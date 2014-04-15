@@ -4,8 +4,10 @@ triSYCL
 This is an humble implementation test bed to experiment with the provisional
 specification of the OpenCL SYCL C++ layer.
 
-This is just the start of a SYCL mock-up only based on C++ execution on
-the CPU, so there is nothing related to OpenCL yet. But since in SYCL
+For more information on SYCL, look at http://www.khronos.org/opencl/sycl
+
+This is just the start of a SYCL mock-up, only based on C++ execution on
+the CPU. So there is nothing related to OpenCL yet. But since in SYCL
 there is a host fall-back, this can be seen as the start of this
 fall-back...
 

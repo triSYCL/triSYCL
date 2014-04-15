@@ -68,17 +68,26 @@ namespace access {
 }
 
 
+/// Define a multi-dimensional index range
+template <size_t Dimensions = 1U>
+struct range : std::vector<size_t> {
+  /* Inherit the constructors from the parent
+
+     Using a std::vector is overkill but std::array has no default
+     constructors and I am lazzy to reimplement them
+  */
+  using std::vector<size_t>::vector;
+
+  /// Create a 1D range from a single integer
+  range(size_t S) : std::vector<size_t> { S } {}
+};
+
+
 /** SYCL queue, similar to the OpenCL queue concept.
 
     The implementation is quite minimal for now. :-)
 */
 struct queue {};
-
-
-// Forward declare buffer because there is a recursion between accessor
-// and buffers
-template <typename T, size_t Dimensions>
-struct buffer;
 
 
 /** The accessor abstracts the way buffer data are accessed inside a
@@ -89,16 +98,17 @@ struct buffer;
 
     Right now the aim of this class is just to access to the buffer in a
     read-write mode, even if capturing the multi_array_ref from a lambda
-    make it const. The access::mode is not used yet.
+    make it const (since in some example we have lambda with [=] and
+    without mutable). The access::mode is not used yet.
 */
-template <typename T, size_t Dimensions, access::mode M>
+template <access::mode M,
+          typename ArrayType>
 struct accessor {
-  typedef boost::multi_array_ref<T, Dimensions> ArrayType;
   typedef typename std::remove_const<ArrayType>::type WritableArrayType;
   ArrayType Array;
 
-  accessor(buffer<T, Dimensions> B) :
-    Array(static_cast<ArrayType>(B)) {}
+  accessor(ArrayType &Buffer) :
+    Array(static_cast<ArrayType>(Buffer)) {}
 
   /// This when we access to accessor[] that we override the const if any
   auto &operator[](size_t Index) const {
@@ -114,24 +124,88 @@ struct accessor {
     data with boost::multi_array_ref to provide the VLA semantics without
     any storage.
 */
-template <typename T, size_t Dimensions = 1U>
-struct buffer : public boost::multi_array_ref<T, Dimensions> {
+template <typename T,
+          size_t Dimensions = 1U>
+struct buffer {
+  using Implementation = boost::multi_array_ref<T, Dimensions>;
+  // Extension to SYCL: provide pieces of STL container interface
+  using element = T;
+  using value_type = T;
 
-  // Not clear in the specification and example if this is legal
-  buffer(T *Data, std::size_t S) :
-    boost::multi_array_ref<T, 1U>(Data, boost::extents[S]) {}
+  // If some allocation is requested, it is managed by this multi_array
+  boost::multi_array<T, Dimensions> Allocation;
+  // This is the multi-dimensional interface to the data
+  boost::multi_array_ref<T, Dimensions> Access;
+  // If the data are read-only, store the information for later optimization
+  bool ReadOnly ;
 
-  buffer(const buffer & B) = default;
+
+  /// Create a new buffer of size \param r
+  buffer(range<Dimensions> r) : Allocation(r),
+                                Access(Allocation),
+                                ReadOnly(false) {}
+
+
+  /** Create a new buffer from \param host_data of size \param r without
+      further allocation */
+  buffer(T * host_data, range<Dimensions> r) : Access(host_data, r),
+                                               ReadOnly(false) {}
+
+
+  /** Create a new read only buffer from \param host_data of size \param r
+      without further allocation */
+  buffer(const T * host_data, range<Dimensions> r) :
+    Access(host_data, r),
+    ReadOnly(true) {}
+
+
+  /// \todo
+  //buffer(storage<T> &store, range<dimensions> r)
+
+  /// Create a new allocated 1D buffer from the given elements
+  buffer(T * start_iterator, T * end_iterator) :
+    // Construct Access for nothing since there is no default constructor
+    Access(Allocation) {
+    /* Then reinitialize Allocation since this is the only multi_array
+       method with this iterator interface */
+    Allocation.assign(start_iterator, end_iterator);
+    // And rewrap it in the multi_array_ref
+    Access = Allocation;
+  }
+
+
+  /// Create a new buffer from an old one, with a new allocation
+  buffer(buffer<T, Dimensions> &b) : Allocation(b.Access),
+                                     Access(Allocation),
+                                     ReadOnly(false) {}
+
+
+  /** Create a new sub-buffer without allocation to have separate accessors
+      later */
+  /* \todo
+  buffer(buffer<T, dimensions> b,
+         index<dimensions> base_index,
+         range<dimensions> sub_range)
+  */
+
+  // Allow CLHPP objects too?
+  // \todo
+  /*
+  buffer(cl_mem mem_object,
+         queue from_queue,
+         event available_event)
+  */
 
   // Use BOOST_DISABLE_ASSERTS at some time to disable range checking
 
-  /// Return an accessor of the required mode
+  /// Return an accessor of the required mode \param M
   template <access::mode M>
-  accessor<T, Dimensions, M> get_access() {
-    return accessor<T, Dimensions, M>(*this);
+  accessor<M, Implementation> get_access() {
+    return { Access };
   }
 
 };
+
 
 
 /** SYCL command group gather all the commands needed to execute one or
@@ -165,3 +239,11 @@ auto single_task = [] (auto F) { F(); };
 
 }
 }
+
+/*
+    # Some Emacs stuff:
+    ### Local Variables:
+    ### minor-mode: flyspell
+    ### ispell-local-dictionary: "american"
+    ### End:
+*/
