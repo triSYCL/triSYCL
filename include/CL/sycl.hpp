@@ -9,23 +9,6 @@
    License. See LICENSE.TXT for details.
 */
 
-/* Do not work with Clang 3.5 + libc++ on 2014/04/10
-   #include <cstdio>
-   /usr/lib/gcc/x86_64-linux-gnu/4.8/../../../../include/c++/4.8/cstdio:120:11: error: no member named 'gets' in the global namespace
-   using ::gets;
-         ~~^
-   So use old stuff instead
-   #include <cstdio.h>
-
-   But indeed Boost reinclude other stuf later, so right now use...
-   Could look at _GLIBCXX_HAVE_GETS instead
-
-   Same issue when including "boost/multi_array.hpp"
-*/
-#ifdef __clang__
-extern "C" char* gets (char* __s) __attribute__((deprecated));
-#endif
-
 
 #include <type_traits>
 #include "boost/multi_array.hpp"

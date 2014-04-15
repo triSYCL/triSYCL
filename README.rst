@@ -19,14 +19,15 @@ Ronan Keryell at AMD point cOm
 
 Installation
 ------------
-Only Clang 3.5 and Boost.MultiArray is needed.
+Only Clang 3.5 or GCC 4.9 and Boost.MultiArray is needed.
 
 To install them on latest Linux Debian (this should work on latest Ubuntu
 too):
 
 .. code:: bash
 
-  sudo apt-get install clang-3.5 libboost-dev
+  sudo apt-get install clang-3.5 g++4.9 libboost-dev
+
 
 Examples
 --------
@@ -46,6 +47,18 @@ To run them:
   make run
 
 
+To clean up:
+
+.. code:: bash
+
+  make clean
+
+You can build the binary with different compilers with
+
+.. code:: bash
+
+  make CXX=g++-4.9
+  make CXX=clang++
 
 
 ..
