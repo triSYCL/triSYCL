@@ -53,16 +53,22 @@ namespace access {
 
 /// Define a multi-dimensional index range
 template <size_t Dimensions = 1U>
-struct range : std::vector<size_t> {
+struct range : std::vector<intptr_t> {
   /* Inherit the constructors from the parent
 
      Using a std::vector is overkill but std::array has no default
      constructors and I am lazzy to reimplement them
-  */
-  using std::vector<size_t>::vector;
 
-  /// Create a 1D range from a single integer
-  range(size_t S) : std::vector<size_t> { S } {}
+     Use intptr_t as a signed version of a size_t to allow computations with
+     negative offsets
+  */
+  using std::vector<intptr_t>::vector;
+
+  /// Create a n-D range from an integer-like list
+  template <typename... Integers>
+  range(Integers... size_of_dimension_i) :
+    // Add a static_cast to allow a narrowing from an unsigned parameter
+    std::vector<intptr_t> { static_cast<intptr_t>(size_of_dimension_i)... } {}
 };
 
 

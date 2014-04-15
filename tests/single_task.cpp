@@ -6,15 +6,15 @@ using namespace cl::sycl;
 int main() {
   int result; // this is where we will write our result
 
-  std::array<size_t,3> a {1,2,3};
-  range<2> z { 1U, 3U};
-  range<1> y = 1U;
+  std::array<size_t,3> a { 1, 2, 3 };
+  range<2> z { 1, 3 };
+  range<1> y = 1;
   { // by sticking all the SYCL work in a {} block, we ensure
     // all SYCL tasks must complete before exiting the block
 
     //  create a queue to work on
     queue myQueue;
-    buffer<int, 3> Buf(range<3> { 1U, 2U, 3U} );
+    buffer<int, 3> Buf(range<3>(1, 2, 3));
 
     // wrap our result variable in a buffer
     buffer<int> resultBuf(&result, 1);
