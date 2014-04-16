@@ -55,6 +55,11 @@ namespace access {
 /// Define a multi-dimensional index range
 template <size_t Dimensions = 1U>
 struct range : std::vector<intptr_t> {
+  static_assert(1 <= Dimensions && Dimensions <= 3,
+                "Dimensions are between 1 and 3");
+
+  static const auto dimensionality = Dimensions;
+
   /* Inherit the constructors from the parent
 
      Using a std::vector is overkill but std::array has no default
@@ -74,11 +79,19 @@ struct range : std::vector<intptr_t> {
   range(Integers... size_of_dimension_i) :
     // Add a static_cast to allow a narrowing from an unsigned parameter
     std::vector<intptr_t> { static_cast<intptr_t>(size_of_dimension_i)... } {}
+
+
+  auto get(int index) {
+    return (*this)[index];
+  }
+
 };
 
 
 /// Define a multi-dimensional index, used for example to locate a work item
-using id = std::tuple<intptr_t>;
+template <size_t N = 1U>
+using id = range<N>;
+
 
 /** SYCL queue, similar to the OpenCL queue concept.
 
@@ -102,18 +115,20 @@ template <access::mode M,
           typename ArrayType>
 struct accessor {
   typedef typename std::remove_const<ArrayType>::type WritableArrayType;
+  static const auto dimensionality = ArrayType::dimensionality;
   ArrayType Array;
 
   accessor(ArrayType &Buffer) :
     Array(static_cast<ArrayType>(Buffer)) {}
 
-  /// This when we access to accessor[] that we override the const if any
+  /// This is when we access to accessor[] that we override the const if any
   auto &operator[](size_t Index) const {
     return (const_cast<WritableArrayType &>(Array))[Index];
   }
-  /// This when we access to accessor[] that we override the const if any
-  auto &operator[](id Index) const {
-    return (const_cast<WritableArrayType &>(Array))[std::get<0>(Index)];
+
+  /// This is when we access to accessor[] that we override the const if any
+  auto &operator[](id<dimensionality> Index) const {
+    return (const_cast<WritableArrayType &>(Array))(Index);
   }
 };
 
@@ -248,8 +263,10 @@ auto single_task = [] (auto F) { F(); };
 */
 template <typename Range, typename ParallelForFunctor>
 void parallel_for(Range r, ParallelForFunctor f) {
-  for (int _sycl_index = 0; _sycl_index < r; _sycl_index++)
-    f(id(_sycl_index));
+  for (boost::multi_array_types::index _sycl_index = 0;
+       _sycl_index < r.get(0);
+       _sycl_index++)
+    f(id<Range::dimensionality>(_sycl_index));
 }
 
 

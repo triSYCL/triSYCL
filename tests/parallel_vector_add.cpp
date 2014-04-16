@@ -34,14 +34,15 @@ int main() {
       auto kc = C.get_access<access::write>();
 
       // Enqueue a single, simple task
-      parallel_for(N, kernel_lambda<class vector_add>([=] (id index) {
-            std::cout << std::get<0>(index) << " ";
+      parallel_for(range<1> { N },
+                   kernel_lambda<class vector_add>([=] (id<1> index) {
+            std::cout << index.get(0) << " ";
             kc[index] = ka[index] + kb[index];
       }));
     }); // End of our commands for this queue
   } // End scope, so we wait for the queue to complete
 
-  std::cout << "Result:" << std::endl;
+  std::cout << std::endl << "Result:" << std::endl;
   for(int i = 0; i < N; i++)
     std::cout << c[i] << " ";
   std::cout << std::endl;

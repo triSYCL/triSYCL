@@ -1,8 +1,8 @@
 triSYCL
 +++++++
 
-This is an humble implementation test bed to experiment with the provisional
-specification of the OpenCL SYCL C++ layer.
+This is a humble implementation test bed to experiment with the
+provisional specification of the OpenCL SYCL C++ layer.
 
 For more information on SYCL, look at http://www.khronos.org/opencl/sycl
 
