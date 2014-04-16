@@ -10,7 +10,6 @@
 */
 
 
-#include <tuple>
 #include <type_traits>
 #include "boost/multi_array.hpp"
 
@@ -63,7 +62,7 @@ struct range : std::vector<intptr_t> {
   /* Inherit the constructors from the parent
 
      Using a std::vector is overkill but std::array has no default
-     constructors and I am lazzy to reimplement them
+     constructors and I am lazy to reimplement them
 
      Use intptr_t as a signed version of a size_t to allow computations with
      negative offsets
@@ -74,14 +73,18 @@ struct range : std::vector<intptr_t> {
   */
   using std::vector<intptr_t>::vector;
 
-  /// Create a n-D range from an integer-like list
+  // By default, create a vector of Dimensions x 0
+  range() : vector(Dimensions) {}
+
+
+  // Create a n-D range from an integer-like list
   template <typename... Integers>
   range(Integers... size_of_dimension_i) :
     // Add a static_cast to allow a narrowing from an unsigned parameter
     std::vector<intptr_t> { static_cast<intptr_t>(size_of_dimension_i)... } {}
 
 
-  auto get(int index) {
+  auto &get(int index) {
     return (*this)[index];
   }
 
@@ -249,7 +252,7 @@ Functor kernel_lambda(Functor F) {
 }
 
 
-/** SYCL single_task lauches a computation without parallelism at launch
+/** SYCL single_task launches a computation without parallelism at launch
     time.
 
     Right now the implementation does nothing else that forwarding the
@@ -258,15 +261,53 @@ Functor kernel_lambda(Functor F) {
 auto single_task = [] (auto F) { F(); };
 
 
+/** A recursive multi-dimensional iterator that ends calling f
+
+    The iteration order may be changed later.
+
+    Since partial specialization of function template is not possible in
+    C++14, use a class template instead with everything in the
+    constructor.
+*/
+template <int level, typename Range, typename ParallelForFunctor, typename Id>
+struct ParallelForIterate {
+  ParallelForIterate(Range &r, ParallelForFunctor &f, Id &index) {
+    for (boost::multi_array_types::index _sycl_index = 0,
+           _sycl_end = r.get(Range::dimensionality - level);
+         _sycl_index < _sycl_end;
+         _sycl_index++) {
+      // Set the current value of the index for this dimension
+      index.get(Range::dimensionality - level) = _sycl_index;
+      // Iterate further on lower dimensions
+      ParallelForIterate<level - 1,
+                         Range,
+                         ParallelForFunctor,
+                         Id> { r, f, index };
+    }
+  }
+};
+
+
+/** Stop the recursion when level reaches 0 by simply calling the
+    kernel functor with the constructed id */
+template <typename Range, typename ParallelForFunctor, typename Id>
+struct ParallelForIterate<0, Range, ParallelForFunctor, Id> {
+  ParallelForIterate(Range &r, ParallelForFunctor &f, Id &index) {
+    f(index);
+  }
+};
+
+
 /** SYCL parallel_for launches a data parallel computation with parallelism
     specified at launch time.
 */
 template <typename Range, typename ParallelForFunctor>
 void parallel_for(Range r, ParallelForFunctor f) {
-  for (boost::multi_array_types::index _sycl_index = 0;
-       _sycl_index < r.get(0);
-       _sycl_index++)
-    f(id<Range::dimensionality>(_sycl_index));
+  id<Range::dimensionality> index;
+  ParallelForIterate<Range::dimensionality,
+                     Range,
+                     ParallelForFunctor,
+                     id<Range::dimensionality>> { r, f, index };
 }
 
 
@@ -283,7 +324,7 @@ void parallel_for(Range r, Program p, ParallelForFunctor f) {
 /*
     # Some Emacs stuff:
     ### Local Variables:
-    ### minor-mode: flyspell
     ### ispell-local-dictionary: "american"
+    ### eval: (flyspell-prog-mode)
     ### End:
 */
