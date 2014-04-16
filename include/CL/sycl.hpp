@@ -84,7 +84,7 @@ struct range : std::vector<intptr_t> {
     std::vector<intptr_t> { static_cast<intptr_t>(size_of_dimension_i)... } {}
 
 
-  auto &get(int index) {
+  auto get(int index) {
     return (*this)[index];
   }
 
@@ -273,11 +273,11 @@ template <int level, typename Range, typename ParallelForFunctor, typename Id>
 struct ParallelForIterate {
   ParallelForIterate(Range &r, ParallelForFunctor &f, Id &index) {
     for (boost::multi_array_types::index _sycl_index = 0,
-           _sycl_end = r.get(Range::dimensionality - level);
+           _sycl_end = r[Range::dimensionality - level];
          _sycl_index < _sycl_end;
          _sycl_index++) {
       // Set the current value of the index for this dimension
-      index.get(Range::dimensionality - level) = _sycl_index;
+      index[Range::dimensionality - level] = _sycl_index;
       // Iterate further on lower dimensions
       ParallelForIterate<level - 1,
                          Range,
