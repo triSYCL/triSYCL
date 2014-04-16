@@ -153,13 +153,12 @@ struct buffer {
 
   /// Create a new allocated 1D buffer from the given elements
   buffer(T * start_iterator, T * end_iterator) :
-    // Construct Access for nothing since there is no default constructor
+    // The size of a multi_array is set at creation time
+    Allocation(boost::extents[std::distance(start_iterator, end_iterator)]),
     Access(Allocation) {
-    /* Then reinitialize Allocation since this is the only multi_array
+    /* Then assign Allocation since this is the only multi_array
        method with this iterator interface */
     Allocation.assign(start_iterator, end_iterator);
-    // And rewrap it in the multi_array_ref
-    Access = Allocation;
   }
 
 

@@ -1,7 +1,7 @@
 TARGETS = queue single_task vector_add
 
 # The implementation use C++14
-CXXFLAGS = -std=c++1y -I../include
+CXXFLAGS = -g -std=c++1y -I../include
 # Assume Clang 3.5 at least
 CXX = clang++
 # This work with GCC 4.9 too
