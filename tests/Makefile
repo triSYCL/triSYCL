@@ -1,4 +1,4 @@
-TARGETS = queue single_task vector_add
+TARGETS = queue single_task vector_add parallel_vector_add
 
 # The implementation use C++14
 CXXFLAGS = -g -std=c++1y -I../include

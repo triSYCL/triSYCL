@@ -10,6 +10,7 @@
 */
 
 
+#include <tuple>
 #include <type_traits>
 #include "boost/multi_array.hpp"
 
@@ -61,6 +62,10 @@ struct range : std::vector<intptr_t> {
 
      Use intptr_t as a signed version of a size_t to allow computations with
      negative offsets
+
+     \todo in the specification: add some accessors. But it seems they are
+     implicitly convertible to vectors of the same size in the
+     specification
   */
   using std::vector<intptr_t>::vector;
 
@@ -71,6 +76,9 @@ struct range : std::vector<intptr_t> {
     std::vector<intptr_t> { static_cast<intptr_t>(size_of_dimension_i)... } {}
 };
 
+
+/// Define a multi-dimensional index, used for example to locate a work item
+using id = std::tuple<intptr_t>;
 
 /** SYCL queue, similar to the OpenCL queue concept.
 
@@ -102,6 +110,10 @@ struct accessor {
   /// This when we access to accessor[] that we override the const if any
   auto &operator[](size_t Index) const {
     return (const_cast<WritableArrayType &>(Array))[Index];
+  }
+  /// This when we access to accessor[] that we override the const if any
+  auto &operator[](id Index) const {
+    return (const_cast<WritableArrayType &>(Array))[std::get<0>(Index)];
   }
 };
 
@@ -195,7 +207,6 @@ struct buffer {
 };
 
 
-
 /** SYCL command group gather all the commands needed to execute one or
     more kernels in a kind of atomic way. Since all the parameters are
     captured at command group creation, one can execute the content in an
@@ -211,19 +222,43 @@ struct command_group {
 };
 
 
-template <typename KernalName, typename Functor>
+/** kernel_lambda specify a kernel to be launch with a single_task or
+    parallel_for
+
+    \todo This seems to have also the kernel_functor name in the
+    specification
+*/
+template <typename KernelName, typename Functor>
 Functor kernel_lambda(Functor F) {
   return F;
 }
 
 
-/** SYCL single task lauches a computation without parallelism at launch
+/** SYCL single_task lauches a computation without parallelism at launch
     time.
 
     Right now the implementation does nothing else that forwarding the
     execution of the given functor
 */
 auto single_task = [] (auto F) { F(); };
+
+
+/** SYCL parallel_for launches a data parallel computation with parallelism
+    specified at launch time.
+*/
+template <typename Range, typename ParallelForFunctor>
+void parallel_for(Range r, ParallelForFunctor f) {
+  for (int _sycl_index = 0; _sycl_index < r; _sycl_index++)
+    f(id(_sycl_index));
+}
+
+
+/// SYCL parallel_for version that allows a Program object to be specified
+template <typename Range, typename Program, typename ParallelForFunctor>
+void parallel_for(Range r, Program p, ParallelForFunctor f) {
+  // \todo deal with Program
+  parallel_for(r, f);
+}
 
 }
 }
