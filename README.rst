@@ -65,6 +65,27 @@ You can build the binary with different compilers with
   make CXX=g++-4.9
   make CXX=clang++
 
+
+Roadmap
+-------
+
+Some ideas of future developments:
+
+- finish implementation of basic classes without any OpenCL support;
+
+- make an accelerator version based on wrapper classes for the C++AMP Open
+  Source compiler
+  https://bitbucket.org/multicoreware/cppamp-driver-ng/wiki/Home
+
+- make an accelerator version based on OpenMP 4, OpenHMPP or OpenACC;
+
+- add OpenCL support with kernels only provided as strings;
+
+- extend runtime and Clang/LLVM to generate OpenCL/SPIR from C++
+  single-source kernels;
+
+- add OpenCL 2.x support.
+
 ..
     # Some Emacs stuff:
     ### Local Variables:
