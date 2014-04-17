@@ -1,6 +1,10 @@
 #include <CL/sycl.hpp>
 #include <iostream>
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 using namespace cl::sycl;
 
 constexpr size_t N = 2;
@@ -35,7 +39,17 @@ int main() {
       // Enqueue a parallel kernel
       parallel_for(range<2> { N, M },
                    kernel_lambda<class matrix_add>([=] (id<2> index) {
-        std::cout << index.get(0) << "," << index.get(1) << " ";
+        // Display the work-item coordinate during "kernel" execution
+        std::cout << index.get(0) << "," << index.get(1) << " "
+#ifdef _OPENMP
+        /* Display also on which OpenMP thread a work-item is executed.
+           Of course, the output may be a little-bit intermixed between
+           threads according to OpenMP implementation...
+         */
+                     "(on thread " << omp_get_thread_num() << ") "
+#endif
+          ;
+        // The real work is only this
         kc[index] = ka[index] + kb[index];
       }));
     }); // End of our commands for this queue

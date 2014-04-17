@@ -289,6 +289,44 @@ struct ParallelForIterate {
 };
 
 
+/** A top-level recursive multi-dimensional iterator variant using OpenMP
+
+    Only the top-level loop uses OpenMP and go on with the normal
+    recursive multi-dimensional.
+*/
+template <int level, typename Range, typename ParallelForFunctor>
+struct ParallelOpenMPForIterate {
+  ParallelOpenMPForIterate(Range &r, ParallelForFunctor &f) {
+    // Create the OpenMP threads before the for loop to avoid creating an
+    // index in each iteration
+#pragma omp parallel
+    {
+      // Allocate an OpenMP thread-local index
+      id<Range::dimensionality> index;
+      // Make a simple loop end condition for OpenMP
+      boost::multi_array_types::index _sycl_end =
+        r[Range::dimensionality - level];
+      /* Distribute the iterations on the OpenMP threads. Some OpenMP
+         "collapse" could be useful for small iteration space, but it
+         would need some template specialization to have real contiguous
+         loop nests */
+#pragma omp for
+      for (boost::multi_array_types::index _sycl_index = 0;
+           _sycl_index < _sycl_end;
+           _sycl_index++) {
+        // Set the current value of the index for this dimension
+        index[Range::dimensionality - level] = _sycl_index;
+        // Iterate further on lower dimensions
+        ParallelForIterate<level - 1,
+                           Range,
+                           ParallelForFunctor,
+                           id<Range::dimensionality>> { r, f, index };
+      }
+    }
+  }
+};
+
+
 /** Stop the recursion when level reaches 0 by simply calling the
     kernel functor with the constructed id */
 template <typename Range, typename ParallelForFunctor, typename Id>
@@ -301,14 +339,24 @@ struct ParallelForIterate<0, Range, ParallelForFunctor, Id> {
 
 /** SYCL parallel_for launches a data parallel computation with parallelism
     specified at launch time.
+
+    This implementation use OpenMP 3 if compiled with the right flag.
 */
 template <typename Range, typename ParallelForFunctor>
 void parallel_for(Range r, ParallelForFunctor f) {
+#ifdef _OPENMP
+  // Use OpenMP for the top loop level
+  ParallelOpenMPForIterate<Range::dimensionality,
+                           Range,
+                           ParallelForFunctor> { r, f };
+#else
+  // In a sequential execution there is only one index processed at a time
   id<Range::dimensionality> index;
   ParallelForIterate<Range::dimensionality,
                      Range,
                      ParallelForFunctor,
                      id<Range::dimensionality>> { r, f, index };
+#endif
 }
 
 
