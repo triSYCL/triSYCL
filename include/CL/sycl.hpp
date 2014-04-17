@@ -10,6 +10,7 @@
 */
 
 
+#include <functional>
 #include <type_traits>
 #include "boost/multi_array.hpp"
 
@@ -258,7 +259,7 @@ Functor kernel_lambda(Functor F) {
     Right now the implementation does nothing else that forwarding the
     execution of the given functor
 */
-auto single_task = [] (auto F) { F(); };
+void single_task(std::function<void(void)> F) { F(); };
 
 
 /** A recursive multi-dimensional iterator that ends calling f
