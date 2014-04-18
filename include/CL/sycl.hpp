@@ -85,6 +85,13 @@ struct range : std::vector<intptr_t> {
     std::vector<intptr_t> { static_cast<intptr_t>(size_of_dimension_i)... } {}
 
 
+  /** Return the given coordinate
+
+      \todo explain in the specification (table 3.29, not only in the
+      text) that [] works also for id, and why not range?
+
+      \todo add also [] for range in the specification
+  */
   auto get(int index) {
     return (*this)[index];
   }
@@ -92,7 +99,16 @@ struct range : std::vector<intptr_t> {
 };
 
 
-/// Define a multi-dimensional index, used for example to locate a work item
+/** Define a multi-dimensional index, used for example to locate a work item
+
+    \todo The definition of id and item are completely broken in the
+    specification. The whole 3.4.1 is to be updated.
+
+    \todo It would be nice to have [] working everywhere, provide both
+    get_...() and get_...(int dim) equivalent to get_...()[int dim]
+
+    \todo group is unclear
+*/
 template <size_t N = 1U>
 using id = range<N>;
 
@@ -108,7 +124,7 @@ struct device {
 /** The SYCL heuristics to select a device
 
     The device with the highest score is selected
- */
+*/
 struct device_selector {
   // The user-provided operator computing the score
   virtual int operator() (device dev) = 0;
@@ -117,6 +133,8 @@ struct device_selector {
 /** Select the best GPU, if any
 
     \todo to be implemented
+
+    \todo to be named device_selector::gpu instead in the specification?
 */
 struct gpu_selector : device_selector {
   // The user-provided operator computing the score
@@ -408,6 +426,9 @@ struct ParallelForIterate<0, Range, ParallelForFunctor, Id> {
     specified at launch time.
 
     This implementation use OpenMP 3 if compiled with the right flag.
+
+    \todo It is not clear if the ParallelForFunctor is called with an id<>
+    or with an item.
 */
 template <size_t Dimensions = 1U, typename ParallelForFunctor>
 void parallel_for(range<Dimensions> r,
