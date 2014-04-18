@@ -17,10 +17,10 @@ int main ()
         cl::sycl::command_group (myQueue, [&] ()
         {
             // request access to our buffer
-            auto writeResult = resultBuf.access<cl::sycl::access::write_only> ();
+            auto writeResult = resultBuf.get_access<cl::sycl::access::write> ();
 
             // enqueue a single, simple task
-            single_task(kernel_lambda<class simple_test>([=] ()
+            cl::sycl::single_task(cl::sycl::kernel_lambda<class simple_test>([=] ()
             {
                 writeResult [0] = 1234;
             }));

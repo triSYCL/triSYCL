@@ -8,9 +8,9 @@ int main ()
         cl::sycl::buffer<int> resultBuf (&result, 1);
         cl::sycl::command_group (myQueue, [&] ()
         {
-            auto writeResult = resultBuf.access<cl::sycl::access::write_only> ();
+            auto writeResult = resultBuf.get_access<cl::sycl::access::write> ();
 
-            single_task(kernel_lambda<class simple_test>([=] ()
+            cl::sycl::single_task(cl::sycl::kernel_lambda<class simple_test>([=] ()
             {
                 writeResult [0] = 1234;
             }));

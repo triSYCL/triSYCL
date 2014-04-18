@@ -259,7 +259,7 @@ Functor kernel_lambda(Functor F) {
     Right now the implementation does nothing else that forwarding the
     execution of the given functor
 */
-void single_task(std::function<void(void)> F) { F(); };
+void single_task(std::function<void(void)> F) { F(); }
 
 
 /** A recursive multi-dimensional iterator that ends calling f
