@@ -456,6 +456,16 @@ void parallel_for(Range r, Program p, ParallelForFunctor f) {
   parallel_for(r, f);
 }
 
+
+/** The kernel synchronization barrier
+
+    \todo To be implemented
+*/
+void
+barrier(int barrier_type) {}
+
+int const CL_LOCAL_MEM_FENCE = 123;
+
 }
 }
 
