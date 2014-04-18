@@ -21,8 +21,8 @@ namespace sycl {
 
 /** Describe the type of access by kernels.
 
-   This values should be normalized to allow separate compilation with
-   different implementations?
+    \todo This values should be normalized to allow separate compilation
+    with different implementations?
 */
 namespace access {
   /* By using "enum mode" here instead of "enum struct mode", we have for
@@ -148,6 +148,10 @@ struct queue {
 };
 
 
+// Forward declaration for use in accessor
+template <typename T, size_t dimensions> struct buffer;
+
+
 /** The accessor abstracts the way buffer data are accessed inside a
     kernel in a multidimensional variable length array way.
 
@@ -159,24 +163,39 @@ struct queue {
     make it const (since in some example we have lambda with [=] and
     without mutable). The access::mode is not used yet.
 */
-template <access::mode M,
-          typename ArrayType>
+template <typename dataType,
+          size_t dimensions,
+          access::mode mode,
+          access::target target = access::global_buffer>
 struct accessor {
-  typedef typename std::remove_const<ArrayType>::type WritableArrayType;
-  static const auto dimensionality = ArrayType::dimensionality;
-  ArrayType Array;
+  // The implementation is a multi_array_ref wrapper
+  typedef boost::multi_array_ref<dataType, dimensions> ArrayViewType;
+  ArrayViewType Array;
 
-  accessor(ArrayType &Buffer) :
-    Array(static_cast<ArrayType>(Buffer)) {}
+  // The same type but writable
+  typedef typename std::remove_const<ArrayViewType>::type WritableArrayViewType;
+
+  // \todo in the specification: store the dimension for user request
+  static const auto dimensionality = dimensions;
+  // \todo in the specification: store the types for user request as STL
+  // or C++AMP
+  using element = dataType;
+  using value_type = dataType;
+
+
+  /// The only way to construct an accessor is from an existing buffer
+  // \todo fix the specification to rename target that shadows template parm
+  accessor(buffer<dataType, dimensions> &targetBuffer) :
+    Array(targetBuffer.Access) {}
 
   /// This is when we access to accessor[] that we override the const if any
   auto &operator[](size_t Index) const {
-    return (const_cast<WritableArrayType &>(Array))[Index];
+    return (const_cast<WritableArrayViewType &>(Array))[Index];
   }
 
   /// This is when we access to accessor[] that we override the const if any
   auto &operator[](id<dimensionality> Index) const {
-    return (const_cast<WritableArrayType &>(Array))(Index);
+    return (const_cast<WritableArrayViewType &>(Array))(Index);
   }
 };
 
@@ -187,38 +206,41 @@ struct accessor {
     In the case we initialize it from a pointer, for now we just wrap the
     data with boost::multi_array_ref to provide the VLA semantics without
     any storage.
+
+    \todo there is a naming inconsistency in the specification between
+    buffer and accessor on T versus datatype
 */
 template <typename T,
-          size_t Dimensions = 1U>
+          size_t dimensions = 1U>
 struct buffer {
-  using Implementation = boost::multi_array_ref<T, Dimensions>;
+  using Implementation = boost::multi_array_ref<T, dimensions>;
   // Extension to SYCL: provide pieces of STL container interface
   using element = T;
   using value_type = T;
 
   // If some allocation is requested, it is managed by this multi_array
-  boost::multi_array<T, Dimensions> Allocation;
+  boost::multi_array<T, dimensions> Allocation;
   // This is the multi-dimensional interface to the data
-  boost::multi_array_ref<T, Dimensions> Access;
+  boost::multi_array_ref<T, dimensions> Access;
   // If the data are read-only, store the information for later optimization
   bool ReadOnly ;
 
 
   /// Create a new buffer of size \param r
-  buffer(range<Dimensions> r) : Allocation(r),
+  buffer(range<dimensions> r) : Allocation(r),
                                 Access(Allocation),
                                 ReadOnly(false) {}
 
 
   /** Create a new buffer from \param host_data of size \param r without
       further allocation */
-  buffer(T * host_data, range<Dimensions> r) : Access(host_data, r),
+  buffer(T * host_data, range<dimensions> r) : Access(host_data, r),
                                                ReadOnly(false) {}
 
 
   /** Create a new read only buffer from \param host_data of size \param r
       without further allocation */
-  buffer(const T * host_data, range<Dimensions> r) :
+  buffer(const T * host_data, range<dimensions> r) :
     Access(host_data, r),
     ReadOnly(true) {}
 
@@ -238,7 +260,7 @@ struct buffer {
 
 
   /// Create a new buffer from an old one, with a new allocation
-  buffer(buffer<T, Dimensions> &b) : Allocation(b.Access),
+  buffer(buffer<T, dimensions> &b) : Allocation(b.Access),
                                      Access(Allocation),
                                      ReadOnly(false) {}
 
@@ -262,9 +284,10 @@ struct buffer {
   // Use BOOST_DISABLE_ASSERTS at some time to disable range checking
 
   /// Return an accessor of the required mode \param M
-  template <access::mode M>
-  accessor<M, Implementation> get_access() {
-    return { Access };
+  template <access::mode mode,
+            access::target target=access::global_buffer>
+  accessor<T, dimensions, mode, target> get_access() {
+    return { *this };
   }
 
 };
