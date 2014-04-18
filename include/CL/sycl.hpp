@@ -113,6 +113,41 @@ template <size_t N = 1U>
 using id = range<N>;
 
 
+/** A ND-range, made by a global and local range
+
+ */
+template <size_t dims = 1U>
+struct nd_range {
+  static_assert(1 <= dims && dims <= 3,
+                "Dimensions are between 1 and 3");
+
+  static const auto dimensionality = dims;
+
+  range<dimensionality> GlobalRange;
+  range<dimensionality> LocalRange;
+  id<dimensionality> Offset;
+
+  nd_range(range<dimensionality> global_size,
+           range<dimensionality> local_size,
+           id<dimensionality> offset = { 0, 0, 0 }) :
+    GlobalRange(global_size),
+    LocalRange(local_size),
+    Offset(offset) {}
+
+  auto get_global_range() { return GlobalRange; }
+
+  auto get_local_range() { return GlobalRange; }
+
+  /// \todo what is it?
+  //range get_group_range() {}
+
+  /// \todo get_offset() is lacking in the specification
+  auto get_offset() { return Offset; }
+
+};
+
+
+
 /** SYCL device
 
     \todo The implementation is quite minimal for now. :-)
