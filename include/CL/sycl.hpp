@@ -106,6 +106,7 @@ struct range : std::vector<intptr_t> {
 
     \todo It would be nice to have [] working everywhere, provide both
     get_...() and get_...(int dim) equivalent to get_...()[int dim]
+    Well it is already the case for item. So not needed for id?
 
     \todo group is unclear
 */
@@ -136,7 +137,7 @@ struct nd_range {
 
   auto get_global_range() { return GlobalRange; }
 
-  auto get_local_range() { return GlobalRange; }
+  auto get_local_range() { return LocalRange; }
 
   /// \todo what is it?
   //range get_group_range() {}
@@ -146,6 +147,41 @@ struct nd_range {
 
 };
 
+
+/** SYCL item that store information on a work-item
+ */
+template <size_t dims = 1U>
+struct item {
+  static_assert(1 <= dims && dims <= 3,
+                "Dimensions are between 1 and 3");
+
+  static const auto dimensionality = dims;
+
+  id<dims> GlobalIndex;
+  id<dims> LocalIndex;
+  nd_range<dims> NDRange;
+
+  /// \todo a constructor from a nd_range too ?
+  item(range<dims> global_size, range<dims> local_size) :
+    NDRange(global_size, local_size) {}
+
+  /// Use the default copy constructor and so on
+  item() = default;
+
+  int get_global(int dimension) { return GlobalIndex[dimension]; }
+
+  int get_local(int dimension) { return LocalIndex[dimension]; }
+
+  id<dims> get_global() { return GlobalIndex; }
+
+  id<dims> get_local() { return LocalIndex; }
+
+  range<dims> get_local_range() { return NDRange.get_local_range(); }
+
+  range<dims> get_global_range() { return NDRange.get_global_range(); }
+
+  /// \todo Add to the specification: get_nd_range() and what about the offset?
+};
 
 
 /** SYCL device
