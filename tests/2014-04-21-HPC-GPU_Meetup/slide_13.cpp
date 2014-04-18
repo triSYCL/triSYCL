@@ -1,3 +1,9 @@
+#include <vector>
+#include <CL/sycl.hpp>
+
+int main() {
+    using cl;
+//////// Start slide
     std::vector<int> inputA(numElements, 1);
     std::vector<int> inputB(numElements, 2);
     std::vector<int> output(numElements, 0xdeadbeef);
@@ -14,13 +20,16 @@
             sycl::accessor<int, 1, read>   a(inputABuffer);
             sycl::accessor<int, 1, read>   b(inputBBuffer);
             sycl::accessor<int, 1, write>  r(outputBuffer);
-            sycl::parallel_for(range<1>(count), 
+            sycl::parallel_for(range<1>(count),
                 sycl::kernel_functor<class three_way_add>([=](id<1> item, void *) {
-                    int i = item.get_global(0);               
+                    int i = item.get_global(0);
                     if (i < count) {
-                        r[i] = a[i] + b[i]
+                        r[i] = a[i] + b[i];
                     }
                 })
            );
-        }	
+        });
     }
+//////// End slide
+    return 0;
+}

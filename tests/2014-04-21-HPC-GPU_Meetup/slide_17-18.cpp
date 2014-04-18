@@ -17,16 +17,16 @@ int main()
     cl::sycl::command_group(myQueue, [&]()
     {
       // request access to our buffer
-      auto writeResult = resultBuf.access<cl::sycl::access:write_only>();
+      auto writeResult = resultBuf.access<cl::sycl::access::write_only>();
 
       // enqueue a single, simple task
       cl::sycl::single_task(kernel_lambda<class simple_test>([=]()
       {
         writeResult[0] = 1234;
-      }
+      }));
     }); // end of our commands for this queue
 
   } // end scope, so we wait for the queue to complete
 
-  printf(“Result = %d\n”, result);
+  printf("Result = %d\n", result);
 }

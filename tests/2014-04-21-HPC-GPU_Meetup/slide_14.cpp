@@ -1,11 +1,16 @@
-// Right side of the slide
+#include <vector>
+#include <CL/sycl.hpp>
+
+//////// Start right side of the slide
 template<typename ElementType>
 ElementType add(ElementType left, ElementType right)
 {
     return left+right;
 }
+//////// End right side of the slide
 
-// Left side of the slide
+int main() {
+//////// Start left side of the slide
     std::vector<int> inputA(numElements, 1);
     std::vector<int> inputB(numElements, 2);
     std::vector<int> output(numElements, 0xdeadbeef);
@@ -22,13 +27,15 @@ ElementType add(ElementType left, ElementType right)
             sycl::accessor<int, 1, read>   a(inputABuffer);
             sycl::accessor<int, 1, read>   b(inputBBuffer);
             sycl::accessor<int, 1, write>  r(outputBuffer);
-            sycl::parallel_for(range<1>(count), 
+            sycl::parallel_for(range<1>(count),
                 sycl::kernel_functor<class three_way_add>([=](id<1> item, void *) {
-                    int i = item.get_global(0);               
+                    int i = item.get_global(0);
                     if (i < count) {
-                        r[i] = add(a[i], b[i])
+                        r[i] = add(a[i], b[i]);
                     }
                 })
            );
-        }	
+          });
     }
+//////// End left side of the slide
+}

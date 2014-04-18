@@ -1,4 +1,6 @@
-TARGETS = queue single_task vector_add parallel_vector_add parallel_matrix_add
+TARGETS = queue single_task vector_add parallel_vector_add \
+	parallel_matrix_add \
+	$(basename $(wildcard 2014-04-21-HPC-GPU_Meetup/*.cpp))
 
 # The implementation uses C++14 and OpenMP
 CXXFLAGS = -g -std=c++1y -I../include
