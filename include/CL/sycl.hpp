@@ -409,20 +409,21 @@ struct ParallelForIterate<0, Range, ParallelForFunctor, Id> {
 
     This implementation use OpenMP 3 if compiled with the right flag.
 */
-template <typename Range, typename ParallelForFunctor>
-void parallel_for(Range r, ParallelForFunctor f) {
+template <size_t Dimensions = 1U, typename ParallelForFunctor>
+void parallel_for(range<Dimensions> r,
+                  ParallelForFunctor f) {
 #ifdef _OPENMP
   // Use OpenMP for the top loop level
-  ParallelOpenMPForIterate<Range::dimensionality,
-                           Range,
+  ParallelOpenMPForIterate<Dimensions,
+                           range<Dimensions>,
                            ParallelForFunctor> { r, f };
 #else
   // In a sequential execution there is only one index processed at a time
-  id<Range::dimensionality> index;
-  ParallelForIterate<Range::dimensionality,
-                     Range,
+  id<Dimensions> index;
+  ParallelForIterate<Dimensions,
+                     range<Dimensions>,
                      ParallelForFunctor,
-                     id<Range::dimensionality>> { r, f, index };
+                     id<Dimensions>> { r, f, index };
 #endif
 }
 
