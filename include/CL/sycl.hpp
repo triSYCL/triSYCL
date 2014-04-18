@@ -97,11 +97,55 @@ template <size_t N = 1U>
 using id = range<N>;
 
 
-/** SYCL queue, similar to the OpenCL queue concept.
+/** SYCL device
+
+    \todo The implementation is quite minimal for now. :-)
+*/
+struct device {
+  device() {}
+};
+
+/** The SYCL heuristics to select a device
+
+    The device with the highest score is selected
+ */
+struct device_selector {
+  // The user-provided operator computing the score
+  virtual int operator() (device dev) = 0;
+};
+
+/** Select the best GPU, if any
+
+    \todo to be implemented
+*/
+struct gpu_selector : device_selector {
+  // The user-provided operator computing the score
+  int operator() (device dev) override { return 1; }
+};
+
+
+/** SYCL context
 
     The implementation is quite minimal for now. :-)
 */
-struct queue {};
+struct context {
+  context() {}
+
+  // \todo fix this implementation
+  context(gpu_selector s) {}
+
+  context(device_selector &s) {}
+};
+
+/** SYCL queue, similar to the OpenCL queue concept.
+
+    \todo The implementation is quite minimal for now. :-)
+*/
+struct queue {
+  queue() {}
+
+  queue(context c) {}
+};
 
 
 /** The accessor abstracts the way buffer data are accessed inside a
