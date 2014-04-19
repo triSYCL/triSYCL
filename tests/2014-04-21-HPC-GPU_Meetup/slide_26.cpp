@@ -1,7 +1,12 @@
+#include <CL/sycl.hpp>
+
+int main()
+{
+//////// Start slide
 int my_array [20];
 
 {
-    cl::sycl::buffer my_buffer (my_array, 20); // creates the buffer
+    cl::sycl::buffer<int> my_buffer (my_array, 20); // creates the buffer
     // my_array is now taken over by the SYCL system and its contents undefined
 
     {
@@ -18,3 +23,5 @@ int my_array [20];
    my_buffer. Then writes any modified contents of my_buffer back to
    my_array, if necessary.
    */
+//////// End slide
+}
