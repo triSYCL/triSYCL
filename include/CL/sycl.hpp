@@ -13,6 +13,7 @@
 #include <functional>
 #include <type_traits>
 #include "boost/multi_array.hpp"
+#include <iostream>
 
 /// SYCL dwells in the cl::sycl namespace
 namespace cl {
@@ -96,7 +97,56 @@ struct range : std::vector<intptr_t> {
     return (*this)[index];
   }
 
+  // To debug
+  void display() {
+    std::clog << typeid(this).name() << ": ";
+    for (int i = 0; i < dimensionality; i++)
+      std::clog << " " << get(i);
+    std::clog << std::endl;
+  }
+
 };
+
+// Add some operations on range to help with OpenCL work-group scheduling
+// \todo use an element-wise template instead of copy past below for / and *
+
+// An element-wise division of ranges, with upper rounding
+template <size_t Dimensions>
+range<Dimensions> operator /(range<Dimensions> dividend,
+                             range<Dimensions> divisor) {
+  range<Dimensions> result;
+
+  for (int i = 0; i < Dimensions; i++)
+    result[i] = (dividend[i] + divisor[i] - 1)/divisor[i];
+
+  return result;
+}
+
+
+// An element-wise multiplication of ranges
+template <size_t Dimensions>
+range<Dimensions> operator *(range<Dimensions> a,
+                             range<Dimensions> b) {
+  range<Dimensions> result;
+
+  for (int i = 0; i < Dimensions; i++)
+    result[i] = a[i] * b[i];
+
+  return result;
+}
+
+
+// An element-wise addition of ranges
+template <size_t Dimensions>
+range<Dimensions> operator +(range<Dimensions> a,
+                             range<Dimensions> b) {
+  range<Dimensions> result;
+
+  for (int i = 0; i < Dimensions; i++)
+    result[i] = a[i] + b[i];
+
+  return result;
+}
 
 
 /** Define a multi-dimensional index, used for example to locate a work item
@@ -139,8 +189,8 @@ struct nd_range {
 
   auto get_local_range() { return LocalRange; }
 
-  /// \todo what is it?
-  //range get_group_range() {}
+  /// Get the range of work-groups needed to run this ND-range
+  auto get_group_range() { return GlobalRange/LocalRange; }
 
   /// \todo get_offset() is lacking in the specification
   auto get_offset() { return Offset; }
@@ -161,12 +211,11 @@ struct item {
   id<dims> LocalIndex;
   nd_range<dims> NDRange;
 
-  /// \todo a constructor from a nd_range too ?
   item(range<dims> global_size, range<dims> local_size) :
     NDRange(global_size, local_size) {}
 
-  /// Use the default copy constructor and so on
-  item() = default;
+  /// \todo a constructor from a nd_range too in the specification?
+  item(nd_range<dims> ndr) : NDRange(ndr) {}
 
   int get_global(int dimension) { return GlobalIndex[dimension]; }
 
@@ -175,6 +224,12 @@ struct item {
   id<dims> get_global() { return GlobalIndex; }
 
   id<dims> get_local() { return LocalIndex; }
+
+  // For the implementation, need to set the local index
+  void set_local(id<dims> Index) { LocalIndex = Index; }
+
+  // For the implementation, need to set the global index
+  void set_global(id<dims> Index) { GlobalIndex = Index; }
 
   range<dims> get_local_range() { return NDRange.get_local_range(); }
 
@@ -494,12 +549,13 @@ struct ParallelForIterate<0, Range, ParallelForFunctor, Id> {
 
 
 /** SYCL parallel_for launches a data parallel computation with parallelism
-    specified at launch time.
+    specified at launch time by a range<>.
 
     This implementation use OpenMP 3 if compiled with the right flag.
 
     \todo It is not clear if the ParallelForFunctor is called with an id<>
-    or with an item.
+    or with an item. Let's use id<> when called with a range<> and item<>
+    when called with a nd_range<>
 */
 template <size_t Dimensions = 1U, typename ParallelForFunctor>
 void parallel_for(range<Dimensions> r,
@@ -517,6 +573,52 @@ void parallel_for(range<Dimensions> r,
                      ParallelForFunctor,
                      id<Dimensions>> { r, f, index };
 #endif
+}
+
+/** A variation of SYCL parallel_for to take into account a nd_range<>
+
+    \todo Add an OpenMP implementation
+
+    \todo Deal with incomplete work-groups
+*/
+template <size_t Dimensions = 1U, typename ParallelForFunctor>
+void parallel_for(nd_range<Dimensions> r,
+                  ParallelForFunctor f) {
+  // In a sequential execution there is only one index processed at a time
+  item<Dimensions> Index { r };
+  // To iterate on the work-group
+  id<Dimensions> Group;
+  range<Dimensions> GroupRange = r.get_group_range();
+  // To iterate on the local work-item
+  id<Dimensions> Local;
+  range<Dimensions> LocalRange = r.get_local_range();
+
+  // Reconstruct the item from its group and local id
+  auto reconstructItem = [&] (id<Dimensions> L) {
+    Local.display();
+    // Reconstruct the global item
+    Index.set_local(Local);
+    Index.set_global(Local + LocalRange*Group);
+    // Call the user kernel at last
+    f(Index);
+  };
+  /* To recycle the parallel_for on range<>, wrap the ParallelForFunctor f
+     into another functor that iterate inside the work-group and then
+     calls f */
+  auto iterateInWorkGroup = [&] (id<Dimensions> G) {
+    Group.display();
+    // Then iterate on the local work-groups
+    ParallelForIterate<Dimensions,
+                       range<Dimensions>,
+                       decltype(reconstructItem),
+                       id<Dimensions>> { LocalRange, reconstructItem, Local };
+  };
+
+  // First iterate on all the work-groups
+  ParallelForIterate<Dimensions,
+                     range<Dimensions>,
+                     decltype(iterateInWorkGroup),
+                     id<Dimensions>> { GroupRange, iterateInWorkGroup, Group };
 }
 
 
