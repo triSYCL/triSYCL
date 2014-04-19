@@ -164,6 +164,12 @@ template <size_t N = 1U>
 using id = range<N>;
 
 
+/** A group index
+*/
+template <size_t N = 1U>
+using group = range<N>;
+
+
 /** A ND-range, made by a global and local range
 
  */
@@ -340,6 +346,11 @@ struct accessor {
   /// This is when we access to accessor[] that we override the const if any
   auto &operator[](id<dimensionality> Index) const {
     return (const_cast<WritableArrayViewType &>(Array))(Index);
+  }
+
+  /// \todo Add in the specification because use by HPC-GPU slide 22
+  auto &operator[](item<dimensionality> Index) const {
+    return (const_cast<WritableArrayViewType &>(Array))(Index.get_global());
   }
 };
 
@@ -627,6 +638,21 @@ template <typename Range, typename Program, typename ParallelForFunctor>
 void parallel_for(Range r, Program p, ParallelForFunctor f) {
   // \todo deal with Program
   parallel_for(r, f);
+}
+
+
+// SYCL parallel_for_workgroup
+// \todo implementation
+template <typename Range, typename ParallelForFunctor>
+void parallel_for_workgroup(Range r, ParallelForFunctor f) {
+
+}
+
+
+// SYCL parallel_for_workitem
+// \todo implementation
+template <typename Range, typename ParallelForFunctor>
+void parallel_for_workitem(Range r, ParallelForFunctor f) {
 }
 
 
