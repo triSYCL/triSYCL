@@ -10,10 +10,7 @@
 */
 
 
-#include <functional>
-#include <type_traits>
-#include "boost/multi_array.hpp"
-#include <iostream>
+#include <cstddef>
 
 /// SYCL dwells in the cl::sycl namespace
 namespace cl {
@@ -51,39 +48,34 @@ namespace access {
   };
 
 }
+}
+}
 
+#include "implementation/sycl-implementation.hpp"
+
+
+/// SYCL dwells in the cl::sycl namespace
+namespace cl {
+namespace sycl {
+
+using namespace trisycl;
 
 /// Define a multi-dimensional index range
 template <size_t Dimensions = 1U>
-struct range : std::vector<intptr_t> {
-  static_assert(1 <= Dimensions && Dimensions <= 3,
-                "Dimensions are between 1 and 3");
+struct range : public RangeImpl<Dimensions> {
 
   static const auto dimensionality = Dimensions;
 
-  /* Inherit the constructors from the parent
-
-     Using a std::vector is overkill but std::array has no default
-     constructors and I am lazy to reimplement them
-
-     Use intptr_t as a signed version of a size_t to allow computations with
-     negative offsets
-
-     \todo in the specification: add some accessors. But it seems they are
-     implicitly convertible to vectors of the same size in the
-     specification
-  */
-  using std::vector<intptr_t>::vector;
+  // Inherit the constructors from the parent
+  using RangeImpl<Dimensions>::RangeImpl;
 
   // By default, create a vector of Dimensions x 0
-  range() : vector(Dimensions) {}
-
+  range() {}
 
   // Create a n-D range from an integer-like list
   template <typename... Integers>
   range(Integers... size_of_dimension_i) :
-    // Add a static_cast to allow a narrowing from an unsigned parameter
-    std::vector<intptr_t> { static_cast<intptr_t>(size_of_dimension_i)... } {}
+    RangeImpl<Dimensions>::RangeImpl(size_of_dimension_i... ) {}
 
 
   /** Return the given coordinate
@@ -95,14 +87,6 @@ struct range : std::vector<intptr_t> {
   */
   auto get(int index) {
     return (*this)[index];
-  }
-
-  // To debug
-  void display() {
-    std::clog << typeid(this).name() << ": ";
-    for (int i = 0; i < dimensionality; i++)
-      std::clog << " " << get(i);
-    std::clog << std::endl;
   }
 
 };

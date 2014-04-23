@@ -9,7 +9,6 @@
    License. See LICENSE.TXT for details.
 */
 
-
 #include <functional>
 #include <type_traits>
 #include "boost/multi_array.hpp"
@@ -18,44 +17,12 @@
 /// SYCL dwells in the cl::sycl namespace
 namespace cl {
 namespace sycl {
-
-
-/** Describe the type of access by kernels.
-
-    \todo This values should be normalized to allow separate compilation
-    with different implementations?
-*/
-namespace access {
-  /* By using "enum mode" here instead of "enum struct mode", we have for
-     example "write" appearing both as cl::sycl::access::mode::write and
-     cl::sycl::access::write, instead of only the last one. This seems
-     more conform to the specification. */
-  enum mode {
-    read = 42, //< Why not? Insist on the fact that read_write != read + write
-    write,
-    atomic,
-    read_write,
-    discard_read_write
-  };
-
-  enum target {
-    global_buffer = 2014, //< Just pick a random number...
-    constant_buffer,
-    local,
-    image,
-    host_buffer,
-    host_image,
-    image_array,
-    cl_buffer,
-    cl_image
-  };
-
-}
+namespace trisycl {
 
 
 /// Define a multi-dimensional index range
-template <size_t Dimensions = 1U>
-struct range : std::vector<intptr_t> {
+template <std::size_t Dimensions = 1U>
+struct RangeImpl : std::vector<std::intptr_t> {
   static_assert(1 <= Dimensions && Dimensions <= 3,
                 "Dimensions are between 1 and 3");
 
@@ -66,24 +33,24 @@ struct range : std::vector<intptr_t> {
      Using a std::vector is overkill but std::array has no default
      constructors and I am lazy to reimplement them
 
-     Use intptr_t as a signed version of a size_t to allow computations with
+     Use std::intptr_t as a signed version of a std::size_t to allow computations with
      negative offsets
 
      \todo in the specification: add some accessors. But it seems they are
      implicitly convertible to vectors of the same size in the
      specification
   */
-  using std::vector<intptr_t>::vector;
+  using std::vector<std::intptr_t>::vector;
 
   // By default, create a vector of Dimensions x 0
-  range() : vector(Dimensions) {}
+  RangeImpl() : vector(Dimensions) {}
 
 
   // Create a n-D range from an integer-like list
   template <typename... Integers>
-  range(Integers... size_of_dimension_i) :
+  RangeImpl(Integers... size_of_dimension_i) :
     // Add a static_cast to allow a narrowing from an unsigned parameter
-    std::vector<intptr_t> { static_cast<intptr_t>(size_of_dimension_i)... } {}
+    std::vector<std::intptr_t> { static_cast<std::intptr_t>(size_of_dimension_i)... } {}
 
 
   /** Return the given coordinate
@@ -107,14 +74,17 @@ struct range : std::vector<intptr_t> {
 
 };
 
+
+#if 0
+
 // Add some operations on range to help with OpenCL work-group scheduling
 // \todo use an element-wise template instead of copy past below for / and *
 
 // An element-wise division of ranges, with upper rounding
-template <size_t Dimensions>
-range<Dimensions> operator /(range<Dimensions> dividend,
-                             range<Dimensions> divisor) {
-  range<Dimensions> result;
+template <std::size_t Dimensions>
+RangeImpl<Dimensions> operator /(RangeImpl<Dimensions> dividend,
+                                 RangeImpl<Dimensions> divisor) {
+  RangeImpl<Dimensions> result;
 
   for (int i = 0; i < Dimensions; i++)
     result[i] = (dividend[i] + divisor[i] - 1)/divisor[i];
@@ -124,10 +94,10 @@ range<Dimensions> operator /(range<Dimensions> dividend,
 
 
 // An element-wise multiplication of ranges
-template <size_t Dimensions>
-range<Dimensions> operator *(range<Dimensions> a,
-                             range<Dimensions> b) {
-  range<Dimensions> result;
+template <std::size_t Dimensions>
+RangeImpl<Dimensions> operator *(RangeImpl<Dimensions> a,
+                                 RangeImpl<Dimensions> b) {
+  RangeImpl<Dimensions> result;
 
   for (int i = 0; i < Dimensions; i++)
     result[i] = a[i] * b[i];
@@ -137,10 +107,10 @@ range<Dimensions> operator *(range<Dimensions> a,
 
 
 // An element-wise addition of ranges
-template <size_t Dimensions>
-range<Dimensions> operator +(range<Dimensions> a,
-                             range<Dimensions> b) {
-  range<Dimensions> result;
+template <std::size_t Dimensions>
+RangeImpl<Dimensions> operator +(RangeImpl<Dimensions> a,
+                                 RangeImpl<Dimensions> b) {
+  RangeImpl<Dimensions> result;
 
   for (int i = 0; i < Dimensions; i++)
     result[i] = a[i] + b[i];
@@ -160,20 +130,20 @@ range<Dimensions> operator +(range<Dimensions> a,
 
     \todo group is unclear
 */
-template <size_t N = 1U>
-using id = range<N>;
+template <std::size_t N = 1U>
+using id = RangeImpl<N>;
 
 
 /** A group index
 */
-template <size_t N = 1U>
+template <std::size_t N = 1U>
 using group = range<N>;
 
 
 /** A ND-range, made by a global and local range
 
  */
-template <size_t dims = 1U>
+template <std::size_t dims = 1U>
 struct nd_range {
   static_assert(1 <= dims && dims <= 3,
                 "Dimensions are between 1 and 3");
@@ -206,7 +176,7 @@ struct nd_range {
 
 /** SYCL item that store information on a work-item
  */
-template <size_t dims = 1U>
+template <std::size_t dims = 1U>
 struct item {
   static_assert(1 <= dims && dims <= 3,
                 "Dimensions are between 1 and 3");
@@ -299,7 +269,7 @@ struct queue {
 
 
 // Forward declaration for use in accessor
-template <typename T, size_t dimensions> struct buffer;
+template <typename T, std::size_t dimensions> struct buffer;
 
 
 /** The accessor abstracts the way buffer data are accessed inside a
@@ -314,7 +284,7 @@ template <typename T, size_t dimensions> struct buffer;
     without mutable). The access::mode is not used yet.
 */
 template <typename dataType,
-          size_t dimensions,
+          std::size_t dimensions,
           access::mode mode,
           access::target target = access::global_buffer>
 struct accessor {
@@ -339,7 +309,7 @@ struct accessor {
     Array(targetBuffer.Access) {}
 
   /// This is when we access to accessor[] that we override the const if any
-  auto &operator[](size_t Index) const {
+  auto &operator[](std::size_t Index) const {
     return (const_cast<WritableArrayViewType &>(Array))[Index];
   }
 
@@ -366,7 +336,7 @@ struct accessor {
     buffer and accessor on T versus datatype
 */
 template <typename T,
-          size_t dimensions = 1U>
+          std::size_t dimensions = 1U>
 struct buffer {
   using Implementation = boost::multi_array_ref<T, dimensions>;
   // Extension to SYCL: provide pieces of STL container interface
@@ -568,7 +538,7 @@ struct ParallelForIterate<0, Range, ParallelForFunctor, Id> {
     or with an item. Let's use id<> when called with a range<> and item<>
     when called with a nd_range<>
 */
-template <size_t Dimensions = 1U, typename ParallelForFunctor>
+template <std::size_t Dimensions = 1U, typename ParallelForFunctor>
 void parallel_for(range<Dimensions> r,
                   ParallelForFunctor f) {
 #ifdef _OPENMP
@@ -592,7 +562,7 @@ void parallel_for(range<Dimensions> r,
 
     \todo Deal with incomplete work-groups
 */
-template <size_t Dimensions = 1U, typename ParallelForFunctor>
+template <std::size_t Dimensions = 1U, typename ParallelForFunctor>
 void parallel_for(nd_range<Dimensions> r,
                   ParallelForFunctor f) {
   // In a sequential execution there is only one index processed at a time
@@ -664,7 +634,8 @@ void
 barrier(int barrier_type) {}
 
 int const CL_LOCAL_MEM_FENCE = 123;
-
+#endif
+}
 }
 }
 
