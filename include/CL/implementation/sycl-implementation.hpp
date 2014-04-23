@@ -144,7 +144,7 @@ using group = range<N>;
 
  */
 template <std::size_t dims = 1U>
-struct nd_range {
+struct NDRangeImpl {
   static_assert(1 <= dims && dims <= 3,
                 "Dimensions are between 1 and 3");
 
@@ -154,9 +154,9 @@ struct nd_range {
   range<dimensionality> LocalRange;
   id<dimensionality> Offset;
 
-  nd_range(range<dimensionality> global_size,
-           range<dimensionality> local_size,
-           id<dimensionality> offset = { 0, 0, 0 }) :
+  NDRangeImpl(range<dimensionality> global_size,
+              range<dimensionality> local_size,
+              id<dimensionality> offset = { 0, 0, 0 }) :
     GlobalRange(global_size),
     LocalRange(local_size),
     Offset(offset) {}

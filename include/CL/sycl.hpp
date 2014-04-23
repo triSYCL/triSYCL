@@ -3,6 +3,13 @@
    This is a simple C++ sequential OpenCL SYCL implementation to
    experiment with the OpenCL CL provisional specification.
 
+   The aim of this file is mainly to define the interface of SYCL so that
+   the specification documentation can be derived from it through tools
+   like Doxygen or Sphinx. This explains why there are many functions and
+   classes that are here only to do some forwarding in some inelegant way.
+   This file is documentation driven and not implementation-style driven.
+
+
    Ronan.Keryell at AMD point com
 
    This file is distributed under the University of Illinois Open Source
@@ -62,11 +69,13 @@ using namespace trisycl;
 
 /** Define a multi-dimensional index range
 
+    \todo use std::size_t dims instead of int dims in the specification?
+
     \todo add to the norm this default parameter value?
 
     \todo add to the norm some way to specify an offset?
 */
-template <size_t dims = 1U>
+template <int dims = 1>
 struct range : public RangeImpl<dims> {
 
   /// \todo add this Boost::multi_array or STL concept to the
@@ -146,48 +155,65 @@ range<Dimensions> operator +(range<Dimensions> a,
     get_...() and get_...(int dim) equivalent to get_...()[int dim]
     Well it is already the case for item. So not needed for id?
 
-    \todo group is unclear
+    \todo implement the real interface
 */
-template <size_t N = 1U>
-using id = range<N>;
+template <int dims = 1>
+using id = range<dims>;
 
 
-/** A group index
+/** A group index, to be used in a parallel_for_workitem
+
+    \todo implement the real interface
 */
-template <size_t N = 1U>
-using group = range<N>;
+template <int dims = 1>
+using group = range<dims>;
 
 
-/** A ND-range, made by a global and local range
+/** A ND-range, made by a global and local range, to specify work-group
+    and work-item organization.
 
- */
-template <size_t dims = 1U>
-struct nd_range {
+    The local offset is used to translate the iteration space origin if
+    needed.
+*/
+template <int dims = 1>
+struct nd_range : RangeImpl<dims> {
   static_assert(1 <= dims && dims <= 3,
                 "Dimensions are between 1 and 3");
 
+  /// \todo add this Boost::multi_array or STL concept to the
+  /// specification?
   static const auto dimensionality = dims;
 
-  range<dimensionality> GlobalRange;
-  range<dimensionality> LocalRange;
-  id<dimensionality> Offset;
 
-  nd_range(range<dimensionality> global_size,
-           range<dimensionality> local_size,
-           id<dimensionality> offset = { 0, 0, 0 }) :
-    GlobalRange(global_size),
-    LocalRange(local_size),
-    Offset(offset) {}
+  /// Construct a ND-range with all the details available in OpenCL
+  nd_range(range<dims> global_size,
+           range<dims> local_size,
+           id<dims> offset = { 0, 0, 0 }) :
+    RangeImpl<dims>(global_size, local_size, offset) {}
 
-  auto get_global_range() { return GlobalRange; }
 
-  auto get_local_range() { return LocalRange; }
+  /// Get the global iteration space range
+  range<dims> get_global_range() {
+    return RangeImpl<dims>::get_global_range();
+  }
+
+
+  /// Get the local part of the iteration space range
+  range<dims> get_local_range() {
+    return RangeImpl<dims>::get_local_range();
+  }
+
 
   /// Get the range of work-groups needed to run this ND-range
-  auto get_group_range() { return GlobalRange/LocalRange; }
+  range<dims> get_group_range() {
+    return RangeImpl<dims>::get_group_range();
+  }
+
 
   /// \todo get_offset() is lacking in the specification
-  auto get_offset() { return Offset; }
+  range<dims> get_offset() {
+    return RangeImpl<dims>::get_offset();
+  }
 
 };
 
