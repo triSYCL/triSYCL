@@ -75,8 +75,6 @@ struct RangeImpl : std::vector<std::intptr_t> {
 };
 
 
-#if 0
-
 // Add some operations on range to help with OpenCL work-group scheduling
 // \todo use an element-wise template instead of copy past below for / and *
 
@@ -131,18 +129,21 @@ RangeImpl<Dimensions> operator +(RangeImpl<Dimensions> a,
     \todo group is unclear
 */
 template <std::size_t N = 1U>
-using id = RangeImpl<N>;
+using IdImpl = RangeImpl<N>;
 
 
 /** A group index
 */
 template <std::size_t N = 1U>
-using group = range<N>;
+using GroupImpl = RangeImpl<N>;
 
 
-/** A ND-range, made by a global and local range
+/** The implementation of a ND-range, made by a global and local range, to
+    specify work-group and work-item organization.
 
- */
+    The local offset is used to translate the iteration space origin if
+    needed.
+*/
 template <std::size_t dims = 1U>
 struct NDRangeImpl {
   static_assert(1 <= dims && dims <= 3,
@@ -150,13 +151,13 @@ struct NDRangeImpl {
 
   static const auto dimensionality = dims;
 
-  range<dimensionality> GlobalRange;
-  range<dimensionality> LocalRange;
-  id<dimensionality> Offset;
+  RangeImpl<dimensionality> GlobalRange;
+  RangeImpl<dimensionality> LocalRange;
+  IdImpl<dimensionality> Offset;
 
-  NDRangeImpl(range<dimensionality> global_size,
-              range<dimensionality> local_size,
-              id<dimensionality> offset = { 0, 0, 0 }) :
+  NDRangeImpl(RangeImpl<dimensionality> global_size,
+              RangeImpl<dimensionality> local_size,
+              IdImpl<dimensionality> offset = { 0, 0, 0 }) :
     GlobalRange(global_size),
     LocalRange(local_size),
     Offset(offset) {}
@@ -174,45 +175,51 @@ struct NDRangeImpl {
 };
 
 
-/** SYCL item that store information on a work-item
+/** The implementation of a SYCL item stores information on a work-item
+    within a work-group, with some more context such as the definition
+    ranges.
  */
 template <std::size_t dims = 1U>
-struct item {
+struct ItemImpl {
   static_assert(1 <= dims && dims <= 3,
                 "Dimensions are between 1 and 3");
 
   static const auto dimensionality = dims;
 
-  id<dims> GlobalIndex;
-  id<dims> LocalIndex;
-  nd_range<dims> NDRange;
+  IdImpl<dims> GlobalIndex;
+  IdImpl<dims> LocalIndex;
+  NDRangeImpl<dims> NDRange;
 
-  item(range<dims> global_size, range<dims> local_size) :
+  ItemImpl(RangeImpl<dims> global_size, RangeImpl<dims> local_size) :
     NDRange(global_size, local_size) {}
 
   /// \todo a constructor from a nd_range too in the specification?
-  item(nd_range<dims> ndr) : NDRange(ndr) {}
+  ItemImpl(NDRangeImpl<dims> ndr) : NDRange(ndr) {}
 
-  int get_global(int dimension) { return GlobalIndex[dimension]; }
+  auto get_global(int dimension) { return GlobalIndex[dimension]; }
 
-  int get_local(int dimension) { return LocalIndex[dimension]; }
+  auto get_local(int dimension) { return LocalIndex[dimension]; }
 
-  id<dims> get_global() { return GlobalIndex; }
+  auto get_global() { return GlobalIndex; }
 
-  id<dims> get_local() { return LocalIndex; }
+  auto get_local() { return LocalIndex; }
 
   // For the implementation, need to set the local index
-  void set_local(id<dims> Index) { LocalIndex = Index; }
+  void set_local(IdImpl<dims> Index) { LocalIndex = Index; }
 
   // For the implementation, need to set the global index
-  void set_global(id<dims> Index) { GlobalIndex = Index; }
+  void set_global(IdImpl<dims> Index) { GlobalIndex = Index; }
 
-  range<dims> get_local_range() { return NDRange.get_local_range(); }
+  auto get_local_range() { return NDRange.get_local_range(); }
 
-  range<dims> get_global_range() { return NDRange.get_global_range(); }
+  auto get_global_range() { return NDRange.get_global_range(); }
 
   /// \todo Add to the specification: get_nd_range() and what about the offset?
 };
+
+
+
+#if 0
 
 
 /** SYCL device

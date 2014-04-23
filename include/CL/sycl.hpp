@@ -34,6 +34,8 @@ namespace access {
      example "write" appearing both as cl::sycl::access::mode::write and
      cl::sycl::access::write, instead of only the last one. This seems
      more conform to the specification. */
+
+  /// This describes the type of the access mode to be used via accessor
   enum mode {
     read = 42, //< Why not? Insist on the fact that read_write != read + write
     write,
@@ -42,6 +44,9 @@ namespace access {
     discard_read_write
   };
 
+  /** The target enumeration describes the type of object to be accessed
+     via the accessor
+   */
   enum target {
     global_buffer = 2014, //< Just pick a random number...
     constant_buffer,
@@ -67,7 +72,8 @@ namespace sycl {
 
 using namespace trisycl;
 
-/** Define a multi-dimensional index range
+/** A SYCL range defines a multi-dimensional index range that can
+    be used to launch parallel computation.
 
     \todo use std::size_t dims instead of int dims in the specification?
 
@@ -88,7 +94,7 @@ struct range : public RangeImpl<dims> {
     RangeImpl<dims>::RangeImpl(size_of_dimension_i... ) {}
 
 
-  /** Return the given coordinate
+  /** Return the range size in the give dimension
 
       \todo explain in the specification (table 3.29, not only in the
       text) that [] works also for id, and why not range?
@@ -218,44 +224,60 @@ struct nd_range : RangeImpl<dims> {
 };
 
 
-/** SYCL item that store information on a work-item
- */
-template <size_t dims = 1U>
-struct item {
-  static_assert(1 <= dims && dims <= 3,
-                "Dimensions are between 1 and 3");
+/** A SYCL item stores information on a work-item within a work-group,
+    with some more context such as the definition ranges.
 
+    \todo Add to the specification: get_nd_range() to be coherent with
+    providing get_local...() and get_global...() and what about the
+    offset?
+*/
+template <int dims = 1>
+struct item : ItemImpl<dims> {
+  /// \todo add this Boost::multi_array or STL concept to the
+  /// specification?
   static const auto dimensionality = dims;
 
-  id<dims> GlobalIndex;
-  id<dims> LocalIndex;
-  nd_range<dims> NDRange;
 
+  /** Create an item from a local size and local size
+
+      \todo what is the meaning of this constructor for a programmer?
+  */
   item(range<dims> global_size, range<dims> local_size) :
-    NDRange(global_size, local_size) {}
+    ItemImpl<dims>(global_size, local_size) {}
 
-  /// \todo a constructor from a nd_range too in the specification?
-  item(nd_range<dims> ndr) : NDRange(ndr) {}
 
-  int get_global(int dimension) { return GlobalIndex[dimension]; }
+  /** \todo a constructor from a nd_range too in the specification if the
+      previous one has a meaning?
+   */
+  item(nd_range<dims> ndr) : ItemImpl<dims>(ndr) {}
 
-  int get_local(int dimension) { return LocalIndex[dimension]; }
 
-  id<dims> get_global() { return GlobalIndex; }
+  /// Return the global coordinate in the given dimension
+  int get_global(int dimension) {
+    return ItemImpl<dims>::get_global(dimension);
+  }
 
-  id<dims> get_local() { return LocalIndex; }
 
-  // For the implementation, need to set the local index
-  void set_local(id<dims> Index) { LocalIndex = Index; }
+  /// Return the local coordinate (that is in the work-group) in the given
+  /// dimension
+  int get_local(int dimension) { return ItemImpl<dims>::get_local(dimension); }
 
-  // For the implementation, need to set the global index
-  void set_global(id<dims> Index) { GlobalIndex = Index; }
 
-  range<dims> get_local_range() { return NDRange.get_local_range(); }
+  /// Get the whole global id coordinate
+  id<dims> get_global() { return ItemImpl<dims>::get_global(); }
 
-  range<dims> get_global_range() { return NDRange.get_global_range(); }
 
-  /// \todo Add to the specification: get_nd_range() and what about the offset?
+  /// Get the whole local id coordinate (which is respective to the
+  /// work-group)
+  id<dims> get_local() { return ItemImpl<dims>::get_local(); }
+
+
+  /// Get the global range where this item rely in
+  range<dims> get_global_range() { return ItemImpl<dims>::get_global_range(); }
+
+  /// Get the local range (the dimension of the work-group) for this item
+  range<dims> get_local_range() { return ItemImpl<dims>::get_local_range(); }
+
 };
 
 
