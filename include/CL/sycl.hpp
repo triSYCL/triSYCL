@@ -60,22 +60,23 @@ namespace sycl {
 
 using namespace trisycl;
 
-/// Define a multi-dimensional index range
-template <size_t Dimensions = 1U>
-struct range : public RangeImpl<Dimensions> {
+/** Define a multi-dimensional index range
 
-  static const auto dimensionality = Dimensions;
+    \todo add to the norm this default parameter value?
 
-  // Inherit the constructors from the parent
-  using RangeImpl<Dimensions>::RangeImpl;
+    \todo add to the norm some way to specify an offset?
+*/
+template <size_t dims = 1U>
+struct range : public RangeImpl<dims> {
 
-  // By default, create a vector of Dimensions x 0
-  range() {}
+  /// \todo add this Boost::multi_array or STL concept to the
+  /// specification?
+  static const auto dimensionality = dims;
 
   // Create a n-D range from an integer-like list
   template <typename... Integers>
   range(Integers... size_of_dimension_i) :
-    RangeImpl<Dimensions>::RangeImpl(size_of_dimension_i... ) {}
+    RangeImpl<dims>::RangeImpl(size_of_dimension_i... ) {}
 
 
   /** Return the given coordinate
@@ -84,12 +85,15 @@ struct range : public RangeImpl<Dimensions> {
       text) that [] works also for id, and why not range?
 
       \todo add also [] for range in the specification
+
+      \todo is it supposed to be an int? A cl_int? a size_t?
   */
-  auto get(int index) {
+  int get(int index) {
     return (*this)[index];
   }
 
 };
+
 
 // Add some operations on range to help with OpenCL work-group scheduling
 // \todo use an element-wise template instead of copy past below for / and *
