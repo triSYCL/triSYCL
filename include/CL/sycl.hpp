@@ -88,10 +88,18 @@ struct range : public RangeImpl<dims> {
   /// specification?
   static const auto dimensionality = dims;
 
-  // Create a n-D range from an integer-like list
+  // A shortcut name to the implementation
+  using Impl = RangeImpl<dims>;
+
+  range(range<dims> &r) : Impl(r.getImpl()) {}
+
+  range(const range<dims> &r) : Impl(r.getImpl()) {}
+
+
+  /// Create a n-D range from an integer-like list
   template <typename... Integers>
   range(Integers... size_of_dimension_i) :
-    RangeImpl<dims>::RangeImpl(size_of_dimension_i... ) {}
+    Impl(size_of_dimension_i... ) {}
 
 
   /** Return the range size in the give dimension
@@ -335,59 +343,65 @@ struct queue {
 
 
 // Forward declaration for use in accessor
-template <typename T, size_t dimensions> struct buffer;
+template <typename T, int dimensions> struct buffer;
 
 
 /** The accessor abstracts the way buffer data are accessed inside a
     kernel in a multidimensional variable length array way.
 
-    This implementation rely on boost::multi_array to provides this nice
-    syntax and behaviour.
-
-    Right now the aim of this class is just to access to the buffer in a
-    read-write mode, even if capturing the multi_array_ref from a lambda
-    make it const (since in some example we have lambda with [=] and
-    without mutable). The access::mode is not used yet.
+    \todo Implement it for images according so section 3.3.4.5
 */
 template <typename dataType,
           size_t dimensions,
           access::mode mode,
           access::target target = access::global_buffer>
-struct accessor {
-  // The implementation is a multi_array_ref wrapper
-  typedef boost::multi_array_ref<dataType, dimensions> ArrayViewType;
-  ArrayViewType Array;
-
-  // The same type but writable
-  typedef typename std::remove_const<ArrayViewType>::type WritableArrayViewType;
-
-  // \todo in the specification: store the dimension for user request
+struct accessor : AccessorImpl<dataType, dimensions, mode, target> {
+  /// \todo in the specification: store the dimension for user request
   static const auto dimensionality = dimensions;
-  // \todo in the specification: store the types for user request as STL
+  /// \todo in the specification: store the types for user request as STL
   // or C++AMP
   using element = dataType;
   using value_type = dataType;
 
+  // Use a short-cut to the implementation because type name becomes quite
+  // long...
+  using Impl = AccessorImpl<dataType, dimensions, mode, target>;
 
-  /// The only way to construct an accessor is from an existing buffer
+  /// Create an accessor to the given buffer
   // \todo fix the specification to rename target that shadows template parm
   accessor(buffer<dataType, dimensions> &targetBuffer) :
-    Array(targetBuffer.Access) {}
+    Impl(targetBuffer) {}
 
-  /// This is when we access to accessor[] that we override the const if any
-  auto &operator[](size_t Index) const {
-    return (const_cast<WritableArrayViewType &>(Array))[Index];
+
+  /** Get the element specified by the given id
+
+      \todo Implement the "const dataType &" version in the case the
+      accessor is not for writing, as required by the specification
+  */
+  dataType &operator[](id<dimensionality> Index) const {
+    return Impl::operator[](Index);
   }
 
-  /// This is when we access to accessor[] that we override the const if any
-  auto &operator[](id<dimensionality> Index) const {
-    return (const_cast<WritableArrayViewType &>(Array))(Index);
+
+  /** Get the element specified by the given index in the case we are
+      mono-dimensional
+
+      \todo This is not in the specification but looks like a cool common
+      feature. Or solving it with an implicit constructor of id<1>?
+  */
+  dataType &operator[](size_t Index) const {
+    return Impl::operator[](Index);
   }
 
-  /// \todo Add in the specification because use by HPC-GPU slide 22
-  auto &operator[](item<dimensionality> Index) const {
-    return (const_cast<WritableArrayViewType &>(Array))(Index.get_global());
+
+  /** Get the element specified by the given item
+
+      \todo Add in the specification because use by HPC-GPU slide 22
+  */
+  dataType &operator[](item<dimensionality> Index) const {
+    return Impl::operator[](Index);
   }
+
 };
 
 
@@ -402,58 +416,42 @@ struct accessor {
     buffer and accessor on T versus datatype
 */
 template <typename T,
-          size_t dimensions = 1U>
-struct buffer {
-  using Implementation = boost::multi_array_ref<T, dimensions>;
-  // Extension to SYCL: provide pieces of STL container interface
+          int dimensions = 1>
+struct buffer : BufferImpl<T, dimensions> {
+  /// \todo Extension to SYCL specification: provide pieces of STL
+  /// container interface?
   using element = T;
   using value_type = T;
 
-  // If some allocation is requested, it is managed by this multi_array
-  boost::multi_array<T, dimensions> Allocation;
-  // This is the multi-dimensional interface to the data
-  boost::multi_array_ref<T, dimensions> Access;
-  // If the data are read-only, store the information for later optimization
-  bool ReadOnly ;
-
+  // Use a short-cut because type name becomes quite long...
+  using Impl = BufferImpl<T, dimensions>;
 
   /// Create a new buffer of size \param r
-  buffer(range<dimensions> r) : Allocation(r),
-                                Access(Allocation),
-                                ReadOnly(false) {}
+  buffer(const range<dimensions> &r) : Impl(r.getImpl()) {}
 
 
   /** Create a new buffer from \param host_data of size \param r without
       further allocation */
-  buffer(T * host_data, range<dimensions> r) : Access(host_data, r),
-                                               ReadOnly(false) {}
+  buffer(T * host_data, range<dimensions> r) : Impl(host_data, r.getImpl()) {}
 
 
   /** Create a new read only buffer from \param host_data of size \param r
       without further allocation */
   buffer(const T * host_data, range<dimensions> r) :
-    Access(host_data, r),
-    ReadOnly(true) {}
+    Impl(host_data, r.getImpl()) {}
 
 
   /// \todo
   //buffer(storage<T> &store, range<dimensions> r)
 
+
   /// Create a new allocated 1D buffer from the given elements
   buffer(T * start_iterator, T * end_iterator) :
-    // The size of a multi_array is set at creation time
-    Allocation(boost::extents[std::distance(start_iterator, end_iterator)]),
-    Access(Allocation) {
-    /* Then assign Allocation since this is the only multi_array
-       method with this iterator interface */
-    Allocation.assign(start_iterator, end_iterator);
-  }
+    Impl(start_iterator, end_iterator) {}
 
 
   /// Create a new buffer from an old one, with a new allocation
-  buffer(buffer<T, dimensions> &b) : Allocation(b.Access),
-                                     Access(Allocation),
-                                     ReadOnly(false) {}
+  buffer(buffer<T, dimensions> &b) : Impl(b) {}
 
 
   /** Create a new sub-buffer without allocation to have separate accessors

@@ -6,7 +6,6 @@ using namespace cl::sycl;
 int main() {
   int result; // this is where we will write our result
 
-  std::array<size_t,3> a { 1, 2, 3 };
   range<2> z { 1, 3 };
   range<1> y = 1;
   { // by sticking all the SYCL work in a {} block, we ensure

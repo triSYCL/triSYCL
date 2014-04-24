@@ -28,6 +28,8 @@ struct RangeImpl : std::vector<std::intptr_t> {
 
   static const auto dimensionality = Dimensions;
 
+  auto const &getImpl() const { return *this; };
+
   /* Inherit the constructors from the parent
 
      Using a std::vector is overkill but std::array has no default
@@ -274,9 +276,10 @@ struct queue {
   queue(context c) {}
 };
 
+#endif
 
 // Forward declaration for use in accessor
-template <typename T, std::size_t dimensions> struct buffer;
+template <typename T, std::size_t dimensions> struct BufferImpl;
 
 
 /** The accessor abstracts the way buffer data are accessed inside a
@@ -290,13 +293,13 @@ template <typename T, std::size_t dimensions> struct buffer;
     make it const (since in some example we have lambda with [=] and
     without mutable). The access::mode is not used yet.
 */
-template <typename dataType,
+template <typename T,
           std::size_t dimensions,
           access::mode mode,
           access::target target = access::global_buffer>
-struct accessor {
+struct AccessorImpl {
   // The implementation is a multi_array_ref wrapper
-  typedef boost::multi_array_ref<dataType, dimensions> ArrayViewType;
+  typedef boost::multi_array_ref<T, dimensions> ArrayViewType;
   ArrayViewType Array;
 
   // The same type but writable
@@ -306,27 +309,27 @@ struct accessor {
   static const auto dimensionality = dimensions;
   // \todo in the specification: store the types for user request as STL
   // or C++AMP
-  using element = dataType;
-  using value_type = dataType;
+  using element = T;
+  using value_type = T;
 
 
-  /// The only way to construct an accessor is from an existing buffer
+  /// The only way to construct an AccessorImpl is from an existing buffer
   // \todo fix the specification to rename target that shadows template parm
-  accessor(buffer<dataType, dimensions> &targetBuffer) :
+  AccessorImpl(BufferImpl<T, dimensions> &targetBuffer) :
     Array(targetBuffer.Access) {}
 
-  /// This is when we access to accessor[] that we override the const if any
+  /// This is when we access to AccessorImpl[] that we override the const if any
   auto &operator[](std::size_t Index) const {
     return (const_cast<WritableArrayViewType &>(Array))[Index];
   }
 
-  /// This is when we access to accessor[] that we override the const if any
-  auto &operator[](id<dimensionality> Index) const {
+  /// This is when we access to AccessorImpl[] that we override the const if any
+  auto &operator[](IdImpl<dimensionality> Index) const {
     return (const_cast<WritableArrayViewType &>(Array))(Index);
   }
 
   /// \todo Add in the specification because use by HPC-GPU slide 22
-  auto &operator[](item<dimensionality> Index) const {
+  auto &operator[](ItemImpl<dimensionality> Index) const {
     return (const_cast<WritableArrayViewType &>(Array))(Index.get_global());
   }
 };
@@ -338,13 +341,10 @@ struct accessor {
     In the case we initialize it from a pointer, for now we just wrap the
     data with boost::multi_array_ref to provide the VLA semantics without
     any storage.
-
-    \todo there is a naming inconsistency in the specification between
-    buffer and accessor on T versus datatype
 */
 template <typename T,
           std::size_t dimensions = 1U>
-struct buffer {
+struct BufferImpl {
   using Implementation = boost::multi_array_ref<T, dimensions>;
   // Extension to SYCL: provide pieces of STL container interface
   using element = T;
@@ -358,30 +358,30 @@ struct buffer {
   bool ReadOnly ;
 
 
-  /// Create a new buffer of size \param r
-  buffer(range<dimensions> r) : Allocation(r),
-                                Access(Allocation),
-                                ReadOnly(false) {}
-
-
-  /** Create a new buffer from \param host_data of size \param r without
-      further allocation */
-  buffer(T * host_data, range<dimensions> r) : Access(host_data, r),
+  /// Create a new BufferImpl of size \param r
+  BufferImpl(RangeImpl<dimensions> const &r) : Allocation(r),
+                                               Access(Allocation),
                                                ReadOnly(false) {}
 
 
-  /** Create a new read only buffer from \param host_data of size \param r
+  /** Create a new BufferImpl from \param host_data of size \param r without
+      further allocation */
+  BufferImpl(T * host_data, RangeImpl<dimensions> r) : Access(host_data, r),
+                                                       ReadOnly(false) {}
+
+
+  /** Create a new read only BufferImpl from \param host_data of size \param r
       without further allocation */
-  buffer(const T * host_data, range<dimensions> r) :
+  BufferImpl(const T * host_data, RangeImpl<dimensions> r) :
     Access(host_data, r),
     ReadOnly(true) {}
 
 
   /// \todo
-  //buffer(storage<T> &store, range<dimensions> r)
+  //BufferImpl(storage<T> &store, range<dimensions> r)
 
-  /// Create a new allocated 1D buffer from the given elements
-  buffer(T * start_iterator, T * end_iterator) :
+  /// Create a new allocated 1D BufferImpl from the given elements
+  BufferImpl(const T * start_iterator, const T * end_iterator) :
     // The size of a multi_array is set at creation time
     Allocation(boost::extents[std::distance(start_iterator, end_iterator)]),
     Access(Allocation) {
@@ -391,26 +391,26 @@ struct buffer {
   }
 
 
-  /// Create a new buffer from an old one, with a new allocation
-  buffer(buffer<T, dimensions> &b) : Allocation(b.Access),
-                                     Access(Allocation),
-                                     ReadOnly(false) {}
+  /// Create a new BufferImpl from an old one, with a new allocation
+  BufferImpl(const BufferImpl<T, dimensions> &b) : Allocation(b.Access),
+                                                   Access(Allocation),
+                                                   ReadOnly(false) {}
 
 
-  /** Create a new sub-buffer without allocation to have separate accessors
-      later */
+  /** Create a new sub-BufferImplImpl without allocation to have separate
+      accessors later */
   /* \todo
-  buffer(buffer<T, dimensions> b,
-         index<dimensions> base_index,
-         range<dimensions> sub_range)
+  BufferImpl(BufferImpl<T, dimensions> b,
+             index<dimensions> base_index,
+             range<dimensions> sub_range)
   */
 
   // Allow CLHPP objects too?
   // \todo
   /*
-  buffer(cl_mem mem_object,
-         queue from_queue,
-         event available_event)
+  BufferImpl(cl_mem mem_object,
+             queue from_queue,
+             event available_event)
   */
 
   // Use BOOST_DISABLE_ASSERTS at some time to disable range checking
@@ -418,13 +418,14 @@ struct buffer {
   /// Return an accessor of the required mode \param M
   template <access::mode mode,
             access::target target=access::global_buffer>
-  accessor<T, dimensions, mode, target> get_access() {
+  AccessorImpl<T, dimensions, mode, target> get_access() {
     return { *this };
   }
 
 };
 
 
+#if 0
 /** SYCL command group gather all the commands needed to execute one or
     more kernels in a kind of atomic way. Since all the parameters are
     captured at command group creation, one can execute the content in an
