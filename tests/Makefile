@@ -1,4 +1,4 @@
-TARGETS = queue single_task vector_add parallel_vector_add \
+TARGETS = queue single_task vector_add range id parallel_vector_add \
 	parallel_matrix_add \
 	$(basename $(wildcard 2014-04-21-HPC-GPU_Meetup/*.cpp))
 

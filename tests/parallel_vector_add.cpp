@@ -9,7 +9,6 @@ using Vector = float[N];
 int main() {
   Vector a = { 1, 2, 3 };
   Vector b = { 5, 6, 8 };
-
   float c[N];
 
   { // By sticking all the SYCL work in a {} block, we ensure

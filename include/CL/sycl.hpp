@@ -18,6 +18,8 @@
 
 
 #include <cstddef>
+#include <initializer_list>
+
 
 /// SYCL dwells in the cl::sycl namespace
 namespace cl {
@@ -96,10 +98,18 @@ struct range : public RangeImpl<dims> {
   range(const range<dims> &r) : Impl(r.getImpl()) {}
 
 
-  /// Create a n-D range from an integer-like list
-  template <typename... Integers>
-  range(Integers... size_of_dimension_i) :
-    Impl(size_of_dimension_i... ) {}
+  /** Create a n-D range from a positive integer-like list
+
+      \todo This is not the same as the range(dim1,...) constructor from
+      the specification
+   */
+  range(std::initializer_list<std::intptr_t> l) : Impl(l) {}
+
+
+  /// To have implicit conversion from 1 integer
+  range(std::intptr_t s) : range({ s }) {
+    static_assert(dims == 1, "A range with 1 size should be 1-D");
+  }
 
 
   /** Return the range size in the give dimension
@@ -162,17 +172,84 @@ range<Dimensions> operator +(range<Dimensions> a,
 
 /** Define a multi-dimensional index, used for example to locate a work item
 
-    \todo The definition of id and item are completely broken in the
-    specification. The whole 3.4.1 is to be updated.
+    \todo The definition of id and item seem completely broken in the
+    current specification. The whole 3.4.1 is to be updated.
 
     \todo It would be nice to have [] working everywhere, provide both
     get_...() and get_...(int dim) equivalent to get_...()[int dim]
     Well it is already the case for item. So not needed for id?
-
-    \todo implement the real interface
+    Indeed [] is mentioned in text of page 59 but not in class description.
 */
 template <int dims = 1>
-using id = range<dims>;
+struct id : public IdImpl<dims> {
+
+  /// \todo add this Boost::multi_array or STL concept to the
+  /// specification?
+  static const auto dimensionality = dims;
+
+  // A shortcut name to the implementation
+  using Impl = IdImpl<dims>;
+
+  /** Create a zero id
+
+      \todo Add it to the specification?
+  */
+  id() : Impl() {}
+
+
+  /// Create an id with the same value of another one
+  id(const id &init) : Impl(init.getImpl()) {}
+
+  /** Create an id from a given range
+      \todo Is this necessary?
+
+      \todo why in the specification
+      id<int dims>(range<dims>global_size, range<dims> local_size)
+      ?
+  */
+  id(const range<dims> &r) : Impl(r.getImpl()) {}
+
+
+  /** Create a n-D range from a positive integer-like list
+
+      \todo Add this to the specification? Since it is said to be usable
+      as a std::vector<>...
+  */
+  id(std::initializer_list<std::intptr_t> l) : Impl(l) {}
+
+
+  /** To have implicit conversion from 1 integer
+
+      \todo Extension to the specification
+  */
+  id(std::intptr_t s) : id({ s }) {
+    static_assert(dims == 1, "A range with 1 size should be 1-D");
+  }
+
+
+  /** Return the id size in the given dimension
+
+      \todo is it supposed to be an int? A cl_int? a size_t?
+  */
+  int get(int index) {
+    return (*this)[index];
+  }
+
+
+  /** Return the id size in the given dimension
+
+      \todo explain in the specification (table 3.29, not only in the
+      text) that [] works also for id, and why not range?
+
+      \todo add also [] for range in the specification
+
+      \todo is it supposed to be an int? A cl_int? a size_t?
+  */
+  int operator[](int index) {
+    return (*this).getImpl()[index];
+  }
+
+};
 
 
 /** A group index, to be used in a parallel_for_workitem
@@ -446,7 +523,7 @@ struct buffer : BufferImpl<T, dimensions> {
 
 
   /// Create a new allocated 1D buffer from the given elements
-  buffer(T * start_iterator, T * end_iterator) :
+  buffer(const T * start_iterator, const T * end_iterator) :
     Impl(start_iterator, end_iterator) {}
 
 
@@ -602,7 +679,7 @@ struct ParallelForIterate<0, Range, ParallelForFunctor, Id> {
     or with an item. Let's use id<> when called with a range<> and item<>
     when called with a nd_range<>
 */
-template <size_t Dimensions = 1U, typename ParallelForFunctor>
+template <int Dimensions = 1, typename ParallelForFunctor>
 void parallel_for(range<Dimensions> r,
                   ParallelForFunctor f) {
 #ifdef _OPENMP
@@ -626,7 +703,7 @@ void parallel_for(range<Dimensions> r,
 
     \todo Deal with incomplete work-groups
 */
-template <size_t Dimensions = 1U, typename ParallelForFunctor>
+template <int Dimensions = 1, typename ParallelForFunctor>
 void parallel_for(nd_range<Dimensions> r,
                   ParallelForFunctor f) {
   // In a sequential execution there is only one index processed at a time

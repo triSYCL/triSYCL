@@ -13,7 +13,7 @@ int main() {
 
     //  create a queue to work on
     queue myQueue;
-    buffer<int, 3> Buf(range<3>(1, 2, 3));
+    buffer<int, 3> Buf(range<3>{1, 2, 3});
 
     // wrap our result variable in a buffer
     buffer<int> resultBuf(&result, 1);

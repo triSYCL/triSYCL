@@ -35,8 +35,8 @@ struct RangeImpl : std::vector<std::intptr_t> {
      Using a std::vector is overkill but std::array has no default
      constructors and I am lazy to reimplement them
 
-     Use std::intptr_t as a signed version of a std::size_t to allow computations with
-     negative offsets
+     Use std::intptr_t as a signed version of a std::size_t to allow
+     computations with negative offsets
 
      \todo in the specification: add some accessors. But it seems they are
      implicitly convertible to vectors of the same size in the
@@ -44,15 +44,18 @@ struct RangeImpl : std::vector<std::intptr_t> {
   */
   using std::vector<std::intptr_t>::vector;
 
-  // By default, create a vector of Dimensions x 0
+  // By default, create a vector of Dimensions 0 elements
   RangeImpl() : vector(Dimensions) {}
 
 
+  // Copy constructor to initialize from another range
+  RangeImpl(const RangeImpl &init) : vector(init) {}
+
+
   // Create a n-D range from an integer-like list
-  template <typename... Integers>
-  RangeImpl(Integers... size_of_dimension_i) :
+  RangeImpl(std::initializer_list<std::intptr_t> l) :
     // Add a static_cast to allow a narrowing from an unsigned parameter
-    std::vector<std::intptr_t> { static_cast<std::intptr_t>(size_of_dimension_i)... } {}
+    std::vector<std::intptr_t>(l) {}
 
 
   /** Return the given coordinate
@@ -119,19 +122,23 @@ RangeImpl<Dimensions> operator +(RangeImpl<Dimensions> a,
 }
 
 
-/** Define a multi-dimensional index, used for example to locate a work item
+/** Define a multi-dimensional index, used for example to locate a work
+    item
 
-    \todo The definition of id and item are completely broken in the
-    specification. The whole 3.4.1 is to be updated.
-
-    \todo It would be nice to have [] working everywhere, provide both
-    get_...() and get_...(int dim) equivalent to get_...()[int dim]
-    Well it is already the case for item. So not needed for id?
-
-    \todo group is unclear
+    Just rely on the range implementation
 */
 template <std::size_t N = 1U>
-using IdImpl = RangeImpl<N>;
+struct IdImpl: RangeImpl<N> {
+  using RangeImpl<N>::RangeImpl;
+
+  /* Since the copy constructor is called with RangeImpl<N>, declare this
+     constructor to forward it */
+  IdImpl(const RangeImpl<N> &init) : RangeImpl<N>(init) {}
+
+  // Add back the default constructors canceled by the previous declaration
+  IdImpl() = default;
+
+};
 
 
 /** A group index
