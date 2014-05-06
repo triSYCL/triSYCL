@@ -28,7 +28,13 @@ struct RangeImpl : std::vector<std::intptr_t> {
 
   static const auto dimensionality = Dimensions;
 
-  auto const &getImpl() const { return *this; };
+  // Return a reference to the implementation itself
+  RangeImpl &getImpl() { return *this; };
+
+
+  // Return a const reference to the implementation itself
+  const RangeImpl &getImpl() const { return *this; };
+
 
   /* Inherit the constructors from the parent
 
@@ -43,6 +49,7 @@ struct RangeImpl : std::vector<std::intptr_t> {
      specification
   */
   using std::vector<std::intptr_t>::vector;
+
 
   // By default, create a vector of Dimensions 0 elements
   RangeImpl() : vector(Dimensions) {}
@@ -468,6 +475,8 @@ Functor kernel_lambda(Functor F) {
 */
 void single_task(std::function<void(void)> F) { F(); }
 
+#endif
+
 
 /** A recursive multi-dimensional iterator that ends calling f
 
@@ -501,7 +510,7 @@ struct ParallelForIterate {
     Only the top-level loop uses OpenMP and go on with the normal
     recursive multi-dimensional.
 */
-template <int level, typename Range, typename ParallelForFunctor>
+template <int level, typename Range, typename ParallelForFunctor, typename Id>
 struct ParallelOpenMPForIterate {
   ParallelOpenMPForIterate(Range &r, ParallelForFunctor &f) {
     // Create the OpenMP threads before the for loop to avoid creating an
@@ -509,7 +518,7 @@ struct ParallelOpenMPForIterate {
 #pragma omp parallel
     {
       // Allocate an OpenMP thread-local index
-      id<Range::dimensionality> index;
+      Id index;
       // Make a simple loop end condition for OpenMP
       boost::multi_array_types::index _sycl_end =
         r[Range::dimensionality - level];
@@ -527,7 +536,7 @@ struct ParallelOpenMPForIterate {
         ParallelForIterate<level - 1,
                            Range,
                            ParallelForFunctor,
-                           id<Range::dimensionality>> { r, f, index };
+                           Id> { r, f, index };
       }
     }
   }
@@ -543,6 +552,8 @@ struct ParallelForIterate<0, Range, ParallelForFunctor, Id> {
   }
 };
 
+
+#if 0
 
 /** SYCL parallel_for launches a data parallel computation with parallelism
     specified at launch time by a range<>.
