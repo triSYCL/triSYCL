@@ -9,6 +9,7 @@
    License. See LICENSE.TXT for details.
 */
 
+#include <cassert>
 #include <functional>
 #include <type_traits>
 #include "boost/multi_array.hpp"
@@ -61,8 +62,10 @@ struct RangeImpl : std::vector<std::intptr_t> {
 
   // Create a n-D range from an integer-like list
   RangeImpl(std::initializer_list<std::intptr_t> l) :
-    // Add a static_cast to allow a narrowing from an unsigned parameter
-    std::vector<std::intptr_t>(l) {}
+    std::vector<std::intptr_t>(l) {
+    // The number of elements must match the dimension
+    assert(Dimensions == l.size());
+  }
 
 
   /** Return the given coordinate

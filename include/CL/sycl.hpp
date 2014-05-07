@@ -106,9 +106,28 @@ struct range : public RangeImpl<dims> {
   range(std::initializer_list<std::intptr_t> l) : Impl(l) {}
 
 
+  /* A variadic template cannot be used because of conflicts with the
+     constructor taking 2 iterators... So let's go verbose.
+
+     \todo Add a make_range() helper too to avoid specifying the
+     dimension? Generalize this helper to anything?
+  */
+
   /// To have implicit conversion from 1 integer
-  range(std::intptr_t s) : range({ s }) {
-    static_assert(dims == 1, "A range with 1 size should be 1-D");
+  range(std::intptr_t x) : range { x } {
+    static_assert(dims == 1, "A range with 1 size value should be 1-D");
+  }
+
+
+  /// A 2-D constructor from 2 integers
+  range(std::intptr_t x, std::intptr_t y) : range { x, y } {
+    static_assert(dims == 2, "A range with 2 size values should be 2-D");
+  }
+
+
+  /// A 3-D constructor from 3 integers
+  range(std::intptr_t x, std::intptr_t y, std::intptr_t z) : range { x, y, z } {
+    static_assert(dims == 3, "A range with 3 size values should be 3-D");
   }
 
 
