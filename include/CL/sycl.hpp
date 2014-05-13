@@ -279,14 +279,6 @@ struct id : public IdImpl<dims> {
 };
 
 
-/** A group index, to be used in a parallel_for_workitem
-
-    \todo implement the real interface
-*/
-template <int dims = 1>
-using group = range<dims>;
-
-
 /** A ND-range, made by a global and local range, to specify work-group
     and work-item organization.
 
@@ -383,6 +375,82 @@ struct item : ItemImpl<dims> {
 
   /// Get the local range (the dimension of the work-group) for this item
   range<dims> get_local_range() { return ItemImpl<dims>::get_local_range(); }
+
+  /// \todo Why the offset is not available here?
+
+  /// \todo Also provide access to the current nd_range?
+
+};
+
+
+/** A group index used in a parallel_for_workitem to specify a work_group
+ */
+template <int dims = 1>
+struct group : GroupImpl<dims> {
+  /// \todo add this Boost::multi_array or STL concept to the
+  /// specification?
+  static const auto dimensionality = dims;
+
+  // A shortcut name to the implementation
+  using Impl = GroupImpl<dims>;
+
+
+  /// \todo in the specification, only provide a copy constructor. Any
+  /// other constructors should be unspecified
+  group(const group &g) : Impl(g.getImpl()) {}
+
+  /* Since the runtime need to construct a group with the right content,
+     define some hidden constructor for this.  Since it is internal,
+     directly use the implementation
+  */
+  group(const NDRangeImpl<dims> &NDR, const IdImpl<dims> &ID) : Impl(NDR, ID) {}
+
+
+  /* Some internal constructor without group id initialization  */
+  group(const NDRangeImpl<dims> &NDR) : Impl(NDR) {}
+
+
+  id<dims> get_group_id() { return Impl::get_group_id(); }
+
+  /** Get the local range for this work_group
+
+      \todo Update the specification to return a range<dims> instead of an
+      id<>
+  */
+  range<dims> get_local_range() { return Impl::get_local_range(); }
+
+  /** Get the local range for this work_group
+
+      \todo Update the specification to return a range<dims> instead of an
+      id<>
+  */
+  range<dims> get_global_range() { return Impl::get_global_range(); }
+
+  /// \todo Why the offset is not available here?
+
+  /// \todo Also provide access to the current nd_range?
+
+
+  /** Return the group coordinate in the given dimension
+
+      \todo add it to the specification?
+
+      \todo is it supposed to be an int? A cl_int? a size_t?
+  */
+  int get(int index) {
+    return (*this)[index];
+  }
+
+
+  /** Return the group coordinate in the given dimension
+
+      \todo add it to the specification?
+
+      \todo is it supposed to be an int? A cl_int? a size_t?
+  */
+  auto &operator[](int index) {
+    return (*this).getImpl()[index];
+  }
 
 };
 
@@ -699,11 +767,27 @@ void parallel_for(Range r, Program p, ParallelForFunctor f) {
 }
 
 
-// SYCL parallel_for_workgroup
-// \todo implementation
-template <typename Range, typename ParallelForFunctor>
-void parallel_for_workgroup(Range r, ParallelForFunctor f) {
+/// SYCL parallel_for_workgroup
+template <int Dimensions = 1, typename ParallelForFunctor>
+void parallel_for_workgroup(nd_range<Dimensions> r,
+                            ParallelForFunctor f) {
+  // In a sequential execution there is only one index processed at a time
+  group<Dimensions> Group(r.getImpl());
 
+  // Reconstruct the item from its group and local id
+  auto callWithGroup = [&] (group<Dimensions> G) {
+    G.Id.display();
+    // Call the user kernel with the group as parameter
+    f(G);
+  };
+  // First iterate on all the work-groups
+  ParallelForIterate<Dimensions,
+                     range<Dimensions>,
+                     ParallelForFunctor,
+                     group<Dimensions>> {
+    r.get_group_range(),
+    f,
+    Group };
 }
 
 

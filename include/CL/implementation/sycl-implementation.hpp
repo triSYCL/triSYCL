@@ -151,12 +151,6 @@ struct IdImpl: RangeImpl<N> {
 };
 
 
-/** A group index
-*/
-template <std::size_t N = 1U>
-using GroupImpl = RangeImpl<N>;
-
-
 /** The implementation of a ND-range, made by a global and local range, to
     specify work-group and work-item organization.
 
@@ -181,15 +175,23 @@ struct NDRangeImpl {
     LocalRange(local_size),
     Offset(offset) {}
 
-  auto get_global_range() { return GlobalRange; }
+  // Return a reference to the implementation itself
+  NDRangeImpl &getImpl() { return *this; };
 
-  auto get_local_range() { return LocalRange; }
+
+  // Return a const reference to the implementation itself
+  const NDRangeImpl &getImpl() const { return *this; };
+
+
+  RangeImpl<dimensionality> get_global_range() { return GlobalRange; }
+
+  RangeImpl<dimensionality> get_local_range() { return LocalRange; }
 
   /// Get the range of work-groups needed to run this ND-range
-  auto get_group_range() { return GlobalRange/LocalRange; }
+  RangeImpl<dimensionality> get_group_range() { return GlobalRange/LocalRange; }
 
   /// \todo get_offset() is lacking in the specification
-  auto get_offset() { return Offset; }
+  IdImpl<dimensionality> get_offset() { return Offset; }
 
 };
 
@@ -234,6 +236,48 @@ struct ItemImpl {
   auto get_global_range() { return NDRange.get_global_range(); }
 
   /// \todo Add to the specification: get_nd_range() and what about the offset?
+};
+
+
+/** The implementation of a SYCL group index to specify a work_group in a
+    parallel_for_workitem
+*/
+template <std::size_t N = 1U>
+struct GroupImpl {
+  // Keep a reference on the nd_range to serve potential query on it
+  const NDRangeImpl<N> &NDR;
+  // The coordinate of the group item
+  IdImpl<N> Id;
+
+  GroupImpl(const GroupImpl &g) : NDR(g.NDR), Id(g.Id) {}
+
+  GroupImpl(const NDRangeImpl<N> &ndr) : NDR(ndr) {}
+
+  GroupImpl(const NDRangeImpl<N> &ndr, const IdImpl<N> &i) :
+    NDR(ndr), Id(i) {}
+
+  // Return a reference to the implementation itself
+  GroupImpl &getImpl() { return *this; };
+
+  // Return a const reference to the implementation itself
+  const GroupImpl &getImpl() const { return *this; };
+
+  IdImpl<N> get_group_id() { return Id; }
+
+  IdImpl<N> get_local_range() { return NDR.LocalRange; }
+
+  IdImpl<N> get_global_range() { return NDR.GlobalRange; }
+
+  /** Return the group coordinate in the given dimension
+
+      \todo add it to the specification?
+
+      \todo is it supposed to be an int? A cl_int? a size_t?
+  */
+  auto &operator[](int index) {
+    return Id[index];
+  }
+
 };
 
 
@@ -491,7 +535,7 @@ void single_task(std::function<void(void)> F) { F(); }
 */
 template <int level, typename Range, typename ParallelForFunctor, typename Id>
 struct ParallelForIterate {
-  ParallelForIterate(Range &r, ParallelForFunctor &f, Id &index) {
+  ParallelForIterate(const Range &r, ParallelForFunctor &f, Id &index) {
     for (boost::multi_array_types::index _sycl_index = 0,
            _sycl_end = r[Range::dimensionality - level];
          _sycl_index < _sycl_end;
@@ -515,7 +559,7 @@ struct ParallelForIterate {
 */
 template <int level, typename Range, typename ParallelForFunctor, typename Id>
 struct ParallelOpenMPForIterate {
-  ParallelOpenMPForIterate(Range &r, ParallelForFunctor &f) {
+  ParallelOpenMPForIterate(const Range &r, ParallelForFunctor &f) {
     // Create the OpenMP threads before the for loop to avoid creating an
     // index in each iteration
 #pragma omp parallel
@@ -550,7 +594,7 @@ struct ParallelOpenMPForIterate {
     kernel functor with the constructed id */
 template <typename Range, typename ParallelForFunctor, typename Id>
 struct ParallelForIterate<0, Range, ParallelForFunctor, Id> {
-  ParallelForIterate(Range &r, ParallelForFunctor &f, Id &index) {
+  ParallelForIterate(const Range &r, ParallelForFunctor &f, Id &index) {
     f(index);
   }
 };
