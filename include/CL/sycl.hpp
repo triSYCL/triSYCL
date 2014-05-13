@@ -98,6 +98,14 @@ struct range : public RangeImpl<dims> {
   range(const range<dims> &r) : Impl(r.getImpl()) {}
 
 
+  /* Construct a range from an implementation, used by nd_range() for example
+
+     \todo this is internal and should not appear in the specification */
+  range(Impl &r) : Impl(r) {}
+
+  range(const Impl &r) : Impl(r) {}
+
+
   /** Create a n-D range from a positive integer-like list
 
       \todo This is not the same as the range(dim1,...) constructor from
@@ -286,7 +294,7 @@ using group = range<dims>;
     needed.
 */
 template <int dims = 1>
-struct nd_range : RangeImpl<dims> {
+struct nd_range : NDRangeImpl<dims> {
   static_assert(1 <= dims && dims <= 3,
                 "Dimensions are between 1 and 3");
 
@@ -294,36 +302,30 @@ struct nd_range : RangeImpl<dims> {
   /// specification?
   static const auto dimensionality = dims;
 
+  // A shortcut name to the implementation
+  using Impl = NDRangeImpl<dims>;
 
   /// Construct a ND-range with all the details available in OpenCL
   nd_range(range<dims> global_size,
            range<dims> local_size,
            id<dims> offset = { 0, 0, 0 }) :
-    RangeImpl<dims>(global_size, local_size, offset) {}
+    Impl(global_size.getImpl(), local_size.getImpl(), offset.getImpl()) {}
 
 
   /// Get the global iteration space range
-  range<dims> get_global_range() {
-    return RangeImpl<dims>::get_global_range();
-  }
+  range<dims> get_global_range() { return Impl::get_global_range(); }
 
 
   /// Get the local part of the iteration space range
-  range<dims> get_local_range() {
-    return RangeImpl<dims>::get_local_range();
-  }
+  range<dims> get_local_range() { return Impl::get_local_range(); }
 
 
   /// Get the range of work-groups needed to run this ND-range
-  range<dims> get_group_range() {
-    return RangeImpl<dims>::get_group_range();
-  }
+  range<dims> get_group_range() { return Impl::get_group_range(); }
 
 
   /// \todo get_offset() is lacking in the specification
-  range<dims> get_offset() {
-    return RangeImpl<dims>::get_offset();
-  }
+  range<dims> get_offset() { return Impl::get_offset(); }
 
 };
 
