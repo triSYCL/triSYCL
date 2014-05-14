@@ -20,10 +20,11 @@ namespace cl {
 namespace sycl {
 namespace trisycl {
 
+#include "sycl-debug.hpp"
 
 /// Define a multi-dimensional index range
 template <std::size_t Dimensions = 1U>
-struct RangeImpl : std::vector<std::intptr_t> {
+struct RangeImpl : std::vector<std::intptr_t>, debug<RangeImpl<Dimensions>> {
   static_assert(1 <= Dimensions && Dimensions <= 3,
                 "Dimensions are between 1 and 3");
 
@@ -63,6 +64,10 @@ struct RangeImpl : std::vector<std::intptr_t> {
   // Create a n-D range from an integer-like list
   RangeImpl(std::initializer_list<std::intptr_t> l) :
     std::vector<std::intptr_t>(l) {
+    std::cerr << "RangeImpl (std::initializer_list<std::intptr_t> l) size:" << l.size() << " ";
+    for(auto i : l)
+      std::cerr << "Range:" << i << " ";
+    std::cerr << std::endl;
     // The number of elements must match the dimension
     assert(Dimensions == l.size());
   }
@@ -170,7 +175,7 @@ struct NDRangeImpl {
 
   NDRangeImpl(RangeImpl<dimensionality> global_size,
               RangeImpl<dimensionality> local_size,
-              IdImpl<dimensionality> offset = { 0, 0, 0 }) :
+              IdImpl<dimensionality> offset) :
     GlobalRange(global_size),
     LocalRange(local_size),
     Offset(offset) {}

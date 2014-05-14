@@ -297,10 +297,13 @@ struct nd_range : NDRangeImpl<dims> {
   // A shortcut name to the implementation
   using Impl = NDRangeImpl<dims>;
 
-  /// Construct a ND-range with all the details available in OpenCL
+  /** Construct a ND-range with all the details available in OpenCL
+
+      By default use a zero offset, that is iterations start at 0
+   */
   nd_range(range<dims> global_size,
            range<dims> local_size,
-           id<dims> offset = { 0, 0, 0 }) :
+           id<dims> offset = id<dims>()) :
     Impl(global_size.getImpl(), local_size.getImpl(), offset.getImpl()) {}
 
 
