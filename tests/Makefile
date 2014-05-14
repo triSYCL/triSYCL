@@ -8,6 +8,9 @@ CXXFLAGS = -g -std=c++1y -I../include
 # To use OpenMP to execute SYCL kernels:
 CXXFLAGS += -fopenmp
 
+# To enable debug and tracing:
+CXXFLAGS += -DTRISYCL_DEBUG
+
 # Assume Clang 3.5 at least
 # There are still some limitations in Clang:
 # - no OpenMP;
