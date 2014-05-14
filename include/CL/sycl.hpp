@@ -237,8 +237,8 @@ struct id : public IdImpl<dims> {
   id(const range<dims> &r) : Impl(r.getImpl()) {}
 
 
-  /* Since the runtime need to construct an id from its implementation for
-     example in item methods, define some hidden constructor here */
+  /* Since the runtime needs to construct an id from its implementation
+     for example in item methods, define some hidden constructor here */
   id(const Impl &init) : Impl(init) {}
 
 
@@ -289,6 +289,8 @@ struct id : public IdImpl<dims> {
 
     The local offset is used to translate the iteration space origin if
     needed.
+
+    \todo add copy constructors in the specification
 */
 template <int dims = 1>
 struct nd_range : NDRangeImpl<dims> {
@@ -310,6 +312,11 @@ struct nd_range : NDRangeImpl<dims> {
            range<dims> local_size,
            id<dims> offset = id<dims>()) :
     Impl(global_size.getImpl(), local_size.getImpl(), offset.getImpl()) {}
+
+  /* Since the runtime needs to construct a nd_range from its
+     implementation for example in parallel_for stuff, define some hidden
+     constructor here */
+  nd_range(const Impl &init) : Impl(init) {}
 
 
   /// Get the global iteration space range
@@ -408,7 +415,7 @@ struct group : GroupImpl<dims> {
   /// other constructors should be unspecified
   group(const group &g) : Impl(g.getImpl()) {}
 
-  /* Since the runtime need to construct a group with the right content,
+  /* Since the runtime needs to construct a group with the right content,
      define some hidden constructor for this.  Since it is internal,
      directly use the implementation
   */
@@ -437,8 +444,8 @@ struct group : GroupImpl<dims> {
 
   /// \todo Why the offset is not available here?
 
-  /// \todo Also provide access to the current nd_range?
-
+  /// \todo Also provide this access to the current nd_range
+  nd_range<dims> get_nr_range() { return Impl::NDR; }
 
   /** Return the group coordinate in the given dimension
 
@@ -726,6 +733,8 @@ void parallel_for(range<Dimensions> r,
     \todo Add an OpenMP implementation
 
     \todo Deal with incomplete work-groups
+
+    \todo Implement with parallel_for_workgroup()/parallel_for_workitem()
 */
 template <int Dimensions = 1, typename ParallelForFunctor>
 void parallel_for(nd_range<Dimensions> r,
@@ -741,18 +750,19 @@ void parallel_for(nd_range<Dimensions> r,
 
   // Reconstruct the item from its group and local id
   auto reconstructItem = [&] (id<Dimensions> L) {
-    Local.display();
+    //Local.display();
     // Reconstruct the global item
     Index.set_local(Local);
     Index.set_global(Local + LocalRange*Group);
     // Call the user kernel at last
     f(Index);
   };
+
   /* To recycle the parallel_for on range<>, wrap the ParallelForFunctor f
      into another functor that iterate inside the work-group and then
      calls f */
   auto iterateInWorkGroup = [&] (id<Dimensions> G) {
-    Group.display();
+    //Group.display();
     // Then iterate on the local work-groups
     ParallelForIterate<Dimensions,
                        range<Dimensions>,
@@ -785,7 +795,7 @@ void parallel_for_workgroup(nd_range<Dimensions> r,
 
   // Reconstruct the item from its group and local id
   auto callWithGroup = [&] (group<Dimensions> G) {
-    G.Id.display();
+    //G.Id.display();
     // Call the user kernel with the group as parameter
     f(G);
   };
@@ -800,10 +810,34 @@ void parallel_for_workgroup(nd_range<Dimensions> r,
 }
 
 
-// SYCL parallel_for_workitem
-// \todo implementation
-template <typename Range, typename ParallelForFunctor>
-void parallel_for_workitem(Range r, ParallelForFunctor f) {
+/// SYCL parallel_for_workitem
+template <int Dimensions = 1, typename ParallelForFunctor>
+void parallel_for_workitem(group<Dimensions> g, ParallelForFunctor f) {
+  // In a sequential execution there is only one index processed at a time
+  item<Dimensions> Index { g.get_nr_range() };
+  // To iterate on the local work-item
+  id<Dimensions> Local;
+
+  // Reconstruct the item from its group and local id
+  auto reconstructItem = [&] (id<Dimensions> L) {
+    //Local.display();
+    //L.display();
+    // Reconstruct the global item
+    Index.set_local(Local);
+    // \todo Some strength reduction here
+    Index.set_global(Local + g.get_local_range()*g.get_group_id());
+    // Call the user kernel at last
+    f(Index);
+  };
+
+  // Then iterate on all the work-items of the work-group
+  ParallelForIterate<Dimensions,
+                     range<Dimensions>,
+                     decltype(reconstructItem),
+                     id<Dimensions>> {
+    g.get_local_range(),
+    reconstructItem,
+    Local };
 }
 
 

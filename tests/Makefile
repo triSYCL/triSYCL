@@ -1,5 +1,5 @@
 TARGETS = queue single_task vector_add range id parallel_vector_add \
-	parallel_matrix_add \
+	parallel_matrix_add hierarchical \
 	$(basename $(wildcard 2014-04-21-HPC-GPU_Meetup/*.cpp))
 
 # The implementation uses C++14 and OpenMP
@@ -9,7 +9,7 @@ CXXFLAGS = -g -std=c++1y -I../include
 CXXFLAGS += -fopenmp
 
 # To enable debug and tracing:
-CXXFLAGS += -DTRISYCL_DEBUG
+#CXXFLAGS += -DTRISYCL_DEBUG
 
 # Assume Clang 3.5 at least
 # There are still some limitations in Clang:

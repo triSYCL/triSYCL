@@ -64,10 +64,6 @@ struct RangeImpl : std::vector<std::intptr_t>, debug<RangeImpl<Dimensions>> {
   // Create a n-D range from an integer-like list
   RangeImpl(std::initializer_list<std::intptr_t> l) :
     std::vector<std::intptr_t>(l) {
-    std::cerr << "RangeImpl (std::initializer_list<std::intptr_t> l) size:" << l.size() << " ";
-    for(auto i : l)
-      std::cerr << "Range:" << i << " ";
-    std::cerr << std::endl;
     // The number of elements must match the dimension
     assert(Dimensions == l.size());
   }
@@ -249,9 +245,9 @@ struct ItemImpl {
 */
 template <std::size_t N = 1U>
 struct GroupImpl {
-  // Keep a reference on the nd_range to serve potential query on it
+  /// Keep a reference on the nd_range to serve potential query on it
   const NDRangeImpl<N> &NDR;
-  // The coordinate of the group item
+  /// The coordinate of the group item
   IdImpl<N> Id;
 
   GroupImpl(const GroupImpl &g) : NDR(g.NDR), Id(g.Id) {}
@@ -261,17 +257,20 @@ struct GroupImpl {
   GroupImpl(const NDRangeImpl<N> &ndr, const IdImpl<N> &i) :
     NDR(ndr), Id(i) {}
 
-  // Return a reference to the implementation itself
+  /// Return a reference to the implementation itself
   GroupImpl &getImpl() { return *this; };
 
-  // Return a const reference to the implementation itself
+  /// Return a const reference to the implementation itself
   const GroupImpl &getImpl() const { return *this; };
 
+  /// Return the id of this work-group
   IdImpl<N> get_group_id() { return Id; }
 
-  IdImpl<N> get_local_range() { return NDR.LocalRange; }
+  /// Return the local range associated to this work-group
+  RangeImpl<N> get_local_range() { return NDR.LocalRange; }
 
-  IdImpl<N> get_global_range() { return NDR.GlobalRange; }
+  /// Return the global range associated to this work-group
+  RangeImpl<N> get_global_range() { return NDR.GlobalRange; }
 
   /** Return the group coordinate in the given dimension
 
