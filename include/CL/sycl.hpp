@@ -237,6 +237,11 @@ struct id : public IdImpl<dims> {
   id(const range<dims> &r) : Impl(r.getImpl()) {}
 
 
+  /* Since the runtime need to construct an id from its implementation for
+     example in item methods, define some hidden constructor here */
+  id(const Impl &init) : Impl(init) {}
+
+
   /** Create a n-D range from a positive integer-like list
 
       \todo Add this to the specification? Since it is said to be usable
@@ -338,46 +343,47 @@ struct item : ItemImpl<dims> {
   /// specification?
   static const auto dimensionality = dims;
 
+  // A shortcut name to the implementation
+  using Impl = ItemImpl<dims>;
+
 
   /** Create an item from a local size and local size
 
       \todo what is the meaning of this constructor for a programmer?
   */
   item(range<dims> global_size, range<dims> local_size) :
-    ItemImpl<dims>(global_size, local_size) {}
+    Impl(global_size, local_size) {}
 
 
   /** \todo a constructor from a nd_range too in the specification if the
       previous one has a meaning?
    */
-  item(nd_range<dims> ndr) : ItemImpl<dims>(ndr) {}
+  item(nd_range<dims> ndr) : Impl(ndr) {}
 
 
   /// Return the global coordinate in the given dimension
-  int get_global(int dimension) {
-    return ItemImpl<dims>::get_global(dimension);
-  }
+  int get_global(int dimension) { return Impl::get_global(dimension); }
 
 
   /// Return the local coordinate (that is in the work-group) in the given
   /// dimension
-  int get_local(int dimension) { return ItemImpl<dims>::get_local(dimension); }
+  int get_local(int dimension) { return Impl::get_local(dimension); }
 
 
   /// Get the whole global id coordinate
-  id<dims> get_global() { return ItemImpl<dims>::get_global(); }
+  id<dims> get_global() { return Impl::get_global(); }
 
 
   /// Get the whole local id coordinate (which is respective to the
   /// work-group)
-  id<dims> get_local() { return ItemImpl<dims>::get_local(); }
+  id<dims> get_local() { return Impl::get_local(); }
 
 
   /// Get the global range where this item rely in
-  range<dims> get_global_range() { return ItemImpl<dims>::get_global_range(); }
+  range<dims> get_global_range() { return Impl::get_global_range(); }
 
   /// Get the local range (the dimension of the work-group) for this item
-  range<dims> get_local_range() { return ItemImpl<dims>::get_local_range(); }
+  range<dims> get_local_range() { return Impl::get_local_range(); }
 
   /// \todo Why the offset is not available here?
 
