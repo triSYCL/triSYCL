@@ -2,32 +2,106 @@ triSYCL
 +++++++
 
 This is a humble implementation test bed to experiment with the
-provisional specification of the OpenCL SYCL C++ layer.
+provisional specification of the OpenCL_ SYCL_ C++ layer and to give
+feedback to the SYCL committee.
 
-For more information on SYCL, look at http://www.khronos.org/opencl/sycl
-
-This is just the start of a SYCL mock-up, only based on C++14 with
+This is just the start of a SYCL_ mock-up, only based on C++14 with
 execution on the CPU. So there is nothing related to OpenCL yet. But since
 in SYCL there is a host fall-back, this can be used as the start of this
 fall-back...
 
-The parallel kernels can be executed in parallel on the CPU with OpenMP in
-the first range dimension, if compiled with OpenMP.
+The parallel kernels can be executed in parallel on the CPU with OpenMP_ in
+the first range dimension, if compiled with OpenMP support.
 
 This is provided as is, without any warranty, with the same license as
-LLVM/Clang.
+LLVM_/Clang_.
 
 Ronan Keryell at AMD point cOm
+
+
+OpenCL SYCL
+-----------
+
+OpenCL_ SYCL_ is a C++11-based DSEL_ (Domain Specific Embedded Language)
+aimed at facilitating the programming of heterogeneous accelerators by
+leveraging the OpenCL language and concepts.
+
+SYCL has a lot of interesting advantages compared to plain OpenCL_ or
+other approaches:
+
+- SYCL_ is an open standard from Khronos_ with a working committee (you can
+  contribute!) and we can expect several implementations (commercial or
+  open source) on many platforms soon;
+
+- it offers a single-source C++ programming model that allows taking
+  advantage of the modern C++11 superpower unifying both the host and
+  accelerator sides. For example it is possible to write generic
+  accelerated functions on the accelerators in a terse way by using
+  (variadic) templates and lambda expressions;
+
+- SYCL abstracts the concepts behind OpenCL and provides higher-level
+  concepts such as ``command_group`` that allows the runtime to take
+  advantage of a more graph-oriented view of the computations. This allows
+  lazy data transfers between accelerators and host or to use platform
+  capabilities such as HSA_ for sharing data between host and
+  accelerators;
+
+- the entry cost of the technology is zero since, after all, an existing
+  OpenCL or C++ program is a valid SYCL program;
+
+- the exit cost is low since it is pure C++ without extension or
+  ``#pragma``. Retargeting the SYCL classes and functions to use other
+  frameworks such as OpenMP_ 4 or `C++AMP`_ is feasible without rewriting a new
+  compiler for example;
+
+- easier debugging
+
+  - since all memory accesses to array parameters in kernels go through
+    accessors, all the memory bound checks can be done in them if needed;
+
+  - since there is a pure host mode, the kernel code can be run also on
+    the host and debugged using the usual tools and use any system (such
+    ``stdio`` or ``iostream``...) or data libraries (for nice data
+    visualization);
+
+  - since the kernel code is C++ code even when run on an accelerator,
+    instrumenting the code by using special array classes or overloading
+    some operators allows deep intrusive debugging or code analysis
+    without changing the algorithmic parts of the code;
+
+- SYCL is high-level standard C++11 without any extension, that means that
+  you can use your usual compiler and the host part can use extensions
+  such as OpenMP_, OpenHMPP_, OpenACC_,... or libraries such as MPI_, be
+  linked with other parts written in other languages (Fortran_...);
+
+- SYCL inherit from all the OpenCL world:
+
+  - same interoperability as the OpenCL underlying platform: OpenGL_,
+    DirectX_...
+
+  - access to all the underlying basic OpenCL objects behind the SYCL
+    abstraction for interoperability and hard-core optimization;
+
+  - construction of SYCL objects from basic OpenCL objects to add some
+    SYCL parts to an existing OpenCL application;
+
+  - so it provides a continuum from higher-level programming `à la` `C++AMP`_
+    or OpenMP_ 4 down to low-level OpenCL, according to the optimization
+    needs.
+
+For more information on SYCL_, look at http://www.khronos.org/opencl/sycl
 
 
 Installation
 ------------
 
-Only Clang 3.5 or GCC 4.9 and Boost.MultiArray is needed.  If you use the
-debug mode or OpenMP, this works only with GCC 4.9...
+Only Clang_ 3.5 or GCC_ 4.9 and `Boost.MultiArray`_ (which adds to C++ the
+nice Fortran array semantics and syntax) is needed.  If you use the debug
+mode or OpenMP, this works only with GCC 4.9 since current Clang version
+does not support OpenMP yet.
 
-To install them on latest Linux Debian (this should work on latest Ubuntu
-too):
+To install them on latest Linux Debian/unstable (this should work on
+latest Ubuntu too):
 
 .. code:: bash
 
@@ -69,7 +143,7 @@ You can build the binary with different compilers with
 Future
 ------
 
-Some ideas of future developments:
+Some ideas of future developments where *you* can contribute:
 
 - split the declaration from the implementation so that the documentation
   of the SYCL API itself can be generated by Doxygen or some other tools
@@ -77,18 +151,63 @@ Some ideas of future developments:
 
 - finish implementation of basic classes without any OpenCL support;
 
-- make an accelerator version based on wrapper classes for the C++AMP Open
-  Source compiler
+- add a test infrastructure;
+
+- make an accelerator version based on wrapper classes for the `C++AMP`_
+  Open Source compiler
   https://bitbucket.org/multicoreware/cppamp-driver-ng/wiki/Home
 
-- make an accelerator version based on OpenMP 4, OpenHMPP or OpenACC;
+- make an accelerator version based on OpenMP_ 4, OpenHMPP_ or OpenACC_;
 
 - add OpenCL support with kernels only provided as strings;
 
-- extend runtime and Clang/LLVM to generate OpenCL/SPIR from C++
+- extend runtime and Clang_/LLVM_ to generate OpenCL/SPIR_ from C++
   single-source kernels;
 
 - add OpenCL 2.x support.
+
+
+..
+  Somme useful link definitions:
+
+.. _C++: http://www.open-std.org/jtc1/sc22/wg21/
+
+.. _C++AMP: http://msdn.microsoft.com/en-us/library/hh265137.aspx
+
+.. _Clang: http://clang.llvm.org/
+
+.. _DirectX: http://en.wikipedia.org/wiki/DirectX
+
+.. _DSEL: http://en.wikipedia.org/wiki/Domain-specific_language
+
+.. _Fortran: http://en.wikipedia.org/wiki/Fortran
+
+.. _GCC: http://gcc.gnu.org/
+
+.. _Boost.MultiArray: http://www.boost.org/doc/libs/1_55_0/libs/multi_array/doc/index.html
+
+.. _HSA: http://www.hsafoundation.com/
+
+.. _Khronos: https://www.khronos.org/
+
+.. _LLVM: http://llvm.org/
+
+.. _MPI: http://en.wikipedia.org/wiki/Message_Passing_Interface
+
+.. _OpenACC: http://www.openacc-standard.org/
+
+.. _OpenCL: http://www.khronos.org/opencl/
+
+.. _OpenGL: https://www.khronos.org/opengl/
+
+.. _OpenHMPP: http://en.wikipedia.org/wiki/OpenHMPP
+
+.. _OpenMP: http://openmp.org/
+
+.. _SPIR: http://www.khronos.org/spir
+
+.. _SYCL: http://www.khronos.org/opencl/sycl/
+
 
 ..
     # Some Emacs stuff:
