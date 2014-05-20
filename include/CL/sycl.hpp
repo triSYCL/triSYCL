@@ -21,10 +21,15 @@
 #include <initializer_list>
 
 
-/// SYCL dwells in the cl::sycl namespace
+// SYCL dwells in the cl::sycl namespace
 namespace cl {
 namespace sycl {
 
+
+/** \addtogroup data Data access and storage in SYCL
+
+    @{
+*/
 
 /** Describe the type of access by kernels.
 
@@ -62,8 +67,13 @@ namespace access {
   };
 
 }
+
+/// @} End the data Doxygen group
+
 }
 }
+
+
 
 #include "implementation/sycl-implementation.hpp"
 
@@ -73,6 +83,10 @@ namespace cl {
 namespace sycl {
 
 using namespace trisycl;
+
+/** \addtogroup parallelism Expressing parallelism through kernels
+    @{
+*/
 
 /** A SYCL range defines a multi-dimensional index range that can
     be used to launch parallel computation.
@@ -100,7 +114,7 @@ struct range : public RangeImpl<dims> {
 
   /* Construct a range from an implementation, used by nd_range() for example
 
-     \todo this is internal and should not appear in the specification */
+     This is internal and should not appear in the specification */
   range(Impl &r) : Impl(r) {}
 
   range(const Impl &r) : Impl(r) {}
@@ -470,6 +484,12 @@ struct group : GroupImpl<dims> {
 
 };
 
+/// @} End the parallelism Doxygen group
+
+
+/** \addtogroup execution Platforms, contexts, devices and queues
+    @{
+*/
 
 /** SYCL device
 
@@ -523,6 +543,27 @@ struct queue {
   queue(context c) {}
 };
 
+
+/** SYCL command group gather all the commands needed to execute one or
+    more kernels in a kind of atomic way. Since all the parameters are
+    captured at command group creation, one can execute the content in an
+    asynchronous way and delayed schedule.
+
+    For now just execute the command group directly.
+ */
+struct command_group {
+  template <typename Functor>
+  command_group(queue Q, Functor F) {
+    F();
+  }
+};
+
+/// @} to end the execution Doxygen group
+
+
+/** \addtogroup data
+    @{
+*/
 
 // Forward declaration for use in accessor
 template <typename T, int dimensions> struct buffer;
@@ -663,21 +704,12 @@ struct buffer : BufferImpl<T, dimensions> {
 
 };
 
+/// @} to end the data Doxygen group
 
-/** SYCL command group gather all the commands needed to execute one or
-    more kernels in a kind of atomic way. Since all the parameters are
-    captured at command group creation, one can execute the content in an
-    asynchronous way and delayed schedule.
 
-    For now just execute the command group directly.
- */
-struct command_group {
-  template <typename Functor>
-  command_group(queue Q, Functor F) {
-    F();
-  }
-};
-
+/** \addtogroup parallelism
+    @{
+*/
 
 /** kernel_lambda specify a kernel to be launch with a single_task or
     parallel_for
@@ -839,6 +871,9 @@ void parallel_for_workitem(group<Dimensions> g, ParallelForFunctor f) {
     reconstructItem,
     Local };
 }
+
+/// @} End the parallelism Doxygen group
+
 
 
 /** The kernel synchronization barrier
