@@ -1,4 +1,4 @@
-/* \file
+/** \file
 
    This is a simple C++ sequential OpenCL SYCL implementation to
    experiment with the OpenCL CL provisional specification.
