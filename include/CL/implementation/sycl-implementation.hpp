@@ -1,12 +1,12 @@
-/* \file
+/** \file
 
-   This is a simple C++ sequential OpenCL SYCL implementation to
-   experiment with the OpenCL CL provisional specification.
+    This is a simple C++ sequential OpenCL SYCL implementation to
+    experiment with the OpenCL CL provisional specification.
 
-   Ronan.Keryell at AMD point com
+    Ronan.Keryell at AMD point com
 
-   This file is distributed under the University of Illinois Open Source
-   License. See LICENSE.TXT for details.
+    This file is distributed under the University of Illinois Open Source
+    License. See LICENSE.TXT for details.
 */
 
 #include <cassert>

@@ -1,19 +1,27 @@
 /** \file
 
-   This is a simple C++ sequential OpenCL SYCL implementation to
-   experiment with the OpenCL CL provisional specification.
+    \mainpage
 
-   The aim of this file is mainly to define the interface of SYCL so that
-   the specification documentation can be derived from it through tools
-   like Doxygen or Sphinx. This explains why there are many functions and
-   classes that are here only to do some forwarding in some inelegant way.
-   This file is documentation driven and not implementation-style driven.
+    This is a simple C++ sequential OpenCL SYCL C++ header file to
+    experiment with the OpenCL CL provisional specification.
+
+    For more information about OpenCL SYCL:
+    http://www.khronos.org/opencl/sycl/
+
+    The aim of this file is mainly to define the interface of SYCL so that
+    the specification documentation can be derived from it through tools
+    like Doxygen or Sphinx. This explains why there are many functions and
+    classes that are here only to do some forwarding in some inelegant way.
+    This file is documentation driven and not implementation-style driven.
 
 
-   Ronan.Keryell at AMD point com
+    This source of this file can be found on
+    https://github.com/amd/triSYCL
 
-   This file is distributed under the University of Illinois Open Source
-   License. See LICENSE.TXT for details.
+    Ronan.Keryell at AMD point com
+
+    This file is distributed under the University of Illinois Open Source
+    License. See LICENSE.TXT for details.
 */
 
 
