@@ -19,6 +19,14 @@ LLVM_/Clang_.
 Ronan Keryell at AMD point cOm
 
 
+OpenCL triSYCL API
+---------------
+
+An experimental description of the API through Doxygen can be found in
+http://amd.github.io/triSYCL/Doxygen/SYCL/html and
+http://amd.github.io/triSYCL/Doxygen/SYCL/SYCL-API-refman.pdf
+
+
 OpenCL SYCL
 -----------
 

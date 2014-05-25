@@ -15,8 +15,12 @@
     This file is documentation driven and not implementation-style driven.
 
 
-    This source of this file can be found on
+    The source of this file can be found on
     https://github.com/amd/triSYCL
+    and the Doxygen version of the API in
+    http://amd.github.io/triSYCL/Doxygen/SYCL/html
+    and http://amd.github.io/triSYCL/Doxygen/SYCL/SYCL-API-refman.pdf
+
 
     Ronan.Keryell at AMD point com
 
