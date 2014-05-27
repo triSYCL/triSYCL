@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['command_5fgroup',['command_group',['../structcl_1_1sycl_1_1command__group.html',1,'cl::sycl']]],
-  ['context',['context',['../structcl_1_1sycl_1_1context.html',1,'cl::sycl']]]
+  ['command_5fgroup',['command_group',['../group__execution.html#structcl_1_1sycl_1_1command__group',1,'cl::sycl']]],
+  ['context',['context',['../group__execution.html#structcl_1_1sycl_1_1context',1,'cl::sycl']]]
 ];

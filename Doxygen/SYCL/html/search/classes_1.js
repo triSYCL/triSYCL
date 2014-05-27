@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['buffer',['buffer',['../structcl_1_1sycl_1_1buffer.html',1,'cl::sycl']]]
+  ['buffer',['buffer',['../group__data.html#structcl_1_1sycl_1_1buffer',1,'cl::sycl']]]
 ];

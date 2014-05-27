@@ -88,6 +88,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
+<a href="#define-members">Macros</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
@@ -95,49 +96,39 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">sycl.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;cstddef&gt;</code><br />
-<code>#include &lt;initializer_list&gt;</code><br />
-<code>#include &quot;implementation/sycl-implementation.hpp&quot;</code><br />
-</div><div class="textblock"><div class="dynheader">
-Include dependency graph for sycl.hpp:</div>
-<div class="dyncontent">
-<div class="center"><img src="sycl_8hpp__incl.png" border="0" usemap="#include_2CL_2sycl_8hpp" alt=""/></div>
-<map name="include_2CL_2sycl_8hpp" id="include_2CL_2sycl_8hpp">
-</map>
-</div>
-</div>
+
 <p><a href="sycl_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcl_1_1sycl_1_1range.html">cl::sycl::range&lt; dims &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcl_1_1sycl_1_1id.html">cl::sycl::id&lt; dims &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcl_1_1sycl_1_1nd__range.html">cl::sycl::nd_range&lt; dims &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcl_1_1sycl_1_1item.html">cl::sycl::item&lt; dims &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcl_1_1sycl_1_1group.html">cl::sycl::group&lt; dims &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcl_1_1sycl_1_1device.html">cl::sycl::device</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcl_1_1sycl_1_1device__selector.html">cl::sycl::device_selector</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcl_1_1sycl_1_1gpu__selector.html">cl::sycl::gpu_selector</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcl_1_1sycl_1_1context.html">cl::sycl::context</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcl_1_1sycl_1_1queue.html">cl::sycl::queue</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcl_1_1sycl_1_1command__group.html">cl::sycl::command_group</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcl_1_1sycl_1_1buffer.html">cl::sycl::buffer&lt; T, dimensions &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcl_1_1sycl_1_1accessor.html">cl::sycl::accessor&lt; dataType, dimensions, mode, target &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcl_1_1sycl_1_1buffer.html">cl::sycl::buffer&lt; T, dimensions &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structcl_1_1sycl_1_1range"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1range">cl::sycl::range&lt; dims &gt;</a></td></tr>
+<tr class="separator:structcl_1_1sycl_1_1range"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structcl_1_1sycl_1_1id"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1id">cl::sycl::id&lt; dims &gt;</a></td></tr>
+<tr class="separator:structcl_1_1sycl_1_1id"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structcl_1_1sycl_1_1nd__range"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1nd__range">cl::sycl::nd_range&lt; dims &gt;</a></td></tr>
+<tr class="separator:structcl_1_1sycl_1_1nd__range"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structcl_1_1sycl_1_1item"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1item">cl::sycl::item&lt; dims &gt;</a></td></tr>
+<tr class="separator:structcl_1_1sycl_1_1item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structcl_1_1sycl_1_1group"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1group">cl::sycl::group&lt; dims &gt;</a></td></tr>
+<tr class="separator:structcl_1_1sycl_1_1group"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structcl_1_1sycl_1_1device"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#structcl_1_1sycl_1_1device">cl::sycl::device</a></td></tr>
+<tr class="separator:structcl_1_1sycl_1_1device"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structcl_1_1sycl_1_1device__selector"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#structcl_1_1sycl_1_1device__selector">cl::sycl::device_selector</a></td></tr>
+<tr class="separator:structcl_1_1sycl_1_1device__selector"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structcl_1_1sycl_1_1gpu__selector"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#structcl_1_1sycl_1_1gpu__selector">cl::sycl::gpu_selector</a></td></tr>
+<tr class="separator:structcl_1_1sycl_1_1gpu__selector"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structcl_1_1sycl_1_1context"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#structcl_1_1sycl_1_1context">cl::sycl::context</a></td></tr>
+<tr class="separator:structcl_1_1sycl_1_1context"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structcl_1_1sycl_1_1queue"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#structcl_1_1sycl_1_1queue">cl::sycl::queue</a></td></tr>
+<tr class="separator:structcl_1_1sycl_1_1queue"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structcl_1_1sycl_1_1command__group"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#structcl_1_1sycl_1_1command__group">cl::sycl::command_group</a></td></tr>
+<tr class="separator:structcl_1_1sycl_1_1command__group"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structcl_1_1sycl_1_1buffer"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer&lt; T, dimensions &gt;</a></td></tr>
+<tr class="separator:structcl_1_1sycl_1_1buffer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structcl_1_1sycl_1_1accessor"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#structcl_1_1sycl_1_1accessor">cl::sycl::accessor&lt; dataType, dimensions, mode, target &gt;</a></td></tr>
+<tr class="separator:structcl_1_1sycl_1_1accessor"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structcl_1_1sycl_1_1buffer"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer&lt; T, dimensions &gt;</a></td></tr>
+<tr class="separator:structcl_1_1sycl_1_1buffer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
@@ -146,6 +137,12 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacecl_1_1sycl_1_1access"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl_1_1access.html">cl::sycl::access</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a6985e58b76cc9aabfeb6ff294bbf8cfc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6985e58b76cc9aabfeb6ff294bbf8cfc"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>TRISYCL_IMPL</b>(...)</td></tr>
+<tr class="separator:a6985e58b76cc9aabfeb6ff294bbf8cfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -178,18 +175,6 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga0e0075b8aac2d3bf6439a778ed5aa7a8"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga0e0075b8aac2d3bf6439a778ed5aa7a8"></a>
-template&lt;size_t Dimensions&gt; </td></tr>
-<tr class="memitem:ga0e0075b8aac2d3bf6439a778ed5aa7a8"><td class="memTemplItemLeft" align="right" valign="top">range&lt; Dimensions &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>cl::sycl::operator/</b> (range&lt; Dimensions &gt; dividend, range&lt; Dimensions &gt; divisor)</td></tr>
-<tr class="separator:ga0e0075b8aac2d3bf6439a778ed5aa7a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab9d95bc930ed139ac23e55ab6e0159c4"><td class="memTemplParams" colspan="2"><a class="anchor" id="gab9d95bc930ed139ac23e55ab6e0159c4"></a>
-template&lt;size_t Dimensions&gt; </td></tr>
-<tr class="memitem:gab9d95bc930ed139ac23e55ab6e0159c4"><td class="memTemplItemLeft" align="right" valign="top">range&lt; Dimensions &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>cl::sycl::operator*</b> (range&lt; Dimensions &gt; a, range&lt; Dimensions &gt; b)</td></tr>
-<tr class="separator:gab9d95bc930ed139ac23e55ab6e0159c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga776ef54675fd63ceec334909b12dbfbb"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga776ef54675fd63ceec334909b12dbfbb"></a>
-template&lt;size_t Dimensions&gt; </td></tr>
-<tr class="memitem:ga776ef54675fd63ceec334909b12dbfbb"><td class="memTemplItemLeft" align="right" valign="top">range&lt; Dimensions &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>cl::sycl::operator+</b> (range&lt; Dimensions &gt; a, range&lt; Dimensions &gt; b)</td></tr>
-<tr class="separator:ga776ef54675fd63ceec334909b12dbfbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8bf8bfae1064d9a5d9577905c633ef72"><td class="memTemplParams" colspan="2">template&lt;typename KernelName , typename Functor &gt; </td></tr>
 <tr class="memitem:ga8bf8bfae1064d9a5d9577905c633ef72"><td class="memTemplItemLeft" align="right" valign="top">Functor&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__parallelism.html#ga8bf8bfae1064d9a5d9577905c633ef72">cl::sycl::kernel_lambda</a> (Functor F)</td></tr>
 <tr class="separator:ga8bf8bfae1064d9a5d9577905c633ef72"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -201,10 +186,9 @@ template&lt;size_t Dimensions&gt; </td></tr>
 <tr class="memitem:ga196521c5710ac87b1d9b77e5f6b4540a"><td class="memTemplParams" colspan="2">template&lt;int Dimensions = 1, typename ParallelForFunctor &gt; </td></tr>
 <tr class="memitem:ga196521c5710ac87b1d9b77e5f6b4540a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__parallelism.html#ga196521c5710ac87b1d9b77e5f6b4540a">cl::sycl::parallel_for</a> (nd_range&lt; Dimensions &gt; r, ParallelForFunctor f)</td></tr>
 <tr class="separator:ga196521c5710ac87b1d9b77e5f6b4540a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3f76733e4b6b5471d0575c0a14ee9b1d"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga3f76733e4b6b5471d0575c0a14ee9b1d"></a>
-template&lt;typename Range , typename Program , typename ParallelForFunctor &gt; </td></tr>
+<tr class="memitem:ga3f76733e4b6b5471d0575c0a14ee9b1d"><td class="memTemplParams" colspan="2">template&lt;typename Range , typename Program , typename ParallelForFunctor &gt; </td></tr>
 <tr class="memitem:ga3f76733e4b6b5471d0575c0a14ee9b1d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__parallelism.html#ga3f76733e4b6b5471d0575c0a14ee9b1d">cl::sycl::parallel_for</a> (Range r, Program p, ParallelForFunctor f)</td></tr>
-<tr class="memdesc:ga3f76733e4b6b5471d0575c0a14ee9b1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">SYCL parallel_for version that allows a Program object to be specified. <br /></td></tr>
+<tr class="memdesc:ga3f76733e4b6b5471d0575c0a14ee9b1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">SYCL parallel_for version that allows a Program object to be specified.  <a href="group__parallelism.html#ga3f76733e4b6b5471d0575c0a14ee9b1d">More...</a><br /></td></tr>
 <tr class="separator:ga3f76733e4b6b5471d0575c0a14ee9b1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga22b68c6f8968dbe90ef56bb3be46791e"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga22b68c6f8968dbe90ef56bb3be46791e"></a>
 template&lt;int Dimensions = 1, typename ParallelForFunctor &gt; </td></tr>
@@ -228,7 +212,7 @@ int const&#160;</td><td class="memItemRight" valign="bottom"><b>cl::sycl::CL_LOC
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun May 25 2014 09:35:02 for OpenCL SYCL API by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon May 26 2014 18:55:39 for OpenCL SYCL API by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.7
 </small></address>
