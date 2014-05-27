@@ -193,6 +193,7 @@ struct range TRISYCL_IMPL(: public RangeImpl<dims>) {
 };
 
 
+#ifndef TRISYCL_HIDE_IMPLEMENTATION
 // Add some operations on range to help with OpenCL work-group scheduling
 // \todo use an element-wise template instead of copy past below for / and *
 
@@ -233,6 +234,7 @@ range<Dimensions> operator +(range<Dimensions> a,
 
   return result;
 }
+#endif
 
 
 /** Define a multi-dimensional index, used for example to locate a work item
@@ -854,7 +856,7 @@ void parallel_for(nd_range<Dimensions> r,
 /// SYCL parallel_for version that allows a Program object to be specified
 template <typename Range, typename Program, typename ParallelForFunctor>
 void parallel_for(Range r, Program p, ParallelForFunctor f) {
-  // \todo deal with Program
+  /// \todo deal with Program
   parallel_for(r, f);
 }
 
