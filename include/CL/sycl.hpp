@@ -29,6 +29,16 @@
 */
 
 
+/* To remove some implementation details from the SYCL API documentation,
+   rely on the preprocessor when this preprocessor symbol is defined */
+#ifdef TRISYCL_HIDE_IMPLEMENTATION
+// Remove the content of TRISYCL_IMPL...
+#define TRISYCL_IMPL(...)
+#else
+// ... or keep the content of TRISYCL_IMPL
+#define TRISYCL_IMPL(...) __VA_ARGS__
+#endif
+
 #include <cstddef>
 #include <initializer_list>
 
@@ -110,26 +120,28 @@ using namespace trisycl;
     \todo add to the norm some way to specify an offset?
 */
 template <int dims = 1>
-struct range : public RangeImpl<dims> {
+struct range TRISYCL_IMPL(: public RangeImpl<dims>) {
 
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
   static const auto dimensionality = dims;
 
+#ifndef TRISYCL_HIDE_IMPLEMENTATION
   // A shortcut name to the implementation
   using Impl = RangeImpl<dims>;
 
-  range(range<dims> &r) : Impl(r.getImpl()) {}
-
-  range(const range<dims> &r) : Impl(r.getImpl()) {}
-
-
-  /* Construct a range from an implementation, used by nd_range() for example
+  /** Construct a range from an implementation, used by nd_range() for
+      example
 
      This is internal and should not appear in the specification */
   range(Impl &r) : Impl(r) {}
 
   range(const Impl &r) : Impl(r) {}
+#endif
+
+  range(range<dims> &r) : Impl(r.getImpl()) {}
+
+  range(const range<dims> &r) : Impl(r.getImpl()) {}
 
 
   /** Create a n-D range from a positive integer-like list
@@ -234,14 +246,23 @@ range<Dimensions> operator +(range<Dimensions> a,
     Indeed [] is mentioned in text of page 59 but not in class description.
 */
 template <int dims = 1>
-struct id : public IdImpl<dims> {
+struct id TRISYCL_IMPL(: public IdImpl<dims>) {
 
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
   static const auto dimensionality = dims;
 
+
+#ifndef TRISYCL_HIDE_IMPLEMENTATION
   // A shortcut name to the implementation
   using Impl = IdImpl<dims>;
+
+
+  /** Since the runtime needs to construct an id from its implementation
+      for example in item methods, define some hidden constructor here */
+  id(const Impl &init) : Impl(init) {}
+#endif
+
 
   /** Create a zero id
 
@@ -261,11 +282,6 @@ struct id : public IdImpl<dims> {
       ?
   */
   id(const range<dims> &r) : Impl(r.getImpl()) {}
-
-
-  /* Since the runtime needs to construct an id from its implementation
-     for example in item methods, define some hidden constructor here */
-  id(const Impl &init) : Impl(init) {}
 
 
   /** Create a n-D range from a positive integer-like list
@@ -319,7 +335,7 @@ struct id : public IdImpl<dims> {
     \todo add copy constructors in the specification
 */
 template <int dims = 1>
-struct nd_range : NDRangeImpl<dims> {
+struct nd_range TRISYCL_IMPL(: NDRangeImpl<dims>) {
   static_assert(1 <= dims && dims <= 3,
                 "Dimensions are between 1 and 3");
 
@@ -327,8 +343,17 @@ struct nd_range : NDRangeImpl<dims> {
   /// specification?
   static const auto dimensionality = dims;
 
+
+#ifndef TRISYCL_HIDE_IMPLEMENTATION
   // A shortcut name to the implementation
   using Impl = NDRangeImpl<dims>;
+
+  /** Since the runtime needs to construct a nd_range from its
+      implementation for example in parallel_for stuff, define some hidden
+      constructor here */
+  nd_range(const Impl &init) : Impl(init) {}
+#endif
+
 
   /** Construct a ND-range with all the details available in OpenCL
 
@@ -338,11 +363,6 @@ struct nd_range : NDRangeImpl<dims> {
            range<dims> local_size,
            id<dims> offset = id<dims>()) :
     Impl(global_size.getImpl(), local_size.getImpl(), offset.getImpl()) {}
-
-  /* Since the runtime needs to construct a nd_range from its
-     implementation for example in parallel_for stuff, define some hidden
-     constructor here */
-  nd_range(const Impl &init) : Impl(init) {}
 
 
   /// Get the global iteration space range
@@ -371,13 +391,15 @@ struct nd_range : NDRangeImpl<dims> {
     offset?
 */
 template <int dims = 1>
-struct item : ItemImpl<dims> {
+struct item TRISYCL_IMPL(: ItemImpl<dims>) {
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
   static const auto dimensionality = dims;
 
+#ifndef TRISYCL_HIDE_IMPLEMENTATION
   // A shortcut name to the implementation
   using Impl = ItemImpl<dims>;
+#endif
 
 
   /** Create an item from a local size and local size
@@ -428,28 +450,30 @@ struct item : ItemImpl<dims> {
 /** A group index used in a parallel_for_workitem to specify a work_group
  */
 template <int dims = 1>
-struct group : GroupImpl<dims> {
+struct group TRISYCL_IMPL(: GroupImpl<dims>) {
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
   static const auto dimensionality = dims;
 
+#ifndef TRISYCL_HIDE_IMPLEMENTATION
   // A shortcut name to the implementation
   using Impl = GroupImpl<dims>;
+
+  /** Since the runtime needs to construct a group with the right content,
+      define some hidden constructor for this.  Since it is internal,
+      directly use the implementation
+  */
+  group(const NDRangeImpl<dims> &NDR, const IdImpl<dims> &ID) : Impl(NDR, ID) {}
+
+
+  /** Some internal constructor without group id initialization  */
+  group(const NDRangeImpl<dims> &NDR) : Impl(NDR) {}
+#endif
 
 
   /// \todo in the specification, only provide a copy constructor. Any
   /// other constructors should be unspecified
   group(const group &g) : Impl(g.getImpl()) {}
-
-  /* Since the runtime needs to construct a group with the right content,
-     define some hidden constructor for this.  Since it is internal,
-     directly use the implementation
-  */
-  group(const NDRangeImpl<dims> &NDR, const IdImpl<dims> &ID) : Impl(NDR, ID) {}
-
-
-  /* Some internal constructor without group id initialization  */
-  group(const NDRangeImpl<dims> &NDR) : Impl(NDR) {}
 
 
   id<dims> get_group_id() { return Impl::get_group_id(); }
@@ -590,7 +614,8 @@ template <typename dataType,
           size_t dimensions,
           access::mode mode,
           access::target target = access::global_buffer>
-struct accessor : AccessorImpl<dataType, dimensions, mode, target> {
+struct accessor
+TRISYCL_IMPL(: AccessorImpl<dataType, dimensions, mode, target>) {
   /// \todo in the specification: store the dimension for user request
   static const auto dimensionality = dimensions;
   /// \todo in the specification: store the types for user request as STL
@@ -598,9 +623,11 @@ struct accessor : AccessorImpl<dataType, dimensions, mode, target> {
   using element = dataType;
   using value_type = dataType;
 
+#ifndef TRISYCL_HIDE_IMPLEMENTATION
   // Use a short-cut to the implementation because type name becomes quite
   // long...
   using Impl = AccessorImpl<dataType, dimensions, mode, target>;
+#endif
 
   /// Create an accessor to the given buffer
   // \todo fix the specification to rename target that shadows template parm
@@ -631,7 +658,7 @@ struct accessor : AccessorImpl<dataType, dimensions, mode, target> {
 
   /** Get the element specified by the given item
 
-      \todo Add in the specification because use by HPC-GPU slide 22
+      \todo Add in the specification because used by HPC-GPU slide 22
   */
   dataType &operator[](item<dimensionality> Index) const {
     return Impl::operator[](Index);
@@ -652,14 +679,16 @@ struct accessor : AccessorImpl<dataType, dimensions, mode, target> {
 */
 template <typename T,
           int dimensions = 1>
-struct buffer : BufferImpl<T, dimensions> {
+struct buffer TRISYCL_IMPL(: BufferImpl<T, dimensions>) {
   /// \todo Extension to SYCL specification: provide pieces of STL
   /// container interface?
   using element = T;
   using value_type = T;
 
+#ifndef TRISYCL_HIDE_IMPLEMENTATION
   // Use a short-cut because type name becomes quite long...
   using Impl = BufferImpl<T, dimensions>;
+#endif
 
   /// Create a new buffer of size \param r
   buffer(const range<dimensions> &r) : Impl(r.getImpl()) {}
