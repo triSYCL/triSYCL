@@ -63,6 +63,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
+      <li><a href="globals.html"><span>File&#160;Members</span></a></li>
     </ul>
   </div>
 <!-- window showing the filter options -->
@@ -70,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Groups</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Groups</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -111,6 +112,16 @@ Classes</h2></td></tr>
 <tr class="separator:structcl_1_1sycl_1_1item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structcl_1_1sycl_1_1group"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1group">cl::sycl::group&lt; dims &gt;</a></td></tr>
 <tr class="separator:structcl_1_1sycl_1_1group"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structcl_1_1sycl_1_1buffer"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer&lt; T, dimensions &gt;</a></td></tr>
+<tr class="separator:structcl_1_1sycl_1_1buffer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structcl_1_1sycl_1_1image"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1image">cl::sycl::image&lt; dimensions &gt;</a></td></tr>
+<tr class="separator:structcl_1_1sycl_1_1image"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structcl_1_1sycl_1_1exception"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1exception">cl::sycl::exception</a></td></tr>
+<tr class="separator:structcl_1_1sycl_1_1exception"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structcl_1_1sycl_1_1error__handler"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1error__handler">cl::sycl::error_handler</a></td></tr>
+<tr class="separator:structcl_1_1sycl_1_1error__handler"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcl_1_1sycl_1_1trisycl_1_1default__error__handler.html">cl::sycl::trisycl::default_error_handler</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structcl_1_1sycl_1_1device"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#structcl_1_1sycl_1_1device">cl::sycl::device</a></td></tr>
 <tr class="separator:structcl_1_1sycl_1_1device"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structcl_1_1sycl_1_1device__selector"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#structcl_1_1sycl_1_1device__selector">cl::sycl::device_selector</a></td></tr>
@@ -121,13 +132,13 @@ Classes</h2></td></tr>
 <tr class="separator:structcl_1_1sycl_1_1context"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structcl_1_1sycl_1_1queue"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#structcl_1_1sycl_1_1queue">cl::sycl::queue</a></td></tr>
 <tr class="separator:structcl_1_1sycl_1_1queue"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structcl_1_1sycl_1_1platform"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#structcl_1_1sycl_1_1platform">cl::sycl::platform</a></td></tr>
+<tr class="separator:structcl_1_1sycl_1_1platform"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structcl_1_1sycl_1_1command__group"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#structcl_1_1sycl_1_1command__group">cl::sycl::command_group</a></td></tr>
 <tr class="separator:structcl_1_1sycl_1_1command__group"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:structcl_1_1sycl_1_1buffer"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer&lt; T, dimensions &gt;</a></td></tr>
-<tr class="separator:structcl_1_1sycl_1_1buffer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structcl_1_1sycl_1_1accessor"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#structcl_1_1sycl_1_1accessor">cl::sycl::accessor&lt; dataType, dimensions, mode, target &gt;</a></td></tr>
 <tr class="separator:structcl_1_1sycl_1_1accessor"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:structcl_1_1sycl_1_1buffer"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer&lt; T, dimensions &gt;</a></td></tr>
+<tr class="memitem:structcl_1_1sycl_1_1buffer"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer&lt; T, dimensions &gt;</a></td></tr>
 <tr class="separator:structcl_1_1sycl_1_1buffer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
@@ -143,6 +154,12 @@ Macros</h2></td></tr>
 <tr class="memitem:a6985e58b76cc9aabfeb6ff294bbf8cfc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6985e58b76cc9aabfeb6ff294bbf8cfc"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>TRISYCL_IMPL</b>(...)</td></tr>
 <tr class="separator:a6985e58b76cc9aabfeb6ff294bbf8cfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1b68fb4ba71d72d397f46a730f03f2f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sycl_8hpp.html#af1b68fb4ba71d72d397f46a730f03f2f">__CL_ENABLE_EXCEPTIONS</a></td></tr>
+<tr class="separator:af1b68fb4ba71d72d397f46a730f03f2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15193d01246ba1dbf4b93e4066b1b28d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sycl_8hpp.html#a15193d01246ba1dbf4b93e4066b1b28d">VECTOR_CLASS</a>&#160;&#160;&#160;std::vector</td></tr>
+<tr class="separator:a15193d01246ba1dbf4b93e4066b1b28d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad19aab2adb729568aee8e28883c6cf7e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sycl_8hpp.html#ad19aab2adb729568aee8e28883c6cf7e">STRING_CLASS</a>&#160;&#160;&#160;std::string</td></tr>
+<tr class="separator:ad19aab2adb729568aee8e28883c6cf7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -209,10 +226,62 @@ Variables</h2></td></tr>
 int const&#160;</td><td class="memItemRight" valign="bottom"><b>cl::sycl::CL_LOCAL_MEM_FENCE</b> = 123</td></tr>
 <tr class="separator:a0e0e430da77af73e6e74254ce57fed75"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a class="anchor" id="af1b68fb4ba71d72d397f46a730f03f2f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define __CL_ENABLE_EXCEPTIONS</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Define TRISYCL_OPENCL to add OpenCL</p>
+<p>triSYCL can indeed work without OpenCL if only host support is needed.</p>
+<p>Right now it is set by Doxygen to generate the documentation.</p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd>Use a macro to check instead if the OpenCL header has been included before.</dd></dl>
+<p>But what is the right one? <b>OPENCL_CL_H? __OPENCL_C_VERSION</b>? CL_HPP_? Mostly CL_HPP_ to be able to use param_traits&lt;&gt; from cl.hpp... </p>
+
+</div>
+</div>
+<a class="anchor" id="ad19aab2adb729568aee8e28883c6cf7e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define STRING_CLASS&#160;&#160;&#160;std::string</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The string type to be used as SYCL string</p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo:</a></b></dt><dd>this should be more local, such as SYCL_STRING_CLASS or _SYCL_STRING_CLASS</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000007">Todo:</a></b></dt><dd>use a typedef or a using instead of a macro?</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000008">Todo:</a></b></dt><dd>implement __NO_STD_STRING</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000009">Todo:</a></b></dt><dd>Table 3.2 in provisional specification is wrong: STRING_CLASS not at the right place </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a15193d01246ba1dbf4b93e4066b1b28d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define VECTOR_CLASS&#160;&#160;&#160;std::vector</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The vector type to be used as SYCL vector</p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>this should be more local, such as SYCL_VECTOR_CLASS or _SYCL_VECTOR_CLASS</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>use a typedef or a using instead of a macro?</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>implement __NO_STD_VECTOR</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo:</a></b></dt><dd>Table 3.1 in provisional specification is wrong: VECTOR_CLASS not at the right place </dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon May 26 2014 18:55:39 for OpenCL SYCL API by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 20 2014 21:32:27 for OpenCL SYCL API by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.7
 </small></address>

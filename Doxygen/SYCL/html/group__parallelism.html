@@ -66,7 +66,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Groups</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Groups</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -140,9 +140,9 @@ template&lt;int Dimensions = 1, typename ParallelForFunctor &gt; </td></tr>
 struct cl::sycl::range&lt; dims &gt;</h3>
 
 <p>A SYCL range defines a multi-dimensional index range that can be used to launch parallel computation.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>use std::size_t dims instead of int dims in the specification?</dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>add to the norm this default parameter value?</dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>add to the norm some way to specify an offset? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000011">Todo:</a></b></dt><dd>use std::size_t dims instead of int dims in the specification?</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000012">Todo:</a></b></dt><dd>add to the norm this default parameter value?</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000013">Todo:</a></b></dt><dd>add to the norm some way to specify an offset? </dd></dl>
 </div><table class="memberdecls">
 <tr><td colspan="2"><h3>Public Member Functions</h3></td></tr>
 <tr class="memitem:a35b266bc72d07b31349c6e557ba20596"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a35b266bc72d07b31349c6e557ba20596"></a>
@@ -196,7 +196,7 @@ template&lt;int dims = 1&gt; </div>
 </table>
 </div><div class="memdoc">
 <p>Create a n-D range from a positive integer-like list</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000023">Todo:</a></b></dt><dd>This is not the same as the range(dim1,...) constructor from the specification </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000033">Todo:</a></b></dt><dd>This is not the same as the range(dim1,...) constructor from the specification </dd></dl>
 
 </div>
 </div>
@@ -225,9 +225,9 @@ template&lt;int dims = 1&gt; </div>
 </table>
 </div><div class="memdoc">
 <p>Return the range size in the give dimension</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000024">Todo:</a></b></dt><dd>explain in the specification (table 3.29, not only in the text) that [] works also for id, and why not range?</dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000025">Todo:</a></b></dt><dd>add also [] for range in the specification</dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000026">Todo:</a></b></dt><dd>is it supposed to be an int? A cl_int? a size_t? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000034">Todo:</a></b></dt><dd>explain in the specification (table 3.29, not only in the text) that [] works also for id, and why not range?</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000035">Todo:</a></b></dt><dd>add also [] for range in the specification</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000036">Todo:</a></b></dt><dd>is it supposed to be an int? A cl_int? a size_t? </dd></dl>
 
 </div>
 </div>
@@ -251,7 +251,7 @@ template&lt;int dims = 1&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000022">Todo:</a></b></dt><dd>add this Boost::multi_array or STL concept to the specification? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000032">Todo:</a></b></dt><dd>add this Boost::multi_array or STL concept to the specification? </dd></dl>
 
 </div>
 </div>
@@ -271,8 +271,8 @@ template&lt;int dims = 1&gt; </div>
 struct cl::sycl::id&lt; dims &gt;</h3>
 
 <p>Define a multi-dimensional index, used for example to locate a work item</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo:</a></b></dt><dd>The definition of id and item seem completely broken in the current specification. The whole 3.4.1 is to be updated.</dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo:</a></b></dt><dd>It would be nice to have [] working everywhere, provide both get_...() and get_...(int dim) equivalent to get_...()[int dim] Well it is already the case for item. So not needed for id? Indeed [] is mentioned in text of page 59 but not in class description. </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000014">Todo:</a></b></dt><dd>The definition of id and item seem completely broken in the current specification. The whole 3.4.1 is to be updated.</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000015">Todo:</a></b></dt><dd>It would be nice to have [] working everywhere, provide both get_...() and get_...(int dim) equivalent to get_...()[int dim] Well it is already the case for item. So not needed for id? Indeed [] is mentioned in text of page 59 but not in class description. </dd></dl>
 </div><table class="memberdecls">
 <tr><td colspan="2"><h3>Public Member Functions</h3></td></tr>
 <tr class="memitem:a69f6daaec3e75b7e6e23bdef0f88a35c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__parallelism.html#a69f6daaec3e75b7e6e23bdef0f88a35c">id</a> ()</td></tr>
@@ -319,7 +319,7 @@ template&lt;int dims = 1&gt; </div>
 </table>
 </div><div class="memdoc">
 <p>Create a zero id</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000028">Todo:</a></b></dt><dd>Add it to the specification? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000038">Todo:</a></b></dt><dd>Add it to the specification? </dd></dl>
 
 </div>
 </div>
@@ -346,8 +346,8 @@ template&lt;int dims = 1&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Create an id from a given range </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000029">Todo:</a></b></dt><dd>Is this necessary?</dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000030">Todo:</a></b></dt><dd>why in the specification id&lt;int dims&gt;(range&lt;dims&gt;global_size, range&lt;dims&gt; local_size) ? </dd></dl>
+<p>Create an id from a given range </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000039">Todo:</a></b></dt><dd>Is this necessary?</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000040">Todo:</a></b></dt><dd>why in the specification id&lt;int dims&gt;(range&lt;dims&gt;global_size, range&lt;dims&gt; local_size) ? </dd></dl>
 
 </div>
 </div>
@@ -375,7 +375,7 @@ template&lt;int dims = 1&gt; </div>
 </table>
 </div><div class="memdoc">
 <p>Create a n-D range from a positive integer-like list</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000031">Todo:</a></b></dt><dd>Add this to the specification? Since it is said to be usable as a std::vector&lt;&gt;... </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000041">Todo:</a></b></dt><dd>Add this to the specification? Since it is said to be usable as a std::vector&lt;&gt;... </dd></dl>
 
 </div>
 </div>
@@ -403,7 +403,7 @@ template&lt;int dims = 1&gt; </div>
 </table>
 </div><div class="memdoc">
 <p>To have implicit conversion from 1 integer</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000032">Todo:</a></b></dt><dd>Extension to the specification </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000042">Todo:</a></b></dt><dd>Extension to the specification </dd></dl>
 
 </div>
 </div>
@@ -432,7 +432,7 @@ template&lt;int dims = 1&gt; </div>
 </table>
 </div><div class="memdoc">
 <p>Return the id size in the given dimension</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000033">Todo:</a></b></dt><dd>is it supposed to be an int? A cl_int? a size_t? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000043">Todo:</a></b></dt><dd>is it supposed to be an int? A cl_int? a size_t? </dd></dl>
 
 </div>
 </div>
@@ -460,9 +460,9 @@ template&lt;int dims = 1&gt; </div>
 </table>
 </div><div class="memdoc">
 <p>Return the id size in the given dimension</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000034">Todo:</a></b></dt><dd>explain in the specification (table 3.29, not only in the text) that [] works also for id, and why not range?</dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000035">Todo:</a></b></dt><dd>add also [] for range in the specification</dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000036">Todo:</a></b></dt><dd>is it supposed to be an int? A cl_int? a size_t? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000044">Todo:</a></b></dt><dd>explain in the specification (table 3.29, not only in the text) that [] works also for id, and why not range?</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000045">Todo:</a></b></dt><dd>add also [] for range in the specification</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000046">Todo:</a></b></dt><dd>is it supposed to be an int? A cl_int? a size_t? </dd></dl>
 
 </div>
 </div>
@@ -486,7 +486,7 @@ template&lt;int dims = 1&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000027">Todo:</a></b></dt><dd>add this Boost::multi_array or STL concept to the specification? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000037">Todo:</a></b></dt><dd>add this Boost::multi_array or STL concept to the specification? </dd></dl>
 
 </div>
 </div>
@@ -507,7 +507,7 @@ struct cl::sycl::nd_range&lt; dims &gt;</h3>
 
 <p>A ND-range, made by a global and local range, to specify work-group and work-item organization.</p>
 <p>The local offset is used to translate the iteration space origin if needed.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000007">Todo:</a></b></dt><dd>add copy constructors in the specification </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000016">Todo:</a></b></dt><dd>add copy constructors in the specification </dd></dl>
 </div><table class="memberdecls">
 <tr><td colspan="2"><h3>Public Member Functions</h3></td></tr>
 <tr class="memitem:a3dd9d9bcc6157ae78d82fcea34155510"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__parallelism.html#a3dd9d9bcc6157ae78d82fcea34155510">nd_range</a> (<a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1range">range</a>&lt; dims &gt; global_size, <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1range">range</a>&lt; dims &gt; local_size, <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1id">id</a>&lt; dims &gt; offset=<a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1id">id</a>&lt; dims &gt;())</td></tr>
@@ -598,7 +598,7 @@ template&lt;int dims = 1&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000038">Todo:</a></b></dt><dd><a class="el" href="group__parallelism.html#aee3a46d4c5851fd3f62c81c4af7add29">get_offset()</a> is lacking in the specification </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000048">Todo:</a></b></dt><dd><a class="el" href="group__parallelism.html#aee3a46d4c5851fd3f62c81c4af7add29">get_offset()</a> is lacking in the specification </dd></dl>
 
 </div>
 </div>
@@ -622,7 +622,7 @@ template&lt;int dims = 1&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000037">Todo:</a></b></dt><dd>add this Boost::multi_array or STL concept to the specification? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000047">Todo:</a></b></dt><dd>add this Boost::multi_array or STL concept to the specification? </dd></dl>
 
 </div>
 </div>
@@ -642,7 +642,7 @@ template&lt;int dims = 1&gt; </div>
 struct cl::sycl::item&lt; dims &gt;</h3>
 
 <p>A SYCL item stores information on a work-item within a work-group, with some more context such as the definition ranges.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000008">Todo:</a></b></dt><dd>Add to the specification: get_nd_range() to be coherent with providing get_local...() and get_global...() and what about the offset? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000017">Todo:</a></b></dt><dd>Add to the specification: get_nd_range() to be coherent with providing get_local...() and get_global...() and what about the offset? </dd></dl>
 </div><table class="memberdecls">
 <tr><td colspan="2"><h3>Public Member Functions</h3></td></tr>
 <tr class="memitem:a3c04ebee9f4c7d42e5117189ccb93e6d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__parallelism.html#a3c04ebee9f4c7d42e5117189ccb93e6d">item</a> (<a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1range">range</a>&lt; dims &gt; global_size, <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1range">range</a>&lt; dims &gt; local_size)</td></tr>
@@ -712,7 +712,7 @@ template&lt;int dims = 1&gt; </div>
 </table>
 </div><div class="memdoc">
 <p>Create an item from a local size and local size</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000040">Todo:</a></b></dt><dd>what is the meaning of this constructor for a programmer? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000050">Todo:</a></b></dt><dd>what is the meaning of this constructor for a programmer? </dd></dl>
 
 </div>
 </div>
@@ -739,7 +739,7 @@ template&lt;int dims = 1&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000041">Todo:</a></b></dt><dd>a constructor from a <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1nd__range">nd_range</a> too in the specification if the previous one has a meaning? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000051">Todo:</a></b></dt><dd>a constructor from a <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1nd__range">nd_range</a> too in the specification if the previous one has a meaning? </dd></dl>
 
 </div>
 </div>
@@ -763,7 +763,7 @@ template&lt;int dims = 1&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000039">Todo:</a></b></dt><dd>add this Boost::multi_array or STL concept to the specification? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000049">Todo:</a></b></dt><dd>add this Boost::multi_array or STL concept to the specification? </dd></dl>
 
 </div>
 </div>
@@ -828,7 +828,7 @@ template&lt;int dims = 1&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000045">Todo:</a></b></dt><dd>in the specification, only provide a copy constructor. Any other constructors should be unspecified </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000055">Todo:</a></b></dt><dd>in the specification, only provide a copy constructor. Any other constructors should be unspecified </dd></dl>
 
 </div>
 </div>
@@ -857,8 +857,8 @@ template&lt;int dims = 1&gt; </div>
 </table>
 </div><div class="memdoc">
 <p>Return the group coordinate in the given dimension</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000050">Todo:</a></b></dt><dd>add it to the specification?</dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000051">Todo:</a></b></dt><dd>is it supposed to be an int? A cl_int? a size_t? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000060">Todo:</a></b></dt><dd>add it to the specification?</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000061">Todo:</a></b></dt><dd>is it supposed to be an int? A cl_int? a size_t? </dd></dl>
 
 </div>
 </div>
@@ -885,7 +885,7 @@ template&lt;int dims = 1&gt; </div>
 </table>
 </div><div class="memdoc">
 <p>Get the local range for this work_group</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000047">Todo:</a></b></dt><dd>Update the specification to return a range&lt;dims&gt; instead of an id&lt;&gt; </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000057">Todo:</a></b></dt><dd>Update the specification to return a range&lt;dims&gt; instead of an id&lt;&gt; </dd></dl>
 
 </div>
 </div>
@@ -912,7 +912,7 @@ template&lt;int dims = 1&gt; </div>
 </table>
 </div><div class="memdoc">
 <p>Get the local range for this work_group</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000046">Todo:</a></b></dt><dd>Update the specification to return a range&lt;dims&gt; instead of an id&lt;&gt; </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000056">Todo:</a></b></dt><dd>Update the specification to return a range&lt;dims&gt; instead of an id&lt;&gt; </dd></dl>
 
 </div>
 </div>
@@ -938,8 +938,8 @@ template&lt;int dims = 1&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000048">Todo:</a></b></dt><dd>Why the offset is not available here? </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000049">Todo:</a></b></dt><dd>Also provide this access to the current <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1nd__range">nd_range</a> </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000058">Todo:</a></b></dt><dd>Why the offset is not available here? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000059">Todo:</a></b></dt><dd>Also provide this access to the current <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1nd__range">nd_range</a> </dd></dl>
 
 </div>
 </div>
@@ -967,8 +967,8 @@ template&lt;int dims = 1&gt; </div>
 </table>
 </div><div class="memdoc">
 <p>Return the group coordinate in the given dimension</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000052">Todo:</a></b></dt><dd>add it to the specification?</dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000053">Todo:</a></b></dt><dd>is it supposed to be an int? A cl_int? a size_t? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000062">Todo:</a></b></dt><dd>add it to the specification?</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000063">Todo:</a></b></dt><dd>is it supposed to be an int? A cl_int? a size_t? </dd></dl>
 
 </div>
 </div>
@@ -992,7 +992,7 @@ template&lt;int dims = 1&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000044">Todo:</a></b></dt><dd>add this Boost::multi_array or STL concept to the specification? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000054">Todo:</a></b></dt><dd>add this Boost::multi_array or STL concept to the specification? </dd></dl>
 
 </div>
 </div>
@@ -1016,7 +1016,7 @@ template&lt;typename KernelName , typename Functor &gt; </div>
       </table>
 </div><div class="memdoc">
 <p>kernel_lambda specify a kernel to be launch with a single_task or parallel_for</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000015">Todo:</a></b></dt><dd>This seems to have also the kernel_functor name in the specification </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000025">Todo:</a></b></dt><dd>This seems to have also the kernel_functor name in the specification </dd></dl>
 
 </div>
 </div>
@@ -1047,7 +1047,7 @@ template&lt;int Dimensions = 1, typename ParallelForFunctor &gt; </div>
 </div><div class="memdoc">
 <p>SYCL parallel_for launches a data parallel computation with parallelism specified at launch time by a range&lt;&gt;.</p>
 <p>This implementation use OpenMP 3 if compiled with the right flag.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000016">Todo:</a></b></dt><dd>It is not clear if the ParallelForFunctor is called with an id&lt;&gt; or with an item. Let's use id&lt;&gt; when called with a range&lt;&gt; and item&lt;&gt; when called with a nd_range&lt;&gt; </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000026">Todo:</a></b></dt><dd>It is not clear if the ParallelForFunctor is called with an id&lt;&gt; or with an item. Let's use id&lt;&gt; when called with a range&lt;&gt; and item&lt;&gt; when called with a nd_range&lt;&gt; </dd></dl>
 
 </div>
 </div>
@@ -1077,9 +1077,9 @@ template&lt;int Dimensions = 1, typename ParallelForFunctor &gt; </div>
       </table>
 </div><div class="memdoc">
 <p>A variation of SYCL parallel_for to take into account a nd_range&lt;&gt;</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000017">Todo:</a></b></dt><dd>Add an OpenMP implementation</dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000018">Todo:</a></b></dt><dd>Deal with incomplete work-groups</dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000019">Todo:</a></b></dt><dd>Implement with <a class="el" href="group__parallelism.html#ga22b68c6f8968dbe90ef56bb3be46791e" title="SYCL parallel_for_workgroup. ">parallel_for_workgroup()</a>/parallel_for_workitem() </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000027">Todo:</a></b></dt><dd>Add an OpenMP implementation</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000028">Todo:</a></b></dt><dd>Deal with incomplete work-groups</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000029">Todo:</a></b></dt><dd>Implement with <a class="el" href="group__parallelism.html#ga22b68c6f8968dbe90ef56bb3be46791e" title="SYCL parallel_for_workgroup. ">parallel_for_workgroup()</a>/parallel_for_workitem() </dd></dl>
 
 </div>
 </div>
@@ -1116,7 +1116,7 @@ template&lt;typename Range , typename Program , typename ParallelForFunctor &gt;
 </div><div class="memdoc">
 
 <p>SYCL parallel_for version that allows a Program object to be specified. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000020">Todo:</a></b></dt><dd>deal with Program </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000030">Todo:</a></b></dt><dd>deal with Program </dd></dl>
 
 </div>
 </div>
@@ -1141,7 +1141,7 @@ template&lt;typename Range , typename Program , typename ParallelForFunctor &gt;
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon May 26 2014 18:55:39 for OpenCL SYCL API by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 20 2014 21:32:27 for OpenCL SYCL API by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.7
 </small></address>

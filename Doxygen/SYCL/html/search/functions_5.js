@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['nd_5frange',['nd_range',['../group__parallelism.html#a3dd9d9bcc6157ae78d82fcea34155510',1,'cl::sycl::nd_range']]]
+  ['kernel_5flambda',['kernel_lambda',['../group__parallelism.html#ga8bf8bfae1064d9a5d9577905c633ef72',1,'cl::sycl']]]
 ];

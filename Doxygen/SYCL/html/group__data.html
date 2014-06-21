@@ -66,7 +66,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Groups</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Groups</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -83,6 +83,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">Data access and storage in SYCL</div>  </div>
 </div><!--header-->
 <div class="contents">
+<div class="dynheader">
+Collaboration diagram for Data access and storage in SYCL:</div>
+<div class="dyncontent">
+<center><table><tr><td><img src="group__data.png" border="0" alt="" usemap="#group____data"/>
+<map name="group____data" id="group____data">
+<area shape="rect" id="node2" href="group__error__handling.html" title="Error handling" alt="" coords="305,15,407,49"/></map>
+</td></tr></table></center>
+</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
@@ -91,13 +99,177 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:structcl_1_1sycl_1_1buffer"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer&lt; T, dimensions &gt;</a></td></tr>
-<tr class="separator:structcl_1_1sycl_1_1buffer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structcl_1_1sycl_1_1accessor"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#structcl_1_1sycl_1_1accessor">cl::sycl::accessor&lt; dataType, dimensions, mode, target &gt;</a></td></tr>
 <tr class="separator:structcl_1_1sycl_1_1accessor"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structcl_1_1sycl_1_1buffer"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer&lt; T, dimensions &gt;</a></td></tr>
+<tr class="separator:structcl_1_1sycl_1_1buffer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <hr/><h2 class="groupheader">Class Documentation</h2>
+<a name="structcl_1_1sycl_1_1accessor" id="structcl_1_1sycl_1_1accessor"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct cl::sycl::accessor</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"><h3>template&lt;typename dataType, size_t dimensions, access::mode mode, access::target target = access::global_buffer&gt;<br />
+struct cl::sycl::accessor&lt; dataType, dimensions, mode, target &gt;</h3>
+
+<p>The accessor abstracts the way buffer data are accessed inside a kernel in a multidimensional variable length array way.</p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000023">Todo:</a></b></dt><dd>Implement it for images according so section 3.3.4.5 </dd></dl>
+</div><table class="memberdecls">
+<tr><td colspan="2"><h3>Public Types</h3></td></tr>
+<tr class="memitem:af802de7e9269d44b98db3ee856b4fe5e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#af802de7e9269d44b98db3ee856b4fe5e">element</a> = dataType</td></tr>
+<tr class="separator:af802de7e9269d44b98db3ee856b4fe5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8edf819288e58510eca8a86a5009d5f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac8edf819288e58510eca8a86a5009d5f"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = dataType</td></tr>
+<tr class="separator:ac8edf819288e58510eca8a86a5009d5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><h3>Public Member Functions</h3></td></tr>
+<tr class="memitem:ab093287499f4d89d4eb9901a266e0b29"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab093287499f4d89d4eb9901a266e0b29"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#ab093287499f4d89d4eb9901a266e0b29">accessor</a> (<a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">buffer</a>&lt; dataType, dimensions &gt; &amp;targetBuffer)</td></tr>
+<tr class="memdesc:ab093287499f4d89d4eb9901a266e0b29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an accessor to the given buffer. <br /></td></tr>
+<tr class="separator:ab093287499f4d89d4eb9901a266e0b29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01895ee72a9c7eb0a1dad1008b88066d"><td class="memItemLeft" align="right" valign="top">dataType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#a01895ee72a9c7eb0a1dad1008b88066d">operator[]</a> (<a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1id">id</a>&lt; <a class="el" href="group__data.html#adf2c21f84b6b2e0f4809a2552381de47">dimensionality</a> &gt; Index) const </td></tr>
+<tr class="separator:a01895ee72a9c7eb0a1dad1008b88066d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca3635845163f5fc54e579c5d5a0dd8d"><td class="memItemLeft" align="right" valign="top">dataType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#aca3635845163f5fc54e579c5d5a0dd8d">operator[]</a> (size_t Index) const </td></tr>
+<tr class="separator:aca3635845163f5fc54e579c5d5a0dd8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88523df1ec1b0750e6077d30f9af583c"><td class="memItemLeft" align="right" valign="top">dataType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#a88523df1ec1b0750e6077d30f9af583c">operator[]</a> (<a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1item">item</a>&lt; <a class="el" href="group__data.html#adf2c21f84b6b2e0f4809a2552381de47">dimensionality</a> &gt; Index) const </td></tr>
+<tr class="separator:a88523df1ec1b0750e6077d30f9af583c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><h3>Static Public Attributes</h3></td></tr>
+<tr class="memitem:adf2c21f84b6b2e0f4809a2552381de47"><td class="memItemLeft" align="right" valign="top">static const auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#adf2c21f84b6b2e0f4809a2552381de47">dimensionality</a> = dimensions</td></tr>
+<tr class="separator:adf2c21f84b6b2e0f4809a2552381de47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h4 class="groupheader">Member Typedef Documentation</h4>
+<a class="anchor" id="af802de7e9269d44b98db3ee856b4fe5e"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename dataType , size_t dimensions, access::mode mode, access::target target = access::global_buffer&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="group__data.html#structcl_1_1sycl_1_1accessor">cl::sycl::accessor</a>&lt; dataType, dimensions, mode, target &gt;::<a class="el" href="group__data.html#af802de7e9269d44b98db3ee856b4fe5e">element</a> =  dataType</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000082">Todo:</a></b></dt><dd>in the specification: store the types for user request as STL </dd></dl>
+
+</div>
+</div>
+<h4 class="groupheader">Member Function Documentation</h4>
+<a class="anchor" id="a01895ee72a9c7eb0a1dad1008b88066d"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename dataType , size_t dimensions, access::mode mode, access::target target = access::global_buffer&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">dataType&amp; <a class="el" href="group__data.html#structcl_1_1sycl_1_1accessor">cl::sycl::accessor</a>&lt; dataType, dimensions, mode, target &gt;::operator[] </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1id">id</a>&lt; <a class="el" href="group__data.html#adf2c21f84b6b2e0f4809a2552381de47">dimensionality</a> &gt;&#160;</td>
+          <td class="paramname"><em>Index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Get the element specified by the given id</p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000083">Todo:</a></b></dt><dd>Implement the "const dataType &amp;" version in the case the accessor is not for writing, as required by the specification </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aca3635845163f5fc54e579c5d5a0dd8d"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename dataType , size_t dimensions, access::mode mode, access::target target = access::global_buffer&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">dataType&amp; <a class="el" href="group__data.html#structcl_1_1sycl_1_1accessor">cl::sycl::accessor</a>&lt; dataType, dimensions, mode, target &gt;::operator[] </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>Index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Get the element specified by the given index in the case we are mono-dimensional</p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000084">Todo:</a></b></dt><dd>This is not in the specification but looks like a cool common feature. Or solving it with an implicit constructor of id&lt;1&gt;? </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a88523df1ec1b0750e6077d30f9af583c"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename dataType , size_t dimensions, access::mode mode, access::target target = access::global_buffer&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">dataType&amp; <a class="el" href="group__data.html#structcl_1_1sycl_1_1accessor">cl::sycl::accessor</a>&lt; dataType, dimensions, mode, target &gt;::operator[] </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1item">item</a>&lt; <a class="el" href="group__data.html#adf2c21f84b6b2e0f4809a2552381de47">dimensionality</a> &gt;&#160;</td>
+          <td class="paramname"><em>Index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Get the element specified by the given item</p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000085">Todo:</a></b></dt><dd>Add in the specification because used by HPC-GPU slide 22 </dd></dl>
+
+</div>
+</div>
+<h4 class="groupheader">Member Data Documentation</h4>
+<a class="anchor" id="adf2c21f84b6b2e0f4809a2552381de47"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename dataType , size_t dimensions, access::mode mode, access::target target = access::global_buffer&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const auto <a class="el" href="group__data.html#structcl_1_1sycl_1_1accessor">cl::sycl::accessor</a>&lt; dataType, dimensions, mode, target &gt;::dimensionality = dimensions</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000081">Todo:</a></b></dt><dd>in the specification: store the dimension for user request </dd></dl>
+
+</div>
+</div>
+
+</div>
+</div>
 <a name="structcl_1_1sycl_1_1buffer" id="structcl_1_1sycl_1_1buffer"></a>
 <div class="memitem">
 <div class="memproto">
@@ -112,32 +284,32 @@ struct cl::sycl::buffer&lt; T, dimensions &gt;</h3>
 
 <p>A SYCL buffer is a multidimensional variable length array (à la C99 VLA or even Fortran before) that is used to store data to work on.</p>
 <p>In the case we initialize it from a pointer, for now we just wrap the data with boost::multi_array_ref to provide the VLA semantics without any storage.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000014">Todo:</a></b></dt><dd>there is a naming inconsistency in the specification between buffer and accessor on T versus datatype </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000024">Todo:</a></b></dt><dd>there is a naming inconsistency in the specification between buffer and accessor on T versus datatype </dd></dl>
 </div><table class="memberdecls">
 <tr><td colspan="2"><h3>Public Types</h3></td></tr>
-<tr class="memitem:a50fc52de5458745304d834b8366872a2"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#a50fc52de5458745304d834b8366872a2">element</a> = T</td></tr>
+<tr class="memitem:a50fc52de5458745304d834b8366872a2"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__error__handling.html#a50fc52de5458745304d834b8366872a2">element</a> = T</td></tr>
 <tr class="separator:a50fc52de5458745304d834b8366872a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a15c7ffdd04f88a910d0ec018fea13a7b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a15c7ffdd04f88a910d0ec018fea13a7b"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = T</td></tr>
 <tr class="separator:a15c7ffdd04f88a910d0ec018fea13a7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><h3>Public Member Functions</h3></td></tr>
-<tr class="memitem:ab67f1478916dd2fa139bf719923d4d69"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#ab67f1478916dd2fa139bf719923d4d69">buffer</a> (const <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1range">range</a>&lt; dimensions &gt; &amp;r)</td></tr>
+<tr class="memitem:ab67f1478916dd2fa139bf719923d4d69"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__error__handling.html#ab67f1478916dd2fa139bf719923d4d69">buffer</a> (const <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1range">range</a>&lt; dimensions &gt; &amp;r)</td></tr>
 <tr class="memdesc:ab67f1478916dd2fa139bf719923d4d69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new buffer of size.  <a href="#ab67f1478916dd2fa139bf719923d4d69">More...</a><br /></td></tr>
 <tr class="separator:ab67f1478916dd2fa139bf719923d4d69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add07231772e65f0183e56ac57304def5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#add07231772e65f0183e56ac57304def5">buffer</a> (T *host_data, <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1range">range</a>&lt; dimensions &gt; r)</td></tr>
+<tr class="memitem:add07231772e65f0183e56ac57304def5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__error__handling.html#add07231772e65f0183e56ac57304def5">buffer</a> (T *host_data, <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1range">range</a>&lt; dimensions &gt; r)</td></tr>
 <tr class="separator:add07231772e65f0183e56ac57304def5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae652f090717104b83ac3ac4bb56f8aa4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#ae652f090717104b83ac3ac4bb56f8aa4">buffer</a> (const T *host_data, <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1range">range</a>&lt; dimensions &gt; r)</td></tr>
+<tr class="memitem:ae652f090717104b83ac3ac4bb56f8aa4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__error__handling.html#ae652f090717104b83ac3ac4bb56f8aa4">buffer</a> (const T *host_data, <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1range">range</a>&lt; dimensions &gt; r)</td></tr>
 <tr class="separator:ae652f090717104b83ac3ac4bb56f8aa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9962990f57b1f97cae0b790a95b59bd5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#a9962990f57b1f97cae0b790a95b59bd5">buffer</a> (const T *start_iterator, const T *end_iterator)</td></tr>
+<tr class="memitem:a9962990f57b1f97cae0b790a95b59bd5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__error__handling.html#a9962990f57b1f97cae0b790a95b59bd5">buffer</a> (const T *start_iterator, const T *end_iterator)</td></tr>
 <tr class="memdesc:a9962990f57b1f97cae0b790a95b59bd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new allocated 1D buffer from the given elements.  <a href="#a9962990f57b1f97cae0b790a95b59bd5">More...</a><br /></td></tr>
 <tr class="separator:a9962990f57b1f97cae0b790a95b59bd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a504d2bac372f3c0eca24d496f892b456"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a504d2bac372f3c0eca24d496f892b456"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#a504d2bac372f3c0eca24d496f892b456">buffer</a> (<a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">buffer</a>&lt; T, dimensions &gt; &amp;b)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__error__handling.html#a504d2bac372f3c0eca24d496f892b456">buffer</a> (<a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">buffer</a>&lt; T, dimensions &gt; &amp;b)</td></tr>
 <tr class="memdesc:a504d2bac372f3c0eca24d496f892b456"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new buffer from an old one, with a new allocation. <br /></td></tr>
 <tr class="separator:a504d2bac372f3c0eca24d496f892b456"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c8e36ffea1e699fc1ad10578ead12b9"><td class="memTemplParams" colspan="2">template&lt;access::mode mode, access::target target = access::global_buffer&gt; </td></tr>
 <tr class="memitem:a3c8e36ffea1e699fc1ad10578ead12b9"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__data.html#structcl_1_1sycl_1_1accessor">accessor</a>&lt; T, dimensions, mode, <br class="typebreak" />
-target &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__data.html#a3c8e36ffea1e699fc1ad10578ead12b9">get_access</a> ()</td></tr>
+target &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__error__handling.html#a3c8e36ffea1e699fc1ad10578ead12b9">get_access</a> ()</td></tr>
 <tr class="memdesc:a3c8e36ffea1e699fc1ad10578ead12b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return an accessor of the required mode.  <a href="#a3c8e36ffea1e699fc1ad10578ead12b9">More...</a><br /></td></tr>
 <tr class="separator:a3c8e36ffea1e699fc1ad10578ead12b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -149,11 +321,11 @@ target &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el
 template&lt;typename T, int dimensions&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::<a class="el" href="group__data.html#a50fc52de5458745304d834b8366872a2">element</a> =  T</td>
+          <td class="memname">using <a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::<a class="el" href="group__error__handling.html#a50fc52de5458745304d834b8366872a2">element</a> =  T</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000059">Todo:</a></b></dt><dd>Extension to SYCL specification: provide pieces of STL container interface? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000086">Todo:</a></b></dt><dd>Extension to SYCL specification: provide pieces of STL container interface? </dd></dl>
 
 </div>
 </div>
@@ -168,7 +340,7 @@ template&lt;typename T, int dimensions&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::<a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">buffer</a> </td>
+          <td class="memname"><a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::<a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">buffer</a> </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1range">range</a>&lt; dimensions &gt; &amp;&#160;</td>
           <td class="paramname"><em>r</em></td><td>)</td>
@@ -202,7 +374,7 @@ template&lt;typename T, int dimensions&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::<a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">buffer</a> </td>
+          <td class="memname"><a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::<a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">buffer</a> </td>
           <td>(</td>
           <td class="paramtype">T *&#160;</td>
           <td class="paramname"><em>host_data</em>, </td>
@@ -245,7 +417,7 @@ template&lt;typename T, int dimensions&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::<a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">buffer</a> </td>
+          <td class="memname"><a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::<a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">buffer</a> </td>
           <td>(</td>
           <td class="paramtype">const T *&#160;</td>
           <td class="paramname"><em>host_data</em>, </td>
@@ -288,7 +460,7 @@ template&lt;typename T, int dimensions&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::<a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">buffer</a> </td>
+          <td class="memname"><a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::<a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">buffer</a> </td>
           <td>(</td>
           <td class="paramtype">const T *&#160;</td>
           <td class="paramname"><em>start_iterator</em>, </td>
@@ -313,7 +485,7 @@ template&lt;typename T, int dimensions&gt; </div>
 </div><div class="memdoc">
 
 <p>Create a new allocated 1D buffer from the given elements. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000060">Todo:</a></b></dt><dd></dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000087">Todo:</a></b></dt><dd></dd></dl>
 
 </div>
 </div>
@@ -330,7 +502,7 @@ template&lt;access::mode mode, access::target target = access::global_buffer&gt;
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__data.html#structcl_1_1sycl_1_1accessor">accessor</a>&lt;T, dimensions, mode, target&gt; <a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::get_access </td>
+          <td class="memname"><a class="el" href="group__data.html#structcl_1_1sycl_1_1accessor">accessor</a>&lt;T, dimensions, mode, target&gt; <a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::get_access </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -356,174 +528,10 @@ template&lt;access::mode mode, access::target target = access::global_buffer&gt;
 
 </div>
 </div>
-<a name="structcl_1_1sycl_1_1accessor" id="structcl_1_1sycl_1_1accessor"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">struct cl::sycl::accessor</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<div class="textblock"><h3>template&lt;typename dataType, size_t dimensions, access::mode mode, access::target target = access::global_buffer&gt;<br />
-struct cl::sycl::accessor&lt; dataType, dimensions, mode, target &gt;</h3>
-
-<p>The accessor abstracts the way buffer data are accessed inside a kernel in a multidimensional variable length array way.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000013">Todo:</a></b></dt><dd>Implement it for images according so section 3.3.4.5 </dd></dl>
-</div><table class="memberdecls">
-<tr><td colspan="2"><h3>Public Types</h3></td></tr>
-<tr class="memitem:af802de7e9269d44b98db3ee856b4fe5e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#af802de7e9269d44b98db3ee856b4fe5e">element</a> = dataType</td></tr>
-<tr class="separator:af802de7e9269d44b98db3ee856b4fe5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8edf819288e58510eca8a86a5009d5f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac8edf819288e58510eca8a86a5009d5f"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = dataType</td></tr>
-<tr class="separator:ac8edf819288e58510eca8a86a5009d5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr><td colspan="2"><h3>Public Member Functions</h3></td></tr>
-<tr class="memitem:ab093287499f4d89d4eb9901a266e0b29"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab093287499f4d89d4eb9901a266e0b29"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#ab093287499f4d89d4eb9901a266e0b29">accessor</a> (<a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">buffer</a>&lt; dataType, dimensions &gt; &amp;targetBuffer)</td></tr>
-<tr class="memdesc:ab093287499f4d89d4eb9901a266e0b29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an accessor to the given buffer. <br /></td></tr>
-<tr class="separator:ab093287499f4d89d4eb9901a266e0b29"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a01895ee72a9c7eb0a1dad1008b88066d"><td class="memItemLeft" align="right" valign="top">dataType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#a01895ee72a9c7eb0a1dad1008b88066d">operator[]</a> (<a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1id">id</a>&lt; <a class="el" href="group__data.html#adf2c21f84b6b2e0f4809a2552381de47">dimensionality</a> &gt; Index) const </td></tr>
-<tr class="separator:a01895ee72a9c7eb0a1dad1008b88066d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca3635845163f5fc54e579c5d5a0dd8d"><td class="memItemLeft" align="right" valign="top">dataType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#aca3635845163f5fc54e579c5d5a0dd8d">operator[]</a> (size_t Index) const </td></tr>
-<tr class="separator:aca3635845163f5fc54e579c5d5a0dd8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88523df1ec1b0750e6077d30f9af583c"><td class="memItemLeft" align="right" valign="top">dataType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#a88523df1ec1b0750e6077d30f9af583c">operator[]</a> (<a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1item">item</a>&lt; <a class="el" href="group__data.html#adf2c21f84b6b2e0f4809a2552381de47">dimensionality</a> &gt; Index) const </td></tr>
-<tr class="separator:a88523df1ec1b0750e6077d30f9af583c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr><td colspan="2"><h3>Static Public Attributes</h3></td></tr>
-<tr class="memitem:adf2c21f84b6b2e0f4809a2552381de47"><td class="memItemLeft" align="right" valign="top">static const auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#adf2c21f84b6b2e0f4809a2552381de47">dimensionality</a> = dimensions</td></tr>
-<tr class="separator:adf2c21f84b6b2e0f4809a2552381de47"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
-<h4 class="groupheader">Member Typedef Documentation</h4>
-<a class="anchor" id="af802de7e9269d44b98db3ee856b4fe5e"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename dataType , size_t dimensions, access::mode mode, access::target target = access::global_buffer&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="group__data.html#structcl_1_1sycl_1_1accessor">cl::sycl::accessor</a>&lt; dataType, dimensions, mode, target &gt;::<a class="el" href="group__data.html#af802de7e9269d44b98db3ee856b4fe5e">element</a> =  dataType</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000055">Todo:</a></b></dt><dd>in the specification: store the types for user request as STL </dd></dl>
-
-</div>
-</div>
-<h4 class="groupheader">Member Function Documentation</h4>
-<a class="anchor" id="a01895ee72a9c7eb0a1dad1008b88066d"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename dataType , size_t dimensions, access::mode mode, access::target target = access::global_buffer&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">dataType&amp; <a class="el" href="group__data.html#structcl_1_1sycl_1_1accessor">cl::sycl::accessor</a>&lt; dataType, dimensions, mode, target &gt;::operator[] </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1id">id</a>&lt; <a class="el" href="group__data.html#adf2c21f84b6b2e0f4809a2552381de47">dimensionality</a> &gt;&#160;</td>
-          <td class="paramname"><em>Index</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Get the element specified by the given id</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000056">Todo:</a></b></dt><dd>Implement the "const dataType &amp;" version in the case the accessor is not for writing, as required by the specification </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="aca3635845163f5fc54e579c5d5a0dd8d"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename dataType , size_t dimensions, access::mode mode, access::target target = access::global_buffer&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">dataType&amp; <a class="el" href="group__data.html#structcl_1_1sycl_1_1accessor">cl::sycl::accessor</a>&lt; dataType, dimensions, mode, target &gt;::operator[] </td>
-          <td>(</td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>Index</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Get the element specified by the given index in the case we are mono-dimensional</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000057">Todo:</a></b></dt><dd>This is not in the specification but looks like a cool common feature. Or solving it with an implicit constructor of id&lt;1&gt;? </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a88523df1ec1b0750e6077d30f9af583c"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename dataType , size_t dimensions, access::mode mode, access::target target = access::global_buffer&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">dataType&amp; <a class="el" href="group__data.html#structcl_1_1sycl_1_1accessor">cl::sycl::accessor</a>&lt; dataType, dimensions, mode, target &gt;::operator[] </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1item">item</a>&lt; <a class="el" href="group__data.html#adf2c21f84b6b2e0f4809a2552381de47">dimensionality</a> &gt;&#160;</td>
-          <td class="paramname"><em>Index</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Get the element specified by the given item</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000058">Todo:</a></b></dt><dd>Add in the specification because used by HPC-GPU slide 22 </dd></dl>
-
-</div>
-</div>
-<h4 class="groupheader">Member Data Documentation</h4>
-<a class="anchor" id="adf2c21f84b6b2e0f4809a2552381de47"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename dataType , size_t dimensions, access::mode mode, access::target target = access::global_buffer&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const auto <a class="el" href="group__data.html#structcl_1_1sycl_1_1accessor">cl::sycl::accessor</a>&lt; dataType, dimensions, mode, target &gt;::dimensionality = dimensions</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000054">Todo:</a></b></dt><dd>in the specification: store the dimension for user request </dd></dl>
-
-</div>
-</div>
-
-</div>
-</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon May 26 2014 18:55:39 for OpenCL SYCL API by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 20 2014 21:32:27 for OpenCL SYCL API by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.7
 </small></address>

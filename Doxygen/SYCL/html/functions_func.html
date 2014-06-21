@@ -81,10 +81,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="#index_a"><span>a</span></a></li>
       <li><a href="#index_b"><span>b</span></a></li>
       <li><a href="#index_g"><span>g</span></a></li>
+      <li><a href="#index_h"><span>h</span></a></li>
       <li><a href="#index_i"><span>i</span></a></li>
       <li><a href="#index_n"><span>n</span></a></li>
       <li><a href="#index_o"><span>o</span></a></li>
-      <li class="current"><a href="#index_r"><span>r</span></a></li>
+      <li><a href="#index_p"><span>p</span></a></li>
+      <li><a href="#index_r"><span>r</span></a></li>
+      <li class="current"><a href="#index_~"><span>~</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -93,7 +96,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Groups</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Groups</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -114,7 +117,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <h3><a class="anchor" id="index_b"></a>- b -</h3><ul>
 <li>buffer()
-: <a class="el" href="group__data.html#ab67f1478916dd2fa139bf719923d4d69">cl::sycl::buffer&lt; T, dimensions &gt;</a>
+: <a class="el" href="group__error__handling.html#ab67f1478916dd2fa139bf719923d4d69">cl::sycl::buffer&lt; T, dimensions &gt;</a>
 </li>
 </ul>
 
@@ -123,10 +126,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>get()
 : <a class="el" href="group__parallelism.html#a3ce9ea3d50ac8beb20957dbbae9635d2">cl::sycl::group&lt; dims &gt;</a>
 , <a class="el" href="group__parallelism.html#a8a10a4cf349d6fb57691c3f77f1e563f">cl::sycl::id&lt; dims &gt;</a>
+, <a class="el" href="group__execution.html#ac32c7047865f4374a8b97e59f8d9691e">cl::sycl::platform</a>
 , <a class="el" href="group__parallelism.html#ad7a6686276949e2ddfadba799e068262">cl::sycl::range&lt; dims &gt;</a>
 </li>
 <li>get_access()
-: <a class="el" href="group__data.html#a3c8e36ffea1e699fc1ad10578ead12b9">cl::sycl::buffer&lt; T, dimensions &gt;</a>
+: <a class="el" href="group__error__handling.html#a3c8e36ffea1e699fc1ad10578ead12b9">cl::sycl::buffer&lt; T, dimensions &gt;</a>
+</li>
+<li>get_buffer()
+: <a class="el" href="group__error__handling.html#a6a37490608415ea394cf9c845ea03dda">cl::sycl::exception</a>
+</li>
+<li>get_cl_code()
+: <a class="el" href="group__error__handling.html#a00a8b080713a4444570ab1cdf8a79021">cl::sycl::exception</a>
+</li>
+<li>get_devices()
+: <a class="el" href="group__execution.html#a5c5c314f9e6e55604be92813b563b817">cl::sycl::platform</a>
 </li>
 <li>get_global()
 : <a class="el" href="group__parallelism.html#a28b04546333850ad9816f5262446794e">cl::sycl::item&lt; dims &gt;</a>
@@ -138,6 +151,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>get_group_range()
 : <a class="el" href="group__parallelism.html#a927ee3ec172010291fee0c69b8a25ee9">cl::sycl::nd_range&lt; dims &gt;</a>
+</li>
+<li>get_image()
+: <a class="el" href="group__error__handling.html#a9a4ae098ae97a7090d92843b2192e23a">cl::sycl::exception</a>
+</li>
+<li>get_info()
+: <a class="el" href="group__execution.html#afbe3a251051e65a3c00d61f074d7b91a">cl::sycl::platform</a>
 </li>
 <li>get_local()
 : <a class="el" href="group__parallelism.html#af5452e4bb736afc53e86c942ab4ab8e4">cl::sycl::item&lt; dims &gt;</a>
@@ -153,8 +172,24 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>get_offset()
 : <a class="el" href="group__parallelism.html#aee3a46d4c5851fd3f62c81c4af7add29">cl::sycl::nd_range&lt; dims &gt;</a>
 </li>
+<li>get_platforms()
+: <a class="el" href="group__execution.html#a5a696cdc8a4398a97cf3f52df6d1e0d2">cl::sycl::platform</a>
+</li>
+<li>get_queue()
+: <a class="el" href="group__error__handling.html#a3e6af7c442b9d8549166f17623dc5060">cl::sycl::exception</a>
+</li>
+<li>get_sycl_code()
+: <a class="el" href="group__error__handling.html#a6a9dd7f74a8affd2ee6e4a9dea4b66ed">cl::sycl::exception</a>
+</li>
 <li>group()
 : <a class="el" href="group__parallelism.html#ade7ef8644b7b5db3254009fd4074b7bf">cl::sycl::group&lt; dims &gt;</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_h"></a>- h -</h3><ul>
+<li>has_extension()
+: <a class="el" href="group__execution.html#a185a4dcddf0ddf20acd679f784f7dd7e">cl::sycl::platform</a>
 </li>
 </ul>
 
@@ -163,8 +198,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>id()
 : <a class="el" href="group__parallelism.html#a69f6daaec3e75b7e6e23bdef0f88a35c">cl::sycl::id&lt; dims &gt;</a>
 </li>
+<li>is_host()
+: <a class="el" href="group__execution.html#a775c4a9d4f176c9255d288e91246e471">cl::sycl::platform</a>
+</li>
 <li>item()
-: <a class="el" href="group__parallelism.html#ae0553994b6689bfe39974b6b20af1583">cl::sycl::item&lt; dims &gt;</a>
+: <a class="el" href="group__parallelism.html#a3c04ebee9f4c7d42e5117189ccb93e6d">cl::sycl::item&lt; dims &gt;</a>
 </li>
 </ul>
 
@@ -185,15 +223,33 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </ul>
 
 
+<h3><a class="anchor" id="index_p"></a>- p -</h3><ul>
+<li>platform()
+: <a class="el" href="group__execution.html#ac32b7b51c70c04842aaddcd8d10af08d">cl::sycl::platform</a>
+</li>
+</ul>
+
+
 <h3><a class="anchor" id="index_r"></a>- r -</h3><ul>
 <li>range()
 : <a class="el" href="group__parallelism.html#ad40965ee0b19d24104a70a927264262d">cl::sycl::range&lt; dims &gt;</a>
+</li>
+<li>report_error()
+: <a class="el" href="group__error__handling.html#a29e90836447e36545115ff568729cb96">cl::sycl::error_handler</a>
+, <a class="el" href="structcl_1_1sycl_1_1trisycl_1_1default__error__handler.html#a978008577609a5b3e52136c43c8bf208">cl::sycl::trisycl::default_error_handler</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_~"></a>- ~ -</h3><ul>
+<li>~platform()
+: <a class="el" href="group__execution.html#a36e567129426523f06094852b6b44351">cl::sycl::platform</a>
 </li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon May 26 2014 18:55:39 for OpenCL SYCL API by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 20 2014 21:32:27 for OpenCL SYCL API by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.7
 </small></address>
