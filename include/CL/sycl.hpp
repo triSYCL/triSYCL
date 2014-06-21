@@ -573,6 +573,118 @@ struct group TRISYCL_IMPL(: GroupImpl<dims>) {
 /// @} End the parallelism Doxygen group
 
 
+/** \addtogroup error_handling Error handling
+    @{
+*/
+
+// Forward definitions
+struct queue;
+
+template <typename T, int dimensions> struct buffer;
+
+template <int dimensions> struct image;
+
+/**
+   Encapsulate a SYCL error information
+*/
+struct exception {
+#ifdef TRISYCL_OPENCL
+  /** Get the OpenCL error code
+
+      \returns 0 if not an OpenCL error
+
+      \todo to be implemented
+  */
+  cl_int get_cl_code() { assert(0); }
+
+
+  /** Get the SYCL-specific error code
+
+      \returns 0 if not a SYCL-specific error
+
+      \todo to be implemented
+
+      \todo use something else instead of cl_int to be usable without
+      OpenCL
+  */
+  cl_int get_sycl_code() { assert(0); }
+#endif
+
+  /** Get the queue that caused the error
+
+      \return nullptr if not a queue error
+
+      \todo Update specification to replace 0 by nullptr
+  */
+  queue *get_queue() { assert(0); }
+
+
+  /** Get the buffer that caused the error
+
+      \returns nullptr if not a buffer error
+
+      \todo Update specification to replace 0 by nullptr and add the
+      templated buffer
+
+      \todo to be implemented
+  */
+  template <typename T, int dimensions> buffer<T, dimensions> *get_buffer() {
+    assert(0); }
+
+
+  /** Get the image that caused the error
+
+      \returns nullptr if not a image error
+
+      \todo Update specification to replace 0 by nullptr and add the
+      templated buffer
+
+      \todo to be implemented
+  */
+  template <int dimensions> image<dimensions> *get_image() { assert(0); }
+};
+
+
+namespace trisycl {
+  // Create a default error handler to be used when nothing is specified
+  struct default_error_handler;
+}
+
+
+/** User supplied error handler to call a user-provided function when an
+    error happens from a SYCL object that was constructed with this error
+    handler
+*/
+struct error_handler {
+  /** The method to define to be called in the case of an error
+
+      \todo Add "virtual void" to the specification
+  */
+  virtual void report_error(exception &error) = 0;
+
+  /** Add a default_handler to be used by default
+
+      \todo add this concept to the specification?
+  */
+  static trisycl::default_error_handler default_handler;
+};
+
+
+namespace trisycl {
+
+  struct default_error_handler : error_handler {
+
+    void report_error(exception &error) override {
+    }
+  };
+}
+
+  // \todo finish initialization
+  //error_handler::default_handler = nullptr;
+
+/// @} End the error_handling Doxygen group
+
+
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
 */
@@ -650,10 +762,6 @@ struct command_group {
 /** \addtogroup data
     @{
 */
-
-// Forward declaration for use in accessor
-template <typename T, int dimensions> struct buffer;
-
 
 /** The accessor abstracts the way buffer data are accessed inside a
     kernel in a multidimensional variable length array way.
