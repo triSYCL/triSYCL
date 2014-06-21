@@ -43,6 +43,24 @@
 #include <initializer_list>
 
 
+/** Define TRISYCL_OPENCL to add OpenCL
+
+    triSYCL can indeed work without OpenCL if only host support is needed.
+
+    Right now it is set by Doxygen to generate the documentation.
+
+    \todo Use a macro to check instead if the OpenCL header has been
+    included before.
+
+    But what is the right one? __OPENCL_CL_H? __OPENCL_C_VERSION__? CL_HPP_?
+    Mostly CL_HPP_ to be able to use param_traits<> from cl.hpp...
+*/
+#ifdef TRISYCL_OPENCL
+#define __CL_ENABLE_EXCEPTIONS
+#include <CL/cl.hpp>
+#endif
+
+
 // SYCL dwells in the cl::sycl namespace
 namespace cl {
 namespace sycl {

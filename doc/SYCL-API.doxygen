@@ -1959,8 +1959,10 @@ INCLUDE_FILE_PATTERNS  =
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
 #PREDEFINED             =
-# Define this macro to hide implementation details
-PREDEFINED             = TRISYCL_HIDE_IMPLEMENTATION
+# Define this macro to hide implementation details and assume that OpenCL .h
+# has been included so we generate also the documentation of the
+# OpenCL-related functions
+PREDEFINED             = TRISYCL_HIDE_IMPLEMENTATION TRISYCL_OPENCL
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then this
 # tag can be used to specify a list of macro names that should be expanded. The
