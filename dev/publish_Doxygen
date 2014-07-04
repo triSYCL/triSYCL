@@ -18,10 +18,26 @@
 # Exit if an error occurs rather than unspecified dangerous behaviour...
 set -e
 
-# Where the doc is generated
-DOXYGEN_DIR=tmp/Doxygen/SYCL
-# Where the doc is published
-PUB_DIR=Doxygen/SYCL
+# Move a Doxygen documentation at the right place
+update_doc() {
+  # First argument: where the doc is published
+  PUB_DIR=$1
+  # Second argument: the name of the PDF version output
+  PDF_NAME=$2
+  # Where the doc is generated
+  DOXYGEN_DIR=tmp/$PUB_DIR
+
+  # Remove the old version, if any
+  rm -rf $PUB_DIR
+  mkdir -p $PUB_DIR
+  cp -a $DOXYGEN_DIR/html $PUB_DIR
+
+  # Add the PDF documentation at the top level of SYCL API
+  cp $DOXYGEN_DIR/latex/refman.pdf $PUB_DIR/$PDF_NAME
+
+  # Add the generated directory to the index
+  git add $PUB_DIR
+}
 
 # Use another copy of the git repository to avoid messing up with the
 # state of the current repository
@@ -44,16 +60,9 @@ make doc
 # (Assume a previous initialization with git checkout --orphan gh-pages)
 git checkout gh-pages
 
-# Remove the old version, if any
-rm -rf $PUB_DIR
-mkdir -p $PUB_DIR
-cp -a $DOXYGEN_DIR/html $PUB_DIR
-
-# Add the PDF documentation at the top level of SYCL API
-cp $DOXYGEN_DIR/latex/refman.pdf $PUB_DIR/SYCL-API-refman.pdf
-
-# Add the generated directory to the index
-git add $PUB_DIR
+# Move the generated documentation at the right place
+update_doc Doxygen/SYCL SYCL-API-refman.pdf
+update_doc Doxygen/triSYCL triSYCL-implementation-refman.pdf
 
 # Take also into account what has been deleted
 git add --update
@@ -73,7 +82,7 @@ tree_object=`git write-tree`
 # also the master branch as an ancestor so we can figure out easily which
 # source of the WWW site is currently published
 commit_object=`git commit-tree -p HEAD -p master \
-  -m "Publish new API WWW site version" $tree_object`
+  -m "Publish new WWW site version" $tree_object`
 
 # Update the gh-pages branch to this commit object. By construction this
 # is not a merge, it is just a fast-forward update, but add --ff-only to

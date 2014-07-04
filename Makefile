@@ -23,5 +23,6 @@ doc-clean:
 	rm -rf $(API_DOXYGEN_DIR) $(IMPLEMENTATION_DOXYGEN_DIR)
 
 
-publish: doc
-	./dev/publish_API
+publish:
+	./dev/publish_Doxygen
+
