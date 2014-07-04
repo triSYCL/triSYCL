@@ -78,11 +78,27 @@ git reset HEAD doc/WWW/index.html
 # Create a snapshot of the index content
 tree_object=`git write-tree`
 
+# Construct a log message with the list of commits since the previous
+# publication
+(
+    echo "Publish new WWW site version"
+    echo
+    echo "The list of commits since last publication:"
+    echo
+    # gh-pages point to the current published version, which is the old
+    # one.  gh-pages^2 is the second parent of the old one, and thus the
+    # master used for this old publication. master point to the last
+    # commit to be taken for publishing, so the following list all the
+    # commits between master and the previous master used for the old
+    # publication
+    git log gh-pages^2..master
+) > commit_list
+
 # Create a commit object that takes into account its natural history but
 # also the master branch as an ancestor so we can figure out easily which
 # source of the WWW site is currently published
 commit_object=`git commit-tree -p HEAD -p master \
-  -m "Publish new WWW site version" $tree_object`
+  -F commit_list $tree_object`
 
 # Update the gh-pages branch to this commit object. By construction this
 # is not a merge, it is just a fast-forward update, but add --ff-only to
