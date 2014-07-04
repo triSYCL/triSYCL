@@ -1,15 +1,27 @@
-# Where the documentation is generated
-DOXYGEN_DIR=tmp/Doxygen/SYCL
+# Where the documentation is generated, to match also .doxygen files in
+# doc/ and dev/publish_API
+API_DOXYGEN_DIR=tmp/Doxygen/SYCL
+IMPLEMENTATION_DOXYGEN_DIR=tmp/Doxygen/triSYCL
 
 # The target to generate the documentation
-doc: doc-API
+doc: doc-API doc-implementation
 
-# Generate the documenttion of the SYCL API
+# Generate the documentation of the SYCL API
 doc-API:
-	mkdir -p $(DOXYGEN_DIR)
+	mkdir -p $(API_DOXYGEN_DIR)
 	doxygen doc/SYCL-API.doxygen
 	# Compile the PDF version
-	cd $(DOXYGEN_DIR)/latex; make
+	cd $(API_DOXYGEN_DIR)/latex; make
+
+doc-implementation:
+	mkdir -p $(IMPLEMENTATION_DOXYGEN_DIR)
+	doxygen doc/triSYCL-implementation.doxygen
+	# Compile the PDF version
+	cd $(IMPLEMENTATION_DOXYGEN_DIR)/latex; make
 
 doc-clean:
-	rm -rf $(DOXYGEN_DIR)
+	rm -rf $(API_DOXYGEN_DIR) $(IMPLEMENTATION_DOXYGEN_DIR)
+
+
+publish: doc
+	./dev/publish_API

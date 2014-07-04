@@ -572,17 +572,18 @@ struct group TRISYCL_IMPL(: GroupImpl<dims>) {
 
 /// @} End the parallelism Doxygen group
 
-
-/** \addtogroup error_handling Error handling
-    @{
-*/
-
-// Forward definitions
+/* Forward definitions (outside the Doxygen addtogroup to avoid multiple
+   definitions) */
 struct queue;
 
 template <typename T, int dimensions> struct buffer;
 
 template <int dimensions> struct image;
+
+
+/** \addtogroup error_handling Error handling
+    @{
+*/
 
 /**
    Encapsulate a SYCL error information
@@ -1108,7 +1109,7 @@ void parallel_for(Range r, Program p, ParallelForFunctor f) {
 }
 
 
-/// SYCL parallel_for_workgroup
+/// Loop on the work-groups
 template <int Dimensions = 1, typename ParallelForFunctor>
 void parallel_for_workgroup(nd_range<Dimensions> r,
                             ParallelForFunctor f) {
@@ -1132,7 +1133,7 @@ void parallel_for_workgroup(nd_range<Dimensions> r,
 }
 
 
-/// SYCL parallel_for_workitem
+/// Loop on the work-items inside a work-group
 template <int Dimensions = 1, typename ParallelForFunctor>
 void parallel_for_workitem(group<Dimensions> g, ParallelForFunctor f) {
   // In a sequential execution there is only one index processed at a time

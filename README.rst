@@ -116,6 +116,28 @@ latest Ubuntu too):
   sudo apt-get install clang-3.5 g++4.9 libboost-dev
 
 
+Doxygen documentation
++++++++++++++++++++++
+
+In the top directory, run
+
+.. code:: bash
+
+  make
+
+that will produce ``tmp/Doxygen/SYCL`` with the API documentation and
+``tmp/Doxygen/triSYCL`` with the documented ``triSYCL`` implementation
+source code.
+
+To publish the documentation on GitHub:
+
+.. code:: bash
+
+  make publish
+
+and finish as explained by the ``make`` output.
+
+
 Examples
 --------
 
