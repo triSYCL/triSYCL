@@ -26,6 +26,10 @@ An experimental description of the API through Doxygen can be found in
 http://amd.github.io/triSYCL/Doxygen/SYCL/html and
 http://amd.github.io/triSYCL/Doxygen/SYCL/SYCL-API-refman.pdf
 
+The documentation of the triSYCL implementation itself can be found in
+http://amd.github.io/triSYCL/Doxygen/triSYCL/html and
+http://amd.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
+
 
 OpenCL SYCL
 -----------
