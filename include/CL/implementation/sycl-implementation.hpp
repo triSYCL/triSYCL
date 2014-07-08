@@ -22,6 +22,10 @@ namespace trisycl {
 
 #include "sycl-debug.hpp"
 
+/** \addtogroup parallelism
+    @{
+*/
+
 /// Define a multi-dimensional index range
 template <std::size_t Dimensions = 1U>
 struct RangeImpl : std::vector<std::intptr_t>, debug<RangeImpl<Dimensions>> {
@@ -284,10 +288,16 @@ struct GroupImpl {
 
 };
 
+/// @} End the parallelism Doxygen group
+
 
 // Forward declaration for use in accessor
 template <typename T, std::size_t dimensions> struct BufferImpl;
 
+
+/** \addtogroup data
+    @{
+*/
 
 /** The accessor abstracts the way buffer data are accessed inside a
     kernel in a multidimensional variable length array way.
@@ -431,6 +441,12 @@ struct BufferImpl {
 
 };
 
+/// @} to end the data Doxygen group
+
+
+/** \addtogroup parallelism
+    @{
+*/
 
 /** A recursive multi-dimensional iterator that ends calling f
 
@@ -506,6 +522,7 @@ struct ParallelForIterate<0, Range, ParallelForFunctor, Id> {
   }
 };
 
+/// @} End the parallelism Doxygen group
 
 }
 }

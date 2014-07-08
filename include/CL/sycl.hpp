@@ -1020,6 +1020,9 @@ Functor kernel_lambda(Functor F) {
 
     Right now the implementation does nothing else that forwarding the
     execution of the given functor
+
+    \todo remove from the SYCL specification and use a range-less
+    parallel_for version with default construction of a 1-element range?
 */
 void single_task(std::function<void(void)> F) { F(); }
 
@@ -1051,6 +1054,7 @@ void parallel_for(range<Dimensions> r,
                      id<Dimensions>> { r, f, index };
 #endif
 }
+
 
 /** A variation of SYCL parallel_for to take into account a nd_range<>
 
