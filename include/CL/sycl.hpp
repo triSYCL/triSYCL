@@ -941,53 +941,104 @@ struct buffer TRISYCL_IMPL(: BufferImpl<T, dimensions>) {
   using Impl = BufferImpl<T, dimensions>;
 #endif
 
-  /// Create a new buffer of size \param r
+  /** Create a new buffer with storage managed by SYCL
+
+      \param r defines the size
+  */
   buffer(const range<dimensions> &r) : Impl(r.getImpl()) {}
 
 
-  /** Create a new buffer from \param host_data of size \param r without
-      further allocation */
+  /** Create a new buffer with associated host memory
+
+      \param host_data points to the storage and values used by the buffer
+
+      \param r defines the size
+  */
   buffer(T * host_data, range<dimensions> r) : Impl(host_data, r.getImpl()) {}
 
 
-  /** Create a new read only buffer from \param host_data of size \param r
-      without further allocation */
+  /** Create a new read only buffer with associated host memory
+
+      \param host_data points to the storage and values used by the buffer
+
+      \param r defines the size
+  */
   buffer(const T * host_data, range<dimensions> r) :
     Impl(host_data, r.getImpl()) {}
 
 
-  /// \todo
-  //buffer(storage<T> &store, range<dimensions> r)
+    //buffer(storage<T> &store, range<dimensions> r)
 
 
-  /// Create a new allocated 1D buffer from the given elements
+  /** Create a new allocated 1D buffer initialized from the given elements
+
+      \param start_iterator points to the first element to copy
+
+      \param end_iterator points to just after the last element to copy
+
+      \todo Add const to the SYCL specification
+  */
   buffer(const T * start_iterator, const T * end_iterator) :
     Impl(start_iterator, end_iterator) {}
 
 
-  /// Create a new buffer from an old one, with a new allocation
+  /** Create a new buffer copy that shares the data with the origin buffer
+
+      \param b is the buffer to copy from
+
+      The system use reference counting to deal with data lifetime
+  */
   buffer(buffer<T, dimensions> &b) : Impl(b) {}
 
 
   /** Create a new sub-buffer without allocation to have separate accessors
-      later */
-  /* \todo
-  buffer(buffer<T, dimensions> b,
-         index<dimensions> base_index,
-         range<dimensions> sub_range)
-  */
+      later
 
-  // Allow CLHPP objects too?
-  // \todo
-  /*
+      \param b is the buffer with the real data
+
+      \param base_index specifies the origin of the sub-buffer inside the
+      buffer b
+
+      \param sub_range specifies the size of the sub-buffer
+
+      \todo To be implemented
+
+      \todo Update the specification to replace index by id
+  */
+  buffer(buffer<T, dimensions> b,
+         id<dimensions> base_index,
+         range<dimensions> sub_range) { assert(0); }
+
+
+#ifdef TRISYCL_OPENCL
+  /** Create a buffer from an existing OpenCL memory object associated to
+      a context after waiting for an event signaling the availability of
+      the OpenCL data
+
+      \param mem_object is the OpenCL memory object to use
+
+      \param from_queue is the queue associated to the memory object
+
+      \param available_event specifies the event to wait for if non null
+
+      \todo To be implemented
+
+      \todo Improve the specification to allow CLHPP objects too
+  */
   buffer(cl_mem mem_object,
          queue from_queue,
-         event available_event)
-  */
+         event available_event) { assert(0); }
+#endif
+
 
   // Use BOOST_DISABLE_ASSERTS at some time to disable range checking
 
-  /// Return an accessor of the required mode \param M
+  /** Get an accessor to the buffer with the required mode
+
+      \param mode is the requested access mode
+
+      \param target is the type of object to be accessed
+  */
   template <access::mode mode,
             access::target target=access::global_buffer>
   accessor<T, dimensions, mode, target> get_access() {
