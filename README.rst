@@ -3,12 +3,12 @@ triSYCL
 
 This is a humble implementation test bed to experiment with the
 provisional specification of the OpenCL_ SYCL_ C++ layer and to give
-feedback to the SYCL committee.
+feedback to the Khronos_ OpenCL_ SYCL_ committee.
 
-This is just the start of a SYCL_ mock-up, only based on C++14 with
-execution on the CPU. So there is nothing related to OpenCL yet. But since
-in SYCL there is a host fall-back, this can be used as the start of this
-fall-back...
+This is just the start of a  SYCL_ mock-up, only based on C++14 and OpenMP
+with execution on the CPU right now. So there is nothing related to OpenCL
+yet. But since in SYCL there is a  host fall-back, this can be used as the
+start of this fall-back...
 
 The parallel kernels can be executed in parallel on the CPU with OpenMP_ in
 the first range dimension, if compiled with OpenMP support.
@@ -16,14 +16,14 @@ the first range dimension, if compiled with OpenMP support.
 This is provided as is, without any warranty, with the same license as
 LLVM_/Clang_.
 
-Ronan Keryell at AMD point cOm
+Main contributor: Ronan Keryell at AMD point cOm
 
 
 OpenCL triSYCL API
 ---------------
 
-An experimental description of the API through Doxygen can be found in
-http://amd.github.io/triSYCL/Doxygen/SYCL/html and
+An experimental description of the API generated from triSYCL through
+Doxygen can be found in http://amd.github.io/triSYCL/Doxygen/SYCL/html and
 http://amd.github.io/triSYCL/Doxygen/SYCL/SYCL-API-refman.pdf
 
 The documentation of the triSYCL implementation itself can be found in
@@ -38,7 +38,24 @@ OpenCL_ SYCL_ is a C++11-based DSEL_ (Domain Specific Embedded Language)
 aimed at facilitating the programming of heterogeneous accelerators by
 leveraging the OpenCL language and concepts.
 
-SYCL has a lot of interesting advantages compared to plain OpenCL_ or
+For more information on SYCL_, look at http://www.khronos.org/opencl/sycl
+
+For introduction material on the interest of DSEL_ in this area, look for
+example at these articles:
+
+- "Domain-specific Languages and Code Synthesis Using Haskell", Andy
+  Gill. May 6, 2014 in ACM Queue and Communications of the ACM
+  http://queue.acm.org/detail.cfm?id=2617811
+
+- "Design Exploration through Code-generating DSLs", Bo Joel Svensson,
+  Mary Sheeran and Ryan Newton. May 15, 2014 in ACM Queue and
+  Communications of the ACM http://queue.acm.org/detail.cfm?id=2626374
+
+
+Some advantages of SYCL
++++++++++++++++++++++++
+
+SYCL_ has a lot of interesting advantages compared to plain OpenCL_ or
 other approaches:
 
 - SYCL_ is an open standard from Khronos_ with a working committee (you can
@@ -101,7 +118,9 @@ other approaches:
     or OpenMP_ 4 down to low-level OpenCL, according to the optimization
     needs.
 
-For more information on SYCL_, look at http://www.khronos.org/opencl/sycl
+
+Presentations on SYCL
++++++++++++++++++++++
 
 
 Installation
