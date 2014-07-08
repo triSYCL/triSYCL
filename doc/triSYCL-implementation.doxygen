@@ -1974,8 +1974,9 @@ INCLUDE_FILE_PATTERNS  =
 #PREDEFINED             =
 # Assume that OpenCL .h
 # has been included so we generate also the documentation of the
-# OpenCL-related functions
-PREDEFINED             = TRISYCL_OPENCL
+# OpenCL-related functions.
+# Include also debug and trace support.
+PREDEFINED             = TRISYCL_OPENCL TRISYCL_DEBUG
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then this
 # tag can be used to specify a list of macro names that should be expanded. The

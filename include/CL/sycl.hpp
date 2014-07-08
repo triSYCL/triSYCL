@@ -578,6 +578,7 @@ struct queue;
 
 template <typename T, int dimensions> struct buffer;
 
+  /// \todo implement image
 template <int dimensions> struct image;
 
 
