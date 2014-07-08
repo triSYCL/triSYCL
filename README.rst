@@ -119,8 +119,40 @@ other approaches:
     needs.
 
 
-Presentations on SYCL
-+++++++++++++++++++++
+Some presentations on SYCL
+++++++++++++++++++++++++++
+
+By reverse chronological order:
+
+- "OpenCL 2.0, OpenCL SYCL & OpenMP 4, open standards for heterogeneous
+  parallel programming", Ronan Keryell (AMD & Khronos OpenCL Working Group
+  Member). 3 July, 2014, High Performance Computing & Supercomputing Group
+  of Paris.
+  http://www.meetup.com/HPC-GPU-Supercomputing-Group-of-Paris-Meetup/events/185216422/
+
+- "OpenCL 2.0, OpenCL SYCL & OpenMP 4, open standards for heterogeneous
+  parallel programming", Ronan Keryell (AMD & Khronos OpenCL Working Group
+  Member). 2 July, 2014, Forum Ter@tec: "Calcul scientifique & Open Source
+  : pratiques industrielles des logiciels libres".
+  http://www.teratec.eu/forum/atelier_3.html
+
+- "SYCL : Abstraction Layer for Leveraging C++ and OpenCL", Maria Rovatsou
+  (Codeplay & Khronos OpenCL Working Group Member). 12-13 May, 2014,
+  IWOCL 2014.
+  http://iwocl.org/iwocl-2014/abstracts/sycl-abstraction-layer-for-leveraging-c-and-opencl/
+
+- "Building the OpenCL ecosystem - SYCL for OpenCL", Lee Howes (Senior
+  Staff Engineer at Qualcomm & Khronos OpenCL Working Group Member). 21
+  April, 2014, HPC & GPU Supercomputing Group of Silicon
+  Valley. http://www.meetup.com/HPC-GPU-Supercomputing-Group-of-Silicon-Valley/events/151429932/
+
+- "SYCL 1.2: Unofficial High-Level Overview", AJ Guillon (Khronos OpenCL
+  Working Group Member). 19
+  March, 2014. https://www.youtube.com/watch?v=-mEQhf8MeUI
+
+- "SYCL for OpenCL", Andrew Richards (CEO Codeplay & Chair SYCL Working
+  group). 19 March, 2014, GDC 2014.
+  http://www.khronos.org/assets/uploads/developers/library/2014-gdc/SYCL-for-OpenCL-GDC-Mar14.pdf
 
 
 Installation
