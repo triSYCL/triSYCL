@@ -130,12 +130,14 @@ By reverse chronological order:
   Member). 3 July, 2014, High Performance Computing & Supercomputing Group
   of Paris.
   http://www.meetup.com/HPC-GPU-Supercomputing-Group-of-Paris-Meetup/events/185216422/
+  slides: http://ronan.keryell.fr/Talks/2014/2014-07-03-Paris_HPC_GPU_meetup/2014-07-03-Paris-HPC-GPU-Meetup-RK-expose.pdf
 
 - *OpenCL 2.0, OpenCL SYCL & OpenMP 4, open standards for heterogeneous
   parallel programming*, Ronan Keryell (AMD & Khronos OpenCL Working Group
   Member). 2 July, 2014, Forum Ter@tec: *Calcul scientifique & Open Source
   : pratiques industrielles des logiciels libres*.
-  http://www.teratec.eu/forum/atelier_3.html
+  http://www.teratec.eu/forum/atelier_3.html slides:
+  http://ronan.keryell.fr/Talks/2014/2014-07-02-Ter@Tec/Ter@tec-HC-RK-expose.pdf
 
 - *SYCL : Abstraction Layer for Leveraging C++ and OpenCL*, Maria Rovatsou
   (Codeplay & Khronos OpenCL Working Group Member). 12-13 May, 2014,
