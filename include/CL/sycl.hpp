@@ -14,12 +14,16 @@
     classes that are here only to do some forwarding in some inelegant way.
     This file is documentation driven and not implementation-style driven.
 
+    For more information on this project and to access to the source of
+    this file, look at https://github.com/amd/triSYCL
 
-    The source of this file can be found on
-    https://github.com/amd/triSYCL
-    and the Doxygen version of the API in
-    http://amd.github.io/triSYCL/Doxygen/SYCL/html
-    and http://amd.github.io/triSYCL/Doxygen/SYCL/SYCL-API-refman.pdf
+    The Doxygen version of the API in
+    http://amd.github.io/triSYCL/Doxygen/SYCL/html and
+    http://amd.github.io/triSYCL/Doxygen/SYCL/SYCL-API-refman.pdf
+
+    The Doxygen version of the implementation itself is in
+    http://amd.github.io/triSYCL/Doxygen/triSYCL/html and
+    http://amd.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
 
 
     Ronan.Keryell at AMD point com
