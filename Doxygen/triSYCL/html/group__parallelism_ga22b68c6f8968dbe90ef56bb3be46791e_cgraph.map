@@ -1,0 +1,4 @@
+<map id="cl::sycl::parallel_for_workgroup" name="cl::sycl::parallel_for_workgroup">
+<area shape="rect" id="node3" href="$group__parallelism.html#a927ee3ec172010291fee0c69b8a25ee9" title="Get the range of work&#45;groups needed to run this ND&#45;range. " alt="" coords="184,5,309,59"/>
+<area shape="rect" id="node5" href="$group__parallelism.html#a7260d25b39008dd0682cd3b8b23a8a6a" title="cl::sycl::trisycl::\lNDRangeImpl::getImpl" alt="" coords="169,82,324,137"/>
+</map>

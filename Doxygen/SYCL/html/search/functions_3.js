@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['has_5fextension',['has_extension',['../group__execution.html#a185a4dcddf0ddf20acd679f784f7dd7e',1,'cl::sycl::platform']]]
+  ['destroy',['destroy',['../group__data.html#ada6116927afdf30041a8e88012954c48',1,'cl::sycl::storage']]]
 ];

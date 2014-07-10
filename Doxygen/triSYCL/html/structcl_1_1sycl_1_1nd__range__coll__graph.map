@@ -1,0 +1,8 @@
+<map id="cl::sycl::nd_range&lt; dims &gt;" name="cl::sycl::nd_range&lt; dims &gt;">
+<area shape="rect" id="node2" href="$group__parallelism.html#structcl_1_1sycl_1_1trisycl_1_1NDRangeImpl" title="The implementation of a ND&#45;range, made by a global and local range, to specify work&#45;group and work&#45;it..." alt="" coords="1107,95,1264,150"/>
+<area shape="rect" id="node4" href="$group__parallelism.html" title="cl::sycl::trisycl::\lRangeImpl\&lt; dimensionality \&gt;" alt="" coords="525,263,717,318"/>
+<area shape="rect" id="node6" title="STL class. " alt="" coords="184,218,357,251"/>
+<area shape="rect" id="node16" href="$group__parallelism.html" title="cl::sycl::trisycl::\lRangeImpl\&lt; N \&gt;" alt="" coords="563,183,680,238"/>
+<area shape="rect" id="node10" href="$structcl_1_1sycl_1_1trisycl_1_1debug.html" title="cl::sycl::trisycl::\ldebug\&lt; RangeImpl\&lt; Dimensions \&gt; \&gt;" alt="" coords="152,290,389,345"/>
+<area shape="rect" id="node14" href="$group__parallelism.html" title="cl::sycl::trisycl::\lIdImpl\&lt; dimensionality \&gt;" alt="" coords="853,129,1019,183"/>
+</map>

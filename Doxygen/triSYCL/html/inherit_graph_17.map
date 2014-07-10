@@ -1,0 +1,4 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$group__parallelism.html#structcl_1_1sycl_1_1trisycl_1_1NDRangeImpl" title="The implementation of a ND&#45;range, made by a global and local range, to specify work&#45;group and work&#45;it..." alt="" coords="5,5,163,59"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#structcl_1_1sycl_1_1nd__range" title="A ND&#45;range, made by a global and local range, to specify work&#45;group and work&#45;item organization..." alt="" coords="211,5,336,59"/>
+</map>

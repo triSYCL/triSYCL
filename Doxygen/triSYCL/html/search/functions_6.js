@@ -1,0 +1,9 @@
+var searchData=
+[
+  ['id',['id',['../group__parallelism.html#a4c01829b52bf85694596da9ae47804d7',1,'cl::sycl::id::id(const Impl &amp;init)'],['../group__parallelism.html#a69f6daaec3e75b7e6e23bdef0f88a35c',1,'cl::sycl::id::id()'],['../group__parallelism.html#acfa8cf670ec23e5cd2b7ea43599479a3',1,'cl::sycl::id::id(const id &amp;init)'],['../group__parallelism.html#a16c05c90ed2926e9de5268712255788a',1,'cl::sycl::id::id(const range&lt; dims &gt; &amp;r)'],['../group__parallelism.html#a75a4de0eb163595774ef0baa145bbde3',1,'cl::sycl::id::id(std::initializer_list&lt; std::intptr_t &gt; l)'],['../group__parallelism.html#a9d45498a4278ecd4afc573397370aa34',1,'cl::sycl::id::id(std::intptr_t s)']]],
+  ['idimpl',['IdImpl',['../group__parallelism.html#ad8885e78d9f337be151ce56df0728199',1,'cl::sycl::trisycl::IdImpl::IdImpl(const RangeImpl&lt; N &gt; &amp;init)'],['../group__parallelism.html#aacdbcae0a70e318631e0eb9806a5ba81',1,'cl::sycl::trisycl::IdImpl::IdImpl()=default']]],
+  ['in_5fuse',['in_use',['../group__data.html#a9dd7ba8c1c3ac907b4b93ccc36b5bc80',1,'cl::sycl::storage']]],
+  ['is_5fhost',['is_host',['../group__execution.html#a775c4a9d4f176c9255d288e91246e471',1,'cl::sycl::platform']]],
+  ['item',['item',['../group__parallelism.html#a3c04ebee9f4c7d42e5117189ccb93e6d',1,'cl::sycl::item::item(range&lt; dims &gt; global_size, range&lt; dims &gt; local_size)'],['../group__parallelism.html#ae0553994b6689bfe39974b6b20af1583',1,'cl::sycl::item::item(nd_range&lt; dims &gt; ndr)']]],
+  ['itemimpl',['ItemImpl',['../group__parallelism.html#a5bcb5a02ebc2131ec024ec0a490ac41e',1,'cl::sycl::trisycl::ItemImpl::ItemImpl(RangeImpl&lt; dims &gt; global_size, RangeImpl&lt; dims &gt; local_size)'],['../group__parallelism.html#a27b054787ed5e6e8859852a9e0f37c01',1,'cl::sycl::trisycl::ItemImpl::ItemImpl(NDRangeImpl&lt; dims &gt; ndr)']]]
+];

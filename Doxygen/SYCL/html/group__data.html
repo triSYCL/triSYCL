@@ -83,25 +83,23 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">Data access and storage in SYCL</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="dynheader">
-Collaboration diagram for Data access and storage in SYCL:</div>
-<div class="dyncontent">
-<center><table><tr><td><img src="group__data.png" border="0" alt="" usemap="#group____data"/>
-<map name="group____data" id="group____data">
-<area shape="rect" id="node2" href="group__error__handling.html" title="Error handling" alt="" coords="305,15,407,49"/></map>
-</td></tr></table></center>
-</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespacecl_1_1sycl_1_1access"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl_1_1access.html">cl::sycl::access</a></td></tr>
+<tr class="memdesc:namespacecl_1_1sycl_1_1access"><td class="mdescLeft">&#160;</td><td class="mdescRight">Describe the type of access by kernels. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:structcl_1_1sycl_1_1accessor"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#structcl_1_1sycl_1_1accessor">cl::sycl::accessor&lt; dataType, dimensions, mode, target &gt;</a></td></tr>
+<tr class="memdesc:structcl_1_1sycl_1_1accessor"><td class="mdescLeft">&#160;</td><td class="mdescRight">The accessor abstracts the way buffer data are accessed inside a kernel in a multidimensional variable length array way.  <a href="group__data.html#structcl_1_1sycl_1_1accessor">More...</a><br /></td></tr>
 <tr class="separator:structcl_1_1sycl_1_1accessor"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:structcl_1_1sycl_1_1buffer"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer&lt; T, dimensions &gt;</a></td></tr>
+<tr class="memitem:structcl_1_1sycl_1_1storage"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#structcl_1_1sycl_1_1storage">cl::sycl::storage&lt; T &gt;</a></td></tr>
+<tr class="memdesc:structcl_1_1sycl_1_1storage"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abstract the way storage is managed to allow the programmer to control the storage management of buffers.  <a href="group__data.html#structcl_1_1sycl_1_1storage">More...</a><br /></td></tr>
+<tr class="separator:structcl_1_1sycl_1_1storage"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structcl_1_1sycl_1_1buffer"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer&lt; T, dimensions &gt;</a></td></tr>
+<tr class="memdesc:structcl_1_1sycl_1_1buffer"><td class="mdescLeft">&#160;</td><td class="mdescRight">A SYCL buffer is a multidimensional variable length array (à la C99 VLA or even Fortran before) that is used to store data to work on.  <a href="group__data.html#structcl_1_1sycl_1_1buffer">More...</a><br /></td></tr>
 <tr class="separator:structcl_1_1sycl_1_1buffer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -118,8 +116,8 @@ Classes</h2></td></tr>
 <div class="textblock"><h3>template&lt;typename dataType, size_t dimensions, access::mode mode, access::target target = access::global_buffer&gt;<br />
 struct cl::sycl::accessor&lt; dataType, dimensions, mode, target &gt;</h3>
 
-<p>The accessor abstracts the way buffer data are accessed inside a kernel in a multidimensional variable length array way.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000023">Todo:</a></b></dt><dd>Implement it for images according so section 3.3.4.5 </dd></dl>
+<p>The accessor abstracts the way buffer data are accessed inside a kernel in a multidimensional variable length array way. </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000024">Todo:</a></b></dt><dd>Implement it for images according so section 3.3.4.5 </dd></dl>
 </div><table class="memberdecls">
 <tr><td colspan="2"><h3>Public Types</h3></td></tr>
 <tr class="memitem:af802de7e9269d44b98db3ee856b4fe5e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#af802de7e9269d44b98db3ee856b4fe5e">element</a> = dataType</td></tr>
@@ -129,14 +127,17 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = dat
 <tr class="separator:ac8edf819288e58510eca8a86a5009d5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><h3>Public Member Functions</h3></td></tr>
 <tr class="memitem:ab093287499f4d89d4eb9901a266e0b29"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab093287499f4d89d4eb9901a266e0b29"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#ab093287499f4d89d4eb9901a266e0b29">accessor</a> (<a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">buffer</a>&lt; dataType, dimensions &gt; &amp;targetBuffer)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#ab093287499f4d89d4eb9901a266e0b29">accessor</a> (<a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">buffer</a>&lt; dataType, dimensions &gt; &amp;targetBuffer)</td></tr>
 <tr class="memdesc:ab093287499f4d89d4eb9901a266e0b29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an accessor to the given buffer. <br /></td></tr>
 <tr class="separator:ab093287499f4d89d4eb9901a266e0b29"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01895ee72a9c7eb0a1dad1008b88066d"><td class="memItemLeft" align="right" valign="top">dataType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#a01895ee72a9c7eb0a1dad1008b88066d">operator[]</a> (<a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1id">id</a>&lt; <a class="el" href="group__data.html#adf2c21f84b6b2e0f4809a2552381de47">dimensionality</a> &gt; Index) const </td></tr>
+<tr class="memdesc:a01895ee72a9c7eb0a1dad1008b88066d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the element specified by the given id.  <a href="#a01895ee72a9c7eb0a1dad1008b88066d">More...</a><br /></td></tr>
 <tr class="separator:a01895ee72a9c7eb0a1dad1008b88066d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca3635845163f5fc54e579c5d5a0dd8d"><td class="memItemLeft" align="right" valign="top">dataType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#aca3635845163f5fc54e579c5d5a0dd8d">operator[]</a> (size_t Index) const </td></tr>
+<tr class="memdesc:aca3635845163f5fc54e579c5d5a0dd8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the element specified by the given index in the case we are mono-dimensional.  <a href="#aca3635845163f5fc54e579c5d5a0dd8d">More...</a><br /></td></tr>
 <tr class="separator:aca3635845163f5fc54e579c5d5a0dd8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88523df1ec1b0750e6077d30f9af583c"><td class="memItemLeft" align="right" valign="top">dataType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#a88523df1ec1b0750e6077d30f9af583c">operator[]</a> (<a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1item">item</a>&lt; <a class="el" href="group__data.html#adf2c21f84b6b2e0f4809a2552381de47">dimensionality</a> &gt; Index) const </td></tr>
+<tr class="memdesc:a88523df1ec1b0750e6077d30f9af583c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the element specified by the given item.  <a href="#a88523df1ec1b0750e6077d30f9af583c">More...</a><br /></td></tr>
 <tr class="separator:a88523df1ec1b0750e6077d30f9af583c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><h3>Static Public Attributes</h3></td></tr>
 <tr class="memitem:adf2c21f84b6b2e0f4809a2552381de47"><td class="memItemLeft" align="right" valign="top">static const auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#adf2c21f84b6b2e0f4809a2552381de47">dimensionality</a> = dimensions</td></tr>
@@ -154,7 +155,7 @@ template&lt;typename dataType , size_t dimensions, access::mode mode, access::ta
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000082">Todo:</a></b></dt><dd>in the specification: store the types for user request as STL </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000084">Todo:</a></b></dt><dd>in the specification: store the types for user request as STL </dd></dl>
 
 </div>
 </div>
@@ -182,8 +183,9 @@ template&lt;typename dataType , size_t dimensions, access::mode mode, access::ta
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Get the element specified by the given id</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000083">Todo:</a></b></dt><dd>Implement the "const dataType &amp;" version in the case the accessor is not for writing, as required by the specification </dd></dl>
+
+<p>Get the element specified by the given id. </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000085">Todo:</a></b></dt><dd>Implement the "const dataType &amp;" version in the case the accessor is not for writing, as required by the specification </dd></dl>
 
 </div>
 </div>
@@ -210,8 +212,9 @@ template&lt;typename dataType , size_t dimensions, access::mode mode, access::ta
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Get the element specified by the given index in the case we are mono-dimensional</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000084">Todo:</a></b></dt><dd>This is not in the specification but looks like a cool common feature. Or solving it with an implicit constructor of id&lt;1&gt;? </dd></dl>
+
+<p>Get the element specified by the given index in the case we are mono-dimensional. </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000086">Todo:</a></b></dt><dd>This is not in the specification but looks like a cool common feature. Or solving it with an implicit constructor of id&lt;1&gt;? </dd></dl>
 
 </div>
 </div>
@@ -238,8 +241,9 @@ template&lt;typename dataType , size_t dimensions, access::mode mode, access::ta
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Get the element specified by the given item</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000085">Todo:</a></b></dt><dd>Add in the specification because used by HPC-GPU slide 22 </dd></dl>
+
+<p>Get the element specified by the given item. </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000087">Todo:</a></b></dt><dd>Add in the specification because used by HPC-GPU slide 22 </dd></dl>
 
 </div>
 </div>
@@ -263,7 +267,249 @@ template&lt;typename dataType , size_t dimensions, access::mode mode, access::ta
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000081">Todo:</a></b></dt><dd>in the specification: store the dimension for user request </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000083">Todo:</a></b></dt><dd>in the specification: store the dimension for user request </dd></dl>
+
+</div>
+</div>
+
+</div>
+</div>
+<a name="structcl_1_1sycl_1_1storage" id="structcl_1_1sycl_1_1storage"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct cl::sycl::storage</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"><h3>template&lt;typename T&gt;<br />
+struct cl::sycl::storage&lt; T &gt;</h3>
+
+<p>Abstract the way storage is managed to allow the programmer to control the storage management of buffers. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">T</td><td>the type of the elements of the underlying data</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>The user is responsible for ensuring that their storage class implementation is thread-safe. </p>
+</div><table class="memberdecls">
+<tr><td colspan="2"><h3>Public Types</h3></td></tr>
+<tr class="memitem:ac97b6c7bb45ebb6d8a0204bdf5f8ec93"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#ac97b6c7bb45ebb6d8a0204bdf5f8ec93">element</a> = T</td></tr>
+<tr class="separator:ac97b6c7bb45ebb6d8a0204bdf5f8ec93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5dd751bb83852bebab77acadb4c197dc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5dd751bb83852bebab77acadb4c197dc"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = T</td></tr>
+<tr class="separator:a5dd751bb83852bebab77acadb4c197dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><h3>Public Member Functions</h3></td></tr>
+<tr class="memitem:aed542f90d4cd03118dbe9c24e3a4c462"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#aed542f90d4cd03118dbe9c24e3a4c462">get_size</a> ()=0</td></tr>
+<tr class="memdesc:aed542f90d4cd03118dbe9c24e3a4c462"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method called by SYCL system to get the number of elements of type T of the underlying data.  <a href="#aed542f90d4cd03118dbe9c24e3a4c462">More...</a><br /></td></tr>
+<tr class="separator:aed542f90d4cd03118dbe9c24e3a4c462"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae21ad180c50826f5060164d960cbd2b"><td class="memItemLeft" align="right" valign="top">virtual T *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#aae21ad180c50826f5060164d960cbd2b">get_host_data</a> ()=0</td></tr>
+<tr class="memdesc:aae21ad180c50826f5060164d960cbd2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method called by the SYCL system to know where that data is held in host memory.  <a href="#aae21ad180c50826f5060164d960cbd2b">More...</a><br /></td></tr>
+<tr class="separator:aae21ad180c50826f5060164d960cbd2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f65217ca4416512cc3405adf74d24c4"><td class="memItemLeft" align="right" valign="top">virtual const T *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#a5f65217ca4416512cc3405adf74d24c4">get_initial_data</a> ()=0</td></tr>
+<tr class="memdesc:a5f65217ca4416512cc3405adf74d24c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method called by the SYCL system at the point of construction to request the initial contents of the buffer.  <a href="#a5f65217ca4416512cc3405adf74d24c4">More...</a><br /></td></tr>
+<tr class="separator:a5f65217ca4416512cc3405adf74d24c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abff9873de4960069a8b863728b6db1a4"><td class="memItemLeft" align="right" valign="top">virtual T *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#abff9873de4960069a8b863728b6db1a4">get_final_data</a> ()=0</td></tr>
+<tr class="memdesc:abff9873de4960069a8b863728b6db1a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method called at the point of construction to request where the content of the buffer should be finally stored to.  <a href="#abff9873de4960069a8b863728b6db1a4">More...</a><br /></td></tr>
+<tr class="separator:abff9873de4960069a8b863728b6db1a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada6116927afdf30041a8e88012954c48"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#ada6116927afdf30041a8e88012954c48">destroy</a> ()=0</td></tr>
+<tr class="memdesc:ada6116927afdf30041a8e88012954c48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method called when the associated memory object is destroyed.  <a href="#ada6116927afdf30041a8e88012954c48">More...</a><br /></td></tr>
+<tr class="separator:ada6116927afdf30041a8e88012954c48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9dd7ba8c1c3ac907b4b93ccc36b5bc80"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#a9dd7ba8c1c3ac907b4b93ccc36b5bc80">in_use</a> ()=0</td></tr>
+<tr class="memdesc:a9dd7ba8c1c3ac907b4b93ccc36b5bc80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method called when a <a class="el" href="group__execution.html#structcl_1_1sycl_1_1command__group" title="SYCL command group gather all the commands needed to execute one or more kernels in a kind of atomic ...">command_group</a> which accesses the data is added to a queue.  <a href="#a9dd7ba8c1c3ac907b4b93ccc36b5bc80">More...</a><br /></td></tr>
+<tr class="separator:a9dd7ba8c1c3ac907b4b93ccc36b5bc80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e2914711881a69a44b131307ee3d59b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1e2914711881a69a44b131307ee3d59b"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#a1e2914711881a69a44b131307ee3d59b">completed</a> ()=0</td></tr>
+<tr class="memdesc:a1e2914711881a69a44b131307ee3d59b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method called when the final enqueued command has completed. <br /></td></tr>
+<tr class="separator:a1e2914711881a69a44b131307ee3d59b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h4 class="groupheader">Member Typedef Documentation</h4>
+<a class="anchor" id="ac97b6c7bb45ebb6d8a0204bdf5f8ec93"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="group__data.html#structcl_1_1sycl_1_1storage">cl::sycl::storage</a>&lt; T &gt;::<a class="el" href="group__data.html#ac97b6c7bb45ebb6d8a0204bdf5f8ec93">element</a> =  T</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000088">Todo:</a></b></dt><dd>Extension to SYCL specification: provide pieces of STL container interface? </dd></dl>
+
+</div>
+</div>
+<h4 class="groupheader">Member Function Documentation</h4>
+<a class="anchor" id="ada6116927afdf30041a8e88012954c48"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void <a class="el" href="group__data.html#structcl_1_1sycl_1_1storage">cl::sycl::storage</a>&lt; T &gt;::destroy </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Method called when the associated memory object is destroyed. </p>
+<p>This method is only called once, so if a memory object is copied multiple times, only when the last copy of the memory object is destroyed is the destroy method called.</p>
+<p>Exceptions thrown by the destroy method will be caught and ignored. </p>
+
+</div>
+</div>
+<a class="anchor" id="abff9873de4960069a8b863728b6db1a4"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual T* <a class="el" href="group__data.html#structcl_1_1sycl_1_1storage">cl::sycl::storage</a>&lt; T &gt;::get_final_data </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Method called at the point of construction to request where the content of the buffer should be finally stored to. </p>
+<dl class="section return"><dt>Returns</dt><dd>the address of where the buffer will be written to in host memory.</dd></dl>
+<p>If the address is nullptr, then this phase is skipped.</p>
+<p>If <a class="el" href="group__data.html#aae21ad180c50826f5060164d960cbd2b" title="Method called by the SYCL system to know where that data is held in host memory. ">get_host_data()</a> returns the same pointer as <a class="el" href="group__data.html#a5f65217ca4416512cc3405adf74d24c4" title="Method called by the SYCL system at the point of construction to request the initial contents of the ...">get_initial_data()</a> and/or <a class="el" href="group__data.html#abff9873de4960069a8b863728b6db1a4" title="Method called at the point of construction to request where the content of the buffer should be final...">get_final_data()</a> then the SYCL system should determine whether copying is actually necessary or not. </p>
+
+</div>
+</div>
+<a class="anchor" id="aae21ad180c50826f5060164d960cbd2b"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual T* <a class="el" href="group__data.html#structcl_1_1sycl_1_1storage">cl::sycl::storage</a>&lt; T &gt;::get_host_data </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Method called by the SYCL system to know where that data is held in host memory. </p>
+<dl class="section return"><dt>Returns</dt><dd>the address or nullptr if SYCL has to manage the temporary storage of the data. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a5f65217ca4416512cc3405adf74d24c4"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual const T* <a class="el" href="group__data.html#structcl_1_1sycl_1_1storage">cl::sycl::storage</a>&lt; T &gt;::get_initial_data </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Method called by the SYCL system at the point of construction to request the initial contents of the buffer. </p>
+<dl class="section return"><dt>Returns</dt><dd>the address of the data to use or nullptr to skip this data initialization </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aed542f90d4cd03118dbe9c24e3a4c462"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual size_t <a class="el" href="group__data.html#structcl_1_1sycl_1_1storage">cl::sycl::storage</a>&lt; T &gt;::get_size </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Method called by SYCL system to get the number of elements of type T of the underlying data. </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000089">Todo:</a></b></dt><dd>This is inconsistent in the specification with <a class="el" href="group__data.html#aed542f90d4cd03118dbe9c24e3a4c462" title="Method called by SYCL system to get the number of elements of type T of the underlying data...">get_size()</a> in buffer which returns the byte size. Is it to be renamed to get_count()? </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a9dd7ba8c1c3ac907b4b93ccc36b5bc80"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void <a class="el" href="group__data.html#structcl_1_1sycl_1_1storage">cl::sycl::storage</a>&lt; T &gt;::in_use </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Method called when a <a class="el" href="group__execution.html#structcl_1_1sycl_1_1command__group" title="SYCL command group gather all the commands needed to execute one or more kernels in a kind of atomic ...">command_group</a> which accesses the data is added to a queue. </p>
+<p>After completed is called, there may be further calls of <a class="el" href="group__data.html#a9dd7ba8c1c3ac907b4b93ccc36b5bc80" title="Method called when a command_group which accesses the data is added to a queue. ">in_use()</a> if new work is enqueued that operates on the memory object. </p>
 
 </div>
 </div>
@@ -282,35 +528,45 @@ template&lt;typename dataType , size_t dimensions, access::mode mode, access::ta
 <div class="textblock"><h3>template&lt;typename T, int dimensions&gt;<br />
 struct cl::sycl::buffer&lt; T, dimensions &gt;</h3>
 
-<p>A SYCL buffer is a multidimensional variable length array (à la C99 VLA or even Fortran before) that is used to store data to work on.</p>
+<p>A SYCL buffer is a multidimensional variable length array (à la C99 VLA or even Fortran before) that is used to store data to work on. </p>
 <p>In the case we initialize it from a pointer, for now we just wrap the data with boost::multi_array_ref to provide the VLA semantics without any storage.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000024">Todo:</a></b></dt><dd>there is a naming inconsistency in the specification between buffer and accessor on T versus datatype </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000025">Todo:</a></b></dt><dd>there is a naming inconsistency in the specification between buffer and accessor on T versus datatype </dd></dl>
 </div><table class="memberdecls">
 <tr><td colspan="2"><h3>Public Types</h3></td></tr>
-<tr class="memitem:a50fc52de5458745304d834b8366872a2"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__error__handling.html#a50fc52de5458745304d834b8366872a2">element</a> = T</td></tr>
+<tr class="memitem:a50fc52de5458745304d834b8366872a2"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#a50fc52de5458745304d834b8366872a2">element</a> = T</td></tr>
 <tr class="separator:a50fc52de5458745304d834b8366872a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a15c7ffdd04f88a910d0ec018fea13a7b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a15c7ffdd04f88a910d0ec018fea13a7b"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = T</td></tr>
 <tr class="separator:a15c7ffdd04f88a910d0ec018fea13a7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><h3>Public Member Functions</h3></td></tr>
-<tr class="memitem:ab67f1478916dd2fa139bf719923d4d69"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__error__handling.html#ab67f1478916dd2fa139bf719923d4d69">buffer</a> (const <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1range">range</a>&lt; dimensions &gt; &amp;r)</td></tr>
-<tr class="memdesc:ab67f1478916dd2fa139bf719923d4d69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new buffer of size.  <a href="#ab67f1478916dd2fa139bf719923d4d69">More...</a><br /></td></tr>
+<tr class="memitem:ab67f1478916dd2fa139bf719923d4d69"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#ab67f1478916dd2fa139bf719923d4d69">buffer</a> (const <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1range">range</a>&lt; dimensions &gt; &amp;r)</td></tr>
+<tr class="memdesc:ab67f1478916dd2fa139bf719923d4d69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new buffer with storage managed by SYCL.  <a href="#ab67f1478916dd2fa139bf719923d4d69">More...</a><br /></td></tr>
 <tr class="separator:ab67f1478916dd2fa139bf719923d4d69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add07231772e65f0183e56ac57304def5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__error__handling.html#add07231772e65f0183e56ac57304def5">buffer</a> (T *host_data, <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1range">range</a>&lt; dimensions &gt; r)</td></tr>
+<tr class="memitem:add07231772e65f0183e56ac57304def5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#add07231772e65f0183e56ac57304def5">buffer</a> (T *host_data, <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1range">range</a>&lt; dimensions &gt; r)</td></tr>
+<tr class="memdesc:add07231772e65f0183e56ac57304def5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new buffer with associated host memory.  <a href="#add07231772e65f0183e56ac57304def5">More...</a><br /></td></tr>
 <tr class="separator:add07231772e65f0183e56ac57304def5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae652f090717104b83ac3ac4bb56f8aa4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__error__handling.html#ae652f090717104b83ac3ac4bb56f8aa4">buffer</a> (const T *host_data, <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1range">range</a>&lt; dimensions &gt; r)</td></tr>
+<tr class="memitem:ae652f090717104b83ac3ac4bb56f8aa4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#ae652f090717104b83ac3ac4bb56f8aa4">buffer</a> (const T *host_data, <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1range">range</a>&lt; dimensions &gt; r)</td></tr>
+<tr class="memdesc:ae652f090717104b83ac3ac4bb56f8aa4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new read only buffer with associated host memory.  <a href="#ae652f090717104b83ac3ac4bb56f8aa4">More...</a><br /></td></tr>
 <tr class="separator:ae652f090717104b83ac3ac4bb56f8aa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9962990f57b1f97cae0b790a95b59bd5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__error__handling.html#a9962990f57b1f97cae0b790a95b59bd5">buffer</a> (const T *start_iterator, const T *end_iterator)</td></tr>
-<tr class="memdesc:a9962990f57b1f97cae0b790a95b59bd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new allocated 1D buffer from the given elements.  <a href="#a9962990f57b1f97cae0b790a95b59bd5">More...</a><br /></td></tr>
+<tr class="memitem:ae33073098f5b8c18bd6786c57d2993c4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#ae33073098f5b8c18bd6786c57d2993c4">buffer</a> (<a class="el" href="group__data.html#structcl_1_1sycl_1_1storage">storage</a>&lt; T &gt; &amp;store, <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1range">range</a>&lt; dimensions &gt; r)</td></tr>
+<tr class="memdesc:ae33073098f5b8c18bd6786c57d2993c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new buffer from a storage abstraction provided by the user.  <a href="#ae33073098f5b8c18bd6786c57d2993c4">More...</a><br /></td></tr>
+<tr class="separator:ae33073098f5b8c18bd6786c57d2993c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9962990f57b1f97cae0b790a95b59bd5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#a9962990f57b1f97cae0b790a95b59bd5">buffer</a> (const T *start_iterator, const T *end_iterator)</td></tr>
+<tr class="memdesc:a9962990f57b1f97cae0b790a95b59bd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new allocated 1D buffer initialized from the given elements.  <a href="#a9962990f57b1f97cae0b790a95b59bd5">More...</a><br /></td></tr>
 <tr class="separator:a9962990f57b1f97cae0b790a95b59bd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a504d2bac372f3c0eca24d496f892b456"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a504d2bac372f3c0eca24d496f892b456"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__error__handling.html#a504d2bac372f3c0eca24d496f892b456">buffer</a> (<a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">buffer</a>&lt; T, dimensions &gt; &amp;b)</td></tr>
-<tr class="memdesc:a504d2bac372f3c0eca24d496f892b456"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new buffer from an old one, with a new allocation. <br /></td></tr>
+<tr class="memitem:a504d2bac372f3c0eca24d496f892b456"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#a504d2bac372f3c0eca24d496f892b456">buffer</a> (<a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">buffer</a>&lt; T, dimensions &gt; &amp;b)</td></tr>
+<tr class="memdesc:a504d2bac372f3c0eca24d496f892b456"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new buffer copy that shares the data with the origin buffer.  <a href="#a504d2bac372f3c0eca24d496f892b456">More...</a><br /></td></tr>
 <tr class="separator:a504d2bac372f3c0eca24d496f892b456"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b19cac44bbfc1cac040d7dbd7205a90"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#a5b19cac44bbfc1cac040d7dbd7205a90">buffer</a> (<a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">buffer</a>&lt; T, dimensions &gt; b, <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1id">id</a>&lt; dimensions &gt; base_index, <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1range">range</a>&lt; dimensions &gt; sub_range)</td></tr>
+<tr class="memdesc:a5b19cac44bbfc1cac040d7dbd7205a90"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new sub-buffer without allocation to have separate accessors later.  <a href="#a5b19cac44bbfc1cac040d7dbd7205a90">More...</a><br /></td></tr>
+<tr class="separator:a5b19cac44bbfc1cac040d7dbd7205a90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af600fab643a04874dc7e2d7b39f0d85d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#af600fab643a04874dc7e2d7b39f0d85d">buffer</a> (cl_mem mem_object, <a class="el" href="group__execution.html#structcl_1_1sycl_1_1queue">queue</a> from_queue, event available_event)</td></tr>
+<tr class="memdesc:af600fab643a04874dc7e2d7b39f0d85d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a buffer from an existing OpenCL memory object associated to a context after waiting for an event signaling the availability of the OpenCL data.  <a href="#af600fab643a04874dc7e2d7b39f0d85d">More...</a><br /></td></tr>
+<tr class="separator:af600fab643a04874dc7e2d7b39f0d85d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c8e36ffea1e699fc1ad10578ead12b9"><td class="memTemplParams" colspan="2">template&lt;access::mode mode, access::target target = access::global_buffer&gt; </td></tr>
 <tr class="memitem:a3c8e36ffea1e699fc1ad10578ead12b9"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__data.html#structcl_1_1sycl_1_1accessor">accessor</a>&lt; T, dimensions, mode, <br class="typebreak" />
-target &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__error__handling.html#a3c8e36ffea1e699fc1ad10578ead12b9">get_access</a> ()</td></tr>
-<tr class="memdesc:a3c8e36ffea1e699fc1ad10578ead12b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return an accessor of the required mode.  <a href="#a3c8e36ffea1e699fc1ad10578ead12b9">More...</a><br /></td></tr>
+target &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__data.html#a3c8e36ffea1e699fc1ad10578ead12b9">get_access</a> ()</td></tr>
+<tr class="memdesc:a3c8e36ffea1e699fc1ad10578ead12b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get an accessor to the buffer with the required mode.  <a href="#a3c8e36ffea1e699fc1ad10578ead12b9">More...</a><br /></td></tr>
 <tr class="separator:a3c8e36ffea1e699fc1ad10578ead12b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h4 class="groupheader">Member Typedef Documentation</h4>
@@ -321,11 +577,11 @@ target &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el
 template&lt;typename T, int dimensions&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::<a class="el" href="group__error__handling.html#a50fc52de5458745304d834b8366872a2">element</a> =  T</td>
+          <td class="memname">using <a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::<a class="el" href="group__data.html#a50fc52de5458745304d834b8366872a2">element</a> =  T</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000086">Todo:</a></b></dt><dd>Extension to SYCL specification: provide pieces of STL container interface? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000090">Todo:</a></b></dt><dd>Extension to SYCL specification: provide pieces of STL container interface? </dd></dl>
 
 </div>
 </div>
@@ -340,7 +596,7 @@ template&lt;typename T, int dimensions&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::<a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">buffer</a> </td>
+          <td class="memname"><a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::<a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">buffer</a> </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1range">range</a>&lt; dimensions &gt; &amp;&#160;</td>
           <td class="paramname"><em>r</em></td><td>)</td>
@@ -354,10 +610,10 @@ template&lt;typename T, int dimensions&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Create a new buffer of size. </p>
+<p>Create a new buffer with storage managed by SYCL. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">r</td><td></td></tr>
+    <tr><td class="paramname">r</td><td>defines the size </td></tr>
   </table>
   </dd>
 </dl>
@@ -374,7 +630,7 @@ template&lt;typename T, int dimensions&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::<a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">buffer</a> </td>
+          <td class="memname"><a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::<a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">buffer</a> </td>
           <td>(</td>
           <td class="paramtype">T *&#160;</td>
           <td class="paramname"><em>host_data</em>, </td>
@@ -397,10 +653,12 @@ template&lt;typename T, int dimensions&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Create a new buffer from </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Create a new buffer with associated host memory. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">host_data</td><td>of size </td></tr>
-    <tr><td class="paramname">r</td><td>without further allocation </td></tr>
+    <tr><td class="paramname">host_data</td><td>points to the storage and values used by the buffer</td></tr>
+    <tr><td class="paramname">r</td><td>defines the size </td></tr>
   </table>
   </dd>
 </dl>
@@ -417,7 +675,7 @@ template&lt;typename T, int dimensions&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::<a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">buffer</a> </td>
+          <td class="memname"><a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::<a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">buffer</a> </td>
           <td>(</td>
           <td class="paramtype">const T *&#160;</td>
           <td class="paramname"><em>host_data</em>, </td>
@@ -440,13 +698,62 @@ template&lt;typename T, int dimensions&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Create a new read only buffer from </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Create a new read only buffer with associated host memory. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">host_data</td><td>of size </td></tr>
-    <tr><td class="paramname">r</td><td>without further allocation </td></tr>
+    <tr><td class="paramname">host_data</td><td>points to the storage and values used by the buffer</td></tr>
+    <tr><td class="paramname">r</td><td>defines the size </td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a class="anchor" id="ae33073098f5b8c18bd6786c57d2993c4"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T, int dimensions&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::<a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">buffer</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__data.html#structcl_1_1sycl_1_1storage">storage</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>store</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1range">range</a>&lt; dimensions &gt;&#160;</td>
+          <td class="paramname"><em>r</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create a new buffer from a storage abstraction provided by the user. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">store</td><td>is the storage back-end to use for the buffer</td></tr>
+    <tr><td class="paramname">r</td><td>defines the size</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>The storage object has to exist during all the life of the buffer object.</p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000091">Todo:</a></b></dt><dd>To be implemented </dd></dl>
 
 </div>
 </div>
@@ -460,7 +767,7 @@ template&lt;typename T, int dimensions&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::<a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">buffer</a> </td>
+          <td class="memname"><a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::<a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">buffer</a> </td>
           <td>(</td>
           <td class="paramtype">const T *&#160;</td>
           <td class="paramname"><em>start_iterator</em>, </td>
@@ -484,8 +791,158 @@ template&lt;typename T, int dimensions&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Create a new allocated 1D buffer from the given elements. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000087">Todo:</a></b></dt><dd></dd></dl>
+<p>Create a new allocated 1D buffer initialized from the given elements. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">start_iterator</td><td>points to the first element to copy</td></tr>
+    <tr><td class="paramname">end_iterator</td><td>points to just after the last element to copy</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000092">Todo:</a></b></dt><dd>Add const to the SYCL specification </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a504d2bac372f3c0eca24d496f892b456"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T, int dimensions&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::<a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">buffer</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">buffer</a>&lt; T, dimensions &gt; &amp;&#160;</td>
+          <td class="paramname"><em>b</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create a new buffer copy that shares the data with the origin buffer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">b</td><td>is the buffer to copy from</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>The system use reference counting to deal with data lifetime </p>
+
+</div>
+</div>
+<a class="anchor" id="a5b19cac44bbfc1cac040d7dbd7205a90"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T, int dimensions&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::<a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">buffer</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">buffer</a>&lt; T, dimensions &gt;&#160;</td>
+          <td class="paramname"><em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1id">id</a>&lt; dimensions &gt;&#160;</td>
+          <td class="paramname"><em>base_index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1range">range</a>&lt; dimensions &gt;&#160;</td>
+          <td class="paramname"><em>sub_range</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create a new sub-buffer without allocation to have separate accessors later. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">b</td><td>is the buffer with the real data</td></tr>
+    <tr><td class="paramname">base_index</td><td>specifies the origin of the sub-buffer inside the buffer b</td></tr>
+    <tr><td class="paramname">sub_range</td><td>specifies the size of the sub-buffer</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000093">Todo:</a></b></dt><dd>To be implemented</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000094">Todo:</a></b></dt><dd>Update the specification to replace index by id </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="af600fab643a04874dc7e2d7b39f0d85d"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T, int dimensions&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::<a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">buffer</a> </td>
+          <td>(</td>
+          <td class="paramtype">cl_mem&#160;</td>
+          <td class="paramname"><em>mem_object</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__execution.html#structcl_1_1sycl_1_1queue">queue</a>&#160;</td>
+          <td class="paramname"><em>from_queue</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">event&#160;</td>
+          <td class="paramname"><em>available_event</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create a buffer from an existing OpenCL memory object associated to a context after waiting for an event signaling the availability of the OpenCL data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mem_object</td><td>is the OpenCL memory object to use</td></tr>
+    <tr><td class="paramname">from_queue</td><td>is the queue associated to the memory object</td></tr>
+    <tr><td class="paramname">available_event</td><td>specifies the event to wait for if non null</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000095">Todo:</a></b></dt><dd>To be implemented</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000096">Todo:</a></b></dt><dd>Improve the specification to allow CLHPP objects too </dd></dl>
 
 </div>
 </div>
@@ -502,7 +959,7 @@ template&lt;access::mode mode, access::target target = access::global_buffer&gt;
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__data.html#structcl_1_1sycl_1_1accessor">accessor</a>&lt;T, dimensions, mode, target&gt; <a class="el" href="group__error__handling.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::get_access </td>
+          <td class="memname"><a class="el" href="group__data.html#structcl_1_1sycl_1_1accessor">accessor</a>&lt;T, dimensions, mode, target&gt; <a class="el" href="group__data.html#structcl_1_1sycl_1_1buffer">cl::sycl::buffer</a>&lt; T, dimensions &gt;::get_access </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -515,10 +972,11 @@ template&lt;access::mode mode, access::target target = access::global_buffer&gt;
 </table>
 </div><div class="memdoc">
 
-<p>Return an accessor of the required mode. </p>
-<p>Create a new sub-buffer without allocation to have separate accessors later </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Get an accessor to the buffer with the required mode. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">M</td><td></td></tr>
+    <tr><td class="paramname">mode</td><td>is the requested access mode</td></tr>
+    <tr><td class="paramname">target</td><td>is the type of object to be accessed </td></tr>
   </table>
   </dd>
 </dl>
@@ -531,7 +989,7 @@ template&lt;access::mode mode, access::target target = access::global_buffer&gt;
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jun 20 2014 21:32:27 for OpenCL SYCL API by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jul 10 2014 10:56:50 for OpenCL SYCL API by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.7
 </small></address>

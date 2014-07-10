@@ -1,0 +1,13 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$structcl_1_1sycl_1_1trisycl_1_1debug.html" title="cl::sycl::trisycl::\ldebug\&lt; RangeImpl\&lt; Dimensions \&gt; \&gt;" alt="" coords="5,107,243,162"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#structcl_1_1sycl_1_1trisycl_1_1RangeImpl" title="Define a multi&#45;dimensional index range. " alt="" coords="297,182,476,237"/>
+<area shape="rect" id="node5" href="$group__parallelism.html" title="cl::sycl::trisycl::\lRangeImpl\&lt; dimensionality \&gt;" alt="" coords="291,259,483,314"/>
+<area shape="rect" id="node7" href="$group__parallelism.html" title="cl::sycl::trisycl::\lRangeImpl\&lt; dims \&gt;" alt="" coords="319,27,455,82"/>
+<area shape="rect" id="node11" href="$group__parallelism.html" title="cl::sycl::trisycl::\lRangeImpl\&lt; N \&gt;" alt="" coords="328,105,445,159"/>
+<area shape="rect" id="node9" href="$group__parallelism.html#structcl_1_1sycl_1_1range" title="A SYCL range defines a multi&#45;dimensional index range that can be used to launch parallel computation..." alt="" coords="536,5,691,38"/>
+<area shape="rect" id="node13" href="$group__parallelism.html#structcl_1_1sycl_1_1trisycl_1_1IdImpl" title="Define a multi&#45;dimensional index, used for example to locate a work item. " alt="" coords="556,61,671,115"/>
+<area shape="rect" id="node15" href="$group__parallelism.html" title="cl::sycl::trisycl::\lIdImpl\&lt; dimensionality \&gt;" alt="" coords="531,138,696,193"/>
+<area shape="rect" id="node17" href="$group__parallelism.html" title="cl::sycl::trisycl::\lIdImpl\&lt; dims \&gt;" alt="" coords="556,215,671,270"/>
+<area shape="rect" id="node19" href="$group__parallelism.html#structcl_1_1sycl_1_1id" title="Define a multi&#45;dimensional index, used for example to locate a work item. " alt="" coords="745,226,879,259"/>
+<area shape="rect" id="node20" title="STL class. " alt="" coords="67,190,181,223"/>
+</map>
