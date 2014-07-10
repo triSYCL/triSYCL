@@ -157,9 +157,17 @@ By reverse chronological order:
   group). 19 March, 2014, GDC 2014.
   http://www.khronos.org/assets/uploads/developers/library/2014-gdc/SYCL-for-OpenCL-GDC-Mar14.pdf
 
+- *Fusing GPU kernels within a novel single-source C++ API*, Ralph Potter,
+  Paul Keir, Jan Lucas, Maurico Alvarez-Mesa, Ben Juurlink and Andrew
+  Richards. 20 January, 2014, LPGPU Workshop on Power-Efficient GPU and
+  Many-core Computing (PEGPUM 2014).
+  http://lpgpu.org/wp/wp-content/uploads/2014/02/PEGPUM_2014_codeplay.pdf
 
-Installation
-------------
+- *Fusing GPU kernels within a novel single-source C++ API*, Ralph Potter,
+  Paul Keir, Jan Lucas, Mauricio Alvarez-Mesa, Ben Juurlink, Andrew
+  Richards. 18 November, 2013, Intel Compiler, Architecture and Tools
+  Conference.
+  https://software.intel.com/sites/default/files/managed/c5/45/Confpkeir_haifa_compilers_architectures_tools.pdf
 
 Only Clang_ 3.5 or GCC_ 4.9 and `Boost.MultiArray`_ (which adds to `C++`_ the
 nice Fortran array semantics and syntax) is needed.  If you use the debug
