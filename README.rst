@@ -20,7 +20,7 @@ Main contributor: Ronan Keryell at AMD_ point cOm
 
 
 OpenCL triSYCL API
----------------
+------------------
 
 An experimental description of the API generated from triSYCL through
 Doxygen can be found in http://amd.github.io/triSYCL/Doxygen/SYCL/html and
@@ -54,7 +54,6 @@ example at these articles:
 
 Some advantages of SYCL
 ~~~~~~~~~~~~~~~~~~~~~~~
-
 
 SYCL_ has a lot of interesting advantages compared to plain OpenCL_ or
 other approaches:
@@ -169,6 +168,18 @@ By reverse chronological order:
   Conference.
   https://software.intel.com/sites/default/files/managed/c5/45/Confpkeir_haifa_compilers_architectures_tools.pdf
 
+
+Some implementations
+~~~~~~~~~~~~~~~~~~~~
+
+Some other implementations:
+
+- CodePlay http://codeplay.com/products
+
+
+Installation
+------------
+
 Only Clang_ 3.5 or GCC_ 4.9 and `Boost.MultiArray`_ (which adds to `C++`_ the
 nice Fortran array semantics and syntax) is needed.  If you use the debug
 mode or OpenMP, this works only with GCC 4.9 since current Clang version
@@ -180,6 +191,10 @@ latest Ubuntu too):
 .. code:: bash
 
   sudo apt-get install clang-3.5 g++4.9 libboost-dev
+
+There is nothing else to do for now to use the include files from
+``include/CL`` when compiling a program. Just add a ``-I.../include/CL``
+option when compiling.
 
 
 Doxygen documentation
