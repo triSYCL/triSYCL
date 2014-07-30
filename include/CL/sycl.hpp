@@ -1322,6 +1322,21 @@ void parallel_for_workitem(group<Dimensions> g, ParallelForFunctor f) {
 /// @} End the parallelism Doxygen group
 
 
+/** \addtogroup address_spaces Dealing with OpenCL address spaces
+    @{
+*/
+
+/** Declare a variable to be an OpenCL generic pointer
+
+    \param T is the pointer type
+
+    Note that if \a T is not a pointer type, it is an error.
+*/
+template <typename T>
+struct generic TRISYCL_IMPL(: GenericImpl<T>) {};
+
+/// @} End the address_spaces Doxygen group
+
 
 /** The kernel synchronization barrier
 

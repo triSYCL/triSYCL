@@ -21,6 +21,7 @@ namespace sycl {
 namespace trisycl {
 
 #include "sycl-debug.hpp"
+#include "sycl-address-spaces.hpp"
 
 /** \addtogroup parallelism
     @{
