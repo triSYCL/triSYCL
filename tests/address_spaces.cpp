@@ -25,9 +25,24 @@ int main() {
     command_group (myQueue, [&] {
       auto kc = C.get_access<access::write>();
 
+
       parallel_for(range<1> { N },
                    kernel_lambda<class generate>([=] (id<1> index) {
-                       generic<int *> p;
+        if (index[0] == 0) {
+          int i = 3;
+          generic<int *> p {&i};
+          p = &i;
+          std::cout << "i = " << *p << std::endl;
+          float f[2] = { 2, 3 };
+          generic<float *> q;
+          q = f;
+          std::cout << "f[0] = " << *q << std::endl;
+          std::cout << "f[0] = " << q[0] << std::endl;
+          std::cout << "f[1] = " << q[1] << std::endl;
+          q++;
+          std::cout << "f[1] = " << *q << std::endl;
+          std::cout << "f[0] = " << q[-1] << std::endl;
+        }
       }));
     }); // End of our commands for this queue
   } // End scope, so we wait for the queue to complete

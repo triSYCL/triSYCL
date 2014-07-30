@@ -1333,7 +1333,21 @@ void parallel_for_workitem(group<Dimensions> g, ParallelForFunctor f) {
     Note that if \a T is not a pointer type, it is an error.
 */
 template <typename T>
-struct generic TRISYCL_IMPL(: GenericImpl<T>) {};
+struct generic TRISYCL_IMPL(: GenericImpl<T>) {
+  /** Inherit from the implementation constructors so that we can
+      construct a generic<T> */
+  using GenericImpl<T>::GenericImpl;
+
+  /** Implement the assignment operator because the copy constructor in
+      the implementation is made explicit and the assignment operator is
+      not automatically synthesized */
+  generic & operator =(T && v) {
+    GenericImpl<T>::pointer = v;
+    /* Return the generic pointer so we may chain some side-effect
+       operators */
+    return *this; }
+
+};
 
 /// @} End the address_spaces Doxygen group
 
