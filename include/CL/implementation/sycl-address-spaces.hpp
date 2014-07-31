@@ -26,12 +26,42 @@ struct OpenCLType {
   using type = T;
 };
 
+/// Add an attribute for __constant address space
+template <typename T>
+struct OpenCLType<T, constant_address_space> {
+  using type =
+#ifdef __SYCL_DEVICE_ONLY__
+    __constant
+#endif
+    T;
+};
+
 /// Add an attribute for __generic address space
 template <typename T>
 struct OpenCLType<T, generic_address_space> {
   using type =
 #ifdef __SYCL_DEVICE_ONLY__
     __generic
+#endif
+    T;
+};
+
+/// Add an attribute for __global address space
+template <typename T>
+struct OpenCLType<T, global_address_space> {
+  using type =
+#ifdef __SYCL_DEVICE_ONLY__
+    __global
+#endif
+    T;
+};
+
+/// Add an attribute for __local address space
+template <typename T>
+struct OpenCLType<T, local_address_space> {
+  using type =
+#ifdef __SYCL_DEVICE_ONLY__
+    __local
 #endif
     T;
 };

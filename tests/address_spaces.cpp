@@ -47,6 +47,12 @@ int main() {
           priv<double*> pd { &d };
           priv<double*> pd2 = &d;
           pd2 = &d;
+          // Can only point to a constant<> object
+          constant<char *> c_p;
+          // Can only point to a global<> object
+          global<unsigned long int *> g_p;
+          // Can only point to a local<> object
+          local<char *> l_p;
         }
       }));
     }); // End of our commands for this queue

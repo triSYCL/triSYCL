@@ -150,7 +150,10 @@ namespace access {
 
 /** Enumerate the different OpenCL 2 address spaces */
 enum address_space {
+  constant_address_space,
   generic_address_space,
+  global_address_space,
+  local_address_space,
   private_address_space,
 };
 
@@ -1338,6 +1341,23 @@ void parallel_for_workitem(group<Dimensions> g, ParallelForFunctor f) {
     @{
 */
 
+/** Declare a variable to be an OpenCL constant pointer
+
+    \param T is the pointer type
+
+    Note that if \a T is not a pointer type, it is an error.
+*/
+#ifdef TRISYCL_HIDE_IMPLEMENTATION
+template <typename T>
+struct constant {
+  // This is only for Doxygen documentation for SYCL API
+};
+#else
+template <typename T>
+using constant = AddressSpaceImpl<T, constant_address_space>;
+#endif
+
+
 /** Declare a variable to be an OpenCL 2 generic pointer
 
     \param T is the pointer type
@@ -1353,6 +1373,41 @@ struct generic {
 template <typename T>
 using generic = AddressSpaceImpl<T, generic_address_space>;
 #endif
+
+
+/** Declare a variable to be an OpenCL global pointer
+
+    \param T is the pointer type
+
+    Note that if \a T is not a pointer type, it is an error.
+*/
+#ifdef TRISYCL_HIDE_IMPLEMENTATION
+template <typename T>
+struct global {
+  // This is only for Doxygen documentation for SYCL API
+};
+#else
+template <typename T>
+using global = AddressSpaceImpl<T, global_address_space>;
+#endif
+
+
+/** Declare a variable to be an OpenCL local pointer
+
+    \param T is the pointer type
+
+    Note that if \a T is not a pointer type, it is an error.
+*/
+#ifdef TRISYCL_HIDE_IMPLEMENTATION
+template <typename T>
+struct local {
+  // This is only for Doxygen documentation for SYCL API
+};
+#else
+template <typename T>
+using local = AddressSpaceImpl<T, local_address_space>;
+#endif
+
 
 /** Declare a variable to be an OpenCL private pointer
 
