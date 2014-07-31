@@ -36,6 +36,16 @@ struct OpenCLType<T, generic_address_space> {
     T;
 };
 
+/// Add an attribute for __private address space
+template <typename T>
+struct OpenCLType<T, private_address_space> {
+  using type =
+#ifdef __SYCL_DEVICE_ONLY__
+    __private
+#endif
+    T;
+};
+
 
 /** Implementation for an OpenCL address space pointer
 

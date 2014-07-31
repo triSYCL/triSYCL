@@ -31,6 +31,7 @@ int main() {
         if (index[0] == 0) {
           int i = 3;
           generic<int *> p {&i};
+          generic<int *> p2 = &i;
           p = &i;
           std::cout << "i = " << *p << std::endl;
           float f[2] = { 2, 3 };
@@ -42,6 +43,10 @@ int main() {
           q++;
           std::cout << "f[1] = " << *q << std::endl;
           std::cout << "f[0] = " << q[-1] << std::endl;
+          double d = 3;
+          priv<double*> pd { &d };
+          priv<double*> pd2 = &d;
+          pd2 = &d;
         }
       }));
     }); // End of our commands for this queue

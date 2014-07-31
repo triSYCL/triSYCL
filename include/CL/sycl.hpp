@@ -151,6 +151,7 @@ namespace access {
 /** Enumerate the different OpenCL 2 address spaces */
 enum address_space {
   generic_address_space,
+  private_address_space,
 };
 
 /// @} End the address_spaces Doxygen group
@@ -1352,6 +1353,23 @@ struct generic {
 template <typename T>
 using generic = AddressSpaceImpl<T, generic_address_space>;
 #endif
+
+/** Declare a variable to be an OpenCL private pointer
+
+    \param T is the pointer type
+
+    Note that if \a T is not a pointer type, it is an error.
+*/
+#ifdef TRISYCL_HIDE_IMPLEMENTATION
+template <typename T>
+struct priv {
+  // This is only for Doxygen documentation for SYCL API
+};
+#else
+template <typename T>
+using priv = AddressSpaceImpl<T, private_address_space>;
+#endif
+
 
 /// @} End the address_spaces Doxygen group
 
