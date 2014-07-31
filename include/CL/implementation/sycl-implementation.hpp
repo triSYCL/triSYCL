@@ -15,12 +15,12 @@
 #include "boost/multi_array.hpp"
 #include <iostream>
 
-/// SYCL dwells in the cl::sycl namespace
+#include "sycl-debug.hpp"
+
+/// triSYCL implementation dwells in the cl::sycl::trisycl namespace
 namespace cl {
 namespace sycl {
 namespace trisycl {
-
-#include "sycl-debug.hpp"
 
 /** \addtogroup parallelism
     @{
