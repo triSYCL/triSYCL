@@ -12,6 +12,10 @@
 #include <typeinfo>
 #endif
 
+namespace cl {
+namespace sycl {
+namespace trisycl {
+
 /** \addtogroup debug_trace Debugging and tracing support
     @{
 */
@@ -39,3 +43,15 @@ struct debug {
 };
 
 /// @} End the debug_trace Doxygen group
+
+}
+}
+}
+
+/*
+    # Some Emacs stuff:
+    ### Local Variables:
+    ### ispell-local-dictionary: "american"
+    ### eval: (flyspell-prog-mode)
+    ### End:
+*/
