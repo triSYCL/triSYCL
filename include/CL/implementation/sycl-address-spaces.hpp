@@ -1,12 +1,12 @@
 /** \file
 
+    Implement OpenCL address spaces in SYCL with C++-style.
+
     Ronan.Keryell at AMD point com
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
 */
-
-//#include <boost/operators.hpp>
 
 namespace cl {
 namespace sycl {
@@ -81,27 +81,6 @@ public:
  T &() { return pointer; }
 
 };
-
-
-#if 0
-// Try a Boost-based implementation
-template <typename T>
-struct GenericImpl : boost::dereferenceable<T,
-#ifdef __SYCL_DEVICE_ONLY__
-                                            __generic
-#endif
-                                            T &,
-                                            GenericImpl> {
-  static_assert(std::is_pointer<T>::value,
-                "T in generic<T> must be a pointer type");
-
-private:
-#ifdef __SYCL_DEVICE_ONLY__
-  __generic
-#endif
-  T pointer;
-};
-#endif
 
 }
 }
