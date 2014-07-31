@@ -8,6 +8,10 @@
 
 //#include <boost/operators.hpp>
 
+namespace cl {
+namespace sycl {
+namespace trisycl {
+
 /** Enumerate the different OpenCL 2 address spaces */
 enum address_space {
   generic_address_space,
@@ -98,6 +102,10 @@ private:
   T pointer;
 };
 #endif
+
+}
+}
+}
 
 /*
     # Some Emacs stuff:

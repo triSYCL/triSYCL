@@ -16,13 +16,12 @@
 #include <iostream>
 
 #include "sycl-debug.hpp"
+#include "sycl-address-spaces.hpp"
 
 /// triSYCL implementation dwells in the cl::sycl::trisycl namespace
 namespace cl {
 namespace sycl {
 namespace trisycl {
-
-#include "sycl-address-spaces.hpp"
 
 /** \addtogroup parallelism
     @{
