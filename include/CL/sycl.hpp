@@ -1334,6 +1334,7 @@ void parallel_for_workitem(group<Dimensions> g, ParallelForFunctor f) {
 */
 template <typename T>
 struct generic TRISYCL_IMPL(: GenericImpl<T>) {
+#ifndef TRISYCL_HIDE_IMPLEMENTATION
   /** Inherit from the implementation constructors so that we can
       construct a generic<T> */
   using GenericImpl<T>::GenericImpl;
@@ -1346,7 +1347,7 @@ struct generic TRISYCL_IMPL(: GenericImpl<T>) {
     /* Return the generic pointer so we may chain some side-effect
        operators */
     return *this; }
-
+#endif
 };
 
 /// @} End the address_spaces Doxygen group
