@@ -46,7 +46,9 @@ public:
   /** Synthesized default constructors
 
       This ensures that we can write
-      \code{generic<float *> q;}
+      \code
+        generic<float *> q;
+      \endcode
       without initialization.
   */
   GenericImpl() = default;
