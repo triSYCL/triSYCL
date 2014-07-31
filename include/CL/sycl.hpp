@@ -1337,24 +1337,24 @@ void parallel_for_workitem(group<Dimensions> g, ParallelForFunctor f) {
     @{
 */
 
-/** Declare a variable to be an OpenCL generic pointer
+/** Declare a variable to be an OpenCL 2 generic pointer
 
     \param T is the pointer type
 
     Note that if \a T is not a pointer type, it is an error.
 */
 template <typename T>
-struct generic TRISYCL_IMPL(: GenericImpl<T>) {
+struct generic TRISYCL_IMPL(: AddressSpaceImpl<T, generic_address_space>) {
 #ifndef TRISYCL_HIDE_IMPLEMENTATION
   /** Inherit from the implementation constructors so that we can
       construct a generic<T> */
-  using GenericImpl<T>::GenericImpl;
+  using AddressSpaceImpl<T, generic_address_space>::AddressSpaceImpl;
 
   /** Implement the assignment operator because the copy constructor in
       the implementation is made explicit and the assignment operator is
       not automatically synthesized */
   generic & operator =(T && v) {
-    GenericImpl<T>::pointer = v;
+    AddressSpaceImpl<T, generic_address_space>::pointer = v;
     /* Return the generic pointer so we may chain some side-effect
        operators */
     return *this; }

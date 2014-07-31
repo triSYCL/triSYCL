@@ -16,50 +16,67 @@ namespace trisycl {
     @{
 */
 
-/** Implementation for an OpenCL 2 generic pointer
+
+/** Generate a type with some real OpenCL 2 attribute if we are on an
+    OpenCL device
+
+    In the general case, do not add any OpenCL address space qualifier */
+template <typename T, address_space AS>
+struct OpenCLType {
+  using type = T;
+};
+
+/// Add an attribute for __generic address space
+template <typename T>
+struct OpenCLType<T, generic_address_space> {
+  using type =
+#ifdef __SYCL_DEVICE_ONLY__
+    __generic
+#endif
+    T;
+};
+
+
+/** Implementation for an OpenCL address space pointer
 
     \param T is the pointer type
 
     Note that if \a T is not a pointer type, it is an error.
 */
-template <typename T>
-class GenericImpl {
+template <typename T, address_space AS>
+class AddressSpaceImpl {
   // Verify that \a T is really a pointer
   static_assert(std::is_pointer<T>::value,
-                "T in generic<T> must be a pointer type");
+                "T must be a pointer type");
 
 protected:
 
-  /** Store the real pointer value
+  /** Store the real pointer value with the right OpenCL address space
+      qualifier if any
 
-      Use a protected member so that the \c generic<> interface class can
-      access the pointer field for assignment.
-
-      On an OpenCL device, use really a \c __generic OpenCL 2 attribute
+      Use a protected member so that the interface class can access the
+      pointer field for assignment.
   */
-#ifdef __SYCL_DEVICE_ONLY__
-  __generic
-#endif
-  T pointer;
+  typename OpenCLType<T, AS>::type pointer;
 
 
 public:
 
   /** Synthesized default constructors
 
-      This ensures that we can write
+      This ensures that we can write for example
       \code
         generic<float *> q;
       \endcode
       without initialization.
   */
-  GenericImpl() = default;
+  AddressSpaceImpl() = default;
 
   /** Set the address_space identifier that can be queried to know the
       pointer type */
-  static auto constexpr address_space = generic_address_space;
+  static auto constexpr address_space = AS;
 
-  /** Allow converting from a normal pointer
+  /** Allow conversion from a normal pointer
 
       Use explicit constructor so that we can forbid construction
       from some pointers from other address spaces.
@@ -68,15 +85,13 @@ public:
       automatically replaced by the copy/move operator and must be
       explicitly defined in the interface
   */
-  explicit GenericImpl(T && v) : pointer(v) { }
+  explicit AddressSpaceImpl(T && v) : pointer(v) { }
 
-  /** Conversion operator to allow this \c generic<> pointer object to be
-      used as a normal (\c __generic on OpenCL target) pointer */
-  operator
-#ifdef __SYCL_DEVICE_ONLY__
-  __generic
-#endif
- T &() { return pointer; }
+  /** Conversion operator to allow for example a \c private<> pointer
+      object to be used as a normal pointer (but with \c __private
+      qualifier on an OpenCL target)
+  */
+  operator typename OpenCLType<T, AS>::type &() { return pointer; }
 
 };
 
