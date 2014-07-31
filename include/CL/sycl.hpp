@@ -144,6 +144,17 @@ namespace access {
 
 /// @} End the data Doxygen group
 
+/** \addtogroup address_spaces Dealing with OpenCL address spaces
+    @{
+*/
+
+/** Enumerate the different OpenCL 2 address spaces */
+enum address_space {
+  generic_address_space,
+};
+
+/// @} End the address_spaces Doxygen group
+
 }
 }
 
@@ -1322,7 +1333,7 @@ void parallel_for_workitem(group<Dimensions> g, ParallelForFunctor f) {
 /// @} End the parallelism Doxygen group
 
 
-/** \addtogroup address_spaces Dealing with OpenCL address spaces
+/** \addtogroup address_spaces
     @{
 */
 

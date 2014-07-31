@@ -12,11 +12,9 @@ namespace cl {
 namespace sycl {
 namespace trisycl {
 
-/** Enumerate the different OpenCL 2 address spaces */
-enum address_space {
-  generic_address_space,
-};
-
+/** \addtogroup address_spaces
+    @{
+*/
 
 /** Implementation for an OpenCL 2 generic pointer
 
@@ -81,6 +79,8 @@ public:
  T &() { return pointer; }
 
 };
+
+/// @} End the address_spaces Doxygen group
 
 }
 }
