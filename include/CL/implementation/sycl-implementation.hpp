@@ -28,7 +28,7 @@ namespace trisycl {
 
 /// Define a multi-dimensional index range
 template <std::size_t Dimensions = 1U>
-struct RangeImpl : std::vector<std::intptr_t>, debug<RangeImpl<Dimensions>> {
+struct RangeImpl : std::vector<std::intptr_t>, Debug<RangeImpl<Dimensions>> {
   static_assert(1 <= Dimensions && Dimensions <= 3,
                 "Dimensions are between 1 and 3");
 

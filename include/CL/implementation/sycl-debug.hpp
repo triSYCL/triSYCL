@@ -26,16 +26,16 @@ namespace trisycl {
     \param T is the real type name to be used in the debug output.
  */
 template <typename T>
-struct debug {
+struct Debug {
 #ifdef TRISYCL_DEBUG
   /// Trace the construction with the compiler-dependent mangled named
-  debug() {
+  Debug() {
     std::cerr << " TRISYCL_DEBUG: Constructor of " << typeid(*this).name()
               << " " << (void*) this << std::endl;
   }
 
   /// Trace the construction with the compiler-dependent mangled named
-  ~debug() {
+  ~Debug() {
     std::cerr << " TRISYCL_DEBUG: ~ Destructor of " << typeid(*this).name()
               << " " << (void*) this << std::endl;
   }
