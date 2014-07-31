@@ -77,21 +77,25 @@ public:
   static auto constexpr address_space = AS;
 
   /** Allow conversion from a normal pointer
-
-      Use explicit constructor so that we can forbid construction
-      from some pointers from other address spaces.
-
-      The negative side effect is that the assignment operator is not
-      automatically replaced by the copy/move operator and must be
-      explicitly defined in the interface
   */
-  explicit AddressSpaceImpl(T && v) : pointer(v) { }
+  AddressSpaceImpl(T && v) : pointer(v) { }
 
   /** Conversion operator to allow for example a \c private<> pointer
       object to be used as a normal pointer (but with \c __private
       qualifier on an OpenCL target)
   */
   operator typename OpenCLType<T, AS>::type &() { return pointer; }
+
+#if 0
+  /** Implement the assignment operator because the copy constructor in
+      the implementation is made explicit and the assignment operator is
+      not automatically synthesized */
+  AddressSpaceImpl & operator =(T v) {
+    AddressSpaceImpl<T, AS>::pointer = v;
+    /* Return the generic pointer so we may chain some side-effect
+       operators */
+    return *this; }
+#endif
 
 };
 
