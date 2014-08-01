@@ -5,6 +5,14 @@ This is a humble implementation test bed to experiment with the
 provisional specification of the OpenCL_ SYCL_ `C++`_ layer and to give
 feedback to the Khronos_ OpenCL_ SYCL_ committee.
 
+For legal reasons, the specification used for this open source project is
+the published current provisional specification and not the last one
+currently discussed in the Khronos_ OpenCL_ SYCL_ committee. If you are a
+Khronos_ member, you can ask for an access to
+https://github.com/amd/triSYCL-private/tree/future in the
+https://github.com/amd/triSYCL-private private repository to use a more
+futuristic version.
+
 This is just the start of a SYCL_ mock-up, only based on C++14 and OpenMP_
 with execution on the CPU right now. So there is nothing related to
 OpenCL_ yet. But since in SYCL_ there is a host fall-back, this can be used
