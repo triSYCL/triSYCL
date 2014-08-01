@@ -5,7 +5,12 @@
     To use it in some class C, make C inherit from debug<C>.
 
     Ronan.Keryell at AMD dot com
- */
+
+    Copyright 2014 Advanced Micro Devices, Inc.
+
+    This file is distributed under the University of Illinois Open Source
+    License. See LICENSE.TXT for details.
+*/
 
 #ifdef TRISYCL_DEBUG
 #include <iostream>
@@ -26,16 +31,16 @@ namespace trisycl {
     \param T is the real type name to be used in the debug output.
  */
 template <typename T>
-struct debug {
+struct Debug {
 #ifdef TRISYCL_DEBUG
   /// Trace the construction with the compiler-dependent mangled named
-  debug() {
+  Debug() {
     std::cerr << " TRISYCL_DEBUG: Constructor of " << typeid(*this).name()
               << " " << (void*) this << std::endl;
   }
 
   /// Trace the construction with the compiler-dependent mangled named
-  ~debug() {
+  ~Debug() {
     std::cerr << " TRISYCL_DEBUG: ~ Destructor of " << typeid(*this).name()
               << " " << (void*) this << std::endl;
   }
