@@ -87,7 +87,7 @@ struct OpenCLType<T, private_address_space> {
     the implementation of cl::sycl::multi_ptr<T, AS>
 */
 template <typename T, address_space AS>
-class AddressSpaceImpl {
+class AddressSpacePointerImpl {
   // Verify that \a T is really a pointer
   static_assert(std::is_pointer<T>::value,
                 "T must be a pointer type");
@@ -114,7 +114,7 @@ public:
       \endcode
       without initialization.
   */
-  AddressSpaceImpl() = default;
+  AddressSpacePointerImpl() = default;
 
   /** Set the address_space identifier that can be queried to know the
       pointer type */
@@ -122,7 +122,7 @@ public:
 
   /** Allow conversion from a normal pointer
   */
-  AddressSpaceImpl(T && v) : pointer(v) { }
+  AddressSpacePointerImpl(T && v) : pointer(v) { }
 
   /** Conversion operator to allow for example a \c private<> pointer
       object to be used as a normal pointer (but with \c __private
@@ -134,14 +134,82 @@ public:
   /** Implement the assignment operator because the copy constructor in
       the implementation is made explicit and the assignment operator is
       not automatically synthesized */
-  AddressSpaceImpl & operator =(T v) {
-    AddressSpaceImpl<T, AS>::pointer = v;
+  AddressSpacePointerImpl & operator =(T v) {
+    AddressSpacePointerImpl<T, AS>::pointer = v;
     /* Return the generic pointer so we may chain some side-effect
        operators */
     return *this; }
 #endif
 
 };
+
+
+/** Implementation of an object type with an OpenCL address space
+
+    \param T is the type of the basic object to be created
+
+    \param AS is the address space to place the object into
+
+    The class implementation is just inheriting of T so that all methods
+    and non-member operators on T work also on AddressSpaceObjectImpl<T>
+
+    \todo Verify/improve to deal with const/volatile?
+
+    \todo what about T having some final methods?
+*/
+template <typename T, address_space AS>
+struct AddressSpaceObjectImpl : public OpenCLType<T, AS>::type {
+  /** Store the base type of the object
+
+      \todo Add to the specification
+  */
+  using type = T;
+
+  /** Store the base type of the object with OpenCL address space modifier
+
+      \todo Add to the specification
+  */
+  using opencl_type = typename OpenCLType<T, AS>::type;
+
+
+  /* C++11 helps a lot to be able to have the same constructors as the
+     parent class here
+
+     \todo Add this to the list of required C++11 features needed for SYCL
+  */
+  using type::type;
+
+  /** Allow to creating an address space version of an object or to
+      convert one */
+  AddressSpaceObjectImpl(T && v) : T (v) { }
+
+  /** Conversion operator to allow a AddressSpaceObjectImpl<T> to be used
+      as a T so that all the methods of a T and the built-in operators for
+      T can be used on a AddressSpaceObjectImpl<T> too */
+  operator T &() { return this; }
+
+};
+  /*
+template <class T>
+struct is_fundamental;
+template <class T>
+struct is_object;
+template <class T>
+struct is_scalar;
+  */
+
+/** Dispatch the address space implementation according to the requested type
+
+    \param T is the type of the object to be created
+
+    \param AS is the address space to place the object into or to point to
+    in the case of a pointer type
+*/
+template <typename T, address_space AS>
+using AddressSpaceImpl =
+  typename std::conditional<std::is_pointer<T>::value,
+                            AddressSpacePointerImpl<T, AS>,
+                            AddressSpaceObjectImpl<T, AS>>::type;
 
 /// @} End the address_spaces Doxygen group
 

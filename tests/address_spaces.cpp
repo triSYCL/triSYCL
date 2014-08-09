@@ -7,9 +7,19 @@ constexpr size_t N = 3;
 using Vector = float[N];
 
 
+struct Range {
+  float low, high;
+
+public:
+
+  Range(float low, float high) : low(low), high(high) {}
+};
+
+
 int main() {
 
   float c[N];
+
 
   { // By sticking all the SYCL work in a {} block, we ensure
     // all SYCL tasks must complete before exiting the block
@@ -57,6 +67,22 @@ int main() {
           multi_ptr<double*, private_address_space> p_mp = pd;
           auto ppd = make_multi(p_mp);
           auto p_c_p = make_multi(c_p);
+
+          static constant<Range> constant_Range { 2, 3 };
+          std::cout << "Range = {" << constant_Range.low << ","
+                    << constant_Range.high << "}" <<std::endl;
+          auto constant_Range2 = constant_Range;
+
+          global<std::string> s = "yo";
+          /* Verify that std::string operators and functions are
+             available also on global<std::string> */
+          s = s + " ";
+          s += "man" ;
+          std::cout << "s = " << s << " Size = " << s.size() << std::endl;
+          // Now the private string constructed from a global one
+          std::string ps { s };
+          ps += s;
+          std::cout << "ps = " << ps << " Size = " << ps.size() << std::endl;
         }
       }));
     }); // End of our commands for this queue
@@ -69,3 +95,4 @@ int main() {
 
   return 0;
 }
+

@@ -1432,6 +1432,8 @@ using priv = AddressSpaceImpl<T, private_address_space>;
 
     \param Pointer is the pointer type
 
+    \param AS is the address space to point to
+
     Note that if \a Pointer is not a pointer type, it is an error.
 */
 #ifdef TRISYCL_HIDE_IMPLEMENTATION
@@ -1441,7 +1443,7 @@ struct multi_ptr {
 };
 #else
 template <typename Pointer, address_space AS>
-using multi_ptr = AddressSpaceImpl<Pointer, AS>;
+using multi_ptr = AddressSpacePointerImpl<Pointer, AS>;
 #endif
 
 
