@@ -55,6 +55,8 @@ int main() {
           local<char *> l_p;
           multi_ptr<char *, constant_address_space> c_mp = c_p;
           multi_ptr<double*, private_address_space> p_mp = pd;
+          auto ppd = make_multi(p_mp);
+          auto p_c_p = make_multi(c_p);
         }
       }));
     }); // End of our commands for this queue

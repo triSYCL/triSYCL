@@ -1428,22 +1428,34 @@ using priv = AddressSpaceImpl<T, private_address_space>;
 #endif
 
 
-/** A pointer that can be statically any type of address-space specific
-    pointer
+/** A pointer that can be statically associated to any address-space
 
-    \param T is the pointer type
+    \param Pointer is the pointer type
 
-    Note that if \a T is not a pointer type, it is an error.
+    Note that if \a Pointer is not a pointer type, it is an error.
 */
 #ifdef TRISYCL_HIDE_IMPLEMENTATION
-template <typename T, address_space AS>
+template <typename Pointer, address_space AS>
 struct multi_ptr {
   // This is only for Doxygen documentation for SYCL API
 };
 #else
-template <typename T, address_space AS>
-using multi_ptr = AddressSpaceImpl<T, AS>;
+template <typename Pointer, address_space AS>
+using multi_ptr = AddressSpaceImpl<Pointer, AS>;
 #endif
+
+
+/** Construct a cl::sycl::multi_ptr<> with the right type
+
+    \param pointer is the address with its address space to point to
+
+    \todo Implement the case with a plain pointer
+*/
+template <typename T, address_space AS>
+multi_ptr<T, AS> make_multi(multi_ptr<T, AS> pointer) {
+  return pointer;
+}
+
 
 /// @} End the address_spaces Doxygen group
 

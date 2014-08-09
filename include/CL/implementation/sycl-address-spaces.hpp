@@ -82,12 +82,17 @@ struct OpenCLType<T, private_address_space> {
     \param T is the pointer type
 
     Note that if \a T is not a pointer type, it is an error.
+
+    All the address space pointers inherit from it, which makes trivial
+    the implementation of cl::sycl::multi_ptr<T, AS>
 */
 template <typename T, address_space AS>
 class AddressSpaceImpl {
   // Verify that \a T is really a pointer
   static_assert(std::is_pointer<T>::value,
                 "T must be a pointer type");
+
+  using pointer_type = typename OpenCLType<T, AS>::type;
 
 protected:
 
@@ -97,8 +102,7 @@ protected:
       Use a protected member so that the interface class can access the
       pointer field for assignment.
   */
-  typename OpenCLType<T, AS>::type pointer;
-
+  pointer_type pointer;
 
 public:
 
@@ -124,7 +128,7 @@ public:
       object to be used as a normal pointer (but with \c __private
       qualifier on an OpenCL target)
   */
-  operator typename OpenCLType<T, AS>::type &() { return pointer; }
+  operator pointer_type &() { return pointer; }
 
 #if 0
   /** Implement the assignment operator because the copy constructor in
