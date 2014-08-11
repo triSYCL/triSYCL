@@ -99,10 +99,84 @@ template <typename T, address_space AS>
 using AddressSpaceImpl =
   typename std::conditional<std::is_pointer<T>::value,
                             AddressSpacePointerImpl<T, AS>,
-                            typename std::conditional<std::is_compound<T>::value,
+                            typename std::conditional<std::is_class<T>::value,
                                                       AddressSpaceObjectImpl<T, AS>,
                                                       AddressSpaceFundamentalImpl<T, AS>
                                                       >::type>::type;
+
+
+/** Implementation of the base infrastructure to wrap something in an
+    OpenCL address space
+
+    \param T is the type of the basic stuff to be created
+
+    \param AS is the address space to place the object into
+
+    \todo Verify/improve to deal with const/volatile?
+*/
+template <typename T, address_space AS>
+struct AddressSpaceBaseImpl {
+  /** Store the base type of the object
+
+      \todo Add to the specification
+  */
+  using type = T;
+
+  /** Store the base type of the object with OpenCL address space modifier
+
+      \todo Add to the specification
+  */
+  using opencl_type = typename OpenCLType<T, AS>::type;
+
+private:
+
+  /* C++11 helps a lot to be able to have the same constructors as the
+     parent class here
+
+     \todo Add this to the list of required C++11 features needed for SYCL
+  */
+  opencl_type variable;
+
+public:
+
+  /** Allow to creating an address space version of an object or to
+      convert one */
+  AddressSpaceBaseImpl(const T & v) : variable(v) { }
+
+
+  /** Also request for the default constructors that have been disabled by
+      the declaration of another constructor */
+  AddressSpaceBaseImpl() = default;
+
+
+  /** Allow for example assignment of a global<float> to a priv<double>
+      for example
+
+     Since it needs 2 implicit conversions, it does not work with the
+     conversion operators already define, so add 1 more explicit
+     conversion here so that the remaining implicit conversion can be
+     found by the compiler.
+
+     Strangely
+     \code
+     template <typename SomeType, address_space SomeAS>
+     AddressSpaceBaseImpl(AddressSpaceImpl<SomeType, SomeAS>& v)
+     : variable(SomeType(v)) { }
+     \endcode
+     cannot be used here because SomeType cannot be inferred. So use
+     AddressSpaceBaseImpl<> instead
+  */
+  template <typename SomeType, address_space SomeAS>
+  AddressSpaceBaseImpl(AddressSpaceBaseImpl<SomeType, SomeAS>& v)
+    : variable(SomeType(v)) { }
+
+
+  /** Conversion operator to allow a AddressSpaceObjectImpl<T> to be used
+      as a T so that all the methods of a T and the built-in operators for
+      T can be used on a AddressSpaceObjectImpl<T> too */
+  operator T & () { return variable; }
+
+};
 
 
 /** Implementation for an OpenCL address space pointer
@@ -181,81 +255,10 @@ public:
     \todo Verify/improve to deal with const/volatile?
 */
 template <typename T, address_space AS>
-struct AddressSpaceFundamentalImpl {
-  /** Store the base type of the object
+struct AddressSpaceFundamentalImpl : public AddressSpaceBaseImpl<T, AS> {
 
-      \todo Add to the specification
-  */
-  using type = T;
-
-  /** Store the base type of the object with OpenCL address space modifier
-
-      \todo Add to the specification
-  */
-  using opencl_type = typename OpenCLType<T, AS>::type;
-
-private:
-
-  /* C++11 helps a lot to be able to have the same constructors as the
-     parent class here
-
-     \todo Add this to the list of required C++11 features needed for SYCL
-  */
-  opencl_type variable;
-
-public:
-
-  /** Allow to creating an address space version of an object or to
-      convert one */
-  AddressSpaceFundamentalImpl(const T & v) : variable(v) { }
-
-
-  /** Also request for the default constructors that have been disabled by
-      the declaration of another constructor */
-  AddressSpaceFundamentalImpl() = default;
-
-
-  /** Allow for example assignment of a global<float> to a priv<double>
-      for example
-
-     Since it needs 2 implicit conversions, it does not work with the
-     conversion operators already define, so add 1 more explicit
-     conversion here so that the remaining implicit conversion can be
-     found by the compiler.
-
-     Strangely
-     \code
-     template <typename SomeType, address_space SomeAS>
-     AddressSpaceFundamentalImpl(AddressSpaceImpl<SomeType, SomeAS>& v)
-     : variable(SomeType(v)) { }
-     \endcode
-     cannot be used here because SomeType cannot be inferred. So use
-     AddressSpaceFundamentalImpl<> instead
-  */
-  template <typename SomeType, address_space SomeAS>
-  AddressSpaceFundamentalImpl(AddressSpaceFundamentalImpl<SomeType, SomeAS>& v)
-    : variable(SomeType(v)) { }
-
-
-  /** Conversion operator to allow a AddressSpaceObjectImpl<T> to be used
-      as a T so that all the methods of a T and the built-in operators for
-      T can be used on a AddressSpaceObjectImpl<T> too */
-  operator T & () { return variable; }
-
-#if 0
-  template <typename SomeType, address_space SomeAS>
-  operator AddressSpaceImpl<SomeType, SomeAS> &() {
-    return variable;
-  }
-  /** Implement the assignment operator because the copy constructor in
-      the implementation is made explicit and the assignment operator is
-      not automatically synthesized */
-  AddressSpacePointerImpl & operator =(T v) {
-    AddressSpacePointerImpl<T, AS>::pointer = v;
-    /* Return the generic pointer so we may chain some side-effect
-       operators */
-    return *this; }
-#endif
+  // Inherit from base class constructors
+  using AddressSpaceBaseImpl<T, AS>::AddressSpaceBaseImpl;
 
 };
 
