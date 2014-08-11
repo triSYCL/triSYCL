@@ -128,6 +128,10 @@ struct AddressSpaceBaseImpl {
   */
   using opencl_type = typename OpenCLType<T, AS>::type;
 
+  /** Set the address_space identifier that can be queried to know the
+      pointer type */
+  static auto constexpr address_space = AS;
+
 private:
 
   /* C++11 helps a lot to be able to have the same constructors as the
@@ -145,7 +149,14 @@ public:
 
 
   /** Also request for the default constructors that have been disabled by
-      the declaration of another constructor */
+      the declaration of another constructor
+
+      This ensures for example that we can write
+      \code
+        generic<float *> q;
+      \endcode
+      without initialization.
+  */
   AddressSpaceBaseImpl() = default;
 
 
@@ -166,7 +177,7 @@ public:
      cannot be used here because SomeType cannot be inferred. So use
      AddressSpaceBaseImpl<> instead
   */
-  template <typename SomeType, address_space SomeAS>
+  template <typename SomeType, cl::sycl::address_space SomeAS>
   AddressSpaceBaseImpl(AddressSpaceBaseImpl<SomeType, SomeAS>& v)
     : variable(SomeType(v)) { }
 
@@ -189,59 +200,13 @@ public:
     the implementation of cl::sycl::multi_ptr<T, AS>
 */
 template <typename T, address_space AS>
-class AddressSpacePointerImpl {
+struct AddressSpacePointerImpl : public AddressSpaceBaseImpl<T, AS> {
   // Verify that \a T is really a pointer
   static_assert(std::is_pointer<T>::value,
                 "T must be a pointer type");
 
-  using pointer_type = typename OpenCLType<T, AS>::type;
-
-protected:
-
-  /** Store the real pointer value with the right OpenCL address space
-      qualifier if any
-
-      Use a protected member so that the interface class can access the
-      pointer field for assignment.
-  */
-  pointer_type pointer;
-
-public:
-
-  /** Synthesized default constructors
-
-      This ensures that we can write for example
-      \code
-        generic<float *> q;
-      \endcode
-      without initialization.
-  */
-  AddressSpacePointerImpl() = default;
-
-  /** Set the address_space identifier that can be queried to know the
-      pointer type */
-  static auto constexpr address_space = AS;
-
-  /** Allow conversion from a normal pointer
-  */
-  AddressSpacePointerImpl(T && v) : pointer(v) { }
-
-  /** Conversion operator to allow for example a \c private<> pointer
-      object to be used as a normal pointer (but with \c __private
-      qualifier on an OpenCL target)
-  */
-  operator pointer_type & () { return pointer; }
-
-#if 0
-  /** Implement the assignment operator because the copy constructor in
-      the implementation is made explicit and the assignment operator is
-      not automatically synthesized */
-  AddressSpacePointerImpl & operator =(T v) {
-    AddressSpacePointerImpl<T, AS>::pointer = v;
-    /* Return the generic pointer so we may chain some side-effect
-       operators */
-    return *this; }
-#endif
+  // Inherit from base class constructors
+  using AddressSpaceBaseImpl<T, AS>::AddressSpaceBaseImpl;
 
 };
 
