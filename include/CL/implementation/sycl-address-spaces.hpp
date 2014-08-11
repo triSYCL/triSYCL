@@ -77,6 +77,34 @@ struct OpenCLType<T, private_address_space> {
 };
 
 
+/* Forward declare some classes to allow some recursion in conversion
+   operators */
+template <typename SomeType, address_space SomeAS>
+struct AddressSpaceFundamentalImpl;
+
+template <typename SomeType, address_space SomeAS>
+struct AddressSpaceObjectImpl;
+
+template <typename SomeType, address_space SomeAS>
+struct AddressSpacePointerImpl;
+
+/** Dispatch the address space implementation according to the requested type
+
+    \param T is the type of the object to be created
+
+    \param AS is the address space to place the object into or to point to
+    in the case of a pointer type
+*/
+template <typename T, address_space AS>
+using AddressSpaceImpl =
+  typename std::conditional<std::is_pointer<T>::value,
+                            AddressSpacePointerImpl<T, AS>,
+                            typename std::conditional<std::is_compound<T>::value,
+                                                      AddressSpaceObjectImpl<T, AS>,
+                                                      AddressSpaceFundamentalImpl<T, AS>
+                                                      >::type>::type;
+
+
 /** Implementation for an OpenCL address space pointer
 
     \param T is the pointer type
@@ -128,9 +156,97 @@ public:
       object to be used as a normal pointer (but with \c __private
       qualifier on an OpenCL target)
   */
-  operator pointer_type &() { return pointer; }
+  operator pointer_type & () { return pointer; }
 
 #if 0
+  /** Implement the assignment operator because the copy constructor in
+      the implementation is made explicit and the assignment operator is
+      not automatically synthesized */
+  AddressSpacePointerImpl & operator =(T v) {
+    AddressSpacePointerImpl<T, AS>::pointer = v;
+    /* Return the generic pointer so we may chain some side-effect
+       operators */
+    return *this; }
+#endif
+
+};
+
+
+/** Implementation of a fundamental type with an OpenCL address space
+
+    \param T is the type of the basic object to be created
+
+    \param AS is the address space to place the object into
+
+    \todo Verify/improve to deal with const/volatile?
+*/
+template <typename T, address_space AS>
+struct AddressSpaceFundamentalImpl {
+  /** Store the base type of the object
+
+      \todo Add to the specification
+  */
+  using type = T;
+
+  /** Store the base type of the object with OpenCL address space modifier
+
+      \todo Add to the specification
+  */
+  using opencl_type = typename OpenCLType<T, AS>::type;
+
+private:
+
+  /* C++11 helps a lot to be able to have the same constructors as the
+     parent class here
+
+     \todo Add this to the list of required C++11 features needed for SYCL
+  */
+  opencl_type variable;
+
+public:
+
+  /** Allow to creating an address space version of an object or to
+      convert one */
+  AddressSpaceFundamentalImpl(const T & v) : variable(v) { }
+
+
+  /** Also request for the default constructors that have been disabled by
+      the declaration of another constructor */
+  AddressSpaceFundamentalImpl() = default;
+
+
+  /** Allow for example assignment of a global<float> to a priv<double>
+      for example
+
+     Since it needs 2 implicit conversions, it does not work with the
+     conversion operators already define, so add 1 more explicit
+     conversion here so that the remaining implicit conversion can be
+     found by the compiler.
+
+     Strangely
+     \code
+     template <typename SomeType, address_space SomeAS>
+     AddressSpaceFundamentalImpl(AddressSpaceImpl<SomeType, SomeAS>& v)
+     : variable(SomeType(v)) { }
+     \endcode
+     cannot be used here because SomeType cannot be inferred. So use
+     AddressSpaceFundamentalImpl<> instead
+  */
+  template <typename SomeType, address_space SomeAS>
+  AddressSpaceFundamentalImpl(AddressSpaceFundamentalImpl<SomeType, SomeAS>& v)
+    : variable(SomeType(v)) { }
+
+
+  /** Conversion operator to allow a AddressSpaceObjectImpl<T> to be used
+      as a T so that all the methods of a T and the built-in operators for
+      T can be used on a AddressSpaceObjectImpl<T> too */
+  operator T & () { return variable; }
+
+#if 0
+  template <typename SomeType, address_space SomeAS>
+  operator AddressSpaceImpl<SomeType, SomeAS> &() {
+    return variable;
+  }
   /** Implement the assignment operator because the copy constructor in
       the implementation is made explicit and the assignment operator is
       not automatically synthesized */
@@ -181,35 +297,14 @@ struct AddressSpaceObjectImpl : public OpenCLType<T, AS>::type {
 
   /** Allow to creating an address space version of an object or to
       convert one */
-  AddressSpaceObjectImpl(T && v) : T (v) { }
+  AddressSpaceObjectImpl(T && v) : T(v) { }
 
   /** Conversion operator to allow a AddressSpaceObjectImpl<T> to be used
       as a T so that all the methods of a T and the built-in operators for
       T can be used on a AddressSpaceObjectImpl<T> too */
-  operator T &() { return this; }
+  operator T & () { return this; }
 
 };
-  /*
-template <class T>
-struct is_fundamental;
-template <class T>
-struct is_object;
-template <class T>
-struct is_scalar;
-  */
-
-/** Dispatch the address space implementation according to the requested type
-
-    \param T is the type of the object to be created
-
-    \param AS is the address space to place the object into or to point to
-    in the case of a pointer type
-*/
-template <typename T, address_space AS>
-using AddressSpaceImpl =
-  typename std::conditional<std::is_pointer<T>::value,
-                            AddressSpacePointerImpl<T, AS>,
-                            AddressSpaceObjectImpl<T, AS>>::type;
 
 /// @} End the address_spaces Doxygen group
 

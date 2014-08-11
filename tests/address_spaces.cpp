@@ -15,6 +15,8 @@ public:
   Range(float low, float high) : low(low), high(high) {}
 };
 
+static_assert(std::is_object<std::string>::value,
+              "T must be a pointer type");
 
 int main() {
 
@@ -68,6 +70,18 @@ int main() {
           auto ppd = make_multi(p_mp);
           auto p_c_p = make_multi(c_p);
 
+          global<float> global_float;
+          global_float = f[0];
+          global_float += 1;
+          global_float += f[1];
+          std::cout << "global_float = " << global_float << std::endl;
+          global_float = 7;
+
+          global<float> global_float2 = global_float;
+
+          priv<double> priv_double = global_float;
+          priv<double> priv_double2 { global_float };
+
           static constant<Range> constant_Range { 2, 3 };
           std::cout << "Range = {" << constant_Range.low << ","
                     << constant_Range.high << "}" <<std::endl;
@@ -87,11 +101,6 @@ int main() {
       }));
     }); // End of our commands for this queue
   } // End scope, so we wait for the queue to complete
-
-  std::cout << "Result:" << std::endl;
-  for(int i = 0; i < N; i++)
-    ;// std::cout << c[i] << " ";
-  std::cout << std::endl;
 
   return 0;
 }
