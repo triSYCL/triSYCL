@@ -22,7 +22,6 @@ int main() {
 
   float c[N];
 
-
   { // By sticking all the SYCL work in a {} block, we ensure
     // all SYCL tasks must complete before exiting the block
 
@@ -78,7 +77,6 @@ int main() {
           global_float = 7;
 
           global<float> global_float2 = global_float;
-
           priv<double> priv_double = global_float;
           priv<double> priv_double2 { global_float };
 
@@ -97,6 +95,16 @@ int main() {
           std::string ps { s };
           ps += s;
           std::cout << "ps = " << ps << " Size = " << ps.size() << std::endl;
+
+
+          static constant<char[6]> hello { "hello" };
+
+          static global<std::string[2]> hello2 { "bonjour", "salut" };
+
+          std::cout << hello[1] << '-' << hello2[1] << std::endl;
+          hello2[1] = "= ";
+          hello2[1] += "Mont a ra mat?";
+          std::cout << hello[1] << '-' << hello2[1] << std::endl;
         }
       }));
     }); // End of our commands for this queue
