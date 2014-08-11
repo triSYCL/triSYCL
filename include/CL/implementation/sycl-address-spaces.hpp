@@ -132,21 +132,31 @@ struct AddressSpaceBaseImpl {
       pointer type */
   static auto constexpr address_space = AS;
 
-private:
+};
+
+
+/** Implementation of a variable with an OpenCL address space
+
+    \param T is the type of the basic object to be created
+
+    \param AS is the address space to place the object into
+
+*/
+template <typename T, address_space AS>
+class AddressSpaceVariableImpl : public AddressSpaceBaseImpl<T, AS> {
 
   /* C++11 helps a lot to be able to have the same constructors as the
      parent class here
 
      \todo Add this to the list of required C++11 features needed for SYCL
   */
-  opencl_type variable;
+  typename AddressSpaceBaseImpl<T, AS>::opencl_type variable;
 
 public:
 
   /** Allow to creating an address space version of an object or to
       convert one */
-  AddressSpaceBaseImpl(const T & v) : variable(v) { }
-
+  AddressSpaceVariableImpl(const T & v) : variable(v) { }
 
   /** Also request for the default constructors that have been disabled by
       the declaration of another constructor
@@ -157,7 +167,10 @@ public:
       \endcode
       without initialization.
   */
-  AddressSpaceBaseImpl() = default;
+  AddressSpaceVariableImpl() = default;
+
+  // Inherit from base class constructors
+  using AddressSpaceBaseImpl<T, AS>::AddressSpaceBaseImpl;
 
 
   /** Allow for example assignment of a global<float> to a priv<double>
@@ -178,7 +191,7 @@ public:
      AddressSpaceBaseImpl<> instead
   */
   template <typename SomeType, cl::sycl::address_space SomeAS>
-  AddressSpaceBaseImpl(AddressSpaceBaseImpl<SomeType, SomeAS>& v)
+  AddressSpaceVariableImpl(AddressSpaceVariableImpl<SomeType, SomeAS>& v)
     : variable(SomeType(v)) { }
 
 
@@ -200,13 +213,13 @@ public:
     the implementation of cl::sycl::multi_ptr<T, AS>
 */
 template <typename T, address_space AS>
-struct AddressSpacePointerImpl : public AddressSpaceBaseImpl<T, AS> {
+struct AddressSpacePointerImpl : public AddressSpaceVariableImpl<T, AS> {
   // Verify that \a T is really a pointer
   static_assert(std::is_pointer<T>::value,
                 "T must be a pointer type");
 
   // Inherit from base class constructors
-  using AddressSpaceBaseImpl<T, AS>::AddressSpaceBaseImpl;
+  using AddressSpaceVariableImpl<T, AS>::AddressSpaceVariableImpl;
 
 };
 
@@ -220,10 +233,10 @@ struct AddressSpacePointerImpl : public AddressSpaceBaseImpl<T, AS> {
     \todo Verify/improve to deal with const/volatile?
 */
 template <typename T, address_space AS>
-struct AddressSpaceFundamentalImpl : public AddressSpaceBaseImpl<T, AS> {
+struct AddressSpaceFundamentalImpl : public AddressSpaceVariableImpl<T, AS> {
 
   // Inherit from base class constructors
-  using AddressSpaceBaseImpl<T, AS>::AddressSpaceBaseImpl;
+  using AddressSpaceVariableImpl<T, AS>::AddressSpaceVariableImpl;
 
 };
 
