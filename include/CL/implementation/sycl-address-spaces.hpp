@@ -143,14 +143,20 @@ struct AddressSpaceBaseImpl {
 
 */
 template <typename T, address_space AS>
-class AddressSpaceVariableImpl : public AddressSpaceBaseImpl<T, AS> {
+struct AddressSpaceVariableImpl : public AddressSpaceBaseImpl<T, AS> {
+  /** Store the base type of the object with OpenCL address space modifier
 
+      \todo Add to the specification
+  */
+  using opencl_type = typename OpenCLType<T, AS>::type;
+
+private:
   /* C++11 helps a lot to be able to have the same constructors as the
      parent class here
 
      \todo Add this to the list of required C++11 features needed for SYCL
   */
-  typename AddressSpaceBaseImpl<T, AS>::opencl_type variable;
+  opencl_type variable;
 
 public:
 
@@ -197,8 +203,12 @@ public:
 
   /** Conversion operator to allow a AddressSpaceObjectImpl<T> to be used
       as a T so that all the methods of a T and the built-in operators for
-      T can be used on a AddressSpaceObjectImpl<T> too */
-  operator T & () { return variable; }
+      T can be used on a AddressSpaceObjectImpl<T> too.
+
+      Use opencl_type so that if we take the address of it, the address
+      space is kept.
+  */
+  operator opencl_type & () { return variable; }
 
 };
 
@@ -255,35 +265,32 @@ struct AddressSpaceFundamentalImpl : public AddressSpaceVariableImpl<T, AS> {
     \todo what about T having some final methods?
 */
 template <typename T, address_space AS>
-struct AddressSpaceObjectImpl : public OpenCLType<T, AS>::type {
-  /** Store the base type of the object
-
-      \todo Add to the specification
-  */
-  using type = T;
-
+struct AddressSpaceObjectImpl : public OpenCLType<T, AS>::type,
+                                public AddressSpaceBaseImpl<T, AS> {
   /** Store the base type of the object with OpenCL address space modifier
 
       \todo Add to the specification
   */
   using opencl_type = typename OpenCLType<T, AS>::type;
 
-
   /* C++11 helps a lot to be able to have the same constructors as the
-     parent class here
+     parent class here but with an OpenCL address space
 
      \todo Add this to the list of required C++11 features needed for SYCL
   */
-  using type::type;
+  using opencl_type::opencl_type;
 
-  /** Allow to creating an address space version of an object or to
+  /** Allow to create an address space version of an object or to
       convert one */
-  AddressSpaceObjectImpl(T && v) : T(v) { }
+  AddressSpaceObjectImpl(T && v) : opencl_type(v) { }
 
   /** Conversion operator to allow a AddressSpaceObjectImpl<T> to be used
       as a T so that all the methods of a T and the built-in operators for
-      T can be used on a AddressSpaceObjectImpl<T> too */
-  operator T & () { return this; }
+      T can be used on a AddressSpaceObjectImpl<T> too.
+
+      Use opencl_type so that if we take the address of it, the address
+      space is kept. */
+  operator opencl_type & () { return this; }
 
 };
 
