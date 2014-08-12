@@ -278,27 +278,18 @@ struct AddressSpacePointerImpl : public AddressSpaceFundamentalImpl<T, AS> {
     \param AS is the address space to place the object into
 */
 template <typename T, address_space AS>
-struct AddressSpaceArrayImpl : public AddressSpaceBaseImpl<T, AS> {
-  /** Store the base type of the object with OpenCL address space modifier
+struct AddressSpaceArrayImpl : public AddressSpaceVariableImpl<T, AS> {
+  /// Keep track of the base class as a short-cut
+  using super = AddressSpaceVariableImpl<T, AS>;
 
-      \todo Add to the specification
-  */
-  using opencl_type = typename OpenCLType<T, AS>::type;
+  /// Inherit from base class constructors
+  using super::AddressSpaceVariableImpl;
 
-private:
-  /* C++11 helps a lot to be able to have the same constructors as the
-     parent class here
-
-     \todo Add this to the list of required C++11 features needed for SYCL
-  */
-  opencl_type variable;
-
-public:
 
   /** Allow to create an address space array from an array
    */
   AddressSpaceArrayImpl(const T &array) {
-    std::copy(std::begin(array), std::end(array), std::begin(variable));
+    std::copy(std::begin(array), std::end(array), std::begin(super::variable));
   };
 
 
@@ -307,55 +298,8 @@ public:
       \todo Extend to more than 1 dimension
   */
   AddressSpaceArrayImpl(std::initializer_list<std::remove_extent_t<T>> list) {
-    std::copy(std::begin(list), std::end(list), std::begin(variable));
+    std::copy(std::begin(list), std::end(list), std::begin(super::variable));
   };
-
-
-  /** Also request for the default constructors that have been disabled by
-      the declaration of another constructor
-
-      This ensures for example that we can write
-      \code
-        generic<float *> q;
-      \endcode
-      without initialization.
-  */
-  AddressSpaceArrayImpl() = default;
-
-  // Inherit from base class constructors
-  using AddressSpaceBaseImpl<T, AS>::AddressSpaceBaseImpl;
-
-
-  /** Allow for example assignment of a global<float> to a priv<double>
-      for example
-
-     Since it needs 2 implicit conversions, it does not work with the
-     conversion operators already define, so add 1 more explicit
-     conversion here so that the remaining implicit conversion can be
-     found by the compiler.
-
-     Strangely
-     \code
-     template <typename SomeType, address_space SomeAS>
-     AddressSpaceBaseImpl(AddressSpaceImpl<SomeType, SomeAS>& v)
-     : variable(SomeType(v)) { }
-     \endcode
-     cannot be used here because SomeType cannot be inferred. So use
-     AddressSpaceBaseImpl<> instead
-  */
-  template <typename SomeType, cl::sycl::address_space SomeAS>
-  AddressSpaceArrayImpl(AddressSpaceArrayImpl<SomeType, SomeAS>& v)
-    : variable { SomeType { v } } { }
-
-
-  /** Conversion operator to allow a AddressSpaceObjectImpl<T> to be used
-      as a T so that all the methods of a T and the built-in operators for
-      T can be used on a AddressSpaceObjectImpl<T> too.
-
-      Use opencl_type so that if we take the address of it, the address
-      space is kept.
-  */
-  operator opencl_type & () { return variable; }
 
 };
 
@@ -399,7 +343,7 @@ struct AddressSpaceObjectImpl : public OpenCLType<T, AS>::type,
 
       Use opencl_type so that if we take the address of it, the address
       space is kept. */
-  operator opencl_type & () { return this; }
+  operator opencl_type & () { return *this; }
 
 };
 

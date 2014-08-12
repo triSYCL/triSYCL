@@ -105,6 +105,9 @@ int main() {
           hello2[1] = "= ";
           hello2[1] += "Mont a ra mat?";
           std::cout << hello[1] << '-' << hello2[1] << std::endl;
+          //static constant<int[2][6]> lut = { { 1, 2 }, { 3, 4} };
+          static int lut[2][6]  = { { 1, 2 }, { 3, 4, 3 } };
+          
         }
       }));
     }); // End of our commands for this queue
