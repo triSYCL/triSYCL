@@ -145,7 +145,6 @@ struct AddressSpaceBaseImpl {
     \param T is the type of the basic object to be created
 
     \param AS is the address space to place the object into
-
 */
 template <typename T, address_space AS>
 struct AddressSpaceVariableImpl : public AddressSpaceBaseImpl<T, AS> {
@@ -155,7 +154,11 @@ struct AddressSpaceVariableImpl : public AddressSpaceBaseImpl<T, AS> {
   */
   using opencl_type = typename OpenCLType<T, AS>::type;
 
-private:
+  /// Keep track of the base class as a short-cut
+  using super = AddressSpaceBaseImpl<T, AS>;
+
+protected:
+
   /* C++11 helps a lot to be able to have the same constructors as the
      parent class here
 
@@ -165,9 +168,44 @@ private:
 
 public:
 
-  /** Allow to creating an address space version of an object or to
-      convert one */
+  /** Allow to create an address space version of an object or to convert
+      one to be used by the classes inheriting by this one because it is
+      not possible to directly initialize a base class member in C++ */
   AddressSpaceVariableImpl(const T & v) : variable(v) { }
+
+
+  /// Put again the default constructors canceled by the previous definition
+  AddressSpaceVariableImpl() = default;
+
+
+  /** Conversion operator to allow a AddressSpaceObjectImpl<T> to be used
+      as a T so that all the methods of a T and the built-in operators for
+      T can be used on a AddressSpaceObjectImpl<T> too.
+
+      Use opencl_type so that if we take the address of it, the address
+      space is kept.
+  */
+  operator opencl_type & () { return variable; }
+
+};
+
+
+/** Implementation of a fundamental type with an OpenCL address space
+
+    \param T is the type of the basic object to be created
+
+    \param AS is the address space to place the object into
+
+    \todo Verify/improve to deal with const/volatile?
+*/
+template <typename T, address_space AS>
+struct AddressSpaceFundamentalImpl : public AddressSpaceVariableImpl<T, AS> {
+  /// Keep track of the base class as a short-cut
+  using super = AddressSpaceVariableImpl<T, AS>;
+
+  /// Inherit from base class constructors
+  using super::AddressSpaceVariableImpl;
+
 
   /** Also request for the default constructors that have been disabled by
       the declaration of another constructor
@@ -178,10 +216,7 @@ public:
       \endcode
       without initialization.
   */
-  AddressSpaceVariableImpl() = default;
-
-  // Inherit from base class constructors
-  using AddressSpaceBaseImpl<T, AS>::AddressSpaceBaseImpl;
+  AddressSpaceFundamentalImpl() = default;
 
 
   /** Allow for example assignment of a global<float> to a priv<double>
@@ -202,18 +237,12 @@ public:
      AddressSpaceBaseImpl<> instead
   */
   template <typename SomeType, cl::sycl::address_space SomeAS>
-  AddressSpaceVariableImpl(AddressSpaceVariableImpl<SomeType, SomeAS>& v)
-    : variable(SomeType(v)) { }
-
-
-  /** Conversion operator to allow a AddressSpaceObjectImpl<T> to be used
-      as a T so that all the methods of a T and the built-in operators for
-      T can be used on a AddressSpaceObjectImpl<T> too.
-
-      Use opencl_type so that if we take the address of it, the address
-      space is kept.
-  */
-  operator opencl_type & () { return variable; }
+  AddressSpaceFundamentalImpl(AddressSpaceFundamentalImpl<SomeType, SomeAS>& v)
+  {
+    /* Strangely I cannot have it working in the initializer instead, for
+       some cases */
+    super::variable = SomeType(v);
+  }
 
 };
 
@@ -228,30 +257,16 @@ public:
     the implementation of cl::sycl::multi_ptr<T, AS>
 */
 template <typename T, address_space AS>
-struct AddressSpacePointerImpl : public AddressSpaceVariableImpl<T, AS> {
+struct AddressSpacePointerImpl : public AddressSpaceFundamentalImpl<T, AS> {
   // Verify that \a T is really a pointer
   static_assert(std::is_pointer<T>::value,
                 "T must be a pointer type");
 
-  // Inherit from base class constructors
-  using AddressSpaceVariableImpl<T, AS>::AddressSpaceVariableImpl;
+  /// Keep track of the base class as a short-cut
+  using super = AddressSpaceFundamentalImpl<T, AS>;
 
-};
-
-
-/** Implementation of a fundamental type with an OpenCL address space
-
-    \param T is the type of the basic object to be created
-
-    \param AS is the address space to place the object into
-
-    \todo Verify/improve to deal with const/volatile?
-*/
-template <typename T, address_space AS>
-struct AddressSpaceFundamentalImpl : public AddressSpaceVariableImpl<T, AS> {
-
-  // Inherit from base class constructors
-  using AddressSpaceVariableImpl<T, AS>::AddressSpaceVariableImpl;
+  /// Inherit from base class constructors
+  using super::AddressSpaceFundamentalImpl;
 
 };
 
@@ -261,7 +276,6 @@ struct AddressSpaceFundamentalImpl : public AddressSpaceVariableImpl<T, AS> {
     \param T is the type of the basic object to be created
 
     \param AS is the address space to place the object into
-
 */
 template <typename T, address_space AS>
 struct AddressSpaceArrayImpl : public AddressSpaceBaseImpl<T, AS> {
@@ -281,14 +295,14 @@ private:
 
 public:
 
-  /** Allow to creating an address space array from an array
+  /** Allow to create an address space array from an array
    */
   AddressSpaceArrayImpl(const T &array) {
     std::copy(std::begin(array), std::end(array), std::begin(variable));
   };
 
 
-  /** Allow to creating an address space array from an initializer list
+  /** Allow to create an address space array from an initializer list
 
       \todo Extend to more than 1 dimension
   */
@@ -331,7 +345,7 @@ public:
   */
   template <typename SomeType, cl::sycl::address_space SomeAS>
   AddressSpaceArrayImpl(AddressSpaceArrayImpl<SomeType, SomeAS>& v)
-    : variable(SomeType(v)) { }
+    : variable { SomeType { v } } { }
 
 
   /** Conversion operator to allow a AddressSpaceObjectImpl<T> to be used
