@@ -705,6 +705,7 @@ struct device {
   device() {}
 };
 
+
 /** The SYCL heuristics to select a device
 
     The device with the highest score is selected
@@ -714,11 +715,14 @@ struct device_selector {
   virtual int operator() (device dev) = 0;
 };
 
+
 /** Select the best GPU, if any
 
     \todo to be implemented
 
     \todo to be named device_selector::gpu instead in the specification?
+
+    \todo it is named opencl_gpu_selector
 */
 struct gpu_selector : device_selector {
   // The user-provided operator computing the score
@@ -739,6 +743,7 @@ struct context {
   context(device_selector &s) {}
 };
 
+
 /** SYCL queue, similar to the OpenCL queue concept.
 
     \todo The implementation is quite minimal for now. :-)
@@ -746,7 +751,9 @@ struct context {
 struct queue {
   queue() {}
 
-  queue(context c) {}
+  queue(const context c) {}
+
+  queue(const device_selector &s) {}
 };
 
 
