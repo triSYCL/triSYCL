@@ -144,6 +144,9 @@ namespace access {
 
 }
 
+/// \todo implement image
+template <int dimensions> struct image;
+
 /// @} End the data Doxygen group
 
 }
@@ -584,9 +587,6 @@ struct queue;
 
 template <typename T, int dimensions> struct buffer;
 
-  /// \todo implement image
-template <int dimensions> struct image;
-
 
 /** \addtogroup error_handling Error handling
     @{
@@ -794,7 +794,7 @@ struct platform {
 #ifdef TRISYCL_OPENCL
   /** Get the OpenCL platform_id underneath
 
-   \todo Add cl.hpp version to the specification
+      \todo Add cl.hpp version to the specification
   */
   cl_platform_id get() { assert(0); }
 #endif
