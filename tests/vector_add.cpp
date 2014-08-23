@@ -1,3 +1,7 @@
+/* RUN: make execute TARGET=%s | FileCheck %s
+   CHECK: Result:
+   CHECK-NEXT: 6 8 11
+*/
 #include <CL/sycl.hpp>
 #include <iostream>
 
