@@ -1,4 +1,4 @@
-/* RUN: make execute TARGET=%s | FileCheck %s
+/* RUN: %{execute}%s | %{filecheck} %s
    CHECK: Result:
    CHECK-NEXT: 6 8 11
 */
