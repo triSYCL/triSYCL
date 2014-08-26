@@ -1,3 +1,7 @@
+/* RUN: %{execute}%s | %{filecheck} %s
+   CHECK: Result:
+   CHECK-NEXT: 3 5 7 9 11 13
+*/
 #include <CL/sycl.hpp>
 #include <iostream>
 
