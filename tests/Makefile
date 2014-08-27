@@ -3,9 +3,9 @@
 # <this_makefile> ... as used by make check:
 triSYCL_DIR=$(abspath $(dir $(lastword $(MAKEFILE_LIST)))/..)
 
-TARGETS = queue single_task vector_add range id parallel_vector_add \
-	parallel_matrix_add hierarchical \
-	$(basename $(wildcard 2014-04-21-HPC-GPU_Meetup/*.cpp))
+# Use all the .cpp files from the subdirectories
+TARGETS = $(basename $(wildcard */*.cpp))
+
 
 # The implementation uses C++14 and OpenMP
 CXXFLAGS = -g -std=c++1y -I$(triSYCL_DIR)/include
