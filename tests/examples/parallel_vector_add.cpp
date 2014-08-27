@@ -1,3 +1,7 @@
+/* RUN: %{execute}%s | %{filecheck} %s
+   CHECK: Result:
+   CHECK-NEXT: 6 8 11
+*/
 #include <CL/sycl.hpp>
 #include <iostream>
 
@@ -9,7 +13,6 @@ using Vector = float[N];
 int main() {
   Vector a = { 1, 2, 3 };
   Vector b = { 5, 6, 8 };
-
   float c[N];
 
   { // By sticking all the SYCL work in a {} block, we ensure
@@ -33,15 +36,16 @@ int main() {
       auto kb = B.get_access<access::read>();
       auto kc = C.get_access<access::write>();
 
-      // Enqueue a single, simple task
-      single_task(kernel_lambda<class sequential_vector>([=] () {
-        for(int i = 0; i < N; i++)
-          kc[i] = ka[i] + kb[i];
+      // Enqueue a parallel kernel
+      parallel_for(range<1> { N },
+                   kernel_lambda<class vector_add>([=] (id<1> index) {
+            std::cout << index.get(0) << " ";
+            kc[index] = ka[index] + kb[index];
       }));
     }); // End of our commands for this queue
   } // End scope, so we wait for the queue to complete
 
-  std::cout << "Result:" << std::endl;
+  std::cout << std::endl << "Result:" << std::endl;
   for(int i = 0; i < N; i++)
     std::cout << c[i] << " ";
   std::cout << std::endl;

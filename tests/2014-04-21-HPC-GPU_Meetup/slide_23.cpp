@@ -1,3 +1,6 @@
+/* RUN: %{execute}%s | %{filecheck} %s
+   CHECK: Result = 1234
+*/
 #include <CL/sycl.hpp>
 
 // To have FunctionObject working without explicit closure, put the

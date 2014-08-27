@@ -1,4 +1,8 @@
+/* RUN: %{execute}%s | %{filecheck} %s
+   CHECK: output[42] = 3, should be 3
+*/
 #include <vector>
+#include <iostream>
 #include <CL/sycl.hpp>
 
 using namespace cl;
@@ -30,6 +34,10 @@ int main() {
                 })
            );
         });
+        //////// Test output to be skiped from slide
+        std::cout << "output[42] = " << output[42]
+                  << ", should be 3" << std::endl;
+        //////// End of test
     }
 //////// End slide
     return 0;

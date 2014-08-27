@@ -1,3 +1,20 @@
+/* RUN: %{execute}%s | %{filecheck} %s
+   CHECK: Group id = 0
+   CHECK-NEXT: Local id = 0 (global id = 0)
+   CHECK-NEXT: Local id = 1 (global id = 1)
+   CHECK-NEXT: Group id = 1
+   CHECK-NEXT: Local id = 0 (global id = 2)
+   CHECK-NEXT: Local id = 1 (global id = 3)
+   CHECK-NEXT: Group id = 2
+   CHECK-NEXT: Local id = 0 (global id = 4)
+   CHECK-NEXT: Local id = 1 (global id = 5)
+   CHECK-NEXT: Group id = 3
+   CHECK-NEXT: Local id = 0 (global id = 6)
+   CHECK-NEXT: Local id = 1 (global id = 7)
+   CHECK-NEXT: Group id = 4
+   CHECK-NEXT: Local id = 0 (global id = 8)
+   CHECK-NEXT: Local id = 1 (global id = 9)
+*/
 #include <vector>
 #include <CL/sycl.hpp>
 
@@ -19,11 +36,11 @@ command_group(my_queue, [&]()
 	parallel_for_workgroup(nd_range<>(range<>(size), range<>(groupsize)),
                          kernel_lambda<class hierarchical>([=](group<> group)
 	{
-    std::cerr << "Group id = " << group.get(0) << std::endl;
+    std::cout << "Group id = " << group.get(0) << std::endl;
 
 		parallel_for_workitem(group, [=](item<1> tile)
 		{
-      std::cerr << "Local id = " << tile.get_local().get(0)
+      std::cout << "Local id = " << tile.get_local().get(0)
                 << " (global id = " << tile.get_global()[0] << ")" << std::endl;
 			out_access[tile] = in_access[tile] * 2;
 		});

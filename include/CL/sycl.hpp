@@ -144,6 +144,9 @@ namespace access {
 
 }
 
+/// \todo implement image
+template <int dimensions> struct image;
+
 /// @} End the data Doxygen group
 
 /** \addtogroup address_spaces Dealing with OpenCL address spaces
@@ -599,9 +602,6 @@ struct queue;
 
 template <typename T, int dimensions> struct buffer;
 
-  /// \todo implement image
-template <int dimensions> struct image;
-
 
 /** \addtogroup error_handling Error handling
     @{
@@ -720,6 +720,7 @@ struct device {
   device() {}
 };
 
+
 /** The SYCL heuristics to select a device
 
     The device with the highest score is selected
@@ -729,11 +730,14 @@ struct device_selector {
   virtual int operator() (device dev) = 0;
 };
 
+
 /** Select the best GPU, if any
 
     \todo to be implemented
 
     \todo to be named device_selector::gpu instead in the specification?
+
+    \todo it is named opencl_gpu_selector
 */
 struct gpu_selector : device_selector {
   // The user-provided operator computing the score
@@ -754,6 +758,7 @@ struct context {
   context(device_selector &s) {}
 };
 
+
 /** SYCL queue, similar to the OpenCL queue concept.
 
     \todo The implementation is quite minimal for now. :-)
@@ -761,7 +766,9 @@ struct context {
 struct queue {
   queue() {}
 
-  queue(context c) {}
+  queue(const context c) {}
+
+  queue(const device_selector &s) {}
 };
 
 
@@ -802,7 +809,7 @@ struct platform {
 #ifdef TRISYCL_OPENCL
   /** Get the OpenCL platform_id underneath
 
-   \todo Add cl.hpp version to the specification
+      \todo Add cl.hpp version to the specification
   */
   cl_platform_id get() { assert(0); }
 #endif

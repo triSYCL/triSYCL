@@ -1,3 +1,6 @@
+/* RUN: %{execute}%s | %{filecheck} %s
+   CHECK: Result = 1234
+*/
 #include <CL/sycl.hpp>
 
 int main()
@@ -24,5 +27,6 @@ single_task(kernel_lambda<class simple_test>([=] ()
         }));
 //////// End right side of the slide
     });
+  std::cout << "Result = " << result << std::endl;
   return 0;
 }

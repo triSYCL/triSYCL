@@ -1,3 +1,7 @@
+/* RUN: %{execute}%s | %{filecheck} %s
+   CHECK: my_array[3] = 42, should be 42
+*/
+#include <iostream>
 #include <CL/sycl.hpp>
 
 int main()
@@ -16,6 +20,9 @@ int my_array [20];
            This is a synchronizing operation - it blocks until access is ready.
            Access is released when my_access is destroyed
            */
+        //////// Test output to be skiped from slide
+        my_access[3] = 42;
+        //////// End of test
     }
     // access to my_buffer is now free to other threads/queues
 }
@@ -24,4 +31,7 @@ int my_array [20];
    my_array, if necessary.
    */
 //////// End slide
+//////// Test output to be skiped from slide
+std::cout << "my_array[3] = " << my_array[3] << ", should be 42" << std::endl;
+//////// End of test
 }
