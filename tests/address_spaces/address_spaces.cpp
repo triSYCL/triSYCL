@@ -1,3 +1,17 @@
+/* RUN: %{execute}%s | %{filecheck} %s
+   CHECK: i = 3
+   CHECK-NEXT: f[0] = 2
+   CHECK-NEXT: f[0] = 2
+   CHECK-NEXT: f[1] = 3
+   CHECK-NEXT: f[1] = 3
+   CHECK-NEXT: f[0] = 2
+   CHECK-NEXT: global_float = 6
+   CHECK-NEXT: Range = {2,3}
+   CHECK-NEXT: s = yo man Size = 6
+   CHECK-NEXT: ps = yo manyo man Size = 12
+   CHECK-NEXT: e-salut
+   CHECK-NEXT: e-= Mont a ra mat?
+*/
 #include <CL/sycl.hpp>
 #include <iostream>
 
