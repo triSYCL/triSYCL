@@ -101,7 +101,6 @@
 namespace cl {
 namespace sycl {
 
-
 /** \addtogroup data Data access and storage in SYCL
 
     @{
@@ -1173,6 +1172,14 @@ struct buffer TRISYCL_IMPL(: BufferImpl<T, dimensions>) {
 
 /// @} to end the data Doxygen group
 
+}
+}
+
+// Include the end of the implementation details
+#include "implementation/sycl-implementation-end.hpp"
+
+namespace cl {
+namespace sycl {
 
 /** \addtogroup parallelism
     @{
@@ -1204,80 +1211,18 @@ void single_task(std::function<void(void)> F) { F(); }
 
 /** SYCL parallel_for launches a data parallel computation with parallelism
     specified at launch time by a range<>.
-
-    This implementation use OpenMP 3 if compiled with the right flag.
-
-    \todo It is not clear if the ParallelForFunctor is called with an id<>
-    or with an item. Let's use id<> when called with a range<> and item<>
-    when called with a nd_range<>
 */
 template <int Dimensions = 1, typename ParallelForFunctor>
-void parallel_for(range<Dimensions> r,
-                  ParallelForFunctor f) {
-#ifdef _OPENMP
-  // Use OpenMP for the top loop level
-  ParallelOpenMPForIterate<Dimensions,
-                           range<Dimensions>,
-                           ParallelForFunctor,
-                           id<Dimensions>> { r, f };
-#else
-  // In a sequential execution there is only one index processed at a time
-  id<Dimensions> index;
-  ParallelForIterate<Dimensions,
-                     range<Dimensions>,
-                     ParallelForFunctor,
-                     id<Dimensions>> { r, f, index };
-#endif
+void parallel_for(range<Dimensions> r, ParallelForFunctor f) {
+  ParallelForImpl(r, f);
 }
 
 
 /** A variation of SYCL parallel_for to take into account a nd_range<>
-
-    \todo Add an OpenMP implementation
-
-    \todo Deal with incomplete work-groups
-
-    \todo Implement with parallel_for_workgroup()/parallel_for_workitem()
-*/
+ */
 template <int Dimensions = 1, typename ParallelForFunctor>
-void parallel_for(nd_range<Dimensions> r,
-                  ParallelForFunctor f) {
-  // In a sequential execution there is only one index processed at a time
-  item<Dimensions> Index { r };
-  // To iterate on the work-group
-  id<Dimensions> Group;
-  range<Dimensions> GroupRange = r.get_group_range();
-  // To iterate on the local work-item
-  id<Dimensions> Local;
-  range<Dimensions> LocalRange = r.get_local_range();
-
-  // Reconstruct the item from its group and local id
-  auto reconstructItem = [&] (id<Dimensions> L) {
-    //Local.display();
-    // Reconstruct the global item
-    Index.set_local(Local);
-    Index.set_global(Local + LocalRange*Group);
-    // Call the user kernel at last
-    f(Index);
-  };
-
-  /* To recycle the parallel_for on range<>, wrap the ParallelForFunctor f
-     into another functor that iterate inside the work-group and then
-     calls f */
-  auto iterateInWorkGroup = [&] (id<Dimensions> G) {
-    //Group.display();
-    // Then iterate on the local work-groups
-    ParallelForIterate<Dimensions,
-                       range<Dimensions>,
-                       decltype(reconstructItem),
-                       id<Dimensions>> { LocalRange, reconstructItem, Local };
-  };
-
-  // First iterate on all the work-groups
-  ParallelForIterate<Dimensions,
-                     range<Dimensions>,
-                     decltype(iterateInWorkGroup),
-                     id<Dimensions>> { GroupRange, iterateInWorkGroup, Group };
+void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {
+  ParallelForImpl(r, f);
 }
 
 
@@ -1293,54 +1238,14 @@ void parallel_for(Range r, Program p, ParallelForFunctor f) {
 template <int Dimensions = 1, typename ParallelForFunctor>
 void parallel_for_workgroup(nd_range<Dimensions> r,
                             ParallelForFunctor f) {
-  // In a sequential execution there is only one index processed at a time
-  group<Dimensions> Group(r.getImpl());
-
-  // Reconstruct the item from its group and local id
-  auto callWithGroup = [&] (group<Dimensions> G) {
-    //G.Id.display();
-    // Call the user kernel with the group as parameter
-    f(G);
-  };
-  // First iterate on all the work-groups
-  ParallelForIterate<Dimensions,
-                     range<Dimensions>,
-                     ParallelForFunctor,
-                     group<Dimensions>> {
-    r.get_group_range(),
-    f,
-    Group };
+  ParallelForWorkgroup(r, f);
 }
 
 
 /// Loop on the work-items inside a work-group
 template <int Dimensions = 1, typename ParallelForFunctor>
 void parallel_for_workitem(group<Dimensions> g, ParallelForFunctor f) {
-  // In a sequential execution there is only one index processed at a time
-  item<Dimensions> Index { g.get_nr_range() };
-  // To iterate on the local work-item
-  id<Dimensions> Local;
-
-  // Reconstruct the item from its group and local id
-  auto reconstructItem = [&] (id<Dimensions> L) {
-    //Local.display();
-    //L.display();
-    // Reconstruct the global item
-    Index.set_local(Local);
-    // \todo Some strength reduction here
-    Index.set_global(Local + g.get_local_range()*g.get_group_id());
-    // Call the user kernel at last
-    f(Index);
-  };
-
-  // Then iterate on all the work-items of the work-group
-  ParallelForIterate<Dimensions,
-                     range<Dimensions>,
-                     decltype(reconstructItem),
-                     id<Dimensions>> {
-    g.get_local_range(),
-    reconstructItem,
-    Local };
+  ParallelForWorkitem(g, f);
 }
 
 /// @} End the parallelism Doxygen group
@@ -1480,6 +1385,7 @@ int const CL_LOCAL_MEM_FENCE = 123;
 
 }
 }
+
 
 /*
     # Some Emacs stuff:
