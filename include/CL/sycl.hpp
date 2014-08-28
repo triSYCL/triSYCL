@@ -101,7 +101,6 @@
 namespace cl {
 namespace sycl {
 
-
 /** \addtogroup data Data access and storage in SYCL
 
     @{
@@ -1158,6 +1157,14 @@ struct buffer TRISYCL_IMPL(: BufferImpl<T, dimensions>) {
 
 /// @} to end the data Doxygen group
 
+}
+}
+
+// Include the end of the implementation details
+#include "implementation/sycl-implementation-end.hpp"
+
+namespace cl {
+namespace sycl {
 
 /** \addtogroup parallelism
     @{
@@ -1343,6 +1350,7 @@ int const CL_LOCAL_MEM_FENCE = 123;
 
 }
 }
+
 
 /*
     # Some Emacs stuff:
