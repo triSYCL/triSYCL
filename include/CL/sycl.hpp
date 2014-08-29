@@ -177,6 +177,9 @@ using namespace trisycl;
 */
 template <int dims = 1>
 struct range TRISYCL_IMPL(: public RangeImpl<dims>) {
+  /* Now this code is only for describing the API and setting the default
+     value for dims. The real classes use are the specializations after
+     this one */
 
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
@@ -215,22 +218,7 @@ struct range TRISYCL_IMPL(: public RangeImpl<dims>) {
      dimension? Generalize this helper to anything?
   */
 
-  /// To have implicit conversion from 1 integer
-  range(std::intptr_t x) : range { x } {
-    static_assert(dims == 1, "A range with 1 size value should be 1-D");
-  }
 
-
-  /// A 2-D constructor from 2 integers
-  range(std::intptr_t x, std::intptr_t y) : range { x, y } {
-    static_assert(dims == 2, "A range with 2 size values should be 2-D");
-  }
-
-
-  /// A 3-D constructor from 3 integers
-  range(std::intptr_t x, std::intptr_t y, std::intptr_t z) : range { x, y, z } {
-    static_assert(dims == 3, "A range with 3 size values should be 3-D");
-  }
 
 
   /** Return the range size in the give dimension
@@ -247,6 +235,77 @@ struct range TRISYCL_IMPL(: public RangeImpl<dims>) {
   }
 
 };
+
+
+#ifndef TRISYCL_HIDE_IMPLEMENTATION
+/* Use some specializations so that some function overloads can be
+   determined according to some implicit constructors, such as we can
+   write parallel_for(7, some_kernel) automatically infers that we have a
+   range<1> { 7 }
+
+   and parallel_for({ 7, 8, 9}, some_kernel) implies a range<3> { 7, 8, 9 }
+*/
+
+template <>
+struct range<1> TRISYCL_IMPL(: public RangeImpl<1>) {
+  // A shortcut name to the implementation
+  using Impl = RangeImpl<1>;
+
+  /** Construct a range from an implementation, used by nd_range() for
+      example
+
+     This is internal and should not appear in the specification */
+  range(Impl &r) : Impl(r) {}
+
+  range(const Impl &r) : Impl(r) {}
+
+  /// To have implicit conversion from 1 integer and automatic inference
+  /// of the dimensionality
+  range(std::intptr_t x) : Impl { x } { }
+
+};
+
+
+template <>
+struct range<2> TRISYCL_IMPL(: public RangeImpl<2>) {
+
+  // A shortcut name to the implementation
+  using Impl = RangeImpl<2>;
+
+  /** Construct a range from an implementation, used by nd_range() for
+      example
+
+     This is internal and should not appear in the specification */
+  range(Impl &r) : Impl(r) {}
+
+  range(const Impl &r) : Impl(r) {}
+
+  /// A 2-D constructor to have implicit conversion from from 2 integers
+  /// and automatic inference of the dimensionality
+  range(std::intptr_t x, std::intptr_t y) : RangeImpl { x, y } { }
+};
+
+
+template <>
+struct range<3> TRISYCL_IMPL(: public RangeImpl<3>) {
+
+  // A shortcut name to the implementation
+  using Impl = RangeImpl<3>;
+
+  /** Construct a range from an implementation, used by nd_range() for
+      example
+
+     This is internal and should not appear in the specification */
+  range(Impl &r) : Impl(r) {}
+
+  range(const Impl &r) : Impl(r) {}
+
+  /// A 3-D constructor to have implicit conversion from from from 3
+  /// integers and automatic inference of the dimensionality
+  range(std::intptr_t x, std::intptr_t y, std::intptr_t z) : RangeImpl { x, y, z }
+  { }
+};
+#endif
 
 
 #ifndef TRISYCL_HIDE_IMPLEMENTATION
