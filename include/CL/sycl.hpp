@@ -263,6 +263,10 @@ struct range<1> TRISYCL_IMPL(: public RangeImpl<1>) {
   /// of the dimensionality
   range(std::intptr_t x) : Impl { x } { }
 
+  /** Conversion so that an range<1> can basically be used like an integer */
+  operator std::ptrdiff_t() {
+    return (*this)[0];
+  }
 };
 
 

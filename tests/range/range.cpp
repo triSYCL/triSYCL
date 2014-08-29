@@ -2,6 +2,7 @@
    CHECK: Result:
    CHECK-NEXT: 1
    CHECK-NEXT: a = 3
+   CHECK-NEXT: a as an int = 3
    CHECK-NEXT: b = 4
    CHECK-NEXT: c = 5,6
    CHECK-NEXT: d = 7,8,9
@@ -38,8 +39,9 @@ int main() {
   std::cout << r.get(0) << " ";
   std::cout << std::endl;
 
-  range<1> a = 3;
+  range<> a = 3;
   std::cout << "a = " << a[0] << std::endl;
+  std::cout << "a as an int = " << a << std::endl;
   range<1> b = { 4 };
   std::cout << "b = " << b[0] << std::endl;
   range<2> c = { 5, 6 };
