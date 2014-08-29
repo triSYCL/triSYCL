@@ -14,8 +14,9 @@
 #include <cassert>
 #include <functional>
 #include <type_traits>
-#include "boost/multi_array.hpp"
 #include <iostream>
+#include <iterator>
+#include "boost/multi_array.hpp"
 
 #include "sycl-debug.hpp"
 
@@ -145,9 +146,11 @@ RangeImpl<Dimensions> operator +(RangeImpl<Dimensions> a,
 template <std::size_t N>
 struct IdImpl {
 
+  using basic_type = ptrdiff_t;
+
 protected:
 
-  std::ptrdiff_t value[N];
+  basic_type value[N];
 
 public:
 
@@ -162,6 +165,29 @@ public:
   /// Return the given coordinate
   auto get(std::size_t index) {
     return value[index];
+  }
+
+  /// Implement begin() for C++ STL interoperability
+  auto begin() {
+    return std::begin(value);
+  }
+
+
+  /// Implement end() for C++ STL interoperability
+  auto end() {
+    return std::end(value);
+  }
+
+
+  /// Implement cbegin() for C++ STL interoperability
+  auto cbegin() {
+    return const_cast<const basic_type &>(std::begin(value));
+  }
+
+
+  /// Implement cend() for C++ STL interoperability
+  auto cend() {
+    return const_cast<const basic_type &>(std::end(value));
   }
 };
 
