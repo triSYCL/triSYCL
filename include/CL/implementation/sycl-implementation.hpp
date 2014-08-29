@@ -142,52 +142,20 @@ RangeImpl<Dimensions> operator +(RangeImpl<Dimensions> a,
 
 /** Define a multi-dimensional index, used for example to locate a work
     item
+
+    Unfortunately, even if std::array is an aggregate class allowing
+    native list initialization, it is no longer an aggregate if we derive
+    from an aggregate. SO we have to redeclare the constructors.
 */
 template <std::size_t N>
-struct IdImpl {
+struct IdImpl : std::array<std::ptrdiff_t, N> {
 
-  using basic_type = ptrdiff_t;
+  /// Keep other constructors
+  using std::array<std::ptrdiff_t, N>::array;
 
-protected:
-
-  basic_type value[N];
-
-public:
-
-  IdImpl() = default;
-
-  /** Get the lvalue of the id size in the given dimension so that we can
-      get or assign the value */
-  auto &operator[](std::size_t index) {
-    return value[index];
-  }
-
-  /// Return the given coordinate
+  /// Return the element of the array
   auto get(std::size_t index) {
-    return value[index];
-  }
-
-  /// Implement begin() for C++ STL interoperability
-  auto begin() {
-    return std::begin(value);
-  }
-
-
-  /// Implement end() for C++ STL interoperability
-  auto end() {
-    return std::end(value);
-  }
-
-
-  /// Implement cbegin() for C++ STL interoperability
-  auto cbegin() {
-    return const_cast<const basic_type &>(std::begin(value));
-  }
-
-
-  /// Implement cend() for C++ STL interoperability
-  auto cend() {
-    return const_cast<const basic_type &>(std::end(value));
+    return (*this)[index];
   }
 };
 

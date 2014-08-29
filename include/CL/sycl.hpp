@@ -460,7 +460,7 @@ struct id<1> : public IdImpl<1> {
   /// A 1-D constructor to have implicit conversion from from 1 integer
   /// and automatic inference of the dimensionality
   id(std::ptrdiff_t x) {
-    value[0] = x;
+    (*this)[0] = x;
   }
 
 
@@ -470,7 +470,7 @@ struct id<1> : public IdImpl<1> {
 
   /** Conversion so that an id<1> can basically be used like an integer */
   operator std::ptrdiff_t() {
-    return value[0];
+    return (*this)[0];
   }
 };
 
@@ -480,8 +480,8 @@ struct id<2> : public IdImpl<2> {
   /// A 2-D constructor to have implicit conversion from from 2 integers
   /// and automatic inference of the dimensionality
   id(std::ptrdiff_t x, std::ptrdiff_t y) {
-    value[0] = x;
-    value[1] = y;
+    (*this)[0] = x;
+    (*this)[1] = y;
   }
 
 
@@ -495,9 +495,9 @@ struct id<3> : public IdImpl<3> {
   /// A 3-D constructor to have implicit conversion from from 3 integers
   /// and automatic inference of the dimensionality
   id(std::ptrdiff_t x, std::ptrdiff_t y, std::ptrdiff_t z) {
-    value[0] = x;
-    value[1] = y;
-    value[2] = z;
+    (*this)[0] = x;
+    (*this)[1] = y;
+    (*this)[2] = z;
   }
 
 
