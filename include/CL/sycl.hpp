@@ -234,8 +234,6 @@ struct range TRISYCL_IMPL(: public RangeImpl<dims>) {
   */
 
 
-
-
   /** Return the range size in the give dimension
 
       \todo explain in the specification (table 3.29, not only in the
@@ -1268,30 +1266,71 @@ Functor kernel_lambda(Functor F) {
 void single_task(std::function<void(void)> F) { F(); }
 
 
+#ifndef TRISYCL_HIDE_IMPLEMENTATION
 /** SYCL parallel_for launches a data parallel computation with parallelism
-    specified at launch time by a range<>.
+    specified at launch time by a range<>
+
+    \param global_size is the full size of the nd_range<>
+
+    \param f is the kernel functor to execute
+
+    Unfortunately, to have implicit conversion to work on the range, the
+    range can not be templated, so instantiate it for all the dimensions
 */
-template <int Dimensions = 1, typename ParallelForFunctor>
-void parallel_for(range<Dimensions> r, ParallelForFunctor f) {
-  ParallelForImpl(r, f);
+#define TRISYCL_ParallelForFunctor_GLOBAL(N)                          \
+  template <typename ParallelForFunctor>                              \
+  void parallel_for(range<N> global_size,                             \
+                    ParallelForFunctor f) {                           \
+    ParallelForImpl(global_size, f);                                  \
 }
+TRISYCL_ParallelForFunctor_GLOBAL(1)
+TRISYCL_ParallelForFunctor_GLOBAL(2)
+TRISYCL_ParallelForFunctor_GLOBAL(3)
+#endif
 
 
 /** A variation of SYCL parallel_for to take into account a nd_range<>
  */
-template <int Dimensions = 1, typename ParallelForFunctor>
+template <int Dimensions, typename ParallelForFunctor>
 void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {
   ParallelForImpl(r, f);
 }
 
 
+#ifndef TRISYCL_HIDE_IMPLEMENTATION
+/** SYCL parallel_for launches a data parallel computation with
+    parallelism specified at launch time by 2 range<> to specify a
+    nd_range<>
+
+    \param global_size is the full size of the nd_range<>
+
+    \param local_size is the local size of the nd_range<>
+
+    \param f is the kernel functor to execute
+
+    Unfortunately, to have implicit conversion to work on the range, the
+    range can not be templated, so instantiate it for all the dimensions
+*/
+#define TRISYCL_ParallelForFunctor_GLOBAL_LOCAL(N)          \
+template <typename ParallelForFunctor>                      \
+void parallel_for(range<N> global_size,                     \
+                  range<N> local_size,                      \
+                  ParallelForFunctor f) {                   \
+  parallel_for(nd_range<N> { global_size, local_size }, f); \
+}
+TRISYCL_ParallelForFunctor_GLOBAL_LOCAL(1)
+TRISYCL_ParallelForFunctor_GLOBAL_LOCAL(2)
+TRISYCL_ParallelForFunctor_GLOBAL_LOCAL(3)
+#endif
+
+
 /// SYCL parallel_for version that allows a Program object to be specified
-template <typename Range, typename Program, typename ParallelForFunctor>
+/* template <typename Range, typename Program, typename ParallelForFunctor>
 void parallel_for(Range r, Program p, ParallelForFunctor f) {
   /// \todo deal with Program
   parallel_for(r, f);
 }
-
+*/
 
 /// Loop on the work-groups
 template <int Dimensions = 1, typename ParallelForFunctor>
