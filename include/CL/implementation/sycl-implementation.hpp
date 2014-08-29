@@ -141,20 +141,28 @@ RangeImpl<Dimensions> operator +(RangeImpl<Dimensions> a,
 
 /** Define a multi-dimensional index, used for example to locate a work
     item
-
-    Just rely on the range implementation
 */
-template <std::size_t N = 1U>
-struct IdImpl: RangeImpl<N> {
-  using RangeImpl<N>::RangeImpl;
+template <std::size_t N>
+struct IdImpl {
 
-  /* Since the copy constructor is called with RangeImpl<N>, declare this
-     constructor to forward it */
-  IdImpl(const RangeImpl<N> &init) : RangeImpl<N>(init) {}
+protected:
 
-  // Add back the default constructors canceled by the previous declaration
+  std::ptrdiff_t value[N];
+
+public:
+
   IdImpl() = default;
 
+  /** Get the lvalue of the id size in the given dimension so that we can
+      get or assign the value */
+  auto &operator[](std::size_t index) {
+    return value[index];
+  }
+
+  /// Return the given coordinate
+  auto get(std::size_t index) {
+    return value[index];
+  }
 };
 
 

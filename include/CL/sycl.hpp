@@ -362,8 +362,11 @@ range<Dimensions> operator +(range<Dimensions> a,
     Well it is already the case for item. So not needed for id?
     Indeed [] is mentioned in text of page 59 but not in class description.
 */
-template <int dims = 1>
+template <std::size_t dims = 1>
 struct id TRISYCL_IMPL(: public IdImpl<dims>) {
+  /* Now this code is only for describing the API and setting the default
+     value for dims. The real classes use are the specializations after
+     this one */
 
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
@@ -441,6 +444,63 @@ struct id TRISYCL_IMPL(: public IdImpl<dims>) {
   }
 
 };
+
+
+#ifndef TRISYCL_HIDE_IMPLEMENTATION
+/** Use some specializations so that some function overloads can be
+    determined according to some implicit constructors and to have an
+    implicit conversion from/to an int if dims = 1
+*/
+template <>
+struct id<1> : public IdImpl<1> {
+  /// A 1-D constructor to have implicit conversion from from 1 integer
+  /// and automatic inference of the dimensionality
+  id(std::ptrdiff_t x) {
+    value[0] = x;
+  }
+
+
+  /// Keep other constructors
+  id() = default;
+
+
+  /** Conversion so that an id<1> can basically be used like an integer */
+  operator std::ptrdiff_t() {
+    return value[0];
+  }
+};
+
+
+template <>
+struct id<2> : public IdImpl<2> {
+  /// A 2-D constructor to have implicit conversion from from 2 integers
+  /// and automatic inference of the dimensionality
+  id(std::ptrdiff_t x, std::ptrdiff_t y) {
+    value[0] = x;
+    value[1] = y;
+  }
+
+
+  /// Keep other constructors
+  id() = default;
+};
+
+
+template <>
+struct id<3> : public IdImpl<3> {
+  /// A 3-D constructor to have implicit conversion from from 3 integers
+  /// and automatic inference of the dimensionality
+  id(std::ptrdiff_t x, std::ptrdiff_t y, std::ptrdiff_t z) {
+    value[0] = x;
+    value[1] = y;
+    value[2] = z;
+  }
+
+
+  /// Keep other constructors
+  id() = default;
+};
+#endif
 
 
 /** A ND-range, made by a global and local range, to specify work-group
