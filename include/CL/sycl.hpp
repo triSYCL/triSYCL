@@ -506,6 +506,15 @@ struct id<3> : public IdImpl<3> {
 };
 #endif
 
+/** Implement a make_id to construct an id of the right dimension with
+    implicit conversion from an initializer list for example.
+
+    Cannot use a template on the number of dimensions because the implicit
+    conversion would not be tried. */
+auto make_id(id<1> i) { return i; }
+auto make_id(id<2> i) { return i; }
+auto make_id(id<3> i) { return i; }
+
 
 /** A ND-range, made by a global and local range, to specify work-group
     and work-item organization.

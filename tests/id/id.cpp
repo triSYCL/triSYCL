@@ -3,7 +3,9 @@
    CHECK-NEXT: 1
    CHECK-NEXT: 5 7
    CHECK-NEXT: 3
-   CHECK: as_an_int = 42
+   CHECK-NEXT: jj has changed
+   CHECK-NEXT: jj is lexicographically lesser than before
+   CHECK-NEXT: as_an_int = 42
    CHECK-NEXT: jj via e = 5
    CHECK-NEXT: jj via e = 3
    CHECK-NEXT: cjj via e = 5
@@ -29,7 +31,15 @@ int main() {
   std::cout << i.get(0) << std::endl;
   std::cout << ii.get(0) << " " << ii.get(1) << std::endl;
   std::cout << jj[1] << std::endl;
-  std::cout << std::endl;
+
+  // Test that id<> implement comparable
+  if (jj != make_id({ 5, 7 }))
+    std::cout << "jj has changed" << std::endl;
+  if (jj > make_id({ 5, 7 }))
+    std::cout << "jj is lexicographically greater than before" << std::endl;
+  if (jj < make_id({ 5, 7 }))
+    std::cout << "jj is lexicographically lesser than before" << std::endl;
+
 
   id <> as_an_int;
   as_an_int = 42;
