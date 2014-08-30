@@ -150,8 +150,9 @@ RangeImpl<Dimensions> operator +(RangeImpl<Dimensions> a,
     return *this;                                   \
   }
 
+
 /** Define a multi-dimensional index, used for example to locate a work
-    item
+    item or a buffer element
 
     Unfortunately, even if std::array is an aggregate class allowing
     native list initialization, it is no longer an aggregate if we derive
@@ -159,8 +160,8 @@ RangeImpl<Dimensions> operator +(RangeImpl<Dimensions> a,
 */
 template <std::size_t N>
 struct IdImpl : std::array<std::ptrdiff_t, N>,
-    // Use boost::addable to add a +-like operation to this type
-    boost::addable<IdImpl<N>>,
+    // To have all the usual arithmetic operations on this type
+    boost::euclidean_ring_operators<IdImpl<N>>,
     // Add a display() method
     DisplayVector<IdImpl<N>> {
 
@@ -172,8 +173,22 @@ struct IdImpl : std::array<std::ptrdiff_t, N>,
     return (*this)[index];
   }
 
-  /// Add +-like operation on the id<>
+  /* Implement minimal methods boost::euclidean_ring_operators needs to
+     generate everything */
+  /// Add + like operations on the id<>
   TRISYCL_BOOST_OPERATOR_VECTOR_OP(+=)
+
+  /// Add - like operations on the id<>
+  TRISYCL_BOOST_OPERATOR_VECTOR_OP(-=)
+
+  /// Add * like operations on the id<>
+  TRISYCL_BOOST_OPERATOR_VECTOR_OP(*=)
+
+  /// Add / like operations on the id<>
+  TRISYCL_BOOST_OPERATOR_VECTOR_OP(/=)
+
+  /// Add % like operations on the id<>
+  TRISYCL_BOOST_OPERATOR_VECTOR_OP(%=)
 };
 
 

@@ -11,6 +11,10 @@
    CHECK-NEXT: cjj via e = 5
    CHECK-NEXT: cjj via e = 3
    CHECK-NEXT: 6 5
+   CHECK-NEXT: 4 4
+   CHECK-NEXT: 0 1
+   CHECK-NEXT: 12 15
+   CHECK-NEXT: 6 2
 */
 #include <CL/sycl.hpp>
 #include <iostream>
@@ -62,7 +66,10 @@ int main() {
 
   jj += make_id({ 1, 2 });
   jj.display();
-
+  (jj - make_id({ 2, 1 })).display();
+  (jj % make_id({ 2, 2 })).display();
+  (jj * make_id({ 2, 3 })).display();
+  (jj /= make_id({ 1, 2 })).display();
 
   return 0;
 }
