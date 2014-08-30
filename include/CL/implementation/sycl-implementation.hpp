@@ -141,6 +141,15 @@ RangeImpl<Dimensions> operator +(RangeImpl<Dimensions> a,
 }
 
 
+/** Helper macro to declare a vector operation with the given side-effect
+    operator */
+#define TRISYCL_BOOST_OPERATOR_VECTOR_OP(op)        \
+  IdImpl<N> operator op(const IdImpl<N>& rhs) {     \
+    for (std::size_t i = 0; i != N; ++i)            \
+      (*this)[i] op rhs[i];                         \
+    return *this;                                   \
+  }
+
 /** Define a multi-dimensional index, used for example to locate a work
     item
 
@@ -150,8 +159,10 @@ RangeImpl<Dimensions> operator +(RangeImpl<Dimensions> a,
 */
 template <std::size_t N>
 struct IdImpl : std::array<std::ptrdiff_t, N>,
-  boost::addable<IdImpl<N>>,
-  DisplayVector<IdImpl<N>> {
+    // Use boost::addable to add a +-like operation to this type
+    boost::addable<IdImpl<N>>,
+    // Add a display() method
+    DisplayVector<IdImpl<N>> {
 
   /// Keep other constructors
   using std::array<std::ptrdiff_t, N>::array;
@@ -161,12 +172,8 @@ struct IdImpl : std::array<std::ptrdiff_t, N>,
     return (*this)[index];
   }
 
-  IdImpl<N> operator+=(const IdImpl<N>& rhs) {
-    for (std::size_t i = 0; i != N; ++i)
-      (*this)[i] += rhs[i];
-    return *this;
-  }
-
+  /// Add +-like operation on the id<>
+  TRISYCL_BOOST_OPERATOR_VECTOR_OP(+=)
 };
 
 
