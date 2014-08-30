@@ -46,6 +46,7 @@ int main() {
   as_an_int = 42;
   std::cout << "as_an_int = " << as_an_int << std::endl;
 
+
   // Try some STL interoperability:
 
   // Check that the for range loop works

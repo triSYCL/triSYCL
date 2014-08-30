@@ -150,7 +150,8 @@ RangeImpl<Dimensions> operator +(RangeImpl<Dimensions> a,
 */
 template <std::size_t N>
 struct IdImpl : std::array<std::ptrdiff_t, N>,
-  boost::addable<IdImpl<N>> {
+  boost::addable<IdImpl<N>>,
+  DisplayVector<IdImpl<N>> {
 
   /// Keep other constructors
   using std::array<std::ptrdiff_t, N>::array;
@@ -166,13 +167,6 @@ struct IdImpl : std::array<std::ptrdiff_t, N>,
     return *this;
   }
 
-  /// To debug and test
-  void display() {
-    std::cout << typeid(this).name() << ": ";
-    for (int i = 0; i < N; ++i)
-      std::cout << " " << (*this)[i];
-    std::cout << std::endl;
-  }
 };
 
 
