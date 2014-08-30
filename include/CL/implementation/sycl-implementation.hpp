@@ -17,6 +17,7 @@
 #include <iostream>
 #include <iterator>
 #include "boost/multi_array.hpp"
+#include <boost/operators.hpp>
 
 #include "sycl-debug.hpp"
 
@@ -145,10 +146,11 @@ RangeImpl<Dimensions> operator +(RangeImpl<Dimensions> a,
 
     Unfortunately, even if std::array is an aggregate class allowing
     native list initialization, it is no longer an aggregate if we derive
-    from an aggregate. SO we have to redeclare the constructors.
+    from an aggregate. Thus we have to redeclare the constructors.
 */
 template <std::size_t N>
-struct IdImpl : std::array<std::ptrdiff_t, N> {
+struct IdImpl : std::array<std::ptrdiff_t, N>,
+  boost::addable<IdImpl<N>> {
 
   /// Keep other constructors
   using std::array<std::ptrdiff_t, N>::array;
@@ -156,6 +158,20 @@ struct IdImpl : std::array<std::ptrdiff_t, N> {
   /// Return the element of the array
   auto get(std::size_t index) {
     return (*this)[index];
+  }
+
+  IdImpl<N> operator+=(const IdImpl<N>& rhs) {
+    for (std::size_t i = 0; i != N; ++i)
+      (*this)[i] += rhs[i];
+    return *this;
+  }
+
+  /// To debug and test
+  void display() {
+    std::cout << typeid(this).name() << ": ";
+    for (int i = 0; i < N; ++i)
+      std::cout << " " << (*this)[i];
+    std::cout << std::endl;
   }
 };
 

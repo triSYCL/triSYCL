@@ -8,7 +8,7 @@ TARGETS = $(basename $(wildcard */*.cpp))
 
 
 # The implementation uses C++14 and OpenMP
-CXXFLAGS = -g -std=c++1y -I$(triSYCL_DIR)/include
+CXXFLAGS = -Wall -g -std=c++1y -I$(triSYCL_DIR)/include
 
 # To use OpenMP to execute SYCL kernels:
 CXXFLAGS += -fopenmp

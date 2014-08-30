@@ -10,6 +10,7 @@
    CHECK-NEXT: jj via e = 3
    CHECK-NEXT: cjj via e = 5
    CHECK-NEXT: cjj via e = 3
+   CHECK-NEXT: 6 5
 */
 #include <CL/sycl.hpp>
 #include <iostream>
@@ -47,7 +48,7 @@ int main() {
 
   // Try some STL interoperability:
 
-  // Check the for range loop works
+  // Check that the for range loop works
   for(auto const & e: jj)
     std::cout << "jj via e = " << e << std::endl;
 
@@ -55,5 +56,11 @@ int main() {
 
   for(auto e: cjj)
     std::cout << "cjj via e = " << e << std::endl;
+
+  // Test arithmetics on id<>
+
+  jj += make_id({ 1, 2 });
+  jj.display();
+
   return 0;
 }
