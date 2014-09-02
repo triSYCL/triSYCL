@@ -14,7 +14,7 @@ namespace trisycl {
     C++14, use a class template instead with everything in the
     constructor.
 */
-template <int level, typename Range, typename ParallelForFunctor, typename Id>
+template <std::size_t level, typename Range, typename ParallelForFunctor, typename Id>
 struct ParallelForIterate {
   ParallelForIterate(const Range &r, ParallelForFunctor &f, Id &index) {
     for (boost::multi_array_types::index _sycl_index = 0,
@@ -38,7 +38,7 @@ struct ParallelForIterate {
     Only the top-level loop uses OpenMP and go on with the normal
     recursive multi-dimensional.
 */
-template <int level, typename Range, typename ParallelForFunctor, typename Id>
+template <std::size_t level, typename Range, typename ParallelForFunctor, typename Id>
 struct ParallelOpenMPForIterate {
   ParallelOpenMPForIterate(const Range &r, ParallelForFunctor &f) {
     // Create the OpenMP threads before the for loop to avoid creating an
@@ -90,7 +90,7 @@ struct ParallelForIterate<0, Range, ParallelForFunctor, Id> {
     or with an item. Let's use id<> when called with a range<> and item<>
     when called with a nd_range<>
 */
-template <int Dimensions = 1, typename ParallelForFunctor>
+template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void ParallelForImpl(range<Dimensions> r,
                      ParallelForFunctor f) {
 #ifdef _OPENMP
@@ -119,7 +119,7 @@ void ParallelForImpl(range<Dimensions> r,
 
     \todo Implement with parallel_for_workgroup()/parallel_for_workitem()
 */
-template <int Dimensions = 1, typename ParallelForFunctor>
+template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void ParallelForImpl(nd_range<Dimensions> r,
                      ParallelForFunctor f) {
   // In a sequential execution there is only one index processed at a time
@@ -162,7 +162,7 @@ void ParallelForImpl(nd_range<Dimensions> r,
 
 
 /// Implement the loop on the work-groups
-template <int Dimensions = 1, typename ParallelForFunctor>
+template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void ParallelForWorkgroup(nd_range<Dimensions> r,
                           ParallelForFunctor f) {
   // In a sequential execution there is only one index processed at a time
@@ -186,7 +186,7 @@ void ParallelForWorkgroup(nd_range<Dimensions> r,
 
 
 /// Implement the loop on the work-items inside a work-group
-template <int Dimensions = 1, typename ParallelForFunctor>
+template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void ParallelForWorkitem(group<Dimensions> g,
                          ParallelForFunctor f) {
   // In a sequential execution there is only one index processed at a time

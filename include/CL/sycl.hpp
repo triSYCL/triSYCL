@@ -144,7 +144,7 @@ namespace access {
 }
 
 /// \todo implement image
-template <int dimensions> struct image;
+template <std::size_t dimensions> struct image;
 
 /// @} End the data Doxygen group
 
@@ -239,7 +239,7 @@ auto make_id(BasicType ... Args) {
 
     \todo add copy constructors in the specification
 */
-template <int dims = 1>
+template <std::size_t dims = 1>
 struct nd_range TRISYCL_IMPL(: NDRangeImpl<dims>) {
   static_assert(1 <= dims && dims <= 3,
                 "Dimensions are between 1 and 3");
@@ -295,7 +295,7 @@ struct nd_range TRISYCL_IMPL(: NDRangeImpl<dims>) {
     providing get_local...() and get_global...() and what about the
     offset?
 */
-template <int dims = 1>
+template <std::size_t dims = 1>
 struct item TRISYCL_IMPL(: ItemImpl<dims>) {
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
@@ -354,7 +354,7 @@ struct item TRISYCL_IMPL(: ItemImpl<dims>) {
 
 /** A group index used in a parallel_for_workitem to specify a work_group
  */
-template <int dims = 1>
+template <std::size_t dims = 1>
 struct group TRISYCL_IMPL(: GroupImpl<dims>) {
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
@@ -495,7 +495,7 @@ struct exception {
 
       \todo to be implemented
   */
-  template <int dimensions> image<dimensions> *get_image() { assert(0); }
+  template <std::size_t dimensions> image<dimensions> *get_image() { assert(0); }
 };
 
 
@@ -1044,7 +1044,7 @@ void single_task(std::function<void(void)> F) { F(); }
 /** SYCL parallel_for launches a data parallel computation with parallelism
     specified at launch time by a range<>.
 */
-template <int Dimensions = 1, typename ParallelForFunctor>
+template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void parallel_for(range<Dimensions> r, ParallelForFunctor f) {
   ParallelForImpl(r, f);
 }
@@ -1052,7 +1052,7 @@ void parallel_for(range<Dimensions> r, ParallelForFunctor f) {
 
 /** A variation of SYCL parallel_for to take into account a nd_range<>
  */
-template <int Dimensions = 1, typename ParallelForFunctor>
+template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {
   ParallelForImpl(r, f);
 }
@@ -1067,7 +1067,7 @@ void parallel_for(Range r, Program p, ParallelForFunctor f) {
 
 
 /// Loop on the work-groups
-template <int Dimensions = 1, typename ParallelForFunctor>
+template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void parallel_for_workgroup(nd_range<Dimensions> r,
                             ParallelForFunctor f) {
   ParallelForWorkgroup(r, f);
@@ -1075,7 +1075,7 @@ void parallel_for_workgroup(nd_range<Dimensions> r,
 
 
 /// Loop on the work-items inside a work-group
-template <int Dimensions = 1, typename ParallelForFunctor>
+template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void parallel_for_workitem(group<Dimensions> g, ParallelForFunctor f) {
   ParallelForWorkitem(g, f);
 }
