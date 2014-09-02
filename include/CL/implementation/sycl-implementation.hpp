@@ -86,12 +86,76 @@ struct SmallArray : std::array<BasicType, Dims>,
 };
 
 
+/** A small array of 1, 2 or 3 elements with the implicit constructors */
+template <typename BasicType, std::size_t Dims>
+struct SmallArray123 : SmallArray<BasicType, Dims> {
+  static_assert(1 <= Dims && Dims <= 3,
+                "Dimensions are between 1 and 3");
+};
+
+
+/** Use some specializations so that some function overloads can be
+    determined according to some implicit constructors and to have an
+    implicit conversion from/to BasicType (such as an int typically) if
+    dims = 1
+*/
+template <typename BasicType>
+struct SmallArray123<BasicType, 1> : public SmallArray<BasicType, 1> {
+  /// A 1-D constructor to have implicit conversion from from 1 integer
+  /// and automatic inference of the dimensionality
+  SmallArray123(BasicType x) {
+    (*this)[0] = x;
+  }
+
+
+  /// Keep other constructors
+  SmallArray123() = default;
+
+
+  /** Conversion so that an id<1> can basically be used like an integer */
+  operator BasicType() {
+    return (*this)[0];
+  }
+};
+
+
+template <typename BasicType>
+struct SmallArray123<BasicType, 2> : public SmallArray<BasicType, 2> {
+  /// A 2-D constructor to have implicit conversion from from 2 integers
+  /// and automatic inference of the dimensionality
+  SmallArray123(BasicType x, BasicType y) {
+    (*this)[0] = x;
+    (*this)[1] = y;
+  }
+
+
+  /// Keep other constructors
+  SmallArray123() = default;
+};
+
+
+template <typename BasicType>
+struct SmallArray123<BasicType, 3> : public SmallArray<BasicType, 3> {
+  /// A 3-D constructor to have implicit conversion from from 3 integers
+  /// and automatic inference of the dimensionality
+  SmallArray123(BasicType x, BasicType y, BasicType z) {
+    (*this)[0] = x;
+    (*this)[1] = y;
+    (*this)[2] = z;
+  }
+
+
+  /// Keep other constructors
+  SmallArray123() = default;
+};
+
+
 /// Implementation of a range: it is a small array of 1 to 3 std::size_t
 template <std::size_t Dims> using RangeImpl = SmallArray<std::size_t, Dims>;
 
 
 /// Implementation of an id: it is a small array of 1 to 3 std::ptrdiff_t
-template <std::size_t Dims> using IdImpl = SmallArray<std::ptrdiff_t, Dims>;
+template <std::size_t Dims> using IdImpl = SmallArray123<std::ptrdiff_t, Dims>;
 
 
 /** The implementation of a ND-range, made by a global and local range, to

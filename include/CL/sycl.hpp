@@ -248,61 +248,9 @@ struct range<3> : public RangeImpl<3> {
     Indeed [] is mentioned in text of page 59 but not in class description.
 */
 template <std::size_t dims = 1>
-struct id : public IdImpl<dims> { };
-
-
-/** Use some specializations so that some function overloads can be
-    determined according to some implicit constructors and to have an
-    implicit conversion from/to an int if dims = 1
-*/
-template <>
-struct id<1> : public IdImpl<1> {
-  /// A 1-D constructor to have implicit conversion from from 1 integer
-  /// and automatic inference of the dimensionality
-  id(std::ptrdiff_t x) {
-    (*this)[0] = x;
-  }
-
-
-  /// Keep other constructors
-  id() = default;
-
-
-  /** Conversion so that an id<1> can basically be used like an integer */
-  operator std::ptrdiff_t() {
-    return (*this)[0];
-  }
-};
-
-
-template <>
-struct id<2> : public IdImpl<2> {
-  /// A 2-D constructor to have implicit conversion from from 2 integers
-  /// and automatic inference of the dimensionality
-  id(std::ptrdiff_t x, std::ptrdiff_t y) {
-    (*this)[0] = x;
-    (*this)[1] = y;
-  }
-
-
-  /// Keep other constructors
-  id() = default;
-};
-
-
-template <>
-struct id<3> : public IdImpl<3> {
-  /// A 3-D constructor to have implicit conversion from from 3 integers
-  /// and automatic inference of the dimensionality
-  id(std::ptrdiff_t x, std::ptrdiff_t y, std::ptrdiff_t z) {
-    (*this)[0] = x;
-    (*this)[1] = y;
-    (*this)[2] = z;
-  }
-
-
-  /// Keep other constructors
-  id() = default;
+struct id : public IdImpl<dims> {
+  // Inherit of all the constructors
+  using IdImpl<dims>::IdImpl;
 };
 
 

@@ -24,7 +24,6 @@ using namespace cl::sycl;
 
 int main() {
   id<> i;
-  id<2> i2;
   id<3> i3;
   id<> k(i);
   id<> j { 1 };
@@ -33,6 +32,7 @@ int main() {
   id<2> jj { 5, 7 };
   ii = jj;
   jj[1] = 3;
+  i3 = { 1, 2, 3 };
 
   std::cout << std::endl << "Result:" << std::endl;
   std::cout << i.get(0) << std::endl;
