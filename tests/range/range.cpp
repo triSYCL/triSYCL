@@ -6,6 +6,7 @@
    CHECK-NEXT: b = 4
    CHECK-NEXT: c = 5,6
    CHECK-NEXT: d = 7,8,9
+   CHECK-NEXT: d = 1,2,1
    CHECK-NEXT: Range of dims 1
    CHECK-NEXT: Range of dims 1
    CHECK-NEXT: Range of dims 2
@@ -17,7 +18,7 @@
 using namespace cl::sycl;
 
 // To test the inference of the range rank
-template<int N> void f(range<N> r) {
+template<std::size_t N> void f(range<N> r) {
   std::cout << "Range of dims " << N << std::endl;
 }
 
@@ -49,9 +50,14 @@ int main() {
   range<3> d = { 7, 8, 9 };
   std::cout << "d = " << d[0] << ',' << d[1] <<  ',' << d[2] << std::endl;
 
+  // Test modulo operation
+  d %= make_range({2, 3, 4});
+  std::cout << "d = " << d[0] << ',' << d[1] <<  ',' << d[2] << std::endl;
+
   g(43);
   g({ 2014 });
   g({ 1, 128 });
   g({ 11, 54, 68 });
+
   return 0;
 }

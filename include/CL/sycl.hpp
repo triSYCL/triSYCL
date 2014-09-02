@@ -176,65 +176,20 @@ using namespace trisycl;
     \todo add to the specification some way to specify an offset?
 */
 template <std::size_t dims = 1>
-struct range : public RangeImpl<dims> { };
-
-
-/* Use some specializations so that some function overloads can be
-   determined according to some implicit constructors, such as we can
-   write parallel_for(7, some_kernel) automatically infers that we have a
-   range<1> { 7 }
-
-   and parallel_for({ 7, 8, 9}, some_kernel) implies a range<3> { 7, 8, 9 }
-*/
-template <>
-struct range<1> : public RangeImpl<1> {
-  /// A 1-D constructor to have implicit conversion from from 1 integer
-  /// and automatic inference of the dimensionality
-  range(std::ptrdiff_t x) {
-    (*this)[0] = x;
-  }
-
-
-  /// Keep other constructors
-  range() = default;
-
-
-  /** Conversion so that an range<1> can basically be used like an integer */
-  operator std::ptrdiff_t() {
-    return (*this)[0];
-  }
+struct range : public RangeImpl<dims> {
+  // Inherit of all the constructors
+  using RangeImpl<dims>::RangeImpl;
 };
 
 
-template <>
-struct range<2> : public RangeImpl<2> {
-  /// A 2-D constructor to have implicit conversion from from 2 integers
-  /// and automatic inference of the dimensionality
-  range(std::ptrdiff_t x, std::ptrdiff_t y) {
-    (*this)[0] = x;
-    (*this)[1] = y;
-  }
+/** Implement a make_range to construct a range<> of the right dimension
+    with implicit conversion from an initializer list for example.
 
-
-  /// Keep other constructors
-  range() = default;
-};
-
-
-template <>
-struct range<3> : public RangeImpl<3> {
-  /// A 3-D constructor to have implicit conversion from from 3 integers
-  /// and automatic inference of the dimensionality
-  range(std::ptrdiff_t x, std::ptrdiff_t y, std::ptrdiff_t z) {
-    (*this)[0] = x;
-    (*this)[1] = y;
-    (*this)[2] = z;
-  }
-
-
-  /// Keep other constructors
-  range() = default;
-};
+    Cannot use a template on the number of dimensions because the implicit
+    conversion would not be tried. */
+auto make_range(range<1> r) { return r; }
+auto make_range(range<2> r) { return r; }
+auto make_range(range<3> r) { return r; }
 
 
 /** Define a multi-dimensional index, used for example to locate a work item
@@ -254,7 +209,7 @@ struct id : public IdImpl<dims> {
 };
 
 
-/** Implement a make_id to construct an id of the right dimension with
+/** Implement a make_id to construct an id<> of the right dimension with
     implicit conversion from an initializer list for example.
 
     Cannot use a template on the number of dimensions because the implicit

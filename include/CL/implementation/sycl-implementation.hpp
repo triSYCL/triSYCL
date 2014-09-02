@@ -151,7 +151,7 @@ struct SmallArray123<BasicType, 3> : public SmallArray<BasicType, 3> {
 
 
 /// Implementation of a range: it is a small array of 1 to 3 std::size_t
-template <std::size_t Dims> using RangeImpl = SmallArray<std::size_t, Dims>;
+template <std::size_t Dims> using RangeImpl = SmallArray123<std::size_t, Dims>;
 
 
 /// Implementation of an id: it is a small array of 1 to 3 std::ptrdiff_t
