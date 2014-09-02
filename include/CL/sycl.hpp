@@ -171,73 +171,14 @@ using namespace trisycl;
 
     \todo use std::size_t dims instead of int dims in the specification?
 
-    \todo add to the norm this default parameter value?
+    \todo add to the specification this default parameter value?
 
-    \todo add to the norm some way to specify an offset?
+    \todo add to the specification some way to specify an offset?
 */
-template <int dims = 1>
-struct range TRISYCL_IMPL(: public RangeImpl<dims>) {
-  /* Now this code is only for describing the API and setting the default
-     value for dims. The real classes use are the specializations after
-     this one */
-
-  /// \todo add this Boost::multi_array or STL concept to the
-  /// specification?
-  static const auto dimensionality = dims;
-
-#ifndef TRISYCL_HIDE_IMPLEMENTATION
-  // A shortcut name to the implementation
-  using Impl = RangeImpl<dims>;
-
-  /** Construct a range from an implementation, used by nd_range() for
-      example
-
-     This is internal and should not appear in the specification */
-  range(Impl &r) : Impl(r) {}
-
-  range(const Impl &r) : Impl(r) {}
-#endif
-
-  range(range<dims> &r) : Impl(r.getImpl()) {}
-
-  range(const range<dims> &r) : Impl(r.getImpl()) {}
+template <std::size_t dims = 1>
+struct range : public RangeImpl<dims> { };
 
 
-  /** Create a n-D range from a positive integer-like list
-
-      \todo This is not the same as the range(dim1,...) constructor from
-      the specification
-   */
-  range(std::initializer_list<std::intptr_t> l) : Impl(l) {}
-
-
-  /* A variadic template cannot be used because of conflicts with the
-     constructor taking 2 iterators... So let's go verbose.
-
-     \todo Add a make_range() helper too to avoid specifying the
-     dimension? Generalize this helper to anything?
-  */
-
-
-
-
-  /** Return the range size in the give dimension
-
-      \todo explain in the specification (table 3.29, not only in the
-      text) that [] works also for id, and why not range?
-
-      \todo add also [] for range in the specification
-
-      \todo is it supposed to be an int? A cl_int? a size_t?
-  */
-  int get(int index) {
-    return (*this)[index];
-  }
-
-};
-
-
-#ifndef TRISYCL_HIDE_IMPLEMENTATION
 /* Use some specializations so that some function overloads can be
    determined according to some implicit constructors, such as we can
    write parallel_for(7, some_kernel) automatically infers that we have a
@@ -294,51 +235,6 @@ struct range<3> : public RangeImpl<3> {
   /// Keep other constructors
   range() = default;
 };
-#endif
-
-
-#ifndef TRISYCL_HIDE_IMPLEMENTATION
-// Add some operations on range to help with OpenCL work-group scheduling
-// \todo use an element-wise template instead of copy past below for / and *
-
-// An element-wise division of ranges, with upper rounding
-template <size_t Dimensions>
-range<Dimensions> operator /(range<Dimensions> dividend,
-                             range<Dimensions> divisor) {
-  range<Dimensions> result;
-
-  for (int i = 0; i < Dimensions; i++)
-    result[i] = (dividend[i] + divisor[i] - 1)/divisor[i];
-
-  return result;
-}
-
-
-// An element-wise multiplication of ranges
-template <size_t Dimensions>
-range<Dimensions> operator *(range<Dimensions> a,
-                             range<Dimensions> b) {
-  range<Dimensions> result;
-
-  for (int i = 0; i < Dimensions; i++)
-    result[i] = a[i] * b[i];
-
-  return result;
-}
-
-
-// An element-wise addition of ranges
-template <size_t Dimensions>
-range<Dimensions> operator +(range<Dimensions> a,
-                             range<Dimensions> b) {
-  range<Dimensions> result;
-
-  for (int i = 0; i < Dimensions; i++)
-    result[i] = a[i] + b[i];
-
-  return result;
-}
-#endif
 
 
 /** Define a multi-dimensional index, used for example to locate a work item
@@ -352,90 +248,9 @@ range<Dimensions> operator +(range<Dimensions> a,
     Indeed [] is mentioned in text of page 59 but not in class description.
 */
 template <std::size_t dims = 1>
-struct id TRISYCL_IMPL(: public IdImpl<dims>) {
-  /* Now this code is only for describing the API and setting the default
-     value for dims. The real classes use are the specializations after
-     this one */
-
-  /// \todo add this Boost::multi_array or STL concept to the
-  /// specification?
-  static const auto dimensionality = dims;
+struct id : public IdImpl<dims> { };
 
 
-#ifndef TRISYCL_HIDE_IMPLEMENTATION
-  // A shortcut name to the implementation
-  using Impl = IdImpl<dims>;
-
-
-  /** Since the runtime needs to construct an id from its implementation
-      for example in item methods, define some hidden constructor here */
-  id(const Impl &init) : Impl(init) {}
-#endif
-
-
-  /** Create a zero id
-
-      \todo Add it to the specification?
-  */
-  id() : Impl() {}
-
-
-  /// Create an id with the same value of another one
-  id(const id &init) : Impl(init.getImpl()) {}
-
-  /** Create an id from a given range
-      \todo Is this necessary?
-
-      \todo why in the specification
-      id<int dims>(range<dims>global_size, range<dims> local_size)
-      ?
-  */
-  id(const range<dims> &r) : Impl(r.getImpl()) {}
-
-
-  /** Create a n-D range from a positive integer-like list
-
-      \todo Add this to the specification? Since it is said to be usable
-      as a std::vector<>...
-  */
-  id(std::initializer_list<std::intptr_t> l) : Impl(l) {}
-
-
-  /** To have implicit conversion from 1 integer
-
-      \todo Extension to the specification
-  */
-  id(std::intptr_t s) : id({ s }) {
-    static_assert(dims == 1, "A range with 1 size should be 1-D");
-  }
-
-
-  /** Return the id size in the given dimension
-
-      \todo is it supposed to be an int? A cl_int? a size_t?
-  */
-  int get(int index) {
-    return (*this)[index];
-  }
-
-
-  /** Return the id size in the given dimension
-
-      \todo explain in the specification (table 3.29, not only in the
-      text) that [] works also for id, and why not range?
-
-      \todo add also [] for range in the specification
-
-      \todo is it supposed to be an int? A cl_int? a size_t?
-  */
-  auto &operator[](int index) {
-    return (*this).getImpl()[index];
-  }
-
-};
-
-
-#ifndef TRISYCL_HIDE_IMPLEMENTATION
 /** Use some specializations so that some function overloads can be
     determined according to some implicit constructors and to have an
     implicit conversion from/to an int if dims = 1
@@ -489,7 +304,7 @@ struct id<3> : public IdImpl<3> {
   /// Keep other constructors
   id() = default;
 };
-#endif
+
 
 /** Implement a make_id to construct an id of the right dimension with
     implicit conversion from an initializer list for example.
