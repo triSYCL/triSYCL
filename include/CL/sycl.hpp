@@ -245,23 +245,18 @@ struct range TRISYCL_IMPL(: public RangeImpl<dims>) {
 
    and parallel_for({ 7, 8, 9}, some_kernel) implies a range<3> { 7, 8, 9 }
 */
-
 template <>
-struct range<1> TRISYCL_IMPL(: public RangeImpl<1>) {
-  // A shortcut name to the implementation
-  using Impl = RangeImpl<1>;
+struct range<1> : public RangeImpl<1> {
+  /// A 1-D constructor to have implicit conversion from from 1 integer
+  /// and automatic inference of the dimensionality
+  range(std::ptrdiff_t x) {
+    (*this)[0] = x;
+  }
 
-  /** Construct a range from an implementation, used by nd_range() for
-      example
 
-     This is internal and should not appear in the specification */
-  range(Impl &r) : Impl(r) {}
+  /// Keep other constructors
+  range() = default;
 
-  range(const Impl &r) : Impl(r) {}
-
-  /// To have implicit conversion from 1 integer and automatic inference
-  /// of the dimensionality
-  range(std::intptr_t x) : Impl { x } { }
 
   /** Conversion so that an range<1> can basically be used like an integer */
   operator std::ptrdiff_t() {
@@ -271,43 +266,33 @@ struct range<1> TRISYCL_IMPL(: public RangeImpl<1>) {
 
 
 template <>
-struct range<2> TRISYCL_IMPL(: public RangeImpl<2>) {
-
-  // A shortcut name to the implementation
-  using Impl = RangeImpl<2>;
-
-  /** Construct a range from an implementation, used by nd_range() for
-      example
-
-     This is internal and should not appear in the specification */
-  range(Impl &r) : Impl(r) {}
-
-  range(const Impl &r) : Impl(r) {}
-
+struct range<2> : public RangeImpl<2> {
   /// A 2-D constructor to have implicit conversion from from 2 integers
   /// and automatic inference of the dimensionality
-  range(std::intptr_t x, std::intptr_t y) : RangeImpl { x, y } { }
+  range(std::ptrdiff_t x, std::ptrdiff_t y) {
+    (*this)[0] = x;
+    (*this)[1] = y;
+  }
+
+
+  /// Keep other constructors
+  range() = default;
 };
 
 
 template <>
-struct range<3> TRISYCL_IMPL(: public RangeImpl<3>) {
+struct range<3> : public RangeImpl<3> {
+  /// A 3-D constructor to have implicit conversion from from 3 integers
+  /// and automatic inference of the dimensionality
+  range(std::ptrdiff_t x, std::ptrdiff_t y, std::ptrdiff_t z) {
+    (*this)[0] = x;
+    (*this)[1] = y;
+    (*this)[2] = z;
+  }
 
-  // A shortcut name to the implementation
-  using Impl = RangeImpl<3>;
 
-  /** Construct a range from an implementation, used by nd_range() for
-      example
-
-     This is internal and should not appear in the specification */
-  range(Impl &r) : Impl(r) {}
-
-  range(const Impl &r) : Impl(r) {}
-
-  /// A 3-D constructor to have implicit conversion from from from 3
-  /// integers and automatic inference of the dimensionality
-  range(std::intptr_t x, std::intptr_t y, std::intptr_t z) : RangeImpl { x, y, z }
-  { }
+  /// Keep other constructors
+  range() = default;
 };
 #endif
 
@@ -1174,7 +1159,7 @@ struct buffer TRISYCL_IMPL(: BufferImpl<T, dimensions>) {
 
       \param r defines the size
   */
-  buffer(const range<dimensions> &r) : Impl(r.getImpl()) {}
+  buffer(const range<dimensions> &r) : Impl(r) {}
 
 
   /** Create a new buffer with associated host memory
@@ -1183,7 +1168,7 @@ struct buffer TRISYCL_IMPL(: BufferImpl<T, dimensions>) {
 
       \param r defines the size
   */
-  buffer(T * host_data, range<dimensions> r) : Impl(host_data, r.getImpl()) {}
+  buffer(T * host_data, range<dimensions> r) : Impl(host_data, r) {}
 
 
   /** Create a new read only buffer with associated host memory
@@ -1193,7 +1178,7 @@ struct buffer TRISYCL_IMPL(: BufferImpl<T, dimensions>) {
       \param r defines the size
   */
   buffer(const T * host_data, range<dimensions> r) :
-    Impl(host_data, r.getImpl()) {}
+    Impl(host_data, r) {}
 
 
   /** Create a new buffer from a storage abstraction provided by the user

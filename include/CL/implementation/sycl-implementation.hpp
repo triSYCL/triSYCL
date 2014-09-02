@@ -30,117 +30,6 @@ namespace trisycl {
     @{
 */
 
-/// Define a multi-dimensional index range
-template <std::size_t Dimensions = 1U>
-struct RangeImpl : std::vector<std::intptr_t>, Debug<RangeImpl<Dimensions>> {
-  static_assert(1 <= Dimensions && Dimensions <= 3,
-                "Dimensions are between 1 and 3");
-
-  static const auto dimensionality = Dimensions;
-
-  // Return a reference to the implementation itself
-  RangeImpl &getImpl() { return *this; };
-
-
-  // Return a const reference to the implementation itself
-  const RangeImpl &getImpl() const { return *this; };
-
-
-  /* Inherit the constructors from the parent
-
-     Using a std::vector is overkill but std::array has no default
-     constructors and I am lazy to reimplement them
-
-     Use std::intptr_t as a signed version of a std::size_t to allow
-     computations with negative offsets
-
-     \todo in the specification: add some accessors. But it seems they are
-     implicitly convertible to vectors of the same size in the
-     specification
-  */
-  using std::vector<std::intptr_t>::vector;
-
-
-  // By default, create a vector of Dimensions 0 elements
-  RangeImpl() : vector(Dimensions) {}
-
-
-  // Copy constructor to initialize from another range
-  RangeImpl(const RangeImpl &init) : vector(init) {}
-
-
-  // Create a n-D range from an integer-like list
-  RangeImpl(std::initializer_list<std::intptr_t> l) :
-    std::vector<std::intptr_t>(l) {
-    // The number of elements must match the dimension
-    assert(Dimensions == l.size());
-  }
-
-
-  /** Return the given coordinate
-
-      \todo explain in the specification (table 3.29, not only in the
-      text) that [] works also for id, and why not range?
-
-      \todo add also [] for range in the specification
-  */
-  auto get(int index) {
-    return (*this)[index];
-  }
-
-  // To debug
-  void display() {
-    std::clog << typeid(this).name() << ": ";
-    for (int i = 0; i < dimensionality; i++)
-      std::clog << " " << get(i);
-    std::clog << std::endl;
-  }
-
-};
-
-
-// Add some operations on range to help with OpenCL work-group scheduling
-// \todo use an element-wise template instead of copy past below for / and *
-
-// An element-wise division of ranges, with upper rounding
-template <std::size_t Dimensions>
-RangeImpl<Dimensions> operator /(RangeImpl<Dimensions> dividend,
-                                 RangeImpl<Dimensions> divisor) {
-  RangeImpl<Dimensions> result;
-
-  for (int i = 0; i < Dimensions; i++)
-    result[i] = (dividend[i] + divisor[i] - 1)/divisor[i];
-
-  return result;
-}
-
-
-// An element-wise multiplication of ranges
-template <std::size_t Dimensions>
-RangeImpl<Dimensions> operator *(RangeImpl<Dimensions> a,
-                                 RangeImpl<Dimensions> b) {
-  RangeImpl<Dimensions> result;
-
-  for (int i = 0; i < Dimensions; i++)
-    result[i] = a[i] * b[i];
-
-  return result;
-}
-
-
-// An element-wise addition of ranges
-template <std::size_t Dimensions>
-RangeImpl<Dimensions> operator +(RangeImpl<Dimensions> a,
-                                 RangeImpl<Dimensions> b) {
-  RangeImpl<Dimensions> result;
-
-  for (int i = 0; i < Dimensions; i++)
-    result[i] = a[i] + b[i];
-
-  return result;
-}
-
-
 /** Helper macro to declare a vector operation with the given side-effect
     operator */
 #define TRISYCL_BOOST_OPERATOR_VECTOR_OP(op)            \
@@ -195,6 +84,10 @@ struct SmallArray : std::array<BasicType, Dims>,
   /// Add % like operations on the id<>
   TRISYCL_BOOST_OPERATOR_VECTOR_OP(%=)
 };
+
+
+/// Implementation of a range: it is a small array of 1 to 3 std::size_t
+template <std::size_t Dims> using RangeImpl = SmallArray<std::size_t, Dims>;
 
 
 /// Implementation of an id: it is a small array of 1 to 3 std::ptrdiff_t
