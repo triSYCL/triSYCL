@@ -4,9 +4,11 @@
    CHECK-NEXT: a = 3
    CHECK-NEXT: a as an int = 3
    CHECK-NEXT: b = 4
+   CHECK-NEXT: b = 2
    CHECK-NEXT: c = 5,6
    CHECK-NEXT: d = 7,8,9
    CHECK-NEXT: d = 1,2,1
+   CHECK-NEXT: d = 2,4,4
    CHECK-NEXT: Range of dims 1
    CHECK-NEXT: Range of dims 1
    CHECK-NEXT: Range of dims 2
@@ -45,6 +47,8 @@ int main() {
   std::cout << "a as an int = " << a << std::endl;
   range<1> b = { 4 };
   std::cout << "b = " << b[0] << std::endl;
+  b /= make_range(2);
+  std::cout << "b = " << b[0] << std::endl;
   range<2> c = { 5, 6 };
   std::cout << "c = " << c[0] << ',' << c[1] << std::endl;
   range<3> d = { 7, 8, 9 };
@@ -54,10 +58,15 @@ int main() {
   d %= make_range({2, 3, 4});
   std::cout << "d = " << d[0] << ',' << d[1] <<  ',' << d[2] << std::endl;
 
+  d += make_range(1, 2, 3);
+  std::cout << "d = " << d[0] << ',' << d[1] <<  ',' << d[2] << std::endl;
+
+
   g(43);
   g({ 2014 });
   g({ 1, 128 });
   g({ 11, 54, 68 });
+
 
   return 0;
 }

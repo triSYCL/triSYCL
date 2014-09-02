@@ -44,7 +44,7 @@ int main() {
     std::cout << "jj has changed" << std::endl;
   if (jj > make_id({ 5, 7 }))
     std::cout << "jj is lexicographically greater than before" << std::endl;
-  if (jj < make_id({ 5, 7 }))
+  if (jj < make_id(5, 7))
     std::cout << "jj is lexicographically lesser than before" << std::endl;
 
 
@@ -71,7 +71,7 @@ int main() {
   (jj - make_id({ 2, 1 })).display();
   (jj % make_id({ 2, 2 })).display();
   (jj * make_id({ 2, 3 })).display();
-  (jj /= make_id({ 1, 2 })).display();
+  (jj /= make_id(1, 2)).display();
 
   return 0;
 }

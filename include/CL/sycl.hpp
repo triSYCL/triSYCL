@@ -176,9 +176,9 @@ using namespace trisycl;
     \todo add to the specification some way to specify an offset?
 */
 template <std::size_t dims = 1>
-struct range : public RangeImpl<dims> {
+struct range : public SmallArray123<std::size_t, dims> {
   // Inherit of all the constructors
-  using RangeImpl<dims>::RangeImpl;
+  using SmallArray123<std::size_t, dims>::SmallArray123;
 };
 
 
@@ -190,7 +190,13 @@ struct range : public RangeImpl<dims> {
 auto make_range(range<1> r) { return r; }
 auto make_range(range<2> r) { return r; }
 auto make_range(range<3> r) { return r; }
-
+/** Construct a range<> from a function call with arguments, like
+    make_range(1, 2, 3) */
+template<typename ... BasicType>
+auto make_range(BasicType ... Args) {
+  // Add a cast to avoid warning messages about narrowing conversion
+  return make_range({ static_cast<std::size_t>(Args)... });
+}
 
 /** Define a multi-dimensional index, used for example to locate a work item
 
@@ -203,9 +209,9 @@ auto make_range(range<3> r) { return r; }
     Indeed [] is mentioned in text of page 59 but not in class description.
 */
 template <std::size_t dims = 1>
-struct id : public IdImpl<dims> {
+struct id : public SmallArray123<std::ptrdiff_t, dims> {
   // Inherit of all the constructors
-  using IdImpl<dims>::IdImpl;
+  using SmallArray123<std::ptrdiff_t, dims>::SmallArray123;
 };
 
 
@@ -217,6 +223,12 @@ struct id : public IdImpl<dims> {
 auto make_id(id<1> i) { return i; }
 auto make_id(id<2> i) { return i; }
 auto make_id(id<3> i) { return i; }
+/** Construct an id<> from a function call with arguments, like
+    make_range(1, 2, 3) */
+template<typename ... BasicType>
+auto make_id(BasicType ... Args) {
+  return make_id({ Args... });
+}
 
 
 /** A ND-range, made by a global and local range, to specify work-group
