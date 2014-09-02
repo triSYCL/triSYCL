@@ -143,11 +143,12 @@ RangeImpl<Dimensions> operator +(RangeImpl<Dimensions> a,
 
 /** Helper macro to declare a vector operation with the given side-effect
     operator */
-#define TRISYCL_BOOST_OPERATOR_VECTOR_OP(op)        \
-  IdImpl<N> operator op(const IdImpl<N>& rhs) {     \
-    for (std::size_t i = 0; i != N; ++i)            \
-      (*this)[i] op rhs[i];                         \
-    return *this;                                   \
+#define TRISYCL_BOOST_OPERATOR_VECTOR_OP(op)            \
+  SmallArray<BasicType, Dims>                           \
+  operator op(const SmallArray<BasicType, Dims>& rhs) { \
+    for (std::size_t i = 0; i != Dims; ++i)             \
+      (*this)[i] op rhs[i];                             \
+    return *this;                                       \
   }
 
 
@@ -158,15 +159,19 @@ RangeImpl<Dimensions> operator +(RangeImpl<Dimensions> a,
     native list initialization, it is no longer an aggregate if we derive
     from an aggregate. Thus we have to redeclare the constructors.
 */
-template <std::size_t N>
-struct IdImpl : std::array<std::ptrdiff_t, N>,
+template <typename BasicType, std::size_t Dims>
+struct SmallArray : std::array<BasicType, Dims>,
     // To have all the usual arithmetic operations on this type
-    boost::euclidean_ring_operators<IdImpl<N>>,
+  boost::euclidean_ring_operators<SmallArray<BasicType, Dims>>,
     // Add a display() method
-    DisplayVector<IdImpl<N>> {
+    DisplayVector<SmallArray<BasicType, Dims>> {
+
+  /// \todo add this Boost::multi_array or STL concept to the
+  /// specification?
+  static const auto dimensionality = Dims;
 
   /// Keep other constructors
-  using std::array<std::ptrdiff_t, N>::array;
+  using std::array<BasicType, Dims>::array;
 
   /// Return the element of the array
   auto get(std::size_t index) {
@@ -190,6 +195,10 @@ struct IdImpl : std::array<std::ptrdiff_t, N>,
   /// Add % like operations on the id<>
   TRISYCL_BOOST_OPERATOR_VECTOR_OP(%=)
 };
+
+
+/// Implementation of an id: it is a small array of 1 to 3 std::ptrdiff_t
+template <std::size_t Dims> using IdImpl = SmallArray<std::ptrdiff_t, Dims>;
 
 
 /** The implementation of a ND-range, made by a global and local range, to

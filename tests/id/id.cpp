@@ -24,6 +24,8 @@ using namespace cl::sycl;
 
 int main() {
   id<> i;
+  id<2> i2;
+  id<3> i3;
   id<> k(i);
   id<> j { 1 };
   i = j;
