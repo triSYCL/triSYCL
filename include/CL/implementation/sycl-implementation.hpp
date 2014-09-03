@@ -24,6 +24,10 @@
 /// triSYCL implementation dwells in the cl::sycl::trisycl namespace
 namespace cl {
 namespace sycl {
+
+// Forward declaration for the buffers
+template <std::size_t dims> struct range;
+
 namespace trisycl {
 
 /** \addtogroup parallelism
@@ -180,7 +184,7 @@ struct SmallArray123<BasicType, FinalType, 3>
     The local offset is used to translate the iteration space origin if
     needed.
 */
-template <std::size_t dims = 1U>
+template <std::size_t dims = 1>
 struct NDRangeImpl {
   static_assert(1 <= dims && dims <= 3,
                 "Dimensions are between 1 and 3");
@@ -223,7 +227,7 @@ struct NDRangeImpl {
     within a work-group, with some more context such as the definition
     ranges.
  */
-template <std::size_t dims = 1U>
+template <std::size_t dims = 1>
 struct ItemImpl {
   static_assert(1 <= dims && dims <= 3,
                 "Dimensions are between 1 and 3");
@@ -265,7 +269,7 @@ struct ItemImpl {
 /** The implementation of a SYCL group index to specify a work_group in a
     parallel_for_workitem
 */
-template <std::size_t N = 1U>
+template <std::size_t N = 1>
 struct GroupImpl {
   /// Keep a reference on the nd_range to serve potential query on it
   const NDRangeImpl<N> &NDR;
@@ -378,7 +382,7 @@ struct AccessorImpl {
     any storage.
 */
 template <typename T,
-          std::size_t dimensions = 1U>
+          std::size_t dimensions = 1>
 struct BufferImpl {
   using Implementation = boost::multi_array_ref<T, dimensions>;
   // Extension to SYCL: provide pieces of STL container interface
@@ -394,20 +398,20 @@ struct BufferImpl {
 
 
   /// Create a new BufferImpl of size \param r
-  BufferImpl(RangeImpl<dimensions> const &r) : Allocation(r),
+  BufferImpl(range<dimensions> const &r) : Allocation(r),
                                                Access(Allocation),
                                                ReadOnly(false) {}
 
 
   /** Create a new BufferImpl from \param host_data of size \param r without
       further allocation */
-  BufferImpl(T * host_data, RangeImpl<dimensions> r) : Access(host_data, r),
+  BufferImpl(T * host_data, range<dimensions> r) : Access(host_data, r),
                                                        ReadOnly(false) {}
 
 
   /** Create a new read only BufferImpl from \param host_data of size \param r
       without further allocation */
-  BufferImpl(const T * host_data, RangeImpl<dimensions> r) :
+  BufferImpl(const T * host_data, range<dimensions> r) :
     Access(host_data, r),
     ReadOnly(true) {}
 

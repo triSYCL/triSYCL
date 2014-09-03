@@ -435,7 +435,7 @@ struct group TRISYCL_IMPL(: GroupImpl<dims>) {
    definitions) */
 struct queue;
 
-template <typename T, int dimensions> struct buffer;
+  template <typename T, std::size_t dimensions> struct buffer;
 
 
 /** \addtogroup error_handling Error handling
@@ -725,7 +725,7 @@ struct command_group {
     \todo Implement it for images according so section 3.3.4.5
 */
 template <typename dataType,
-          size_t dimensions,
+          std::size_t dimensions,
           access::mode mode,
           access::target target = access::global_buffer>
 struct accessor
@@ -765,7 +765,7 @@ TRISYCL_IMPL(: AccessorImpl<dataType, dimensions, mode, target>) {
       \todo This is not in the specification but looks like a cool common
       feature. Or solving it with an implicit constructor of id<1>?
   */
-  dataType &operator[](size_t Index) const {
+  dataType &operator[](std::size_t Index) const {
     return Impl::operator[](Index);
   }
 
@@ -805,7 +805,7 @@ struct storage {
       buffer which returns the byte size. Is it to be renamed to
       get_count()?
   */
-  virtual size_t get_size() = 0;
+  virtual std::size_t get_size() = 0;
 
 
   /** Method called by the SYCL system to know where that data is held in
@@ -877,7 +877,7 @@ struct storage {
     buffer and accessor on T versus datatype
 */
 template <typename T,
-          int dimensions = 1>
+          std::size_t dimensions = 1>
 struct buffer TRISYCL_IMPL(: BufferImpl<T, dimensions>) {
   /// \todo Extension to SYCL specification: provide pieces of STL
   /// container interface?

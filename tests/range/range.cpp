@@ -7,7 +7,7 @@
    CHECK-NEXT: b = 2
    CHECK-NEXT: c = 5,6
    CHECK-NEXT: d = 7,8,9
-   CHECK-NEXT: d = 1,1,1
+   CHECK-NEXT: 1 1 1
    CHECK-NEXT: d = 1,2,1
    CHECK-NEXT: d = 2,4,4
    CHECK-NEXT: Range of dims 1
