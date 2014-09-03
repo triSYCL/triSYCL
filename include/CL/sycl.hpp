@@ -176,9 +176,9 @@ using namespace trisycl;
     \todo add to the specification some way to specify an offset?
 */
 template <std::size_t dims = 1>
-struct range : public SmallArray123<std::size_t, dims> {
+struct range : public SmallArray123<std::size_t, range<dims>, dims> {
   // Inherit of all the constructors
-  using SmallArray123<std::size_t, dims>::SmallArray123;
+  using SmallArray123<std::size_t, range<dims>, dims>::SmallArray123;
 };
 
 
@@ -209,9 +209,9 @@ auto make_range(BasicType ... Args) {
     Indeed [] is mentioned in text of page 59 but not in class description.
 */
 template <std::size_t dims = 1>
-struct id : public SmallArray123<std::ptrdiff_t, dims> {
+struct id : public SmallArray123<std::ptrdiff_t, id<dims>, dims> {
   // Inherit of all the constructors
-  using SmallArray123<std::ptrdiff_t, dims>::SmallArray123;
+  using SmallArray123<std::ptrdiff_t, id<dims>, dims>::SmallArray123;
 };
 
 
@@ -240,25 +240,18 @@ auto make_id(BasicType ... Args) {
     \todo add copy constructors in the specification
 */
 template <std::size_t dims = 1>
-struct nd_range TRISYCL_IMPL(: NDRangeImpl<dims>) {
-  static_assert(1 <= dims && dims <= 3,
-                "Dimensions are between 1 and 3");
-
+struct nd_range {
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
   static const auto dimensionality = dims;
 
+private:
 
-#ifndef TRISYCL_HIDE_IMPLEMENTATION
-  // A shortcut name to the implementation
-  using Impl = NDRangeImpl<dims>;
+  range<dimensionality> GlobalRange;
+  range<dimensionality> LocalRange;
+  id<dimensionality> Offset;
 
-  /** Since the runtime needs to construct a nd_range from its
-      implementation for example in parallel_for stuff, define some hidden
-      constructor here */
-  nd_range(const Impl &init) : Impl(init) {}
-#endif
-
+public:
 
   /** Construct a ND-range with all the details available in OpenCL
 
@@ -267,23 +260,34 @@ struct nd_range TRISYCL_IMPL(: NDRangeImpl<dims>) {
   nd_range(range<dims> global_size,
            range<dims> local_size,
            id<dims> offset = id<dims>()) :
-    Impl(global_size.getImpl(), local_size.getImpl(), offset.getImpl()) {}
+    GlobalRange(global_size), LocalRange(local_size), Offset(offset) { }
 
 
   /// Get the global iteration space range
-  range<dims> get_global_range() { return Impl::get_global_range(); }
+  range<dims> get_global_range() { return GlobalRange; }
 
 
   /// Get the local part of the iteration space range
-  range<dims> get_local_range() { return Impl::get_local_range(); }
+  range<dims> get_local_range() { return LocalRange; }
 
 
   /// Get the range of work-groups needed to run this ND-range
-  range<dims> get_group_range() { return Impl::get_group_range(); }
+  auto get_group_range() {
+    // \todo Assume that GlobalRange is a multiple of LocalRange, element-wise
+    return GlobalRange/LocalRange;
+  }
 
 
   /// \todo get_offset() is lacking in the specification
-  range<dims> get_offset() { return Impl::get_offset(); }
+  id<dims> get_offset() { return Offset; }
+
+
+  /// Display the value for debugging and validation purpose
+  void display() {
+    GlobalRange.display();
+    LocalRange.display();
+    Offset.display();
+  }
 
 };
 

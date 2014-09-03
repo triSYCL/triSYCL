@@ -7,6 +7,7 @@
    CHECK-NEXT: b = 2
    CHECK-NEXT: c = 5,6
    CHECK-NEXT: d = 7,8,9
+   CHECK-NEXT: d = 1,1,1
    CHECK-NEXT: d = 1,2,1
    CHECK-NEXT: d = 2,4,4
    CHECK-NEXT: Range of dims 1
@@ -53,6 +54,8 @@ int main() {
   std::cout << "c = " << c[0] << ',' << c[1] << std::endl;
   range<3> d = { 7, 8, 9 };
   std::cout << "d = " << d[0] << ',' << d[1] <<  ',' << d[2] << std::endl;
+  auto div = d/d;
+  div.display();
 
   // Test modulo operation
   d %= make_range({2, 3, 4});

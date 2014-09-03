@@ -33,8 +33,7 @@ namespace trisycl {
 /** Helper macro to declare a vector operation with the given side-effect
     operator */
 #define TRISYCL_BOOST_OPERATOR_VECTOR_OP(op)            \
-  SmallArray<BasicType, Dims>                           \
-  operator op(const SmallArray<BasicType, Dims>& rhs) { \
+  FinalType operator op(const FinalType& rhs) {         \
     for (std::size_t i = 0; i != Dims; ++i)             \
       (*this)[i] op rhs[i];                             \
     return *this;                                       \
@@ -47,13 +46,20 @@ namespace trisycl {
     Unfortunately, even if std::array is an aggregate class allowing
     native list initialization, it is no longer an aggregate if we derive
     from an aggregate. Thus we have to redeclare the constructors.
+
+    \param BasicType is the type element, such as int
+
+    \param Dims is the dimension number, typically between 1 and 3
+
+    \param FinalType is the final type, such as range<> or id<>, so that
+    boost::operator can return the right type
 */
-template <typename BasicType, std::size_t Dims>
+template <typename BasicType, typename FinalType, std::size_t Dims>
 struct SmallArray : std::array<BasicType, Dims>,
     // To have all the usual arithmetic operations on this type
-  boost::euclidean_ring_operators<SmallArray<BasicType, Dims>>,
+  boost::euclidean_ring_operators<FinalType>,
     // Add a display() method
-    DisplayVector<SmallArray<BasicType, Dims>> {
+    DisplayVector<FinalType> {
 
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
@@ -83,12 +89,19 @@ struct SmallArray : std::array<BasicType, Dims>,
 
   /// Add % like operations on the id<>
   TRISYCL_BOOST_OPERATOR_VECTOR_OP(%=)
+
+  /** Since the boost::operator work on the Small array, add an implicit
+      conversion to produce the expected type */
+  operator FinalType () {
+    return *static_cast<FinalType *>(this);
+  }
+
 };
 
 
 /** A small array of 1, 2 or 3 elements with the implicit constructors */
-template <typename BasicType, std::size_t Dims>
-struct SmallArray123 : SmallArray<BasicType, Dims> {
+template <typename BasicType, typename FinalType, std::size_t Dims>
+struct SmallArray123 : SmallArray<BasicType, FinalType, Dims> {
   static_assert(1 <= Dims && Dims <= 3,
                 "Dimensions are between 1 and 3");
 };
@@ -99,8 +112,9 @@ struct SmallArray123 : SmallArray<BasicType, Dims> {
     implicit conversion from/to BasicType (such as an int typically) if
     dims = 1
 */
-template <typename BasicType>
-struct SmallArray123<BasicType, 1> : public SmallArray<BasicType, 1> {
+template <typename BasicType, typename FinalType>
+struct SmallArray123<BasicType, FinalType, 1>
+  : public SmallArray<BasicType, FinalType, 1> {
   /// A 1-D constructor to have implicit conversion from from 1 integer
   /// and automatic inference of the dimensionality
   SmallArray123(BasicType x) {
@@ -119,8 +133,9 @@ struct SmallArray123<BasicType, 1> : public SmallArray<BasicType, 1> {
 };
 
 
-template <typename BasicType>
-struct SmallArray123<BasicType, 2> : public SmallArray<BasicType, 2> {
+template <typename BasicType, typename FinalType>
+struct SmallArray123<BasicType, FinalType, 2>
+  : public SmallArray<BasicType, FinalType, 2> {
   /// A 2-D constructor to have implicit conversion from from 2 integers
   /// and automatic inference of the dimensionality
   SmallArray123(BasicType x, BasicType y) {
@@ -134,8 +149,9 @@ struct SmallArray123<BasicType, 2> : public SmallArray<BasicType, 2> {
 };
 
 
-template <typename BasicType>
-struct SmallArray123<BasicType, 3> : public SmallArray<BasicType, 3> {
+template <typename BasicType, typename FinalType>
+struct SmallArray123<BasicType, FinalType, 3>
+  : public SmallArray<BasicType, FinalType, 3> {
   /// A 3-D constructor to have implicit conversion from from 3 integers
   /// and automatic inference of the dimensionality
   SmallArray123(BasicType x, BasicType y, BasicType z) {
@@ -151,11 +167,11 @@ struct SmallArray123<BasicType, 3> : public SmallArray<BasicType, 3> {
 
 
 /// Implementation of a range: it is a small array of 1 to 3 std::size_t
-template <std::size_t Dims> using RangeImpl = SmallArray123<std::size_t, Dims>;
+  template <std::size_t Dims> using RangeImpl = SmallArray123<std::size_t, SmallArray123<std::size_t, std::size_t, Dims>, Dims>;
 
 
 /// Implementation of an id: it is a small array of 1 to 3 std::ptrdiff_t
-template <std::size_t Dims> using IdImpl = SmallArray123<std::ptrdiff_t, Dims>;
+  template <std::size_t Dims> using IdImpl = SmallArray123<std::ptrdiff_t, SmallArray123<std::size_t, std::ptrdiff_t, Dims>, Dims>;
 
 
 /** The implementation of a ND-range, made by a global and local range, to
