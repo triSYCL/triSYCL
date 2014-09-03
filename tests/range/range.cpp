@@ -14,6 +14,8 @@
    CHECK-NEXT: Range of dims 1
    CHECK-NEXT: Range of dims 2
    CHECK-NEXT: Range of dims 3
+   CHECK-NEXT: 1 2 3
+   CHECK-NEXT: 2 5 6
 */
 #include <CL/sycl.hpp>
 #include <iostream>
@@ -68,8 +70,17 @@ int main() {
   g(43);
   g({ 2014 });
   g({ 1, 128 });
+
   g({ 11, 54, 68 });
 
+
+  // Try some conversions
+  char array[3] = { 1, 2, 3 };
+  range<3> r_array = array;
+  r_array.display();
+  // Conversion from an id<>
+  r_array = id<3>(2,5,6);
+  r_array.display();
 
   return 0;
 }

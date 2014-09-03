@@ -57,6 +57,8 @@ namespace trisycl {
 
     \param FinalType is the final type, such as range<> or id<>, so that
     boost::operator can return the right type
+
+    std::array<> provides the collection concept.
 */
 template <typename BasicType, typename FinalType, std::size_t Dims>
 struct SmallArray : std::array<BasicType, Dims>,
@@ -69,8 +71,26 @@ struct SmallArray : std::array<BasicType, Dims>,
   /// specification?
   static const auto dimensionality = Dims;
 
+
+  /// Add a constructor from an other array
+  template <typename SourceType>
+  SmallArray(const SourceType src[Dims]) {
+    // (*this)[0] is the first element of the underlying array
+    std::copy_n(src, Dims, &(*this)[0]);
+  }
+
+
+  /// Add a constructor from an other SmallArray of the same size
+  template <typename SourceBasicType, typename SourceFinalType>
+  SmallArray(const SmallArray<SourceBasicType, SourceFinalType, Dims> &src) {
+    std::copy_n(&src[0], Dims, &(*this)[0]);
+  }
+
+
   /// Keep other constructors
   using std::array<BasicType, Dims>::array;
+
+  SmallArray() = default;
 
   /// Return the element of the array
   auto get(std::size_t index) {
@@ -129,6 +149,7 @@ struct SmallArray123<BasicType, FinalType, 1>
   /// Keep other constructors
   SmallArray123() = default;
 
+  using SmallArray<BasicType, FinalType, 1>::SmallArray;
 
   /** Conversion so that an id<1> can basically be used like an integer */
   operator BasicType() {
@@ -150,6 +171,8 @@ struct SmallArray123<BasicType, FinalType, 2>
 
   /// Keep other constructors
   SmallArray123() = default;
+
+  using SmallArray<BasicType, FinalType, 2>::SmallArray;
 };
 
 
@@ -167,6 +190,8 @@ struct SmallArray123<BasicType, FinalType, 3>
 
   /// Keep other constructors
   SmallArray123() = default;
+
+  using SmallArray<BasicType, FinalType, 3>::SmallArray;
 };
 
 
