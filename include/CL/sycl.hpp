@@ -300,58 +300,68 @@ public:
     offset?
 */
 template <std::size_t dims = 1>
-struct item TRISYCL_IMPL(: ItemImpl<dims>) {
+struct item {
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
   static const auto dimensionality = dims;
 
-#ifndef TRISYCL_HIDE_IMPLEMENTATION
-  // A shortcut name to the implementation
-  using Impl = ItemImpl<dims>;
-#endif
+private:
 
+  id<dims> GlobalIndex;
+  id<dims> LocalIndex;
+  nd_range<dims> NDRange;
+
+public:
 
   /** Create an item from a local size and local size
 
       \todo what is the meaning of this constructor for a programmer?
   */
   item(range<dims> global_size, range<dims> local_size) :
-    Impl(global_size, local_size) {}
+    NDRange { global_size, local_size } {}
 
 
   /** \todo a constructor from a nd_range too in the specification if the
       previous one has a meaning?
    */
-  item(nd_range<dims> ndr) : Impl(ndr) {}
+  item(nd_range<dims> ndr) : NDRange { ndr } {}
 
 
   /// Return the global coordinate in the given dimension
-  int get_global(int dimension) { return Impl::get_global(dimension); }
+  auto get_global(int dimension) { return GlobalIndex[dimension]; }
 
 
   /// Return the local coordinate (that is in the work-group) in the given
   /// dimension
-  int get_local(int dimension) { return Impl::get_local(dimension); }
+  auto get_local(int dimension) { return LocalIndex[dimension]; }
 
 
   /// Get the whole global id coordinate
-  id<dims> get_global() { return Impl::get_global(); }
+  id<dims> get_global() { return GlobalIndex; }
 
 
   /// Get the whole local id coordinate (which is respective to the
   /// work-group)
-  id<dims> get_local() { return Impl::get_local(); }
+  id<dims> get_local() { return LocalIndex; }
 
 
   /// Get the global range where this item rely in
-  range<dims> get_global_range() { return Impl::get_global_range(); }
+  range<dims> get_global_range() { return NDRange.get_global_range(); }
+
 
   /// Get the local range (the dimension of the work-group) for this item
-  range<dims> get_local_range() { return Impl::get_local_range(); }
+  range<dims> get_local_range() { return NDRange.get_local_range(); }
 
   /// \todo Why the offset is not available here?
 
   /// \todo Also provide access to the current nd_range?
+
+
+  // For the implementation, need to set the local index
+  void set_local(id<dims> Index) { LocalIndex = Index; }
+
+  // For the implementation, need to set the global index
+  void set_global(id<dims> Index) { GlobalIndex = Index; }
 
 };
 
