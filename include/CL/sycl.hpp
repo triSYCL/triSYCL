@@ -190,12 +190,13 @@ struct range : public SmallArray123<std::size_t, range<dims>, dims> {
 auto make_range(range<1> r) { return r; }
 auto make_range(range<2> r) { return r; }
 auto make_range(range<3> r) { return r; }
+
+
 /** Construct a range<> from a function call with arguments, like
     make_range(1, 2, 3) */
-template<typename ... BasicType>
-auto make_range(BasicType ... Args) {
-  // Add a cast to avoid warning messages about narrowing conversion
-  return make_range({ static_cast<std::size_t>(Args)... });
+template<typename... BasicType>
+auto make_range(BasicType... Args) {
+  return range<sizeof...(Args)>(Args...);
 }
 
 /** Define a multi-dimensional index, used for example to locate a work item
@@ -223,11 +224,13 @@ struct id : public SmallArray123<std::ptrdiff_t, id<dims>, dims> {
 auto make_id(id<1> i) { return i; }
 auto make_id(id<2> i) { return i; }
 auto make_id(id<3> i) { return i; }
+
+
 /** Construct an id<> from a function call with arguments, like
-    make_range(1, 2, 3) */
-template<typename ... BasicType>
-auto make_id(BasicType ... Args) {
-  return make_id({ Args... });
+    make_id(1, 2, 3) */
+template<typename... BasicType>
+auto make_id(BasicType... Args) {
+  return id<sizeof...(Args)>(Args...);
 }
 
 
