@@ -25,7 +25,9 @@
 namespace cl {
 namespace sycl {
 
-// Forward declaration for the buffers
+// Forward declaration for the buffer<> and the accessor<>
+template <std::size_t dims> struct id;
+template <std::size_t dims> struct item;
 template <std::size_t dims> struct range;
 
 namespace trisycl {
@@ -388,12 +390,12 @@ struct AccessorImpl {
   }
 
   /// This is when we access to AccessorImpl[] that we override the const if any
-  auto &operator[](IdImpl<dimensionality> Index) const {
+  auto &operator[](id<dimensionality> Index) const {
     return (const_cast<WritableArrayViewType &>(Array))(Index);
   }
 
   /// \todo Add in the specification because use by HPC-GPU slide 22
-  auto &operator[](ItemImpl<dimensionality> Index) const {
+  auto &operator[](item<dimensionality> Index) const {
     return (const_cast<WritableArrayViewType &>(Array))(Index.get_global());
   }
 };
