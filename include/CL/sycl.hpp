@@ -440,7 +440,7 @@ public:
 
 
   /// Return the group coordinate in the given dimension
-  auto get(int index) const {
+  auto get(int index) {
     return (*this)[index];
   }
 

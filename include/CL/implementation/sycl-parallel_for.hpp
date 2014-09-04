@@ -16,7 +16,7 @@ namespace trisycl {
 */
 template <std::size_t level, typename Range, typename ParallelForFunctor, typename Id>
 struct ParallelForIterate {
-  ParallelForIterate(const Range &r, ParallelForFunctor &f, Id &index) {
+  ParallelForIterate(Range r, ParallelForFunctor &f, Id &index) {
     for (boost::multi_array_types::index _sycl_index = 0,
            _sycl_end = r[Range::dimensionality - level];
          _sycl_index < _sycl_end;
@@ -40,7 +40,7 @@ struct ParallelForIterate {
 */
 template <std::size_t level, typename Range, typename ParallelForFunctor, typename Id>
 struct ParallelOpenMPForIterate {
-  ParallelOpenMPForIterate(const Range &r, ParallelForFunctor &f) {
+  ParallelOpenMPForIterate(Range r, ParallelForFunctor &f) {
     // Create the OpenMP threads before the for loop to avoid creating an
     // index in each iteration
 #pragma omp parallel
@@ -75,7 +75,7 @@ struct ParallelOpenMPForIterate {
     kernel functor with the constructed id */
 template <typename Range, typename ParallelForFunctor, typename Id>
 struct ParallelForIterate<0, Range, ParallelForFunctor, Id> {
-  ParallelForIterate(const Range &r, ParallelForFunctor &f, Id &index) {
+  ParallelForIterate(Range r, ParallelForFunctor &f, Id &index) {
     f(index);
   }
 };
@@ -129,15 +129,16 @@ void ParallelForImpl(nd_range<Dimensions> r,
   range<Dimensions> GroupRange = r.get_group_range();
   // To iterate on the local work-item
   id<Dimensions> Local;
-  // Cast to id to avoid a conversion in LocalRange*Group later
-  id<Dimensions> LocalRange = r.get_local_range();
+
+  range<Dimensions> LocalRange = r.get_local_range();
 
   // Reconstruct the item from its group and local id
   auto reconstructItem = [&] (id<Dimensions> L) {
     //Local.display();
     // Reconstruct the global item
     Index.set_local(Local);
-    Index.set_global(Local + LocalRange*Group);
+    // Upgrade LocalRange to an id<> so that we can * with the Group (an id<>)
+    Index.set_global(Local + id<Dimensions>(LocalRange)*Group);
     // Call the user kernel at last
     f(Index);
   };
@@ -169,12 +170,6 @@ void ParallelForWorkgroup(nd_range<Dimensions> r,
   // In a sequential execution there is only one index processed at a time
   group<Dimensions> Group(r);
 
-  // Reconstruct the item from its group and local id
-  auto callWithGroup = [&] (group<Dimensions> G) {
-    //G.Id.display();
-    // Call the user kernel with the group as parameter
-    f(G);
-  };
   // First iterate on all the work-groups
   ParallelForIterate<Dimensions,
                      range<Dimensions>,
