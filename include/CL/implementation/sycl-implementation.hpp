@@ -292,51 +292,6 @@ struct ItemImpl {
   /// \todo Add to the specification: get_nd_range() and what about the offset?
 };
 
-
-/** The implementation of a SYCL group index to specify a work_group in a
-    parallel_for_workitem
-*/
-template <std::size_t N = 1>
-struct GroupImpl {
-  /// Keep a reference on the nd_range to serve potential query on it
-  const NDRangeImpl<N> &NDR;
-  /// The coordinate of the group item
-  IdImpl<N> Id;
-
-  GroupImpl(const GroupImpl &g) : NDR(g.NDR), Id(g.Id) {}
-
-  GroupImpl(const NDRangeImpl<N> &ndr) : NDR(ndr) {}
-
-  GroupImpl(const NDRangeImpl<N> &ndr, const IdImpl<N> &i) :
-    NDR(ndr), Id(i) {}
-
-  /// Return a reference to the implementation itself
-  GroupImpl &getImpl() { return *this; };
-
-  /// Return a const reference to the implementation itself
-  const GroupImpl &getImpl() const { return *this; };
-
-  /// Return the id of this work-group
-  IdImpl<N> get_group_id() { return Id; }
-
-  /// Return the local range associated to this work-group
-  RangeImpl<N> get_local_range() { return NDR.LocalRange; }
-
-  /// Return the global range associated to this work-group
-  RangeImpl<N> get_global_range() { return NDR.GlobalRange; }
-
-  /** Return the group coordinate in the given dimension
-
-      \todo add it to the specification?
-
-      \todo is it supposed to be an int? A cl_int? a size_t?
-  */
-  auto &operator[](int index) {
-    return Id[index];
-  }
-
-};
-
 /// @} End the parallelism Doxygen group
 
 

@@ -129,7 +129,8 @@ void ParallelForImpl(nd_range<Dimensions> r,
   range<Dimensions> GroupRange = r.get_group_range();
   // To iterate on the local work-item
   id<Dimensions> Local;
-  range<Dimensions> LocalRange = r.get_local_range();
+  // Cast to id to avoid a conversion in LocalRange*Group later
+  id<Dimensions> LocalRange = r.get_local_range();
 
   // Reconstruct the item from its group and local id
   auto reconstructItem = [&] (id<Dimensions> L) {
@@ -166,7 +167,7 @@ template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void ParallelForWorkgroup(nd_range<Dimensions> r,
                           ParallelForFunctor f) {
   // In a sequential execution there is only one index processed at a time
-  group<Dimensions> Group(r.getImpl());
+  group<Dimensions> Group(r);
 
   // Reconstruct the item from its group and local id
   auto callWithGroup = [&] (group<Dimensions> G) {
@@ -201,7 +202,7 @@ void ParallelForWorkitem(group<Dimensions> g,
     // Reconstruct the global item
     Index.set_local(Local);
     // \todo Some strength reduction here
-    Index.set_global(Local + g.get_local_range()*g.get_group_id());
+    Index.set_global(Local + id<Dimensions>(g.get_local_range())*g.get_group_id());
     // Call the user kernel at last
     f(Index);
   };

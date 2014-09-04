@@ -372,62 +372,60 @@ public:
 /** A group index used in a parallel_for_workitem to specify a work_group
  */
 template <std::size_t dims = 1>
-struct group TRISYCL_IMPL(: GroupImpl<dims>) {
+struct group {
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
   static const auto dimensionality = dims;
 
-#ifndef TRISYCL_HIDE_IMPLEMENTATION
-  // A shortcut name to the implementation
-  using Impl = GroupImpl<dims>;
+private:
 
-  /** Since the runtime needs to construct a group with the right content,
-      define some hidden constructor for this.  Since it is internal,
-      directly use the implementation
+  /// Keep a reference on the nd_range to serve potential query on it
+  nd_range<dims> NDR;
+  /// The coordinate of the group item
+  id<dims> Id;
+
+public:
+
+  /** Create a group from an nd_range<> with a 0 id<>
+
+      \todo This should be private
   */
-  group(const NDRangeImpl<dims> &NDR, const IdImpl<dims> &ID) : Impl(NDR, ID) {}
+  group(const nd_range<dims> &ndr) : NDR(ndr) {}
 
 
-  /** Some internal constructor without group id initialization  */
-  group(const NDRangeImpl<dims> &NDR) : Impl(NDR) {}
-#endif
+  /** Create a group from an nd_range<> with a 0 id<>
+
+      \todo This should be private
+  */
+  group(const nd_range<dims> &ndr, const id<dims> &i) :
+    NDR(ndr), Id(i) {}
 
 
-  /// \todo in the specification, only provide a copy constructor. Any
-  /// other constructors should be unspecified
-  group(const group &g) : Impl(g.getImpl()) {}
+  /// Get the group identifier for this work_group
+  id<dims> get_group_id() const { return Id; }
 
-
-  id<dims> get_group_id() { return Impl::get_group_id(); }
 
   /** Get the local range for this work_group
 
       \todo Update the specification to return a range<dims> instead of an
       id<>
   */
-  range<dims> get_local_range() { return Impl::get_local_range(); }
+  range<dims> get_local_range() { return NDR.get_local_range(); }
+
 
   /** Get the local range for this work_group
 
       \todo Update the specification to return a range<dims> instead of an
       id<>
   */
-  range<dims> get_global_range() { return Impl::get_global_range(); }
+  range<dims> get_global_range() { return NDR.get_global_range(); }
+
 
   /// \todo Why the offset is not available here?
 
+
   /// \todo Also provide this access to the current nd_range
-  nd_range<dims> get_nr_range() { return Impl::NDR; }
-
-  /** Return the group coordinate in the given dimension
-
-      \todo add it to the specification?
-
-      \todo is it supposed to be an int? A cl_int? a size_t?
-  */
-  int get(int index) {
-    return (*this)[index];
-  }
+  nd_range<dims> get_nr_range() const { return NDR; }
 
 
   /** Return the group coordinate in the given dimension
@@ -437,7 +435,13 @@ struct group TRISYCL_IMPL(: GroupImpl<dims>) {
       \todo is it supposed to be an int? A cl_int? a size_t?
   */
   auto &operator[](int index) {
-    return (*this).getImpl()[index];
+    return Id[index];
+  }
+
+
+  /// Return the group coordinate in the given dimension
+  auto get(int index) const {
+    return (*this)[index];
   }
 
 };
