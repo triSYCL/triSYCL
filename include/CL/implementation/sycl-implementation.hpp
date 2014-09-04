@@ -74,9 +74,13 @@ struct SmallArray : std::array<BasicType, Dims>,
   static const auto dimensionality = Dims;
 
 
-  /// Add a constructor from an other array
+  /** Add a constructor from an other array
+
+      Make it explicit to avoid spurious range<> constructions from int *
+      for example
+  */
   template <typename SourceType>
-  SmallArray(const SourceType src[Dims]) {
+  explicit SmallArray(const SourceType src[Dims]) {
     // (*this)[0] is the first element of the underlying array
     std::copy_n(src, Dims, &(*this)[0]);
   }
@@ -195,9 +199,6 @@ struct SmallArray123<BasicType, FinalType, 3>
 
   using SmallArray<BasicType, FinalType, 3>::SmallArray;
 };
-
-
-
 
 /// @} End the parallelism Doxygen group
 
