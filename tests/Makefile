@@ -7,7 +7,7 @@ triSYCL_DIR=$(abspath $(dir $(lastword $(MAKEFILE_LIST)))/..)
 TARGETS = $(basename $(wildcard */*.cpp))
 
 # The implementation uses C++14 and OpenMP
-CXXFLAGS = -g -std=c++1y -I$(triSYCL_DIR)/include
+CXXFLAGS = -Wall -g -std=c++1y -I$(triSYCL_DIR)/include
 
 # To use OpenMP to execute SYCL kernels:
 CXXFLAGS += -fopenmp
@@ -42,7 +42,7 @@ check:
 	# export TRISYCL_LIT=/usr/lib/llvm-3.5/build/utils/lit/lit.py
 	# The config file for triSYCL needs at least Python 3.3
 	test "unset$$TRISYCL_LIT == unset" && echo 'Initialize TRISYCL_LIT variable to the path of "lit" command' ; echo 1
-	python3 $$TRISYCL_LIT .
+	python3 $$TRISYCL_LIT $(LITFLAGS) .
 
 # A special target to be called as from the test as "make execute
 # TARGET=%s" with the right Makefile. There is a short-cut in the lit.cfg

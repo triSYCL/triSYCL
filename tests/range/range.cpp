@@ -2,13 +2,20 @@
    CHECK: Result:
    CHECK-NEXT: 1
    CHECK-NEXT: a = 3
+   CHECK-NEXT: a as an int = 3
    CHECK-NEXT: b = 4
+   CHECK-NEXT: b = 2
    CHECK-NEXT: c = 5,6
    CHECK-NEXT: d = 7,8,9
+   CHECK-NEXT: 1 1 1
+   CHECK-NEXT: d = 1,2,1
+   CHECK-NEXT: d = 2,4,4
    CHECK-NEXT: Range of dims 1
    CHECK-NEXT: Range of dims 1
    CHECK-NEXT: Range of dims 2
    CHECK-NEXT: Range of dims 3
+   CHECK-NEXT: 1 2 3
+   CHECK-NEXT: 2 5 6
 */
 #include <CL/sycl.hpp>
 #include <iostream>
@@ -16,7 +23,7 @@
 using namespace cl::sycl;
 
 // To test the inference of the range rank
-template<int N> void f(range<N> r) {
+template<std::size_t N> void f(range<N> r) {
   std::cout << "Range of dims " << N << std::endl;
 }
 
@@ -38,18 +45,43 @@ int main() {
   std::cout << r.get(0) << " ";
   std::cout << std::endl;
 
-  range<1> a = 3;
+  range<> a = 3;
   std::cout << "a = " << a[0] << std::endl;
+  std::cout << "a as an int = " << a << std::endl;
   range<1> b = { 4 };
+  std::cout << "b = " << b[0] << std::endl;
+  b /= make_range(2);
   std::cout << "b = " << b[0] << std::endl;
   range<2> c = { 5, 6 };
   std::cout << "c = " << c[0] << ',' << c[1] << std::endl;
   range<3> d = { 7, 8, 9 };
   std::cout << "d = " << d[0] << ',' << d[1] <<  ',' << d[2] << std::endl;
+  auto div = d/d;
+  div.display();
+
+  // Test modulo operation
+  d %= make_range({2, 3, 4});
+  std::cout << "d = " << d[0] << ',' << d[1] <<  ',' << d[2] << std::endl;
+
+  d += make_range(1, 2, 3);
+  std::cout << "d = " << d[0] << ',' << d[1] <<  ',' << d[2] << std::endl;
+
 
   g(43);
   g({ 2014 });
   g({ 1, 128 });
+
   g({ 11, 54, 68 });
+
+
+  // Try some conversions
+  char array[3] = { 1, 2, 3 };
+  // Use some explicit conversion
+  range<3> r_array { array };
+  r_array.display();
+  // Conversion from an id<>
+  r_array = id<3>(2,5,6);
+  r_array.display();
+
   return 0;
 }

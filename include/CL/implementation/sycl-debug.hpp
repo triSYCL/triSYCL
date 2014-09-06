@@ -47,6 +47,26 @@ struct Debug {
 #endif
 };
 
+
+/** Class used to display a vector-like type of classes that inherit from
+    it
+
+    \param T is the real type name to be used in the debug output.
+
+    Calling the display() method dump the values on std::cout
+ */
+template <typename T>
+struct DisplayVector {
+  /// To debug and test
+  void display() {
+    std::cout << typeid(T).name() << ":";
+    // Get a pointer to the real object
+    for (auto e : *static_cast<T *>(this))
+      std::cout << " " << e;
+    std::cout << std::endl;
+  }
+};
+
 /// @} End the debug_trace Doxygen group
 
 }

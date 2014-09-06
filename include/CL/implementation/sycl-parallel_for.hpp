@@ -14,9 +14,9 @@ namespace trisycl {
     C++14, use a class template instead with everything in the
     constructor.
 */
-template <int level, typename Range, typename ParallelForFunctor, typename Id>
+template <std::size_t level, typename Range, typename ParallelForFunctor, typename Id>
 struct ParallelForIterate {
-  ParallelForIterate(const Range &r, ParallelForFunctor &f, Id &index) {
+  ParallelForIterate(Range r, ParallelForFunctor &f, Id &index) {
     for (boost::multi_array_types::index _sycl_index = 0,
            _sycl_end = r[Range::dimensionality - level];
          _sycl_index < _sycl_end;
@@ -38,9 +38,9 @@ struct ParallelForIterate {
     Only the top-level loop uses OpenMP and go on with the normal
     recursive multi-dimensional.
 */
-template <int level, typename Range, typename ParallelForFunctor, typename Id>
+template <std::size_t level, typename Range, typename ParallelForFunctor, typename Id>
 struct ParallelOpenMPForIterate {
-  ParallelOpenMPForIterate(const Range &r, ParallelForFunctor &f) {
+  ParallelOpenMPForIterate(Range r, ParallelForFunctor &f) {
     // Create the OpenMP threads before the for loop to avoid creating an
     // index in each iteration
 #pragma omp parallel
@@ -75,7 +75,7 @@ struct ParallelOpenMPForIterate {
     kernel functor with the constructed id */
 template <typename Range, typename ParallelForFunctor, typename Id>
 struct ParallelForIterate<0, Range, ParallelForFunctor, Id> {
-  ParallelForIterate(const Range &r, ParallelForFunctor &f, Id &index) {
+  ParallelForIterate(Range r, ParallelForFunctor &f, Id &index) {
     f(index);
   }
 };
@@ -90,7 +90,7 @@ struct ParallelForIterate<0, Range, ParallelForFunctor, Id> {
     or with an item. Let's use id<> when called with a range<> and item<>
     when called with a nd_range<>
 */
-template <int Dimensions = 1, typename ParallelForFunctor>
+template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void ParallelForImpl(range<Dimensions> r,
                      ParallelForFunctor f) {
 #ifdef _OPENMP
@@ -119,7 +119,7 @@ void ParallelForImpl(range<Dimensions> r,
 
     \todo Implement with parallel_for_workgroup()/parallel_for_workitem()
 */
-template <int Dimensions = 1, typename ParallelForFunctor>
+template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void ParallelForImpl(nd_range<Dimensions> r,
                      ParallelForFunctor f) {
   // In a sequential execution there is only one index processed at a time
@@ -129,6 +129,7 @@ void ParallelForImpl(nd_range<Dimensions> r,
   range<Dimensions> GroupRange = r.get_group_range();
   // To iterate on the local work-item
   id<Dimensions> Local;
+
   range<Dimensions> LocalRange = r.get_local_range();
 
   // Reconstruct the item from its group and local id
@@ -136,7 +137,8 @@ void ParallelForImpl(nd_range<Dimensions> r,
     //Local.display();
     // Reconstruct the global item
     Index.set_local(Local);
-    Index.set_global(Local + LocalRange*Group);
+    // Upgrade LocalRange to an id<> so that we can * with the Group (an id<>)
+    Index.set_global(Local + id<Dimensions>(LocalRange)*Group);
     // Call the user kernel at last
     f(Index);
   };
@@ -162,18 +164,12 @@ void ParallelForImpl(nd_range<Dimensions> r,
 
 
 /// Implement the loop on the work-groups
-template <int Dimensions = 1, typename ParallelForFunctor>
+template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void ParallelForWorkgroup(nd_range<Dimensions> r,
                           ParallelForFunctor f) {
   // In a sequential execution there is only one index processed at a time
-  group<Dimensions> Group(r.getImpl());
+  group<Dimensions> Group(r);
 
-  // Reconstruct the item from its group and local id
-  auto callWithGroup = [&] (group<Dimensions> G) {
-    //G.Id.display();
-    // Call the user kernel with the group as parameter
-    f(G);
-  };
   // First iterate on all the work-groups
   ParallelForIterate<Dimensions,
                      range<Dimensions>,
@@ -186,7 +182,7 @@ void ParallelForWorkgroup(nd_range<Dimensions> r,
 
 
 /// Implement the loop on the work-items inside a work-group
-template <int Dimensions = 1, typename ParallelForFunctor>
+template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void ParallelForWorkitem(group<Dimensions> g,
                          ParallelForFunctor f) {
   // In a sequential execution there is only one index processed at a time
@@ -201,7 +197,7 @@ void ParallelForWorkitem(group<Dimensions> g,
     // Reconstruct the global item
     Index.set_local(Local);
     // \todo Some strength reduction here
-    Index.set_global(Local + g.get_local_range()*g.get_group_id());
+    Index.set_global(Local + id<Dimensions>(g.get_local_range())*g.get_group_id());
     // Call the user kernel at last
     f(Index);
   };

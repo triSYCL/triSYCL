@@ -144,7 +144,7 @@ namespace access {
 }
 
 /// \todo implement image
-template <int dimensions> struct image;
+template <std::size_t dimensions> struct image;
 
 /// @} End the data Doxygen group
 
@@ -186,184 +186,33 @@ using namespace trisycl;
 
     \todo use std::size_t dims instead of int dims in the specification?
 
-    \todo add to the norm this default parameter value?
+    \todo add to the specification this default parameter value?
 
-    \todo add to the norm some way to specify an offset?
+    \todo add to the specification some way to specify an offset?
 */
-template <int dims = 1>
-struct range TRISYCL_IMPL(: public RangeImpl<dims>) {
-  /* Now this code is only for describing the API and setting the default
-     value for dims. The real classes use are the specializations after
-     this one */
-
-  /// \todo add this Boost::multi_array or STL concept to the
-  /// specification?
-  static const auto dimensionality = dims;
-
-#ifndef TRISYCL_HIDE_IMPLEMENTATION
-  // A shortcut name to the implementation
-  using Impl = RangeImpl<dims>;
-
-  /** Construct a range from an implementation, used by nd_range() for
-      example
-
-     This is internal and should not appear in the specification */
-  range(Impl &r) : Impl(r) {}
-
-  range(const Impl &r) : Impl(r) {}
-#endif
-
-  range(range<dims> &r) : Impl(r.getImpl()) {}
-
-  range(const range<dims> &r) : Impl(r.getImpl()) {}
-
-
-  /** Create a n-D range from a positive integer-like list
-
-      \todo This is not the same as the range(dim1,...) constructor from
-      the specification
-   */
-  range(std::initializer_list<std::intptr_t> l) : Impl(l) {}
-
-
-  /* A variadic template cannot be used because of conflicts with the
-     constructor taking 2 iterators... So let's go verbose.
-
-     \todo Add a make_range() helper too to avoid specifying the
-     dimension? Generalize this helper to anything?
-  */
-
-
-  /** Return the range size in the give dimension
-
-      \todo explain in the specification (table 3.29, not only in the
-      text) that [] works also for id, and why not range?
-
-      \todo add also [] for range in the specification
-
-      \todo is it supposed to be an int? A cl_int? a size_t?
-  */
-  int get(int index) {
-    return (*this)[index];
-  }
-
+template <std::size_t dims = 1>
+struct range : public SmallArray123<std::size_t, range<dims>, dims> {
+  // Inherit of all the constructors
+  using SmallArray123<std::size_t, range<dims>, dims>::SmallArray123;
 };
 
 
-#ifndef TRISYCL_HIDE_IMPLEMENTATION
-/* Use some specializations so that some function overloads can be
-   determined according to some implicit constructors, such as we can
-   write parallel_for(7, some_kernel) automatically infers that we have a
-   range<1> { 7 }
+/** Implement a make_range to construct a range<> of the right dimension
+    with implicit conversion from an initializer list for example.
 
-   and parallel_for({ 7, 8, 9}, some_kernel) implies a range<3> { 7, 8, 9 }
-*/
-
-template <>
-struct range<1> TRISYCL_IMPL(: public RangeImpl<1>) {
-  // A shortcut name to the implementation
-  using Impl = RangeImpl<1>;
-
-  /** Construct a range from an implementation, used by nd_range() for
-      example
-
-     This is internal and should not appear in the specification */
-  range(Impl &r) : Impl(r) {}
-
-  range(const Impl &r) : Impl(r) {}
-
-  /// To have implicit conversion from 1 integer and automatic inference
-  /// of the dimensionality
-  range(std::intptr_t x) : Impl { x } { }
-
-};
+    Cannot use a template on the number of dimensions because the implicit
+    conversion would not be tried. */
+auto make_range(range<1> r) { return r; }
+auto make_range(range<2> r) { return r; }
+auto make_range(range<3> r) { return r; }
 
 
-template <>
-struct range<2> TRISYCL_IMPL(: public RangeImpl<2>) {
-
-  // A shortcut name to the implementation
-  using Impl = RangeImpl<2>;
-
-  /** Construct a range from an implementation, used by nd_range() for
-      example
-
-     This is internal and should not appear in the specification */
-  range(Impl &r) : Impl(r) {}
-
-  range(const Impl &r) : Impl(r) {}
-
-  /// A 2-D constructor to have implicit conversion from from 2 integers
-  /// and automatic inference of the dimensionality
-  range(std::intptr_t x, std::intptr_t y) : RangeImpl { x, y } { }
-};
-
-
-template <>
-struct range<3> TRISYCL_IMPL(: public RangeImpl<3>) {
-
-  // A shortcut name to the implementation
-  using Impl = RangeImpl<3>;
-
-  /** Construct a range from an implementation, used by nd_range() for
-      example
-
-     This is internal and should not appear in the specification */
-  range(Impl &r) : Impl(r) {}
-
-  range(const Impl &r) : Impl(r) {}
-
-  /// A 3-D constructor to have implicit conversion from from from 3
-  /// integers and automatic inference of the dimensionality
-  range(std::intptr_t x, std::intptr_t y, std::intptr_t z) : RangeImpl { x, y, z }
-  { }
-};
-#endif
-
-
-#ifndef TRISYCL_HIDE_IMPLEMENTATION
-// Add some operations on range to help with OpenCL work-group scheduling
-// \todo use an element-wise template instead of copy past below for / and *
-
-// An element-wise division of ranges, with upper rounding
-template <size_t Dimensions>
-range<Dimensions> operator /(range<Dimensions> dividend,
-                             range<Dimensions> divisor) {
-  range<Dimensions> result;
-
-  for (int i = 0; i < Dimensions; i++)
-    result[i] = (dividend[i] + divisor[i] - 1)/divisor[i];
-
-  return result;
+/** Construct a range<> from a function call with arguments, like
+    make_range(1, 2, 3) */
+template<typename... BasicType>
+auto make_range(BasicType... Args) {
+  return range<sizeof...(Args)>(Args...);
 }
-
-
-// An element-wise multiplication of ranges
-template <size_t Dimensions>
-range<Dimensions> operator *(range<Dimensions> a,
-                             range<Dimensions> b) {
-  range<Dimensions> result;
-
-  for (int i = 0; i < Dimensions; i++)
-    result[i] = a[i] * b[i];
-
-  return result;
-}
-
-
-// An element-wise addition of ranges
-template <size_t Dimensions>
-range<Dimensions> operator +(range<Dimensions> a,
-                             range<Dimensions> b) {
-  range<Dimensions> result;
-
-  for (int i = 0; i < Dimensions; i++)
-    result[i] = a[i] + b[i];
-
-  return result;
-}
-#endif
-
 
 /** Define a multi-dimensional index, used for example to locate a work item
 
@@ -375,85 +224,29 @@ range<Dimensions> operator +(range<Dimensions> a,
     Well it is already the case for item. So not needed for id?
     Indeed [] is mentioned in text of page 59 but not in class description.
 */
-template <int dims = 1>
-struct id TRISYCL_IMPL(: public IdImpl<dims>) {
-
-  /// \todo add this Boost::multi_array or STL concept to the
-  /// specification?
-  static const auto dimensionality = dims;
-
-
-#ifndef TRISYCL_HIDE_IMPLEMENTATION
-  // A shortcut name to the implementation
-  using Impl = IdImpl<dims>;
-
-
-  /** Since the runtime needs to construct an id from its implementation
-      for example in item methods, define some hidden constructor here */
-  id(const Impl &init) : Impl(init) {}
-#endif
-
-
-  /** Create a zero id
-
-      \todo Add it to the specification?
-  */
-  id() : Impl() {}
-
-
-  /// Create an id with the same value of another one
-  id(const id &init) : Impl(init.getImpl()) {}
-
-  /** Create an id from a given range
-      \todo Is this necessary?
-
-      \todo why in the specification
-      id<int dims>(range<dims>global_size, range<dims> local_size)
-      ?
-  */
-  id(const range<dims> &r) : Impl(r.getImpl()) {}
-
-
-  /** Create a n-D range from a positive integer-like list
-
-      \todo Add this to the specification? Since it is said to be usable
-      as a std::vector<>...
-  */
-  id(std::initializer_list<std::intptr_t> l) : Impl(l) {}
-
-
-  /** To have implicit conversion from 1 integer
-
-      \todo Extension to the specification
-  */
-  id(std::intptr_t s) : id({ s }) {
-    static_assert(dims == 1, "A range with 1 size should be 1-D");
-  }
-
-
-  /** Return the id size in the given dimension
-
-      \todo is it supposed to be an int? A cl_int? a size_t?
-  */
-  int get(int index) {
-    return (*this)[index];
-  }
-
-
-  /** Return the id size in the given dimension
-
-      \todo explain in the specification (table 3.29, not only in the
-      text) that [] works also for id, and why not range?
-
-      \todo add also [] for range in the specification
-
-      \todo is it supposed to be an int? A cl_int? a size_t?
-  */
-  auto &operator[](int index) {
-    return (*this).getImpl()[index];
-  }
-
+template <std::size_t dims = 1>
+struct id : public SmallArray123<std::ptrdiff_t, id<dims>, dims> {
+  // Inherit of all the constructors
+  using SmallArray123<std::ptrdiff_t, id<dims>, dims>::SmallArray123;
 };
+
+
+/** Implement a make_id to construct an id<> of the right dimension with
+    implicit conversion from an initializer list for example.
+
+    Cannot use a template on the number of dimensions because the implicit
+    conversion would not be tried. */
+auto make_id(id<1> i) { return i; }
+auto make_id(id<2> i) { return i; }
+auto make_id(id<3> i) { return i; }
+
+
+/** Construct an id<> from a function call with arguments, like
+    make_id(1, 2, 3) */
+template<typename... BasicType>
+auto make_id(BasicType... Args) {
+  return id<sizeof...(Args)>(Args...);
+}
 
 
 /** A ND-range, made by a global and local range, to specify work-group
@@ -464,26 +257,19 @@ struct id TRISYCL_IMPL(: public IdImpl<dims>) {
 
     \todo add copy constructors in the specification
 */
-template <int dims = 1>
-struct nd_range TRISYCL_IMPL(: NDRangeImpl<dims>) {
-  static_assert(1 <= dims && dims <= 3,
-                "Dimensions are between 1 and 3");
-
+template <std::size_t dims = 1>
+struct nd_range {
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
   static const auto dimensionality = dims;
 
+private:
 
-#ifndef TRISYCL_HIDE_IMPLEMENTATION
-  // A shortcut name to the implementation
-  using Impl = NDRangeImpl<dims>;
+  range<dimensionality> GlobalRange;
+  range<dimensionality> LocalRange;
+  id<dimensionality> Offset;
 
-  /** Since the runtime needs to construct a nd_range from its
-      implementation for example in parallel_for stuff, define some hidden
-      constructor here */
-  nd_range(const Impl &init) : Impl(init) {}
-#endif
-
+public:
 
   /** Construct a ND-range with all the details available in OpenCL
 
@@ -492,23 +278,34 @@ struct nd_range TRISYCL_IMPL(: NDRangeImpl<dims>) {
   nd_range(range<dims> global_size,
            range<dims> local_size,
            id<dims> offset = id<dims>()) :
-    Impl(global_size.getImpl(), local_size.getImpl(), offset.getImpl()) {}
+    GlobalRange(global_size), LocalRange(local_size), Offset(offset) { }
 
 
   /// Get the global iteration space range
-  range<dims> get_global_range() { return Impl::get_global_range(); }
+  range<dims> get_global_range() { return GlobalRange; }
 
 
   /// Get the local part of the iteration space range
-  range<dims> get_local_range() { return Impl::get_local_range(); }
+  range<dims> get_local_range() { return LocalRange; }
 
 
   /// Get the range of work-groups needed to run this ND-range
-  range<dims> get_group_range() { return Impl::get_group_range(); }
+  auto get_group_range() {
+    // \todo Assume that GlobalRange is a multiple of LocalRange, element-wise
+    return GlobalRange/LocalRange;
+  }
 
 
   /// \todo get_offset() is lacking in the specification
-  range<dims> get_offset() { return Impl::get_offset(); }
+  id<dims> get_offset() { return Offset; }
+
+
+  /// Display the value for debugging and validation purpose
+  void display() {
+    GlobalRange.display();
+    LocalRange.display();
+    Offset.display();
+  }
 
 };
 
@@ -520,122 +317,130 @@ struct nd_range TRISYCL_IMPL(: NDRangeImpl<dims>) {
     providing get_local...() and get_global...() and what about the
     offset?
 */
-template <int dims = 1>
-struct item TRISYCL_IMPL(: ItemImpl<dims>) {
+template <std::size_t dims = 1>
+struct item {
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
   static const auto dimensionality = dims;
 
-#ifndef TRISYCL_HIDE_IMPLEMENTATION
-  // A shortcut name to the implementation
-  using Impl = ItemImpl<dims>;
-#endif
+private:
 
+  id<dims> GlobalIndex;
+  id<dims> LocalIndex;
+  nd_range<dims> NDRange;
+
+public:
 
   /** Create an item from a local size and local size
 
       \todo what is the meaning of this constructor for a programmer?
   */
   item(range<dims> global_size, range<dims> local_size) :
-    Impl(global_size, local_size) {}
+    NDRange { global_size, local_size } {}
 
 
   /** \todo a constructor from a nd_range too in the specification if the
       previous one has a meaning?
    */
-  item(nd_range<dims> ndr) : Impl(ndr) {}
+  item(nd_range<dims> ndr) : NDRange { ndr } {}
 
 
   /// Return the global coordinate in the given dimension
-  int get_global(int dimension) { return Impl::get_global(dimension); }
+  auto get_global(int dimension) { return GlobalIndex[dimension]; }
 
 
   /// Return the local coordinate (that is in the work-group) in the given
   /// dimension
-  int get_local(int dimension) { return Impl::get_local(dimension); }
+  auto get_local(int dimension) { return LocalIndex[dimension]; }
 
 
   /// Get the whole global id coordinate
-  id<dims> get_global() { return Impl::get_global(); }
+  id<dims> get_global() { return GlobalIndex; }
 
 
   /// Get the whole local id coordinate (which is respective to the
   /// work-group)
-  id<dims> get_local() { return Impl::get_local(); }
+  id<dims> get_local() { return LocalIndex; }
 
 
   /// Get the global range where this item rely in
-  range<dims> get_global_range() { return Impl::get_global_range(); }
+  range<dims> get_global_range() { return NDRange.get_global_range(); }
+
 
   /// Get the local range (the dimension of the work-group) for this item
-  range<dims> get_local_range() { return Impl::get_local_range(); }
+  range<dims> get_local_range() { return NDRange.get_local_range(); }
 
   /// \todo Why the offset is not available here?
 
   /// \todo Also provide access to the current nd_range?
+
+
+  // For the implementation, need to set the local index
+  void set_local(id<dims> Index) { LocalIndex = Index; }
+
+  // For the implementation, need to set the global index
+  void set_global(id<dims> Index) { GlobalIndex = Index; }
 
 };
 
 
 /** A group index used in a parallel_for_workitem to specify a work_group
  */
-template <int dims = 1>
-struct group TRISYCL_IMPL(: GroupImpl<dims>) {
+template <std::size_t dims = 1>
+struct group {
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
   static const auto dimensionality = dims;
 
-#ifndef TRISYCL_HIDE_IMPLEMENTATION
-  // A shortcut name to the implementation
-  using Impl = GroupImpl<dims>;
+private:
 
-  /** Since the runtime needs to construct a group with the right content,
-      define some hidden constructor for this.  Since it is internal,
-      directly use the implementation
+  /// Keep a reference on the nd_range to serve potential query on it
+  nd_range<dims> NDR;
+  /// The coordinate of the group item
+  id<dims> Id;
+
+public:
+
+  /** Create a group from an nd_range<> with a 0 id<>
+
+      \todo This should be private
   */
-  group(const NDRangeImpl<dims> &NDR, const IdImpl<dims> &ID) : Impl(NDR, ID) {}
+  group(const nd_range<dims> &ndr) : NDR(ndr) {}
 
 
-  /** Some internal constructor without group id initialization  */
-  group(const NDRangeImpl<dims> &NDR) : Impl(NDR) {}
-#endif
+  /** Create a group from an nd_range<> with a 0 id<>
+
+      \todo This should be private
+  */
+  group(const nd_range<dims> &ndr, const id<dims> &i) :
+    NDR(ndr), Id(i) {}
 
 
-  /// \todo in the specification, only provide a copy constructor. Any
-  /// other constructors should be unspecified
-  group(const group &g) : Impl(g.getImpl()) {}
+  /// Get the group identifier for this work_group
+  id<dims> get_group_id() const { return Id; }
 
-
-  id<dims> get_group_id() { return Impl::get_group_id(); }
 
   /** Get the local range for this work_group
 
       \todo Update the specification to return a range<dims> instead of an
       id<>
   */
-  range<dims> get_local_range() { return Impl::get_local_range(); }
+  range<dims> get_local_range() { return NDR.get_local_range(); }
+
 
   /** Get the local range for this work_group
 
       \todo Update the specification to return a range<dims> instead of an
       id<>
   */
-  range<dims> get_global_range() { return Impl::get_global_range(); }
+  range<dims> get_global_range() { return NDR.get_global_range(); }
+
 
   /// \todo Why the offset is not available here?
 
+
   /// \todo Also provide this access to the current nd_range
-  nd_range<dims> get_nr_range() { return Impl::NDR; }
-
-  /** Return the group coordinate in the given dimension
-
-      \todo add it to the specification?
-
-      \todo is it supposed to be an int? A cl_int? a size_t?
-  */
-  int get(int index) {
-    return (*this)[index];
-  }
+  nd_range<dims> get_nr_range() const { return NDR; }
 
 
   /** Return the group coordinate in the given dimension
@@ -645,7 +450,13 @@ struct group TRISYCL_IMPL(: GroupImpl<dims>) {
       \todo is it supposed to be an int? A cl_int? a size_t?
   */
   auto &operator[](int index) {
-    return (*this).getImpl()[index];
+    return Id[index];
+  }
+
+
+  /// Return the group coordinate in the given dimension
+  auto get(int index) {
+    return (*this)[index];
   }
 
 };
@@ -656,7 +467,7 @@ struct group TRISYCL_IMPL(: GroupImpl<dims>) {
    definitions) */
 struct queue;
 
-template <typename T, int dimensions> struct buffer;
+  template <typename T, std::size_t dimensions> struct buffer;
 
 
 /** \addtogroup error_handling Error handling
@@ -720,7 +531,7 @@ struct exception {
 
       \todo to be implemented
   */
-  template <int dimensions> image<dimensions> *get_image() { assert(0); }
+  template <std::size_t dimensions> image<dimensions> *get_image() { assert(0); }
 };
 
 
@@ -946,7 +757,7 @@ struct command_group {
     \todo Implement it for images according so section 3.3.4.5
 */
 template <typename dataType,
-          size_t dimensions,
+          std::size_t dimensions,
           access::mode mode,
           access::target target = access::global_buffer>
 struct accessor
@@ -986,7 +797,7 @@ TRISYCL_IMPL(: AccessorImpl<dataType, dimensions, mode, target>) {
       \todo This is not in the specification but looks like a cool common
       feature. Or solving it with an implicit constructor of id<1>?
   */
-  dataType &operator[](size_t Index) const {
+  dataType &operator[](std::size_t Index) const {
     return Impl::operator[](Index);
   }
 
@@ -1026,7 +837,7 @@ struct storage {
       buffer which returns the byte size. Is it to be renamed to
       get_count()?
   */
-  virtual size_t get_size() = 0;
+  virtual std::size_t get_size() = 0;
 
 
   /** Method called by the SYCL system to know where that data is held in
@@ -1098,7 +909,7 @@ struct storage {
     buffer and accessor on T versus datatype
 */
 template <typename T,
-          int dimensions = 1>
+          std::size_t dimensions = 1>
 struct buffer TRISYCL_IMPL(: BufferImpl<T, dimensions>) {
   /// \todo Extension to SYCL specification: provide pieces of STL
   /// container interface?
@@ -1114,7 +925,7 @@ struct buffer TRISYCL_IMPL(: BufferImpl<T, dimensions>) {
 
       \param r defines the size
   */
-  buffer(const range<dimensions> &r) : Impl(r.getImpl()) {}
+  buffer(const range<dimensions> &r) : Impl(r) {}
 
 
   /** Create a new buffer with associated host memory
@@ -1123,7 +934,7 @@ struct buffer TRISYCL_IMPL(: BufferImpl<T, dimensions>) {
 
       \param r defines the size
   */
-  buffer(T * host_data, range<dimensions> r) : Impl(host_data, r.getImpl()) {}
+  buffer(T * host_data, range<dimensions> r) : Impl(host_data, r) {}
 
 
   /** Create a new read only buffer with associated host memory
@@ -1133,7 +944,7 @@ struct buffer TRISYCL_IMPL(: BufferImpl<T, dimensions>) {
       \param r defines the size
   */
   buffer(const T * host_data, range<dimensions> r) :
-    Impl(host_data, r.getImpl()) {}
+    Impl(host_data, r) {}
 
 
   /** Create a new buffer from a storage abstraction provided by the user
@@ -1291,7 +1102,7 @@ TRISYCL_ParallelForFunctor_GLOBAL(3)
 
 /** A variation of SYCL parallel_for to take into account a nd_range<>
  */
-template <int Dimensions, typename ParallelForFunctor>
+template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {
   ParallelForImpl(r, f);
 }
@@ -1333,7 +1144,7 @@ void parallel_for(Range r, Program p, ParallelForFunctor f) {
 */
 
 /// Loop on the work-groups
-template <int Dimensions = 1, typename ParallelForFunctor>
+template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void parallel_for_workgroup(nd_range<Dimensions> r,
                             ParallelForFunctor f) {
   ParallelForWorkgroup(r, f);
@@ -1341,7 +1152,7 @@ void parallel_for_workgroup(nd_range<Dimensions> r,
 
 
 /// Loop on the work-items inside a work-group
-template <int Dimensions = 1, typename ParallelForFunctor>
+template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void parallel_for_workitem(group<Dimensions> g, ParallelForFunctor f) {
   ParallelForWorkitem(g, f);
 }

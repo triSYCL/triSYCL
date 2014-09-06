@@ -14,8 +14,10 @@
 #include <cassert>
 #include <functional>
 #include <type_traits>
-#include "boost/multi_array.hpp"
 #include <iostream>
+#include <iterator>
+#include "boost/multi_array.hpp"
+#include <boost/operators.hpp>
 
 #include "sycl-debug.hpp"
 #include "sycl-address-spaces.hpp"
@@ -23,272 +25,180 @@
 /// triSYCL implementation dwells in the cl::sycl::trisycl namespace
 namespace cl {
 namespace sycl {
+
+// Forward declaration for the buffer<> and the accessor<>
+template <std::size_t dims> struct id;
+template <std::size_t dims> struct item;
+template <std::size_t dims> struct range;
+
 namespace trisycl {
 
 /** \addtogroup parallelism
     @{
 */
 
-/// Define a multi-dimensional index range
-template <std::size_t Dimensions = 1U>
-struct RangeImpl : std::vector<std::intptr_t>, Debug<RangeImpl<Dimensions>> {
-  static_assert(1 <= Dimensions && Dimensions <= 3,
-                "Dimensions are between 1 and 3");
-
-  static const auto dimensionality = Dimensions;
-
-  // Return a reference to the implementation itself
-  RangeImpl &getImpl() { return *this; };
-
-
-  // Return a const reference to the implementation itself
-  const RangeImpl &getImpl() const { return *this; };
-
-
-  /* Inherit the constructors from the parent
-
-     Using a std::vector is overkill but std::array has no default
-     constructors and I am lazy to reimplement them
-
-     Use std::intptr_t as a signed version of a std::size_t to allow
-     computations with negative offsets
-
-     \todo in the specification: add some accessors. But it seems they are
-     implicitly convertible to vectors of the same size in the
-     specification
-  */
-  using std::vector<std::intptr_t>::vector;
-
-
-  // By default, create a vector of Dimensions 0 elements
-  RangeImpl() : vector(Dimensions) {}
-
-
-  // Copy constructor to initialize from another range
-  RangeImpl(const RangeImpl &init) : vector(init) {}
-
-
-  // Create a n-D range from an integer-like list
-  RangeImpl(std::initializer_list<std::intptr_t> l) :
-    std::vector<std::intptr_t>(l) {
-    // The number of elements must match the dimension
-    assert(Dimensions == l.size());
+/** Helper macro to declare a vector operation with the given side-effect
+    operator */
+#define TRISYCL_BOOST_OPERATOR_VECTOR_OP(op)            \
+  FinalType operator op(const FinalType& rhs) {         \
+    for (std::size_t i = 0; i != Dims; ++i)             \
+      (*this)[i] op rhs[i];                             \
+    return *this;                                       \
   }
-
-
-  /** Return the given coordinate
-
-      \todo explain in the specification (table 3.29, not only in the
-      text) that [] works also for id, and why not range?
-
-      \todo add also [] for range in the specification
-  */
-  auto get(int index) {
-    return (*this)[index];
-  }
-
-  // To debug
-  void display() {
-    std::clog << typeid(this).name() << ": ";
-    for (int i = 0; i < dimensionality; i++)
-      std::clog << " " << get(i);
-    std::clog << std::endl;
-  }
-
-};
-
-
-// Add some operations on range to help with OpenCL work-group scheduling
-// \todo use an element-wise template instead of copy past below for / and *
-
-// An element-wise division of ranges, with upper rounding
-template <std::size_t Dimensions>
-RangeImpl<Dimensions> operator /(RangeImpl<Dimensions> dividend,
-                                 RangeImpl<Dimensions> divisor) {
-  RangeImpl<Dimensions> result;
-
-  for (int i = 0; i < Dimensions; i++)
-    result[i] = (dividend[i] + divisor[i] - 1)/divisor[i];
-
-  return result;
-}
-
-
-// An element-wise multiplication of ranges
-template <std::size_t Dimensions>
-RangeImpl<Dimensions> operator *(RangeImpl<Dimensions> a,
-                                 RangeImpl<Dimensions> b) {
-  RangeImpl<Dimensions> result;
-
-  for (int i = 0; i < Dimensions; i++)
-    result[i] = a[i] * b[i];
-
-  return result;
-}
-
-
-// An element-wise addition of ranges
-template <std::size_t Dimensions>
-RangeImpl<Dimensions> operator +(RangeImpl<Dimensions> a,
-                                 RangeImpl<Dimensions> b) {
-  RangeImpl<Dimensions> result;
-
-  for (int i = 0; i < Dimensions; i++)
-    result[i] = a[i] + b[i];
-
-  return result;
-}
 
 
 /** Define a multi-dimensional index, used for example to locate a work
-    item
+    item or a buffer element
 
-    Just rely on the range implementation
+    Unfortunately, even if std::array is an aggregate class allowing
+    native list initialization, it is no longer an aggregate if we derive
+    from an aggregate. Thus we have to redeclare the constructors.
+
+    \param BasicType is the type element, such as int
+
+    \param Dims is the dimension number, typically between 1 and 3
+
+    \param FinalType is the final type, such as range<> or id<>, so that
+    boost::operator can return the right type
+
+    std::array<> provides the collection concept.
 */
-template <std::size_t N = 1U>
-struct IdImpl: RangeImpl<N> {
-  using RangeImpl<N>::RangeImpl;
+template <typename BasicType, typename FinalType, std::size_t Dims>
+struct SmallArray : std::array<BasicType, Dims>,
+    // To have all the usual arithmetic operations on this type
+  boost::euclidean_ring_operators<FinalType>,
+    // Add a display() method
+    DisplayVector<FinalType> {
 
-  /* Since the copy constructor is called with RangeImpl<N>, declare this
-     constructor to forward it */
-  IdImpl(const RangeImpl<N> &init) : RangeImpl<N>(init) {}
-
-  // Add back the default constructors canceled by the previous declaration
-  IdImpl() = default;
-
-};
+  /// \todo add this Boost::multi_array or STL concept to the
+  /// specification?
+  static const auto dimensionality = Dims;
 
 
-/** The implementation of a ND-range, made by a global and local range, to
-    specify work-group and work-item organization.
+  /** Add a constructor from an other array
 
-    The local offset is used to translate the iteration space origin if
-    needed.
-*/
-template <std::size_t dims = 1U>
-struct NDRangeImpl {
-  static_assert(1 <= dims && dims <= 3,
-                "Dimensions are between 1 and 3");
-
-  static const auto dimensionality = dims;
-
-  RangeImpl<dimensionality> GlobalRange;
-  RangeImpl<dimensionality> LocalRange;
-  IdImpl<dimensionality> Offset;
-
-  NDRangeImpl(RangeImpl<dimensionality> global_size,
-              RangeImpl<dimensionality> local_size,
-              IdImpl<dimensionality> offset) :
-    GlobalRange(global_size),
-    LocalRange(local_size),
-    Offset(offset) {}
-
-  // Return a reference to the implementation itself
-  NDRangeImpl &getImpl() { return *this; };
-
-
-  // Return a const reference to the implementation itself
-  const NDRangeImpl &getImpl() const { return *this; };
-
-
-  RangeImpl<dimensionality> get_global_range() { return GlobalRange; }
-
-  RangeImpl<dimensionality> get_local_range() { return LocalRange; }
-
-  /// Get the range of work-groups needed to run this ND-range
-  RangeImpl<dimensionality> get_group_range() { return GlobalRange/LocalRange; }
-
-  /// \todo get_offset() is lacking in the specification
-  IdImpl<dimensionality> get_offset() { return Offset; }
-
-};
-
-
-/** The implementation of a SYCL item stores information on a work-item
-    within a work-group, with some more context such as the definition
-    ranges.
- */
-template <std::size_t dims = 1U>
-struct ItemImpl {
-  static_assert(1 <= dims && dims <= 3,
-                "Dimensions are between 1 and 3");
-
-  static const auto dimensionality = dims;
-
-  IdImpl<dims> GlobalIndex;
-  IdImpl<dims> LocalIndex;
-  NDRangeImpl<dims> NDRange;
-
-  ItemImpl(RangeImpl<dims> global_size, RangeImpl<dims> local_size) :
-    NDRange(global_size, local_size) {}
-
-  /// \todo a constructor from a nd_range too in the specification?
-  ItemImpl(NDRangeImpl<dims> ndr) : NDRange(ndr) {}
-
-  auto get_global(int dimension) { return GlobalIndex[dimension]; }
-
-  auto get_local(int dimension) { return LocalIndex[dimension]; }
-
-  auto get_global() { return GlobalIndex; }
-
-  auto get_local() { return LocalIndex; }
-
-  // For the implementation, need to set the local index
-  void set_local(IdImpl<dims> Index) { LocalIndex = Index; }
-
-  // For the implementation, need to set the global index
-  void set_global(IdImpl<dims> Index) { GlobalIndex = Index; }
-
-  auto get_local_range() { return NDRange.get_local_range(); }
-
-  auto get_global_range() { return NDRange.get_global_range(); }
-
-  /// \todo Add to the specification: get_nd_range() and what about the offset?
-};
-
-
-/** The implementation of a SYCL group index to specify a work_group in a
-    parallel_for_workitem
-*/
-template <std::size_t N = 1U>
-struct GroupImpl {
-  /// Keep a reference on the nd_range to serve potential query on it
-  const NDRangeImpl<N> &NDR;
-  /// The coordinate of the group item
-  IdImpl<N> Id;
-
-  GroupImpl(const GroupImpl &g) : NDR(g.NDR), Id(g.Id) {}
-
-  GroupImpl(const NDRangeImpl<N> &ndr) : NDR(ndr) {}
-
-  GroupImpl(const NDRangeImpl<N> &ndr, const IdImpl<N> &i) :
-    NDR(ndr), Id(i) {}
-
-  /// Return a reference to the implementation itself
-  GroupImpl &getImpl() { return *this; };
-
-  /// Return a const reference to the implementation itself
-  const GroupImpl &getImpl() const { return *this; };
-
-  /// Return the id of this work-group
-  IdImpl<N> get_group_id() { return Id; }
-
-  /// Return the local range associated to this work-group
-  RangeImpl<N> get_local_range() { return NDR.LocalRange; }
-
-  /// Return the global range associated to this work-group
-  RangeImpl<N> get_global_range() { return NDR.GlobalRange; }
-
-  /** Return the group coordinate in the given dimension
-
-      \todo add it to the specification?
-
-      \todo is it supposed to be an int? A cl_int? a size_t?
+      Make it explicit to avoid spurious range<> constructions from int *
+      for example
   */
-  auto &operator[](int index) {
-    return Id[index];
+  template <typename SourceType>
+  explicit SmallArray(const SourceType src[Dims]) {
+    // (*this)[0] is the first element of the underlying array
+    std::copy_n(src, Dims, &(*this)[0]);
   }
 
+
+  /// Add a constructor from an other SmallArray of the same size
+  template <typename SourceBasicType, typename SourceFinalType>
+  SmallArray(const SmallArray<SourceBasicType, SourceFinalType, Dims> &src) {
+    std::copy_n(&src[0], Dims, &(*this)[0]);
+  }
+
+
+  /// Keep other constructors
+  using std::array<BasicType, Dims>::array;
+
+  SmallArray() = default;
+
+  /// Return the element of the array
+  auto get(std::size_t index) {
+    return (*this)[index];
+  }
+
+  /* Implement minimal methods boost::euclidean_ring_operators needs to
+     generate everything */
+  /// Add + like operations on the id<>
+  TRISYCL_BOOST_OPERATOR_VECTOR_OP(+=)
+
+  /// Add - like operations on the id<>
+  TRISYCL_BOOST_OPERATOR_VECTOR_OP(-=)
+
+  /// Add * like operations on the id<>
+  TRISYCL_BOOST_OPERATOR_VECTOR_OP(*=)
+
+  /// Add / like operations on the id<>
+  TRISYCL_BOOST_OPERATOR_VECTOR_OP(/=)
+
+  /// Add % like operations on the id<>
+  TRISYCL_BOOST_OPERATOR_VECTOR_OP(%=)
+
+  /** Since the boost::operator work on the Small array, add an implicit
+      conversion to produce the expected type */
+  operator FinalType () {
+    return *static_cast<FinalType *>(this);
+  }
+
+};
+
+
+/** A small array of 1, 2 or 3 elements with the implicit constructors */
+template <typename BasicType, typename FinalType, std::size_t Dims>
+struct SmallArray123 : SmallArray<BasicType, FinalType, Dims> {
+  static_assert(1 <= Dims && Dims <= 3,
+                "Dimensions are between 1 and 3");
+};
+
+
+/** Use some specializations so that some function overloads can be
+    determined according to some implicit constructors and to have an
+    implicit conversion from/to BasicType (such as an int typically) if
+    dims = 1
+*/
+template <typename BasicType, typename FinalType>
+struct SmallArray123<BasicType, FinalType, 1>
+  : public SmallArray<BasicType, FinalType, 1> {
+  /// A 1-D constructor to have implicit conversion from from 1 integer
+  /// and automatic inference of the dimensionality
+  SmallArray123(BasicType x) {
+    (*this)[0] = x;
+  }
+
+
+  /// Keep other constructors
+  SmallArray123() = default;
+
+  using SmallArray<BasicType, FinalType, 1>::SmallArray;
+
+  /** Conversion so that an id<1> can basically be used like an integer */
+  operator BasicType() {
+    return (*this)[0];
+  }
+};
+
+
+template <typename BasicType, typename FinalType>
+struct SmallArray123<BasicType, FinalType, 2>
+  : public SmallArray<BasicType, FinalType, 2> {
+  /// A 2-D constructor to have implicit conversion from from 2 integers
+  /// and automatic inference of the dimensionality
+  SmallArray123(BasicType x, BasicType y) {
+    (*this)[0] = x;
+    (*this)[1] = y;
+  }
+
+
+  /// Keep other constructors
+  SmallArray123() = default;
+
+  using SmallArray<BasicType, FinalType, 2>::SmallArray;
+};
+
+
+template <typename BasicType, typename FinalType>
+struct SmallArray123<BasicType, FinalType, 3>
+  : public SmallArray<BasicType, FinalType, 3> {
+  /// A 3-D constructor to have implicit conversion from from 3 integers
+  /// and automatic inference of the dimensionality
+  SmallArray123(BasicType x, BasicType y, BasicType z) {
+    (*this)[0] = x;
+    (*this)[1] = y;
+    (*this)[2] = z;
+  }
+
+
+  /// Keep other constructors
+  SmallArray123() = default;
+
+  using SmallArray<BasicType, FinalType, 3>::SmallArray;
 };
 
 /// @} End the parallelism Doxygen group
@@ -344,12 +254,12 @@ struct AccessorImpl {
   }
 
   /// This is when we access to AccessorImpl[] that we override the const if any
-  auto &operator[](IdImpl<dimensionality> Index) const {
+  auto &operator[](id<dimensionality> Index) const {
     return (const_cast<WritableArrayViewType &>(Array))(Index);
   }
 
   /// \todo Add in the specification because use by HPC-GPU slide 22
-  auto &operator[](ItemImpl<dimensionality> Index) const {
+  auto &operator[](item<dimensionality> Index) const {
     return (const_cast<WritableArrayViewType &>(Array))(Index.get_global());
   }
 };
@@ -363,7 +273,7 @@ struct AccessorImpl {
     any storage.
 */
 template <typename T,
-          std::size_t dimensions = 1U>
+          std::size_t dimensions = 1>
 struct BufferImpl {
   using Implementation = boost::multi_array_ref<T, dimensions>;
   // Extension to SYCL: provide pieces of STL container interface
@@ -379,20 +289,20 @@ struct BufferImpl {
 
 
   /// Create a new BufferImpl of size \param r
-  BufferImpl(RangeImpl<dimensions> const &r) : Allocation(r),
+  BufferImpl(range<dimensions> const &r) : Allocation(r),
                                                Access(Allocation),
                                                ReadOnly(false) {}
 
 
   /** Create a new BufferImpl from \param host_data of size \param r without
       further allocation */
-  BufferImpl(T * host_data, RangeImpl<dimensions> r) : Access(host_data, r),
+  BufferImpl(T * host_data, range<dimensions> r) : Access(host_data, r),
                                                        ReadOnly(false) {}
 
 
   /** Create a new read only BufferImpl from \param host_data of size \param r
       without further allocation */
-  BufferImpl(const T * host_data, RangeImpl<dimensions> r) :
+  BufferImpl(const T * host_data, range<dimensions> r) :
     Access(host_data, r),
     ReadOnly(true) {}
 
