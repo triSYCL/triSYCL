@@ -76,7 +76,8 @@ int main() {
 
   // Try some conversions
   char array[3] = { 1, 2, 3 };
-  range<3> r_array = array;
+  // Use some explicit conversion
+  range<3> r_array { array };
   r_array.display();
   // Conversion from an id<>
   r_array = id<3>(2,5,6);
