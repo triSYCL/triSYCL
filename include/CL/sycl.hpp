@@ -1086,7 +1086,8 @@ void single_task(std::function<void(void)> F) { F(); }
     \param f is the kernel functor to execute
 
     Unfortunately, to have implicit conversion to work on the range, the
-    range can not be templated, so instantiate it for all the dimensions
+    function can not be templated, so instantiate it for all the
+    dimensions
 */
 #define TRISYCL_ParallelForFunctor_GLOBAL(N)                          \
   template <typename ParallelForFunctor>                              \
@@ -1102,7 +1103,7 @@ TRISYCL_ParallelForFunctor_GLOBAL(3)
 
 /** A variation of SYCL parallel_for to take into account a nd_range<>
  */
-template <std::size_t Dimensions = 1, typename ParallelForFunctor>
+template <std::size_t Dimensions, typename ParallelForFunctor>
 void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {
   ParallelForImpl(r, f);
 }
@@ -1120,7 +1121,8 @@ void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {
     \param f is the kernel functor to execute
 
     Unfortunately, to have implicit conversion to work on the range, the
-    range can not be templated, so instantiate it for all the dimensions
+    function can not be templated, so instantiate it for all the
+    dimensions
 */
 #define TRISYCL_ParallelForFunctor_GLOBAL_LOCAL(N)          \
 template <typename ParallelForFunctor>                      \
