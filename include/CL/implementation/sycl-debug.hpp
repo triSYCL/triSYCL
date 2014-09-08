@@ -58,10 +58,10 @@ struct Debug {
 template <typename T>
 struct DisplayVector {
   /// To debug and test
-  void display() {
+  void display() const {
     std::cout << typeid(T).name() << ":";
     // Get a pointer to the real object
-    for (auto e : *static_cast<T *>(this))
+    for (auto e : *static_cast<const T *>(this))
       std::cout << " " << e;
     std::cout << std::endl;
   }
