@@ -290,14 +290,14 @@ struct BufferImpl {
 
   /// Create a new BufferImpl of size \param r
   BufferImpl(range<dimensions> const &r) : Allocation(r),
-                                               Access(Allocation),
-                                               ReadOnly(false) {}
+                                           Access(Allocation),
+                                           ReadOnly(false) {}
 
 
   /** Create a new BufferImpl from \param host_data of size \param r without
       further allocation */
   BufferImpl(T * host_data, range<dimensions> r) : Access(host_data, r),
-                                                       ReadOnly(false) {}
+                                                   ReadOnly(false) {}
 
 
   /** Create a new read only BufferImpl from \param host_data of size \param r
@@ -318,6 +318,19 @@ struct BufferImpl {
     /* Then assign Allocation since this is the only multi_array
        method with this iterator interface */
     Allocation.assign(start_iterator, end_iterator);
+  }
+
+
+  /// Get the range<> of the buffer
+  auto get_range() {
+    /* Interpret the shape which is a pointer to the first element as an
+       array of dimensions elements so that the range<dimensions>
+       constructor is happy with this collection
+
+       \todo Add also a constructor in range<> to accept a const
+       std::size_t *?
+     */
+    return range<dimensions> { *(const std::size_t (*)[dimensions])(Allocation.shape()) };
   }
 
 
