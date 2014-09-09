@@ -282,26 +282,26 @@ public:
 
 
   /// Get the global iteration space range
-  range<dims> get_global_range() { return GlobalRange; }
+  range<dims> get_global_range() const { return GlobalRange; }
 
 
   /// Get the local part of the iteration space range
-  range<dims> get_local_range() { return LocalRange; }
+  range<dims> get_local_range() const { return LocalRange; }
 
 
   /// Get the range of work-groups needed to run this ND-range
-  auto get_group_range() {
+  auto get_group_range() const {
     // \todo Assume that GlobalRange is a multiple of LocalRange, element-wise
     return GlobalRange/LocalRange;
   }
 
 
   /// \todo get_offset() is lacking in the specification
-  id<dims> get_offset() { return Offset; }
+  id<dims> get_offset() const { return Offset; }
 
 
   /// Display the value for debugging and validation purpose
-  void display() {
+  void display() const {
     GlobalRange.display();
     LocalRange.display();
     Offset.display();
