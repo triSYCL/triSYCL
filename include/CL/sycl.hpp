@@ -224,6 +224,7 @@ auto make_range(BasicType... Args) {
   return range<sizeof...(Args)>(Args...);
 }
 
+
 /** Define a multi-dimensional index, used for example to locate a work item
 
     \todo The definition of id and item seem completely broken in the
@@ -320,12 +321,67 @@ public:
 };
 
 
+/** A SYCL item stores information on a work-item with some more context
+    such as the definition range and offset.
+*/
+template <std::size_t dims = 1>
+struct item {
+  /// \todo add this Boost::multi_array or STL concept to the
+  /// specification?
+  static const auto dimensionality = dims;
+
+private:
+
+  id<dims> GlobalIndex;
+  id<dims> Offset;
+  range<dims> Range;
+
+public:
+
+  /** Create an item from a local size and an optional offset
+
+      \todo what is the meaning of this constructor for a programmer?
+  */
+  item(range<dims> global_size, id<dims> offset = id<dims>()) :
+    Offset { offset }, Range { global_size } {}
+
+  /** To be able to copy and assign item, use default constructors also
+
+      \todo Make most of them protected, reserved to implementation
+  */
+  item() = default;
+
+  /// Get the whole global id coordinate
+  id<dims> get_global_id() const { return GlobalIndex; }
+
+
+  /// Return the global coordinate in the given dimension
+  size_t get(int dimension) const { return GlobalIndex[dimension]; }
+
+
+  /// Return an l-value of the global coordinate in the given dimension
+  auto &operator[](int dimension) { return GlobalIndex[dimension]; }
+
+
+  /// Get the global range where this item dwells in
+  range<dims> get_global_range() const { return Range; }
+
+
+  /// Get the offset associated with the item context
+  id<dims> get_offset() const { return Offset; }
+
+
+  /** For the implementation, need to set the global index
+
+      \todo Move to private and add friends
+  */
+  void set_global(id<dims> Index) { GlobalIndex = Index; }
+
+};
+
+
 /** A SYCL nd_item stores information on a work-item within a work-group,
     with some more context such as the definition ranges.
-
-    \todo Add to the specification: get_nd_range() to be coherent with
-    providing get_local...() and get_global...() and what about the
-    offset?
 */
 template <std::size_t dims = 1>
 struct nd_item {
@@ -383,7 +439,7 @@ public:
   }
 
 
-  /// Get the global range where this nd_item rely in
+  /// Get the global range where this nd_item dwells in
   range<dims> get_global_range() const { return NDRange.get_global_range(); }
 
 
@@ -391,7 +447,7 @@ public:
   range<dims> get_local_range() const { return NDRange.get_local_range(); }
 
 
-  /// \todo Why the offset is not available here?
+  /// Get the offset of the NDRange
   id<dims> get_offset() const { return NDRange.get_offset(); }
 
 
@@ -458,23 +514,16 @@ public:
   id<dims> get_group_id() const { return Id; }
 
 
-  /** Get the local range for this work_group
-
-      \todo Update the specification to return a range<dims> instead of an
-      id<>
-  */
-  range<dims> get_local_range() { return NDR.get_local_range(); }
+  /// Get the local range for this work_group
+  range<dims> get_local_range() const { return NDR.get_local_range(); }
 
 
-  /** Get the local range for this work_group
-
-      \todo Update the specification to return a range<dims> instead of an
-      id<>
-  */
-  range<dims> get_global_range() { return NDR.get_global_range(); }
+  /// Get the local range for this work_group
+  range<dims> get_global_range() const { return NDR.get_global_range(); }
 
 
-  /// \todo Why the offset is not available here?
+  /// Get the offset of the NDRange
+  id<dims> get_offset() const { return NDR.get_offset(); }
 
 
   /// \todo Also provide this access to the current nd_range
@@ -483,18 +532,18 @@ public:
 
   /** Return the group coordinate in the given dimension
 
-      \todo add it to the specification?
-
-      \todo is it supposed to be an int? A cl_int? a size_t?
-  */
-  auto &operator[](int index) {
-    return Id[index];
+      \todo In this implementation it is not const because the group<> is
+      written in the parallel_for iterators. To fix according to the
+      specification
+   */
+  auto &operator[](int dimension) {
+    return Id[dimension];
   }
 
 
   /// Return the group coordinate in the given dimension
-  auto get(int index) {
-    return (*this)[index];
+  std::size_t get(int dimension) const {
+    return Id[dimension];
   }
 
 };
@@ -826,6 +875,15 @@ TRISYCL_IMPL(: AccessorImpl<dataType, dimensions, mode, target>) {
   */
   dataType &operator[](id<dimensionality> Index) const {
     return Impl::operator[](Index);
+  }
+
+
+  /** Get the element specified by the given item
+
+      \todo add it to the specification
+  */
+  dataType &operator[](item<dimensionality> Index) const {
+    return Impl::operator[](Index.get_global_id());
   }
 
 
