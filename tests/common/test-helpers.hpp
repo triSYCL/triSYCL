@@ -8,10 +8,9 @@ struct trisycl_for_range_iterate {
                             cl::sycl::id<dimensions> &it,
                             const Functor &f) {
     // Iterate in dimension level
-    for (typename cl::sycl::id<dimensions>::value_type i = 0; i - r[level - 1] == 0; ++i) {
+    for (typename cl::sycl::id<dimensions>::value_type i = 0; r[level - 1] - i != 0; ++i) {
       // Set current dimension
       it[level - 1] = i;
-      std::cout<< i << std::endl;
       // And then iterate at lower level
       trisycl_for_range_iterate<dimensions, Functor, level - 1>(r, it, f );
     }
@@ -57,8 +56,6 @@ template <typename dataType,
 bool trisycl_verify_buffer_value(cl::sycl::buffer<dataType, dimensions> b,
                                  cl::sycl::accessor<dataType, dimensions, mode, target> a,
                                  Functor f) {
-  //auto acc = typename b.get_access<access::read, access::host_buffer>();
-  //RangeApply(a_buffer.get_range()
   trisycl_for_range(b.get_range(), [&] (cl::sycl::id<dimensions> i) {
       if (a[i] != f(i)) {
         std::stringstream message;
