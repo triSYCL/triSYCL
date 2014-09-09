@@ -332,9 +332,10 @@ struct item {
 
 private:
 
+  range<dims> Range;
   id<dims> GlobalIndex;
   id<dims> Offset;
-  range<dims> Range;
+
 
 public:
 
@@ -342,8 +343,11 @@ public:
 
       \todo what is the meaning of this constructor for a programmer?
   */
-  item(range<dims> global_size, id<dims> offset = id<dims>()) :
-    Offset { offset }, Range { global_size } {}
+  item(range<dims> global_size,
+       id<dims> global_index,
+       id<dims> offset = id<dims>()) :
+    Range { global_size }, GlobalIndex { global_index }, Offset { offset } {}
+
 
   /** To be able to copy and assign item, use default constructors also
 
@@ -376,6 +380,14 @@ public:
       \todo Move to private and add friends
   */
   void set_global(id<dims> Index) { GlobalIndex = Index; }
+
+
+  /// Display the value for debugging and validation purpose
+  void display() const {
+    Range.display();
+    GlobalIndex.display();
+    Offset.display();
+  }
 
 };
 
@@ -1177,7 +1189,7 @@ void single_task(std::function<void(void)> F) { F(); }
 /** SYCL parallel_for launches a data parallel computation with parallelism
     specified at launch time by a range<>
 
-    \param global_size is the full size of the nd_range<>
+    \param global_size is the full size of the range<>
 
     \param f is the kernel functor to execute
 
@@ -1190,7 +1202,7 @@ void single_task(std::function<void(void)> F) { F(); }
   void parallel_for(range<N> global_size,                             \
                     ParallelForFunctor f) {                           \
     ParallelForImpl(global_size, f);                                  \
-}
+  }
 TRISYCL_ParallelForFunctor_GLOBAL(1)
 TRISYCL_ParallelForFunctor_GLOBAL(2)
 TRISYCL_ParallelForFunctor_GLOBAL(3)
@@ -1207,12 +1219,11 @@ void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {
 
 #ifndef TRISYCL_HIDE_IMPLEMENTATION
 /** SYCL parallel_for launches a data parallel computation with
-    parallelism specified at launch time by 2 range<> to specify a
-    nd_range<>
+    parallelism specified at launch time by 1 range<> and an offset
 
-    \param global_size is the full size of the nd_range<>
+    \param global_size is the global size of the range<>
 
-    \param local_size is the local size of the nd_range<>
+    \param offset is the offset to be add to the id<> during iteration
 
     \param f is the kernel functor to execute
 
@@ -1220,16 +1231,16 @@ void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {
     function can not be templated, so instantiate it for all the
     dimensions
 */
-#define TRISYCL_ParallelForFunctor_GLOBAL_LOCAL(N)          \
-template <typename ParallelForFunctor>                      \
-void parallel_for(range<N> global_size,                     \
-                  range<N> local_size,                      \
-                  ParallelForFunctor f) {                   \
-  parallel_for(nd_range<N> { global_size, local_size }, f); \
-}
-TRISYCL_ParallelForFunctor_GLOBAL_LOCAL(1)
-TRISYCL_ParallelForFunctor_GLOBAL_LOCAL(2)
-TRISYCL_ParallelForFunctor_GLOBAL_LOCAL(3)
+#define TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(N)                   \
+  template <typename ParallelForFunctor>                              \
+  void parallel_for(range<N> global_size,                             \
+                    id<N> offset,                                     \
+                    ParallelForFunctor f) {                           \
+    ParallelForGlobalOffset(global_size, offset, f);  \
+  }
+TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(1)
+TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(2)
+TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(3)
 #endif
 
 

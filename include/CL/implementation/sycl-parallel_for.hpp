@@ -85,10 +85,6 @@ struct ParallelForIterate<0, Range, ParallelForFunctor, Id> {
     specified at launch time by a range<>.
 
     This implementation use OpenMP 3 if compiled with the right flag.
-
-    \todo It is not clear if the ParallelForFunctor is called with an id<>
-    or with an item. Let's use id<> when called with a range<> and item<>
-    when called with a nd_range<>
 */
 template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void ParallelForImpl(range<Dimensions> r,
@@ -107,6 +103,24 @@ void ParallelForImpl(range<Dimensions> r,
                      ParallelForFunctor,
                      id<Dimensions>> { r, f, index };
 #endif
+}
+
+
+/** Implementation of parallel_for with a range<> and an offset */
+template <std::size_t Dimensions = 1, typename ParallelForFunctor>
+void ParallelForGlobalOffset(range<Dimensions> global_size,
+                             id<Dimensions> offset,
+                             ParallelForFunctor f) {
+  // Reconstruct the item from its id<> and its offset
+  auto reconstructItem = [&] (id<Dimensions> L) {
+    // Reconstruct the global item
+    item<Dimensions> Index { global_size, L + offset, offset };
+    // Call the user kernel with the item<> instead of the id<>
+    f(Index);
+  };
+
+  // First iterate on all the work-groups
+  ParallelForImpl(global_size, reconstructItem);
 }
 
 
@@ -132,10 +146,10 @@ void ParallelForImpl(nd_range<Dimensions> r,
 
   range<Dimensions> LocalRange = r.get_local_range();
 
-  // Reconstruct the item from its group and local id
+  // Reconstruct the nd_item from its group and local id
   auto reconstructItem = [&] (id<Dimensions> L) {
     //Local.display();
-    // Reconstruct the global item
+    // Reconstruct the global nd_item
     Index.set_local(Local);
     // Upgrade LocalRange to an id<> so that we can * with the Group (an id<>)
     Index.set_global(Local + id<Dimensions>(LocalRange)*Group);
@@ -190,11 +204,11 @@ void ParallelForWorkitem(group<Dimensions> g,
   // To iterate on the local work-item
   id<Dimensions> Local;
 
-  // Reconstruct the item from its group and local id
+  // Reconstruct the nd_item from its group and local id
   auto reconstructItem = [&] (id<Dimensions> L) {
     //Local.display();
     //L.display();
-    // Reconstruct the global item
+    // Reconstruct the global nd_item
     Index.set_local(Local);
     // \todo Some strength reduction here
     Index.set_global(Local + id<Dimensions>(g.get_local_range())*g.get_group_id());
