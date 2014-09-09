@@ -123,7 +123,7 @@ template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void ParallelForImpl(nd_range<Dimensions> r,
                      ParallelForFunctor f) {
   // In a sequential execution there is only one index processed at a time
-  item<Dimensions> Index { r };
+  nd_item<Dimensions> Index { r };
   // To iterate on the work-group
   id<Dimensions> Group;
   range<Dimensions> GroupRange = r.get_group_range();
@@ -186,7 +186,7 @@ template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void ParallelForWorkitem(group<Dimensions> g,
                          ParallelForFunctor f) {
   // In a sequential execution there is only one index processed at a time
-  item<Dimensions> Index { g.get_nr_range() };
+  nd_item<Dimensions> Index { g.get_nd_range() };
   // To iterate on the local work-item
   id<Dimensions> Local;
 

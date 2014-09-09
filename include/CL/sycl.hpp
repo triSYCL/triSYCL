@@ -126,6 +126,7 @@ namespace access {
     discard_read_write
   };
 
+
   /** The target enumeration describes the type of object to be accessed
      via the accessor
    */
@@ -139,6 +140,15 @@ namespace access {
     image_array,
     cl_buffer,
     cl_image
+  };
+
+
+  /** Precise the address space a barrier needs to act on
+   */
+  enum class address_space : char {
+    local,
+    global,
+    global_and_local
   };
 
 }
@@ -310,7 +320,7 @@ public:
 };
 
 
-/** A SYCL item stores information on a work-item within a work-group,
+/** A SYCL nd_item stores information on a work-item within a work-group,
     with some more context such as the definition ranges.
 
     \todo Add to the specification: get_nd_range() to be coherent with
@@ -318,7 +328,7 @@ public:
     offset?
 */
 template <std::size_t dims = 1>
-struct item {
+struct nd_item {
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
   static const auto dimensionality = dims;
@@ -331,52 +341,80 @@ private:
 
 public:
 
-  /** Create an item from a local size and local size
+  /** Create an nd_item from a local size and local size
 
       \todo what is the meaning of this constructor for a programmer?
   */
-  item(range<dims> global_size, range<dims> local_size) :
+  nd_item(range<dims> global_size, range<dims> local_size) :
     NDRange { global_size, local_size } {}
 
 
   /** \todo a constructor from a nd_range too in the specification if the
       previous one has a meaning?
    */
-  item(nd_range<dims> ndr) : NDRange { ndr } {}
-
-
-  /// Return the global coordinate in the given dimension
-  auto get_global(int dimension) { return GlobalIndex[dimension]; }
-
-
-  /// Return the local coordinate (that is in the work-group) in the given
-  /// dimension
-  auto get_local(int dimension) { return LocalIndex[dimension]; }
+  nd_item(nd_range<dims> ndr) : NDRange { ndr } {}
 
 
   /// Get the whole global id coordinate
-  id<dims> get_global() { return GlobalIndex; }
+  id<dims> get_global_id() const { return GlobalIndex; }
 
 
   /// Get the whole local id coordinate (which is respective to the
   /// work-group)
-  id<dims> get_local() { return LocalIndex; }
+  id<dims> get_local_id() const { return LocalIndex; }
 
 
-  /// Get the global range where this item rely in
-  range<dims> get_global_range() { return NDRange.get_global_range(); }
+  /// Get the whole group id coordinate
+  id<dims> get_group_id() const { return get_global_id()/get_local_range(); }
 
 
-  /// Get the local range (the dimension of the work-group) for this item
-  range<dims> get_local_range() { return NDRange.get_local_range(); }
+  /// Return the global coordinate in the given dimension
+  auto get_global_id(int dimension) const { return get_global_id()[dimension]; }
+
+
+  /// Return the local coordinate (that is in the work-group) in the given
+  /// dimension
+  auto get_local_id(int dimension) const { return get_local_id()[dimension]; }
+
+
+  /// Get the whole group id coordinate in the given dimension
+  id<dims> get_group_id(int dimension) const {
+    return get_group_id()[dimension];
+  }
+
+
+  /// Get the global range where this nd_item rely in
+  range<dims> get_global_range() const { return NDRange.get_global_range(); }
+
+
+  /// Get the local range (the dimension of the work-group) for this nd_item
+  range<dims> get_local_range() const { return NDRange.get_local_range(); }
+
 
   /// \todo Why the offset is not available here?
+  id<dims> get_offset() const { return NDRange.get_offset(); }
 
-  /// \todo Also provide access to the current nd_range?
+
+  /// Get the NDRange for this nd_item
+  nd_range<dims> get_nd_range() const { return NDRange; }
+
+
+  /** Executes a barrier with memory ordering on the local address space,
+      global address space or both based on the value of flag. The current
+      work- item will wait at the barrier until all work-items in the
+      current work-group have reached the barrier.  In addition the
+      barrier performs a fence operation ensuring that all memory accesses
+      in the specified address space issued before the barrier complete
+      before those issued after the barrier.
+
+      \todo To be implemented
+  */
+  void barrier(access::address_space flag) const {}
 
 
   // For the implementation, need to set the local index
   void set_local(id<dims> Index) { LocalIndex = Index; }
+
 
   // For the implementation, need to set the global index
   void set_global(id<dims> Index) { GlobalIndex = Index; }
@@ -440,7 +478,7 @@ public:
 
 
   /// \todo Also provide this access to the current nd_range
-  nd_range<dims> get_nr_range() const { return NDR; }
+  nd_range<dims> get_nd_range() const { return NDR; }
 
 
   /** Return the group coordinate in the given dimension
@@ -806,7 +844,7 @@ TRISYCL_IMPL(: AccessorImpl<dataType, dimensions, mode, target>) {
 
       \todo Add in the specification because used by HPC-GPU slide 22
   */
-  dataType &operator[](item<dimensionality> Index) const {
+  dataType &operator[](nd_item<dimensionality> Index) const {
     return Impl::operator[](Index);
   }
 
@@ -1283,16 +1321,6 @@ multi_ptr<T, AS> make_multi(multi_ptr<T, AS> pointer) {
 
 
 /// @} End the address_spaces Doxygen group
-
-
-/** The kernel synchronization barrier
-
-    \todo To be implemented
-*/
-void
-barrier(int barrier_type) {}
-
-int const CL_LOCAL_MEM_FENCE = 123;
 
 }
 }

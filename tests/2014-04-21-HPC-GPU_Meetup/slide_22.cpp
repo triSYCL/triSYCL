@@ -26,7 +26,7 @@ command_group(my_queue, [&]()
 	parallel_for_workgroup(nd_range<>(range<>(size), range<>(groupsize)),
                          kernel_lambda<class hierarchical>([=](group<> group)
 	{
-		parallel_for_workitem(group, [=](item<1> tile)
+		parallel_for_workitem(group, [=](nd_item<1> tile)
 		{
 			out_access[tile] = in_access[tile] * 2;
 		});

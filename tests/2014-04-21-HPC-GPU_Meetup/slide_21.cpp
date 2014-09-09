@@ -22,8 +22,8 @@ single_task(kernel_lambda<class simple_test>([=] ()
 //////// Start right side of the slide
  parallel_for(nd_range<3>(range<3>(4, 40, 4), range<3>(2, 2, 2)),
     kernel_lambda<class example_kernel>(
-        [=]  (item<3> t_item) {
-            barrier(CL_LOCAL_MEM_FENCE);
+        [=]  (nd_item<3> t_item) {
+          t_item.barrier(access::address_space::local);
         }));
 //////// End right side of the slide
     });
