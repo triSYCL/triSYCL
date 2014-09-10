@@ -32,6 +32,51 @@ int main() {
                        }));
       }};
     VERIFY_BUFFER_VALUE(b, [](id<2> i) { return 10*i[1] + i[0]; });
+
+#if 0
+    command_group { myQueue, [&] () {
+        auto acc = b.get_access<access::write>();
+        parallel_for({ N }, { 3 },
+                     kernel_lambda<class nothing>([=] (item<1> index) {
+                         acc[index] = 2*index.get_global()[1]
+                           + index.get_global()[0];
+                       }));
+      }};
+    VERIFY_BUFFER_VALUE(b, [](id<2> i) { return 2*i[1] + i[0]; });
+
+    command_group { myQueue, [&] () {
+        auto acc = b.get_access<access::write>();
+        parallel_for( N, { 3 },
+                     kernel_lambda<class nothing>([=] (item<1> index) {
+                         std::cout << index.get_global()[0] << std::endl;
+                       }));
+      }};
+    VERIFY_BUFFER_VALUE(b, [](id<2> i) { return 2*i[1] + i[0]; });
+
+    command_group { myQueue, [&] () {
+        auto acc = b.get_access<access::write>();
+        parallel_for({ N }, 3,
+                     kernel_lambda<class nothing>([=] (item<1> index) {
+                         std::cout << index.get_global(0) << std::endl;
+                       }));
+      }};
+
+    command_group { myQueue, [&] () {
+        auto acc = b.get_access<access::write>();
+        parallel_for( N, 3,
+                     kernel_lambda<class nothing>([=] (item<1> index) {
+                         std::cout << index.get_global(0) << std::endl;
+                       }));
+      }};
+
+    command_group { myQueue, [&] () {
+        auto acc = b.get_access<access::write>();
+        parallel_for(range<>(N), { 2 },
+                     kernel_lambda<class nothing>([=] (item<1> index) {
+                         std::cout << index.get_global(0) << std::endl;
+                       }));
+      }};
+#endif
   }
   return 0;
 }

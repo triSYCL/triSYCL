@@ -86,3 +86,18 @@ bool trisycl_verify_buffer_value(cl::sycl::buffer<dataType, dimensions> b,
       exit(1);                                                          \
     }                                                                   \
   } while (0)
+
+
+/** Write a value, read it back and verify it is the same */
+#define VERIFY_READ_WRITE_VALUE(location, value)                        \
+  do {                                                                  \
+    /* Write the value at location */                                   \
+    location = value;                                                   \
+    /* Verify we can read the same value */                             \
+    if (location != value) {                                            \
+      std::cout << "In file " __FILE__ " line " << __LINE__ << ": "     \
+                << "Read " << location << " instead of "                \
+                << value << std::endl;                                  \
+      exit(1);                                                          \
+    }                                                                   \
+  } while (0)
