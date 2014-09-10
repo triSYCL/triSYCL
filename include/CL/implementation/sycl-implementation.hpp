@@ -260,30 +260,46 @@ struct AccessorImpl {
   }
 
 
-  /// This is when we access to AccessorImpl[] that we override the const if any
-  auto &operator[](id<dimensionality> Index) const {
-    return (const_cast<WritableArrayViewType &>(Array))(Index);
-  }
-
-
-  /// This is when we access to AccessorImpl[] that we override the const if any
+  /// To use the accessor in with [id<>]
   auto &operator[](id<dimensionality> Index) {
     return (const_cast<WritableArrayViewType &>(Array))(Index);
   }
 
 
-  /// To use an accessor with an item<>
+  /** To use the accessor in with [id<>]
+
+      This is when we access to AccessorImpl[] that we override the const
+      if any
+  */
+  auto &operator[](id<dimensionality> Index) const {
+    return (const_cast<WritableArrayViewType &>(Array))(Index);
+  }
+
+
+  /// To use an accessor with [item<>]
   auto &operator[](item<dimensionality> Index) {
     return (*this)[Index.get_global_id()];
   }
 
 
-  /// \todo Add in the specification because use by HPC-GPU slide 22
+  /// To use an accessor with [item<>]
+  auto &operator[](item<dimensionality> Index) const {
+    return (*this)[Index.get_global_id()];
+  }
+
+
+  /** To use an accessor with an [nd_item<>]
+
+      \todo Add in the specification because use by HPC-GPU slide 22
+  */
   auto &operator[](nd_item<dimensionality> Index) {
     return (*this)[Index.get_global_id()];
   }
 
-  /// \todo Add in the specification because use by HPC-GPU slide 22
+  /** To use an accessor with an [nd_item<>]
+
+      \todo Add in the specification because use by HPC-GPU slide 22
+  */
   auto &operator[](nd_item<dimensionality> Index) const {
     return (*this)[Index.get_global_id()];
   }
