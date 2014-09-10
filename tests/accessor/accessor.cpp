@@ -33,13 +33,7 @@ int main() {
     VERIFY_READ_WRITE_VALUE(A[item<1> (N, 10, 2)], 5);
     VERIFY_READ_WRITE_VALUE(A[nd_item<1> (7, 2, nd_range<1>{ N, 3 })], 15);
 
-#if 0
-    // Bugs
-    B[3][8] = A[3];
-    A[3]= B[3][2];
-
     VERIFY_READ_WRITE_VALUE((B[3][8]), 17);
-#endif
     VERIFY_READ_WRITE_VALUE(B[id<2> (8, 7)], 87);
     VERIFY_READ_WRITE_VALUE(B[item<2> ({ N, M }, { 2, 3 })], 175);
     VERIFY_READ_WRITE_VALUE(B[item<2> ({ N, M }, { 12, 13 }, { 0, 0 })], 527);

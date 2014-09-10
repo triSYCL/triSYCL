@@ -250,21 +250,15 @@ struct AccessorImpl {
     Array(targetBuffer.Access) {}
 
 
-  /// This is when we access to AccessorImpl[] that we override the const if any
-  auto & operator[](std::size_t Index) {
+  /** Use the accessor in with integers à la [][][]
+
+      Use ArrayViewType::reference instead of auto& because it does not
+      work in some dimensions.
+   */
+  typename ArrayViewType::reference operator[](std::size_t Index) {
     return Array[Index];
   }
 
-
-  /// This is when we access to AccessorImpl[] that we override the const if any
-  /*  auto operator[](std::size_t Index) const {
-    return Array[Index];
-  }
-
-  auto operator[](std::size_t Index)  {
-    return (const_cast<WritableArrayViewType &>(Array))[Index];
-  }
-  */
 
   /// This is when we access to AccessorImpl[] that we override the const if any
   auto &operator[](id<dimensionality> Index) const {
