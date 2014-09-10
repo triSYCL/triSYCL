@@ -6,8 +6,8 @@
 using namespace cl::sycl;
 
 // Size of the matrices
-constexpr size_t N = 2000;
-constexpr size_t M = 3000;
+const size_t N = 2000;
+const size_t M = 3000;
 
 int main() {
   { // By sticking all the SYCL work in a {} block, we ensure
@@ -64,8 +64,8 @@ int main() {
                        }));
       });
 
-    /* Ask an access to read c from the host-side.
-       This will block until c is computed */
+    /* Ask an access to read c from the host-side. The SYCL runtime
+       ensures that c is ready when the accessor is returned */
     auto C = c.get_access<access::read, access::host_buffer>();
     std::cout << std::endl << "Result:" << std::endl;
     for(size_t i = 0; i < N; i++)
