@@ -423,6 +423,17 @@ public:
   nd_item(nd_range<dims> ndr) : NDRange { ndr } {}
 
 
+  /** Create a full nd_item
+
+      \todo this is for validation purpose. Hide this to the programmer
+      somehow
+  */
+  nd_item(id<dims> global_index,
+          id<dims> local_index,
+          nd_range<dims> ndr) :
+    GlobalIndex { global_index }, LocalIndex { local_index }, NDRange { ndr } {}
+
+
   /// Get the whole global id coordinate
   id<dims> get_global_id() const { return GlobalIndex; }
 
@@ -878,45 +889,6 @@ TRISYCL_IMPL(: AccessorImpl<dataType, dimensions, mode, target>) {
   // \todo fix the specification to rename target that shadows template parm
   accessor(buffer<dataType, dimensions> &targetBuffer) :
     Impl(targetBuffer) {}
-
-
-  /** Get the element specified by the given id
-
-      \todo Implement the "const dataType &" version in the case the
-      accessor is not for writing, as required by the specification
-  */
-  dataType &operator[](id<dimensionality> Index) const {
-    return Impl::operator[](Index);
-  }
-
-
-  /** Get the element specified by the given item
-
-      \todo add it to the specification
-  */
-  dataType &operator[](item<dimensionality> Index) const {
-    return Impl::operator[](Index.get_global_id());
-  }
-
-
-  /** Get the element specified by the given index in the case we are
-      mono-dimensional
-
-      \todo This is not in the specification but looks like a cool common
-      feature. Or solving it with an implicit constructor of id<1>?
-  */
-  dataType &operator[](std::size_t Index) const {
-    return Impl::operator[](Index);
-  }
-
-
-  /** Get the element specified by the given item
-
-      \todo Add in the specification because used by HPC-GPU slide 22
-  */
-  dataType &operator[](nd_item<dimensionality> Index) const {
-    return Impl::operator[](Index);
-  }
 
 };
 

@@ -249,20 +249,51 @@ struct AccessorImpl {
   AccessorImpl(BufferImpl<T, dimensions> &targetBuffer) :
     Array(targetBuffer.Access) {}
 
+
   /// This is when we access to AccessorImpl[] that we override the const if any
-  auto &operator[](std::size_t Index) const {
+  auto & operator[](std::size_t Index) {
+    return Array[Index];
+  }
+
+
+  /// This is when we access to AccessorImpl[] that we override the const if any
+  /*  auto operator[](std::size_t Index) const {
+    return Array[Index];
+  }
+
+  auto operator[](std::size_t Index)  {
     return (const_cast<WritableArrayViewType &>(Array))[Index];
   }
+  */
 
   /// This is when we access to AccessorImpl[] that we override the const if any
   auto &operator[](id<dimensionality> Index) const {
     return (const_cast<WritableArrayViewType &>(Array))(Index);
   }
 
+
+  /// This is when we access to AccessorImpl[] that we override the const if any
+  auto &operator[](id<dimensionality> Index) {
+    return (const_cast<WritableArrayViewType &>(Array))(Index);
+  }
+
+
+  /// To use an accessor with an item<>
+  auto &operator[](item<dimensionality> Index) {
+    return (*this)[Index.get_global_id()];
+  }
+
+
+  /// \todo Add in the specification because use by HPC-GPU slide 22
+  auto &operator[](nd_item<dimensionality> Index) {
+    return (*this)[Index.get_global_id()];
+  }
+
   /// \todo Add in the specification because use by HPC-GPU slide 22
   auto &operator[](nd_item<dimensionality> Index) const {
-    return (const_cast<WritableArrayViewType &>(Array))(Index.get_global_id());
+    return (*this)[Index.get_global_id()];
   }
+
 };
 
 
