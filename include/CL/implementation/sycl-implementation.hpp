@@ -159,8 +159,9 @@ struct SmallArray123<BasicType, FinalType, 1>
 
   using SmallArray<BasicType, FinalType, 1>::SmallArray;
 
-  /** Conversion so that an id<1> can basically be used like an integer */
-  operator BasicType() {
+  /** Conversion so that an for example an id<1> can basically be used
+      like an integer */
+  operator BasicType() const {
     return (*this)[0];
   }
 };

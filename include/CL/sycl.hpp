@@ -1017,7 +1017,7 @@ struct buffer TRISYCL_IMPL(: BufferImpl<T, dimensions>) {
   buffer(T * host_data, range<dimensions> r) : Impl(host_data, r) {}
 
 
-  /** Create a new read only buffer with associated host memory
+  /** Create a new read-only buffer with associated host memory
 
       \param host_data points to the storage and values used by the buffer
 
