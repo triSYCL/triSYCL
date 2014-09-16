@@ -51,8 +51,8 @@ int main() {
       auto kc = C.get_access<access::write>();
 
 
-      parallel_for(range<1> { N },
-                   kernel_lambda<class generate>([=] (id<1> index) {
+      parallel_for<class generate>(range<1> { N },
+                                   [=] (id<1> index) {
         if (index[0] == 0) {
           int i = 3;
           generic<int *> p {&i};
@@ -123,7 +123,7 @@ int main() {
           static int lut[2][6]  = { { 1, 2 }, { 3, 4, 3 } };
           
         }
-      }));
+      });
     }); // End of our commands for this queue
   } // End scope, so we wait for the queue to complete
 

@@ -16,10 +16,10 @@ int main() {
 
     command_group { myQueue, [&] () {
         auto acc = a.get_access<access::write>();
-        parallel_for(range<1> { N }, /* Offset */ id<1> { 7 },
-                     kernel_lambda<class nothing>([=] (item<1> index) {
-                         acc[index[0] - 7] = index[0];
-                       }));
+        parallel_for<class nothing>(range<1> { N }, /* Offset */ id<1> { 7 },
+                                    [=] (item<1> index) {
+                                      acc[index[0] - 7] = index[0];
+                                    });
       }};
     VERIFY_BUFFER_VALUE(a, [](id<1> i) { return i[0] + 7; });
   }

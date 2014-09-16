@@ -1133,27 +1133,19 @@ namespace sycl {
     @{
 */
 
-/** kernel_lambda specify a kernel to be launch with a single_task or
-    parallel_for
-
-    \todo This seems to have also the kernel_functor name in the
-    specification
-*/
-template <typename KernelName, typename Functor>
-Functor kernel_lambda(Functor F) {
-  return F;
-}
-
 
 /** SYCL single_task launches a computation without parallelism at launch
     time.
 
-    Right now the implementation does nothing else that forwarding the
-    execution of the given functor
+    \param F specify the kernel to be launched as a single_task
 
-    \todo remove from the SYCL specification and use a range-less
-    parallel_for version with default construction of a 1-element range?
+    \param KernelName is a class type that defines the name to be used for
+    the underlying kernel
+
+    \todo Right now the implementation does nothing else that forwarding
+    the execution of the given functor
 */
+template <typename KernelName = std::nullptr_t>
 void single_task(std::function<void(void)> F) { F(); }
 
 
@@ -1163,14 +1155,20 @@ void single_task(std::function<void(void)> F) { F(); }
 
     \param global_size is the full size of the range<>
 
+    \param N dimensionality of the iteration space
+
     \param f is the kernel functor to execute
+
+    \param KernelName is a class type that defines the name to be used for
+    the underlying kernel
 
     Unfortunately, to have implicit conversion to work on the range, the
     function can not be templated, so instantiate it for all the
     dimensions
 */
 #define TRISYCL_ParallelForFunctor_GLOBAL(N)                          \
-  template <typename ParallelForFunctor>                              \
+  template <typename KernelName = std::nullptr_t,                     \
+            typename ParallelForFunctor>                              \
   void parallel_for(range<N> global_size,                             \
                     ParallelForFunctor f) {                           \
     ParallelForImpl(global_size, f);                                  \
@@ -1182,8 +1180,22 @@ TRISYCL_ParallelForFunctor_GLOBAL(3)
 
 
 /** A variation of SYCL parallel_for to take into account a nd_range<>
- */
-template <std::size_t Dimensions, typename ParallelForFunctor>
+
+    \param r defines the iteration space with the work-group layout and
+    offset
+
+    \param Dimensions dimensionality of the iteration space
+
+    \param f is the kernel functor to execute
+
+    \param ParallelForFunctor is the kernel functor type
+
+    \param KernelName is a class type that defines the name to be used for
+    the underlying kernel
+*/
+template <typename KernelName,
+          std::size_t Dimensions,
+          typename ParallelForFunctor>
 void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {
   ParallelForImpl(r, f);
 }
@@ -1199,12 +1211,18 @@ void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {
 
     \param f is the kernel functor to execute
 
+    \param ParallelForFunctor is the kernel functor type
+
+    \param KernelName is a class type that defines the name to be used for
+    the underlying kernel
+
     Unfortunately, to have implicit conversion to work on the range, the
     function can not be templated, so instantiate it for all the
     dimensions
 */
 #define TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(N)                   \
-  template <typename ParallelForFunctor>                              \
+  template <typename KernelName = std::nullptr_t,                     \
+            typename ParallelForFunctor>                              \
   void parallel_for(range<N> global_size,                             \
                     id<N> offset,                                     \
                     ParallelForFunctor f) {                           \
@@ -1217,6 +1235,7 @@ TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(3)
 
 
 /// SYCL parallel_for version that allows a Program object to be specified
+/// \todo To be implemented
 /* template <typename Range, typename Program, typename ParallelForFunctor>
 void parallel_for(Range r, Program p, ParallelForFunctor f) {
   /// \todo deal with Program
@@ -1224,8 +1243,24 @@ void parallel_for(Range r, Program p, ParallelForFunctor f) {
 }
 */
 
-/// Loop on the work-groups
-template <std::size_t Dimensions = 1, typename ParallelForFunctor>
+
+/** Loop on the work-groups
+
+    \param r defines the iteration space with the work-group layout and
+    offset
+
+    \param Dimensions dimensionality of the iteration space
+
+    \param f is the kernel functor to execute
+
+    \param ParallelForFunctor is the kernel functor type
+
+    \param KernelName is a class type that defines the name to be used for
+    the underlying kernel
+*/
+template <typename KernelName = std::nullptr_t,
+          std::size_t Dimensions = 1,
+          typename ParallelForFunctor>
 void parallel_for_workgroup(nd_range<Dimensions> r,
                             ParallelForFunctor f) {
   ParallelForWorkgroup(r, f);

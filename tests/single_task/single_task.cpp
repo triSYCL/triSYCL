@@ -27,9 +27,9 @@ int main() {
       auto writeResult = resultBuf.get_access<access::mode::write>();
 
       // enqueue a single, simple task
-      single_task(kernel_lambda<class simple_test>([=] () {
+      single_task<class simple_test>([=] () {
         writeResult [0] = 1234;
-      }));
+      });
     }); // end of our commands for this queue
 
   } // end scope, so we wait for the queue to complete

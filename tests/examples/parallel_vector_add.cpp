@@ -37,11 +37,11 @@ int main() {
       auto kc = C.get_access<access::write>();
 
       // Enqueue a parallel kernel
-      parallel_for(range<1> { N },
-                   kernel_lambda<class vector_add>([=] (id<1> index) {
+      parallel_for<class vector_add>(range<1> { N },
+                                     [=] (id<1> index) {
             std::cout << index.get(0) << " ";
             kc[index] = ka[index] + kb[index];
-      }));
+      });
     }); // End of our commands for this queue
   } // End scope, so we wait for the queue to complete
 

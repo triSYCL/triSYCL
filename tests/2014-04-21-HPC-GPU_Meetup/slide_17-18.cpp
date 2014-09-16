@@ -23,10 +23,10 @@ int main()
       auto writeResult = resultBuf.get_access<cl::sycl::access::write>();
 
       // enqueue a single, simple task
-      cl::sycl::single_task(cl::sycl::kernel_lambda<class simple_test>([=]()
+      cl::sycl::single_task<class simple_test>([=]()
       {
         writeResult[0] = 1234;
-      }));
+      });
     }); // end of our commands for this queue
 
   } // end scope, so we wait for the queue to complete

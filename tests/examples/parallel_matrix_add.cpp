@@ -41,8 +41,8 @@ int main() {
       auto kc = C.get_access<access::write>();
 
       // Enqueue a parallel kernel
-      parallel_for(range<2> { N, M },
-                   kernel_lambda<class matrix_add>([=] (id<2> index) {
+      parallel_for<class matrix_add>(range<2> { N, M },
+                                     [=] (id<2> index) {
         // Display the work-item coordinate during "kernel" execution
         std::cout << index.get(0) << "," << index.get(1) << " "
 #ifdef _OPENMP
@@ -55,7 +55,7 @@ int main() {
           ;
         // The real work is only this
         kc[index] = ka[index] + kb[index];
-      }));
+      });
     }); // End of our commands for this queue
   } // End scope, so we wait for the queue to complete
 

@@ -23,16 +23,15 @@ command_group(my_queue, [&]()
 	auto in_access = my_buffer.get_access<access::read>();
 	auto out_access = my_buffer.get_access<access::write>();
 
-	parallel_for_workgroup(nd_range<>(range<>(size), range<>(groupsize)),
-                         kernel_lambda<class hierarchical>([=](group<> group)
-	{
-		parallel_for_workitem(group, [=](nd_item<1> tile)
-		{
-			out_access[tile] = in_access[tile] * 2;
-		});
-	}));
-});
-//////// End slide
+	parallel_for_workgroup<class hierarchical>(nd_range<>(range<>(size),
+                                                        range<>(groupsize)),
+                                             [=](group<> group) {
+                                               parallel_for_workitem(group, [=](nd_item<1> tile) {
+                                                   out_access[tile] = in_access[tile] * 2;
+                                                 });
+                                             });
+ });
+  //////// End slide
   std::cout << "data[5] = " << data[5] << ", should be 10" << std::endl;
   return 0;
 }

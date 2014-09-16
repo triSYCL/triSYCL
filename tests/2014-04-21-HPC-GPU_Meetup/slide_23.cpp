@@ -35,11 +35,11 @@ cl::sycl::single_task(FunctionObject());
 //////// End left side of the slide
 
 //////// Start right side of the slide
-cl::sycl::single_task(cl::sycl::kernel_lambda<class simple_test>([=] ()
-            {
-                writeResult [0] = 1234;
-            }
-    ));
+cl::sycl::single_task<class simple_test>([=] ()
+                                         {
+                                           writeResult [0] = 1234;
+                                         }
+                                         );
 //////// End right side of the slide
     }); // end of our commands for this queue
 

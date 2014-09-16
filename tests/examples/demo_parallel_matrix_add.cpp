@@ -27,10 +27,10 @@ int main() {
         auto A = a.get_access<access::write>();
 
         // Enqueue a parallel kernel iterating on a N*M 2D iteration space
-        parallel_for({ N, M },
-                     kernel_lambda<class init_a>([=] (id<2> index) {
-                         A[index] = index[0]*2 + index[1];
-                       }));
+        parallel_for<class init_a>({ N, M },
+                                   [=] (id<2> index) {
+                                     A[index] = index[0]*2 + index[1];
+                                   });
       });
 
     // Launch an asynchronous kernel to initialize b
@@ -42,11 +42,11 @@ int main() {
            scheduled independently */
 
         // Enqueue a parallel kernel iterating on a N*M 2D iteration space
-        parallel_for({ N, M },
-                     kernel_lambda<class init_b>([=] (id<2> index) {
-                         B[index] = index[0]*2014 + index[1]*42;
-                       }));
-    });
+        parallel_for<class init_b>({ N, M },
+                                   [=] (id<2> index) {
+                                     B[index] = index[0]*2014 + index[1]*42;
+                                   });
+      });
 
     // Launch an asynchronous kernel to compute matrix addition c = a + b
     command_group (myQueue, [&] () {
@@ -58,10 +58,10 @@ int main() {
         // this kernel is run, the kernels computing a and b completed
 
         // Enqueue a parallel kernel iterating on a N*M 2D iteration space
-        parallel_for({ N, M },
-                     kernel_lambda<class matrix_add>([=] (id<2> index) {
-                         C[index] = A[index] + B[index];
-                       }));
+        parallel_for<class matrix_add>({ N, M },
+                                       [=] (id<2> index) {
+                                         C[index] = A[index] + B[index];
+                                       });
       });
 
     /* Ask an access to read c from the host-side. The SYCL runtime

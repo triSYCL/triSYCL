@@ -33,8 +33,9 @@ command_group(my_queue, [&]()
 	auto in_access = my_buffer.get_access<access::read>();
 	auto out_access = my_buffer.get_access<access::write>();
 
-	parallel_for_workgroup(nd_range<>(range<>(size), range<>(groupsize)),
-                         kernel_lambda<class hierarchical>([=](group<> group)
+	parallel_for_workgroup<class hierarchical>(nd_range<>(range<>(size),
+                                                        range<>(groupsize)),
+                                             [=](group<> group)
 	{
     std::cout << "Group id = " << group.get(0) << std::endl;
 
@@ -44,7 +45,7 @@ command_group(my_queue, [&]()
                 << " (global id = " << tile.get_global_id(0) << ")" << std::endl;
 			out_access[tile] = in_access[tile] * 2;
 		});
-	}));
+	});
 });
 //////// End slide
     return 0;
