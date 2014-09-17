@@ -119,11 +119,11 @@ namespace access {
 
   /// This describes the type of the access mode to be used via accessor
   enum mode {
-    read = 42, //< Why not? Insist on the fact that read_write != read + write
-    write,
-    atomic,
-    read_write,
-    discard_read_write
+    read = 42, //?< Why not? Insist on the fact that read_write != read + write
+    write, ///< Write-only access, but previous content *not* discarded
+    read_write, ///< Read and write access
+    discard_write, ///< Write-only access and previous content discarded
+    discard_read_write ///< Read and write access and previous content discarded
   };
 
 
