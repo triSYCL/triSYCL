@@ -35,16 +35,6 @@
 */
 
 
-/* To remove some implementation details from the SYCL API documentation,
-   rely on the preprocessor when this preprocessor symbol is defined */
-#ifdef TRISYCL_HIDE_IMPLEMENTATION
-// Remove the content of TRISYCL_IMPL...
-#define TRISYCL_IMPL(...)
-#else
-// ... or keep the content of TRISYCL_IMPL
-#define TRISYCL_IMPL(...) __VA_ARGS__
-#endif
-
 #include <cstddef>
 #include <initializer_list>
 
@@ -870,8 +860,7 @@ template <typename dataType,
           std::size_t dimensions,
           access::mode mode,
           access::target target = access::global_buffer>
-struct accessor
-TRISYCL_IMPL(: AccessorImpl<dataType, dimensions, mode, target>) {
+struct accessor : AccessorImpl<dataType, dimensions, mode, target> {
   /// \todo in the specification: store the dimension for user request
   static const auto dimensionality = dimensions;
   /// \todo in the specification: store the types for user request as STL
@@ -879,11 +868,10 @@ TRISYCL_IMPL(: AccessorImpl<dataType, dimensions, mode, target>) {
   using element = dataType;
   using value_type = dataType;
 
-#ifndef TRISYCL_HIDE_IMPLEMENTATION
   // Use a short-cut to the implementation because type name becomes quite
   // long...
   using Impl = AccessorImpl<dataType, dimensions, mode, target>;
-#endif
+
 
   /// Create an accessor to the given buffer
   // \todo fix the specification to rename target that shadows template parm
@@ -990,16 +978,15 @@ struct storage {
 */
 template <typename T,
           std::size_t dimensions = 1>
-struct buffer TRISYCL_IMPL(: BufferImpl<T, dimensions>) {
+struct buffer : BufferImpl<T, dimensions> {
   /// \todo Extension to SYCL specification: provide pieces of STL
   /// container interface?
   using element = T;
   using value_type = T;
 
-#ifndef TRISYCL_HIDE_IMPLEMENTATION
   // Use a short-cut because type name becomes quite long...
   using Impl = BufferImpl<T, dimensions>;
-#endif
+
 
   /** Create a new buffer with storage managed by SYCL
 
@@ -1149,7 +1136,6 @@ template <typename KernelName = std::nullptr_t>
 void single_task(std::function<void(void)> F) { F(); }
 
 
-#ifndef TRISYCL_HIDE_IMPLEMENTATION
 /** SYCL parallel_for launches a data parallel computation with parallelism
     specified at launch time by a range<>
 
@@ -1176,7 +1162,6 @@ void single_task(std::function<void(void)> F) { F(); }
 TRISYCL_ParallelForFunctor_GLOBAL(1)
 TRISYCL_ParallelForFunctor_GLOBAL(2)
 TRISYCL_ParallelForFunctor_GLOBAL(3)
-#endif
 
 
 /** A variation of SYCL parallel_for to take into account a nd_range<>
@@ -1201,7 +1186,6 @@ void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {
 }
 
 
-#ifndef TRISYCL_HIDE_IMPLEMENTATION
 /** SYCL parallel_for launches a data parallel computation with
     parallelism specified at launch time by 1 range<> and an offset
 
@@ -1231,7 +1215,6 @@ void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {
 TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(1)
 TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(2)
 TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(3)
-#endif
 
 
 /// SYCL parallel_for version that allows a Program object to be specified
@@ -1286,15 +1269,8 @@ void parallel_for_workitem(group<Dimensions> g, ParallelForFunctor f) {
 
     Note that if \a T is not a pointer type, it is an error.
 */
-#ifdef TRISYCL_HIDE_IMPLEMENTATION
-template <typename T>
-struct constant {
-  // This is only for Doxygen documentation for SYCL API
-};
-#else
 template <typename T>
 using constant = AddressSpaceImpl<T, constant_address_space>;
-#endif
 
 
 /** Declare a variable to be an OpenCL 2 generic pointer
@@ -1303,15 +1279,8 @@ using constant = AddressSpaceImpl<T, constant_address_space>;
 
     Note that if \a T is not a pointer type, it is an error.
 */
-#ifdef TRISYCL_HIDE_IMPLEMENTATION
-template <typename T>
-struct generic {
-  // This is only for Doxygen documentation for SYCL API
-};
-#else
 template <typename T>
 using generic = AddressSpaceImpl<T, generic_address_space>;
-#endif
 
 
 /** Declare a variable to be an OpenCL global pointer
@@ -1320,15 +1289,8 @@ using generic = AddressSpaceImpl<T, generic_address_space>;
 
     Note that if \a T is not a pointer type, it is an error.
 */
-#ifdef TRISYCL_HIDE_IMPLEMENTATION
-template <typename T>
-struct global {
-  // This is only for Doxygen documentation for SYCL API
-};
-#else
 template <typename T>
 using global = AddressSpaceImpl<T, global_address_space>;
-#endif
 
 
 /** Declare a variable to be an OpenCL local pointer
@@ -1337,15 +1299,8 @@ using global = AddressSpaceImpl<T, global_address_space>;
 
     Note that if \a T is not a pointer type, it is an error.
 */
-#ifdef TRISYCL_HIDE_IMPLEMENTATION
-template <typename T>
-struct local {
-  // This is only for Doxygen documentation for SYCL API
-};
-#else
 template <typename T>
 using local = AddressSpaceImpl<T, local_address_space>;
-#endif
 
 
 /** Declare a variable to be an OpenCL private pointer
@@ -1354,15 +1309,8 @@ using local = AddressSpaceImpl<T, local_address_space>;
 
     Note that if \a T is not a pointer type, it is an error.
 */
-#ifdef TRISYCL_HIDE_IMPLEMENTATION
-template <typename T>
-struct priv {
-  // This is only for Doxygen documentation for SYCL API
-};
-#else
 template <typename T>
 using priv = AddressSpaceImpl<T, private_address_space>;
-#endif
 
 
 /** A pointer that can be statically associated to any address-space
@@ -1373,15 +1321,8 @@ using priv = AddressSpaceImpl<T, private_address_space>;
 
     Note that if \a Pointer is not a pointer type, it is an error.
 */
-#ifdef TRISYCL_HIDE_IMPLEMENTATION
-template <typename Pointer, address_space AS>
-struct multi_ptr {
-  // This is only for Doxygen documentation for SYCL API
-};
-#else
 template <typename Pointer, address_space AS>
 using multi_ptr = AddressSpacePointerImpl<Pointer, AS>;
-#endif
 
 
 /** Construct a cl::sycl::multi_ptr<> with the right type
