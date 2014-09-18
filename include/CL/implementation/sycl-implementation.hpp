@@ -355,7 +355,8 @@ struct BufferImpl {
   //BufferImpl(storage<T> &store, range<dimensions> r)
 
   /// Create a new allocated 1D BufferImpl from the given elements
-  BufferImpl(const T * start_iterator, const T * end_iterator) :
+  template <typename Iterator>
+  BufferImpl(Iterator start_iterator, Iterator end_iterator) :
     // The size of a multi_array is set at creation time
     Allocation(boost::extents[std::distance(start_iterator, end_iterator)]),
     Access(Allocation),
@@ -386,7 +387,7 @@ struct BufferImpl {
   */
   BufferImpl(const BufferImpl<T, dimensions> &b) : Allocation(b.Access),
                                                    Access(Allocation),
-                                                   ReadOnly(false) {}
+                                                   ReadOnly(b.ReadOnly) {}
 
 
   /** Create a new sub-BufferImplImpl without allocation to have separate

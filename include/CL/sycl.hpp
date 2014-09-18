@@ -617,6 +617,9 @@ struct exception {
       templated buffer
 
       \todo to be implemented
+
+      \todo How to get the real buffer type? Update: has been removed in
+      new specification
   */
   template <typename T, int dimensions> buffer<T, dimensions> *get_buffer() {
     assert(0); }
@@ -1044,7 +1047,8 @@ struct buffer : BufferImpl<T, dimensions> {
 
       \todo Allow initialization from ranges and collections à la STL
   */
-  buffer(const T * start_iterator, const T * end_iterator) :
+  template <typename Iterator>
+  buffer(Iterator start_iterator, Iterator end_iterator) :
     Impl(start_iterator, end_iterator) {}
 
 
