@@ -12,7 +12,7 @@ constexpr size_t M = 30;
 constexpr size_t P = 40;
 
 int main() {
-    // Create some 2D buffers of float for our matrices
+    // Create read-write buffers for each rank
     cl::sycl::buffer<int, 1> a(N);
     cl::sycl::buffer<int, 2> b({ N, M });
     cl::sycl::buffer<int, 3> c({ N, M, P });

@@ -346,7 +346,8 @@ struct BufferImpl {
   /** Create a new read-only BufferImpl from \param host_data of size \param r
       without further allocation */
   BufferImpl(const T * host_data, range<dimensions> r) :
-    Access(host_data, r),
+    /// \todo Need to solve this const buffer issue in a clean way
+    Access(const_cast<T *>(host_data), r),
     ReadOnly(true) {}
 
 
