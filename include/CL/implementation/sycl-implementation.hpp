@@ -328,22 +328,22 @@ struct BufferImpl {
   // This is the multi-dimensional interface to the data
   boost::multi_array_ref<T, dimensions> Access;
   // If the data are read-only, store the information for later optimization
-  bool ReadOnly ;
+  bool ReadOnly;
 
 
-  /// Create a new BufferImpl of size \param r
+  /// Create a new read-write BufferImpl of size \param r
   BufferImpl(range<dimensions> const &r) : Allocation(r),
                                            Access(Allocation),
                                            ReadOnly(false) {}
 
 
-  /** Create a new BufferImpl from \param host_data of size \param r without
-      further allocation */
+  /** Create a new read-write BufferImpl from \param host_data of size
+      \param r without further allocation */
   BufferImpl(T * host_data, range<dimensions> r) : Access(host_data, r),
                                                    ReadOnly(false) {}
 
 
-  /** Create a new read only BufferImpl from \param host_data of size \param r
+  /** Create a new read-only BufferImpl from \param host_data of size \param r
       without further allocation */
   BufferImpl(const T * host_data, range<dimensions> r) :
     Access(host_data, r),
@@ -357,7 +357,8 @@ struct BufferImpl {
   BufferImpl(const T * start_iterator, const T * end_iterator) :
     // The size of a multi_array is set at creation time
     Allocation(boost::extents[std::distance(start_iterator, end_iterator)]),
-    Access(Allocation) {
+    Access(Allocation),
+    ReadOnly(false) {
     /* Then assign Allocation since this is the only multi_array
        method with this iterator interface */
     Allocation.assign(start_iterator, end_iterator);
@@ -377,22 +378,27 @@ struct BufferImpl {
   }
 
 
-  /// Create a new BufferImpl from an old one, with a new allocation
+  /** Create a new BufferImpl from an old one, with a new allocation
+
+      \todo Refactor the implementation to deal with buffer sharing with
+      reference counting
+  */
   BufferImpl(const BufferImpl<T, dimensions> &b) : Allocation(b.Access),
                                                    Access(Allocation),
                                                    ReadOnly(false) {}
 
 
   /** Create a new sub-BufferImplImpl without allocation to have separate
-      accessors later */
-  /* \todo
+      accessors later
+
+      \todo To implement and deal with reference counting
   BufferImpl(BufferImpl<T, dimensions> b,
              index<dimensions> base_index,
              range<dimensions> sub_range)
   */
 
-  // Allow CLHPP objects too?
-  // \todo
+  /// \todo Allow CLHPP objects too?
+  ///
   /*
   BufferImpl(cl_mem mem_object,
              queue from_queue,
@@ -407,6 +413,13 @@ struct BufferImpl {
   AccessorImpl<T, dimensions, mode, target> get_access() {
     return { *this };
   }
+
+
+  /** Ask for read-only status of the buffer
+
+      \todo Add to specification
+  */
+  bool is_read_only() { return ReadOnly; }
 
 };
 

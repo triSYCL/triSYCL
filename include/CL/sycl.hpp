@@ -969,9 +969,10 @@ struct storage {
 /** A SYCL buffer is a multidimensional variable length array (à la C99
     VLA or even Fortran before) that is used to store data to work on.
 
-    In the case we initialize it from a pointer, for now we just wrap the
-    data with boost::multi_array_ref to provide the VLA semantics without
-    any storage.
+    \todo We have some read-write buffers and some read-only buffers,
+    according to the constructor called. So we could have some static
+    checking for correctness with the accessors used, but we do not have a
+    way in the specification to have a read-only buffer type for this.
 
     \todo there is a naming inconsistency in the specification between
     buffer and accessor on T versus datatype
@@ -988,14 +989,14 @@ struct buffer : BufferImpl<T, dimensions> {
   using Impl = BufferImpl<T, dimensions>;
 
 
-  /** Create a new buffer with storage managed by SYCL
+  /** Create a new read-write buffer with storage managed by SYCL
 
       \param r defines the size
   */
   buffer(const range<dimensions> &r) : Impl(r) {}
 
 
-  /** Create a new buffer with associated host memory
+  /** Create a new read-write buffer with associated host memory
 
       \param host_data points to the storage and values used by the buffer
 
@@ -1010,8 +1011,7 @@ struct buffer : BufferImpl<T, dimensions> {
 
       \param r defines the size
   */
-  buffer(const T * host_data, range<dimensions> r) :
-    Impl(host_data, r) {}
+  buffer(const T * host_data, range<dimensions> r) : Impl(host_data, r) {}
 
 
   /** Create a new buffer from a storage abstraction provided by the user
@@ -1028,13 +1028,21 @@ struct buffer : BufferImpl<T, dimensions> {
   buffer(storage<T> &store, range<dimensions> r) { assert(0); }
 
 
-  /** Create a new allocated 1D buffer initialized from the given elements
+  /** Create a new read-write allocated 1D buffer initialized from the
+      given elements
 
       \param start_iterator points to the first element to copy
 
       \param end_iterator points to just after the last element to copy
 
-      \todo Add const to the SYCL specification
+      \todo Add const to the SYCL specification.
+
+      \todo Generalize this for n-D and provide column-major and row-major
+      initialization
+
+      \todo Allow read-only buffer construction too
+
+      \todo Allow initialization from ranges and collections à la STL
   */
   buffer(const T * start_iterator, const T * end_iterator) :
     Impl(start_iterator, end_iterator) {}
