@@ -324,11 +324,17 @@ struct BufferImpl {
   using element = T;
   using value_type = T;
 
-  // If some allocation is requested, it is managed by this multi_array
+  /** If some allocation is requested, it is managed by this multi_array
+      to ease initialization from data */
   boost::multi_array<T, dimensions> Allocation;
-  // This is the multi-dimensional interface to the data
+  /** This is the multi-dimensional interface to the data that may point
+      to either Allocation in the case of storage managed by SYCL itself
+      or to some other memory location in the case of host memory or
+      storage<> abstraction use
+  */
   boost::multi_array_ref<T, dimensions> Access;
-  // If the data are read-only, store the information for later optimization
+  /// If the data are read-only, store the information for later optimization.
+  /// \todo Replace this by a static read-only type for the buffer
   bool ReadOnly;
 
 

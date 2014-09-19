@@ -881,7 +881,7 @@ struct accessor : AccessorImpl<dataType, dimensions, mode, target> {
   /// Create an accessor to the given buffer
   // \todo fix the specification to rename target that shadows template parm
   accessor(buffer<dataType, dimensions> &targetBuffer) :
-    Impl(targetBuffer.Impl) {}
+    Impl(*targetBuffer.Impl) {}
 
 };
 
@@ -985,19 +985,23 @@ struct storage {
 template <typename T,
           std::size_t dimensions = 1>
 struct buffer {
-  /// \todo Extension to SYCL specification: provide pieces of STL
-  /// container interface?
+  /** \todo Extension to SYCL specification: provide pieces of STL
+      container interface? Yes for the construction, but not for the
+      access that is to be done through the accessor<>
+  */
   using element = T;
   using value_type = T;
 
-  // Use a short-cut because type name becomes quite long...
-  BufferImpl<T, dimensions> Impl;
+  /** Point to the underlying buffer implementation that can be shared in
+      the SYCL model */
+  std::shared_ptr<BufferImpl<T, dimensions>> Impl;
 
   /** Create a new read-write buffer with storage managed by SYCL
 
       \param r defines the size
   */
-  buffer(const range<dimensions> &r) : Impl(r) {}
+  buffer(const range<dimensions> &r)
+    : Impl(new BufferImpl<T, dimensions> { r }) {}
 
 
   /** Create a new read-write buffer with associated host memory
@@ -1006,7 +1010,8 @@ struct buffer {
 
       \param r defines the size
   */
-  buffer(T * host_data, range<dimensions> r) : Impl(host_data, r) {}
+  buffer(T * host_data, range<dimensions> r)
+    : Impl(new BufferImpl<T, dimensions> { host_data, r }) {}
 
 
   /** Create a new read-only buffer with associated host memory
@@ -1015,7 +1020,8 @@ struct buffer {
 
       \param r defines the size
   */
-  buffer(const T * host_data, range<dimensions> r) : Impl(host_data, r) {}
+  buffer(const T * host_data, range<dimensions> r)
+    : Impl(new BufferImpl<T, dimensions> { host_data, r }) {}
 
 
   /** Create a new buffer from a storage abstraction provided by the user
@@ -1050,16 +1056,19 @@ struct buffer {
   */
   template <typename Iterator>
   buffer(Iterator start_iterator, Iterator end_iterator) :
-    Impl(start_iterator, end_iterator) {}
+    Impl(new BufferImpl<T, dimensions> { start_iterator, end_iterator }) {}
 
 
   /** Create a new buffer copy that shares the data with the origin buffer
 
       \param b is the buffer to copy from
 
-      The system use reference counting to deal with data lifetime
+      The system uses reference counting to deal with data lifetime
   */
-  buffer(buffer<T, dimensions> &b) : Impl(b.Impl) {}
+  buffer(buffer<T, dimensions> &b)
+    /* Since we just copy the shared_ptr<>, this is where the sharing
+       magic is happening with reference counting */
+    : Impl(b.Impl) {}
 
 
   /** Create a new sub-buffer without allocation to have separate accessors
@@ -1115,7 +1124,7 @@ struct buffer {
   template <access::mode mode,
             access::target target=access::global_buffer>
   accessor<T, dimensions, mode, target> get_access() {
-    return Impl;
+    return *Impl;
   }
 
 
@@ -1128,7 +1137,7 @@ struct buffer {
        \todo Add also a constructor in range<> to accept a const
        std::size_t *?
      */
-    return range<dimensions> { *(const std::size_t (*)[dimensions])(Impl.Allocation.shape()) };
+    return range<dimensions> { *(const std::size_t (*)[dimensions])(Impl->Allocation.shape()) };
   }
 
 
@@ -1136,7 +1145,7 @@ struct buffer {
 
       \todo Add to specification
   */
-  bool is_read_only() { return Impl.ReadOnly; }
+  bool is_read_only() { return Impl->ReadOnly; }
 
 };
 
