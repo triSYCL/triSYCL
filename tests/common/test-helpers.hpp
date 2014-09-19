@@ -104,7 +104,7 @@ bool trisycl_verify_buffer_value(cl::sycl::buffer<dataType, dimensions> b,
 
 
 /** Output the name of a buffer with its read-only status */
-#define DISPLAY_READ_ONLY_BUFFER_STATUS(a_buffer)          \
+#define DISPLAY_BUFFER_READ_ONLY_STATUS(a_buffer)          \
   do {                                                     \
     std::cout << "buffer \"" #a_buffer "\" is read_only: " \
       << a_buffer.is_read_only() << std::endl;             \

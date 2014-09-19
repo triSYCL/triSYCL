@@ -20,17 +20,17 @@ int main() {
 
   // Create a read-write 1D buffer of size N
   cl::sycl::buffer<int, 1> a(N);
-  DISPLAY_READ_ONLY_BUFFER_STATUS(a);
+  DISPLAY_BUFFER_READ_ONLY_STATUS(a);
 
   // Create a read-write 2D buffer of size N*M upon host storage
   double array[N][M];
   cl::sycl::buffer<double, 2> b(&array[0][0], make_range(N, M));
-  DISPLAY_READ_ONLY_BUFFER_STATUS(b);
+  DISPLAY_BUFFER_READ_ONLY_STATUS(b);
 
   // Create a read-only 2D buffer of size N*M upon host storage
-  const double carray[N][M] = { 0 };
+  const double carray[N][M] = { { 0 } };
   cl::sycl::buffer<double, 2> c(&carray[0][0], make_range(N, M));
-  DISPLAY_READ_ONLY_BUFFER_STATUS(c);
+  DISPLAY_BUFFER_READ_ONLY_STATUS(c);
   //cl::sycl::buffer<const double, 2> cc(&array[0][0], make_range(N, M));
 
   // Create a read-write 1D buffer initialized with copy of elements given
@@ -38,8 +38,7 @@ int main() {
   // (conversion-compatible) element type
   std::vector<int> v { 1, 8, 11 };
   cl::sycl::buffer<double, 1> vb(v.begin(), v.end());
-  DISPLAY_READ_ONLY_BUFFER_STATUS(vb);
+  DISPLAY_BUFFER_READ_ONLY_STATUS(vb);
 
   return 0;
 }
-
