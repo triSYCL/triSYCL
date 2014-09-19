@@ -31,6 +31,7 @@ int main() {
   const double carray[N][M] = { 0 };
   cl::sycl::buffer<double, 2> c(&carray[0][0], make_range(N, M));
   DISPLAY_READ_ONLY_BUFFER_STATUS(c);
+  //cl::sycl::buffer<const double, 2> cc(&array[0][0], make_range(N, M));
 
   // Create a read-write 1D buffer initialized with copy of elements given
   // by a range. Since it is a copy, we can use another
@@ -41,3 +42,4 @@ int main() {
 
   return 0;
 }
+

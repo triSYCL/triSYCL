@@ -16,6 +16,7 @@
 #include <type_traits>
 #include <iostream>
 #include <iterator>
+#include <memory>
 #include "boost/multi_array.hpp"
 #include <boost/operators.hpp>
 
@@ -367,19 +368,6 @@ struct BufferImpl {
   }
 
 
-  /// Get the range<> of the buffer
-  auto get_range() {
-    /* Interpret the shape which is a pointer to the first element as an
-       array of dimensions elements so that the range<dimensions>
-       constructor is happy with this collection
-
-       \todo Add also a constructor in range<> to accept a const
-       std::size_t *?
-     */
-    return range<dimensions> { *(const std::size_t (*)[dimensions])(Allocation.shape()) };
-  }
-
-
   /** Create a new BufferImpl from an old one, with a new allocation
 
       \todo Refactor the implementation to deal with buffer sharing with
@@ -415,13 +403,6 @@ struct BufferImpl {
   AccessorImpl<T, dimensions, mode, target> get_access() {
     return { *this };
   }
-
-
-  /** Ask for read-only status of the buffer
-
-      \todo Add to specification
-  */
-  bool is_read_only() { return ReadOnly; }
 
 };
 

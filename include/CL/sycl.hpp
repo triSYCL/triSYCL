@@ -875,11 +875,13 @@ struct accessor : AccessorImpl<dataType, dimensions, mode, target> {
   // long...
   using Impl = AccessorImpl<dataType, dimensions, mode, target>;
 
+  // Inherit of the constructors to have accessor constructor from BufferImpl
+  using Impl::AccessorImpl;
 
   /// Create an accessor to the given buffer
   // \todo fix the specification to rename target that shadows template parm
   accessor(buffer<dataType, dimensions> &targetBuffer) :
-    Impl(targetBuffer) {}
+    Impl(targetBuffer.Impl) {}
 
 };
 
@@ -982,15 +984,14 @@ struct storage {
 */
 template <typename T,
           std::size_t dimensions = 1>
-struct buffer : BufferImpl<T, dimensions> {
+struct buffer {
   /// \todo Extension to SYCL specification: provide pieces of STL
   /// container interface?
   using element = T;
   using value_type = T;
 
   // Use a short-cut because type name becomes quite long...
-  using Impl = BufferImpl<T, dimensions>;
-
+  BufferImpl<T, dimensions> Impl;
 
   /** Create a new read-write buffer with storage managed by SYCL
 
@@ -1058,7 +1059,7 @@ struct buffer : BufferImpl<T, dimensions> {
 
       The system use reference counting to deal with data lifetime
   */
-  buffer(buffer<T, dimensions> &b) : Impl(b) {}
+  buffer(buffer<T, dimensions> &b) : Impl(b.Impl) {}
 
 
   /** Create a new sub-buffer without allocation to have separate accessors
@@ -1108,12 +1109,34 @@ struct buffer : BufferImpl<T, dimensions> {
       \param mode is the requested access mode
 
       \param target is the type of object to be accessed
+
+      \todo Implement the modes and targets
   */
   template <access::mode mode,
             access::target target=access::global_buffer>
   accessor<T, dimensions, mode, target> get_access() {
-    return { *this };
+    return Impl;
   }
+
+
+  /// Get the range<> of the buffer
+  auto get_range() {
+    /* Interpret the shape which is a pointer to the first element as an
+       array of dimensions elements so that the range<dimensions>
+       constructor is happy with this collection
+
+       \todo Add also a constructor in range<> to accept a const
+       std::size_t *?
+     */
+    return range<dimensions> { *(const std::size_t (*)[dimensions])(Impl.Allocation.shape()) };
+  }
+
+
+  /** Ask for read-only status of the buffer
+
+      \todo Add to specification
+  */
+  bool is_read_only() { return Impl.ReadOnly; }
 
 };
 
