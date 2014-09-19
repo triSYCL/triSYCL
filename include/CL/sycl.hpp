@@ -1119,17 +1119,20 @@ struct buffer {
 
       \param target is the type of object to be accessed
 
+      \todo Do we need for an accessor to increase the reference count of
+      a buffer object? It does make more sense for a host-side accessor.
+
       \todo Implement the modes and targets
   */
   template <access::mode mode,
             access::target target=access::global_buffer>
-  accessor<T, dimensions, mode, target> get_access() {
+  accessor<T, dimensions, mode, target> get_access() const {
     return *Impl;
   }
 
 
   /// Get the range<> of the buffer
-  auto get_range() {
+  auto get_range() const {
     /* Interpret the shape which is a pointer to the first element as an
        array of dimensions elements so that the range<dimensions>
        constructor is happy with this collection
@@ -1145,7 +1148,18 @@ struct buffer {
 
       \todo Add to specification
   */
-  bool is_read_only() { return Impl->ReadOnly; }
+  bool is_read_only() const { return Impl->ReadOnly; }
+
+
+  /** Return the use count of the data of this buffer
+
+      \todo Add to the specification? At least useful for the
+      non-regression testing.
+  */
+  auto use_count() const {
+    // Rely on the shared_ptr<> use_count()
+    return Impl.use_count();
+  }
 
 };
 
