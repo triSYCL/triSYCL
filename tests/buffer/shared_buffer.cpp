@@ -14,7 +14,8 @@ using namespace cl::sycl;
 constexpr size_t N = 20;
 
 
-int main() {
+// To verify it works through function return
+cl::sycl::buffer<int, 1> f(void) {
   // Create a read-write 1D buffer of size N
   cl::sycl::buffer<int, 1> a(N);
   DISPLAY_BUFFER_USE_COUNT(a);
@@ -32,14 +33,30 @@ int main() {
     auto B = b.get_access<access::write, access::host_buffer>();
 
     for (std::size_t i = 0; i != N; ++i)
-      B[i] = i;
+      B[i] = i*56 - 100;
+
+    // Check b & c storage is really shared
     auto C = c.get_access<access::read, access::host_buffer>();
     DISPLAY_BUFFER_USE_COUNT(a);
     DISPLAY_BUFFER_USE_COUNT(b);
     DISPLAY_BUFFER_USE_COUNT(c);
     DISPLAY_BUFFER_READ_ONLY_STATUS(c);
+    VERIFY_BUFFER_VALUE(b, [] (size_t i) { return i*56 - 100; });
+
+    b = c;
+    DISPLAY_BUFFER_USE_COUNT(a);
+    DISPLAY_BUFFER_USE_COUNT(b);
+    DISPLAY_BUFFER_USE_COUNT(c);
   }
   DISPLAY_BUFFER_USE_COUNT(a);
+  return a;
+}
+
+int main() {
+  // Check that the r-value assignment/constructor works
+  auto z = f();
+  DISPLAY_BUFFER_USE_COUNT(z);
+  DISPLAY_BUFFER_READ_ONLY_STATUS(z);
   return 0;
 }
 

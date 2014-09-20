@@ -996,6 +996,16 @@ struct buffer {
       the SYCL model */
   std::shared_ptr<BufferImpl<T, dimensions>> Impl;
 
+  /** Use default constructors so that we can create a new buffer copy
+      from another one, with either a l-value or an r-value (for
+      std::move() for example).
+
+      Since we just copy the shared_ptr<> above, this is where/how the
+      sharing magic is happening with reference counting in this case.
+  */
+  buffer() = default;
+
+
   /** Create a new read-write buffer with storage managed by SYCL
 
       \param r defines the size
@@ -1057,18 +1067,6 @@ struct buffer {
   template <typename Iterator>
   buffer(Iterator start_iterator, Iterator end_iterator) :
     Impl(new BufferImpl<T, dimensions> { start_iterator, end_iterator }) {}
-
-
-  /** Create a new buffer copy that shares the data with the origin buffer
-
-      \param b is the buffer to copy from
-
-      The system uses reference counting to deal with data lifetime
-  */
-  buffer(buffer<T, dimensions> &b)
-    /* Since we just copy the shared_ptr<>, this is where the sharing
-       magic is happening with reference counting */
-    : Impl(b.Impl) {}
 
 
   /** Create a new sub-buffer without allocation to have separate accessors
