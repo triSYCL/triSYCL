@@ -61,6 +61,7 @@ check-compilers:
 	# Launch the check with various compilers
 	-FORCE_CXX=g++-4.9 $(MAKE) clean check
 	-FORCE_CXX=clang++-3.5 $(MAKE) clean check
+	-FORCE_CXX=g++ $(MAKE) clean check
 
 # A special target to be called as from the test as "make execute
 # TARGET=%s" with the right Makefile. There is a short-cut in the lit.cfg
