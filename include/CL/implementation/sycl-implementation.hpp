@@ -17,7 +17,7 @@
 #include <iostream>
 #include <iterator>
 #include <memory>
-#include "boost/multi_array.hpp"
+#include <boost/multi_array.hpp>
 #include <boost/operators.hpp>
 
 #include "sycl-debug.hpp"

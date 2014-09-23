@@ -1064,7 +1064,12 @@ struct buffer {
 
       \todo Allow initialization from ranges and collections à la STL
   */
-  template <typename Iterator>
+  template <typename Iterator,
+            /* To force some iterator concept checking to avoid GCC 4.9
+               diving into this when initializing from ({ int, int })
+               which is a range<> and and not an iterator... */
+            typename ValueType =
+            typename std::iterator_traits<Iterator>::value_type>
   buffer(Iterator start_iterator, Iterator end_iterator) :
     Impl(new BufferImpl<T, dimensions> { start_iterator, end_iterator }) {}
 
