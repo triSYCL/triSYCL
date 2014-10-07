@@ -185,6 +185,20 @@ Some other implementations:
 - CodePlay http://codeplay.com/products
 
 
+Related projects
+~~~~~~~~~~~~~~~~
+
+- `C++AMP`_
+
+- Open Source implementation of C++AMP https://bitbucket.org/multicoreware/cppamp-driver-ng
+
+- Intel Lab's iHRC https://github.com/IntelLabs/iHRC
+
+- C++ Parallelism TS https://github.com/cplusplus/parallelism-ts
+
+- C++ Concurrency TS https://github.com/cplusplus/concurrency_ts
+
+
 Installation
 ------------
 
@@ -274,7 +288,7 @@ Some ideas of future developments where *you* can contribute:
 
 - make an accelerator version based on wrapper classes for the `C++AMP`_
   Open Source compiler
-  https://bitbucket.org/multicoreware/cppamp-driver-ng/wiki/Home
+  https://bitbucket.org/multicoreware/cppamp-driver-ng
 
 - make an accelerator version based on OpenMP_ 4, OpenHMPP_ or OpenACC_;
 
