@@ -39,6 +39,16 @@
 #include <initializer_list>
 
 
+/// This implement SYCL 1.2
+#define CL_SYCL_LANGUAGE_VERSION 120
+
+/// This implement triSYCL 1.2
+#define CL_TRISYCL_LANGUAGE_VERSION 120
+
+/// This source is compiled by a single source compiler
+#define __SYCL_SINGLE_SOURCE__
+
+
 /** Define TRISYCL_OPENCL to add OpenCL
 
     triSYCL can indeed work without OpenCL if only host support is needed.
