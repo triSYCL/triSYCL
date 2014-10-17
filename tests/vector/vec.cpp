@@ -29,6 +29,7 @@ int main() {
                                      vec<float, 16> v;
                                      float1 v1 = 1.2F;
                                      float2 v2 = { 2, 3};
+                                     float2 v2_c(2, 3);
                                      float2 v2_v1 = { v1, v1 };
                                      float2 v2f = { 2.F, 3.6F };
                                      float4 v4 = { 2.F, 3.6F, 3, -8 };
@@ -40,5 +41,3 @@ int main() {
 
   return 0;
 }
-
-

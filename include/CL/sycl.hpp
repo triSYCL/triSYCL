@@ -1416,36 +1416,8 @@ multi_ptr<T, AS> make_multi(multi_ptr<T, AS> pointer) {
     @{
 */
 
-  template <size_t N, typename... Types>
-  struct VecInit {
-    VecInit(const Types... args) {}
-  };
-
-  /*
-  template <>
-  struct VecInit<1, float> {
-  };
-  */
 template <typename DataType, size_t NumElements>
 struct vec;
-
-#if 0
-  template<typename A=vec<DataType, N>>
-  struct flatten {
-    flatten(A &a) {}
-  };
-
-  template <typename V, typename HeadType, typename... TailTypes>
-  struct expand {
-    expand(V &v, HeadType &t, TailTypes&... tail) {}
-  };
-
-  template <typename V, typename HeadType, typename... TailTypes>
-  std::array<typename V::element_type, V::dimension>
-  auto flatten(const V && v) {
-    return std::make_integer_sequence<size_t, V::dimension>
-  }
-#endif
 
 
   /** Helper to construct an array from initializer elements provided as a
@@ -1458,9 +1430,11 @@ struct vec;
   template <typename V, typename Tuple, size_t... Is>
   std::array<typename V::element_type, V::dimension>
   tuple_to_array_iterate(Tuple t, std::index_sequence<Is...>) {
-    /* The effect is like a static for loop with Is counting from 0 to
+    /* The effect is like a static for-loop with Is counting from 0 to
        dimension-1 and thus constructing a uniform initialization { }
-       construction from each tuple element */
+       construction from each tuple element:
+       { std::get<0>(t), std::get<1>(t), ..., std::get<dimension-1>(t) }
+ */
     return { std::get<Is>(t)... };
   }
 
@@ -1509,13 +1483,13 @@ struct vec;
     */
     template <typename Value, size_t... Is>
     static auto fill_tuple(Value e, std::index_sequence<Is...>) {
-      /* The effect is like a static for loop with Is counting from 0 to
+      /* The effect is like a static for-loop with Is counting from 0 to
          dimension-1 and thus replicating the pattern to have
          make_tuple( (0, e), (1, e), ... (n - 1, e) )
 
-         Since the "," operator is just to throw away the Is value (which
-         is needed for the pack expansion), at the end this is equivalent
-         to:
+         Since the "," operator is just here to throw away the Is value
+         (which is needed for the pack expansion...), at the end this is
+         equivalent to:
          make_tuple( e, e, ..., e )
       */
       return std::make_tuple(((void)Is, e)...);
@@ -1530,6 +1504,7 @@ struct vec;
     }
 
   };
+
 
   /** Create the array data of V from a tuple of initializer
 
@@ -1583,20 +1558,6 @@ struct vec;
     return std::tuple_cat(flatten<V>(i)...);
   }
 
-#if 0
-  template <typename V, typename HeadType>
-  void expand(V &v, HeadType &t) {
-    v.data[0] = t;
-  }
-  template <typename V, typename HeadType, typename... TailTypes>
-  std::array<typename V::element_type, V::dimension>
-  expand(V &v, HeadType &t, TailTypes&... tail) {
-    static_assert(V::dimension == 1 + sizeof...(TailTypes),
-                  "There is not the right number of arguments");
-    return { t, tail... };
-  }
-#endif
-
 
 /** Small OpenCL vector class
 
@@ -1619,23 +1580,8 @@ struct vec {
 
   template <typename... Types>
   vec(const Types... args)
-    : data (expand<vec>(flatten_to_tuple<vec>(args...))) {
-    //  vec(const Types... args) : data (expand(*this, args...)) {
-    ///expand(*this, flatten(args...));
-    //VecInit<sizeof...(Types)>(args...);
-    //flatten<>(args)...;
-  }
+    : data (expand<vec>(flatten_to_tuple<vec>(args...))) { }
 
-#if 0
-  template <typename... Types>
-  vec(const Types&&... args) {
-    vecInit<sizeof...(Types)>(std::forward<Types>(args)...);
-  }
-  vec<DataType>(const DataType &arg) {
-    for (size_t i = 0; i != NumElements; ++i)
-      data[i];
-  }
-#endif
   /// \todo To implement
 #if 0
   vec<dataT,
