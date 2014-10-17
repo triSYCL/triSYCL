@@ -1462,6 +1462,27 @@ struct vec;
                              std::make_index_sequence<std::tuple_size<Tuple>::value>{});
   }
 
+  /** If we have a vector, just forward its array content since an array
+      has also a tuple interface :-) (23.3.2.9 Tuple interface to class
+      template array [array.tuple])
+  */
+  template <typename V, typename Element, size_t s>
+  auto flatten(vec<Element, s> && i) {
+    return i.data;
+  }
+
+  /** If we do not have a vector, just forward it as a tuple up to the
+      final initialization */
+  template <typename V, typename Type>
+  auto flatten(Type && i) {
+    return std::forward_as_tuple(i);
+  }
+
+  template <typename V, typename... Types>
+  auto flatten_to_tuple(Types &&... i) {
+    return std::tuple_cat(flatten<V>(i)...);
+  }
+
 #if 0
   template <typename V, typename HeadType>
   void expand(V &v, HeadType &t) {
@@ -1498,7 +1519,7 @@ struct vec {
 
   template <typename... Types>
   vec(const Types... args)
-    : data (expand<vec>(std::forward_as_tuple(args...))) {
+    : data (expand<vec>(flatten_to_tuple<vec>(args...))) {
     //  vec(const Types... args) : data (expand(*this, args...)) {
     ///expand(*this, flatten(args...));
     //VecInit<sizeof...(Types)>(args...);

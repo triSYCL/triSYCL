@@ -26,10 +26,11 @@ int main() {
 
       parallel_for<class generate>(range<1> { N },
                                    [=] (id<1> index) {
-                                     //vec<float, 16> v;
-                                     //float1 v1 = 1.2F;
-                                     //float2 v2 = {2,3};
+                                     vec<float, 16> v;
+                                     float1 v1 = 1.2F;
+                                     float2 v2 = {2,3};
                                      float2 v2f = {2.F,3.6F};
+                                     float4 v4f = {2.F,3.6F, 3, -8 };
 
                                    });
     }); // End of our commands for this queue
