@@ -1410,6 +1410,169 @@ multi_ptr<T, AS> make_multi(multi_ptr<T, AS> pointer) {
 
 /// @} End the address_spaces Doxygen group
 
+
+/** \addtogroup vector Vector types in SYCL
+
+    @{
+*/
+
+  template <size_t N, typename... Types>
+  struct VecInit {
+    VecInit(const Types... args) {}
+  };
+
+  /*
+  template <>
+  struct VecInit<1, float> {
+  };
+  */
+template <typename DataType, size_t NumElements>
+struct vec;
+
+#if 0
+  template<typename A=vec<DataType, N>>
+  struct flatten {
+    flatten(A &a) {}
+  };
+
+  template <typename V, typename HeadType, typename... TailTypes>
+  struct expand {
+    expand(V &v, HeadType &t, TailTypes&... tail) {}
+  };
+
+  template <typename V, typename HeadType, typename... TailTypes>
+  std::array<typename V::element_type, V::dimension>
+  auto flatten(const V && v) {
+    return std::make_integer_sequence<size_t, V::dimension>
+  }
+#endif
+
+  template <typename V, typename Tuple, size_t... Is>
+  std::array<typename V::element_type, V::dimension>
+  tuple_to_array(Tuple && t, std::index_sequence<Is...>) {
+    return { std::get<Is>(t)... };
+  }
+
+  /**
+   */
+  template <typename V, typename Tuple>
+  std::array<typename V::element_type, V::dimension>
+  expand(Tuple && t) {
+    return tuple_to_array<V>(t/*std::forward(t)*/,
+                             std::make_index_sequence<std::tuple_size<Tuple>::value>{});
+  }
+
+#if 0
+  template <typename V, typename HeadType>
+  void expand(V &v, HeadType &t) {
+    v.data[0] = t;
+  }
+  template <typename V, typename HeadType, typename... TailTypes>
+  std::array<typename V::element_type, V::dimension>
+  expand(V &v, HeadType &t, TailTypes&... tail) {
+    static_assert(V::dimension == 1 + sizeof...(TailTypes),
+                  "There is not the right number of arguments");
+    return { t, tail... };
+  }
+#endif
+
+
+/** Small OpenCL vector class
+
+    \todo add [] operator
+
+    \todo add iterators on elements, with begin() and end()
+
+    \todo remove explicit on vec(const dataT &arg) ?
+*/
+template <typename DataType, size_t NumElements>
+struct vec {
+  std::array<DataType, NumElements> data;
+
+  static const size_t dimension = NumElements;
+  using element_type = DataType;
+
+  /// Use classical constructors too
+  vec() = default;
+
+
+  template <typename... Types>
+  vec(const Types... args)
+    : data (expand<vec>(std::forward_as_tuple(args...))) {
+    //  vec(const Types... args) : data (expand(*this, args...)) {
+    ///expand(*this, flatten(args...));
+    //VecInit<sizeof...(Types)>(args...);
+    //flatten<>(args)...;
+  }
+
+#if 0
+  template <typename... Types>
+  vec(const Types&&... args) {
+    vecInit<sizeof...(Types)>(std::forward<Types>(args)...);
+  }
+  vec<DataType>(const DataType &arg) {
+    for (size_t i = 0; i != NumElements; ++i)
+      data[i];
+  }
+#endif
+  /// \todo To implement
+#if 0
+  vec<dataT,
+      numElements>
+  operator+(const vec<dataT, numElements> &rhs) const;
+  vec<dataT, numElements>
+  operator-(const vec<dataT, numElements> &rhs) const;
+  vec<dataT, numElements>
+  operator*(const vec<dataT, numElements> &rhs) const;
+  vec<dataT, numElements>
+  operator/(const vec<dataT, numElements> &rhs) const;
+  vec<dataT, numElements>
+  operator+=(const vec<dataT, numElements> &rhs);
+  vec<dataT, numElements>
+  operator-=(const vec<dataT, numElements> &rhs);
+  vec<dataT, numElements>
+  operator*=(const vec<dataT, numElements> &rhs);
+  vec<dataT, numElements>
+  operator/=(const vec<dataT, numElements> &rhs);
+  vec<dataT, numElements>
+  operator+(const dataT &rhs) const;
+  vec<dataT, numElements>
+  operator-(const dataT &rhs) const;
+  vec<dataT, numElements>
+  operator*(const dataT &rhs) const;
+  vec<dataT, numElements>
+  operator/(const dataT &rhs) const;
+  vec<dataT, numElements>
+  operator+=(const dataT &rhs);
+  vec<dataT, numElements>
+  operator-=(const dataT &rhs);
+  vec<dataT, numElements>
+  operator*=(const dataT &rhs);
+  vec<dataT, numElements>
+  operator/=(const dataT &rhs);
+  vec<dataT, numElements> &operator=(const vec<dataT, numElements> &rhs);
+  vec<dataT, numElements> &operator=(const dataT &rhs);
+  bool operator==(const vec<dataT, numElements> &rhs) const;
+  bool operator!=(const vec<dataT, numElements> &rhs) const;
+  // Swizzle methods (see notes)
+  swizzled_vec<T, out_dims> swizzle<int s1, ...>();
+#ifdef SYCL_SIMPLE_SWIZZLES
+  swizzled_vec<T, 4> xyzw();
+  ...
+#endif // #ifdef SYCL_SIMPLE_SWIZZLES
+#endif
+};
+
+  using float1 = vec<float, 1>;
+  using float2 = vec<float, 2>;
+  using float3 = vec<float, 3>;
+  using float4 = vec<float, 4>;
+  using float8 = vec<float, 8>;
+  using float16 = vec<float, 16>;
+
+/// @} End the vector Doxygen group
+
+
 }
 }
 
