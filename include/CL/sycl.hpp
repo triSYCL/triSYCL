@@ -1630,12 +1630,32 @@ struct vec {
 #endif
 };
 
-  using float1 = vec<float, 1>;
-  using float2 = vec<float, 2>;
-  using float3 = vec<float, 3>;
-  using float4 = vec<float, 4>;
-  using float8 = vec<float, 8>;
-  using float16 = vec<float, 16>;
+  /** A macro to define type alias, such as for type=uchar, size=4 and
+      real_type=unsigned char, uchar4 is equivalent to vec<float, 4>
+  */
+#define TRISYCL_DEFINE_VEC_TYPE_SIZE(type, size, actual_type) \
+  using type##size = vec<actual_type, size>;
+
+  /// Declare the vector types of a type for all the sizes
+#define TRISYCL_DEFINE_VEC_TYPE(type, actual_type)           \
+  TRISYCL_DEFINE_VEC_TYPE_SIZE(type, 1, actual_type)         \
+  TRISYCL_DEFINE_VEC_TYPE_SIZE(type, 2, actual_type)         \
+  TRISYCL_DEFINE_VEC_TYPE_SIZE(type, 3, actual_type)         \
+  TRISYCL_DEFINE_VEC_TYPE_SIZE(type, 4, actual_type)         \
+  TRISYCL_DEFINE_VEC_TYPE_SIZE(type, 8, actual_type)         \
+  TRISYCL_DEFINE_VEC_TYPE_SIZE(type, 16, actual_type)
+
+  /// Declare all the possible vector type aliases
+  TRISYCL_DEFINE_VEC_TYPE(char, char)
+  TRISYCL_DEFINE_VEC_TYPE(uchar, unsigned char)
+  TRISYCL_DEFINE_VEC_TYPE(short, short int)
+  TRISYCL_DEFINE_VEC_TYPE(ushort, unsigned short int)
+  TRISYCL_DEFINE_VEC_TYPE(int, int)
+  TRISYCL_DEFINE_VEC_TYPE(uint, unsigned int)
+  TRISYCL_DEFINE_VEC_TYPE(long, long int)
+  TRISYCL_DEFINE_VEC_TYPE(ulong, unsigned long int)
+  TRISYCL_DEFINE_VEC_TYPE(float, float)
+  TRISYCL_DEFINE_VEC_TYPE(double, double)
 
 /// @} End the vector Doxygen group
 

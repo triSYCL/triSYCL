@@ -35,9 +35,15 @@ int main() {
                                      float4 v4 = { 2.F, 3.6F, 3, -8 };
                                      float4 v4_v2_v1 = { 2.F, v2, v1 };
                                      float16 v16_broadcast = 2.6;
+                                     uchar2 uc2 = 3;
+                                     char3 c3(1, uc2);
+                                     short4 s4 = { c3, v1 };
+                                     ulong8 ul8(s4, 1, 2, uc2);
+                                     double16 d16(3.14, 2.78, 1.602, ul8, c3, v2);
                                    });
     }); // End of our commands for this queue
   } // End scope, so we wait for the queue to complete
 
   return 0;
 }
+
