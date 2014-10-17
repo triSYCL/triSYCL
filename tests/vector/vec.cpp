@@ -28,14 +28,16 @@ int main() {
                                    [=] (id<1> index) {
                                      vec<float, 16> v;
                                      float1 v1 = 1.2F;
-                                     float2 v2 = {2,3};
-                                     float2 v2f = {2.F,3.6F};
-                                     float4 v4f = {2.F,3.6F, 3, -8 };
 
+                                     float2 v2 = { 2, 3};
+                                     float2 v2_v1 = { v1, v1 };
+                                     float2 v2f = { 2.F, 3.6F };
+
+                                     float4 v4 = { 2.F, 3.6F, 3, -8 };
+                                     float4 v4_v2_v1 = { 2.F, v2, v1 };
                                    });
     }); // End of our commands for this queue
   } // End scope, so we wait for the queue to complete
 
   return 0;
 }
-

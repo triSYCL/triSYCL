@@ -1447,11 +1447,22 @@ struct vec;
   }
 #endif
 
+
+  /** Construct an array from initializer elements provided as a tuple
+
+      The trick is to get the std::index_sequence<> that represent 0,
+       1,..., dimension-1 as a variadic template pack Is that we can
+       iterate on in the function,
+   */
   template <typename V, typename Tuple, size_t... Is>
   std::array<typename V::element_type, V::dimension>
   tuple_to_array(Tuple && t, std::index_sequence<Is...>) {
+    /* The effect is like a static for loop with Is counting from 0 to
+       dimension-1 and thus constructing a uniform initialization { }
+       construction from each tuple element */
     return { std::get<Is>(t)... };
   }
+
 
   /**
    */
@@ -1462,22 +1473,37 @@ struct vec;
                              std::make_index_sequence<std::tuple_size<Tuple>::value>{});
   }
 
-  /** If we have a vector, just forward its array content since an array
+
+  /** Flattening helper that does not change scalar values but flatten a
+      vec<T, n> v into a tuple<T, T,..., T>{ v[0], v[1],..., v[n-1] }
+
+
+      If we have a vector, just forward its array content since an array
       has also a tuple interface :-) (23.3.2.9 Tuple interface to class
       template array [array.tuple])
   */
   template <typename V, typename Element, size_t s>
-  auto flatten(vec<Element, s> && i) {
+  auto flatten(const vec<Element, s> i) {
+    static_assert(s <= V::dimension,
+                  "The element i will not fit in the vector");
     return i.data;
   }
 
   /** If we do not have a vector, just forward it as a tuple up to the
-      final initialization */
+      final initialization.
+
+      @return typically tuple<double>{ 2.4 } from 2.4 input for example
+  */
   template <typename V, typename Type>
   auto flatten(Type && i) {
     return std::forward_as_tuple(i);
   }
 
+
+  /** Take some initializer values and apply flattening on each
+
+      @return a tuple of scalar initializer values
+   */
   template <typename V, typename... Types>
   auto flatten_to_tuple(Types &&... i) {
     return std::tuple_cat(flatten<V>(i)...);
