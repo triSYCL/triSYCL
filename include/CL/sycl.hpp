@@ -1416,16 +1416,55 @@ multi_ptr<T, AS> make_multi(multi_ptr<T, AS> pointer) {
     @{
 */
 
-template <typename DataType, size_t NumElements>
-struct vec;
 
+/** Small OpenCL vector class
+
+    \todo add [] operator
+
+    \todo add iterators on elements, with begin() and end()
+
+    \todo having vec<> sub-classing array<> instead would solve the
+    previous issues
+
+    \todo move the implementation elsewhere
+
+    \todo simplify the helpers by removing some template types since there
+    are now inside the vec<> class.
+*/
+template <typename DataType, size_t NumElements>
+class vec {
+
+public:
+
+  /// The actual storage of the vector elements
+  std::array<DataType, NumElements> data;
+
+  static const size_t dimension = NumElements;
+  using element_type = DataType;
+
+
+  /** Construct a vec from anything from a scalar (to initialize all the
+      elements with this value) up to an aggregate of scalar and vector
+      types (in this case the total number of elements must match the size
+      of the vector)
+  */
+  template <typename... Types>
+  vec(const Types... args)
+    : data (expand<vec>(flatten_to_tuple<vec>(args...))) { }
+
+
+  /// Use classical constructors too
+  vec() = default;
+
+
+private:
 
   /** Helper to construct an array from initializer elements provided as a
       tuple
 
       The trick is to get the std::index_sequence<> that represent 0,
-       1,..., dimension-1 as a variadic template pack Is that we can
-       iterate on, in this function.
+      1,..., dimension-1 as a variadic template pack Is that we can
+      iterate on, in this function.
   */
   template <typename V, typename Tuple, size_t... Is>
   std::array<typename V::element_type, V::dimension>
@@ -1476,9 +1515,9 @@ struct vec;
 
     /** Construct a tuple from a value
 
-        @param value is used to initialize each tuple element
+        \param value is used to initialize each tuple element
 
-        @param size is the number of elements of the tuple to be generated
+        \param size is the number of elements of the tuple to be generated
 
         The trick is to get the std::index_sequence<> that represent 0,
         1,..., dimension-1 as a variadic template pack Is that we can
@@ -1533,7 +1572,7 @@ struct vec;
       template array [array.tuple])
   */
   template <typename V, typename Element, size_t s>
-  auto flatten(const vec<Element, s> i) {
+  static auto flatten(const vec<Element, s> i) {
     static_assert(s <= V::dimension,
                   "The element i will not fit in the vector");
     return i.data;
@@ -1543,47 +1582,24 @@ struct vec;
   /** If we do not have a vector, just forward it as a tuple up to the
       final initialization.
 
-      @return typically tuple<double>{ 2.4 } from 2.4 input for example
+      \return typically tuple<double>{ 2.4 } from 2.4 input for example
   */
   template <typename V, typename Type>
-  auto flatten(const Type i) {
+  static auto flatten(const Type i) {
     return std::forward_as_tuple(i);
   }
 
 
-  /** Take some initializer values and apply flattening on each value
+ /** Take some initializer values and apply flattening on each value
 
-      @return a tuple of scalar initializer values
+      \return a tuple of scalar initializer values
    */
   template <typename V, typename... Types>
-  auto flatten_to_tuple(const Types... i) {
+  static auto flatten_to_tuple(const Types... i) {
     // Concatenate the tuples returned by each flattening
     return std::tuple_cat(flatten<V>(i)...);
   }
 
-
-/** Small OpenCL vector class
-
-    \todo add [] operator
-
-    \todo add iterators on elements, with begin() and end()
-
-    \todo remove explicit on vec(const dataT &arg) ?
-*/
-template <typename DataType, size_t NumElements>
-struct vec {
-  std::array<DataType, NumElements> data;
-
-  static const size_t dimension = NumElements;
-  using element_type = DataType;
-
-  /// Use classical constructors too
-  vec() = default;
-
-
-  template <typename... Types>
-  vec(const Types... args)
-    : data (expand<vec>(flatten_to_tuple<vec>(args...))) { }
 
   /// \todo To implement
 #if 0
