@@ -1434,8 +1434,11 @@ struct vec;
        dimension-1 and thus constructing a uniform initialization { }
        construction from each tuple element:
        { std::get<0>(t), std::get<1>(t), ..., std::get<dimension-1>(t) }
- */
-    return { std::get<Is>(t)... };
+
+       The static cast is here to avoid the warning when there is a loss
+       of precision, for example when initializing an int from a float.
+    */
+    return { static_cast<typename V::element_type>(std::get<Is>(t))... };
   }
 
 
