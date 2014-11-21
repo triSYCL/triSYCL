@@ -64,7 +64,7 @@ int main() {
                                        });
       });
 
-    /* Ask an access to read c from the host-side. The SYCL runtime
+    /* Request an access to read c from the host-side. The SYCL runtime
        ensures that c is ready when the accessor is returned */
     auto C = c.get_access<access::read, access::host_buffer>();
     std::cout << std::endl << "Result:" << std::endl;
