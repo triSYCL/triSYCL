@@ -1,7 +1,7 @@
 triSYCL
 +++++++
 
-This is a humble implementation test bed to experiment with the
+This is a humble implementation test-bed to experiment with the
 provisional specification of the OpenCL_ SYCL_ `C++`_ layer and to give
 feedback to the Khronos_ OpenCL_ SYCL_ committee.
 
@@ -34,21 +34,12 @@ OpenCL_ SYCL_ is a C++11-based DSEL_ (Domain Specific Embedded Language)
 aimed at facilitating the programming of heterogeneous accelerators by
 leveraging the OpenCL_ language and concepts.
 
-For more information on SYCL_, look at http://www.khronos.org/opencl/sycl
-
-For introduction material on the interest of DSEL_ in this area, look for
-example at these articles:
-
-- *Domain-specific Languages and Code Synthesis Using Haskell*, Andy
-  Gill. May 6, 2014 in ACM Queue and Communications of the ACM
-  http://queue.acm.org/detail.cfm?id=2617811
-
-- *Design Exploration through Code-generating DSLs*, Bo Joel Svensson,
-  Mary Sheeran and Ryan Newton. May 15, 2014 in ACM Queue and
-  Communications of the ACM http://queue.acm.org/detail.cfm?id=2626374
+OpenCL_ SYCL_ is developed inside the Khronos_ OpenCL_ SYCL_ committee and
+thus, for more information on SYCL_, look at
+http://www.khronos.org/opencl/sycl
 
 
-Some advantages of SYCL
+Why you should use SYCL
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 SYCL_ has a lot of interesting advantages compared to plain OpenCL_ or
@@ -56,28 +47,29 @@ other approaches:
 
 - SYCL_ is an open standard from Khronos_ with a working committee (you can
   contribute!) and we can expect several implementations (commercial or
-  open source) on many platforms soon;
+  open source) on many platforms soon, ranging from GPU, APU, FPGA... down
+  to plain CPU;
 
-- it offers a single-source `C++`_ programming model that allows taking
-  advantage of the modern C++11 superpower unifying both the host and
+- it offers a *single-source* `C++`_ programming model that allows taking
+  advantage of the modern C++11 superpower, unifying both the host and
   accelerator sides. For example it is possible to write generic
   accelerated functions on the accelerators in a terse way by using
-  (variadic) templates and lambda expressions;
+  (variadic) templates, meta-programming and lambda expressions;
 
 - SYCL_ abstracts the concepts behind OpenCL_ and provides higher-level
   concepts such as ``command_group`` that allows the runtime to take
-  advantage of a more graph-oriented view of the computations. This allows
-  lazy data transfers between accelerators and host or to use platform
-  capabilities such as HSA_ for sharing data between host and
-  accelerators;
+  advantage of a more task graph-oriented view of the computations. This
+  allows lazy data transfers between accelerators and host or to use
+  platform capabilities such as OpenCL 2 SVM or HSA_ for sharing data
+  between host and accelerators;
 
 - the entry cost of the technology is zero since, after all, an existing
   OpenCL_ or `C++`_ program is a valid SYCL_ program;
 
-- the exit cost is low since it is pure `C++`_ without extension or
-  ``#pragma``. Retargeting the SYCL_ classes and functions to use other
-  frameworks such as OpenMP_ 4 or `C++AMP`_ is feasible without rewriting a new
-  compiler for example;
+- the exit cost is low since it is *pure* `C++`_ *without any* extension
+  or ``#pragma``. Retargeting the SYCL_ classes and functions to use other
+  frameworks such as OpenMP_ 4 or `C++AMP`_ is feasible without rewriting
+  a new compiler for example;
 
 - easier debugging
 
@@ -94,10 +86,12 @@ other approaches:
     some operators allows deep intrusive debugging or code analysis
     without changing the algorithmic parts of the code;
 
-- SYCL_ is high-level standard C++11 without any extension, that means that
-  you can use your usual compiler and the host part can use extensions
-  such as OpenMP_, OpenHMPP_, OpenACC_,... or libraries such as MPI_, be
-  linked with other parts written in other languages (Fortran_...);
+- SYCL_ is high-level standard C++11 without any extension, that means
+  that you can use your usual compiler and the host part can use some cool
+  and common extensions such as OpenMP_, OpenHMPP_, OpenACC_,... or
+  libraries such as MPI_ or PGAS Coarray++, be linked with other parts
+  written in other languages (Fortran_...). Thus SYCL is already
+  Exascale-ready!
 
 - SYCL_ inherit from all the OpenCL_ world:
 
@@ -110,9 +104,42 @@ other approaches:
   - construction of SYCL_ objects from basic OpenCL_ objects to add some
     SYCL_ parts to an existing OpenCL_ application;
 
-  - so it provides a continuum from higher-level programming `à la` `C++AMP`_
-    or OpenMP_ 4 down to low-level OpenCL_, according to the optimization
-    needs, which seems the most compelling argument for SYCL_.
+  - so it provides a continuum from higher-level programming `à la`
+    `C++AMP`_ or OpenMP_ 4 down to low-level OpenCL_, according to the
+    optimization needs, from using simple OpenCL intrinsics or vector
+    operation from the ``cl::sycl`` namespace down to providing a real
+    OpenCL kernel to be executed without requiring all the cumbersome
+    usual OpenCL host API.
+
+  This OpenCL seamless integration plus the gradual optimization features
+  are perhaps the most compelling arguments for SYCL_ because it allows
+  high-level programming simplicity without giving-up hard-core
+  performance;
+
+- since the SYCL task graph execution model is asynchronous, this can be
+  used by side effect to overcome some underlying OpenCL implementation
+  limitations. For example, some OpenCL stacks may have only in-order
+  execution queues or even synchronous (blocking) ND-range enqueue, or
+  some weird constrained mapping between OpenCL programmer level queue(s)
+  and the hardware queues.
+
+  In this case, a SYCL implementation can deal with this, relying for
+  example on multiple host CPU threads, multiple thread-local-storage
+  (TLS) queues, its own scheduler, etc. atop the limited OpenCL stack to
+  provide computation and communication overlap in a natural pain-free
+  fashion. This relieves the programmer to reorganize her application to
+  work around these limitation, which can be quite a cumbersome work.
+
+For introduction material on the interest of DSEL_ in this area, look for
+example at these articles:
+
+- *Domain-specific Languages and Code Synthesis Using Haskell*, Andy
+  Gill. May 6, 2014 in ACM Queue and Communications of the ACM
+  http://queue.acm.org/detail.cfm?id=2617811
+
+- *Design Exploration through Code-generating DSLs*, Bo Joel Svensson,
+  Mary Sheeran and Ryan Newton. May 15, 2014 in ACM Queue and
+  Communications of the ACM http://queue.acm.org/detail.cfm?id=2626374
 
 
 Some presentations on SYCL
