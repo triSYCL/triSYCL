@@ -13,10 +13,10 @@ https://github.com/amd/triSYCL-private/tree/future in the
 https://github.com/amd/triSYCL-private private repository to use a more
 futuristic version.
 
-This is just the start of a SYCL_ mock-up, only based on C++14 and OpenMP_
-with execution on the CPU right now. So there is nothing related to
-OpenCL_ yet. But since in SYCL_ there is a host fall-back, this can be used
-as the start of this fall-back...
+This is just the start of a SYCL_ mock-up, only based on C++1z (2017?) and
+OpenMP_ with execution on the CPU right now. So there is nothing related
+to OpenCL_ yet. But since in SYCL_ there is a host fall-back, this can be
+used as the start of this fall-back...
 
 The parallel kernels can be executed in parallel on the CPU with OpenMP_ in
 the first range dimension, if compiled with OpenMP support.
@@ -25,18 +25,6 @@ This is provided as is, without any warranty, with the same license as
 LLVM_/Clang_.
 
 Main contributor: Ronan Keryell at AMD_ point cOm
-
-
-OpenCL triSYCL API
-------------------
-
-An experimental description of the API generated from triSYCL through
-Doxygen can be found in http://amd.github.io/triSYCL/Doxygen/SYCL/html and
-http://amd.github.io/triSYCL/Doxygen/SYCL/SYCL-API-refman.pdf
-
-The documentation of the triSYCL implementation itself can be found in
-http://amd.github.io/triSYCL/Doxygen/triSYCL/html and
-http://amd.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
 
 
 OpenCL SYCL
@@ -180,9 +168,27 @@ By reverse chronological order:
 Some implementations
 ~~~~~~~~~~~~~~~~~~~~
 
-Some other implementations:
+Some other known implementations:
 
-- CodePlay http://codeplay.com/products
+- CodePlay has an implementation based on OpenCL SPIR with Clang/LLVM
+  http://codeplay.com/products
+
+
+OpenCL triSYCL code documentation
+---------------------------------
+
+The documentation of the triSYCL implementation itself can be found in
+http://amd.github.io/triSYCL/Doxygen/triSYCL/html and
+http://amd.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
+
+An experimental description of the API generated from triSYCL through
+Doxygen can be found in http://amd.github.io/triSYCL/Doxygen/SYCL/html and
+http://amd.github.io/triSYCL/Doxygen/SYCL/SYCL-API-refman.pdf
+
+But since the implementation has moved toward more meta-progamming usage,
+this API documentation is no longer really descriptive of what is really
+available, since it is mainly hidden by the meta-programming power. At
+some point this API documentation will disappear.
 
 
 Installation
@@ -205,8 +211,8 @@ There is nothing else to do for now to use the include files from
 option when compiling.
 
 
-Doxygen documentation
-~~~~~~~~~~~~~~~~~~~~~
+Generating the Doxygen documentation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the top directory, run
 
@@ -262,25 +268,49 @@ You can build the binary with different compilers with
 Future
 ------
 
-Some ideas of future developments where *you* can contribute:
+Some ideas of future developments where *you* can contribute too: :-)
 
 - finish implementation of basic classes without any OpenCL_ support;
 
 - move to CMake for better portability;
 
-- add a test infrastructure;
+- improve the test infrastructure;
+
+- use the official OpenCL SYCL test suite to extend/debug/validate this
+  implementation;
 
 - add first OpenCL_ support with kernels provided only as strings, thus
-  avoiding the need of a compiler;
+  avoiding the need for a compiler. Could be based on other libraries such
+  as ``Bolt``, ``boost::compute`` or ``VexCL``;
+
+- make an accelerator version based on OpenMP_ 4 accelerator target,
+  OpenHMPP_ or OpenACC_;
 
 - make an accelerator version based on wrapper classes for the `C++AMP`_
   Open Source compiler
   https://bitbucket.org/multicoreware/cppamp-driver-ng/wiki/Home
 
-- make an accelerator version based on OpenMP_ 4, OpenHMPP_ or OpenACC_;
+  Extend the current C++AMP OpenCL HSA or SPIR back-end runtime to expose
+  OpenCL objects needed for the SYCL OpenCL interoperability. This is
+  probably the simpler approach to have a running SYCL compiler working
+  quickly.
+
+  The main issue is that since C++AMP support is not yet integrated in the
+  official trunk, it would take a long time to break things down and be
+  reviewed by the Clang/LLVM community;
 
 - extend runtime and Clang_/LLVM_ to generate OpenCL/SPIR_ from `C++`_
   single-source kernels, by using OpenMP outliner;
+
+- alternatively develop a Clang/LLVM-based version, recycling the outliner
+  which is already present for OpenMP support and modify it to generate
+  SPIR. Then build a specific version of ``libiomp5`` to use the OpenCL
+  C/C++ API to run the offloaded kernels.
+
+  This approach may require more work than the C++AMP version but since it
+  is based on the existing OpenMP infrastructure Intel spent a lot of time
+  to upstream through the official code review process, at the end it
+  would require quite less time for up-streaming, if this is the goal;
 
 - add OpenCL_ 2.x support.
 
