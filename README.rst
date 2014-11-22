@@ -1,6 +1,11 @@
 triSYCL
 +++++++
 
+.. section-numbering::
+
+.. contents::
+
+
 This is a humble implementation test-bed to experiment with the
 provisional specification of the OpenCL_ SYCL_ `C++`_ layer and to give
 feedback to the Khronos_ OpenCL_ SYCL_ committee.
@@ -292,8 +297,8 @@ You can build the binary with different compilers with
   make CXX=clang++
 
 
-Future
-------
+Possible futures
+----------------
 
 Some ideas of future developments where *you* can contribute too: :-)
 
