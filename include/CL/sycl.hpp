@@ -35,18 +35,18 @@
 */
 
 
-/* To remove some implementation details from the SYCL API documentation,
-   rely on the preprocessor when this preprocessor symbol is defined */
-#ifdef TRISYCL_HIDE_IMPLEMENTATION
-// Remove the content of TRISYCL_IMPL...
-#define TRISYCL_IMPL(...)
-#else
-// ... or keep the content of TRISYCL_IMPL
-#define TRISYCL_IMPL(...) __VA_ARGS__
-#endif
-
 #include <cstddef>
 #include <initializer_list>
+
+
+/// This implement SYCL 1.2
+#define CL_SYCL_LANGUAGE_VERSION 120
+
+/// This implement triSYCL 1.2
+#define CL_TRISYCL_LANGUAGE_VERSION 120
+
+/// This source is compiled by a single source compiler
+#define __SYCL_SINGLE_SOURCE__
 
 
 /** Define TRISYCL_OPENCL to add OpenCL
@@ -119,12 +119,13 @@ namespace access {
 
   /// This describes the type of the access mode to be used via accessor
   enum mode {
-    read = 42, //< Why not? Insist on the fact that read_write != read + write
-    write,
-    atomic,
-    read_write,
-    discard_read_write
+    read = 42, //?< Why not? Insist on the fact that read_write != read + write
+    write, ///< Write-only access, but previous content *not* discarded
+    read_write, ///< Read and write access
+    discard_write, ///< Write-only access and previous content discarded
+    discard_read_write ///< Read and write access and previous content discarded
   };
+
 
   /** The target enumeration describes the type of object to be accessed
      via the accessor
@@ -141,12 +142,36 @@ namespace access {
     cl_image
   };
 
+
+  /** Precise the address space a barrier needs to act on
+   */
+  enum class address_space : char {
+    local,
+    global,
+    global_and_local
+  };
+
 }
 
 /// \todo implement image
 template <std::size_t dimensions> struct image;
 
 /// @} End the data Doxygen group
+
+/** \addtogroup address_spaces Dealing with OpenCL address spaces
+    @{
+*/
+
+/** Enumerate the different OpenCL 2 address spaces */
+enum address_space {
+  constant_address_space,
+  generic_address_space,
+  global_address_space,
+  local_address_space,
+  private_address_space,
+};
+
+/// @} End the address_spaces Doxygen group
 
 }
 }
@@ -198,6 +223,7 @@ template<typename... BasicType>
 auto make_range(BasicType... Args) {
   return range<sizeof...(Args)>(Args...);
 }
+
 
 /** Define a multi-dimensional index, used for example to locate a work item
 
@@ -267,26 +293,26 @@ public:
 
 
   /// Get the global iteration space range
-  range<dims> get_global_range() { return GlobalRange; }
+  range<dims> get_global_range() const { return GlobalRange; }
 
 
   /// Get the local part of the iteration space range
-  range<dims> get_local_range() { return LocalRange; }
+  range<dims> get_local_range() const { return LocalRange; }
 
 
   /// Get the range of work-groups needed to run this ND-range
-  auto get_group_range() {
+  auto get_group_range() const {
     // \todo Assume that GlobalRange is a multiple of LocalRange, element-wise
     return GlobalRange/LocalRange;
   }
 
 
   /// \todo get_offset() is lacking in the specification
-  id<dims> get_offset() { return Offset; }
+  id<dims> get_offset() const { return Offset; }
 
 
   /// Display the value for debugging and validation purpose
-  void display() {
+  void display() const {
     GlobalRange.display();
     LocalRange.display();
     Offset.display();
@@ -295,15 +321,82 @@ public:
 };
 
 
-/** A SYCL item stores information on a work-item within a work-group,
-    with some more context such as the definition ranges.
-
-    \todo Add to the specification: get_nd_range() to be coherent with
-    providing get_local...() and get_global...() and what about the
-    offset?
+/** A SYCL item stores information on a work-item with some more context
+    such as the definition range and offset.
 */
 template <std::size_t dims = 1>
 struct item {
+  /// \todo add this Boost::multi_array or STL concept to the
+  /// specification?
+  static const auto dimensionality = dims;
+
+private:
+
+  range<dims> Range;
+  id<dims> GlobalIndex;
+  id<dims> Offset;
+
+
+public:
+
+  /** Create an item from a local size and an optional offset
+
+      \todo what is the meaning of this constructor for a programmer?
+  */
+  item(range<dims> global_size,
+       id<dims> global_index,
+       id<dims> offset = id<dims>()) :
+    Range { global_size }, GlobalIndex { global_index }, Offset { offset } {}
+
+
+  /** To be able to copy and assign item, use default constructors also
+
+      \todo Make most of them protected, reserved to implementation
+  */
+  item() = default;
+
+  /// Get the whole global id coordinate
+  id<dims> get_global_id() const { return GlobalIndex; }
+
+
+  /// Return the global coordinate in the given dimension
+  size_t get(int dimension) const { return GlobalIndex[dimension]; }
+
+
+  /// Return an l-value of the global coordinate in the given dimension
+  auto &operator[](int dimension) { return GlobalIndex[dimension]; }
+
+
+  /// Get the global range where this item dwells in
+  range<dims> get_global_range() const { return Range; }
+
+
+  /// Get the offset associated with the item context
+  id<dims> get_offset() const { return Offset; }
+
+
+  /** For the implementation, need to set the global index
+
+      \todo Move to private and add friends
+  */
+  void set_global(id<dims> Index) { GlobalIndex = Index; }
+
+
+  /// Display the value for debugging and validation purpose
+  void display() const {
+    Range.display();
+    GlobalIndex.display();
+    Offset.display();
+  }
+
+};
+
+
+/** A SYCL nd_item stores information on a work-item within a work-group,
+    with some more context such as the definition ranges.
+*/
+template <std::size_t dims = 1>
+struct nd_item {
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
   static const auto dimensionality = dims;
@@ -316,52 +409,91 @@ private:
 
 public:
 
-  /** Create an item from a local size and local size
+  /** Create an nd_item from a local size and local size
 
       \todo what is the meaning of this constructor for a programmer?
   */
-  item(range<dims> global_size, range<dims> local_size) :
+  nd_item(range<dims> global_size, range<dims> local_size) :
     NDRange { global_size, local_size } {}
 
 
   /** \todo a constructor from a nd_range too in the specification if the
       previous one has a meaning?
    */
-  item(nd_range<dims> ndr) : NDRange { ndr } {}
+  nd_item(nd_range<dims> ndr) : NDRange { ndr } {}
 
 
-  /// Return the global coordinate in the given dimension
-  auto get_global(int dimension) { return GlobalIndex[dimension]; }
+  /** Create a full nd_item
 
-
-  /// Return the local coordinate (that is in the work-group) in the given
-  /// dimension
-  auto get_local(int dimension) { return LocalIndex[dimension]; }
+      \todo this is for validation purpose. Hide this to the programmer
+      somehow
+  */
+  nd_item(id<dims> global_index,
+          id<dims> local_index,
+          nd_range<dims> ndr) :
+    GlobalIndex { global_index }, LocalIndex { local_index }, NDRange { ndr } {}
 
 
   /// Get the whole global id coordinate
-  id<dims> get_global() { return GlobalIndex; }
+  id<dims> get_global_id() const { return GlobalIndex; }
 
 
   /// Get the whole local id coordinate (which is respective to the
   /// work-group)
-  id<dims> get_local() { return LocalIndex; }
+  id<dims> get_local_id() const { return LocalIndex; }
 
 
-  /// Get the global range where this item rely in
-  range<dims> get_global_range() { return NDRange.get_global_range(); }
+  /// Get the whole group id coordinate
+  id<dims> get_group_id() const { return get_global_id()/get_local_range(); }
 
 
-  /// Get the local range (the dimension of the work-group) for this item
-  range<dims> get_local_range() { return NDRange.get_local_range(); }
+  /// Return the global coordinate in the given dimension
+  auto get_global_id(int dimension) const { return get_global_id()[dimension]; }
 
-  /// \todo Why the offset is not available here?
 
-  /// \todo Also provide access to the current nd_range?
+  /// Return the local coordinate (that is in the work-group) in the given
+  /// dimension
+  auto get_local_id(int dimension) const { return get_local_id()[dimension]; }
+
+
+  /// Get the whole group id coordinate in the given dimension
+  id<dims> get_group_id(int dimension) const {
+    return get_group_id()[dimension];
+  }
+
+
+  /// Get the global range where this nd_item dwells in
+  range<dims> get_global_range() const { return NDRange.get_global_range(); }
+
+
+  /// Get the local range (the dimension of the work-group) for this nd_item
+  range<dims> get_local_range() const { return NDRange.get_local_range(); }
+
+
+  /// Get the offset of the NDRange
+  id<dims> get_offset() const { return NDRange.get_offset(); }
+
+
+  /// Get the NDRange for this nd_item
+  nd_range<dims> get_nd_range() const { return NDRange; }
+
+
+  /** Executes a barrier with memory ordering on the local address space,
+      global address space or both based on the value of flag. The current
+      work- item will wait at the barrier until all work-items in the
+      current work-group have reached the barrier.  In addition the
+      barrier performs a fence operation ensuring that all memory accesses
+      in the specified address space issued before the barrier complete
+      before those issued after the barrier.
+
+      \todo To be implemented
+  */
+  void barrier(access::address_space flag) const {}
 
 
   // For the implementation, need to set the local index
   void set_local(id<dims> Index) { LocalIndex = Index; }
+
 
   // For the implementation, need to set the global index
   void set_global(id<dims> Index) { GlobalIndex = Index; }
@@ -405,43 +537,36 @@ public:
   id<dims> get_group_id() const { return Id; }
 
 
-  /** Get the local range for this work_group
-
-      \todo Update the specification to return a range<dims> instead of an
-      id<>
-  */
-  range<dims> get_local_range() { return NDR.get_local_range(); }
+  /// Get the local range for this work_group
+  range<dims> get_local_range() const { return NDR.get_local_range(); }
 
 
-  /** Get the local range for this work_group
-
-      \todo Update the specification to return a range<dims> instead of an
-      id<>
-  */
-  range<dims> get_global_range() { return NDR.get_global_range(); }
+  /// Get the local range for this work_group
+  range<dims> get_global_range() const { return NDR.get_global_range(); }
 
 
-  /// \todo Why the offset is not available here?
+  /// Get the offset of the NDRange
+  id<dims> get_offset() const { return NDR.get_offset(); }
 
 
   /// \todo Also provide this access to the current nd_range
-  nd_range<dims> get_nr_range() const { return NDR; }
+  nd_range<dims> get_nd_range() const { return NDR; }
 
 
   /** Return the group coordinate in the given dimension
 
-      \todo add it to the specification?
-
-      \todo is it supposed to be an int? A cl_int? a size_t?
-  */
-  auto &operator[](int index) {
-    return Id[index];
+      \todo In this implementation it is not const because the group<> is
+      written in the parallel_for iterators. To fix according to the
+      specification
+   */
+  auto &operator[](int dimension) {
+    return Id[dimension];
   }
 
 
   /// Return the group coordinate in the given dimension
-  auto get(int index) {
-    return (*this)[index];
+  std::size_t get(int dimension) const {
+    return Id[dimension];
   }
 
 };
@@ -502,6 +627,9 @@ struct exception {
       templated buffer
 
       \todo to be implemented
+
+      \todo How to get the real buffer type? Update: has been removed in
+      new specification
   */
   template <typename T, int dimensions> buffer<T, dimensions> *get_buffer() {
     assert(0); }
@@ -745,8 +873,7 @@ template <typename dataType,
           std::size_t dimensions,
           access::mode mode,
           access::target target = access::global_buffer>
-struct accessor
-TRISYCL_IMPL(: AccessorImpl<dataType, dimensions, mode, target>) {
+struct accessor : AccessorImpl<dataType, dimensions, mode, target> {
   /// \todo in the specification: store the dimension for user request
   static const auto dimensionality = dimensions;
   /// \todo in the specification: store the types for user request as STL
@@ -754,46 +881,17 @@ TRISYCL_IMPL(: AccessorImpl<dataType, dimensions, mode, target>) {
   using element = dataType;
   using value_type = dataType;
 
-#ifndef TRISYCL_HIDE_IMPLEMENTATION
   // Use a short-cut to the implementation because type name becomes quite
   // long...
   using Impl = AccessorImpl<dataType, dimensions, mode, target>;
-#endif
+
+  // Inherit of the constructors to have accessor constructor from BufferImpl
+  using Impl::AccessorImpl;
 
   /// Create an accessor to the given buffer
   // \todo fix the specification to rename target that shadows template parm
   accessor(buffer<dataType, dimensions> &targetBuffer) :
-    Impl(targetBuffer) {}
-
-
-  /** Get the element specified by the given id
-
-      \todo Implement the "const dataType &" version in the case the
-      accessor is not for writing, as required by the specification
-  */
-  dataType &operator[](id<dimensionality> Index) const {
-    return Impl::operator[](Index);
-  }
-
-
-  /** Get the element specified by the given index in the case we are
-      mono-dimensional
-
-      \todo This is not in the specification but looks like a cool common
-      feature. Or solving it with an implicit constructor of id<1>?
-  */
-  dataType &operator[](std::size_t Index) const {
-    return Impl::operator[](Index);
-  }
-
-
-  /** Get the element specified by the given item
-
-      \todo Add in the specification because used by HPC-GPU slide 22
-  */
-  dataType &operator[](item<dimensionality> Index) const {
-    return Impl::operator[](Index);
-  }
+    Impl(*targetBuffer.Impl) {}
 
 };
 
@@ -886,50 +984,64 @@ struct storage {
 /** A SYCL buffer is a multidimensional variable length array (à la C99
     VLA or even Fortran before) that is used to store data to work on.
 
-    In the case we initialize it from a pointer, for now we just wrap the
-    data with boost::multi_array_ref to provide the VLA semantics without
-    any storage.
+    \todo We have some read-write buffers and some read-only buffers,
+    according to the constructor called. So we could have some static
+    checking for correctness with the accessors used, but we do not have a
+    way in the specification to have a read-only buffer type for this.
 
     \todo there is a naming inconsistency in the specification between
     buffer and accessor on T versus datatype
 */
 template <typename T,
           std::size_t dimensions = 1>
-struct buffer TRISYCL_IMPL(: BufferImpl<T, dimensions>) {
-  /// \todo Extension to SYCL specification: provide pieces of STL
-  /// container interface?
+struct buffer {
+  /** \todo Extension to SYCL specification: provide pieces of STL
+      container interface? Yes for the construction, but not for the
+      access that is to be done through the accessor<>
+  */
   using element = T;
   using value_type = T;
 
-#ifndef TRISYCL_HIDE_IMPLEMENTATION
-  // Use a short-cut because type name becomes quite long...
-  using Impl = BufferImpl<T, dimensions>;
-#endif
+  /** Point to the underlying buffer implementation that can be shared in
+      the SYCL model */
+  std::shared_ptr<BufferImpl<T, dimensions>> Impl;
 
-  /** Create a new buffer with storage managed by SYCL
+  /** Use default constructors so that we can create a new buffer copy
+      from another one, with either a l-value or an r-value (for
+      std::move() for example).
+
+      Since we just copy the shared_ptr<> above, this is where/how the
+      sharing magic is happening with reference counting in this case.
+  */
+  buffer() = default;
+
+
+  /** Create a new read-write buffer with storage managed by SYCL
 
       \param r defines the size
   */
-  buffer(const range<dimensions> &r) : Impl(r) {}
+  buffer(const range<dimensions> &r)
+    : Impl(new BufferImpl<T, dimensions> { r }) {}
 
 
-  /** Create a new buffer with associated host memory
+  /** Create a new read-write buffer with associated host memory
 
       \param host_data points to the storage and values used by the buffer
 
       \param r defines the size
   */
-  buffer(T * host_data, range<dimensions> r) : Impl(host_data, r) {}
+  buffer(T * host_data, range<dimensions> r)
+    : Impl(new BufferImpl<T, dimensions> { host_data, r }) {}
 
 
-  /** Create a new read only buffer with associated host memory
+  /** Create a new read-only buffer with associated host memory
 
       \param host_data points to the storage and values used by the buffer
 
       \param r defines the size
   */
-  buffer(const T * host_data, range<dimensions> r) :
-    Impl(host_data, r) {}
+  buffer(const T * host_data, range<dimensions> r)
+    : Impl(new BufferImpl<T, dimensions> { host_data, r }) {}
 
 
   /** Create a new buffer from a storage abstraction provided by the user
@@ -946,25 +1058,30 @@ struct buffer TRISYCL_IMPL(: BufferImpl<T, dimensions>) {
   buffer(storage<T> &store, range<dimensions> r) { assert(0); }
 
 
-  /** Create a new allocated 1D buffer initialized from the given elements
+  /** Create a new read-write allocated 1D buffer initialized from the
+      given elements
 
       \param start_iterator points to the first element to copy
 
       \param end_iterator points to just after the last element to copy
 
-      \todo Add const to the SYCL specification
+      \todo Add const to the SYCL specification.
+
+      \todo Generalize this for n-D and provide column-major and row-major
+      initialization
+
+      \todo Allow read-only buffer construction too
+
+      \todo Allow initialization from ranges and collections à la STL
   */
-  buffer(const T * start_iterator, const T * end_iterator) :
-    Impl(start_iterator, end_iterator) {}
-
-
-  /** Create a new buffer copy that shares the data with the origin buffer
-
-      \param b is the buffer to copy from
-
-      The system use reference counting to deal with data lifetime
-  */
-  buffer(buffer<T, dimensions> &b) : Impl(b) {}
+  template <typename Iterator,
+            /* To force some iterator concept checking to avoid GCC 4.9
+               diving into this when initializing from ({ int, int })
+               which is a range<> and and not an iterator... */
+            typename ValueType =
+            typename std::iterator_traits<Iterator>::value_type>
+  buffer(Iterator start_iterator, Iterator end_iterator) :
+    Impl(new BufferImpl<T, dimensions> { start_iterator, end_iterator }) {}
 
 
   /** Create a new sub-buffer without allocation to have separate accessors
@@ -1014,11 +1131,47 @@ struct buffer TRISYCL_IMPL(: BufferImpl<T, dimensions>) {
       \param mode is the requested access mode
 
       \param target is the type of object to be accessed
+
+      \todo Do we need for an accessor to increase the reference count of
+      a buffer object? It does make more sense for a host-side accessor.
+
+      \todo Implement the modes and targets
   */
   template <access::mode mode,
             access::target target=access::global_buffer>
-  accessor<T, dimensions, mode, target> get_access() {
-    return { *this };
+  accessor<T, dimensions, mode, target> get_access() const {
+    return *Impl;
+  }
+
+
+  /// Get the range<> of the buffer
+  auto get_range() const {
+    /* Interpret the shape which is a pointer to the first element as an
+       array of dimensions elements so that the range<dimensions>
+       constructor is happy with this collection
+
+       \todo Add also a constructor in range<> to accept a const
+       std::size_t *?
+     */
+    return range<dimensions> { *(const std::size_t (*)[dimensions])(Impl->Allocation.shape()) };
+  }
+
+
+  /** Ask for read-only status of the buffer
+
+      \todo Add to specification
+  */
+  bool is_read_only() const { return Impl->ReadOnly; }
+
+
+  /** Return the use count of the data of this buffer
+
+      \todo Add to the specification? At least useful for the
+      non-regression testing.
+  */
+  auto use_count() const {
+    // Rely on the shared_ptr<> use_count()
+    return Impl.use_count();
   }
 
 };
@@ -1038,57 +1191,130 @@ namespace sycl {
     @{
 */
 
-/** kernel_lambda specify a kernel to be launch with a single_task or
-    parallel_for
-
-    \todo This seems to have also the kernel_functor name in the
-    specification
-*/
-template <typename KernelName, typename Functor>
-Functor kernel_lambda(Functor F) {
-  return F;
-}
-
 
 /** SYCL single_task launches a computation without parallelism at launch
     time.
 
-    Right now the implementation does nothing else that forwarding the
-    execution of the given functor
+    \param F specify the kernel to be launched as a single_task
 
-    \todo remove from the SYCL specification and use a range-less
-    parallel_for version with default construction of a 1-element range?
+    \param KernelName is a class type that defines the name to be used for
+    the underlying kernel
+
+    \todo Right now the implementation does nothing else that forwarding
+    the execution of the given functor
 */
+template <typename KernelName = std::nullptr_t>
 void single_task(std::function<void(void)> F) { F(); }
 
 
 /** SYCL parallel_for launches a data parallel computation with parallelism
-    specified at launch time by a range<>.
+    specified at launch time by a range<>
+
+    \param global_size is the full size of the range<>
+
+    \param N dimensionality of the iteration space
+
+    \param f is the kernel functor to execute
+
+    \param KernelName is a class type that defines the name to be used for
+    the underlying kernel
+
+    Unfortunately, to have implicit conversion to work on the range, the
+    function can not be templated, so instantiate it for all the
+    dimensions
 */
-template <std::size_t Dimensions = 1, typename ParallelForFunctor>
-void parallel_for(range<Dimensions> r, ParallelForFunctor f) {
-  ParallelForImpl(r, f);
-}
+#define TRISYCL_ParallelForFunctor_GLOBAL(N)                          \
+  template <typename KernelName = std::nullptr_t,                     \
+            typename ParallelForFunctor>                              \
+  void parallel_for(range<N> global_size,                             \
+                    ParallelForFunctor f) {                           \
+    ParallelForImpl(global_size, f);                                  \
+  }
+TRISYCL_ParallelForFunctor_GLOBAL(1)
+TRISYCL_ParallelForFunctor_GLOBAL(2)
+TRISYCL_ParallelForFunctor_GLOBAL(3)
 
 
 /** A variation of SYCL parallel_for to take into account a nd_range<>
- */
-template <std::size_t Dimensions = 1, typename ParallelForFunctor>
+
+    \param r defines the iteration space with the work-group layout and
+    offset
+
+    \param Dimensions dimensionality of the iteration space
+
+    \param f is the kernel functor to execute
+
+    \param ParallelForFunctor is the kernel functor type
+
+    \param KernelName is a class type that defines the name to be used for
+    the underlying kernel
+*/
+template <typename KernelName,
+          std::size_t Dimensions,
+          typename ParallelForFunctor>
 void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {
   ParallelForImpl(r, f);
 }
 
 
+/** SYCL parallel_for launches a data parallel computation with
+    parallelism specified at launch time by 1 range<> and an offset
+
+    \param global_size is the global size of the range<>
+
+    \param offset is the offset to be add to the id<> during iteration
+
+    \param f is the kernel functor to execute
+
+    \param ParallelForFunctor is the kernel functor type
+
+    \param KernelName is a class type that defines the name to be used for
+    the underlying kernel
+
+    Unfortunately, to have implicit conversion to work on the range, the
+    function can not be templated, so instantiate it for all the
+    dimensions
+*/
+#define TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(N)                   \
+  template <typename KernelName = std::nullptr_t,                     \
+            typename ParallelForFunctor>                              \
+  void parallel_for(range<N> global_size,                             \
+                    id<N> offset,                                     \
+                    ParallelForFunctor f) {                           \
+    ParallelForGlobalOffset(global_size, offset, f);  \
+  }
+TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(1)
+TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(2)
+TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(3)
+
+
 /// SYCL parallel_for version that allows a Program object to be specified
-template <typename Range, typename Program, typename ParallelForFunctor>
+/// \todo To be implemented
+/* template <typename Range, typename Program, typename ParallelForFunctor>
 void parallel_for(Range r, Program p, ParallelForFunctor f) {
   /// \todo deal with Program
   parallel_for(r, f);
 }
+*/
 
 
-/// Loop on the work-groups
-template <std::size_t Dimensions = 1, typename ParallelForFunctor>
+/** Loop on the work-groups
+
+    \param r defines the iteration space with the work-group layout and
+    offset
+
+    \param Dimensions dimensionality of the iteration space
+
+    \param f is the kernel functor to execute
+
+    \param ParallelForFunctor is the kernel functor type
+
+    \param KernelName is a class type that defines the name to be used for
+    the underlying kernel
+*/
+template <typename KernelName = std::nullptr_t,
+          std::size_t Dimensions = 1,
+          typename ParallelForFunctor>
 void parallel_for_workgroup(nd_range<Dimensions> r,
                             ParallelForFunctor f) {
   ParallelForWorkgroup(r, f);
@@ -1104,15 +1330,354 @@ void parallel_for_workitem(group<Dimensions> g, ParallelForFunctor f) {
 /// @} End the parallelism Doxygen group
 
 
-
-/** The kernel synchronization barrier
-
-    \todo To be implemented
+/** \addtogroup address_spaces
+    @{
 */
-void
-barrier(int barrier_type) {}
 
-int const CL_LOCAL_MEM_FENCE = 123;
+/** Declare a variable to be an OpenCL constant pointer
+
+    \param T is the pointer type
+
+    Note that if \a T is not a pointer type, it is an error.
+*/
+template <typename T>
+using constant = AddressSpaceImpl<T, constant_address_space>;
+
+
+/** Declare a variable to be an OpenCL 2 generic pointer
+
+    \param T is the pointer type
+
+    Note that if \a T is not a pointer type, it is an error.
+*/
+template <typename T>
+using generic = AddressSpaceImpl<T, generic_address_space>;
+
+
+/** Declare a variable to be an OpenCL global pointer
+
+    \param T is the pointer type
+
+    Note that if \a T is not a pointer type, it is an error.
+*/
+template <typename T>
+using global = AddressSpaceImpl<T, global_address_space>;
+
+
+/** Declare a variable to be an OpenCL local pointer
+
+    \param T is the pointer type
+
+    Note that if \a T is not a pointer type, it is an error.
+*/
+template <typename T>
+using local = AddressSpaceImpl<T, local_address_space>;
+
+
+/** Declare a variable to be an OpenCL private pointer
+
+    \param T is the pointer type
+
+    Note that if \a T is not a pointer type, it is an error.
+*/
+template <typename T>
+using priv = AddressSpaceImpl<T, private_address_space>;
+
+
+/** A pointer that can be statically associated to any address-space
+
+    \param Pointer is the pointer type
+
+    \param AS is the address space to point to
+
+    Note that if \a Pointer is not a pointer type, it is an error.
+*/
+template <typename Pointer, address_space AS>
+using multi_ptr = AddressSpacePointerImpl<Pointer, AS>;
+
+
+/** Construct a cl::sycl::multi_ptr<> with the right type
+
+    \param pointer is the address with its address space to point to
+
+    \todo Implement the case with a plain pointer
+*/
+template <typename T, address_space AS>
+multi_ptr<T, AS> make_multi(multi_ptr<T, AS> pointer) {
+  return pointer;
+}
+
+
+/// @} End the address_spaces Doxygen group
+
+
+/** \addtogroup vector Vector types in SYCL
+
+    @{
+*/
+
+
+/** Small OpenCL vector class
+
+    \todo add [] operator
+
+    \todo add iterators on elements, with begin() and end()
+
+    \todo having vec<> sub-classing array<> instead would solve the
+    previous issues
+
+    \todo move the implementation elsewhere
+
+    \todo simplify the helpers by removing some template types since there
+    are now inside the vec<> class.
+*/
+template <typename DataType, size_t NumElements>
+class vec {
+
+public:
+
+  /// The actual storage of the vector elements
+  std::array<DataType, NumElements> data;
+
+  static const size_t dimension = NumElements;
+  using element_type = DataType;
+
+
+  /** Construct a vec from anything from a scalar (to initialize all the
+      elements with this value) up to an aggregate of scalar and vector
+      types (in this case the total number of elements must match the size
+      of the vector)
+  */
+  template <typename... Types>
+  vec(const Types... args)
+    : data (expand<vec>(flatten_to_tuple<vec>(args...))) { }
+
+
+  /// Use classical constructors too
+  vec() = default;
+
+
+private:
+
+  /** Helper to construct an array from initializer elements provided as a
+      tuple
+
+      The trick is to get the std::index_sequence<> that represent 0,
+      1,..., dimension-1 as a variadic template pack Is that we can
+      iterate on, in this function.
+  */
+  template <typename V, typename Tuple, size_t... Is>
+  std::array<typename V::element_type, V::dimension>
+  tuple_to_array_iterate(Tuple t, std::index_sequence<Is...>) {
+    /* The effect is like a static for-loop with Is counting from 0 to
+       dimension-1 and thus constructing a uniform initialization { }
+       construction from each tuple element:
+       { std::get<0>(t), std::get<1>(t), ..., std::get<dimension-1>(t) }
+
+       The static cast is here to avoid the warning when there is a loss
+       of precision, for example when initializing an int from a float.
+    */
+    return { static_cast<typename V::element_type>(std::get<Is>(t))... };
+  }
+
+
+  /** Construct an array from initializer elements provided as a tuple
+   */
+  template <typename V, typename Tuple>
+  auto tuple_to_array(Tuple t) {
+    /* Construct an index_sequence with 0, 1, ..., (size of the tuple-1)
+       so that tuple_to_array_iterate can statically iterate on it */
+    return tuple_to_array_iterate<V>(t,
+                                     std::make_index_sequence<std::tuple_size<Tuple>::value>{});
+  }
+
+
+  /** Allows optional expansion of a 1-element tuple to a V::dimension
+      tuple to replicate scalar values in vector initialization
+  */
+  template <typename V, typename Tuple, bool expansion = false>
+  struct expand_to_vector {
+    static_assert(V::dimension == std::tuple_size<Tuple>::value,
+                  "The number of element in initialization should match the dimension of the vector");
+
+    // By default, act as a pass-through and do not do any expansion
+    static auto expand(Tuple t) { return t; }
+
+  };
+
+
+  /** Specialization in the case we ask for expansion */
+  template <typename V, typename Tuple>
+  struct expand_to_vector<V, Tuple, true> {
+    static_assert(std::tuple_size<Tuple>::value == 1,
+                  "Since it is a vector initialization from a scalar there should be only one initializer value");
+
+
+    /** Construct a tuple from a value
+
+        \param value is used to initialize each tuple element
+
+        \param size is the number of elements of the tuple to be generated
+
+        The trick is to get the std::index_sequence<> that represent 0,
+        1,..., dimension-1 as a variadic template pack Is that we can
+        iterate on, in this function.
+    */
+    template <typename Value, size_t... Is>
+    static auto fill_tuple(Value e, std::index_sequence<Is...>) {
+      /* The effect is like a static for-loop with Is counting from 0 to
+         dimension-1 and thus replicating the pattern to have
+         make_tuple( (0, e), (1, e), ... (n - 1, e) )
+
+         Since the "," operator is just here to throw away the Is value
+         (which is needed for the pack expansion...), at the end this is
+         equivalent to:
+         make_tuple( e, e, ..., e )
+      */
+      return std::make_tuple(((void)Is, e)...);
+    }
+
+
+    /** We expand the 1-element tuple by replicating into a tuple with the
+        size of the vector */
+    static auto expand(Tuple t) {
+      return fill_tuple(std::get<0>(t),
+                        std::make_index_sequence<V::dimension>{});
+    }
+
+  };
+
+
+  /** Create the array data of V from a tuple of initializer
+
+      If there is only 1 initializer, this is a scalar initialization of a
+      vector and the value is expanded to all the vector elements first.
+   */
+  template <typename V, typename Tuple>
+  auto expand(Tuple t) {
+    return tuple_to_array<V>(expand_to_vector<V,
+                             decltype(t),
+                             /* Only ask the expansion to all vector
+                                element if there only a scalar
+                                initializer */
+                             std::tuple_size<Tuple>::value == 1>{}.expand(t));
+  }
+
+
+  /** Flattening helper that does not change scalar values but flatten a
+      vec<T, n> v into a tuple<T, T,..., T>{ v[0], v[1],..., v[n-1] }
+
+      If we have a vector, just forward its array content since an array
+      has also a tuple interface :-) (23.3.2.9 Tuple interface to class
+      template array [array.tuple])
+  */
+  template <typename V, typename Element, size_t s>
+  static auto flatten(const vec<Element, s> i) {
+    static_assert(s <= V::dimension,
+                  "The element i will not fit in the vector");
+    return i.data;
+  }
+
+
+  /** If we do not have a vector, just forward it as a tuple up to the
+      final initialization.
+
+      \return typically tuple<double>{ 2.4 } from 2.4 input for example
+  */
+  template <typename V, typename Type>
+  static auto flatten(const Type i) {
+    return std::forward_as_tuple(i);
+  }
+
+
+ /** Take some initializer values and apply flattening on each value
+
+      \return a tuple of scalar initializer values
+   */
+  template <typename V, typename... Types>
+  static auto flatten_to_tuple(const Types... i) {
+    // Concatenate the tuples returned by each flattening
+    return std::tuple_cat(flatten<V>(i)...);
+  }
+
+
+  /// \todo To implement
+#if 0
+  vec<dataT,
+      numElements>
+  operator+(const vec<dataT, numElements> &rhs) const;
+  vec<dataT, numElements>
+  operator-(const vec<dataT, numElements> &rhs) const;
+  vec<dataT, numElements>
+  operator*(const vec<dataT, numElements> &rhs) const;
+  vec<dataT, numElements>
+  operator/(const vec<dataT, numElements> &rhs) const;
+  vec<dataT, numElements>
+  operator+=(const vec<dataT, numElements> &rhs);
+  vec<dataT, numElements>
+  operator-=(const vec<dataT, numElements> &rhs);
+  vec<dataT, numElements>
+  operator*=(const vec<dataT, numElements> &rhs);
+  vec<dataT, numElements>
+  operator/=(const vec<dataT, numElements> &rhs);
+  vec<dataT, numElements>
+  operator+(const dataT &rhs) const;
+  vec<dataT, numElements>
+  operator-(const dataT &rhs) const;
+  vec<dataT, numElements>
+  operator*(const dataT &rhs) const;
+  vec<dataT, numElements>
+  operator/(const dataT &rhs) const;
+  vec<dataT, numElements>
+  operator+=(const dataT &rhs);
+  vec<dataT, numElements>
+  operator-=(const dataT &rhs);
+  vec<dataT, numElements>
+  operator*=(const dataT &rhs);
+  vec<dataT, numElements>
+  operator/=(const dataT &rhs);
+  vec<dataT, numElements> &operator=(const vec<dataT, numElements> &rhs);
+  vec<dataT, numElements> &operator=(const dataT &rhs);
+  bool operator==(const vec<dataT, numElements> &rhs) const;
+  bool operator!=(const vec<dataT, numElements> &rhs) const;
+  // Swizzle methods (see notes)
+  swizzled_vec<T, out_dims> swizzle<int s1, ...>();
+#ifdef SYCL_SIMPLE_SWIZZLES
+  swizzled_vec<T, 4> xyzw();
+  ...
+#endif // #ifdef SYCL_SIMPLE_SWIZZLES
+#endif
+};
+
+  /** A macro to define type alias, such as for type=uchar, size=4 and
+      real_type=unsigned char, uchar4 is equivalent to vec<float, 4>
+  */
+#define TRISYCL_DEFINE_VEC_TYPE_SIZE(type, size, actual_type) \
+  using type##size = vec<actual_type, size>;
+
+  /// Declare the vector types of a type for all the sizes
+#define TRISYCL_DEFINE_VEC_TYPE(type, actual_type)           \
+  TRISYCL_DEFINE_VEC_TYPE_SIZE(type, 1, actual_type)         \
+  TRISYCL_DEFINE_VEC_TYPE_SIZE(type, 2, actual_type)         \
+  TRISYCL_DEFINE_VEC_TYPE_SIZE(type, 3, actual_type)         \
+  TRISYCL_DEFINE_VEC_TYPE_SIZE(type, 4, actual_type)         \
+  TRISYCL_DEFINE_VEC_TYPE_SIZE(type, 8, actual_type)         \
+  TRISYCL_DEFINE_VEC_TYPE_SIZE(type, 16, actual_type)
+
+  /// Declare all the possible vector type aliases
+  TRISYCL_DEFINE_VEC_TYPE(char, char)
+  TRISYCL_DEFINE_VEC_TYPE(uchar, unsigned char)
+  TRISYCL_DEFINE_VEC_TYPE(short, short int)
+  TRISYCL_DEFINE_VEC_TYPE(ushort, unsigned short int)
+  TRISYCL_DEFINE_VEC_TYPE(int, int)
+  TRISYCL_DEFINE_VEC_TYPE(uint, unsigned int)
+  TRISYCL_DEFINE_VEC_TYPE(long, long int)
+  TRISYCL_DEFINE_VEC_TYPE(ulong, unsigned long int)
+  TRISYCL_DEFINE_VEC_TYPE(float, float)
+  TRISYCL_DEFINE_VEC_TYPE(double, double)
+
+/// @} End the vector Doxygen group
+
 
 }
 }

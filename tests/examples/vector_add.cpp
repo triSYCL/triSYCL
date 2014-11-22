@@ -38,10 +38,10 @@ int main() {
       auto kc = C.get_access<access::write>();
 
       // Enqueue a single, simple task
-      single_task(kernel_lambda<class sequential_vector>([=] () {
+      single_task<class sequential_vector>([=] () {
         for(int i = 0; i < N; i++)
           kc[i] = ka[i] + kb[i];
-      }));
+      });
     }); // End of our commands for this queue
   } // End scope, so we wait for the queue to complete
 

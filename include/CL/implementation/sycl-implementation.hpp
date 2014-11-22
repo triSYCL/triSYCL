@@ -16,10 +16,14 @@
 #include <type_traits>
 #include <iostream>
 #include <iterator>
-#include "boost/multi_array.hpp"
+#include <memory>
+#include <tuple>
+#include <utility>
+#include <boost/multi_array.hpp>
 #include <boost/operators.hpp>
 
 #include "sycl-debug.hpp"
+#include "sycl-address-spaces.hpp"
 
 /// triSYCL implementation dwells in the cl::sycl::trisycl namespace
 namespace cl {
@@ -28,6 +32,7 @@ namespace sycl {
 // Forward declaration for the buffer<> and the accessor<>
 template <std::size_t dims> struct id;
 template <std::size_t dims> struct item;
+template <std::size_t dims> struct nd_item;
 template <std::size_t dims> struct range;
 
 namespace trisycl {
@@ -157,8 +162,9 @@ struct SmallArray123<BasicType, FinalType, 1>
 
   using SmallArray<BasicType, FinalType, 1>::SmallArray;
 
-  /** Conversion so that an id<1> can basically be used like an integer */
-  operator BasicType() {
+  /** Conversion so that an for example an id<1> can basically be used
+      like an integer */
+  operator BasicType() const {
     return (*this)[0];
   }
 };
@@ -247,20 +253,61 @@ struct AccessorImpl {
   AccessorImpl(BufferImpl<T, dimensions> &targetBuffer) :
     Array(targetBuffer.Access) {}
 
-  /// This is when we access to AccessorImpl[] that we override the const if any
-  auto &operator[](std::size_t Index) const {
-    return (const_cast<WritableArrayViewType &>(Array))[Index];
+
+  /** Use the accessor in with integers à la [][][]
+
+      Use ArrayViewType::reference instead of auto& because it does not
+      work in some dimensions.
+   */
+  typename ArrayViewType::reference operator[](std::size_t Index) {
+    return Array[Index];
   }
 
-  /// This is when we access to AccessorImpl[] that we override the const if any
+
+  /// To use the accessor in with [id<>]
+  auto &operator[](id<dimensionality> Index) {
+    return (const_cast<WritableArrayViewType &>(Array))(Index);
+  }
+
+
+  /** To use the accessor in with [id<>]
+
+      This is when we access to AccessorImpl[] that we override the const
+      if any
+  */
   auto &operator[](id<dimensionality> Index) const {
     return (const_cast<WritableArrayViewType &>(Array))(Index);
   }
 
-  /// \todo Add in the specification because use by HPC-GPU slide 22
-  auto &operator[](item<dimensionality> Index) const {
-    return (const_cast<WritableArrayViewType &>(Array))(Index.get_global());
+
+  /// To use an accessor with [item<>]
+  auto &operator[](item<dimensionality> Index) {
+    return (*this)[Index.get_global_id()];
   }
+
+
+  /// To use an accessor with [item<>]
+  auto &operator[](item<dimensionality> Index) const {
+    return (*this)[Index.get_global_id()];
+  }
+
+
+  /** To use an accessor with an [nd_item<>]
+
+      \todo Add in the specification because use by HPC-GPU slide 22
+  */
+  auto &operator[](nd_item<dimensionality> Index) {
+    return (*this)[Index.get_global_id()];
+  }
+
+  /** To use an accessor with an [nd_item<>]
+
+      \todo Add in the specification because use by HPC-GPU slide 22
+  */
+  auto &operator[](nd_item<dimensionality> Index) const {
+    return (*this)[Index.get_global_id()];
+  }
+
 };
 
 
@@ -279,30 +326,37 @@ struct BufferImpl {
   using element = T;
   using value_type = T;
 
-  // If some allocation is requested, it is managed by this multi_array
+  /** If some allocation is requested, it is managed by this multi_array
+      to ease initialization from data */
   boost::multi_array<T, dimensions> Allocation;
-  // This is the multi-dimensional interface to the data
+  /** This is the multi-dimensional interface to the data that may point
+      to either Allocation in the case of storage managed by SYCL itself
+      or to some other memory location in the case of host memory or
+      storage<> abstraction use
+  */
   boost::multi_array_ref<T, dimensions> Access;
-  // If the data are read-only, store the information for later optimization
-  bool ReadOnly ;
+  /// If the data are read-only, store the information for later optimization.
+  /// \todo Replace this by a static read-only type for the buffer
+  bool ReadOnly;
 
 
-  /// Create a new BufferImpl of size \param r
+  /// Create a new read-write BufferImpl of size \param r
   BufferImpl(range<dimensions> const &r) : Allocation(r),
-                                               Access(Allocation),
-                                               ReadOnly(false) {}
+                                           Access(Allocation),
+                                           ReadOnly(false) {}
 
 
-  /** Create a new BufferImpl from \param host_data of size \param r without
-      further allocation */
+  /** Create a new read-write BufferImpl from \param host_data of size
+      \param r without further allocation */
   BufferImpl(T * host_data, range<dimensions> r) : Access(host_data, r),
-                                                       ReadOnly(false) {}
+                                                   ReadOnly(false) {}
 
 
-  /** Create a new read only BufferImpl from \param host_data of size \param r
+  /** Create a new read-only BufferImpl from \param host_data of size \param r
       without further allocation */
   BufferImpl(const T * host_data, range<dimensions> r) :
-    Access(host_data, r),
+    /// \todo Need to solve this const buffer issue in a clean way
+    Access(const_cast<T *>(host_data), r),
     ReadOnly(true) {}
 
 
@@ -310,32 +364,39 @@ struct BufferImpl {
   //BufferImpl(storage<T> &store, range<dimensions> r)
 
   /// Create a new allocated 1D BufferImpl from the given elements
-  BufferImpl(const T * start_iterator, const T * end_iterator) :
+  template <typename Iterator>
+  BufferImpl(Iterator start_iterator, Iterator end_iterator) :
     // The size of a multi_array is set at creation time
     Allocation(boost::extents[std::distance(start_iterator, end_iterator)]),
-    Access(Allocation) {
+    Access(Allocation),
+    ReadOnly(false) {
     /* Then assign Allocation since this is the only multi_array
        method with this iterator interface */
     Allocation.assign(start_iterator, end_iterator);
   }
 
 
-  /// Create a new BufferImpl from an old one, with a new allocation
+  /** Create a new BufferImpl from an old one, with a new allocation
+
+      \todo Refactor the implementation to deal with buffer sharing with
+      reference counting
+  */
   BufferImpl(const BufferImpl<T, dimensions> &b) : Allocation(b.Access),
                                                    Access(Allocation),
-                                                   ReadOnly(false) {}
+                                                   ReadOnly(b.ReadOnly) {}
 
 
   /** Create a new sub-BufferImplImpl without allocation to have separate
-      accessors later */
-  /* \todo
+      accessors later
+
+      \todo To implement and deal with reference counting
   BufferImpl(BufferImpl<T, dimensions> b,
              index<dimensions> base_index,
              range<dimensions> sub_range)
   */
 
-  // Allow CLHPP objects too?
-  // \todo
+  /// \todo Allow CLHPP objects too?
+  ///
   /*
   BufferImpl(cl_mem mem_object,
              queue from_queue,

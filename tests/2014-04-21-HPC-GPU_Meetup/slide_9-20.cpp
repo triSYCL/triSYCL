@@ -9,14 +9,12 @@ int main ()
     {
         cl::sycl::queue myQueue;
         cl::sycl::buffer<int> resultBuf (&result, 1);
-        cl::sycl::command_group (myQueue, [&] ()
-        {
+        cl::sycl::command_group (myQueue, [&] () {
             auto writeResult = resultBuf.get_access<cl::sycl::access::write> ();
 
-            cl::sycl::single_task(cl::sycl::kernel_lambda<class simple_test>([=] ()
-            {
+            cl::sycl::single_task<class simple_test>([=] () {
                 writeResult [0] = 1234;
-            }));
+              });
         });
     }
     printf ("Result = %d\n", result);
