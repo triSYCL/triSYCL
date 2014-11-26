@@ -138,13 +138,14 @@ other approaches:
 For introduction material on the interest of DSEL_ in this area, look for
 example at these articles:
 
-- *Domain-specific Languages and Code Synthesis Using Haskell*, Andy
-  Gill. May 6, 2014 in ACM Queue and Communications of the ACM
-  http://queue.acm.org/detail.cfm?id=2617811
+- `Domain-specific Languages and Code Synthesis Using Haskell
+  <http://queue.acm.org/detail.cfm?id=2617811>`_, Andy Gill. May 6, 2014
+  in ACM Queue and Communications of the ACM.
 
-- *Design Exploration through Code-generating DSLs*, Bo Joel Svensson,
-  Mary Sheeran and Ryan Newton. May 15, 2014 in ACM Queue and
-  Communications of the ACM http://queue.acm.org/detail.cfm?id=2626374
+- `Design Exploration through Code-generating DSLs
+  <http://queue.acm.org/detail.cfm?id=2626374>`_, Bo Joel Svensson, Mary
+  Sheeran and Ryan Newton. May 15, 2014 in ACM Queue and Communications of
+  the ACM.
 
 
 Some presentations and publications on SYCL
@@ -164,7 +165,7 @@ By reverse chronological order:
   OpenCL Working Group — SYCL subgroup. Editors: Lee Howes and Maria
   Rovatsou. Version 1.2, Revision 2014-09-16.
 
-- `OpenCL 2.0, OpenCL SYCL and OpenMP 4, open standards for heterogeneous
+- `OpenCL 2.0, OpenCL SYCL & OpenMP 4, open standards for heterogeneous
   parallel programming
   <http://ronan.keryell.fr/Talks/2014/2014-07-03-Paris_HPC_GPU_meetup/2014-07-03-Paris-HPC-GPU-Meetup-RK-expose.pdf>`_,
   Ronan Keryell (AMD & Khronos OpenCL Working Group Member). 3 July, 2014,
