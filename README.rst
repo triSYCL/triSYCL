@@ -152,6 +152,12 @@ Some presentations on SYCL
 
 By reverse chronological order:
 
+- *Modern C++, OpenCL SYCL & OpenCL CL2.hpp*, Ronan Keryell (AMD & Khronos
+  OpenCL SYCL Working Group Member). 18 November, 2014, SuperComputing
+  2014, OpenCL BoF, New Orleans, USA.
+  http://sc14.supercomputing.org/schedule/event_detail?evid=bof131 slides:
+  http://ronan.keryell.fr/Talks/2014/2014-11-18-SC14-OpenCL_BoF_SYCL/2014-11-18-OpenCL_BoF_SYCL-expose.pdf
+
 - *OpenCL 2.0, OpenCL SYCL & OpenMP 4, open standards for heterogeneous
   parallel programming*, Ronan Keryell (AMD & Khronos OpenCL Working Group
   Member). 3 July, 2014, High Performance Computing & Supercomputing Group
