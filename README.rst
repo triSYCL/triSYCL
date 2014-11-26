@@ -6,7 +6,7 @@ triSYCL
 .. contents::
 
 
-This is a humble implementation test-bed to experiment with the
+triSYCL is a humble implementation test-bed to experiment with the
 provisional specification of the OpenCL_ SYCL_ `C++`_ layer and to give
 feedback to the Khronos_ OpenCL_ SYCL_ committee.
 
@@ -147,60 +147,69 @@ example at these articles:
   Communications of the ACM http://queue.acm.org/detail.cfm?id=2626374
 
 
-Some presentations on SYCL
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Some presentations and publications on SYCL
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 By reverse chronological order:
 
-- *Modern C++, OpenCL SYCL & OpenCL CL2.hpp*, Ronan Keryell (AMD & Khronos
-  OpenCL SYCL Working Group Member). 18 November, 2014, SuperComputing
-  2014, OpenCL BoF, New Orleans, USA.
-  http://sc14.supercomputing.org/schedule/event_detail?evid=bof131 slides:
-  http://ronan.keryell.fr/Talks/2014/2014-11-18-SC14-OpenCL_BoF_SYCL/2014-11-18-OpenCL_BoF_SYCL-expose.pdf
+- `Modern C++, OpenCL SYCL & OpenCL CL2.hpp
+  <http://ronan.keryell.fr/Talks/2014/2014-11-18-SC14-OpenCL_BoF_SYCL/2014-11-18-OpenCL_BoF_SYCL-expose.pdf>`_,
+  Ronan Keryell (AMD & Khronos OpenCL SYCL Working Group Member). 18
+  November, 2014, Presentation at `SuperComputing 2014, OpenCL BoF
+  <http://sc14.supercomputing.org/schedule/event_detail?evid=bof131>`_,
+  New Orleans, USA.
 
-- *OpenCL 2.0, OpenCL SYCL & OpenMP 4, open standards for heterogeneous
-  parallel programming*, Ronan Keryell (AMD & Khronos OpenCL Working Group
-  Member). 3 July, 2014, High Performance Computing & Supercomputing Group
-  of Paris.
-  http://www.meetup.com/HPC-GPU-Supercomputing-Group-of-Paris-Meetup/events/185216422/
-  slides: http://ronan.keryell.fr/Talks/2014/2014-07-03-Paris_HPC_GPU_meetup/2014-07-03-Paris-HPC-GPU-Meetup-RK-expose.pdf
+- `SYCL Specification --- SYCL integrates OpenCL devices with modern C++
+  <https://www.khronos.org/registry/sycl/specs/sycl-1.2.pdf>`_, Khronos
+  OpenCL Working Group — SYCL subgroup. Editors: Lee Howes and Maria
+  Rovatsou. Version 1.2, Revision 2014-09-16.
 
-- *OpenCL 2.0, OpenCL SYCL & OpenMP 4, open standards for heterogeneous
-  parallel programming*, Ronan Keryell (AMD & Khronos OpenCL Working Group
-  Member). 2 July, 2014, Forum Ter@tec: *Calcul scientifique & Open Source
-  : pratiques industrielles des logiciels libres*.
-  http://www.teratec.eu/forum/atelier_3.html slides:
-  http://ronan.keryell.fr/Talks/2014/2014-07-02-Ter@Tec/Ter@tec-HC-RK-expose.pdf
+- `OpenCL 2.0, OpenCL SYCL and OpenMP 4, open standards for heterogeneous
+  parallel programming
+  <http://ronan.keryell.fr/Talks/2014/2014-07-03-Paris_HPC_GPU_meetup/2014-07-03-Paris-HPC-GPU-Meetup-RK-expose.pdf>`_,
+  Ronan Keryell (AMD & Khronos OpenCL Working Group Member). 3 July, 2014,
+  Presentation at the Meetup of the `High Performance Computing &
+  Supercomputing Group of Paris
+  <http://www.meetup.com/HPC-GPU-Supercomputing-Group-of-Paris-Meetup/events/185216422>`_.
+
+- `OpenCL 2.0, OpenCL SYCL & OpenMP 4, open standards for heterogeneous
+  parallel programming
+  <http://ronan.keryell.fr/Talks/2014/2014-07-02-Ter@Tec/Ter@tec-HC-RK-expose.pdf>`_,
+  Ronan Keryell (AMD & Khronos OpenCL Working Group Member). 2 July, 2014,
+  Presentation at Forum Ter\@tec: `Calcul scientifique & Open Source :
+  pratiques industrielles des logiciels libres
+  <http://www.teratec.eu/forum/atelier_3.html>`_.
 
 - *SYCL : Abstraction Layer for Leveraging C++ and OpenCL*, Maria Rovatsou
   (Codeplay & Khronos OpenCL Working Group Member). 12-13 May, 2014,
-  IWOCL 2014.
-  http://iwocl.org/iwocl-2014/abstracts/sycl-abstraction-layer-for-leveraging-c-and-opencl/
+  `IWOCL 2014
+  <http://iwocl.org/iwocl-2014/abstracts/sycl-abstraction-layer-for-leveraging-c-and-opencl>`_.
 
 - *Building the OpenCL ecosystem - SYCL for OpenCL*, Lee Howes (Senior
   Staff Engineer at Qualcomm & Khronos OpenCL Working Group Member). 21
-  April, 2014, HPC & GPU Supercomputing Group of Silicon
-  Valley. http://www.meetup.com/HPC-GPU-Supercomputing-Group-of-Silicon-Valley/events/151429932/
+  April, 2014, `HPC & GPU Supercomputing Group of Silicon Valley
+  <http://www.meetup.com/HPC-GPU-Supercomputing-Group-of-Silicon-Valley/events/151429932>`_.
 
-- *SYCL 1.2: Unofficial High-Level Overview*, AJ Guillon (Khronos OpenCL
-  Working Group Member). 19
-  March, 2014. https://www.youtube.com/watch?v=-mEQhf8MeUI
+- `SYCL 1.2: Unofficial High-Level Overview
+  <https://www.youtube.com/watch?v=-mEQhf8MeUI>`_, AJ Guillon (Khronos
+  OpenCL Working Group Member). 19 March, 2014. Video.
 
-- *SYCL for OpenCL*, Andrew Richards (CEO Codeplay & Chair SYCL Working
-  group). 19 March, 2014, GDC 2014.
-  http://www.khronos.org/assets/uploads/developers/library/2014-gdc/SYCL-for-OpenCL-GDC-Mar14.pdf
+- `SYCL for OpenCL
+  <http://www.khronos.org/assets/uploads/developers/library/2014-gdc/SYCL-for-OpenCL-GDC-Mar14.pdf>`_,
+  Andrew Richards (CEO Codeplay & Chair SYCL Working group). 19 March,
+  2014, GDC 2014.
 
-- *Fusing GPU kernels within a novel single-source C++ API*, Ralph Potter,
-  Paul Keir, Jan Lucas, Maurico Alvarez-Mesa, Ben Juurlink and Andrew
-  Richards. 20 January, 2014, LPGPU Workshop on Power-Efficient GPU and
-  Many-core Computing (PEGPUM 2014).
-  http://lpgpu.org/wp/wp-content/uploads/2014/02/PEGPUM_2014_codeplay.pdf
+- `Fusing GPU kernels within a novel single-source C++ API
+  <http://lpgpu.org/wp/wp-content/uploads/2014/02/PEGPUM_2014_codeplay.pdf>`_,
+  Ralph Potter, Paul Keir, Jan Lucas, Maurico Alvarez-Mesa, Ben Juurlink
+  and Andrew Richards. 20 January, 2014, LPGPU Workshop on Power-Efficient
+  GPU and Many-core Computing (PEGPUM 2014).
 
-- *Fusing GPU kernels within a novel single-source C++ API*, Ralph Potter,
-  Paul Keir, Jan Lucas, Mauricio Alvarez-Mesa, Ben Juurlink, Andrew
-  Richards. 18 November, 2013, Intel Compiler, Architecture and Tools
-  Conference.
-  https://software.intel.com/sites/default/files/managed/c5/45/Confpkeir_haifa_compilers_architectures_tools.pdf
+- `Fusing GPU kernels within a novel single-source C++ API
+  <https://software.intel.com/sites/default/files/managed/c5/45/Confpkeir_haifa_compilers_architectures_tools.pdf>`_,
+  Ralph Potter, Paul Keir, Jan Lucas, Mauricio Alvarez-Mesa, Ben Juurlink,
+  Andrew Richards. 18 November, 2013, Intel Compiler, Architecture and
+  Tools Conference.
 
 
 Some implementations
@@ -210,6 +219,20 @@ Some other known implementations:
 
 - CodePlay has an implementation based on OpenCL SPIR with Clang/LLVM
   http://codeplay.com/products
+
+
+Related projects
+~~~~~~~~~~~~~~~~
+
+- `C++AMP`_
+
+- Open Source implementation of C++AMP https://bitbucket.org/multicoreware/cppamp-driver-ng
+
+- Intel Lab's iHRC https://github.com/IntelLabs/iHRC
+
+- C++ Parallelism TS https://github.com/cplusplus/parallelism-ts
+
+- C++ Concurrency TS https://github.com/cplusplus/concurrency_ts
 
 
 OpenCL triSYCL code documentation
@@ -227,20 +250,6 @@ But since the implementation has moved toward more meta-progamming usage,
 this API documentation is no longer really descriptive of what is really
 available, since it is mainly hidden by the meta-programming power. At
 some point this API documentation will disappear.
-
-
-Related projects
-~~~~~~~~~~~~~~~~
-
-- `C++AMP`_
-
-- Open Source implementation of C++AMP https://bitbucket.org/multicoreware/cppamp-driver-ng
-
-- Intel Lab's iHRC https://github.com/IntelLabs/iHRC
-
-- C++ Parallelism TS https://github.com/cplusplus/parallelism-ts
-
-- C++ Concurrency TS https://github.com/cplusplus/concurrency_ts
 
 
 Installation
