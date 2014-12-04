@@ -148,8 +148,8 @@ example at these articles:
   the ACM.
 
 
-Some presentations and publications on SYCL
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Some presentations and publications related to SYCL
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 By reverse chronological order:
 
@@ -180,6 +180,11 @@ By reverse chronological order:
   Presentation at Forum Ter\@tec: `Calcul scientifique & Open Source :
   pratiques industrielles des logiciels libres
   <http://www.teratec.eu/forum/atelier_3.html>`_.
+
+- `The Future of Accelerator Programming in C++
+  <https://github.com/boostcon/cppnow_presentations_2014/blob/master/files/CppNow2014_Future_of_Accelerator_Programming.pdf?raw=true>`_,
+  Sebastian Schaetz, 18 May, 2014. Presentation at `C++Now 2014
+  <http://cppnow.org/schedule-2014>`_.
 
 - *SYCL : Abstraction Layer for Leveraging C++ and OpenCL*, Maria Rovatsou
   (Codeplay & Khronos OpenCL Working Group Member). 12-13 May, 2014,
