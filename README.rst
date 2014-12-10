@@ -156,8 +156,8 @@ By reverse chronological order:
 
 - `Modern C++, OpenCL SYCL & OpenCL CL2.hpp
   <http://ronan.keryell.fr/Talks/2014/2014-11-18-SC14-OpenCL_BoF_SYCL/2014-11-18-OpenCL_BoF_SYCL-expose.pdf>`_,
-  Ronan Keryell (AMD & Khronos OpenCL SYCL Working Group Member). 18
-  November, 2014, Presentation at `SuperComputing 2014, OpenCL BoF
+  Ronan Keryell (AMD & Khronos OpenCL SYCL Working Group Member).
+  November 18, 2014, Presentation at `SuperComputing 2014, OpenCL BoF
   <http://sc14.supercomputing.org/schedule/event_detail?evid=bof131>`_,
   New Orleans, USA.
 
@@ -177,7 +177,7 @@ By reverse chronological order:
 - `OpenCL 2.0, OpenCL SYCL & OpenMP 4, open standards for heterogeneous
   parallel programming
   <http://ronan.keryell.fr/Talks/2014/2014-07-03-Paris_HPC_GPU_meetup/2014-07-03-Paris-HPC-GPU-Meetup-RK-expose.pdf>`_,
-  Ronan Keryell (AMD & Khronos OpenCL Working Group Member). 3 July, 2014,
+  Ronan Keryell (AMD & Khronos OpenCL Working Group Member). July 3, 2014,
   Presentation at the Meetup of the `High Performance Computing &
   Supercomputing Group of Paris
   <http://www.meetup.com/HPC-GPU-Supercomputing-Group-of-Paris-Meetup/events/185216422>`_.
@@ -185,45 +185,45 @@ By reverse chronological order:
 - `OpenCL 2.0, OpenCL SYCL & OpenMP 4, open standards for heterogeneous
   parallel programming
   <http://ronan.keryell.fr/Talks/2014/2014-07-02-Ter@Tec/Ter@tec-HC-RK-expose.pdf>`_,
-  Ronan Keryell (AMD & Khronos OpenCL Working Group Member). 2 July, 2014,
+  Ronan Keryell (AMD & Khronos OpenCL Working Group Member). July 2, 2014,
   Presentation at Forum Ter\@tec: `Calcul scientifique & Open Source :
   pratiques industrielles des logiciels libres
   <http://www.teratec.eu/forum/atelier_3.html>`_.
 
 - `The Future of Accelerator Programming in C++
   <https://github.com/boostcon/cppnow_presentations_2014/blob/master/files/CppNow2014_Future_of_Accelerator_Programming.pdf?raw=true>`_,
-  Sebastian Schaetz, 18 May, 2014. Presentation at `C++Now 2014
+  Sebastian Schaetz, May 18, 2014. Presentation at `C++Now 2014
   <http://cppnow.org/schedule-2014>`_.
 
 - *SYCL : Abstraction Layer for Leveraging C++ and OpenCL*, Maria Rovatsou
-  (Codeplay & Khronos OpenCL Working Group Member). 12-13 May, 2014,
+  (Codeplay & Khronos OpenCL Working Group Member). May 12-13, 2014,
   `IWOCL 2014
   <http://iwocl.org/iwocl-2014/abstracts/sycl-abstraction-layer-for-leveraging-c-and-opencl>`_.
 
 - *Building the OpenCL ecosystem - SYCL for OpenCL*, Lee Howes (Senior
-  Staff Engineer at Qualcomm & Khronos OpenCL Working Group Member). 21
-  April, 2014, `HPC & GPU Supercomputing Group of Silicon Valley
+  Staff Engineer at Qualcomm & Khronos OpenCL Working Group Member).
+  April 21, 2014, `HPC & GPU Supercomputing Group of Silicon Valley
   <http://www.meetup.com/HPC-GPU-Supercomputing-Group-of-Silicon-Valley/events/151429932>`_.
 
 - `SYCL 1.2: Unofficial High-Level Overview
   <https://www.youtube.com/watch?v=-mEQhf8MeUI>`_, AJ Guillon (Khronos
-  OpenCL Working Group Member). 19 March, 2014. Video.
+  OpenCL Working Group Member). March 19, 2014. Video.
 
 - `SYCL for OpenCL
   <http://www.khronos.org/assets/uploads/developers/library/2014-gdc/SYCL-for-OpenCL-GDC-Mar14.pdf>`_,
-  Andrew Richards (CEO Codeplay & Chair SYCL Working group). 19 March,
+  Andrew Richards (CEO Codeplay & Chair SYCL Working group). March 19,
   2014, GDC 2014.
 
 - `Fusing GPU kernels within a novel single-source C++ API
   <http://lpgpu.org/wp/wp-content/uploads/2014/02/PEGPUM_2014_codeplay.pdf>`_,
   Ralph Potter, Paul Keir, Jan Lucas, Maurico Alvarez-Mesa, Ben Juurlink
-  and Andrew Richards. 20 January, 2014, LPGPU Workshop on Power-Efficient
+  and Andrew Richards. January 20, 2014, LPGPU Workshop on Power-Efficient
   GPU and Many-core Computing (PEGPUM 2014).
 
 - `Fusing GPU kernels within a novel single-source C++ API
   <https://software.intel.com/sites/default/files/managed/c5/45/Confpkeir_haifa_compilers_architectures_tools.pdf>`_,
   Ralph Potter, Paul Keir, Jan Lucas, Mauricio Alvarez-Mesa, Ben Juurlink,
-  Andrew Richards. 18 November, 2013, Intel Compiler, Architecture and
+  Andrew Richards. November 18, 2013, Intel Compiler, Architecture and
   Tools Conference.
 
 There are also many interesting articles in the `publication list from
