@@ -44,8 +44,8 @@ thus, for more information on SYCL_, look at
 http://www.khronos.org/opencl/sycl
 
 
-Why you should use SYCL
-~~~~~~~~~~~~~~~~~~~~~~~
+Why you could use SYCL
+~~~~~~~~~~~~~~~~~~~~~~
 
 SYCL_ has a lot of interesting advantages compared to plain OpenCL_ or
 other approaches:
@@ -98,7 +98,8 @@ other approaches:
   written in other languages (Fortran_...). Thus SYCL is already
   Exascale-ready!
 
-- SYCL_ inherit from all the OpenCL_ world:
+- even if SYCL_ hides the OpenCL_ world by default, it inherits from all
+  the OpenCL_ world:
 
   - same interoperability as the OpenCL_ underlying platform: OpenGL_,
     DirectX_...
@@ -160,6 +161,14 @@ By reverse chronological order:
   <http://sc14.supercomputing.org/schedule/event_detail?evid=bof131>`_,
   New Orleans, USA.
 
+- `Implementing the OpenCL SYCL Shared Source C++ Programming Model using
+  Clang/LLVM
+  <http://www.codeplay.com/public/uploaded/publications/SC2014_LLVM_HPC.pdf>`_,
+  Gordon Brown. November 17, 2014, `Workshop on the LLVM Compiler
+  Infrastructure in HPC, SuperComputing 2014
+  <http://llvm-hpc-workshop.github.io>`_
+
+
 - `SYCL Specification --- SYCL integrates OpenCL devices with modern C++
   <https://www.khronos.org/registry/sycl/specs/sycl-1.2.pdf>`_, Khronos
   OpenCL Working Group — SYCL subgroup. Editors: Lee Howes and Maria
@@ -216,6 +225,9 @@ By reverse chronological order:
   Ralph Potter, Paul Keir, Jan Lucas, Mauricio Alvarez-Mesa, Ben Juurlink,
   Andrew Richards. 18 November, 2013, Intel Compiler, Architecture and
   Tools Conference.
+
+There are also many interesting articles in the `publication list from
+Codeplay <http://www.codeplay.com/company/publications.html>`_.
 
 
 Some implementations
