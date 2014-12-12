@@ -29,51 +29,61 @@ struct OpenCLType {
 /// Add an attribute for __constant address space
 template <typename T>
 struct OpenCLType<T, constant_address_space> {
-  using type =
+  using type = T
 #ifdef __SYCL_DEVICE_ONLY__
+    /* Put the address space qualifier after the type so that we can
+       construct pointer type with qualifier */
     __constant
 #endif
-    T;
+    ;
 };
 
 /// Add an attribute for __generic address space
 template <typename T>
 struct OpenCLType<T, generic_address_space> {
-  using type =
+  using type = T
 #ifdef __SYCL_DEVICE_ONLY__
+    /* Put the address space qualifier after the type so that we can
+       construct pointer type with qualifier */
     __generic
 #endif
-    T;
+    ;
 };
 
 /// Add an attribute for __global address space
 template <typename T>
 struct OpenCLType<T, global_address_space> {
-  using type =
+  using type = T
 #ifdef __SYCL_DEVICE_ONLY__
+    /* Put the address space qualifier after the type so that we can
+       construct pointer type with qualifier */
     __global
 #endif
-    T;
+    ;
 };
 
 /// Add an attribute for __local address space
 template <typename T>
 struct OpenCLType<T, local_address_space> {
-  using type =
+  using type = T
 #ifdef __SYCL_DEVICE_ONLY__
+    /* Put the address space qualifier after the type so that we can
+       construct pointer type with qualifier */
     __local
 #endif
-    T;
+    ;
 };
 
 /// Add an attribute for __private address space
 template <typename T>
 struct OpenCLType<T, private_address_space> {
-  using type =
+  using type = T
 #ifdef __SYCL_DEVICE_ONLY__
+    /* Put the address space qualifier after the type so that we can
+       construct pointer type with qualifier */
     __private
 #endif
-    T;
+    ;
 };
 
 
