@@ -6,6 +6,7 @@ namespace cl {
 namespace sycl {
 namespace trisycl {
 
+
 /** A recursive multi-dimensional iterator that ends calling f
 
     The iteration order may be changed later.

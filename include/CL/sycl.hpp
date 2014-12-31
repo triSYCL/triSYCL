@@ -66,6 +66,14 @@
 #include <CL/cl.hpp>
 #endif
 
+/** Allow the asynchronous implementation of tasks */
+#ifndef TRISYCL_ASYNC
+/** Use asynchronous tasks by default.
+
+    Is set to 0, the functors are executed synchronously.
+ */
+#define TRISYCL_ASYNC 1
+#endif
 
 /** The vector type to be used as SYCL vector
 
@@ -1204,7 +1212,9 @@ namespace sycl {
     the execution of the given functor
 */
 template <typename KernelName = std::nullptr_t>
-void single_task(std::function<void(void)> F) { F(); }
+void single_task(std::function<void(void)> F) {
+  Task::add(F);
+}
 
 
 /** SYCL parallel_for launches a data parallel computation with parallelism
@@ -1228,7 +1238,7 @@ void single_task(std::function<void(void)> F) { F(); }
             typename ParallelForFunctor>                              \
   void parallel_for(range<N> global_size,                             \
                     ParallelForFunctor f) {                           \
-    ParallelForImpl(global_size, f);                                  \
+    Task::add([=] { ParallelForImpl(global_size, f); });               \
   }
 TRISYCL_ParallelForFunctor_GLOBAL(1)
 TRISYCL_ParallelForFunctor_GLOBAL(2)
@@ -1253,11 +1263,11 @@ template <typename KernelName,
           std::size_t Dimensions,
           typename ParallelForFunctor>
 void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {
-  ParallelForImpl(r, f);
+  Task::add([=] { ParallelForImpl(r, f); });
 }
 
 
-/** SYCL parallel_for launches a data parallel computation with
+  /** SYCL parallel_for launches a data parallel computation with
     parallelism specified at launch time by 1 range<> and an offset
 
     \param global_size is the global size of the range<>
@@ -1281,7 +1291,7 @@ void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {
   void parallel_for(range<N> global_size,                             \
                     id<N> offset,                                     \
                     ParallelForFunctor f) {                           \
-    ParallelForGlobalOffset(global_size, offset, f);  \
+    Task::add([=] { ParallelForGlobalOffset(global_size, offset, f); }); \
   }
 TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(1)
 TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(2)
@@ -1317,7 +1327,7 @@ template <typename KernelName = std::nullptr_t,
           typename ParallelForFunctor>
 void parallel_for_workgroup(nd_range<Dimensions> r,
                             ParallelForFunctor f) {
-  ParallelForWorkgroup(r, f);
+  Task::add([=] { ParallelForWorkgroup(r, f); });
 }
 
 
