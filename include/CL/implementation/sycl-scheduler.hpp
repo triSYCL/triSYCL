@@ -26,3 +26,12 @@ struct Task {
 }
 }
 }
+
+
+/*
+    # Some Emacs stuff:
+    ### Local Variables:
+    ### ispell-local-dictionary: "american"
+    ### eval: (flyspell-prog-mode)
+    ### End:
+*/
