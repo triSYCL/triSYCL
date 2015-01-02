@@ -37,6 +37,8 @@ template <std::size_t dims> struct range;
 
 namespace trisycl {
 
+struct CommandGroupImpl;
+
 /** \addtogroup parallelism
     @{
 */

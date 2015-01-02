@@ -850,38 +850,13 @@ struct platform {
 
 };
 
-/** Store the current command_group to attach the task and accessors to it.
-
-    Use a TLS variable since there may be several threads in the program.
-
-    \todo Change the specification to avoid this hack.
-*/
-struct command_group;
-thread_local command_group *current_command_group = nullptr;
-
 /** SYCL command group gather all the commands needed to execute one or
     more kernels in a kind of atomic way. Since all the parameters are
     captured at command group creation, one can execute the content in an
     asynchronous way and delayed schedule.
 */
-struct command_group {
+using command_group = CommandGroupImpl;
 
-
-  template <typename Functor>
-  command_group(queue Q, Functor F) {
-    // Nesting of command_group is forbidden
-    assert(current_command_group == nullptr);
-    current_command_group = this;
-    F();
-  }
-
-
-  ~command_group() {
-    // Reset the current_command_group at the end of the command_group
-    current_command_group = nullptr;
-  }
-
-};
 
 /// @} to end the execution Doxygen group
 
