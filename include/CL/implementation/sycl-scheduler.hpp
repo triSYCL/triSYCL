@@ -6,6 +6,13 @@ namespace cl {
 namespace sycl {
 namespace trisycl {
 
+template <typename T,
+          std::size_t dimensions,
+          access::mode mode,
+          access::target target = access::global_buffer>
+struct AccessorImpl;
+
+
 struct Task {
   /// Add a new task to the task graph
   static void add(std::function<void(void)> F) {
@@ -19,6 +26,15 @@ struct Task {
     // Just a synchronous execution
     F();
 #endif
+  }
+
+
+  /// Register an accessor to this task
+  template <typename T,
+            std::size_t dimensions,
+            access::mode mode,
+            access::target target = access::global_buffer>
+  void add(AccessorImpl<T, dimensions, mode, target> * A) {
   }
 
 };
@@ -36,8 +52,8 @@ thread_local std::shared_ptr<Task> CurrentTask;
 struct CommandGroupImpl : public Debug<CommandGroupImpl> {
 
 
-  template <typename Functor>
-  CommandGroupImpl(queue Q, Functor F) {
+  template <typename Queue, typename Functor>
+  CommandGroupImpl(Queue Q, Functor F) {
     // Nesting of command_group is forbidden, so there should be no
     // current task yet
     assert(!CurrentTask);

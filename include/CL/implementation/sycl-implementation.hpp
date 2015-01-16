@@ -24,6 +24,7 @@
 
 #include "sycl-debug.hpp"
 #include "sycl-address-spaces.hpp"
+#include "sycl-scheduler.hpp"
 
 /// triSYCL implementation dwells in the cl::sycl::trisycl namespace
 namespace cl {
@@ -36,8 +37,6 @@ template <std::size_t dims> struct nd_item;
 template <std::size_t dims> struct range;
 
 namespace trisycl {
-
-struct CommandGroupImpl;
 
 /** \addtogroup parallelism
     @{
@@ -233,7 +232,7 @@ template <typename T, std::size_t dimensions> struct BufferImpl;
 template <typename T,
           std::size_t dimensions,
           access::mode mode,
-          access::target target = access::global_buffer>
+          access::target target /* = access::global_buffer */>
 struct AccessorImpl {
   // The implementation is a multi_array_ref wrapper
   typedef boost::multi_array_ref<T, dimensions> ArrayViewType;
@@ -253,7 +252,10 @@ struct AccessorImpl {
   /// The only way to construct an AccessorImpl is from an existing buffer
   // \todo fix the specification to rename target that shadows template parm
   AccessorImpl(BufferImpl<T, dimensions> &targetBuffer) :
-    Array(targetBuffer.Access) {}
+    Array(targetBuffer.Access) {
+    // Register the accessor to the task dependencies
+    CurrentTask->add(this);
+  }
 
 
   /** Use the accessor in with integers à la [][][]

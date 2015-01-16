@@ -181,6 +181,12 @@ enum address_space {
 
 /// @} End the address_spaces Doxygen group
 
+/* Forward definitions (outside the Doxygen addtogroup to avoid multiple
+   definitions) */
+struct queue;
+
+template <typename T, std::size_t dimensions> struct buffer;
+
 }
 }
 
@@ -580,12 +586,6 @@ public:
 };
 
 /// @} End the parallelism Doxygen group
-
-/* Forward definitions (outside the Doxygen addtogroup to avoid multiple
-   definitions) */
-struct queue;
-
-  template <typename T, std::size_t dimensions> struct buffer;
 
 
 /** \addtogroup error_handling Error handling

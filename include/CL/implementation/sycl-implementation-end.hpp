@@ -11,7 +11,6 @@
     License. See LICENSE.TXT for details.
 */
 
-#include "sycl-scheduler.hpp"
 #include "sycl-parallel_for.hpp"
 
 /*
