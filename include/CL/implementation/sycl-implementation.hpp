@@ -234,8 +234,10 @@ template <typename T,
           access::mode mode,
           access::target target /* = access::global_buffer */>
 struct AccessorImpl {
+  BufferImpl<T, dimensions> *Buffer;
   // The implementation is a multi_array_ref wrapper
   typedef boost::multi_array_ref<T, dimensions> ArrayViewType;
+  // \todo Do we need this if we have a reference on Buffer?
   ArrayViewType Array;
 
   // The same type but writable
@@ -252,9 +254,11 @@ struct AccessorImpl {
   /// The only way to construct an AccessorImpl is from an existing buffer
   // \todo fix the specification to rename target that shadows template parm
   AccessorImpl(BufferImpl<T, dimensions> &targetBuffer) :
-    Array(targetBuffer.Access) {
+    Buffer { &targetBuffer }, Array { targetBuffer.Access } {
+      // The accessor needs to be declared inside a command_group
+      assert(CurrentTask != nullptr);
     // Register the accessor to the task dependencies
-    CurrentTask->add(this);
+    CurrentTask->add(*this);
   }
 
 
@@ -310,6 +314,12 @@ struct AccessorImpl {
   */
   auto &operator[](nd_item<dimensionality> Index) const {
     return (*this)[Index.get_global_id()];
+  }
+
+
+  /// Get the buffer used to create the accessor
+  BufferImpl<T, dimensions> &getBuffer() {
+    return *Buffer;
   }
 
 };
@@ -416,6 +426,13 @@ struct BufferImpl {
     return { *this };
   }
 
+
+  /** Add task and accessor as a client of this buffer */
+  template <access::mode mode,
+            access::target target>
+  void addClient(AccessorImpl<T, dimensions, mode, target> &A,
+                 std::shared_ptr<Task> Task) {
+  }
 };
 
 /// @} to end the data Doxygen group

@@ -13,7 +13,13 @@ template <typename T,
 struct AccessorImpl;
 
 
-struct Task {
+/** The abstraction to represent SYCL tasks executing inside command_group
+
+    "enable_shared_from_this" allows to access the shared_ptr behind the
+    scene.
+ */
+struct Task : std::enable_shared_from_this<Task>,
+              public Debug<Task> {
   /// Add a new task to the task graph
   static void add(std::function<void(void)> F) {
 #if TRISYCL_ASYNC
@@ -34,7 +40,9 @@ struct Task {
             std::size_t dimensions,
             access::mode mode,
             access::target target = access::global_buffer>
-  void add(AccessorImpl<T, dimensions, mode, target> * A) {
+  void add(AccessorImpl<T, dimensions, mode, target> &A) {
+    // Add the task as a new client for the buffer of the accessor
+    A.getBuffer().addClient(A, shared_from_this());
   }
 
 };
@@ -57,6 +65,7 @@ struct CommandGroupImpl : public Debug<CommandGroupImpl> {
     // Nesting of command_group is forbidden, so there should be no
     // current task yet
     assert(!CurrentTask);
+    // Create a new task for this command_group
     CurrentTask = std::make_shared<Task>();
     F();
   }
