@@ -3,14 +3,26 @@
 */
 #include <CL/sycl.hpp>
 
+/* This used to be a presentation slide but since SYCL evolved, it has
+   been changed to fit the current version of SYCL
+*/
+
 // To have FunctionObject working without explicit closure, put the
 // accessor as a global variable. But that means to pull many things as a
 // global variable...
 int result; //< this is where we will write our result
 // wrap our result variable in a buffer
 cl::sycl::buffer<int> resultBuf(&result, 1);
-auto writeResult = resultBuf.get_access<cl::sycl::access::write>();
 
+//////// Start left side of the slide
+struct FunctionObject {
+    using Accessor = cl::sycl::accessor<int, 1, cl::sycl::access::write, cl::sycl::access::global_buffer>;
+    Accessor &a;
+    FunctionObject(Accessor A) : a { A } {}
+    void operator()() {
+        a [0] = 1234;
+    }
+};
 int main()
 {
 
@@ -24,14 +36,9 @@ int main()
     cl::sycl::command_group(myQueue, [&]()
     {
       // request access to our buffer
-      writeResult = { resultBuf };
-//////// Start left side of the slide
-struct FunctionObject {
-    void operator()() {
-        writeResult [0] = 1234;
-    }
-};
-cl::sycl::single_task(FunctionObject());
+      cl::sycl::accessor<int, 1, cl::sycl::access::write, cl::sycl::access::global_buffer>
+        writeResult = { resultBuf };
+cl::sycl::single_task(FunctionObject(writeResult));
 //////// End left side of the slide
 
 //////// Start right side of the slide
