@@ -48,6 +48,25 @@ struct Task : std::enable_shared_from_this<Task>,
 };
 
 
+/** Keep track of the tasks waiting for the availability of a buffer
+    generation, either to read it or to write it
+*/
+class BufferCustomer : public Debug<BufferCustomer> {
+
+  bool WriteAccess;
+  std::vector<std::shared_ptr<Task>> tasks;
+
+public:
+
+  /// Add a new task as a customer
+  void add(std::shared_ptr<Task> task, bool writeAccess) {
+    WriteAccess = writeAccess;
+    tasks.push_back(task);
+  }
+
+};
+
+
 /** Store the current Task to attach the task and accessors to it.
 
     Use a TLS variable since there may be several threads in the program.

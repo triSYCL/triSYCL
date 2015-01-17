@@ -14,7 +14,7 @@ CXXFLAGS = -Wall -std=c++1y -I$(triSYCL_DIR)/include \
 CXXFLAGS += -fopenmp
 
 # To enable debug and tracing:
-#CXXFLAGS += -g -DTRISYCL_DEBUG
+CXXFLAGS += -g -DTRISYCL_DEBUG
 
 # By default run lit checking in the current directory
 CHECKING_DIR ?= .

@@ -12,6 +12,7 @@
 */
 
 #include <cassert>
+#include <deque>
 #include <functional>
 #include <type_traits>
 #include <iostream>
@@ -233,7 +234,7 @@ template <typename T,
           std::size_t dimensions,
           access::mode mode,
           access::target target /* = access::global_buffer */>
-struct AccessorImpl {
+struct AccessorImpl : public Debug<AccessorImpl<T, dimensions, mode, target>> {
   BufferImpl<T, dimensions> *Buffer;
   // The implementation is a multi_array_ref wrapper
   typedef boost::multi_array_ref<T, dimensions> ArrayViewType;
@@ -320,6 +321,17 @@ struct AccessorImpl {
   /// Get the buffer used to create the accessor
   BufferImpl<T, dimensions> &getBuffer() {
     return *Buffer;
+  }
+
+
+  /// Test if the accessor as a write access right
+  constexpr bool isWriteAccess() const {
+    /** \todo to move in the access::mode enum class and add to the
+        specification ? */
+    return mode == access::mode::write
+      || mode == access::mode::read_write
+      || mode == access::mode::discard_write
+      || mode == access::mode::discard_read_write;
   }
 
 };
@@ -427,11 +439,33 @@ struct BufferImpl {
   }
 
 
-  /** Add task and accessor as a client of this buffer */
+  /** During its life, a buffer contains different values. To deal with
+      dependencies between client tasks using the buffer, we use a
+      BufferCustomer to represent an instance of the buffer during its
+      life */
+  std::deque<BufferCustomer> generations;
+
+  /** Add task and accessor as a client of this buffer
+
+      \todo deal with read-write accessors
+
+      \todo a read write access should be split in one read node with all
+      the reads and a write node with the write
+
+      \todo make this thread safe
+  */
   template <access::mode mode,
             access::target target>
   void addClient(AccessorImpl<T, dimensions, mode, target> &A,
                  std::shared_ptr<Task> Task) {
+    /* When we write into a buffer, we generate a new version of it (think
+       "SSA"). Of course we do it also when there not yet any
+       BufferCustomer */
+    if (generations.empty() || A.isWriteAccess())
+      generations.emplace_back();
+
+    // Add the task as a client of the latest generation
+    generations.back().add(Task, A.isWriteAccess());
   }
 };
 
