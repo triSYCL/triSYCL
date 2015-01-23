@@ -106,7 +106,7 @@ struct SmallArray : std::array<BasicType, Dims>,
   SmallArray() = default;
 
   /// Return the element of the array
-  auto get(std::size_t index) {
+  auto get(std::size_t index) const {
     return (*this)[index];
   }
 
