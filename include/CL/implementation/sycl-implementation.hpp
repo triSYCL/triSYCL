@@ -12,12 +12,14 @@
 */
 
 #include <cassert>
+#include <condition_variable>
 #include <deque>
 #include <functional>
 #include <type_traits>
 #include <iostream>
 #include <iterator>
 #include <memory>
+#include <mutex>
 #include <tuple>
 #include <utility>
 #include <boost/multi_array.hpp>
@@ -337,6 +339,18 @@ struct AccessorImpl : public Debug<AccessorImpl<T, dimensions, mode, target>> {
 };
 
 
+/** Factorize some template independent buffer aspects in a base class
+ */
+ struct BufferBase {
+  /// If the data are read-only, store the information for later optimization.
+  /// \todo Replace this by a static read-only type for the buffer
+  bool ReadOnly;
+
+   BufferBase(bool ReadOnly) : ReadOnly { ReadOnly } { }
+
+};
+
+
 /** A SYCL buffer is a multidimensional variable length array (à la C99
     VLA or even Fortran before) that is used to store data to work on.
 
@@ -346,7 +360,7 @@ struct AccessorImpl : public Debug<AccessorImpl<T, dimensions, mode, target>> {
 */
 template <typename T,
           std::size_t dimensions = 1>
-struct BufferImpl {
+struct BufferImpl : BufferBase {
   using Implementation = boost::multi_array_ref<T, dimensions>;
   // Extension to SYCL: provide pieces of STL container interface
   using element = T;
@@ -361,21 +375,18 @@ struct BufferImpl {
       storage<> abstraction use
   */
   boost::multi_array_ref<T, dimensions> Access;
-  /// If the data are read-only, store the information for later optimization.
-  /// \todo Replace this by a static read-only type for the buffer
-  bool ReadOnly;
 
 
   /// Create a new read-write BufferImpl of size \param r
-  BufferImpl(range<dimensions> const &r) : Allocation(r),
-                                           Access(Allocation),
-                                           ReadOnly(false) {}
+  BufferImpl(range<dimensions> const &r) : BufferBase(false),
+                                           Allocation(r),
+                                           Access(Allocation) {}
 
 
   /** Create a new read-write BufferImpl from \param host_data of size
       \param r without further allocation */
   BufferImpl(T * host_data, range<dimensions> r) : Access(host_data, r),
-                                                   ReadOnly(false) {}
+                                                   BufferBase(false) {}
 
 
   /** Create a new read-only BufferImpl from \param host_data of size \param r
@@ -383,7 +394,7 @@ struct BufferImpl {
   BufferImpl(const T * host_data, range<dimensions> r) :
     /// \todo Need to solve this const buffer issue in a clean way
     Access(const_cast<T *>(host_data), r),
-    ReadOnly(true) {}
+    BufferBase(true) {}
 
 
   /// \todo
@@ -395,7 +406,7 @@ struct BufferImpl {
     // The size of a multi_array is set at creation time
     Allocation(boost::extents[std::distance(start_iterator, end_iterator)]),
     Access(Allocation),
-    ReadOnly(false) {
+    BufferBase(false) {
     /* Then assign Allocation since this is the only multi_array
        method with this iterator interface */
     Allocation.assign(start_iterator, end_iterator);
@@ -409,7 +420,7 @@ struct BufferImpl {
   */
   BufferImpl(const BufferImpl<T, dimensions> &b) : Allocation(b.Access),
                                                    Access(Allocation),
-                                                   ReadOnly(b.ReadOnly) {}
+                                                   BufferBase(ReadOnly) {}
 
 
   /** Create a new sub-BufferImplImpl without allocation to have separate
@@ -459,7 +470,7 @@ struct BufferImpl {
   void addClient(AccessorImpl<T, dimensions, mode, target> &A,
                  std::shared_ptr<Task> Task) {
     /* When we write into a buffer, we generate a new version of it (think
-       "SSA"). Of course we do it also when there not yet any
+       "SSA"). Of course we do it also when there is not yet any
        BufferCustomer */
     if (generations.empty() || A.isWriteAccess())
       generations.emplace_back();
