@@ -11,6 +11,83 @@ template <typename T,
           access::mode mode,
           access::target target = access::global_buffer>
 struct AccessorImpl;
+class Task;
+
+
+/** Keep track of the tasks waiting for the availability of a buffer
+    generation, either to read it or to write it
+
+    \todo make this multithread safe
+*/
+class BufferCustomer : public Debug<BufferCustomer> {
+  BufferBase &Buffer;
+  bool WriteAccess;
+  bool ReadyToUse;
+  int UserNumber;
+  std::vector<std::shared_ptr<Task>> Tasks;
+  std::mutex ReadyMutex;
+  std::condition_variable ReadyCV;
+
+public:
+
+  BufferCustomer(BufferBase &Buffer, bool isWriteAccess)
+    : Buffer { Buffer },  WriteAccess { isWriteAccess },
+      ReadyToUse { false }, UserNumber { -42 } {
+  }
+
+
+  /// Get the buffer customer associated to the latest version of the buffer
+  template <typename T,
+            std::size_t dimensions,
+            access::mode mode,
+            access::target target = access::global_buffer>
+  static std::shared_ptr<BufferCustomer>
+  getBufferCustomer(AccessorImpl<T, dimensions, mode, target> &A) {
+    BufferBase &B = A.getBuffer();
+    /// \todo make this multithread safe. Use atomic list?
+    std::shared_ptr<BufferCustomer> BC = B.getLastBufferCustomer();
+    /* When we write into a buffer, we generate a new version of it (think
+       "SSA"). Of course we do it also when there is not yet any
+       BufferCustomer */
+    if (!BC || A.isWriteAccess())
+      BC = std::make_shared<BufferCustomer>(B, A.isWriteAccess());
+
+    // \todo Connect old BC to new BC if needed
+
+    return BC;
+  }
+
+
+  /// Add a new task as a customer
+  void add(std::shared_ptr<Task> task, bool writeAccess) {
+    WriteAccess = writeAccess;
+    /// \todo make this multithread safe
+    Tasks.push_back(task);
+    UserNumber++;
+  }
+
+
+  void notify() {
+    {
+      std::unique_lock<std::mutex> UL { ReadyMutex };
+      ReadyToUse = true;
+    }
+    ReadyCV.notify_all();
+  }
+
+  void wait() {
+    {
+      std::unique_lock<std::mutex> UL { ReadyMutex };
+      ReadyCV.wait(UL, [&] { return ReadyToUse; });
+    }
+  }
+
+
+  /** \todo
+   */
+  void release() {;}
+
+};
 
 
 /** The abstraction to represent SYCL tasks executing inside command_group
@@ -20,48 +97,57 @@ struct AccessorImpl;
  */
 struct Task : std::enable_shared_from_this<Task>,
               public Debug<Task> {
-  /// Add a new task to the task graph
-  static void add(std::function<void(void)> F) {
+  /// The buffers that are used by this task
+  std::vector<std::shared_ptr<BufferCustomer>> Buffers;
+
+  /// Add a new task to the task graph and schedule for execution
+  void schedule(std::function<void(void)> F) {
+    auto execution = [&] {
+      // Wait for the required buffers to be ready
+      acquireBuffers();
+      // Execute the kernel
+      F();
+      // Release the required buffers for other uses
+      releaseBuffers();
+    };
 #if TRISYCL_ASYNC
-    // Execute the functor in a new thread
-    std::thread thread(F);
+    /* If in asynchronous execution mode, execute the functor in a new
+       thread */
+    std::thread thread(execution);
     // std::cout << thread.get_id();
-    // For now just wait for the synchronous execution
-    thread.join();
+    // Detach the thread since it will synchronize by its own means
+    thread.detach();
 #else
-    // Just a synchronous execution
-    F();
+    // Just a synchronous execution otherwise
+    execution();
 #endif
   }
 
 
-  /// Register an accessor to this task
+  void acquireBuffers() {
+    for (auto &b : Buffers)
+      b->wait();
+  }
+
+
+  void releaseBuffers() {
+    for (auto &b : Buffers)
+      b->release();
+  }
+
+
+  /** Register an accessor to this task
+
+      This is how the dependency graph is incrementally built.
+  */
   template <typename T,
             std::size_t dimensions,
             access::mode mode,
             access::target target = access::global_buffer>
   void add(AccessorImpl<T, dimensions, mode, target> &A) {
     // Add the task as a new client for the buffer of the accessor
-    A.getBuffer().addClient(A, shared_from_this());
-  }
-
-};
-
-
-/** Keep track of the tasks waiting for the availability of a buffer
-    generation, either to read it or to write it
-*/
-class BufferCustomer : public Debug<BufferCustomer> {
-
-  bool WriteAccess;
-  std::vector<std::shared_ptr<Task>> tasks;
-
-public:
-
-  /// Add a new task as a customer
-  void add(std::shared_ptr<Task> task, bool writeAccess) {
-    WriteAccess = writeAccess;
-    tasks.push_back(task);
+    //A.getBuffer().addClient(A, shared_from_this());
+    Buffers.push_back(BufferCustomer::getBufferCustomer(A));
   }
 
 };

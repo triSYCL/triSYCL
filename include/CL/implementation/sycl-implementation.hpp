@@ -27,6 +27,36 @@
 
 #include "sycl-debug.hpp"
 #include "sycl-address-spaces.hpp"
+
+
+namespace cl {
+namespace sycl {
+namespace trisycl {
+
+class BufferCustomer;
+
+/** Factorize some template independent buffer aspects in a base class
+ */
+ struct BufferBase {
+   /// If the data are read-only, store the information for later optimization.
+   /// \todo Replace this by a static read-only type for the buffer
+   bool ReadOnly;
+
+   /// Store the BufferCustomer for the last generation of this buffer
+   std::shared_ptr<BufferCustomer> LastBufferCustomer;
+
+
+   BufferBase(bool ReadOnly) : ReadOnly { ReadOnly } {}
+
+   std::shared_ptr<BufferCustomer> getLastBufferCustomer() {
+     return LastBufferCustomer;
+   }
+};
+
+}
+}
+}
+
 #include "sycl-scheduler.hpp"
 
 /// triSYCL implementation dwells in the cl::sycl::trisycl namespace
@@ -339,18 +369,6 @@ struct AccessorImpl : public Debug<AccessorImpl<T, dimensions, mode, target>> {
 };
 
 
-/** Factorize some template independent buffer aspects in a base class
- */
- struct BufferBase {
-  /// If the data are read-only, store the information for later optimization.
-  /// \todo Replace this by a static read-only type for the buffer
-  bool ReadOnly;
-
-   BufferBase(bool ReadOnly) : ReadOnly { ReadOnly } { }
-
-};
-
-
 /** A SYCL buffer is a multidimensional variable length array (à la C99
     VLA or even Fortran before) that is used to store data to work on.
 
@@ -385,8 +403,8 @@ struct BufferImpl : BufferBase {
 
   /** Create a new read-write BufferImpl from \param host_data of size
       \param r without further allocation */
-  BufferImpl(T * host_data, range<dimensions> r) : Access(host_data, r),
-                                                   BufferBase(false) {}
+  BufferImpl(T * host_data, range<dimensions> r) : BufferBase(false),
+                                                   Access(host_data, r) {}
 
 
   /** Create a new read-only BufferImpl from \param host_data of size \param r
@@ -403,10 +421,10 @@ struct BufferImpl : BufferBase {
   /// Create a new allocated 1D BufferImpl from the given elements
   template <typename Iterator>
   BufferImpl(Iterator start_iterator, Iterator end_iterator) :
+    BufferBase(false),
     // The size of a multi_array is set at creation time
     Allocation(boost::extents[std::distance(start_iterator, end_iterator)]),
-    Access(Allocation),
-    BufferBase(false) {
+    Access(Allocation) {
     /* Then assign Allocation since this is the only multi_array
        method with this iterator interface */
     Allocation.assign(start_iterator, end_iterator);
@@ -418,9 +436,9 @@ struct BufferImpl : BufferBase {
       \todo Refactor the implementation to deal with buffer sharing with
       reference counting
   */
-  BufferImpl(const BufferImpl<T, dimensions> &b) : Allocation(b.Access),
-                                                   Access(Allocation),
-                                                   BufferBase(ReadOnly) {}
+  BufferImpl(const BufferImpl<T, dimensions> &b) : BufferBase(ReadOnly),
+                                                   Allocation(b.Access),
+                                                   Access(Allocation) {}
 
 
   /** Create a new sub-BufferImplImpl without allocation to have separate
