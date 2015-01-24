@@ -288,10 +288,12 @@ struct AccessorImpl : public Debug<AccessorImpl<T, dimensions, mode, target>> {
   // \todo fix the specification to rename target that shadows template parm
   AccessorImpl(BufferImpl<T, dimensions> &targetBuffer) :
     Buffer { &targetBuffer }, Array { targetBuffer.Access } {
-      // The accessor needs to be declared inside a command_group
-      assert(CurrentTask != nullptr);
+#if TRISYCL_ASYNC
+    // The accessor needs to be declared inside a command_group
+    assert(CurrentTask != nullptr);
     // Register the accessor to the task dependencies
     CurrentTask->add(*this);
+#endif
   }
 
 

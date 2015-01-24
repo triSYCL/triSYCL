@@ -13,8 +13,11 @@ CXXFLAGS = -Wall -std=c++1y -I$(triSYCL_DIR)/include \
 # To use OpenMP to execute SYCL kernels:
 CXXFLAGS += -fopenmp
 
+# To avoid asynchronous kernels
+CXXFLAGS += -DTRISYCL_ASYNC=0
+
 # To enable debug and tracing:
-CXXFLAGS += -g -DTRISYCL_DEBUG
+#CXXFLAGS += -g -DTRISYCL_DEBUG
 
 # By default run lit checking in the current directory
 CHECKING_DIR ?= .

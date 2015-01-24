@@ -1,6 +1,6 @@
-/* RUN: %{execute}%s | %{filecheck} %s
-   CHECK: i = 3
-   CHECK-NEXT: f[0] = 2
+/* RUN: %{execute}%s
+
+   \todo test for some execution results
 */
 #include <CL/sycl.hpp>
 #include <iostream>
