@@ -35,9 +35,9 @@ Main contributor: Ronan Keryell at AMD_ point cOm
 OpenCL SYCL
 -----------
 
-OpenCL_ SYCL_ is a C++11-based DSEL_ (Domain Specific Embedded Language)
-aimed at facilitating the programming of heterogeneous accelerators by
-leveraging the OpenCL_ language and concepts.
+OpenCL_ SYCL_ is a single-source C++11-based DSEL_ (Domain Specific
+Embedded Language) aimed at facilitating the programming of heterogeneous
+accelerators by leveraging the OpenCL_ language and concepts.
 
 OpenCL_ SYCL_ is developed inside the Khronos_ OpenCL_ SYCL_ committee and
 thus, for more information on SYCL_, look at
@@ -273,10 +273,10 @@ some point this API documentation will disappear.
 Installation
 ------------
 
-Only Clang_ 3.5 or GCC_ 4.9 and `Boost.MultiArray`_ (which adds to `C++`_ the
-nice Fortran array semantics and syntax) is needed.  If you use the debug
-mode or OpenMP, this works only with GCC 4.9 since current Clang version
-does not support OpenMP yet.
+Only Clang_ 3.5+ or GCC_ 4.9+, `Boost.MultiArray`_ (which adds to `C++`_
+the nice Fortran array semantics and syntax), Boost.Operators are needed.
+If you use the debug mode or OpenMP, this works only with GCC 4.9 since
+current Clang version does not support OpenMP yet.
 
 To install them on latest Linux Debian/unstable (this should work on
 latest Ubuntu too):
@@ -288,6 +288,13 @@ latest Ubuntu too):
 There is nothing else to do for now to use the include files from
 ``include/CL`` when compiling a program. Just add a ``-I.../include/CL``
 option when compiling.
+
+
+Examples and tests
+------------------
+
+There are simple examples and tests in the ``tests`` directory.  Look at
+`tests/README.rst` description.
 
 
 Generating the Doxygen documentation
@@ -310,38 +317,6 @@ To publish the documentation on GitHub:
   make publish
 
 and finish as explained by the ``make`` output.
-
-
-Examples
---------
-
-There are trivial examples in the ``tests`` directory.
-
-To compile them:
-
-.. code:: bash
-
-  make
-
-To run them:
-
-.. code:: bash
-
-  make run
-
-
-To clean up:
-
-.. code:: bash
-
-  make clean
-
-You can build the binary with different compilers with
-
-.. code:: bash
-
-  make CXX=g++-4.9
-  make CXX=clang++
 
 
 Possible futures
@@ -436,6 +411,8 @@ Some ideas of future developments where *you* can contribute too: :-)
 .. _SPIR: http://www.khronos.org/spir
 
 .. _SYCL: http://www.khronos.org/opencl/sycl/
+
+.. _triSYCL: http://www.khronos.org/opencl/sycl/
 
 
 ..
