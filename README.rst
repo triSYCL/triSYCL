@@ -273,7 +273,7 @@ some point this API documentation will disappear.
 Installation
 ------------
 
-Only Clang_ 3.5+ or GCC_ 4.9+, `Boost.MultiArray`_ (which adds to `C++`_
+Only Clang_ 3.6+ or GCC_ 4.9+, `Boost.MultiArray`_ (which adds to `C++`_
 the nice Fortran array semantics and syntax), Boost.Operators are needed.
 If you use the debug mode or OpenMP, this works only with GCC 4.9 since
 current Clang version does not support OpenMP yet.
@@ -283,7 +283,7 @@ latest Ubuntu too):
 
 .. code:: bash
 
-  sudo apt-get install clang-3.5 g++4.9 libboost-dev
+  sudo apt-get install clang-3.6 g++4.9 libboost-dev
 
 There is nothing else to do for now to use the include files from
 ``include/CL`` when compiling a program. Just add a ``-I.../include/CL``

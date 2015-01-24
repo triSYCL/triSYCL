@@ -61,14 +61,14 @@ To install it on Debian or Ubuntu, use typically:
 
 .. code:: bash
 
-  sudo apt-get install llvm-3.5-tools
+  sudo apt-get install llvm-3.6-tools
 
 You should direct the following variable to where is LIT located on your
 machine, for example:
 
 .. code:: bash
 
-  export TRISYCL_LIT=/usr/lib/llvm-3.5/build/utils/lit/lit.py
+  export TRISYCL_LIT=/usr/lib/llvm-3.6/build/utils/lit/lit.py
 
 To run with the checker, try:
 

@@ -24,7 +24,7 @@ CHECKING_DIR ?= .
 
 # Set default compiler instead of default CXX=g++ value
 
-# Assume Clang 3.5 at least
+# Assume Clang 3.6 at least
 # There are still some limitations in Clang:
 # - no OpenMP;
 # - the "auto" return type methods that does not work with "-g" option
@@ -32,7 +32,7 @@ CHECKING_DIR ?= .
 
 # But everything works fine with GCC 4.9!
 CXX = g++-4.9
-#CXX = clang++-3.5
+#CXX = clang++-3.6
 
 # Some hack to force the compiler from the test infrastructure:
 ifdef FORCE_CXX
@@ -53,9 +53,9 @@ check:
 	# Launch testing with lit tool from LLVM in current directory
 	echo Using $(CXX) compiler:
 	# lit can be found for example on Debian/Ubuntu in package
-	# llvm-3.5-tools in /usr/lib/llvm-3.5/build/utils/lit/lit.py
+	# llvm-3.6-tools in /usr/lib/llvm-3.6/build/utils/lit/lit.py
 	# so try before running the check:
-	# export TRISYCL_LIT=/usr/lib/llvm-3.5/build/utils/lit/lit.py
+	# export TRISYCL_LIT=/usr/lib/llvm-3.6/build/utils/lit/lit.py
 	# The config file for triSYCL needs at least Python 3.3
 	test "unset$$TRISYCL_LIT == unset" && echo 'Initialize TRISYCL_LIT variable to the path of "lit" command' ; echo 1
 	python3 $$TRISYCL_LIT $(LITFLAGS) $(CHECKING_DIR)
@@ -63,7 +63,7 @@ check:
 check-compilers:
 	# Launch the check with various compilers
 	-FORCE_CXX=g++-4.9 $(MAKE) clean check
-	-FORCE_CXX=clang++-3.5 $(MAKE) clean check
+	-FORCE_CXX=clang++-3.6 $(MAKE) clean check
 	-FORCE_CXX=g++ $(MAKE) clean check
 
 # A special target to be called as from the test as "make execute
