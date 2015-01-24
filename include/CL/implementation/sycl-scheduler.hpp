@@ -21,18 +21,22 @@ class Task;
 */
 class BufferCustomer : public Debug<BufferCustomer> {
   BufferBase &Buffer;
+  // Needed?
   bool WriteAccess;
   bool ReadyToUse;
-  int UserNumber;
+  std::atomic<unsigned int> UserNumber;
+  // Needed?
   std::vector<std::shared_ptr<Task>> Tasks;
   std::mutex ReadyMutex;
   std::condition_variable ReadyCV;
+  // At some point use lock free list for this inside BufferBase
+  std::shared_ptr<BufferCustomer> nextGeneration;
 
 public:
 
   BufferCustomer(BufferBase &Buffer, bool isWriteAccess)
     : Buffer { Buffer },  WriteAccess { isWriteAccess },
-      ReadyToUse { false }, UserNumber { -42 } {
+      ReadyToUse { false }, UserNumber { 0 } {
   }
 
 
@@ -46,19 +50,25 @@ public:
     BufferBase &B = A.getBuffer();
     /// \todo make this multithread safe. Use atomic list?
     std::shared_ptr<BufferCustomer> BC = B.getLastBufferCustomer();
+    auto OldBC = BC;
     /* When we write into a buffer, we generate a new version of it (think
        "SSA"). Of course we do it also when there is not yet any
        BufferCustomer */
     if (!BC || A.isWriteAccess())
       BC = std::make_shared<BufferCustomer>(B, A.isWriteAccess());
 
-    // \todo Connect old BC to new BC if needed
+    if (OldBC)
+      // \todo Use atomic list instead
+      OldBC->nextGeneration = BC;
+    else
+      // If we just created the BufferCustomer, it is ready to use
+      BC->notifyReady();
 
     return BC;
   }
 
 
-  /// Add a new task as a customer
+  /// Add a new task as a customer of the buffer generation
   void add(std::shared_ptr<Task> task, bool writeAccess) {
     WriteAccess = writeAccess;
     /// \todo make this multithread safe
@@ -67,14 +77,7 @@ public:
   }
 
 
-  void notify() {
-    {
-      std::unique_lock<std::mutex> UL { ReadyMutex };
-      ReadyToUse = true;
-    }
-    ReadyCV.notify_all();
-  }
-
+  /// Wait for the buffer generation to be ready to use
   void wait() {
     {
       std::unique_lock<std::mutex> UL { ReadyMutex };
@@ -83,9 +86,26 @@ public:
   }
 
 
-  /** \todo
-   */
-  void release() {;}
+  /// Release the buffer generation usage
+  void release() {
+    UserNumber--;
+    /* If there is no task using this generation of the buffer, make the
+       next generation ready if any*/
+    if (UserNumber == 0 && nextGeneration)
+      nextGeneration->notifyReady();
+    // \todo Can we have UserNumber increasing again?
+  }
+
+private:
+
+  /// Notify the customer tasks this buffer generation is ready to use
+  void notifyReady() {
+    {
+      std::unique_lock<std::mutex> UL { ReadyMutex };
+      ReadyToUse = true;
+    }
+    ReadyCV.notify_all();
+  }
 
 };
 
@@ -177,6 +197,8 @@ struct CommandGroupImpl : public Debug<CommandGroupImpl> {
 
 
   ~CommandGroupImpl() {
+    // There should be a current task
+    assert(CurrentTask);
     // Reset the current_command_group at the end of the command_group
     CurrentTask.reset();
   }

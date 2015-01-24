@@ -11,6 +11,7 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <atomic>
 #include <cassert>
 #include <condition_variable>
 #include <deque>
@@ -470,6 +471,7 @@ struct BufferImpl : BufferBase {
   }
 
 
+#if 0
   /** During its life, a buffer contains different values. To deal with
       dependencies between client tasks using the buffer, we use a
       BufferCustomer to represent an instance of the buffer during its
@@ -498,6 +500,7 @@ struct BufferImpl : BufferBase {
     // Add the task as a client of the latest generation
     generations.back().add(Task, A.isWriteAccess());
   }
+#endif
 };
 
 /// @} to end the data Doxygen group
