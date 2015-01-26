@@ -25,8 +25,6 @@ class BufferCustomer : public Debug<BufferCustomer> {
   bool WriteAccess;
   bool ReadyToUse;
   std::atomic<unsigned int> UserNumber;
-  // Needed?
-  std::vector<std::shared_ptr<Task>> Tasks;
   std::mutex ReadyMutex;
   std::condition_variable ReadyCV;
   // At some point use lock free list for this inside BufferBase
@@ -71,8 +69,6 @@ public:
   /// Add a new task as a customer of the buffer generation
   void add(std::shared_ptr<Task> task, bool writeAccess) {
     WriteAccess = writeAccess;
-    /// \todo make this multithread safe
-    Tasks.push_back(task);
     UserNumber++;
   }
 

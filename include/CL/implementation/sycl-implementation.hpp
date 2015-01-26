@@ -470,37 +470,6 @@ struct BufferImpl : BufferBase {
     return { *this };
   }
 
-
-#if 0
-  /** During its life, a buffer contains different values. To deal with
-      dependencies between client tasks using the buffer, we use a
-      BufferCustomer to represent an instance of the buffer during its
-      life */
-  std::deque<BufferCustomer> generations;
-
-  /** Add task and accessor as a client of this buffer
-
-      \todo deal with read-write accessors
-
-      \todo a read write access should be split in one read node with all
-      the reads and a write node with the write
-
-      \todo make this thread safe
-  */
-  template <access::mode mode,
-            access::target target>
-  void addClient(AccessorImpl<T, dimensions, mode, target> &A,
-                 std::shared_ptr<Task> Task) {
-    /* When we write into a buffer, we generate a new version of it (think
-       "SSA"). Of course we do it also when there is not yet any
-       BufferCustomer */
-    if (generations.empty() || A.isWriteAccess())
-      generations.emplace_back();
-
-    // Add the task as a client of the latest generation
-    generations.back().add(Task, A.isWriteAccess());
-  }
-#endif
 };
 
 /// @} to end the data Doxygen group
