@@ -45,13 +45,27 @@ class BufferCustomer;
 
    /// Store the BufferCustomer for the last generation of this buffer
    std::shared_ptr<BufferCustomer> LastBufferCustomer;
+  std::mutex ProtectBuffer;
 
 
    BufferBase(bool ReadOnly) : ReadOnly { ReadOnly } {}
 
+
+   /// Lock the BufferBase structure by returning a unique_lock on the mutex
+   std::unique_lock<std::mutex> lock() {
+     return std::unique_lock<std::mutex> { ProtectBuffer };
+   }
+
+
    std::shared_ptr<BufferCustomer> getLastBufferCustomer() {
      return LastBufferCustomer;
    }
+
+
+   void setLastBufferCustomer(std::shared_ptr<BufferCustomer> BC) {
+     LastBufferCustomer = BC;
+   }
+
 };
 
 }

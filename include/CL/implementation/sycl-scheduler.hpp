@@ -17,18 +17,19 @@ class Task;
 /** Keep track of the tasks waiting for the availability of a buffer
     generation, either to read it or to write it
 
-    \todo make this multithread safe
+    When we write into a buffer, we generate a new version of it (think
+    "SSA")
 */
 class BufferCustomer : public Debug<BufferCustomer> {
   BufferBase &Buffer;
+  // At some point use lock free list for this inside BufferBase
+  std::shared_ptr<BufferCustomer> nextGeneration;
   // Needed?
   bool WriteAccess;
   bool ReadyToUse;
-  std::atomic<unsigned int> UserNumber;
   std::mutex ReadyMutex;
   std::condition_variable ReadyCV;
-  // At some point use lock free list for this inside BufferBase
-  std::shared_ptr<BufferCustomer> nextGeneration;
+  std::atomic<unsigned int> UserNumber;
 
 public:
 
@@ -46,23 +47,29 @@ public:
   static std::shared_ptr<BufferCustomer>
   getBufferCustomer(AccessorImpl<T, dimensions, mode, target> &A) {
     BufferBase &B = A.getBuffer();
-    /// \todo make this multithread safe. Use atomic list?
-    std::shared_ptr<BufferCustomer> BC = B.getLastBufferCustomer();
-    auto OldBC = BC;
-    /* When we write into a buffer, we generate a new version of it (think
-       "SSA"). Of course we do it also when there is not yet any
-       BufferCustomer */
-    if (!BC || A.isWriteAccess())
-      BC = std::make_shared<BufferCustomer>(B, A.isWriteAccess());
+    {
+      /// Use atomic list?
+      // Protect the update of LastBufferCustomer in the Buffer
+      auto Lock = B.lock();
+      std::shared_ptr<BufferCustomer> BC = B.getLastBufferCustomer();
+      auto OldBC = BC;
+      /* When we write into a buffer, we generate a new version of it (think
+         "SSA"). Of course we do it also when there is not yet any
+         BufferCustomer */
+      if (!BC || A.isWriteAccess()) {
+        BC = std::make_shared<BufferCustomer>(B, A.isWriteAccess());
+        B.setLastBufferCustomer(BC);
+      }
 
-    if (OldBC)
-      // \todo Use atomic list instead
-      OldBC->nextGeneration = BC;
-    else
-      // If we just created the BufferCustomer, it is ready to use
-      BC->notifyReady();
+      if (OldBC)
+        // \todo Use atomic list instead
+        OldBC->nextGeneration = BC;
+      else
+        // If we just created the BufferCustomer, it is ready to use
+        BC->notifyReady();
 
-    return BC;
+      return BC;
+    }
   }
 
 
