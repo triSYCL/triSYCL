@@ -25,8 +25,8 @@ namespace trisycl {
     @{
 */
 
-/** Class used to trace the construction and destruction of classes that
-    inherit from it
+/** Class used to trace the construction, copy-construction,
+    move-construction and destruction of classes that inherit from it
 
     \param T is the real type name to be used in the debug output.
  */
@@ -39,7 +39,24 @@ struct Debug {
               << " " << (void*) this << std::endl;
   }
 
-  /// Trace the construction with the compiler-dependent mangled named
+
+  /// Trace the copy construction with the compiler-dependent mangled
+  /// named
+  Debug(Debug const &) {
+    std::cerr << " TRISYCL_DEBUG: Copy of " << typeid(*this).name()
+              << " " << (void*) this << std::endl;
+  }
+
+
+  /// Trace the move construction with the compiler-dependent mangled
+  /// named
+  Debug(Debug &&) {
+    std::cerr << " TRISYCL_DEBUG: Move of " << typeid(*this).name()
+              << " " << (void*) this << std::endl;
+  }
+
+
+  /// Trace the destruction with the compiler-dependent mangled named
   ~Debug() {
     std::cerr << " TRISYCL_DEBUG: ~ Destructor of " << typeid(*this).name()
               << " " << (void*) this << std::endl;
