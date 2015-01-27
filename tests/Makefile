@@ -17,7 +17,8 @@ CXXFLAGS += -fopenmp
 #CXXFLAGS += -DTRISYCL_ASYNC=0
 
 # To enable debug and tracing:
-CXXFLAGS += -g -DTRISYCL_DEBUG
+CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
+LDLIBS=-lboost_log
 
 # By default run lit checking in the current directory
 CHECKING_DIR ?= .

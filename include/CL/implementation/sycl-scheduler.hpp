@@ -172,15 +172,17 @@ struct Task : std::enable_shared_from_this<Task>,
       // Wait for the required buffers to be ready
       acquireBuffers();
       // Execute the kernel
+      TRISYCL_DUMP_T("Execute the kernel");
       F();
       // Release the required buffers for other uses
       releaseBuffers();
+      TRISYCL_DUMP_T("Exit");
     };
 #if TRISYCL_ASYNC
     /* If in asynchronous execution mode, execute the functor in a new
        thread */
     std::thread thread(execution);
-    // std::cout << thread.get_id();
+    TRISYCL_DUMP_T("Started");
     // Detach the thread since it will synchronize by its own means
     thread.detach();
 #else
@@ -191,12 +193,14 @@ struct Task : std::enable_shared_from_this<Task>,
 
 
   void acquireBuffers() {
+    TRISYCL_DUMP_T("acquireBuffers()");
     for (auto &b : Buffers)
       b->wait();
   }
 
 
   void releaseBuffers() {
+    TRISYCL_DUMP_T("releaseBuffers()");
     for (auto &b : Buffers)
       b->release();
   }

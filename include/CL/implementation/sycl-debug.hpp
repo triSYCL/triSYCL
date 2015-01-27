@@ -13,8 +13,31 @@
 */
 
 #ifdef TRISYCL_DEBUG
+#include <boost/log/trivial.hpp>
 #include <iostream>
 #include <typeinfo>
+#include <sstream>
+#include <string>
+// To be able to construct string literals like "blah"s
+using namespace std::string_literals;
+
+/** Dump a debug message in a formatted way.
+
+    Use an intermediate ostringstream because there are issues with
+    BOOST_LOG_TRIVIAL to display C strings
+*/
+#define TRISYCL_DUMP(expression) do {                \
+    std::ostringstream s;                            \
+    s << expression;                                 \
+    BOOST_LOG_TRIVIAL(debug) << s.str();             \
+  } while(0)
+/// Same as TRISYCL_DUMP() but with thread id first
+#define TRISYCL_DUMP_T(expression)                                      \
+  TRISYCL_DUMP("Thread " << std::ios_base::hex                          \
+               << std::this_thread::get_id() << ": " << expression)
+#else
+#define TRISYCL_DUMP(expression) do { } while(0)
+#define TRISYCL_DUMP_T(expression) do { } while(0)
 #endif
 
 namespace cl {
@@ -35,31 +58,29 @@ struct Debug {
 #ifdef TRISYCL_DEBUG
   /// Trace the construction with the compiler-dependent mangled named
   Debug() {
-    std::cerr << " TRISYCL_DEBUG: Constructor of " << typeid(*this).name()
-              << " " << (void*) this << std::endl;
+    TRISYCL_DUMP("Constructor of " << typeid(*this).name()
+                 << " " << (void*) this);
   }
 
 
   /// Trace the copy construction with the compiler-dependent mangled
   /// named
   Debug(Debug const &) {
-    std::cerr << " TRISYCL_DEBUG: Copy of " << typeid(*this).name()
-              << " " << (void*) this << std::endl;
+    TRISYCL_DUMP("Copy of " << typeid(*this).name() << " " << (void*) this);
   }
 
 
   /// Trace the move construction with the compiler-dependent mangled
   /// named
   Debug(Debug &&) {
-    std::cerr << " TRISYCL_DEBUG: Move of " << typeid(*this).name()
-              << " " << (void*) this << std::endl;
+    TRISYCL_DUMP("Move of " << typeid(*this).name() << " " << (void*) this);
   }
 
 
   /// Trace the destruction with the compiler-dependent mangled named
   ~Debug() {
-    std::cerr << " TRISYCL_DEBUG: ~ Destructor of " << typeid(*this).name()
-              << " " << (void*) this << std::endl;
+    TRISYCL_DUMP("~ Destructor of " << typeid(*this).name()
+                 << " " << (void*) this);
   }
 #endif
 };

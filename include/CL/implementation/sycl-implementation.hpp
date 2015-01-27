@@ -403,7 +403,8 @@ struct AccessorImpl : public Debug<AccessorImpl<T, dimensions, mode, target>> {
 */
 template <typename T,
           std::size_t dimensions = 1>
-struct BufferImpl : BufferBase {
+struct BufferImpl : public Debug<BufferImpl<T, dimensions>>,
+  BufferBase {
   using Implementation = boost::multi_array_ref<T, dimensions>;
   // Extension to SYCL: provide pieces of STL container interface
   using element = T;
