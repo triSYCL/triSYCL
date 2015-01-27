@@ -26,10 +26,20 @@ class BufferCustomer : public Debug<BufferCustomer> {
   std::shared_ptr<BufferCustomer> nextGeneration;
   // Needed?
   bool WriteAccess;
+  // State when the buffer generation is ready to be used
   bool ReadyToUse;
-  std::mutex ReadyMutex;
+  // To signal when it is ready
   std::condition_variable ReadyCV;
+  /// To protect the access to the condition variable
+  std::mutex ReadyMutex;
+  // Count the number of accelerator-side usage of this buffer generation
   std::atomic<unsigned int> UserNumber;
+  /** To signal when the buffer generation is no longer used from the
+      accelerator side and can be used for example through a host
+      accessor */
+  std::condition_variable ReleasedCV;
+  /// To protect the access to the condition variable
+  std::mutex ReleasedMutex;
 
 public:
 
@@ -73,6 +83,17 @@ public:
   }
 
 
+  // Wait for the latest generation of the buffer before the host can use it
+   static void wait(BufferBase &B) {
+     // If there is nobody using the buffer, no need to wait
+     if (B.LastBufferCustomer)
+       /* In a correct SYCL program there should be no more task creation
+          using a buffer given to use by a hast accessor so this should be
+          race free */
+       B.LastBufferCustomer->waitReleased();
+   }
+
+
   /// Add a new task as a customer of the buffer generation
   void add(std::shared_ptr<Task> task, bool writeAccess) {
     WriteAccess = writeAccess;
@@ -80,7 +101,7 @@ public:
   }
 
 
-  /// Wait for the buffer generation to be ready to use
+  /// Wait for the buffer generation to be ready to use by a kernel task
   void wait() {
     {
       std::unique_lock<std::mutex> UL { ReadyMutex };
@@ -89,15 +110,36 @@ public:
   }
 
 
-  /// Release the buffer generation usage
+  /// Release the buffer generation usage by a  kernel task
   void release() {
     UserNumber--;
-    /* If there is no task using this generation of the buffer, make the
-       next generation ready if any*/
-    if (UserNumber == 0 && nextGeneration)
-      nextGeneration->notifyReady();
+    if (UserNumber == 0) {
+      /* If there is no task using this generation of the buffer, first
+         notify the host accessors waiting for it, if any */
+      ReleasedCV.notify_all();
+
+      /* And then make the next generation ready if any. Note that if the
+         SYCL program is race condition-free, there should be no host
+         accessor waiting for a generation which is not the last one...
+
+         \todo: add some SYCL semantics runtime verification
+      */
+      if (nextGeneration)
+        nextGeneration->notifyReady();
+    }
     // \todo Can we have UserNumber increasing again?
   }
+
+
+  // Wait for the release of the buffer generation before the host can use
+  // it
+  void waitReleased() {
+    {
+      std::unique_lock<std::mutex> UL { ReleasedMutex };
+      ReleasedCV.wait(UL, [&] { return UserNumber == 0; });
+    }
+  }
+
 
 private:
 
@@ -105,6 +147,7 @@ private:
   void notifyReady() {
     {
       std::unique_lock<std::mutex> UL { ReadyMutex };
+      // \todo This lock can be avoid if ReadyToUse is atomic
       ReadyToUse = true;
     }
     ReadyCV.notify_all();

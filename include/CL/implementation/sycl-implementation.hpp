@@ -45,7 +45,7 @@ class BufferCustomer;
 
    /// Store the BufferCustomer for the last generation of this buffer
    std::shared_ptr<BufferCustomer> LastBufferCustomer;
-  std::mutex ProtectBuffer;
+   std::mutex ProtectBuffer;
 
 
    BufferBase(bool ReadOnly) : ReadOnly { ReadOnly } {}
@@ -304,10 +304,18 @@ struct AccessorImpl : public Debug<AccessorImpl<T, dimensions, mode, target>> {
   AccessorImpl(BufferImpl<T, dimensions> &targetBuffer) :
     Buffer { &targetBuffer }, Array { targetBuffer.Access } {
 #if TRISYCL_ASYNC
-    // The accessor needs to be declared inside a command_group
-    assert(CurrentTask != nullptr);
-    // Register the accessor to the task dependencies
-    CurrentTask->add(*this);
+    if (target == access::target::host_buffer) {
+      // A host accessor needs to be declared *outside* a command_group
+      assert(CurrentTask == nullptr);
+      // Wait for the latest generation of the buffer before the host can use it
+      BufferCustomer::wait(targetBuffer);
+    }
+    else {
+      // A host non-host accessor needs to be declared *inside* a command_group
+      assert(CurrentTask != nullptr);
+      // Register the accessor to the task dependencies
+      CurrentTask->add(*this);
+    }
 #endif
   }
 
