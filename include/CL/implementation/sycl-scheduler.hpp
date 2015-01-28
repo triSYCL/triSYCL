@@ -147,7 +147,7 @@ private:
   void notifyReady() {
     {
       std::unique_lock<std::mutex> UL { ReadyMutex };
-      // \todo This lock can be avoid if ReadyToUse is atomic
+      // \todo This lock can be avoided if ReadyToUse is atomic
       ReadyToUse = true;
     }
     ReadyCV.notify_all();
@@ -168,14 +168,19 @@ struct Task : std::enable_shared_from_this<Task>,
 
   /// Add a new task to the task graph and schedule for execution
   void schedule(std::function<void(void)> F) {
-    auto execution = [&] {
+    /** To keep a reference on the Task shared_ptr after the end of the
+        command group, capture it by copy in the following lambda.  This
+        should be easier in C++17 with move semantics on capture
+    */
+    auto task = shared_from_this();
+    auto execution = [=] {
       // Wait for the required buffers to be ready
-      acquireBuffers();
+      task->acquireBuffers();
       // Execute the kernel
       TRISYCL_DUMP_T("Execute the kernel");
       F();
       // Release the required buffers for other uses
-      releaseBuffers();
+      task->releaseBuffers();
       TRISYCL_DUMP_T("Exit");
     };
 #if TRISYCL_ASYNC
