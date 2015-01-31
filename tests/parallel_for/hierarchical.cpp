@@ -1,19 +1,19 @@
 /* RUN: %{execute}%s | %{filecheck} %s
    CHECK: Group id = 0
-   CHECK-NEXT: Local id = 0 (global id = 0)
-   CHECK-NEXT: Local id = 1 (global id = 1)
-   CHECK-NEXT: Group id = 1
-   CHECK-NEXT: Local id = 0 (global id = 2)
-   CHECK-NEXT: Local id = 1 (global id = 3)
-   CHECK-NEXT: Group id = 2
-   CHECK-NEXT: Local id = 0 (global id = 4)
-   CHECK-NEXT: Local id = 1 (global id = 5)
-   CHECK-NEXT: Group id = 3
-   CHECK-NEXT: Local id = 0 (global id = 6)
-   CHECK-NEXT: Local id = 1 (global id = 7)
-   CHECK-NEXT: Group id = 4
-   CHECK-NEXT: Local id = 0 (global id = 8)
-   CHECK-NEXT: Local id = 1 (global id = 9)
+   CHECK: Local id = 0 (global id = 0)
+   CHECK: Local id = 1 (global id = 1)
+   CHECK: Group id = 1
+   CHECK: Local id = 0 (global id = 2)
+   CHECK: Local id = 1 (global id = 3)
+   CHECK: Group id = 2
+   CHECK: Local id = 0 (global id = 4)
+   CHECK: Local id = 1 (global id = 5)
+   CHECK: Group id = 3
+   CHECK: Local id = 0 (global id = 6)
+   CHECK: Local id = 1 (global id = 7)
+   CHECK: Group id = 4
+   CHECK: Local id = 0 (global id = 8)
+   CHECK: Local id = 1 (global id = 9)
 */
 #include <vector>
 #include <CL/sycl.hpp>
