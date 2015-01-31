@@ -1,7 +1,3 @@
-#if TRISYCL_ASYNC
-#include <thread>
-#endif
-
 namespace cl {
 namespace sycl {
 namespace trisycl {
@@ -98,6 +94,7 @@ public:
   void add(std::shared_ptr<Task> task, bool writeAccess) {
     WriteAccess = writeAccess;
     UserNumber++;
+    TRISYCL_DUMP_T("BufferCustomer::add() now UserNumber = " << UserNumber);
   }
 
 
@@ -113,6 +110,7 @@ public:
   /// Release the buffer generation usage by a  kernel task
   void release() {
     UserNumber--;
+    TRISYCL_DUMP_T("BufferCustomer::release() now UserNumber = " << UserNumber);
     if (UserNumber == 0) {
       /* If there is no task using this generation of the buffer, first
          notify the host accessors waiting for it, if any */
@@ -131,9 +129,11 @@ public:
   }
 
 
-  // Wait for the release of the buffer generation before the host can use
-  // it
+  /** Wait for the release of the buffer generation before the host can
+      use it
+  */
   void waitReleased() {
+    TRISYCL_DUMP_T("BufferCustomer::waitReleased() UserNumber = " << UserNumber);
     {
       std::unique_lock<std::mutex> UL { ReleasedMutex };
       ReleasedCV.wait(UL, [&] { return UserNumber == 0; });
@@ -150,6 +150,7 @@ private:
       // \todo This lock can be avoided if ReadyToUse is atomic
       ReadyToUse = true;
     }
+    TRISYCL_DUMP_T("BufferCustomer::notifyReady()");
     ReadyCV.notify_all();
   }
 
@@ -168,16 +169,16 @@ struct Task : std::enable_shared_from_this<Task>,
 
   /// Add a new task to the task graph and schedule for execution
   void schedule(std::function<void(void)> F) {
-    /** To keep a reference on the Task shared_ptr after the end of the
-        command group, capture it by copy in the following lambda.  This
-        should be easier in C++17 with move semantics on capture
+    /** To keep a copy of the Task shared_ptr after the end of the command
+        group, capture it by copy in the following lambda. This should be
+        easier in C++17 with move semantics on capture
     */
     auto task = shared_from_this();
     auto execution = [=] {
       // Wait for the required buffers to be ready
       task->acquireBuffers();
-      // Execute the kernel
       TRISYCL_DUMP_T("Execute the kernel");
+      // Execute the kernel
       F();
       // Release the required buffers for other uses
       task->releaseBuffers();
@@ -220,9 +221,10 @@ struct Task : std::enable_shared_from_this<Task>,
             access::mode mode,
             access::target target = access::global_buffer>
   void add(AccessorImpl<T, dimensions, mode, target> &A) {
-    // Add the task as a new client for the buffer of the accessor
-    //A.getBuffer().addClient(A, shared_from_this());
-    Buffers.push_back(BufferCustomer::getBufferCustomer(A));
+    auto BC = BufferCustomer::getBufferCustomer(A);
+    // Add the task as a new client for the buffer customer of the accessor
+    BC->add(shared_from_this(), A.isWriteAccess());
+    Buffers.push_back(BC);
   }
 
 };
