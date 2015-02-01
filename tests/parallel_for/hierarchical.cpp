@@ -23,15 +23,18 @@ using namespace cl::sycl;
 int main() {
   queue my_queue;
   const int size = 10;
-  int data[size];
+  std::vector<int> data(size);
   const int groupsize = 2;
+/* Put &data[0] instead of data.data() because it is not obvious in the
+   excerpt below it is a vector */
 //////// Start slide
-buffer<int> my_buffer(data, size);
+buffer<int> input(&data[0], size);
+buffer<int> output(size);
 
 command_group(my_queue, [&]()
 {
-	auto in_access = my_buffer.get_access<access::read>();
-	auto out_access = my_buffer.get_access<access::write>();
+	auto in_access = input.get_access<access::read>();
+	auto out_access = output.get_access<access::write>();
 
 	parallel_for_workgroup<class hierarchical>(nd_range<>(range<>(size),
                                                         range<>(groupsize)),
