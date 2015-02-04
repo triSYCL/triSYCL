@@ -242,6 +242,14 @@ Some other known implementations:
 Related projects
 ~~~~~~~~~~~~~~~~
 
+- Boost.Compute_
+
+- VexCL_
+
+- ViennaCL_
+
+- Bolt_
+
 - `C++AMP`_
 
 - Open Source implementation of C++AMP https://bitbucket.org/multicoreware/cppamp-driver-ng
@@ -335,7 +343,7 @@ Some ideas of future developments where *you* can contribute too: :-)
 
 - add first OpenCL_ support with kernels provided only as strings, thus
   avoiding the need for a compiler. Could be based on other libraries such
-  as ``Bolt``, ``boost::compute`` or ``VexCL``;
+  as Boost.Compute_, VexCL_ or Bolt_;
 
 - make an accelerator version based on OpenMP_ 4 accelerator target,
   OpenHMPP_ or OpenACC_;
@@ -373,6 +381,10 @@ Some ideas of future developments where *you* can contribute too: :-)
   Somme useful link definitions:
 
 .. _AMD: http://www.amd/com
+
+.. _Bolt: https://github.com/HSA-Libraries/Bolt
+
+.. _Boost.Compute: http://kylelutz.github.io/compute/
 
 .. _C++: http://www.open-std.org/jtc1/sc22/wg21/
 
@@ -413,6 +425,10 @@ Some ideas of future developments where *you* can contribute too: :-)
 .. _SYCL: http://www.khronos.org/opencl/sycl/
 
 .. _triSYCL: http://www.khronos.org/opencl/sycl/
+
+.. _VexCL: http://ddemidov.github.io/vexcl/
+
+.. _ViennaCL: http://viennacl.sourceforge.net
 
 
 ..
