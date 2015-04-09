@@ -250,11 +250,15 @@ Related projects
 
 - Bolt_
 
+- Thrust_
+
 - `C++AMP`_
 
 - Open Source implementation of C++AMP https://bitbucket.org/multicoreware/cppamp-driver-ng
 
 - Intel Lab's iHRC https://github.com/IntelLabs/iHRC
+
+- CUDA_
 
 - C++ Parallelism TS https://github.com/cplusplus/parallelism-ts
 
@@ -391,6 +395,8 @@ Some ideas of future developments where *you* can contribute too: :-)
 .. _C++AMP: http://msdn.microsoft.com/en-us/library/hh265137.aspx
 
 .. _Clang: http://clang.llvm.org/
+
+.. _CUDA: https://developer.nvidia.com/cuda-zone
 
 .. _DirectX: http://en.wikipedia.org/wiki/DirectX
 
