@@ -54,16 +54,17 @@ void single_task(std::function<void(void)> F) {
     function can not be templated, so instantiate it for all the
     dimensions
 */
-#define TRISYCL_ParallelForFunctor_GLOBAL(N)                          \
-  template <typename KernelName = std::nullptr_t,                     \
-            typename ParallelForFunctor>                              \
-  void parallel_for(range<N> global_size,                             \
-                    ParallelForFunctor f) {                           \
-    CurrentTask->schedule([=] { detail::ParallelForImpl(global_size, f); }); \
+#define TRISYCL_parallel_for_functor_GLOBAL(N)                          \
+  template <typename KernelName = std::nullptr_t,                       \
+            typename ParallelForFunctor>                                \
+  void parallel_for(range<N> global_size,                               \
+                    ParallelForFunctor f) {                             \
+    CurrentTask->schedule([=] { detail::parallel_for(global_size, f); }); \
   }
-TRISYCL_ParallelForFunctor_GLOBAL(1)
-TRISYCL_ParallelForFunctor_GLOBAL(2)
-TRISYCL_ParallelForFunctor_GLOBAL(3)
+
+TRISYCL_parallel_for_functor_GLOBAL(1)
+TRISYCL_parallel_for_functor_GLOBAL(2)
+TRISYCL_parallel_for_functor_GLOBAL(3)
 
 
 /** A variation of SYCL parallel_for to take into account a nd_range<>
@@ -84,7 +85,7 @@ template <typename KernelName,
           std::size_t Dimensions,
           typename ParallelForFunctor>
 void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {
-  CurrentTask->schedule([=] { detail::ParallelForImpl(r, f); });
+  CurrentTask->schedule([=] { detail::parallel_for(r, f); });
 }
 
 
@@ -106,16 +107,18 @@ void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {
     function can not be templated, so instantiate it for all the
     dimensions
 */
-#define TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(N)                   \
-  template <typename KernelName = std::nullptr_t,                     \
-            typename ParallelForFunctor>                              \
-  void parallel_for(range<N> global_size,                             \
-                    id<N> offset,                                     \
-                    ParallelForFunctor f) {                           \
-    CurrentTask->schedule([=] { detail::ParallelForGlobalOffset(global_size,  \
-                                                        offset,       \
-                                                        f); });       \
+#define TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(N)     \
+  template <typename KernelName = std::nullptr_t,       \
+            typename ParallelForFunctor>                \
+  void parallel_for(range<N> global_size,               \
+                    id<N> offset,                       \
+                    ParallelForFunctor f) {             \
+    CurrentTask->schedule([=] {                         \
+        detail::parallel_for_global_offset(global_size, \
+                                           offset,      \
+                                           f); });      \
   }
+
 TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(1)
 TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(2)
 TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(3)
@@ -150,14 +153,14 @@ template <typename KernelName = std::nullptr_t,
           typename ParallelForFunctor>
 void parallel_for_workgroup(nd_range<Dimensions> r,
                             ParallelForFunctor f) {
-  CurrentTask->schedule([=] { detail::ParallelForWorkgroup(r, f); });
+  CurrentTask->schedule([=] { detail::parallel_for_workgroup(r, f); });
 }
 
 
 /// Loop on the work-items inside a work-group
 template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void parallel_for_workitem(group<Dimensions> g, ParallelForFunctor f) {
-  detail::ParallelForWorkitem(g, f);
+  detail::parallel_for_workitem(g, f);
 }
 
 }
