@@ -248,6 +248,10 @@ Related projects
 
 - ViennaCL_
 
+- C++ Parallelism TS https://github.com/cplusplus/parallelism-ts
+
+- C++ Concurrency TS https://github.com/cplusplus/concurrency_ts
+
 - Bolt_
 
 - Thrust_
@@ -259,10 +263,6 @@ Related projects
 - Intel Lab's iHRC https://github.com/IntelLabs/iHRC
 
 - CUDA_
-
-- C++ Parallelism TS https://github.com/cplusplus/parallelism-ts
-
-- C++ Concurrency TS https://github.com/cplusplus/concurrency_ts
 
 
 OpenCL triSYCL code documentation
@@ -288,7 +288,8 @@ Installation
 Only Clang_ 3.6+ or GCC_ 4.9+, `Boost.MultiArray`_ (which adds to `C++`_
 the nice Fortran array semantics and syntax), Boost.Operators are needed.
 If you use the debug mode or OpenMP, this works only with GCC 4.9 since
-current Clang version does not support OpenMP yet.
+current Clang version does not support OpenMP yet or some C++14 with
+``-g``.
 
 To install them on latest Linux Debian/unstable (this should work on
 latest Ubuntu too):
@@ -336,6 +337,14 @@ Possible futures
 
 Some ideas of future developments where *you* can contribute too: :-)
 
+- refactor the implementation to follow more the Boost.Compute_ coding
+  style (this is on-going);
+
+- update the implementation to stick to the final SYCL 1.2 specification
+  for the `IWOCL 2015
+  <http://www.iwocl.org/conf-2015/tutorials-and-workshops>`_ tutorial
+  (this is on-going);
+
 - finish implementation of basic classes without any OpenCL_ support;
 
 - move to CMake for better portability;
@@ -347,7 +356,7 @@ Some ideas of future developments where *you* can contribute too: :-)
 
 - add first OpenCL_ support with kernels provided only as strings, thus
   avoiding the need for a compiler. Could be based on other libraries such
-  as Boost.Compute_, VexCL_ or Bolt_;
+  as Boost.Compute_, VexCL_, ViennaCL_...;
 
 - make an accelerator version based on OpenMP_ 4 accelerator target,
   OpenHMPP_ or OpenACC_;
@@ -376,10 +385,17 @@ Some ideas of future developments where *you* can contribute too: :-)
   This approach may require more work than the C++AMP version but since it
   is based on the existing OpenMP infrastructure Intel spent a lot of time
   to upstream through the official code review process, at the end it
-  would require quite less time for up-streaming, if this is the goal;
+  would require quite less time for up-streaming, if this is the goal.
 
-- add OpenCL_ 2.x support.
+  OpenMP4 in Clang/LLVM is getting momentum and making lot of progress
+  backed by Intel, IBM, AMD... so it sounds like the way to go;
 
+- add OpenCL_ 2.x support with SYCL 2.1;
+
+- since SYCL is a pretty general programming model for heterogeneous
+  computing, if the OpenCL compatibility layer is not required, some other
+  back-end could be written besides the current OpenMP_ one: CUDA_,
+  RenderScript_, etc.
 
 ..
   Somme useful link definitions:
@@ -426,9 +442,13 @@ Some ideas of future developments where *you* can contribute too: :-)
 
 .. _OpenMP: http://openmp.org/
 
+.. _RenderScript: http://en.wikipedia.org/wiki/Renderscript
+
 .. _SPIR: http://www.khronos.org/spir
 
 .. _SYCL: http://www.khronos.org/opencl/sycl/
+
+.. _Thrust: http://thrust.github.io/
 
 .. _triSYCL: http://www.khronos.org/opencl/sycl/
 
