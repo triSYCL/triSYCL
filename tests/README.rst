@@ -101,6 +101,12 @@ in the between, try:
 
   make check-compilers
 
+To check into a new clone to be sure you did not forget to commit some
+files, use the ``clone-T`` targets, such as:
+
+.. code:: bash
+
+  make clone-check
 
 ..
   Somme useful link definitions:

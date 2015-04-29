@@ -75,3 +75,15 @@ check-compilers:
 execute: $(basename $(TARGET))
 	# Execute the compiled binary
 	$<
+
+# To verify everything is self-contained, run the target in a clone of the
+# current branch of the current repository.
+#
+# Forward any clone-T target into a clone and make T in it
+#
+# Use for example:
+# make clone-check
+clone-%:
+	rm -rf test-clone
+	git clone --branch `git rev-parse --abbrev-ref HEAD` .. test-clone
+	cd test-clone/tests; $(MAKE) $*
