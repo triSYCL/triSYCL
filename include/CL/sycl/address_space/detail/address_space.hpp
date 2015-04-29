@@ -24,13 +24,13 @@ namespace detail {
 
     In the general case, do not add any OpenCL address space qualifier */
 template <typename T, address_space AS>
-struct OpenCLType {
+struct opencl_type {
   using type = T;
 };
 
 /// Add an attribute for __constant address space
 template <typename T>
-struct OpenCLType<T, constant_address_space> {
+struct opencl_type<T, constant_address_space> {
   using type = T
 #ifdef __SYCL_DEVICE_ONLY__
     /* Put the address space qualifier after the type so that we can
@@ -42,7 +42,7 @@ struct OpenCLType<T, constant_address_space> {
 
 /// Add an attribute for __generic address space
 template <typename T>
-struct OpenCLType<T, generic_address_space> {
+struct opencl_type<T, generic_address_space> {
   using type = T
 #ifdef __SYCL_DEVICE_ONLY__
     /* Put the address space qualifier after the type so that we can
@@ -54,7 +54,7 @@ struct OpenCLType<T, generic_address_space> {
 
 /// Add an attribute for __global address space
 template <typename T>
-struct OpenCLType<T, global_address_space> {
+struct opencl_type<T, global_address_space> {
   using type = T
 #ifdef __SYCL_DEVICE_ONLY__
     /* Put the address space qualifier after the type so that we can
@@ -66,7 +66,7 @@ struct OpenCLType<T, global_address_space> {
 
 /// Add an attribute for __local address space
 template <typename T>
-struct OpenCLType<T, local_address_space> {
+struct opencl_type<T, local_address_space> {
   using type = T
 #ifdef __SYCL_DEVICE_ONLY__
     /* Put the address space qualifier after the type so that we can
@@ -78,7 +78,7 @@ struct OpenCLType<T, local_address_space> {
 
 /// Add an attribute for __private address space
 template <typename T>
-struct OpenCLType<T, private_address_space> {
+struct opencl_type<T, private_address_space> {
   using type = T
 #ifdef __SYCL_DEVICE_ONLY__
     /* Put the address space qualifier after the type so that we can
@@ -92,16 +92,16 @@ struct OpenCLType<T, private_address_space> {
 /* Forward declare some classes to allow some recursion in conversion
    operators */
 template <typename SomeType, address_space SomeAS>
-struct AddressSpaceArrayImpl;
+struct address_space_array;
 
 template <typename SomeType, address_space SomeAS>
-struct AddressSpaceFundamentalImpl;
+struct address_space_fundamental;
 
 template <typename SomeType, address_space SomeAS>
-struct AddressSpaceObjectImpl;
+struct address_space_object;
 
 template <typename SomeType, address_space SomeAS>
-struct AddressSpacePointerImpl;
+struct address_space_ptr;
 
 /** Dispatch the address space implementation according to the requested type
 
@@ -111,14 +111,14 @@ struct AddressSpacePointerImpl;
     in the case of a pointer type
 */
 template <typename T, address_space AS>
-using AddressSpaceImpl =
+using addr_space =
   typename std::conditional<std::is_pointer<T>::value,
-                            AddressSpacePointerImpl<T, AS>,
+                            address_space_ptr<T, AS>,
   typename std::conditional<std::is_class<T>::value,
-                            AddressSpaceObjectImpl<T, AS>,
+                            address_space_object<T, AS>,
   typename std::conditional<std::is_array<T>::value,
-                            AddressSpaceArrayImpl<T, AS>,
-                            AddressSpaceFundamentalImpl<T, AS>
+                            address_space_array<T, AS>,
+                            address_space_fundamental<T, AS>
   >::type>::type>::type;
 
 
@@ -132,7 +132,7 @@ using AddressSpaceImpl =
     \todo Verify/improve to deal with const/volatile?
 */
 template <typename T, address_space AS>
-struct AddressSpaceBaseImpl {
+struct address_space_base {
   /** Store the base type of the object
 
       \todo Add to the specification
@@ -143,7 +143,7 @@ struct AddressSpaceBaseImpl {
 
       \todo Add to the specification
   */
-  using opencl_type = typename OpenCLType<T, AS>::type;
+  using opencl_type = typename opencl_type<T, AS>::type;
 
   /** Set the address_space identifier that can be queried to know the
       pointer type */
@@ -159,15 +159,15 @@ struct AddressSpaceBaseImpl {
     \param AS is the address space to place the object into
 */
 template <typename T, address_space AS>
-struct AddressSpaceVariableImpl : public AddressSpaceBaseImpl<T, AS> {
+struct address_space_variable : public address_space_base<T, AS> {
   /** Store the base type of the object with OpenCL address space modifier
 
       \todo Add to the specification
   */
-  using opencl_type = typename OpenCLType<T, AS>::type;
+  using opencl_type = typename opencl_type<T, AS>::type;
 
   /// Keep track of the base class as a short-cut
-  using super = AddressSpaceBaseImpl<T, AS>;
+  using super = address_space_base<T, AS>;
 
 protected:
 
@@ -183,16 +183,16 @@ public:
   /** Allow to create an address space version of an object or to convert
       one to be used by the classes inheriting by this one because it is
       not possible to directly initialize a base class member in C++ */
-  AddressSpaceVariableImpl(const T & v) : variable(v) { }
+  address_space_variable(const T & v) : variable(v) { }
 
 
-  /// Put again the default constructors canceled by the previous definition
-  AddressSpaceVariableImpl() = default;
+  /// Put back the default constructors canceled by the previous definition
+  address_space_variable() = default;
 
 
-  /** Conversion operator to allow a AddressSpaceObjectImpl<T> to be used
+  /** Conversion operator to allow a address_space_object<T> to be used
       as a T so that all the methods of a T and the built-in operators for
-      T can be used on a AddressSpaceObjectImpl<T> too.
+      T can be used on a address_space_object<T> too.
 
       Use opencl_type so that if we take the address of it, the address
       space is kept.
@@ -211,12 +211,12 @@ public:
     \todo Verify/improve to deal with const/volatile?
 */
 template <typename T, address_space AS>
-struct AddressSpaceFundamentalImpl : public AddressSpaceVariableImpl<T, AS> {
+struct address_space_fundamental : public address_space_variable<T, AS> {
   /// Keep track of the base class as a short-cut
-  using super = AddressSpaceVariableImpl<T, AS>;
+  using super = address_space_variable<T, AS>;
 
   /// Inherit from base class constructors
-  using super::AddressSpaceVariableImpl;
+  using super::address_space_variable;
 
 
   /** Also request for the default constructors that have been disabled by
@@ -228,7 +228,7 @@ struct AddressSpaceFundamentalImpl : public AddressSpaceVariableImpl<T, AS> {
       \endcode
       without initialization.
   */
-  AddressSpaceFundamentalImpl() = default;
+  address_space_fundamental() = default;
 
 
   /** Allow for example assignment of a global<float> to a priv<double>
@@ -242,14 +242,16 @@ struct AddressSpaceFundamentalImpl : public AddressSpaceVariableImpl<T, AS> {
      Strangely
      \code
      template <typename SomeType, address_space SomeAS>
-     AddressSpaceBaseImpl(AddressSpaceImpl<SomeType, SomeAS>& v)
+     address_space_base(addr_space<SomeType, SomeAS>& v)
      : variable(SomeType(v)) { }
      \endcode
      cannot be used here because SomeType cannot be inferred. So use
-     AddressSpaceBaseImpl<> instead
+     address_space_base<> instead
+
+     Need to think further about it...
   */
   template <typename SomeType, cl::sycl::address_space SomeAS>
-  AddressSpaceFundamentalImpl(AddressSpaceFundamentalImpl<SomeType, SomeAS>& v)
+  address_space_fundamental(address_space_fundamental<SomeType, SomeAS>& v)
   {
     /* Strangely I cannot have it working in the initializer instead, for
        some cases */
@@ -269,16 +271,16 @@ struct AddressSpaceFundamentalImpl : public AddressSpaceVariableImpl<T, AS> {
     the implementation of cl::sycl::multi_ptr<T, AS>
 */
 template <typename T, address_space AS>
-struct AddressSpacePointerImpl : public AddressSpaceFundamentalImpl<T, AS> {
+struct address_space_ptr : public address_space_fundamental<T, AS> {
   // Verify that \a T is really a pointer
   static_assert(std::is_pointer<T>::value,
                 "T must be a pointer type");
 
   /// Keep track of the base class as a short-cut
-  using super = AddressSpaceFundamentalImpl<T, AS>;
+  using super = address_space_fundamental<T, AS>;
 
   /// Inherit from base class constructors
-  using super::AddressSpaceFundamentalImpl;
+  using super::address_space_fundamental;
 
 };
 
@@ -290,17 +292,17 @@ struct AddressSpacePointerImpl : public AddressSpaceFundamentalImpl<T, AS> {
     \param AS is the address space to place the object into
 */
 template <typename T, address_space AS>
-struct AddressSpaceArrayImpl : public AddressSpaceVariableImpl<T, AS> {
+struct address_space_array : public address_space_variable<T, AS> {
   /// Keep track of the base class as a short-cut
-  using super = AddressSpaceVariableImpl<T, AS>;
+  using super = address_space_variable<T, AS>;
 
   /// Inherit from base class constructors
-  using super::AddressSpaceVariableImpl;
+  using super::address_space_variable;
 
 
   /** Allow to create an address space array from an array
    */
-  AddressSpaceArrayImpl(const T &array) {
+  address_space_array(const T &array) {
     std::copy(std::begin(array), std::end(array), std::begin(super::variable));
   };
 
@@ -309,7 +311,7 @@ struct AddressSpaceArrayImpl : public AddressSpaceVariableImpl<T, AS> {
 
       \todo Extend to more than 1 dimension
   */
-  AddressSpaceArrayImpl(std::initializer_list<std::remove_extent_t<T>> list) {
+  address_space_array(std::initializer_list<std::remove_extent_t<T>> list) {
     std::copy(std::begin(list), std::end(list), std::begin(super::variable));
   };
 
@@ -323,20 +325,20 @@ struct AddressSpaceArrayImpl : public AddressSpaceVariableImpl<T, AS> {
     \param AS is the address space to place the object into
 
     The class implementation is just inheriting of T so that all methods
-    and non-member operators on T work also on AddressSpaceObjectImpl<T>
+    and non-member operators on T work also on address_space_object<T>
 
     \todo Verify/improve to deal with const/volatile?
 
     \todo what about T having some final methods?
 */
 template <typename T, address_space AS>
-struct AddressSpaceObjectImpl : public OpenCLType<T, AS>::type,
-                                public AddressSpaceBaseImpl<T, AS> {
+struct address_space_object : public opencl_type<T, AS>::type,
+                              public address_space_base<T, AS> {
   /** Store the base type of the object with OpenCL address space modifier
 
       \todo Add to the specification
   */
-  using opencl_type = typename OpenCLType<T, AS>::type;
+  using opencl_type = typename opencl_type<T, AS>::type;
 
   /* C++11 helps a lot to be able to have the same constructors as the
      parent class here but with an OpenCL address space
@@ -347,11 +349,11 @@ struct AddressSpaceObjectImpl : public OpenCLType<T, AS>::type,
 
   /** Allow to create an address space version of an object or to
       convert one */
-  AddressSpaceObjectImpl(T && v) : opencl_type(v) { }
+  address_space_object(T && v) : opencl_type(v) { }
 
-  /** Conversion operator to allow a AddressSpaceObjectImpl<T> to be used
+  /** Conversion operator to allow a address_space_object<T> to be used
       as a T so that all the methods of a T and the built-in operators for
-      T can be used on a AddressSpaceObjectImpl<T> too.
+      T can be used on a address_space_object<T> too.
 
       Use opencl_type so that if we take the address of it, the address
       space is kept. */

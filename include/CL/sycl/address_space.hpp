@@ -49,7 +49,7 @@ namespace sycl {
     Note that if \a T is not a pointer type, it is an error.
 */
 template <typename T>
-using constant = detail::AddressSpaceImpl<T, constant_address_space>;
+using constant = detail::addr_space<T, constant_address_space>;
 
 
 /** Declare a variable to be an OpenCL 2 generic pointer
@@ -59,7 +59,7 @@ using constant = detail::AddressSpaceImpl<T, constant_address_space>;
     Note that if \a T is not a pointer type, it is an error.
 */
 template <typename T>
-using generic = detail::AddressSpaceImpl<T, generic_address_space>;
+using generic = detail::addr_space<T, generic_address_space>;
 
 
 /** Declare a variable to be an OpenCL global pointer
@@ -69,7 +69,7 @@ using generic = detail::AddressSpaceImpl<T, generic_address_space>;
     Note that if \a T is not a pointer type, it is an error.
 */
 template <typename T>
-using global = detail::AddressSpaceImpl<T, global_address_space>;
+using global = detail::addr_space<T, global_address_space>;
 
 
 /** Declare a variable to be an OpenCL local pointer
@@ -79,7 +79,7 @@ using global = detail::AddressSpaceImpl<T, global_address_space>;
     Note that if \a T is not a pointer type, it is an error.
 */
 template <typename T>
-using local = detail::AddressSpaceImpl<T, local_address_space>;
+using local = detail::addr_space<T, local_address_space>;
 
 
 /** Declare a variable to be an OpenCL private pointer
@@ -89,7 +89,7 @@ using local = detail::AddressSpaceImpl<T, local_address_space>;
     Note that if \a T is not a pointer type, it is an error.
 */
 template <typename T>
-using priv = detail::AddressSpaceImpl<T, private_address_space>;
+using priv = detail::addr_space<T, private_address_space>;
 
 
 /** A pointer that can be statically associated to any address-space
@@ -101,7 +101,7 @@ using priv = detail::AddressSpaceImpl<T, private_address_space>;
     Note that if \a Pointer is not a pointer type, it is an error.
 */
 template <typename Pointer, address_space AS>
-using multi_ptr = detail::AddressSpacePointerImpl<Pointer, AS>;
+using multi_ptr = detail::address_space_ptr<Pointer, AS>;
 
 
 /** Construct a cl::sycl::multi_ptr<> with the right type
