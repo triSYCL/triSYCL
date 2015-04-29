@@ -1,8 +1,11 @@
+#ifndef TRISYCL_SYCL_ADDRESS_SPACES_DETAIL_ADDRESS_SPACES_HPP
+#define TRISYCL_SYCL_ADDRESS_SPACES_DETAIL_ADDRESS_SPACES_HPP
+
 /** \file
 
     Implement OpenCL address spaces in SYCL with C++-style.
 
-    Ronan.Keryell at AMD point com
+    Ronan at Keryell point FR
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
@@ -10,12 +13,11 @@
 
 namespace cl {
 namespace sycl {
-namespace trisycl {
+namespace detail {
 
 /** \addtogroup address_spaces
     @{
 */
-
 
 /** Generate a type with some real OpenCL 2 attribute if we are on an
     OpenCL device
@@ -370,3 +372,5 @@ struct AddressSpaceObjectImpl : public OpenCLType<T, AS>::type,
     ### eval: (flyspell-prog-mode)
     ### End:
 */
+
+#endif // TRISYCL_SYCL_ADDRESS_SPACES_DETAIL_ADDRESS_SPACES_HPP

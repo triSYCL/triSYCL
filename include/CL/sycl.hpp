@@ -167,21 +167,6 @@ template <std::size_t dimensions> struct image;
 
 /// @} End the data Doxygen group
 
-/** \addtogroup address_spaces Dealing with OpenCL address spaces
-    @{
-*/
-
-/** Enumerate the different OpenCL 2 address spaces */
-enum address_space {
-  constant_address_space,
-  generic_address_space,
-  global_address_space,
-  local_address_space,
-  private_address_space,
-};
-
-/// @} End the address_spaces Doxygen group
-
 /* Forward definitions (outside the Doxygen addtogroup to avoid multiple
    definitions) */
 struct queue;
@@ -1183,91 +1168,11 @@ struct buffer {
 }
 }
 
+#include "CL/sycl/address_space.hpp"
 #include "CL/sycl/parallelism.hpp"
 
 namespace cl {
 namespace sycl {
-
-/** \addtogroup address_spaces
-    @{
-*/
-
-/** Declare a variable to be an OpenCL constant pointer
-
-    \param T is the pointer type
-
-    Note that if \a T is not a pointer type, it is an error.
-*/
-template <typename T>
-using constant = AddressSpaceImpl<T, constant_address_space>;
-
-
-/** Declare a variable to be an OpenCL 2 generic pointer
-
-    \param T is the pointer type
-
-    Note that if \a T is not a pointer type, it is an error.
-*/
-template <typename T>
-using generic = AddressSpaceImpl<T, generic_address_space>;
-
-
-/** Declare a variable to be an OpenCL global pointer
-
-    \param T is the pointer type
-
-    Note that if \a T is not a pointer type, it is an error.
-*/
-template <typename T>
-using global = AddressSpaceImpl<T, global_address_space>;
-
-
-/** Declare a variable to be an OpenCL local pointer
-
-    \param T is the pointer type
-
-    Note that if \a T is not a pointer type, it is an error.
-*/
-template <typename T>
-using local = AddressSpaceImpl<T, local_address_space>;
-
-
-/** Declare a variable to be an OpenCL private pointer
-
-    \param T is the pointer type
-
-    Note that if \a T is not a pointer type, it is an error.
-*/
-template <typename T>
-using priv = AddressSpaceImpl<T, private_address_space>;
-
-
-/** A pointer that can be statically associated to any address-space
-
-    \param Pointer is the pointer type
-
-    \param AS is the address space to point to
-
-    Note that if \a Pointer is not a pointer type, it is an error.
-*/
-template <typename Pointer, address_space AS>
-using multi_ptr = AddressSpacePointerImpl<Pointer, AS>;
-
-
-/** Construct a cl::sycl::multi_ptr<> with the right type
-
-    \param pointer is the address with its address space to point to
-
-    \todo Implement the case with a plain pointer
-*/
-template <typename T, address_space AS>
-multi_ptr<T, AS> make_multi(multi_ptr<T, AS> pointer) {
-  return pointer;
-}
-
-
-/// @} End the address_spaces Doxygen group
-
 
 /** \addtogroup vector Vector types in SYCL
 

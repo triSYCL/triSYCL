@@ -168,4 +168,12 @@ void parallel_for_workitem(group<Dimensions> g, ParallelForFunctor f) {
 
 /// @} End the parallelism Doxygen group
 
+/*
+    # Some Emacs stuff:
+    ### Local Variables:
+    ### ispell-local-dictionary: "american"
+    ### eval: (flyspell-prog-mode)
+    ### End:
+*/
+
 #endif // TRISYCL_SYCL_PARALLELISM_HPP

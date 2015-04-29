@@ -28,7 +28,6 @@
 #include <boost/operators.hpp>
 
 #include "sycl-debug.hpp"
-#include "sycl-address-spaces.hpp"
 
 
 namespace cl {
