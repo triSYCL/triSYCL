@@ -13,9 +13,13 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <algorithm>
 #include <array>
 #include <cstddef>
+
 #include <boost/operators.hpp>
+
+#include "CL/sycl/detail/debug.hpp"
 
 
 namespace cl {

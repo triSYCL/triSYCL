@@ -235,10 +235,8 @@ namespace cl {
 namespace sycl {
 
 // Forward declaration for the buffer<> and the accessor<>
-template <std::size_t dims> struct id;
 template <std::size_t dims> struct item;
 template <std::size_t dims> struct nd_item;
-template <std::size_t dims> struct range;
 
 namespace trisycl {
 

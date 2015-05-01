@@ -15,9 +15,9 @@
 
 #ifdef TRISYCL_DEBUG
 #include <iostream>
-#include <typeinfo>
 #include <sstream>
 #include <string>
+#include <typeinfo>
 
 #include <boost/log/trivial.hpp>
 
@@ -98,6 +98,7 @@ struct debug {
 */
 template <typename T>
 struct display_vector {
+#ifdef TRISYCL_DEBUG
   /// To debug and test
   void display() const {
     std::cout << typeid(T).name() << ":";
@@ -106,6 +107,7 @@ struct display_vector {
       std::cout << " " << e;
     std::cout << std::endl;
   }
+#endif
 };
 
 /// @} End the debug_trace Doxygen group

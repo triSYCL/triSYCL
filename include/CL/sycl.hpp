@@ -174,12 +174,14 @@ template <typename T, std::size_t dimensions> struct buffer;
 }
 
 
-// Include the implementation details
-#include "implementation/sycl-implementation.hpp"
 /// \todo Move into files really using it
 #include "CL/sycl/detail/small_array.hpp"
+#include "CL/sycl/id.hpp"
 #include "CL/sycl/image.hpp"
+#include "CL/sycl/range.hpp"
 
+// Include the implementation details
+#include "implementation/sycl-implementation.hpp"
 
 /// SYCL dwells in the cl::sycl namespace
 namespace cl {
@@ -190,43 +192,6 @@ using namespace trisycl;
 /** \addtogroup parallelism Expressing parallelism through kernels
     @{
 */
-
-/** Define a multi-dimensional index, used for example to locate a work item
-
-    \todo The definition of id and item seem completely broken in the
-    current specification. The whole 3.4.1 is to be updated.
-
-    \todo It would be nice to have [] working everywhere, provide both
-    get_...() and get_...(int dim) equivalent to get_...()[int dim]
-    Well it is already the case for item. So not needed for id?
-    Indeed [] is mentioned in text of page 59 but not in class description.
-*/
-template <std::size_t dims = 1>
-struct id : public detail::small_array_123<std::ptrdiff_t, id<dims>, dims> {
-  // Inherit of all the constructors
-  using detail::small_array_123<std::ptrdiff_t,
-                                id<dims>,
-                                dims>::small_array_123;
-};
-
-
-/** Implement a make_id to construct an id<> of the right dimension with
-    implicit conversion from an initializer list for example.
-
-    Cannot use a template on the number of dimensions because the implicit
-    conversion would not be tried. */
-auto make_id(id<1> i) { return i; }
-auto make_id(id<2> i) { return i; }
-auto make_id(id<3> i) { return i; }
-
-
-/** Construct an id<> from a function call with arguments, like
-    make_id(1, 2, 3) */
-template<typename... BasicType>
-auto make_id(BasicType... Args) {
-  return id<sizeof...(Args)>(Args...);
-}
-
 
 /** A ND-range, made by a global and local range, to specify work-group
     and work-item organization.
