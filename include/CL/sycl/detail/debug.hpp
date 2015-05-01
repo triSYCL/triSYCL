@@ -1,12 +1,13 @@
+#ifndef TRISYCL_SYCL_DETAIL_DEBUG_HPP
+#define TRISYCL_SYCL_DETAIL_DEBUG_HPP
+
 /** \file This is a small class to track constructor/destructor invocations
 
     Define the TRISYCL_DEBUG CPP flag to have an output.
 
     To use it in some class C, make C inherit from debug<C>.
 
-    Ronan.Keryell at AMD dot com
-
-    Copyright 2014 Advanced Micro Devices, Inc.
+    Ronan at Keryell point FR
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
@@ -18,6 +19,7 @@
 #include <typeinfo>
 #include <sstream>
 #include <string>
+
 // To be able to construct string literals like "blah"s
 using namespace std::string_literals;
 
@@ -118,3 +120,5 @@ struct DisplayVector {
     ### eval: (flyspell-prog-mode)
     ### End:
 */
+
+#endif // TRISYCL_SYCL_DETAIL_DEBUG_HPP

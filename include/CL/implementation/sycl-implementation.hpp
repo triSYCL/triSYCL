@@ -25,8 +25,8 @@
 #include <boost/multi_array.hpp>
 #include <boost/operators.hpp>
 
-#include "sycl-debug.hpp"
-
+/// \todo Move into files really using it
+#include "CL/sycl/detail/debug.hpp"
 
 namespace cl {
 namespace sycl {
