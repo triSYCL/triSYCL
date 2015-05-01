@@ -176,6 +176,7 @@ template <typename T, std::size_t dimensions> struct buffer;
 
 /// \todo Move into files really using it
 #include "CL/sycl/detail/small_array.hpp"
+#include "CL/sycl/device.hpp"
 #include "CL/sycl/error_handler.hpp"
 #include "CL/sycl/exception.hpp"
 #include "CL/sycl/group.hpp"
@@ -198,15 +199,6 @@ using namespace trisycl;
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
 */
-
-/** SYCL device
-
-    \todo The implementation is quite minimal for now. :-)
-*/
-struct device {
-  device() {}
-};
-
 
 /** The SYCL heuristics to select a device
 
