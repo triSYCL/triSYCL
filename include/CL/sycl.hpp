@@ -1169,6 +1169,7 @@ struct buffer {
 }
 
 #include "CL/sycl/address_space.hpp"
+#include "CL/sycl/image.hpp"
 #include "CL/sycl/parallelism.hpp"
 #include "CL/sycl/vec.hpp"
 
