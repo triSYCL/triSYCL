@@ -175,6 +175,7 @@ template <typename T, std::size_t dimensions> struct buffer;
 
 
 /// \todo Move into files really using it
+#include "CL/sycl/context.hpp"
 #include "CL/sycl/detail/small_array.hpp"
 #include "CL/sycl/device.hpp"
 #include "CL/sycl/device_selector.hpp"
@@ -200,20 +201,6 @@ using namespace trisycl;
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
 */
-
-/** SYCL context
-
-    The implementation is quite minimal for now. :-)
-*/
-struct context {
-  context() {}
-
-  // \todo fix this implementation
-  context(gpu_selector s) {}
-
-  context(device_selector &s) {}
-};
-
 
 /** SYCL queue, similar to the OpenCL queue concept.
 

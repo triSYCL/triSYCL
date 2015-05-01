@@ -9,6 +9,8 @@
     License. See LICENSE.TXT for details.
 */
 
+#include "CL/sycl/device.hpp"
+
 namespace cl {
 namespace sycl {
 
