@@ -54,7 +54,7 @@ namespace detail {
     std::array<> provides the collection concept.
 */
 template <typename BasicType, typename FinalType, std::size_t Dims>
-struct SmallArray : std::array<BasicType, Dims>,
+struct small_array : std::array<BasicType, Dims>,
     // To have all the usual arithmetic operations on this type
   boost::euclidean_ring_operators<FinalType>,
     // Add a display() method
@@ -71,15 +71,15 @@ struct SmallArray : std::array<BasicType, Dims>,
       for example
   */
   template <typename SourceType>
-  explicit SmallArray(const SourceType src[Dims]) {
+  explicit small_array(const SourceType src[Dims]) {
     // (*this)[0] is the first element of the underlying array
     std::copy_n(src, Dims, &(*this)[0]);
   }
 
 
-  /// Add a constructor from an other SmallArray of the same size
+  /// Add a constructor from an other small_array of the same size
   template <typename SourceBasicType, typename SourceFinalType>
-  SmallArray(const SmallArray<SourceBasicType, SourceFinalType, Dims> &src) {
+  small_array(const small_array<SourceBasicType, SourceFinalType, Dims> &src) {
     std::copy_n(&src[0], Dims, &(*this)[0]);
   }
 
@@ -87,7 +87,7 @@ struct SmallArray : std::array<BasicType, Dims>,
   /// Keep other constructors
   using std::array<BasicType, Dims>::array;
 
-  SmallArray() = default;
+  small_array() = default;
 
   /// Return the element of the array
   auto get(std::size_t index) const {
@@ -122,7 +122,7 @@ struct SmallArray : std::array<BasicType, Dims>,
 
 /** A small array of 1, 2 or 3 elements with the implicit constructors */
 template <typename BasicType, typename FinalType, std::size_t Dims>
-struct SmallArray123 : SmallArray<BasicType, FinalType, Dims> {
+struct small_array_123 : small_array<BasicType, FinalType, Dims> {
   static_assert(1 <= Dims && Dims <= 3,
                 "Dimensions are between 1 and 3");
 };
@@ -134,19 +134,19 @@ struct SmallArray123 : SmallArray<BasicType, FinalType, Dims> {
     dims = 1
 */
 template <typename BasicType, typename FinalType>
-struct SmallArray123<BasicType, FinalType, 1>
-  : public SmallArray<BasicType, FinalType, 1> {
+struct small_array_123<BasicType, FinalType, 1>
+  : public small_array<BasicType, FinalType, 1> {
   /// A 1-D constructor to have implicit conversion from from 1 integer
   /// and automatic inference of the dimensionality
-  SmallArray123(BasicType x) {
+  small_array_123(BasicType x) {
     (*this)[0] = x;
   }
 
 
   /// Keep other constructors
-  SmallArray123() = default;
+  small_array_123() = default;
 
-  using SmallArray<BasicType, FinalType, 1>::SmallArray;
+  using small_array<BasicType, FinalType, 1>::small_array;
 
   /** Conversion so that an for example an id<1> can basically be used
       like an integer */
@@ -157,29 +157,29 @@ struct SmallArray123<BasicType, FinalType, 1>
 
 
 template <typename BasicType, typename FinalType>
-struct SmallArray123<BasicType, FinalType, 2>
-  : public SmallArray<BasicType, FinalType, 2> {
+struct small_array_123<BasicType, FinalType, 2>
+  : public small_array<BasicType, FinalType, 2> {
   /// A 2-D constructor to have implicit conversion from from 2 integers
   /// and automatic inference of the dimensionality
-  SmallArray123(BasicType x, BasicType y) {
+  small_array_123(BasicType x, BasicType y) {
     (*this)[0] = x;
     (*this)[1] = y;
   }
 
 
   /// Keep other constructors
-  SmallArray123() = default;
+  small_array_123() = default;
 
-  using SmallArray<BasicType, FinalType, 2>::SmallArray;
+  using small_array<BasicType, FinalType, 2>::small_array;
 };
 
 
 template <typename BasicType, typename FinalType>
-struct SmallArray123<BasicType, FinalType, 3>
-  : public SmallArray<BasicType, FinalType, 3> {
+struct small_array_123<BasicType, FinalType, 3>
+  : public small_array<BasicType, FinalType, 3> {
   /// A 3-D constructor to have implicit conversion from from 3 integers
   /// and automatic inference of the dimensionality
-  SmallArray123(BasicType x, BasicType y, BasicType z) {
+  small_array_123(BasicType x, BasicType y, BasicType z) {
     (*this)[0] = x;
     (*this)[1] = y;
     (*this)[2] = z;
@@ -187,9 +187,9 @@ struct SmallArray123<BasicType, FinalType, 3>
 
 
   /// Keep other constructors
-  SmallArray123() = default;
+  small_array_123() = default;
 
-  using SmallArray<BasicType, FinalType, 3>::SmallArray;
+  using small_array<BasicType, FinalType, 3>::small_array;
 };
 
 /// @} End the helpers Doxygen group

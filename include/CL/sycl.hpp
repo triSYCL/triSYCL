@@ -203,9 +203,11 @@ using namespace trisycl;
     \todo add to the specification some way to specify an offset?
 */
 template <std::size_t dims = 1>
-struct range : public detail::SmallArray123<std::size_t, range<dims>, dims> {
+struct range : public detail::small_array_123<std::size_t, range<dims>, dims> {
   // Inherit of all the constructors
-  using detail::SmallArray123<std::size_t, range<dims>, dims>::SmallArray123;
+  using detail::small_array_123<std::size_t,
+                                range<dims>,
+                                dims>::small_array_123;
 };
 
 
@@ -238,9 +240,11 @@ auto make_range(BasicType... Args) {
     Indeed [] is mentioned in text of page 59 but not in class description.
 */
 template <std::size_t dims = 1>
-struct id : public detail::SmallArray123<std::ptrdiff_t, id<dims>, dims> {
+struct id : public detail::small_array_123<std::ptrdiff_t, id<dims>, dims> {
   // Inherit of all the constructors
-  using detail::SmallArray123<std::ptrdiff_t, id<dims>, dims>::SmallArray123;
+  using detail::small_array_123<std::ptrdiff_t,
+                                id<dims>,
+                                dims>::small_array_123;
 };
 
 
