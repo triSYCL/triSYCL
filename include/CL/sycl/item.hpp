@@ -28,13 +28,13 @@ template <std::size_t dims = 1>
 struct item {
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
-  static const auto dimensionality = dims;
+  static constexpr auto dimensionality = dims;
 
 private:
 
-  range<dims> Range;
-  id<dims> GlobalIndex;
-  id<dims> Offset;
+  range<dims> global_range;
+  id<dims> global_index;
+  id<dims> offset;
 
 
 public:
@@ -46,47 +46,50 @@ public:
   item(range<dims> global_size,
        id<dims> global_index,
        id<dims> offset = id<dims>()) :
-    Range { global_size }, GlobalIndex { global_index }, Offset { offset } {}
+    global_range { global_size },
+    global_index { global_index },
+    offset { offset }
+  {}
 
 
-  /** To be able to copy and assign item, use default constructors also
+  /** To be able to copy and assign item, use default constructors too
 
       \todo Make most of them protected, reserved to implementation
   */
   item() = default;
 
   /// Get the whole global id coordinate
-  id<dims> get_global_id() const { return GlobalIndex; }
+  id<dims> get_global_id() const { return global_index; }
 
 
   /// Return the global coordinate in the given dimension
-  size_t get(int dimension) const { return GlobalIndex[dimension]; }
+  size_t get(int dimension) const { return global_index[dimension]; }
 
 
   /// Return an l-value of the global coordinate in the given dimension
-  auto &operator[](int dimension) { return GlobalIndex[dimension]; }
+  auto &operator[](int dimension) { return global_index[dimension]; }
 
 
   /// Get the global range where this item dwells in
-  range<dims> get_global_range() const { return Range; }
+  range<dims> get_global_range() const { return global_range; }
 
 
   /// Get the offset associated with the item context
-  id<dims> get_offset() const { return Offset; }
+  id<dims> get_offset() const { return offset; }
 
 
   /** For the implementation, need to set the global index
 
       \todo Move to private and add friends
   */
-  void set_global(id<dims> Index) { GlobalIndex = Index; }
+  void set_global(id<dims> Index) { global_index = Index; }
 
 
   /// Display the value for debugging and validation purpose
   void display() const {
-    Range.display();
-    GlobalIndex.display();
-    Offset.display();
+    global_range.display();
+    global_index.display();
+    offset.display();
   }
 
 };
