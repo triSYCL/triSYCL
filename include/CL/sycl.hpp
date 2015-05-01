@@ -179,6 +179,8 @@ template <typename T, std::size_t dimensions> struct buffer;
 
 // Include the implementation details
 #include "implementation/sycl-implementation.hpp"
+/// \todo Move into files really using it
+#include "CL/sycl/detail/small_array.hpp"
 
 
 /// SYCL dwells in the cl::sycl namespace
@@ -201,9 +203,9 @@ using namespace trisycl;
     \todo add to the specification some way to specify an offset?
 */
 template <std::size_t dims = 1>
-struct range : public SmallArray123<std::size_t, range<dims>, dims> {
+struct range : public detail::SmallArray123<std::size_t, range<dims>, dims> {
   // Inherit of all the constructors
-  using SmallArray123<std::size_t, range<dims>, dims>::SmallArray123;
+  using detail::SmallArray123<std::size_t, range<dims>, dims>::SmallArray123;
 };
 
 
@@ -236,9 +238,9 @@ auto make_range(BasicType... Args) {
     Indeed [] is mentioned in text of page 59 but not in class description.
 */
 template <std::size_t dims = 1>
-struct id : public SmallArray123<std::ptrdiff_t, id<dims>, dims> {
+struct id : public detail::SmallArray123<std::ptrdiff_t, id<dims>, dims> {
   // Inherit of all the constructors
-  using SmallArray123<std::ptrdiff_t, id<dims>, dims>::SmallArray123;
+  using detail::SmallArray123<std::ptrdiff_t, id<dims>, dims>::SmallArray123;
 };
 
 
