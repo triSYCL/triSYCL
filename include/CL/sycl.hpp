@@ -177,6 +177,7 @@ template <typename T, std::size_t dimensions> struct buffer;
 /// \todo Move into files really using it
 #include "CL/sycl/detail/small_array.hpp"
 #include "CL/sycl/device.hpp"
+#include "CL/sycl/device_selector.hpp"
 #include "CL/sycl/error_handler.hpp"
 #include "CL/sycl/exception.hpp"
 #include "CL/sycl/group.hpp"
@@ -199,30 +200,6 @@ using namespace trisycl;
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
 */
-
-/** The SYCL heuristics to select a device
-
-    The device with the highest score is selected
-*/
-struct device_selector {
-  // The user-provided operator computing the score
-  virtual int operator() (device dev) = 0;
-};
-
-
-/** Select the best GPU, if any
-
-    \todo to be implemented
-
-    \todo to be named device_selector::gpu instead in the specification?
-
-    \todo it is named opencl_gpu_selector
-*/
-struct gpu_selector : device_selector {
-  // The user-provided operator computing the score
-  int operator() (device dev) override { return 1; }
-};
-
 
 /** SYCL context
 
