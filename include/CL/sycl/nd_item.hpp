@@ -29,13 +29,13 @@ template <std::size_t dims = 1>
 struct nd_item {
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
-  static const auto dimensionality = dims;
+  static constexpr auto dimensionality = dims;
 
 private:
 
-  id<dims> GlobalIndex;
-  id<dims> LocalIndex;
-  nd_range<dims> NDRange;
+  id<dims> global_index;
+  id<dims> local_index;
+  nd_range<dims> ND_range;
 
 public:
 
@@ -44,13 +44,13 @@ public:
       \todo what is the meaning of this constructor for a programmer?
   */
   nd_item(range<dims> global_size, range<dims> local_size) :
-    NDRange { global_size, local_size } {}
+    ND_range { global_size, local_size } {}
 
 
   /** \todo a constructor from a nd_range too in the specification if the
       previous one has a meaning?
    */
-  nd_item(nd_range<dims> ndr) : NDRange { ndr } {}
+  nd_item(nd_range<dims> ndr) : ND_range { ndr } {}
 
 
   /** Create a full nd_item
@@ -61,16 +61,16 @@ public:
   nd_item(id<dims> global_index,
           id<dims> local_index,
           nd_range<dims> ndr) :
-    GlobalIndex { global_index }, LocalIndex { local_index }, NDRange { ndr } {}
+    global_index { global_index }, local_index { local_index }, ND_range { ndr } {}
 
 
   /// Get the whole global id coordinate
-  id<dims> get_global_id() const { return GlobalIndex; }
+  id<dims> get_global_id() const { return global_index; }
 
 
   /// Get the whole local id coordinate (which is respective to the
   /// work-group)
-  id<dims> get_local_id() const { return LocalIndex; }
+  id<dims> get_local_id() const { return local_index; }
 
 
   /// Get the whole group id coordinate
@@ -93,19 +93,19 @@ public:
 
 
   /// Get the global range where this nd_item dwells in
-  range<dims> get_global_range() const { return NDRange.get_global_range(); }
+  range<dims> get_global_range() const { return ND_range.get_global_range(); }
 
 
   /// Get the local range (the dimension of the work-group) for this nd_item
-  range<dims> get_local_range() const { return NDRange.get_local_range(); }
+  range<dims> get_local_range() const { return ND_range.get_local_range(); }
 
 
   /// Get the offset of the NDRange
-  id<dims> get_offset() const { return NDRange.get_offset(); }
+  id<dims> get_offset() const { return ND_range.get_offset(); }
 
 
   /// Get the NDRange for this nd_item
-  nd_range<dims> get_nd_range() const { return NDRange; }
+  nd_range<dims> get_nd_range() const { return ND_range; }
 
 
   /** Executes a barrier with memory ordering on the local address space,
@@ -122,11 +122,11 @@ public:
 
 
   // For the implementation, need to set the local index
-  void set_local(id<dims> Index) { LocalIndex = Index; }
+  void set_local(id<dims> Index) { local_index = Index; }
 
 
   // For the implementation, need to set the global index
-  void set_global(id<dims> Index) { GlobalIndex = Index; }
+  void set_global(id<dims> Index) { global_index = Index; }
 
 };
 
