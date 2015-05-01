@@ -14,11 +14,12 @@
 */
 
 #ifdef TRISYCL_DEBUG
-#include <boost/log/trivial.hpp>
 #include <iostream>
 #include <typeinfo>
 #include <sstream>
 #include <string>
+
+#include <boost/log/trivial.hpp>
 
 // To be able to construct string literals like "blah"s
 using namespace std::string_literals;
@@ -44,7 +45,7 @@ using namespace std::string_literals;
 
 namespace cl {
 namespace sycl {
-namespace trisycl {
+namespace detail {
 
 /** \addtogroup debug_trace Debugging and tracing support
     @{
@@ -56,10 +57,10 @@ namespace trisycl {
     \param T is the real type name to be used in the debug output.
  */
 template <typename T>
-struct Debug {
+struct debug {
 #ifdef TRISYCL_DEBUG
   /// Trace the construction with the compiler-dependent mangled named
-  Debug() {
+  debug() {
     TRISYCL_DUMP("Constructor of " << typeid(*this).name()
                  << " " << (void*) this);
   }
@@ -67,20 +68,20 @@ struct Debug {
 
   /// Trace the copy construction with the compiler-dependent mangled
   /// named
-  Debug(Debug const &) {
+  debug(debug const &) {
     TRISYCL_DUMP("Copy of " << typeid(*this).name() << " " << (void*) this);
   }
 
 
   /// Trace the move construction with the compiler-dependent mangled
   /// named
-  Debug(Debug &&) {
+  debug(debug &&) {
     TRISYCL_DUMP("Move of " << typeid(*this).name() << " " << (void*) this);
   }
 
 
   /// Trace the destruction with the compiler-dependent mangled named
-  ~Debug() {
+  ~debug() {
     TRISYCL_DUMP("~ Destructor of " << typeid(*this).name()
                  << " " << (void*) this);
   }
@@ -96,7 +97,7 @@ struct Debug {
     Calling the display() method dump the values on std::cout
  */
 template <typename T>
-struct DisplayVector {
+struct display_vector {
   /// To debug and test
   void display() const {
     std::cout << typeid(T).name() << ":";

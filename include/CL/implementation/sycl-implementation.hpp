@@ -46,7 +46,7 @@ class Task;
     When we write into a buffer, we generate a new version of it (think
     "SSA")
 */
-class BufferCustomer : public Debug<BufferCustomer> {
+class BufferCustomer : public detail::debug<BufferCustomer> {
   BufferBase &Buffer;
   // At some point use lock free list for this inside BufferBase
   std::shared_ptr<BufferCustomer> nextGeneration;
@@ -278,7 +278,7 @@ struct SmallArray : std::array<BasicType, Dims>,
     // To have all the usual arithmetic operations on this type
   boost::euclidean_ring_operators<FinalType>,
     // Add a display() method
-    DisplayVector<FinalType> {
+    detail::display_vector<FinalType> {
 
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
@@ -438,7 +438,10 @@ template <typename T,
           std::size_t dimensions,
           access::mode mode,
           access::target target /* = access::global_buffer */>
-struct AccessorImpl : public Debug<AccessorImpl<T, dimensions, mode, target>> {
+struct AccessorImpl : public detail::debug<AccessorImpl<T,
+                                                        dimensions,
+                                                        mode,
+                                                        target>> {
   BufferImpl<T, dimensions> *Buffer;
   // The implementation is a multi_array_ref wrapper
   typedef boost::multi_array_ref<T, dimensions> ArrayViewType;
@@ -560,7 +563,7 @@ struct AccessorImpl : public Debug<AccessorImpl<T, dimensions, mode, target>> {
 */
 template <typename T,
           std::size_t dimensions = 1>
-struct BufferImpl : public Debug<BufferImpl<T, dimensions>>,
+struct BufferImpl : public detail::debug<BufferImpl<T, dimensions>>,
   BufferBase {
   using Implementation = boost::multi_array_ref<T, dimensions>;
   // Extension to SYCL: provide pieces of STL container interface

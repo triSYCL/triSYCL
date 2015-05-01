@@ -8,7 +8,7 @@ namespace trisycl {
     scene.
  */
 struct Task : std::enable_shared_from_this<Task>,
-              public Debug<Task> {
+              public detail::debug<Task> {
   /// The buffers that are used by this task
   std::vector<std::shared_ptr<BufferCustomer>> Buffers;
 
@@ -84,7 +84,7 @@ struct Task : std::enable_shared_from_this<Task>,
 thread_local std::shared_ptr<Task> CurrentTask;
 
 
-struct CommandGroupImpl : public Debug<CommandGroupImpl> {
+struct CommandGroupImpl : public detail::debug<CommandGroupImpl> {
 
 
   template <typename Queue, typename Functor>
