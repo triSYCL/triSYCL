@@ -176,6 +176,7 @@ template <typename T, std::size_t dimensions> struct buffer;
 
 /// \todo Move into files really using it
 #include "CL/sycl/detail/small_array.hpp"
+#include "CL/sycl/group.hpp"
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/image.hpp"
 #include "CL/sycl/item.hpp"
@@ -191,82 +192,6 @@ namespace cl {
 namespace sycl {
 
 using namespace trisycl;
-
-/** \addtogroup parallelism Expressing parallelism through kernels
-    @{
-*/
-/** A group index used in a parallel_for_workitem to specify a work_group
- */
-template <std::size_t dims = 1>
-struct group {
-  /// \todo add this Boost::multi_array or STL concept to the
-  /// specification?
-  static const auto dimensionality = dims;
-
-private:
-
-  /// Keep a reference on the nd_range to serve potential query on it
-  nd_range<dims> NDR;
-  /// The coordinate of the group item
-  id<dims> Id;
-
-public:
-
-  /** Create a group from an nd_range<> with a 0 id<>
-
-      \todo This should be private
-  */
-  group(const nd_range<dims> &ndr) : NDR(ndr) {}
-
-
-  /** Create a group from an nd_range<> with a 0 id<>
-
-      \todo This should be private
-  */
-  group(const nd_range<dims> &ndr, const id<dims> &i) :
-    NDR(ndr), Id(i) {}
-
-
-  /// Get the group identifier for this work_group
-  id<dims> get_group_id() const { return Id; }
-
-
-  /// Get the local range for this work_group
-  range<dims> get_local_range() const { return NDR.get_local_range(); }
-
-
-  /// Get the local range for this work_group
-  range<dims> get_global_range() const { return NDR.get_global_range(); }
-
-
-  /// Get the offset of the NDRange
-  id<dims> get_offset() const { return NDR.get_offset(); }
-
-
-  /// \todo Also provide this access to the current nd_range
-  nd_range<dims> get_nd_range() const { return NDR; }
-
-
-  /** Return the group coordinate in the given dimension
-
-      \todo In this implementation it is not const because the group<> is
-      written in the parallel_for iterators. To fix according to the
-      specification
-   */
-  auto &operator[](int dimension) {
-    return Id[dimension];
-  }
-
-
-  /// Return the group coordinate in the given dimension
-  std::size_t get(int dimension) const {
-    return Id[dimension];
-  }
-
-};
-
-/// @} End the parallelism Doxygen group
-
 
 /** \addtogroup error_handling Error handling
     @{
