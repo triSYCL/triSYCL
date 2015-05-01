@@ -13,6 +13,9 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <tuple>
+#include <utility>
+
 namespace cl {
 namespace sycl {
 namespace detail {

@@ -11,7 +11,7 @@
     License. See LICENSE.TXT for details.
 */
 
-#include "CL/sycl/detail/array_tupple_helpers.hpp"
+#include "CL/sycl/detail/array_tuple_helpers.hpp"
 
 namespace cl {
 namespace sycl {

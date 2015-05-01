@@ -22,8 +22,6 @@
 #include <memory>
 #include <mutex>
 #include <thread>
-#include <tuple>
-#include <utility>
 #include <boost/multi_array.hpp>
 #include <boost/operators.hpp>
 
