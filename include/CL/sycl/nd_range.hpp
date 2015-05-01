@@ -3,7 +3,7 @@
 
 /** \file The OpenCL SYCL nd_range<>
 
-   Ronan at Keryell point FR
+    Ronan at Keryell point FR
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
@@ -11,7 +11,6 @@
 
 #include <cstddef>
 
-#include "CL/sycl/detail/small_array.hpp"
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/range.hpp"
 
@@ -82,8 +81,6 @@ public:
   }
 
 };
-
-
 
 /// @} End the parallelism Doxygen group
 

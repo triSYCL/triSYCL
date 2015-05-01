@@ -178,6 +178,7 @@ template <typename T, std::size_t dimensions> struct buffer;
 #include "CL/sycl/detail/small_array.hpp"
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/image.hpp"
+#include "CL/sycl/item.hpp"
 #include "CL/sycl/nd_range.hpp"
 #include "CL/sycl/range.hpp"
 
@@ -193,77 +194,6 @@ using namespace trisycl;
 /** \addtogroup parallelism Expressing parallelism through kernels
     @{
 */
-
-/** A SYCL item stores information on a work-item with some more context
-    such as the definition range and offset.
-*/
-template <std::size_t dims = 1>
-struct item {
-  /// \todo add this Boost::multi_array or STL concept to the
-  /// specification?
-  static const auto dimensionality = dims;
-
-private:
-
-  range<dims> Range;
-  id<dims> GlobalIndex;
-  id<dims> Offset;
-
-
-public:
-
-  /** Create an item from a local size and an optional offset
-
-      \todo what is the meaning of this constructor for a programmer?
-  */
-  item(range<dims> global_size,
-       id<dims> global_index,
-       id<dims> offset = id<dims>()) :
-    Range { global_size }, GlobalIndex { global_index }, Offset { offset } {}
-
-
-  /** To be able to copy and assign item, use default constructors also
-
-      \todo Make most of them protected, reserved to implementation
-  */
-  item() = default;
-
-  /// Get the whole global id coordinate
-  id<dims> get_global_id() const { return GlobalIndex; }
-
-
-  /// Return the global coordinate in the given dimension
-  size_t get(int dimension) const { return GlobalIndex[dimension]; }
-
-
-  /// Return an l-value of the global coordinate in the given dimension
-  auto &operator[](int dimension) { return GlobalIndex[dimension]; }
-
-
-  /// Get the global range where this item dwells in
-  range<dims> get_global_range() const { return Range; }
-
-
-  /// Get the offset associated with the item context
-  id<dims> get_offset() const { return Offset; }
-
-
-  /** For the implementation, need to set the global index
-
-      \todo Move to private and add friends
-  */
-  void set_global(id<dims> Index) { GlobalIndex = Index; }
-
-
-  /// Display the value for debugging and validation purpose
-  void display() const {
-    Range.display();
-    GlobalIndex.display();
-    Offset.display();
-  }
-
-};
-
 
 /** A SYCL nd_item stores information on a work-item within a work-group,
     with some more context such as the definition ranges.

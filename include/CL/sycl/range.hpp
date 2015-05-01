@@ -3,7 +3,7 @@
 
 /** \file The OpenCL SYCL range<>
 
-   Ronan at Keryell point FR
+    Ronan at Keryell point FR
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
@@ -54,7 +54,6 @@ template<typename... BasicType>
 auto make_range(BasicType... Args) {
   return range<sizeof...(Args)>(Args...);
 }
-
 
 /// @} End the parallelism Doxygen group
 

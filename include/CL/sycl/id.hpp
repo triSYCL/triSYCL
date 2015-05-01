@@ -3,7 +3,7 @@
 
 /** \file The OpenCL SYCL id<>
 
-   Ronan at Keryell point FR
+    Ronan at Keryell point FR
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
