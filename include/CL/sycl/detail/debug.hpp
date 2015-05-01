@@ -55,7 +55,7 @@ namespace detail {
     move-construction and destruction of classes that inherit from it
 
     \param T is the real type name to be used in the debug output.
- */
+*/
 template <typename T>
 struct debug {
 #ifdef TRISYCL_DEBUG
@@ -95,7 +95,7 @@ struct debug {
     \param T is the real type name to be used in the debug output.
 
     Calling the display() method dump the values on std::cout
- */
+*/
 template <typename T>
 struct display_vector {
   /// To debug and test
