@@ -187,6 +187,7 @@ template <typename T, std::size_t dimensions> struct buffer;
 #include "CL/sycl/item.hpp"
 #include "CL/sycl/nd_item.hpp"
 #include "CL/sycl/nd_range.hpp"
+#include "CL/sycl/queue.hpp"
 #include "CL/sycl/range.hpp"
 
 // Include the implementation details
@@ -201,19 +202,6 @@ using namespace trisycl;
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
 */
-
-/** SYCL queue, similar to the OpenCL queue concept.
-
-    \todo The implementation is quite minimal for now. :-)
-*/
-struct queue {
-  queue() {}
-
-  queue(const context c) {}
-
-  queue(const device_selector &s) {}
-};
-
 
 /** Abstract the OpenCL platform
 
