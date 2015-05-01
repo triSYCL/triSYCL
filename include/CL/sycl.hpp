@@ -176,6 +176,7 @@ template <typename T, std::size_t dimensions> struct buffer;
 
 /// \todo Move into files really using it
 #include "CL/sycl/detail/small_array.hpp"
+#include "CL/sycl/error_handler.hpp"
 #include "CL/sycl/exception.hpp"
 #include "CL/sycl/group.hpp"
 #include "CL/sycl/id.hpp"
@@ -193,49 +194,6 @@ namespace cl {
 namespace sycl {
 
 using namespace trisycl;
-
-/** \addtogroup error_handling Error handling
-    @{
-*/
-namespace trisycl {
-  // Create a default error handler to be used when nothing is specified
-  struct default_error_handler;
-}
-
-
-/** User supplied error handler to call a user-provided function when an
-    error happens from a SYCL object that was constructed with this error
-    handler
-*/
-struct error_handler {
-  /** The method to define to be called in the case of an error
-
-      \todo Add "virtual void" to the specification
-  */
-  virtual void report_error(exception &error) = 0;
-
-  /** Add a default_handler to be used by default
-
-      \todo add this concept to the specification?
-  */
-  static trisycl::default_error_handler default_handler;
-};
-
-
-namespace trisycl {
-
-  struct default_error_handler : error_handler {
-
-    void report_error(exception &error) override {
-    }
-  };
-}
-
-  // \todo finish initialization
-  //error_handler::default_handler = nullptr;
-
-/// @} End the error_handling Doxygen group
-
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
