@@ -9,6 +9,8 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <cstddef>
+
 #include "CL/sycl/detail/small_array.hpp"
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/range.hpp"
@@ -32,13 +34,13 @@ template <std::size_t dims = 1>
 struct nd_range {
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
-  static const auto dimensionality = dims;
+  static constexpr auto dimensionality = dims;
 
 private:
 
-  range<dimensionality> GlobalRange;
-  range<dimensionality> LocalRange;
-  id<dimensionality> Offset;
+  range<dimensionality> global_range;
+  range<dimensionality> local_range;
+  id<dimensionality> offset;
 
 public:
 
@@ -48,34 +50,35 @@ public:
    */
   nd_range(range<dims> global_size,
            range<dims> local_size,
-           id<dims> offset = id<dims>()) :
-    GlobalRange(global_size), LocalRange(local_size), Offset(offset) { }
+           id<dims> offset = id<dims> {}) :
+    global_range { global_size }, local_range { local_size }, offset { offset }
+  { }
 
 
   /// Get the global iteration space range
-  range<dims> get_global_range() const { return GlobalRange; }
+  range<dims> get_global_range() const { return global_range; }
 
 
   /// Get the local part of the iteration space range
-  range<dims> get_local_range() const { return LocalRange; }
+  range<dims> get_local_range() const { return local_range; }
 
 
   /// Get the range of work-groups needed to run this ND-range
   auto get_group_range() const {
-    // \todo Assume that GlobalRange is a multiple of LocalRange, element-wise
-    return GlobalRange/LocalRange;
+    // \todo Assume that global_range is a multiple of local_range, element-wise
+    return global_range/local_range;
   }
 
 
   /// \todo get_offset() is lacking in the specification
-  id<dims> get_offset() const { return Offset; }
+  id<dims> get_offset() const { return offset; }
 
 
   /// Display the value for debugging and validation purpose
   void display() const {
-    GlobalRange.display();
-    LocalRange.display();
-    Offset.display();
+    global_range.display();
+    local_range.display();
+    offset.display();
   }
 
 };
