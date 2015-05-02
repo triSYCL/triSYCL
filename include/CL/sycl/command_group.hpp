@@ -9,7 +9,7 @@
     License. See LICENSE.TXT for details.
 */
 
-#include "CL/sycl/detail/task.hpp"
+#include "CL/sycl/command_group/detail/task.hpp"
 
 namespace cl {
 namespace sycl {
