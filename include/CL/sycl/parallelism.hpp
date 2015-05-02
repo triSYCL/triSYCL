@@ -34,7 +34,7 @@ namespace sycl {
 */
 template <typename KernelName = std::nullptr_t>
 void single_task(std::function<void(void)> F) {
-  CurrentTask->schedule(F);
+  current_task->schedule(F);
 }
 
 
@@ -59,7 +59,7 @@ void single_task(std::function<void(void)> F) {
             typename ParallelForFunctor>                                \
   void parallel_for(range<N> global_size,                               \
                     ParallelForFunctor f) {                             \
-    CurrentTask->schedule([=] { detail::parallel_for(global_size, f); }); \
+    current_task->schedule([=] { detail::parallel_for(global_size, f); }); \
   }
 
 TRISYCL_parallel_for_functor_GLOBAL(1)
@@ -85,7 +85,7 @@ template <typename KernelName,
           std::size_t Dimensions,
           typename ParallelForFunctor>
 void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {
-  CurrentTask->schedule([=] { detail::parallel_for(r, f); });
+  current_task->schedule([=] { detail::parallel_for(r, f); });
 }
 
 
@@ -113,7 +113,7 @@ void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {
   void parallel_for(range<N> global_size,               \
                     id<N> offset,                       \
                     ParallelForFunctor f) {             \
-    CurrentTask->schedule([=] {                         \
+    current_task->schedule([=] {                        \
         detail::parallel_for_global_offset(global_size, \
                                            offset,      \
                                            f); });      \
@@ -153,7 +153,7 @@ template <typename KernelName = std::nullptr_t,
           typename ParallelForFunctor>
 void parallel_for_workgroup(nd_range<Dimensions> r,
                             ParallelForFunctor f) {
-  CurrentTask->schedule([=] { detail::parallel_for_workgroup(r, f); });
+  current_task->schedule([=] { detail::parallel_for_workgroup(r, f); });
 }
 
 

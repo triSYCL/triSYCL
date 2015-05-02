@@ -25,26 +25,26 @@ namespace detail {
     "enable_shared_from_this" allows to access the shared_ptr behind the
     scene.
  */
-struct Task : std::enable_shared_from_this<Task>,
-              public detail::debug<Task> {
+struct task : std::enable_shared_from_this<task>,
+              public detail::debug<task> {
   /// The buffers that are used by this task
-  std::vector<std::shared_ptr<BufferCustomer>> Buffers;
+  std::vector<std::shared_ptr<buffer_customer>> buffers;
 
   /// Add a new task to the task graph and schedule for execution
-  void schedule(std::function<void(void)> F) {
-    /** To keep a copy of the Task shared_ptr after the end of the command
+  void schedule(std::function<void(void)> f) {
+    /** To keep a copy of the task shared_ptr after the end of the command
         group, capture it by copy in the following lambda. This should be
         easier in C++17 with move semantics on capture
     */
     auto task = shared_from_this();
     auto execution = [=] {
       // Wait for the required buffers to be ready
-      task->acquireBuffers();
+      task->acquire_buffers();
       TRISYCL_DUMP_T("Execute the kernel");
       // Execute the kernel
-      F();
+      f();
       // Release the required buffers for other uses
-      task->releaseBuffers();
+      task->release_buffers();
       TRISYCL_DUMP_T("Exit");
     };
 #if TRISYCL_ASYNC
@@ -61,16 +61,16 @@ struct Task : std::enable_shared_from_this<Task>,
   }
 
 
-  void acquireBuffers() {
-    TRISYCL_DUMP_T("acquireBuffers()");
-    for (auto &b : Buffers)
+  void acquire_buffers() {
+    TRISYCL_DUMP_T("acquire_buffers()");
+    for (auto &b : buffers)
       b->wait();
   }
 
 
-  void releaseBuffers() {
-    TRISYCL_DUMP_T("releaseBuffers()");
-    for (auto &b : Buffers)
+  void release_buffers() {
+    TRISYCL_DUMP_T("release_buffers()");
+    for (auto &b : buffers)
       b->release();
   }
 
@@ -83,11 +83,11 @@ struct Task : std::enable_shared_from_this<Task>,
             std::size_t dimensions,
             access::mode mode,
             access::target target = access::global_buffer>
-  void add(AccessorImpl<T, dimensions, mode, target> &A) {
-    auto BC = BufferBase::getBufferCustomer(A);
+  void add(AccessorImpl<T, dimensions, mode, target> &a) {
+    auto bc = buffer_base::get_buffer_customer(a);
     // Add the task as a new client for the buffer customer of the accessor
-    BC->add(shared_from_this(), A.isWriteAccess());
-    Buffers.push_back(BC);
+    bc->add(shared_from_this(), a.isWriteAccess());
+    buffers.push_back(bc);
   }
 
 };

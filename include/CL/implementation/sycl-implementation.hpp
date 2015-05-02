@@ -106,7 +106,7 @@ struct AccessorImpl : public detail::debug<AccessorImpl<T,
       // A host accessor needs to be declared *outside* a command_group
       assert(CurrentTask == nullptr);
       // Wait for the latest generation of the buffer before the host can use it
-      BufferBase::wait(targetBuffer);
+      buffer_base::wait(targetBuffer);
     }
     else {
       // A host non-host accessor needs to be declared *inside* a command_group
@@ -202,7 +202,7 @@ struct AccessorImpl : public detail::debug<AccessorImpl<T,
 template <typename T,
           std::size_t dimensions = 1>
 struct BufferImpl : public detail::debug<BufferImpl<T, dimensions>>,
-  detail::BufferBase {
+  detail::buffer_base {
   using Implementation = boost::multi_array_ref<T, dimensions>;
   // Extension to SYCL: provide pieces of STL container interface
   using element = T;
@@ -220,14 +220,14 @@ struct BufferImpl : public detail::debug<BufferImpl<T, dimensions>>,
 
 
   /// Create a new read-write BufferImpl of size \param r
-  BufferImpl(range<dimensions> const &r) : BufferBase(false),
+  BufferImpl(range<dimensions> const &r) : buffer_base(false),
                                            Allocation(r),
                                            Access(Allocation) {}
 
 
   /** Create a new read-write BufferImpl from \param host_data of size
       \param r without further allocation */
-  BufferImpl(T * host_data, range<dimensions> r) : BufferBase(false),
+  BufferImpl(T * host_data, range<dimensions> r) : buffer_base(false),
                                                    Access(host_data, r) {}
 
 
@@ -236,7 +236,7 @@ struct BufferImpl : public detail::debug<BufferImpl<T, dimensions>>,
   BufferImpl(const T * host_data, range<dimensions> r) :
     /// \todo Need to solve this const buffer issue in a clean way
     Access(const_cast<T *>(host_data), r),
-    BufferBase(true) {}
+    buffer_base(true) {}
 
 
   /// \todo
@@ -245,7 +245,7 @@ struct BufferImpl : public detail::debug<BufferImpl<T, dimensions>>,
   /// Create a new allocated 1D BufferImpl from the given elements
   template <typename Iterator>
   BufferImpl(Iterator start_iterator, Iterator end_iterator) :
-    BufferBase(false),
+    buffer_base(false),
     // The size of a multi_array is set at creation time
     Allocation(boost::extents[std::distance(start_iterator, end_iterator)]),
     Access(Allocation) {
@@ -260,7 +260,7 @@ struct BufferImpl : public detail::debug<BufferImpl<T, dimensions>>,
       \todo Refactor the implementation to deal with buffer sharing with
       reference counting
   */
-  BufferImpl(const BufferImpl<T, dimensions> &b) : BufferBase(ReadOnly),
+  BufferImpl(const BufferImpl<T, dimensions> &b) : buffer_base(b.read_only),
                                                    Allocation(b.Access),
                                                    Access(Allocation) {}
 

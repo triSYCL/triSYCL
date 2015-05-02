@@ -509,7 +509,7 @@ struct buffer {
 
       \todo Add to specification
   */
-  bool is_read_only() const { return Impl->ReadOnly; }
+  bool is_read_only() const { return Impl->read_only; }
 
 
   /** Return the use count of the data of this buffer

@@ -20,7 +20,7 @@ namespace sycl {
 
     \todo Change the specification to avoid this hack.
 */
-thread_local std::shared_ptr<detail::Task> CurrentTask;
+thread_local std::shared_ptr<detail::task> current_task;
 
 
 /** \addtogroup execution Platforms, contexts, devices and queues
@@ -39,18 +39,18 @@ struct command_group : public detail::debug<command_group> {
   command_group(Queue Q, Functor F) {
     // Nesting of command_group is forbidden, so there should be no
     // current task yet
-    assert(!CurrentTask);
+    assert(!current_task);
     // Create a new task for this command_group
-    CurrentTask = std::make_shared<detail::Task>();
+    current_task = std::make_shared<detail::task>();
     F();
   }
 
 
   ~command_group() {
     // There should be a current task
-    assert(CurrentTask);
+    assert(current_task);
     // Reset the current_command_group at the end of the command_group
-    CurrentTask.reset();
+    current_task.reset();
   }
 
 };
