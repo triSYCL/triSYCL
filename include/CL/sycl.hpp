@@ -175,6 +175,7 @@ template <typename T, std::size_t dimensions> struct buffer;
 
 
 /// \todo Move into files really using it
+#include "CL/sycl/command_group.hpp"
 #include "CL/sycl/context.hpp"
 #include "CL/sycl/detail/small_array.hpp"
 #include "CL/sycl/device.hpp"
@@ -203,14 +204,6 @@ using namespace trisycl;
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
 */
-
-/** SYCL command group gather all the commands needed to execute one or
-    more kernels in a kind of atomic way. Since all the parameters are
-    captured at command group creation, one can execute the content in an
-    asynchronous way and delayed schedule.
-*/
-using command_group = CommandGroupImpl;
-
 
 /// @} to end the execution Doxygen group
 

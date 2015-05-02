@@ -1,6 +1,24 @@
+#ifndef TRISYCL_SYCL_TASK_HPP
+#define TRISYCL_SYCL_TASK_HPP
+
+/** \file The concept of task behind the scene
+
+    Ronan at Keryell point FR
+
+    This file is distributed under the University of Illinois Open Source
+    License. See LICENSE.TXT for details.
+*/
+
+#include <memory>
+#include <thread>
+
+#include "CL/sycl/detail/buffer_base.hpp"
+#include "CL/sycl/detail/buffer_customer.hpp"
+#include "CL/sycl/detail/debug.hpp"
+
 namespace cl {
 namespace sycl {
-namespace trisycl {
+namespace detail {
 
 /** The abstraction to represent SYCL tasks executing inside command_group
 
@@ -78,7 +96,6 @@ struct Task : std::enable_shared_from_this<Task>,
 }
 }
 
-
 /*
     # Some Emacs stuff:
     ### Local Variables:
@@ -86,3 +103,5 @@ struct Task : std::enable_shared_from_this<Task>,
     ### eval: (flyspell-prog-mode)
     ### End:
 */
+
+#endif // TRISYCL_SYCL_TASK_HPP
