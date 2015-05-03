@@ -32,6 +32,7 @@ class task;
 */
 class buffer_customer : public detail::debug<buffer_customer> {
   /// The considered buffer
+  /// \todo Do we need to keep it?
   buffer_base &buf;
   /// At some point use lock free list for this inside buffer_base
   std::shared_ptr<buffer_customer> next_generation;
