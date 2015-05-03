@@ -22,7 +22,7 @@ namespace cl {
 namespace sycl {
 namespace trisycl {
 // Forward declaration for use in accessor
-template <typename T, std::size_t dimensions> struct BufferImpl;
+template <typename T, std::size_t Dimensions> struct BufferImpl;
 }
 namespace detail {
 
@@ -39,120 +39,120 @@ namespace detail {
     without mutable). The access::mode is not used yet.
 */
 template <typename T,
-          std::size_t dimensions,
-          access::mode mode,
-          access::target target /* = access::global_buffer */>
-struct AccessorImpl : public detail::debug<AccessorImpl<T,
-                                                        dimensions,
-                                                        mode,
-                                                        target>> {
-  trisycl::BufferImpl<T, dimensions> *Buffer;
+          std::size_t Dimensions,
+          access::mode Mode,
+          access::target Target /* = access::global_buffer */>
+struct accessor : public detail::debug<accessor<T,
+                                                Dimensions,
+                                                Mode,
+                                                Target>> {
+  trisycl::BufferImpl<T, Dimensions> *buf;
   // The implementation is a multi_array_ref wrapper
-  typedef boost::multi_array_ref<T, dimensions> ArrayViewType;
-  // \todo Do we need this if we have a reference on Buffer?
-  ArrayViewType Array;
+  using array_view_type = boost::multi_array_ref<T, Dimensions>;
+  // \todo Do we need this if we have a reference on buf?
+  array_view_type array;
 
   // The same type but writable
-  typedef typename std::remove_const<ArrayViewType>::type WritableArrayViewType;
+  using writable_array_view_type = typename std::remove_const<array_view_type>::type;
 
   // \todo in the specification: store the dimension for user request
-  static const auto dimensionality = dimensions;
+  static const auto dimensionality = Dimensions;
   // \todo in the specification: store the types for user request as STL
   // or C++AMP
   using element = T;
   using value_type = T;
 
 
-  /// The only way to construct an AccessorImpl is from an existing buffer
+  /// The only way to construct an accessor is from an existing buffer
   // \todo fix the specification to rename target that shadows template parm
-  AccessorImpl(trisycl::BufferImpl<T, dimensions> &targetBuffer) :
-    Buffer { &targetBuffer }, Array { targetBuffer.Access } {
+  accessor(trisycl::BufferImpl<T, Dimensions> &target_buffer) :
+    buf { &target_buffer }, array { target_buffer.Access } {
 #if TRISYCL_ASYNC
-    if (target == access::target::host_buffer) {
+    if (Target == access::target::host_buffer) {
       // A host accessor needs to be declared *outside* a command_group
-      assert(CurrentTask == nullptr);
+      assert(current_task == nullptr);
       // Wait for the latest generation of the buffer before the host can use it
-      buffer_base::wait(targetBuffer);
+      buffer_base::wait(target_buffer);
     }
     else {
       // A host non-host accessor needs to be declared *inside* a command_group
-      assert(CurrentTask != nullptr);
+      assert(current_task != nullptr);
       // Register the accessor to the task dependencies
-      CurrentTask->add(*this);
+      current_task->add(*this);
     }
 #endif
   }
 
 
-  /** Use the accessor in with integers à la [][][]
+  /** Use the accessor with integers à la [][][]
 
-      Use ArrayViewType::reference instead of auto& because it does not
+      Use array_view_type::reference instead of auto& because it does not
       work in some dimensions.
    */
-  typename ArrayViewType::reference operator[](std::size_t Index) {
-    return Array[Index];
+  typename array_view_type::reference operator[](std::size_t index) {
+    return array[index];
   }
 
 
   /// To use the accessor in with [id<>]
-  auto &operator[](id<dimensionality> Index) {
-    return (const_cast<WritableArrayViewType &>(Array))(Index);
+  auto &operator[](id<dimensionality> index) {
+    return (const_cast<writable_array_view_type &>(array))(index);
   }
 
 
   /** To use the accessor in with [id<>]
 
-      This is when we access to AccessorImpl[] that we override the const
+      This is when we access to accessor[] that we override the const
       if any
   */
-  auto &operator[](id<dimensionality> Index) const {
-    return (const_cast<WritableArrayViewType &>(Array))(Index);
+  auto &operator[](id<dimensionality> index) const {
+    return (const_cast<writable_array_view_type &>(array))(index);
   }
 
 
   /// To use an accessor with [item<>]
-  auto &operator[](item<dimensionality> Index) {
-    return (*this)[Index.get_global_id()];
+  auto &operator[](item<dimensionality> index) {
+    return (*this)[index.get_global_id()];
   }
 
 
   /// To use an accessor with [item<>]
-  auto &operator[](item<dimensionality> Index) const {
-    return (*this)[Index.get_global_id()];
+  auto &operator[](item<dimensionality> index) const {
+    return (*this)[index.get_global_id()];
   }
 
 
   /** To use an accessor with an [nd_item<>]
 
-      \todo Add in the specification because use by HPC-GPU slide 22
+      \todo Add in the specification because used by HPC-GPU slide 22
   */
-  auto &operator[](nd_item<dimensionality> Index) {
-    return (*this)[Index.get_global_id()];
+  auto &operator[](nd_item<dimensionality> index) {
+    return (*this)[index.get_global_id()];
   }
 
   /** To use an accessor with an [nd_item<>]
 
-      \todo Add in the specification because use by HPC-GPU slide 22
+      \todo Add in the specification because used by HPC-GPU slide 22
   */
-  auto &operator[](nd_item<dimensionality> Index) const {
-    return (*this)[Index.get_global_id()];
+  auto &operator[](nd_item<dimensionality> index) const {
+    return (*this)[index.get_global_id()];
   }
 
 
   /// Get the buffer used to create the accessor
-  trisycl::BufferImpl<T, dimensions> &getBuffer() {
-    return *Buffer;
+  trisycl::BufferImpl<T, Dimensions> &get_buffer() {
+    return *buf;
   }
 
 
   /// Test if the accessor as a write access right
-  constexpr bool isWriteAccess() const {
+  constexpr bool is_write_access() const {
     /** \todo to move in the access::mode enum class and add to the
         specification ? */
-    return mode == access::mode::write
-      || mode == access::mode::read_write
-      || mode == access::mode::discard_write
-      || mode == access::mode::discard_read_write;
+    return Mode == access::mode::write
+      || Mode == access::mode::read_write
+      || Mode == access::mode::discard_write
+      || Mode == access::mode::discard_read_write;
   }
 
 };

@@ -25,29 +25,25 @@ namespace sycl {
 
     \todo Implement it for images according so section 3.3.4.5
 */
-template <typename dataType,
-          std::size_t dimensions,
-          access::mode mode,
-          access::target target = access::global_buffer>
-struct accessor : detail::AccessorImpl<dataType, dimensions, mode, target> {
+template <typename DataType,
+          std::size_t Dimensions,
+          access::mode Mode,
+          access::target Target = access::global_buffer>
+struct accessor : detail::accessor<DataType, Dimensions, Mode, Target> {
   /// \todo in the specification: store the dimension for user request
-  static const auto dimensionality = dimensions;
+  static constexpr auto dimensionality = Dimensions;
   /// \todo in the specification: store the types for user request as STL
   // or C++AMP
-  using element = dataType;
-  using value_type = dataType;
+  using element = DataType;
+  using value_type = DataType;
 
-  // Use a short-cut to the implementation because type name becomes quite
-  // long...
-  using Impl = detail::AccessorImpl<dataType, dimensions, mode, target>;
-
-  // Inherit of the constructors to have accessor constructor from BufferImpl
-  using Impl::AccessorImpl;
+  // Inherit of the constructors to have accessor constructor from detail
+  using detail::accessor<DataType, Dimensions, Mode, Target>::accessor;
 
   /// Create an accessor to the given buffer
   // \todo fix the specification to rename target that shadows template parm
-  accessor(buffer<dataType, dimensions> &targetBuffer) :
-    Impl(*targetBuffer.Impl) {}
+  accessor(buffer<DataType, Dimensions> &target_buffer) :
+    detail::accessor<DataType, Dimensions, Mode, Target> { *target_buffer.Impl } {}
 
 };
 
