@@ -164,17 +164,12 @@ namespace access {
 
 /// @} End the data Doxygen group
 
-/* Forward definitions (outside the Doxygen addtogroup to avoid multiple
-   definitions) */
-struct queue;
-
-template <typename T, std::size_t dimensions> struct buffer;
-
 }
 }
 
 
 #include "CL/sycl/accessor.hpp"
+#include "CL/sycl/address_space.hpp"
 #include "CL/sycl/buffer.hpp"
 #include "CL/sycl/command_group.hpp"
 #include "CL/sycl/context.hpp"
@@ -189,32 +184,11 @@ template <typename T, std::size_t dimensions> struct buffer;
 #include "CL/sycl/item.hpp"
 #include "CL/sycl/nd_item.hpp"
 #include "CL/sycl/nd_range.hpp"
+#include "CL/sycl/parallelism.hpp"
 #include "CL/sycl/platform.hpp"
 #include "CL/sycl/queue.hpp"
 #include "CL/sycl/range.hpp"
 #include "CL/sycl/storage.hpp"
-
-// Include the implementation details
-#include "implementation/sycl-implementation.hpp"
-
-/// SYCL dwells in the cl::sycl namespace
-namespace cl {
-namespace sycl {
-
-using namespace trisycl;
-
-/** \addtogroup data
-    @{
-*/
-
-
-/// @} to end the data Doxygen group
-
-}
-}
-
-#include "CL/sycl/address_space.hpp"
-#include "CL/sycl/parallelism.hpp"
 #include "CL/sycl/vec.hpp"
 
 

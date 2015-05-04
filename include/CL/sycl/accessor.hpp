@@ -16,6 +16,8 @@
 namespace cl {
 namespace sycl {
 
+template <typename T, std::size_t dimensions> struct buffer;
+
 /** \addtogroup data Data access and storage in SYCL
     @{
 */
@@ -40,8 +42,11 @@ struct accessor : detail::accessor<DataType, Dimensions, Mode, Target> {
   // Inherit of the constructors to have accessor constructor from detail
   using detail::accessor<DataType, Dimensions, Mode, Target>::accessor;
 
-  /// Create an accessor to the given buffer
-  // \todo fix the specification to rename target that shadows template parm
+  /** Create an accessor to the given buffer
+
+      \todo fix the specification to rename target that shadows template
+      parameter
+  */
   accessor(buffer<DataType, Dimensions> &target_buffer) :
     detail::accessor<DataType, Dimensions, Mode, Target> { *target_buffer.implementation } {}
 
