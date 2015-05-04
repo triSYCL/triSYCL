@@ -20,9 +20,9 @@ namespace cl {
 namespace sycl {
 namespace detail {
 
-class buffer_base;
+struct buffer_base;
 /// \todo is it needed?
-class task;
+struct task;
 
 /** Keep track of the tasks waiting for the availability of a buffer
     generation, either to read it or to write it
