@@ -337,9 +337,6 @@ Possible futures
 
 Some ideas of future developments where *you* can contribute too: :-)
 
-- refactor the implementation to follow more the Boost.Compute_ coding
-  style (this is on-going);
-
 - update the implementation to stick to the final SYCL 1.2 specification
   for the `IWOCL 2015
   <http://www.iwocl.org/conf-2015/tutorials-and-workshops>`_ tutorial
