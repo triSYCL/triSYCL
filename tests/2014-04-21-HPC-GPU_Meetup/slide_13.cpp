@@ -18,7 +18,7 @@ int main() {
         sycl::buffer<int> inputBBuffer(inputB.data(), inputB.size());
         sycl::buffer<int> outputBuffer(output.data(), output.size());
 
-        sycl::context myContext { sycl::gpu_selector { } };
+        sycl::context myContext { sycl::gpu_selector { }, false };
         sycl::queue myQueue(myContext);
 
         sycl::command_group(myQueue, [&]() {

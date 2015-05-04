@@ -20,6 +20,8 @@ namespace sycl {
     @{
 */
 
+using async_handler = function_class<int/*cl::sycl::exception_list*/>;
+
 /**
    Encapsulate a SYCL error information
 */

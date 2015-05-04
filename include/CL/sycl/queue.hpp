@@ -15,6 +15,8 @@
 namespace cl {
 namespace sycl {
 
+class context;
+
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
 */
@@ -26,7 +28,7 @@ namespace sycl {
 struct queue {
   queue() {}
 
-  queue(const context c) {}
+  queue(const context &c) {}
 
   queue(const device_selector &s) {}
 };
