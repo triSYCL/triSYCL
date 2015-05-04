@@ -1,7 +1,7 @@
 #ifndef TRISYCL_SYCL_DETAIL_GLOBAL_CONFIG_HPP
 #define TRISYCL_SYCL_DETAIL_GLOBAL_CONFIG_HPP
 
-/** \file The OpenCL SYCL buffer<> detail of the global triSYCL configuration
+/** \file The OpenCL SYCL details on the global triSYCL configuration
 
     Ronan at Keryell point FR
 

@@ -11,6 +11,7 @@
 
 #include <cstddef>
 
+#include "CL/sycl/access.hpp"
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/nd_range.hpp"
 #include "CL/sycl/range.hpp"

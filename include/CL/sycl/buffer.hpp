@@ -14,6 +14,7 @@
 #include <iterator>
 #include <memory>
 
+#include "CL/sycl/access.hpp"
 #include "CL/sycl/accessor.hpp"
 #include "CL/sycl/buffer/detail/buffer.hpp"
 #include "CL/sycl/id.hpp"

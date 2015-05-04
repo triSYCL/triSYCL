@@ -8,12 +8,6 @@
     For more information about OpenCL SYCL:
     http://www.khronos.org/opencl/sycl/
 
-    The aim of this file is mainly to define the interface of SYCL so that
-    the specification documentation can be derived from it through tools
-    like Doxygen or Sphinx. This explains why there are many functions and
-    classes that are here only to do some forwarding in some inelegant way.
-    This file is documentation driven and not implementation-style driven.
-
     For more information on this project and to access to the source of
     this file, look at https://github.com/amd/triSYCL
 
@@ -66,72 +60,12 @@
 #define STRING_CLASS std::string
 
 
-// SYCL dwells in the cl::sycl namespace
-namespace cl {
-namespace sycl {
-
-/** \addtogroup data Data access and storage in SYCL
-
-    @{
-*/
-
-/** Describe the type of access by kernels.
-
-    \todo This values should be normalized to allow separate compilation
-    with different implementations?
-*/
-namespace access {
-  /* By using "enum mode" here instead of "enum struct mode", we have for
-     example "write" appearing both as cl::sycl::access::mode::write and
-     cl::sycl::access::write, instead of only the last one. This seems
-     more conform to the specification. */
-
-  /// This describes the type of the access mode to be used via accessor
-  enum mode {
-    read = 42, //?< Why not? Insist on the fact that read_write != read + write
-    write, ///< Write-only access, but previous content *not* discarded
-    read_write, ///< Read and write access
-    discard_write, ///< Write-only access and previous content discarded
-    discard_read_write ///< Read and write access and previous content discarded
-  };
-
-
-  /** The target enumeration describes the type of object to be accessed
-     via the accessor
-   */
-  enum target {
-    global_buffer = 2014, //< Just pick a random number...
-    constant_buffer,
-    local,
-    image,
-    host_buffer,
-    host_image,
-    image_array,
-    cl_buffer,
-    cl_image
-  };
-
-
-  /** Precise the address space a barrier needs to act on
-   */
-  enum class address_space : char {
-    local,
-    global,
-    global_and_local
-  };
-
-}
-
-/// @} End the data Doxygen group
-
-}
-}
-
 /** Some global triSYCL configuration */
 #include "CL/sycl/detail/global_config.hpp"
 
 
 /* All the SYCL components, one per file */
+#include "CL/sycl/access.hpp"
 #include "CL/sycl/accessor.hpp"
 #include "CL/sycl/address_space.hpp"
 #include "CL/sycl/buffer.hpp"

@@ -12,6 +12,7 @@
 #include <memory>
 #include <thread>
 
+#include "CL/sycl/access.hpp"
 #include "CL/sycl/buffer/detail/buffer_base.hpp"
 #include "CL/sycl/buffer/detail/buffer_customer.hpp"
 #include "CL/sycl/detail/debug.hpp"

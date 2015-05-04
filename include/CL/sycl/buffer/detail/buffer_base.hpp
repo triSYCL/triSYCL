@@ -12,6 +12,7 @@
 #include <memory>
 #include <mutex>
 
+#include "CL/sycl/access.hpp"
 #include "CL/sycl/buffer/detail/buffer_customer.hpp"
 
 namespace cl {

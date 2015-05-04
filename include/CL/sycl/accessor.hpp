@@ -11,6 +11,7 @@
 
 #include <cstddef>
 
+#include "CL/sycl/access.hpp"
 #include "CL/sycl/accessor/detail/accessor.hpp"
 
 namespace cl {

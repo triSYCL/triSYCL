@@ -13,6 +13,7 @@
 
 #include <boost/multi_array.hpp>
 
+#include "CL/sycl/access.hpp"
 #include "CL/sycl/detail/debug.hpp"
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/item.hpp"
