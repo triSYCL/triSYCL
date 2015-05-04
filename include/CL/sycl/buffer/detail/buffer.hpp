@@ -29,94 +29,99 @@ namespace detail {
     any storage.
 */
 template <typename T,
-          std::size_t dimensions = 1>
-struct BufferImpl : public detail::debug<BufferImpl<T, dimensions>>,
-  detail::buffer_base {
-  using Implementation = boost::multi_array_ref<T, dimensions>;
+          std::size_t Dimensions = 1>
+struct buffer : public detail::debug<buffer<T, Dimensions>>,
+                public detail::buffer_base {
   // Extension to SYCL: provide pieces of STL container interface
   using element = T;
   using value_type = T;
 
   /** If some allocation is requested, it is managed by this multi_array
       to ease initialization from data */
-  boost::multi_array<T, dimensions> Allocation;
+  boost::multi_array<T, Dimensions> allocation;
   /** This is the multi-dimensional interface to the data that may point
-      to either Allocation in the case of storage managed by SYCL itself
+      to either allocation in the case of storage managed by SYCL itself
       or to some other memory location in the case of host memory or
       storage<> abstraction use
   */
-  boost::multi_array_ref<T, dimensions> Access;
+  boost::multi_array_ref<T, Dimensions> access;
 
 
-  /// Create a new read-write BufferImpl of size \param r
-  BufferImpl(range<dimensions> const &r) : buffer_base(false),
-                                           Allocation(r),
-                                           Access(Allocation) {}
+  /// Create a new read-write buffer of size \param r
+  buffer(range<Dimensions> const &r) : buffer_base { false },
+                                       allocation { r },
+                                       access { allocation }
+                                       {}
 
 
-  /** Create a new read-write BufferImpl from \param host_data of size
+  /** Create a new read-write buffer from \param host_data of size
       \param r without further allocation */
-  BufferImpl(T * host_data, range<dimensions> r) : buffer_base(false),
-                                                   Access(host_data, r) {}
+  buffer(T * host_data, range<Dimensions> r) : buffer_base { false },
+                                               access { host_data, r }
+                                               {}
 
 
-  /** Create a new read-only BufferImpl from \param host_data of size \param r
+  /** Create a new read-only buffer from \param host_data of size \param r
       without further allocation */
-  BufferImpl(const T * host_data, range<dimensions> r) :
+  buffer(const T * host_data, range<Dimensions> r) :
     /// \todo Need to solve this const buffer issue in a clean way
-    Access(const_cast<T *>(host_data), r),
-    buffer_base(true) {}
+    access { const_cast<T *>(host_data), r },
+    buffer_base { true }
+    {}
 
 
   /// \todo
-  //BufferImpl(storage<T> &store, range<dimensions> r)
+  //buffer(storage<T> &store, range<Dimensions> r)
 
-  /// Create a new allocated 1D BufferImpl from the given elements
+  /// Create a new allocated 1D buffer from the given elements
   template <typename Iterator>
-  BufferImpl(Iterator start_iterator, Iterator end_iterator) :
-    buffer_base(false),
+  buffer(Iterator start_iterator, Iterator end_iterator) :
+    buffer_base { false },
     // The size of a multi_array is set at creation time
-    Allocation(boost::extents[std::distance(start_iterator, end_iterator)]),
-    Access(Allocation) {
-    /* Then assign Allocation since this is the only multi_array
-       method with this iterator interface */
-    Allocation.assign(start_iterator, end_iterator);
-  }
+    allocation { boost::extents[std::distance(start_iterator, end_iterator)] },
+    access { allocation }
+    {
+      /* Then assign allocation since this is the only multi_array
+         method with this iterator interface */
+      allocation.assign(start_iterator, end_iterator);
+    }
 
 
-  /** Create a new BufferImpl from an old one, with a new allocation
+  /** Create a new buffer from an old one, with a new allocation
 
       \todo Refactor the implementation to deal with buffer sharing with
       reference counting
   */
-  BufferImpl(const BufferImpl<T, dimensions> &b) : buffer_base(b.read_only),
-                                                   Allocation(b.Access),
-                                                   Access(Allocation) {}
+  buffer(const buffer<T, Dimensions> &b) : buffer_base { b.read_only },
+                                           allocation { b.access },
+                                           access { allocation }
+                                           {}
 
 
-  /** Create a new sub-BufferImplImpl without allocation to have separate
+  /** Create a new sub-buffer without allocation to have separate
       accessors later
 
       \todo To implement and deal with reference counting
-  BufferImpl(BufferImpl<T, dimensions> b,
-             index<dimensions> base_index,
-             range<dimensions> sub_range)
+  buffer(buffer<T, Dimensions> b,
+         index<Dimensions> base_index,
+         range<Dimensions> sub_range)
   */
 
   /// \todo Allow CLHPP objects too?
   ///
   /*
-  BufferImpl(cl_mem mem_object,
-             queue from_queue,
-             event available_event)
+  buffer(cl_mem mem_object,
+         queue from_queue,
+         event available_event)
   */
 
   // Use BOOST_DISABLE_ASSERTS at some time to disable range checking
 
   /// Return an accessor of the required mode \param M
-  template <access::mode mode,
-            access::target target=access::global_buffer>
-  AccessorImpl<T, dimensions, mode, target> get_access() {
+  /// \todo Remove if not used
+  template <access::mode Mode,
+            access::target Target = access::global_buffer>
+  detail::accessor<T, Dimensions, Mode, Target> get_access() {
     return { *this };
   }
 

@@ -39,7 +39,7 @@ namespace sycl {
     buffer and accessor on T versus datatype
 */
 template <typename T,
-          std::size_t dimensions = 1>
+          std::size_t Dimensions = 1>
 struct buffer {
   /** \todo Extension to SYCL specification: provide pieces of STL
       container interface? Yes for the construction, but not for the
@@ -50,7 +50,7 @@ struct buffer {
 
   /** Point to the underlying buffer implementation that can be shared in
       the SYCL model */
-  std::shared_ptr<detail::BufferImpl<T, dimensions>> Impl;
+  std::shared_ptr<detail::buffer<T, Dimensions>> implementation;
 
   /** Use default constructors so that we can create a new buffer copy
       from another one, with either a l-value or an r-value (for
@@ -66,8 +66,8 @@ struct buffer {
 
       \param r defines the size
   */
-  buffer(const range<dimensions> &r)
-    : Impl(new detail::BufferImpl<T, dimensions> { r }) {}
+  buffer(const range<Dimensions> &r)
+    : implementation { new detail::buffer<T, Dimensions> { r } } {}
 
 
   /** Create a new read-write buffer with associated host memory
@@ -76,8 +76,8 @@ struct buffer {
 
       \param r defines the size
   */
-  buffer(T * host_data, range<dimensions> r)
-    : Impl(new detail::BufferImpl<T, dimensions> { host_data, r }) {}
+  buffer(T * host_data, range<Dimensions> r)
+    : implementation { new detail::buffer<T, Dimensions> { host_data, r } } {}
 
 
   /** Create a new read-only buffer with associated host memory
@@ -86,8 +86,8 @@ struct buffer {
 
       \param r defines the size
   */
-  buffer(const T * host_data, range<dimensions> r)
-    : Impl(new detail::BufferImpl<T, dimensions> { host_data, r }) {}
+  buffer(const T * host_data, range<Dimensions> r)
+    : implementation { new detail::buffer<T, Dimensions> { host_data, r } } {}
 
 
   /** Create a new buffer from a storage abstraction provided by the user
@@ -101,7 +101,7 @@ struct buffer {
 
       \todo To be implemented
   */
-  buffer(storage<T> &store, range<dimensions> r) { assert(0); }
+  buffer(storage<T> &store, range<Dimensions> r) { assert(0); }
 
 
   /** Create a new read-write allocated 1D buffer initialized from the
@@ -127,7 +127,9 @@ struct buffer {
             typename ValueType =
             typename std::iterator_traits<Iterator>::value_type>
   buffer(Iterator start_iterator, Iterator end_iterator) :
-    Impl(new detail::BufferImpl<T, dimensions> { start_iterator, end_iterator }) {}
+    implementation { new detail::buffer<T, Dimensions> { start_iterator,
+                                                         end_iterator } }
+  {}
 
 
   /** Create a new sub-buffer without allocation to have separate accessors
@@ -144,9 +146,9 @@ struct buffer {
 
       \todo Update the specification to replace index by id
   */
-  buffer(buffer<T, dimensions> b,
-         id<dimensions> base_index,
-         range<dimensions> sub_range) { assert(0); }
+  buffer(buffer<T, Dimensions> b,
+         id<Dimensions> base_index,
+         range<Dimensions> sub_range) { assert(0); }
 
 
 #ifdef TRISYCL_OPENCL
@@ -174,32 +176,34 @@ struct buffer {
 
   /** Get an accessor to the buffer with the required mode
 
-      \param mode is the requested access mode
+      \param Mode is the requested access mode
 
-      \param target is the type of object to be accessed
+      \param Target is the type of object to be accessed
 
       \todo Do we need for an accessor to increase the reference count of
       a buffer object? It does make more sense for a host-side accessor.
 
       \todo Implement the modes and targets
   */
-  template <access::mode mode,
-            access::target target=access::global_buffer>
-  accessor<T, dimensions, mode, target> get_access() const {
-    return *Impl;
+  template <access::mode Mode,
+            access::target Target = access::global_buffer>
+  accessor<T, Dimensions, Mode, Target> get_access() const {
+    return *implementation;
   }
 
 
   /// Get the range<> of the buffer
   auto get_range() const {
     /* Interpret the shape which is a pointer to the first element as an
-       array of dimensions elements so that the range<dimensions>
+       array of Dimensions elements so that the range<Dimensions>
        constructor is happy with this collection
+
+       \todo Move into detail::
 
        \todo Add also a constructor in range<> to accept a const
        std::size_t *?
      */
-    return range<dimensions> { *(const std::size_t (*)[dimensions])(Impl->Allocation.shape()) };
+    return range<Dimensions> { *(const std::size_t (*)[Dimensions])(implementation->allocation.shape()) };
   }
 
 
@@ -207,7 +211,7 @@ struct buffer {
 
       \todo Add to specification
   */
-  bool is_read_only() const { return Impl->read_only; }
+  bool is_read_only() const { return implementation->read_only; }
 
 
   /** Return the use count of the data of this buffer
@@ -217,7 +221,7 @@ struct buffer {
   */
   auto use_count() const {
     // Rely on the shared_ptr<> use_count()
-    return Impl.use_count();
+    return implementation.use_count();
   }
 
 };

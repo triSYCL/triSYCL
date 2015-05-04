@@ -43,7 +43,7 @@ struct accessor : detail::accessor<DataType, Dimensions, Mode, Target> {
   /// Create an accessor to the given buffer
   // \todo fix the specification to rename target that shadows template parm
   accessor(buffer<DataType, Dimensions> &target_buffer) :
-    detail::accessor<DataType, Dimensions, Mode, Target> { *target_buffer.Impl } {}
+    detail::accessor<DataType, Dimensions, Mode, Target> { *target_buffer.implementation } {}
 
 };
 
