@@ -63,7 +63,7 @@ struct platform {
 
 
   /** Get the list of all the platforms available to the application */
-  static VECTOR_CLASS<platform> get_platforms() { assert(0); }
+  static vector_class<platform> get_platforms() { assert(0); }
 
 
 #ifdef TRISYCL_OPENCL
@@ -71,7 +71,7 @@ struct platform {
 
       By default returns all the devices.
   */
-  static VECTOR_CLASS<device>
+  static vector_class<device>
   get_devices(cl_device_type device_type = CL_DEVICE_TYPE_ALL) {
     assert(0);
   }
@@ -103,7 +103,7 @@ struct platform {
 
       \todo extend to any type of C++-string like object
   */
-  bool has_extension(const STRING_CLASS extension_name) {
+  bool has_extension(const string_class extension_name) {
     assert(0);
   }
 
