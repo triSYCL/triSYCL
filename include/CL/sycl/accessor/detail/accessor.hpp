@@ -20,12 +20,14 @@
 
 namespace cl {
 namespace sycl {
-namespace trisycl {
-// Forward declaration for use in accessor
-template <typename T, std::size_t Dimensions> struct BufferImpl;
-}
 namespace detail {
 
+// Forward declaration for use in accessor
+template <typename T, std::size_t Dimensions> struct BufferImpl;
+
+/** \addtogroup data Data access and storage in SYCL
+    @{
+*/
 
 /** The accessor abstracts the way buffer data are accessed inside a
     kernel in a multidimensional variable length array way.
@@ -46,7 +48,7 @@ struct accessor : public detail::debug<accessor<T,
                                                 Dimensions,
                                                 Mode,
                                                 Target>> {
-  trisycl::BufferImpl<T, Dimensions> *buf;
+  detail::BufferImpl<T, Dimensions> *buf;
   // The implementation is a multi_array_ref wrapper
   using array_view_type = boost::multi_array_ref<T, Dimensions>;
   // \todo Do we need this if we have a reference on buf?
@@ -65,7 +67,7 @@ struct accessor : public detail::debug<accessor<T,
 
   /// The only way to construct an accessor is from an existing buffer
   // \todo fix the specification to rename target that shadows template parm
-  accessor(trisycl::BufferImpl<T, Dimensions> &target_buffer) :
+  accessor(detail::BufferImpl<T, Dimensions> &target_buffer) :
     buf { &target_buffer }, array { target_buffer.Access } {
 #if TRISYCL_ASYNC
     if (Target == access::target::host_buffer) {
@@ -140,7 +142,7 @@ struct accessor : public detail::debug<accessor<T,
 
 
   /// Get the buffer used to create the accessor
-  trisycl::BufferImpl<T, Dimensions> &get_buffer() {
+  detail::BufferImpl<T, Dimensions> &get_buffer() {
     return *buf;
   }
 

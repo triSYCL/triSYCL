@@ -17,6 +17,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <thread>
 #include <typeinfo>
 
 #include <boost/log/trivial.hpp>
