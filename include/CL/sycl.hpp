@@ -36,46 +36,6 @@
 */
 
 
-#include <cstddef>
-#include <initializer_list>
-
-
-/// This implement SYCL 1.2
-#define CL_SYCL_LANGUAGE_VERSION 120
-
-/// This implement triSYCL 1.2
-#define CL_TRISYCL_LANGUAGE_VERSION 120
-
-/// This source is compiled by a single source compiler
-#define __SYCL_SINGLE_SOURCE__
-
-
-/** Define TRISYCL_OPENCL to add OpenCL
-
-    triSYCL can indeed work without OpenCL if only host support is needed.
-
-    Right now it is set by Doxygen to generate the documentation.
-
-    \todo Use a macro to check instead if the OpenCL header has been
-    included before.
-
-    But what is the right one? __OPENCL_CL_H? __OPENCL_C_VERSION__? CL_HPP_?
-    Mostly CL_HPP_ to be able to use param_traits<> from cl.hpp...
-*/
-#ifdef TRISYCL_OPENCL
-#define __CL_ENABLE_EXCEPTIONS
-#include <CL/cl.hpp>
-#endif
-
-/** Allow the asynchronous implementation of tasks */
-#ifndef TRISYCL_ASYNC
-/** Use asynchronous tasks by default.
-
-    Is set to 0, the functors are executed synchronously.
- */
-#define TRISYCL_ASYNC 1
-#endif
-
 /** The vector type to be used as SYCL vector
 
     \todo this should be more local, such as SYCL_VECTOR_CLASS or
@@ -167,13 +127,16 @@ namespace access {
 }
 }
 
+/** Some global triSYCL configuration */
+#include "CL/sycl/detail/global_config.hpp"
 
+
+/* All the SYCL components, one per file */
 #include "CL/sycl/accessor.hpp"
 #include "CL/sycl/address_space.hpp"
 #include "CL/sycl/buffer.hpp"
 #include "CL/sycl/command_group.hpp"
 #include "CL/sycl/context.hpp"
-#include "CL/sycl/detail/small_array.hpp"
 #include "CL/sycl/device.hpp"
 #include "CL/sycl/device_selector.hpp"
 #include "CL/sycl/error_handler.hpp"
