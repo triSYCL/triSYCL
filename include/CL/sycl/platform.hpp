@@ -10,6 +10,7 @@
 */
 
 #include "CL/sycl/context.hpp"
+#include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/device_selector.hpp"
 
 namespace cl {
@@ -18,13 +19,73 @@ namespace sycl {
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
 */
+namespace info {
+
+enum class device_type : unsigned int {
+  cpu,
+  gpu,
+  accelerator,
+  custom,
+  defaults,
+  host,
+  all
+};
+
+
+/** Platform information descriptors
+
+    A SYCL platform can be queried for all of the following information
+    using the get_info function. All SYCL contexts have valid devices for
+    them, including the SYCL host device.
+*/
+enum class platform : unsigned int {
+  /** Returns the profile name (as a string_class) supported by the im-
+      plementation.
+
+      Can be either FULL PROFILE or EMBEDDED PROFILE.
+  */
+  profile,
+  /** Returns the OpenCL software driver version string in the form major
+      number.minor number (as a string_class)
+  */
+  version,
+  /** Returns the name of the platform (as a string_class)
+  */
+  name,
+  /** Returns the string provided by the platform vendor (as a string_class)
+  */
+  vendor,
+  /** Returns a space-separated list of extension names supported by the
+      platform (as a string_class)
+  */
+  extensions
+};
+
+
+/** Query the return type for get_info()
+
+    Only return a string_class
+*/
+template <info::platform Param>
+class param_traits {
+
+  public:
+
+  using type = string_class;
+};
+
+}
 
 /** Abstract the OpenCL platform
 
     \todo triSYCL Implementation
 */
-struct platform {
+class platform {
 
+
+public:
+
+#ifdef TRISYCL_OPENCL
   /** Construct a default platform and provide an optional error_handler
       to deals with errors
 
@@ -32,68 +93,70 @@ struct platform {
 
       \todo Add const to the specification
   */
-  platform(const error_handler &handler = error_handler::default_handler) {}
-
-#ifdef TRISYCL_OPENCL
-  /** Create a SYCL platform from an existing OpenCL one and provide an
-      optional error_handler to deals with errors
-
-      \todo improve specification to accept also a cl.hpp object
-  */
-  platform(cl_platform_id platform id,
-           const error_handler &handler = error_handler::default_handler) {}
-
-  /** Create a SYCL platform from an existing OpenCL one and provide an
-      integer place-holder to return the OpenCL error code, if any */
-  platform(cl_platform_id platform id,
-           int &error_code) {}
+  explicit platform(cl_platform_id platformID) {
+    detail::unimplemented();
+  };
 #endif
 
-  /** Destructor of the SYCL abstraction */
-  ~platform() {}
+  /** Default constructor for platform
+
+      It constructs a platform object to encapsulate the device returned
+      by the default device selector.
+
+      Returns errors via the SYCL exception class.
+
+      Get back the default constructors, for this implementation.
+  */
+  platform() = default;
 
 
 #ifdef TRISYCL_OPENCL
-  /** Get the OpenCL platform_id underneath
+  /** Returns the cl_platform_id of the underlying
+      OpenCL platform
 
-      \todo Add cl.hpp version to the specification
+      If the platform is not a valid OpenCL platform, for example if it is
+      the SYCL host, a nullptr will be returned.
+
+      \todo To be implemented
   */
-  cl_platform_id get() { assert(0); }
+  cl_platform_id get() const {
+    detail::unimplemented();
+    return {}; }
 #endif
 
 
-  /** Get the list of all the platforms available to the application */
-  static vector_class<platform> get_platforms() { assert(0); }
+  /** Get the list of all the platforms available to the application
+
+      \todo To be implemented
+  */
+  static vector_class<platform> get_platforms() {
+    detail::unimplemented();
+    return {};
+  }
 
 
-#ifdef TRISYCL_OPENCL
-  /** Get all the devices of a given type available to the application.
+  /** Returns all the available devices for this platform, of type device
+      type, which is defaulted to info::device_type::all
+
 
       By default returns all the devices.
   */
-  static vector_class<device>
-  get_devices(cl_device_type device_type = CL_DEVICE_TYPE_ALL) {
-    assert(0);
+  vector_class<device>
+  get_devices(info::device_type device_type = info::device_type::all) const {
+    detail::unimplemented();
+    return {};
   }
 
 
   /** Get the OpenCL information about the requested parameter
 
-      \todo It looks like in the specification the cl::detail:: is lacking
-      to fit the cl.hpp version. Or is it to be redefined in SYCL too?
+      \todo To be implemented
   */
-  template<cl_int name> typename
-  cl::detail::param_traits<cl_platform_info, name>::param_type
-  get_info() {
-    assert(0);
-  }
-#endif
-
-
-  /** Test if this platform is a host platform */
-  bool is_host() {
-    // Right now, this is a host-only implementation :-)
-    return true;
+  template <info::platform Param>
+  typename info::param_traits<Param>::type
+  get_info() const {
+    detail::unimplemented();
+    return {};
   }
 
 
@@ -103,8 +166,16 @@ struct platform {
 
       \todo extend to any type of C++-string like object
   */
-  bool has_extension(const string_class extension_name) {
-    assert(0);
+  bool has_extension(const string_class &extension) const {
+    detail::unimplemented();
+    return {};
+  }
+
+
+  /// Test if this platform is a host platform
+  bool is_host() const {
+    // Right now, this is a host-only implementation :-)
+    return true;
   }
 
 };

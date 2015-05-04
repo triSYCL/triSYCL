@@ -9,6 +9,7 @@
     License. See LICENSE.TXT for details.
 */
 
+#include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/device.hpp"
 
 namespace cl {
@@ -32,7 +33,7 @@ public:
       \todo To be implemented
   */
   device select_device() const {
-    assert(0);
+    detail::unimplemented();
     return {};
   }
 
@@ -62,7 +63,11 @@ class default_selector : public device_selector {
 public:
 
   // The user-provided operator computing the score
-  int operator() (const device &dev) const override { return 1; }
+  int operator() (const device &dev) const override {
+    detail::unimplemented();
+    return 1;
+  }
+
 };
 
 
@@ -82,7 +87,11 @@ class gpu_selector : public device_selector {
 public:
 
   // The user-provided operator computing the score
-  int operator() (const device &dev) const override { return 1; }
+  int operator() (const device &dev) const override {
+    detail::unimplemented();
+    return 1;
+  }
+
 };
 
 
@@ -100,7 +109,11 @@ class cpu_selector : public device_selector {
 public:
 
   // The user-provided operator computing the score
-  int operator() (const device &dev) const override { return 1; }
+  int operator() (const device &dev) const override {
+    detail::unimplemented();
+    return 1;
+  }
+
 };
 
 
@@ -116,7 +129,11 @@ class host_selector : public device_selector {
 public:
 
   // The user-provided operator computing the score
-  int operator() (const device &dev) const override { return 1; }
+  int operator() (const device &dev) const override {
+    detail::unimplemented();
+    return 1;
+  }
+
 };
 
 /// @} to end the execution Doxygen group
