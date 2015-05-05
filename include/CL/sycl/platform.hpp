@@ -10,11 +10,15 @@
 */
 
 #include "CL/sycl/context.hpp"
+#include "CL/sycl/detail/default_classes.hpp"
 #include "CL/sycl/detail/unimplemented.hpp"
-#include "CL/sycl/device_selector.hpp"
+#include "CL/sycl/device.hpp"
 
 namespace cl {
 namespace sycl {
+
+class device_selector;
+class device;
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
@@ -62,17 +66,11 @@ enum class platform : unsigned int {
 };
 
 
-/** Query the return type for get_info()
+/** Query the return type for get_info() on platform stuff
 
     Only return a string_class
 */
-template <info::platform Param>
-class param_traits {
-
-  public:
-
-  using type = string_class;
-};
+TRISYCL_INFO_PARAM_TRAITS_ANY_T(info::platform, string_class)
 
 }
 
@@ -153,7 +151,7 @@ public:
       \todo To be implemented
   */
   template <info::platform Param>
-  typename info::param_traits<Param>::type
+  typename info::param_traits<info::platform, Param>::type
   get_info() const {
     detail::unimplemented();
     return {};

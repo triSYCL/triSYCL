@@ -11,9 +11,12 @@
 
 #include <cstddef>
 
+#include "CL/sycl/detail/default_classes.hpp"
+#include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/device.hpp"
 #include "CL/sycl/device_selector.hpp"
 #include "CL/sycl/exception.hpp"
+#include "CL/sycl/info/param_traits.hpp"
 #include "CL/sycl/platform.hpp"
 
 namespace cl {
@@ -24,15 +27,26 @@ namespace sycl {
 */
 
 namespace info {
-  using gl_context_interop = bool;
 
-  /** Should be unsigned int to be consistent with others?
-   */
-  enum class context : int {
-    reference_count,
-    num_devices,
-    gl_interop
-  };
+using gl_context_interop = bool;
+
+/** Context information descriptors
+
+    \todo Should be unsigned int to be consistent with others?
+*/
+enum class context : int {
+  reference_count,
+  num_devices,
+  gl_interop
+};
+
+
+/** Query the return type for get_info() on context stuff
+
+    \todo To be implemented
+*/
+TRISYCL_INFO_PARAM_TRAITS_ANY_T(info::context, void)
+
 }
 
 
@@ -180,7 +194,7 @@ public:
       \todo To be implemented
   */
   template <info::context Param>
-  typename info::param_traits<Param>::type get_info() const {
+  typename info::param_traits<info::context, Param>::type get_info() const {
     detail::unimplemented();
     return {};
   }
