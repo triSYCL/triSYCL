@@ -9,6 +9,7 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <algorithm>
 #include <array>
 #include <cstddef>
 

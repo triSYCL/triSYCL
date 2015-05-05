@@ -25,7 +25,10 @@ namespace sycl {
     such as the definition range and offset.
 */
 template <std::size_t dims = 1>
-struct item {
+class item {
+
+public:
+
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
   static constexpr auto dimensionality = dims;
@@ -35,7 +38,6 @@ private:
   range<dims> global_range;
   id<dims> global_index;
   id<dims> offset;
-
 
 public:
 
