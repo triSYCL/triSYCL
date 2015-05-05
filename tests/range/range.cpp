@@ -16,6 +16,21 @@
    CHECK-NEXT: Range of dims 3
    CHECK-NEXT: 1 2 3
    CHECK-NEXT: 2 5 6
+   CHECK-NEXT: 1 4 16
+   CHECK-NEXT: 1 2 4
+   CHECK-NEXT: 0 2 4
+   CHECK-NEXT: 1 3 5
+   CHECK-NEXT: 1 1 1
+   CHECK-NEXT: 0
+   CHECK-NEXT: 1
+   CHECK-NEXT: 0
+   CHECK-NEXT: 1
+   CHECK-NEXT: 0
+   CHECK-NEXT: 0
+   CHECK-NEXT: 1
+   CHECK-NEXT: 1
+   CHECK-NEXT: 1
+   CHECK-NEXT: 1
 */
 #include <CL/sycl.hpp>
 #include <iostream>
@@ -66,7 +81,6 @@ int main() {
   d += make_range(1, 2, 3);
   std::cout << "d = " << d[0] << ',' << d[1] <<  ',' << d[2] << std::endl;
 
-
   g(43);
   g({ 2014 });
   g({ 1, 128 });
@@ -83,5 +97,26 @@ int main() {
   r_array = id<3>(2,5,6);
   r_array.display();
 
+  range<3> r1 = { 1, 2, 4 };
+  r1 <<= { 0, 1, 2 };
+  r1.display();
+  (r1 >>= { 0, 1, 2 }).display();
+
+  range<3> r2 = { 0, 3, 5 };
+  auto r3 = r1 & r2;
+  r3.display();
+  r3 = r1 | r2;
+  r3.display();
+  (r1 ^ r2).display();
+  std::cout << (r1!= r1) << std::endl;
+  std::cout << (r1 == r1) << std::endl;
+  std::cout << (r1 == r2) << std::endl;
+  std::cout << (r1 != r2) << std::endl;
+  std::cout << (r1 < r2) << std::endl;
+  std::cout << (r1 <= r2) << std::endl;
+  std::cout << (r1 > r2) << std::endl;
+  std::cout << (r1 >= r2) << std::endl;
+  std::cout << (r2 >= r2) << std::endl;
+  std::cout << (r1 <= r1) << std::endl;
   return 0;
 }

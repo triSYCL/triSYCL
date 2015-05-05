@@ -1,11 +1,7 @@
 #ifndef TRISYCL_SYCL_DETAIL_SMALL_ARRAY_HPP
 #define TRISYCL_SYCL_DETAIL_SMALL_ARRAY_HPP
 
-/** \file This is a small class to track constructor/destructor invocations
-
-    Define the TRISYCL_DEBUG CPP flag to have an output.
-
-    To use it in some class C, make C inherit from debug<C>.
+/** \file This is a small array class to build range<>, id<>, etc.
 
     Ronan at Keryell point FR
 
@@ -13,7 +9,6 @@
     License. See LICENSE.TXT for details.
 */
 
-#include <algorithm>
 #include <array>
 #include <cstddef>
 
@@ -55,14 +50,22 @@ namespace detail {
     \param FinalType is the final type, such as range<> or id<>, so that
     boost::operator can return the right type
 
-    std::array<> provides the collection concept.
+    std::array<> provides the collection concept, with .size(), == and !=
+    too.
 */
 template <typename BasicType, typename FinalType, std::size_t Dims>
 struct small_array : std::array<BasicType, Dims>,
-    // To have all the usual arithmetic operations on this type
+  // To have all the usual arithmetic operations on this type
   boost::euclidean_ring_operators<FinalType>,
-    // Add a display() method
-    detail::display_vector<FinalType> {
+  // Bitwise operations
+  boost::bitwise<FinalType>,
+  // Shift operations
+  boost::shiftable<FinalType>,
+  // Already provided by array<> lexicographically:
+  // boost::equality_comparable<FinalType>,
+  // boost::less_than_comparable<FinalType>,
+  // Add a display() method
+  detail::display_vector<FinalType> {
 
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
@@ -100,20 +103,35 @@ struct small_array : std::array<BasicType, Dims>,
 
   /* Implement minimal methods boost::euclidean_ring_operators needs to
      generate everything */
-  /// Add + like operations on the id<>
+  /// Add + like operations on the id<> and others
   TRISYCL_BOOST_OPERATOR_VECTOR_OP(+=)
 
-  /// Add - like operations on the id<>
+  /// Add - like operations on the id<> and others
   TRISYCL_BOOST_OPERATOR_VECTOR_OP(-=)
 
-  /// Add * like operations on the id<>
+  /// Add * like operations on the id<> and others
   TRISYCL_BOOST_OPERATOR_VECTOR_OP(*=)
 
-  /// Add / like operations on the id<>
+  /// Add / like operations on the id<> and others
   TRISYCL_BOOST_OPERATOR_VECTOR_OP(/=)
 
-  /// Add % like operations on the id<>
+  /// Add % like operations on the id<> and others
   TRISYCL_BOOST_OPERATOR_VECTOR_OP(%=)
+
+  /// Add << like operations on the id<> and others
+  TRISYCL_BOOST_OPERATOR_VECTOR_OP(<<=)
+
+  /// Add >> like operations on the id<> and others
+  TRISYCL_BOOST_OPERATOR_VECTOR_OP(>>=)
+
+  /// Add & like operations on the id<> and others
+  TRISYCL_BOOST_OPERATOR_VECTOR_OP(&=)
+
+  /// Add ^ like operations on the id<> and others
+  TRISYCL_BOOST_OPERATOR_VECTOR_OP(^=)
+
+  /// Add | like operations on the id<> and others
+  TRISYCL_BOOST_OPERATOR_VECTOR_OP(|=)
 
   /** Since the boost::operator work on the Small array, add an implicit
       conversion to produce the expected type */
