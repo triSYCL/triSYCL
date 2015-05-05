@@ -38,11 +38,11 @@ int main() {
   nd_range<3> ndr3 { range<3>{ 6, 4, 8 }, range<3>{ 3, 2, 4} };
   ndr3.display();
 
-  ndr3.get_global_range().display();
-  ndr3.get_local_range().display();
+  ndr3.get_global().display();
+  ndr3.get_local().display();
   ndr3.get_offset().display();
-  ndr3.get_group_range().display();
-  range<3> ndr4 = ndr3.get_group_range();
+  ndr3.get_group().display();
+  range<3> ndr4 = ndr3.get_group();
   ndr4.display();
 
   nd_range<> ndr1 { 1, 2, 3 };

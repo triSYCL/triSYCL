@@ -59,11 +59,11 @@ public:
 
 
   /// Get the local range for this work_group
-  range<dims> get_local_range() const { return ndr.get_local_range(); }
+  range<dims> get_local_range() const { return ndr.get_local(); }
 
 
   /// Get the local range for this work_group
-  range<dims> get_global_range() const { return ndr.get_global_range(); }
+  range<dims> get_global_range() const { return ndr.get_global(); }
 
 
   /// Get the offset of the NDRange
