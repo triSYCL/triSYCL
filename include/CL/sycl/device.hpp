@@ -11,6 +11,7 @@
 
 #include "CL/sycl/detail/default_classes.hpp"
 #include "CL/sycl/detail/unimplemented.hpp"
+#include "CL/sycl/exception.hpp"
 #include "CL/sycl/info/param_traits.hpp"
 #include "CL/sycl/platform.hpp"
 

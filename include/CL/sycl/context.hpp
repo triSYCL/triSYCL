@@ -69,8 +69,11 @@ public:
 
   /** Constructs a context object for SYCL host using an async_handler for
       handling asynchronous errors
+
+      Note that the default case asyncHandler = nullptr is handled by the
+      default constructor.
   */
-  explicit context(async_handler asyncHandler = nullptr) {
+  explicit context(async_handler asyncHandler) {
     detail::unimplemented();
   }
 

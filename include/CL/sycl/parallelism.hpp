@@ -20,6 +20,14 @@ namespace sycl {
     @{
 */
 
+class handler_event {
+/*
+ public:
+  event get_kernel() const;
+  event get_complete() const;
+  event get_end() const;
+*/
+};
 
 /** SYCL single_task launches a computation without parallelism at launch
     time.

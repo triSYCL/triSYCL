@@ -11,10 +11,11 @@
 
 #include "CL/sycl/buffer.hpp"
 #include "CL/sycl/image.hpp"
-#include "CL/sycl/queue.hpp"
 
 namespace cl {
 namespace sycl {
+
+class queue;
 
 /** \addtogroup error_handling Error handling
     @{
