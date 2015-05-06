@@ -80,6 +80,20 @@ public:
   id<dims> get_offset() const { return offset; }
 
 
+  /** Return the linearized ID in the item's range
+
+      Computed as the flatted ID after the offset is subtracted.
+  */
+  size_t get_linear_id() const {
+    size_t linear_id = 0;
+    for (int i = dims - 1; i >= 0; --i)
+      linear_id = linear_id*get_range()[i]
+        + get_global_id()[i] - get_offset()[i];
+
+    return linear_id;
+  }
+
+
   /** For the implementation, need to set the global index
 
       \todo Move to private and add friends
