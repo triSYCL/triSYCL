@@ -73,7 +73,7 @@ public:
 
 
   /// Get the global range where this item dwells in
-  range<dims> get_global_range() const { return global_range; }
+  range<dims> get_range() const { return global_range; }
 
 
   /// Get the offset associated with the item context
