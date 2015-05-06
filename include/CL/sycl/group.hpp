@@ -11,6 +11,7 @@
 
 #include <cstddef>
 
+#include "CL/sycl/detail/linear_id.hpp"
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/nd_range.hpp"
 #include "CL/sycl/range.hpp"
@@ -95,7 +96,7 @@ public:
       \todo Fix this comment and the specification
   */
   range<dims> get_group_range() const {
-    return get_nd_range().get_num_groups();
+    return get_nd_range().get_group();
   }
 
 
