@@ -18,8 +18,8 @@ CXXFLAGS += -DTRISYCL_ASYNC=0
 
 # There are some tests using small array display() method
 # To enable debug and tracing:
-CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
-LDLIBS=-lboost_log
+#CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
+#LDLIBS=-lboost_log
 
 # By default run lit checking in the current directory
 CHECKING_DIR ?= .

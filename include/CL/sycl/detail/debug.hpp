@@ -99,16 +99,18 @@ struct debug {
 */
 template <typename T>
 struct display_vector {
-#ifdef TRISYCL_DEBUG
+
   /// To debug and test
   void display() const {
+#ifdef TRISYCL_DEBUG
     std::cout << typeid(T).name() << ":";
+#endif
     // Get a pointer to the real object
     for (auto e : *static_cast<const T *>(this))
       std::cout << " " << e;
     std::cout << std::endl;
   }
-#endif
+
 };
 
 /// @} End the debug_trace Doxygen group
