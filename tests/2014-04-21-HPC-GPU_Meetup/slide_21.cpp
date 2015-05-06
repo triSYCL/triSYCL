@@ -22,7 +22,7 @@ single_task<class simple_test>([=] ()
 //////// Start right side of the slide
  parallel_for<class example_kernel>(nd_range<3>(range<3>(4, 40, 4), range<3>(2, 2, 2)),
       [=]  (nd_item<3> t_item) {
-        t_item.barrier(access::address_space::local);
+        t_item.barrier(access::fence_space::local_space);
       });
 //////// End right side of the slide
     });

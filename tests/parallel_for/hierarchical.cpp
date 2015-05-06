@@ -44,8 +44,8 @@ command_group(my_queue, [&]()
 
 		parallel_for_workitem(group, [=](nd_item<1> tile)
 		{
-      std::cout << "Local id = " << tile.get_local_id(0)
-                << " (global id = " << tile.get_global_id(0) << ")" << std::endl;
+      std::cout << "Local id = " << tile.get_local(0)
+                << " (global id = " << tile.get_global(0) << ")" << std::endl;
 			out_access[tile] = in_access[tile] * 2;
 		});
 	});

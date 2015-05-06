@@ -12,6 +12,8 @@
 #include <cstddef>
 
 #include "CL/sycl/access.hpp"
+#include "CL/sycl/detail/linear_id.hpp"
+#include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/nd_range.hpp"
 #include "CL/sycl/range.hpp"
@@ -62,71 +64,132 @@ public:
   nd_item(id<dims> global_index,
           id<dims> local_index,
           nd_range<dims> ndr) :
-    global_index { global_index }, local_index { local_index }, ND_range { ndr } {}
+    global_index { global_index },
+    local_index { local_index },
+    ND_range { ndr }
+  {}
 
 
-  /// Get the whole global id coordinate
-  id<dims> get_global_id() const { return global_index; }
+  /** Return the constituent global id representing the work-item's
+      position in the global it eration space
+  */
+  id<dims> get_global() const { return global_index; }
 
 
-  /// Get the whole local id coordinate (which is respective to the
-  /// work-group)
-  id<dims> get_local_id() const { return local_index; }
+  /** Return the constituent element of the global id representing the
+      work-item's position in the global iteration space in the given
+      dimension
+  */
+  auto get_global(int dimension) const { return get_global()[dimension]; }
 
 
-  /// Get the whole group id coordinate
-  id<dims> get_group_id() const { return get_global_id()/get_local_range(); }
-
-
-  /// Return the global coordinate in the given dimension
-  auto get_global_id(int dimension) const { return get_global_id()[dimension]; }
-
-
-  /// Return the local coordinate (that is in the work-group) in the given
-  /// dimension
-  auto get_local_id(int dimension) const { return get_local_id()[dimension]; }
-
-
-  /// Get the whole group id coordinate in the given dimension
-  id<dims> get_group_id(int dimension) const {
-    return get_group_id()[dimension];
+  /** Return the flattened id of the current work-item after subtracting
+      the offset
+  */
+  size_t get_global_linear_id() const {
+    return detail::linear_id(get_global_range(), get_global(), get_offset());
   }
 
 
-  /// Get the global range where this nd_item dwells in
-  range<dims> get_global_range() const { return ND_range.get_global_range(); }
+  /** Return the constituent local id representing the work-item's
+      position within the current work-group
+  */
+  id<dims> get_local() const { return local_index; }
 
 
-  /// Get the local range (the dimension of the work-group) for this nd_item
-  range<dims> get_local_range() const { return ND_range.get_local_range(); }
+  /** Return the constituent element of the local id representing the
+      work-item's position within the current work-group in the given
+      dimension
+  */
+  auto get_local(int dimension) const { return get_local()[dimension]; }
 
 
-  /// Get the offset of the NDRange
-  id<dims> get_offset() const { return ND_range.get_offset(); }
+  /** Return the flattened id of the current work-item within the current
+      work-group
+   */
+  size_t get_local_linear_id() const {
+    return detail::linear_id(get_local_range(), get_local());
+  }
 
 
-  /// Get the NDRange for this nd_item
+  /** Return the constituent group group representing the work-group's
+      position within the overall nd_range
+  */
+  id<dims> get_group() const { return get_global()/get_local_range(); }
+
+
+  /** Return the constituent element of the group id representing the
+      work-group;s position within the overall nd_range in the given
+      dimension.
+  */
+  id<dims> get_group(int dimension) const {
+    return get_group()[dimension];
+  }
+
+
+  /// Return the flattened id of the current work-group
+  size_t get_group_linear_id() const {
+    return detail::linear_id(get_num_groups(), get_group());
+  }
+
+
+  /// Return the number of groups in the nd_range
+  id<dims> get_num_groups() const {
+    return get_nd_range().get_group();
+  }
+
+  /// Return the number of groups for dimension in the nd_range
+  size_t get_num_groups(int dimension) const {
+     return get_num_groups()[dimension];
+  }
+
+
+  /// Return a range<> representing the dimensions of the nd_range<>
+  range<dims> get_global_range() const {
+    return get_nd_range().get_global_range();
+  }
+
+
+  /// Return a range<> representing the dimensions of the current work-group
+  range<dims> get_local_range() const {
+    return get_nd_range().get_local_range();
+  }
+
+
+  /** Return an id<> representing the n-dimensional offset provided to the
+      constructor of the nd_range<> and that is added by the runtime to the
+      global-ID of each work-item
+  */
+  id<dims> get_offset() const { return get_nd_range().get_offset(); }
+
+
+  /// Return the nd_range<> of the current execution
   nd_range<dims> get_nd_range() const { return ND_range; }
 
 
-  /** Executes a barrier with memory ordering on the local address space,
-      global address space or both based on the value of flag. The current
-      work- item will wait at the barrier until all work-items in the
-      current work-group have reached the barrier.  In addition the
-      barrier performs a fence operation ensuring that all memory accesses
-      in the specified address space issued before the barrier complete
-      before those issued after the barrier.
+  /** Execute a barrier with memory ordering on the local address space,
+      global address space or both based on the value of flag
+
+      The current work-item will wait at the barrier until all work-items
+      in the current work-group have reached the barrier.
+
+      In addition, the barrier performs a fence operation ensuring that all
+      memory accesses in the specified address space issued before the
+      barrier complete before those issued after the barrier
 
       \todo To be implemented
   */
-  void barrier(access::address_space flag) const {}
+  void barrier(access::fence_space flag =
+               access::fence_space::global_and_local) const {
+    detail::unimplemented();
+  }
 
 
-  // For the implementation, need to set the local index
+  // For the triSYCL implementation, need to set the local index
   void set_local(id<dims> Index) { local_index = Index; }
 
 
-  // For the implementation, need to set the global index
+  // For the triSYCL implementation, need to set the global index
   void set_global(id<dims> Index) { global_index = Index; }
 
 };
