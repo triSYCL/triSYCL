@@ -24,8 +24,8 @@ namespace detail {
     Typically for the get_global_linear_id() and get_local_linear_id()
     functions.
 */
-template <typename Range, typename Id, typename Offset>
-size_t linear_id(Range range, Id id, Offset offset = {}) {
+template <typename Range, typename Id>
+size_t linear_id(Range range, Id id, Id offset = {}) {
   auto dims = std::distance(std::begin(range), std::end(range));
 
   size_t linear_id = 0;

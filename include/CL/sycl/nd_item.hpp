@@ -37,41 +37,45 @@ struct nd_item {
 private:
 
   id<dims> global_index;
+  /* This is a cached value since it can be computed from global_index and
+     ND_range */
   id<dims> local_index;
   nd_range<dims> ND_range;
 
 public:
 
-  /** Create an nd_item from a local size and local size
+  /** Create an empty nd_item<> from an nd_range<>
 
-      \todo what is the meaning of this constructor for a programmer?
+      \todo This is for the triSYCL implementation which is expected to
+      call set_global() and set_local() later. This should be hidden to
+      the user.
   */
-  nd_item(range<dims> global_size, range<dims> local_size) :
-    ND_range { global_size, local_size } {}
-
-
-  /** \todo a constructor from a nd_range too in the specification if the
-      previous one has a meaning?
-   */
   nd_item(nd_range<dims> ndr) : ND_range { ndr } {}
 
 
   /** Create a full nd_item
 
-      \todo this is for validation purpose. Hide this to the programmer
+      \todo This is for validation purpose. Hide this to the programmer
       somehow
   */
   nd_item(id<dims> global_index,
-          id<dims> local_index,
           nd_range<dims> ndr) :
     global_index { global_index },
-    local_index { local_index },
+    // Compute the local index using the offset and the group size
+    local_index { (global_index - ndr.get_offset())%id<dims> { ndr.get_local() } },
     ND_range { ndr }
   {}
 
 
+  /** To be able to copy and assign nd_item, use default constructors too
+
+      \todo Make most of them protected, reserved to implementation
+  */
+  nd_item() = default;
+
+
   /** Return the constituent global id representing the work-item's
-      position in the global it eration space
+      position in the global iteration space
   */
   id<dims> get_global() const { return global_index; }
 
@@ -80,7 +84,7 @@ public:
       work-item's position in the global iteration space in the given
       dimension
   */
-  auto get_global(int dimension) const { return get_global()[dimension]; }
+  size_t get_global(int dimension) const { return get_global()[dimension]; }
 
 
   /** Return the flattened id of the current work-item after subtracting
@@ -101,7 +105,7 @@ public:
       work-item's position within the current work-group in the given
       dimension
   */
-  auto get_local(int dimension) const { return get_local()[dimension]; }
+  size_t get_local(int dimension) const { return get_local()[dimension]; }
 
 
   /** Return the flattened id of the current work-item within the current
@@ -115,14 +119,18 @@ public:
   /** Return the constituent group group representing the work-group's
       position within the overall nd_range
   */
-  id<dims> get_group() const { return get_global()/get_local_range(); }
+  id<dims> get_group() const {
+    /* Convert get_local_range() to an id<> to remove ambiguity into using
+       implicit conversion either from range<> to id<> or the opposite */
+    return get_global()/id<dims> { get_local_range() };
+  }
 
 
   /** Return the constituent element of the group id representing the
       work-group;s position within the overall nd_range in the given
       dimension.
   */
-  id<dims> get_group(int dimension) const {
+  size_t get_group(int dimension) const {
     return get_group()[dimension];
   }
 
@@ -146,13 +154,13 @@ public:
 
   /// Return a range<> representing the dimensions of the nd_range<>
   range<dims> get_global_range() const {
-    return get_nd_range().get_global_range();
+    return get_nd_range().get_global();
   }
 
 
   /// Return a range<> representing the dimensions of the current work-group
   range<dims> get_local_range() const {
-    return get_nd_range().get_local_range();
+    return get_nd_range().get_local();
   }
 
 
