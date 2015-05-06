@@ -11,6 +11,7 @@
 
 #include <cstddef>
 
+#include "CL/sycl/detail/linear_id.hpp"
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/range.hpp"
 
@@ -43,11 +44,12 @@ public:
 
   /** Create an item from a local size and an optional offset
 
-      \todo what is the meaning of this constructor for a programmer?
+      This constructor is used by the triSYCL implementation and the
+      non-regression testing.
   */
   item(range<dims> global_size,
        id<dims> global_index,
-       id<dims> offset = id<dims>()) :
+       id<dims> offset = {}) :
     global_range { global_size },
     global_index { global_index },
     offset { offset }
@@ -60,23 +62,38 @@ public:
   */
   item() = default;
 
-  /// Get the whole global id coordinate
-  id<dims> get_global_id() const { return global_index; }
+
+  /** Return the constituent local or global id<> representing the
+      work-item's position in the iteration space
+  */
+  id<dims> get() const { return global_index; }
 
 
-  /// Return the global coordinate in the given dimension
-  size_t get(int dimension) const { return global_index[dimension]; }
+  /** Return the requested dimension of the constituent id<> representing
+      the work-item's position in the iteration space
+  */
+  size_t get(int dimension) const { return get()[dimension]; }
 
 
-  /// Return an l-value of the global coordinate in the given dimension
+  /** Return the constituent id<> l-value representing the work-item's
+      position in the iteration space in the given dimension
+  */
   auto &operator[](int dimension) { return global_index[dimension]; }
 
 
-  /// Get the global range where this item dwells in
+  /** Returns a range<> representing the dimensions of the range of
+      possible values of the item
+  */
   range<dims> get_range() const { return global_range; }
 
 
-  /// Get the offset associated with the item context
+  /** Returns an id<> representing the n-dimensional offset provided to
+      the parallel_for and that is added by the runtime to the global-ID
+      of each work-item, if this item represents a global range
+
+      For an item representing a local range of where no offset was passed
+      this will always return an id of all 0 values.
+  */
   id<dims> get_offset() const { return offset; }
 
 
@@ -85,12 +102,7 @@ public:
       Computed as the flatted ID after the offset is subtracted.
   */
   size_t get_linear_id() const {
-    size_t linear_id = 0;
-    for (int i = dims - 1; i >= 0; --i)
-      linear_id = linear_id*get_range()[i]
-        + get_global_id()[i] - get_offset()[i];
-
-    return linear_id;
+    return detail::linear_id(get_range(), get(), get_offset());
   }
 
 
@@ -98,7 +110,7 @@ public:
 
       \todo Move to private and add friends
   */
-  void set_global(id<dims> Index) { global_index = Index; }
+  void set(id<dims> Index) { global_index = Index; }
 
 
   /// Display the value for debugging and validation purpose

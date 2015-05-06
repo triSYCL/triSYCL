@@ -26,11 +26,7 @@ namespace detail {
 */
 template <typename Range, typename Id, typename Offset>
 size_t linear_id(Range range, Id id, Offset offset = {}) {
-  auto constexpr dims = std::distance(std::begin(range), std::end(range));
-  static_assert(std::distance(std::begin(id), std::end(id)) == dims,
-                "Range and Id should have the same size");
-  static_assert(std::distance(std::begin(offset), std::end(offset)) == dims,
-                "Range and Offset should have the same size");
+  auto dims = std::distance(std::begin(range), std::end(range));
 
   size_t linear_id = 0;
   /* A good compiler should unroll this and do partial evaluation to

@@ -115,13 +115,13 @@ struct accessor : public detail::debug<accessor<T,
 
   /// To use an accessor with [item<>]
   auto &operator[](item<dimensionality> index) {
-    return (*this)[index.get_global_id()];
+    return (*this)[index.get()];
   }
 
 
   /// To use an accessor with [item<>]
   auto &operator[](item<dimensionality> index) const {
-    return (*this)[index.get_global_id()];
+    return (*this)[index.get()];
   }
 
 

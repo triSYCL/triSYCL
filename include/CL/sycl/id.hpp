@@ -49,7 +49,7 @@ public:
   /// Construct an id from an item global_id
   id(const item<dims> &rhs)
     : detail::small_array_123<std::size_t, id<dims>, dims>
-      { rhs.get_global_id() }
+      { rhs.get() }
   {}
 
   /// Keep other constructors
