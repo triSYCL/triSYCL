@@ -93,7 +93,7 @@ public:
   */
   explicit platform(cl_platform_id platformID) {
     detail::unimplemented();
-  };
+  }
 #endif
 
   /** Default constructor for platform
@@ -119,7 +119,8 @@ public:
   */
   cl_platform_id get() const {
     detail::unimplemented();
-    return {}; }
+    return {};
+  }
 #endif
 
 

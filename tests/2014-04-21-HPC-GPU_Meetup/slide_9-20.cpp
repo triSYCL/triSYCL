@@ -9,10 +9,10 @@ int main ()
     {
         cl::sycl::queue myQueue;
         cl::sycl::buffer<int> resultBuf (&result, 1);
-        cl::sycl::command_group (myQueue, [&] () {
+        myQueue.submit([&](cl::sycl::handler &cgh) {
             auto writeResult = resultBuf.get_access<cl::sycl::access::write> ();
 
-            cl::sycl::single_task<class simple_test>([=] () {
+            cgh.single_task<class simple_test>([=] () {
                 writeResult [0] = 1234;
               });
         });

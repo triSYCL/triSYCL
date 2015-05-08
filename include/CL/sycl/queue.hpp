@@ -14,6 +14,8 @@
 #include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/device.hpp"
 #include "CL/sycl/device_selector.hpp"
+#include "CL/sycl/handler.hpp"
+#include "CL/sycl/handler_event.hpp"
 #include "CL/sycl/exception.hpp"
 #include "CL/sycl/info/param_traits.hpp"
 #include "CL/sycl/parallelism.hpp"
@@ -275,10 +277,13 @@ public:
 
   /** Submit a command group functor to the queue, in order to be
       scheduled for execution on the device
+
+      Use an explicit functor parameter taking a handler& so we can use
+      "auto" in submit() lambda parameter.
   */
-  template <typename T>
-  handler_event submit(T cgf) {
-    detail::unimplemented();
+  handler_event submit(std::function<void(handler &)> cgf) {
+    handler command_group_handler;
+    cgf(command_group_handler);
     return {};
   }
 
@@ -292,10 +297,10 @@ public:
       Return a command group functor event, which is corresponds to the
       queue the command group functor is being enqueued on.
   */
-  template <typename T>
-  handler_event submit(T cgf, queue &secondaryQueue) {
+  handler_event submit(std::function<void(handler &)> cgf, queue &secondaryQueue) {
     detail::unimplemented();
-    return {};
+    // Since it is not implemented, always submit on the main queue
+    return submit(cgf);
   }
 
 };
