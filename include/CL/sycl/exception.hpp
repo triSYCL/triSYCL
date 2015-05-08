@@ -70,7 +70,8 @@ struct exception {
       \todo How to get the real buffer type? Update: has been removed in
       new specification
   */
-  template <typename T, int dimensions> buffer<T, dimensions> *get_buffer() {
+  template <typename T, int dimensions, typename Allocator>
+  buffer<T, dimensions, Allocator> *get_buffer() {
     assert(0); }
 
 

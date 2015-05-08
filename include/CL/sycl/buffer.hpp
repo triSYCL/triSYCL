@@ -17,6 +17,7 @@
 #include "CL/sycl/access.hpp"
 #include "CL/sycl/accessor.hpp"
 #include "CL/sycl/buffer/detail/buffer.hpp"
+#include "CL/sycl/buffer_allocator.hpp"
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/range.hpp"
 #include "CL/sycl/storage.hpp"
@@ -40,14 +41,14 @@ namespace sycl {
     buffer and accessor on T versus datatype
 */
 template <typename T,
-          std::size_t Dimensions = 1>
+          std::size_t Dimensions = 1,
+          typename Allocator = buffer_allocator<T>>
 struct buffer {
-  /** \todo Extension to SYCL specification: provide pieces of STL
-      container interface? Yes for the construction, but not for the
-      access that is to be done through the accessor<>
-  */
-  using element = T;
+  /// The STL-like types
   using value_type = T;
+  using reference = value_type&;
+  using const_reference = const value_type&;
+  using allocator_type = Allocator;
 
   /** Point to the underlying buffer implementation that can be shared in
       the SYCL model */
@@ -67,7 +68,7 @@ struct buffer {
 
       \param r defines the size
   */
-  buffer(const range<Dimensions> &r)
+  buffer(const range<Dimensions> &r, Allocator allocator = {})
     : implementation { new detail::buffer<T, Dimensions> { r } } {}
 
 
@@ -77,7 +78,7 @@ struct buffer {
 
       \param r defines the size
   */
-  buffer(T * host_data, range<Dimensions> r)
+  buffer(T * host_data, range<Dimensions> r, Allocator allocator = {})
     : implementation { new detail::buffer<T, Dimensions> { host_data, r } } {}
 
 
@@ -87,7 +88,7 @@ struct buffer {
 
       \param r defines the size
   */
-  buffer(const T * host_data, range<Dimensions> r)
+  buffer(const T * host_data, range<Dimensions> r, Allocator allocator = {})
     : implementation { new detail::buffer<T, Dimensions> { host_data, r } } {}
 
 
@@ -102,7 +103,7 @@ struct buffer {
 
       \todo To be implemented
   */
-  buffer(storage<T> &store, range<Dimensions> r) { assert(0); }
+  buffer(storage<T> &store, range<Dimensions> r, Allocator allocator = {}) { assert(0); }
 
 
   /** Create a new read-write allocated 1D buffer initialized from the
@@ -127,7 +128,9 @@ struct buffer {
                which is a range<> and and not an iterator... */
             typename ValueType =
             typename std::iterator_traits<Iterator>::value_type>
-  buffer(Iterator start_iterator, Iterator end_iterator) :
+  buffer(Iterator start_iterator,
+         Iterator end_iterator,
+         Allocator allocator = {}) :
     implementation { new detail::buffer<T, Dimensions> { start_iterator,
                                                          end_iterator } }
   {}
@@ -147,9 +150,10 @@ struct buffer {
 
       \todo Update the specification to replace index by id
   */
-  buffer(buffer<T, Dimensions> b,
+  buffer(buffer<T, Dimensions, Allocator> b,
          id<Dimensions> base_index,
-         range<Dimensions> sub_range) { assert(0); }
+         range<Dimensions> sub_range,
+         Allocator allocator = {}) { assert(0); }
 
 
 #ifdef TRISYCL_OPENCL
@@ -169,7 +173,8 @@ struct buffer {
   */
   buffer(cl_mem mem_object,
          queue from_queue,
-         event available_event) { assert(0); }
+         event available_event,
+         Allocator allocator = {}) { assert(0); }
 #endif
 
 
