@@ -23,7 +23,9 @@ namespace detail {
     Can be changed to call assert(0) or whatever.
 */
 void unimplemented() {
-  std::cerr << "Error: using an implemented feature!!!" << std::endl;
+  std::cerr << "Error: using a non implemented feature!!!" << std::endl
+            << "Please contribute to the open source implementation. :-)"
+            << std::endl;
 }
 
 /// @} End the debug_trace Doxygen group
