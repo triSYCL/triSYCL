@@ -57,7 +57,6 @@
 #include "CL/sycl/platform.hpp"
 #include "CL/sycl/queue.hpp"
 #include "CL/sycl/range.hpp"
-#include "CL/sycl/storage.hpp"
 #include "CL/sycl/vec.hpp"
 
 

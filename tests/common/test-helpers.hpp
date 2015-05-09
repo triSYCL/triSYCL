@@ -115,5 +115,5 @@ bool trisycl_verify_buffer_value(cl::sycl::buffer<dataType, dimensions> b,
 #define DISPLAY_BUFFER_USE_COUNT(a_buffer)                   \
   do {                                                       \
     std::cout << "buffer \"" #a_buffer "\" use_count() is: " \
-      << a_buffer.use_count() << std::endl;                  \
+      << a_buffer.get_count() << std::endl;                  \
   } while (0)
