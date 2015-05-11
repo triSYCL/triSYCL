@@ -1,4 +1,5 @@
 /* RUN: %{execute}%s | %{filecheck} %s
+   CHECK: 0
    CHECK: Result:
    CHECK-NEXT: 1
    CHECK-NEXT: 5 7
@@ -15,6 +16,8 @@
    CHECK-NEXT: 0 1
    CHECK-NEXT: 12 15
    CHECK-NEXT: 6 2
+   CHECK-NEXT: 1 2 3
+   CHECK-NEXT: 5 6
 */
 #include <CL/sycl.hpp>
 #include <iostream>
@@ -25,7 +28,9 @@ using namespace cl::sycl;
 int main() {
   id<> i;
   id<3> i3;
+  // Since i is not initialized, neither k
   id<> k(i);
+  (k - k).display();
   id<> j { 1 };
   i = j;
   id<2> ii;
@@ -72,6 +77,14 @@ int main() {
   (jj % make_id({ 2, 2 })).display();
   (jj * make_id({ 2, 3 })).display();
   (jj /= make_id(1, 2)).display();
+
+  range<3> r = { 1, 2, 3 };
+  id<3> ir { r };
+  ir.display();
+
+  item<2> it { { 1, 2 }, { 5, 6 }, { 9, 10 } };
+  id<2> iditem { it };
+  iditem.display();
 
   return 0;
 }

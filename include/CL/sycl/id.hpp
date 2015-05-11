@@ -9,31 +9,52 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <algorithm>
+#include <cstddef>
+
 #include "CL/sycl/detail/small_array.hpp"
+#include "CL/sycl/range.hpp"
 
 namespace cl {
 namespace sycl {
+
+template <std::size_t dims> class item;
 
 /** \addtogroup parallelism Expressing parallelism through kernels
     @{
 */
 
-/** Define a multi-dimensional index, used for example to locate a work item
-
-    \todo The definition of id and item seem completely broken in the
-    current specification. The whole 3.4.1 is to be updated.
-
-    \todo It would be nice to have [] working everywhere, provide both
-    get_...() and get_...(int dim) equivalent to get_...()[int dim]
-    Well it is already the case for item. So not needed for id?
-    Indeed [] is mentioned in text of page 59 but not in class description.
+/** Define a multi-dimensional index, used for example to locate a work
+    item
 */
 template <std::size_t dims = 1>
-struct id : public detail::small_array_123<std::ptrdiff_t, id<dims>, dims> {
-  // Inherit of all the constructors
-  using detail::small_array_123<std::ptrdiff_t,
+class id : public detail::small_array_123<std::size_t, id<dims>, dims> {
+
+public:
+
+  // Inherit from all the constructors
+  using detail::small_array_123<std::size_t,
                                 id<dims>,
                                 dims>::small_array_123;
+
+
+  /// Construct an id from the dimensions of a range
+  id(const range<dims> &range_size)
+    /** Use the fact we have a constructor of a small_array from a another
+        kind of small_array
+     */
+    : detail::small_array_123<std::size_t, id<dims>, dims> { range_size } {}
+
+
+  /// Construct an id from an item global_id
+  id(const item<dims> &rhs)
+    : detail::small_array_123<std::size_t, id<dims>, dims>
+      { rhs.get() }
+  {}
+
+  /// Keep other constructors
+  id() = default;
+
 };
 
 

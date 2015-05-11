@@ -17,13 +17,13 @@ int main ()
         cl::sycl::buffer<int> resultBuf (&result, 1);
 
         // create some ‘commands’ for our ‘queue’
-        cl::sycl::command_group (myQueue, [&] ()
+        myQueue.submit([&](cl::sycl::handler &cgh)
         {
             // request access to our buffer
             auto writeResult = resultBuf.get_access<cl::sycl::access::write> ();
 
             // enqueue a single, simple task
-            cl::sycl::single_task<class simple_test>([=] ()
+            cgh.single_task<class simple_test>([=] ()
             {
                 writeResult [0] = 1234;
             });

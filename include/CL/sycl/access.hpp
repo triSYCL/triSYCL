@@ -56,12 +56,10 @@ namespace access {
 
 
   /** Precise the address space a barrier needs to act on
-
-      \todo Is this in the access namespace?
   */
-  enum class address_space : char {
-    local,
-    global,
+  enum class fence_space : char {
+    local_space,
+    global_space,
     global_and_local
   };
 

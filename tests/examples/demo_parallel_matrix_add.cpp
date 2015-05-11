@@ -22,19 +22,19 @@ int main() {
     buffer<double, 2> c({ N, M });
 
     // Launch a first asynchronous kernel to initialize a
-    command_group (myQueue, [&] () {
+    myQueue.submit([&](handler &cgh) {
         // The kernel write a, so get a write accessor on it
         auto A = a.get_access<access::write>();
 
         // Enqueue a parallel kernel iterating on a N*M 2D iteration space
-        parallel_for<class init_a>({ N, M },
-                                   [=] (id<2> index) {
-                                     A[index] = index[0]*2 + index[1];
-                                   });
+        cgh.parallel_for<class init_a>({ N, M },
+                                       [=] (id<2> index) {
+                                         A[index] = index[0]*2 + index[1];
+                                       });
       });
 
     // Launch an asynchronous kernel to initialize b
-    command_group (myQueue, [&] () {
+    myQueue.submit([&](handler &cgh) {
         // The kernel write b, so get a write accessor on it
         auto B = b.get_access<access::write>();
         /* From the access pattern above, the SYCL runtime detect this
@@ -42,14 +42,14 @@ int main() {
            scheduled independently */
 
         // Enqueue a parallel kernel iterating on a N*M 2D iteration space
-        parallel_for<class init_b>({ N, M },
-                                   [=] (id<2> index) {
-                                     B[index] = index[0]*2014 + index[1]*42;
-                                   });
+        cgh.parallel_for<class init_b>({ N, M },
+                                       [=] (id<2> index) {
+                                         B[index] = index[0]*2014 + index[1]*42;
+                                       });
       });
 
     // Launch an asynchronous kernel to compute matrix addition c = a + b
-    command_group (myQueue, [&] () {
+    myQueue.submit([&](handler &cgh) {
         // In the kernel a and b are read, but c is written
         auto A = a.get_access<access::read>();
         auto B = b.get_access<access::read>();
@@ -58,10 +58,10 @@ int main() {
         // this kernel is run, the kernels computing a and b completed
 
         // Enqueue a parallel kernel iterating on a N*M 2D iteration space
-        parallel_for<class matrix_add>({ N, M },
-                                       [=] (id<2> index) {
-                                         C[index] = A[index] + B[index];
-                                       });
+        cgh.parallel_for<class matrix_add>({ N, M },
+                                           [=] (id<2> index) {
+                                             C[index] = A[index] + B[index];
+                                           });
       });
 
     /* Request an access to read c from the host-side. The SYCL runtime

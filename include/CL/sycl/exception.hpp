@@ -11,14 +11,17 @@
 
 #include "CL/sycl/buffer.hpp"
 #include "CL/sycl/image.hpp"
-#include "CL/sycl/queue.hpp"
 
 namespace cl {
 namespace sycl {
 
+class queue;
+
 /** \addtogroup error_handling Error handling
     @{
 */
+
+using async_handler = function_class<int/*cl::sycl::exception_list*/>;
 
 /**
    Encapsulate a SYCL error information
@@ -67,7 +70,8 @@ struct exception {
       \todo How to get the real buffer type? Update: has been removed in
       new specification
   */
-  template <typename T, int dimensions> buffer<T, dimensions> *get_buffer() {
+  template <typename T, int dimensions, typename Allocator>
+  buffer<T, dimensions, Allocator> *get_buffer() {
     assert(0); }
 
 
