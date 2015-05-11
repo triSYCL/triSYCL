@@ -20,7 +20,7 @@ int main ()
         myQueue.submit([&](cl::sycl::handler &cgh)
         {
             // request access to our buffer
-            auto writeResult = resultBuf.get_access<cl::sycl::access::write> ();
+            auto writeResult = resultBuf.get_access<cl::sycl::access::write> (cgh);
 
             // enqueue a single, simple task
             cgh.single_task<class simple_test>([=] ()

@@ -24,7 +24,7 @@ int main() {
     // create some "commands" for our "queue"
     myQueue.submit([&](handler &cgh) {
       // request access to our buffer
-      auto writeResult = resultBuf.get_access<access::mode::write>();
+      auto writeResult = resultBuf.get_access<access::mode::write>(cgh);
 
       // enqueue a single, simple task
       cgh.single_task<class simple_test>([=] () {

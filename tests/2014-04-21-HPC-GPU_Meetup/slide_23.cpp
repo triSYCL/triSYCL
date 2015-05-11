@@ -37,7 +37,7 @@ int main()
     {
       // request access to our buffer
       cl::sycl::accessor<int, 1, cl::sycl::access::write, cl::sycl::access::global_buffer>
-        writeResult = { resultBuf };
+        writeResult = { resultBuf, cgh };
 cgh.single_task(FunctionObject(writeResult));
 //////// End left side of the slide
 

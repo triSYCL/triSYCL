@@ -14,7 +14,7 @@ int main() {
 
     buffer<int,1> a(N);
     myQueue.submit([&](handler &cgh) {
-        auto acc = a.get_access<access::write>();
+        auto acc = a.get_access<access::write>(cgh);
         // Show that we can use a simple parallel_for with int, for example
         cgh.parallel_for<class nothing>(N, [=] (int index) {
             acc[index] = index;

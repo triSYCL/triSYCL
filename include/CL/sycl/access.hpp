@@ -31,11 +31,12 @@ namespace access {
 
   /// This describes the type of the access mode to be used via accessor
   enum mode {
-    read = 42, //?< Why not? Insist on the fact that read_write != read + write
+    read = 42, ///< Read-only access. Insist on the fact that read_write != read + write
     write, ///< Write-only access, but previous content *not* discarded
     read_write, ///< Read and write access
     discard_write, ///< Write-only access and previous content discarded
-    discard_read_write ///< Read and write access and previous content discarded
+    discard_read_write, ///< Read and write access and previous content discarded
+    atomic ///< Atomic access
   };
 
 
@@ -49,9 +50,7 @@ namespace access {
     image,
     host_buffer,
     host_image,
-    image_array,
-    cl_buffer,
-    cl_image
+    image_array
   };
 
 

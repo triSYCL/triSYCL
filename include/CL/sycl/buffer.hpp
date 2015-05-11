@@ -18,6 +18,7 @@
 #include "CL/sycl/accessor.hpp"
 #include "CL/sycl/buffer/detail/buffer.hpp"
 #include "CL/sycl/buffer_allocator.hpp"
+#include "CL/sycl/handler.hpp"
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/range.hpp"
 
@@ -211,7 +212,30 @@ struct buffer {
   */
   template <access::mode Mode,
             access::target Target = access::global_buffer>
-  accessor<T, Dimensions, Mode, Target> get_access() const {
+  accessor<T, Dimensions, Mode, Target>
+  get_access(handler &command_group_handler) const {
+    static_assert(Target != access::host_buffer,
+                  "get_access(&cgh) for non host_buffer accessor "
+                  "takes a command group handler");
+    return *implementation;
+  }
+
+
+  /** Get a host accessor to the buffer with the required mode
+
+      \param Mode is the requested access mode
+
+      \todo Implement the modes
+
+      \todo More elegant solution
+  */
+  template <access::mode Mode,
+            access::target Target = access::global_buffer>
+  accessor<T, Dimensions, Mode, access::host_buffer>
+  get_access() const {
+    static_assert(Target == access::host_buffer,
+                  "get_access() for host_buffer accessor does not "
+                  "take a command group handler");
     return *implementation;
   }
 
