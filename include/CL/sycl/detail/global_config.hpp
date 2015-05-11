@@ -42,7 +42,7 @@
 
     Is set to 0, the functors are executed synchronously.
  */
-#define TRISYCL_ASYNC 1
+#define TRISYCL_ASYNC 0
 #endif
 
 /*

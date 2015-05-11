@@ -298,9 +298,11 @@ latest Ubuntu too):
 
   sudo apt-get install clang-3.6 g++4.9 libboost-dev
 
-There is nothing else to do for now to use the include files from
-``include/CL`` when compiling a program. Just add a ``-I.../include/CL``
-option when compiling.
+There is nothing else to do for now to use the include files from triSYCL
+``include`` directory when compiling a program. Just add a
+``-I.../include`` option and ``-std=c++1y`` when compiling.
+
+Also use ``-fopenmp`` if you want to use multicore parallelism on the CPU.
 
 
 Examples and tests
