@@ -119,7 +119,11 @@ public:
 
       \todo To be implemented
   */
-  void barrier(access::address_space flag) const {}
+  void barrier(access::address_space flag) const {
+#ifdef _OPENMP
+#pragma omp barrier
+#endif    
+  }
 
 
   // For the implementation, need to set the local index
