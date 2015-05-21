@@ -21,6 +21,11 @@
 #include "CL/sycl/nd_range.hpp"
 #include "CL/sycl/range.hpp"
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
+
 /** \addtogroup parallelism
     @{
 */
@@ -222,6 +227,36 @@ void parallel_for_workgroup(nd_range<Dimensions> r,
 template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void parallel_for_workitem(group<Dimensions> g,
                            ParallelForFunctor f) {
+  // With OMP, one thread is created for each work-item in the group
+#ifdef _OPENMP
+  range<Dimensions> l_r = g.get_nd_range().get_local_range();
+  int tot = l_r.get(0);
+  for (int i = 1; i < (int) Dimensions; ++i){
+    tot *= l_r.get(i);
+  }
+  omp_set_num_threads(tot);
+#pragma omp parallel
+  {
+    int th_id = omp_get_thread_num();
+    nd_item<Dimensions> index { g.get_nd_range() };
+    id<Dimensions> local; // to initialize correctly
+
+    if (Dimensions ==1) {
+      local[0] = th_id;
+    } else if (Dimensions == 2) {
+      local[0] = th_id / l_r.get(1);
+      local[1] = th_id - local[0]*l_r.get(1);
+    } else if (Dimensions == 3) {
+      int tmp = l_r.get(1)*l_r.get(2);
+      local[0] = th_id / tmp;
+      local[1] = (th_id - local[0]*tmp) / l_r.get(1);
+      local[2] = th_id - local[0]*tmp - local[1]*l_r.get(1);
+    }
+    index.set_local(local);
+    index.set_global(local + id<Dimensions>(l_r)*g.get_group_id());
+    f(index);
+  }
+#else
   // In a sequential execution there is only one index processed at a time
   nd_item<Dimensions> index { g.get_nd_range() };
   // To iterate on the local work-item
@@ -247,8 +282,8 @@ void parallel_for_workitem(group<Dimensions> g,
     g.get_local_range(),
     reconstruct_item,
     local };
+#endif
 }
-
 /// @} End the parallelism Doxygen group
 
 }
