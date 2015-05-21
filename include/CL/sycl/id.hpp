@@ -43,17 +43,20 @@ public:
     /** Use the fact we have a constructor of a small_array from a another
         kind of small_array
      */
-    : detail::small_array_123<std::size_t, id<dims>, dims> { range_size } {}
+    : detail::small_array_123<std::size_t, id<dims>, dims> ( range_size ) {}
 
 
   /// Construct an id from an item global_id
   id(const item<dims> &rhs)
     : detail::small_array_123<std::size_t, id<dims>, dims>
-      { rhs.get() }
+      ( rhs.get() )
   {}
 
   /// Keep other constructors
-  id() = default;
+  // VS2015 fix
+  // Lee: I think it must have problems with partial constructor defaults
+  //id() = default;
+  id() : detail::small_array_123<std::size_t, id<dims>, dims>(range<dims>()) {}
 
 };
 

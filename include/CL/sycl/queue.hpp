@@ -284,7 +284,10 @@ public:
   handler_event submit(std::function<void(handler &)> cgf) {
     handler command_group_handler;
     cgf(command_group_handler);
-    return {};
+	
+	// VS2015 fix: I don't know why, but the return {} here stopped handler's destructor being called
+	handler_event h;
+    return h;
   }
 
 

@@ -164,7 +164,7 @@ struct address_space_variable : public address_space_base<T, AS> {
 
       \todo Add to the specification
   */
-  using opencl_type = typename opencl_type<T, AS>::type;
+  using opencl_type = typename detail::opencl_type<T, AS>::type;
 
   /// Keep track of the base class as a short-cut
   using super = address_space_base<T, AS>;
@@ -228,7 +228,13 @@ struct address_space_fundamental : public address_space_variable<T, AS> {
       \endcode
       without initialization.
   */
-  address_space_fundamental() = default;
+  // VS2015 fix: default construction does not seem to be inherited correctly
+  // Without this change (or specifying a constructor at the call site)
+  // constant<char *> c_p; in address_spaces.cpp did not run and 
+  // multi_ptr<char *, constant_address_space> c_mp = c_p; reported a runtime error
+  // due to use of an uninitialized variable
+  //address_space_fundamental() = default;
+  address_space_fundamental() : address_space_variable<T, AS>() {}
 
 
   /** Allow for example assignment of a global<float> to a priv<double>
@@ -338,7 +344,7 @@ struct address_space_object : public opencl_type<T, AS>::type,
 
       \todo Add to the specification
   */
-  using opencl_type = typename opencl_type<T, AS>::type;
+  using opencl_type = typename detail::opencl_type<T, AS>::type;
 
   /* C++11 helps a lot to be able to have the same constructors as the
      parent class here but with an OpenCL address space

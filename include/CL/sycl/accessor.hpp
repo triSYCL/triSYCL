@@ -57,7 +57,7 @@ struct accessor : detail::accessor<DataType, Dimensions, AccessMode, Target> {
   template <typename Allocator>
   accessor(buffer<DataType, Dimensions, Allocator> &target_buffer,
            handler &command_group_handler) :
-    detail::accessor<DataType, Dimensions, AccessMode, Target> { *target_buffer.implementation } {}
+    detail::accessor<DataType, Dimensions, AccessMode, Target> ( *target_buffer.implementation ) {}
 
 
   /** Construct a buffer accessor from a buffer given a specific range for
