@@ -1,0 +1,43 @@
+cmake_minimum_required(VERSION 2.6)
+project(triSYCL-headers)
+
+set(triSYCL_HEADERS
+    ${triSYCL_SOURCE_DIR}/include/CL/sycl.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/access.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/accessor.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/accessor/detail/accessor.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/address_space.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/address_space/detail/address_space.hpp	
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/buffer.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/buffer/detail/buffer.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/buffer/detail/buffer_base.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/buffer/detail/buffer_customer.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/buffer_allocator.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/context.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/command_group/detail/task.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/device.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/device_selector.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/detail/array_tuple_helpers.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/detail/debug.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/detail/default_classes.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/detail/global_config.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/detail/linear_id.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/detail/small_array.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/detail/unimplemented.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/error_handler.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/exception.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/group.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/handler.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/handler_event.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/id.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/image.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/info/param_traits.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/item.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/nd_item.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/nd_range.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/parallelism.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/parallelism/detail/parallelism.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/queue.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/range.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/vec.hpp
+	PARENT_SCOPE)
