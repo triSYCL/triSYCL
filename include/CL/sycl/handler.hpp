@@ -30,13 +30,20 @@ class kernel {
 };
 
 
+#if defined(_MSC_VER)
+# define SYCL_HANDLER_DEFINE_STATIC_MEMBER_ __declspec(selectany)
+#else
+# define SYCL_HANDLER_DEFINE_STATIC_MEMBER_ __attribute__((weak))
+#endif // !_MSC_VER
+
+
 /** Store the current Task to attach the task and accessors to it.
 
     Use a TLS variable since there may be several threads in the program.
 
     \todo Remove this variable and only use the handler.
 */
-thread_local std::shared_ptr<detail::task> current_task;
+SYCL_HANDLER_DEFINE_STATIC_MEMBER_ thread_local std::shared_ptr<detail::task> current_task;
 
 
 /** Command group handler class
