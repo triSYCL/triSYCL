@@ -72,6 +72,11 @@ private:
     {
     }
 
+    template<std::size_t... I>
+    void callFromArgList(Index it, std::index_sequence<I...>) const
+    {
+        f_(it, std::get<I>(argList_)...);
+    }
 
     std::function<KernelFunction> f_;
 
@@ -84,8 +89,7 @@ public:
 
     void operator() (Index it) const
     {
-        // TODO: Fix to expand arbitrary sized tuple
-        f_(it, std::get<0>(argList_));
+        callFromArgList(it, std::make_index_sequence < sizeof...(Ts) >());
     }
 };
 
@@ -121,6 +125,7 @@ public:
 };
 
 // For the purposes of linking
+// The OpenCL implementation would load this into the Kernel class behind the scenes
 void myKernel(
     cl::sycl::item<1>,
     int *);
@@ -145,8 +150,6 @@ int main()
                 [=](item<1> index) {                
                 k(index);
             });
-            //cgh.parallel_for(range<1> { N }, /* Offset */ id<1> { 7 },                
-                //);
         });
         VERIFY_BUFFER_VALUE(a, [](id<1> i) { return i[0] + 7; });
     }
