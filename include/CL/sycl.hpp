@@ -51,6 +51,7 @@
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/image.hpp"
 #include "CL/sycl/item.hpp"
+#include "CL/sycl/kernel.hpp"
 #include "CL/sycl/nd_item.hpp"
 #include "CL/sycl/nd_range.hpp"
 #include "CL/sycl/parallelism.hpp"
