@@ -17,3 +17,5 @@ add_subdirectory(queue)
 add_subdirectory(range)
 add_subdirectory(single_task)
 add_subdirectory(vector)
+
+add_subdirectory(parallel_for_item_separate_source)
