@@ -57,6 +57,7 @@
 #include "CL/sycl/parallelism.hpp"
 #include "CL/sycl/platform.hpp"
 #include "CL/sycl/queue.hpp"
+#include "CL/sycl/device_queue.hpp"
 #include "CL/sycl/range.hpp"
 #include "CL/sycl/vec.hpp"
 

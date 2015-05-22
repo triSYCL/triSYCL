@@ -33,11 +33,15 @@ set(triSYCL_HEADERS
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/image.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/info/param_traits.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/item.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/kernel/detail/kernel.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/kernel.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/nd_item.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/nd_range.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/parallelism.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/parallelism/detail/parallelism.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/queue.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/device_queue.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/range.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/vec.hpp
 	PARENT_SCOPE)
+

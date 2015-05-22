@@ -27,6 +27,10 @@
 
 namespace cl {
 namespace sycl {
+
+// Declaration of handler for reference pass-through
+class handler;
+
 namespace detail {
 
 
@@ -128,16 +132,18 @@ void parallel_for(range<Dimensions> r,
 #endif
 }
 
-
 /** Implementation of parallel_for with a range<> and an offset */
+// SYCL2.1: Adding handler to pass through
 template <std::size_t Dimensions = 1, typename ParallelForFunctor>
-void parallel_for_global_offset(range<Dimensions> global_size,
+void parallel_for_global_offset(handler &h,
+                                range<Dimensions> global_size,
                                 id<Dimensions> offset,
                                 ParallelForFunctor f) {
   // Reconstruct the item from its id<> and its offset
   auto reconstruct_item = [&] (id<Dimensions> l) {
     // Reconstruct the global item
-    item<Dimensions> index { global_size, l + offset, offset };
+    // SYCL2.1: Including handler in construction
+    item<Dimensions> index { h, global_size, l + offset, offset };
     // Call the user kernel with the item<> instead of the id<>
     f(index);
   };

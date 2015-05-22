@@ -11,9 +11,6 @@
 
 #include <cstddef>
 
-#include "CL/sycl/id.hpp"
-#include "CL/sycl/range.hpp"
-
 namespace cl {
 namespace sycl {
 

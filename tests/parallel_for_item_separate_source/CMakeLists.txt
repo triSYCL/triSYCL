@@ -16,5 +16,4 @@ elseif( CMAKE_CXX_COMPILER_ID STREQUAL "Clang" )
   set(CMAKE_CXX_FLAGS "-Wall -std=c++11" )
 endif()
 
-
 add_executable(parallel_for_item_separate_source ${PARALLEL_FOR_ITEM_SEPARATE_SOURCE_SOURCES} ${PARALLEL_FOR_ITEM_SEPARATE_SOURCE_HEADERS})

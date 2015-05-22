@@ -22,6 +22,8 @@ namespace sycl {
     @{
 */
 
+class handler;
+
 /** A SYCL item stores information on a work-item with some more context
     such as the definition range and offset.
 */
@@ -33,7 +35,7 @@ public:
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
   static constexpr auto dimensionality = dims;
-
+  
 private:
 
   range<dims> global_range;

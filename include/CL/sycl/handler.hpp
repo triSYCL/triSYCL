@@ -226,21 +226,11 @@ public:
       \param KernelName is a class type that defines the name to be used for
       the underlying kernel
   */
-  template <typename KernelName,
+  template <typename KernelName = std::nullptr_t,
             std::size_t Dimensions,
             typename ParallelForFunctor>
   void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {
     current_task->schedule([=] { detail::parallel_for(r, f); });
-  }
-
-  // SYCL2.1: Specialization for a kernel class for device/host split code
-  template <typename KernelName,
-      std::size_t Dimensions,
-      typename KernelFunction,
-      class Index,
-      typename... Ts>
-      void parallel_for(nd_range<Dimensions> r, detail::KernelHelper<KernelFunction, Index, Ts...> f) {
-          current_task->schedule([=] { detail::parallel_for(r, [=](item<1> index) {f(index)}); });
   }
 
 
