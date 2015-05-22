@@ -147,6 +147,13 @@ struct accessor : public detail::debug<accessor<T,
     return *buf;
   }
 
+  // Currently pointer types in triSYCL are out of date compared with spec
+  // This should return the right type of pointer depending on the accessor type
+  // Return address of the first element for now
+  T* get_pointer()
+  {
+      return &(this->operator[](item<dimensionality> {}));
+  }
 
   /// Test if the accessor as a write access right
   constexpr bool is_write_access() const {

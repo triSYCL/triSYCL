@@ -22,9 +22,10 @@ struct Convert<cl::sycl::accessor<DataType, dimensions, access_mode, access_targ
 {
     using type = DataType*;
 
-    static type convert(const cl::sycl::accessor<DataType, dimensions, access_mode, access_target> &rhs)
+    static type convert(cl::sycl::accessor<DataType, dimensions, access_mode, access_target> &rhs)
     {
-        return rhs;
+        // Convert an accessor to a pointer to pass to the kernel stub
+        return rhs.get_pointer();
     }
 };
 
@@ -72,26 +73,26 @@ private:
     }
 
 
-    KernelFunction f_;
+    std::function<KernelFunction> f_;
 
 public:
-    KernelHelper(KernelFunction f, Ts... ts) :
+    KernelHelper(std::function<KernelFunction> f, Ts... ts) :
         f_{ f }
     {
         setArgs<0>(ts...);
     }
 
-    void operator() (Index it)
+    void operator() (Index it) const
     {
         // TODO: Fix to expand arbitrary sized tuple
-        KernelFunction(it, argList_.get<0>);
+        f_(it, std::get<0>(argList_));
     }
 };
 
 template<class KernelFunction, class Index, typename... Ts>
 class Kernel
 {
-    KernelFunction f_;
+    std::function<KernelFunction> f_;
 
 public:
     Kernel(KernelFunction f) :
@@ -100,14 +101,11 @@ public:
     }
 
     /**
-     * Enqueue kernel.
-     * @param args Launch parameters of the kernel.
-     * @param t0... List of kernel arguments based on the template type of the functor.
+     * Create helper kernel object with captured args set
      */
     auto operator() (
         Ts... ts)
     {
-        //return KernelHelper<KernelFunction, Transform<ts>::argList>(it, ts);
         return KernelHelper<KernelFunction, Index, Ts...>(f_, ts...);
     }
 };
@@ -115,17 +113,17 @@ public:
 class Program
 {
 public:
-    template<typename Index, typename...Ts>
-    auto getKernel(void(*f)(Index, Ts...))
+    template<class KernelFunctor, typename Index, typename...Ts>
+    auto getKernel(KernelFunctor f)
     {
-        return Kernel<decltype(f), Index, Ts... >(f);
+        return Kernel<KernelFunctor, Index, Ts... >(f);
     }
 };
 
 // For the purposes of linking
 void myKernel(
-    cl::sycl::item<1> index,
-    cl::sycl::accessor<int, 1, cl::sycl::access::write> acc);
+    cl::sycl::item<1>,
+    int *);
 
 int main() 
 {    
@@ -137,7 +135,7 @@ int main()
 
         Program p;
         
-        auto kernelObject = p.getKernel<cl::sycl::item<1>, cl::sycl::accessor<int, 1, cl::sycl::access::write>>(&myKernel);
+        auto kernelObject = p.getKernel<decltype(myKernel), cl::sycl::item<1>, cl::sycl::accessor<int, 1, cl::sycl::access::write>>(&myKernel);
         
         myQueue.submit([&](handler &cgh) {
             auto acc = a.get_access<access::write>(cgh);
