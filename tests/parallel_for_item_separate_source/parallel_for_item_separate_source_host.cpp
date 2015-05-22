@@ -17,6 +17,18 @@ struct Convert
     }
 };
 
+template<>
+struct Convert<int>
+{
+    using type = int;
+
+    static type convert(int &rhs)
+    {
+        // Convert an accessor to a pointer to pass to the kernel stub
+        return rhs;
+    }
+};
+
 template<class DataType, int dimensions, cl::sycl::access::mode access_mode, cl::sycl::access::target access_target>
 struct Convert<cl::sycl::accessor<DataType, dimensions, access_mode, access_target>>
 {
@@ -128,6 +140,7 @@ public:
 // The OpenCL implementation would load this into the Kernel class behind the scenes
 void myKernel(
     cl::sycl::item<1>,
+    int,
     int *);
 
 int main() 
@@ -140,12 +153,12 @@ int main()
 
         Program p;
         
-        auto kernelObject = p.getKernel<decltype(myKernel), cl::sycl::item<1>, cl::sycl::accessor<int, 1, cl::sycl::access::write>>(&myKernel);
+        auto kernelObject = p.getKernel<decltype(myKernel), cl::sycl::item<1>, int, cl::sycl::accessor<int, 1, cl::sycl::access::write>>(&myKernel);
         
         myQueue.submit([&](handler &cgh) {
             auto acc = a.get_access<access::write>(cgh);
             // TODO: Hide behind parallel_for
-            auto k = kernelObject(acc);
+            auto k = kernelObject(0, acc);
             cgh.parallel_for(range<1> { N }, /* Offset */ id<1> { 7 },
                 [=](item<1> index) {                
                 k(index);
