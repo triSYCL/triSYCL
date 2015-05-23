@@ -6,7 +6,7 @@ triSYCL
 .. contents::
 
 
-triSYCL is a humble implementation test-bed to experiment with the
+triSYCL_ is a humble implementation test-bed to experiment with the
 provisional specification of the OpenCL_ SYCL_ `C++`_ layer and to give
 feedback to the Khronos_ OpenCL_ SYCL_ committee.
 
@@ -268,11 +268,11 @@ Related projects
 OpenCL triSYCL code documentation
 ---------------------------------
 
-The documentation of the triSYCL implementation itself can be found in
+The documentation of the triSYCL_ implementation itself can be found in
 http://amd.github.io/triSYCL/Doxygen/triSYCL/html and
 http://amd.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
 
-An experimental description of the API generated from triSYCL through
+An experimental description of the API generated from triSYCL_ through
 Doxygen can be found in http://amd.github.io/triSYCL/Doxygen/SYCL/html and
 http://amd.github.io/triSYCL/Doxygen/SYCL/SYCL-API-refman.pdf
 
@@ -298,7 +298,7 @@ latest Ubuntu too):
 
   sudo apt-get install clang-3.6 g++4.9 libboost-dev
 
-There is nothing else to do for now to use the include files from triSYCL
+There is nothing else to do for now to use the include files from triSYCL_
 ``include`` directory when compiling a program. Just add a
 ``-I.../include`` option and ``-std=c++1y`` when compiling.
 
@@ -322,7 +322,7 @@ In the top directory, run
   make
 
 that will produce ``tmp/Doxygen/SYCL`` with the API documentation and
-``tmp/Doxygen/triSYCL`` with the documented ``triSYCL`` implementation
+``tmp/Doxygen/triSYCL`` with the documented triSYCL_ implementation
 source code.
 
 To publish the documentation on GitHub:
@@ -445,7 +445,7 @@ Some ideas of future developments where *you* can contribute too: :-)
 
 .. _SPIR: http://www.khronos.org/spir
 
-.. _SYCL: http://www.khronos.org/opencl/sycl/
+.. _SYCL: https://www.khronos.org/sycl
 
 .. _Thrust: http://thrust.github.io/
 
