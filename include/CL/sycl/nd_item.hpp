@@ -21,6 +21,8 @@
 namespace cl {
 namespace sycl {
 
+class handler;
+
 /** \addtogroup parallelism Expressing parallelism through kernels
     @{
 */

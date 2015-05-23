@@ -7,3 +7,4 @@ include_directories(${Boost_INCLUDE_DIR})
 
 add_subdirectory(include)
 add_subdirectory(tests)
+add_subdirectory(src)

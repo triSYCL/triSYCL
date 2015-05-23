@@ -29,6 +29,7 @@ set(triSYCL_HEADERS
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/group.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/handler.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/handler_event.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/device_handler.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/id.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/image.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/info/param_traits.hpp

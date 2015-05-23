@@ -17,3 +17,4 @@ elseif( CMAKE_CXX_COMPILER_ID STREQUAL "Clang" )
 endif()
 
 add_executable(parallel_for_item_separate_source ${PARALLEL_FOR_ITEM_SEPARATE_SOURCE_SOURCES} ${PARALLEL_FOR_ITEM_SEPARATE_SOURCE_HEADERS})
+target_link_libraries(parallel_for_item_separate_source trisycl)

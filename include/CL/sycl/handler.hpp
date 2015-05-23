@@ -14,7 +14,6 @@
 #include "CL/sycl/parallelism/detail/parallelism.hpp"
 #include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/exception.hpp"
-#include "CL/sycl/kernel/detail/kernel.hpp"
 
 namespace cl {
 namespace sycl {
@@ -29,6 +28,8 @@ namespace sycl {
 */
 class kernel {
 };
+
+class device_queue;
 
 
 #if defined(_MSC_VER)
@@ -74,6 +75,8 @@ public:
     // Reset the current_command_group at the end of the command_group
     current_task.reset();
   }
+
+  device_queue get_device_queue();
 
 
   /** Set kernel args for an OpenCL kernel which is used through the

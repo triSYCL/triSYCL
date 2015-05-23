@@ -27,6 +27,10 @@
 
 namespace cl {
 namespace sycl {
+    
+// Conversion forward declarations
+//class device_queue;
+
 namespace detail {
 
 // Conversion type, we can specialize to get real conversions later
@@ -36,6 +40,18 @@ struct Convert
 {
     static void convert()
     {
+    }
+};
+
+template<>
+struct Convert<device_queue>
+{
+    using type = device_queue;
+
+    static type convert(device_queue &rhs)
+    {
+        // Convert an accessor to a pointer to pass to the kernel stub
+        return rhs;
     }
 };
 

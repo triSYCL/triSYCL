@@ -10,6 +10,7 @@
 */
 
 #include <cstddef>
+#include "CL/sycl/kernel/detail/kernel.hpp"
 
 namespace cl {
 namespace sycl {

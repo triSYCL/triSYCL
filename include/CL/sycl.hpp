@@ -48,10 +48,10 @@
 #include "CL/sycl/exception.hpp"
 #include "CL/sycl/group.hpp"
 #include "CL/sycl/handler.hpp"
+#include "CL/sycl/device_handler.hpp"
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/image.hpp"
 #include "CL/sycl/item.hpp"
-#include "CL/sycl/kernel.hpp"
 #include "CL/sycl/nd_item.hpp"
 #include "CL/sycl/nd_range.hpp"
 #include "CL/sycl/parallelism.hpp"
@@ -60,6 +60,7 @@
 #include "CL/sycl/device_queue.hpp"
 #include "CL/sycl/range.hpp"
 #include "CL/sycl/vec.hpp"
+#include "CL/sycl/kernel.hpp"
 
 
 /*
