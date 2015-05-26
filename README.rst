@@ -6,7 +6,7 @@ triSYCL
 .. contents::
 
 
-triSYCL is a humble implementation test-bed to experiment with the
+triSYCL_ is a humble implementation test-bed to experiment with the
 provisional specification of the OpenCL_ SYCL_ `C++`_ layer and to give
 feedback to the Khronos_ OpenCL_ SYCL_ committee.
 
@@ -154,6 +154,9 @@ Some presentations and publications related to SYCL
 
 By reverse chronological order:
 
+- `A Tutorial on Khronos SYCL for OpenCL at IWOCL 2015
+  <http://codeplaysoftware.github.io/iwocl2015>`_.
+
 - `Modern C++, OpenCL SYCL & OpenCL CL2.hpp
   <http://ronan.keryell.fr/Talks/2014/2014-11-18-SC14-OpenCL_BoF_SYCL/2014-11-18-OpenCL_BoF_SYCL-expose.pdf>`_,
   Ronan Keryell (AMD & Khronos OpenCL SYCL Working Group Member).
@@ -268,11 +271,11 @@ Related projects
 OpenCL triSYCL code documentation
 ---------------------------------
 
-The documentation of the triSYCL implementation itself can be found in
+The documentation of the triSYCL_ implementation itself can be found in
 http://amd.github.io/triSYCL/Doxygen/triSYCL/html and
 http://amd.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
 
-An experimental description of the API generated from triSYCL through
+An experimental description of the API generated from triSYCL_ through
 Doxygen can be found in http://amd.github.io/triSYCL/Doxygen/SYCL/html and
 http://amd.github.io/triSYCL/Doxygen/SYCL/SYCL-API-refman.pdf
 
@@ -298,7 +301,7 @@ latest Ubuntu too):
 
   sudo apt-get install clang-3.6 g++4.9 libboost-dev
 
-There is nothing else to do for now to use the include files from triSYCL
+There is nothing else to do for now to use the include files from triSYCL_
 ``include`` directory when compiling a program. Just add a
 ``-I.../include`` option and ``-std=c++1y`` when compiling.
 
@@ -322,7 +325,7 @@ In the top directory, run
   make
 
 that will produce ``tmp/Doxygen/SYCL`` with the API documentation and
-``tmp/Doxygen/triSYCL`` with the documented ``triSYCL`` implementation
+``tmp/Doxygen/triSYCL`` with the documented triSYCL_ implementation
 source code.
 
 To publish the documentation on GitHub:
@@ -338,11 +341,6 @@ Possible futures
 ----------------
 
 Some ideas of future developments where *you* can contribute too: :-)
-
-- update the implementation to stick to the final SYCL 1.2 specification
-  for the `IWOCL 2015
-  <http://www.iwocl.org/conf-2015/tutorials-and-workshops>`_ tutorial
-  (this is on-going);
 
 - finish implementation of basic classes without any OpenCL_ support;
 
@@ -388,6 +386,10 @@ Some ideas of future developments where *you* can contribute too: :-)
 
   OpenMP4 in Clang/LLVM is getting momentum and making lot of progress
   backed by Intel, IBM, AMD... so it sounds like the way to go;
+
+- recycle the GCC https://gcc.gnu.org/wiki/Offloading OpenMP/OpenACC
+  library infrastructure to construct an OpenCL interoperability API and
+  adapt the triSYCL classes to leverage OpenMP/OpenACC;
 
 - add OpenCL_ 2.x support with SYCL 2.1;
 
@@ -445,7 +447,7 @@ Some ideas of future developments where *you* can contribute too: :-)
 
 .. _SPIR: http://www.khronos.org/spir
 
-.. _SYCL: http://www.khronos.org/opencl/sycl/
+.. _SYCL: https://www.khronos.org/sycl
 
 .. _Thrust: http://thrust.github.io/
 

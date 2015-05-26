@@ -31,23 +31,6 @@ class kernel {
 
 class device_queue;
 
-
-#if defined(_MSC_VER)
-# define SYCL_HANDLER_DEFINE_STATIC_MEMBER_ __declspec(selectany)
-#else
-# define SYCL_HANDLER_DEFINE_STATIC_MEMBER_ __attribute__((weak))
-#endif // !_MSC_VER
-
-
-/** Store the current Task to attach the task and accessors to it.
-
-    Use a TLS variable since there may be several threads in the program.
-
-    \todo Remove this variable and only use the handler.
-*/
-SYCL_HANDLER_DEFINE_STATIC_MEMBER_ thread_local std::shared_ptr<detail::task> current_task;
-
-
 /** Command group handler class
 
     A command group handler object can only be constructed by the SYCL runtime.
@@ -60,21 +43,16 @@ class handler {
 
 public:
 
+  /** Attach the task and accessors to it.
+   */
+  std::shared_ptr<detail::task> current_task;
+
+
   handler() {
-    // Nesting of command_group is forbidden, so there should be no
-    // current task yet
-    assert(!current_task);
     // Create a new task for this command_group
     current_task = std::make_shared<detail::task>();
   }
 
-
-  ~handler() {
-    // There should be a current task
-    assert(current_task);
-    // Reset the current_command_group at the end of the command_group
-    current_task.reset();
-  }
 
   device_queue get_device_queue();
 
