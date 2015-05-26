@@ -2,12 +2,12 @@ cmake_minimum_required(VERSION 2.6)
 project(triSYCL-headers)
 
 set(triSYCL_HEADERS
-    ${triSYCL_SOURCE_DIR}/include/CL/sycl.hpp
+  ${triSYCL_SOURCE_DIR}/include/CL/sycl.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/access.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/accessor.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/accessor/detail/accessor.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/address_space.hpp
-	${triSYCL_SOURCE_DIR}/include/CL/sycl/address_space/detail/address_space.hpp	
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/address_space/detail/address_space.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/buffer.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/buffer/detail/buffer.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/buffer/detail/buffer_base.hpp
@@ -45,4 +45,3 @@ set(triSYCL_HEADERS
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/range.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/vec.hpp
 	PARENT_SCOPE)
-
