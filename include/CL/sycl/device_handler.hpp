@@ -18,14 +18,14 @@ namespace sycl {
     @{
 */
 
-class device_handler
+class device_handler : public handler
 {
     // TODO: How was Ronan planning to get rid of the TLS?
     // Don't overcomplicate this until we talk so the plans can be matched properly
-    std::shared_ptr<detail::task> current_task;
+  //  std::shared_ptr<detail::task> current_task;
 
 public:
-    device_handler()
+  /*  device_handler()
         : current_task{ std::make_shared<detail::task>() }
     {
     }
@@ -36,7 +36,9 @@ public:
         void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) 
     {
         current_task->schedule([=] { detail::parallel_for(r, f); });
-    }
+    }*/
+
+    using handler::handler;
 
 };
 

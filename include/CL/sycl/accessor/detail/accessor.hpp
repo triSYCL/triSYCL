@@ -21,6 +21,9 @@
 
 namespace cl {
 namespace sycl {
+
+class handler_event;
+
 namespace detail {
 
 // Forward declaration of detail::buffer for use in accessor
@@ -50,6 +53,8 @@ struct accessor : public detail::debug<accessor<T,
                                                 Mode,
                                                 Target>> {
   detail::buffer<T, Dimensions> *buf;
+  handler_event *event_dep;
+
   // The implementation is a multi_array_ref wrapper
   using array_view_type = boost::multi_array_ref<T, Dimensions>;
   // \todo Do we need this if we have a reference on buf?
@@ -84,6 +89,11 @@ struct accessor : public detail::debug<accessor<T,
       current_task->add(*this);
     }
 #endif
+  }
+
+  accessor(handler_event &event_dependence) :
+      event_dep{ &event_dependence }, buf{ nullptr }
+  {
   }
 
 
@@ -164,6 +174,44 @@ struct accessor : public detail::debug<accessor<T,
       || Mode == access::mode::discard_write
       || Mode == access::mode::discard_read_write;
   }
+
+};
+
+/**
+ * handler_event specialization of accessor.
+ */
+template <
+    access::mode Mode>
+struct accessor<
+    void,
+    0,
+    Mode,
+    access::target::handler_event>
+    : public detail::debug<accessor<void,
+    0,
+    Mode,
+    access::target::handler_event >> 
+{
+    handler_event *event_dep;
+
+    // The implementation is a mul
+    // \todo in the specification: store the dimension for user request
+    static const auto dimensionality = 0;
+
+    accessor(handler_event &event_dependence) :
+        event_dep{ &event_dependence }
+    {
+    }
+
+    /// Test if the accessor as a write access right
+    constexpr bool is_write_access() const {
+        /** \todo to move in the access::mode enum class and add to the
+        specification ? */
+        return Mode == access::mode::write
+            || Mode == access::mode::read_write
+            || Mode == access::mode::discard_write
+            || Mode == access::mode::discard_read_write;
+    }
 
 };
 

@@ -35,7 +35,7 @@ int main()
                 kernelObject(dq, 0, acc)
             );
         });
-        VERIFY_BUFFER_VALUE(a, [](id<1> i) { return ((i == 0)?i[0]:5); });
+        VERIFY_BUFFER_VALUE(a, [](id<1> i) { return ((i == 0)?i[0]:((i == 1) ? 5 : 6)); });
     }
     return 0;
 }

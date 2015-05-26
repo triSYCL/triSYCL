@@ -22,6 +22,7 @@ namespace cl {
 namespace sycl {
 
 class handler;
+class handler_event;
 
 /** \addtogroup parallelism Expressing parallelism through kernels
     @{
@@ -43,7 +44,7 @@ private:
      ND_range */
   id<dims> local_index;
   nd_range<dims> ND_range;
-
+  
 public:
 
   /** Create an empty nd_item<> from an nd_range<>
@@ -201,6 +202,14 @@ public:
 
   // For the triSYCL implementation, need to set the global index
   void set_global(id<dims> Index) { global_index = Index; }
+
+  // Return the parent kernel's completion event to allow a child to 
+  // schedule itself after the parent
+  handler_event get_parent_event();
+
+  // Return an event modelling completion of the current work_group
+  // to allow child kernels to depend on it
+  handler_event get_parent_work_group_event();
 
 };
 

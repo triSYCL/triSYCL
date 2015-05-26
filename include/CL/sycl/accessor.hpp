@@ -21,6 +21,7 @@ namespace sycl {
 template <typename T, std::size_t Dimensions, typename Allocator> struct buffer;
 
 class handler;
+class handler_event;
 
 /** \addtogroup data Data access and storage in SYCL
     @{
@@ -99,6 +100,14 @@ struct accessor : detail::accessor<DataType, Dimensions, AccessMode, Target> {
     detail::unimplemented();
   }
 
+  /** Construct an accessor from an event.
+      Only available if AccessTarget is event. 
+  */
+  accessor(handler_event &event_dependence) :
+    detail::accessor(event_dependence)
+  {
+    
+  }
 };
 
 /// @} End the data Doxygen group
