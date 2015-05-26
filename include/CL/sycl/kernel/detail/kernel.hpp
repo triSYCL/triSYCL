@@ -107,14 +107,14 @@ private:
     template<int index, typename T0, typename... T1s>
     void setArgs(T0&& t0, T1s&&... t1s)
     {
-        std::get<index>(argList_) = Convert<std::remove_reference<T0>::type>::convert(t0);
+        std::get<index>(argList_) = Convert<typename std::remove_reference<T0>::type>::convert(t0);
         setArgs<index + 1, T1s...>(std::forward<T1s>(t1s)...);
     }
 
     template<int index, typename T0>
     void setArgs(T0&& t0)
     {
-        std::get<index>(argList_) = Convert<std::remove_reference<T0>::type>::convert(t0);
+        std::get<index>(argList_) = Convert<typename std::remove_reference<T0>::type>::convert(t0);
     }
 
     template<int index>
