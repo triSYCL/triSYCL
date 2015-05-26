@@ -154,6 +154,9 @@ Some presentations and publications related to SYCL
 
 By reverse chronological order:
 
+- `A Tutorial on Khronos SYCL for OpenCL at IWOCL 2015
+  <http://codeplaysoftware.github.io/iwocl2015>`_.
+
 - `Modern C++, OpenCL SYCL & OpenCL CL2.hpp
   <http://ronan.keryell.fr/Talks/2014/2014-11-18-SC14-OpenCL_BoF_SYCL/2014-11-18-OpenCL_BoF_SYCL-expose.pdf>`_,
   Ronan Keryell (AMD & Khronos OpenCL SYCL Working Group Member).
@@ -339,11 +342,6 @@ Possible futures
 
 Some ideas of future developments where *you* can contribute too: :-)
 
-- update the implementation to stick to the final SYCL 1.2 specification
-  for the `IWOCL 2015
-  <http://www.iwocl.org/conf-2015/tutorials-and-workshops>`_ tutorial
-  (this is on-going);
-
 - finish implementation of basic classes without any OpenCL_ support;
 
 - move to CMake for better portability;
@@ -388,6 +386,10 @@ Some ideas of future developments where *you* can contribute too: :-)
 
   OpenMP4 in Clang/LLVM is getting momentum and making lot of progress
   backed by Intel, IBM, AMD... so it sounds like the way to go;
+
+- recycle the GCC https://gcc.gnu.org/wiki/Offloading OpenMP/OpenACC
+  library infrastructure to construct an OpenCL interoperability API and
+  adapt the triSYCL classes to leverage OpenMP/OpenACC;
 
 - add OpenCL_ 2.x support with SYCL 2.1;
 
