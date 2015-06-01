@@ -1,3 +1,6 @@
+set(PARALLEL_FOR_HIERARCHICAL_SCALAR_VECTOR_SOURCES
+    hierarchical_scalar_vector.cpp )
+
 set(PARALLEL_FOR_HIERARCHICAL_SOURCES
     hierarchical.cpp )
 
@@ -25,6 +28,7 @@ elseif( CMAKE_CXX_COMPILER_ID STREQUAL "Clang" )
 endif()
 
 
+add_executable(parallel_for_hierarchical_scalar_vector ${PARALLEL_FOR_HIERARCHICAL_SCALAR_VECTOR_SOURCES} ${VECTOR_HEADERS})
 add_executable(parallel_for_hierarchical ${PARALLEL_FOR_HIERARCHICAL_SOURCES} ${VECTOR_HEADERS})
 add_executable(parallel_for_initializer_list ${PARALLEL_FOR_INITIALIZER_LIST_SOURCES} ${VECTOR_HEADERS})
 add_executable(parallel_for_integer ${PARALLEL_FOR_INTEGER_SOURCES} ${VECTOR_HEADERS})
