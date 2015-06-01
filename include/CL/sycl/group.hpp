@@ -38,7 +38,7 @@ private:
 
   /// Keep a reference on the nd_range to serve potential query on it
   nd_range<dims> ndr;
-
+  
 public:
 
   /** Create a group from an nd_range<> with a 0 id<>
@@ -115,6 +115,26 @@ public:
     return get_global_range()[dimension];
   }
 
+  /** Get the sub-group range for this work_group
+
+  \todo Add to the specification
+  */
+  range<1> get_sub_group_range() const 
+  { 
+    // Quick hack to make this only work with 1D groups for now.
+    // Later either hide this function, or make it work
+    // for arbitrary dimensionality
+    range<1> localRange = get_nd_range().get_local();
+
+    return localRange[0] / get_sub_group_size()[0];
+  }
+
+  id<1> get_sub_group_size() const
+  {
+    // Subgroups are of size 2 for now
+    // TODO: Remove hard coding. Runtime select size maybe?
+    return 2;
+  }
 
   /** Get the local range for this work_group
 

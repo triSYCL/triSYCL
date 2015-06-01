@@ -15,6 +15,7 @@
 #include <boost/multi_array.hpp>
 
 #include "CL/sycl/group.hpp"
+#include "CL/sycl/subgroup.hpp"
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/item.hpp"
 #include "CL/sycl/nd_item.hpp"
@@ -224,6 +225,29 @@ void parallel_for_workgroup(nd_range<Dimensions> r,
 }
 
 
+/// Implement the loop on the work-groups
+template <typename ParallelForFunctor>
+void parallel_for_subgroup(
+  group<1> g,
+  ParallelForFunctor f) 
+{
+
+  // In a sequential execution there is only one index processed at a time
+
+  // TODO: it isn't absolutely vital that groups be 1D here but we'll have to fix the maths if they are not
+  subgroup sg{ g };
+
+  // First iterate on all the work-groups
+  parallel_for_iterate<
+    1,
+    range<1>,
+    ParallelForFunctor,
+    subgroup> {
+    g.get_sub_group_range(),
+      f,
+      sg };
+}
+
 /// Implement the loop on the work-items inside a work-group
 template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void parallel_for_workitem(group<Dimensions> g,
@@ -252,6 +276,36 @@ void parallel_for_workitem(group<Dimensions> g,
     g.get_local_range(),
     reconstruct_item,
     local };
+}
+
+/// Implement the loop on the work-items inside a sub-group
+template <typename ParallelForFunctor>
+void parallel_for_workitem(subgroup sg, ParallelForFunctor f) 
+{
+    // In a sequential execution there is only one index processed at a time
+  item<1> index{ sg.get_local_range(), id<1>{} };
+  // To iterate on the local work-item
+  id<1> local;
+
+  // Reconstruct the nd_item from its group and local id
+  auto reconstruct_item = [&](id<1> l) {
+      //local.display();
+      //l.display();
+      // Reconstruct the global nd_item
+
+      index.set(local);
+      f(index);
+  };
+
+  // Then iterate on all the work-items of the sub-group
+  parallel_for_iterate<
+    1,
+    range<1>,
+    decltype(reconstruct_item),
+    id<1>> {
+      sg.get_local_range(),
+      reconstruct_item,
+      local };
 }
 
 /// @} End the parallelism Doxygen group

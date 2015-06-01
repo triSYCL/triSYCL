@@ -27,6 +27,7 @@ set(triSYCL_HEADERS
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/error_handler.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/exception.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/group.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/subgroup.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/handler.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/handler_event.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/device_handler.hpp

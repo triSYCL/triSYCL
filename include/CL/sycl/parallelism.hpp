@@ -35,6 +35,19 @@ void parallel_for(Range r, Program p, ParallelForFunctor f) {
     detail::parallel_for_workitem(g, f);
   }
 
+  /// Loop on the sub-groups inside a work-group
+  template <typename ParallelForFunctor>
+  void parallel_for_sub_group(group<1> g, ParallelForFunctor f) {
+    detail::parallel_for_subgroup(g, f);
+  }
+
+
+  /// Loop on the work-items inside a sub-group
+  template <typename ParallelForFunctor>
+  void parallel_for_work_item(subgroup g, ParallelForFunctor f) {
+    detail::parallel_for_workitem(g, f);
+  }
+
 
 
 }
