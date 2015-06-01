@@ -31,8 +31,11 @@ int main() {
         std::cout << "Subgroup id = " << subGroup.get() << std::endl;
         
         // TODO: continue work on sgvec code
-        auto idx ( subGroup.get_index_vector() );
-
+        auto idx = subGroup.get_index_vector();
+        auto vec3 = subGroup.make_sgvec(static_cast<size_t>(3));
+        auto vec5 = subGroup.make_sgvec(static_cast<size_t>(5));
+        auto vec8 = vec3 + vec5 + idx;
+        
         parallel_for_work_item(subGroup, [=](item<1> tile)
         {
           size_t localID = tile.get(0);
@@ -42,18 +45,21 @@ int main() {
           size_t globalIDGroupStart = groupID*groupRange;
           size_t globalIDSubGroupStart = globalIDGroupStart + subGroupID*subGroup.get_local_range().get(0);
           size_t globalID = globalIDSubGroupStart + localID;
-          std::cout << "Local id = " << localID
+          
+          // Interface with vector operations
+          size_t vecVal = vec8.get(tile);
+
+          std::cout 
+            << "Local id = " << localID
+            << " vecVal = " << vecVal
             << " (sub-group id = " << (subGroupID) << ")"
             << " (global id = " << (globalID) << ")" << std::endl;
 
-          // Interface with vector operations
-          size_t vecVal = idx.get(tile);
-          out_access[globalID] = in_access[globalID] * 2 + vecVal
-;
+          out_access[globalID] = static_cast<int>(in_access[globalID] * 2 + vecVal);
         });
       });
     });
   });
-  //////// End slide
+
   return 0;
 }

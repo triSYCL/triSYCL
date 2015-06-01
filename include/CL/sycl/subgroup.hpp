@@ -108,6 +108,10 @@ namespace cl {
         }
 
         sgvec<size_t> get_index_vector();
+
+        template<class DataType>
+        sgvec<DataType> make_sgvec(const DataType &);
+
     };
 
     /// @} End the parallelism Doxygen subgroup
