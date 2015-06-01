@@ -18,6 +18,9 @@ License. See LICENSE.TXT for details.
 
 namespace cl {
   namespace sycl {
+    
+    template <typename DataType>
+    class sgvec;
 
     /** \addtosubgroup parallelism Expressing parallelism through kernels
     @{
@@ -104,6 +107,7 @@ namespace cl {
           return subgroup_id[dimension];
         }
 
+        sgvec<size_t> get_index_vector();
     };
 
     /// @} End the parallelism Doxygen subgroup

@@ -62,6 +62,7 @@
 #include "CL/sycl/device_queue.hpp"
 #include "CL/sycl/range.hpp"
 #include "CL/sycl/vec.hpp"
+#include "CL/sycl/sgvec.hpp"
 #include "CL/sycl/kernel.hpp"
 
 

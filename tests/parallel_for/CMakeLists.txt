@@ -29,6 +29,7 @@ endif()
 
 
 add_executable(parallel_for_hierarchical_scalar_vector ${PARALLEL_FOR_HIERARCHICAL_SCALAR_VECTOR_SOURCES} ${VECTOR_HEADERS})
+target_link_libraries(parallel_for_hierarchical_scalar_vector trisycl)
 add_executable(parallel_for_hierarchical ${PARALLEL_FOR_HIERARCHICAL_SOURCES} ${VECTOR_HEADERS})
 add_executable(parallel_for_initializer_list ${PARALLEL_FOR_INITIALIZER_LIST_SOURCES} ${VECTOR_HEADERS})
 add_executable(parallel_for_integer ${PARALLEL_FOR_INTEGER_SOURCES} ${VECTOR_HEADERS})

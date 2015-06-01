@@ -45,4 +45,5 @@ set(triSYCL_HEADERS
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/device_queue.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/range.hpp
 	${triSYCL_SOURCE_DIR}/include/CL/sycl/vec.hpp
+	${triSYCL_SOURCE_DIR}/include/CL/sycl/sgvec.hpp
 	PARENT_SCOPE)

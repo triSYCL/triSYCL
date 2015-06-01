@@ -30,6 +30,16 @@ handler_event nd_item<1>::get_parent_work_group_event()
     return handler_event{};
 }
 
+sgvec<size_t> subgroup::get_index_vector()
+{
+  sgvec<size_t> sv{ *this };
+  int id = 0;
+  for (auto &idx : sv) {
+    idx = id++;
+  }
+  return std::move(sv);
+}
+
 
 }
 }

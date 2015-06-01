@@ -29,6 +29,10 @@ int main() {
       parallel_for_sub_group(group, [=](subgroup subGroup)
       {
         std::cout << "Subgroup id = " << subGroup.get() << std::endl;
+        
+        // TODO: continue work on sgvec code
+        auto idx ( subGroup.get_index_vector() );
+
         parallel_for_work_item(subGroup, [=](item<1> tile)
         {
           size_t localID = tile.get(0);
@@ -41,7 +45,11 @@ int main() {
           std::cout << "Local id = " << localID
             << " (sub-group id = " << (subGroupID) << ")"
             << " (global id = " << (globalID) << ")" << std::endl;
-          out_access[globalID] = in_access[globalID] * 2;
+
+          // Interface with vector operations
+          size_t vecVal = idx.get(tile);
+          out_access[globalID] = in_access[globalID] * 2 + vecVal
+;
         });
       });
     });
