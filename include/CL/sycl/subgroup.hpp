@@ -112,6 +112,14 @@ namespace cl {
         template<class DataType>
         sgvec<DataType> make_sgvec(const DataType &);
 
+        template<class DataType>
+        sgvec<DataType> load_vec(const DataType *);
+
+        template<class DataType>
+        void store_vec(DataType *, const sgvec<DataType> &);
+
+        template<class DataType>
+        sgvec<DataType> gather_vec(const sgvec<DataType*> &);
     };
 
     /// @} End the parallelism Doxygen subgroup
