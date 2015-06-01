@@ -39,13 +39,18 @@ my_queue.submit([&](handler &cgh)
                                                              range<>(groupsize)),
                                                   [=](group<> group)
 	{
-    std::cout << "Group id = " << group.get(0) << std::endl;
+        std::cout << "Group id = " << group.get(0) << std::endl;
 
-		parallel_for_work_item(group, [=](nd_item<1> tile)
+		parallel_for_work_item(group, [=](item<1> tile)
 		{
-      std::cout << "Local id = " << tile.get_local(0)
-                << " (global id = " << tile.get_global(0) << ")" << std::endl;
-			out_access[tile] = in_access[tile] * 2;
+      size_t localID = tile.get(0);
+      size_t groupID = group.get(0);
+      size_t groupRange = group.get_local_range(0);
+      size_t globalIDGroupStart = groupID*groupRange;
+      size_t globalID = globalIDGroupStart + localID;
+      std::cout << "Local id = " << localID
+          << " (global id = " << (globalID) << ")" << std::endl;
+			out_access[globalID] = in_access[globalID] * 2;
 		});
 	});
 });

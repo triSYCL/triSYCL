@@ -229,7 +229,7 @@ template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void parallel_for_workitem(group<Dimensions> g,
                            ParallelForFunctor f) {
   // In a sequential execution there is only one index processed at a time
-  nd_item<Dimensions> index { g.get_nd_range() };
+  item<Dimensions> index{ g.get_group_range(), id<Dimensions>{} };
   // To iterate on the local work-item
   id<Dimensions> local;
 
@@ -238,9 +238,8 @@ void parallel_for_workitem(group<Dimensions> g,
     //local.display();
     //l.display();
     // Reconstruct the global nd_item
-    index.set_local(local);
-    // \todo Some strength reduction here
-    index.set_global(local + id<Dimensions>(g.get_local_range())*g.get());
+    index.set(local);
+
     // Call the user kernel at last
     f(index);
   };
