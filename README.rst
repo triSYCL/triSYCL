@@ -377,7 +377,12 @@ Some ideas of future developments where *you* can contribute too: :-)
 - alternatively develop a Clang/LLVM-based version, recycling the outliner
   which is already present for OpenMP support and modify it to generate
   SPIR. Then build a specific version of ``libiomp5`` to use the OpenCL
-  C/C++ API to run the offloaded kernels.
+  C/C++ API to run the offloaded kernels. See
+  https://drive.google.com/file/d/0B-jX56_FbGKRM21sYlNYVnB4eFk/view and
+  the projects https://github.com/clang-omp/libomptarget for
+  https://github.com/clang-omp/llvm_trunk and
+  https://github.com/clang-omp/clang_trunk
+
 
   This approach may require more work than the C++AMP version but since it
   is based on the existing OpenMP infrastructure Intel spent a lot of time
