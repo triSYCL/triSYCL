@@ -251,9 +251,10 @@ void parallel_for_subgroup(
 /// Implement the loop on the work-items inside a work-group
 template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void parallel_for_workitem(group<Dimensions> g,
+                           range<Dimensions> r,
                            ParallelForFunctor f) {
   // In a sequential execution there is only one index processed at a time
-  item<Dimensions> index{ g.get_group_range(), id<Dimensions>{} };
+  item<Dimensions> index{ r, id<Dimensions>{} };
   // To iterate on the local work-item
   id<Dimensions> local;
 
@@ -273,7 +274,7 @@ void parallel_for_workitem(group<Dimensions> g,
                        range<Dimensions>,
                        decltype(reconstruct_item),
                        id<Dimensions>> {
-    g.get_local_range(),
+    r,
     reconstruct_item,
     local };
 }

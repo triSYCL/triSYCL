@@ -230,7 +230,7 @@ struct buffer {
       \todo More elegant solution
   */
   template <access::mode Mode,
-            access::target Target = access::global_buffer>
+            access::target Target = access::host_buffer>
   accessor<T, Dimensions, Mode, access::host_buffer>
   get_access() const {
     static_assert(Target == access::host_buffer,
