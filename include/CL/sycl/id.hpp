@@ -72,6 +72,7 @@ auto make_id(id<3> i) { return i; }
     make_id(1, 2, 3) */
 template<typename... BasicType>
 auto make_id(BasicType... Args) {
+  // Call constructor directly to allow narrowing
   return id<sizeof...(Args)>(Args...);
 }
 

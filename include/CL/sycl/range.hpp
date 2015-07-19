@@ -55,6 +55,7 @@ auto make_range(range<3> r) { return r; }
 */
 template<typename... BasicType>
 auto make_range(BasicType... Args) {
+  // Call constructor directly to allow narrowing
   return range<sizeof...(Args)>(Args...);
 }
 
