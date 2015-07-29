@@ -28,18 +28,22 @@ int main() {
                                        [=] (id<1> index) {
                                          vec<float, 16> v;
                                          float1 v1 = 1.2F;
+                                         auto v1_1 = v1 - v1;
                                          float2 v2 = { 2, 3};
                                          float2 v2_c(2, 3);
                                          float2 v2_v1 = { v1, v1 };
+                                         double2 v2_d = v2/v2_c;
                                          float2 v2f = { 2.F, 3.6F };
                                          float4 v4 = { 2.F, 3.6F, 3, -8 };
                                          float4 v4_v2_v1 = { 2.F, v2, v1 };
                                          float16 v16_broadcast = 2.6;
                                          uchar2 uc2 = 3;
                                          char3 c3(1, uc2);
+                                         auto c3_identity = c3 & c3;
                                          short4 s4 = { c3, v1 };
                                          ulong8 ul8(s4, 1, 2, uc2);
                                          double16 d16(3.14, 2.78, 1.602, ul8, c3, v2);
+                                         auto d16_2 = d16 + d16;
                                        });
       }); // End of our commands for this queue
   } // End scope, so we wait for the queue to complete

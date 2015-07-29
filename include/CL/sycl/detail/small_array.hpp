@@ -185,6 +185,7 @@ struct small_array : std::array<BasicType, Dims>,
   /// Add | like operations on the id<> and others
   TRISYCL_BOOST_OPERATOR_VECTOR_OP(|=)
 
+
   /** Since the boost::operator work on the small_array, add an implicit
       conversion to produce the expected type */
   operator FinalType () {

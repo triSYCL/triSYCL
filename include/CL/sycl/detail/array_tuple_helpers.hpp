@@ -1,9 +1,9 @@
-#ifndef TRISYCL_SYCL_DETAIL_ARRAY_TUPPLE_HELPERS_HPP
-#define TRISYCL_SYCL_DETAIL_ARRAY_TUPPLE_HELPERS_HPP
+#ifndef TRISYCL_SYCL_DETAIL_ARRAY_TUPLE_HELPERS_HPP
+#define TRISYCL_SYCL_DETAIL_ARRAY_TUPLE_HELPERS_HPP
 
 /** \file
 
-    Some helpers to do array-tupple conversions
+    Some helpers to do array-tuple conversions
 
     Used for example to implement cl::sycl::vec<> class.
 
@@ -20,7 +20,7 @@ namespace cl {
 namespace sycl {
 namespace detail {
 
-/** \addtogroup array_tupple_helpers Helpers to do array and tupple conversion
+/** \addtogroup array_tuple_helpers Helpers to do array and tuple conversion
 
     @{
 */
@@ -43,7 +43,7 @@ tuple_to_array_iterate(Tuple t, std::index_sequence<Is...>) {
      The static cast is here to avoid the warning when there is a loss
      of precision, for example when initializing an int from a float.
   */
-  return { static_cast<typename V::element_type>(std::get<Is>(t))... };
+  return { { static_cast<typename V::element_type>(std::get<Is>(t))...} };
 }
 
 
@@ -141,4 +141,4 @@ auto expand(Tuple t) {
     ### End:
 */
 
-#endif // TRISYCL_SYCL_DETAIL_ARRAY_TUPPLE_HELPERS_HPP
+#endif // TRISYCL_SYCL_DETAIL_ARRAY_TUPLE_HELPERS_HPP
