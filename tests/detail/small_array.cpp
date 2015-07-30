@@ -1,4 +1,10 @@
+/* RUN: %{execute}%s
+
+   Test some internal triSYCL classes
+*/
+
 #include "CL/sycl/detail/small_array.hpp"
+#include <boost/test/minimal.hpp>
 
 using namespace cl::sycl;
 
@@ -14,18 +20,45 @@ struct sa3 : public detail::small_array<float, sa3, 3, true> {
   using detail::small_array<float, sa3, 3, true>::small_array;
 };
 
-int main() {
+
+/// Return true if both contents are the same
+template <typename T, typename U, size_t N>
+bool verify(const detail::small_array<T, U, N, true> &v,
+            const std::array<T, N> &verif) {
+  /* Do not use directly v == verif because we want to verify the
+     (implicit) constructor itself */
+  auto p = std::begin(verif);
+  for (auto e : v)
+    if (e != *p++)
+      return false;
+
+  return true;
+}
+
+
+int test_main(int argc, char *argv[]) {
   sa1 a;
-  sa1 a1 { 1 };
+  sa1 a1 { 3 };
+  BOOST_CHECK(a1[0] == 3);
   a = a1;
+  BOOST_CHECK(a[0] == 3);
   auto a2 = a*a1;
+  BOOST_CHECK(a2[0] == 9);
   sa2 b1 { 1, 2 };
+  BOOST_CHECK(verify(b1, { 1, 2 }));
   sa2 b2 = { 1, 2 };
-  sa2 b3 = b1;
-  b2 + b3;
-  sa2 b4 { b1 + b2 };
+  BOOST_CHECK(b1 == b2);
+  sa2 b3 = b2 + b1;
+  BOOST_CHECK(verify(b3, { 2, 4 }));
+  sa2 b4 { b1 - b3 };
+  BOOST_CHECK(verify(b4, { -1, -2 }));
   auto b5 = b4/b1;
+  BOOST_CHECK(verify(b5, { -1, -1 }));
   sa3 c = { 1, 2, 3 };
+  BOOST_CHECK(verify(c, { 1, 2, 3 }));
   std::array<float, 3> da = { 2, 3, 4};
   sa3 d = da;
+  BOOST_CHECK(verify(d , { 2, 3, 4 }));
+
+  return 0;
 }
