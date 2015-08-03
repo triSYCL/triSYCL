@@ -174,7 +174,7 @@ public:
       asynchronous errors via the async_handler callback function in
       conjunction with the synchronization and throw methods.
   */
-  queue(cl_command_queue clQueue,
+  queue(const cl_command_queue &clQueue,
         async_handler asyncHandler = nullptr) {
     detail::unimplemented();
   }
@@ -196,7 +196,7 @@ public:
 
       If the queue is a SYCL host queue then a nullptr will be returned.
   */
-  cl_command_queue get() {
+  cl_command_queue get() const {
     detail::unimplemented();
     return {};
   }
@@ -207,7 +207,7 @@ public:
 
       Report errors using SYCL exception classes.
   */
-  context get_context() {
+  context get_context() const {
     detail::unimplemented();
     return {};
   }
@@ -217,7 +217,7 @@ public:
 
       Report errors using SYCL exception classes.
   */
-  device get_device() {
+  device get_device() const {
     detail::unimplemented();
     return {};
   }
@@ -225,7 +225,7 @@ public:
 
   /** Return whether the queue is executing on a SYCL host device
   */
-  bool is_host() {
+  bool is_host() const {
     detail::unimplemented();
     return true;
   }
