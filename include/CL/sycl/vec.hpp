@@ -89,7 +89,7 @@ private:
   */
   template <typename V, typename Type>
   static auto flatten(const Type i) {
-    return std::forward_as_tuple(i);
+    return std::make_tuple(i);
   }
 
 
