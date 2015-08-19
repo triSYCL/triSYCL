@@ -25,12 +25,12 @@ void ute_and_are(float * a_test, float * b_test, auto C){
 for (unsigned int t = 0; t < NB_ITER; ++t){
     for (size_t i = 1; i < M - 1; ++i){
       for (size_t j = 1; j < N - 1; ++j){
-	b_test[i*M+j] = MULT_COEF * (a_test[i*M+j] + a_test[i*M+(j-1)] + a_test[i*M+(1+j)] + a_test[(1+i)*M+j] + a_test[(i-1)*M+j]);
+        b_test[i*M+j] = MULT_COEF * (a_test[i*M+j] + a_test[i*M+(j-1)] + a_test[i*M+(1+j)] + a_test[(1+i)*M+j] + a_test[(i-1)*M+j]);
       }
-    }		
+    }
     for (size_t i = 1; i < M - 1; ++i){
       for (size_t j = 1; j < N - 1; ++j){
-	a_test[i*M+j] = b_test[i*M+j];
+        a_test[i*M+j] = b_test[i*M+j];
       }
     }
   }
@@ -40,11 +40,11 @@ for (unsigned int t = 0; t < NB_ITER; ++t){
   for(size_t i = 0; i < M; ++i){
     for(size_t j = 0; j < N; ++j){
       // Compare the result to the analytic value
-      float err = ABS((C[i][j] - a_test[i*M+j]) / a_test[i*M+j]); 
+      float err = ABS((C[i][j] - a_test[i*M+j]) / a_test[i*M+j]);
       if ( err > ERR_MAX) {
-	std::cout << "Wrong value " << C[i][j] << " on element "
-		  << i << ' ' << j << " (error : " << err << ")" << std::endl;
-	exit(-1);
+        std::cout << "Wrong value " << C[i][j] << " on element "
+                  << i << ' ' << j << " (error : " << err << ")" << std::endl;
+        exit(-1);
       }
     }
 }

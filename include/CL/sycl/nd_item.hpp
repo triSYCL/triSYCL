@@ -122,7 +122,7 @@ public:
   void barrier(access::address_space flag) const {
 #ifdef _OPENMP
 #pragma omp barrier
-#endif    
+#endif
   }
 
 
