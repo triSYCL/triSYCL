@@ -49,21 +49,21 @@ public:
    */
   nd_range(range<dims> global_size,
            range<dims> local_size,
-           id<dims> offset = id<dims> {}) :
+           id<dims> offset = {}) :
     global_range { global_size }, local_range { local_size }, offset { offset }
   { }
 
 
   /// Get the global iteration space range
-  range<dims> get_global_range() const { return global_range; }
+  range<dims> get_global() const { return global_range; }
 
 
   /// Get the local part of the iteration space range
-  range<dims> get_local_range() const { return local_range; }
+  range<dims> get_local() const { return local_range; }
 
 
   /// Get the range of work-groups needed to run this ND-range
-  auto get_group_range() const {
+  auto get_group() const {
     // \todo Assume that global_range is a multiple of local_range, element-wise
     return global_range/local_range;
   }

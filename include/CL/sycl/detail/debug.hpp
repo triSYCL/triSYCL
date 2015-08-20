@@ -13,8 +13,9 @@
     License. See LICENSE.TXT for details.
 */
 
-#ifdef TRISYCL_DEBUG
 #include <iostream>
+
+#ifdef TRISYCL_DEBUG
 #include <sstream>
 #include <string>
 #include <thread>

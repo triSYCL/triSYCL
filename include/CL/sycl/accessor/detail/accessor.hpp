@@ -115,13 +115,13 @@ struct accessor : public detail::debug<accessor<T,
 
   /// To use an accessor with [item<>]
   auto &operator[](item<dimensionality> index) {
-    return (*this)[index.get_global_id()];
+    return (*this)[index.get()];
   }
 
 
   /// To use an accessor with [item<>]
   auto &operator[](item<dimensionality> index) const {
-    return (*this)[index.get_global_id()];
+    return (*this)[index.get()];
   }
 
 
@@ -130,7 +130,7 @@ struct accessor : public detail::debug<accessor<T,
       \todo Add in the specification because used by HPC-GPU slide 22
   */
   auto &operator[](nd_item<dimensionality> index) {
-    return (*this)[index.get_global_id()];
+    return (*this)[index.get_global()];
   }
 
   /** To use an accessor with an [nd_item<>]
@@ -138,7 +138,7 @@ struct accessor : public detail::debug<accessor<T,
       \todo Add in the specification because used by HPC-GPU slide 22
   */
   auto &operator[](nd_item<dimensionality> index) const {
-    return (*this)[index.get_global_id()];
+    return (*this)[index.get_global()];
   }
 
 

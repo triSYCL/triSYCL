@@ -31,18 +31,18 @@ int main() {
 
     /* The command group describing all operations needed for the kernel
        execution */
-    command_group (myQueue, [&] () {
+    myQueue.submit([&](handler &cgh) {
       // In the kernel A and B are read, but C is written
-      auto ka = A.get_access<access::read>();
-      auto kb = B.get_access<access::read>();
-      auto kc = C.get_access<access::write>();
+      auto ka = A.get_access<access::read>(cgh);
+      auto kb = B.get_access<access::read>(cgh);
+      auto kc = C.get_access<access::write>(cgh);
 
       // Enqueue a single, simple task
-      single_task<class sequential_vector>([=] () {
-        for(int i = 0; i < N; i++)
-          kc[i] = ka[i] + kb[i];
-      });
-    }); // End of our commands for this queue
+      cgh.single_task<class sequential_vector>([=] () {
+          for(int i = 0; i < N; i++)
+            kc[i] = ka[i] + kb[i];
+        });
+      }); // End of our commands for this queue
   } // End scope, so we wait for the queue to complete
 
   std::cout << "Result:" << std::endl;

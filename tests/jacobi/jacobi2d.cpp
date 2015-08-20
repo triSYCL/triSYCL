@@ -37,31 +37,31 @@ int main() {
     sycl::queue myQueue;
 
     for (unsigned int i = 0; i < NB_ITER; ++i){
-      sycl::command_group(myQueue, [&]() {
-          sycl::accessor<float, 2, sycl::access::read>  a(ioABuffer);
-          sycl::accessor<float, 2, sycl::access::write> b(ioBBuffer);
-          sycl::parallel_for<class KernelCompute>(sycl::range<2> {M-2, N-2},
-                                                  sycl::id<2> {1, 1},
-                                                  [=] (sycl::item<2> it) {
-                                   sycl::id<2> index = it.get_global_id();
-                                   sycl::id<2> id1(sycl::range<2> {0,1});
-                                   sycl::id<2> id2(sycl::range<2> {1,0});
-                                   b[index] = a[index];
-                                   b[index] += a[index+id1];
-                                   b[index] += a[index+id2];
-                                   b[index] += a[index-id1];
-                                   b[index] += a[index-id2];
+      myQueue.submit([&](sycl::handler &cgh) {
+          sycl::accessor<float, 2, sycl::access::read>  a(ioABuffer, cgh);
+          sycl::accessor<float, 2, sycl::access::write> b(ioBBuffer, cgh);
+          cgh.parallel_for<class KernelCompute>(sycl::range<2> {M-2, N-2},
+                                                sycl::id<2> {1, 1},
+                                                [=] (sycl::item<2> it) {
+                                 sycl::id<2> index = it.get();
+                                 sycl::id<2> id1(sycl::range<2> {0,1});
+                                 sycl::id<2> id2(sycl::range<2> {1,0});
+                                 b[index] = a[index];
+                                 b[index] += a[index+id1];
+                                 b[index] += a[index+id2];
+                                 b[index] += a[index-id1];
+                                 b[index] += a[index-id2];
 
                                                   });
         });
-      sycl::command_group(myQueue, [&]() {
-          sycl::accessor<float, 2, sycl::access::write> a(ioABuffer);
-          sycl::accessor<float, 2, sycl::access::read>  b(ioBBuffer);
-          sycl::parallel_for<class KernelCopy>(sycl::range<2> {M-2, N-2},
-                                               sycl::id<2> {1, 1},
-                                               [=] (sycl::item<2> it) {
-                                                 a[it] = MULT_COEF * b[it];
-                                               });
+      myQueue.submit([&](sycl::handler &cgh) {
+          sycl::accessor<float, 2, sycl::access::write> a(ioABuffer, cgh);
+          sycl::accessor<float, 2, sycl::access::read>  b(ioBBuffer, cgh);
+          cgh.parallel_for<class KernelCopy>(sycl::range<2> {M-2, N-2},
+                                             sycl::id<2> {1, 1},
+                                             [=] (sycl::item<2> it) {
+                                               a[it] = MULT_COEF * b[it];
+                                             });
         });
     }
   }

@@ -15,7 +15,7 @@ int main() {
   float *a_test = (float *) malloc(sizeof(float)*M*N);
   float *b_test = (float *) malloc(sizeof(float)*M*N);
 #endif
-  // initialization
+  // Initialization
   for (size_t i = 0; i < M; ++i){
     for (size_t j = 0; j < N; ++j){
       ioA[i*M+j] = ((float) i*(j+2) + 10) / N;
@@ -31,25 +31,25 @@ int main() {
   sycl::buffer<float,2> ioABuffer(ioA, sycl::range<2> {M, N});
   sycl::buffer<float,2> ioBBuffer(ioB, sycl::range<2> {M, N});
 
-  // compute result with "gpu"
+  // Compute result with "gpu"
   {
     sycl::queue myQueue;
 
     for (unsigned int i = 0; i < NB_ITER; ++i){
-      sycl::command_group(myQueue, [&]() {
-          sycl::accessor<float, 2, sycl::access::read>  a(ioABuffer);
-          sycl::accessor<float, 2, sycl::access::write> b(ioBBuffer);
+      myQueue.submit([&](sycl::handler &cgh) {
+          sycl::accessor<float, 2, sycl::access::read>  a(ioABuffer, cgh);
+          sycl::accessor<float, 2, sycl::access::write> b(ioBBuffer, cgh);
           // as many items as threads in a workgroup (i.e. 32 = 4 X 8),
           // M-2 and N-2 must be multiples of 4 and 8
-          sycl::parallel_for_workgroup<class KernelCompute>(sycl::nd_range<2> {sycl::range<2> {M-2, N-2}, sycl::range<2> {4, 8}, sycl::id<2> {1, 1}},
+          cgh.parallel_for_work_group<class KernelCompute>(sycl::nd_range<2> {sycl::range<2> {M-2, N-2}, sycl::range<2> {4, 8}, sycl::id<2> {1, 1}},
                                                             [=](sycl::group<2> group){
                                                               // tile to be load : (4+2)*(8+2)
                                                               // dynamic bounds unauthorized
                                                               float local[6][10];
-                                                              sycl::parallel_for_workitem(group, [=,&local](sycl::nd_item<2> it){
+                                                              sycl::parallel_for_work_item(group, [=,&local](sycl::nd_item<2> it){
                                                                   sycl::range<2> l_range = it.get_local_range();
-                                                                  sycl::id<2> g_ind = it.get_global_id();
-                                                                  sycl::id<2> l_ind = it.get_local_id();
+                                                                  sycl::id<2> g_ind = it.get_global();
+                                                                  sycl::id<2> l_ind = it.get_local();
                                                                   sycl::id<2> offset = it.get_offset();
                                                                   sycl::id<2> id1(sycl::range<2> {0,1});
                                                                   sycl::id<2> id2(sycl::range<2> {1,0});
@@ -66,7 +66,7 @@ int main() {
                                                                     local[(l_ind+offset).get(0)][(id1_s+offset).get(1)] = a[g_ind+id1_s+offset];
                                                                   }
 
-                                                                  it.barrier(sycl::access::address_space::local);
+                                                                  it.barrier(sycl::access::fence_space::local_space);
 
                                                                   b[g_ind+offset] = local[(l_ind+offset).get(0)][(l_ind+offset).get(1)];
                                                                   b[g_ind+offset] += local[(l_ind+offset+id1).get(0)][(l_ind+offset+id1).get(1)];
@@ -77,14 +77,14 @@ int main() {
                                                             });
         });
 
-      sycl::command_group(myQueue, [&]() {
-          sycl::accessor<float, 2, sycl::access::write> a(ioABuffer);
-          sycl::accessor<float, 2, sycl::access::read>  b(ioBBuffer);
-          sycl::parallel_for<class KernelCopy>(sycl::range<2> {M-2, N-2},
-                                               sycl::id<2> {1, 1},
-                                               [=] (sycl::item<2> it) {
-                                                 a[it] = MULT_COEF * b[it];
-                                               });
+      myQueue.submit([&](sycl::handler &cgh) {
+          sycl::accessor<float, 2, sycl::access::write> a(ioABuffer, cgh);
+          sycl::accessor<float, 2, sycl::access::read>  b(ioBBuffer, cgh);
+          cgh.parallel_for<class KernelCopy>(sycl::range<2> {M-2, N-2},
+                                             sycl::id<2> {1, 1},
+                                             [=] (sycl::item<2> it) {
+                                               a[it] = MULT_COEF * b[it];
+                                             });
         });
     }
   }

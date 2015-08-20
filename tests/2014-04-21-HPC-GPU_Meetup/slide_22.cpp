@@ -18,18 +18,18 @@ int main() {
 //////// Start slide
 buffer<int> my_buffer(data, size);
 
-command_group(my_queue, [&]()
+my_queue.submit([&](handler &cgh)
 {
-	auto in_access = my_buffer.get_access<access::read>();
-	auto out_access = my_buffer.get_access<access::write>();
+	auto in_access = my_buffer.get_access<access::read>(cgh);
+	auto out_access = my_buffer.get_access<access::write>(cgh);
 
-	parallel_for_workgroup<class hierarchical>(nd_range<>(range<>(size),
-                                                        range<>(groupsize)),
-                                             [=](group<> group) {
-                                               parallel_for_workitem(group, [=](nd_item<1> tile) {
-                                                   out_access[tile] = in_access[tile] * 2;
-                                                 });
-                                             });
+	cgh.parallel_for_work_group<class hierarchical>(nd_range<>(range<>(size),
+                                                             range<>(groupsize)),
+                                                  [=](group<> group) {
+                                                    parallel_for_work_item(group, [=](nd_item<1> tile) {
+                                                        out_access[tile] = in_access[tile] * 2;
+                                                      });
+                                                  });
  });
   //////// End slide
   std::cout << "data[5] = " << data[5] << ", should be 10" << std::endl;

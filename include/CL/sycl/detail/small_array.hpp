@@ -1,11 +1,7 @@
 #ifndef TRISYCL_SYCL_DETAIL_SMALL_ARRAY_HPP
 #define TRISYCL_SYCL_DETAIL_SMALL_ARRAY_HPP
 
-/** \file This is a small class to track constructor/destructor invocations
-
-    Define the TRISYCL_DEBUG CPP flag to have an output.
-
-    To use it in some class C, make C inherit from debug<C>.
+/** \file This is a small array class to build range<>, id<>, etc.
 
     Ronan at Keryell point FR
 
@@ -16,6 +12,7 @@
 #include <algorithm>
 #include <array>
 #include <cstddef>
+#include <type_traits>
 
 #include <boost/operators.hpp>
 
@@ -34,7 +31,7 @@ namespace detail {
 /** Helper macro to declare a vector operation with the given side-effect
     operator */
 #define TRISYCL_BOOST_OPERATOR_VECTOR_OP(op)            \
-  FinalType operator op(const FinalType& rhs) {         \
+  FinalType operator op(const FinalType &rhs) {         \
     for (std::size_t i = 0; i != Dims; ++i)             \
       (*this)[i] op rhs[i];                             \
     return *this;                                       \
@@ -55,42 +52,100 @@ namespace detail {
     \param FinalType is the final type, such as range<> or id<>, so that
     boost::operator can return the right type
 
-    std::array<> provides the collection concept.
+    \param EnableArgsConstructor adds a constructors from Dims variadic
+    elements when true. It is false by default.
+
+    std::array<> provides the collection concept, with .size(), == and !=
+    too.
 */
-template <typename BasicType, typename FinalType, std::size_t Dims>
+template <typename BasicType,
+          typename FinalType,
+          std::size_t Dims,
+          bool EnableArgsConstructor = false>
 struct small_array : std::array<BasicType, Dims>,
-    // To have all the usual arithmetic operations on this type
+  // To have all the usual arithmetic operations on this type
   boost::euclidean_ring_operators<FinalType>,
-    // Add a display() method
-    detail::display_vector<FinalType> {
+  // Bitwise operations
+  boost::bitwise<FinalType>,
+  // Shift operations
+  boost::shiftable<FinalType>,
+  // Already provided by array<> lexicographically:
+  // boost::equality_comparable<FinalType>,
+  // boost::less_than_comparable<FinalType>,
+  // Add a display() method
+  detail::display_vector<FinalType> {
 
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
   static const auto dimensionality = Dims;
 
+  /* Note that constexpr size() from the underlying std::array provides
+     the same functionality */
+  static const size_t dimension = Dims;
+  using element_type = BasicType;
 
-  /** Add a constructor from an other array
+
+  /** A constructor from another array
 
       Make it explicit to avoid spurious range<> constructions from int *
       for example
   */
   template <typename SourceType>
-  explicit small_array(const SourceType src[Dims]) {
+  small_array(const SourceType src[Dims]) {
     // (*this)[0] is the first element of the underlying array
     std::copy_n(src, Dims, &(*this)[0]);
   }
 
 
-  /// Add a constructor from an other small_array of the same size
-  template <typename SourceBasicType, typename SourceFinalType>
-  small_array(const small_array<SourceBasicType, SourceFinalType, Dims> &src) {
+  /// A constructor from another small_array of the same size
+  template <typename SourceBasicType,
+            typename SourceFinalType,
+            bool SourceEnableArgsConstructor>
+  small_array(const small_array<SourceBasicType,
+              SourceFinalType,
+              Dims,
+              SourceEnableArgsConstructor> &src) {
     std::copy_n(&src[0], Dims, &(*this)[0]);
   }
 
 
-  /// Keep other constructors
+  /** Initialize the array from a list of elements
+
+      Strangely, even when using the array constructors, the
+      initialization of the aggregate is not available. So recreate an
+      equivalent here.
+
+      Since there are inherited types that defines some constructors with
+      some conflicts, make it optional here, according to
+      EnableArgsConstructor template parameter.
+   */
+  template <typename... Types,
+            // Just to make enable_if depend of the template and work
+            bool Depend = true,
+            typename = typename std::enable_if<EnableArgsConstructor
+                                               && Depend>::type>
+  small_array(const Types &... args)
+    : std::array<BasicType, Dims> {
+    // Allow a loss of precision in initialization with the static_cast
+    { static_cast<BasicType>(args)... }
+  }
+  {
+    static_assert(sizeof...(args) == Dims,
+                  "The number of initializing elements should match "
+                  "the dimension");
+  }
+
+
+  /// Construct a small_array from a std::array
+  template <typename SourceBasicType>
+  small_array(const std::array<SourceBasicType, Dims> &src)
+  : std::array<BasicType, Dims>(src) {}
+
+
+  /// Keep other constructors from the underlying std::array
   using std::array<BasicType, Dims>::array;
 
+  /// Keep the synthesized constructors
   small_array() = default;
 
   /// Return the element of the array
@@ -100,22 +155,38 @@ struct small_array : std::array<BasicType, Dims>,
 
   /* Implement minimal methods boost::euclidean_ring_operators needs to
      generate everything */
-  /// Add + like operations on the id<>
+  /// Add + like operations on the id<> and others
   TRISYCL_BOOST_OPERATOR_VECTOR_OP(+=)
 
-  /// Add - like operations on the id<>
+  /// Add - like operations on the id<> and others
   TRISYCL_BOOST_OPERATOR_VECTOR_OP(-=)
 
-  /// Add * like operations on the id<>
+  /// Add * like operations on the id<> and others
   TRISYCL_BOOST_OPERATOR_VECTOR_OP(*=)
 
-  /// Add / like operations on the id<>
+  /// Add / like operations on the id<> and others
   TRISYCL_BOOST_OPERATOR_VECTOR_OP(/=)
 
-  /// Add % like operations on the id<>
+  /// Add % like operations on the id<> and others
   TRISYCL_BOOST_OPERATOR_VECTOR_OP(%=)
 
-  /** Since the boost::operator work on the Small array, add an implicit
+  /// Add << like operations on the id<> and others
+  TRISYCL_BOOST_OPERATOR_VECTOR_OP(<<=)
+
+  /// Add >> like operations on the id<> and others
+  TRISYCL_BOOST_OPERATOR_VECTOR_OP(>>=)
+
+  /// Add & like operations on the id<> and others
+  TRISYCL_BOOST_OPERATOR_VECTOR_OP(&=)
+
+  /// Add ^ like operations on the id<> and others
+  TRISYCL_BOOST_OPERATOR_VECTOR_OP(^=)
+
+  /// Add | like operations on the id<> and others
+  TRISYCL_BOOST_OPERATOR_VECTOR_OP(|=)
+
+
+  /** Since the boost::operator work on the small_array, add an implicit
       conversion to produce the expected type */
   operator FinalType () {
     return *static_cast<FinalType *>(this);

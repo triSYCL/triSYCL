@@ -17,9 +17,10 @@
 #include "CL/sycl/access.hpp"
 #include "CL/sycl/accessor.hpp"
 #include "CL/sycl/buffer/detail/buffer.hpp"
+#include "CL/sycl/buffer_allocator.hpp"
+#include "CL/sycl/handler.hpp"
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/range.hpp"
-#include "CL/sycl/storage.hpp"
 
 namespace cl {
 namespace sycl {
@@ -36,18 +37,21 @@ namespace sycl {
     checking for correctness with the accessors used, but we do not have a
     way in the specification to have a read-only buffer type for this.
 
-    \todo there is a naming inconsistency in the specification between
+    \todo There is a naming inconsistency in the specification between
     buffer and accessor on T versus datatype
+
+    \todo Think about the need of an allocator when constructing a buffer
+    from other buffers
 */
 template <typename T,
-          std::size_t Dimensions = 1>
+          std::size_t Dimensions = 1,
+          typename Allocator = buffer_allocator<T>>
 struct buffer {
-  /** \todo Extension to SYCL specification: provide pieces of STL
-      container interface? Yes for the construction, but not for the
-      access that is to be done through the accessor<>
-  */
-  using element = T;
+  /// The STL-like types
   using value_type = T;
+  using reference = value_type&;
+  using const_reference = const value_type&;
+  using allocator_type = Allocator;
 
   /** Point to the underlying buffer implementation that can be shared in
       the SYCL model */
@@ -67,7 +71,7 @@ struct buffer {
 
       \param r defines the size
   */
-  buffer(const range<Dimensions> &r)
+  buffer(const range<Dimensions> &r, Allocator allocator = {})
     : implementation { new detail::buffer<T, Dimensions> { r } } {}
 
 
@@ -77,7 +81,7 @@ struct buffer {
 
       \param r defines the size
   */
-  buffer(T * host_data, range<Dimensions> r)
+  buffer(T * host_data, range<Dimensions> r, Allocator allocator = {})
     : implementation { new detail::buffer<T, Dimensions> { host_data, r } } {}
 
 
@@ -87,22 +91,38 @@ struct buffer {
 
       \param r defines the size
   */
-  buffer(const T * host_data, range<Dimensions> r)
+  buffer(const T * host_data, range<Dimensions> r, Allocator allocator = {})
     : implementation { new detail::buffer<T, Dimensions> { host_data, r } } {}
 
+  /** Create a new buffer with associated memory, using the data in
+      hostData
 
-  /** Create a new buffer from a storage abstraction provided by the user
-
-      \param store is the storage back-end to use for the buffer
-
-      \param r defines the size
-
-      The storage object has to exist during all the life of the buffer
-      object.
-
-      \todo To be implemented
+      The ownership of the hostData is shared between the runtime and the
+      user. In order to enable both the user application and the SYCL
+      runtime to use the same pointer, a cl::sycl::mutex_class is
+      used. The mutex m is locked by the runtime whenever the data is in
+      use and unlocked otherwise. Data is synchronized with hostData, when
+      the mutex is unlocked by the runtime.
   */
-  buffer(storage<T> &store, range<Dimensions> r) { assert(0); }
+  buffer(shared_ptr_class<T> & hostData,
+         const range<Dimensions> & bufferRange,
+         cl::sycl::mutex_class * m = nullptr,
+         Allocator allocator = {}) {
+    detail::unimplemented();
+  }
+
+
+  /** Create a new buffer which is initialized by
+      hostData
+
+      The SYCL runtime receives full ownership of the hostData unique_ptr
+      and there in effect there is no synchronization with the application
+      code using hostData.
+*/
+  buffer(unique_ptr_class<T> && hostData,
+         const range<Dimensions> & bufferRange) {
+    detail::unimplemented();
+  }
 
 
   /** Create a new read-write allocated 1D buffer initialized from the
@@ -121,13 +141,15 @@ struct buffer {
 
       \todo Allow initialization from ranges and collections à la STL
   */
-  template <typename Iterator,
+  template <typename InputIterator,
             /* To force some iterator concept checking to avoid GCC 4.9
                diving into this when initializing from ({ int, int })
                which is a range<> and and not an iterator... */
             typename ValueType =
-            typename std::iterator_traits<Iterator>::value_type>
-  buffer(Iterator start_iterator, Iterator end_iterator) :
+            typename std::iterator_traits<InputIterator>::value_type>
+  buffer(InputIterator start_iterator,
+         InputIterator end_iterator,
+         Allocator allocator = {}) :
     implementation { new detail::buffer<T, Dimensions> { start_iterator,
                                                          end_iterator } }
   {}
@@ -147,9 +169,10 @@ struct buffer {
 
       \todo Update the specification to replace index by id
   */
-  buffer(buffer<T, Dimensions> b,
+  buffer(buffer<T, Dimensions, Allocator> b,
          id<Dimensions> base_index,
-         range<Dimensions> sub_range) { assert(0); }
+         range<Dimensions> sub_range,
+         Allocator allocator = {}) { assert(0); }
 
 
 #ifdef TRISYCL_OPENCL
@@ -169,7 +192,8 @@ struct buffer {
   */
   buffer(cl_mem mem_object,
          queue from_queue,
-         event available_event) { assert(0); }
+         event available_event = {},
+         Allocator allocator = {}) { assert(0); }
 #endif
 
 
@@ -188,7 +212,30 @@ struct buffer {
   */
   template <access::mode Mode,
             access::target Target = access::global_buffer>
-  accessor<T, Dimensions, Mode, Target> get_access() const {
+  accessor<T, Dimensions, Mode, Target>
+  get_access(handler &command_group_handler) const {
+    static_assert(Target != access::host_buffer,
+                  "get_access(&cgh) for non host_buffer accessor "
+                  "takes a command group handler");
+    return *implementation;
+  }
+
+
+  /** Get a host accessor to the buffer with the required mode
+
+      \param Mode is the requested access mode
+
+      \todo Implement the modes
+
+      \todo More elegant solution
+  */
+  template <access::mode Mode,
+            access::target Target = access::global_buffer>
+  accessor<T, Dimensions, Mode, access::host_buffer>
+  get_access() const {
+    static_assert(Target == access::host_buffer,
+                  "get_access() for host_buffer accessor does not "
+                  "take a command group handler");
     return *implementation;
   }
 
@@ -217,13 +264,35 @@ struct buffer {
 
   /** Return the use count of the data of this buffer
 
-      \todo Add to the specification? At least useful for the
-      non-regression testing.
+      \todo Rename to use_count() to follow shared_ptr<> naming
   */
-  auto use_count() const {
+  auto get_count() const {
     // Rely on the shared_ptr<> use_count()
     return implementation.use_count();
   }
+
+
+  /** Set destination of buffer data on destruction
+
+      The finalData points to the host memory to which, the outcome of all
+      the buffer processing is going to be copied to.
+
+      This is the final pointer, which is going to be accessible after the
+      destruction of the buffer and in the case where this is a valid
+      pointer, the data are going to be copied to this host address.
+
+      finalData is different from the original host address, if the buffer
+      was created associated with one. This is mainly to be used when a
+      shared_ptr is given in the constructor and the output data will
+      reside in a different location from the initialization data.
+
+      It is defined as a weak_ptr referring to a shared_ptr that is not
+      associated with the cl::sycl::buffer, and so the cl::sycl::buffer
+      will have no ownership of finalData.
+  */
+  void set_final_data(weak_ptr_class<T> & finalData) {
+  detail::unimplemented();
+}
 
 };
 

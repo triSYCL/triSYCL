@@ -22,13 +22,13 @@ int main() {
     buffer<int> resultBuf(&result, 1);
 
     // create some "commands" for our "queue"
-    command_group (myQueue, [&] () {
+    myQueue.submit([&](handler &cgh) {
       // request access to our buffer
-      auto writeResult = resultBuf.get_access<access::mode::write>();
+      auto writeResult = resultBuf.get_access<access::mode::write>(cgh);
 
       // enqueue a single, simple task
-      single_task<class simple_test>([=] () {
-        writeResult [0] = 1234;
+      cgh.single_task<class simple_test>([=] () {
+          writeResult [0] = 1234;
       });
     }); // end of our commands for this queue
 

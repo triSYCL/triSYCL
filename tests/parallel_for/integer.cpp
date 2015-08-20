@@ -13,13 +13,13 @@ int main() {
     queue myQueue;
 
     buffer<int,1> a(N);
-    command_group { myQueue, [&] () {
-        auto acc = a.get_access<access::write>();
+    myQueue.submit([&](handler &cgh) {
+        auto acc = a.get_access<access::write>(cgh);
         // Show that we can use a simple parallel_for with int, for example
-        parallel_for<class nothing>(N, [=] (int index) {
-                         acc[index] = index;
-            });
-      }};
+        cgh.parallel_for<class nothing>(N, [=] (int index) {
+            acc[index] = index;
+          });
+      });
     // Verify that a[i] == i
     VERIFY_BUFFER_VALUE(a, [](id<1> i) { return i[0]; });
   }

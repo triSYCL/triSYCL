@@ -40,13 +40,14 @@
 #include "CL/sycl/accessor.hpp"
 #include "CL/sycl/address_space.hpp"
 #include "CL/sycl/buffer.hpp"
-#include "CL/sycl/command_group.hpp"
 #include "CL/sycl/context.hpp"
 #include "CL/sycl/device.hpp"
 #include "CL/sycl/device_selector.hpp"
 #include "CL/sycl/error_handler.hpp"
+//#include "CL/sycl/event.hpp"
 #include "CL/sycl/exception.hpp"
 #include "CL/sycl/group.hpp"
+#include "CL/sycl/handler.hpp"
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/image.hpp"
 #include "CL/sycl/item.hpp"
@@ -56,7 +57,6 @@
 #include "CL/sycl/platform.hpp"
 #include "CL/sycl/queue.hpp"
 #include "CL/sycl/range.hpp"
-#include "CL/sycl/storage.hpp"
 #include "CL/sycl/vec.hpp"
 
 

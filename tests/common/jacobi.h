@@ -19,10 +19,10 @@
 size_t M = 130;
 size_t N = 130;
 
-// comp..
-void ute_and_are(float * a_test, float * b_test, auto C){
-  // compute result with cpu
-for (unsigned int t = 0; t < NB_ITER; ++t){
+// comp...ute and comp...are
+auto ute_and_are = [](float * a_test, float * b_test, auto C){
+  // Compute result with cpu
+  for (unsigned int t = 0; t < NB_ITER; ++t){
     for (size_t i = 1; i < M - 1; ++i){
       for (size_t j = 1; j < N - 1; ++j){
         b_test[i*M+j] = MULT_COEF * (a_test[i*M+j] + a_test[i*M+(j-1)] + a_test[i*M+(1+j)] + a_test[(1+i)*M+j] + a_test[(i-1)*M+j]);
@@ -35,7 +35,7 @@ for (unsigned int t = 0; t < NB_ITER; ++t){
     }
   }
 
-  // compare with cpu result
+  // Compare with cpu result
   std::cout << "Result:" << std::endl;
   for(size_t i = 0; i < M; ++i){
     for(size_t j = 0; j < N; ++j){
@@ -47,10 +47,10 @@ for (unsigned int t = 0; t < NB_ITER; ++t){
         exit(-1);
       }
     }
-}
+  }
 
   std::cout << "ok" << std::endl;
-return;
-}
+  return;
+};
 
 #endif

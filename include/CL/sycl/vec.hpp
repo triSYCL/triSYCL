@@ -35,18 +35,18 @@ namespace sycl {
 
     \todo simplify the helpers by removing some template types since there
     are now inside the vec<> class.
+
+    \todo rename in the specification element_type to value_type
 */
 template <typename DataType, size_t NumElements>
-class vec {
+class vec : public detail::small_array<DataType,
+                                       vec<DataType, NumElements>,
+                                       NumElements> {
+  using basic_type = typename detail::small_array<DataType,
+                                                  vec<DataType, NumElements>,
+                                                  NumElements>;
 
 public:
-
-  /// The actual storage of the vector elements
-  std::array<DataType, NumElements> data;
-
-  static const size_t dimension = NumElements;
-  using element_type = DataType;
-
 
   /** Construct a vec from anything from a scalar (to initialize all the
       elements with this value) up to an aggregate of scalar and vector
@@ -55,12 +55,15 @@ public:
   */
   template <typename... Types>
   vec(const Types... args)
-    : data (detail::expand<vec>(flatten_to_tuple<vec>(args...))) { }
+    : basic_type { detail::expand<vec>(flatten_to_tuple<vec>(args...)) } { }
 
 
-  /// Use classical constructors too
+/// Use classical constructors too
   vec() = default;
 
+
+  // Inherit of all the constructors
+  using typename basic_type::small_array;
 
 private:
 
@@ -75,7 +78,7 @@ private:
   static auto flatten(const vec<Element, s> i) {
     static_assert(s <= V::dimension,
                   "The element i will not fit in the vector");
-    return i.data;
+    return static_cast<std::array<Element, s>>(i);
   }
 
 
@@ -86,7 +89,7 @@ private:
   */
   template <typename V, typename Type>
   static auto flatten(const Type i) {
-    return std::forward_as_tuple(i);
+    return std::make_tuple(i);
   }
 
 

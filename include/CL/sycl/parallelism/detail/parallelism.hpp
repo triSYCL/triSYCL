@@ -168,11 +168,11 @@ void parallel_for(nd_range<Dimensions> r,
   nd_item<Dimensions> index { r };
   // To iterate on the work-group
   id<Dimensions> group;
-  range<Dimensions> group_range = r.get_group_range();
+  range<Dimensions> group_range = r.get_group();
   // To iterate on the local work-item
   id<Dimensions> local;
 
-  range<Dimensions> local_range = r.get_local_range();
+  range<Dimensions> local_range = r.get_local();
 
   // Reconstruct the nd_item from its group and local id
   auto reconstruct_item = [&] (id<Dimensions> l) {
@@ -217,7 +217,7 @@ void parallel_for_workgroup(nd_range<Dimensions> r,
                        range<Dimensions>,
                        ParallelForFunctor,
                        group<Dimensions>> {
-    r.get_group_range(),
+    r.get_group(),
     f,
     g };
 }
@@ -235,7 +235,7 @@ void parallel_for_workitem(group<Dimensions> g,
      The issue is that the parallel_for_workitem() execution is slow even
      when nd_item::barrier() is not used
   */
-  range<Dimensions> l_r = g.get_nd_range().get_local_range();
+  range<Dimensions> l_r = g.get_nd_range().get_local();
   // \todo Implement with a reduction algorithm
   int tot = l_r.get(0);
   for (int i = 1; i < (int) Dimensions; ++i){
@@ -263,7 +263,7 @@ void parallel_for_workitem(group<Dimensions> g,
       local[2] = th_id - local[0]*tmp - local[1]*l_r.get(1);
     }
     index.set_local(local);
-    index.set_global(local + id<Dimensions>(l_r)*g.get_group_id());
+    index.set_global(local + id<Dimensions>(l_r)*g.get());
     f(index);
   }
 #else
@@ -279,7 +279,7 @@ void parallel_for_workitem(group<Dimensions> g,
     // Reconstruct the global nd_item
     index.set_local(local);
     // \todo Some strength reduction here
-    index.set_global(local + id<Dimensions>(g.get_local_range())*g.get_group_id());
+    index.set_global(local + id<Dimensions>(g.get_local_range())*g.get());
     // Call the user kernel at last
     f(index);
   };

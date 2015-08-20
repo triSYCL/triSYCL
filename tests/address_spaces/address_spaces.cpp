@@ -47,12 +47,12 @@ int main() {
 
     /* The command group describing all operations needed for the kernel
        execution */
-    command_group (myQueue, [&] {
-      auto kc = C.get_access<access::write>();
+    myQueue.submit([&](handler &cgh) {
+      auto kc = C.get_access<access::write>(cgh);
 
 
-      parallel_for<class generate>(range<1> { N },
-                                   [=] (id<1> index) {
+      cgh.parallel_for<class generate>(range<1> { N },
+                                       [=] (id<1> index) {
         if (index[0] == 0) {
           int i = 3;
           generic<int *> p {&i};
@@ -121,7 +121,6 @@ int main() {
           std::cout << hello[1] << '-' << hello2[1] << std::endl;
           //static constant<int[2][6]> lut = { { 1, 2 }, { 3, 4} };
           static int lut[2][6]  = { { 1, 2 }, { 3, 4, 3 } };
-          
         }
       });
     }); // End of our commands for this queue

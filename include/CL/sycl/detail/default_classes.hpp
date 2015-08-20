@@ -1,7 +1,8 @@
 #ifndef TRISYCL_SYCL_DETAIL_DEFAULT_CLASSES_HPP
 #define TRISYCL_SYCL_DETAIL_DEFAULT_CLASSES_HPP
 
-/** \file The OpenCL SYCL default classes to use from the STL
+/** \file The OpenCL SYCL default classes to use from the STL according to
+    section 3.2 of SYCL 1.2 specification
 
     Ronan at Keryell point FR
 
@@ -9,34 +10,108 @@
     License. See LICENSE.TXT for details.
 */
 
+#ifndef CL_SYCL_NO_STD_VECTOR
 /** The vector type to be used as SYCL vector
+ */
+#include <memory>
+#include <vector>
+namespace cl {
+namespace sycl {
 
-    \todo this should be more local, such as SYCL_VECTOR_CLASS or
-    _SYCL_VECTOR_CLASS
+template <class T, class Alloc = std::allocator<T>>
+using vector_class = std::vector<T, Alloc>;
 
-    \todo use a typedef or a using instead of a macro?
-
-    \todo implement __NO_STD_VECTOR
-
-    \todo Table 3.1 in provisional specification is wrong: VECTOR_CLASS
-    not at the right place
-*/
-#define VECTOR_CLASS std::vector
+}
+}
+#endif
 
 
+#ifndef CL_SYCL_NO_STD_STRING
 /** The string type to be used as SYCL string
+ */
+#include <string>
+namespace cl {
+namespace sycl {
 
-    \todo this should be more local, such as SYCL_STRING_CLASS or
-    _SYCL_STRING_CLASS
+using string_class = std::string;
 
-    \todo use a typedef or a using instead of a macro?
+}
+}
+#endif
 
-    \todo implement __NO_STD_STRING
 
-    \todo Table 3.2 in provisional specification is wrong: STRING_CLASS
-    not at the right place
-*/
-#define STRING_CLASS std::string
+#ifndef CL_SYCL_NO_STD_FUNCTION
+/** The functional type to be used as SYCL function
+ */
+#include <functional>
+namespace cl {
+namespace sycl {
+
+template <class R, class... ArgTypes>
+using function_class = std::function<R(ArgTypes...)>;
+
+}
+}
+#endif
+
+
+#ifndef CL_SYCL_NO_STD_MUTEX
+/** The mutex type to be used as SYCL mutex
+ */
+#include <mutex>
+namespace cl {
+namespace sycl {
+
+using mutex_class = std::mutex;
+
+}
+}
+#endif
+
+
+#ifndef CL_SYCL_NO_STD_UNIQUE_PTR
+/** The unique pointer type to be used as SYCL unique pointer
+ */
+#include <memory>
+namespace cl {
+namespace sycl {
+
+template <class T, class D = std::default_delete<T>>
+using unique_ptr_class = std::unique_ptr<T[], D>;
+
+}
+}
+#endif
+
+
+#ifndef CL_SYCL_NO_STD_SHARED_PTR
+/** The shared pointer type to be used as SYCL shared pointer
+ */
+#include <memory>
+namespace cl {
+namespace sycl {
+
+template <class T>
+using shared_ptr_class = std::shared_ptr<T>;
+
+}
+}
+#endif
+
+
+#ifndef CL_SYCL_NO_STD_WEAK_PTR
+/** The weak pointer type to be used as SYCL weak pointer
+ */
+#include <memory>
+namespace cl {
+namespace sycl {
+
+template <class T>
+using weak_ptr_class = std::weak_ptr<T>;
+
+}
+}
+#endif
 
 
 /*

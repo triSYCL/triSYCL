@@ -30,19 +30,19 @@ int main() {
 
     /* The command group describing all operations needed for the kernel
        execution */
-    command_group (myQueue, [&] () {
+    myQueue.submit([&](handler &cgh) {
       // In the kernel A and B are read, but C is written
-      auto ka = A.get_access<access::read>();
-      auto kb = B.get_access<access::read>();
-      auto kc = C.get_access<access::write>();
+      auto ka = A.get_access<access::read>(cgh);
+      auto kb = B.get_access<access::read>(cgh);
+      auto kc = C.get_access<access::write>(cgh);
 
       // Enqueue a parallel kernel
-      parallel_for<class vector_add>(range<1> { N },
-                                     [=] (id<1> index) {
-            std::cout << index.get(0) << " ";
-            kc[index] = ka[index] + kb[index];
-      });
-    }); // End of our commands for this queue
+      cgh.parallel_for<class vector_add>(range<1> { N },
+                                         [=] (id<1> index) {
+                                           std::cout << index.get(0) << " ";
+                                           kc[index] = ka[index] + kb[index];
+                                         });
+      }); // End of our commands for this queue
   } // End scope, so we wait for the queue to complete
 
   std::cout << std::endl << "Result:" << std::endl;
