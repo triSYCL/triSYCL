@@ -1,3 +1,5 @@
+/* RUN: %{execute}%s
+ */
 #include <stdlib.h>
 #include <CL/sycl.hpp>
 
