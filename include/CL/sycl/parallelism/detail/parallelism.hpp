@@ -227,13 +227,23 @@ void parallel_for_workgroup(nd_range<Dimensions> r,
 template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void parallel_for_workitem(group<Dimensions> g,
                            ParallelForFunctor f) {
-  // With OMP, one thread is created for each work-item in the group
-#ifdef _OPENMP
+#if defined(_OPENMP) && !defined(TRISYCL_NO_BARRIER)
+  /* To implement barriers With OpenMP, one thread is created for each
+     work-item in the group and thus an OpenMP barrier has the same effect
+     of an OpenCL barrier executed by the work-items in a workgroup
+
+     The issue is that the parallel_for_workitem() execution is slow even
+     when nd_item::barrier() is not used
+  */
   range<Dimensions> l_r = g.get_nd_range().get_local_range();
+  // \todo Implement with a reduction algorithm
   int tot = l_r.get(0);
   for (int i = 1; i < (int) Dimensions; ++i){
     tot *= l_r.get(i);
   }
+  /* An alternative could be to use 1 to 3 loops with #pragma omp parallel
+     for collapse(...) instead of reconstructing the iteration index from
+     the thread number */
   omp_set_num_threads(tot);
 #pragma omp parallel
   {

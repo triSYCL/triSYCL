@@ -116,11 +116,11 @@ public:
       barrier performs a fence operation ensuring that all memory accesses
       in the specified address space issued before the barrier complete
       before those issued after the barrier.
-
-      \todo To be implemented
   */
   void barrier(access::address_space flag) const {
-#ifdef _OPENMP
+#if defined(_OPENMP) && !defined(TRISYCL_NO_BARRIER)
+    /* Use OpenMP barrier in the implementation with 1 OpenMP thread per
+       work-item of the work-group */
 #pragma omp barrier
 #endif
   }

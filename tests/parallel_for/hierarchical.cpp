@@ -15,6 +15,14 @@
    CHECK: Local id = 0 (global id = 8)
    CHECK: Local id = 1 (global id = 9)
 */
+
+/* The OpenMP based barrier use nested parallelism that makes order of
+   execution in parallel_for_workitem non deterministic so disable it on
+   this test
+*/
+#define TRISYCL_NO_BARRIER
+
+
 #include <vector>
 #include <CL/sycl.hpp>
 
