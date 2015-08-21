@@ -45,9 +45,9 @@ public:
     Cannot use a template on the number of dimensions because the implicit
     conversion would not be tried.
 */
-auto make_range(range<1> r) { return r; }
-auto make_range(range<2> r) { return r; }
-auto make_range(range<3> r) { return r; }
+inline auto make_range(range<1> r) { return r; }
+inline auto make_range(range<2> r) { return r; }
+inline auto make_range(range<3> r) { return r; }
 
 
 /** Construct a range<> from a function call with arguments, like
