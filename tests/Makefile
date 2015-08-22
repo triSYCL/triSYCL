@@ -3,8 +3,17 @@
 # <this_makefile> ... as used by make check:
 triSYCL_DIR=$(abspath $(dir $(lastword $(MAKEFILE_LIST)))/..)
 
-# Use all the .cpp files from the subdirectories
+# Use all the .cpp C++ files from the subdirectories that have a 1-1
+# mapping with the binaries to generate, that means the binary is made
+# from only one compilation unit (1 source file)
 TARGETS = $(basename $(wildcard */*.cpp))
+
+# There are also .cc C++ files that are used to test binaries made from
+# multiple compilation units. There should be specific dependencies added
+# later to deal with other compilation units to be linked to the .cc main
+# executable. To avoid messing up with LLVM/LIT, the other compilation
+# units have .C extensions
+TARGETS += $(basename $(wildcard */*.cc))
 
 # The implementation uses C++14 and OpenMP
 CXXFLAGS = -Wall -std=c++1y -I$(triSYCL_DIR)/include \
@@ -88,3 +97,6 @@ clone-%:
 	rm -rf test-clone
 	git clone --branch `git rev-parse --abbrev-ref HEAD` .. test-clone
 	cd test-clone/tests; $(MAKE) $*
+
+
+multiple_compilation_units/parallel_for: multiple_compilation_units/parallel_for_other.o
