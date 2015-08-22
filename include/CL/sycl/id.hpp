@@ -63,9 +63,9 @@ public:
 
     Cannot use a template on the number of dimensions because the implicit
     conversion would not be tried. */
-auto make_id(id<1> i) { return i; }
-auto make_id(id<2> i) { return i; }
-auto make_id(id<3> i) { return i; }
+inline auto make_id(id<1> i) { return i; }
+inline auto make_id(id<2> i) { return i; }
+inline auto make_id(id<3> i) { return i; }
 
 
 /** Construct an id<> from a function call with arguments, like
