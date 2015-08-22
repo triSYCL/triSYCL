@@ -13,7 +13,8 @@ TARGETS = $(basename $(wildcard */*.cpp))
 # later to deal with other compilation units to be linked to the .cc main
 # executable. To avoid messing up with LLVM/LIT, the other compilation
 # units have .C extensions
-TARGETS += $(basename $(wildcard */*.cc))
+TARGETS_CC = $(basename $(wildcard */*.cc))
+TARGETS += $(TARGETS_CC)
 
 # The implementation uses C++14 and OpenMP
 CXXFLAGS = -Wall -std=c++1y -I$(triSYCL_DIR)/include \
@@ -60,7 +61,9 @@ run: $(TARGETS)
 clean:
 	$(RM) $(TARGETS)
 
-check:
+# Force recompilation of $(TARGETS_CC) binaries through the Makefile since
+# LIT does not know the dependencies
+check: $(TARGETS_CC)
 	# Launch testing with lit tool from LLVM in current directory
 	echo Using $(CXX) compiler:
 	# lit can be found for example on Debian/Ubuntu in package

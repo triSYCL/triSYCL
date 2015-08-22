@@ -16,7 +16,7 @@
    CHECK: Local id = 1 (global id = 9)
 
    // In other()
-   CHECK-NEXT: 6 8 11
+   CHECK: 6 8 11
 */
 #include <vector>
 #include <CL/sycl.hpp>
