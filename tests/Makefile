@@ -23,6 +23,9 @@ CXXFLAGS = -Wall -std=c++1y -I$(triSYCL_DIR)/include \
 # To use OpenMP to execute SYCL kernels:
 CXXFLAGS += -fopenmp
 
+# To verify results of Jacobi stencils
+CXXFLAGS += -DDEBUG_STENCIL
+
 ## To enable asynchronous kernels
 #CXXFLAGS += -DTRISYCL_ASYNC=1
 

@@ -184,12 +184,17 @@ public:
       In addition, the barrier performs a fence operation ensuring that all
       memory accesses in the specified address space issued before the
       barrier complete before those issued after the barrier
-
-      \todo To be implemented
   */
   void barrier(access::fence_space flag =
                access::fence_space::global_and_local) const {
+#if defined(_OPENMP) && !defined(TRISYCL_NO_BARRIER)
+    /* Use OpenMP barrier in the implementation with 1 OpenMP thread per
+       work-item of the work-group */
+#pragma omp barrier
+#else
+    // \todo To be implemented efficiently otherwise
     detail::unimplemented();
+#endif
   }
 
 
