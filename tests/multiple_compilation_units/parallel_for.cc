@@ -19,6 +19,13 @@
    CHECK: 6 8 11
 */
 #include <vector>
+
+/* The OpenMP based barrier use nested parallelism that makes order of
+   execution in parallel_for_workitem non deterministic so disable it on
+   this test
+*/
+#define TRISYCL_NO_BARRIER
+
 #include <CL/sycl.hpp>
 
 extern void other();
