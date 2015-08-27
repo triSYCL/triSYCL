@@ -70,8 +70,8 @@ struct buffer : public detail::debug<buffer<T, Dimensions>>,
       without further allocation */
   buffer(const T * host_data, range<Dimensions> r) :
     /// \todo Need to solve this const buffer issue in a clean way
-    access { const_cast<T *>(host_data), r },
-    buffer_base { true }
+    buffer_base { true },
+    access { const_cast<T *>(host_data), r }
     {}
 
 
