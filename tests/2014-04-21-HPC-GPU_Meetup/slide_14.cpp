@@ -34,7 +34,7 @@ int main() {
             sycl::accessor<int, 1, sycl::access::write>  r(outputBuffer, cgh);
             cgh.parallel_for<class three_way_add>(sycl::range<1> { numElements },
                                                   [=](sycl::id<1> item) {
-                                                    int i = item.get(0);
+                                                    auto i = item.get(0);
                                                     if (i < numElements) {
                                                       r[i] = add(a[i], b[i]);
                                                     }

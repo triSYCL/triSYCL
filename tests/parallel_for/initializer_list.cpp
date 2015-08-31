@@ -11,7 +11,7 @@ int main() {
   {
     queue myQueue;
 
-    buffer<int,1> a(N);
+    buffer<unsigned int,1> a(N);
 
     myQueue.submit([&](handler &cgh) {
         auto acc = a.get_access<access::write>(cgh);
@@ -22,7 +22,7 @@ int main() {
       });
     VERIFY_BUFFER_VALUE(a, [](id<1> i) { return i[0]; });
 
-    buffer<int,2> b({ N, 3 });
+    buffer<unsigned int,2> b({ N, 3 });
 
     myQueue.submit([&](handler &cgh) {
         auto acc = b.get_access<access::write>(cgh);

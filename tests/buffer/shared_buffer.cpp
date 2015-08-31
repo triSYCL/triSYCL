@@ -41,7 +41,7 @@ cl::sycl::buffer<int, 1> f(void) {
     DISPLAY_BUFFER_USE_COUNT(b);
     DISPLAY_BUFFER_USE_COUNT(c);
     DISPLAY_BUFFER_READ_ONLY_STATUS(c);
-    VERIFY_BUFFER_VALUE(b, [] (size_t i) { return i*56 - 100; });
+    VERIFY_BUFFER_VALUE(b, [] (int i) { return i*56 - 100; });
 
     b = c;
     DISPLAY_BUFFER_USE_COUNT(a);

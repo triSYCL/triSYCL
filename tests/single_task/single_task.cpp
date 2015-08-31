@@ -10,7 +10,6 @@ int main() {
   int result; // this is where we will write our result
 
   range<2> z { 1, 3 };
-  range<1> y = 1;
   { // by sticking all the SYCL work in a {} block, we ensure
     // all SYCL tasks must complete before exiting the block
 

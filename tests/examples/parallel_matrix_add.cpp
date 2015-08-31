@@ -60,8 +60,8 @@ int main() {
   } // End scope, so we wait for the queue to complete
 
   std::cout << std::endl << "Result:" << std::endl;
-  for(int i = 0; i < N; i++)
-    for(int j = 0; j < M; j++)
+  for(size_t i = 0; i != N; i++)
+    for(size_t j = 0; j != M; j++)
       std::cout << c[i][j] << " ";
   std::cout << std::endl;
 

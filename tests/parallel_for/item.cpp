@@ -12,7 +12,7 @@ int main() {
     queue myQueue;
 
 
-    buffer<int,1> a(N);
+    buffer<unsigned int,1> a(N);
 
     myQueue.submit([&](handler &cgh) {
         auto acc = a.get_access<access::write>(cgh);

@@ -7,10 +7,12 @@
    CHECK-NEXT: f[0] = 2
    CHECK-NEXT: global_float = 6
    CHECK-NEXT: Range = {2,3}
+   CHECK-NEXT: Range2 = {2,3}
    CHECK-NEXT: s = yo man Size = 6
    CHECK-NEXT: ps = yo manyo man Size = 12
    CHECK-NEXT: e-salut
    CHECK-NEXT: e-= Mont a ra mat?
+   CHECK-NEXT: 3
 */
 #include <CL/sycl.hpp>
 #include <iostream>
@@ -57,6 +59,7 @@ int main() {
           int i = 3;
           generic<int *> p {&i};
           generic<int *> p2 = &i;
+          ++p2;
           p = &i;
           std::cout << "i = " << *p << std::endl;
           float f[2] = { 2, 3 };
@@ -79,9 +82,12 @@ int main() {
           // Can only point to a local<> object
           local<char *> l_p;
           multi_ptr<char *, constant_address_space> c_mp = c_p;
+          c_mp--;
           multi_ptr<double*, private_address_space> p_mp = pd;
           auto ppd = make_multi(p_mp);
+          *ppd = 5.5;
           auto p_c_p = make_multi(c_p);
+          *ppd += *p_c_p;
 
           global<float> global_float;
           global_float = f[0];
@@ -91,13 +97,16 @@ int main() {
           global_float = 7;
 
           global<float> global_float2 = global_float;
+          global_float2 += .1;
           priv<double> priv_double = global_float;
-          priv<double> priv_double2 { global_float };
+          priv<double> priv_double2 { priv_double };
 
           static constant<Range> constant_Range { 2, 3 };
           std::cout << "Range = {" << constant_Range.low << ","
                     << constant_Range.high << "}" <<std::endl;
           auto constant_Range2 = constant_Range;
+          std::cout << "Range2 = {" << constant_Range2.low << ","
+                    << constant_Range2.high << "}" <<std::endl;
 
           global<std::string> s = "yo";
           /* Verify that std::string operators and functions are
@@ -121,6 +130,7 @@ int main() {
           std::cout << hello[1] << '-' << hello2[1] << std::endl;
           //static constant<int[2][6]> lut = { { 1, 2 }, { 3, 4} };
           static int lut[2][6]  = { { 1, 2 }, { 3, 4, 3 } };
+          std::cout << lut[1][2] << std::endl;
         }
       });
     }); // End of our commands for this queue
