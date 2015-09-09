@@ -11,19 +11,12 @@
     For more information on this project and to access to the source of
     this file, look at https://github.com/amd/triSYCL
 
-    The Doxygen version of the API in
-    http://amd.github.io/triSYCL/Doxygen/SYCL/html and
-    http://amd.github.io/triSYCL/Doxygen/SYCL/SYCL-API-refman.pdf
-
     The Doxygen version of the implementation itself is in
     http://amd.github.io/triSYCL/Doxygen/triSYCL/html and
     http://amd.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
 
 
-    Ronan.Keryell at AMD point com
     Ronan at keryell dot FR
-
-    Copyright 2014--2015 Advanced Micro Devices, Inc.
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.

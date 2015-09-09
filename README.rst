@@ -8,28 +8,27 @@ triSYCL
 
 triSYCL_ is a humble implementation test-bed to experiment with the
 provisional specification of the OpenCL_ SYCL_ `C++`_ layer and to give
-feedback to the Khronos_ OpenCL_ SYCL_ committee.
+feedback to the Khronos_ OpenCL_ SYCL_ and OpenCL C++ kernel language
+committees.
 
 For legal reasons, the specification used for this open source project is
 the published current provisional specification and not the last one
 currently discussed in the Khronos_ OpenCL_ SYCL_ committee. If you are a
-Khronos_ member, you can ask for an access to
-https://github.com/amd/triSYCL-private/tree/future in the
-https://github.com/amd/triSYCL-private private repository to use a more
-futuristic version.
+Khronos_ member, you can access to https://gitlab.khronos.org/sycl/triSYCL
+where you can find more futuristic branches.
 
 This is just the start of a SYCL_ mock-up, only based on C++1z (2017?) and
 OpenMP_ with execution on the CPU right now. So there is nothing related
 to OpenCL_ yet. But since in SYCL_ there is a host fall-back, this can be
-used as the start of this fall-back...
+seen as an implementation of this fall-back too...
 
 The parallel kernels can be executed in parallel on the CPU with OpenMP_ in
-the first range dimension, if compiled with OpenMP support.
+the first range dimension, if compiled with OpenMP_ support.
 
 This is provided as is, without any warranty, with the same license as
 LLVM_/Clang_.
 
-Main contributor: Ronan Keryell at AMD_ point cOm
+Main contributor: Ronan at keryell point FR
 
 
 OpenCL SYCL
@@ -171,7 +170,6 @@ By reverse chronological order:
   Infrastructure in HPC, SuperComputing 2014
   <http://llvm-hpc-workshop.github.io>`_
 
-
 - `SYCL Specification --- SYCL integrates OpenCL devices with modern C++
   <https://www.khronos.org/registry/sycl/specs/sycl-1.2.pdf>`_, Khronos
   OpenCL Working Group — SYCL subgroup. Editors: Lee Howes and Maria
@@ -289,9 +287,10 @@ Installation
 ------------
 
 Only Clang_ 3.6+ or GCC_ 4.9+, `Boost.MultiArray`_ (which adds to `C++`_
-the nice Fortran array semantics and syntax), Boost.Operators are needed.
+the nice Fortran array semantics and syntax), Boost.Operators and a few
+other Boost libraries are needed.
 If you use the debug mode or OpenMP, this works only with GCC 4.9 since
-current Clang version does not support OpenMP yet or some C++14 with
+current Clang version does not fully support OpenMP yet or some C++14 with
 ``-g``.
 
 To install them on latest Linux Debian/unstable (this should work on
@@ -346,10 +345,16 @@ Some ideas of future developments where *you* can contribute too: :-)
 
 - move to CMake for better portability;
 
-- improve the test infrastructure;
+- improve the test infrastructure (for example move to something more
+  standard with Boost.Test);
 
 - use the official OpenCL SYCL test suite to extend/debug/validate this
   implementation;
+
+- add vector swizzle support by following ideas from
+  https://github.com/gwiazdorrr/CxxSwizzle http://glm.g-truc.net
+  http://jojendersie.de/performance-optimal-vector-swizzling-in-c
+  http://www.reedbeta.com/blog/2013/12/28/on-vector-math-libraries ;
 
 - add first OpenCL_ support with kernels provided only as strings, thus
   avoiding the need for a compiler. Could be based on other libraries such
@@ -372,7 +377,8 @@ Some ideas of future developments where *you* can contribute too: :-)
   reviewed by the Clang/LLVM community;
 
 - extend runtime and Clang_/LLVM_ to generate OpenCL/SPIR_ from `C++`_
-  single-source kernels, by using OpenMP outliner;
+  single-source kernels, by using OpenMP outliner. Starting from an open
+  source OpenCL C/C++ compiler sounds great;
 
 - alternatively develop a Clang/LLVM-based version, recycling the outliner
   which is already present for OpenMP support and modify it to generate
@@ -382,7 +388,6 @@ Some ideas of future developments where *you* can contribute too: :-)
   the projects https://github.com/clang-omp/libomptarget for
   https://github.com/clang-omp/llvm_trunk and
   https://github.com/clang-omp/clang_trunk
-
 
   This approach may require more work than the C++AMP version but since it
   is based on the existing OpenMP infrastructure Intel spent a lot of time
@@ -396,11 +401,11 @@ Some ideas of future developments where *you* can contribute too: :-)
   library infrastructure to construct an OpenCL interoperability API and
   adapt the triSYCL classes to leverage OpenMP/OpenACC;
 
-- add OpenCL_ 2.x support with SYCL 2.1;
+- add OpenCL_ 2.x support with SYCL 2.x;
 
 - since SYCL is a pretty general programming model for heterogeneous
   computing, if the OpenCL compatibility layer is not required, some other
-  back-end could be written besides the current OpenMP_ one: CUDA_,
+  back-ends could be written besides the current OpenMP_ one: CUDA_,
   RenderScript_, etc.
 
 ..
