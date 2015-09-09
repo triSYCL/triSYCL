@@ -1,0 +1,27 @@
+digraph "cl::sycl::range&lt; dims &gt;"
+{
+ // INTERACTIVE_SVG=YES
+  bgcolor="transparent";
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="cl::sycl::range\< dims \>",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node2 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="cl::sycl::detail::small\l_array_123\< std::size\l_t, range\< dims \>, dims \>",height=0.2,width=0.4,color="black",URL="$group__helpers.html"];
+  Node3 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="cl::sycl::detail::small\l_array\< std::size_t, range\l\< dims \>, Dims \>",height=0.2,width=0.4,color="black",URL="$group__helpers.html"];
+  Node4 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="std::array\< std::size\l_t, Dims \>",height=0.2,width=0.4,color="grey75"];
+  Node5 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="boost::euclidean_ring\l_operators\< range\< dims \> \>",height=0.2,width=0.4,color="grey75"];
+  Node6 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="boost::bitwise\< range\l\< dims \> \>",height=0.2,width=0.4,color="grey75"];
+  Node7 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="boost::shiftable\< range\l\< dims \> \>",height=0.2,width=0.4,color="grey75"];
+  Node8 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="cl::sycl::detail::display\l_vector\< range\< dims \> \>",height=0.2,width=0.4,color="black",URL="$group__debug__trace.html"];
+  Node9 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" dimensionality" ,fontname="Helvetica"];
+  Node9 [label="static const auto",height=0.2,width=0.4,color="grey75"];
+  Node10 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" dimension" ,fontname="Helvetica"];
+  Node10 [label="static const size_t",height=0.2,width=0.4,color="grey75"];
+}

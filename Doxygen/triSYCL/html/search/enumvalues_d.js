@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['parent_5fdevice',['parent_device',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a173b3ec8ac32dd6c997450c1f11ba4a1',1,'cl::sycl::info']]],
+  ['partition_5faffinity_5fdomain',['partition_affinity_domain',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a4104bc7cbf76836c6ea9c8b67db90d83',1,'cl::sycl::info']]],
+  ['partition_5faffinity_5fdomain_5fnext_5fpartitionable',['partition_affinity_domain_next_partitionable',['../group__execution.html#ggaa0e3e915db3c3a6049efb595141acfcdaad8d7657e784af4ac67e74c083e44f98',1,'cl::sycl::info']]],
+  ['partition_5fby_5faffinity_5fdomain',['partition_by_affinity_domain',['../group__execution.html#ggaa0e3e915db3c3a6049efb595141acfcda328f56c3ee3a3f018f31116e39293733',1,'cl::sycl::info']]],
+  ['partition_5fby_5fcounts',['partition_by_counts',['../group__execution.html#ggaa0e3e915db3c3a6049efb595141acfcda4c4301ae11412ff3c4e4606babd69941',1,'cl::sycl::info']]],
+  ['partition_5fequally',['partition_equally',['../group__execution.html#ggaa0e3e915db3c3a6049efb595141acfcdaab767eff72d001b59d3d14ed38783c2b',1,'cl::sycl::info']]],
+  ['partition_5fmax_5fsub_5fdevices',['partition_max_sub_devices',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ac29ed48d84bd9469ce34e82722837567',1,'cl::sycl::info']]],
+  ['partition_5fproperties',['partition_properties',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a6202f9f9122c2bd39e9cbd08683354d7',1,'cl::sycl::info']]],
+  ['partition_5ftype',['partition_type',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ab90f95b341b6645eaf67613349c12293',1,'cl::sycl::info']]],
+  ['platform',['platform',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a34a6e5d64ade17ef4e51612c50dd72f5',1,'cl::sycl::info']]],
+  ['preferred_5finterop_5fuser_5fsync',['preferred_interop_user_sync',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a3e61f47504a8d1de81642c7c72f25dba',1,'cl::sycl::info']]],
+  ['preferred_5fvector_5fwidth_5fchar',['preferred_vector_width_char',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a0172422d8c3c4ed5a4116131baed67f8',1,'cl::sycl::info']]],
+  ['preferred_5fvector_5fwidth_5fdouble',['preferred_vector_width_double',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a4d034db6176d6fe61a8c61993e4a8755',1,'cl::sycl::info']]],
+  ['preferred_5fvector_5fwidth_5ffloat',['preferred_vector_width_float',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5af1ceee4eb024070ede074e770117b09c',1,'cl::sycl::info']]],
+  ['preferred_5fvector_5fwidth_5fhalf',['preferred_vector_width_half',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5afaf7badb225f9861e3d4fa808d023f77',1,'cl::sycl::info']]],
+  ['preferred_5fvector_5fwidth_5fint',['preferred_vector_width_int',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a148905ebf38930dab36309e04801eac7',1,'cl::sycl::info']]],
+  ['preferred_5fvector_5fwidth_5flong_5flong',['preferred_vector_width_long_long',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a4a58df452bc3a80f0f078dfaaa1ae870',1,'cl::sycl::info']]],
+  ['preferred_5fvector_5fwidth_5fshort',['preferred_vector_width_short',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a05cb235087712878ec261706dab65603',1,'cl::sycl::info']]],
+  ['printf_5fbuffer_5fsize',['printf_buffer_size',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a83d4ed8a78a5710a11e3c00178959f5e',1,'cl::sycl::info']]],
+  ['private_5faddress_5fspace',['private_address_space',['../group__address__spaces.html#gga03ea3501c0e52ba48d2cdf36ff00f0a7a609235bf7830cbb437a74c2b682bbaf4',1,'cl::sycl']]],
+  ['profile',['profile',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a7d97481b1fe66f4b51db90da7e794d9f',1,'cl::sycl::info::profile()'],['../group__execution.html#gga3ea7e38ccbc7de5270c4f69bbae20463a7d97481b1fe66f4b51db90da7e794d9f',1,'cl::sycl::info::profile()']]],
+  ['profiling_5ftimer_5fresolution',['profiling_timer_resolution',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ab128a9128069a203a38f56f7e9b55cc5',1,'cl::sycl::info']]],
+  ['properties',['properties',['../group__execution.html#gga86e91e6deadca35d20f77932c0550426a74693d2fc58b46bd06410f278e39aa71',1,'cl::sycl::info']]]
+];

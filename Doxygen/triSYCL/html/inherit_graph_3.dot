@@ -1,0 +1,21 @@
+digraph "Graphical Class Hierarchy"
+{
+ // INTERACTIVE_SVG=YES
+  bgcolor="transparent";
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="cl::sycl::detail::address\l_space_base\< T, AS \>",height=0.2,width=0.4,color="black",URL="$group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1address__space__base",tooltip="Implementation of the base infrastructure to wrap something in an OpenCL address space. "];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="cl::sycl::detail::address\l_space_object\< T, AS \>",height=0.2,width=0.4,color="black",URL="$group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1address__space__object",tooltip="Implementation of an object type with an OpenCL address space. "];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="cl::sycl::detail::address\l_space_variable\< T, AS \>",height=0.2,width=0.4,color="black",URL="$group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1address__space__variable",tooltip="Implementation of a variable with an OpenCL address space. "];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="cl::sycl::detail::address\l_space_array\< T, AS \>",height=0.2,width=0.4,color="black",URL="$group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1address__space__array",tooltip="Implementation of an array variable with an OpenCL address space. "];
+  Node3 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="cl::sycl::detail::address\l_space_fundamental\< T, AS \>",height=0.2,width=0.4,color="black",URL="$group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1address__space__fundamental",tooltip="Implementation of a fundamental type with an OpenCL address space. "];
+  Node5 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="cl::sycl::detail::address\l_space_ptr\< T, AS \>",height=0.2,width=0.4,color="black",URL="$group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1address__space__ptr",tooltip="Implementation for an OpenCL address space pointer. "];
+  Node7 [label="type",height=0.2,width=0.4,color="grey75"];
+  Node7 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

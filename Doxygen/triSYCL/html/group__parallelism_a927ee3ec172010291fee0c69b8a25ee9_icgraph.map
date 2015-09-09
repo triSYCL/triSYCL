@@ -1,4 +1,0 @@
-<map id="cl::sycl::nd_range::get_group_range" name="cl::sycl::nd_range::get_group_range">
-<area shape="rect" id="node3" href="$group__parallelism.html#ga196521c5710ac87b1d9b77e5f6b4540a" title="A variation of SYCL parallel_for to take into account a nd_range&lt;&gt; " alt="" coords="183,5,316,38"/>
-<area shape="rect" id="node5" href="$group__parallelism.html#ga22b68c6f8968dbe90ef56bb3be46791e" title="Loop on the work&#45;groups. " alt="" coords="193,61,305,115"/>
-</map>

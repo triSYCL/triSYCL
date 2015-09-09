@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['nd_5frange',['nd_range',['../group__parallelism.html#structcl_1_1sycl_1_1nd__range',1,'cl::sycl']]],
-  ['ndrangeimpl',['NDRangeImpl',['../group__parallelism.html#structcl_1_1sycl_1_1trisycl_1_1NDRangeImpl',1,'cl::sycl::trisycl']]],
-  ['ndrangeimpl_3c_20n_20_3e',['NDRangeImpl&lt; N &gt;',['../group__parallelism.html',1,'cl::sycl::trisycl']]]
+  ['id',['id',['../group__parallelism.html#classcl_1_1sycl_1_1id',1,'cl::sycl']]],
+  ['id_3c_20dimensionality_20_3e',['id&lt; dimensionality &gt;',['../group__parallelism.html',1,'cl::sycl']]],
+  ['image',['image',['../group__data.html#structcl_1_1sycl_1_1image',1,'cl::sycl']]],
+  ['item',['item',['../group__parallelism.html#classcl_1_1sycl_1_1item',1,'cl::sycl']]]
 ];

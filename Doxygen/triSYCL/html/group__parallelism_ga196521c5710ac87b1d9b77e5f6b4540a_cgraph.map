@@ -1,4 +1,0 @@
-<map id="cl::sycl::parallel_for" name="cl::sycl::parallel_for">
-<area shape="rect" id="node3" href="$group__parallelism.html#a927ee3ec172010291fee0c69b8a25ee9" title="Get the range of work&#45;groups needed to run this ND&#45;range. " alt="" coords="191,5,316,59"/>
-<area shape="rect" id="node5" href="$group__parallelism.html#a1ca27ad9b2e772fe41622f322c3de7e7" title="Get the local part of the iteration space range. " alt="" coords="191,82,316,137"/>
-</map>

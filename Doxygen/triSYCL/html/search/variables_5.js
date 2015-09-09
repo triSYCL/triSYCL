@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['localindex',['LocalIndex',['../group__parallelism.html#a27ab71123836e897a2f7bed96363f880',1,'cl::sycl::trisycl::ItemImpl']]],
-  ['localrange',['LocalRange',['../group__parallelism.html#a487c2c6dffc4fab0df34c74005f6ec18',1,'cl::sycl::trisycl::NDRangeImpl']]]
+  ['implementation',['implementation',['../group__data.html#adc361a9333f648a8b1fd8a820992f735',1,'cl::sycl::buffer']]]
 ];

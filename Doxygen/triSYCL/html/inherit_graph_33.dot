@@ -1,0 +1,9 @@
+digraph "Graphical Class Hierarchy"
+{
+ // INTERACTIVE_SVG=YES
+  bgcolor="transparent";
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="cl::sycl::nd_item\<\l dims \>",height=0.2,width=0.4,color="black",URL="$group__parallelism.html#structcl_1_1sycl_1_1nd__item",tooltip="A SYCL nd_item stores information on a work-item within a work-group, with some more context such as ..."];
+}

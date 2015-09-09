@@ -1,4 +1,0 @@
-<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$group__error__handling.html#structcl_1_1sycl_1_1error__handler" title="User supplied error handler to call a user&#45;provided function when an error happens from a SYCL object..." alt="" coords="5,15,152,49"/>
-<area shape="rect" id="node3" href="$structcl_1_1sycl_1_1trisycl_1_1default__error__handler.html" title="cl::sycl::trisycl::\ldefault_error_handler" alt="" coords="201,5,343,59"/>
-</map>

@@ -1,9 +1,0 @@
-<map id="cl::sycl::group&lt; dims &gt;" name="cl::sycl::group&lt; dims &gt;">
-<area shape="rect" id="node2" href="$group__parallelism.html" title="cl::sycl::trisycl::\lGroupImpl\&lt; dims \&gt;" alt="" coords="1377,65,1511,119"/>
-<area shape="rect" id="node6" href="$group__parallelism.html" title="cl::sycl::trisycl::\lNDRangeImpl\&lt; N \&gt;" alt="" coords="1155,134,1293,189"/>
-<area shape="rect" id="node8" href="$group__parallelism.html" title="cl::sycl::trisycl::\lRangeImpl\&lt; dimensionality \&gt;" alt="" coords="525,254,717,309"/>
-<area shape="rect" id="node10" title="STL class. " alt="" coords="184,207,357,241"/>
-<area shape="rect" id="node20" href="$group__parallelism.html" title="cl::sycl::trisycl::\lRangeImpl\&lt; N \&gt;" alt="" coords="563,154,680,209"/>
-<area shape="rect" id="node14" href="$structcl_1_1sycl_1_1trisycl_1_1debug.html" title="cl::sycl::trisycl::\ldebug\&lt; RangeImpl\&lt; Dimensions \&gt; \&gt;" alt="" coords="152,279,389,334"/>
-<area shape="rect" id="node18" href="$group__parallelism.html" title="cl::sycl::trisycl::\lIdImpl\&lt; dimensionality \&gt;" alt="" coords="853,141,1019,195"/>
-</map>

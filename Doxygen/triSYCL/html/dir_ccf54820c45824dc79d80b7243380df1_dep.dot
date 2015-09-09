@@ -1,0 +1,12 @@
+digraph "include/CL/sycl/accessor/detail" {
+  bgcolor=transparent;
+  compound=true
+  node [ fontsize="10", fontname="Helvetica"];
+  edge [ labelfontsize="10", labelfontname="Helvetica"];
+  subgraph clusterdir_80ed0fe738b46f4cbe0bcf2da8f64fb7 {
+    graph [ bgcolor="#ddddee", pencolor="black", label="accessor" fontname="Helvetica", fontsize="10", URL="dir_80ed0fe738b46f4cbe0bcf2da8f64fb7.html"]
+  dir_ccf54820c45824dc79d80b7243380df1 [shape=box, label="detail", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_ccf54820c45824dc79d80b7243380df1.html"];
+  }
+  dir_9b6d7024eea66e98eb7c621176d4b6ba [shape=box label="detail" URL="dir_9b6d7024eea66e98eb7c621176d4b6ba.html"];
+  dir_ccf54820c45824dc79d80b7243380df1->dir_9b6d7024eea66e98eb7c621176d4b6ba [headlabel="1", labeldistance=1.5 headhref="dir_000004_000011.html"];
+}

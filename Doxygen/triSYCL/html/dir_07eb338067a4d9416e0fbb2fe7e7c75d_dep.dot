@@ -1,0 +1,10 @@
+digraph "include/CL/sycl/parallelism/detail" {
+  bgcolor=transparent;
+  compound=true
+  node [ fontsize="10", fontname="Helvetica"];
+  edge [ labelfontsize="10", labelfontname="Helvetica"];
+  subgraph clusterdir_a18b4360666c55a0969029118deaa9e8 {
+    graph [ bgcolor="#ddddee", pencolor="black", label="parallelism" fontname="Helvetica", fontsize="10", URL="dir_a18b4360666c55a0969029118deaa9e8.html"]
+  dir_07eb338067a4d9416e0fbb2fe7e7c75d [shape=box, label="detail", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_07eb338067a4d9416e0fbb2fe7e7c75d.html"];
+  }
+}

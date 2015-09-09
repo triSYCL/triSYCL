@@ -1,9 +1,25 @@
 var searchData=
 [
-  ['offset',['Offset',['../group__parallelism.html#a61e802983370d89cf793cfd18db68adf',1,'cl::sycl::trisycl::NDRangeImpl']]],
-  ['operator_28_29',['operator()',['../group__execution.html#a4e3ee017e02467cdfc7d1f474573ea81',1,'cl::sycl::device_selector::operator()()'],['../group__execution.html#a9ea55404085f7fb139dfeddf65f9467e',1,'cl::sycl::gpu_selector::operator()()']]],
-  ['operator_2a',['operator*',['../group__parallelism.html#gae41fe7709d7611036754ce7c620d0e2f',1,'cl::sycl::trisycl::operator*()'],['../group__parallelism.html#gab9d95bc930ed139ac23e55ab6e0159c4',1,'cl::sycl::operator*()']]],
-  ['operator_2b',['operator+',['../group__parallelism.html#ga26f6e3c19e8476a589ef4e524a8a8bc7',1,'cl::sycl::trisycl::operator+()'],['../group__parallelism.html#ga776ef54675fd63ceec334909b12dbfbb',1,'cl::sycl::operator+()']]],
-  ['operator_2f',['operator/',['../group__parallelism.html#gab8e8b40836efb6724d63724a41af1b84',1,'cl::sycl::trisycl::operator/()'],['../group__parallelism.html#ga0e0075b8aac2d3bf6439a778ed5aa7a8',1,'cl::sycl::operator/()']]],
-  ['operator_5b_5d',['operator[]',['../group__parallelism.html#a783402deedce0add326afde9fe441c44',1,'cl::sycl::trisycl::GroupImpl::operator[]()'],['../group__data.html#a3a1741b619394be32f57a3b7b6e80cf4',1,'cl::sycl::trisycl::AccessorImpl::operator[](std::size_t Index) const '],['../group__data.html#a4c780c42d8cd8fd598d683ab0c829c67',1,'cl::sycl::trisycl::AccessorImpl::operator[](IdImpl&lt; dimensionality &gt; Index) const '],['../group__data.html#a02405a9dbf9097df1e20be11f5ba89fc',1,'cl::sycl::trisycl::AccessorImpl::operator[](ItemImpl&lt; dimensionality &gt; Index) const '],['../group__parallelism.html#ae293d1cc410615e2578d783bc4277f95',1,'cl::sycl::id::operator[]()'],['../group__parallelism.html#aa5de7c9e6e5a1128b0b8f648ed7c0046',1,'cl::sycl::group::operator[]()'],['../group__data.html#a01895ee72a9c7eb0a1dad1008b88066d',1,'cl::sycl::accessor::operator[](id&lt; dimensionality &gt; Index) const '],['../group__data.html#aca3635845163f5fc54e579c5d5a0dd8d',1,'cl::sycl::accessor::operator[](size_t Index) const '],['../group__data.html#a88523df1ec1b0750e6077d30f9af583c',1,'cl::sycl::accessor::operator[](item&lt; dimensionality &gt; Index) const ']]]
+  ['name',['name',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ab068931cc450442b63f5b3d276ea4297',1,'cl::sycl::info::name()'],['../group__execution.html#gga3ea7e38ccbc7de5270c4f69bbae20463ab068931cc450442b63f5b3d276ea4297',1,'cl::sycl::info::name()']]],
+  ['native_5fvector_5fwitdth_5fchar',['native_vector_witdth_char',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a518eca5f4d506715cf398ea7ba23dc9f',1,'cl::sycl::info']]],
+  ['native_5fvector_5fwitdth_5fdouble',['native_vector_witdth_double',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ae9ad26b30e893b6e8b92137c215a5ef3',1,'cl::sycl::info']]],
+  ['native_5fvector_5fwitdth_5ffloat',['native_vector_witdth_float',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a6ab028332a59b2695a48e9ed882ff285',1,'cl::sycl::info']]],
+  ['native_5fvector_5fwitdth_5fhalf',['native_vector_witdth_half',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ab465e1581fae13ce968402776e3090dd',1,'cl::sycl::info']]],
+  ['native_5fvector_5fwitdth_5fint',['native_vector_witdth_int',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5af655dbdbe67b460a09e5354e7f0238be',1,'cl::sycl::info']]],
+  ['native_5fvector_5fwitdth_5flong_5flong',['native_vector_witdth_long_long',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5acd47111ba0bb3d8401ebce36a048f215',1,'cl::sycl::info']]],
+  ['native_5fvector_5fwitdth_5fshort',['native_vector_witdth_short',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a4e5edd883f8cb2d030c75216a2651164',1,'cl::sycl::info']]],
+  ['nd_5fitem',['nd_item',['../group__parallelism.html#structcl_1_1sycl_1_1nd__item',1,'cl::sycl']]],
+  ['nd_5fitem',['nd_item',['../group__parallelism.html#a5bc8d921724ee3f4cbf4548e0ce2eba1',1,'cl::sycl::nd_item::nd_item(nd_range&lt; dims &gt; ndr)'],['../group__parallelism.html#a82f8a617ce5caee6c50abc6f1b220fd2',1,'cl::sycl::nd_item::nd_item(id&lt; dims &gt; global_index, nd_range&lt; dims &gt; ndr)']]],
+  ['nd_5fitem_2ehpp',['nd_item.hpp',['../nd__item_8hpp.html',1,'']]],
+  ['nd_5frange',['nd_range',['../group__parallelism.html#structcl_1_1sycl_1_1nd__range',1,'cl::sycl']]],
+  ['nd_5frange',['nd_range',['../group__parallelism.html#ac5326dd21dbc4b0e16991722c9c1978f',1,'cl::sycl::nd_range::nd_range()'],['../group__parallelism.html#ad3341ded4c2faf89e1c23e29a7de6b87',1,'cl::sycl::nd_item::ND_range()'],['../group__parallelism.html#a8f8139000ce81bae04b2af72895f2076',1,'cl::sycl::nd_item::ND_range()']]],
+  ['nd_5frange_2ehpp',['nd_range.hpp',['../nd__range_8hpp.html',1,'']]],
+  ['ndr',['ndr',['../group__parallelism.html#a0a8143d8777bc568ea2b2dc4abfd06e1',1,'cl::sycl::group']]],
+  ['next_5fgeneration',['next_generation',['../classcl_1_1sycl_1_1detail_1_1buffer__customer.html#a7b64e276b24f8899bd29d7e0a3e443ba',1,'cl::sycl::detail::buffer_customer']]],
+  ['next_5fpartitionable',['next_partitionable',['../group__execution.html#gga51116d5add442d9bae6028c45e09eca4a9e50da16b6f86043b800814c259a6f5f',1,'cl::sycl::info']]],
+  ['no_5fpartition',['no_partition',['../group__execution.html#gga88aea8ff69afd9cf81594eb915690b25a7f4266f4f9a51dde86e2c69df7ff52d3',1,'cl::sycl::info']]],
+  ['none',['none',['../group__execution.html#ggad3cf44d11f60b23508e91d1ed61ad001a334c4a4c42fdb79d7ebc3e73b517e6f8',1,'cl::sycl::info::none()'],['../group__execution.html#gga8986fcccc4479065bdbf37d9b9d8def5a334c4a4c42fdb79d7ebc3e73b517e6f8',1,'cl::sycl::info::none()']]],
+  ['notify_5fready',['notify_ready',['../classcl_1_1sycl_1_1detail_1_1buffer__customer.html#a83194f860e82c2e9fc71e4e6890ff10f',1,'cl::sycl::detail::buffer_customer']]],
+  ['num_5fdevices',['num_devices',['../group__execution.html#gga1a5898274a448ac592ebbcee928939c1abf324a81d4e115643691b7aa4cc12828',1,'cl::sycl::info']]],
+  ['numa',['numa',['../group__execution.html#gga51116d5add442d9bae6028c45e09eca4a0dfb2d09aeef6a0220a25c2e2d0fddbd',1,'cl::sycl::info::numa()'],['../group__execution.html#gga88aea8ff69afd9cf81594eb915690b25a0dfb2d09aeef6a0220a25c2e2d0fddbd',1,'cl::sycl::info::numa()']]]
 ];

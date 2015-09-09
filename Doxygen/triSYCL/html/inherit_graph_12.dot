@@ -1,0 +1,9 @@
+digraph "Graphical Class Hierarchy"
+{
+ // INTERACTIVE_SVG=YES
+  bgcolor="transparent";
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="cl::sycl::detail::opencl\l_type\< T, AS \>",height=0.2,width=0.4,color="black",URL="$group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1opencl__type",tooltip="Generate a type with some real OpenCL 2 attribute if we are on an OpenCL device. "];
+}

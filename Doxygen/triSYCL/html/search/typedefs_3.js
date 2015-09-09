@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['value_5ftype',['value_type',['../group__data.html#ac69700f72546ce546fd4520747bb8e68',1,'cl::sycl::trisycl::AccessorImpl::value_type()'],['../group__data.html#a87f39d6645e1da74706347993e491f3f',1,'cl::sycl::trisycl::BufferImpl::value_type()'],['../group__data.html#ac8edf819288e58510eca8a86a5009d5f',1,'cl::sycl::accessor::value_type()'],['../group__data.html#a5dd751bb83852bebab77acadb4c197dc',1,'cl::sycl::storage::value_type()'],['../group__data.html#a15c7ffdd04f88a910d0ec018fea13a7b',1,'cl::sycl::buffer::value_type()']]]
+  ['device_5fexec_5fcapabilities',['device_exec_capabilities',['../namespacecl_1_1sycl_1_1info.html#ac5ac9066c5ce7d0a10dcffaddfa0769a',1,'cl::sycl::info']]],
+  ['device_5ffp_5fconfig',['device_fp_config',['../namespacecl_1_1sycl_1_1info.html#ae9c4c661cca884e4d9e2f39ebcf49116',1,'cl::sycl::info']]],
+  ['device_5fqueue_5fproperties',['device_queue_properties',['../namespacecl_1_1sycl_1_1info.html#ad4ea7703299d04277a837ac58ba36834',1,'cl::sycl::info']]]
 ];

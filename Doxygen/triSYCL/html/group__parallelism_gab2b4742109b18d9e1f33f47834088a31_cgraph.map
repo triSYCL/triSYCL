@@ -1,5 +1,0 @@
-<map id="cl::sycl::parallel_for_workitem" name="cl::sycl::parallel_for_workitem">
-<area shape="rect" id="node3" href="$group__parallelism.html#afcb8aac12a206a460b99afdd6324111b" title="cl::sycl::group::get\l_group_id" alt="" coords="168,5,299,59"/>
-<area shape="rect" id="node5" href="$group__parallelism.html#ac15a2f48eb93da8ba690644d3431b16a" title="Get the local range for this work_group. " alt="" coords="168,82,299,137"/>
-<area shape="rect" id="node7" href="$group__parallelism.html#aa752af183220f46eb3f54d9253e9724d" title="cl::sycl::group::get\l_nr_range" alt="" coords="168,159,299,214"/>
-</map>

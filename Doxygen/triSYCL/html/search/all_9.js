@@ -1,4 +1,32 @@
 var searchData=
 [
-  ['kernel_5flambda',['kernel_lambda',['../group__parallelism.html#ga8bf8bfae1064d9a5d9577905c633ef72',1,'cl::sycl']]]
+  ['id',['id',['../group__parallelism.html#classcl_1_1sycl_1_1id',1,'cl::sycl']]],
+  ['id',['id',['../group__parallelism.html#a765ae388bf8a9a3803ba5b8138005d00',1,'cl::sycl::id']]],
+  ['id_2ehpp',['id.hpp',['../id_8hpp.html',1,'']]],
+  ['id_3c_20dimensionality_20_3e',['id&lt; dimensionality &gt;',['../group__parallelism.html',1,'cl::sycl']]],
+  ['image',['image',['../group__data.html#gga54d2e6e700c92ce57c6fe2ba91432598ac77aa668559e62c53a0209e1bc1cb05f',1,'cl::sycl::access']]],
+  ['image',['image',['../group__data.html#structcl_1_1sycl_1_1image',1,'cl::sycl']]],
+  ['image_2ehpp',['image.hpp',['../image_8hpp.html',1,'']]],
+  ['image2d_5fmax_5fheight',['image2d_max_height',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a32d3cc82e659c366219c0c4199aecfb4',1,'cl::sycl::info']]],
+  ['image2d_5fmax_5fwidth',['image2d_max_width',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ad51e9d78d8bbceba716fc595dcf62060',1,'cl::sycl::info']]],
+  ['image3d_5fmas_5fdepth',['image3d_mas_depth',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a24085cce1c20a7f2d931572ece1d7a46',1,'cl::sycl::info']]],
+  ['image3d_5fmax_5fheight',['image3d_max_height',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a803763900aa6655c989e3c39e4702e39',1,'cl::sycl::info']]],
+  ['image3d_5fmax_5fwidht',['image3d_max_widht',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a33f8f1f5bbf2cc09ae3c35918da6dabf',1,'cl::sycl::info']]],
+  ['image_5farray',['image_array',['../group__data.html#gga54d2e6e700c92ce57c6fe2ba91432598aacae0f87feeda5203767f4d433162204',1,'cl::sycl::access']]],
+  ['image_5fmax_5farray_5fsize',['image_max_array_size',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5aa454d1c5114e7b085e5e21e7be5e18de',1,'cl::sycl::info']]],
+  ['image_5fmax_5fbuffer_5fsize',['image_max_buffer_size',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a6d89b3affe73b8dbe95ae9d61cdac33a',1,'cl::sycl::info']]],
+  ['image_5fsupport',['image_support',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5aa6474ef1a7514c0b0d89cac06ef81a6c',1,'cl::sycl::info']]],
+  ['implementation',['implementation',['../group__data.html#adc361a9333f648a8b1fd8a820992f735',1,'cl::sycl::buffer']]],
+  ['inf_5fnan',['inf_nan',['../group__execution.html#gga1f763ed06ac5c82a02a7425bd7739745a55148441bb694773f842b0553e451c53',1,'cl::sycl::info']]],
+  ['is_5faccelerator',['is_accelerator',['../group__execution.html#a900db8487f118d653017abc7f9949d1f',1,'cl::sycl::device']]],
+  ['is_5favailable',['is_available',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ad331bbef72d5903997a0e6fb68d984e0',1,'cl::sycl::info']]],
+  ['is_5fcompiler_5favailable',['is_compiler_available',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ac59501c63a2e4c12f3ef0e624694a96e',1,'cl::sycl::info']]],
+  ['is_5fcpu',['is_cpu',['../group__execution.html#a2ad8cb3462516a0f3069875640d44dc1',1,'cl::sycl::device']]],
+  ['is_5fgpu',['is_gpu',['../group__execution.html#a75b085b8e49d8bdd9511adb61aeeca37',1,'cl::sycl::device']]],
+  ['is_5fhost',['is_host',['../group__execution.html#a8a1fd3033f06bb991e025bb5f48801cf',1,'cl::sycl::context::is_host()'],['../group__execution.html#a5bef943886c69c9dff340479fd1525b8',1,'cl::sycl::device::is_host()'],['../group__execution.html#acacdc85cb00467d36fa3d1724074e6f6',1,'cl::sycl::platform::is_host()'],['../group__execution.html#affe18def9e9082f4a8bbdabea974fa92',1,'cl::sycl::queue::is_host()']]],
+  ['is_5flinker_5favailable',['is_linker_available',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a7e6049679642fdf8aa7123a16d01c068',1,'cl::sycl::info']]],
+  ['is_5fwrite_5faccess',['is_write_access',['../group__data.html#a65dedf695e3113aabc2fd42720ac4af1',1,'cl::sycl::detail::accessor']]],
+  ['item',['item',['../group__parallelism.html#classcl_1_1sycl_1_1item',1,'cl::sycl']]],
+  ['item',['item',['../group__parallelism.html#a4cf03e235f8cee7866aa9444d2c4c37e',1,'cl::sycl::item::item(range&lt; dims &gt; global_size, id&lt; dims &gt; global_index, id&lt; dims &gt; offset={})'],['../group__parallelism.html#a687de13d5d391a590f6962009e1bbb9f',1,'cl::sycl::item::item()=default']]],
+  ['item_2ehpp',['item.hpp',['../item_8hpp.html',1,'']]]
 ];

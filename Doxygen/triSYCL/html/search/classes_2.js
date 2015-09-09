@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['command_5fgroup',['command_group',['../group__execution.html#structcl_1_1sycl_1_1command__group',1,'cl::sycl']]],
-  ['context',['context',['../group__execution.html#structcl_1_1sycl_1_1context',1,'cl::sycl']]]
+  ['context',['context',['../group__execution.html#classcl_1_1sycl_1_1context',1,'cl::sycl']]],
+  ['cpu_5fselector',['cpu_selector',['../group__execution.html#classcl_1_1sycl_1_1cpu__selector',1,'cl::sycl']]]
 ];

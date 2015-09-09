@@ -1,5 +1,10 @@
 var searchData=
 [
-  ['accessor',['accessor',['../group__data.html#ab093287499f4d89d4eb9901a266e0b29',1,'cl::sycl::accessor']]],
-  ['accessorimpl',['AccessorImpl',['../group__data.html#ac989362382bac87ec3211adbf3113e6b',1,'cl::sycl::trisycl::AccessorImpl']]]
+  ['accessor',['accessor',['../group__data.html#ad9f9908c63ecb79b5cb26756b779114d',1,'cl::sycl::detail::accessor::accessor()'],['../group__data.html#ab8764506ee71ccce97fb4468d2171ca8',1,'cl::sycl::accessor::accessor()']]],
+  ['acquire_5fbuffers',['acquire_buffers',['../structcl_1_1sycl_1_1detail_1_1task.html#a29e24713cb2af3054ce2bcdca5fbd649',1,'cl::sycl::detail::task']]],
+  ['add',['add',['../classcl_1_1sycl_1_1detail_1_1buffer__customer.html#abe890c1b0c667ff33a589d1a978ad341',1,'cl::sycl::detail::buffer_customer::add()'],['../structcl_1_1sycl_1_1detail_1_1task.html#abbd92ffa3fc1b20fb87db52e47d270bc',1,'cl::sycl::detail::task::add()']]],
+  ['address_5fspace_5farray',['address_space_array',['../group__address__spaces.html#a71118a65a5b9951ebf74854fb97667df',1,'cl::sycl::detail::address_space_array::address_space_array(const T &amp;array)'],['../group__address__spaces.html#a6d75cad305874dc5377efc33a40f4ad2',1,'cl::sycl::detail::address_space_array::address_space_array(std::initializer_list&lt; std::remove_extent_t&lt; T &gt;&gt; list)']]],
+  ['address_5fspace_5ffundamental',['address_space_fundamental',['../group__address__spaces.html#a05baa4801c2b1e1ba1a8439aec5400bf',1,'cl::sycl::detail::address_space_fundamental::address_space_fundamental()=default'],['../group__address__spaces.html#a9c54d40734d14ce01ccbd1b9266c6057',1,'cl::sycl::detail::address_space_fundamental::address_space_fundamental(address_space_fundamental&lt; SomeType, SomeAS &gt; &amp;v)']]],
+  ['address_5fspace_5fobject',['address_space_object',['../group__address__spaces.html#aa68a76f29f098ade216c9ac534339daa',1,'cl::sycl::detail::address_space_object']]],
+  ['address_5fspace_5fvariable',['address_space_variable',['../group__address__spaces.html#a8e8e4cdfd42cf3721e3ebbf9724396e4',1,'cl::sycl::detail::address_space_variable::address_space_variable(const T &amp;v)'],['../group__address__spaces.html#aef81221f58fcc6847fd2985700b50975',1,'cl::sycl::detail::address_space_variable::address_space_variable()=default']]]
 ];

@@ -1,0 +1,20 @@
+digraph "cl::sycl::parallel_for_work_item"
+{
+ // INTERACTIVE_SVG=YES
+  bgcolor="transparent";
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="cl::sycl::parallel\l_for_work_item",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="cl::sycl::detail::parallel\l_for_workitem",height=0.2,width=0.4,color="black",URL="$group__parallelism.html#gaee40543200f4434f2d63d1f02621321a",tooltip="Implement the loop on the work-items inside a work-group. "];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="cl::sycl::group::get\l_nd_range",height=0.2,width=0.4,color="black",URL="$group__parallelism.html#a85e5894039de77befed845734e305a93"];
+  Node2 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="cl::sycl::detail::small\l_array\< std::size_t, range\l\< dims \>, Dims \>::get",height=0.2,width=0.4,color="black",URL="$group__helpers.html#a17609386a684ec2649347c0328f82050",tooltip="Return the element of the array. "];
+  Node2 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="cl::sycl::group::get",height=0.2,width=0.4,color="black",URL="$group__parallelism.html#a1c2dc8ba6d58ec8077f16a63eb1bc446",tooltip="Return an id representing the index of the group within the nd_range for every dimension. "];
+  Node2 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="cl::sycl::group::get\l_local_range",height=0.2,width=0.4,color="black",URL="$group__parallelism.html#a34443b10048ef7bf76e609faba9399f5",tooltip="Get the local range for this work_group. "];
+  Node6 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

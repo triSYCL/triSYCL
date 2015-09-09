@@ -1,0 +1,9 @@
+digraph "Graphical Class Hierarchy"
+{
+ // INTERACTIVE_SVG=YES
+  bgcolor="transparent";
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="cl::sycl::info::param\l_traits\< T, Param \>",height=0.2,width=0.4,color="black",URL="$classcl_1_1sycl_1_1info_1_1param__traits.html",tooltip="Implement a meta-function from (T, value) to T&#39; to express the return type value of an OpenCL functio..."];
+}

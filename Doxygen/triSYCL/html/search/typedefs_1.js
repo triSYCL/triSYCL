@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['element',['element',['../group__data.html#a7c0c4a82c680938e0ce191e577907edb',1,'cl::sycl::trisycl::AccessorImpl::element()'],['../group__data.html#a73c3daf474b94f56ec96a122d90b8254',1,'cl::sycl::trisycl::BufferImpl::element()'],['../group__data.html#af802de7e9269d44b98db3ee856b4fe5e',1,'cl::sycl::accessor::element()'],['../group__data.html#ac97b6c7bb45ebb6d8a0204bdf5f8ec93',1,'cl::sycl::storage::element()'],['../group__data.html#a50fc52de5458745304d834b8366872a2',1,'cl::sycl::buffer::element()']]]
+  ['basic_5ftype',['basic_type',['../group__vector.html#aac8ab494e97a008a3c636c9c00191719',1,'cl::sycl::vec']]],
+  ['buffer_5fallocator',['buffer_allocator',['../group__data.html#gac9d61f5d9836dfcb2cbfb41a895dc04b',1,'cl::sycl']]]
 ];

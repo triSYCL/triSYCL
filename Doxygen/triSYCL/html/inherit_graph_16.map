@@ -1,4 +1,0 @@
-<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$group__parallelism.html#structcl_1_1sycl_1_1trisycl_1_1ItemImpl" title="The implementation of a SYCL item stores information on a work&#45;item within a work&#45;group, with some more context such as the definition ranges. " alt="" coords="5,5,131,59"/>
-<area shape="rect" id="node3" href="$group__parallelism.html#structcl_1_1sycl_1_1item" title="A SYCL item stores information on a work&#45;item within a work&#45;group, with some more context such as the..." alt="" coords="179,15,328,49"/>
-</map>
