@@ -415,7 +415,7 @@ Some ideas of future developments where *you* can contribute too: :-)
 
 .. _Bolt: https://github.com/HSA-Libraries/Bolt
 
-.. _Boost.Compute: http://kylelutz.github.io/compute/
+.. _Boost.Compute: https://github.com/boostorg/compute
 
 .. _C++: http://www.open-std.org/jtc1/sc22/wg21/
 
