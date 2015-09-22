@@ -22,7 +22,7 @@ namespace detail {
 /** A metafunction returning the parameters for the host platform
     implementation */
 template <info::platform Param>
-string_class get_host_platform_info() {
+inline string_class get_host_platform_info() {
   // \todo Define some SYCL exception type for this type of errors
   throw std::invalid_argument {
     "Unknown parameter valuefor SYCL platform information" };
@@ -30,7 +30,7 @@ string_class get_host_platform_info() {
 
 /// The metafunction value for the profile
 template <>
-string_class get_host_platform_info<info::platform::profile>() {
+inline string_class get_host_platform_info<info::platform::profile>() {
   /* Well... Is the host platform really a full profile whereas it is not
      really OpenCL? */
   return "FULL_PROFILE";
@@ -38,26 +38,26 @@ string_class get_host_platform_info<info::platform::profile>() {
 
 /// The metafunction value for the version
 template <>
-string_class get_host_platform_info<info::platform::version>() {
+inline string_class get_host_platform_info<info::platform::version>() {
   // \todo I guess it should include the software version too...
   return "1.2";
 }
 
 /// The metafunction value for the name
 template <>
-string_class get_host_platform_info<info::platform::name>() {
+inline string_class get_host_platform_info<info::platform::name>() {
   return "triSYCL host platform";
 }
 
 /// The metafunction value for the vendor
 template <>
-string_class get_host_platform_info<info::platform::vendor>() {
+inline string_class get_host_platform_info<info::platform::vendor>() {
   return "triSYCL Open Source project";
 }
 
 /// The metafunction value for the extensions
 template <>
-string_class get_host_platform_info<info::platform::extensions>() {
+inline string_class get_host_platform_info<info::platform::extensions>() {
   // No extension
   return "";
 }

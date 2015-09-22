@@ -5,6 +5,18 @@
    CHECK-NEXT: get_info<info::platform::name>() = triSYCL host platform
    CHECK-NEXT: get_info<info::platform::vendor>() = triSYCL Open Source project
    CHECK-NEXT: get_info<info::platform::extensions>() = 
+   CHECK-NEXT: is_host() = 1
+   CHECK-NEXT: get_info<info::platform::profile>() = FULL_PROFILE
+   CHECK-NEXT: get_info<info::platform:::version>() = 1.2
+   CHECK-NEXT: get_info<info::platform::name>() = triSYCL host platform
+   CHECK-NEXT: get_info<info::platform::vendor>() = triSYCL Open Source project
+   CHECK-NEXT: get_info<info::platform::extensions>() = 
+   CHECK: is_host() = 1
+   CHECK-NEXT: get_info<info::platform::profile>() = FULL_PROFILE
+   CHECK-NEXT: get_info<info::platform:::version>() = 1.2
+   CHECK-NEXT: get_info<info::platform::name>() = triSYCL host platform
+   CHECK-NEXT: get_info<info::platform::vendor>() = triSYCL Open Source project
+   CHECK-NEXT: get_info<info::platform::extensions>() = 
 */
 #include <CL/sycl.hpp>
 #include <iostream>
@@ -30,6 +42,16 @@ void display(const platform &p) {
 int main() {
   platform p;
   display(p);
+
+  platform p2 { p };
+
+  display(p2);
+  std::cout << std::endl;
+
+  for (const auto &p : platform::get_platforms()) {
+    std::cout << "Platform " << &p << ':' << std::endl;
+    display(p);
+  }
 
   return 0;
 }
