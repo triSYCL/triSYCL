@@ -11,8 +11,11 @@
 
 #include "CL/sycl/context.hpp"
 #include "CL/sycl/detail/default_classes.hpp"
+#include "CL/sycl/detail/global_config.hpp"
 #include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/device.hpp"
+#include "CL/sycl/platform/detail/platform.hpp"
+#include "CL/sycl/platform_info.hpp"
 
 namespace cl {
 namespace sycl {
@@ -23,56 +26,6 @@ class device;
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
 */
-namespace info {
-
-enum class device_type : unsigned int {
-  cpu,
-  gpu,
-  accelerator,
-  custom,
-  defaults,
-  host,
-  all
-};
-
-
-/** Platform information descriptors
-
-    A SYCL platform can be queried for all of the following information
-    using the get_info function. All SYCL contexts have valid devices for
-    them, including the SYCL host device.
-*/
-enum class platform : unsigned int {
-  /** Returns the profile name (as a string_class) supported by the im-
-      plementation.
-
-      Can be either FULL PROFILE or EMBEDDED PROFILE.
-  */
-  profile,
-  /** Returns the OpenCL software driver version string in the form major
-      number.minor number (as a string_class)
-  */
-  version,
-  /** Returns the name of the platform (as a string_class)
-  */
-  name,
-  /** Returns the string provided by the platform vendor (as a string_class)
-  */
-  vendor,
-  /** Returns a space-separated list of extension names supported by the
-      platform (as a string_class)
-  */
-  extensions
-};
-
-
-/** Query the return type for get_info() on platform stuff
-
-    Only return a string_class
-*/
-TRISYCL_INFO_PARAM_TRAITS_ANY_T(info::platform, string_class)
-
-}
 
 /** Abstract the OpenCL platform
 
@@ -80,6 +33,10 @@ TRISYCL_INFO_PARAM_TRAITS_ANY_T(info::platform, string_class)
 */
 class platform {
 
+#ifdef TRISYCL_OPENCL
+  /// Refer to the related OpenCL platform of any
+  std::shared_ptr<boost::compute::platform> m_platform;
+#endif
 
 public:
 
@@ -91,9 +48,9 @@ public:
 
       \todo Add const to the specification
   */
-  explicit platform(cl_platform_id platformID) {
-    detail::unimplemented();
-  }
+  explicit platform(cl_platform_id platformID) :
+    m_platform { new boost::compute::platform { platformID} }
+  {}
 #endif
 
   /** Default constructor for platform
@@ -104,41 +61,63 @@ public:
       Returns errors via the SYCL exception class.
 
       Get back the default constructors, for this implementation.
+
+      In this implementation the default platform is the host platform.
   */
   platform() = default;
 
 
+  /**  Construct a platform object from the device returned by a device
+       selector of the user’s choice
+
+       Returns errors via the SYCL exception class.
+  */
+  explicit platform(const device_selector &devSelector) {
+    detail::unimplemented();
+  }
+
+
 #ifdef TRISYCL_OPENCL
-  /** Returns the cl_platform_id of the underlying
-      OpenCL platform
+  /** Returns the cl_platform_id of the underlying OpenCL platform
 
       If the platform is not a valid OpenCL platform, for example if it is
-      the SYCL host, a nullptr will be returned.
+      the SYCL host, an exception is thrown
 
-      \todo To be implemented
+      \todo Modify the specification to throw since returning nullptr does
+      mean anything
+
+      \todo Define a SYCL exception for this
   */
   cl_platform_id get() const {
-    detail::unimplemented();
-    return {};
+    if (m_platform)
+      return *m_platform;
+
+    throw std::domain_error { "The host platform is not an OpenCL platform" };
   }
 #endif
 
 
   /** Get the list of all the platforms available to the application
-
-      \todo To be implemented
-  */
+   */
   static vector_class<platform> get_platforms() {
-    detail::unimplemented();
-    return {};
+    // There is always the host platform at least
+    vector_class<platform> platforms { platform { } };
+
+#ifdef TRISYCL_OPENCL
+    for (auto const &p : boost::compute::system::platforms())
+      platforms.emplace_back(p);
+#endif
+
+    return platforms;
   }
 
 
   /** Returns all the available devices for this platform, of type device
       type, which is defaulted to info::device_type::all
 
-
       By default returns all the devices.
+
+      \todo To be implemented
   */
   vector_class<device>
   get_devices(info::device_type device_type = info::device_type::all) const {
@@ -147,15 +126,16 @@ public:
   }
 
 
-  /** Get the OpenCL information about the requested parameter
-
-      \todo To be implemented
-  */
+  /// Get the OpenCL information about the requested parameter
   template <info::platform Param>
   typename info::param_traits<info::platform, Param>::type
   get_info() const {
-    detail::unimplemented();
-    return {};
+#ifdef TRISYCL_OPENCL
+    if (m_platform)
+      return m_platform->get_info<Param>(extension);
+#endif
+    // Ask the host platform information
+    return detail::get_host_platform_info<Param>();
   }
 
 
@@ -166,15 +146,24 @@ public:
       \todo extend to any type of C++-string like object
   */
   bool has_extension(const string_class &extension) const {
-    detail::unimplemented();
-    return {};
+#ifdef TRISYCL_OPENCL
+    if (m_platform)
+      return m_platform->supports_extension(extension);
+#endif
+    // For now there is no supported extension on the host platform
+    return false;
   }
 
 
   /// Test if this platform is a host platform
   bool is_host() const {
-    // Right now, this is a host-only implementation :-)
+#ifdef TRISYCL_OPENCL
+    // This is the host platform if there is no OpenCL associated
+    return !m_platform;
+#else
+    // When there is no OpenCL, there is only a host platform
     return true;
+#endif
   }
 
 };

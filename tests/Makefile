@@ -23,6 +23,24 @@ CXXFLAGS = -Wall -std=c++1y -I$(triSYCL_DIR)/include \
 # To use OpenMP to execute SYCL kernels:
 CXXFLAGS += -fopenmp
 
+# Specify where OpenCL includes files are with OpenCL_INCPATH
+ifdef OpenCL_INCPATH
+	CXXFLAGS += -I$(OpenCL_INCPATH)
+endif
+
+# Specify where Bost.Compute is with BOOST_COMPUTE_INCPATH
+ifdef BOOST_COMPUTE_INCPATH
+	CXXFLAGS += -I$(BOOST_COMPUTE_INCPATH) \
+	-DBOOST_COMPUTE_DEBUG_KERNEL_COMPILATION \
+	-DBOOST_COMPUTE_HAVE_THREAD_LOCAL \
+	-DBOOST_COMPUTE_THREAD_SAFE
+endif
+
+# Specify where OpenCL library files are with OpenCL_LIBPATH
+ifdef OpenCL_LIBPATH
+  LDFLAGS += -L$(OpenCL_LIBPATH)
+endif
+
 # To verify results of Jacobi stencils
 CXXFLAGS += -DDEBUG_STENCIL
 
@@ -32,7 +50,7 @@ CXXFLAGS += -DDEBUG_STENCIL
 # There are some tests using small array display() method
 # To enable debug and tracing:
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
-#LDLIBS=-lboost_log
+#LDLIBS+=-lboost_log
 
 # By default run lit checking in the current directory
 CHECKING_DIR ?= .

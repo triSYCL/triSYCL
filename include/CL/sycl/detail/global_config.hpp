@@ -22,18 +22,15 @@
 /** Define TRISYCL_OPENCL to add OpenCL
 
     triSYCL can indeed work without OpenCL if only host support is needed.
-
-    Right now it is set by Doxygen to generate the documentation.
-
-    \todo Use a macro to check instead if the OpenCL header has been
-    included before.
-
-    But what is the right one? __OPENCL_CL_H? __OPENCL_C_VERSION__? CL_HPP_?
-    Mostly CL_HPP_ to be able to use param_traits<> from cl.hpp...
 */
 #ifdef TRISYCL_OPENCL
-#define __CL_ENABLE_EXCEPTIONS
-#include <CL/cl.hpp>
+// triSYCL is based on Boost.Compute for OpenCL support
+#include <boost/compute.hpp>
+/// A macro to keep some stuff in OpenCL mode
+#define TRISYCL_SKIP_OPENCL(x) x
+#else
+/// A macro to skip stuff when not supporting OpenCL
+#define TRISYCL_SKIP_OPENCL(x)
 #endif
 
 /** Allow the asynchronous implementation of tasks */
