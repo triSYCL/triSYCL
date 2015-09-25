@@ -18,8 +18,11 @@
 #include "CL/sycl/accessor.hpp"
 #include "CL/sycl/buffer/detail/buffer.hpp"
 #include "CL/sycl/buffer_allocator.hpp"
+#include "CL/sycl/detail/global_config.hpp"
+#include "CL/sycl/event.hpp"
 #include "CL/sycl/handler.hpp"
 #include "CL/sycl/id.hpp"
+#include "CL/sycl/queue.hpp"
 #include "CL/sycl/range.hpp"
 
 namespace cl {

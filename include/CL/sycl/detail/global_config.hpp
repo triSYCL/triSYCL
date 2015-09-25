@@ -24,7 +24,14 @@
     triSYCL can indeed work without OpenCL if only host support is needed.
 */
 #ifdef TRISYCL_OPENCL
-// triSYCL is based on Boost.Compute for OpenCL support
+
+// SYCL interoperation API with OpenCL requires some OpenCL C types:
+#if defined(__APPLE__)
+#include <OpenCL/cl.h>
+#else
+#include <CL/cl.h>
+#endif
+// But the triSYCL OpenCL implementation is actually based on Boost.Compute
 #include <boost/compute.hpp>
 /// A macro to keep some stuff in OpenCL mode
 #define TRISYCL_SKIP_OPENCL(x) x

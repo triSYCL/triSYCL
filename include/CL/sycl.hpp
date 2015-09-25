@@ -41,7 +41,7 @@
 #include "CL/sycl/device.hpp"
 #include "CL/sycl/device_selector.hpp"
 #include "CL/sycl/error_handler.hpp"
-//#include "CL/sycl/event.hpp"
+#include "CL/sycl/event.hpp"
 #include "CL/sycl/exception.hpp"
 #include "CL/sycl/group.hpp"
 #include "CL/sycl/handler.hpp"
