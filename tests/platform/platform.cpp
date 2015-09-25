@@ -46,7 +46,9 @@ int main() {
   platform p2 { p };
 
   display(p2);
-  std::cout << std::endl;
+
+//  std::cout << "(p == p2) should be printed as 1: " << (p == p2) << std::endl
+//            << std::endl;
 
   for (const auto &p : platform::get_platforms()) {
     std::cout << "Platform " << &p << ':' << std::endl;

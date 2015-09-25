@@ -1,7 +1,7 @@
 #ifndef TRISYCL_SYCL_PLATFORM_DETAIL_PLATFORM_HPP
 #define TRISYCL_SYCL_PLATFORM_DETAIL_PLATFORM_HPP
 
-/** \file The OpenCL SYCL platform
+/** \file The OpenCL triSYCL platform information
 
     Ronan at Keryell point FR
 

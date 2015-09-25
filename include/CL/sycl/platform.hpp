@@ -90,7 +90,7 @@ public:
   */
   cl_platform_id get() const {
     if (m_platform)
-      return *m_platform;
+      return m_platform->id();
 
     throw std::domain_error { "The host platform is not an OpenCL platform" };
   }
@@ -105,7 +105,7 @@ public:
 
 #ifdef TRISYCL_OPENCL
     for (auto const &p : boost::compute::system::platforms())
-      platforms.emplace_back(p);
+      platforms.emplace_back(p.id());
 #endif
 
     return platforms;
@@ -132,9 +132,12 @@ public:
   get_info() const {
 #ifdef TRISYCL_OPENCL
     if (m_platform)
-      return m_platform->get_info<Param>(extension);
+      /* Use the fact that the triSYCL info values are the same as the
+         OpenCL ones used in Boost.Compute to just cast the enum class to
+         the int value */
+      return m_platform->get_info<static_cast<int>(Param)>();
 #endif
-    // Ask the host platform information
+    // Otherwise ask the host platform information
     return detail::get_host_platform_info<Param>();
   }
 
@@ -165,6 +168,11 @@ public:
     return true;
 #endif
   }
+
+
+/// \todo Add to the specification and implement == and !=
+
+/// \todo Add also < and hash for associative containers
 
 };
 

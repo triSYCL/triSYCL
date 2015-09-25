@@ -23,6 +23,10 @@ CXXFLAGS = -Wall -std=c++1y -I$(triSYCL_DIR)/include \
 # To use OpenMP to execute SYCL kernels:
 CXXFLAGS += -fopenmp
 
+# To use OpenCL
+#CXXFLAGS += -DTRISYCL_OPENCL
+#LDLIBS += -lOpenCL
+
 # Specify where OpenCL includes files are with OpenCL_INCPATH
 ifdef OpenCL_INCPATH
 	CXXFLAGS += -I$(OpenCL_INCPATH)
