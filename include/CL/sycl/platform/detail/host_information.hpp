@@ -8,7 +8,7 @@
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
 */
-#include "CL/sycl/platform_info.hpp"
+#include "CL/sycl/info/platform.hpp"
 #include "CL/sycl/detail/global_config.hpp"
 
 namespace cl {

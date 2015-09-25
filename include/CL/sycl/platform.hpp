@@ -14,8 +14,8 @@
 #include "CL/sycl/detail/global_config.hpp"
 #include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/device.hpp"
-#include "CL/sycl/platform/detail/platform.hpp"
-#include "CL/sycl/platform_info.hpp"
+#include "CL/sycl/platform/detail/host_information.hpp"
+#include "CL/sycl/info/platform.hpp"
 
 namespace cl {
 namespace sycl {
