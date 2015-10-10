@@ -5,6 +5,7 @@
    CHECK-NEXT: f[1] = 3
    CHECK-NEXT: f[1] = 3
    CHECK-NEXT: f[0] = 2
+   CHECK-NEXT: *c_p = s
    CHECK-NEXT: global_float = 6
    CHECK-NEXT: Range = {2,3}
    CHECK-NEXT: Range2 = {2,3}
@@ -77,6 +78,10 @@ int main() {
           pd2 = &d;
           // Can only point to a constant<> object
           constant<char *> c_p;
+	  constant<char> c = 's';
+	  c_p = &c;
+          std::cout << "*c_p = " << *c_p << std::endl;
+	  
           // Can only point to a global<> object
           global<unsigned long int *> g_p;
           // Can only point to a local<> object

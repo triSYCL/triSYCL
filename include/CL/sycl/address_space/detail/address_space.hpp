@@ -199,6 +199,9 @@ public:
   */
   operator opencl_type & () { return variable; }
 
+  /// Return the address of the value to implement pointers
+  opencl_type * get_address() { return &variable; }
+
 };
 
 
@@ -282,6 +285,14 @@ struct address_space_ptr : public address_space_fundamental<T, AS> {
   /// Inherit from base class constructors
   using super::address_space_fundamental;
 
+  /** Allow initialization of a pointer type from the address of an
+      element with the same type and address space
+  */
+  address_space_ptr(address_space_fundamental<typename std::pointer_traits<T>::element_type, AS> *p)
+    : address_space_fundamental<T, AS> { p->get_address() } {}
+
+  /// Put back the default constructors canceled by the previous definition
+  address_space_ptr() = default;
 };
 
 
