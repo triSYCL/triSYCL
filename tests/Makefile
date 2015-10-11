@@ -45,9 +45,6 @@ ifdef OpenCL_LIBPATH
   LDFLAGS += -L$(OpenCL_LIBPATH)
 endif
 
-# To verify results of Jacobi stencils
-CXXFLAGS += -DDEBUG_STENCIL
-
 ## To enable asynchronous kernels
 #CXXFLAGS += -DTRISYCL_ASYNC=1
 
