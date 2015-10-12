@@ -1,40 +1,47 @@
 /* RUN: %{execute}%s
  */
-#include <stdlib.h>
+#include <cstdlib>
 #include <CL/sycl.hpp>
 
-#include "jacobi.h"
+#include "include/helpers-jacobi.hpp"
 
 using namespace cl;
 
-int main() {
+int main(int argc, char **argv) {
+  read_args(argc, argv);
+  struct counters timer;
+  struct op_time time_op;
+  start_measure(timer);
 
-  float *ioA = (float *) malloc(sizeof(float)*M*N);
-  float *ioB = (float *) malloc(sizeof(float)*M*N);
+  // declarations
+  sycl::buffer<float,2> ioABuffer = cl::sycl::buffer<float,2>(sycl::range<2> {M, N});
+  sycl::buffer<float,2> ioBBuffer = sycl::buffer<float,2>(sycl::range<2> {M, N}); 
 #if DEBUG_STENCIL
   float *a_test = (float *) malloc(sizeof(float)*M*N);
   float *b_test = (float *) malloc(sizeof(float)*M*N);
 #endif
 
-
   // initialization
   for (size_t i = 0; i < M; ++i){
     for (size_t j = 0; j < N; ++j){
-      ioA[i*M+j] = ((float) i*(j+2) + 10) / N;
-      ioB[i*M+j] = ((float) i*(j+2) + 10) / N;
+      float value = ((float) i*(j+2) + 10) / N;
+      sycl::id<2> id = {i, j};
+      ioABuffer.get_access<sycl::access::write, sycl::access::host_buffer>()[id] = value;
+      ioBBuffer.get_access<sycl::access::write, sycl::access::host_buffer>()[id] = value;
 #if DEBUG_STENCIL
-      a_test[i*M+j] = ((float) i*(j+2) + 10) / N;
-      b_test[i*M+j] = ((float) i*(j+2) + 10) / N;
+      a_test[i*N+j] = value;
+      b_test[i*N+j] = value;
 #endif
     }
   }
 
-  sycl::buffer<float,2> ioABuffer(ioA, sycl::range<2> {M, N});
-  sycl::buffer<float,2> ioBBuffer(ioB, sycl::range<2> {M, N});
+  end_init(timer);
 
   // compute result with "gpu"
-  {
+  {    
     sycl::queue myQueue;
+
+    begin_op(time_op);
 
     for (unsigned int i = 0; i < NB_ITER; ++i){
       myQueue.submit([&](sycl::handler &cgh) {
@@ -54,6 +61,11 @@ int main() {
 
                                                   });
         });
+
+      end_op(time_op, timer.stencil_time);
+      begin_op(time_op);
+
+
       myQueue.submit([&](sycl::handler &cgh) {
           sycl::accessor<float, 2, sycl::access::write> a(ioABuffer, cgh);
           sycl::accessor<float, 2, sycl::access::read>  b(ioBBuffer, cgh);
@@ -63,8 +75,11 @@ int main() {
                                                a[it] = MULT_COEF * b[it];
                                              });
         });
+      end_op(time_op, timer.copy_time);
     }
   }
+
+  end_measure(timer);
 
 #if DEBUG_STENCIL
   // get the gpu result
@@ -73,8 +88,6 @@ int main() {
   free(a_test);
   free(b_test);
 #endif
-  free(ioA);
-  free(ioB);
 
   return 0;
 }
