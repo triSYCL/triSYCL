@@ -1,16 +1,16 @@
 /* RUN: %{execute}%s | %{filecheck} %s
    CHECK: 7
-   CHECK-NEXT: 3
-   CHECK-NEXT: 2
-   CHECK-NEXT: 1
-   CHECK-NEXT: 10 11 12
-   CHECK-NEXT: 2 3 6
-   CHECK-NEXT: 1 2 3
-   CHECK-NEXT: 341
-   CHECK-NEXT: 100 10
-   CHECK-NEXT: 2 3
-   CHECK-NEXT: 0 0
-   CHECK-NEXT: 302
+   CHECK: 3
+   CHECK: 2
+   CHECK: 1
+   CHECK: 10 11 12
+   CHECK: 2 3 6
+   CHECK: 1 2 3
+   CHECK: 341
+   CHECK: 100 10
+   CHECK: 2 3
+   CHECK: 0 0
+   CHECK: 302
 */
 #include <CL/sycl.hpp>
 #include <iostream>
