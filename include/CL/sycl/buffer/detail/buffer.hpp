@@ -44,13 +44,17 @@ struct buffer : public detail::debug<buffer<T, Dimensions>>,
   /** If some allocation is requested, it is managed by this multi_array
       to ease initialization from data */
   boost::multi_array<T, Dimensions> allocation;
+
   /** This is the multi-dimensional interface to the data that may point
       to either allocation in the case of storage managed by SYCL itself
       or to some other memory location in the case of host memory or
       storage<> abstraction use
   */
+
   boost::multi_array_ref<T, Dimensions> access;
 
+  /// The weak pointer to copy back data on buffer deletion
+  weak_ptr_class<T> final_data;
 
   /// Create a new read-write buffer of size \param r
   buffer(range<Dimensions> const &r) : buffer_base { false },
@@ -120,6 +124,15 @@ struct buffer : public detail::debug<buffer<T, Dimensions>>,
          event available_event)
   */
 
+  /** The buffer content may be copied back on destruction to some
+      final location */
+  ~buffer() {
+    /* If there is a final_data set and that points to something
+       alive, copy back the data through the shared pointer */
+    if (auto p = final_data.lock())
+      std::copy_n(access.data(), access.num_elements(), p.get());
+  }
+
   // Use BOOST_DISABLE_ASSERTS at some time to disable range checking
 
   /// Return an accessor of the required mode \param M
@@ -128,6 +141,16 @@ struct buffer : public detail::debug<buffer<T, Dimensions>>,
             access::target Target = access::global_buffer>
   detail::accessor<T, Dimensions, Mode, Target> get_access() {
     return { *this };
+  }
+
+  /** Set the weak pointer to copy back data on buffer deletion
+
+      \todo Add a write kernel dependency on the buffer so the buffer
+      destructor has to wait for the kernel execution if the buffer is
+      also accessed through a write accessor
+  */
+  void set_final_data(weak_ptr_class<T> && finalData) {
+    final_data = finalData;
   }
 
 };

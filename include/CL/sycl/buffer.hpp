@@ -140,6 +140,10 @@ struct buffer {
       \todo Generalize this for n-D and provide column-major and row-major
       initialization
 
+      \todo a reason to have this nD is that
+            set_final_data(weak_ptr_class<T> & finalData) is actually
+            doing this linearization anyway
+
       \todo Allow read-only buffer construction too
 
       \todo Allow initialization from ranges and collections à la STL
@@ -175,7 +179,7 @@ struct buffer {
   buffer(buffer<T, Dimensions, Allocator> b,
          id<Dimensions> base_index,
          range<Dimensions> sub_range,
-         Allocator allocator = {}) { assert(0); }
+         Allocator allocator = {}) { detail::unimplemented(); }
 
 
 #ifdef TRISYCL_OPENCL
@@ -196,7 +200,7 @@ struct buffer {
   buffer(cl_mem mem_object,
          queue from_queue,
          event available_event = {},
-         Allocator allocator = {}) { assert(0); }
+         Allocator allocator = {}) { detail::unimplemented();  }
 #endif
 
 
@@ -292,10 +296,15 @@ struct buffer {
       It is defined as a weak_ptr referring to a shared_ptr that is not
       associated with the cl::sycl::buffer, and so the cl::sycl::buffer
       will have no ownership of finalData.
+
+      \todo Update the API to take finalData by value instead of by
+            reference.  This way we can have an implicit conversion
+            possible at the API call from a shared_ptr<>, avoiding an
+            explicit weak_ptr<> creation
   */
-  void set_final_data(weak_ptr_class<T> & finalData) {
-  detail::unimplemented();
-}
+  void set_final_data(weak_ptr_class<T> &&finalData) {
+    implementation->set_final_data(std::move(finalData));
+  }
 
 };
 
