@@ -9,6 +9,36 @@
 #define MIN(a,b) ((a > b) ? b : a)
 #define MAX(a,b) ((a > b) ? a : b)
 
+// operator redef
+
+// template <typename T>
+// T coef_times (T& a, T& b) {
+//   std::function<T(T&, T&)> f; 
+//   f = std::multiplies<T>();
+//   return f(a,b);
+// }
+
+// template <typename T>
+// T coef_plus (T& a, T& b) {
+//   std::function<T(T&, T&)> f; 
+//   f = std::plus<T>();
+//   return f(a,b);
+// }
+
+template <typename T>
+T coef_times (T a, T b) {
+  std::function<T(T, T)> f; 
+  f = std::multiplies<T>();
+  return f(a,b);
+}
+
+template <typename T>
+T coef_plus (T a, T b) {
+  std::function<T(T, T)> f; 
+  f = std::plus<T>();
+  return f(a,b);
+}
+
 
 // common
 
