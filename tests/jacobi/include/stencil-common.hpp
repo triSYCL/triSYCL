@@ -11,32 +11,14 @@
 
 // operator redef
 
-// template <typename T>
-// T coef_times (T& a, T& b) {
-//   std::function<T(T&, T&)> f; 
-//   f = std::multiplies<T>();
-//   return f(a,b);
-// }
-
-// template <typename T>
-// T coef_plus (T& a, T& b) {
-//   std::function<T(T&, T&)> f; 
-//   f = std::plus<T>();
-//   return f(a,b);
-// }
-
 template <typename T>
-T coef_times (T a, T b) {
-  std::function<T(T, T)> f; 
-  f = std::multiplies<T>();
-  return f(a,b);
+inline T coef_times (T a, T b) {
+  return std::multiplies<T>()(a,b);
 }
 
 template <typename T>
-T coef_plus (T a, T b) {
-  std::function<T(T, T)> f; 
-  f = std::plus<T>();
-  return f(a,b);
+inline T coef_plus (T a, T b) {
+  return std::plus<T>()(a,b);
 }
 
 
