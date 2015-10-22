@@ -17,8 +17,8 @@ int test_main(int argc, char *argv[]) {
     queue myQueue;
 
     /** There is a draft for shared_ptr of arrays for C++17, but it is
-	not here... So use a shared pointer with an explicit
-	destructor waiting for 2017 */
+        not here... So use a shared pointer with an explicit
+        destructor waiting for 2017 */
     std::shared_ptr<int> result { new int[N], std::default_delete<int[]>{} };
 
     {

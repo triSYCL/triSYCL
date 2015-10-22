@@ -98,33 +98,42 @@ struct buffer {
     : implementation { new detail::buffer<T, Dimensions> { host_data, r } } {}
 
   /** Create a new buffer with associated memory, using the data in
-      hostData
+      host_data
 
-      The ownership of the hostData is shared between the runtime and the
+      The ownership of the host_data is shared between the runtime and the
       user. In order to enable both the user application and the SYCL
       runtime to use the same pointer, a cl::sycl::mutex_class is
       used. The mutex m is locked by the runtime whenever the data is in
-      use and unlocked otherwise. Data is synchronized with hostData, when
+      use and unlocked otherwise. Data is synchronized with host_data, when
       the mutex is unlocked by the runtime.
   */
-  buffer(shared_ptr_class<T> & hostData,
-         const range<Dimensions> & bufferRange,
+  buffer(shared_ptr_class<T> & host_data,
+         const range<Dimensions> & buffer_range,
          cl::sycl::mutex_class * m = nullptr,
          Allocator allocator = {}) {
     detail::unimplemented();
   }
 
 
-  /** Create a new buffer which is initialized by
-      hostData
+  /** Create a new buffer which is initialized by host_data
 
-      The SYCL runtime receives full ownership of the hostData unique_ptr
+      The SYCL runtime receives full ownership of the host_data unique_ptr
       and there in effect there is no synchronization with the application
-      code using hostData.
-*/
-  buffer(unique_ptr_class<T> && hostData,
-         const range<Dimensions> & bufferRange) {
-    detail::unimplemented();
+      code using host_data.
+
+      \todo Update the API to add template <typename D =
+      std::default_delete<T>> because the
+      unique_ptr_class/std::unique_ptr have the destructor type as
+      dependent
+  */
+  template <typename D = std::default_delete<T>>
+  buffer(unique_ptr_class<T, D> &&host_data,
+         const range<Dimensions> & buffer_range,
+         Allocator allocator = {})
+  // Just delegate to the constructor with normal pointer
+    : buffer(host_data.get(), buffer_range, allocator) {
+    // Then release the host_data memory
+    host_data.release();
   }
 
 
@@ -302,7 +311,7 @@ struct buffer {
             possible at the API call from a shared_ptr<>, avoiding an
             explicit weak_ptr<> creation
   */
-  void set_final_data(weak_ptr_class<T> &&finalData) {
+  void set_final_data(weak_ptr_class<T> finalData) {
     implementation->set_final_data(std::move(finalData));
   }
 
