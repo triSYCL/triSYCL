@@ -55,6 +55,10 @@ struct buffer : public detail::debug<buffer<T, Dimensions>>,
   /// The weak pointer to copy back data on buffer deletion
   weak_ptr_class<T> final_data;
 
+  /** The shared pointer in the case the buffer memory is shared with
+      the host */
+  shared_ptr_class<T> shared_data;
+
   /// Create a new read-write buffer of size \param r
   buffer(const range<Dimensions> &r) : buffer_base { false },
                                        allocation { r },
@@ -75,6 +79,22 @@ struct buffer : public detail::debug<buffer<T, Dimensions>>,
     /// \todo Need to solve this const buffer issue in a clean way
     buffer_base { true },
     access { const_cast<T *>(host_data), r }
+    {}
+
+
+  /** Create a new buffer with associated memory, using the data in
+      host_data
+
+      The ownership of the host_data is shared between the runtime and the
+      user. In order to enable both the user application and the SYCL
+      runtime to use the same pointer, a cl::sycl::mutex_class is
+      used.
+  */
+  buffer(shared_ptr_class<T> &host_data,
+         const range<Dimensions> &r)
+    : buffer_base { false },
+    access { host_data.get(), r },
+    shared_data { }
     {}
 
 
@@ -116,6 +136,10 @@ struct buffer : public detail::debug<buffer<T, Dimensions>>,
        alive, copy back the data through the shared pointer */
     if (auto p = final_data.lock())
       std::copy_n(access.data(), access.num_elements(), p.get());
+    /* If data are shared with the host but not concretely, we would
+       have to copy back the data to the host */
+    // else if (shared_data)
+    //   std::copy_n(access.data(), access.num_elements(), shared_data.get());
   }
 
   // Use BOOST_DISABLE_ASSERTS at some time to disable range checking

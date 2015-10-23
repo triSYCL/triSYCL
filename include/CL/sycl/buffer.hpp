@@ -134,19 +134,58 @@ struct buffer {
   /** Create a new buffer with associated memory, using the data in
       host_data
 
+      \param[inout] host_data points to the storage and values used by
+      the buffer
+
+      \param[in] r defines the size
+
+      \param[in] allocator is to be used by the SYCL runtime, of type
+      cl::sycl::buffer_allocator<T> by default
+
       The ownership of the host_data is shared between the runtime and the
       user. In order to enable both the user application and the SYCL
       runtime to use the same pointer, a cl::sycl::mutex_class is
       used. The mutex m is locked by the runtime whenever the data is in
       use and unlocked otherwise. Data is synchronized with host_data, when
       the mutex is unlocked by the runtime.
+
+      \todo update the specification to replace the pointer by a
+      reference and provide the constructor with and without a mutex
   */
-  buffer(shared_ptr_class<T> & host_data,
-         const range<Dimensions> & buffer_range,
-         cl::sycl::mutex_class * m = nullptr,
+  buffer(shared_ptr_class<T> &host_data,
+         const range<Dimensions> &buffer_range,
+         cl::sycl::mutex_class &m,
          Allocator allocator = {}) {
     detail::unimplemented();
   }
+
+
+  /** Create a new buffer with associated memory, using the data in
+      host_data
+
+      \param[inout] host_data points to the storage and values used by
+      the buffer
+
+      \param[in] r defines the size
+
+      \param[inout] m is the mutex used to protect the data access
+
+      \param[in] allocator is to be used by the SYCL runtime, of type
+      cl::sycl::buffer_allocator<T> by default
+
+      The ownership of the host_data is shared between the runtime and the
+      user. In order to enable both the user application and the SYCL
+      runtime to use the same pointer, a cl::sycl::mutex_class is
+      used.
+
+      \todo add this mutex-less constructor to the specification
+  */
+  buffer(shared_ptr_class<T> &host_data,
+         const range<Dimensions> &buffer_range,
+         Allocator allocator = {})
+    : implementation {
+    new detail::buffer<T, Dimensions> { host_data, buffer_range } }
+  {}
 
 
   /** Create a new buffer which is initialized by host_data
