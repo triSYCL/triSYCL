@@ -50,14 +50,13 @@ struct buffer : public detail::debug<buffer<T, Dimensions>>,
       or to some other memory location in the case of host memory or
       storage<> abstraction use
   */
-
   boost::multi_array_ref<T, Dimensions> access;
 
   /// The weak pointer to copy back data on buffer deletion
   weak_ptr_class<T> final_data;
 
   /// Create a new read-write buffer of size \param r
-  buffer(range<Dimensions> const &r) : buffer_base { false },
+  buffer(const range<Dimensions> &r) : buffer_base { false },
                                        allocation { r },
                                        access { allocation }
                                        {}
@@ -65,22 +64,19 @@ struct buffer : public detail::debug<buffer<T, Dimensions>>,
 
   /** Create a new read-write buffer from \param host_data of size
       \param r without further allocation */
-  buffer(T * host_data, range<Dimensions> r) : buffer_base { false },
-                                               access { host_data, r }
-                                               {}
+  buffer(T *host_data, const range<Dimensions> &r) : buffer_base { false },
+                                                     access { host_data, r }
+                                                     {}
 
 
   /** Create a new read-only buffer from \param host_data of size \param r
       without further allocation */
-  buffer(const T * host_data, range<Dimensions> r) :
+  buffer(const T *host_data, const range<Dimensions> &r) :
     /// \todo Need to solve this const buffer issue in a clean way
     buffer_base { true },
     access { const_cast<T *>(host_data), r }
     {}
 
-
-  /// \todo
-  //buffer(storage<T> &store, range<Dimensions> r)
 
   /// Create a new allocated 1D buffer from the given elements
   template <typename Iterator>
@@ -94,17 +90,6 @@ struct buffer : public detail::debug<buffer<T, Dimensions>>,
          method with this iterator interface */
       allocation.assign(start_iterator, end_iterator);
     }
-
-
-  /** Create a new buffer from an old one, with a new allocation
-
-      \todo Refactor the implementation to deal with buffer sharing with
-      reference counting
-  */
-  buffer(const buffer<T, Dimensions> &b) : buffer_base { b.read_only },
-                                           allocation { b.access },
-                                           access { allocation }
-                                           {}
 
 
   /** Create a new sub-buffer without allocation to have separate

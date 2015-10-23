@@ -70,32 +70,66 @@ struct buffer {
   buffer() = default;
 
 
-  /** Create a new read-write buffer with storage managed by SYCL
+  /** Create a new buffer of the given size with
+      storage managed by the SYCL runtime
 
-      \param r defines the size
+      The default behavior is to use the default host buffer
+      allocator, in order to allow for host accesses. If the type of
+      the buffer, has the const qualifier, then the default allocator
+      will remove the qualifier to allow host access to the data.
+
+      \param[in] r defines the size
+
+      \param[in] allocator is to be used by the SYCL runtime
   */
   buffer(const range<Dimensions> &r, Allocator allocator = {})
     : implementation { new detail::buffer<T, Dimensions> { r } } {}
 
 
-  /** Create a new read-write buffer with associated host memory
+  /** Create a new buffer with associated host memory
 
-      \param host_data points to the storage and values used by the buffer
+      \param[in] host_data points to the storage and values used by
+      the buffer
 
-      \param r defines the size
+      \param[in] r defines the size
+
+      \param[in] allocator is to be used by the SYCL runtime, of type
+      cl::sycl::buffer_allocator<T> by default
+
+      The host address is const T, so the host accesses can be
+      read-only.
+
+      However, the typename T is not const so the device accesses can
+      be both read and write accesses. Since, the host_data is const,
+      this buffer is only initialized with this memory and there is
+      no write after its destruction, unless there is another final
+      data address given after construction of the buffer.
   */
-  buffer(T * host_data, range<Dimensions> r, Allocator allocator = {})
+  buffer(const T *host_data,
+         const range<Dimensions> &r,
+         Allocator allocator = {})
     : implementation { new detail::buffer<T, Dimensions> { host_data, r } } {}
 
 
-  /** Create a new read-only buffer with associated host memory
+  /** Create a new buffer with associated host memory
 
-      \param host_data points to the storage and values used by the buffer
+      \param[inout] host_data points to the storage and values used by
+      the buffer
 
-      \param r defines the size
+      \param[in] r defines the size
+
+      \param[in] allocator is to be used by the SYCL runtime, of type
+      cl::sycl::buffer_allocator<T> by default
+
+      The memory is owned by the runtime during the lifetime of the
+      object.  Data is copied back to the host unless the user
+      overrides the behavior using the set_final_data method. host_data
+      points to the storage and values used by the buffer and
+      range<dimensions> defines the size.
   */
-  buffer(const T * host_data, range<Dimensions> r, Allocator allocator = {})
+  buffer(T *host_data, const range<Dimensions> &r, Allocator allocator = {})
     : implementation { new detail::buffer<T, Dimensions> { host_data, r } } {}
+
 
   /** Create a new buffer with associated memory, using the data in
       host_data
@@ -117,6 +151,14 @@ struct buffer {
 
   /** Create a new buffer which is initialized by host_data
 
+      \param[inout] host_data points to the storage and values used to
+      initialize the buffer
+
+      \param[in] r defines the size
+
+      \param[in] allocator is to be used by the SYCL runtime, of type
+      cl::sycl::buffer_allocator<T> by default
+
       The SYCL runtime receives full ownership of the host_data unique_ptr
       and there in effect there is no synchronization with the application
       code using host_data.
@@ -128,7 +170,7 @@ struct buffer {
   */
   template <typename D = std::default_delete<T>>
   buffer(unique_ptr_class<T, D> &&host_data,
-         const range<Dimensions> & buffer_range,
+         const range<Dimensions> &buffer_range,
          Allocator allocator = {})
   // Just delegate to the constructor with normal pointer
     : buffer(host_data.get(), buffer_range, allocator) {
@@ -137,14 +179,21 @@ struct buffer {
   }
 
 
-  /** Create a new read-write allocated 1D buffer initialized from the
-      given elements
+  /**  Create a new allocated 1D buffer initialized from the given
+       elements ranging from first up to one before last
 
-      \param start_iterator points to the first element to copy
+       The data is copied to an intermediate memory position by the
+       runtime. Data is written back to the same iterator set if the
+       iterator is not a const iterator.
 
-      \param end_iterator points to just after the last element to copy
+      \param[inout] start_iterator points to the first element to copy
 
-      \todo Add const to the SYCL specification.
+      \param[in] end_iterator points to just after the last element to copy
+
+      \param[in] allocator is to be used by the SYCL runtime, of type
+      cl::sycl::buffer_allocator<T> by default
+
+      \todo Implement the copy back at buffer destruction
 
       \todo Generalize this for n-D and provide column-major and row-major
       initialization
@@ -154,6 +203,10 @@ struct buffer {
             doing this linearization anyway
 
       \todo Allow read-only buffer construction too
+
+      \todo update the specification to deal with forward iterators
+      instead and rewrite back only when it is non const and output
+      iterator at least
 
       \todo Allow initialization from ranges and collections à la STL
   */
@@ -171,36 +224,42 @@ struct buffer {
   {}
 
 
-  /** Create a new sub-buffer without allocation to have separate accessors
-      later
+  /** Create a new sub-buffer without allocation to have separate
+      accessors later
 
-      \param b is the buffer with the real data
+      \param[inout] b is the buffer with the real data
 
-      \param base_index specifies the origin of the sub-buffer inside the
+      \param[in] base_index specifies the origin of the sub-buffer inside the
       buffer b
 
-      \param sub_range specifies the size of the sub-buffer
+      \param[in] sub_range specifies the size of the sub-buffer
 
       \todo To be implemented
 
       \todo Update the specification to replace index by id
   */
-  buffer(buffer<T, Dimensions, Allocator> b,
-         id<Dimensions> base_index,
-         range<Dimensions> sub_range,
+  buffer(buffer<T, Dimensions, Allocator> &b,
+         const id<Dimensions> &base_index,
+         const range<Dimensions> &sub_range,
          Allocator allocator = {}) { detail::unimplemented(); }
 
 
 #ifdef TRISYCL_OPENCL
-  /** Create a buffer from an existing OpenCL memory object associated to
-      a context after waiting for an event signaling the availability of
-      the OpenCL data
+  /** Create a buffer from an existing OpenCL memory object associated
+      with a context after waiting for an event signaling the
+      availability of the OpenCL data
 
-      \param mem_object is the OpenCL memory object to use
+      \param[inout] mem_object is the OpenCL memory object to use
 
-      \param from_queue is the queue associated to the memory object
+      \param[inout] from_queue is the queue associated to the memory
+      object
 
-      \param available_event specifies the event to wait for if non null
+      \param[in] available_event specifies the event to wait for if
+      non null
+
+      Note that a buffer created from a cl_mem object will only have
+      one underlying cl_mem for the lifetime of the buffer and use on
+      an incompatible queue constitues an error.
 
       \todo To be implemented
 
@@ -221,18 +280,25 @@ struct buffer {
 
       \param Target is the type of object to be accessed
 
+      \param[in] command_group_handler is the command group handler in
+      which the kernel is to be executed
+
       \todo Do we need for an accessor to increase the reference count of
       a buffer object? It does make more sense for a host-side accessor.
 
       \todo Implement the modes and targets
+
+      \todo for this implementation it is const for now
   */
   template <access::mode Mode,
             access::target Target = access::global_buffer>
   accessor<T, Dimensions, Mode, Target>
   get_access(handler &command_group_handler) const {
-    static_assert(Target != access::host_buffer,
-                  "get_access(&cgh) for non host_buffer accessor "
-                  "takes a command group handler");
+    static_assert(Target == access::global_buffer
+                  || Target == access::constant_buffer,
+                  "get_access(handler) can only deal with access::global_buffer"
+                  " or access::constant_buffer (for host_buffer accessor"
+                  " do not use a command group handler");
     return *implementation;
   }
 
@@ -244,19 +310,24 @@ struct buffer {
       \todo Implement the modes
 
       \todo More elegant solution
+
+      \todo for this implementation it is const for now
   */
   template <access::mode Mode,
-            access::target Target = access::global_buffer>
-  accessor<T, Dimensions, Mode, access::host_buffer>
+            access::target Target = access::host_buffer>
+  accessor<T, Dimensions, Mode, Target>
   get_access() const {
     static_assert(Target == access::host_buffer,
-                  "get_access() for host_buffer accessor does not "
-                  "take a command group handler");
+                  "get_access() without a command gtoup handler is only "
+                  " for host_buffer accessor");
     return *implementation;
   }
 
 
-  /// Get the range<> of the buffer
+  /** Return a range object representing the size of the buffer in
+      terms of number of elements in each dimension as passed to the
+      constructor
+  */
   auto get_range() const {
     /* Interpret the shape which is a pointer to the first element as an
        array of Dimensions elements so that the range<Dimensions>
@@ -271,21 +342,33 @@ struct buffer {
   }
 
 
-  /** Ask for read-only status of the buffer
+  /** Returns the total number of elements in the buffer
 
-      \todo Add to specification
-  */
-  bool is_read_only() const { return implementation->read_only; }
+      Equal to get_range()[0] * ... * get_range()[dimensions-1].
 
-
-  /** Return the use count of the data of this buffer
-
-      \todo Rename to use_count() to follow shared_ptr<> naming
+      \todo Rename to use_count() to follow shared_ptr<> naming or
+      count() as in unordered containers
   */
   auto get_count() const {
     // Rely on the shared_ptr<> use_count()
     return implementation.use_count();
   }
+
+
+  /** Returns the size of the buffer storage in bytes
+
+      Equal to get_count()*sizeof(T).
+  */
+  size_t get_size() {
+    return get_count()*sizeof(T);
+  }
+
+
+  /** Ask for read-only status of the buffer
+
+      \todo Add to specification
+  */
+  bool is_read_only() const { return implementation->read_only; }
 
 
   /** Set destination of buffer data on destruction
@@ -310,6 +393,10 @@ struct buffer {
             reference.  This way we can have an implicit conversion
             possible at the API call from a shared_ptr<>, avoiding an
             explicit weak_ptr<> creation
+
+      \todo figure out how set_final_data() interact with the other
+      way to write back some data or with some data sharing with the
+      host that can not be undone
   */
   void set_final_data(weak_ptr_class<T> finalData) {
     implementation->set_final_data(std::move(finalData));
