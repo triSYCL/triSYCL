@@ -2,10 +2,10 @@
 
 #include "include/jacobi-stencil.hpp"
 
-float& fdl_out(int a,int b, cl::sycl::accessor<float, 2, cl::sycl::access::write> acc) {return acc[a][b];}
-float  fdl_in(int a,int b, cl::sycl::accessor<float, 2, cl::sycl::access::read>  acc) {return acc[a][b];}
-float  fac(int a,int b, int c, int d, cl::sycl::accessor<float, 1, cl::sycl::access::read>  acc) {return MULT_COEF*acc[0];}
-float  fac_id(int a,int b, int c, int d, cl::sycl::accessor<float, 1, cl::sycl::access::read>  acc) {return acc[0];}
+inline float& fdl_out(int a,int b, cl::sycl::accessor<float, 2, cl::sycl::access::write> acc) {return acc[a][b];}
+inline float  fdl_in(int a,int b, cl::sycl::accessor<float, 2, cl::sycl::access::read>  acc) {return acc[a][b];}
+inline float  fac(int a,int b, int c, int d, cl::sycl::accessor<float, 1, cl::sycl::access::read>  acc) {return MULT_COEF*acc[0];}
+inline float  fac_id(int a,int b, int c, int d, cl::sycl::accessor<float, 1, cl::sycl::access::read>  acc) {return acc[0];}
 
 // static declaration to use pointers
 cl::sycl::buffer<float,2> ioBuffer;
@@ -60,6 +60,8 @@ int main(int argc, char **argv) {
   auto op_copy = copy_out << st_id << copy_in;
 
   end_init(timer);
+  struct op_time time_op;
+  begin_op(time_op);
 
   // compute result with "gpu"
   {   
@@ -71,6 +73,8 @@ int main(int argc, char **argv) {
     }
   }
 
+  end_op(time_op, timer.stencil_time);
+  // loading time is not watched
   end_measure(timer);
 
 #if DEBUG_STENCIL

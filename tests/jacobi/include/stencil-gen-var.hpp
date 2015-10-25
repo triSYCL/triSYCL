@@ -24,13 +24,13 @@ public:
   static const int max_ind0 = MAX((c_or0_s2D::max_ind0), (c_or1_s2D::max_ind0));
   static const int min_ind1 = MIN((c_or0_s2D::min_ind1), (c_or1_s2D::min_ind1));
   static const int max_ind1 = MAX((c_or0_s2D::max_ind1), (c_or1_s2D::max_ind1));
-  template<typename T, T (*c_f) (T, T) = coef_times<T>, T (*r_f) (T, T) = coef_plus<T>>
-  static inline T eval(cl::sycl::accessor<T, 2, cl::sycl::access::read> a, std::function<T(int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>)> a_f, cl::sycl::accessor<T, 1, cl::sycl::access::read> b, std::function<T(int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>)> b_f, int k, int l) {
-    return r_f(c_or0_s2D::template eval<T, c_f>(a, a_f, b, b_f, k, l), c_or1_s2D::template eval<T, c_f>(a, a_f, b, b_f, k, l));
+  template<typename T, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>), T (*c_f) (T, T) = coef_times<T>, T (*r_f) (T, T) = coef_plus<T>>
+  static inline T eval(cl::sycl::accessor<T, 2, cl::sycl::access::read> a, cl::sycl::accessor<T, 1, cl::sycl::access::read> b, int k, int l) {
+    return r_f(c_or0_s2D::template eval<T, a_f, b_f, c_f>(a, b, k, l), c_or1_s2D::template eval<T, a_f, b_f, c_f>(a, b, k, l));
   }
-  template<typename T, T (*c_f) (T, T) = coef_times<T>, T (*r_f) (T, T) = coef_plus<T>>
-  static inline T eval_local(T *a, cl::sycl::accessor<T, 1, cl::sycl::access::read> b, std::function<T(int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>)> b_f, int k, int l, int k_local, int l_local, int ldc) {
-    return r_f(c_or0_s2D::template eval_local<T, c_f>(a, b, b_f, k, l, k_local, l_local, ldc), c_or1_s2D::template eval_local<T, c_f>(a, b, b_f, k, l, k_local, l_local, ldc));
+  template<typename T, int ldc, T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>), T (*c_f) (T, T) = coef_times<T>, T (*r_f) (T, T) = coef_plus<T>>
+  static inline T eval_local(T *a, cl::sycl::accessor<T, 1, cl::sycl::access::read> b, int k, int l, int k_local, int l_local) {
+    return r_f(c_or0_s2D::template eval_local<T, ldc, b_f, c_f>(a, b, k, l, k_local, l_local), c_or1_s2D::template eval_local<T, ldc, b_f, c_f>(a, b, k, l, k_local, l_local));
   }
 };
 
@@ -42,13 +42,13 @@ public:
   static const int max_ind0 = c_or0_s2D::max_ind0;
   static const int min_ind1 = c_or0_s2D::min_ind1;
   static const int max_ind1 = c_or0_s2D::max_ind1;
-  template<typename T, T (*c_f) (T, T) = coef_times<T>, T (*r_f) (T, T) = coef_plus<T>>
-  static inline T eval(cl::sycl::accessor<T, 2, cl::sycl::access::read> a, std::function<T(int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>)> a_f, cl::sycl::accessor<T, 1, cl::sycl::access::read> b, std::function<T(int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>)> b_f, int k, int l) {
-    return c_or0_s2D::template eval<T, c_f>(a, a_f, b, b_f, k, l);
+  template<typename T, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>), T (*c_f) (T, T) = coef_times<T>, T (*r_f) (T, T) = coef_plus<T>>
+  static inline T eval(cl::sycl::accessor<T, 2, cl::sycl::access::read> a, cl::sycl::accessor<T, 1, cl::sycl::access::read> b, int k, int l) {
+    return c_or0_s2D::template eval<T, a_f, b_f, c_f>(a, b, k, l);
   }
-  template<typename T, T (*c_f) (T, T) = coef_times<T>, T (*r_f) (T, T) = coef_plus<T>>
-  static inline T eval_local(T *a, cl::sycl::accessor<T, 1, cl::sycl::access::read> b, std::function<T(int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>)> b_f, int k, int l, int k_local, int l_local, int ldc) {
-    return c_or0_s2D::template eval_local<T, c_f>(a, b, b_f, k, l, k_local, l_local, ldc);
+  template<typename T, int ldc, T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>), T (*c_f) (T, T) = coef_times<T>, T (*r_f) (T, T) = coef_plus<T>>
+  static inline T eval_local(T *a, cl::sycl::accessor<T, 1, cl::sycl::access::read> b, int k, int l, int k_local, int l_local) {
+    return c_or0_s2D::template eval_local<T, ldc, b_f, c_f>(a, b, k, l, k_local, l_local);
   }
 };
 
@@ -62,12 +62,12 @@ public:
   static inline stencil_var2D_bis<coef_var2D<i, j>> toStencil() {
     return stencil_var2D_bis<coef_var2D<i, j>> {};
   }
-  template<typename T, T (*c_f) (T, T) = coef_times<T>>
-  static inline T eval(cl::sycl::accessor<T, 2, cl::sycl::access::read> a, std::function<T(int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>)> a_f, cl::sycl::accessor<T, 1, cl::sycl::access::read> b, std::function<T(int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>)> b_f, int k, int l) {
-    return c_f(b_f(k,l,i,j,b), a_f(k+i,l+j,a)); // template operator ? it would be cool
+  template<typename T, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>), T (*c_f) (T, T) = coef_times<T>>
+  static inline T eval(cl::sycl::accessor<T, 2, cl::sycl::access::read> a, cl::sycl::accessor<T, 1, cl::sycl::access::read> b, int k, int l) {
+    return c_f(b_f(k,l,i,j,b), a_f(k+i,l+j,a));
   }
-  template<typename T, T (*c_f) (T, T) = coef_times<T>>
-  static inline T eval_local(T *a, cl::sycl::accessor<T, 1, cl::sycl::access::read> b, std::function<T(int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>)> b_f, int k, int l, int k_local, int l_local, int ldc) {
+  template<typename T, int ldc, T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>), T (*c_f) (T, T) = coef_times<T>>
+  static inline T eval_local(T *a, cl::sycl::accessor<T, 1, cl::sycl::access::read> b, int k, int l, int k_local, int l_local) {
     return c_f(b_f(k,l,i,j,b), a[(k_local+i)*ldc + l_local+j]);
   }
 };
@@ -155,7 +155,7 @@ public:
   static inline void eval(cl::sycl::id<2> id, cl::sycl::accessor<T, 2, cl::sycl::access::write> *out, cl::sycl::accessor<T, 2, cl::sycl::access::read> *in, cl::sycl::accessor<T, 1, cl::sycl::access::read> *coef) {
     int i = id.get(0) + of0;
     int j = id.get(1) + of1;
-    f(i, j, *out) = st::template eval<T, c_f, r_f>(*in, a_f, *coef, b_f, i, j);
+    f(i, j, *out) = st::template eval<T, a_f, b_f, c_f, r_f>(*in, *coef, i, j);
   }
 
   // Not really static because of the use of global_max (which is passed by args)
@@ -168,7 +168,7 @@ public:
     j += of1;
     int i_local = it.get_local().get(0) - st::min_ind0;
     int j_local = it.get_local().get(1) - st::min_ind1;
-    f(i, j, *out) = st::template eval_local<T, c_f, r_f>(local_tab, *coef, b_f, i, j, i_local, j_local, local_dim1);
+    f(i, j, *out) = st::template eval_local<T, local_dim1, b_f, c_f, r_f>(local_tab, *coef, i, j, i_local, j_local);
   }
 
   // Not really static because of the use of global_max (which is passed by args)
