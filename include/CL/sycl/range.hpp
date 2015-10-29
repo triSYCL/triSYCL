@@ -9,6 +9,8 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <functional>
+#include <numeric>
 #include "CL/sycl/detail/small_array.hpp"
 
 namespace cl {
@@ -36,6 +38,21 @@ public:
   using detail::small_array_123<std::size_t,
                                 range<dims>,
                                 dims>::small_array_123;
+
+
+  /** Return the number of elements in the range
+
+      \todo Give back size() its real meaning in the specification
+
+      \todo add this method to the specification
+  */
+  size_t get_count() {
+    // Return the product of the sizes in each dimension
+    return std::accumulate(this->cbegin(),
+                           this->cend(),
+                           1,
+                           std::multiplies<size_t> {});
+  }
 };
 
 
