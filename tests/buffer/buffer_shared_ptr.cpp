@@ -15,34 +15,28 @@ int test_main(int argc, char *argv[]) {
   /** There is a draft for shared_ptr of arrays for C++17, but it is
       not here... So use a shared pointer with an explicit destructor
       waiting for 2017 */
-  std::shared_ptr<int> result { new int[N], std::default_delete<int[]>{} };
+  std::shared_ptr<int> data { new int[N], std::default_delete<int[]>{} };
+  std::iota(data.get(), data.get() + N, 314);
 
   {
-    buffer<int> b { N };
-    /* Note that here there is a nice implicit conversion happening
-       from std::shared_ptr<int> to std::weak_ptr<int> */
-    b.set_final_data(result);
+    buffer<int> b { data, N };
 
     queue {}.submit([&](handler &cgh) {
-        auto a = b.get_access<access::write>(cgh);
+        auto kb = b.get_access<access::read_write>(cgh);
 
         cgh.parallel_for<class generate>(range<1> { N },
                                          [=] (id<1> index) {
-                                           a[index] = index;
+                                           kb[index] += 2015;
                                          });
       });
-    // auto B = b.get_access<access::read, access::host_buffer>();
-    // for (int i = 0; i != N; ++i)
-    // std::cerr << B[i] << ':' << i << std::endl;
-
     /* Here the buffer b goes out of scope, so it first waits for
        kernel completion, then its destructor copies back its content
-       to result as instructed by set_final_data(result) */
+       to data memory */
   }
 
   for (int i = 0; i != N; ++i) {
-    // std::cerr << result.get()[i] << ':' << i << std::endl;
-    BOOST_CHECK(result.get()[i] == i);
+    // std::cerr << data.get()[i] << ':' << i << std::endl;
+    BOOST_CHECK(data.get()[i] == i + 314 + 2015);
   }
 
   return 0;
