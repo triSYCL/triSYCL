@@ -152,6 +152,34 @@ struct buffer : public detail::debug<buffer<T, Dimensions>>,
     return { *this };
   }
 
+
+ /** Return a range object representing the size of the buffer in
+      terms of number of elements in each dimension as passed to the
+      constructor
+  */
+  auto get_range() const {
+    /* Interpret the shape which is a pointer to the first element as an
+       array of Dimensions elements so that the range<Dimensions>
+       constructor is happy with this collection
+
+       \todo Add also a constructor in range<> to accept a const
+       std::size_t *?
+    */
+    return range<Dimensions> {
+      *(const std::size_t (*)[Dimensions])(allocation.shape())
+        };
+  }
+
+
+  /** Returns the total number of elements in the buffer
+
+      Equal to get_range()[0] * ... * get_range()[dimensions-1].
+  */
+  auto get_count() const {
+    return allocation.num_elements();
+  }
+
+
   /** Set the weak pointer to copy back data on buffer deletion
 
       \todo Add a write kernel dependency on the buffer so the buffer
