@@ -2,6 +2,11 @@
 
 #include "include/stencil-gen-var.hpp"
 
+// coefficients functions
+inline float coef_el_op(float coef, float el) {return coef*el;}
+inline float reduc_op(float el1, float el2) {return el1+el2;}
+
+// acces functions
 inline float& fdl_out(int a,int b, cl::sycl::accessor<float, 2, cl::sycl::access::write> acc) {return acc[a][b];}
 inline float  fdl_in(int a,int b, cl::sycl::accessor<float, 2, cl::sycl::access::read>  acc) {return acc[a][b];}
 inline float  fac(int a,int b, int c, int d, cl::sycl::accessor<float, 1, cl::sycl::access::read>  acc) {return MULT_COEF*acc[0];}
@@ -50,7 +55,7 @@ int main(int argc, char **argv) {
   coef_var2D<0, -1> c5;
 
   auto st = c1+c2+c3+c4+c5;
-  input_var2D<float, &ioABuffer, &ioBBuffer, &fdl_in, &fac> work_in;
+  input_var2D<float, &ioABuffer, &ioBBuffer, &fdl_in, &fac, &coef_el_op, &reduc_op> work_in;
   output_2D<float, &ioBuffer, &fdl_out> work_out;
   auto op_work = work_out << st << work_in;
 
