@@ -366,40 +366,59 @@ struct buffer {
   /** Return a range object representing the size of the buffer in
       terms of number of elements in each dimension as passed to the
       constructor
+
+      \todo rename to the equivalent from array_view proposals? Such
+      as size() in
+      http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/p0009r0.html
+      or
+      http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/p0114r0.pdf
   */
   auto get_range() const {
     /* Interpret the shape which is a pointer to the first element as an
        array of Dimensions elements so that the range<Dimensions>
        constructor is happy with this collection
-
-       \todo Move into detail::
-
-       \todo Add also a constructor in range<> to accept a const
-       std::size_t *?
      */
-    return range<Dimensions> { *(const std::size_t (*)[Dimensions])(implementation->allocation.shape()) };
+    return implementation->get_range();
   }
 
 
   /** Returns the total number of elements in the buffer
 
       Equal to get_range()[0] * ... * get_range()[dimensions-1].
-
-      \todo Rename to use_count() to follow shared_ptr<> naming or
-      count() as in unordered containers
   */
   auto get_count() const {
-    // Rely on the shared_ptr<> use_count()
-    return implementation.use_count();
+    return implementation->get_count();
   }
 
 
   /** Returns the size of the buffer storage in bytes
 
       Equal to get_count()*sizeof(T).
+
+      \todo rename to something else. In
+      http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/p0122r0.pdf
+      it is named bytes() for example
   */
-  size_t get_size() {
+  size_t get_size() const {
     return get_count()*sizeof(T);
+  }
+
+
+  /** Returns the number of buffers that are shared/referenced
+
+      For example
+      \code
+      cl::sycl::buffer<int> b { 1000 };
+      // Here b.use_count() should return 1
+      cl::sycl::buffer<int> c { b };
+      // Here b.use_count() and b.use_count() should return 2
+      \endcode
+
+      \todo Add to the specification, useful for validation
+  */
+  auto use_count() const {
+    // Rely on the shared_ptr<> use_count()
+    return implementation.use_count();
   }
 
 

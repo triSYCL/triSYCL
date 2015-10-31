@@ -3,7 +3,7 @@
    Exercise buffer::set_final_data()
 */
 #include <CL/sycl.hpp>
-#include <iostream>
+//#include <iostream>
 #include <boost/test/minimal.hpp>
 
 using namespace cl::sycl;
