@@ -24,13 +24,13 @@ public:
   static const int max_ind0 = MAX((c_or0_s2D::max_ind0), (c_or1_s2D::max_ind0));
   static const int min_ind1 = MIN((c_or0_s2D::min_ind1), (c_or1_s2D::min_ind1));
   static const int max_ind1 = MAX((c_or0_s2D::max_ind1), (c_or1_s2D::max_ind1));
-  template<typename T, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>)>
+  template<typename T, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>), T (*c_f) (T, T) = coef_times<T>, T (*r_f) (T, T) = coef_plus<T>>
   static inline T eval(cl::sycl::accessor<T, 2, cl::sycl::access::read> a, cl::sycl::accessor<T, 1, cl::sycl::access::read> b, int k, int l) {
-    return c_or0_s2D::template eval<T, a_f, b_f>(a, b, k, l) + c_or1_s2D::template eval<T, a_f, b_f>(a, b, k, l);
+    return r_f(c_or0_s2D::template eval<T, a_f, b_f, c_f>(a, b, k, l), c_or1_s2D::template eval<T, a_f, b_f, c_f>(a, b, k, l));
   }
-  template<typename T, int ldc, T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>)>
+  template<typename T, int ldc, T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>), T (*c_f) (T, T) = coef_times<T>, T (*r_f) (T, T) = coef_plus<T>>
   static inline T eval_local(T *a, cl::sycl::accessor<T, 1, cl::sycl::access::read> b, int k, int l, int k_local, int l_local) {
-    return c_or0_s2D::template eval_local<T, ldc, b_f>(a, b, k, l, k_local, l_local) + c_or1_s2D::template eval_local<T, ldc, b_f>(a, b, k, l, k_local, l_local);
+    return r_f(c_or0_s2D::template eval_local<T, ldc, b_f, c_f>(a, b, k, l, k_local, l_local), c_or1_s2D::template eval_local<T, ldc, b_f, c_f>(a, b, k, l, k_local, l_local));
   }
 };
 
@@ -42,13 +42,13 @@ public:
   static const int max_ind0 = c_or0_s2D::max_ind0;
   static const int min_ind1 = c_or0_s2D::min_ind1;
   static const int max_ind1 = c_or0_s2D::max_ind1;
-  template<typename T, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>)>
+  template<typename T, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>), T (*c_f) (T, T) = coef_times<T>, T (*r_f) (T, T) = coef_plus<T>>
   static inline T eval(cl::sycl::accessor<T, 2, cl::sycl::access::read> a, cl::sycl::accessor<T, 1, cl::sycl::access::read> b, int k, int l) {
-    return c_or0_s2D::template eval<T, a_f, b_f>(a, b, k, l);
+    return c_or0_s2D::template eval<T, a_f, b_f, c_f>(a, b, k, l);
   }
-  template<typename T, int ldc, T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>)>
+  template<typename T, int ldc, T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>), T (*c_f) (T, T) = coef_times<T>, T (*r_f) (T, T) = coef_plus<T>>
   static inline T eval_local(T *a, cl::sycl::accessor<T, 1, cl::sycl::access::read> b, int k, int l, int k_local, int l_local) {
-    return c_or0_s2D::template eval_local<T, ldc, b_f>(a, b, k, l, k_local, l_local);
+    return c_or0_s2D::template eval_local<T, ldc, b_f, c_f>(a, b, k, l, k_local, l_local);
   }
 };
 
@@ -62,13 +62,13 @@ public:
   static inline stencil_var2D_bis<coef_var2D<i, j>> toStencil() {
     return stencil_var2D_bis<coef_var2D<i, j>> {};
   }
-  template<typename T, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>)>
+  template<typename T, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>), T (*c_f) (T, T) = coef_times<T>>
   static inline T eval(cl::sycl::accessor<T, 2, cl::sycl::access::read> a, cl::sycl::accessor<T, 1, cl::sycl::access::read> b, int k, int l) {
-    return b_f(k,l,i,j,b) * a_f(k+i,l+j,a);
+    return c_f(b_f(k,l,i,j,b), a_f(k+i,l+j,a));
   }
-  template<typename T, int ldc, T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>)>
+  template<typename T, int ldc, T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>), T (*c_f) (T, T) = coef_times<T>>
   static inline T eval_local(T *a, cl::sycl::accessor<T, 1, cl::sycl::access::read> b, int k, int l, int k_local, int l_local) {
-    return b_f(k,l,i,j,b) * a[(k_local+i)*ldc + l_local+j];
+    return c_f(b_f(k,l,i,j,b), a[(k_local+i)*ldc + l_local+j]);
   }
 };
 
@@ -92,14 +92,14 @@ inline stencil_var2D<stencil_var2D<C1, C2>, stencil_var2D<C3, C4>> operator+ (st
   return stencil_var2D<stencil_var2D<C1, C2>, stencil_var2D<C3, C4>> {};
 }
 
-template <typename T, cl::sycl::buffer<T,2> *_aB, cl::sycl::buffer<T,1> *_bB, T (*_a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>), T (*_b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>)>
+template <typename T, cl::sycl::buffer<T,2> *aB, cl::sycl::buffer<T,1> *bB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>), T (*c_f) (T, T) = coef_times<T>, T (*r_f) (T, T) = coef_plus<T>>
 class input_var2D {};
 
-template <typename T, class st, cl::sycl::buffer<T,2> *_aB, cl::sycl::buffer<T,1> *_bB, T (*_a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>), T (*_b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>)>
+template <typename T, class st, cl::sycl::buffer<T,2> *aB, cl::sycl::buffer<T,1> *bB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>), T (*c_f) (T, T) = coef_times<T>, T (*r_f) (T, T) = coef_plus<T>>
 class stencil_input_var2D {};
 
 
-template <typename T, cl::sycl::buffer<T,2> *B, T& (*f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::write>), class st, cl::sycl::buffer<T,2> *aB, cl::sycl::buffer<T,1> *bB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>)>
+template <typename T, cl::sycl::buffer<T,2> *B, T& (*f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::write>), class st, cl::sycl::buffer<T,2> *aB, cl::sycl::buffer<T,1> *bB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>), T (*c_f) (T, T) = coef_times<T>, T (*r_f) (T, T) = coef_plus<T>>
 class operation_var2D {
 public:
   static_assert(std::is_base_of<auth_in_op_var, st>::value, "An operation must be built with a stencil.");
@@ -155,7 +155,7 @@ public:
   static inline void eval(cl::sycl::id<2> id, cl::sycl::accessor<T, 2, cl::sycl::access::write> *out, cl::sycl::accessor<T, 2, cl::sycl::access::read> *in, cl::sycl::accessor<T, 1, cl::sycl::access::read> *coef) {
     int i = id.get(0) + of0;
     int j = id.get(1) + of1;
-    f(i, j, *out) = st::template eval<T, a_f, b_f>(*in, *coef, i, j);
+    f(i, j, *out) = st::template eval<T, a_f, b_f, c_f, r_f>(*in, *coef, i, j);
   }
 
   // Not really static because of the use of global_max (which is passed by args)
@@ -168,7 +168,7 @@ public:
     j += of1;
     int i_local = it.get_local().get(0) - st::min_ind0;
     int j_local = it.get_local().get(1) - st::min_ind1;
-    f(i, j, *out) = st::template eval_local<T, local_dim1, b_f>(local_tab, *coef, i, j, i_local, j_local);
+    f(i, j, *out) = st::template eval_local<T, local_dim1, b_f, c_f, r_f>(local_tab, *coef, i, j, i_local, j_local);
   }
 
   // Not really static because of the use of global_max (which is passed by args)
@@ -220,7 +220,7 @@ public:
 	cl::sycl::accessor<T, 2, cl::sycl::access::read>  *_aB = new cl::sycl::accessor<T, 2, cl::sycl::access::read>(*aB, cgh);
 	cl::sycl::accessor<T, 1, cl::sycl::access::read>  *_bB = new cl::sycl::accessor<T, 1, cl::sycl::access::read>(*bB, cgh);
 	cgh.parallel_for<class KernelCompute>(range, [=](cl::sycl::id<2> id){
-	    operation_var2D<T, B, f, st, aB, bB, a_f, b_f>::eval(id, _B, _aB, _bB);
+	    eval(id, _B, _aB, _bB);
 	  }); 
 	delete _B;
 	delete _aB;
@@ -260,7 +260,7 @@ public:
 };
 
 
-template <typename T, cl::sycl::buffer<T,2> *_B, T& (*_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::write>), class st>
+template <typename T, cl::sycl::buffer<T,2> *B, T& (*f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::write>), class st>
 class output_stencil_var2D {};
 
 
@@ -277,26 +277,26 @@ inline output_stencil_var2D<T, B, f, stencil_var2D_bis<C1>> operator<< (output_2
 
 
 
-template <typename T, class C1, class C2, cl::sycl::buffer<T,2> *aB, cl::sycl::buffer<T,1> *bB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>)>
-inline stencil_input_var2D<T, stencil_var2D<C1, C2>, aB, bB, a_f, b_f> operator<< (stencil_var2D<C1, C2> out, input_var2D<T, aB, bB, a_f, b_f> in) {
-  return stencil_input_var2D<T, stencil_var2D<C1, C2>, aB, bB, a_f, b_f> {};
+template <typename T, class C1, class C2, cl::sycl::buffer<T,2> *aB, cl::sycl::buffer<T,1> *bB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>), T (*c_f) (T, T) = coef_times<T>, T (*r_f) (T, T) = coef_plus<T>>
+  inline stencil_input_var2D<T, stencil_var2D<C1, C2>, aB, bB, a_f, b_f, r_f> operator<< (stencil_var2D<C1, C2> out, input_var2D<T, aB, bB, a_f, b_f, c_f, r_f> in) {
+  return stencil_input_var2D<T, stencil_var2D<C1, C2>, aB, bB, a_f, b_f, r_f> {};
 }
 
-template <typename T, class C1, cl::sycl::buffer<T,2> *aB, cl::sycl::buffer<T,1> *bB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>)>
-inline stencil_input_var2D<T, stencil_var2D_bis<C1>, aB, bB, a_f, b_f> operator<< (stencil_var2D_bis<C1> out, input_var2D<T, aB, bB, a_f, b_f> in) {
-  return stencil_input_var2D<T, stencil_var2D_bis<C1>, aB, bB, a_f, b_f> {};
+template <typename T, class C1, cl::sycl::buffer<T,2> *aB, cl::sycl::buffer<T,1> *bB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>), T (*c_f) (T, T) = coef_times<T>, T (*r_f) (T, T) = coef_plus<T>>
+  inline stencil_input_var2D<T, stencil_var2D_bis<C1>, aB, bB, a_f, b_f, c_f, r_f> operator<< (stencil_var2D_bis<C1> out, input_var2D<T, aB, bB, a_f, b_f, c_f, r_f> in) {
+  return stencil_input_var2D<T, stencil_var2D_bis<C1>, aB, bB, a_f, b_f, c_f, r_f> {};
 }
 
 
 
-template <typename T, cl::sycl::buffer<T,2> *B, T& (*f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::write>), class st, cl::sycl::buffer<T,2> *aB, cl::sycl::buffer<T,1> *bB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>)>
-inline operation_var2D<T, B, f, st, aB, bB, a_f, b_f> operator<< (output_stencil_var2D<T, B, f, st> out, input_var2D<T, aB, bB, a_f, b_f> in) {
-  return operation_var2D<T, B, f, st, aB, bB, a_f, b_f> {};
+template <typename T, cl::sycl::buffer<T,2> *B, T& (*f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::write>), class st, cl::sycl::buffer<T,2> *aB, cl::sycl::buffer<T,1> *bB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>), T (*c_f) (T, T) = coef_times<T>, T (*r_f) (T, T) = coef_plus<T>>
+  inline operation_var2D<T, B, f, st, aB, bB, a_f, b_f, c_f, r_f> operator<< (output_stencil_var2D<T, B, f, st> out, input_var2D<T, aB, bB, a_f, b_f, c_f, r_f> in) {
+  return operation_var2D<T, B, f, st, aB, bB, a_f, b_f, c_f, r_f> {};
 }
 
-template <typename T, cl::sycl::buffer<T,2> *B, T& (*f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::write>), class st, cl::sycl::buffer<T,2> *aB, cl::sycl::buffer<T,1> *bB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>)>
-inline operation_var2D<T, B, f, st, aB, bB, a_f, b_f> operator<< (output_2D<T, B, f> out, stencil_input_var2D<T, st, aB, bB, a_f, b_f> in) {
-  return operation_var2D<T, B, f, st, aB, bB, a_f, b_f> {};
+template <typename T, cl::sycl::buffer<T,2> *B, T& (*f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::write>), class st, cl::sycl::buffer<T,2> *aB, cl::sycl::buffer<T,1> *bB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::read>), T (*c_f) (T, T) = coef_times<T>, T (*r_f) (T, T) = coef_plus<T>>
+  inline operation_var2D<T, B, f, st, aB, bB, a_f, b_f, c_f, r_f> operator<< (output_2D<T, B, f> out, stencil_input_var2D<T, st, aB, bB, a_f, b_f, c_f, r_f> in) {
+  return operation_var2D<T, B, f, st, aB, bB, a_f, b_f, c_f, r_f> {};
 }
 
 #endif

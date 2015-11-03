@@ -27,11 +27,13 @@ public:
 
   stencil_fxd2D(c_or0_s2D st0, c_or1_s2D st1) : st_left(st0), st_right(st1) {}
 
-  inline T eval(cl::sycl::accessor<T, 2, cl::sycl::access::read> a, std::function<T(int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>)> a_f, int k, int l) const {
-    return st_left.eval(a, a_f, k, l) + st_right.eval(a, a_f, k, l);
+  template<T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>)>
+  inline T eval(cl::sycl::accessor<T, 2, cl::sycl::access::read> a, int k, int l) const {
+    return st_left.template eval<a_f>(a, a_f, k, l) + st_right.template eval<a_f>(a, k, l);
   }
-  inline T eval_local(T *a, int k_local, int l_local, int ldc) const {
-    return st_left.eval_local(a, k_local, l_local, ldc) + st_right.eval_local(a, k_local, l_local, ldc);
+  template<int ldc>
+  inline T eval_local(T *a, int k_local, int l_local) const {
+    return st_left.template eval_local<ldc>(a, k_local, l_local) + st_right.template eval_local<ldc>(a, k_local, l_local);
   }
 private:
   const c_or0_s2D st_left;
@@ -49,11 +51,13 @@ public:
 
   stencil_fxd2D_bis(c_or0_s2D st0) : st(st0) {}
 
-  inline T eval(cl::sycl::accessor<T, 2, cl::sycl::access::read> a, std::function<T(int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>)> a_f, int k, int l) const {
-    return st.eval(a, a_f, k, l);
+  template<T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>)>
+  inline T eval(cl::sycl::accessor<T, 2, cl::sycl::access::read> a, int k, int l) const {
+    return st.template eval<a_f>(a, k, l);
   }
-  inline T eval_local(T *a, int k_local, int l_local, int ldc) const {
-    return st.eval_local(a, k_local, l_local, ldc);
+  template <int ldc>
+  inline T eval_local(T *a, int k_local, int l_local) const {
+    return st.template eval_local<ldc>(a, k_local, l_local);
   }
 private:
   const c_or0_s2D st;
@@ -72,10 +76,13 @@ public:
   inline stencil_fxd2D_bis<coef_fxd2D<i, j>> toStencil() {
     return stencil_fxd2D_bis<coef_fxd2D<i, j>> {*this};
   }
-  inline T eval(cl::sycl::accessor<T, 2, cl::sycl::access::read> a, std::function<T(int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>)> a_f, int k, int l) const {
+
+  template<T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>)>
+  inline T eval(cl::sycl::accessor<T, 2, cl::sycl::access::read> a, int k, int l) const {
     return coef * a_f(k+i,l+j,a); // template operator ? it would be cool
   }
-  inline T eval_local(T *a, int k_local, int l_local, int ldc) const {
+  template<int ldc>
+  inline T eval_local(T *a, int k_local, int l_local) const {
     return coef * a[(k_local+i)*ldc + l_local+j];
   }
 private:
@@ -171,7 +178,7 @@ public:
   inline void eval(cl::sycl::id<2> id, cl::sycl::accessor<T, 2, cl::sycl::access::write> *out, cl::sycl::accessor<T, 2, cl::sycl::access::read> *in) {
     int i = id.get(0) + of0;
     int j = id.get(1) + of1;
-    f(i, j, *out) = stencil.eval(*in, a_f, i, j);
+    f(i, j, *out) = stencil.template eval<a_f>(*in, i, j);
   }
 
   inline void eval_local(cl::sycl::nd_item<2> it, cl::sycl::accessor<T, 2, cl::sycl::access::write> *out, T *local_tab, int glob_max0, int glob_max1) {
@@ -183,7 +190,7 @@ public:
     j += of1;
     int i_local = it.get_local().get(0) - st::min_ind0;
     int j_local = it.get_local().get(1) - st::min_ind1;
-    f(i, j, *out) = stencil.eval_local(local_tab, i_local, j_local, local_dim1);
+    f(i, j, *out) = stencil.template eval_local<local_dim1>(local_tab, i_local, j_local);
   }
 
   inline void store_local(T * local_tab, cl::sycl::accessor<T, 2, cl::sycl::access::read> *in, cl::sycl::nd_item<2> it, cl::sycl::group<2> gr, int glob_max0, int glob_max1) {

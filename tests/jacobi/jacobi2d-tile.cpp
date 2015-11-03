@@ -118,6 +118,8 @@ int main(int argc, char **argv) {
     }
   }
 
+  end_measure(timer);
+
 #if DEBUG_STENCIL
   // get the gpu result
   auto C = ioABuffer.get_access<sycl::access::read, sycl::access::host_buffer>();
