@@ -278,7 +278,7 @@ public:
 
 };
 
-/// @} End the error_handling Doxygen group
+/// @} End the execution Doxygen group
 
 }
 }

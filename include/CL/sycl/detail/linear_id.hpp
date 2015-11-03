@@ -25,7 +25,7 @@ namespace detail {
     functions.
 */
 template <typename Range, typename Id>
-size_t linear_id(Range range, Id id, Id offset = {}) {
+size_t constexpr inline linear_id(Range range, Id id, Id offset = {}) {
   auto dims = std::distance(std::begin(range), std::end(range));
 
   size_t linear_id = 0;

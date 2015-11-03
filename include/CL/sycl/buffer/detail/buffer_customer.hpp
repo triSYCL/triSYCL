@@ -87,10 +87,11 @@ public:
   }
 
 
-  /// Release the buffer generation usage by a  kernel task
+  /// Release the buffer generation usage by a kernel task
   void release() {
     user_number--;
-    TRISYCL_DUMP_T("buffer_customer::release() now user_number = " << user_number);
+    TRISYCL_DUMP_T("buffer_customer::release() now user_number = "
+                   << user_number);
     if (user_number == 0) {
       /* If there is no task using this generation of the buffer, first
          notify the host accessors waiting for it, if any */
@@ -113,7 +114,8 @@ public:
       use it
   */
   void wait_released() {
-    TRISYCL_DUMP_T("buffer_customer::wait_released() user_number = " << user_number);
+    TRISYCL_DUMP_T("buffer_customer::wait_released() user_number = "
+                   << user_number);
     {
       std::unique_lock<std::mutex> ul { released_mutex };
       released_cv.wait(ul, [&] { return user_number == 0; });

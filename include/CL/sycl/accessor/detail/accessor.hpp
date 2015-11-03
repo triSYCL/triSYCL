@@ -21,6 +21,9 @@
 
 namespace cl {
 namespace sycl {
+
+class handler;
+
 namespace detail {
 
 // Forward declaration of detail::buffer for use in accessor
@@ -56,7 +59,8 @@ struct accessor : public detail::debug<accessor<T,
   array_view_type array;
 
   // The same type but writable
-  using writable_array_view_type = typename std::remove_const<array_view_type>::type;
+  using writable_array_view_type =
+    typename std::remove_const<array_view_type>::type;
 
   // \todo in the specification: store the dimension for user request
   static const auto dimensionality = Dimensions;
@@ -65,11 +69,39 @@ struct accessor : public detail::debug<accessor<T,
   using element = T;
   using value_type = T;
 
+  /** Construct a host accessor from an existing buffer
 
-  /// The only way to construct an accessor is from an existing buffer
-  // \todo fix the specification to rename target that shadows template parm
+      \todo fix the specification to rename target that shadows
+      template parm
+  */
   accessor(detail::buffer<T, Dimensions> &target_buffer) :
     buf { &target_buffer }, array { target_buffer.access } {
+#if TRISYCL_ASYNC
+    if (Target == access::target::host_buffer) {
+      // A host accessor needs to be declared *outside* a command_group
+      assert(current_task == nullptr);
+      // Wait for the latest generation of the buffer before the host can use it
+      buffer_base::wait(target_buffer);
+    }
+    else {
+      // A host non-host accessor needs to be declared *inside* a command_group
+      assert(current_task != nullptr);
+      // Register the accessor to the task dependencies
+      current_task->add(*this);
+    }
+#endif
+  }
+
+
+  /** Construct a device accessor from an existing buffer
+
+      \todo fix the specification to rename target that shadows
+      template parm
+  */
+  accessor(detail::buffer<T, Dimensions> &target_buffer,
+           handler &command_group_handler) :
+    buf { &target_buffer },
+    array { target_buffer.access } {
 #if TRISYCL_ASYNC
     if (Target == access::target::host_buffer) {
       // A host accessor needs to be declared *outside* a command_group

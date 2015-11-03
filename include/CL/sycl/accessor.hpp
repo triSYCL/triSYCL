@@ -18,7 +18,8 @@
 namespace cl {
 namespace sycl {
 
-template <typename T, std::size_t Dimensions, typename Allocator> struct buffer;
+template <typename T, std::size_t Dimensions, typename Allocator>
+struct buffer;
 
 class handler;
 
@@ -48,16 +49,46 @@ struct accessor : detail::accessor<DataType, Dimensions, AccessMode, Target> {
   /** Construct a buffer accessor from a buffer using a command group
       handler object from the command group scope
 
-      Constructor only available for access modes global_buffer,
-      host_buffer, constant_buffer (see Table 3.25).
+      Constructor only available for global_buffer or constant_buffer
+      target.
 
-      access_target defines the form of access being obtained. See Table
-      3.26.
+      access_target defines the form of access being obtained.
+
+      \todo Add template allocator type in all the accessor
+      constructors in the specification or just use a more opaque
+      Buffer type?
+
+      \todo fix specification where access mode should be target
+      instead
   */
   template <typename Allocator>
   accessor(buffer<DataType, Dimensions, Allocator> &target_buffer,
-           handler &command_group_handler) :
-    detail::accessor<DataType, Dimensions, AccessMode, Target> { *target_buffer.implementation } {}
+           handler &command_group_handler)
+    : detail::accessor<DataType, Dimensions, AccessMode, Target> {
+    *target_buffer.implementation, command_group_handler } {
+    static_assert(Target == access::target::global_buffer
+                  || Target == access::target::constant_buffer,
+                  "access target should be global_buffer or constant_buffer "
+                  "when a handler is used");
+  }
+
+
+  /** Construct a buffer accessor from a buffer using a command group
+      handler object from the command group scope
+
+      Constructor only available for host_buffer target.
+
+      access_target defines the form of access being obtained.
+
+      \todo add this lacking constructor to specification
+  */
+  template <typename Allocator>
+  accessor(buffer<DataType, Dimensions, Allocator> &target_buffer)
+    : detail::accessor<DataType, Dimensions, AccessMode, Target> {
+    *target_buffer.implementation } {
+    static_assert(Target == access::target::host_buffer,
+                  "without a handler, access target should be host_buffer");
+  }
 
 
   /** Construct a buffer accessor from a buffer given a specific range for
