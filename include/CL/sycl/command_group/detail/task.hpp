@@ -46,11 +46,7 @@ struct task : std::enable_shared_from_this<task>,
 
   /// Add a new task to the task graph and schedule for execution
   void schedule(std::function<void(void)> f) {
-#if TRISYCL_ASYNC
-    /* If in asynchronous execution mode, execute the functor in a new
-       thread
-
-       To keep a copy of the task shared_ptr after the end of the
+    /* To keep a copy of the task shared_ptr after the end of the
        command group, capture it by copy in the following lambda. This
        should be easier in C++17 with move semantics on capture
     */
@@ -70,6 +66,9 @@ struct task : std::enable_shared_from_this<task>,
     /* \todo it may be implementable with packaged_task that would
        deal with exceptions in kernels
     */
+#if TRISYCL_ASYNC
+    /* If in asynchronous execution mode, execute the functor in a new
+       thread */
     std::thread thread(execution);
     TRISYCL_DUMP_T("Task thread started");
     /** Detach the thread since it will synchronize by its own means
@@ -79,7 +78,7 @@ struct task : std::enable_shared_from_this<task>,
     thread.detach();
 #else
     // Just a synchronous execution otherwise
-    f();
+    execution();
 #endif
   }
 

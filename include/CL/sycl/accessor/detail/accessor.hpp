@@ -76,6 +76,8 @@ struct accessor : public detail::debug<accessor<T,
   */
   accessor(detail::buffer<T, Dimensions> &target_buffer) :
     buf { &target_buffer }, array { target_buffer.access } {
+    /* The host needs to wait for all the producers of the buffer to
+       have finished */
     buf->wait();
   }
 
