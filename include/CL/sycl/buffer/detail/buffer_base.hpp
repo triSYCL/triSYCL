@@ -9,95 +9,87 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <atomic>
+#include <condition_variable>
 #include <memory>
 #include <mutex>
 
 #include "CL/sycl/access.hpp"
-#include "CL/sycl/buffer/detail/buffer_customer.hpp"
 
 namespace cl {
 namespace sycl {
+
+class handler;
+
 namespace detail {
 
-template <typename T,
-          std::size_t dimensions,
-          access::mode mode,
-          access::target target = access::global_buffer>
-struct AccessorImpl;
+struct task;
+struct buffer_base;
+inline static void add_buffer_to_task(handler *command_group_handler,
+                                      detail::buffer_base *b,
+                                      bool is_write_mode);
 
 /** Factorize some template independent buffer aspects in a base class
  */
- struct buffer_base {
-   /// If the data are read-only, store the information for later optimization.
-   /// \todo Replace this by a static read-only type for the buffer
-   bool read_only;
+struct buffer_base {
+  /// If the data are read-only, store the information for later optimization.
+  /// \todo Replace this by a static read-only type for the buffer
+  bool read_only;
 
-   /// Store the buffer_customer for the last generation of this buffer
-   std::shared_ptr<buffer_customer> last_buffer_customer;
-   std::mutex protect_buffer;
+  /// Store the latest task to produce this buffer
+  std::atomic<detail::task *> latest_producer {};
 
-
-   buffer_base(bool read_only) : read_only { read_only } {}
-
-
-   /// Lock the buffer_base structure by returning a unique_lock on the mutex
-   std::unique_lock<std::mutex> lock() {
-     return std::unique_lock<std::mutex> { protect_buffer };
-   }
+  /// To signal when this buffer ready
+  std::condition_variable ready;
+  /// To protect the access to the condition variable
+  std::mutex ready_mutex;
 
 
-   std::shared_ptr<buffer_customer> get_last_buffer_customer() {
-     return last_buffer_customer;
-   }
+  /// Create a buffer base
+  buffer_base(bool read_only) : read_only { read_only } {}
 
 
-   void set_last_buffer_customer(std::shared_ptr<buffer_customer> bc) {
-     last_buffer_customer = bc;
-   }
+  /// Wait for this buffer to be ready
+  void wait() {
+    std::unique_lock<std::mutex> ul { ready_mutex };
+    ready.wait(ul, [&] {
+        // When there is no producer for this buffer, we are ready to use it
+        return !latest_producer;
+      });
+  }
 
-  /// Get the buffer customer associated to the latest version of the buffer
-  template <typename T,
-            std::size_t dimensions,
-            access::mode mode,
-            access::target target = access::global_buffer>
-  static std::shared_ptr<buffer_customer>
-  get_buffer_customer(AccessorImpl<T, dimensions, mode, target> &a) {
-    buffer_base &b = a.get_buffer();
-    {
-      /// Use atomic list?
-      // Protect the update of last_buffer_customer in the Buffer
-      auto lock = b.lock();
-      std::shared_ptr<buffer_customer> bc = b.get_last_buffer_customer();
-      auto old_bc = bc;
-      /* When we write into a buffer, we generate a new version of it (think
-         "SSA"). Of course we do it also when there is not yet any
-         buffer_customer */
-      if (!bc || a.is_write_access()) {
-        bc = std::make_shared<buffer_customer>(b, a.is_write_access());
-        b.set_last_buffer_customer(bc);
-      }
 
-      if (old_bc)
-        // \todo Use atomic list instead
-        old_bc->set_next_generation(bc);
-      else
-        // If we just created the buffer_customer, it is ready to use
-        bc->notify_ready();
-
-      return bc;
+  /// A task has released the buffer
+  void release(detail::task *t) {
+    if (latest_producer == t) {
+      // The latest consumer just released the buffer
+      latest_producer = {};
+      // Notify the host consumers that it is ready
+      ready.notify_all();
     }
   }
 
 
-  // Wait for the latest generation of the buffer before the host can use it
-   static void wait(buffer_base &b) {
-     // If there is nobody using the buffer, no need to wait
-     if (b.last_buffer_customer)
-       /* In a correct SYCL program there should be no more task creation
-          using a buffer given to use by a host accessor so this should be
-          race free */
-       b.last_buffer_customer->wait_released();
-   }
+  /// Return the latest producer for the buffer
+  detail::task *get_latest_producer() {
+    /// No lock explicitly required since it is an atomic type
+    return latest_producer;
+  }
+
+
+  /** Return the latest producer for the buffer and set another
+      future producer
+  */
+  detail::task *
+  set_latest_producer(detail::task *newer_latest_producer) {
+    return latest_producer.exchange(newer_latest_producer);
+  }
+
+
+  /// Add a buffer to the task running the command group
+  void add_to_task(handler *command_group_handler, bool is_write_mode) {
+    add_buffer_to_task(command_group_handler, this, is_write_mode);
+  }
 
 };
 

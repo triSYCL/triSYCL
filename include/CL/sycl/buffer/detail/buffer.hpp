@@ -192,6 +192,18 @@ struct buffer : public detail::debug<buffer<T, Dimensions>>,
 
 };
 
+
+/** Proxy function to avoid some circular type recursion
+
+    \todo To remove with some refactoring
+*/
+template <typename BufferDetail>
+static void buffer_add_to_task(BufferDetail *buf,
+                               handler *command_group_handler,
+                               bool is_write_mode) {
+    buf->add_to_task(command_group_handler, is_write_mode);
+  }
+
 /// @} End the data Doxygen group
 
 }

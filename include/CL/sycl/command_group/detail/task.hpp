@@ -9,12 +9,12 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <condition_variable>
 #include <memory>
 #include <thread>
 
 #include "CL/sycl/access.hpp"
-#include "CL/sycl/buffer/detail/buffer_base.hpp"
-#include "CL/sycl/buffer/detail/buffer_customer.hpp"
+#include "CL/sycl/buffer/detail/buffer.hpp"
 #include "CL/sycl/detail/debug.hpp"
 
 namespace cl {
@@ -25,70 +25,127 @@ namespace detail {
 
     "enable_shared_from_this" allows to access the shared_ptr behind the
     scene.
- */
+*/
 struct task : std::enable_shared_from_this<task>,
               public detail::debug<task> {
-  /// The buffers that are used by this task
-  std::vector<std::shared_ptr<buffer_customer>> buffers;
+  /// The tasks producing the buffers used by this task
+  std::vector<std::shared_ptr<detail::task>> producer_tasks;
+
+  /// List of buffer written by this task
+  std::vector<detail::buffer_base *> written_buffers;
+
+  /// Store if the execution ended, to be notified by task_ready
+  bool execution_ended = false;
+
+  /// To signal when this task is ready
+  std::condition_variable ready;
+
+  /// To protect the access to the condition variable
+  std::mutex ready_mutex;
+
 
   /// Add a new task to the task graph and schedule for execution
   void schedule(std::function<void(void)> f) {
-    /** To keep a copy of the task shared_ptr after the end of the command
-        group, capture it by copy in the following lambda. This should be
-        easier in C++17 with move semantics on capture
+#if TRISYCL_ASYNC
+    /* If in asynchronous execution mode, execute the functor in a new
+       thread
+
+       To keep a copy of the task shared_ptr after the end of the
+       command group, capture it by copy in the following lambda. This
+       should be easier in C++17 with move semantics on capture
     */
     auto task = shared_from_this();
     auto execution = [=] {
-      // Wait for the required buffers to be ready
-      task->acquire_buffers();
+      // Wait for the required tasks to be ready
+      task->wait_for_producers();
       TRISYCL_DUMP_T("Execute the kernel");
       // Execute the kernel
       f();
-      // Release the required buffers for other uses
-      task->release_buffers();
+      // Release the buffers that have been written by this task
+      task->release_written_buffers();
+      // Notify the waiting tasks that we are done
+      task->notify_consumers();
       TRISYCL_DUMP_T("Exit");
     };
-#if TRISYCL_ASYNC
-    /* If in asynchronous execution mode, execute the functor in a new
-       thread */
+    /* \todo it may be implementable with packaged_task that would
+       deal with exceptions in kernels
+    */
     std::thread thread(execution);
-    TRISYCL_DUMP_T("Started");
-    // Detach the thread since it will synchronize by its own means
+    TRISYCL_DUMP_T("Task thread started");
+    /** Detach the thread since it will synchronize by its own means
+
+        \todo This is an issue if there is an exception in the kernel
+    */
     thread.detach();
 #else
     // Just a synchronous execution otherwise
-    execution();
+    f();
 #endif
   }
 
 
-  void acquire_buffers() {
-    TRISYCL_DUMP_T("acquire_buffers()");
-    for (auto &b : buffers)
-      b->wait();
+  /// Wait for the required producer tasks to be ready
+  void wait_for_producers() {
+  TRISYCL_DUMP_T("Wait for the producer tasks");
+    for (auto &t : producer_tasks)
+      t->wait();
+    // We can let the producers rest in peace
+    /* \todo Think more about who is retaining the input buffer and
+       their life time */
+    producer_tasks.clear();
   }
 
 
-  void release_buffers() {
-    TRISYCL_DUMP_T("release_buffers()");
-    for (auto &b : buffers)
-      b->release();
+  /// Release the buffers that have been written by this task
+  void release_written_buffers() {
+  TRISYCL_DUMP_T("Release the written buffers");
+    for (auto b : written_buffers)
+      b->release(this);
+    written_buffers.clear();
   }
 
 
-  /** Register an accessor to this task
+  /// Notify the waiting tasks that we are done
+  void notify_consumers() {
+    TRISYCL_DUMP_T("Notify all the task waiting for us");
+    execution_ended = true;
+    /* \todo Verify that the memory model with the notify does not
+       require some fence or atomic */
+    ready.notify_all();
+  }
+
+
+  /** Wait for this task to be ready
+
+      This is to be called from another thread
+  */
+  void wait() {
+      std::unique_lock<std::mutex> ul { ready_mutex };
+      ready.wait(ul, [&] { return execution_ended; });
+  }
+
+
+  /** Register a buffer to this task
 
       This is how the dependency graph is incrementally built.
   */
-  template <typename T,
-            std::size_t dimensions,
-            access::mode mode,
-            access::target target = access::global_buffer>
-  void add(AccessorImpl<T, dimensions, mode, target> &a) {
-    auto bc = buffer_base::get_buffer_customer(a);
-    // Add the task as a new client for the buffer customer of the accessor
-    bc->add(shared_from_this(), a.isWriteAccess());
-    buffers.push_back(bc);
+  void add_buffer(detail::buffer_base *buf, bool is_write_mode) {
+    detail::task *latest_producer {};
+
+    if (is_write_mode) {
+      // Keep track of the written buffer to notify some host consumers later
+      written_buffers.push_back(buf);
+      /* Set this task as the latest producer of the buffer so that
+         another kernel mat wait on this task */
+      latest_producer = buf->set_latest_producer(this);
+    }
+    else
+      latest_producer = buf->get_latest_producer();
+
+    /* If the buffer is to be produced by a task, add the task in the
+       producer list to wait on it before running the task core */
+    if (latest_producer)
+      producer_tasks.push_back(latest_producer->shared_from_this());
   }
 
 };

@@ -44,12 +44,12 @@ public:
 
   /** Attach the task and accessors to it.
    */
-  std::shared_ptr<detail::task> current_task;
+  std::shared_ptr<detail::task> task;
 
 
   handler() {
     // Create a new task for this command_group
-    current_task = std::make_shared<detail::task>();
+    task = std::make_shared<detail::task>();
   }
 
 
@@ -59,6 +59,10 @@ public:
       The index value specifies which parameter of the OpenCL kernel is
       being set and the accessor object, which OpenCL buffer or image is
       going to be given as kernel argument.
+
+      \todo Update the specification to use a ref to the accessor instead?
+
+      \todo add a variadic method that accepts accessors too
 
       \todo To be implemented
   */
@@ -102,7 +106,7 @@ public:
   */
   template <typename KernelName = std::nullptr_t>
   void single_task(std::function<void(void)> F) {
-    current_task->schedule(F);
+    task->schedule(F);
   }
 
 
@@ -135,7 +139,7 @@ public:
             typename ParallelForFunctor>                                \
   void parallel_for(range<N> global_size,                               \
                     ParallelForFunctor f) {                             \
-    current_task->schedule([=] { detail::parallel_for(global_size, f); }); \
+    task->schedule([=] { detail::parallel_for(global_size, f); }); \
   }
 
   TRISYCL_parallel_for_functor_GLOBAL(1)
@@ -172,7 +176,7 @@ public:
   void parallel_for(range<N> global_size,               \
                     id<N> offset,                       \
                     ParallelForFunctor f) {             \
-    current_task->schedule([=] {                        \
+    task->schedule([=] {                                \
         detail::parallel_for_global_offset(global_size, \
                                            offset,      \
                                            f); });      \
@@ -207,7 +211,7 @@ public:
             std::size_t Dimensions,
             typename ParallelForFunctor>
   void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {
-    current_task->schedule([=] { detail::parallel_for(r, f); });
+    task->schedule([=] { detail::parallel_for(r, f); });
   }
 
 
@@ -237,7 +241,7 @@ public:
             typename ParallelForFunctor>
   void parallel_for_work_group(nd_range<Dimensions> r,
                                ParallelForFunctor f) {
-    current_task->schedule([=] { detail::parallel_for_workgroup(r, f); });
+    task->schedule([=] { detail::parallel_for_workgroup(r, f); });
   }
 
 
@@ -277,6 +281,21 @@ public:
   }
 
 };
+
+namespace detail {
+
+inline static void add_buffer_to_task(handler *command_group_handler,
+                                      detail::buffer_base *b,
+                                      bool is_write_mode) {
+  command_group_handler->task->add_buffer(b, is_write_mode);
+}
+
+
+static inline auto get_task(handler &command_group_handler) {
+  return command_group_handler.task;
+}
+
+}
 
 /// @} End the execution Doxygen group
 
