@@ -60,7 +60,8 @@ namespace detail {
 */
 template <typename T>
 struct debug {
-#ifdef TRISYCL_DEBUG
+  // To trace the execution of the conSTRUCTORs and deSTRUCTORs
+#ifdef TRISYCL_DEBUG_STRUCTORS
   /// Trace the construction with the compiler-dependent mangled named
   debug() {
     TRISYCL_DUMP("Constructor of " << typeid(*this).name()
