@@ -11,9 +11,10 @@
 
 #include "CL/sycl/accessor.hpp"
 #include "CL/sycl/command_group/detail/task.hpp"
-#include "CL/sycl/parallelism/detail/parallelism.hpp"
 #include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/exception.hpp"
+#include "CL/sycl/parallelism/detail/parallelism.hpp"
+#include "CL/sycl/queue/detail/queue.hpp"
 
 namespace cl {
 namespace sycl {
@@ -47,9 +48,18 @@ public:
   std::shared_ptr<detail::task> task;
 
 
-  handler() {
+  /* Create a command group handler from the queue detail
+
+     The queue detail is used to track kernel completion.
+
+     Note that this is an implementation dependent constructor. Normal
+     users cannot construct handler from scratch.
+
+     \todo Make this constructor private
+  */
+  handler(detail::queue &q) {
     // Create a new task for this command_group
-    task = std::make_shared<detail::task>();
+    task = std::make_shared<detail::task>(q);
   }
 
 

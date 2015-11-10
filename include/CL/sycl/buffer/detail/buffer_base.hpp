@@ -1,5 +1,5 @@
-#ifndef TRISYCL_SYCL_BUFFER_BASE_HPP
-#define TRISYCL_SYCL_BUFFER_BASE_HPP
+#ifndef TRISYCL_SYCL_BUFFER_DETAIL_BUFFER_BASE_HPP
+#define TRISYCL_SYCL_BUFFER_DETAIL_BUFFER_BASE_HPP
 
 /** \file The buffer_base behind the buffers
 
@@ -105,4 +105,4 @@ struct buffer_base {
     ### End:
 */
 
-#endif // TRISYCL_SYCL_BUFFER_BASE_HPP
+#endif // TRISYCL_SYCL_BUFFER_DETAIL_BUFFER_BASE_HPP

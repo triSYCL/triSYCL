@@ -13,9 +13,9 @@
 #include <memory>
 #include <thread>
 
-#include "CL/sycl/access.hpp"
 #include "CL/sycl/buffer/detail/buffer.hpp"
 #include "CL/sycl/detail/debug.hpp"
+#include "CL/sycl/queue/detail/queue.hpp"
 
 namespace cl {
 namespace sycl {
@@ -43,6 +43,13 @@ struct task : std::enable_shared_from_this<task>,
   /// To protect the access to the condition variable
   std::mutex ready_mutex;
 
+  /// Keep track of the queue used to submission to notify kernel completion
+  detail::queue *owner_queue;
+
+
+  /// Create a task from a submitting queue
+  task(detail::queue &q) : owner_queue { &q } {}
+
 
   /// Add a new task to the task graph and schedule for execution
   void schedule(std::function<void(void)> f) {
@@ -61,8 +68,16 @@ struct task : std::enable_shared_from_this<task>,
       task->release_written_buffers();
       // Notify the waiting tasks that we are done
       task->notify_consumers();
+      // Notify the queue we are done
+      owner_queue->kernel_end();
       TRISYCL_DUMP_T("Exit");
     };
+    /* Notify the queue that there is a kernel submitted to the
+       queue. Do not do it in the task contructor so that we can deal
+       with command group without kernel and if we put it inside the
+       thread, the queue may have finished before the thread is
+       scheduled */
+    owner_queue->kernel_start();
     /* \todo it may be implementable with packaged_task that would
        deal with exceptions in kernels
     */

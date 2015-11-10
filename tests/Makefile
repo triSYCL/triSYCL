@@ -54,6 +54,7 @@ endif
 
 # There are some tests using small array display() method
 # To enable debug and tracing:
+#CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DTRISYCL_DEBUG_STRUCTORS -DBOOST_LOG_DYN_LINK
 #LDLIBS+=-lboost_log
 

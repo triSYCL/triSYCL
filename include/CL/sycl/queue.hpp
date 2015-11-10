@@ -9,16 +9,20 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <memory>
+
 #include "CL/sycl/context.hpp"
+#include "CL/sycl/detail/debug.hpp"
 #include "CL/sycl/detail/default_classes.hpp"
 #include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/device.hpp"
 #include "CL/sycl/device_selector.hpp"
+#include "CL/sycl/exception.hpp"
 #include "CL/sycl/handler.hpp"
 #include "CL/sycl/handler_event.hpp"
-#include "CL/sycl/exception.hpp"
 #include "CL/sycl/info/param_traits.hpp"
 #include "CL/sycl/parallelism.hpp"
+#include "CL/sycl/queue/detail/queue.hpp"
 
 namespace cl {
 namespace sycl {
@@ -63,9 +67,15 @@ TRISYCL_INFO_PARAM_TRAITS(queue::context, context)
 
     \todo The implementation is quite minimal for now. :-)
 */
-class queue {
+class queue : public detail::debug<queue> {
+
+  /** The queue implementation, in a shared pointer to have an easy
+      copyable queue as required by the SYCL specification */
+  std::shared_ptr<detail::queue> implementation =
+    std::make_shared<detail::queue>();
 
 public:
+
   /** This constructor creates a SYCL queue from an OpenCL queue
 
       At construction it does a retain on the queue memory object.
@@ -282,7 +292,9 @@ public:
       "auto" in submit() lambda parameter.
   */
   handler_event submit(std::function<void(handler &)> cgf) {
-    handler command_group_handler;
+    /** Since the queue will wait for the kernels to end, we can pass
+        a detail::queue instead of a shared pointer on it */
+    handler command_group_handler { *implementation };
     cgf(command_group_handler);
     return {};
   }
