@@ -35,8 +35,8 @@ namespace detail {
 */
 template <typename T,
           std::size_t Dimensions = 1>
-struct buffer : public detail::debug<buffer<T, Dimensions>>,
-                public detail::buffer_base {
+struct buffer : public detail::buffer_base,
+                public detail::debug<buffer<T, Dimensions>> {
   // Extension to SYCL: provide pieces of STL container interface
   using element = T;
   using value_type = T;

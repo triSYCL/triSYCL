@@ -13,7 +13,7 @@
 #include <memory>
 #include <thread>
 
-#include "CL/sycl/buffer/detail/buffer.hpp"
+#include "CL/sycl/buffer/detail/buffer_base.hpp"
 #include "CL/sycl/detail/debug.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"
 
@@ -26,13 +26,18 @@ namespace detail {
     "enable_shared_from_this" allows to access the shared_ptr behind the
     scene.
 */
-struct task : std::enable_shared_from_this<task>,
+struct task : public std::enable_shared_from_this<task>,
               public detail::debug<task> {
+
+  /** List of the buffers used by this task
+
+      \todo Use a set to check that some buffers are not used many
+      times at least on writing
+  */
+  std::vector<detail::buffer_base *> buffers_in_use;
+
   /// The tasks producing the buffers used by this task
   std::vector<std::shared_ptr<detail::task>> producer_tasks;
-
-  /// List of buffer written by this task
-  std::vector<detail::buffer_base *> written_buffers;
 
   /// Store if the execution ended, to be notified by task_ready
   bool execution_ended = false;
@@ -65,7 +70,7 @@ struct task : std::enable_shared_from_this<task>,
       // Execute the kernel
       f();
       // Release the buffers that have been written by this task
-      task->release_written_buffers();
+      task->release_buffers();
       // Notify the waiting tasks that we are done
       task->notify_consumers();
       // Notify the queue we are done
@@ -104,18 +109,16 @@ struct task : std::enable_shared_from_this<task>,
     for (auto &t : producer_tasks)
       t->wait();
     // We can let the producers rest in peace
-    /* \todo Think more about who is retaining the input buffer and
-       their life time */
     producer_tasks.clear();
   }
 
 
-  /// Release the buffers that have been written by this task
-  void release_written_buffers() {
+  /// Release the buffers that have  been used by this task
+  void release_buffers() {
   TRISYCL_DUMP_T("Release the written buffers");
-    for (auto b : written_buffers)
-      b->release(this);
-    written_buffers.clear();
+    for (auto b: buffers_in_use)
+      b->release();
+    buffers_in_use.clear();
   }
 
 
@@ -134,8 +137,9 @@ struct task : std::enable_shared_from_this<task>,
       This is to be called from another thread
   */
   void wait() {
-      std::unique_lock<std::mutex> ul { ready_mutex };
-      ready.wait(ul, [&] { return execution_ended; });
+    TRISYCL_DUMP_T("The task wait for another task");
+    std::unique_lock<std::mutex> ul { ready_mutex };
+    ready.wait(ul, [&] { return execution_ended; });
   }
 
 
@@ -146,11 +150,14 @@ struct task : std::enable_shared_from_this<task>,
   void add_buffer(detail::buffer_base *buf, bool is_write_mode) {
     detail::task *latest_producer {};
 
+    /* Keep track of the use of the buffer to notify its release at
+       the end of the execution */
+    buffers_in_use.push_back(buf);
+    // To be sure the buffer does not disappear before the kernel can run
+    buf->use();
     if (is_write_mode) {
-      // Keep track of the written buffer to notify some host consumers later
-      written_buffers.push_back(buf);
       /* Set this task as the latest producer of the buffer so that
-         another kernel mat wait on this task */
+         another kernel may wait on this task */
       latest_producer = buf->set_latest_producer(this);
     }
     else

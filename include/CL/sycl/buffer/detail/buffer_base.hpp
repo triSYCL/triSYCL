@@ -36,6 +36,9 @@ struct buffer_base {
   /// \todo Replace this by a static read-only type for the buffer
   bool read_only;
 
+  //// Keep track of the number of kernel accessors using this buffer
+  std::atomic<size_t> number_of_users;
+
   /// Store the latest task to produce this buffer
   std::atomic<detail::task *> latest_producer {};
 
@@ -46,27 +49,38 @@ struct buffer_base {
 
 
   /// Create a buffer base
-  buffer_base(bool read_only) : read_only { read_only } {}
+  buffer_base(bool read_only) : read_only { read_only },
+                                number_of_users { 0 } {}
 
 
-  /// Wait for this buffer to be ready
+  /// The destructor wait for not being used anymore
+  ~buffer_base() {
+    wait();
+  }
+
+
+  /// Wait for this buffer to be ready, which is no longer in use
   void wait() {
     std::unique_lock<std::mutex> ul { ready_mutex };
     ready.wait(ul, [&] {
         // When there is no producer for this buffer, we are ready to use it
-        return !latest_producer;
+        return number_of_users == 0;
       });
   }
 
 
+  /// Mark this buffer in use by a task
+  void use() {
+    // Increment the use count
+    ++number_of_users;
+  }
+
+
   /// A task has released the buffer
-  void release(detail::task *t) {
-    if (latest_producer == t) {
-      // The latest consumer just released the buffer
-      latest_producer = {};
-      // Notify the host consumers that it is ready
+  void release() {
+    if (--number_of_users == 0)
+      // Notify the host consumers or the buffer destructor that it is ready
       ready.notify_all();
-    }
   }
 
 
