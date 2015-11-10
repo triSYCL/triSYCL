@@ -76,6 +76,9 @@ struct accessor : public detail::debug<accessor<T,
   */
   accessor(detail::buffer<T, Dimensions> &target_buffer) :
     buf { &target_buffer }, array { target_buffer.access } {
+    TRISYCL_DUMP_T("Create a host accessor write = " << is_write_access());
+    static_assert(Target == access::target::host_buffer,
+                  "without a handler, access target should be host_buffer");
     /* The host needs to wait for all the producers of the buffer to
        have finished */
     buf->wait();
@@ -90,6 +93,11 @@ struct accessor : public detail::debug<accessor<T,
   accessor(detail::buffer<T, Dimensions> &target_buffer,
            handler &command_group_handler) :
     buf { &target_buffer }, array { target_buffer.access } {
+    TRISYCL_DUMP_T("Create a kernel accessor write = " << is_write_access());
+    static_assert(Target == access::target::global_buffer
+                  || Target == access::target::constant_buffer,
+                  "access target should be global_buffer or constant_buffer "
+                  "when a handler is used");
     // Register the buffer to the task dependencies
     buffer_add_to_task(buf, &command_group_handler, is_write_access());
   }

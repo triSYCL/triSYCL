@@ -338,7 +338,7 @@ struct buffer {
                   "get_access(handler) can only deal with access::global_buffer"
                   " or access::constant_buffer (for host_buffer accessor"
                   " do not use a command group handler");
-    return *implementation;
+    return { *implementation, command_group_handler };
   }
 
 
