@@ -16,6 +16,10 @@ TARGETS = $(basename $(wildcard */*.cpp))
 TARGETS_CC = $(basename $(wildcard */*.cc))
 TARGETS += $(TARGETS_CC)
 
+# Since the .C files generates some .o, think to remove them
+FILES_C =$(wildcard */*.C)
+CLEANING_TARGETS = $(TARGETS) $(FILES_C:%.C=%.o)
+
 # The implementation uses C++14 and OpenMP
 CXXFLAGS = -Wall -std=c++1y -I$(triSYCL_DIR)/include \
 	-I$(triSYCL_DIR)/tests/common
@@ -81,7 +85,7 @@ run: $(TARGETS)
 
 # Useful before a check...
 clean:
-	$(RM) $(TARGETS)
+	$(RM) $(CLEANING_TARGETS)
 
 # Force recompilation of $(TARGETS_CC) binaries through the Makefile since
 # LIT does not know the dependencies
