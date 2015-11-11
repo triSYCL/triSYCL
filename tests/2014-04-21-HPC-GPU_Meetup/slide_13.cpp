@@ -34,11 +34,11 @@ int main() {
                                                   }
                                                   );
           });
-        //////// Test output to be skiped from slide
-        std::cout << "output[42] = " << output[42]
-                  << ", should be 3" << std::endl;
-        //////// End of test
     }
+    //////// Test output to be skiped from slide
+    std::cout << "output[42] = " << output[42]
+              << ", should be 3" << std::endl;
+    //////// End of test
 //////// End slide
     return 0;
 }

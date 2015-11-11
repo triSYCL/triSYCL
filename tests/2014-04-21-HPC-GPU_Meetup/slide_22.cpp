@@ -15,6 +15,7 @@ int main() {
   // Initialize the data with the index value
   std::iota(std::begin(data), std::end(data), 0);
   const int groupsize = 2;
+  {
 //////// Start slide
 buffer<int> my_buffer(data, size);
 
@@ -32,6 +33,7 @@ my_queue.submit([&](handler &cgh)
                                                   });
  });
   //////// End slide
+  }
   std::cout << "data[5] = " << data[5] << ", should be 10" << std::endl;
   return 0;
 }
