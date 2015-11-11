@@ -1,3 +1,5 @@
+/* RUN: %{execute}%s
+ */
 #include <cstdlib>
 
 #include "include/stencil-gen-var.hpp"
