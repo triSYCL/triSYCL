@@ -22,6 +22,7 @@
 #include <typeinfo>
 
 #include <boost/log/trivial.hpp>
+//#include <boost/type_index.hpp>
 
 // To be able to construct string literals like "blah"s
 using namespace std::string_literals;
@@ -52,6 +53,16 @@ namespace detail {
 /** \addtogroup debug_trace Debugging and tracing support
     @{
 */
+
+/* Not yet in Ubuntu 15.04
+/// To display the name of a type
+template <typename T>
+auto get_type_name() {
+  // Prettier output than typeid(T).name()
+  //return boost::typeindex::type_id<T>().pretty_name();
+}
+*/
+
 
 /** Class used to trace the construction, copy-construction,
     move-construction and destruction of classes that inherit from it

@@ -75,7 +75,7 @@ struct task : public std::enable_shared_from_this<task>,
       task->notify_consumers();
       // Notify the queue we are done
       owner_queue->kernel_end();
-      TRISYCL_DUMP_T("Exit");
+      TRISYCL_DUMP_T("Task thread exit");
     };
     /* Notify the queue that there is a kernel submitted to the
        queue. Do not do it in the task contructor so that we can deal
@@ -105,7 +105,7 @@ struct task : public std::enable_shared_from_this<task>,
 
   /// Wait for the required producer tasks to be ready
   void wait_for_producers() {
-  TRISYCL_DUMP_T("Wait for the producer tasks");
+    TRISYCL_DUMP_T("Task " << this << " waits for the producer tasks");
     for (auto &t : producer_tasks)
       t->wait();
     // We can let the producers rest in peace
@@ -115,7 +115,7 @@ struct task : public std::enable_shared_from_this<task>,
 
   /// Release the buffers that have  been used by this task
   void release_buffers() {
-  TRISYCL_DUMP_T("Release the written buffers");
+    TRISYCL_DUMP_T("Task " << this << " releases the written buffers");
     for (auto b: buffers_in_use)
       b->release();
     buffers_in_use.clear();
@@ -124,7 +124,7 @@ struct task : public std::enable_shared_from_this<task>,
 
   /// Notify the waiting tasks that we are done
   void notify_consumers() {
-    TRISYCL_DUMP_T("Notify all the task waiting for us");
+    TRISYCL_DUMP_T("Notify all the task waiting for this task " << this);
     execution_ended = true;
     /* \todo Verify that the memory model with the notify does not
        require some fence or atomic */
@@ -137,7 +137,7 @@ struct task : public std::enable_shared_from_this<task>,
       This is to be called from another thread
   */
   void wait() {
-    TRISYCL_DUMP_T("The task wait for another task");
+    TRISYCL_DUMP_T("The task wait for task " << this << " to end");
     std::unique_lock<std::mutex> ul { ready_mutex };
     ready.wait(ul, [&] { return execution_ended; });
   }
@@ -155,6 +155,8 @@ struct task : public std::enable_shared_from_this<task>,
     buffers_in_use.push_back(buf);
     // To be sure the buffer does not disappear before the kernel can run
     buf->use();
+    TRISYCL_DUMP_T("Add buffer " << buf << " in task " << this);
+
     if (is_write_mode) {
       /* Set this task as the latest producer of the buffer so that
          another kernel may wait on this task */
