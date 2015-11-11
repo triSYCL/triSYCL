@@ -12,12 +12,12 @@
 // global variable...
 int result; //< this is where we will write our result
 // wrap our result variable in a buffer
-cl::sycl::buffer<int> resultBuf(&result, 1);
+cl::sycl::buffer<int> resultBuf(1);
 
 //////// Start left side of the slide
 struct FunctionObject {
     using Accessor = cl::sycl::accessor<int, 1, cl::sycl::access::write, cl::sycl::access::global_buffer>;
-    Accessor &a;
+    Accessor a;
     FunctionObject(Accessor A) : a { A } {}
     void operator()() {
         a [0] = 1234;
@@ -36,21 +36,34 @@ int main()
     myQueue.submit([&](cl::sycl::handler &cgh)
     {
       // request access to our buffer
-      cl::sycl::accessor<int, 1, cl::sycl::access::write, cl::sycl::access::global_buffer>
+      cl::sycl::accessor<int, 1, cl::sycl::access::write,
+                         cl::sycl::access::global_buffer>
         writeResult = { resultBuf, cgh };
-cgh.single_task(FunctionObject(writeResult));
+      cgh.single_task(FunctionObject(writeResult));
+    });
 //////// End left side of the slide
+  /* Since resultBuf is a global variable, it will never goes out of
+     scope from the main point-of-view, so use a host accessor */
+  result = resultBuf.get_access<cl::sycl::access::read>()[0];
+  printf("Result = %d\n", result);
 
 //////// Start right side of the slide
-cgh.single_task<class simple_test>([=] ()
+    myQueue.submit([&](cl::sycl::handler &cgh)
+    {
+      cl::sycl::accessor<int, 1, cl::sycl::access::write,
+                         cl::sycl::access::global_buffer>
+        writeResult = { resultBuf, cgh };
+      cgh.single_task<class simple_test>([=] ()
                                    {
                                      writeResult [0] = 1234;
                                    }
-                                   );
+                                         );
 //////// End right side of the slide
     }); // end of our commands for this queue
 
   } // end scope, so we wait for the queue to complete
-
+  /* Since resultBuf is a global variable, it will never goes out of
+     scope from the main point-of-view, so use a host accessor */
+  result = resultBuf.get_access<cl::sycl::access::read>()[0];
   printf("Result = %d\n", result);
 }
