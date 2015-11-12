@@ -13,6 +13,7 @@
 #include <condition_variable>
 #include <memory>
 #include <mutex>
+#include <utility>
 
 #include "CL/sycl/access.hpp"
 
@@ -40,7 +41,9 @@ struct buffer_base {
   std::atomic<size_t> number_of_users;
 
   /// Store the latest task to produce this buffer
-  std::atomic<detail::task *> latest_producer {};
+  std::shared_ptr<detail::task> latest_producer;
+  /// To protect the access to latest_producer
+  std::mutex latest_producer_mutex;
 
   /// To signal when this buffer ready
   std::condition_variable ready;
@@ -85,8 +88,8 @@ struct buffer_base {
 
 
   /// Return the latest producer for the buffer
-  detail::task *get_latest_producer() {
-    /// No lock explicitly required since it is an atomic type
+  std::shared_ptr<detail::task> get_latest_producer() {
+    std::lock_guard<std::mutex> lg { latest_producer_mutex };
     return latest_producer;
   }
 
@@ -94,9 +97,13 @@ struct buffer_base {
   /** Return the latest producer for the buffer and set another
       future producer
   */
-  detail::task *
-  set_latest_producer(detail::task *newer_latest_producer) {
-    return latest_producer.exchange(newer_latest_producer);
+  std::shared_ptr<detail::task>
+  set_latest_producer(std::shared_ptr<detail::task> newer_latest_producer) {
+    std::lock_guard<std::mutex> lg { latest_producer_mutex };
+    using std::swap;
+
+    swap(newer_latest_producer, latest_producer);
+    return newer_latest_producer;
   }
 
 

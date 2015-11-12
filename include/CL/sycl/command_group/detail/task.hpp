@@ -148,19 +148,18 @@ struct task : public std::enable_shared_from_this<task>,
       This is how the dependency graph is incrementally built.
   */
   void add_buffer(detail::buffer_base *buf, bool is_write_mode) {
-    detail::task *latest_producer {};
-
+    TRISYCL_DUMP_T("Add buffer " << buf << " in task " << this);
     /* Keep track of the use of the buffer to notify its release at
        the end of the execution */
     buffers_in_use.push_back(buf);
     // To be sure the buffer does not disappear before the kernel can run
     buf->use();
-    TRISYCL_DUMP_T("Add buffer " << buf << " in task " << this);
 
+    std::shared_ptr<detail::task> latest_producer;
     if (is_write_mode) {
       /* Set this task as the latest producer of the buffer so that
          another kernel may wait on this task */
-      latest_producer = buf->set_latest_producer(this);
+      latest_producer = buf->set_latest_producer(shared_from_this());
     }
     else
       latest_producer = buf->get_latest_producer();
@@ -168,7 +167,7 @@ struct task : public std::enable_shared_from_this<task>,
     /* If the buffer is to be produced by a task, add the task in the
        producer list to wait on it before running the task core */
     if (latest_producer)
-      producer_tasks.push_back(latest_producer->shared_from_this());
+      producer_tasks.push_back(latest_producer);
   }
 
 };

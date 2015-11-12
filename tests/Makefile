@@ -1,3 +1,6 @@
+## To enable asynchronous kernels
+#CXXFLAGS += -DTRISYCL_ASYNC=1
+
 # Compute the absolute directory name from the location of this Makefile
 # so that we can compile from anywhere even if we use make -f
 # <this_makefile> ... as used by make check:
@@ -49,14 +52,14 @@ ifdef OpenCL_LIBPATH
   LDFLAGS += -L$(OpenCL_LIBPATH)
 endif
 
-## To enable asynchronous kernels
-#CXXFLAGS += -DTRISYCL_ASYNC=1
-
 # There are some tests using small array display() method
 # To enable debug and tracing:
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DTRISYCL_DEBUG_STRUCTORS -DBOOST_LOG_DYN_LINK
 #LDLIBS+=-lboost_log
+#CXXFLAGS += -fsanitize=address -fno-omit-frame-pointer -fsanitize=thread
+#CXXFLAGS += -fsanitize=thread -shared
+
 
 # By default run lit checking in the current directory
 CHECKING_DIR ?= .
