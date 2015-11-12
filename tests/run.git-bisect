@@ -1,0 +1,17 @@
+#! /bin/bash -vx
+
+# Typical verification script used with git bisect, such as:
+
+# git bisect start HEAD 8cf506aa31b9e44b9
+# git bisect run tests/run.git-bisect
+
+# Convert any error into an error status that git bisect can understand
+function handler() {
+         exit 1
+}
+
+trap handler ERR
+
+cd tests
+# Adapt you use case here:
+make -f Makefile.bisect clean parallel_for/integer && parallel_for/integer
