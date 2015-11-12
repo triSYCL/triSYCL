@@ -72,8 +72,8 @@ CHECKING_DIR ?= .
 # - the "auto" return type methods that does not work with "-g" option
 #CXX = clang++
 
-# But everything works fine with GCC 4.9!
-CXX = g++-4.9
+# But everything works fine with GCC 5.2!
+CXX = g++
 #CXX = clang++-3.6
 
 # Some hack to force the compiler from the test infrastructure:
@@ -97,9 +97,9 @@ check: $(TARGETS_CC)
 	# Launch testing with lit tool from LLVM in current directory
 	echo Using $(CXX) compiler:
 	# lit can be found for example on Debian/Ubuntu in package
-	# llvm-3.6-tools in /usr/lib/llvm-3.6/build/utils/lit/lit.py
+	# llvm-3.7-tools in /usr/lib/llvm-3.7/build/utils/lit/lit.py
 	# so try before running the check:
-	# export TRISYCL_LIT=/usr/lib/llvm-3.6/build/utils/lit/lit.py
+	# export TRISYCL_LIT=/usr/lib/llvm-3.7/build/utils/lit/lit.py
 	# The config file for triSYCL needs at least Python 3.3
 	test "unset$$TRISYCL_LIT == unset" && echo 'Initialize TRISYCL_LIT variable to the path of "lit" command' ; echo 1
 	python3 $$TRISYCL_LIT $(LITFLAGS) $(CHECKING_DIR)
@@ -107,7 +107,7 @@ check: $(TARGETS_CC)
 check-compilers:
 	# Launch the check with various compilers
 	-FORCE_CXX=g++-4.9 $(MAKE) clean check
-	-FORCE_CXX=clang++-3.6 $(MAKE) clean check
+	-FORCE_CXX=clang++-3.7 $(MAKE) clean check
 	-FORCE_CXX=g++ $(MAKE) clean check
 
 # A special target to be called as from the test as "make execute
