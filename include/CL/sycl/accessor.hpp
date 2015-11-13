@@ -13,22 +13,23 @@
 
 #include "CL/sycl/access.hpp"
 #include "CL/sycl/accessor/detail/accessor.hpp"
-
+#include "CL/sycl/pipe/detail/accessor.hpp"
 
 namespace cl {
 namespace sycl {
 
 template <typename T, std::size_t Dimensions, typename Allocator>
 struct buffer;
-
+template <typename T>
+struct pipe;
 class handler;
 
 /** \addtogroup data Data access and storage in SYCL
     @{
 */
 
-/** The accessor abstracts the way buffer data are accessed inside a
-    kernel in a multidimensional variable length array way.
+/** The accessor abstracts the way buffer or pipe data are accessed
+    inside a kernel in a multidimensional variable length array way.
 
     \todo Implement it for images according so section 3.3.4.5
 */
@@ -129,6 +130,37 @@ struct accessor : detail::accessor<DataType, Dimensions, AccessMode, Target> {
            handler &command_group_handler) {
     detail::unimplemented();
   }
+
+};
+
+/** The pipe accessor abstracts the way pipe data are accessed inside
+    a kernel
+
+    \todo Implement blocking pipes
+*/
+template <typename DataType,
+          access::mode AccessMode>
+struct accessor<DataType, 1, AccessMode, access::pipe> :
+    detail::accessor<DataType, 1, AccessMode, access::pipe> {
+  static constexpr auto rank = 1;
+  using value_type = DataType;
+  using reference = value_type&;
+  using const_reference = const value_type&;
+  static constexpr auto access_mode = AccessMode;
+  static constexpr auto target = access::pipe;
+
+  using accessor_detail =
+    detail::accessor<value_type, rank, access_mode, target>;
+  // Inherit of the constructors to have accessor constructor from detail
+  using accessor_detail::accessor_detail;
+
+  /** Construct a pipe accessor from a pipe using a command group
+      handler object from the command group scope
+
+      access_target defines the form of access being obtained.
+  */
+  accessor(pipe<value_type> &p, handler &command_group_handler)
+    : accessor_detail { *p.implementation, command_group_handler } { }
 
 };
 

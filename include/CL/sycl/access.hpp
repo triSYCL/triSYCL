@@ -52,7 +52,9 @@ namespace access {
     image,
     host_buffer,
     host_image,
-    image_array
+    image_array,
+    pipe,
+    blocking_pipe
   };
 
 

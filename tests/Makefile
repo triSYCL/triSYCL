@@ -1,5 +1,5 @@
 ## To enable asynchronous kernels
-#CXXFLAGS += -DTRISYCL_ASYNC=1
+CXXFLAGS += -DTRISYCL_ASYNC=1
 
 # Compute the absolute directory name from the location of this Makefile
 # so that we can compile from anywhere even if we use make -f
@@ -56,7 +56,7 @@ endif
 # To enable debug and tracing:
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DTRISYCL_DEBUG_STRUCTORS -DBOOST_LOG_DYN_LINK
-#LDLIBS+=-lboost_log
+#LDLIBS+=-lboost_log -lpthread
 #CXXFLAGS += -fsanitize=address -fno-omit-frame-pointer -fsanitize=thread
 #CXXFLAGS += -fsanitize=thread -shared
 
