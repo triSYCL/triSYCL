@@ -65,7 +65,7 @@ struct pipe {
   */
   bool read(T &value) {
     std::lock_guard<std::mutex> lg { cb_mutex };
-    TRISYCL_DUMP_T("Read pipe empty = " << cb.empty());
+    // TRISYCL_DUMP_T("Read pipe empty = " << cb.empty());
 
     if (cb.empty())
       return false;

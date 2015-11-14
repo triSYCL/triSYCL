@@ -2,8 +2,15 @@
    CHECK: Result:
    CHECK-NEXT: 6 8 11
 
-   Extend a pipe program example from Andrew Richards
-   https://cvs.khronos.org/bugzilla/show_bug.cgi?id=14215
+   A convoluted example of pipes using 2 different short-live queues.
+
+   Since the queues disappear after each submit() in this example, the
+   run-time wait for completion of the first queue, which has to send
+   all the data in the pipe before the second queue start.
+
+   If the pipe is not big enough, there is a dead-lock: the sending
+   kernel fill the pipe but the consumer kernel cannot start in the
+   meantime
 */
 #include <CL/sycl.hpp>
 #include <iostream>
@@ -25,14 +32,11 @@ int main() {
     // A buffer of N float using the storage of c
     cl::sycl::buffer<float> C { c, N };
 
-    // A pipe of 2 float elements
-    cl::sycl::pipe<float> P { 2 };
+    //  A pipe of float with at least N elements to avoid the dead-lock
+    cl::sycl::pipe<float> P { N };
 
-    // Create a queue to launch the kernels
-    cl::sycl::queue q;
-
-    // Launch the producer to stream A to the pipe
-    q.submit([&](cl::sycl::handler &cgh) {
+    // Launch the producer to stream A to the pipe on its own queue
+    cl::sycl::queue {}.submit([&](cl::sycl::handler &cgh) {
       // Get write access to the pipe
       auto p = P.get_access<cl::sycl::access::write>(cgh);
       // Get read access to the data
@@ -44,10 +48,11 @@ int main() {
             while (!(p.write(ka[i])))
               ;
         });
-      });
+      }); //< The first queue goes out-of-scope: wait for completion!
 
-    // Launch the consumer that adds the pipe stream with B to C
-    q.submit([&](cl::sycl::handler &cgh) {
+    /* Launch the consumer that adds the pipe stream with B to C on
+       its own queue */
+    cl::sycl::queue {}.submit([&](cl::sycl::handler &cgh) {
       // Get read access to the pipe
       auto p = P.get_access<cl::sycl::access::read>(cgh);
 
@@ -67,8 +72,9 @@ int main() {
             kc[i] = e + kb[i];
           }
         });
-      });
-  } //< End scope for the queue and the buffers, so wait for completion
+      }); //< The second queue goes out-of-scope: wait for completion!
+  } /*< End scope, so we wait for the buffers to be unused, in this
+      case there is nothing to wait for */
 
   std::cout << std::endl << "Result:" << std::endl;
   for(auto e : c)
