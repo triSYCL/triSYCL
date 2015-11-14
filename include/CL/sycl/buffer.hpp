@@ -9,7 +9,6 @@
     License. See LICENSE.TXT for details.
 */
 
-#include <cassert>
 #include <cstddef>
 #include <iterator>
 #include <memory>
