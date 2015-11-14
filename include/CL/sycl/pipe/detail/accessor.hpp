@@ -103,6 +103,13 @@ struct accessor<T, 1, AccessMode, access::pipe> :
   }
 
 
+  /// Some syntactic sugar to use a << v instead of a.write(v)
+  const accessor &operator<<(const T &value) const {
+    // Return a reference to *this so we can apply a sequence of >>
+    return write(value);
+  }
+
+
   /** Try to read a value from the pipe
 
       \param[out] value is the reference to where to store what is
@@ -119,6 +126,13 @@ struct accessor<T, 1, AccessMode, access::pipe> :
     ok = implementation.read(value);
     // Return a reference to *this so we can apply a sequence of read
     return *this;
+  }
+
+
+  /// Some syntactic sugar to use a >> v instead of a.read(v)
+  const accessor &operator>>(T &value) const {
+    // Return a reference to *this so we can apply a sequence of >>
+    return read(value);
   }
 
 };
