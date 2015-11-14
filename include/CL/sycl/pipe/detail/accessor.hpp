@@ -39,13 +39,30 @@ template <typename T,
           access::mode AccessMode>
 struct accessor<T, 1, AccessMode, access::pipe> :
     public detail::debug<accessor<T, 1, AccessMode, access::pipe>> {
-
-  detail::pipe<T> &implementation;
-
   /// The STL-like types
   using value_type = T;
   using reference = value_type&;
   using const_reference = const value_type&;
+
+  /** The real pipe implementation behind the hood
+
+      Since it is a reference instead of value member, it is a mutable
+      state here, so that it can work with a [=] lambda capture
+      without having to declare the whole lambda as mutable
+   */
+  detail::pipe<T> &implementation;
+
+  /** Store the success status of last pipe operation
+
+      It does exists even if the pipe accessor is not evaluated in a
+      boolean context for, but a use-def analysis can optimise it out
+      in that case and not use some storage
+
+      Use a mutable state here so that it can work with a [=] lambda
+      capture without having to declare the whole lambda as mutable
+  */
+  bool mutable ok = false;
+
 
   /** Construct a pipe accessor from an existing pipe
    */
@@ -56,20 +73,33 @@ struct accessor<T, 1, AccessMode, access::pipe> :
   }
 
 
+  /** In a bool context, the accessor gives the success status of the
+      last access
+
+      \return true on success
+  */
+  operator bool() const {
+    return ok;
+  }
+
+
   /** Try to write a value to the pipe
 
       \param[in] value is what we want to write
 
-      \return true on success
+      \return  this so we can apply a sequence of write for example
+      (but do not do this on a non blocking pipe...)
 
       \todo provide a && version
 
       This function is const so it can work when the accessor is
       passed by copy in the [=] kernel lambda, which is not mutable by
       default
-   */
-  bool write(const T &value) const {
-    return implementation.write(value);
+  */
+  const accessor &write(const T &value) const {
+    ok = implementation.write(value);
+    // Return a reference to *this so we can apply a sequence of write
+    return *this;
   }
 
 
@@ -78,14 +108,17 @@ struct accessor<T, 1, AccessMode, access::pipe> :
       \param[out] value is the reference to where to store what is
       read
 
-      \return true on success
+      \return *this so we can apply a sequence of read for example
+      (but do not do this on a non blocking pipe...)
 
       This function is const so it can work when the accessor is
       passed by copy in the [=] kernel lambda, which is not mutable by
       default
   */
-  bool read(T &value) const {
-    return implementation.read(value);
+  const accessor &read(T &value) const {
+    ok = implementation.read(value);
+    // Return a reference to *this so we can apply a sequence of read
+    return *this;
   }
 
 };
