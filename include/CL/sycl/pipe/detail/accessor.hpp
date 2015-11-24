@@ -73,6 +73,51 @@ struct accessor<T, 1, AccessMode, access::pipe> :
   }
 
 
+  /** Return the maximum number of elements that can fit in the pipe
+   */
+  std::size_t capacity() const {
+    return implementation.capacity();
+  }
+
+  /** Get the current number of elements in the pipe
+
+      This is obviously a volatile value which is constrained by
+      restricted relativity.
+
+      Note that on some devices it may be costly to implement (for
+      example on FPGA).
+   */
+  std::size_t size() const {
+    return implementation.size();
+  }
+
+
+  /** Test if the pipe is empty
+
+      This is obviously a volatile value which is constrained by
+      restricted relativity.
+
+      Note that on some devices it may be costly to implement on the
+      write side (for example on FPGA).
+   */
+  bool empty() const {
+    return implementation.empty();
+  }
+
+
+  /** Test if the pipe is full
+
+      This is obviously a volatile value which is constrained by
+      restricted relativity.
+
+      Note that on some devices it may be costly to implement on the
+      read side (for example on FPGA).
+  */
+  bool full() const {
+    return implementation.full();
+  }
+
+
   /** In a bool context, the accessor gives the success status of the
       last access
 

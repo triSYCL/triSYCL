@@ -61,6 +61,13 @@ struct pipe {
     return { *this->implementation, command_group_handler };
   }
 
+
+  /** Return the maximum number of elements that can fit in the pipe
+   */
+  std::size_t capacity() const {
+    return implementation->capacity();
+    }
+
 };
 
 /// @} End the execution Doxygen group
