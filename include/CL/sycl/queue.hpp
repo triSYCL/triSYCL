@@ -246,7 +246,7 @@ public:
       Synchronous errors will be reported through SYCL exceptions.
   */
   void wait() {
-    detail::unimplemented();
+    implementation->wait_for_kernel_execution();
   }
 
 
