@@ -20,6 +20,9 @@ auto send_element = [] (auto a_queue, cl::sycl::pipe<char> &a_pipe, char a_value
               ;
         });
       });
+   /* Make sure we wait for the pipe writing execution before inquring
+      about the pipe sate later */
+   a_queue.wait();
 };
 
 
