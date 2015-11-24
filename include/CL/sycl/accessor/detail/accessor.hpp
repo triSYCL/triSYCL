@@ -158,6 +158,36 @@ struct accessor : public detail::debug<accessor<T,
   }
 
 
+  /** Get the first element of the accessor
+
+      Useful with an accessor on a scalar for example.
+
+      \todo Add in the specification
+
+      \todo Fix this constness issue someday
+  */
+  value_type &operator*() {
+    return const_cast<value_type &>(*array.data());
+  }
+
+
+  /** Get the first element of the accessor
+
+      Useful with an accessor on a scalar for example.
+
+      \todo Add in the specification?
+
+      \todo Add the concept of 0-dim buffer and accessor for scalar
+      and use an implicit conversion to value_type reference to access
+      the value with the accessor?
+
+      \todo Fix this constness issue someday
+  */
+  value_type &operator*() const {
+    return const_cast<value_type &>(*array.data());
+  }
+
+
   /// Get the buffer used to create the accessor
   detail::buffer<T, Dimensions> &get_buffer() {
     return *buf;
