@@ -1,7 +1,7 @@
 #ifndef TRISYCL_SYCL_ACCESSOR_DETAIL_ACCESSOR_HPP
 #define TRISYCL_SYCL_ACCESSOR_DETAIL_ACCESSOR_HPP
 
-/** \file The OpenCL SYCL accessor<> detail behind the scene
+/** \file The OpenCL SYCL buffer accessor<> detail behind the scene
 
     Ronan at Keryell point FR
 
@@ -33,16 +33,18 @@ template <typename T, std::size_t Dimensions> struct buffer;
     @{
 */
 
-/** The accessor abstracts the way buffer data are accessed inside a
-    kernel in a multidimensional variable length array way.
+/** The buffer accessor abstracts the way buffer data are accessed
+    inside a kernel in a multidimensional variable length array way.
 
-    This implementation rely on boost::multi_array to provides this nice
-    syntax and behaviour.
+    This implementation relies on boost::multi_array to provide this
+    nice syntax and behaviour.
 
-    Right now the aim of this class is just to access to the buffer in a
-    read-write mode, even if capturing the multi_array_ref from a lambda
-    make it const (since in some example we have lambda with [=] and
-    without mutable). The access::mode is not used yet.
+    Right now the aim of this class is just to access to the buffer in
+    a read-write mode, even if capturing the multi_array_ref from a
+    lambda make it const (since in examples we have lambda with [=]
+    without mutable lambda).
+
+    \todo Use the access::mode
 */
 template <typename T,
           std::size_t Dimensions,
@@ -52,22 +54,31 @@ struct accessor : public detail::debug<accessor<T,
                                                 Dimensions,
                                                 Mode,
                                                 Target>> {
+  /// Keep a reference to the accessed buffer
   detail::buffer<T, Dimensions> *buf;
-  // The implementation is a multi_array_ref wrapper
+
+  /// The implementation is a multi_array_ref wrapper
   using array_view_type = boost::multi_array_ref<T, Dimensions>;
-  // \todo Do we need this if we have a reference on buf?
-  array_view_type array;
 
-  // The same type but writable
-  using writable_array_view_type =
-    typename std::remove_const<array_view_type>::type;
+  /** The way the buffer is really accessed
 
-  // \todo in the specification: store the dimension for user request
-  static const auto dimensionality = Dimensions;
-  // \todo in the specification: store the types for user request as STL
-  // or C++AMP
-  using element = T;
+      Use a mutable member because the accessor needs to be captured
+      by value in the lambda which is then read-only. This is to avoid
+      the user to use mutable lambda or have a lot of const_cast as
+      previously done in this implementation
+   */
+  mutable array_view_type array;
+
+  /** \todo in the specification: store the dimension for user request
+
+      \todo Use another name, such as from C++17 committee discussions.
+   */
+  static constexpr auto dimensionality = Dimensions;
+
+  /** \todo in the specification: store the types for user request as STL
+      or C++AMP */
   using value_type = T;
+  using element = T;
 
   /** Construct a host accessor from an existing buffer
 
@@ -115,17 +126,13 @@ struct accessor : public detail::debug<accessor<T,
 
   /// To use the accessor in with [id<>]
   auto &operator[](id<dimensionality> index) {
-    return (const_cast<writable_array_view_type &>(array))(index);
+    return array(index);
   }
 
 
-  /** To use the accessor in with [id<>]
-
-      This is when we access to accessor[] that we override the const
-      if any
-  */
+  /// To use the accessor in with [id<>]
   auto &operator[](id<dimensionality> index) const {
-    return (const_cast<writable_array_view_type &>(array))(index);
+    return array(index);
   }
 
 
@@ -163,11 +170,9 @@ struct accessor : public detail::debug<accessor<T,
       Useful with an accessor on a scalar for example.
 
       \todo Add in the specification
-
-      \todo Fix this constness issue someday
   */
   value_type &operator*() {
-    return const_cast<value_type &>(*array.data());
+    return *array.data();
   }
 
 
@@ -180,11 +185,9 @@ struct accessor : public detail::debug<accessor<T,
       \todo Add the concept of 0-dim buffer and accessor for scalar
       and use an implicit conversion to value_type reference to access
       the value with the accessor?
-
-      \todo Fix this constness issue someday
   */
   value_type &operator*() const {
-    return const_cast<value_type &>(*array.data());
+    return *array.data();
   }
 
 
