@@ -46,7 +46,7 @@ namespace access {
       via the accessor
   */
   enum target {
-    global_buffer = 2014, //< Just pick a random number...
+    global_buffer = 2015, //< Just pick a random number...
     constant_buffer,
     local,
     image,

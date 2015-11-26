@@ -114,26 +114,6 @@ struct parallel_for_iterate<0, Range, ParallelForFunctor, Id> {
 
     This implementation use OpenMP 3 if compiled with the right flag.
 */
-#if 0
-template <std::size_t Dimensions = 1, typename ParallelForFunctor>
-void parallel_for(range<Dimensions> r,
-                  ParallelForFunctor f) {
-#ifdef _OPENMP
-  // Use OpenMP for the top loop level
-  parallel_OpenMP_for_iterate<Dimensions,
-                              range<Dimensions>,
-                              ParallelForFunctor,
-                              id<Dimensions>> { r, f };
-#else
-  // In a sequential execution there is only one index processed at a time
-  id<Dimensions> index;
-  parallel_for_iterate<Dimensions,
-                       range<Dimensions>,
-                       ParallelForFunctor,
-                       id<Dimensions>> { r, f, index };
-#endif
-}
-#else
 template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void parallel_for(range<Dimensions> r,
                   ParallelForFunctor f) {
@@ -158,7 +138,6 @@ void parallel_for(range<Dimensions> r,
                        id<Dimensions>> { r, reconstruct_item, index };
 #endif
 }
-#endif
 
 
 /** Implementation of parallel_for with a range<> and an offset */

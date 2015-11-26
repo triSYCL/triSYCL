@@ -42,6 +42,10 @@ private:
 
 public:
 
+  /** Create an empty item<> from a range<>
+  */
+  item(range<dims> r) : global_range { r } {}
+
   /** Create an item from a local size and an optional offset
 
       This constructor is used by the triSYCL implementation and the
