@@ -32,7 +32,7 @@ public:
      or even an integer as a parameter
   */
   void operator()(item<1> index) {
-    a[index.get_linear_id()] = index.get_linear_id();
+    a[index[0]] = index[0];
   }
 
 };

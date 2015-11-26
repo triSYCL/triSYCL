@@ -16,7 +16,8 @@ int main() {
     myQueue.submit([&](handler &cgh) {
         auto acc = a.get_access<access::mode::write>(cgh);
         cgh.parallel_for<class nothing>(range<1>{N}, [=] (item<1> index) {
-            acc[index.get_linear_id()] = index.get_linear_id();
+//            acc[index.get_linear_id()] = index.get_linear_id();
+            acc[index[0]] = index[0];
           });
       });
     // Verify that a[i] == i
