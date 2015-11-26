@@ -12,7 +12,7 @@
 #include <cstddef>
 
 #include "CL/sycl/access.hpp"
-#include "CL/sycl/accessor/detail/accessor.hpp"
+#include "CL/sycl/buffer/detail/accessor.hpp"
 
 
 namespace cl {
