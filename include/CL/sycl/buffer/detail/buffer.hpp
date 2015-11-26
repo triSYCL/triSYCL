@@ -14,7 +14,7 @@
 #include <boost/multi_array.hpp>
 
 #include "CL/sycl/access.hpp"
-#include "CL/sycl/accessor/detail/accessor.hpp"
+#include "CL/sycl/buffer/detail/accessor.hpp"
 #include "CL/sycl/buffer/detail/buffer_base.hpp"
 #include "CL/sycl/range.hpp"
 
