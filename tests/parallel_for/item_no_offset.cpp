@@ -12,12 +12,11 @@ int main() {
   {
     queue myQueue;
 
-    buffer<unsigned int,1> a(N);
+    buffer<unsigned int,1> a(range<1>{N});
     myQueue.submit([&](handler &cgh) {
-        auto acc = a.get_access<access::write>(cgh);
-        // Show that we can use a simple parallel_for with int, for example
-        cgh.parallel_for<class nothing>(N, [=] (int index) {
-            acc[index] = index;
+        auto acc = a.get_access<access::mode::write>(cgh);
+        cgh.parallel_for<class nothing>(range<1>{N}, [=] (item<1> index) {
+            acc[index.get_linear_id()] = index.get_linear_id();
           });
       });
     // Verify that a[i] == i

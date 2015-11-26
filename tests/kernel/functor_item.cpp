@@ -15,8 +15,8 @@ constexpr size_t N = 30;
 class ParallelFor {
  using accessor_type = accessor<unsigned int,
                                 1,
-                                access::write,
-                                access::global_buffer>;
+                                access::mode::write,
+                                access::target::global_buffer>;
   // The way to access to the buffer from inside the kernel
   accessor_type a;
 
@@ -31,8 +31,8 @@ public:
      Since it is to be used in a 1D parallel_for, it takes a item<1>
      or even an integer as a parameter
   */
-  void operator()(int index) {
-    a[index] = index;
+  void operator()(item<1> index) {
+    a[index.get_linear_id()] = index.get_linear_id();
   }
 
 };
@@ -42,8 +42,8 @@ public:
 class SingleTask {
  using accessor_type = accessor<char,
                                 1,
-                                access::write,
-                                access::global_buffer>;
+                                access::mode::write,
+                                access::target::global_buffer>;
   // The value to be stored in the buffer
   char value;
   // The way to access to the buffer from inside the kernel
@@ -70,19 +70,17 @@ int main() {
   {
     queue q;
 
-    buffer<unsigned int, 1> a { N };
+    buffer<unsigned int, 1> a { range<1>{N} };
     q.submit([&](handler &cgh) {
-        auto acc = a.get_access<access::write>(cgh);
-        // Show that we can use a simple parallel_for with int, for example
-        cgh.parallel_for(N, ParallelFor { acc });
+        auto acc = a.get_access<access::mode::write>(cgh);
+        cgh.parallel_for(range<1>{N}, ParallelFor { acc });
       });
     // Verify that a[i] == i
     VERIFY_BUFFER_VALUE(a, [](id<1> i) { return i[0]; });
 
-    buffer<char, 1> b { 1 };
+    buffer<char, 1> b { range<1>{1} };
     q.submit([&](handler &cgh) {
-        auto acc = b.get_access<access::write>(cgh);
-        // Show that we can use a simple parallel_for with int, for example
+        auto acc = b.get_access<access::mode::write>(cgh);
         cgh.single_task(SingleTask { 42, acc });
       });
     // Verify that b[0] == 42
