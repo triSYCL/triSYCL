@@ -60,6 +60,10 @@ struct accessor : public detail::debug<accessor<T,
   /// The implementation is a multi_array_ref wrapper
   using array_view_type = boost::multi_array_ref<T, Dimensions>;
 
+  // The same type but writable
+  using writable_array_view_type =
+    typename std::remove_const<array_view_type>::type;
+
   /** The way the buffer is really accessed
 
       Use a mutable member because the accessor needs to be captured
@@ -79,6 +83,19 @@ struct accessor : public detail::debug<accessor<T,
       or C++AMP */
   using value_type = T;
   using element = T;
+  using reference = typename array_view_type::reference;
+  using const_reference = typename array_view_type::const_reference;
+
+  /** Inherit the iterator types from the implementation
+
+      \todo Add iterators to accessors in the specification
+  */
+  using iterator = typename array_view_type::iterator;
+  using const_iterator = typename array_view_type::const_iterator;
+  using reverse_iterator = typename array_view_type::reverse_iterator;
+  using const_reverse_iterator =
+    typename array_view_type::const_reverse_iterator;
+
 
   /** Construct a host accessor from an existing buffer
 
@@ -119,7 +136,7 @@ struct accessor : public detail::debug<accessor<T,
       Use array_view_type::reference instead of auto& because it does not
       work in some dimensions.
    */
-  typename array_view_type::reference operator[](std::size_t index) {
+  reference operator[](std::size_t index) {
     return array[index];
   }
 
@@ -171,7 +188,7 @@ struct accessor : public detail::debug<accessor<T,
 
       \todo Add in the specification
   */
-  value_type &operator*() {
+  reference operator*() {
     return *array.data();
   }
 
@@ -186,7 +203,7 @@ struct accessor : public detail::debug<accessor<T,
       and use an implicit conversion to value_type reference to access
       the value with the accessor?
   */
-  value_type &operator*() const {
+  reference operator*() const {
     return *array.data();
   }
 
@@ -206,6 +223,76 @@ struct accessor : public detail::debug<accessor<T,
       || Mode == access::mode::discard_write
       || Mode == access::mode::discard_read_write;
   }
+
+
+  /** Forward all the iterator functions to the implementation
+
+      \todo Add these functions to the specification
+
+      \todo The fact that the lambda capture make a const copy of the
+      accessor is not yet elegantly managed... The issue is that
+      begin()/end() dispatch is made according to the accessor
+      constness and not from the array member constness...
+
+      \todo try to solve it by using some enable_if on array
+      constness?
+
+      \todo The issue is that the end may not be known if it is
+      implemented by a raw OpenCL cl_mem... So only provide on the
+      device the iterators related to the start? Actually the accessor
+      needs to know a part of the shape to have the multidimentional
+      addressing. So this only require a size_t more...
+
+      \todo Factor out these in a template helper
+  */
+
+
+  // iterator begin() { return array.begin(); }
+  iterator begin() const {
+    return const_cast<writable_array_view_type &>(array).begin();
+  }
+
+
+  // iterator end() { return array.end(); }
+  iterator end() const {
+    return const_cast<writable_array_view_type &>(array).end();
+  }
+
+
+  // const_iterator begin() const { return array.begin(); }
+
+
+  // const_iterator end() const { return array.end(); }
+
+
+  const_iterator cbegin() const { return array.begin(); }
+
+
+  const_iterator cend() const { return array.end(); }
+
+
+  // reverse_iterator rbegin() { return array.rbegin(); }
+  reverse_iterator rbegin() const {
+    return const_cast<writable_array_view_type &>(array).rbegin();
+  }
+
+
+  // reverse_iterator rend() { return array.rend(); }
+  reverse_iterator rend() const {
+    return const_cast<writable_array_view_type &>(array).rend();
+  }
+
+
+  // const_reverse_iterator rbegin() const { return array.rbegin(); }
+
+
+  // const_reverse_iterator rend() const { return array.rend(); }
+
+
+  const_reverse_iterator crbegin() const { return array.rbegin(); }
+
+
+  const_reverse_iterator crend() const { return array.rend(); }
 
 };
 
