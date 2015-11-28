@@ -110,14 +110,14 @@ struct parallel_for_iterate<0, Range, ParallelForFunctor, Id> {
 
 
 /** Implementation of a data parallel computation with parallelism
-    specified at launch time by a range<>. Kernel index is int.
+    specified at launch time by a range<>. Kernel index is id or int.
 
     This implementation use OpenMP 3 if compiled with the right flag.
 */
-template <std::size_t Dimensions = 1, typename ParallelForFunctor>
+template <std::size_t Dimensions = 1, typename ParallelForFunctor, typename Id>
 void parallel_for(range<Dimensions> r,
                   ParallelForFunctor f,
-                  int index) {
+                  Id) {
 #ifdef _OPENMP
   // Use OpenMP for the top loop level
   parallel_OpenMP_for_iterate<Dimensions,
@@ -126,6 +126,7 @@ void parallel_for(range<Dimensions> r,
                               id<Dimensions>> { r, f };
 #else
   // In a sequential execution there is only one index processed at a time
+  id<Dimensions> index;
   parallel_for_iterate<Dimensions,
                        range<Dimensions>,
                        ParallelForFunctor,
@@ -135,14 +136,14 @@ void parallel_for(range<Dimensions> r,
 
 
 /** Implementation of a data parallel computation with parallelism
-    specified at launch time by a range<>. Kernel index is id or index.
+    specified at launch time by a range<>. Kernel index is item.
 
     This implementation use OpenMP 3 if compiled with the right flag.
 */
-template <std::size_t Dimensions = 1, typename ParallelForFunctor, typename Id>
+template <std::size_t Dimensions = 1, typename ParallelForFunctor>
 void parallel_for(range<Dimensions> r,
                   ParallelForFunctor f,
-                  Id index) {
+                  item<Dimensions>) {
   auto reconstruct_item = [&] (id<Dimensions> l) {
     // Reconstruct the global item
     item<Dimensions> index { r, l };
@@ -157,6 +158,7 @@ void parallel_for(range<Dimensions> r,
                               id<Dimensions>> { r, reconstruct_item };
 #else
   // In a sequential execution there is only one index processed at a time
+  id<Dimensions> index;
   parallel_for_iterate<Dimensions,
                        range<Dimensions>,
                        decltype(reconstruct_item),
