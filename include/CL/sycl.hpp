@@ -52,6 +52,7 @@
 #include "CL/sycl/nd_range.hpp"
 #include "CL/sycl/parallelism.hpp"
 #include "CL/sycl/pipe.hpp"
+#include "CL/sycl/pipe_reservation.hpp"
 #include "CL/sycl/platform.hpp"
 #include "CL/sycl/queue.hpp"
 #include "CL/sycl/range.hpp"

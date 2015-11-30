@@ -14,6 +14,7 @@
 #include "CL/sycl/access.hpp"
 #include "CL/sycl/detail/debug.hpp"
 #include "CL/sycl/pipe/detail/pipe.hpp"
+#include "CL/sycl/pipe_reservation/detail/pipe_reservation.hpp"
 
 namespace cl {
 namespace sycl {
@@ -66,7 +67,7 @@ struct accessor<T, 1, AccessMode, access::pipe> :
 
   /** Construct a pipe accessor from an existing pipe
    */
-  accessor(detail::pipe<T> &p, handler &command_group_handler) :
+  accessor(detail::pipe<value_type> &p, handler &command_group_handler) :
     implementation { p } {
     //    TRISYCL_DUMP_T("Create a kernel pipe accessor write = "
     //                 << is_write_access());
@@ -141,7 +142,7 @@ struct accessor<T, 1, AccessMode, access::pipe> :
       passed by copy in the [=] kernel lambda, which is not mutable by
       default
   */
-  const accessor &write(const T &value) const {
+  const accessor &write(const value_type &value) const {
     ok = implementation.write(value);
     // Return a reference to *this so we can apply a sequence of write
     return *this;
@@ -149,7 +150,7 @@ struct accessor<T, 1, AccessMode, access::pipe> :
 
 
   /// Some syntactic sugar to use a << v instead of a.write(v)
-  const accessor &operator<<(const T &value) const {
+  const accessor &operator<<(const value_type &value) const {
     // Return a reference to *this so we can apply a sequence of >>
     return write(value);
   }
@@ -167,7 +168,7 @@ struct accessor<T, 1, AccessMode, access::pipe> :
       passed by copy in the [=] kernel lambda, which is not mutable by
       default
   */
-  const accessor &read(T &value) const {
+  const accessor &read(value_type &value) const {
     ok = implementation.read(value);
     // Return a reference to *this so we can apply a sequence of read
     return *this;
@@ -175,9 +176,14 @@ struct accessor<T, 1, AccessMode, access::pipe> :
 
 
   /// Some syntactic sugar to use a >> v instead of a.read(v)
-  const accessor &operator>>(T &value) const {
+  const accessor &operator>>(value_type &value) const {
     // Return a reference to *this so we can apply a sequence of >>
     return read(value);
+  }
+
+
+  detail::pipe_reservation<accessor> reserve(std::size_t size) {
+    return { implementation, size };
   }
 
 };
