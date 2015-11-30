@@ -50,12 +50,12 @@ struct accessor<T, 1, AccessMode, access::pipe> :
       Since it is a reference instead of value member, it is a mutable
       state here, so that it can work with a [=] lambda capture
       without having to declare the whole lambda as mutable
-   */
+  */
   detail::pipe<T> &implementation;
 
   /** Store the success status of last pipe operation
 
-      It does exists even if the pipe accessor is not evaluated in a
+      It does exist even if the pipe accessor is not evaluated in a
       boolean context for, but a use-def analysis can optimise it out
       in that case and not use some storage
 
@@ -182,8 +182,8 @@ struct accessor<T, 1, AccessMode, access::pipe> :
   }
 
 
-  detail::pipe_reservation<accessor> reserve(std::size_t size) {
-    return { implementation, size };
+  detail::pipe_reservation<accessor> reserve(std::size_t size) const {
+    return { *this, size };
   }
 
 };

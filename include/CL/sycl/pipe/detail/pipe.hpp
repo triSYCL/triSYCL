@@ -11,7 +11,7 @@
 
 #include <cstddef>
 #include <mutex>
-#include <queue>
+#include <deque>
 
 #include <boost/circular_buffer.hpp>
 
@@ -23,12 +23,32 @@ namespace detail {
     @{
 */
 
+
+/// A private description of a reservation station
 template <typename T>
 struct reserve_id {
+  /// Start of the reservation in the pipe storage
   typename boost::circular_buffer<T>::iterator start;
+
+  /// Number of elements in the reservation
   std::size_t size;
+
+  /* True when the reservation has been committed and is ready to be
+     released */
   bool ready = false;
+
+  /** Track a reservation not committed yet
+
+      \param[in] start point to the start of the reservation in the
+      pipe storage
+
+      \param[in] size is the number of elements in the reservation
+  */
+  reserve_id(typename boost::circular_buffer<T>::iterator start,
+             std::size_t size) : start { start }, size { size } {}
+
 };
+
 
 /** Implement a pipe object
 */
@@ -52,9 +72,8 @@ struct pipe {
       un-committed reservations */
   std::size_t reserved;
 
-  std::queue<reserve_id<value_type>> qrid;
-  using rid_iterator =
-    typename std::queue<reserve_id<value_type>>::container_type::iterator;
+  std::deque<reserve_id<value_type>> qrid;
+  using rid_iterator = typename std::deque<reserve_id<value_type>>::iterator;
 
   /// Create a pipe as a circular buffer of the required capacity
   pipe(std::size_t capacity) : cb { capacity } { }
@@ -153,37 +172,74 @@ struct pipe {
   }
 
 
+  /** Reserve some part of the pipe for writing
+
+      \param[in] s is the number of element to reserve
+
+      \param[out] rid is an iterator to a description of the
+      reservation that has been done if successful
+
+      \return true if the reservation was successful
+
+      \todo implement reservation for reading
+   */
   bool reserve(std::size_t s,
                rid_iterator &rid)  {
+    // Lock the pipe to be quite
     std::lock_guard<std::mutex> lg { cb_mutex };
+
     if (size() >= s) {
+      /* If there is enough room in the pipe, just create default
+         values in it to do the reservation */
       for (std::size_t i = 0; i != s; ++i)
         cb.push_back();
       /* Compute the location of the first element a posteriori since
-         it does not exist if cb was empty before */
-      auto first = cb.back() - (s - 1);
+         it may not exist if cb was empty before */
+      auto first = cb.end() - s;
+      /* Add a description of the reservation at the end of the
+         reservation queue */
       qrid.emplace_back(first, s);
-      rid = qrid.back();
+      // Return the iterator to the last element
+      rid = qrid.rbegin();
       return true;
     }
     else
+      // Not enough room in the pipe for the reservation
       return false;
   }
 
 
+  /** Process the reservations that are ready to be released in the
+      reservation queue
+  */
   void move_reservation_forward() {
+    // Lock the pipe to be quite
     std::lock_guard<std::mutex> lg { cb_mutex };
-    if (qrid.empty())
-      return;
-    auto rid = *qrid.front();
-    if (!rid.ready)
-      return;
-    qrid.pop_front();
-    if (qrid.empty())
-      reserved -= cb.back() - rid.start + 1;
-    else {
-      reserved -= qrid.front().start - rid.start + 1;
-      this->move_reserve_id_forward();
+
+    for (;;) {
+      if (qrid.empty())
+        // No pending reservation, so nothing to do
+        break;
+      // Get the first reservation
+      const auto &rid = qrid.front();
+      if (!rid.ready)
+        /* If the reservation is not ready to be released, stop
+           because it is blocking all the following in the queue
+           anyway */
+        break;
+      // Remove the reservation to be released from the queue
+      qrid.pop_front();
+      if (qrid.empty()) {
+        /* If it was the last reservation, it unblock all the pipe
+           content, up to its end */
+        reserved -= cb.end() - rid.start;
+        break;
+      }
+      /* Otherwise just unblock everything from the current
+         reservation up to the start of the next one... */
+      reserved -= qrid.front().start - rid.start;
+      /* ...and process the next reservation to see if it is ready to
+         be released too */
     }
   }
 

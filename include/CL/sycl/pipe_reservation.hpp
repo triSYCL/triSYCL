@@ -31,7 +31,7 @@ struct pipe_reservation {
 
   /** Point to the underlying implementation that can be shared in the
       SYCL model with a handler semantics */
-  std::shared_ptr<detail::pipe_reservation<accessor_type>> implementation;
+  typename std::shared_ptr<detail::pipe_reservation<accessor_type>> implementation;
 
   /** Use default constructors so that we can create a new buffer copy
       from another one, with either a l-value or a r-value (for
@@ -59,8 +59,8 @@ struct pipe_reservation {
       \todo Make it private and add required friends
    */
 
-  pipe_reservation(const detail::pipe_reservation<accessor_type> &pr)
-    : implementation { pr.make_shared_from_this() }
+  pipe_reservation(detail::pipe_reservation<accessor_type> &pr)
+    : implementation { pr.shared_from_this() }
   {}
 
 
@@ -94,7 +94,7 @@ struct pipe_reservation {
 
 
   /// Access to a given element of the reservation
-  auto &operator[](std::size_t index) {
+  reference operator[](std::size_t index) {
     return (*implementation)[index];
   }
 

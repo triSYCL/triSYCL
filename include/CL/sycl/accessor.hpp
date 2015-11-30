@@ -13,8 +13,8 @@
 
 #include "CL/sycl/access.hpp"
 #include "CL/sycl/buffer/detail/accessor.hpp"
-#include "CL/sycl/pipe/detail/accessor.hpp"
 #include "CL/sycl/pipe_reservation.hpp"
+#include "CL/sycl/pipe/detail/accessor.hpp"
 
 namespace cl {
 namespace sycl {
@@ -163,7 +163,7 @@ struct accessor<DataType, 1, AccessMode, access::pipe> :
   accessor(pipe<value_type> &p, handler &command_group_handler)
     : accessor_detail { *p.implementation, command_group_handler } { }
 
-  pipe_reservation<accessor> reserve(std::size_t size) {
+  pipe_reservation<accessor> reserve(std::size_t size) const {
     return accessor_detail::reserve(size);
   }
 

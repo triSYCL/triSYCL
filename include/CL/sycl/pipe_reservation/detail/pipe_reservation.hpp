@@ -10,6 +10,7 @@
 */
 
 #include <cstddef>
+#include <memory>
 
 #include "CL/sycl/pipe/detail/pipe.hpp"
 
@@ -28,14 +29,14 @@ struct accessor;
 */
 
 template <typename PipeAccessor>
-class pipe_reservation {
+class pipe_reservation :
+    std::enable_shared_from_this<pipe_reservation<PipeAccessor>> {
 
   using accessor_type =  PipeAccessor;
   using value_type = typename accessor_type::value_type;
+  using reference = typename accessor_type::reference;
   using iterator = typename
-    std::queue<detail::reserve_id<value_type>>::container_type::iterator;
-  using reference = typename
-    std::queue<detail::reserve_id<value_type>>::container_type::reference;
+    std::deque<detail::reserve_id<value_type>>::iterator;
 
   /// True if the reservation was successful and still uncommitted
   bool ok;
