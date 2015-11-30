@@ -110,13 +110,14 @@ struct parallel_for_iterate<0, Range, ParallelForFunctor, Id> {
 
 
 /** Implementation of a data parallel computation with parallelism
-    specified at launch time by a range<>.
+    specified at launch time by a range<>. Kernel index is id or int.
 
     This implementation use OpenMP 3 if compiled with the right flag.
 */
-template <std::size_t Dimensions = 1, typename ParallelForFunctor>
+template <std::size_t Dimensions = 1, typename ParallelForFunctor, typename Id>
 void parallel_for(range<Dimensions> r,
-                  ParallelForFunctor f) {
+                  ParallelForFunctor f,
+                  Id) {
 #ifdef _OPENMP
   // Use OpenMP for the top loop level
   parallel_OpenMP_for_iterate<Dimensions,
@@ -131,6 +132,50 @@ void parallel_for(range<Dimensions> r,
                        ParallelForFunctor,
                        id<Dimensions>> { r, f, index };
 #endif
+}
+
+
+/** Implementation of a data parallel computation with parallelism
+    specified at launch time by a range<>. Kernel index is item.
+
+    This implementation use OpenMP 3 if compiled with the right flag.
+*/
+template <std::size_t Dimensions = 1, typename ParallelForFunctor>
+void parallel_for(range<Dimensions> r,
+                  ParallelForFunctor f,
+                  item<Dimensions>) {
+  auto reconstruct_item = [&] (id<Dimensions> l) {
+    // Reconstruct the global item
+    item<Dimensions> index { r, l };
+    // Call the user kernel with the item<> instead of the id<>
+    f(index);
+  };
+#ifdef _OPENMP
+  // Use OpenMP for the top loop level
+  parallel_OpenMP_for_iterate<Dimensions,
+                              range<Dimensions>,
+                              decltype(reconstruct_item),
+                              id<Dimensions>> { r, reconstruct_item };
+#else
+  // In a sequential execution there is only one index processed at a time
+  id<Dimensions> index;
+  parallel_for_iterate<Dimensions,
+                       range<Dimensions>,
+                       decltype(reconstruct_item),
+                       id<Dimensions>> { r, reconstruct_item, index };
+#endif
+}
+
+
+/** Calls the appropriate ternary parallel_for overload based on the
+    index type of the kernel function object f
+
+*/
+template <std::size_t Dimensions = 1, typename ParallelForFunctor>
+void parallel_for(range<Dimensions> r, ParallelForFunctor f) {
+  using mf_t  = decltype(std::mem_fn(&ParallelForFunctor::operator()));
+  using arg_t = typename mf_t::second_argument_type;
+  parallel_for(r,f,arg_t{});
 }
 
 
@@ -306,7 +351,7 @@ void parallel_for_workitem(group<Dimensions> g,
 }
 /// @} End the parallelism Doxygen group
 
-}
+} // namespace detail
 }
 }
 
