@@ -183,7 +183,12 @@ struct accessor<T, 1, AccessMode, access::pipe> :
 
 
   detail::pipe_reservation<accessor> reserve(std::size_t size) const {
-    return { *this, size };
+    return { this->implementation, size };
+  }
+
+
+  auto &get_pipe_detail() {
+    return implementation;
   }
 
 };

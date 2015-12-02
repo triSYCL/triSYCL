@@ -24,14 +24,16 @@ namespace sycl {
 template <typename PipeAccessor>
 struct pipe_reservation {
   /// The STL-like types
-  using accessor_type =  PipeAccessor;
+  using accessor_type = PipeAccessor;
+  using accessor_detail = typename accessor_type::accessor_detail;
   using value_type = typename accessor_type::value_type;
   using reference = value_type&;
   using const_reference = const value_type&;
 
   /** Point to the underlying implementation that can be shared in the
       SYCL model with a handler semantics */
-  typename std::shared_ptr<detail::pipe_reservation<accessor_type>> implementation;
+  typename std::shared_ptr<detail::pipe_reservation<accessor_detail>>
+  implementation;
 
   /** Use default constructors so that we can create a new buffer copy
       from another one, with either a l-value or a r-value (for
@@ -46,7 +48,8 @@ struct pipe_reservation {
   /// Create a pipe_reservation for an accessor and a number of elements
   pipe_reservation(accessor_type &accessor, std::size_t s)
     : implementation {
-    new detail::pipe_reservation<accessor_type> { accessor, s }
+    new detail::pipe_reservation<accessor_detail> {
+      get_pipe_detail(accessor), s }
   } {}
 
 
@@ -59,7 +62,7 @@ struct pipe_reservation {
       \todo Make it private and add required friends
    */
 
-  pipe_reservation(detail::pipe_reservation<accessor_type> &pr)
+  pipe_reservation(detail::pipe_reservation<accessor_detail> &&pr)
     : implementation { pr.shared_from_this() }
   {}
 

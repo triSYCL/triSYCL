@@ -30,7 +30,7 @@ struct accessor;
 
 template <typename PipeAccessor>
 class pipe_reservation :
-    std::enable_shared_from_this<pipe_reservation<PipeAccessor>> {
+    public std::enable_shared_from_this<pipe_reservation<PipeAccessor>> {
 
   using accessor_type =  PipeAccessor;
   using value_type = typename accessor_type::value_type;
@@ -43,12 +43,13 @@ class pipe_reservation :
 
   /// Point into the reservation buffer. Only valid if ok is true
   iterator rid;
-  accessor_type &acc;
+
+  detail::pipe<value_type> &p;
 
 public:
 
-  pipe_reservation(accessor_type accessor, std::size_t s) : acc { accessor } {
-    ok = acc.implementation.reserve(s, rid);
+  pipe_reservation(detail::pipe<value_type> &p, std::size_t s) : p { p } {
+    ok = p.reserve(s, rid);
   }
 
 
@@ -80,7 +81,7 @@ public:
   void commit() {
     if (ok) {
       rid->ready = true;
-      acc.implementation.move_reservation_forward();
+      p.move_reservation_forward();
       ok = false;
     }
   }

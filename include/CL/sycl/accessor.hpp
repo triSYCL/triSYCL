@@ -167,7 +167,18 @@ struct accessor<DataType, 1, AccessMode, access::pipe> :
     return accessor_detail::reserve(size);
   }
 
+
+  auto &get_pipe_detail() {
+    return accessor_detail::get_pipe_detail();
+  }
+
 };
+
+
+  template <typename Accessor>
+  static inline auto &get_pipe_detail(Accessor &a) {
+    return a.get_pipe_detail();
+  }
 
 /// @} End the data Doxygen group
 

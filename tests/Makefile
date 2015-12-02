@@ -1,5 +1,7 @@
 ## To enable asynchronous kernels
 CXXFLAGS += -DTRISYCL_ASYNC=1
+# For asynchronous kernels when OpenMP is not enabled
+LDLIBS += -lpthread
 
 # Compute the absolute directory name from the location of this Makefile
 # so that we can compile from anywhere even if we use make -f

@@ -73,7 +73,7 @@ struct pipe {
   std::size_t reserved;
 
   std::deque<reserve_id<value_type>> qrid;
-  using rid_iterator = typename std::deque<reserve_id<value_type>>::iterator;
+  using rid_iterator = typename decltype(qrid)::iterator;
 
   /// Create a pipe as a circular buffer of the required capacity
   pipe(std::size_t capacity) : cb { capacity } { }
@@ -182,7 +182,7 @@ struct pipe {
       \return true if the reservation was successful
 
       \todo implement reservation for reading
-   */
+  */
   bool reserve(std::size_t s,
                rid_iterator &rid)  {
     // Lock the pipe to be quite
@@ -199,8 +199,8 @@ struct pipe {
       /* Add a description of the reservation at the end of the
          reservation queue */
       qrid.emplace_back(first, s);
-      // Return the iterator to the last element
-      rid = qrid.rbegin();
+      // Return the iterator to the last reservation descriptor
+      rid = qrid.end() - 1;
       return true;
     }
     else
