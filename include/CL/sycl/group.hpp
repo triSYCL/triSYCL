@@ -10,6 +10,7 @@
 */
 
 #include <cstddef>
+#include <functional>
 
 #include "CL/sycl/detail/linear_id.hpp"
 #include "CL/sycl/id.hpp"
@@ -172,11 +173,21 @@ public:
   /** Loop on the work-items inside a work-group
 
       \todo Add this method in the specification
+  */
+  void parallel_for_work_item(std::function<void(nd_item<dimensionality>)> f)
+    const {
+    detail::parallel_for_workitem(*this, f);
+  }
+
+
+  /** Loop on the work-items inside a work-group
+
+      \todo Add this method in the specification
 
       \todo Better type the functor
   */
-  template <typename ParallelForFunctor>
-  void parallel_for_work_item(ParallelForFunctor f) const {
+  void parallel_for_work_item(std::function<void(item<dimensionality>)> f)
+    const {
     detail::parallel_for_workitem(*this, f);
   }
 

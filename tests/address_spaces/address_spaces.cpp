@@ -78,10 +78,10 @@ int main() {
           pd2 = &d;
           // Can only point to a constant<> object
           constant<char *> c_p;
-	  constant<char> c = 's';
-	  c_p = &c;
+          constant<char> c = 's';
+          c_p = &c;
           std::cout << "*c_p = " << *c_p << std::endl;
-	  
+
           // Can only point to a global<> object
           global<unsigned long int *> g_p;
           // Can only point to a local<> object
@@ -143,4 +143,3 @@ int main() {
 
   return 0;
 }
-

@@ -10,7 +10,7 @@ int main ()
     {  // by sticking all the SYCL work in a {} block, we ensure
        // all SYCL tasks must complete before exiting the block
 
- 	      //  create a queue to work on
+       //  create a queue to work on
         cl::sycl::queue myQueue;
 
         // wrap our result variable in a buffer

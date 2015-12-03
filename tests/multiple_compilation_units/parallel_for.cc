@@ -44,22 +44,22 @@ buffer<int> input(&data[0], size);
 buffer<int> output(size);
 my_queue.submit([&](handler &cgh)
 {
-	auto in_access = input.get_access<access::read>(cgh);
-	auto out_access = output.get_access<access::write>(cgh);
+  auto in_access = input.get_access<access::read>(cgh);
+  auto out_access = output.get_access<access::write>(cgh);
 
-	cgh.parallel_for_work_group<class hierarchical>(nd_range<>(range<>(size),
+  cgh.parallel_for_work_group<class hierarchical>(nd_range<>(range<>(size),
                                                              range<>(groupsize)),
                                                   [=](group<> group)
-	{
+  {
     std::cout << "Group id = " << group.get(0) << std::endl;
 
-		parallel_for_work_item(group, [=](nd_item<1> tile)
-		{
+    parallel_for_work_item(group, [=](nd_item<1> tile)
+    {
       std::cout << "Local id = " << tile.get_local(0)
                 << " (global id = " << tile.get_global(0) << ")" << std::endl;
-			out_access[tile] = in_access[tile] * 2;
-		});
-	});
+      out_access[tile] = in_access[tile] * 2;
+    });
+  });
 });
 //////// End slide
 

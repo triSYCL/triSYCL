@@ -15,7 +15,7 @@ protected:
   auth_in_op_var () {}
 };
 
-template <class c_or0_s2D, class c_or1_s2D> 
+template <class c_or0_s2D, class c_or1_s2D>
 class stencil_var2D : private auth_in_st_var, private auth_in_op_var {
 public:
   static_assert(std::is_base_of<auth_in_st_var, c_or0_s2D>::value,"A stencil must be built from a coef or a stencil.");
@@ -133,7 +133,7 @@ public:
   int global_max0;
   int global_max1;
 
-  operation_var2D() {    
+  operation_var2D() {
     cl::sycl::range<2> rg1 = aB->get_range();
     cl::sycl::range<2> rg2 = B->get_range();
     assert(rg1 == rg2); //seems a bad idea, indeed ! we will not do that ...
@@ -160,7 +160,7 @@ public:
 
   // Not really static because of the use of global_max (which is passed by args)
   static inline void eval_local(cl::sycl::nd_item<2> it, cl::sycl::accessor<T, 2, cl::sycl::access::write> *out, T *local_tab, cl::sycl::accessor<T, 1, cl::sycl::access::read> *coef, int glob_max0, int glob_max1) {
-    int i = it.get_global().get(0); 
+    int i = it.get_global().get(0);
     int j = it.get_global().get(1);
     if (i >= glob_max0 || j >= glob_max1)
       return;
@@ -183,7 +183,7 @@ public:
     int l_ind1 = l_ind.get(1);
     int gr_ind0 = g_ind.get(0);
     int gr_ind1 = g_ind.get(1);
-      
+
     int block_dim0 = local_dim0 / l_range0;
     int block_dim1 = local_dim1 / l_range1;
     int total_block_dim0 = block_dim0;
@@ -201,10 +201,10 @@ public:
     for (int i = 0; i < total_block_dim0; ++i){
       int j;
       for (j = 0; j < total_block_dim1; ++j){
-	if (global_ind0 < glob_max0 && global_ind1 < glob_max1)
-	  local_tab[local_ind0 * local_dim1 + local_ind1] = a_f(global_ind0, global_ind1, *in);
-	local_ind1++;
-	global_ind1++;
+        if (global_ind0 < glob_max0 && global_ind1 < glob_max1)
+          local_tab[local_ind0 * local_dim1 + local_ind1] = a_f(global_ind0, global_ind1, *in);
+        local_ind1++;
+        global_ind1++;
       }
       local_ind0++;
       global_ind0++;
@@ -216,43 +216,43 @@ public:
   //conversion not known in reference (&) for all sycl objects ...
   inline void doComputation(cl::sycl::queue queue){
     queue.submit([&](cl::sycl::handler &cgh) {
-	cl::sycl::accessor<T, 2, cl::sycl::access::write> *_B = new cl::sycl::accessor<T, 2, cl::sycl::access::write>(*B, cgh);
-	cl::sycl::accessor<T, 2, cl::sycl::access::read>  *_aB = new cl::sycl::accessor<T, 2, cl::sycl::access::read>(*aB, cgh);
-	cl::sycl::accessor<T, 1, cl::sycl::access::read>  *_bB = new cl::sycl::accessor<T, 1, cl::sycl::access::read>(*bB, cgh);
-	cgh.parallel_for<class KernelCompute>(range, [=](cl::sycl::id<2> id){
-	    operation_var2D<T, B, f, st, aB, bB, a_f, b_f>::eval(id, _B, _aB, _bB);
-	  }); 
-	delete _B;
-	delete _aB;
-	delete _bB;
+        cl::sycl::accessor<T, 2, cl::sycl::access::write> *_B = new cl::sycl::accessor<T, 2, cl::sycl::access::write>(*B, cgh);
+        cl::sycl::accessor<T, 2, cl::sycl::access::read>  *_aB = new cl::sycl::accessor<T, 2, cl::sycl::access::read>(*aB, cgh);
+        cl::sycl::accessor<T, 1, cl::sycl::access::read>  *_bB = new cl::sycl::accessor<T, 1, cl::sycl::access::read>(*bB, cgh);
+        cgh.parallel_for<class KernelCompute>(range, [=](cl::sycl::id<2> id){
+            operation_var2D<T, B, f, st, aB, bB, a_f, b_f>::eval(id, _B, _aB, _bB);
+          });
+        delete _B;
+        delete _aB;
+        delete _bB;
       });
   }
 
   inline void doLocalComputation(cl::sycl::queue queue){
     queue.submit([&](cl::sycl::handler &cgh) {
-	cl::sycl::accessor<T, 2, cl::sycl::access::write> *_B = new cl::sycl::accessor<T, 2, cl::sycl::access::write>(*B, cgh);
-	cl::sycl::accessor<T, 2, cl::sycl::access::read>  *_aB = new cl::sycl::accessor<T, 2, cl::sycl::access::read>(*aB, cgh);
-	cl::sycl::accessor<T, 1, cl::sycl::access::read>  *_bB = new cl::sycl::accessor<T, 1, cl::sycl::access::read>(*bB, cgh);
-	cgh.parallel_for_work_group<class KernelCompute>(nd_range, [=](cl::sycl::group<2> group){
-							    T * local = new T[local_dim0 * local_dim1];
-							    cl::sycl::parallel_for_work_item(group, [=](cl::sycl::nd_item<2> it){
-								//local copy
-								/* group shoudn't be needed, neither global max*/
-								/* static function needed for st use a priori, but static not compatible
-								   with dynamic filed as global_max */
-								store_local(local, _aB, it, group, global_max0+d0, global_max1+d1); 
-							      });
-							    //synchro
-							    cl::sycl::parallel_for_work_item(group, [=](cl::sycl::nd_item<2> it){
-								//computing
-								/*operation_var2D<T, B, f, st, aB, bB, a_f, b_f>::*/
-								eval_local(it, _B, local, _bB, global_max0, global_max1);
-							      });
-							    delete [] local;
-	  });
-	delete _B;
-	delete _aB;
-	delete _bB;
+        cl::sycl::accessor<T, 2, cl::sycl::access::write> *_B = new cl::sycl::accessor<T, 2, cl::sycl::access::write>(*B, cgh);
+        cl::sycl::accessor<T, 2, cl::sycl::access::read>  *_aB = new cl::sycl::accessor<T, 2, cl::sycl::access::read>(*aB, cgh);
+        cl::sycl::accessor<T, 1, cl::sycl::access::read>  *_bB = new cl::sycl::accessor<T, 1, cl::sycl::access::read>(*bB, cgh);
+        cgh.parallel_for_work_group<class KernelCompute>(nd_range, [=](cl::sycl::group<2> group){
+            T * local = new T[local_dim0 * local_dim1];
+            cl::sycl::parallel_for_work_item(group, [=](cl::sycl::nd_item<2> it){
+                //local copy
+                /* group shoudn't be needed, neither global max*/
+                /* static function needed for st use a priori, but static not compatible
+                   with dynamic filed as global_max */
+                store_local(local, _aB, it, group, global_max0+d0, global_max1+d1); 
+              });
+            //synchro
+            cl::sycl::parallel_for_work_item(group, [=](cl::sycl::nd_item<2> it){
+                //computing
+                /*operation_var2D<T, B, f, st, aB, bB, a_f, b_f>::*/
+                eval_local(it, _B, local, _bB, global_max0, global_max1);
+              });
+            delete [] local;
+          });
+        delete _B;
+        delete _aB;
+        delete _bB;
       });
   }
 

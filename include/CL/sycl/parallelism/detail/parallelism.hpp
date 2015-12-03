@@ -296,31 +296,31 @@ void parallel_for_workitem(const group<Dimensions> &g,
   for (int i = 1; i < (int) Dimensions; ++i){
     tot *= l_r.get(i);
   }
-#pragma omp parallel 
+#pragma omp parallel
   {
 #pragma omp single nowait
     {
       for (int th_id = 0; th_id < tot; ++th_id) {
 #pragma omp task firstprivate(th_id)
-	{
-	  nd_item<Dimensions> index { g.get_nd_range() };
-	  id<Dimensions> local; // to initialize correctly
-      
-	  if (Dimensions ==1) {
-	    local[0] = th_id;
-	  } else if (Dimensions == 2) {
-	    local[0] = th_id / l_r.get(1);
-	    local[1] = th_id - local[0]*l_r.get(1);
-	  } else if (Dimensions == 3) {
-	    int tmp = l_r.get(1)*l_r.get(2);
-	    local[0] = th_id / tmp;
-	    local[1] = (th_id - local[0]*tmp) / l_r.get(1);
-	    local[2] = th_id - local[0]*tmp - local[1]*l_r.get(1);
-	  }
-	  index.set_local(local);
-	  index.set_global(local + id<Dimensions>(l_r)*g.get());
-	  f(index);
-	}
+        {
+          nd_item<Dimensions> index { g.get_nd_range() };
+          id<Dimensions> local; // to initialize correctly
+
+          if (Dimensions ==1) {
+            local[0] = th_id;
+          } else if (Dimensions == 2) {
+            local[0] = th_id / l_r.get(1);
+            local[1] = th_id - local[0]*l_r.get(1);
+          } else if (Dimensions == 3) {
+            int tmp = l_r.get(1)*l_r.get(2);
+            local[0] = th_id / tmp;
+            local[1] = (th_id - local[0]*tmp) / l_r.get(1);
+            local[2] = th_id - local[0]*tmp - local[1]*l_r.get(1);
+          }
+          index.set_local(local);
+          index.set_global(local + id<Dimensions>(l_r)*g.get());
+          f(index);
+        }
       }
     }
   }
