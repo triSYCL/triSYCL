@@ -183,12 +183,14 @@ public:
   /** Loop on the work-items inside a work-group
 
       \todo Add this method in the specification
-
-      \todo Better type the functor
   */
   void parallel_for_work_item(std::function<void(item<dimensionality>)> f)
     const {
-    detail::parallel_for_workitem(*this, f);
+    auto item_adapter = [=] (nd_item<dimensionality> ndi) {
+      item<dimensionality> i = ndi.get_item();
+      f(i);
+    };
+    detail::parallel_for_workitem(*this, item_adapter);
   }
 
 };

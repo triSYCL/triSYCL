@@ -35,7 +35,7 @@ namespace sycl {
 namespace detail {
 
 
-/** A recursive multi-dimensional iterator that ends calling f
+/** A recursive multi-dimensional iterator that ends up calling f
 
     The iteration order may be changed later.
 
@@ -64,20 +64,24 @@ struct parallel_for_iterate {
 
 /** A top-level recursive multi-dimensional iterator variant using OpenMP
 
-    Only the top-level loop uses OpenMP and go on with the normal
+    Only the top-level loop uses OpenMP and goes on with the normal
     recursive multi-dimensional.
 */
-template <std::size_t level, typename Range, typename ParallelForFunctor, typename Id>
+template <std::size_t level,
+          typename Range,
+          typename ParallelForFunctor,
+          typename Id>
 struct parallel_OpenMP_for_iterate {
   parallel_OpenMP_for_iterate(Range r, ParallelForFunctor &f) {
-    // Create the OpenMP threads before the for loop to avoid creating an
+    // Create the OpenMP threads before the for-loop to avoid creating an
     // index in each iteration
 #pragma omp parallel
     {
       // Allocate an OpenMP thread-local index
       Id index;
       // Make a simple loop end condition for OpenMP
-      boost::multi_array_types::index _sycl_end = r[Range::dimensionality - level];
+      boost::multi_array_types::index _sycl_end =
+        r[Range::dimensionality - level];
       /* Distribute the iterations on the OpenMP threads. Some OpenMP
          "collapse" could be useful for small iteration space, but it
          would need some template specialization to have real contiguous
@@ -239,14 +243,18 @@ void parallel_for(nd_range<Dimensions> r,
     parallel_for_iterate<Dimensions,
                          range<Dimensions>,
                          decltype(reconstruct_item),
-                         id<Dimensions>> { local_range, reconstruct_item, local };
+                         id<Dimensions>> { local_range,
+                                           reconstruct_item,
+                                           local };
   };
 
   // First iterate on all the work-groups
   parallel_for_iterate<Dimensions,
                        range<Dimensions>,
                        decltype(iterate_in_work_group),
-                       id<Dimensions>> { group_range, iterate_in_work_group, group };
+                       id<Dimensions>> { group_range,
+                                         iterate_in_work_group,
+      group };
 }
 
 
