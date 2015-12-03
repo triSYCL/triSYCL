@@ -65,13 +65,6 @@ struct pipe {
   /// To protect the access to the circular buffer
   std::mutex cb_mutex;
 
-  /** The amount of elements blocked by reservations, not yet
-      committed.
-
-      This include some normal read/write to pipes between
-      un-committed reservations */
-  std::size_t reserved;
-
   std::deque<reserve_id<value_type>> qrid;
   using rid_iterator = typename decltype(qrid)::iterator;
 
@@ -98,7 +91,7 @@ struct pipe {
     /* The actual number of available elements depends from the
        elements blocked by some reservation.
        This prevents a consumer to read into reserved area. */
-    return cb.size() - reserved;
+    return cb.size() - reserved_for_writing();
   }
 
 
@@ -172,6 +165,25 @@ struct pipe {
   }
 
 
+  /** Compute the amount of elements blocked by write reservations, not yet
+      committed
+
+      This includes some normal writes to pipes between/after
+      un-committed reservations
+
+      This function assumes that the data structure is locked
+  */
+std::size_t reserved_for_writing() const {
+  if (qrid.empty())
+    // No on-going reservation
+    return 0;
+  else
+    /* The reserved size is from the first element of the first
+       on-going reservation up to the end of the pipe content */
+    return cb.end() - qrid.front().start;
+}
+
+
   /** Reserve some part of the pipe for writing
 
       \param[in] s is the number of element to reserve
@@ -185,16 +197,18 @@ struct pipe {
   */
   bool reserve(std::size_t s,
                rid_iterator &rid)  {
-    // Lock the pipe to be quite
+    // Lock the pipe to avoid being disturbed
     std::lock_guard<std::mutex> lg { cb_mutex };
 
-    if (size() >= s) {
+    /* Do not use a difference here because it is only about unsigned
+       values */
+    if (size() + s <= capacity()) {
       /* If there is enough room in the pipe, just create default
          values in it to do the reservation */
       for (std::size_t i = 0; i != s; ++i)
         cb.push_back();
       /* Compute the location of the first element a posteriori since
-         it may not exist if cb was empty before */
+         it may not exist a priori if cb was empty before */
       auto first = cb.end() - s;
       /* Add a description of the reservation at the end of the
          reservation queue */
@@ -213,7 +227,7 @@ struct pipe {
       reservation queue
   */
   void move_reservation_forward() {
-    // Lock the pipe to be quite
+    // Lock the pipe to avoid nuisance
     std::lock_guard<std::mutex> lg { cb_mutex };
 
     for (;;) {
@@ -229,15 +243,6 @@ struct pipe {
         break;
       // Remove the reservation to be released from the queue
       qrid.pop_front();
-      if (qrid.empty()) {
-        /* If it was the last reservation, it unblock all the pipe
-           content, up to its end */
-        reserved -= cb.end() - rid.start;
-        break;
-      }
-      /* Otherwise just unblock everything from the current
-         reservation up to the start of the next one... */
-      reserved -= qrid.front().start - rid.start;
       /* ...and process the next reservation to see if it is ready to
          be released too */
     }

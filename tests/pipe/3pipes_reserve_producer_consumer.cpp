@@ -21,37 +21,36 @@ int test_main(int argc, char *argv[]) {
   cl::sycl::buffer<Type> a { N };
   {
     auto aa = a.get_access<cl::sycl::access::write>();
-    // Initialize buffer a with increasing integer starting at 0
+    // Initialize buffer a with increasing integer numbers starting at 0
     std::iota(aa.begin(), aa.end(), 0);
   }
   cl::sycl::buffer<Type> b { N };
   {
     auto ab = b.get_access<cl::sycl::access::write>();
     // Initialize buffer b starting from the end with increasing
-    // integer starting at 42
+    // integer numbers starting at 42
     std::iota(ab.rbegin(), ab.rend(), 42);
   }
 
   // A buffer of N Type to get the result
   cl::sycl::buffer<Type> c { N };
 
-  // The plumbing with minimal pipes of size 1
-  cl::sycl::pipe<Type> pa { 1 };
+  // The plumbing pipes
+  cl::sycl::pipe<Type> pa { WI };
   cl::sycl::pipe<Type> pb { 1 };
   cl::sycl::pipe<Type> pc { 1 };
 
   // Create a queue to launch the kernels
   cl::sycl::queue q;
 
-  // Launch a producer to stream va to the pipe pa
+  // Launch a producer for streaming va to the pipe pa
   q.submit([&] (cl::sycl::handler &cgh) {
       // Get write access to the pipe
       auto apa = pa.get_access<cl::sycl::access::write>(cgh);
       // Get read access to the data
       auto aa = a.get_access<cl::sycl::access::read>(cgh);
-
       cgh.parallel_for_work_group<class stream_a>(
-        { 1, WI },
+        { 1, 1 },
         [=] (auto group) {
           // Use a sequential loop in the work-group to stream chunks in order
           for (int start = 0; start != N; start += WI) {
@@ -68,7 +67,7 @@ int test_main(int argc, char *argv[]) {
         });
     });
 
-  // Launch a producer to stream vb to the pipe pb
+  // Launch a producer for streaming vb to the pipe pb
   q.submit([&] (cl::sycl::handler &cgh) {
       // Get write access to the pipe
       auto apb = pb.get_access<cl::sycl::access::write>(cgh);
