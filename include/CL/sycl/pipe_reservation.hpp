@@ -61,9 +61,8 @@ struct pipe_reservation {
 
       \todo Make it private and add required friends
    */
-
   pipe_reservation(detail::pipe_reservation<accessor_detail> &&pr)
-    : implementation { pr.shared_from_this() }
+    : implementation { new detail::pipe_reservation<accessor_detail> { pr } }
   {}
 
 

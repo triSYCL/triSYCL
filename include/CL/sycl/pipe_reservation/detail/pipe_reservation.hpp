@@ -29,8 +29,7 @@ struct accessor;
 */
 
 template <typename PipeAccessor>
-class pipe_reservation :
-    public std::enable_shared_from_this<pipe_reservation<PipeAccessor>> {
+class pipe_reservation {
 
   using accessor_type =  PipeAccessor;
   using value_type = typename accessor_type::value_type;
