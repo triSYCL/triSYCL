@@ -268,9 +268,12 @@ void parallel_for_workgroup(nd_range<Dimensions> r,
 }
 
 
-/// Implement the loop on the work-items inside a work-group
+/** Implement the loop on the work-items inside a work-group
+
+    \todo Better type the functor
+*/
 template <std::size_t Dimensions = 1, typename ParallelForFunctor>
-void parallel_for_workitem(group<Dimensions> g,
+void parallel_for_workitem(const group<Dimensions> &g,
                            ParallelForFunctor f) {
 #if defined(_OPENMP) && !defined(TRISYCL_NO_BARRIER)
   /* To implement barriers With OpenMP, one thread is created for each
