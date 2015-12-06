@@ -15,7 +15,7 @@ int main() {
 
     myQueue.submit([&](handler &cgh) {
         auto acc = a.get_access<access::write>(cgh);
-        cgh.parallel_for<class nothing>({ N },
+        cgh.parallel_for<class nothing>(N,
                                         [=] (id<1> index) {
                                           acc[index] = index[0];
                                         });
