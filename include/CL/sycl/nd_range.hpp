@@ -64,8 +64,11 @@ public:
 
   /// Get the range of work-groups needed to run this ND-range
   auto get_group() const {
-    // \todo Assume that global_range is a multiple of local_range, element-wise
-    return global_range/local_range;
+    /* This is basically global_range/local_range, round up to the
+       next integer, in case the global eange is not a multiple of the
+       local range. Note this is a motivating example to build a range
+       from a scalar with a broadcasting constructor. */
+    return (global_range + local_range - range<dims>{ 1 })/local_range;
   }
 
 
