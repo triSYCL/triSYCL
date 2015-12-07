@@ -15,6 +15,7 @@
 #include "CL/sycl/detail/linear_id.hpp"
 #include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/id.hpp"
+#include "CL/sycl/item.hpp"
 #include "CL/sycl/nd_range.hpp"
 #include "CL/sycl/range.hpp"
 
@@ -173,6 +174,15 @@ public:
 
   /// Return the nd_range<> of the current execution
   nd_range<dims> get_nd_range() const { return ND_range; }
+
+
+  /** Allows projection down to an item
+
+      \todo Add to the specification
+  */
+  item<dims> get_item() const {
+    return { get_global_range(), get_global(), get_offset() };
+  }
 
 
   /** Execute a barrier with memory ordering on the local address space,

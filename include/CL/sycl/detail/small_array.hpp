@@ -242,6 +242,14 @@ struct small_array_123<BasicType, FinalType, 2>
   }
 
 
+  /** Broadcasting constructor initializing all the elements with the
+      same value
+
+      \todo Add to the specification of the range, id...
+  */
+  explicit small_array_123(BasicType e) : small_array_123 { e, e } { }
+
+
   /// Keep other constructors
   small_array_123() = default;
 
@@ -259,6 +267,14 @@ struct small_array_123<BasicType, FinalType, 3>
     (*this)[1] = y;
     (*this)[2] = z;
   }
+
+
+  /** Broadcasting constructor initializing all the elements with the
+      same value
+
+      \todo Add to the specification of the range, id...
+  */
+  explicit small_array_123(BasicType e) : small_array_123 { e, e, e } { }
 
 
   /// Keep other constructors

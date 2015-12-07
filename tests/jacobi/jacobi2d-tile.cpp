@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
   end_init(timer);
 
   // compute result with "gpu"
-  {  
+  {
     sycl::queue myQueue;
 
     for (unsigned int i = 0; i < NB_ITER; ++i){
@@ -45,62 +45,62 @@ int main(int argc, char **argv) {
           sycl::accessor<float, 2, sycl::access::read>  a(ioABuffer, cgh);
           sycl::accessor<float, 2, sycl::access::write> b(ioBBuffer, cgh);
 
-	  cgh.parallel_for_work_group<class KernelCompute>(sycl::nd_range<2> {
-	      sycl::range<2> {M-2, N-2}, 
-		sycl::range<2> {CL_DEVICE_MAX_WORK_GROUP_SIZE0, CL_DEVICE_MAX_WORK_GROUP_SIZE1}, 
-		  sycl::id<2> {1, 1}}, 
-	    [=,&timer](sycl::group<2> group){
-	      // tile to be load : (4+2)*(8+2)
-	      // dynamic bounds unauthorized
-	      float * local = new float[(CL_DEVICE_MAX_WORK_GROUP_SIZE0+2)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2)];
+          cgh.parallel_for_work_group<class KernelCompute>(sycl::nd_range<2> {
+              sycl::range<2> {M-2, N-2},
+                sycl::range<2> {CL_DEVICE_MAX_WORK_GROUP_SIZE0, CL_DEVICE_MAX_WORK_GROUP_SIZE1}, 
+                  sycl::id<2> {1, 1}},
+            [=,&timer](sycl::group<2> group){
+              // tile to be load : (4+2)*(8+2)
+              // dynamic bounds unauthorized
+              float * local = new float[(CL_DEVICE_MAX_WORK_GROUP_SIZE0+2)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2)];
 
-	      struct op_time time_op;
-	      begin_op(time_op);
+              struct op_time time_op;
+              begin_op(time_op);
 
-	      // tab_local has to be passed by reference
-	      sycl::parallel_for_work_item(group, [=,&local](sycl::nd_item<2> it){
-		  sycl::range<2> l_range = it.get_local_range();
-		  sycl::id<2> g_ind = it.get_global();
-		  sycl::id<2> l_ind = it.get_local();
-		  sycl::id<2> offset = it.get_offset();
-		  sycl::id<2> id1(sycl::range<2> {0,1});
-		  sycl::id<2> id2(sycl::range<2> {1,0});
-		  sycl::id<2> id1_s(sycl::range<2> {0,l_range.get(1)});
-		  sycl::id<2> id2_s(sycl::range<2> {l_range.get(0),0});
-		  local[(l_ind+offset).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset).get(1)] = a[g_ind+offset];
-		  if (l_ind.get(0) == 0) {
-		    // we should not have ourself to add the offset ...
-		    local[(l_ind+offset).get(1)] = a[g_ind-id2+offset];
-		    local[(id2_s+offset).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset).get(1)] = a[g_ind+id2_s+offset];
-		  }
-		  if (l_ind.get(1) == 0) {
-		    local[(l_ind+offset).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2)] = a[g_ind-id1+offset];
-		    local[(l_ind+offset).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (id1_s+offset).get(1)] = a[g_ind+id1_s+offset];
-		  }
-		});
+              // tab_local has to be passed by reference
+              sycl::parallel_for_work_item(group, [=,&local](sycl::nd_item<2> it){
+                  sycl::range<2> l_range = it.get_local_range();
+                  sycl::id<2> g_ind = it.get_global();
+                  sycl::id<2> l_ind = it.get_local();
+                  sycl::id<2> offset = it.get_offset();
+                  sycl::id<2> id1(sycl::range<2> {0,1});
+                  sycl::id<2> id2(sycl::range<2> {1,0});
+                  sycl::id<2> id1_s(sycl::range<2> {0,l_range.get(1)});
+                  sycl::id<2> id2_s(sycl::range<2> {l_range.get(0),0});
+                  local[(l_ind+offset).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset).get(1)] = a[g_ind+offset];
+                  if (l_ind.get(0) == 0) {
+                    // we should not have ourself to add the offset ...
+                    local[(l_ind+offset).get(1)] = a[g_ind-id2+offset];
+                    local[(id2_s+offset).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset).get(1)] = a[g_ind+id2_s+offset];
+                  }
+                  if (l_ind.get(1) == 0) {
+                    local[(l_ind+offset).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2)] = a[g_ind-id1+offset];
+                    local[(l_ind+offset).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (id1_s+offset).get(1)] = a[g_ind+id1_s+offset];
+                  }
+                });
 
-	      end_op(time_op, timer.load_time);
-	      begin_op(time_op);
+              end_op(time_op, timer.load_time);
+              begin_op(time_op);
 
-	      sycl::parallel_for_work_item(group, [=,&local](sycl::nd_item<2> it){
-		  sycl::id<2> g_ind = it.get_global();
-		  sycl::id<2> l_ind = it.get_local();
-		  sycl::id<2> offset = it.get_offset();
-		  sycl::id<2> id1(sycl::range<2> {0,1});
-		  sycl::id<2> id2(sycl::range<2> {1,0});
+              sycl::parallel_for_work_item(group, [=,&local](sycl::nd_item<2> it){
+                  sycl::id<2> g_ind = it.get_global();
+                  sycl::id<2> l_ind = it.get_local();
+                  sycl::id<2> offset = it.get_offset();
+                  sycl::id<2> id1(sycl::range<2> {0,1});
+                  sycl::id<2> id2(sycl::range<2> {1,0});
 
-		  b[g_ind+offset] = local[(l_ind+offset).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset).get(1)];
-		  b[g_ind+offset] += local[(l_ind+offset+id1).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset+id1).get(1)];
-		  b[g_ind+offset] += local[(l_ind+offset+id2).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset+id2).get(1)];
-		  b[g_ind+offset] += local[(l_ind+offset-id1).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset-id1).get(1)];
-		  b[g_ind+offset] += local[(l_ind+offset-id2).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset-id2).get(1)];
-		});
-	      
-	      delete [] local;
-	      end_op(time_op, timer.stencil_time);
-	    
-	    });
-	});
+                  b[g_ind+offset] = local[(l_ind+offset).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset).get(1)];
+                  b[g_ind+offset] += local[(l_ind+offset+id1).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset+id1).get(1)];
+                  b[g_ind+offset] += local[(l_ind+offset+id2).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset+id2).get(1)];
+                  b[g_ind+offset] += local[(l_ind+offset-id1).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset-id1).get(1)];
+                  b[g_ind+offset] += local[(l_ind+offset-id2).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset-id2).get(1)];
+                });
+
+              delete [] local;
+              end_op(time_op, timer.stencil_time);
+
+            });
+        });
 
       struct op_time time_op;
       begin_op(time_op);

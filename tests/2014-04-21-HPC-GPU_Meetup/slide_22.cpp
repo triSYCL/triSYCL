@@ -21,10 +21,10 @@ buffer<int> my_buffer(data, size);
 
 my_queue.submit([&](handler &cgh)
 {
-	auto in_access = my_buffer.get_access<access::read>(cgh);
-	auto out_access = my_buffer.get_access<access::write>(cgh);
+  auto in_access = my_buffer.get_access<access::read>(cgh);
+  auto out_access = my_buffer.get_access<access::write>(cgh);
 
-	cgh.parallel_for_work_group<class hierarchical>(nd_range<>(range<>(size),
+  cgh.parallel_for_work_group<class hierarchical>(nd_range<>(range<>(size),
                                                              range<>(groupsize)),
                                                   [=](group<> group) {
                                                     parallel_for_work_item(group, [=](nd_item<1> tile) {

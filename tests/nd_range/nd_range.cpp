@@ -7,12 +7,15 @@
    CHECK-NEXT: 0 0 0
    CHECK-NEXT: 2 2 2
    CHECK-NEXT: 2 2 2
-   CHECK-NEXT: 1
+   CHECK-NEXT: 4
    CHECK-NEXT: 2
    CHECK-NEXT: 3
    CHECK-NEXT: 10 20
    CHECK-NEXT: 2 5
    CHECK-NEXT: 0 0
+   CHECK-NEXT: 1
+   CHECK-NEXT: 6 4
+   CHECK-NEXT: 6 5 7
 */
 #include <CL/sycl.hpp>
 #include <iostream>
@@ -45,9 +48,20 @@ int main() {
   range<3> ndr4 = ndr3.get_group();
   ndr4.display();
 
-  nd_range<> ndr1 { 1, 2, 3 };
+  nd_range<> ndr1 { 4, 2, 3 };
   ndr1.display();
   nd_range<2> ndr2 { { 10, 20 }, { 2, 5 } };
   ndr2.display();
+
+  // Test now for incomplete work-groups
+  nd_range<> ndri1 { 1, 2, 3 };
+  ndri1.get_group().display();
+
+  nd_range<2> ndri2 { { 11, 25 }, { 2, 7 } };
+  ndri2.get_group().display();
+
+  nd_range<3> ndri3 { { 11, 25, 48 }, { 2, 5, 7 } };
+  ndri3.get_group().display();
+
   return 0;
 }

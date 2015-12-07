@@ -10,6 +10,7 @@
 */
 
 #include <cstddef>
+#include <functional>
 
 #include "CL/sycl/detail/linear_id.hpp"
 #include "CL/sycl/id.hpp"
@@ -19,13 +20,24 @@
 namespace cl {
 namespace sycl {
 
+template <std::size_t dims = 1>
+struct group;
+
+namespace detail {
+
+template <std::size_t Dimensions = 1, typename ParallelForFunctor>
+void parallel_for_workitem(const group<Dimensions> &g,
+                           ParallelForFunctor f);
+
+}
+
 /** \addtogroup parallelism Expressing parallelism through kernels
     @{
 */
 
 /** A group index used in a parallel_for_workitem to specify a work_group
  */
-template <std::size_t dims = 1>
+template <std::size_t dims>
 struct group {
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
@@ -155,6 +167,30 @@ public:
    */
   size_t get_linear() const {
     return detail::linear_id(get_group_range(), get());
+  }
+
+
+  /** Loop on the work-items inside a work-group
+
+      \todo Add this method in the specification
+  */
+  void parallel_for_work_item(std::function<void(nd_item<dimensionality>)> f)
+    const {
+    detail::parallel_for_workitem(*this, f);
+  }
+
+
+  /** Loop on the work-items inside a work-group
+
+      \todo Add this method in the specification
+  */
+  void parallel_for_work_item(std::function<void(item<dimensionality>)> f)
+    const {
+    auto item_adapter = [=] (nd_item<dimensionality> ndi) {
+      item<dimensionality> i = ndi.get_item();
+      f(i);
+    };
+    detail::parallel_for_workitem(*this, item_adapter);
   }
 
 };

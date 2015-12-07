@@ -2,23 +2,29 @@
    CHECK: Group id = 0
    CHECK: Local id = 0 (global id = 0)
    CHECK: Local id = 1 (global id = 1)
+   CHECK: Global id = 0
+   CHECK: Global id = 1
    CHECK: Group id = 1
    CHECK: Local id = 0 (global id = 2)
    CHECK: Local id = 1 (global id = 3)
+   CHECK: Global id = 2
+   CHECK: Global id = 3
    CHECK: Group id = 2
    CHECK: Local id = 0 (global id = 4)
    CHECK: Local id = 1 (global id = 5)
+   CHECK: Global id = 4
+   CHECK: Global id = 5
    CHECK: Group id = 3
    CHECK: Local id = 0 (global id = 6)
    CHECK: Local id = 1 (global id = 7)
+   CHECK: Global id = 6
+   CHECK: Global id = 7
    CHECK: Group id = 4
    CHECK: Local id = 0 (global id = 8)
    CHECK: Local id = 1 (global id = 9)
-
-   // In other()
-   CHECK: 6 8 11
+   CHECK: Global id = 8
+   CHECK: Global id = 9
 */
-#include <vector>
 
 /* The OpenMP based barrier use nested parallelism that makes order of
    execution in parallel_for_workitem non deterministic so disable it on
@@ -26,9 +32,9 @@
 */
 #define TRISYCL_NO_BARRIER
 
-#include <CL/sycl.hpp>
 
-extern void other();
+#include <vector>
+#include <CL/sycl.hpp>
 
 using namespace cl::sycl;
 
@@ -36,33 +42,33 @@ int main() {
   queue my_queue;
   const int size = 10;
   std::vector<int> data(size);
-  const int groupsize = 2;
+  constexpr int groupsize = 2;
 /* Put &data[0] instead of data.data() because it is not obvious in the
    excerpt below it is a vector */
 //////// Start slide
 buffer<int> input(&data[0], size);
 buffer<int> output(size);
-my_queue.submit([&](handler &cgh)
-{
+my_queue.submit([&](handler &cgh) {
   auto in_access = input.get_access<access::read>(cgh);
   auto out_access = output.get_access<access::write>(cgh);
 
   cgh.parallel_for_work_group<class hierarchical>(nd_range<>(range<>(size),
                                                              range<>(groupsize)),
-                                                  [=](group<> group)
-  {
+                                                  [=](group<> group) {
     std::cout << "Group id = " << group.get(0) << std::endl;
 
-    parallel_for_work_item(group, [=](nd_item<1> tile)
-    {
+    group.parallel_for_work_item([=](nd_item<1> tile) {
       std::cout << "Local id = " << tile.get_local(0)
                 << " (global id = " << tile.get_global(0) << ")" << std::endl;
+      out_access[tile] = in_access[tile] * 2;
+    });
+
+    group.parallel_for_work_item([=](item<1> tile) {
+      std::cout << "Global id = " << tile[0] << std::endl;
       out_access[tile] = in_access[tile] * 2;
     });
   });
 });
 //////// End slide
-
-  other();
-  return 0;
+    return 0;
 }

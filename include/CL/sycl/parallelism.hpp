@@ -29,9 +29,14 @@ void parallel_for(Range r, Program p, ParallelForFunctor f) {
 }
 */
 
-  /// Loop on the work-items inside a work-group
+  /** Loop on the work-items inside a work-group
+
+      \todo Deprecate this function in the specification to use
+      instead the group method
+  */
   template <std::size_t Dimensions = 1, typename ParallelForFunctor>
-  void parallel_for_work_item(group<Dimensions> g, ParallelForFunctor f) {
+  void parallel_for_work_item(const group<Dimensions> &g,
+                              ParallelForFunctor f) {
     detail::parallel_for_workitem(g, f);
   }
 

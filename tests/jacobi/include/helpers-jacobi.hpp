@@ -30,7 +30,7 @@ int es = PAPI_NULL; //event set
 
 #include <pthread.h>
 
-//pthread_mutex_t time_mutex = PTHREAD_MUTEX_INITIALIZER; 
+//pthread_mutex_t time_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 #ifndef NB_TOP_PROCS
 #define NB_TOP_PROCS 2
@@ -52,7 +52,7 @@ int es = PAPI_NULL; //event set
 #define USE_MALLOC 0
 #endif
 
-#ifndef USE_INIT_FT 
+#ifndef USE_INIT_FT
 #define USE_INIT_FT 1 // first touch accordingly to the sycl or malloc allocation
 #endif
 
@@ -122,7 +122,7 @@ inline void end_init(struct counters& timer) {
 }
 
 inline void begin_op(struct op_time& time) {
-  gettimeofday(&(time.start), NULL);  
+  gettimeofday(&(time.start), NULL);
 }
 
 inline void end_op(struct op_time& time, unsigned long& var) {
@@ -207,7 +207,7 @@ inline void end_measure(struct counters& timer) {
     int r;
     for (int i = 0; i < nb_papi_event; ++i){
       if ((r = PAPI_remove_named_event(es, (char *)papi_events[i]))!=PAPI_OK)
-	papi_error("PAPI_remove_named_event", r);
+        papi_error("PAPI_remove_named_event", r);
     }
 
     delete [] timer.papi_values_l;
@@ -224,13 +224,13 @@ public:
 };
 
 struct Matrix_f {
-public:  
+public:
   float tab[VEC_CONST_SIZE*VEC_CONST_SIZE];
 };
 
 void add_vec(struct Vector_f * vec_inout, struct Vector_f * vec_in) {
   for (size_t i = 0; i < VEC_CONST_SIZE; ++i) {
-    vec_inout->tab[i] += vec_in->tab[i]; 
+    vec_inout->tab[i] += vec_in->tab[i];
   }
 }
 
@@ -283,17 +283,17 @@ void read_args(int argc, char **argv){
   nb_papi_event = argc - 6;
   if (nb_papi_event > 0) {
     int r;
-    papi_events = new char*[nb_papi_event];	
+    papi_events = new char*[nb_papi_event];
     if ((r = PAPI_library_init(PAPI_VER_CURRENT))!=PAPI_VER_CURRENT)
       papi_error("PAPI_library_init", r);
     if ((r = PAPI_create_eventset(&es))!=PAPI_OK)
       papi_error("PAPI_create_eventset", r);
     for (int i = 0; i < nb_papi_event; ++i){
       papi_events[i] = argv[6+i];
-      if ((r = PAPI_query_named_event((char *)papi_events[i]))!=PAPI_OK) 
-	papi_error("PAPI_query_named_event", r);
+      if ((r = PAPI_query_named_event((char *)papi_events[i]))!=PAPI_OK)
+        papi_error("PAPI_query_named_event", r);
       if ((r = PAPI_add_named_event(es, (char *)papi_events[i]))!= PAPI_OK)
-	papi_error("PAPI_add_named_event", r);
+        papi_error("PAPI_add_named_event", r);
     }
   }
 #endif
@@ -344,27 +344,27 @@ void compute_jacobi2D(float * a_test, float * b_test, struct counters& timer){
 
     struct op_time time_op;
     begin_op(time_op);
-    
+
     for (size_t i = 1; i < M - 1; ++i){
 #ifdef _OPENMP
 #pragma omp parallel for
 #endif
       for (size_t j = 1; j < N - 1; ++j){
-	b_test[i*N+j] = MULT_COEF * (a_test[i*N+j] + a_test[i*N+(j-1)] + a_test[i*N+(1+j)] + a_test[(1+i)*N+j] + a_test[(i-1)*N+j]);
+        b_test[i*N+j] = MULT_COEF * (a_test[i*N+j] + a_test[i*N+(j-1)] + a_test[i*N+(1+j)] + a_test[(1+i)*N+j] + a_test[(i-1)*N+j]);
       }
     }
-    
+
     end_op(time_op, timer.stencil_time);
     begin_op(time_op);
 
     for (size_t i = 1; i < M - 1; ++i){
       for (size_t j = 1; j < N - 1; ++j){
-	a_test[i*N+j] = b_test[i*N+j];
+        a_test[i*N+j] = b_test[i*N+j];
       }
-    }  
+    }
 
     end_op(time_op, timer.copy_time);
-  }  
+  }
 }
 
 // comp..
@@ -378,13 +378,13 @@ void ute_and_are(float * a_test, float * b_test, cl::sycl::accessor<float, 2, cl
   for(size_t i = 0; i < M; ++i){
     for(size_t j = 0; j < N; ++j){
       // Compare the result to the analytic value
-      float err = ABS((C[i][j] - a_test[i*N+j]) / a_test[i*N+j]); 
+      float err = ABS((C[i][j] - a_test[i*N+j]) / a_test[i*N+j]);
       if ( err > ERR_MAX) {
-	std::cout << "Wrong value " << C[i][j] << " on element "
-		  << i << ' ' << j << " (error : " << err << ")" << std::endl;
-	std::cout << "Programm exiting now." << std::endl;
-	exit(-1);
-	//return;
+        std::cout << "Wrong value " << C[i][j] << " on element "
+                  << i << ' ' << j << " (error : " << err << ")" << std::endl;
+        std::cout << "Programm exiting now." << std::endl;
+        exit(-1);
+        //return;
       }
     }
   }

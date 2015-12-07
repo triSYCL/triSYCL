@@ -35,7 +35,7 @@ namespace sycl {
 namespace detail {
 
 
-/** A recursive multi-dimensional iterator that ends calling f
+/** A recursive multi-dimensional iterator that ends up calling f
 
     The iteration order may be changed later.
 
@@ -64,20 +64,24 @@ struct parallel_for_iterate {
 
 /** A top-level recursive multi-dimensional iterator variant using OpenMP
 
-    Only the top-level loop uses OpenMP and go on with the normal
+    Only the top-level loop uses OpenMP and goes on with the normal
     recursive multi-dimensional.
 */
-template <std::size_t level, typename Range, typename ParallelForFunctor, typename Id>
+template <std::size_t level,
+          typename Range,
+          typename ParallelForFunctor,
+          typename Id>
 struct parallel_OpenMP_for_iterate {
   parallel_OpenMP_for_iterate(Range r, ParallelForFunctor &f) {
-    // Create the OpenMP threads before the for loop to avoid creating an
+    // Create the OpenMP threads before the for-loop to avoid creating an
     // index in each iteration
 #pragma omp parallel
     {
       // Allocate an OpenMP thread-local index
       Id index;
       // Make a simple loop end condition for OpenMP
-      boost::multi_array_types::index _sycl_end = r[Range::dimensionality - level];
+      boost::multi_array_types::index _sycl_end =
+        r[Range::dimensionality - level];
       /* Distribute the iterations on the OpenMP threads. Some OpenMP
          "collapse" could be useful for small iteration space, but it
          would need some template specialization to have real contiguous
@@ -110,13 +114,14 @@ struct parallel_for_iterate<0, Range, ParallelForFunctor, Id> {
 
 
 /** Implementation of a data parallel computation with parallelism
-    specified at launch time by a range<>.
+    specified at launch time by a range<>. Kernel index is id or int.
 
     This implementation use OpenMP 3 if compiled with the right flag.
 */
-template <std::size_t Dimensions = 1, typename ParallelForFunctor>
+template <std::size_t Dimensions = 1, typename ParallelForFunctor, typename Id>
 void parallel_for(range<Dimensions> r,
-                  ParallelForFunctor f) {
+                  ParallelForFunctor f,
+                  Id) {
 #ifdef _OPENMP
   // Use OpenMP for the top loop level
   parallel_OpenMP_for_iterate<Dimensions,
@@ -131,6 +136,50 @@ void parallel_for(range<Dimensions> r,
                        ParallelForFunctor,
                        id<Dimensions>> { r, f, index };
 #endif
+}
+
+
+/** Implementation of a data parallel computation with parallelism
+    specified at launch time by a range<>. Kernel index is item.
+
+    This implementation use OpenMP 3 if compiled with the right flag.
+*/
+template <std::size_t Dimensions = 1, typename ParallelForFunctor>
+void parallel_for(range<Dimensions> r,
+                  ParallelForFunctor f,
+                  item<Dimensions>) {
+  auto reconstruct_item = [&] (id<Dimensions> l) {
+    // Reconstruct the global item
+    item<Dimensions> index { r, l };
+    // Call the user kernel with the item<> instead of the id<>
+    f(index);
+  };
+#ifdef _OPENMP
+  // Use OpenMP for the top loop level
+  parallel_OpenMP_for_iterate<Dimensions,
+                              range<Dimensions>,
+                              decltype(reconstruct_item),
+                              id<Dimensions>> { r, reconstruct_item };
+#else
+  // In a sequential execution there is only one index processed at a time
+  id<Dimensions> index;
+  parallel_for_iterate<Dimensions,
+                       range<Dimensions>,
+                       decltype(reconstruct_item),
+                       id<Dimensions>> { r, reconstruct_item, index };
+#endif
+}
+
+
+/** Calls the appropriate ternary parallel_for overload based on the
+    index type of the kernel function object f
+
+*/
+template <std::size_t Dimensions = 1, typename ParallelForFunctor>
+void parallel_for(range<Dimensions> r, ParallelForFunctor f) {
+  using mf_t  = decltype(std::mem_fn(&ParallelForFunctor::operator()));
+  using arg_t = typename mf_t::second_argument_type;
+  parallel_for(r,f,arg_t{});
 }
 
 
@@ -194,14 +243,18 @@ void parallel_for(nd_range<Dimensions> r,
     parallel_for_iterate<Dimensions,
                          range<Dimensions>,
                          decltype(reconstruct_item),
-                         id<Dimensions>> { local_range, reconstruct_item, local };
+                         id<Dimensions>> { local_range,
+                                           reconstruct_item,
+                                           local };
   };
 
   // First iterate on all the work-groups
   parallel_for_iterate<Dimensions,
                        range<Dimensions>,
                        decltype(iterate_in_work_group),
-                       id<Dimensions>> { group_range, iterate_in_work_group, group };
+                       id<Dimensions>> { group_range,
+                                         iterate_in_work_group,
+      group };
 }
 
 
@@ -223,9 +276,12 @@ void parallel_for_workgroup(nd_range<Dimensions> r,
 }
 
 
-/// Implement the loop on the work-items inside a work-group
+/** Implement the loop on the work-items inside a work-group
+
+    \todo Better type the functor
+*/
 template <std::size_t Dimensions = 1, typename ParallelForFunctor>
-void parallel_for_workitem(group<Dimensions> g,
+void parallel_for_workitem(const group<Dimensions> &g,
                            ParallelForFunctor f) {
 #if defined(_OPENMP) && !defined(TRISYCL_NO_BARRIER)
   /* To implement barriers With OpenMP, one thread is created for each
@@ -248,31 +304,31 @@ void parallel_for_workitem(group<Dimensions> g,
   for (int i = 1; i < (int) Dimensions; ++i){
     tot *= l_r.get(i);
   }
-#pragma omp parallel 
+#pragma omp parallel
   {
 #pragma omp single nowait
     {
       for (int th_id = 0; th_id < tot; ++th_id) {
 #pragma omp task firstprivate(th_id)
-	{
-	  nd_item<Dimensions> index { g.get_nd_range() };
-	  id<Dimensions> local; // to initialize correctly
-      
-	  if (Dimensions ==1) {
-	    local[0] = th_id;
-	  } else if (Dimensions == 2) {
-	    local[0] = th_id / l_r.get(1);
-	    local[1] = th_id - local[0]*l_r.get(1);
-	  } else if (Dimensions == 3) {
-	    int tmp = l_r.get(1)*l_r.get(2);
-	    local[0] = th_id / tmp;
-	    local[1] = (th_id - local[0]*tmp) / l_r.get(1);
-	    local[2] = th_id - local[0]*tmp - local[1]*l_r.get(1);
-	  }
-	  index.set_local(local);
-	  index.set_global(local + id<Dimensions>(l_r)*g.get());
-	  f(index);
-	}
+        {
+          nd_item<Dimensions> index { g.get_nd_range() };
+          id<Dimensions> local; // to initialize correctly
+
+          if (Dimensions ==1) {
+            local[0] = th_id;
+          } else if (Dimensions == 2) {
+            local[0] = th_id / l_r.get(1);
+            local[1] = th_id - local[0]*l_r.get(1);
+          } else if (Dimensions == 3) {
+            int tmp = l_r.get(1)*l_r.get(2);
+            local[0] = th_id / tmp;
+            local[1] = (th_id - local[0]*tmp) / l_r.get(1);
+            local[2] = th_id - local[0]*tmp - local[1]*l_r.get(1);
+          }
+          index.set_local(local);
+          index.set_global(local + id<Dimensions>(l_r)*g.get());
+          f(index);
+        }
       }
     }
   }
@@ -306,7 +362,7 @@ void parallel_for_workitem(group<Dimensions> g,
 }
 /// @} End the parallelism Doxygen group
 
-}
+} // namespace detail
 }
 }
 
