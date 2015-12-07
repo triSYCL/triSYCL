@@ -75,9 +75,12 @@ struct pipe {
   /** Return the maximum number of elements that can fit in the pipe
    */
   std::size_t capacity() const {
+    // No lock required since it is fixed and set at construction time
     return cb.capacity();
   }
 
+
+private:
 
   /** Get the current number of elements in the pipe
 
@@ -122,6 +125,29 @@ struct pipe {
   }
 
 
+public:
+
+  /// The size() method used outside needs to lock the datastructure
+  bool size_with_lock() const {
+    std::lock_guard<std::mutex> lg { cb_mutex };
+    return size();
+  }
+
+
+  /// The empty() method used outside needs to lock the datastructure
+  bool empty_with_lock() const {
+    std::lock_guard<std::mutex> lg { cb_mutex };
+    return empty();
+  }
+
+
+  // The full() method used outside needs to lock the datastructure
+  bool full_with_lock() const {
+    std::lock_guard<std::mutex> lg { cb_mutex };
+    return full();
+  }
+
+
   /** Try to write a value to the pipe
 
       \param[in] value is what we want to write
@@ -132,9 +158,9 @@ struct pipe {
   */
   bool write(const T &value) {
     std::lock_guard<std::mutex> lg { cb_mutex };
-    // TRISYCL_DUMP_T("Write pipe full = " << cb.full()
+    // TRISYCL_DUMP_T("Write pipe full = " << full()
     //                << " value = " << value);
-    if (cb.full())
+    if (full())
       return false;
     cb.push_back(value);
     // TRISYCL_DUMP_T("Write pipe front = " << cb.front()
@@ -152,9 +178,9 @@ struct pipe {
   */
   bool read(T &value) {
     std::lock_guard<std::mutex> lg { cb_mutex };
-    // TRISYCL_DUMP_T("Read pipe empty = " << cb.empty());
+    // TRISYCL_DUMP_T("Read pipe empty = " << empty());
 
-    if (cb.empty())
+    if (empty())
       return false;
     // TRISYCL_DUMP_T("Read pipe front = " << cb.front()
     //                << " back = " << cb.back());
@@ -199,6 +225,10 @@ std::size_t reserved_for_writing() const {
                rid_iterator &rid)  {
     // Lock the pipe to avoid being disturbed
     std::lock_guard<std::mutex> lg { cb_mutex };
+
+    if (s ==0)
+      // Empty reservation requested, so nothing to do
+      return false;
 
     /* Do not use a difference here because it is only about unsigned
        values */

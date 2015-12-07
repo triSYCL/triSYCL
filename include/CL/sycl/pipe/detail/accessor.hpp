@@ -89,7 +89,7 @@ struct accessor<T, 1, AccessMode, access::pipe> :
       example on FPGA).
    */
   std::size_t size() const {
-    return implementation.size();
+    return implementation.size_with_lock();
   }
 
 
@@ -102,7 +102,7 @@ struct accessor<T, 1, AccessMode, access::pipe> :
       write side (for example on FPGA).
    */
   bool empty() const {
-    return implementation.empty();
+    return implementation.empty_with_lock();
   }
 
 
@@ -115,7 +115,7 @@ struct accessor<T, 1, AccessMode, access::pipe> :
       read side (for example on FPGA).
   */
   bool full() const {
-    return implementation.full();
+    return implementation.full_with_lock();
   }
 
 
