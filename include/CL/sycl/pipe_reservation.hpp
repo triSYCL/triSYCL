@@ -96,7 +96,7 @@ struct pipe_reservation {
 
 
   /// Access to a given element of the reservation
-  reference operator[](std::size_t index) {
+  reference operator[](std::size_t index) const {
     return (*implementation)[index];
   }
 
