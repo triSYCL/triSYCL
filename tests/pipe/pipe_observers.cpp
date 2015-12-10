@@ -45,7 +45,7 @@ auto get_##METHOD = [] (auto &a_queue, cl::sycl::pipe<char> &a_pipe) {  \
       auto v = value.get_access<cl::sycl::access::write>(cgh);          \
                                                                         \
       cgh.single_task([=] {                                             \
-            *v = p.METHOD();                                             \
+          *v = p.METHOD();                                              \
         });                                                             \
       });                                                               \
   return *(value.get_access<cl::sycl::access::read>());                 \

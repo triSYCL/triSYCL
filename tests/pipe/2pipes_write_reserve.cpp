@@ -45,7 +45,6 @@ int test_main(int argc, char *argv[]) {
       cgh.parallel_for_work_group<class stream_a>(
         { WI, WI },
         [=] (auto group) {
-          std::cerr << "kernel" << std::endl;
           // Use a sequential loop in the work-group to stream chunks in order
           for (int start = 0; start != N; start += WI) {
             /* To keep the reservation status outside the scope of the
@@ -56,14 +55,11 @@ int test_main(int argc, char *argv[]) {
               auto r = apa.reserve(WI);
               // Evaluating the reservation as a bool returns the status
               ok = r;
-              std::cerr << "ok = " << ok << std::endl;
               if (ok) {
-//sleep(1000);
                 /* There was enough room for the reservation, then
                    launch the work-items in this work-group to do the
                    writing in parallel */
                 group.parallel_for_work_item([=] (cl::sycl::item<> i) {
-                    std::cerr << "i[0] = " << i[0] << std::endl;
                     r[i[0]] = aa[start + i[0]];
                   });
               }
@@ -89,7 +85,7 @@ int test_main(int argc, char *argv[]) {
 
   // Verify on the host the buffer content
   for(auto const &e : c.get_access<cl::sycl::access::read>()) {
-    std::cerr << e << ' ' << &e - &*c.get_access<cl::sycl::access::read>().begin() << std::endl;
+    // The difference between elements reconstructs the index value
     BOOST_CHECK(e == &e - &*c.get_access<cl::sycl::access::read>().begin());
   }
   return 0;

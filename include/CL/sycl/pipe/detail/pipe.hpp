@@ -133,7 +133,7 @@ private:
 public:
 
   /// The size() method used outside needs to lock the datastructure
-  bool size_with_lock() const {
+  std::size_t size_with_lock() const {
     std::lock_guard<std::mutex> lg { cb_mutex };
     return size();
   }
@@ -168,8 +168,8 @@ public:
     if (full())
       return false;
     cb.push_back(value);
-    // TRISYCL_DUMP_T("Write pipe front = " << cb.front()
-    //                << " back = " << cb.back());
+    TRISYCL_DUMP_T("Write pipe front = " << cb.front()
+                   << " back = " << cb.back());
     return true;
   }
 
