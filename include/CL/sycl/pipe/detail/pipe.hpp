@@ -51,21 +51,24 @@ struct reserve_id {
 
 
 /** Implement a pipe object
+
+    Use mutable member so that the pipe object can be changed even
+    when the accessors are captured in a lambda.
 */
 template <typename T>
-struct pipe {
+struct pipe : public detail::debug<pipe<T>> {
   using value_type = T;
 
   /// Implement the pipe with a circular buffer
   using implementation_t = boost::circular_buffer<value_type>;
 
   /// The circular buffer to store the elements
-  boost::circular_buffer<value_type> cb;
+  mutable boost::circular_buffer<value_type> cb;
 
   /// To protect the access to the circular buffer
-  std::mutex cb_mutex;
+  mutable std::mutex cb_mutex;
 
-  std::deque<reserve_id<value_type>> qrid;
+  mutable std::deque<reserve_id<value_type>> qrid;
   using rid_iterator = typename decltype(qrid)::iterator;
 
   /// Create a pipe as a circular buffer of the required capacity
@@ -107,6 +110,8 @@ private:
       write side (for example on FPGA).
    */
   bool empty() const {
+    TRISYCL_DUMP_T("empty() cb.size() = " << cb.size()
+                   << " size() = " << size());
     // It is empty when the size is zero, taking into account reservations
     return size() ==  0;
   }
@@ -178,14 +183,15 @@ public:
   */
   bool read(T &value) {
     std::lock_guard<std::mutex> lg { cb_mutex };
-    // TRISYCL_DUMP_T("Read pipe empty = " << empty());
+    TRISYCL_DUMP_T("Read pipe empty = " << empty());
 
     if (empty())
       return false;
-    // TRISYCL_DUMP_T("Read pipe front = " << cb.front()
-    //                << " back = " << cb.back());
+    TRISYCL_DUMP_T("Read pipe front = " << cb.front()
+                   << " back = " << cb.back());
     value = cb.front();
-    // TRISYCL_DUMP_T("Read pipe value = " << value);
+    TRISYCL_DUMP_T("Read pipe value = " << value
+                   << "address = " << &(cb.front()));
     cb.pop_front();
     return true;
   }
@@ -226,13 +232,16 @@ std::size_t reserved_for_writing() const {
     // Lock the pipe to avoid being disturbed
     std::lock_guard<std::mutex> lg { cb_mutex };
 
-    if (s ==0)
+    if (s == 0)
       // Empty reservation requested, so nothing to do
       return false;
 
     /* Do not use a difference here because it is only about unsigned
        values */
-    if (size() + s <= capacity()) {
+    if (cb.size() + s <= capacity()) {
+      TRISYCL_DUMP_T("Before reservation cb.size() = " << cb.size()
+                     << " size() = " << size());
+
       /* If there is enough room in the pipe, just create default
          values in it to do the reservation */
       for (std::size_t i = 0; i != s; ++i)
@@ -245,6 +254,8 @@ std::size_t reserved_for_writing() const {
       qrid.emplace_back(first, s);
       // Return the iterator to the last reservation descriptor
       rid = qrid.end() - 1;
+      TRISYCL_DUMP_T("After reservation cb.size() = " << cb.size()
+                     << " size() = " << size());
       return true;
     }
     else

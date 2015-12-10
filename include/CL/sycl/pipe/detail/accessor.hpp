@@ -39,7 +39,7 @@ struct accessor;
 template <typename T,
           access::mode AccessMode>
 struct accessor<T, 1, AccessMode, access::pipe> :
-    public detail::debug<accessor<T, 1, AccessMode, access::pipe>> {
+    public detail::debug<detail::accessor<T, 1, AccessMode, access::pipe>> {
   /// The STL-like types
   using value_type = T;
   using reference = value_type&;
@@ -72,6 +72,9 @@ struct accessor<T, 1, AccessMode, access::pipe> :
     //    TRISYCL_DUMP_T("Create a kernel pipe accessor write = "
     //                 << is_write_access());
   }
+
+
+  accessor() = default;
 
 
   /** Return the maximum number of elements that can fit in the pipe

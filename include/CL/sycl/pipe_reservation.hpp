@@ -62,7 +62,8 @@ struct pipe_reservation {
       \todo Make it private and add required friends
    */
   pipe_reservation(detail::pipe_reservation<accessor_detail> &&pr)
-    : implementation { new detail::pipe_reservation<accessor_detail> { pr } }
+    : implementation {
+    new detail::pipe_reservation<accessor_detail> { std::move(pr) } }
   {}
 
 
