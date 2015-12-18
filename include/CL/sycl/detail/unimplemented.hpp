@@ -14,7 +14,7 @@ namespace cl {
 namespace sycl {
 namespace detail {
 
-/** \addtogroup debug_trace Debugging and tracing support
+/** \addtogroup helpers Some helpers for the implementation
     @{
 */
 
@@ -28,7 +28,7 @@ inline void unimplemented() {
             << std::endl;
 }
 
-/// @} End the debug_trace Doxygen group
+/// @} End the helpers Doxygen group
 
 }
 }

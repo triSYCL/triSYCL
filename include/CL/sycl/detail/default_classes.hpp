@@ -10,6 +10,10 @@
     License. See LICENSE.TXT for details.
 */
 
+/** \addtogroup defaults Manage default configuration and types
+    @{
+*/
+
 #ifndef CL_SYCL_NO_STD_VECTOR
 /** The vector type to be used as SYCL vector
  */
@@ -113,6 +117,7 @@ using weak_ptr_class = std::weak_ptr<T>;
 }
 #endif
 
+/// @} End the defaults Doxygen group
 
 /*
     # Some Emacs stuff:

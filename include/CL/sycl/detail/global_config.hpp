@@ -9,6 +9,10 @@
     License. See LICENSE.TXT for details.
 */
 
+/** \addtogroup defaults Manage default configuration and types
+    @{
+*/
+
 /// This implement SYCL 1.2
 #define CL_SYCL_LANGUAGE_VERSION 120
 
@@ -45,9 +49,11 @@
 /** Use asynchronous tasks by default.
 
     Is set to 0, the functors are executed synchronously.
- */
+*/
 #define TRISYCL_ASYNC 0
 #endif
+
+/// @} End the defaults Doxygen group
 
 /*
     # Some Emacs stuff:
