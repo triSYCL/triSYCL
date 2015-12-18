@@ -115,7 +115,8 @@ public:
 
   reference operator[](std::size_t index) {
     assume_validity();
-    TRISYCL_DUMP_T("Reservation write address = " << &(rid->start[index]));
+    TRISYCL_DUMP_T("[] index = " << index
+                   << " Reservation write address = " << &(rid->start[index]));
 
     return rid->start[index];
   }

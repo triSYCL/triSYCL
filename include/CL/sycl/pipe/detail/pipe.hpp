@@ -13,6 +13,11 @@
 #include <mutex>
 #include <deque>
 
+/* The debug mode of boost/circular_buffer.hpp has a nasty side effect
+   in multithread applications using several iterators at the same
+   time even in read-only mode because the library tracks them for
+   debugging purpose in a... non-thread safe way */
+#define BOOST_CB_DISABLE_DEBUG
 #include <boost/circular_buffer.hpp>
 
 namespace cl {
@@ -52,7 +57,7 @@ struct reserve_id {
 
 /** Implement a pipe object
 
-    Use mutable member so that the pipe object can be changed even
+    Use some mutable members so that the pipe object can be changed even
     when the accessors are captured in a lambda.
 */
 template <typename T>
@@ -63,12 +68,15 @@ struct pipe : public detail::debug<pipe<T>> {
   using implementation_t = boost::circular_buffer<value_type>;
 
   /// The circular buffer to store the elements
-  mutable boost::circular_buffer<value_type> cb;
+  boost::circular_buffer<value_type> cb;
 
-  /// To protect the access to the circular buffer
+  /** To protect the access to the circular buffer.
+
+      In case the object is capture in a lambda per copy, make it
+      mutable. */
   mutable std::mutex cb_mutex;
 
-  mutable std::deque<reserve_id<value_type>> qrid;
+  std::deque<reserve_id<value_type>> qrid;
   using rid_iterator = typename decltype(qrid)::iterator;
 
   /// Create a pipe as a circular buffer of the required capacity
