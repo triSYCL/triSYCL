@@ -61,30 +61,30 @@ MAKE_GET_OBSERVER(capacity, std::size_t);
 
 int test_main(int argc, char *argv[]) {
   // A pipe of N char elements
-  cl::sycl::pipe<char> P { N };
+  cl::sycl::pipe<char> p { N };
 
   // Create a queue to launch the kernels
   cl::sycl::queue q;
 
-  BOOST_CHECK(get_empty(q, P) == true);
-  BOOST_CHECK(get_full(q, P) == false);
-  BOOST_CHECK(get_size(q, P) == 0);
-  BOOST_CHECK(get_capacity(q, P) == N);
-  send_element(q, P, 43);
-  BOOST_CHECK(get_empty(q, P) == false);
-  BOOST_CHECK(get_full(q, P) == false);
-  BOOST_CHECK(get_size(q, P) == 1);
-  BOOST_CHECK(get_capacity(q, P) == N);
-  send_element(q, P, 18);
-  BOOST_CHECK(get_empty(q, P) == false);
-  BOOST_CHECK(get_full(q, P) == false);
-  BOOST_CHECK(get_size(q, P) == 2);
-  BOOST_CHECK(get_capacity(q, P) == N);
-  send_element(q, P, 100);
-  BOOST_CHECK(get_empty(q, P) == false);
-  BOOST_CHECK(get_full(q, P) == true);
-  BOOST_CHECK(get_size(q, P) == 3);
-  BOOST_CHECK(get_capacity(q, P) == N);
+  BOOST_CHECK(get_empty(q, p) == true);
+  BOOST_CHECK(get_full(q, p) == false);
+  BOOST_CHECK(get_size(q, p) == 0);
+  BOOST_CHECK(get_capacity(q, p) == N);
+  send_element(q, p, 43);
+  BOOST_CHECK(get_empty(q, p) == false);
+  BOOST_CHECK(get_full(q, p) == false);
+  BOOST_CHECK(get_size(q, p) == 1);
+  BOOST_CHECK(get_capacity(q, p) == N);
+  send_element(q, p, 18);
+  BOOST_CHECK(get_empty(q, p) == false);
+  BOOST_CHECK(get_full(q, p) == false);
+  BOOST_CHECK(get_size(q, p) == 2);
+  BOOST_CHECK(get_capacity(q, p) == N);
+  send_element(q, p, 100);
+  BOOST_CHECK(get_empty(q, p) == false);
+  BOOST_CHECK(get_full(q, p) == true);
+  BOOST_CHECK(get_size(q, p) == 3);
+  BOOST_CHECK(get_capacity(q, p) == N);
 
   return 0;
 }
