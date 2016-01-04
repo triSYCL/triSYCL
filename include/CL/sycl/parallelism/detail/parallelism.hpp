@@ -280,7 +280,7 @@ void parallel_for_workgroup(nd_range<Dimensions> r,
 
     \todo Better type the functor
 */
-template <std::size_t Dimensions = 1, typename ParallelForFunctor>
+template <std::size_t Dimensions, typename ParallelForFunctor>
 void parallel_for_workitem(const group<Dimensions> &g,
                            ParallelForFunctor f) {
 #if defined(_OPENMP) && !defined(TRISYCL_NO_BARRIER)
