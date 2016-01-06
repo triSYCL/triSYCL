@@ -1,7 +1,7 @@
 #ifndef TRISYCL_SYCL_PIPE_RESERVATION_DETAIL_PIPE_RESERVATION_HPP
 #define TRISYCL_SYCL_PIPE_RESERVATION_DETAIL_PIPE_RESERVATION_HPP
 
-/** \file The OpenCL SYCL pipe accessor<> detail behind the scene
+/** \file The OpenCL SYCL pipe reservation detail behind the scene
 
     Ronan at Keryell point FR
 
@@ -21,22 +21,27 @@ namespace detail {
 template <typename T,
           std::size_t Dimensions,
           access::mode Mode,
-          access::target Target /* = access::global_buffer */>
+          access::target Target>
 struct accessor;
 
 /** \addtogroup data Data access and storage in SYCL
     @{
 */
 
+/// The implementation of the pipe reservation station
 template <typename PipeAccessor>
 class pipe_reservation :
     public detail::debug<detail::pipe_reservation<PipeAccessor>> {
 
-  using accessor_type =  PipeAccessor;
+  using accessor_type = PipeAccessor;
   using value_type = typename accessor_type::value_type;
   using reference = typename accessor_type::reference;
   using iterator = typename
     std::deque<detail::reserve_id<value_type>>::iterator;
+
+  // \todo Add to the specification
+  static constexpr access::mode mode = accessor_type::mode;
+  static constexpr access::target target = accessor_type::target;
 
   /// True if the reservation was successful and still uncommitted
   bool ok;
@@ -44,6 +49,10 @@ class pipe_reservation :
   /// Point into the reservation buffer. Only valid if ok is true
   iterator rid;
 
+  /** Keep a reference on the pipe to access to the data and methods
+
+      Note that with inlining and CSE it should not use more register
+      when compiler optimization is in use. */
   detail::pipe<value_type> &p;
 
 
@@ -57,8 +66,20 @@ class pipe_reservation :
 
 public:
 
+  /// Create a pipe reservation station that reserves the pipe itself
   pipe_reservation(detail::pipe<value_type> &p, std::size_t s) : p { p } {
-    ok = p.reserve(s, rid);
+    static_assert(mode == access::mode::write
+                  || mode == access::mode::read,
+                  "A pipe can only be accesed in read or write mode,"
+                  " exclusively");
+
+    /* Since this test is constexpr and dependent of a template
+       parameter, it should be equivalent to a specialization of the
+       method but in a clearer way */
+    if (mode == access::mode::write)
+      ok = p.reserve_write(s, rid);
+    else
+      ok = p.reserve_read(s, rid);
   }
 
 
@@ -68,7 +89,7 @@ public:
   pipe_reservation(const pipe_reservation &) = delete;
 
 
-  /// Only a move constructor is required to move it in the shared_ptr
+  /// Only a move constructor is required to move it into the shared_ptr
   pipe_reservation(pipe_reservation &&orig) :
     ok {orig.ok },
     rid {orig.rid },
@@ -84,35 +105,45 @@ public:
 
       Otherwise there is no move semantics and the copy is made by
       creating a new reservation and destructing the old one with a
-      spurious commit in the meantime....
+      spurious commit in the meantime...
   */
   pipe_reservation() = default;
 
 
+  /** Test if the reservation succeeded and thus if the reservation
+      can be committed
 
+      Note that it is up to the user to ensure that all the
+      reservation elements have been initialized correctly in the case
+      of a write for example
+  */
   operator bool() {
     return ok;
   }
 
 
+  /// Start of the reservation area
   iterator begin() {
     assume_validity();
     return rid->start;
   }
 
 
+  /// Past the end of the reservation area
   iterator end() {
     assume_validity();
     return rid->start + rid->size;;
   }
 
 
+  /// Get the number of elements in the reservation station
   std::size_t size() {
     assume_validity();
     return rid->size;
   }
 
 
+  /// Access to an element of the reservation
   reference operator[](std::size_t index) {
     assume_validity();
     TRISYCL_DUMP_T("[] index = " << index
@@ -133,7 +164,10 @@ public:
       // If the reservation is in a committable state, commit
       TRISYCL_DUMP_T("Commit");
       rid->ready = true;
-      p.move_reservation_forward();
+      if (mode == access::mode::write)
+        p.move_write_reservation_forward();
+      else
+        p.move_read_reservation_forward();
       ok = false;
     }
   }

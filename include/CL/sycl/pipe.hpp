@@ -26,7 +26,8 @@ namespace sycl {
 
 /** A SYCL pipe
 
-    
+    Implement a FIFO-style object that can be used through accessors
+    to send some objects T from the input to the output
 */
 template <typename T>
 struct pipe {
@@ -35,8 +36,11 @@ struct pipe {
   using reference = value_type&;
   using const_reference = const value_type&;
 
+  /// The implementation is defined elsewhere
   std::shared_ptr<detail::pipe<T>> implementation;
 
+
+  /// Construct a pipe able to store up to capacity T objects
   pipe(std::size_t capacity)
     : implementation { new detail::pipe<T> { capacity } } { }
 
@@ -62,8 +66,7 @@ struct pipe {
   }
 
 
-  /** Return the maximum number of elements that can fit in the pipe
-   */
+  /// Return the maximum number of elements that can fit in the pipe
   std::size_t capacity() const {
     return implementation->capacity();
     }

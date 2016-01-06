@@ -21,6 +21,10 @@ namespace sycl {
     @{
 */
 
+/** The pipe reservation station allows to reserve an array-like view
+    inside the pipe for ordered race-free access from various
+    work-items for example
+ */
 template <typename PipeAccessor>
 struct pipe_reservation {
   /// The STL-like types

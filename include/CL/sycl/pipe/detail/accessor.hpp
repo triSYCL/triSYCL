@@ -45,6 +45,11 @@ struct accessor<T, 1, AccessMode, access::pipe> :
   using reference = value_type&;
   using const_reference = const value_type&;
 
+  /// \todo move to a global accessor type
+  static constexpr access::mode mode = AccessMode;
+
+  static constexpr access::target target =  access::pipe;
+
   /** The real pipe implementation behind the hood
 
       Since it is a reference instead of value member, it is a mutable

@@ -28,7 +28,6 @@ namespace detail {
     @{
 */
 
-
 /// A private description of a reservation station
 template <typename T>
 struct reserve_id {
@@ -76,11 +75,19 @@ struct pipe : public detail::debug<pipe<T>> {
       mutable. */
   mutable std::mutex cb_mutex;
 
-  std::deque<reserve_id<value_type>> qrid;
-  using rid_iterator = typename decltype(qrid)::iterator;
+  /// The queue of pending write reservations
+  std::deque<reserve_id<value_type>> w_rid_q;
+  using rid_iterator = typename decltype(w_rid_q)::iterator;
+
+  /// The queue of pending read reservations
+  std::deque<reserve_id<value_type>> r_rid_q;
+
+  /// Track the number of frozen elements related to read reservations
+  std::size_t read_reserved_frozen;
+
 
   /// Create a pipe as a circular buffer of the required capacity
-  pipe(std::size_t capacity) : cb { capacity } { }
+  pipe(std::size_t capacity) : cb { capacity }, read_reserved_frozen { 0 } { }
 
 
   /** Return the maximum number of elements that can fit in the pipe
@@ -93,7 +100,7 @@ struct pipe : public detail::debug<pipe<T>> {
 
 private:
 
-  /** Get the current number of elements in the pipe
+  /** Get the current number of elements in the pipe that can be read
 
       This is obviously a volatile value which is constrained by the
       theory of restricted relativity.
@@ -102,10 +109,14 @@ private:
       example on FPGA).
    */
   std::size_t size() const {
+    TRISYCL_DUMP_T("size() cb.size() = " << cb.size()
+                   << " cb.end() = " << (void *)&*cb.end()
+                   << " reserved_for_reading() = " << reserved_for_reading()
+                   << " reserved_for_writing() = " << reserved_for_writing());
     /* The actual number of available elements depends from the
-       elements blocked by some reservation.
+       elements blocked by some reservations.
        This prevents a consumer to read into reserved area. */
-    return cb.size() - reserved_for_writing();
+    return cb.size() - reserved_for_reading() - reserved_for_writing();
   }
 
 
@@ -116,7 +127,7 @@ private:
 
       Note that on some devices it may be costly to implement on the
       write side (for example on FPGA).
-   */
+  */
   bool empty() const {
     TRISYCL_DUMP_T("empty() cb.size() = " << cb.size()
                    << " size() = " << size());
@@ -171,13 +182,18 @@ public:
   */
   bool write(const T &value) {
     std::lock_guard<std::mutex> lg { cb_mutex };
-    // TRISYCL_DUMP_T("Write pipe full = " << full()
-    //                << " value = " << value);
+    TRISYCL_DUMP_T("Write pipe full = " << full()
+                   << " value = " << value);
     if (full())
       return false;
     cb.push_back(value);
     TRISYCL_DUMP_T("Write pipe front = " << cb.front()
-                   << " back = " << cb.back());
+                   << " back = " << cb.back()
+                   << " cb.begin() = " << (void *)&*cb.begin()
+                   << " cb.size() = " << cb.size()
+                   << " cb.end() = " << (void *)&*cb.end()
+                   << " reserved_for_reading() = " << reserved_for_reading()
+                   << " reserved_for_writing() = " << reserved_for_writing());
     return true;
   }
 
@@ -196,12 +212,34 @@ public:
     if (empty())
       return false;
     TRISYCL_DUMP_T("Read pipe front = " << cb.front()
-                   << " back = " << cb.back());
-    value = cb.front();
-    TRISYCL_DUMP_T("Read pipe value = " << value
-                   << "address = " << &(cb.front()));
-    cb.pop_front();
+                   << " back = " << cb.back()
+                   << " reserved_for_reading() = " << reserved_for_reading());
+    if (read_reserved_frozen)
+      /** If there is a pending reservation, read the next element to
+          be read and update the number of reserved elements */
+      value = cb.begin()[read_reserved_frozen++];
+    else {
+      /* There is no pending read reservation, so pop the read value
+         from the pipe */
+      value = cb.front();
+      cb.pop_front();
+    }
+
+    TRISYCL_DUMP_T("Read pipe value = " << value);
     return true;
+  }
+
+
+  /** Compute the amount of elements blocked by read reservations, not yet
+      committed
+
+      This includes some normal reads to pipes between/after
+      un-committed reservations
+
+      This function assumes that the data structure is locked
+  */
+  std::size_t reserved_for_reading() const {
+    return read_reserved_frozen;
   }
 
 
@@ -213,15 +251,57 @@ public:
 
       This function assumes that the data structure is locked
   */
-std::size_t reserved_for_writing() const {
-  if (qrid.empty())
-    // No on-going reservation
-    return 0;
-  else
-    /* The reserved size is from the first element of the first
-       on-going reservation up to the end of the pipe content */
-    return cb.end() - qrid.front().start;
-}
+  std::size_t reserved_for_writing() const {
+    if (w_rid_q.empty())
+      // No on-going reservation
+      return 0;
+    else
+      /* The reserved size is from the first element of the first
+         on-going reservation up to the end of the pipe content */
+      return cb.end() - w_rid_q.front().start;
+  }
+
+
+  /** Reserve some part of the pipe for reading
+
+      \param[in] s is the number of element to reserve
+
+      \param[out] rid is an iterator to a description of the
+      reservation that has been done if successful
+
+      \return true if the reservation was successful
+  */
+  bool reserve_read(std::size_t s,
+                    rid_iterator &rid)  {
+    // Lock the pipe to avoid being disturbed
+    std::lock_guard<std::mutex> lg { cb_mutex };
+
+    if (s == 0)
+      // Empty reservation requested, so nothing to do
+      return false;
+
+    if (s <= size()) {
+      TRISYCL_DUMP_T("Before read reservation cb.size() = " << cb.size()
+                     << " size() = " << size());
+
+      /* Compute the location of the first element of the
+         reservation */
+      auto first = cb.begin() + read_reserved_frozen;
+      // Increment the number of frozen elements
+      read_reserved_frozen += s;
+      /* Add a description of the reservation at the end of the
+         reservation queue */
+      r_rid_q.emplace_back(first, s);
+      // Return the iterator to the last reservation descriptor
+      rid = r_rid_q.end() - 1;
+      TRISYCL_DUMP_T("After reservation cb.size() = " << cb.size()
+                     << " size() = " << size());
+      return true;
+    }
+    else
+      // Not enough room in the pipe for the reservation
+      return false;
+  }
 
 
   /** Reserve some part of the pipe for writing
@@ -232,11 +312,9 @@ std::size_t reserved_for_writing() const {
       reservation that has been done if successful
 
       \return true if the reservation was successful
-
-      \todo implement reservation for reading
   */
-  bool reserve(std::size_t s,
-               rid_iterator &rid)  {
+  bool reserve_write(std::size_t s,
+                     rid_iterator &rid)  {
     // Lock the pipe to avoid being disturbed
     std::lock_guard<std::mutex> lg { cb_mutex };
 
@@ -247,7 +325,7 @@ std::size_t reserved_for_writing() const {
     /* Do not use a difference here because it is only about unsigned
        values */
     if (cb.size() + s <= capacity()) {
-      TRISYCL_DUMP_T("Before reservation cb.size() = " << cb.size()
+      TRISYCL_DUMP_T("Before write reservation cb.size() = " << cb.size()
                      << " size() = " << size());
 
       /* If there is enough room in the pipe, just create default
@@ -259,9 +337,9 @@ std::size_t reserved_for_writing() const {
       auto first = cb.end() - s;
       /* Add a description of the reservation at the end of the
          reservation queue */
-      qrid.emplace_back(first, s);
+      w_rid_q.emplace_back(first, s);
       // Return the iterator to the last reservation descriptor
-      rid = qrid.end() - 1;
+      rid = w_rid_q.end() - 1;
       TRISYCL_DUMP_T("After reservation cb.size() = " << cb.size()
                      << " size() = " << size());
       return true;
@@ -272,26 +350,62 @@ std::size_t reserved_for_writing() const {
   }
 
 
-  /** Process the reservations that are ready to be released in the
+  /** Process the read reservations that are ready to be released in the
       reservation queue
   */
-  void move_reservation_forward() {
+  void move_read_reservation_forward() {
     // Lock the pipe to avoid nuisance
     std::lock_guard<std::mutex> lg { cb_mutex };
 
     for (;;) {
-      if (qrid.empty())
+      if (r_rid_q.empty())
+        // No pending reservation, so nothing to do
+        break;
+      if (!r_rid_q.front().ready)
+        /* If the first reservation is not ready to be released, stop
+           because it is blocking all the following in the queue
+           anyway */
+        break;
+      // Remove the reservation to be released from the queue
+      r_rid_q.pop_front();
+      std::size_t n_to_pop;
+      if (r_rid_q.empty())
+        // If it was the last one, remove all the reservation
+        n_to_pop = read_reserved_frozen;
+      else
+        // Else remove everything up to the next reservation
+        n_to_pop =  r_rid_q.front().start - cb.begin();
+      // No longer take into account these reserved slots
+      read_reserved_frozen -= n_to_pop;
+      // Release the elements from the FIFO
+      while (n_to_pop--)
+        cb.pop_front();
+      /* ...and process the next reservation to see if it is ready to
+         be released too */
+    }
+  }
+
+
+  /** Process the write reservations that are ready to be released in the
+      reservation queue
+  */
+  void move_write_reservation_forward() {
+    // Lock the pipe to avoid nuisance
+    std::lock_guard<std::mutex> lg { cb_mutex };
+
+    for (;;) {
+      if (w_rid_q.empty())
         // No pending reservation, so nothing to do
         break;
       // Get the first reservation
-      const auto &rid = qrid.front();
+      const auto &rid = w_rid_q.front();
       if (!rid.ready)
         /* If the reservation is not ready to be released, stop
            because it is blocking all the following in the queue
            anyway */
         break;
       // Remove the reservation to be released from the queue
-      qrid.pop_front();
+      w_rid_q.pop_front();
       /* ...and process the next reservation to see if it is ready to
          be released too */
     }
