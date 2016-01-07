@@ -1,6 +1,7 @@
 /* RUN: %{execute}%s
 
-   4 kernels producing, transforming and consuming data through 3 pipes
+   2 kernels producing, transforming and consuming data through 1 pipe
+   with write reservation
 */
 #include <CL/sycl.hpp>
 #include <iostream>
@@ -9,7 +10,7 @@
 #include <boost/test/minimal.hpp>
 
 // Size of the buffers
-constexpr size_t N = 20;
+constexpr size_t N = 200;
 // Number of work-item per work-group
 constexpr size_t WI = 20;
 static_assert(N == WI*(N/WI), "N needs to be a multiple of WI");
@@ -28,7 +29,7 @@ int test_main(int argc, char *argv[]) {
   // A buffer of N Type to get the result
   cl::sycl::buffer<Type> c { N };
 
-  // The plumbin
+  // The plumbing
   cl::sycl::pipe<Type> pa { WI };
 
   // Create a queue to launch the kernels
@@ -42,7 +43,7 @@ int test_main(int argc, char *argv[]) {
       auto aa = a.get_access<cl::sycl::access::read>(cgh);
       /* Create a kernel with WI work-items executed by work-groups of
          size WI, that is only 1 work-group of WI work-items */
-      cgh.parallel_for_work_group<class stream_a>(
+      cgh.parallel_for_work_group<class producer>(
         { WI, WI },
         [=] (auto group) {
           // Use a sequential loop in the work-group to stream chunks in order

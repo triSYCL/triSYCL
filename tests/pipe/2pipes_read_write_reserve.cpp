@@ -1,7 +1,10 @@
 /* RUN: %{execute}%s
 
    2 kernels producing, transforming and consuming data through 1 pipe
-   with read reservation
+   with reservations.
+
+   The 2 reservations are used in 2 different ways for demonstration
+   purpose
 */
 #include <CL/sycl.hpp>
 #include <iostream>
@@ -29,8 +32,8 @@ int test_main(int argc, char *argv[]) {
   // A buffer of N Type to get the result
   cl::sycl::buffer<Type> c { N };
 
-  // The plumbing
-  cl::sycl::pipe<Type> pa { WI };
+  // The plumbing with some weird size prime to WI to exercise the system
+  cl::sycl::pipe<Type> pa { 2*WI + 7 };
 
   // Create a queue to launch the kernels
   cl::sycl::queue q;
@@ -41,10 +44,32 @@ int test_main(int argc, char *argv[]) {
       auto apa = pa.get_access<cl::sycl::access::write>(cgh);
       // Get read access to the data
       auto aa = a.get_access<cl::sycl::access::read>(cgh);
-      cgh.single_task<class producer>([=] {
-          for (int i = 0; i != N; i++)
-            // Try to write 1 element from the pipe up to success
-            while (!(apa << aa[i])) ;
+      /* Create a kernel with WI work-items executed by work-groups of
+         size WI, that is only 1 work-group of WI work-items */
+      cgh.parallel_for_work_group<class producer>(
+        { WI, WI },
+        [=] (auto group) {
+          // Use a sequential loop in the work-group to stream chunks in order
+          for (int start = 0; start != N; start += WI) {
+            /* To keep the reservation status outside the scope of the
+               reservation itself */
+            bool ok;
+            do {
+              // Try to reserve a chunk of WI elements of the pipe for writing
+              auto r = apa.reserve(WI);
+              // Evaluating the reservation as a bool returns the status
+              ok = r;
+              if (ok) {
+                /* There was enough room for the reservation, then
+                   launch the work-items in this work-group to do the
+                   writing in parallel */
+                group.parallel_for_work_item([=] (cl::sycl::item<> i) {
+                    r[i[0]] = aa[start + i[0]];
+                  });
+              }
+            }
+            while (!ok);
+          }
         });
     });
 
@@ -60,26 +85,27 @@ int test_main(int argc, char *argv[]) {
       cgh.parallel_for_work_group<class consumer>(
         { WI, WI },
         [=] (auto group) {
+          /* Use another approach different from the writing part to
+             demonstrate the way to use an explicit commit as proposed
+             by Alex Bour */
+          cl::sycl:: pipe_reservation<decltype(apa)> r;
           // Use a sequential loop in the work-group to stream chunks in order
           for (int start = 0; start != N; start += WI) {
-            /* To keep the reservation status outside the scope of the
-               reservation itself */
-            bool ok;
-            do {
-              // Try to reserve a chunk of WI elements of the pipe for reading
-              auto r = apa.reserve(WI);
-              // Evaluating the reservation as a bool returns the status
-              ok = r;
-              if (ok) {
-                /* There was enough room for the reservation, then
-                   launch the work-items in this work-group to do the
-                   reading in parallel */
-                group.parallel_for_work_item([=] (cl::sycl::item<> i) {
-                    ac[start + i[0]] = r[i[0]];
-                  });
-              }
-            }
-            while (!ok);
+            // Wait for the reservation to succeed
+            while (!(r = apa.reserve(WI)))
+              ;
+            /* There was enough room for the reservation, then launch
+               the work-items in this work-group to do the reading in
+               parallel */
+            group.parallel_for_work_item([=] (cl::sycl::item<> i) {
+                ac[start + i[0]] = r[i[0]];
+              });
+            /** Explicit commit requested here. Note that in this
+                simple example, since there is nothing useful after
+                the commit, using the default destructor at the end of
+                the work-group or inside the while would have been
+                enough */
+            r.commit();
           }
         });
     });
