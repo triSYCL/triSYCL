@@ -12,6 +12,10 @@
 constexpr size_t N = 3;
 using Vector = float[N];
 
+// A program-scoped pipe of 2 float elements
+
+cl::sycl::program_pipe<float, 2> p;
+
 int main() {
   Vector va = { 1, 2, 3 };
   Vector vb = { 5, 6, 8 };
@@ -24,9 +28,6 @@ int main() {
 
     // A buffer of N float using the storage of vc
     cl::sycl::buffer<float> bc { vc, N };
-
-    // A pipe of 2 float elements
-    cl::sycl::pipe<float> p { 2 };
 
     // Create a queue to launch the kernels
     cl::sycl::queue q;

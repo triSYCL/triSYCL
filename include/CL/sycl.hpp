@@ -54,6 +54,7 @@
 #include "CL/sycl/pipe.hpp"
 #include "CL/sycl/pipe_reservation.hpp"
 #include "CL/sycl/platform.hpp"
+#include "CL/sycl/program_pipe.hpp"
 #include "CL/sycl/queue.hpp"
 #include "CL/sycl/range.hpp"
 #include "CL/sycl/vec.hpp"
