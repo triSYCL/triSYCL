@@ -92,7 +92,7 @@ directory. For example:
 
 .. code:: bash
 
-  make LITFLAGS=--verbose CHECKING_DIR=range clean check
+  make LITFLAGS=--verbose CHECKING_DIR=pipe clean check
 
 To run the tests on several default compilers (G++, Clang...) and cleaning
 in the between, try:

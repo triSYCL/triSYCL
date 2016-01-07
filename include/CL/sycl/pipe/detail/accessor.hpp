@@ -27,7 +27,7 @@ namespace detail {
 template <typename T,
           std::size_t Dimensions,
           access::mode Mode,
-          access::target Target /* = access::global_buffer */>
+          access::target Target>
 struct accessor;
 /** \addtogroup data Data access and storage in SYCL
     @{
@@ -37,18 +37,20 @@ struct accessor;
     kernel
 */
 template <typename T,
-          access::mode AccessMode>
-struct accessor<T, 1, AccessMode, access::pipe> :
-    public detail::debug<detail::accessor<T, 1, AccessMode, access::pipe>> {
+          access::mode AccessMode,
+          access::target Target>
+struct pipe_accessor :
+    public detail::debug<detail::pipe_accessor<T, AccessMode, Target>> {
+  static constexpr auto rank = 1;
+  static constexpr auto mode = AccessMode;
+  static constexpr auto target = Target;
+
+  static constexpr bool blocking = (target == cl::sycl::access::blocking_pipe);
+
   /// The STL-like types
   using value_type = T;
   using reference = value_type&;
   using const_reference = const value_type&;
-
-  /// \todo move to a global accessor type
-  static constexpr access::mode mode = AccessMode;
-
-  static constexpr access::target target =  access::pipe;
 
   /** The real pipe implementation behind the hood
 
@@ -72,14 +74,14 @@ struct accessor<T, 1, AccessMode, access::pipe> :
 
   /** Construct a pipe accessor from an existing pipe
    */
-  accessor(detail::pipe<value_type> &p, handler &command_group_handler) :
+  pipe_accessor(detail::pipe<value_type> &p, handler &command_group_handler) :
     implementation { p } {
     //    TRISYCL_DUMP_T("Create a kernel pipe accessor write = "
     //                 << is_write_access());
   }
 
 
-  accessor() = default;
+  pipe_accessor() = default;
 
 
   /** Return the maximum number of elements that can fit in the pipe
@@ -141,7 +143,7 @@ struct accessor<T, 1, AccessMode, access::pipe> :
 
       \param[in] value is what we want to write
 
-      \return  this so we can apply a sequence of write for example
+      \return this so we can apply a sequence of write for example
       (but do not do this on a non blocking pipe...)
 
       \todo provide a && version
@@ -150,15 +152,15 @@ struct accessor<T, 1, AccessMode, access::pipe> :
       passed by copy in the [=] kernel lambda, which is not mutable by
       default
   */
-  const accessor &write(const value_type &value) const {
-    ok = implementation.write(value);
+  const pipe_accessor &write(const value_type &value) const {
+    ok = implementation.write(value, blocking);
     // Return a reference to *this so we can apply a sequence of write
     return *this;
   }
 
 
   /// Some syntactic sugar to use a << v instead of a.write(v)
-  const accessor &operator<<(const value_type &value) const {
+  const pipe_accessor &operator<<(const value_type &value) const {
     // Return a reference to *this so we can apply a sequence of >>
     return write(value);
   }
@@ -176,21 +178,37 @@ struct accessor<T, 1, AccessMode, access::pipe> :
       passed by copy in the [=] kernel lambda, which is not mutable by
       default
   */
-  const accessor &read(value_type &value) const {
-    ok = implementation.read(value);
+  const pipe_accessor &read(value_type &value) const {
+    ok = implementation.read(value, blocking);
     // Return a reference to *this so we can apply a sequence of read
     return *this;
   }
 
 
+  /** Read a value from a blocking pipe
+
+      \return the read value directly, since it cannot fail on
+      blocking pipe
+
+      This function is const so it can work when the accessor is
+      passed by copy in the [=] kernel lambda, which is not mutable by
+      default
+  */
+  value_type read() const {
+    value_type value;
+    implementation.read(value, blocking);
+    return value;
+  }
+
+
   /// Some syntactic sugar to use a >> v instead of a.read(v)
-  const accessor &operator>>(value_type &value) const {
+  const pipe_accessor &operator>>(value_type &value) const {
     // Return a reference to *this so we can apply a sequence of >>
     return read(value);
   }
 
 
-  detail::pipe_reservation<accessor> reserve(std::size_t size) const {
+  detail::pipe_reservation<pipe_accessor> reserve(std::size_t size) const {
     return { this->implementation, size };
   }
 

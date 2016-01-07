@@ -9,6 +9,7 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <condition_variable>
 #include <cstddef>
 #include <mutex>
 #include <deque>
@@ -85,6 +86,12 @@ struct pipe : public detail::debug<pipe<T>> {
   /// Track the number of frozen elements related to read reservations
   std::size_t read_reserved_frozen;
 
+  /// To signal that a read has been successful
+  std::condition_variable read_done;
+
+  /// To signal that a write has been successful
+  std::condition_variable write_done;
+
 
   /// Create a pipe as a circular buffer of the required capacity
   pipe(std::size_t capacity) : cb { capacity }, read_reserved_frozen { 0 } { }
@@ -96,7 +103,6 @@ struct pipe : public detail::debug<pipe<T>> {
     // No lock required since it is fixed and set at construction time
     return cb.capacity();
   }
-
 
 private:
 
@@ -176,16 +182,25 @@ public:
 
       \param[in] value is what we want to write
 
+      \param[in] blocking specify if the call wait for the operation
+      to succeed
+
       \return true on success
 
       \todo provide a && version
   */
-  bool write(const T &value) {
-    std::lock_guard<std::mutex> lg { cb_mutex };
+  bool write(const T &value, bool blocking = false) {
+    std::unique_lock<std::mutex> ul { cb_mutex };
     TRISYCL_DUMP_T("Write pipe full = " << full()
                    << " value = " << value);
-    if (full())
+
+    if (blocking)
+      /* If in blocking mode, wait for the not full condition, that
+         may be changed when a read is done */
+      read_done.wait(ul, [&] { return !full(); });
+    else if (full())
       return false;
+
     cb.push_back(value);
     TRISYCL_DUMP_T("Write pipe front = " << cb.front()
                    << " back = " << cb.back()
@@ -194,6 +209,8 @@ public:
                    << " cb.end() = " << (void *)&*cb.end()
                    << " reserved_for_reading() = " << reserved_for_reading()
                    << " reserved_for_writing() = " << reserved_for_writing());
+    // Notify some clients waiting to read something from the pipe
+    write_done.notify_all();
     return true;
   }
 
@@ -203,14 +220,22 @@ public:
       \param[out] value is the reference to where to store what is
       read
 
+      \param[in] blocking specify if the call wait for the operation
+      to succeed
+
       \return true on success
   */
-  bool read(T &value) {
-    std::lock_guard<std::mutex> lg { cb_mutex };
+  bool read(T &value, bool blocking = false) {
+    std::unique_lock<std::mutex> ul { cb_mutex };
     TRISYCL_DUMP_T("Read pipe empty = " << empty());
 
-    if (empty())
+    if (blocking)
+      /* If in blocking mode, wait for the not empty condition, that
+         may be changed when a write is done */
+      write_done.wait(ul, [&] { return !empty(); });
+    else if (empty())
       return false;
+
     TRISYCL_DUMP_T("Read pipe front = " << cb.front()
                    << " back = " << cb.back()
                    << " reserved_for_reading() = " << reserved_for_reading());
@@ -226,6 +251,8 @@ public:
     }
 
     TRISYCL_DUMP_T("Read pipe value = " << value);
+    // Notify some clients waiting for some room to write in the pipe
+    read_done.notify_all();
     return true;
   }
 
