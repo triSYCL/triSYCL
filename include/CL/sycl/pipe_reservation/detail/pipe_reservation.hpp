@@ -43,8 +43,10 @@ class pipe_reservation :
   static constexpr access::mode mode = accessor_type::mode;
   static constexpr access::target target = accessor_type::target;
 
-  /// True if the reservation was successful and still uncommitted
-  bool ok;
+  /**  True if the reservation was successful and still uncommitted. B
+       default a pipe_reservation is not reserved and cannot be
+       committed */
+  bool ok = false;
 
   /// Point into the reservation buffer. Only valid if ok is true
   iterator rid;
