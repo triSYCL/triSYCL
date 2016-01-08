@@ -190,6 +190,7 @@ public:
       \todo provide a && version
   */
   bool write(const T &value, bool blocking = false) {
+    // Lock the pipe to avoid being disturbed
     std::unique_lock<std::mutex> ul { cb_mutex };
     TRISYCL_DUMP_T("Write pipe full = " << full()
                    << " value = " << value);
@@ -209,7 +210,7 @@ public:
                    << " cb.end() = " << (void *)&*cb.end()
                    << " reserved_for_reading() = " << reserved_for_reading()
                    << " reserved_for_writing() = " << reserved_for_writing());
-    // Notify some clients waiting to read something from the pipe
+    // Notify the clients waiting to read something from the pipe
     write_done.notify_all();
     return true;
   }
@@ -226,6 +227,7 @@ public:
       \return true on success
   */
   bool read(T &value, bool blocking = false) {
+    // Lock the pipe to avoid being disturbed
     std::unique_lock<std::mutex> ul { cb_mutex };
     TRISYCL_DUMP_T("Read pipe empty = " << empty());
 
@@ -251,7 +253,7 @@ public:
     }
 
     TRISYCL_DUMP_T("Read pipe value = " << value);
-    // Notify some clients waiting for some room to write in the pipe
+    // Notify the clients waiting for some room to write in the pipe
     read_done.notify_all();
     return true;
   }
@@ -296,38 +298,46 @@ public:
       \param[out] rid is an iterator to a description of the
       reservation that has been done if successful
 
+      \param[in] blocking specify if the call wait for the operation
+      to succeed
+
       \return true if the reservation was successful
   */
   bool reserve_read(std::size_t s,
-                    rid_iterator &rid)  {
+                    rid_iterator &rid,
+                    bool blocking = false)  {
     // Lock the pipe to avoid being disturbed
-    std::lock_guard<std::mutex> lg { cb_mutex };
+    std::unique_lock<std::mutex> ul { cb_mutex };
 
+    TRISYCL_DUMP_T("Before read reservation cb.size() = " << cb.size()
+                   << " size() = " << size());
     if (s == 0)
       // Empty reservation requested, so nothing to do
       return false;
 
-    if (s <= size()) {
-      TRISYCL_DUMP_T("Before read reservation cb.size() = " << cb.size()
-                     << " size() = " << size());
-
-      /* Compute the location of the first element of the
-         reservation */
-      auto first = cb.begin() + read_reserved_frozen;
-      // Increment the number of frozen elements
-      read_reserved_frozen += s;
-      /* Add a description of the reservation at the end of the
-         reservation queue */
-      r_rid_q.emplace_back(first, s);
-      // Return the iterator to the last reservation descriptor
-      rid = r_rid_q.end() - 1;
-      TRISYCL_DUMP_T("After reservation cb.size() = " << cb.size()
-                     << " size() = " << size());
-      return true;
-    }
-    else
-      // Not enough room in the pipe for the reservation
+    if (blocking)
+      /* If in blocking mode, wait for enough elements to read in the
+         pipe for the reservation. This condition can change when a
+         write is done */
+      write_done.wait(ul, [&] { return s <= size(); });
+    else if (s > size())
+      // Not enough elements to read in the pipe for the reservation
       return false;
+
+    // Compute the location of the first element of the reservation
+    auto first = cb.begin() + read_reserved_frozen;
+    // Increment the number of frozen elements
+    read_reserved_frozen += s;
+    /* Add a description of the reservation at the end of the
+       reservation queue */
+    r_rid_q.emplace_back(first, s);
+    // Return the iterator to the last reservation descriptor
+    rid = r_rid_q.end() - 1;
+    TRISYCL_DUMP_T("After reservation cb.size() = " << cb.size()
+                   << " size() = " << size());
+    // Notify the clients waiting for some room to write in the pipe
+    read_done.notify_all();
+    return true;
   }
 
 
@@ -338,42 +348,49 @@ public:
       \param[out] rid is an iterator to a description of the
       reservation that has been done if successful
 
+      \param[in] blocking specify if the call wait for the operation
+      to succeed
+
       \return true if the reservation was successful
   */
   bool reserve_write(std::size_t s,
-                     rid_iterator &rid)  {
+                     rid_iterator &rid,
+                     bool blocking = false)  {
     // Lock the pipe to avoid being disturbed
-    std::lock_guard<std::mutex> lg { cb_mutex };
+    std::unique_lock<std::mutex> ul { cb_mutex };
 
+    TRISYCL_DUMP_T("Before write reservation cb.size() = " << cb.size()
+                   << " size() = " << size());
     if (s == 0)
       // Empty reservation requested, so nothing to do
       return false;
 
-    /* Do not use a difference here because it is only about unsigned
-       values */
-    if (cb.size() + s <= capacity()) {
-      TRISYCL_DUMP_T("Before write reservation cb.size() = " << cb.size()
-                     << " size() = " << size());
-
-      /* If there is enough room in the pipe, just create default
-         values in it to do the reservation */
-      for (std::size_t i = 0; i != s; ++i)
-        cb.push_back();
-      /* Compute the location of the first element a posteriori since
-         it may not exist a priori if cb was empty before */
-      auto first = cb.end() - s;
-      /* Add a description of the reservation at the end of the
-         reservation queue */
-      w_rid_q.emplace_back(first, s);
-      // Return the iterator to the last reservation descriptor
-      rid = w_rid_q.end() - 1;
-      TRISYCL_DUMP_T("After reservation cb.size() = " << cb.size()
-                     << " size() = " << size());
-      return true;
-    }
-    else
+    if (blocking)
+      /* If in blocking mode, wait for enough room in the pipe, that
+         may be changed when a read is done. Do not use a difference
+         here because it is only about unsigned values */
+      read_done.wait(ul, [&] { return cb.size() + s <= capacity(); });
+    else if (cb.size() + s > capacity())
       // Not enough room in the pipe for the reservation
       return false;
+
+    /* If there is enough room in the pipe, just create default values
+         in it to do the reservation */
+    for (std::size_t i = 0; i != s; ++i)
+      cb.push_back();
+    /* Compute the location of the first element a posteriori since it
+         may not exist a priori if cb was empty before */
+    auto first = cb.end() - s;
+    /* Add a description of the reservation at the end of the
+       reservation queue */
+    w_rid_q.emplace_back(first, s);
+    // Return the iterator to the last reservation descriptor
+    rid = w_rid_q.end() - 1;
+    TRISYCL_DUMP_T("After reservation cb.size() = " << cb.size()
+                   << " size() = " << size());
+    // Notify the clients waiting to read something from the pipe
+    write_done.notify_all();
+    return true;
   }
 
 

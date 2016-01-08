@@ -32,8 +32,9 @@ struct accessor;
 template <typename PipeAccessor>
 class pipe_reservation :
     public detail::debug<detail::pipe_reservation<PipeAccessor>> {
-
   using accessor_type = PipeAccessor;
+  static constexpr bool blocking =
+    (accessor_type::target == cl::sycl::access::blocking_pipe);
   using value_type = typename accessor_type::value_type;
   using reference = typename accessor_type::reference;
   using iterator = typename
@@ -79,9 +80,9 @@ public:
        parameter, it should be equivalent to a specialization of the
        method but in a clearer way */
     if (mode == access::mode::write)
-      ok = p.reserve_write(s, rid);
+      ok = p.reserve_write(s, rid, blocking);
     else
-      ok = p.reserve_read(s, rid);
+      ok = p.reserve_read(s, rid, blocking);
   }
 
 
