@@ -10,6 +10,7 @@
 */
 
 #include <cstddef>
+#include <type_traits>
 
 #include "CL/sycl/access.hpp"
 #include "CL/sycl/detail/debug.hpp"
@@ -190,10 +191,15 @@ struct pipe_accessor :
       \return the read value directly, since it cannot fail on
       blocking pipe
 
+      Use std::enable_if_t to have this function only when blocking is
+      true
+
       This function is const so it can work when the accessor is
       passed by copy in the [=] kernel lambda, which is not mutable by
       default
   */
+  template <bool Depend = true, //< To have enable_if working
+            typename = std::enable_if_t<blocking && Depend>>
   value_type read() const {
     value_type value;
     implementation.read(value, blocking);
