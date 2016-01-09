@@ -335,8 +335,6 @@ public:
     rid = r_rid_q.end() - 1;
     TRISYCL_DUMP_T("After reservation cb.size() = " << cb.size()
                    << " size() = " << size());
-    // Notify the clients waiting for some room to write in the pipe
-    read_done.notify_all();
     return true;
   }
 
@@ -388,8 +386,6 @@ public:
     rid = w_rid_q.end() - 1;
     TRISYCL_DUMP_T("After reservation cb.size() = " << cb.size()
                    << " size() = " << size());
-    // Notify the clients waiting to read something from the pipe
-    write_done.notify_all();
     return true;
   }
 
@@ -424,6 +420,8 @@ public:
       // Release the elements from the FIFO
       while (n_to_pop--)
         cb.pop_front();
+      // Notify the clients waiting for some room to write in the pipe
+      read_done.notify_all();
       /* ...and process the next reservation to see if it is ready to
          be released too */
     }
@@ -450,6 +448,8 @@ public:
         break;
       // Remove the reservation to be released from the queue
       w_rid_q.pop_front();
+      // Notify the clients waiting to read something from the pipe
+      write_done.notify_all();
       /* ...and process the next reservation to see if it is ready to
          be released too */
     }
