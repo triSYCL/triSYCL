@@ -14,7 +14,7 @@
 #include "CL/sycl/access.hpp"
 #include "CL/sycl/buffer/detail/accessor.hpp"
 #include "CL/sycl/pipe_reservation.hpp"
-#include "CL/sycl/pipe/detail/accessor.hpp"
+#include "CL/sycl/pipe/detail/pipe_accessor.hpp"
 
 namespace cl {
 namespace sycl {

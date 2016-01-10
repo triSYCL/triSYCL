@@ -1,5 +1,5 @@
-#ifndef TRISYCL_SYCL_PIPE_DETAIL_ACCESSOR_HPP
-#define TRISYCL_SYCL_PIPE_DETAIL_ACCESSOR_HPP
+#ifndef TRISYCL_SYCL_PIPE_DETAIL_PIPE_ACCESSOR_HPP
+#define TRISYCL_SYCL_PIPE_DETAIL_PIPE_ACCESSOR_HPP
 
 /** \file The OpenCL SYCL pipe accessor<> detail behind the scene
 
@@ -239,4 +239,4 @@ struct pipe_accessor :
     ### End:
 */
 
-#endif // TRISYCL_SYCL_PIPE_DETAIL_ACCESSOR_HPP
+#endif // TRISYCL_SYCL_PIPE_DETAIL_PIPE_ACCESSOR_HPP
