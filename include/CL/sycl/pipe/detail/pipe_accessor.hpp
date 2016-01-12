@@ -130,12 +130,17 @@ struct pipe_accessor :
   }
 
 
-  /** In a bool context, the accessor gives the success status of the
-      last access
+  /** In an explicit bool context, the accessor gives the success
+      status of the last access
+
+      The explicitness is related to avoid \code somepipe <<
+      some_value \endcode to be interpreted as \code some_bool <<
+      some_value \endcode when the type of some_value is not the same
+      type as the pipe type.
 
       \return true on success
   */
-  operator bool() const {
+   explicit operator bool() const {
     return ok;
   }
 
