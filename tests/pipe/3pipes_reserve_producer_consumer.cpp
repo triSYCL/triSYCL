@@ -71,6 +71,7 @@ int test_main(int argc, char *argv[]) {
                 group.parallel_for_work_item([=] (cl::sycl::item<> i) {
                     r[i[0]] = aa[start + i[0]];
                   });
+              // Here the reservation object goes out of scope: commit if ok
             }
             while (!ok);
           }

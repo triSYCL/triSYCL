@@ -78,6 +78,7 @@ int test_main(int argc, char *argv[]) {
                     ac[start + i[0]] = r[i[0]];
                   });
               }
+              // Here the reservation object goes out of scope: commit
             }
             while (!ok);
           }
