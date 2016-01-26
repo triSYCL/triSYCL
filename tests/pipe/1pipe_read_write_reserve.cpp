@@ -89,7 +89,7 @@ int test_main(int argc, char *argv[]) {
         [=] (auto group) {
           /* Use another approach different from the writing part to
              demonstrate the way to use an explicit commit as proposed
-             by Alex Bour */
+             by Alex Bourd */
           cl::sycl:: pipe_reservation<decltype(apa)> r;
           // Use a sequential loop in the work-group to stream chunks in order
           for (int start = 0; start != N; start += WI) {
