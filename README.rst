@@ -6,10 +6,19 @@ triSYCL
 .. contents::
 
 
-triSYCL_ is a humble implementation test-bed to experiment with the
-provisional specification of the OpenCL_ SYCL_ `C++`_ layer and to give
-feedback to the Khronos_ OpenCL_ SYCL_ and OpenCL C++ kernel language
+triSYCL_ is an implementation test-bed to experiment with the
+specification of the OpenCL_ SYCL_ `C++`_ layer and to give feedback
+to the Khronos_ OpenCL_ SYCL_ and OpenCL C++ kernel language
 committees.
+
+This SYCL_ implementation is only based on C++1z
+(2017?) and OpenMP_ with execution on the CPU right now. So there is
+almost nothing related to OpenCL_ or SPIR_ yet. But since in SYCL_
+there is a host fall-back, this can be seen as an implementation of
+this fall-back too...
+
+The parallel kernels can be executed in parallel on the CPU with OpenMP_ in
+the first range dimension, if compiled with OpenMP_ support.
 
 For legal reasons, the specification used for this open source project is
 the published current provisional specification and not the last one
@@ -17,24 +26,16 @@ currently discussed in the Khronos_ OpenCL_ SYCL_ committee. If you are a
 Khronos_ member, you can access to https://gitlab.khronos.org/sycl/triSYCL
 where you can find more futuristic branches.
 
-This is just the start of a SYCL_ mock-up, only based on C++1z (2017?) and
-OpenMP_ with execution on the CPU right now. So there is nothing related
-to OpenCL_ yet. But since in SYCL_ there is a host fall-back, this can be
-seen as an implementation of this fall-back too...
-
-The parallel kernels can be executed in parallel on the CPU with OpenMP_ in
-the first range dimension, if compiled with OpenMP_ support.
-
 This is provided as is, without any warranty, with the same license as
 LLVM_/Clang_.
 
-Main contributor: Ronan at keryell point FR
+Technical lead: Ronan at keryell point FR
 
 
 OpenCL SYCL
 -----------
 
-OpenCL_ SYCL_ is a single-source C++11-based DSEL_ (Domain Specific
+OpenCL_ SYCL_ is a single-source C++14-based DSEL_ (Domain Specific
 Embedded Language) aimed at facilitating the programming of heterogeneous
 accelerators by leveraging the OpenCL_ language and concepts.
 
@@ -49,23 +50,26 @@ Why you could use SYCL
 SYCL_ has a lot of interesting advantages compared to plain OpenCL_ or
 other approaches:
 
-- SYCL_ is an open standard from Khronos_ with a working committee (you can
-  contribute!) and we can expect several implementations (commercial or
-  open source) on many platforms soon, ranging from GPU, APU, FPGA... down
-  to plain CPU;
+- SYCL_ is an open standard from Khronos_ with a working committee
+  (you can contribute!) and we can expect several implementations
+  (commercial or open source) on many platforms soon, ranging from
+  GPU, APU, FPGA, DSP... down to plain CPU;
 
 - it offers a *single-source* `C++`_ programming model that allows taking
-  advantage of the modern C++11 superpower, unifying both the host and
+  advantage of the modern C++14 superpower, unifying both the host and
   accelerator sides. For example it is possible to write generic
   accelerated functions on the accelerators in a terse way by using
-  (variadic) templates, meta-programming and lambda expressions;
+  (variadic) templates, meta-programming and lambda expressions. This
+  allows to build templated libraries such as Eigen_ or TensorFlow_ in
+  a seamless way;
 
-- SYCL_ abstracts the concepts behind OpenCL_ and provides higher-level
-  concepts such as ``command_group`` that allows the runtime to take
-  advantage of a more task graph-oriented view of the computations. This
-  allows lazy data transfers between accelerators and host or to use
-  platform capabilities such as OpenCL 2 SVM or HSA_ for sharing data
-  between host and accelerators;
+- SYCL_ abstracts the concepts behind OpenCL_ and provides
+  higher-level concepts such as tasks (or command group in OpenCL SYCL
+  jargon) that allow the runtime to take advantage of a more task
+  graph-oriented view of the computations. This allows lazy data
+  transfers between accelerators and host or to use platform
+  capabilities such as OpenCL 2 SVM or HSA_ for sharing data between
+  host and accelerators;
 
 - the entry cost of the technology is zero since, after all, an existing
   OpenCL_ or `C++`_ program is a valid SYCL_ program;
@@ -90,18 +94,18 @@ other approaches:
     some operators allows deep intrusive debugging or code analysis
     without changing the algorithmic parts of the code;
 
-- SYCL_ is high-level standard C++11 without any extension, that means
-  that you can use your usual compiler and the host part can use some cool
-  and common extensions such as OpenMP_, OpenHMPP_, OpenACC_,... or
-  libraries such as MPI_ or PGAS Coarray++, be linked with other parts
-  written in other languages (Fortran_...). Thus SYCL is already
-  Exascale-ready!
+- SYCL_ is high-level standard C++14 without any extension, that means
+  that you can use your usual compiler and the host part can use at
+  the *same time* some cool and common extensions such as OpenMP_,
+  OpenHMPP_, OpenACC_,... or libraries such as MPI_ or PGAS Coarray++,
+  be linked with other parts written in other languages
+  (Fortran_...). Thus SYCL is already Exascale-ready!
 
 - even if SYCL_ hides the OpenCL_ world by default, it inherits from all
   the OpenCL_ world:
 
-  - same interoperability as the OpenCL_ underlying platform: OpenGL_,
-    DirectX_...
+  - same interoperability as the OpenCL_ underlying platform: Vulkan_,
+    OpenGL_, DirectX_...
 
   - access to all the underlying basic OpenCL_ objects behind the SYCL_
     abstraction for interoperability and hard-core optimization;
@@ -113,13 +117,13 @@ other approaches:
     `C++AMP`_ or OpenMP_ 4 down to low-level OpenCL_, according to the
     optimization needs, from using simple OpenCL intrinsics or vector
     operation from the ``cl::sycl`` namespace down to providing a real
-    OpenCL kernel to be executed without requiring all the cumbersome
+    OpenCL kernel to be executed without requiring all the verbose
     usual OpenCL host API.
 
   This OpenCL seamless integration plus the gradual optimization features
   are perhaps the most compelling arguments for SYCL_ because it allows
   high-level programming simplicity without giving-up hard-core
-  performance;
+  performance when needed;
 
 - since the SYCL task graph execution model is asynchronous, this can be
   used by side effect to overcome some underlying OpenCL implementation
@@ -135,7 +139,7 @@ other approaches:
   fashion. This relieves the programmer to reorganize her application to
   work around these limitation, which can be quite a cumbersome work.
 
-For introduction material on the interest of DSEL_ in this area, look for
+for introduction material on the interest of DSEL_ in this area, look for
 example at these articles:
 
 - `Domain-specific Languages and Code Synthesis Using Haskell
@@ -153,8 +157,25 @@ Some presentations and publications related to SYCL
 
 By reverse chronological order:
 
+- `Post-modern C++ abstractions for FPGA & heterogeneous computing
+  with OpenCL SYCL & SPIR-V
+  <https://github.com/keryell/ronan/raw/gh-pages/Talks/2016/2016-01-21--22-ANL-REFORM/2016-01-22-ANL-REFORM-Xilinx_SYCL_SPIR-V-expose.pdf>`_,
+  Ronan Keryell. ANL REFORM 2016: Workshop on FPGAs for scientific
+  simulation and data analytics, Argone National Labs. January
+  22, 2016.
+
+- `From modern FPGA to high-level post-modern C++ abstractions for
+  heterogeneous computing with OpenCL SYCL & SPIR-V
+  <https://github.com/keryell/ronan/raw/gh-pages/Talks/2016/HiPEAC-WRC-2016/2016-01-19-HiPEAC-WRC-Xilinx_FPGA_SYCL_keynote-expose.pdf>`_,
+  Ronan Keryell. HiPEAC WRC 2016: Workshop on Reconfigurable
+  Computing. Prague, January 19, 2016.
+
+- `HiPEAC 2016 tutorial on SYCL: Khronos SYCL for OpenCL
+  <https://www.hipeac.net/events/activities/7328/sycl/#fndtn-program>`_.
+  HiPEAC 2016, Prague, January 18, 2016.
+
 - `A Tutorial on Khronos SYCL for OpenCL at IWOCL 2015
-  <http://codeplaysoftware.github.io/iwocl2015>`_.
+  <http://codeplaysoftware.github.io/iwocl2015>`_. Stanford, May 12, 2015.
 
 - `Modern C++, OpenCL SYCL & OpenCL CL2.hpp
   <http://ronan.keryell.fr/Talks/2014/2014-11-18-SC14-OpenCL_BoF_SYCL/2014-11-18-OpenCL_BoF_SYCL-expose.pdf>`_,
@@ -239,6 +260,8 @@ Some other known implementations:
 - CodePlay has an implementation based on OpenCL SPIR with Clang/LLVM
   http://codeplay.com/products
 
+- SYCL-GTX https://github.com/ProGTX/sycl-gtx
+
 
 Related projects
 ~~~~~~~~~~~~~~~~
@@ -259,11 +282,15 @@ Related projects
 
 - `C++AMP`_
 
-- Open Source implementation of C++AMP https://bitbucket.org/multicoreware/cppamp-driver-ng
+- HCC https://bitbucket.org/multicoreware/hcc/wiki/Home
+
+- Intel SPMD Program Compiler https://ispc.github.io/
 
 - Intel Lab's iHRC https://github.com/IntelLabs/iHRC
 
 - CUDA_
+
+- Metal_
 
 
 OpenCL triSYCL code documentation
@@ -272,15 +299,6 @@ OpenCL triSYCL code documentation
 The documentation of the triSYCL_ implementation itself can be found in
 http://amd.github.io/triSYCL/Doxygen/triSYCL/html and
 http://amd.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
-
-An experimental description of the API generated from triSYCL_ through
-Doxygen can be found in http://amd.github.io/triSYCL/Doxygen/SYCL/html and
-http://amd.github.io/triSYCL/Doxygen/SYCL/SYCL-API-refman.pdf
-
-But since the implementation has moved toward more meta-progamming usage,
-this API documentation is no longer really descriptive of what is really
-available, since it is mainly hidden by the meta-programming power. At
-some point this API documentation will disappear.
 
 
 Installation
@@ -343,10 +361,11 @@ Some ideas of future developments where *you* can contribute too: :-)
 
 - finish implementation of basic classes without any OpenCL_ support;
 
-- move to CMake for better portability;
+- move to CMake for better portability (status: Lee Howes has made it on 1 of
+  his private branches. To be merged...);
 
 - improve the test infrastructure (for example move to something more
-  standard with Boost.Test);
+  standard with Boost.Test. Status: started);
 
 - use the official OpenCL SYCL test suite to extend/debug/validate this
   implementation;
@@ -356,16 +375,16 @@ Some ideas of future developments where *you* can contribute too: :-)
   http://jojendersie.de/performance-optimal-vector-swizzling-in-c
   http://www.reedbeta.com/blog/2013/12/28/on-vector-math-libraries ;
 
-- add first OpenCL_ support with kernels provided only as strings, thus
-  avoiding the need for a compiler. Could be based on other libraries such
-  as Boost.Compute_, VexCL_, ViennaCL_...;
+- add first OpenCL_ support with kernels provided only as strings,
+  thus avoiding the need for a compiler. Could be based on other
+  libraries such as Boost.Compute_, VexCL_, ViennaCL_... (status:
+  started with Boost.Compute_);
 
 - make an accelerator version based on OpenMP_ 4 accelerator target,
   OpenHMPP_ or OpenACC_;
 
 - make an accelerator version based on wrapper classes for the `C++AMP`_
-  Open Source compiler
-  https://bitbucket.org/multicoreware/cppamp-driver-ng
+  Open Source compiler.
 
   Extend the current C++AMP OpenCL HSA or SPIR back-end runtime to expose
   OpenCL objects needed for the SYCL OpenCL interoperability. This is
@@ -408,6 +427,11 @@ Some ideas of future developments where *you* can contribute too: :-)
   back-ends could be written besides the current OpenMP_ one: CUDA_,
   RenderScript_, etc.
 
+- SYCL concepts (well, classes) can also be ported to some other
+  languages to provide heterogeneous support: SYJSCL, SYCamlCL,
+  SYJavaCL... It is not clear yet if SYFortranCL is possible with
+  Fortran 2008 or 2015+.
+
 ..
   Somme useful link definitions:
 
@@ -429,6 +453,8 @@ Some ideas of future developments where *you* can contribute too: :-)
 
 .. _DSEL: http://en.wikipedia.org/wiki/Domain-specific_language
 
+.. _Eigen: http://eigen.tuxfamily.org
+
 .. _Fortran: http://en.wikipedia.org/wiki/Fortran
 
 .. _GCC: http://gcc.gnu.org/
@@ -440,6 +466,8 @@ Some ideas of future developments where *you* can contribute too: :-)
 .. _Khronos: https://www.khronos.org/
 
 .. _LLVM: http://llvm.org/
+
+.. _Metal: https://developer.apple.com/library/ios/documentation/Metal/Reference/MetalShadingLanguageGuide
 
 .. _MPI: http://en.wikipedia.org/wiki/Message_Passing_Interface
 
@@ -459,14 +487,17 @@ Some ideas of future developments where *you* can contribute too: :-)
 
 .. _SYCL: https://www.khronos.org/sycl
 
+.. _TensorFlow: https://www.tensorflow.org
+
 .. _Thrust: http://thrust.github.io/
 
 .. _triSYCL: http://www.khronos.org/opencl/sycl/
 
 .. _VexCL: http://ddemidov.github.io/vexcl/
 
-.. _ViennaCL: http://viennacl.sourceforge.net
+.. _ViennaCL: http://viennacl.sourceforge.net/
 
+.. _Vulkan: https://www.khronos.org/vulkan/
 
 ..
     # Some Emacs stuff:
