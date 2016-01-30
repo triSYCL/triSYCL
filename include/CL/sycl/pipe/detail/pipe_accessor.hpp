@@ -162,6 +162,9 @@ struct pipe_accessor :
       default
   */
   const pipe_accessor &write(const value_type &value) const {
+    static_assert(mode == access::write,
+                  "'.write(const value_type &value)' method on a pipe accessor"
+                  " is only possible with write access mode");
     ok = implementation.write(value, blocking);
     // Return a reference to *this so we can apply a sequence of write
     return *this;
@@ -171,6 +174,9 @@ struct pipe_accessor :
   /** Some syntactic sugar to use \code a << v \endcode instead of
       \code a.write(v) \endcode */
   const pipe_accessor &operator<<(const value_type &value) const {
+    static_assert(mode == access::write,
+                  "'<<' operator on a pipe accessor is only possible"
+                  " with write access mode");
     // Return a reference to *this so we can apply a sequence of >>
     return write(value);
   }
@@ -189,6 +195,9 @@ struct pipe_accessor :
       default
   */
   const pipe_accessor &read(value_type &value) const {
+    static_assert(mode == access::read,
+                  "'.read(value_type &value)' method on a pipe accessor"
+                  " is only possible with read access mode");
     ok = implementation.read(value, blocking);
     // Return a reference to *this so we can apply a sequence of read
     return *this;
@@ -200,16 +209,17 @@ struct pipe_accessor :
       \return the read value directly, since it cannot fail on
       blocking pipe
 
-      \todo Replace by a static_assert: Use std::enable_if_t to have
-      this function only when blocking is true
-
       This function is const so it can work when the accessor is
       passed by copy in the [=] kernel lambda, which is not mutable by
       default
   */
-  template <bool Depend = true, //< To have enable_if working
-            typename = std::enable_if_t<blocking && Depend>>
   value_type read() const {
+    static_assert(mode == access::read,
+                  "'.read()' method on a pipe accessor is only possible"
+                  " with read access mode");
+    static_assert(blocking,
+                  "'.read()' method on a pipe accessor is only possible"
+                  " with a blocking pipe");
     value_type value;
     implementation.read(value, blocking);
     return value;
@@ -219,6 +229,9 @@ struct pipe_accessor :
   /** Some syntactic sugar to use \code a >> v \endcode instead of
       \code a.read(v) \endcode */
   const pipe_accessor &operator>>(value_type &value) const {
+    static_assert(mode == access::read,
+                  "'>>' operator on a pipe accessor is only possible"
+                  " with read access mode");
     // Return a reference to *this so we can apply a sequence of >>
     return read(value);
   }
