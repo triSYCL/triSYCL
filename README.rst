@@ -284,6 +284,8 @@ Related projects
 
 - HCC https://bitbucket.org/multicoreware/hcc/wiki/Home
 
+- PACXX_
+
 - Intel SPMD Program Compiler https://ispc.github.io/
 
 - Intel Lab's iHRC https://github.com/IntelLabs/iHRC
@@ -481,6 +483,7 @@ Some ideas of future developments where *you* can contribute too: :-)
 
 .. _OpenMP: http://openmp.org/
 
+.. _PACXX: http://pacxx.github.io/page/
 .. _RenderScript: http://en.wikipedia.org/wiki/Renderscript
 
 .. _SPIR: http://www.khronos.org/spir
