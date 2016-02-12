@@ -266,6 +266,8 @@ Some other known implementations:
 Related projects
 ~~~~~~~~~~~~~~~~
 
+- CLHPP_: The OpenCL C++ wrapper from Khronos around host API
+
 - Boost.Compute_
 
 - VexCL_
@@ -448,6 +450,8 @@ Some ideas of future developments where *you* can contribute too: :-)
 .. _C++AMP: http://msdn.microsoft.com/en-us/library/hh265137.aspx
 
 .. _Clang: http://clang.llvm.org/
+
+.. _CLHPP: https://github.com/KhronosGroup/OpenCL-CLHPP
 
 .. _CUDA: https://developer.nvidia.com/cuda-zone
 
