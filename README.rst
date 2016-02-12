@@ -274,9 +274,14 @@ Related projects
 
 - ViennaCL_
 
-- C++ Parallelism TS https://github.com/cplusplus/parallelism-ts
+- `C++`_ WG21 committee_
 
-- C++ Concurrency TS https://github.com/cplusplus/concurrency_ts
+  - the SG14_ subgroup on low Latency, real time requirements,
+    performance, efficiency, heterogeneous computing
+
+  - C++ Parallelism TS https://github.com/cplusplus/parallelism-ts
+
+  - C++ Concurrency TS https://github.com/cplusplus/concurrency_ts
 
 - Bolt_
 
@@ -447,6 +452,8 @@ Some ideas of future developments where *you* can contribute too: :-)
 
 .. _C++: http://www.open-std.org/jtc1/sc22/wg21/
 
+.. _committee: https://isocpp.org/std/the-committee
+
 .. _C++AMP: http://msdn.microsoft.com/en-us/library/hh265137.aspx
 
 .. _Clang: http://clang.llvm.org/
@@ -488,7 +495,10 @@ Some ideas of future developments where *you* can contribute too: :-)
 .. _OpenMP: http://openmp.org/
 
 .. _PACXX: http://pacxx.github.io/page/
+
 .. _RenderScript: http://en.wikipedia.org/wiki/Renderscript
+
+.. _SG14: https://groups.google.com/a/isocpp.org/forum/?fromgroups=#!forum/sg14
 
 .. _SPIR: http://www.khronos.org/spir
 
