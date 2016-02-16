@@ -44,7 +44,7 @@ int main() {
   } // End scope, so we wait for the queue to complete
 
   std::cout << std::endl << "Result:" << std::endl;
-  for(auto e : c)
+  for (auto e : c)
     std::cout << e << " ";
   std::cout << std::endl;
 }

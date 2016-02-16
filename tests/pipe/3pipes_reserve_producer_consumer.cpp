@@ -132,7 +132,7 @@ int test_main(int argc, char *argv[]) {
     });
 
   // Verify on the host the buffer content
-  for(auto e : c.get_access<cl::sycl::access::read>())
+  for (auto e : c.get_access<cl::sycl::access::read>())
     BOOST_CHECK(e == N + 42 - 1);
 
   return 0;

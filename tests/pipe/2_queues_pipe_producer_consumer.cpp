@@ -77,7 +77,7 @@ int main() {
       case there is nothing to wait for */
 
   std::cout << std::endl << "Result:" << std::endl;
-  for(auto e : c)
+  for (auto e : c)
     std::cout << e << " ";
   std::cout << std::endl;
 }

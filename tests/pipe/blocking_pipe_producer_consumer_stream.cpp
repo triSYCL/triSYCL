@@ -64,7 +64,7 @@ int main() {
         wait for completion q completion & bc copied back to v */
 
   std::cout << std::endl << "Result:" << std::endl;
-  for(auto e : vc)
+  for (auto e : vc)
     std::cout << e << " ";
   std::cout << std::endl;
 }

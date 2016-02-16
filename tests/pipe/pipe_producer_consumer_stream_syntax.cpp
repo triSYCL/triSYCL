@@ -72,7 +72,7 @@ int main() {
   } //< End scope for the queue and the buffers, so wait for completion
 
   std::cout << std::endl << "Result:" << std::endl;
-  for(auto e : c)
+  for (auto e : c)
     std::cout << e << " ";
   std::cout << std::endl;
 }

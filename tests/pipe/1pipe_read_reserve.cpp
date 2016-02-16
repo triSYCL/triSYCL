@@ -87,7 +87,7 @@ int test_main(int argc, char *argv[]) {
     });
 
   // Verify on the host the buffer content
-  for(auto const &e : c.get_access<cl::sycl::access::read>()) {
+  for (auto const &e : c.get_access<cl::sycl::access::read>()) {
     // The difference between elements reconstructs the index value
     BOOST_CHECK(e == &e - &*c.get_access<cl::sycl::access::read>().begin());
   }

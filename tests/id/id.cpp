@@ -61,12 +61,12 @@ int main() {
   // Try some STL interoperability:
 
   // Check that the for range loop works
-  for(auto const & e: jj)
+  for (auto const & e: jj)
     std::cout << "jj via e = " << e << std::endl;
 
   std::vector<float> cjj(std::begin(jj), std::end(jj));
 
-  for(auto e: cjj)
+  for (auto e: cjj)
     std::cout << "cjj via e = " << e << std::endl;
 
   // Test arithmetics on id<>
