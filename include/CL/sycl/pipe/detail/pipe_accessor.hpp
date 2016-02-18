@@ -63,6 +63,8 @@ struct pipe_accessor :
 
   /** Store the success status of last pipe operation
 
+      It is not impacted by reservation success.
+
       It does exist even if the pipe accessor is not evaluated in a
       boolean context for, but a use-def analysis can optimise it out
       in that case and not use some storage
@@ -132,14 +134,16 @@ struct pipe_accessor :
   /** In an explicit bool context, the accessor gives the success
       status of the last access
 
-      The explicitness is related to avoid \code somepipe <<
-      some_value \endcode to be interpreted as \code some_bool <<
-      some_value \endcode when the type of some_value is not the same
-      type as the pipe type.
+      It is not impacted by reservation success.
 
-      \return true on success
+      The explicitness is related to avoid \code some_pipe <<
+      some_value \endcode to be interpreted as \code some_bool <<
+      some_value \endcode when the type of \code some_value \endcode
+      is not the same type as the pipe type.
+
+      \return true on success of the previous read or write operation
   */
-   explicit operator bool() const {
+  explicit operator bool() const {
     return ok;
   }
 
@@ -164,7 +168,8 @@ struct pipe_accessor :
   }
 
 
-  /// Some syntactic sugar to use a << v instead of a.write(v)
+  /** Some syntactic sugar to use \code a << v \endcode instead of
+      \code a.write(v) \endcode */
   const pipe_accessor &operator<<(const value_type &value) const {
     // Return a reference to *this so we can apply a sequence of >>
     return write(value);
@@ -176,8 +181,8 @@ struct pipe_accessor :
       \param[out] value is the reference to where to store what is
       read
 
-      \return *this so we can apply a sequence of read for example
-      (but do not do this on a non blocking pipe...)
+      \return \code this \endcode so we can apply a sequence of read
+      for example (but do not do this on a non blocking pipe...)
 
       This function is const so it can work when the accessor is
       passed by copy in the [=] kernel lambda, which is not mutable by
@@ -195,8 +200,8 @@ struct pipe_accessor :
       \return the read value directly, since it cannot fail on
       blocking pipe
 
-      Use std::enable_if_t to have this function only when blocking is
-      true
+      \todo Replace by a static_assert: Use std::enable_if_t to have
+      this function only when blocking is true
 
       This function is const so it can work when the accessor is
       passed by copy in the [=] kernel lambda, which is not mutable by
@@ -211,7 +216,8 @@ struct pipe_accessor :
   }
 
 
-  /// Some syntactic sugar to use a >> v instead of a.read(v)
+  /** Some syntactic sugar to use \code a >> v \endcode instead of
+      \code a.read(v) \endcode */
   const pipe_accessor &operator>>(value_type &value) const {
     // Return a reference to *this so we can apply a sequence of >>
     return read(value);

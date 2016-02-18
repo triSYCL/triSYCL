@@ -88,22 +88,22 @@ struct pipe_reservation {
 
       \return true if the pipe_reservation can be used and committed
   */
-  operator bool() {
+  operator bool() const {
     return *implementation;
   }
 
 
-  /// \todo Add all kind of iterators
-
   /// Get an iterator on the first element of the reservation station
-  auto begin() const {
+  iterator begin() const {
     return implementation->begin();
   }
 
+
   /// Get an iterator past the end of the reservation station
-  auto end() const {
+  iterator end() const {
     return implementation->end();
   }
+
 
   /// Build a constant iterator on the first element of the reservation station
   const_iterator cbegin() const {
@@ -118,34 +118,34 @@ struct pipe_reservation {
 
 
   /// Get a reverse iterator on the last element of the reservation station
-  auto rbegin() const {
+  reverse_iterator rbegin() const {
     return std::make_reverse_iterator(end());
   }
 
 
   /** Get a reverse iterator on the first element past the end of the
       reservation station */
-  auto rend() const {
+  reverse_iterator rend() const {
     return std::make_reverse_iterator(begin());
   }
 
 
   /** Get a constant reverse iterator on the last element of the
       reservation station */
-  auto crbegin() const {
+  const_reverse_iterator crbegin() const {
     return std::make_reverse_iterator(cend());
   }
 
 
   /** Get a constant reverse iterator on the first element past the
       end of the reservation station */
-  auto crend() const {
+  const_reverse_iterator crend() const {
     return std::make_reverse_iterator(cbegin());
   }
 
 
   /// Get the number of reserved element(s)
-  std::size_t size() {
+  std::size_t size() const {
     return implementation->size();
   }
 
@@ -161,7 +161,7 @@ struct pipe_reservation {
       Normally the commit is implicitly done in the destructor, but
       sometime it is useful to do it earlier.
   */
-  void commit() {
+  void commit() const {
     return implementation->commit();
   }
 
