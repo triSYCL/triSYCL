@@ -93,6 +93,28 @@ struct pipe_reservation {
   }
 
 
+  /// Get the number of reserved element(s)
+  std::size_t size() const {
+    return implementation->size();
+  }
+
+
+  /// Access to a given element of the reservation
+  reference operator[](std::size_t index) const {
+    return (*implementation)[index];
+  }
+
+
+  /** Force a commit operation
+
+      Normally the commit is implicitly done in the destructor, but
+      sometime it is useful to do it earlier.
+  */
+  void commit() const {
+    return implementation->commit();
+  }
+
+
   /// Get an iterator on the first element of the reservation station
   iterator begin() const {
     return implementation->begin();
@@ -141,28 +163,6 @@ struct pipe_reservation {
       end of the reservation station */
   const_reverse_iterator crend() const {
     return std::make_reverse_iterator(cbegin());
-  }
-
-
-  /// Get the number of reserved element(s)
-  std::size_t size() const {
-    return implementation->size();
-  }
-
-
-  /// Access to a given element of the reservation
-  reference operator[](std::size_t index) const {
-    return (*implementation)[index];
-  }
-
-
-  /** Force a commit operation
-
-      Normally the commit is implicitly done in the destructor, but
-      sometime it is useful to do it earlier.
-  */
-  void commit() const {
-    return implementation->commit();
   }
 
 };
