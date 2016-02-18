@@ -10,6 +10,7 @@
 */
 
 #include <cstddef>
+#include <iterator>
 #include <memory>
 
 #include "CL/sycl/pipe_reservation/detail/pipe_reservation.hpp"
@@ -35,6 +36,16 @@ struct pipe_reservation {
   using value_type = typename accessor_type::value_type;
   using reference = value_type&;
   using const_reference = const value_type&;
+  using pointer = value_type*;
+  using const_pointer = const value_type*;
+  using size_type = std::size_t;
+  using difference_type = ptrdiff_t;
+  using iterator =
+    typename detail::pipe_reservation<accessor_detail>::iterator;
+  using const_iterator =
+    typename detail::pipe_reservation<accessor_detail>::const_iterator;
+  using reverse_iterator = std::reverse_iterator<iterator>;
+  using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
   /** Point to the underlying implementation that can be shared in the
       SYCL model with a handler semantics */
@@ -85,14 +96,51 @@ struct pipe_reservation {
   /// \todo Add all kind of iterators
 
   /// Get an iterator on the first element of the reservation station
-  auto begin() {
+  auto begin() const {
+    return implementation->begin();
+  }
+
+  /// Get an iterator past the end of the reservation station
+  auto end() const {
+    return implementation->end();
+  }
+
+  /// Build a constant iterator on the first element of the reservation station
+  const_iterator cbegin() const {
     return implementation->begin();
   }
 
 
-  /// Get an iterator past the end of the reservation station
-  auto end() {
+  /// Build a constant iterator past the end of the reservation station
+  const_iterator cend() const {
     return implementation->end();
+  }
+
+
+  /// Get a reverse iterator on the last element of the reservation station
+  auto rbegin() const {
+    return std::make_reverse_iterator(end());
+  }
+
+
+  /** Get a reverse iterator on the first element past the end of the
+      reservation station */
+  auto rend() const {
+    return std::make_reverse_iterator(begin());
+  }
+
+
+  /** Get a constant reverse iterator on the last element of the
+      reservation station */
+  auto crbegin() const {
+    return std::make_reverse_iterator(cend());
+  }
+
+
+  /** Get a constant reverse iterator on the first element past the
+      end of the reservation station */
+  auto crend() const {
+    return std::make_reverse_iterator(cbegin());
   }
 
 

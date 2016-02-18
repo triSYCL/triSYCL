@@ -85,8 +85,7 @@ struct pipe_accessor :
   pipe_accessor() = default;
 
 
-  /** Return the maximum number of elements that can fit in the pipe
-   */
+  /// Return the maximum number of elements that can fit in the pipe
   std::size_t capacity() const {
     return implementation.capacity();
   }

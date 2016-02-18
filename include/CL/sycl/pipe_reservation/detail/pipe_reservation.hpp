@@ -37,8 +37,13 @@ class pipe_reservation :
     (accessor_type::target == cl::sycl::access::blocking_pipe);
   using value_type = typename accessor_type::value_type;
   using reference = typename accessor_type::reference;
-  using iterator = typename
-    std::deque<detail::reserve_id<value_type>>::iterator;
+
+public:
+
+  using iterator =
+    typename detail::pipe<value_type>::implementation_t::iterator;
+  using const_iterator =
+    typename detail::pipe<value_type>::implementation_t::const_iterator;
 
   // \todo Add to the specification
   static constexpr access::mode mode = accessor_type::mode;
@@ -50,7 +55,7 @@ class pipe_reservation :
   bool ok = false;
 
   /// Point into the reservation buffer. Only valid if ok is true
-  iterator rid;
+  typename detail::pipe<value_type>::rid_iterator rid;
 
   /** Keep a reference on the pipe to access to the data and methods
 
@@ -135,7 +140,7 @@ public:
   /// Past the end of the reservation area
   iterator end() {
     assume_validity();
-    return rid->start + rid->size;;
+    return rid->start + rid->size;
   }
 
 

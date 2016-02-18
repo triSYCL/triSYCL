@@ -32,9 +32,9 @@ namespace sycl {
 template <typename T>
 struct pipe {
   /// The STL-like types
+  /* Since a pipe element cannot be directly addressed without
+     accessor, only define value_type here */
   using value_type = T;
-  using reference = value_type&;
-  using const_reference = const value_type&;
 
   /// The implementation is defined elsewhere
   std::shared_ptr<detail::pipe<T>> implementation;
