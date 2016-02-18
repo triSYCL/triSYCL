@@ -1,9 +1,6 @@
 /* RUN: %{execute}%s | %{filecheck} %s
    CHECK: Result:
    CHECK-NEXT: 6 8 11
-
-   Extend a pipe program example from Andrew Richards
-   https://cvs.khronos.org/bugzilla/show_bug.cgi?id=14215
 */
 #include <CL/sycl.hpp>
 #include <iostream>
@@ -12,9 +9,8 @@
 constexpr size_t N = 3;
 using Vector = float[N];
 
-// A program-scoped pipe of 2 float elements
-
-cl::sycl::program_pipe<float, 2> p;
+// A static-scoped pipe of 4 float elements
+cl::sycl::static_pipe<float, 4> p;
 
 int main() {
   Vector va = { 1, 2, 3 };

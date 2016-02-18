@@ -1,7 +1,8 @@
-#ifndef TRISYCL_SYCL_PROGRAM_PIPE_HPP
-#define TRISYCL_SYCL_PROGRAM_PIPE_HPP
+#ifndef TRISYCL_SYCL_STATIC_PIPE_HPP
+#define TRISYCL_SYCL_STATIC_PIPE_HPP
 
-/** \file The OpenCL SYCL program-scoped pipe
+/** \file The OpenCL SYCL static-scoped pipe equivalent to an OpenCL
+    program-scoped pipe
 
     Ronan at Keryell point FR
 
@@ -24,24 +25,38 @@ namespace sycl {
     @{
 */
 
-/** A SYCL program-scoped pipe
+/** A SYCL static-scoped pipe equivalent to an OpenCL program-scoped
+    pipe
 
     Implement a FIFO-style object that can be used through accessors
-    to send some objects T from the input to the output
+    to send some objects T from the input to the output.
+
+    Compared to a normal pipe, a static_pipe takes a constexpr size
+    and is expected to be declared in a compile-unit static context so
+    the compiler can generate everything at compile time.
+
+    This is useful to generate a fixed and optimized hardware
+    implementation on FPGA for example, where the interconnection
+    graph can be also inferred at compile time.
+
+    It is not directly mapped to the OpenCL program-scoped pipe
+    because in SYCL there is not this concept of separated
+    program. But the SYCL device compiler is expected to generate some
+    OpenCL program(s) with program-scoped pipes when a SYCL
+    static-scoped pipe is used. These details are implementation
+    defined.
 */
 template <typename T, std::size_t Capacity>
-struct program_pipe {
+struct static_pipe {
   /// The STL-like types
   using value_type = T;
-  using reference = value_type&;
-  using const_reference = const value_type&;
 
   /// The implementation is defined elsewhere
   std::shared_ptr<detail::pipe<T>> implementation;
 
 
-  /// Construct a program-scoped pipe able to store up to Capacity T objects
-  program_pipe()
+  /// Construct a static-scoped pipe able to store up to Capacity T objects
+  static_pipe()
     : implementation { new detail::pipe<T> { Capacity } } { }
 
 
@@ -52,7 +67,7 @@ struct program_pipe {
       \param Target is the type of pipe access required
 
       \param[in] command_group_handler is the command group handler in
-      which the kernel is to be executed
+      which the kernel is to be executed.
   */
   template <access::mode Mode,
             access::target Target = access::pipe>
@@ -68,8 +83,7 @@ struct program_pipe {
 
   /** Return the maximum number of elements that can fit in the pipe
 
-      This is a constexpr since the capacity is in the type of a
-      program-scoped pipe.
+      This is a constexpr since the capacity is in the type.
   */
   std::size_t constexpr capacity() const {
     return Capacity;
@@ -90,4 +104,4 @@ struct program_pipe {
     ### End:
 */
 
-#endif // TRISYCL_SYCL_PROGRAM_PIPE_HPP
+#endif // TRISYCL_SYCL_STATIC_PIPE_HPP
