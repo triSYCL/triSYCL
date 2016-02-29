@@ -1,7 +1,7 @@
 #ifndef TRISYCL_SYCL_DETAIL_DEBUG_HPP
 #define TRISYCL_SYCL_DETAIL_DEBUG_HPP
 
-/** \file This is a small class to track constructor/destructor invocations
+/** \file Track constructor/destructor invocations and trace kernel execution
 
     Define the TRISYCL_DEBUG CPP flag to have an output.
 
@@ -15,7 +15,8 @@
 
 #include <iostream>
 
-#ifdef TRISYCL_DEBUG
+// The common debug and trace infrastructure
+#if defined(TRISYCL_DEBUG) || defined(TRISYCL_TRACE_KERNEL)
 #include <sstream>
 #include <string>
 #include <thread>
@@ -32,11 +33,16 @@ using namespace std::string_literals;
     Use an intermediate ostringstream because there are issues with
     BOOST_LOG_TRIVIAL to display C strings
 */
-#define TRISYCL_DUMP(expression) do {                \
+#define TRISYCL_INTERNAL_DUMP(expression) do {       \
     std::ostringstream s;                            \
     s << expression;                                 \
     BOOST_LOG_TRIVIAL(debug) << s.str();             \
   } while(0)
+#endif
+
+#ifdef TRISYCL_DEBUG
+#define TRISYCL_DUMP(expression) TRISYCL_INTERNAL_DUMP(expression)
+
 /// Same as TRISYCL_DUMP() but with thread id first
 #define TRISYCL_DUMP_T(expression)                                      \
   TRISYCL_DUMP("Thread " << std::ios_base::hex                          \
@@ -101,6 +107,27 @@ struct debug {
   }
 #endif
 };
+
+
+/** Wrap a kernel functor in some tracing messages to have start/stop
+    information when TRISYCL_TRACE_KERNEL macro is defined */
+template <typename KernelName, typename Functor>
+auto trace_kernel(const Functor &f) {
+#ifdef TRISYCL_TRACE_KERNEL
+  // Inject tracing message around the kernel
+  return [=] {
+    /* Since the class KernelName may just declared and not be really
+       defined, just use it through a class pointer to have
+       typeid().name() not complaining */
+    TRISYCL_INTERNAL_DUMP("Kernel started " << typeid(KernelName*).name());
+    f();
+    TRISYCL_INTERNAL_DUMP("Kernel stopped " << typeid(KernelName*).name());
+  };
+#else
+  // Identity by default
+  return f;
+#endif
+}
 
 
 /** Class used to display a vector-like type of classes that inherit from

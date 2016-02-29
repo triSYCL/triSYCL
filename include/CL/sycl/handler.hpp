@@ -116,7 +116,7 @@ public:
   */
   template <typename KernelName = std::nullptr_t>
   void single_task(std::function<void(void)> F) {
-    task->schedule(F);
+    task->schedule(detail::trace_kernel<KernelName>(F));
   }
 
 
@@ -149,7 +149,9 @@ public:
             typename ParallelForFunctor>                                \
   void parallel_for(range<N> global_size,                               \
                     ParallelForFunctor f) {                             \
-    task->schedule([=] { detail::parallel_for(global_size, f); }); \
+    task->schedule(detail::trace_kernel<KernelName>([=] {               \
+          detail::parallel_for(global_size, f);                         \
+        }));                                                            \
   }
 
   TRISYCL_parallel_for_functor_GLOBAL(1)
@@ -180,16 +182,17 @@ public:
       function can not be templated, so instantiate it for all the
       dimensions
   */
-#define TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(N)     \
-  template <typename KernelName = std::nullptr_t,       \
-            typename ParallelForFunctor>                \
-  void parallel_for(range<N> global_size,               \
-                    id<N> offset,                       \
-                    ParallelForFunctor f) {             \
-    task->schedule([=] {                                \
-        detail::parallel_for_global_offset(global_size, \
-                                           offset,      \
-                                           f); });      \
+#define TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(N)       \
+  template <typename KernelName = std::nullptr_t,         \
+            typename ParallelForFunctor>                  \
+  void parallel_for(range<N> global_size,                 \
+                    id<N> offset,                         \
+                    ParallelForFunctor f) {               \
+    task->schedule(detail::trace_kernel<KernelName>([=] { \
+          detail::parallel_for_global_offset(global_size, \
+                                             offset,      \
+                                             f);          \
+        }));                                              \
   }
 
   TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(1)
@@ -221,7 +224,9 @@ public:
             std::size_t Dimensions,
             typename ParallelForFunctor>
   void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {
-    task->schedule([=] { detail::parallel_for(r, f); });
+    task->schedule(detail::trace_kernel<KernelName>([=] {
+          detail::parallel_for(r, f);
+        }));
   }
 
 
@@ -251,7 +256,8 @@ public:
             typename ParallelForFunctor>
   void parallel_for_work_group(nd_range<Dimensions> r,
                                ParallelForFunctor f) {
-    task->schedule([=] { detail::parallel_for_workgroup(r, f); });
+    task->schedule(detail::trace_kernel<KernelName>([=] {
+          detail::parallel_for_workgroup(r, f); }));
   }
 
 
