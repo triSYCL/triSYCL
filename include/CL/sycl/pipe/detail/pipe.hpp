@@ -92,6 +92,12 @@ struct pipe : public detail::debug<pipe<T>> {
   /// To signal that a write has been successful
   std::condition_variable write_done;
 
+  /// True when the pipe is currently used for reading
+  bool used_for_reading = false;
+
+  /// True when the pipe is currently used for writing
+  bool used_for_writing = false;
+
 
   /// Create a pipe as a circular buffer of the required capacity
   pipe(std::size_t capacity) : cb { capacity }, read_reserved_frozen { 0 } { }

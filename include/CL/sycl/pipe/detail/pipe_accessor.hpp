@@ -81,6 +81,18 @@ struct pipe_accessor :
     implementation { p } {
     //    TRISYCL_DUMP_T("Create a kernel pipe accessor write = "
     //                 << is_write_access());
+    // Verify that the pipe is not already used in the requested mode
+    if (mode == access::write)
+      if (implementation.used_for_writing)
+        /// \todo Use pipe_exception instead
+        throw std::logic_error { "The pipe is already used for writing." };
+      else
+        implementation.used_for_writing = true;
+    else
+      if (implementation.used_for_reading)
+        throw std::logic_error { "The pipe is already used for reading." };
+      else
+        implementation.used_for_reading = true;
   }
 
 
@@ -244,6 +256,15 @@ struct pipe_accessor :
 
   auto &get_pipe_detail() {
     return implementation;
+  }
+
+
+  ~pipe_accessor() {
+    /// Free the pipe for a future usage for the current mode
+    if (mode == access::write)
+      implementation.used_for_writing = false;
+    else
+      implementation.used_for_reading = false;
   }
 
 };
