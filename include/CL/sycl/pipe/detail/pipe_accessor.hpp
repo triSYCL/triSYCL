@@ -254,6 +254,12 @@ struct pipe_accessor :
   }
 
 
+  /// Set debug mode
+  void set_debug(bool enable) const {
+    implementation.debug_mode = enable;
+  }
+
+
   auto &get_pipe_detail() {
     return implementation;
   }

@@ -98,6 +98,9 @@ struct pipe : public detail::debug<pipe<T>> {
   /// True when the pipe is currently used for writing
   bool used_for_writing = false;
 
+  /// To control the debug mode, disabled by default
+  bool debug_mode = false;
+
 
   /// Create a pipe as a circular buffer of the required capacity
   pipe(std::size_t capacity) : cb { capacity }, read_reserved_frozen { 0 } { }
