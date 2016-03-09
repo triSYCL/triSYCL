@@ -48,7 +48,7 @@ namespace trisycl {
 
   struct default_error_handler : error_handler {
 
-    void report_error(exception &error) override {
+    void report_error(exception &) override {
     }
   };
 }

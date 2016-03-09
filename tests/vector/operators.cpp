@@ -26,24 +26,24 @@ auto equal = [] (auto const &v, auto const &verif) {
 /* Use the std::valarray<> implementation to compare computations on vec<>
    and std::valarray<>
 */
-#define TRISYCL_CHECK(OPERATOR, TYPE, VAL1, VAL2)     \
-  {                                                   \
-    constexpr std::initializer_list<TYPE> vil1 VAL1;  \
-    constexpr std::initializer_list<TYPE> vil2 VAL2;  \
-    using v = vec<TYPE, vil1.size()>;                 \
-    using va = std::valarray<TYPE>;                   \
-    v v1 VAL1;                                        \
-    v v2 VAL2;                                        \
-    v v3 = v1 OPERATOR v2;                            \
-    va va1 { vil1 };                                  \
-    va va2 { vil2 };                                  \
-    va va3 = va1 OPERATOR va2;                        \
-    BOOST_CHECK(equal(v1, va1));                      \
-    BOOST_CHECK(equal(v2, va2));                      \
-    BOOST_CHECK(equal(v3, va3));                      \
-    v3 OPERATOR##= v1;                                \
-    va3 OPERATOR##= va1;                              \
-    BOOST_CHECK(equal(v3, va3));                      \
+#define TRISYCL_CHECK(OPERATOR, TYPE, SIZE, VAL1, VAL2) \
+  {                                                     \
+    std::initializer_list<TYPE> vil1 VAL1;              \
+    std::initializer_list<TYPE> vil2 VAL2;              \
+    using v = vec<TYPE, SIZE>;                          \
+    using va = std::valarray<TYPE>;                     \
+    v v1 VAL1;                                          \
+    v v2 VAL2;                                          \
+    v v3 = v1 OPERATOR v2;                              \
+    va va1 { vil1 };                                    \
+    va va2 { vil2 };                                    \
+    va va3 = va1 OPERATOR va2;                          \
+    BOOST_CHECK(equal(v1, va1));                        \
+    BOOST_CHECK(equal(v2, va2));                        \
+    BOOST_CHECK(equal(v3, va3));                        \
+    v3 OPERATOR##= v1;                                  \
+    va3 OPERATOR##= va1;                                \
+    BOOST_CHECK(equal(v3, va3));                        \
   }
 
 
@@ -84,16 +84,16 @@ int test_main(int argc, char *argv[]) {
         BOOST_CHECK(equal(v2, va2));
         BOOST_CHECK(equal(v3, va3));
         BOOST_CHECK(equal(v4, va4));
-        TRISYCL_CHECK(+, float, ({ 1, 2, 3, 4}), ({ 4, 5, 6, 7}));
-        TRISYCL_CHECK(-, float, ({ 1, 2, 3, 4}), ({ 4, 5, 6, 7}));
-        TRISYCL_CHECK(*, float, ({ 1, 2, 3, 4}), ({ 4, 5, 6, 7}));
-        TRISYCL_CHECK(/, float, ({ 1, 2, 3, 4}), ({ 4, 5, 6, 7}));
-        TRISYCL_CHECK(%, int, ({ 4, 5, 6, 7}), ({ 1, 2, 3, 4}));
-        TRISYCL_CHECK(&, char, ({ 4, 5, 6, 7}), ({ 1, 2, 3, 4}));
-        TRISYCL_CHECK(|, char, ({ 4, 5, 6, 7}), ({ 1, 2, 3, 4}));
-        TRISYCL_CHECK(^, int, ({ 4, 5, 6, 7}), ({ 1, 2, 3, 4}));
-        TRISYCL_CHECK(<<, int, ({ 4, 5, 6, 7}), ({ 1, 2, 3, 4}));
-        TRISYCL_CHECK(>>, int, ({ 4, 5, 6, 7}), ({ 1, 2, 3, 4}));
+        TRISYCL_CHECK(+, float, 4, ({ 1, 2, 3, 4}), ({ 4, 5, 6, 7}));
+        TRISYCL_CHECK(-, float, 4, ({ 1, 2, 3, 4}), ({ 4, 5, 6, 7}));
+        TRISYCL_CHECK(*, float, 4, ({ 1, 2, 3, 4}), ({ 4, 5, 6, 7}));
+        TRISYCL_CHECK(/, float, 4, ({ 1, 2, 3, 4}), ({ 4, 5, 6, 7}));
+        TRISYCL_CHECK(%, int, 4, ({ 4, 5, 6, 7}), ({ 1, 2, 3, 4}));
+        TRISYCL_CHECK(&, char, 4, ({ 4, 5, 6, 7}), ({ 1, 2, 3, 4}));
+        TRISYCL_CHECK(|, char, 4, ({ 4, 5, 6, 7}), ({ 1, 2, 3, 4}));
+        TRISYCL_CHECK(^, int, 4, ({ 4, 5, 6, 7}), ({ 1, 2, 3, 4}));
+        TRISYCL_CHECK(<<, int, 4, ({ 4, 5, 6, 7}), ({ 1, 2, 3, 4}));
+        TRISYCL_CHECK(>>, int, 4, ({ 4, 5, 6, 7}), ({ 1, 2, 3, 4}));
         //TRISYCL_CHECK(&&, int, ({ 4, 5, 6, 7}), ({ 1, 2, 3, 4}));
                                        });
       }); // End of our commands for this queue

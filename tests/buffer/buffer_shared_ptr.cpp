@@ -4,6 +4,7 @@
 */
 #include <CL/sycl.hpp>
 //#include <iostream>
+#include <numeric>
 #include <boost/test/minimal.hpp>
 
 using namespace cl::sycl;

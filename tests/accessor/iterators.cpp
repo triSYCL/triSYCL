@@ -5,6 +5,7 @@
 #include <CL/sycl.hpp>
 #include <iostream>
 #include <iterator>
+#include <numeric>
 
 #include <boost/iterator/zip_iterator.hpp>
 #include <boost/test/minimal.hpp>

@@ -2,7 +2,7 @@
    CHECK: data[5] = 10, should be 10
 */
 #include <vector>
-#include <algorithm>
+#include <numeric>
 #include <iostream>
 #include <CL/sycl.hpp>
 

@@ -5,6 +5,11 @@
 
     Implement OpenCL address spaces in SYCL with C++-style.
 
+    Note that in SYCL 1.2, only pointer types should be specified but
+    in this implementation we generalize the concept to any type.
+
+    \todo Add the alias ..._ptr<T> = ...<T *>
+
     Ronan at Keryell point FR
 
     This file is distributed under the University of Illinois Open Source
@@ -42,51 +47,41 @@ namespace sycl {
     @{
 */
 
-/** Declare a variable to be an OpenCL constant pointer
+/** Declare a variable to be in the OpenCL constant address space
 
-    \param T is the pointer type
-
-    Note that if \a T is not a pointer type, it is an error.
+    \param T is the type of the object
 */
 template <typename T>
 using constant = detail::addr_space<T, constant_address_space>;
 
 
-/** Declare a variable to be an OpenCL 2 generic pointer
+/** Declare a variable to be in the OpenCL 2 generic address space
 
-    \param T is the pointer type
-
-    Note that if \a T is not a pointer type, it is an error.
+    \param T is the type of the object
 */
 template <typename T>
 using generic = detail::addr_space<T, generic_address_space>;
 
 
-/** Declare a variable to be an OpenCL global pointer
+/** Declare a variable to be in the OpenCL global address space
 
-    \param T is the pointer type
-
-    Note that if \a T is not a pointer type, it is an error.
+    \param T is the type of the object
 */
 template <typename T>
 using global = detail::addr_space<T, global_address_space>;
 
 
-/** Declare a variable to be an OpenCL local pointer
+/** Declare a variable to be in the OpenCL local address space
 
-    \param T is the pointer type
-
-    Note that if \a T is not a pointer type, it is an error.
+    \param T is the type of the object
 */
 template <typename T>
 using local = detail::addr_space<T, local_address_space>;
 
 
-/** Declare a variable to be an OpenCL private pointer
+/** Declare a variable to be in the OpenCL private address space
 
-    \param T is the pointer type
-
-    Note that if \a T is not a pointer type, it is an error.
+    \param T is the type of the object
 */
 template <typename T>
 using priv = detail::addr_space<T, private_address_space>;

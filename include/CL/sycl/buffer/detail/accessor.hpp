@@ -131,6 +131,12 @@ struct accessor : public detail::debug<accessor<T,
   }
 
 
+  /// Returns the size of the underlying buffer in number of elements.
+  std::size_t get_size() const {
+    return array.num_elements();
+  }
+
+
   /** Use the accessor with integers à la [][][]
 
       Use array_view_type::reference instead of auto& because it does not

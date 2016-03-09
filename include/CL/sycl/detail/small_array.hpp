@@ -122,8 +122,8 @@ struct small_array : std::array<BasicType, Dims>,
   template <typename... Types,
             // Just to make enable_if depend of the template and work
             bool Depend = true,
-            typename = typename std::enable_if<EnableArgsConstructor
-                                               && Depend>::type>
+            typename = typename std::enable_if_t<EnableArgsConstructor
+                                                 && Depend>>
   small_array(const Types &... args)
     : std::array<BasicType, Dims> {
     // Allow a loss of precision in initialization with the static_cast
