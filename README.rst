@@ -287,6 +287,11 @@ Related projects
 
   - C++ Concurrency TS https://github.com/cplusplus/concurrency_ts
 
+- OpenMP_ is a ``#pragma``-based standard to express different kind of
+  parallelism with accelerators supported since version 4.0;
+
+- OpenACC_ is a ``#pragma``-based extension targetting accelerators;
+
 - Bolt_
 
 - Thrust_
