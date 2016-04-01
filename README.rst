@@ -257,8 +257,8 @@ Some implementations
 
 Some other known implementations:
 
-- CodePlay has an implementation based on OpenCL SPIR with Clang/LLVM
-  http://codeplay.com/products
+- CodePlay has a product implementing SYCL based on OpenCL SPIR with
+  Clang/LLVM http://codeplay.com/products
 
 - SYCL-GTX https://github.com/ProGTX/sycl-gtx
 
@@ -277,9 +277,13 @@ Related projects
 - `C++`_ WG21 committee_
 
   - the SG14_ subgroup on low Latency, real time requirements,
-    performance, efficiency, heterogeneous computing
+    performance, efficiency, heterogeneous computing, where SYCL is
+    one of the candidates;
 
   - C++ Parallelism TS https://github.com/cplusplus/parallelism-ts
+
+    `SYCL Parallel STL`_ is an implementation of the Parallel STL of
+    C++17 based on SYCL;
 
   - C++ Concurrency TS https://github.com/cplusplus/concurrency_ts
 
@@ -291,7 +295,10 @@ Related projects
 
 - HCC https://bitbucket.org/multicoreware/hcc/wiki/Home
 
-- PACXX_
+- GOOPAX_ is a product providing a C++11 framework for single-source
+  OpenCL;
+
+- PACXX_ is a higher-level C++ compiler and framework for accelerators;
 
 - Intel SPMD Program Compiler https://ispc.github.io/
 
@@ -321,7 +328,7 @@ current Clang version does not fully support OpenMP yet or some C++14 with
 ``-g``.
 
 To install them on latest Linux Debian/unstable (this should work on
-latest Ubuntu too):
+latest Ubuntu too, just adapt the compiler versions):
 
 .. code:: bash
 
@@ -450,6 +457,8 @@ Some ideas of future developments where *you* can contribute too: :-)
 
 .. _Boost.Compute: https://github.com/boostorg/compute
 
+.. _Boost.MultiArray: http://www.boost.org/doc/libs/1_55_0/libs/multi_array/doc/index.html
+
 .. _C++: http://www.open-std.org/jtc1/sc22/wg21/
 
 .. _committee: https://isocpp.org/std/the-committee
@@ -472,7 +481,7 @@ Some ideas of future developments where *you* can contribute too: :-)
 
 .. _GCC: http://gcc.gnu.org/
 
-.. _Boost.MultiArray: http://www.boost.org/doc/libs/1_55_0/libs/multi_array/doc/index.html
+.. _GOOPAX: http://www.goopax.com/
 
 .. _HSA: http://www.hsafoundation.com/
 
@@ -495,6 +504,8 @@ Some ideas of future developments where *you* can contribute too: :-)
 .. _OpenMP: http://openmp.org/
 
 .. _PACXX: http://pacxx.github.io/page/
+
+.. _SYCL Parallel STL: https://github.com/KhronosGroup/SyclParallelSTL
 
 .. _RenderScript: http://en.wikipedia.org/wiki/Renderscript
 
