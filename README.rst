@@ -157,6 +157,16 @@ Some presentations and publications related to SYCL
 
 By reverse chronological order:
 
+- `Khronos's OpenCL SYCL to support Heterogeneous Devices for C++
+  <http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0236r0.pdf>`_.
+  Proposal for the C++ committee SG14 in Jacksonville, Florida, USA
+  February 12, 2016.
+
+- `SYCL presentation at SG14 C++ committee teleconference
+  <https://groups.google.com/a/isocpp.org/group/sg14/attach/10071129554d08/SYCL%20to%20SG14%20Presentation.pdf?part=0.1>`_,
+  Andrew Richards (CEO Codeplay & Chair SYCL Working group). February
+  3, 2016.
+
 - `Post-modern C++ abstractions for FPGA & heterogeneous computing
   with OpenCL SYCL & SPIR-V
   <https://github.com/keryell/ronan/raw/gh-pages/Talks/2016/2016-01-21--22-ANL-REFORM/2016-01-22-ANL-REFORM-Xilinx_SYCL_SPIR-V-expose.pdf>`_,
