@@ -1,5 +1,7 @@
 ## To enable asynchronous kernels
-#CXXFLAGS += -DTRISYCL_ASYNC=1
+CXXFLAGS += -DTRISYCL_ASYNC=1
+# For asynchronous kernels when OpenMP is not enabled
+LDLIBS += -lpthread
 
 # Compute the absolute directory name from the location of this Makefile
 # so that we can compile from anywhere even if we use make -f
@@ -54,12 +56,13 @@ endif
 
 # There are some tests using small array display() method
 # To enable debug and tracing:
+#CXXFLAGS += -g
 #CXXFLAGS += -g -DTRISYCL_TRACE_KERNEL -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DTRISYCL_DEBUG_STRUCTORS -DBOOST_LOG_DYN_LINK
-#LDLIBS+=-lboost_log
+#LDLIBS+=-lboost_log -lpthread
 #CXXFLAGS += -fsanitize=address -fno-omit-frame-pointer -fsanitize=thread
-#CXXFLAGS += -fsanitize=thread -shared
+#CXXFLAGS += -fsanitize=thread
 
 
 # By default run lit checking in the current directory

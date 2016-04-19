@@ -70,8 +70,8 @@ int main() {
        ensures that c is ready when the accessor is returned */
     auto C = accessor<double, 2, access::read, access::host_buffer> { c };
     std::cout << std::endl << "Result:" << std::endl;
-    for(size_t i = 0; i < N; i++)
-      for(size_t j = 0; j < M; j++)
+    for (size_t i = 0; i < N; i++)
+      for (size_t j = 0; j < M; j++)
         // Compare the result to the analytic value
         if (C[i][j] != i*(2 + 2014) + j*(1 + 42)) {
           std::cout << "Wrong value " << C[i][j] << " on element "
