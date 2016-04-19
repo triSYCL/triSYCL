@@ -179,7 +179,7 @@ struct buffer {
 
       \todo add this mutex-less constructor to the specification
   */
-  buffer(shared_ptr_class<T> &host_data,
+  buffer(shared_ptr_class<T> host_data,
          const range<Dimensions> &buffer_range,
          Allocator allocator = {})
     : implementation {
