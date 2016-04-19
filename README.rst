@@ -1,13 +1,21 @@
 triSYCL
 +++++++
 
+NEWS
+----
+
+SYCL 2.2 provisional specification is out since 2016/04/18!
+
+This version implement SYCL 2.2 pipes and reservations plus the blocking
+pipe extension from Xilinx.
+
 .. section-numbering::
 
 .. contents::
 
 
 triSYCL_ is an implementation test-bed to experiment with the
-specification of the OpenCL_ SYCL_ `C++`_ layer and to give feedback
+specification of the OpenCL_ SYCL_ 2.2 `C++`_ layer and to give feedback
 to the Khronos_ OpenCL_ SYCL_ and OpenCL C++ kernel language
 committees.
 
