@@ -49,6 +49,10 @@ ifdef BOOST_COMPUTE_INCPATH
 	-DBOOST_COMPUTE_THREAD_SAFE
 endif
 
+# Work-around an old Boost.CircularBuffer bug if a pre 1.62 Boost
+# version is used
+CXXFLAGS += -DMAKE_BOOST_CIRCULARBUFFER_THREAD_SAFE
+
 # Specify where OpenCL library files are with OpenCL_LIBPATH
 ifdef OpenCL_LIBPATH
   LDFLAGS += -L$(OpenCL_LIBPATH)

@@ -14,11 +14,17 @@
 #include <mutex>
 #include <deque>
 
+#ifdef MAKE_BOOST_CIRCULARBUFFER_THREAD_SAFE
 /* The debug mode of boost/circular_buffer.hpp has a nasty side effect
    in multithread applications using several iterators at the same
    time even in read-only mode because the library tracks them for
-   debugging purpose in a... non-thread safe way */
+   debugging purpose in a... non-thread safe way
+
+   This is described in https://svn.boost.org/trac/boost/ticket/6277
+   and fixed with https://github.com/boostorg/circular_buffer/pull/9
+*/
 #define BOOST_CB_DISABLE_DEBUG
+#endif
 #include <boost/circular_buffer.hpp>
 
 namespace cl {
