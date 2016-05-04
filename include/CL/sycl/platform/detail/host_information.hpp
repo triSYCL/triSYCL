@@ -1,5 +1,5 @@
-#ifndef TRISYCL_SYCL_PLATFORM_DETAIL_PLATFORM_HPP
-#define TRISYCL_SYCL_PLATFORM_DETAIL_PLATFORM_HPP
+#ifndef TRISYCL_SYCL_PLATFORM_DETAIL_HOST_INFORMATION_HPP
+#define TRISYCL_SYCL_PLATFORM_DETAIL_HOST_INFORMATION_HPP
 
 /** \file The OpenCL triSYCL platform information
 
@@ -25,7 +25,7 @@ template <info::platform Param>
 inline string_class get_host_platform_info() {
   // \todo Define some SYCL exception type for this type of errors
   throw std::invalid_argument {
-    "Unknown parameter valuefor SYCL platform information" };
+    "Unknown parameter value for SYCL platform information" };
 }
 
 /// The metafunction value for the profile
@@ -40,7 +40,7 @@ inline string_class get_host_platform_info<info::platform::profile>() {
 template <>
 inline string_class get_host_platform_info<info::platform::version>() {
   // \todo I guess it should include the software version too...
-  return "1.2";
+  return "2.2";
 }
 
 /// The metafunction value for the name
@@ -59,7 +59,7 @@ inline string_class get_host_platform_info<info::platform::vendor>() {
 template <>
 inline string_class get_host_platform_info<info::platform::extensions>() {
   // No extension
-  return "";
+  return "Xilinx_blocking_pipes";
 }
 
 /// @} to end the execution Doxygen group
@@ -76,4 +76,4 @@ inline string_class get_host_platform_info<info::platform::extensions>() {
     ### End:
 */
 
-#endif // TRISYCL_SYCL_PLATFORM_DETAIL_PLATFORM_HPP
+#endif // TRISYCL_SYCL_PLATFORM_DETAIL_HOST_INFORMATION_HPP

@@ -1,5 +1,5 @@
-#ifndef TRISYCL_SYCL_PLATFORM_INFO_HPP
-#define TRISYCL_SYCL_PLATFORM_INFO_HPP
+#ifndef TRISYCL_SYCL_INFO_PLATFORM_HPP
+#define TRISYCL_SYCL_INFO_PLATFORM_HPP
 
 /** \file The OpenCL SYCL platform
 
@@ -37,7 +37,7 @@ enum class device_type : unsigned int {
     them, including the SYCL host device.
 
     In this implementation, the values are mapped to OpenCL values to
-    avoid further remapping later
+    avoid further remapping later when OpenCL is used
 */
 enum class platform : unsigned int {
   /** Returns the profile name (as a string_class) supported by the
@@ -46,20 +46,32 @@ enum class platform : unsigned int {
       Can be either FULL PROFILE or EMBEDDED PROFILE.
   */
   profile TRISYCL_SKIP_OPENCL(= CL_PLATFORM_PROFILE),
+
   /** Returns the OpenCL software driver version string in the form major
       number.minor number (as a string_class)
   */
   version TRISYCL_SKIP_OPENCL(= CL_PLATFORM_VERSION),
+
   /** Returns the name of the platform (as a string_class)
   */
   name TRISYCL_SKIP_OPENCL(= CL_PLATFORM_NAME),
+
   /** Returns the string provided by the platform vendor (as a string_class)
   */
   vendor TRISYCL_SKIP_OPENCL(= CL_PLATFORM_VENDOR),
+
   /** Returns a space-separated list of extension names supported by the
       platform (as a string_class)
   */
-  extensions TRISYCL_SKIP_OPENCL(= CL_PLATFORM_EXTENSIONS)
+  extensions TRISYCL_SKIP_OPENCL(= CL_PLATFORM_EXTENSIONS),
+
+#if CL_SYCL_LANGUAGE_VERSION >= 220
+  /** Returns the resolution of the host timer in nanoseconds as used by
+      clGetDeviceAndHostTimer
+  */
+  host_timer_resolution
+    TRISYCL_SKIP_OPENCL(= CL_PLATFORM_HOST_TIMER_RESOLUTION)
+#endif
 };
 
 
@@ -75,6 +87,15 @@ enum class platform : unsigned int {
 */
 TRISYCL_INFO_PARAM_TRAITS_ANY_T(info::platform, string_class)
 
+#if CL_SYCL_LANGUAGE_VERSION >= 220
+///  get_info<host_timer_resolution>() return a cl_ulong
+#ifdef TRISYCL_OPENCL
+TRISYCL_INFO_PARAM_TRAITS(info::platform::host_timer_resolution, cl_ulong)
+#else
+TRISYCL_INFO_PARAM_TRAITS(info::platform::host_timer_resolution,
+                          unsigned long int)
+#endif
+#endif
 }
 }
 }
@@ -87,4 +108,4 @@ TRISYCL_INFO_PARAM_TRAITS_ANY_T(info::platform, string_class)
     ### End:
 */
 
-#endif // TRISYCL_SYCL_PLATFORM_INFO_HPP
+#endif // TRISYCL_SYCL_INFO_PLATFORM_HPP

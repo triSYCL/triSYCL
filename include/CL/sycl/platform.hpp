@@ -68,7 +68,7 @@ public:
 
 
   /**  Construct a platform object from the device returned by a device
-       selector of the user’s choice
+       selector of the user's choice
 
        Returns errors via the SYCL exception class.
   */
