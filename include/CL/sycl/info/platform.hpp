@@ -10,6 +10,7 @@
 */
 
 #include "CL/sycl/detail/global_config.hpp"
+#include "CL/sycl/info/param_traits.hpp"
 
 namespace cl {
 namespace sycl {
