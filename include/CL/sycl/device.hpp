@@ -39,6 +39,9 @@ class device : public boost::totally_ordered<device> {
   /// The implementation forward everything to this... implementation
   std::shared_ptr<detail::device> implementation;
 
+  /// Allows the hashing class to access the private implementation
+  friend class std::hash<device>;
+
 public:
 
   /** The default constructor will create an instance of the SYCL host
@@ -193,6 +196,8 @@ public:
       This is generalized by boost::less_than_comparable from
       boost::totally_ordered to implement the equality comparable
       concept
+
+      \todo Add this to the spec
   */
   bool operator <(const device &other) const {
     return implementation < other.implementation;
@@ -203,6 +208,25 @@ public:
 /// @} to end the Doxygen group
 
 }
+}
+
+
+/* Inject a custom specialization of std::hash to have the object
+   usable into an unordered associative container
+
+   \todo Add this to the spec
+ */
+namespace std {
+
+template <> struct hash<cl::sycl::device> {
+
+  auto operator()(cl::sycl::device const& d) const {
+    // Forward the hashing to the implementation
+    return std::hash<decltype(d.implementation)>{}(d.implementation);
+  }
+
+};
+
 }
 
 /*

@@ -3,6 +3,7 @@
 #include <CL/sycl.hpp>
 
 #include <iostream>
+#include <unordered_set>
 #include <set>
 
 #include <boost/test/minimal.hpp>
@@ -36,6 +37,16 @@ int test_main(int argc, char *argv[]) {
   std::cout << devices.size() << std::endl;
   // Check the host device is actually a singleton
   //BOOST_CHECK(devices.size() == 1);
+
+  // Check device is comparable so it can be put in associative containers
+  std::unordered_set<device> ud;
+  ud.insert(d);
+  ud.insert(d2);
+  ud.insert(d3);
+
+  std::cout << ud.size() << std::endl;
+  // Check the host device is actually a singleton
+  //BOOST_CHECK(ud.size() == 1);
 
   return 0;
 }
