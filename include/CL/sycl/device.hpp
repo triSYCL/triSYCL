@@ -11,6 +11,8 @@
 
 #include <memory>
 
+#include <boost/operators.hpp>
+
 #include "CL/sycl/detail/default_classes.hpp"
 
 #include "CL/sycl/device/detail/host_device.hpp"
@@ -27,8 +29,12 @@ class platform;
     @{
 */
 
-/// SYCL device
-class device {
+/** SYCL device
+
+    Implement comparable concepts to be put into containers for
+    example
+ */
+class device : public boost::totally_ordered<device> {
 
   /// The implementation forward everything to this... implementation
   std::shared_ptr<detail::device> implementation;
@@ -170,6 +176,27 @@ public:
                                               affinity_domain);
   }
 #endif
+
+  /** Equality operator
+
+      This is generalized by boost::equality_comparable from
+      boost::totally_ordered to implement the equality comparable
+      concept
+  */
+  bool operator ==(const device &other) const {
+    return implementation == other.implementation;
+  }
+
+
+  /** Inferior operator
+
+      This is generalized by boost::less_than_comparable from
+      boost::totally_ordered to implement the equality comparable
+      concept
+  */
+  bool operator <(const device &other) const {
+    return implementation < other.implementation;
+  }
 
 };
 
