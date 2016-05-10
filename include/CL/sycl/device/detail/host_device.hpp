@@ -9,6 +9,10 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <memory>
+
+#include <boost/core/null_deleter.hpp>
+
 #include "CL/sycl/detail/default_classes.hpp"
 
 #include "CL/sycl/detail/unimplemented.hpp"
@@ -106,6 +110,25 @@ public:
     detail::unimplemented();
     return {};
   }
+
+
+  /// Get a singleton instance of the object
+  static auto instance() {
+    // C++11 guaranties the static construction is thread-safe
+    static auto singleton = new host_device;
+
+    // Use a null_deleter since the singleton should not be deleted
+    return std::shared_ptr<host_device> { singleton, boost::null_deleter {} };
+  }
+
+private:
+
+  /// The private constructors make sure it is only constructed here
+  host_device() = default;
+
+
+  /// Disallow someone else to destroy the instance
+  ~host_device() {}
 
 };
 

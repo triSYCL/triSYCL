@@ -26,7 +26,7 @@ int test_main(int argc, char *argv[]) {
 
   device d3;
   // Check the host device is actually a singleton
-  //BOOST_CHECK(d == d3);
+  BOOST_CHECK(d == d3);
 
   // Check device is comparable so it can be put in associative containers
   std::set<device> devices;
@@ -34,9 +34,8 @@ int test_main(int argc, char *argv[]) {
   devices.insert(d2);
   devices.insert(d3);
 
-  std::cout << devices.size() << std::endl;
-  // Check the host device is actually a singleton
-  //BOOST_CHECK(devices.size() == 1);
+  // Check the host device is actually a singleton even in an ordered set
+  BOOST_CHECK(devices.size() == 1);
 
   // Check device is comparable so it can be put in associative containers
   std::unordered_set<device> ud;
@@ -44,9 +43,8 @@ int test_main(int argc, char *argv[]) {
   ud.insert(d2);
   ud.insert(d3);
 
-  std::cout << ud.size() << std::endl;
-  // Check the host device is actually a singleton
-  //BOOST_CHECK(ud.size() == 1);
+  // Check the host device is actually a singleton even in an unordered set
+  BOOST_CHECK(ud.size() == 1);
 
   return 0;
 }

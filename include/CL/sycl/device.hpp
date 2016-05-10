@@ -44,10 +44,8 @@ class device : public boost::totally_ordered<device> {
 
 public:
 
-  /** The default constructor will create an instance of the SYCL host
-      device
-  */
-  device() : implementation { new detail::host_device } {}
+  /// The default constructor uses the SYCL host device
+  device() : implementation { detail::host_device::instance() } {}
 
 
 #ifdef TRISYCL_OPENCL
