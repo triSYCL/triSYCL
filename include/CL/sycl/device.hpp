@@ -9,9 +9,11 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <memory>
+
 #include "CL/sycl/detail/default_classes.hpp"
-#include "CL/sycl/detail/unimplemented.hpp"
-#include "CL/sycl/exception.hpp"
+
+#include "CL/sycl/device/detail/host_device.hpp"
 #include "CL/sycl/info/device.hpp"
 #include "CL/sycl/platform.hpp"
 
@@ -25,30 +27,31 @@ class platform;
     @{
 */
 
-/** SYCL device
-
-    \todo The implementation is quite minimal for now. :-)
-*/
+/// SYCL device
 class device {
+
+  /// The implementation forward everything to this... implementation
+  std::shared_ptr<detail::device> implementation;
 
 public:
 
-#ifdef TRISYCL_OPENCL
-  /** Construct a device class instance using cl_device_id of the OpenCL
+  /** The default constructor will create an instance of the SYCL host
       device
-
-      Return synchronous errors via the SYCL exception
-      class.
-
-      Retain a reference to the OpenCL device and if this device was an
-      OpenCL subdevice the device should be released by the caller when it
-      is no longer needed.
-
-      \todo To be implemented
   */
-  explicit device(cl_device_id deviceId) {
-    detail::unimplemented();
-  }
+  device() : implementation { new detail::host_device } {}
+
+
+#ifdef TRISYCL_OPENCL
+  /** Construct a device class instance using cl_device_id of the
+      OpenCL device
+
+      Return synchronous errors via the SYCL exception class.
+
+      Retain a reference to the OpenCL device and if this device was
+      an OpenCL subdevice the device should be released by the caller
+      when it is no longer needed.
+  */
+  device(cl_device_id device_id) : implementation { device_id } {}
 #endif
 
 
@@ -57,19 +60,13 @@ public:
 
       Return errors via C++ exception class.
 
-      \todo To be implemented
+      \todo
   */
-  explicit device(const device_selector &deviceSelector) {
-    detail::unimplemented();
-  }
+  //explicit device(const device_selector &ds) : implementation { ds } {}
 
 
-  /** The default constructor will create an instance of the SYCL host
-      device
-
-      Get the default constructors back.
-  */
-  device() = default;
+  /// Get the default constructors back.
+  //device() = default;
 
 
 #ifdef TRISYCL_OPENCL
@@ -80,78 +77,53 @@ public:
       Retain a reference to the returned cl_device_id object. Caller
       should release it when finished.
 
-      In the case where this is the SYCL host device it will return a
-      nullptr.
-
-      \todo To be implemented
+      In the case where this is the SYCL host device it will throw an
+      exception.
   */
   cl_device_id get() const {
-    detail::unimplemented();
-    return {};
+    return implementation->get();
   }
 #endif
 
-  /** Return true if the device is a SYCL host device
-
-      \todo To be implemented
-  */
+  /// Return true if the device is the SYCL host device
   bool is_host() const {
-    detail::unimplemented();
-    return true;
+    return implementation->is_host();
   }
 
 
-  /** Return true if the device is an OpenCL CPU device
-
-      \todo To be implemented
-  */
+  /// Return true if the device is an OpenCL CPU device
   bool is_cpu() const {
-    detail::unimplemented();
-    return {};
+    return implementation->is_cpu();
   }
 
 
-  /** Return true if the device is an OpenCL GPU device
-
-      \todo To be implemented
-  */
+  /// Return true if the device is an OpenCL GPU device
   bool is_gpu() const {
-    detail::unimplemented();
-    return {};
+    return implementation->is_gpu();
   }
 
 
-  /** Return true if the device is an OpenCL accelerator device
-
-      \todo To be implemented
-  */
+  /// Return true if the device is an OpenCL accelerator device
   bool is_accelerator() const {
-    detail::unimplemented();
-    return {};
+    return implementation->is_accelerator();
   }
 
 
   /** Return the platform of device
 
       Return synchronous errors via the SYCL exception class.
-
-      \todo To be implemented
   */
   platform get_platform() const {
-    detail::unimplemented();
-    return {};
+    return implementation->get_platform();
   }
 
 
   /** Return a list of all available devices
 
       Return synchronous errors via SYCL exception classes.
-
-      \todo To be implemented
   */
   static vector_class<device>
-  get_devices(info::device_type deviceType = info::device_type::all) {
-    detail::unimplemented();
+  get_devices(info::device_type device_type = info::device_type::all) {
     return {};
   }
 
@@ -159,45 +131,49 @@ public:
   /** Query the device for OpenCL info::device info
 
       Return synchronous errors via the SYCL exception class.
+  */
+  template <typename T>
+  T get_info(info::device param) const {
+    //return implementation->get_info<Param>(param);
+  }
 
-      \todo To be implemented
+
+  /** Query the device for OpenCL info::device info
+
+      Return synchronous errors via the SYCL exception class.
   */
   template <info::device Param>
-  typename info::param_traits<info::device, Param>::type
-  get_info() const {
-    detail::unimplemented();
-    return {};
+  auto get_info() const {
+    // Forward to the version where the info parameter is not a template
+    //return get_info<typename info::param_traits_t<info::device, Param>>(Param);
   }
 
 
-  /** Specify whether a specific extension is supported on the device.
-
-      \todo To be implemented
-  */
+  /// Specify whether a specific extension is supported on the device
   bool has_extension(const string_class &extension) const {
-    detail::unimplemented();
-    return {};
+    return implementation->has_extension(extension);
   }
 
 
+#ifdef TRISYCL_OPENCL
   /** Partition the device into sub devices based upon the properties
       provided
 
       Return synchronous errors via SYCL exception classes.
-
-      \todo To be implemented
   */
   vector_class<device>
-  create_sub_devices(info::device_partition_type partitionType,
-                     info::device_partition_property partitionProperty,
-                     info::device_affinity_domain affinityDomain) const {
-    detail::unimplemented();
-    return {};
+  create_sub_devices(info::device_partition_type partition_type,
+                     info::device_partition_property partition_property,
+                     info::device_affinity_domain affinity_domain) const {
+    return implementation->create_sub_devices(partition_type,
+                                              partition_property,
+                                              affinity_domain);
   }
+#endif
 
 };
 
-/// @} to end the execution Doxygen group
+/// @} to end the Doxygen group
 
 }
 }
