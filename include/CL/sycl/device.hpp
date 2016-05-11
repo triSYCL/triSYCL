@@ -92,6 +92,7 @@ public:
   }
 #endif
 
+
   /// Return true if the device is the SYCL host device
   bool is_host() const {
     return implementation->is_host();
@@ -131,7 +132,8 @@ public:
   */
   static vector_class<device>
   get_devices(info::device_type device_type = info::device_type::all) {
-    return {};
+    // Return a list with only the default device for now
+    return { {} };
   }
 
 

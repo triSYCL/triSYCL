@@ -2,6 +2,7 @@
 */
 #include <CL/sycl.hpp>
 
+#include <algorithm>
 #include <iostream>
 #include <unordered_set>
 #include <set>
@@ -46,7 +47,12 @@ int test_main(int argc, char *argv[]) {
   // Check the host device is actually a singleton even in an unordered set
   BOOST_CHECK(ud.size() == 1);
 
+  // Check that the host device appears in the device list exactly once
+  auto l = device::get_devices();
+  BOOST_CHECK(std::count(l.begin(), l.end(), d) == 1);
 
+// Some OpenCL specific tests
+#ifdef TRISYCL_OPENCL
   bool exception_seen = false;
   try {
     // Try to get the non existent CL device
@@ -57,6 +63,7 @@ int test_main(int argc, char *argv[]) {
   }
   // Check the error was well managed
   BOOST_CHECK(exception_seen);
+#endif
 
   return 0;
 }
