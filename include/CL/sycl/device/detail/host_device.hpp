@@ -36,21 +36,14 @@ public:
 #ifdef TRISYCL_OPENCL
   /** Return the cl_device_id of the underlying OpenCL platform
 
-      Return synchronous errors via the SYCL exception class.
-
-      Retain a reference to the returned cl_device_id object. Caller
-      should release it when finished.
-
-      In the case where this is the SYCL host device it will return a
-      nullptr.
-
-      \todo To be implemented
+      This throws an error since there is no OpenCL device associated
+      to the host device.
   */
   cl_device_id get() const override {
-    detail::unimplemented();
-    return {};
+    throw non_cl_error("The host device has no OpenCL device");
   }
 #endif
+
 
   /// Return true since the device is a SYCL host device
   bool is_host() const override {

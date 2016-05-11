@@ -9,6 +9,8 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <stdexcept>
+
 #include "CL/sycl/buffer.hpp"
 #include "CL/sycl/image.hpp"
 
@@ -22,6 +24,20 @@ class queue;
 */
 
 using async_handler = function_class<int/*cl::sycl::exception_list*/>;
+
+
+/** Exception for an OpenCL operation requested in a non OpenCL area
+
+    \todo Add to the specification
+
+    \todo Clean implementation
+
+    \todo Exceptions are named error in C++
+*/
+class non_cl_error : public std::domain_error {
+  using std::domain_error::domain_error;
+};
+
 
 /**
    Encapsulate a SYCL error information

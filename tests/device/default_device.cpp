@@ -46,5 +46,17 @@ int test_main(int argc, char *argv[]) {
   // Check the host device is actually a singleton even in an unordered set
   BOOST_CHECK(ud.size() == 1);
 
+
+  bool exception_seen = false;
+  try {
+    // Try to get the non existent CL device
+    d.get();
+  }
+  catch (non_cl_error e) {
+    exception_seen = true;
+  }
+  // Check the error was well managed
+  BOOST_CHECK(exception_seen);
+
   return 0;
 }
