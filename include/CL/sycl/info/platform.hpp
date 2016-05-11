@@ -66,7 +66,7 @@ enum class platform : unsigned int {
   */
   extensions TRISYCL_SKIP_OPENCL(= CL_PLATFORM_EXTENSIONS),
 
-#if CL_SYCL_LANGUAGE_VERSION >= 220
+#if CL_SYCL_LANGUAGE_VERSION >= 220 && defined(CL_VERSION_2_1)
   /** Returns the resolution of the host timer in nanoseconds as used by
       clGetDeviceAndHostTimer
   */
@@ -88,7 +88,7 @@ enum class platform : unsigned int {
 */
 TRISYCL_INFO_PARAM_TRAITS_ANY_T(info::platform, string_class)
 
-#if CL_SYCL_LANGUAGE_VERSION >= 220
+#if CL_SYCL_LANGUAGE_VERSION >= 220 && defined(CL_VERSION_2_1)
 ///  get_info<host_timer_resolution>() return a cl_ulong
 #ifdef TRISYCL_OPENCL
 TRISYCL_INFO_PARAM_TRAITS(info::platform::host_timer_resolution, cl_ulong)

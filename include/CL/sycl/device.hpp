@@ -48,7 +48,7 @@ public:
   device() : implementation { detail::host_device::instance() } {}
 
 
-#ifdef TRISYCL_OPENCL
+#ifdef XYZTRISYCL_OPENCL
   /** Construct a device class instance using cl_device_id of the
       OpenCL device
 
@@ -162,7 +162,7 @@ public:
   }
 
 
-#ifdef TRISYCL_OPENCL
+#ifdef XYZTRISYCL_OPENCL
   /** Partition the device into sub devices based upon the properties
       provided
 
