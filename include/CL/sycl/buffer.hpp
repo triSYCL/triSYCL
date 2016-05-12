@@ -18,6 +18,7 @@
 #include "CL/sycl/buffer/detail/buffer.hpp"
 #include "CL/sycl/buffer_allocator.hpp"
 #include "CL/sycl/detail/global_config.hpp"
+#include "CL/sycl/detail/shared_ptr_implementation.hpp"
 #include "CL/sycl/event.hpp"
 #include "CL/sycl/handler.hpp"
 #include "CL/sycl/id.hpp"
@@ -48,23 +49,32 @@ namespace sycl {
 template <typename T,
           std::size_t Dimensions = 1,
           typename Allocator = buffer_allocator<T>>
-struct buffer {
+struct buffer
+  /* Use the underlying buffer implementation that can be shared in
+     the SYCL model */
+  : public detail::shared_ptr_implementation<buffer<T, Dimensions, Allocator>,
+                                             detail::buffer<T, Dimensions>> {
   /// The STL-like types
   using value_type = T;
   using reference = value_type&;
   using const_reference = const value_type&;
   using allocator_type = Allocator;
 
-  /** Point to the underlying buffer implementation that can be shared in
-      the SYCL model */
-  std::shared_ptr<detail::buffer<T, Dimensions>> implementation;
+  // The type encapsulating the implementation
+  using implementation_t =
+    detail::shared_ptr_implementation<buffer<T, Dimensions, Allocator>,
+                                      detail::buffer<T, Dimensions>>;
+
+  // Make the implementation member directly accessible in this class
+  using implementation_t::implementation;
 
   /** Use default constructors so that we can create a new buffer copy
       from another one, with either a l-value or an r-value (for
       std::move() for example).
 
-      Since we just copy the shared_ptr<> above, this is where/how the
-      sharing magic is happening with reference counting in this case.
+      Since we just copy the shared_ptr<> from the
+      shared_ptr_implementation above, this is where/how the sharing
+      magic is happening with reference counting in this case.
   */
   buffer() = default;
 
@@ -82,7 +92,7 @@ struct buffer {
       \param[in] allocator is to be used by the SYCL runtime
   */
   buffer(const range<Dimensions> &r, Allocator allocator = {})
-    : implementation { new detail::buffer<T, Dimensions> { r } } {}
+    : implementation_t { new detail::buffer<T, Dimensions> { r } } {}
 
 
   /** Create a new buffer with associated host memory
@@ -107,7 +117,8 @@ struct buffer {
   buffer(const T *host_data,
          const range<Dimensions> &r,
          Allocator allocator = {})
-    : implementation { new detail::buffer<T, Dimensions> { host_data, r } } {}
+    : implementation_t { new detail::buffer<T, Dimensions> { host_data, r } }
+  {}
 
 
   /** Create a new buffer with associated host memory
@@ -127,7 +138,8 @@ struct buffer {
       range<dimensions> defines the size.
   */
   buffer(T *host_data, const range<Dimensions> &r, Allocator allocator = {})
-    : implementation { new detail::buffer<T, Dimensions> { host_data, r } } {}
+    : implementation_t { new detail::buffer<T, Dimensions> { host_data, r } }
+  {}
 
 
   /** Create a new buffer with associated memory, using the data in
@@ -182,7 +194,7 @@ struct buffer {
   buffer(shared_ptr_class<T> host_data,
          const range<Dimensions> &buffer_range,
          Allocator allocator = {})
-    : implementation {
+    : implementation_t {
     new detail::buffer<T, Dimensions> { host_data, buffer_range } }
   {}
 
@@ -257,8 +269,8 @@ struct buffer {
   buffer(InputIterator start_iterator,
          InputIterator end_iterator,
          Allocator allocator = {}) :
-    implementation { new detail::buffer<T, Dimensions> { start_iterator,
-                                                         end_iterator } }
+    implementation_t { new detail::buffer<T, Dimensions> { start_iterator,
+                                                           end_iterator } }
   {}
 
 
@@ -464,6 +476,27 @@ struct buffer {
 /// @} End the data Doxygen group
 
 }
+}
+
+/* Inject a custom specialization of std::hash to have the buffer
+   usable into an unordered associative container
+
+   \todo Add this to the spec
+*/
+namespace std {
+
+template <typename T,
+          std::size_t Dimensions,
+          typename Allocator>
+struct hash<cl::sycl::buffer<T, Dimensions, Allocator>> {
+
+  auto operator()(const cl::sycl::buffer<T, Dimensions, Allocator> &b) const {
+    // Forward the hashing to the implementation
+    return b.hash();
+  }
+
+};
+
 }
 
 /*
