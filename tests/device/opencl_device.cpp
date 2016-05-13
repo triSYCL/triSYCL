@@ -13,6 +13,7 @@
 using namespace cl::sycl;
 
 int test_main(int argc, char *argv[]) {
+{
   // Create an OpenCL device
   device d { boost::compute::system::devices()[0] };
 
@@ -25,7 +26,8 @@ int test_main(int argc, char *argv[]) {
   device d2 { d };
   BOOST_CHECK(d == d2);
 
-  device d3;
+  // Verify that the cache works when asking for same device
+  device d3 = boost::compute::system::devices()[0];
   // Check the host device is actually a singleton
   BOOST_CHECK(d == d3);
 
@@ -47,20 +49,6 @@ int test_main(int argc, char *argv[]) {
   // Check the host device is actually a singleton even in an unordered set
   BOOST_CHECK(ud.size() == 1);
 
-  // Check that the host device appears in the device list exactly once
-  auto l = device::get_devices();
-  BOOST_CHECK(std::count(l.begin(), l.end(), d) == 1);
-
-  bool exception_seen = false;
-  try {
-    // Try to get the non existent CL device
-    d.get();
-  }
-  catch (non_cl_error e) {
-    exception_seen = true;
-  }
-  // Check the error was well managed
-  BOOST_CHECK(exception_seen);
-
+}
   return 0;
 }

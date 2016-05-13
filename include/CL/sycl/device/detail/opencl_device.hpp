@@ -1,7 +1,7 @@
 #ifndef TRISYCL_SYCL_DEVICE_DETAIL_OPENCL_DEVICE_HPP
 #define TRISYCL_SYCL_DEVICE_DETAIL_OPENCL_DEVICE_HPP
 
-/** \file The OpenCL SYCL OpenCL device implementation
+/** \file The SYCL OpenCL device implementation
 
     Ronan at Keryell point FR
 
@@ -12,10 +12,10 @@
 #include <memory>
 
 #include <boost/compute.hpp>
-#include <boost/core/null_deleter.hpp>
 
 #include "CL/sycl/detail/default_classes.hpp"
 
+#include "CL/sycl/detail/cache.hpp"
 #include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/device/detail/device.hpp"
 #include "CL/sycl/exception.hpp"
@@ -29,8 +29,15 @@ namespace detail {
 /// SYCL OpenCL device
 class opencl_device : public detail::device {
 
-  /// The Boost Compute abstraction of the OpenCL device
+  /// Use the Boost Compute abstraction of the OpenCL device
   boost::compute::device d;
+
+  /** A cache to always return the same live device for a given OpenCL
+      device
+
+      C++11 guaranties the static construction is thread-safe
+  */
+  static detail::cache<cl_device_id, detail::opencl_device> cache;
 
 public:
 
@@ -100,20 +107,32 @@ public:
   }
 
 
-  ///// Get a singleton instance of the object
-  static auto instance(const boost::compute::device &d) {
-    return std::make_shared<opencl_device>(d);
+  ///// Get a singleton instance of the opencl_device
+  static std::shared_ptr<opencl_device>
+  instance(const boost::compute::device &d) {
+    return cache.get_or_register(d.id(), [&] { return new opencl_device(d); });
   }
 
-///private:
+private:
 
+  /// Only the instance factory can built it
   opencl_device(const boost::compute::device &d) : d { d } {}
 
+public:
 
-  /// Disallow someone else to destroy the instance
-  ~opencl_device() {}
+  /// Unregister from the cache on destruction
+  ~opencl_device() {
+    cache.remove(d.id());
+  }
 
 };
+
+/* Allocate the cache here but since this is a pure-header library,
+   use a weak symbol so that only one remains when SYCL headers are
+   used in different compilation units of a program
+*/
+detail::cache<cl_device_id, detail::opencl_device> opencl_device::cache
+  __attribute__((weak));
 
 /// @} to end the execution Doxygen group
 

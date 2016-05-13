@@ -229,7 +229,7 @@ public:
    usable into an unordered associative container
 
    \todo Add this to the spec
- */
+*/
 namespace std {
 
 template <> struct hash<cl::sycl::device> {
