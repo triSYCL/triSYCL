@@ -105,13 +105,16 @@ public:
   }
 
 
-  /// Get a singleton instance of the object
-  static auto instance() {
+  /// Get a singleton instance of the host_device
+  static std::shared_ptr<host_device> instance() {
     // C++11 guaranties the static construction is thread-safe
-    static auto singleton = new host_device;
+    static host_device singleton;
+    /** Use a null_deleter since the singleton should not be deleted,
+        as allocated in the static area */
+    static std::shared_ptr<host_device> sps { &singleton,
+                                              boost::null_deleter {} };
 
-    // Use a null_deleter since the singleton should not be deleted
-    return std::shared_ptr<host_device> { singleton, boost::null_deleter {} };
+    return sps;
   }
 
 private:
