@@ -11,11 +11,15 @@
 
 #include <memory>
 
+#include <boost/compute.hpp>
 #include <boost/operators.hpp>
 
 #include "CL/sycl/detail/default_classes.hpp"
 
 #include "CL/sycl/device/detail/host_device.hpp"
+#ifdef TRISYCL_OPENCL
+#include "CL/sycl/device/detail/opencl_device.hpp"
+#endif
 #include "CL/sycl/info/device.hpp"
 #include "CL/sycl/platform.hpp"
 
@@ -40,7 +44,7 @@ class device : public boost::totally_ordered<device> {
   std::shared_ptr<detail::device> implementation;
 
   /// Allows the hashing class to access the private implementation
-  friend class std::hash<device>;
+  friend struct std::hash<device>;
 
 public:
 
@@ -59,6 +63,16 @@ public:
       when it is no longer needed.
   */
   device(cl_device_id device_id) : implementation { device_id } {}
+#endif
+
+
+#ifdef TRISYCL_OPENCL
+  /** Construct a device class instance using a boost::compute::device
+
+      Return synchronous errors via the SYCL exception class.
+  */
+  device(const boost::compute::device &d)
+    : implementation { detail::opencl_device::instance(d) } {}
 #endif
 
 
