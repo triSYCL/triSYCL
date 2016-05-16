@@ -13,7 +13,6 @@
 using namespace cl::sycl;
 
 int test_main(int argc, char *argv[]) {
-{
   // Create an OpenCL device
   device d { boost::compute::system::devices()[0] };
 
@@ -49,6 +48,20 @@ int test_main(int argc, char *argv[]) {
   // Check the host device is actually a singleton even in an unordered set
   BOOST_CHECK(ud.size() == 1);
 
-}
+  // Verify the construction from cl_device_id
+  auto all_devices = device::get_devices();
+  devices = { all_devices.begin(), all_devices.end() };
+  // Remove the host device from the list
+  devices.erase(device {});
+
+  // Reconstruct the OpenCL devices from their cl_device_id:
+  std::vector<device> od;
+  for (const auto &bd : boost::compute::system::devices())
+    od.emplace_back(bd.id());
+
+  // Compare the elements from SYCL and from Boost.Compute
+  BOOST_CHECK(std::is_permutation(devices.begin(), devices.end(),
+                                  od.begin(), od.end()));
+
   return 0;
 }

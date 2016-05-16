@@ -35,9 +35,9 @@ class platform;
 
 /** SYCL device
 
-    Implement comparable concepts to be put into containers for
-    example
- */
+    Implement comparable and hashable concepts to be put into associative
+    containers for example
+*/
 class device : public boost::totally_ordered<device> {
 
   /// The implementation forward everything to this... implementation
@@ -52,7 +52,6 @@ public:
   device() : implementation { detail::host_device::instance() } {}
 
 
-#ifdef XYZTRISYCL_OPENCL
   /** Construct a device class instance using cl_device_id of the
       OpenCL device
 
@@ -62,18 +61,18 @@ public:
       an OpenCL subdevice the device should be released by the caller
       when it is no longer needed.
   */
-  device(cl_device_id device_id) : implementation { device_id } {}
-#endif
+  device(cl_device_id device_id)
+    : device { boost::compute::device { device_id } } {}
 
 
-#ifdef TRISYCL_OPENCL
   /** Construct a device class instance using a boost::compute::device
+
+      This is a triSYCL extension for boost::compute interoperation.
 
       Return synchronous errors via the SYCL exception class.
   */
   device(const boost::compute::device &d)
     : implementation { detail::opencl_device::instance(d) } {}
-#endif
 
 
   /** Construct a device class instance using the device selector
@@ -146,8 +145,14 @@ public:
   */
   static vector_class<device>
   get_devices(info::device_type device_type = info::device_type::all) {
-    // Return a list with only the default device for now
-    return { {} };
+    // Start with the default device
+    vector_class<device> devices = { {} };
+
+    // Then add all the OpenCL devices
+    for (const auto &d : boost::compute::system::devices())
+      devices.emplace_back(d);
+
+    return devices;
   }
 
 
