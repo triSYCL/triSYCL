@@ -18,6 +18,7 @@
 
 #include "CL/sycl/detail/default_classes.hpp"
 
+#include "CL/sycl/detail/shared_ptr_implementation.hpp"
 #include "CL/sycl/device/detail/host_device.hpp"
 #ifdef TRISYCL_OPENCL
 #include "CL/sycl/device/detail/opencl_device.hpp"
@@ -35,23 +36,23 @@ class platform;
     @{
 */
 
-/** SYCL device
+/// SYCL device
+class device
+  /* Use the underlying device implementation that can be shared in the
+     SYCL model */
+  : public detail::shared_ptr_implementation<device, detail::device> {
 
-    Implement comparable and hashable concepts to be put into associative
-    containers for example
-*/
-class device : public boost::totally_ordered<device> {
+  // The type encapsulating the implementation
+  using implementation_t =
+    detail::shared_ptr_implementation<device, detail::device>;
 
-  /// The implementation forward everything to this... implementation
-  std::shared_ptr<detail::device> implementation;
-
-  /// Allows the hashing class to access the private implementation
-  friend struct std::hash<device>;
+  // Make the implementation member directly accessible in this class
+  using implementation_t::implementation;
 
 public:
 
   /// The default constructor uses the SYCL host device
-  device() : implementation { detail::host_device::instance() } {}
+  device() : implementation_t { detail::host_device::instance() } {}
 
 
 #ifdef TRISYCL_OPENCL
@@ -75,7 +76,7 @@ public:
       Return synchronous errors via the SYCL exception class.
   */
   device(const boost::compute::device &d)
-    : implementation { detail::opencl_device::instance(d) } {}
+    : implementation_t { detail::opencl_device::instance(d) } {}
 #endif
 
 
@@ -161,6 +162,8 @@ public:
   /** Query the device for OpenCL info::device info
 
       Return synchronous errors via the SYCL exception class.
+
+      \todo
   */
   template <typename T>
   T get_info(info::device param) const {
@@ -171,6 +174,8 @@ public:
   /** Query the device for OpenCL info::device info
 
       Return synchronous errors via the SYCL exception class.
+
+      \todo
   */
   template <info::device Param>
   auto get_info() const {
@@ -190,6 +195,8 @@ public:
       provided
 
       Return synchronous errors via SYCL exception classes.
+
+      \todo
   */
   vector_class<device>
   create_sub_devices(info::device_partition_type partition_type,
@@ -201,29 +208,6 @@ public:
   }
 #endif
 
-  /** Equality operator
-
-      This is generalized by boost::equality_comparable from
-      boost::totally_ordered to implement the equality comparable
-      concept
-  */
-  bool operator ==(const device &other) const {
-    return implementation == other.implementation;
-  }
-
-
-  /** Inferior operator
-
-      This is generalized by boost::less_than_comparable from
-      boost::totally_ordered to implement the equality comparable
-      concept
-
-      \todo Add this to the spec
-  */
-  bool operator <(const device &other) const {
-    return implementation < other.implementation;
-  }
-
 };
 
 /// @} to end the Doxygen group
@@ -232,7 +216,7 @@ public:
 }
 
 
-/* Inject a custom specialization of std::hash to have the object
+/* Inject a custom specialization of std::hash to have the buffer
    usable into an unordered associative container
 
    \todo Add this to the spec
@@ -241,9 +225,9 @@ namespace std {
 
 template <> struct hash<cl::sycl::device> {
 
-  auto operator()(cl::sycl::device const& d) const {
+  auto operator()(const cl::sycl::device &d) const {
     // Forward the hashing to the implementation
-    return std::hash<decltype(d.implementation)>{}(d.implementation);
+    return d.hash();
   }
 
 };

@@ -41,6 +41,11 @@ struct shared_ptr_implementation : public boost::totally_ordered<Parent> {
 
 public:
 
+  /// The implementation directly as a shared pointer
+  shared_ptr_implementation(std::shared_ptr<Implementation> i)
+    : implementation { i } {}
+
+
   /// The implementation takes the ownership from a raw pointer
   shared_ptr_implementation(Implementation *i) : implementation { i } {}
 
