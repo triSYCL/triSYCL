@@ -1,11 +1,9 @@
 #include <unordered_set>
 #include <set>
 
+/// Check associative containers with a default object by default
 template <typename T>
-void associative_container_checks() {
-  // Create a default object
-  T t;
-
+void associative_container_checks(T t = {}) {
   // Verify the copy operation
   T t2 { t };
   BOOST_CHECK(t2 == t);
