@@ -11,7 +11,9 @@
 
 #include <memory>
 
+#ifdef TRISYCL_OPENCL
 #include <boost/compute.hpp>
+#endif
 #include <boost/operators.hpp>
 
 #include "CL/sycl/detail/default_classes.hpp"
@@ -52,6 +54,7 @@ public:
   device() : implementation { detail::host_device::instance() } {}
 
 
+#ifdef TRISYCL_OPENCL
   /** Construct a device class instance using cl_device_id of the
       OpenCL device
 
@@ -73,6 +76,7 @@ public:
   */
   device(const boost::compute::device &d)
     : implementation { detail::opencl_device::instance(d) } {}
+#endif
 
 
   /** Construct a device class instance using the device selector
@@ -83,10 +87,6 @@ public:
       \todo
   */
   //explicit device(const device_selector &ds) : implementation { ds } {}
-
-
-  /// Get the default constructors back.
-  //device() = default;
 
 
 #ifdef TRISYCL_OPENCL
@@ -148,9 +148,11 @@ public:
     // Start with the default device
     vector_class<device> devices = { {} };
 
+#ifdef TRISYCL_OPENCL
     // Then add all the OpenCL devices
     for (const auto &d : boost::compute::system::devices())
       devices.emplace_back(d);
+#endif
 
     return devices;
   }
