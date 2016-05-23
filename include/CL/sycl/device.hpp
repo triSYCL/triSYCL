@@ -130,6 +130,26 @@ public:
   }
 
 
+
+  /** Return the device_type of a device
+
+      \todo Present in Boost.Compute, to be added to the specification
+  */
+  info::device_type type() const {
+    if (is_host())
+      return info::device_type::host;
+    else if (is_cpu())
+      return info::device_type::cpu;
+    else if (is_gpu())
+      return info::device_type::gpu;
+    else if (is_accelerator())
+      return info::device_type::accelerator;
+    else
+      // \todo Put a SYCL exception
+      throw std::domain_error("Unknown cl::sycl::info::device_type");
+  }
+
+
   /** Return the platform of device
 
       Return synchronous errors via the SYCL exception class.

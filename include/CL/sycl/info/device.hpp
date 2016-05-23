@@ -19,6 +19,25 @@ namespace sycl {
 */
 
 namespace info {
+
+/** Type of devices
+
+    To be used either to define a device type or to select more
+    broadly a kind of device
+
+    \todo To be moved in the specification from platform to device
+*/
+enum class device_type : unsigned int {
+  cpu,
+  gpu,
+  accelerator,
+  custom,
+  defaults,
+  host,
+  all
+};
+
+
 /** Device information descriptors
 
     From specs/latex/headers/deviceInfo.h in the specification

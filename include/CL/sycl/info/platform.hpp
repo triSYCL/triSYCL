@@ -20,17 +20,6 @@ namespace sycl {
 */
 namespace info {
 
-enum class device_type : unsigned int {
-  cpu,
-  gpu,
-  accelerator,
-  custom,
-  defaults,
-  host,
-  all
-};
-
-
 /** Platform information descriptors
 
     A SYCL platform can be queried for all of the following information
