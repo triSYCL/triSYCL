@@ -21,6 +21,10 @@
 #include <CL/sycl.hpp>
 #include <iostream>
 
+#include <boost/test/minimal.hpp>
+
+#include "associative_container_checks.hpp"
+
 using namespace cl::sycl;
 
 
@@ -39,9 +43,13 @@ void display(const platform &p) {
 }
 
 
-int main() {
+int test_main(int argc, char *argv[]) {
+  associative_container_checks<device>({});
   platform p;
   display(p);
+
+  // Check that it is the host platform by default
+  BOOST_CHECK(p.is_host());
 
   platform p2 { p };
 
