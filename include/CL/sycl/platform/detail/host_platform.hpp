@@ -72,10 +72,11 @@ public:
   }
 #endif
 
+
   /** Returning the information parameters for the host platform
       implementation
   */
-  string_class get_host_platform_info_string(info::platform param) {
+  string_class get_info_string(info::platform param) const override {
     switch (param) {
     case info::platform::profile:
       /* Well... Is the host platform really a full profile whereas it
@@ -102,6 +103,7 @@ public:
     }
   }
 
+
   /** Specify whether a specific extension is supported on the platform
 
       \todo To be implemented
@@ -126,12 +128,8 @@ public:
 
 private:
 
-  /// The private constructors make sure it is only constructed here
-  host_platform() = default;
-
-
   /// Disallow someone else to destroy the instance
-  ~host_platform() {}
+  ~host_platform() override {}
 };
 
 /// @} to end the execution Doxygen group

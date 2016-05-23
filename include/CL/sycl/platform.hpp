@@ -23,7 +23,6 @@
 #ifdef TRISYCL_OPENCL
 #include "CL/sycl/platform/detail/opencl_platform.hpp"
 #endif
-#include "CL/sycl/platform/detail/host_information.hpp"
 #include "CL/sycl/platform/detail/platform.hpp"
 #include "CL/sycl/info/platform.hpp"
 
@@ -71,12 +70,22 @@ public:
 
       Retain a reference to the OpenCL platform.
   */
-  platform(cl_platform_id platform_id) :
-    : device { boost::compute::platform { platform_id } } {}
+  platform(cl_platform_id platform_id)
+    : platform { boost::compute::platform { platform_id } } {}
+
+
+  /** Construct a platform class instance using a boost::compute::platform
+
+      This is a triSYCL extension for boost::compute interoperation.
+
+      Return synchronous errors via the SYCL exception class.
+  */
+  platform(const boost::compute::platform &p)
+    : implementation_t { detail::opencl_platform::instance(p) } {}
 #endif
 
 
-  /**  Construct a platform object from the device returned by a device
+  /**  Construct a platform object from the device selected by a device
        selector of the user's choice
 
        Returns errors via the SYCL exception class.
@@ -104,6 +113,13 @@ public:
   static vector_class<platform> get_platforms() {
     // Start with the default platform
     vector_class<platform> platforms { {} };
+
+#ifdef TRISYCL_OPENCL
+    // Then add all the OpenCL platforms
+    for (const auto &d : boost::compute::system::platforms())
+      platforms.emplace_back(d);
+#endif
+
     return platforms;
   }
 
@@ -127,15 +143,11 @@ public:
   template <info::platform Param>
   typename info::param_traits<info::platform, Param>::type
   get_info() const {
-#ifdef TRISYCL_OPENCL
-    if (m_platform)
-      /* Use the fact that the triSYCL info values are the same as the
-         OpenCL ones used in Boost.Compute to just cast the enum class to
-         the int value */
-      return m_platform->get_info<static_cast<int>(Param)>();
-#endif
-    // Otherwise ask the host platform information
-    return detail::get_host_platform_info<Param>();
+    /* Forward to the implementation without using template parameter
+       but with a parameter instead, since it is incompatible with
+       virtual function and because fortunately only strings are
+       needed here */
+    return implementation->get_info_string(Param);
   }
 
 
@@ -155,6 +167,25 @@ public:
 /// @} to end the execution Doxygen group
 
 }
+}
+
+
+/* Inject a custom specialization of std::hash to have the buffer
+   usable into an unordered associative container
+
+   \todo Add this to the spec
+*/
+namespace std {
+
+template <> struct hash<cl::sycl::platform> {
+
+  auto operator()(const cl::sycl::platform &p) const {
+    // Forward the hashing to the implementation
+    return p.hash();
+  }
+
+};
+
 }
 
 /*

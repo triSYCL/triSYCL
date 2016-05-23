@@ -1,5 +1,5 @@
 #ifndef TRISYCL_SYCL_DETAIL_CACHE_HPP
-#define TRISYCL_SYCL_DEVICE_CACHE_HPP
+#define TRISYCL_SYCL_DETAIL_CACHE_HPP
 
 /** \file A simple thread-safe cache
 

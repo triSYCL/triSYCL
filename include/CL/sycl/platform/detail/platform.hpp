@@ -36,8 +36,8 @@ public:
   virtual bool is_host() const = 0;
 
 
-//  /// Query the platform for OpenCL string info::platform info
-//  virtual string_class get_info_string(info::platform param) const = 0;
+  /// Query the platform for OpenCL string info::platform info
+  virtual string_class get_info_string(info::platform param) const = 0;
 
 
   /// Specify whether a specific extension is supported on the platform.

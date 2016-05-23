@@ -4,8 +4,6 @@
 
 #include <algorithm>
 #include <iostream>
-#include <unordered_set>
-#include <set>
 
 // The #ifdef is to remember this test requires OpenCL to run...
 #ifdef TRISYCL_OPENCL

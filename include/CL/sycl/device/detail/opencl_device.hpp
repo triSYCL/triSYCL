@@ -77,7 +77,7 @@ public:
 
       \todo To be implemented
   */
-  platform get_platform() const override {
+  cl::sycl::platform get_platform() const override {
     detail::unimplemented();
     return {};
   }
@@ -121,7 +121,7 @@ private:
 public:
 
   /// Unregister from the cache on destruction
-  ~opencl_device() {
+  ~opencl_device() override {
     cache.remove(d.id());
   }
 

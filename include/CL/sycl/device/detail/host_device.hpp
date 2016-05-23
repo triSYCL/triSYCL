@@ -119,12 +119,8 @@ public:
 
 private:
 
-  /// The private constructors make sure it is only constructed here
-  host_device() = default;
-
-
   /// Disallow someone else to destroy the instance
-  ~host_device() {}
+  ~host_device() override {}
 
 };
 
