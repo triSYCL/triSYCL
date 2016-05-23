@@ -139,7 +139,18 @@ public:
 #endif
 
 
-  /// Get the OpenCL information about the requested parameter
+  /** Get the OpenCL information about the requested parameter
+
+      \todo Add to the specification
+  */
+  template <typename ReturnT>
+  ReturnT get_info(info::platform param) const {
+    // Only strings are needed here
+    return implementation->get_info_string(param);
+  }
+
+
+  /// Get the OpenCL information about the requested template parameter
   template <info::platform Param>
   typename info::param_traits<info::platform, Param>::type
   get_info() const {
@@ -147,7 +158,8 @@ public:
        but with a parameter instead, since it is incompatible with
        virtual function and because fortunately only strings are
        needed here */
-    return implementation->get_info_string(Param);
+    return get_info<typename info::param_traits<info::platform,
+                                                Param>::type>(Param);
   }
 
 

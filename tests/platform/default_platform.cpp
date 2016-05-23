@@ -24,24 +24,9 @@
 #include <boost/test/minimal.hpp>
 
 #include "associative_container_checks.hpp"
+#include "display_platform.hpp"
 
 using namespace cl::sycl;
-
-
-void display(const platform &p) {
-  std::cout << "is_host() = " << p.is_host() << std::endl;
-  std::cout << "get_info<info::platform::profile>() = "
-            << p.get_info<info::platform::profile>() << std::endl;
-  std::cout << "get_info<info::platform:::version>() = "
-            << p.get_info<info::platform::version>() << std::endl;
-  std::cout << "get_info<info::platform::name>() = "
-            << p.get_info<info::platform::name>() << std::endl;
-  std::cout << "get_info<info::platform::vendor>() = "
-            << p.get_info<info::platform::vendor>() << std::endl;
-  std::cout << "get_info<info::platform::extensions>() = "
-            << p.get_info<info::platform::extensions>() << std::endl;
-}
-
 
 int test_main(int argc, char *argv[]) {
   associative_container_checks<device>({});
