@@ -1,7 +1,7 @@
 #ifndef TRISYCL_SYCL_DEVICE_DETAIL_DEVICE_HPP
 #define TRISYCL_SYCL_DEVICE_DETAIL_DEVICE_HPP
 
-/** \file The OpenCL SYCL device
+/** \file The OpenCL SYCL abstract device
 
     Ronan at Keryell point FR
 
@@ -49,7 +49,7 @@ public:
 
 
   /// Return the platform of device
-  virtual platform get_platform() const = 0;
+  virtual cl::sycl::platform get_platform() const = 0;
 
 
   /// Query the device for OpenCL info::device info

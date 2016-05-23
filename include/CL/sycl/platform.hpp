@@ -9,12 +9,22 @@
     License. See LICENSE.TXT for details.
 */
 
-#include "CL/sycl/context.hpp"
+#ifdef TRISYCL_OPENCL
+#include <boost/compute.hpp>
+#endif
+
 #include "CL/sycl/detail/default_classes.hpp"
 #include "CL/sycl/detail/global_config.hpp"
+
+#include "CL/sycl/detail/shared_ptr_implementation.hpp"
 #include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/device.hpp"
+#include "CL/sycl/platform/detail/host_platform.hpp"
+#ifdef TRISYCL_OPENCL
+#include "CL/sycl/platform/detail/opencl_platform.hpp"
+#endif
 #include "CL/sycl/platform/detail/host_information.hpp"
+#include "CL/sycl/platform/detail/platform.hpp"
 #include "CL/sycl/info/platform.hpp"
 
 namespace cl {
@@ -31,40 +41,39 @@ class device;
 
     \todo triSYCL Implementation
 */
-class platform {
+class platform
+  /* Use the underlying platform implementation that can be shared in the
+     SYCL model */
+  : public detail::shared_ptr_implementation<platform, detail::platform> {
 
-#ifdef TRISYCL_OPENCL
-  /// Refer to the related OpenCL platform of any
-  std::shared_ptr<boost::compute::platform> m_platform;
-#endif
+  // The type encapsulating the implementation
+  using implementation_t =
+    detail::shared_ptr_implementation<platform, detail::platform>;
+
+  // Make the implementation member directly accessible in this class
+  using implementation_t::implementation;
+
 
 public:
 
-#ifdef TRISYCL_OPENCL
-  /** Construct a default platform and provide an optional error_handler
-      to deals with errors
-
-      \todo Add copy/move constructor to the implementation
-
-      \todo Add const to the specification
-  */
-  explicit platform(cl_platform_id platformID) :
-    m_platform { new boost::compute::platform { platformID} }
-  {}
-#endif
-
-  /** Default constructor for platform
-
-      It constructs a platform object to encapsulate the device returned
-      by the default device selector.
+  /** Default constructor for platform which is the host platform
 
       Returns errors via the SYCL exception class.
-
-      Get back the default constructors, for this implementation.
-
-      In this implementation the default platform is the host platform.
   */
-  platform() = default;
+  platform() : implementation_t { detail::host_platform::instance() } {}
+
+
+#ifdef TRISYCL_OPENCL
+  /** Construct a platform class instance using cl_platform_id of the
+      OpenCL device
+
+      Return synchronous errors via the SYCL exception class.
+
+      Retain a reference to the OpenCL platform.
+  */
+  platform(cl_platform_id platform_id) :
+    : device { boost::compute::platform { platform_id } } {}
+#endif
 
 
   /**  Construct a platform object from the device returned by a device
@@ -72,7 +81,7 @@ public:
 
        Returns errors via the SYCL exception class.
   */
-  explicit platform(const device_selector &devSelector) {
+  explicit platform(const device_selector &dev_selector) {
     detail::unimplemented();
   }
 
@@ -83,35 +92,22 @@ public:
       If the platform is not a valid OpenCL platform, for example if it is
       the SYCL host, an exception is thrown
 
-      \todo Modify the specification to throw since returning nullptr does
-      mean anything
-
       \todo Define a SYCL exception for this
   */
   cl_platform_id get() const {
-    if (m_platform)
-      return m_platform->id();
-
-    throw std::domain_error { "The host platform is not an OpenCL platform" };
+    return implementation->get();
   }
 #endif
 
 
-  /** Get the list of all the platforms available to the application
-   */
+  /// Get the list of all the platforms available to the application
   static vector_class<platform> get_platforms() {
-    // There is always the host platform at least
-    vector_class<platform> platforms { platform { } };
-
-#ifdef TRISYCL_OPENCL
-    for (auto const &p : boost::compute::system::platforms())
-      platforms.emplace_back(p.id());
-#endif
-
+    // Start with the default platform
+    vector_class<platform> platforms { {} };
     return platforms;
   }
 
-
+#if 0
   /** Returns all the available devices for this platform, of type device
       type, which is defaulted to info::device_type::all
 
@@ -124,6 +120,7 @@ public:
     detail::unimplemented();
     return {};
   }
+#endif
 
 
   /// Get the OpenCL information about the requested parameter
@@ -142,37 +139,16 @@ public:
   }
 
 
-  /** Test if an extension is available on the platform
-
-      \todo Should it be a param type instead of a STRING?
-
-      \todo extend to any type of C++-string like object
-  */
+  /// Test if an extension is available on the platform
   bool has_extension(const string_class &extension) const {
-#ifdef TRISYCL_OPENCL
-    if (m_platform)
-      return m_platform->supports_extension(extension);
-#endif
-    // For now there is no supported extension on the host platform
-    return false;
+    return implementation->has_extension(extension);
   }
 
 
   /// Test if this platform is a host platform
   bool is_host() const {
-#ifdef TRISYCL_OPENCL
-    // This is the host platform if there is no OpenCL associated
-    return !m_platform;
-#else
-    // When there is no OpenCL, there is only a host platform
-    return true;
-#endif
+    return implementation->is_host();
   }
-
-
-/// \todo Add to the specification and implement == and !=
-
-/// \todo Add also < and hash for associative containers
 
 };
 

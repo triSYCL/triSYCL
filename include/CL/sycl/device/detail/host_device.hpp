@@ -75,7 +75,7 @@ public:
 
       \todo To be implemented
   */
-  platform get_platform() const override {
+  cl::sycl::platform get_platform() const override {
     detail::unimplemented();
     return {};
   }
@@ -95,7 +95,7 @@ public:
   }
 #endif
 
-  /** Specify whether a specific extension is supported on the device.
+  /** Specify whether a specific extension is supported on the device
 
       \todo To be implemented
   */

@@ -41,7 +41,7 @@ class opencl_device : public detail::device {
 
 public:
 
-  /// Return the cl_device_id of the underlying OpenCL platform
+  /// Return the cl_device_id of the underlying OpenCL device
   cl_device_id get() const override {
     return d.id();
   }

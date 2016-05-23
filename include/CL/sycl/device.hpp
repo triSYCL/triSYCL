@@ -14,7 +14,6 @@
 #ifdef TRISYCL_OPENCL
 #include <boost/compute.hpp>
 #endif
-#include <boost/operators.hpp>
 
 #include "CL/sycl/detail/default_classes.hpp"
 
@@ -184,7 +183,7 @@ public:
   }
 
 
-  /// Specify whether a specific extension is supported on the device
+  /// Test if a specific extension is supported on the device
   bool has_extension(const string_class &extension) const {
     return implementation->has_extension(extension);
   }
