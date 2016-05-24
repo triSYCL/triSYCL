@@ -165,28 +165,8 @@ public:
       Return synchronous errors via SYCL exception classes.
   */
   static vector_class<device>
-  get_devices(info::device_type device_type = info::device_type::all) {
-    // Start with the default device
-    vector_class<device> devices = { {} };
-
-#ifdef TRISYCL_OPENCL
-    // Then add all the OpenCL devices
-    for (const auto &d : boost::compute::system::devices())
-      devices.emplace_back(d);
-#endif
-
-    if (device_type == info::device_type::all)
-      return devices;
-
-    vector_class<device> d;
-    device_type_selector s { device_type };
-
-    // Return the devices with the good criterion according to the selector
-    std::copy_if(devices.begin(), devices.end(), std::back_inserter(d),
-                 [&](const device &e ) { return s(e) >= 0; });
-    return d;
-  }
-
+  get_devices(info::device_type device_type = info::device_type::all)
+    __attribute__((weak));
 
 
   /** Query the device for OpenCL info::device info

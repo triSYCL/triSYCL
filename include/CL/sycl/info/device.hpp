@@ -26,6 +26,8 @@ namespace info {
     broadly a kind of device
 
     \todo To be moved in the specification from platform to device
+
+    \todo Add opencl to the specification
 */
 enum class device_type : unsigned int {
   cpu,
@@ -34,6 +36,7 @@ enum class device_type : unsigned int {
   custom,
   defaults,
   host,
+  opencl,
   all
 };
 

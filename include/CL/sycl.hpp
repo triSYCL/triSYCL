@@ -61,6 +61,7 @@
 
 // Some includes at the end to break some dependencies
 #include "CL/sycl/device_selector/detail/device_selector_tail.hpp"
+#include "CL/sycl/device/detail/device_tail.hpp"
 
 /*
     # Some Emacs stuff:

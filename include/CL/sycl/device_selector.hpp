@@ -54,27 +54,6 @@ public:
 };
 
 
-/** A device selector by device_type
-
-    \todo To be added to the specification
-*/
-class device_type_selector : public device_selector {
-
-private:
-
-  info::device_type device_type;
-
-public:
-
-  device_type_selector(info::device_type device_type)
-    : device_type { device_type } {}
-
-  // To select only the requested device_type
-  int operator()(const device &dev) const override __attribute__((weak));
-
-};
-
-
 /** Devices selected by heuristics of the system
 
     If no OpenCL device is found then it defaults to the SYCL host device.
