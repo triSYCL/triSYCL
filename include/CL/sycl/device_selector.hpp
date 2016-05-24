@@ -30,11 +30,10 @@ public:
   /** Returns a selected device using the functor operator defined in
       sub-classes operator()(const device &dev)
 
-      \todo To be implemented
+      \todo Remove this from specification
   */
-  device select_device() const {
-    detail::unimplemented();
-    return {};
+  void /* device */ select_device() const {
+    //    return {};
   }
 
 
@@ -46,7 +45,33 @@ public:
        device in the system and the highest rated device will be used
        by the SYCL runtime.
   */
-  virtual int operator() (const device &dev) const = 0;
+  virtual int operator()(const device &dev) const = 0;
+
+
+  /// Virtual destructor so the final destructor can be called if any
+  virtual ~device_selector() {}
+
+};
+
+
+/** A device selector by device_type
+
+    \todo To be added to the specification
+*/
+class device_type_selector : public device_selector {
+
+private:
+
+  info::device_type device_type;
+
+public:
+
+  device_type_selector(info::device_type device_type)
+    : device_type { device_type } {}
+
+  // To select only the requested device_type
+  int operator()(const device &dev) const override __attribute__((weak));
+
 };
 
 
