@@ -9,6 +9,7 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <algorithm>
 #include <memory>
 
 #ifdef TRISYCL_OPENCL
@@ -85,9 +86,28 @@ public:
 
       Return errors via C++ exception class.
 
-      \todo
+      \todo Make it non-explicit in the specification?
   */
-  //explicit device(const device_selector &ds) : implementation { ds } {}
+  explicit device(const device_selector &ds) {
+    auto devices = device::get_devices();
+    if (devices.empty())
+      // \todo Put a SYCL exception
+      throw std::domain_error("No device at all! Internal error...");
+
+    /* Find the device with the best score according to the given
+       device_selector */
+    auto max = std::max_element(devices.cbegin(), devices.cend(),
+                                [&] (const device &d1, const device &d2) {
+                                  return ds(d1) < ds(d2);
+                                });
+    if (ds(*max) < 0)
+      // \todo Put a SYCL exception
+      throw std::domain_error("No device selected because no positive "
+                              "device_selector score found");
+
+    // Create the current device as a shared copy of the selected one
+    implementation = max->implementation;
+  }
 
 
 #ifdef TRISYCL_OPENCL

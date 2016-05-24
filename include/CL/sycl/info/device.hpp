@@ -28,6 +28,8 @@ namespace info {
     \todo To be moved in the specification from platform to device
 
     \todo Add opencl to the specification
+
+    \todo there is no accelerator_selector and custom_accelerator
 */
 enum class device_type : unsigned int {
   cpu,

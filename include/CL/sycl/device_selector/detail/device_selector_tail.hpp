@@ -5,6 +5,8 @@
 
     This is here to break a dependence between device and device_selector
 
+    \todo Implement lacking SYCL 2.2 selectors
+
     Ronan at Keryell point FR
 
     This file is distributed under the University of Illinois Open Source
