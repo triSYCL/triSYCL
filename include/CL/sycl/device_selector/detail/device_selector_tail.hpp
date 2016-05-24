@@ -70,6 +70,51 @@ public:
 
 };
 
+
+/** Select a device by template device_type parameter
+
+    \todo To be added to the specification
+*/
+template <info::device_type DeviceType>
+class device_typename_selector : public device_type_selector {
+
+public:
+
+  device_typename_selector() : device_type_selector { DeviceType } {}
+
+};
+
+
+/** Devices selected by heuristics of the system
+
+    If no OpenCL device is found then it defaults to the SYCL host device.
+*/
+using default_selector = device_typename_selector<info::device_type::defaults>;
+
+
+  /** Select devices according to device type info::device::device_type::gpu
+    from all the available OpenCL devices.
+
+    If no OpenCL GPU device is found the selector fails.
+
+    Select the best GPU, if any.
+*/
+using gpu_selector = device_typename_selector<info::device_type::gpu>;
+
+
+/** Select devices according to device type info::device::device_type::cpu
+    from all the available devices and heuristics
+
+    If no OpenCL CPU device is found the selector fails.
+*/
+using cpu_selector = device_typename_selector<info::device_type::cpu>;
+
+
+/** Selects the SYCL host CPU device that does not require an OpenCL
+    runtime
+*/
+using host_selector = device_typename_selector<info::device_type::host>;
+
 /// @} to end the execution Doxygen group
 
 }
