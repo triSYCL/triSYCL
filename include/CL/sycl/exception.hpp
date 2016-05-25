@@ -23,7 +23,15 @@ class queue;
     @{
 */
 
-using async_handler = function_class<int/*cl::sycl::exception_list*/>;
+/** Exception list to store several exceptions
+
+    \todo Do we need to define it in SYCL or can we rely on plain C++17 one?
+*/
+struct exception_list : std::vector<std::exception_ptr> {
+  using std::vector<std::exception_ptr>::vector;
+};
+
+using async_handler = function_class<void, exception_list>;
 
 
 /** Exception for an OpenCL operation requested in a non OpenCL area
