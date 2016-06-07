@@ -9,6 +9,7 @@
 
 #include <boost/test/minimal.hpp>
 
+#include "associative_container_checks.hpp"
 #include "check_throwing_get.hpp"
 
 using namespace cl::sycl;
@@ -23,31 +24,8 @@ int test_main(int argc, char *argv[]) {
   BOOST_CHECK(!d.is_gpu());
   BOOST_CHECK(!d.is_accelerator());
 
-  // Verify the copy operation
-  device d2 { d };
-  BOOST_CHECK(d == d2);
-
-  device d3;
-  // Check the host device is actually a singleton
-  BOOST_CHECK(d == d3);
-
-  // Check device is comparable so it can be put in associative containers
-  std::set<device> devices;
-  devices.insert(d);
-  devices.insert(d2);
-  devices.insert(d3);
-
-  // Check the host device is actually a singleton even in an ordered set
-  BOOST_CHECK(devices.size() == 1);
-
-  // Check device is comparable so it can be put in associative containers
-  std::unordered_set<device> ud;
-  ud.insert(d);
-  ud.insert(d2);
-  ud.insert(d3);
-
-  // Check the host device is actually a singleton even in an unordered set
-  BOOST_CHECK(ud.size() == 1);
+  // Basic checks on associative containers
+  associative_container_checks(d);
 
   // Check that the host device appears in the device list exactly once
   auto l = device::get_devices();
