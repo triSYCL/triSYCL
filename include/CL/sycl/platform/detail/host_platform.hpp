@@ -10,10 +10,9 @@
 */
 #include <memory>
 
-#include <boost/core/null_deleter.hpp>
-
 #include "CL/sycl/detail/default_classes.hpp"
 
+#include "CL/sycl/detail/singleton.hpp"
 #include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/exception.hpp"
 #include "CL/sycl/info/param_traits.hpp"
@@ -29,7 +28,8 @@ namespace detail {
 */
 
 /// SYCL host platform
-class host_platform : public detail::platform {
+class host_platform : public detail::platform,
+                      public detail::singleton<host_platform> {
 
 // \todo Have this compatible with has_extension
 auto static constexpr platform_extensions = "Xilinx_blocking_pipes";
@@ -113,23 +113,6 @@ public:
     return {};
   }
 
-
-  /// Get a singleton instance of the host_platform
-  static std::shared_ptr<host_platform> instance() {
-    // C++11 guaranties the static construction is thread-safe
-    static host_platform singleton;
-    /** Use a null_deleter since the singleton should not be deleted,
-        as allocated in the static area */
-    static std::shared_ptr<host_platform> sps { &singleton,
-                                                boost::null_deleter {} };
-
-    return sps;
-  }
-
-private:
-
-  /// Disallow someone else to destroy the instance
-  ~host_platform() override {}
 };
 
 /// @} to end the execution Doxygen group

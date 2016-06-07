@@ -11,10 +11,9 @@
 
 #include <memory>
 
-#include <boost/core/null_deleter.hpp>
-
 #include "CL/sycl/detail/default_classes.hpp"
 
+#include "CL/sycl/detail/singleton.hpp"
 #include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/device/detail/device.hpp"
 #include "CL/sycl/exception.hpp"
@@ -29,7 +28,8 @@ namespace detail {
 
     \todo The implementation is quite minimal for now. :-)
 */
-class host_device : public detail::device {
+class host_device : public detail::device,
+                    public detail::singleton<host_device> {
 
 public:
 
@@ -104,23 +104,6 @@ public:
     return {};
   }
 
-
-  /// Get a singleton instance of the host_device
-  static std::shared_ptr<host_device> instance() {
-    // C++11 guaranties the static construction is thread-safe
-    static host_device singleton;
-    /** Use a null_deleter since the singleton should not be deleted,
-        as allocated in the static area */
-    static std::shared_ptr<host_device> sps { &singleton,
-                                              boost::null_deleter {} };
-
-    return sps;
-  }
-
-private:
-
-  /// Disallow someone else to destroy the instance
-  ~host_device() override {}
 
 };
 
