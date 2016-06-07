@@ -9,6 +9,8 @@
 
 #include <boost/test/minimal.hpp>
 
+#include "check_throwing_get.hpp"
+
 using namespace cl::sycl;
 
 int test_main(int argc, char *argv[]) {
@@ -51,19 +53,8 @@ int test_main(int argc, char *argv[]) {
   auto l = device::get_devices();
   BOOST_CHECK(std::count(l.begin(), l.end(), d) == 1);
 
-// Some OpenCL specific tests
-#ifdef TRISYCL_OPENCL
-  bool exception_seen = false;
-  try {
-    // Try to get the non existent CL device
-    d.get();
-  }
-  catch (non_cl_error e) {
-    exception_seen = true;
-  }
-  // Check the error was well managed
-  BOOST_CHECK(exception_seen);
-#endif
+  // Verify that get() throws since there is no OpenCL behind the curtain
+  check_throwing_get(d);
 
   return 0;
 }

@@ -24,6 +24,7 @@
 #include <boost/test/minimal.hpp>
 
 #include "associative_container_checks.hpp"
+#include "check_throwing_get.hpp"
 #include "display_platform.hpp"
 
 using namespace cl::sycl;
@@ -47,6 +48,9 @@ int test_main(int argc, char *argv[]) {
     std::cout << "Platform " << &p << ':' << std::endl;
     display(p);
   }
+
+  // Verify that get() throws since there is no OpenCL behind the curtain
+  check_throwing_get(p);
 
   return 0;
 }
