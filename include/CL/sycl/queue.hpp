@@ -22,7 +22,10 @@
 #include "CL/sycl/handler_event.hpp"
 #include "CL/sycl/info/param_traits.hpp"
 #include "CL/sycl/parallelism.hpp"
-#include "CL/sycl/queue/detail/queue.hpp"
+#include "CL/sycl/queue/detail/host_queue.hpp"
+#ifdef TRISYCL_OPENCL
+//#include "CL/sycl/queue/detail/opencl_queue.hpp"
+#endif
 
 namespace cl {
 namespace sycl {
@@ -85,8 +88,7 @@ public:
 
       Returns errors via the SYCL exception class.
   */
-  //queue() : implementation_t { new detail::host_queue } {}
-  queue() : implementation_t { new detail::queue } {}
+  queue() : implementation_t { new detail::host_queue } {}
 
 
   /** This constructor creates a SYCL queue from an OpenCL queue
@@ -322,6 +324,10 @@ public:
     // Since it is not implemented, always submit on the main queue
     return submit(cgf);
   }
+
+
+  // Virtual to call the real destructor
+  virtual ~queue() {}
 
 };
 
