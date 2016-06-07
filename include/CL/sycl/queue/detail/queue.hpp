@@ -68,6 +68,7 @@ struct queue {
 
 
   /// Wait for all kernel completion before the queue destruction
+  /// \todo Update according spec since queue destruction is non blocking
   ~queue() {
     wait_for_kernel_execution();
   }
