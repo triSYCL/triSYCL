@@ -29,7 +29,7 @@
 using namespace cl::sycl;
 
 int test_main(int argc, char *argv[]) {
-  associative_container_checks<device>({});
+  associative_container_checks<platform>({});
   platform p;
   display(p);
 

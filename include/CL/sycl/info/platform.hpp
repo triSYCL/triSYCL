@@ -1,7 +1,7 @@
 #ifndef TRISYCL_SYCL_INFO_PLATFORM_HPP
 #define TRISYCL_SYCL_INFO_PLATFORM_HPP
 
-/** \file The OpenCL SYCL platform
+/** \file The OpenCL SYCL platform information parameters
 
     Ronan at Keryell point FR
 
@@ -23,8 +23,7 @@ namespace info {
 /** Platform information descriptors
 
     A SYCL platform can be queried for all of the following information
-    using the get_info function. All SYCL contexts have valid devices for
-    them, including the SYCL host device.
+    using the get_info function.
 
     In this implementation, the values are mapped to OpenCL values to
     avoid further remapping later when OpenCL is used
