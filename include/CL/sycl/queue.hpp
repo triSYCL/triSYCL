@@ -215,22 +215,20 @@ public:
 
       Caller should release it when finished.
 
-      If the queue is a SYCL host queue then a nullptr will be returned.
+      If the queue is a SYCL host queue then an exception is thrown.
   */
   cl_command_queue get() const {
-    detail::unimplemented();
-    return {};
+    return implementation->get();
   }
 #endif
 
 
-  /** Return the SYCL queue’s context
+  /** Return the SYCL queue's context
 
       Report errors using SYCL exception classes.
   */
   context get_context() const {
-    detail::unimplemented();
-    return {};
+    return implementation->get_context();
   }
 
 
@@ -239,16 +237,15 @@ public:
       Report errors using SYCL exception classes.
   */
   device get_device() const {
-    detail::unimplemented();
-    return {};
+    return implementation->get_device();
   }
 
 
-  /** Return whether the queue is executing on a SYCL host device
-  */
+  /// Return whether the queue is executing on a SYCL host device
   bool is_host() const {
-    return true;
+    return implementation->is_host();
   }
+
 
   /** Performs a blocking wait for the completion all enqueued tasks in
       the queue
@@ -324,10 +321,6 @@ public:
     // Since it is not implemented, always submit on the main queue
     return submit(cgf);
   }
-
-
-  // Virtual to call the real destructor
-  virtual ~queue() {}
 
 };
 

@@ -13,6 +13,8 @@
 #include <condition_variable>
 #include <mutex>
 
+#include "CL/sycl/context.hpp"
+#include "CL/sycl/device.hpp"
 #include "CL/sycl/detail/debug.hpp"
 
 namespace cl {
@@ -67,9 +69,42 @@ struct queue {
   }
 
 
+#ifdef TRISYCL_OPENCL
+  /** Return the underlying OpenCL command queue after doing a retain
+
+      This memory object is expected to be released by the developer.
+
+      Retain a reference to the returned cl_command_queue object.
+
+      Caller should release it when finished.
+
+      If the queue is a SYCL host queue then an exception is thrown.
+  */
+  virtual cl_command_queue get() const = 0;
+#endif
+
+
+  /** Return the SYCL queue's context
+
+      Report errors using SYCL exception classes.
+  */
+  virtual cl::sycl::context get_context() const = 0;
+
+
+  /** Return the SYCL device the queue is associated with
+
+      Report errors using SYCL exception classes.
+  */
+  virtual cl::sycl::device get_device() const = 0;
+
+
+  /// Return whether the queue is executing on a SYCL host device
+  virtual bool is_host() const = 0;
+
+
   /// Wait for all kernel completion before the queue destruction
   /// \todo Update according spec since queue destruction is non blocking
-  ~queue() {
+  virtual ~queue() {
     wait_for_kernel_execution();
   }
 
