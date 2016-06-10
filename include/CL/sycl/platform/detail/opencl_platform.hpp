@@ -97,7 +97,7 @@ public:
   static std::shared_ptr<opencl_platform>
   instance(const boost::compute::platform &p) {
     return cache.get_or_register(p.id(),
-                                 [&] { return new opencl_platform(p); });
+                                 [&] { return new opencl_platform { p }; });
   }
 
 private:

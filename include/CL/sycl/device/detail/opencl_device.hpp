@@ -32,8 +32,8 @@ class opencl_device : public detail::device {
   /// Use the Boost Compute abstraction of the OpenCL device
   boost::compute::device d;
 
-  /** A cache to always return the same live device for a given OpenCL
-      device
+  /** A cache to always return the same alive device for a given
+      OpenCL device
 
       C++11 guaranties the static construction is thread-safe
   */
@@ -110,7 +110,8 @@ public:
   ///// Get a singleton instance of the opencl_device
   static std::shared_ptr<opencl_device>
   instance(const boost::compute::device &d) {
-    return cache.get_or_register(d.id(), [&] { return new opencl_device(d); });
+    return cache.get_or_register(d.id(),
+                                 [&] { return new opencl_device { d }; });
   }
 
 private:
@@ -133,8 +134,6 @@ public:
 */
 detail::cache<cl_device_id, detail::opencl_device> opencl_device::cache
   __attribute__((weak));
-
-/// @} to end the execution Doxygen group
 
 }
 }
