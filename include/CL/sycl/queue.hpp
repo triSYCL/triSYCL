@@ -24,7 +24,7 @@
 #include "CL/sycl/parallelism.hpp"
 #include "CL/sycl/queue/detail/host_queue.hpp"
 #ifdef TRISYCL_OPENCL
-//#include "CL/sycl/queue/detail/opencl_queue.hpp"
+#include "CL/sycl/queue/detail/opencl_queue.hpp"
 #endif
 
 namespace cl {
@@ -199,10 +199,20 @@ public:
       asynchronous errors via the async_handler callback function in
       conjunction with the synchronization and throw methods.
   */
-  queue(const cl_command_queue &clQueue,
-        async_handler asyncHandler = nullptr) : queue { } {
-    detail::unimplemented();
-  }
+  queue(const cl_command_queue &q, async_handler ah = nullptr)
+    : queue { boost::compute::command_queue { q }, ah } {}
+
+
+  /** Construct a queue instance using a boost::compute::command_queue
+
+      This is a triSYCL extension for boost::compute interoperation.
+
+      Return synchronous errors via the SYCL exception class.
+
+      \todo Deal with handler
+  */
+  queue(const boost::compute::command_queue &q, async_handler ah = nullptr)
+    : implementation_t { detail::opencl_queue::instance(q) } {}
 #endif
 
 
