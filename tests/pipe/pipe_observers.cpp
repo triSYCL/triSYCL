@@ -12,7 +12,7 @@ constexpr size_t N = 3;
 auto send_element = [] (auto a_queue, cl::sycl::pipe<char> &a_pipe, char a_value) {
    a_queue.submit([&] (cl::sycl::handler &cgh) {
       // Get write access to the pipe
-      auto p = a_pipe.get_access<cl::sycl::access::write>(cgh);
+      auto p = a_pipe.get_access<cl::sycl::access::mode::write>(cgh);
 
       cgh.single_task([=] {
             // Try to write to the pipe up to success
@@ -40,15 +40,15 @@ auto get_##METHOD = [] (auto &a_queue, cl::sycl::pipe<char> &a_pipe) {  \
   cl::sycl::buffer<VALUE_TYPE> value { 1 };                             \
   a_queue.submit([&] (cl::sycl::handler &cgh) {                         \
       /* Get write access to the pipe */                                \
-      auto p = a_pipe.get_access<cl::sycl::access::write>(cgh);         \
+      auto p = a_pipe.get_access<cl::sycl::access::mode::write>(cgh);   \
       /* Get write access to write back the value returned by the observer */ \
-      auto v = value.get_access<cl::sycl::access::write>(cgh);          \
+      auto v = value.get_access<cl::sycl::access::mode::write>(cgh);    \
                                                                         \
       cgh.single_task([=] {                                             \
           *v = p.METHOD();                                              \
         });                                                             \
       });                                                               \
-  return *(value.get_access<cl::sycl::access::read>());                 \
+  return *(value.get_access<cl::sycl::access::mode::read>());           \
 };
 
 

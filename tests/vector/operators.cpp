@@ -62,7 +62,7 @@ int test_main(int argc, char *argv[]) {
     /* The command group describing all operations needed for the kernel
        execution */
     myQueue.submit([&](handler &cgh) {
-      auto kc = C.get_access<access::write>(cgh);
+      auto kc = C.get_access<access::mode::write>(cgh);
 
       cgh.parallel_for<class generate>(range<1> { N },
                                        [=] (id<1> index) {

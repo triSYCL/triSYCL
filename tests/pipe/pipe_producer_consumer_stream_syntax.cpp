@@ -35,9 +35,9 @@ int main() {
     // Launch the producer to stream A to the pipe
     q.submit([&](cl::sycl::handler &cgh) {
       // Get write access to the pipe
-      auto p = P.get_access<cl::sycl::access::write>(cgh);
+      auto p = P.get_access<cl::sycl::access::mode::write>(cgh);
       // Get read access to the data
-      auto ka = A.get_access<cl::sycl::access::read>(cgh);
+      auto ka = A.get_access<cl::sycl::access::mode::read>(cgh);
 
       cgh.single_task<class producer>([=] {
           for (int i = 0; i != N; i++)
@@ -50,11 +50,11 @@ int main() {
     // Launch the consumer that adds the pipe stream with B to C
     q.submit([&](cl::sycl::handler &cgh) {
       // Get read access to the pipe
-      auto p = P.get_access<cl::sycl::access::read>(cgh);
+      auto p = P.get_access<cl::sycl::access::mode::read>(cgh);
 
       // Get access to the input/output buffers
-      auto kb = B.get_access<cl::sycl::access::read>(cgh);
-      auto kc = C.get_access<cl::sycl::access::write>(cgh);
+      auto kb = B.get_access<cl::sycl::access::mode::read>(cgh);
+      auto kc = C.get_access<cl::sycl::access::mode::write>(cgh);
 
       cgh.single_task<class consumer>([=] {
           for (int i = 0; i != N; i++) {

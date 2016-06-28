@@ -36,9 +36,9 @@ int main() {
        execution */
     myQueue.submit([&](handler &cgh) {
       // In the kernel A and B are read, but C is written
-      auto ka = A.get_access<access::read>(cgh);
-      auto kb = B.get_access<access::read>(cgh);
-      auto kc = C.get_access<access::write>(cgh);
+      auto ka = A.get_access<access::mode::read>(cgh);
+      auto kb = B.get_access<access::mode::read>(cgh);
+      auto kc = C.get_access<access::mode::write>(cgh);
 
       // Enqueue a parallel kernel
       cgh.parallel_for<class matrix_add>(range<2> { N, M },

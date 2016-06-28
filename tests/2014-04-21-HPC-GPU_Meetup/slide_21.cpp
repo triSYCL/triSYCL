@@ -11,7 +11,7 @@ int main()
   {
     cl::sycl::buffer<int> resultBuf(&result, 1);
     myQueue.submit([&](handler &cgh) {
-        auto writeResult = resultBuf.get_access<cl::sycl::access::write>(cgh);
+        auto writeResult = resultBuf.get_access<cl::sycl::access::mode::write>(cgh);
 //////// Start left side of the slide
 cgh.single_task<class simple_test>([=] ()
             {

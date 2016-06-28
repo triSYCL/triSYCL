@@ -25,7 +25,7 @@ int test_main(int argc, char *argv[]) {
   // Initialize the input buffers to some easy-to-compute values
   cl::sycl::buffer<Type> a { N };
   {
-    auto aa = a.get_access<cl::sycl::access::write>();
+    auto aa = a.get_access<cl::sycl::access::mode::write>();
     // Initialize buffer a with increasing integer numbers starting at 0
     std::iota(aa.begin(), aa.end(), 0);
   }
@@ -42,9 +42,9 @@ int test_main(int argc, char *argv[]) {
   // Launch a producer for streaming va to the pipe pa
   q.submit([&] (cl::sycl::handler &cgh) {
       // Get write access to the pipe
-      auto apa = pa.get_access<cl::sycl::access::write>(cgh);
+      auto apa = pa.get_access<cl::sycl::access::mode::write>(cgh);
       // Get read access to the data
-      auto aa = a.get_access<cl::sycl::access::read>(cgh);
+      auto aa = a.get_access<cl::sycl::access::mode::read>(cgh);
       /* Create a kernel with WI work-items executed by work-groups of
          size WI, that is only 1 work-group of WI work-items */
       cgh.parallel_for_work_group<class producer>(
@@ -78,9 +78,9 @@ int test_main(int argc, char *argv[]) {
   // Launch the consumer to read stream from pipe pa to buffer c
   q.submit([&] (cl::sycl::handler &cgh) {
       // Get read access to the pipe
-      auto apa = pa.get_access<cl::sycl::access::read>(cgh);
+      auto apa = pa.get_access<cl::sycl::access::mode::read>(cgh);
       // Get write access to the data
-      auto ac = c.get_access<cl::sycl::access::write>(cgh);
+      auto ac = c.get_access<cl::sycl::access::mode::write>(cgh);
 
       /* Create a kernel with WI work-items executed by work-groups of
          size WI, that is only 1 work-group of WI work-items */
@@ -113,9 +113,9 @@ int test_main(int argc, char *argv[]) {
     });
 
   // Verify on the host the buffer content
-  for (auto const &e : c.get_access<cl::sycl::access::read>()) {
+  for (auto const &e : c.get_access<cl::sycl::access::mode::read>()) {
     // The difference between elements reconstructs the index value
-    BOOST_CHECK(e == &e - &*c.get_access<cl::sycl::access::read>().begin());
+    BOOST_CHECK(e == &e - &*c.get_access<cl::sycl::access::mode::read>().begin());
   }
   return 0;
 }

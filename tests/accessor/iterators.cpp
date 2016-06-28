@@ -19,13 +19,13 @@ int test_main(int argc, char *argv[]) {
   // Initialize the input buffers to some easy-to-compute values
   cl::sycl::buffer<Type> a { N };
   {
-    auto aa = a.get_access<cl::sycl::access::write>();
+    auto aa = a.get_access<cl::sycl::access::mode::write>();
     // Initialize buffer a with increasing integer starting at 0
     std::iota(aa.begin(), aa.end(), 0);
   }
   cl::sycl::buffer<Type> b { N };
   {
-    auto ab = b.get_access<cl::sycl::access::write>();
+    auto ab = b.get_access<cl::sycl::access::mode::write>();
     // Initialize buffer b starting from the end with increasing
     // integer starting at 42
     std::iota(ab.rbegin(), ab.rend(), 42);
@@ -40,9 +40,9 @@ int test_main(int argc, char *argv[]) {
   // Launch a kernel to do the summation
   q.submit([&] (cl::sycl::handler &cgh) {
       // Get access to the data
-      auto aa = a.get_access<cl::sycl::access::read>(cgh);
-      auto ab = b.get_access<cl::sycl::access::read>(cgh);
-      auto ac = c.get_access<cl::sycl::access::write>(cgh);
+      auto aa = a.get_access<cl::sycl::access::mode::read>(cgh);
+      auto ab = b.get_access<cl::sycl::access::mode::read>(cgh);
+      auto ac = c.get_access<cl::sycl::access::mode::write>(cgh);
 
       cgh.single_task<class sum>([=] {
           // For fun, use aggregate iterators
@@ -59,7 +59,7 @@ int test_main(int argc, char *argv[]) {
     });
 
   //std::cout << std::endl << "Result:" << std::endl;
-  for (auto e : c.get_access<cl::sycl::access::read>())
+  for (auto e : c.get_access<cl::sycl::access::mode::read>())
     BOOST_CHECK(e == N + 42 - 1);
     // std::cout << e << " ";
   //std::cout << std::endl;

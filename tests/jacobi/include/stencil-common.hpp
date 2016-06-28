@@ -24,7 +24,7 @@ inline T coef_plus (T a, T b) {
 
 // common
 
-template <typename T, cl::sycl::buffer<T,2> *_B, T& (*_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::write>)>
+template <typename T, cl::sycl::buffer<T,2> *_B, T& (*_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write>)>
 class output_2D {};
 
 template <typename T, int _nb_tab, int d0, int d1, int _nbi_wg0 = d0 + 1, int _nbi_wg1 = d1 + 1, bool _recur = 1>

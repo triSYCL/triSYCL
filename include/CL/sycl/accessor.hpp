@@ -37,7 +37,7 @@ class handler;
 template <typename DataType,
           std::size_t Dimensions,
           access::mode AccessMode,
-          access::target Target = access::global_buffer>
+          access::target Target = access::target::global_buffer>
 struct accessor : detail::accessor<DataType, Dimensions, AccessMode, Target> {
   /// \todo in the specification: store the dimension for user request
   static constexpr auto dimensionality = Dimensions;
@@ -142,10 +142,10 @@ struct accessor : detail::accessor<DataType, Dimensions, AccessMode, Target> {
 */
 template <typename DataType,
           access::mode AccessMode>
-struct accessor<DataType, 1, AccessMode, access::pipe> :
-    detail::pipe_accessor<DataType, AccessMode, access::pipe> {
+struct accessor<DataType, 1, AccessMode, access::target::pipe> :
+    detail::pipe_accessor<DataType, AccessMode, access::target::pipe> {
   using accessor_detail =
-    detail::pipe_accessor<DataType, AccessMode, access::pipe>;
+    detail::pipe_accessor<DataType, AccessMode, access::target::pipe>;
   // Inherit of the constructors to have accessor constructor from detail
   using accessor_detail::accessor_detail;
 
@@ -178,10 +178,12 @@ struct accessor<DataType, 1, AccessMode, access::pipe> :
 */
 template <typename DataType,
           access::mode AccessMode>
-struct accessor<DataType, 1, AccessMode, access::blocking_pipe> :
-    detail::pipe_accessor<DataType, AccessMode, access::blocking_pipe> {
+struct accessor<DataType, 1, AccessMode, access::target::blocking_pipe> :
+    detail::pipe_accessor<DataType,
+                          AccessMode,
+                          access::target::blocking_pipe> {
   using accessor_detail =
-    detail::pipe_accessor<DataType, AccessMode, access::blocking_pipe>;
+    detail::pipe_accessor<DataType, AccessMode, access::target::blocking_pipe>;
   // Inherit of the constructors to have accessor constructor from detail
   using accessor_detail::accessor_detail;
 

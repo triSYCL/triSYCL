@@ -76,8 +76,8 @@ bool trisycl_verify_buffer_value(cl::sycl::buffer<dataType, dimensions> b,
   do {                                                                  \
     try {                                                               \
       trisycl_verify_buffer_value(b,                                    \
-                                  b.get_access<cl::sycl::access::read,  \
-                                  cl::sycl::access::host_buffer>(),     \
+                                  b.get_access<cl::sycl::access::mode::read, \
+                                  cl::sycl::access::target::host_buffer>(), \
                                   func);                                \
     }                                                                   \
     catch (std::runtime_error &e) {                                     \

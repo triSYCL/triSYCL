@@ -15,8 +15,8 @@ constexpr size_t N = 30;
 class ParallelFor {
  using accessor_type = accessor<unsigned int,
                                 1,
-                                access::write,
-                                access::global_buffer>;
+                                access::mode::write,
+                                access::target::global_buffer>;
   // The way to access to the buffer from inside the kernel
   accessor_type a;
 
@@ -42,8 +42,8 @@ public:
 class SingleTask {
  using accessor_type = accessor<char,
                                 1,
-                                access::write,
-                                access::global_buffer>;
+                                access::mode::write,
+                                access::target::global_buffer>;
   // The value to be stored in the buffer
   char value;
   // The way to access to the buffer from inside the kernel
@@ -72,7 +72,7 @@ int main() {
 
     buffer<unsigned int, 1> a { N };
     q.submit([&](handler &cgh) {
-        auto acc = a.get_access<access::write>(cgh);
+        auto acc = a.get_access<access::mode::write>(cgh);
         // Show that we can use a simple parallel_for with int, for example
         cgh.parallel_for(N, ParallelFor { acc });
       });
@@ -81,7 +81,7 @@ int main() {
 
     buffer<char, 1> b { 1 };
     q.submit([&](handler &cgh) {
-        auto acc = b.get_access<access::write>(cgh);
+        auto acc = b.get_access<access::mode::write>(cgh);
         // Show that we can use a simple parallel_for with int, for example
         cgh.single_task(SingleTask { 42, acc });
       });

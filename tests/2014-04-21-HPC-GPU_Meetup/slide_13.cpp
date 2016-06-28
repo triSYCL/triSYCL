@@ -22,9 +22,9 @@ int main() {
         sycl::queue myQueue(myContext, sycl::gpu_selector { });
 
         myQueue.submit([&](sycl::handler &cgh) {
-            sycl::accessor<int, 1, sycl::access::read>   a(inputABuffer, cgh);
-            sycl::accessor<int, 1, sycl::access::read>   b(inputBBuffer, cgh);
-            sycl::accessor<int, 1, sycl::access::write>  r(outputBuffer, cgh);
+            sycl::accessor<int, 1, sycl::access::mode::read>   a(inputABuffer, cgh);
+            sycl::accessor<int, 1, sycl::access::mode::read>   b(inputBBuffer, cgh);
+            sycl::accessor<int, 1, sycl::access::mode::write>  r(outputBuffer, cgh);
             cgh.parallel_for<class three_way_add>(sycl::range<1> { numElements },
                                                   [=](sycl::id<1> item) {
                                                     auto i = item.get(0);

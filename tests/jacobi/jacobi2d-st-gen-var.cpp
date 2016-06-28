@@ -9,10 +9,10 @@ inline float coef_el_op(float coef, float el) {return coef*el;}
 inline float reduc_op(float el1, float el2) {return el1+el2;}
 
 // acces functions
-inline float& fdl_out(int a,int b, cl::sycl::accessor<float, 2, cl::sycl::access::write> acc) {return acc[a][b];}
-inline float  fdl_in(int a,int b, cl::sycl::accessor<float, 2, cl::sycl::access::read>  acc) {return acc[a][b];}
-inline float  fac(int a,int b, int c, int d, cl::sycl::accessor<float, 1, cl::sycl::access::read>  acc) {return MULT_COEF*acc[0];}
-inline float  fac_id(int a,int b, int c, int d, cl::sycl::accessor<float, 1, cl::sycl::access::read>  acc) {return acc[0];}
+inline float& fdl_out(int a,int b, cl::sycl::accessor<float, 2, cl::sycl::access::mode::write> acc) {return acc[a][b];}
+inline float  fdl_in(int a,int b, cl::sycl::accessor<float, 2, cl::sycl::access::mode::read>  acc) {return acc[a][b];}
+inline float  fac(int a,int b, int c, int d, cl::sycl::accessor<float, 1, cl::sycl::access::mode::read>  acc) {return MULT_COEF*acc[0];}
+inline float  fac_id(int a,int b, int c, int d, cl::sycl::accessor<float, 1, cl::sycl::access::mode::read>  acc) {return acc[0];}
 
 // static declaration to use pointers
 cl::sycl::buffer<float,2> ioBuffer;
@@ -40,8 +40,8 @@ int main(int argc, char **argv) {
     for (size_t j = 0; j < N; ++j){
       float value = ((float) i*(j+2) + 10) / N;
       cl::sycl::id<2> id = {i, j};
-      ioBuffer.get_access<cl::sycl::access::write, cl::sycl::access::host_buffer>()[id] = value;
-      ioABuffer.get_access<cl::sycl::access::write, cl::sycl::access::host_buffer>()[id] = value;
+      ioBuffer.get_access<cl::sycl::access::mode::write, cl::sycl::access::target::host_buffer>()[id] = value;
+      ioABuffer.get_access<cl::sycl::access::mode::write, cl::sycl::access::target::host_buffer>()[id] = value;
 #if DEBUG_STENCIL
       a_test[i*N+j] = value;
       b_test[i*N+j] = value;
@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
 
 #if DEBUG_STENCIL
   // get the gpu result
-  auto C = (ioABuffer).get_access<cl::sycl::access::read, cl::sycl::access::host_buffer>();
+  auto C = (ioABuffer).get_access<cl::sycl::access::mode::read, cl::sycl::access::target::host_buffer>();
   ute_and_are(a_test,b_test,C);
   free(a_test);
   free(b_test);

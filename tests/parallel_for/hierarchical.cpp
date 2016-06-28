@@ -40,8 +40,8 @@ buffer<int> input(&data[0], size);
 buffer<int> output(size);
 my_queue.submit([&](handler &cgh)
 {
-  auto in_access = input.get_access<access::read>(cgh);
-  auto out_access = output.get_access<access::write>(cgh);
+  auto in_access = input.get_access<access::mode::read>(cgh);
+  auto out_access = output.get_access<access::mode::write>(cgh);
 
   cgh.parallel_for_work_group<class hierarchical>(nd_range<>(range<>(size),
                                                              range<>(groupsize)),

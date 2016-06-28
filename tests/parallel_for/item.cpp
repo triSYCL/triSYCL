@@ -15,7 +15,7 @@ int main() {
     buffer<unsigned int,1> a(N);
 
     myQueue.submit([&](handler &cgh) {
-        auto acc = a.get_access<access::write>(cgh);
+        auto acc = a.get_access<access::mode::write>(cgh);
         cgh.parallel_for<class nothing>(range<1> { N }, /* Offset */ id<1> { 7 },
                                         [=] (item<1> index) {
                                           acc[index[0] - 7] = index[0];

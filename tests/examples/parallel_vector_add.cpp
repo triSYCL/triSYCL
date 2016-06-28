@@ -31,9 +31,9 @@ int main() {
        execution */
     myQueue.submit([&](cl::sycl::handler &cgh) {
       // In the kernel A and B are read, but C is written
-      auto ka = A.get_access<cl::sycl::access::read>(cgh);
-      auto kb = B.get_access<cl::sycl::access::read>(cgh);
-      auto kc = C.get_access<cl::sycl::access::write>(cgh);
+      auto ka = A.get_access<cl::sycl::access::mode::read>(cgh);
+      auto kb = B.get_access<cl::sycl::access::mode::read>(cgh);
+      auto kc = C.get_access<cl::sycl::access::mode::write>(cgh);
 
       // Enqueue a parallel kernel
       cgh.parallel_for<class vector_add>(cl::sycl::range<1> { N },

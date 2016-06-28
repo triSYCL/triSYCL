@@ -28,10 +28,10 @@ Complex operator*(const Complex& a, const Complex& b) {
 Complex coef(0.2,0.0);
 
 
-inline Complex& fdl_out(int a,int b, cl::sycl::accessor<Complex, 2, cl::sycl::access::write> acc) {return acc[a][b];}
-inline Complex  fdl_in(int a,int b, cl::sycl::accessor<Complex, 2, cl::sycl::access::read>  acc) {return acc[a][b];}
-inline Complex  fac(int a,int b, int c, int d, cl::sycl::accessor<Complex, 1, cl::sycl::access::read>  acc) {return coef*acc[0];}
-inline Complex  fac_id(int a,int b, int c, int d, cl::sycl::accessor<Complex, 1, cl::sycl::access::read>  acc) {return acc[0];}
+inline Complex& fdl_out(int a,int b, cl::sycl::accessor<Complex, 2, cl::sycl::access::mode::write> acc) {return acc[a][b];}
+inline Complex  fdl_in(int a,int b, cl::sycl::accessor<Complex, 2, cl::sycl::access::mode::read>  acc) {return acc[a][b];}
+inline Complex  fac(int a,int b, int c, int d, cl::sycl::accessor<Complex, 1, cl::sycl::access::mode::read>  acc) {return coef*acc[0];}
+inline Complex  fac_id(int a,int b, int c, int d, cl::sycl::accessor<Complex, 1, cl::sycl::access::mode::read>  acc) {return acc[0];}
 
 // static declaration to use pointers
 cl::sycl::buffer<Complex,2> ioBuffer;
@@ -55,8 +55,8 @@ int main(int argc, char **argv) {
       float tmp = (float) (i*(j+2) + 10) / N;
       Complex value(tmp, tmp);
       cl::sycl::id<2> id = {i, j};
-      ioBuffer.get_access<cl::sycl::access::write, cl::sycl::access::host_buffer>()[id] = value;
-      ioABuffer.get_access<cl::sycl::access::write, cl::sycl::access::host_buffer>()[id] = value;
+      ioBuffer.get_access<cl::sycl::access::mode::write, cl::sycl::access::target::host_buffer>()[id] = value;
+      ioABuffer.get_access<cl::sycl::access::mode::write, cl::sycl::access::target::host_buffer>()[id] = value;
     }
   }
 

@@ -16,7 +16,7 @@ cl::sycl::buffer<int> resultBuf(1);
 
 //////// Start left side of the slide
 struct FunctionObject {
-    using Accessor = cl::sycl::accessor<int, 1, cl::sycl::access::write, cl::sycl::access::global_buffer>;
+    using Accessor = cl::sycl::accessor<int, 1, cl::sycl::access::mode::write, cl::sycl::access::target::global_buffer>;
     Accessor a;
     FunctionObject(Accessor A) : a { A } {}
     void operator()() {
@@ -36,22 +36,22 @@ int main()
     myQueue.submit([&](cl::sycl::handler &cgh)
     {
       // request access to our buffer
-      cl::sycl::accessor<int, 1, cl::sycl::access::write,
-                         cl::sycl::access::global_buffer>
+      cl::sycl::accessor<int, 1, cl::sycl::access::mode::write,
+                         cl::sycl::access::target::global_buffer>
         writeResult = { resultBuf, cgh };
       cgh.single_task(FunctionObject(writeResult));
     });
 //////// End left side of the slide
   /* Since resultBuf is a global variable, it will never goes out of
      scope from the main point-of-view, so use a host accessor */
-  result = resultBuf.get_access<cl::sycl::access::read>()[0];
+  result = resultBuf.get_access<cl::sycl::access::mode::read>()[0];
   printf("Result = %d\n", result);
 
 //////// Start right side of the slide
     myQueue.submit([&](cl::sycl::handler &cgh)
     {
-      cl::sycl::accessor<int, 1, cl::sycl::access::write,
-                         cl::sycl::access::global_buffer>
+      cl::sycl::accessor<int, 1, cl::sycl::access::mode::write,
+                         cl::sycl::access::target::global_buffer>
         writeResult = { resultBuf, cgh };
       cgh.single_task<class simple_test>([=] ()
                                    {
@@ -64,6 +64,6 @@ int main()
   } // end scope, so we wait for the queue to complete
   /* Since resultBuf is a global variable, it will never goes out of
      scope from the main point-of-view, so use a host accessor */
-  result = resultBuf.get_access<cl::sycl::access::read>()[0];
+  result = resultBuf.get_access<cl::sycl::access::mode::read>()[0];
   printf("Result = %d\n", result);
 }
