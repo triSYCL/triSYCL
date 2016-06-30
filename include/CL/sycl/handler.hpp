@@ -13,6 +13,7 @@
 #include "CL/sycl/command_group/detail/task.hpp"
 #include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/exception.hpp"
+#include "CL/sycl/kernel.hpp"
 #include "CL/sycl/parallelism/detail/parallelism.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"
 
@@ -22,14 +23,6 @@ namespace sycl {
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
 */
-
-/** Kernel
-
-    \todo To be implemented
-*/
-class kernel {
-};
-
 
 /** Command group handler class
 
