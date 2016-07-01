@@ -6,12 +6,12 @@
 
 #include <boost/test/minimal.hpp>
 
-#include "associative_container_checks.hpp"
+#include "basic_object_checks.hpp"
 
 using namespace cl::sycl;
 
 int test_main(int argc, char *argv[]) {
-  associative_container_checks<buffer<char, 3>>();
+  check_all<buffer<char, 3>>();
 
   return 0;
 }

@@ -108,6 +108,25 @@ class kernel
 }
 }
 
+
+/* Inject a custom specialization of std::hash to have the buffer
+   usable into an unordered associative container
+
+   \todo Add this to the spec
+*/
+namespace std {
+
+template <> struct hash<cl::sycl::kernel> {
+
+  auto operator()(const cl::sycl::kernel &k) const {
+    // Forward the hashing to the implementation
+    return k.hash();
+  }
+
+};
+
+}
+
 /*
     # Some Emacs stuff:
     ### Local Variables:

@@ -23,14 +23,14 @@
 
 #include <boost/test/minimal.hpp>
 
-#include "associative_container_checks.hpp"
+#include "basic_object_checks.hpp"
 #include "check_throwing_get.hpp"
 #include "display_platform.hpp"
 
 using namespace cl::sycl;
 
 int test_main(int argc, char *argv[]) {
-  associative_container_checks<platform>({});
+  check_all<platform>();
   platform p;
   display(p);
 

@@ -5,7 +5,7 @@
 
 #include <CL/sycl.hpp>
 
-#include "associative_container_checks.hpp"
+#include "basic_object_checks.hpp"
 
 using namespace cl::sycl;
 
@@ -15,7 +15,7 @@ int test_main(int argc, char *argv[]) {
   // Construct a SYCL queue from it
   queue q { oq };
 
-  associative_container_checks<queue>(q);
+  check_all<queue>(q);
 
   // Check the OpenCL queue is still there behind the scene
   BOOST_CHECK(oq == q.get());

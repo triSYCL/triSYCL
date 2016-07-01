@@ -11,13 +11,13 @@
 #endif
 #include <boost/test/minimal.hpp>
 
-#include "associative_container_checks.hpp"
+#include "basic_object_checks.hpp"
 
 using namespace cl::sycl;
 
 int test_main(int argc, char *argv[]) {
   // Create an OpenCL device
-  associative_container_checks<device>(boost::compute::system::devices()[0]);
+  check_all<device>(boost::compute::system::devices()[0]);
 
   device d { boost::compute::system::devices()[0] };
   // Check that it cannot be the host device

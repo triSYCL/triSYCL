@@ -9,7 +9,7 @@
 
 #include <boost/test/minimal.hpp>
 
-#include "associative_container_checks.hpp"
+#include "basic_object_checks.hpp"
 #include "check_throwing_get.hpp"
 
 using namespace cl::sycl;
@@ -25,7 +25,7 @@ int test_main(int argc, char *argv[]) {
   BOOST_CHECK(!d.is_accelerator());
 
   // Basic checks on associative containers
-  associative_container_checks(d);
+  check_all(d);
 
   // Check that the host device appears in the device list exactly once
   auto l = device::get_devices();

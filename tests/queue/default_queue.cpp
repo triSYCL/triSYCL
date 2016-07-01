@@ -5,13 +5,13 @@
 
 #include <boost/test/minimal.hpp>
 
-#include "associative_container_checks.hpp"
+#include "basic_object_checks.hpp"
 #include "check_throwing_get.hpp"
 
 using namespace cl::sycl;
 
 int test_main(int argc, char *argv[]) {
-  associative_container_checks<queue>({});
+  check_all<queue>({});
   queue q;
 
   // Check that this is the host queue by default
