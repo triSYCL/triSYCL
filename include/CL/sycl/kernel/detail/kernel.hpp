@@ -13,8 +13,10 @@
 #include <boost/compute.hpp>
 #endif
 
+#include "CL/sycl/detail/debug.hpp"
 #include "CL/sycl/detail/unimplemented.hpp"
 //#include "CL/sycl/info/kernel.hpp"
+#include "CL/sycl/queue/detail/queue.hpp"
 
 namespace cl {
 namespace sycl {
@@ -25,7 +27,7 @@ namespace detail {
 */
 
 /// Abstract SYCL kernel
-class kernel {
+class kernel : detail::debug<detail::kernel> {
 
  public:
 
@@ -37,6 +39,22 @@ class kernel {
   */
   virtual cl_kernel get() const = 0;
 #endif
+
+
+  /** Launch a kernel with a range<>
+
+      Do not use a template since it does not work with virtual functions
+
+      \todo Think to a cleaner solution
+  */
+#define TRISYCL_ParallelForKernel_RANGE(N)                        \
+  virtual void parallel_for(std::shared_ptr<detail::queue> q,     \
+                            const range<N> &num_work_items) = 0;
+
+  TRISYCL_ParallelForKernel_RANGE(1)
+  TRISYCL_ParallelForKernel_RANGE(2)
+  TRISYCL_ParallelForKernel_RANGE(3)
+#undef TRISYCL_ParallelForKernel_RANGE
 
 
   /// Return the context that this kernel is defined for

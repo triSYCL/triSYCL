@@ -24,7 +24,10 @@ namespace detail {
     hashing to be used with algorithms and in (un)ordered containers
 
     To be used, a Parent class wanting an Implementation needs to
-    inherit from
+    inherit from.
+
+    The implementation ends up in a member really named
+    "implementation".
 
     \code
     public detail::shared_ptr_implementation<Parent, Implementation>

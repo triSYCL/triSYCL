@@ -13,6 +13,10 @@
 #include <condition_variable>
 #include <mutex>
 
+#ifdef TRISYCL_OPENCL
+#include <boost/compute.hpp>
+#endif
+
 #include "CL/sycl/context.hpp"
 #include "CL/sycl/device.hpp"
 #include "CL/sycl/detail/debug.hpp"
@@ -23,7 +27,7 @@ namespace detail {
 
 /** Some implementation details about the SYCL queue
  */
-struct queue {
+struct queue : detail::debug<detail::queue> {
   /// Track the number of kernels still running to wait for their completion
   std::atomic<size_t> running_kernels;
 
@@ -81,6 +85,9 @@ struct queue {
       If the queue is a SYCL host queue then an exception is thrown.
   */
   virtual cl_command_queue get() const = 0;
+
+  /// Return the underlying Boost.Compute command queue
+  virtual boost::compute::command_queue &get_boost_compute() = 0;
 #endif
 
 

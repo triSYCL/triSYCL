@@ -50,7 +50,7 @@ public:
 
      \todo Make this constructor private
   */
-  handler(detail::queue &q) {
+  handler(const std::shared_ptr<detail::queue> &q) {
     // Create a new task for this command_group
     task = std::make_shared<detail::task>(q);
   }
@@ -64,6 +64,8 @@ public:
       going to be given as kernel argument.
 
       \todo Update the specification to use a ref to the accessor instead?
+
+      \todo It seems more logical to have these methods on kernel instead
 
       \todo add a variadic method that accepts accessors too
 
@@ -257,6 +259,9 @@ public:
   /** Kernel invocation method of a kernel defined as pointer to a kernel
       object, described in detail in 3.5.3
 
+      \todo Add in the spec a version taking a kernel and a functor,
+      to have host fall-back
+
       \todo To be implemented
   */
   void single_task(kernel syclKernel) {
@@ -264,23 +269,45 @@ public:
   }
 
 
-  /** Kernel invocation method of a kernel defined as pointer to a kernel
-      object, for the specified range and given an id or item for indexing
-      in the indexing space defined by range, described in detail in 3.5.3
+  /** Kernel invocation method of a kernel defined as a kernel object,
+      for the specified range and given an id or item for indexing in
+      the indexing space defined by range, described in detail in
+      5.4.
 
-      \todo To be implemented
+      \todo Add in the spec a version taking a kernel and a functor,
+      to have host fall-back
   */
-  template <std::size_t Dimensions = 1>
-  void parallel_for(range<Dimensions> numWorkItems,
-                    kernel sycl_kernel) {
-    detail::unimplemented();
+#define TRISYCL_ParallelForKernel_RANGE(N)                              \
+  void parallel_for(range<N> num_work_items,                            \
+                    kernel sycl_kernel) {                               \
+    /* For now just use the usual host task system to schedule          \
+       manually the OpenCL kernels instead of using OpenCL event-based  \
+       scheduling                                                       \
+                                                                        \
+       \todo Move the tracing inside the kernel implementation          \
+    */                                                                  \
+    task->schedule(detail::trace_kernel<kernel>([=] {                   \
+          sycl_kernel.implementation->parallel_for(task->get_queue(),   \
+                                                   num_work_items); })); \
   }
 
+  /* Do not use a template parameter since otherwise the parallel_for
+     functor is selected instead of this one
+
+     \todo Clean this
+  */
+  TRISYCL_ParallelForKernel_RANGE(1)
+  TRISYCL_ParallelForKernel_RANGE(2)
+  TRISYCL_ParallelForKernel_RANGE(3)
+#undef TRISYCL_ParallelForKernel_RANGE
 
   /** Kernel invocation method of a kernel defined as pointer to a kernel
       object, for the specified nd_range and given an nd_item for indexing
       in the indexing space defined by the nd_range, described in detail
       in 3.5.3
+
+      \todo Add in the spec a version taking a kernel and a functor,
+      to have host fall-back
 
       \todo To be implemented
   */

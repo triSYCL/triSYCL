@@ -42,12 +42,12 @@ int test_main(int argc, char *argv[]) {
   // Construct the queue from the defaul OpenCL one
   queue q { boost::compute::system::default_queue() };
 
-#if 0
   // \todo add to spec section Defining kernels using OpenCL C kernel objects
   q.submit([&](handler &cgh) {
-      cgh.parallel_for<class empty>(N, kernel);
+      cgh.parallel_for(N, k);
     });
 
+#if 0
   // \todo add to spec section Defining kernels using OpenCL C kernel objects
   // The same with the equivalent host fallback
   q.submit([&](handler &cgh) {

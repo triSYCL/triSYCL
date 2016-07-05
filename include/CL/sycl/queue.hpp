@@ -11,6 +11,10 @@
 
 #include <memory>
 
+#ifdef TRISYCL_OPENCL
+#include <boost/compute.hpp>
+#endif
+
 #include "CL/sycl/context.hpp"
 #include "CL/sycl/detail/debug.hpp"
 #include "CL/sycl/detail/default_classes.hpp"
@@ -309,9 +313,7 @@ public:
       "auto" in submit() lambda parameter.
   */
   handler_event submit(std::function<void(handler &)> cgf) {
-    /** Since the queue will wait for the kernels to end, we can pass
-        a detail::queue instead of a shared pointer on it */
-    handler command_group_handler { *implementation };
+    handler command_group_handler { implementation };
     cgf(command_group_handler);
     return {};
   }

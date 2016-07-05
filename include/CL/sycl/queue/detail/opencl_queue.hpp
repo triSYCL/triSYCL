@@ -11,6 +11,7 @@
 
 #include "CL/sycl/context.hpp"
 #include "CL/sycl/detail/cache.hpp"
+#include "CL/sycl/detail/debug.hpp"
 #include "CL/sycl/device.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"
 
@@ -19,8 +20,8 @@ namespace sycl {
 namespace detail {
 
 /// Some implementation details about the SYCL queue
-class opencl_queue : public detail::queue {
-
+class opencl_queue : public detail::queue,
+                     detail::debug<opencl_queue> {
   /// Use the Boost Compute abstraction of the OpenCL command queue
   boost::compute::command_queue q;
 
@@ -34,6 +35,12 @@ class opencl_queue : public detail::queue {
   /// Return the cl_command_queue of the underlying OpenCL queue
   cl_command_queue get() const override {
     return q.get();
+  }
+
+
+  /// Return the underlying Boost.Compute command queue
+  boost::compute::command_queue &get_boost_compute() override {
+    return q;
   }
 
 
@@ -75,7 +82,6 @@ public:
   ~opencl_queue() override {
     cache.remove(q.get());
   }
-
 
 };
 

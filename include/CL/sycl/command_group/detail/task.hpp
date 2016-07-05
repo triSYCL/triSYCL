@@ -48,12 +48,14 @@ struct task : public std::enable_shared_from_this<task>,
   /// To protect the access to the condition variable
   std::mutex ready_mutex;
 
-  /// Keep track of the queue used to submission to notify kernel completion
-  detail::queue *owner_queue;
+  /** Keep track of the queue used to submission to notify kernel completion
+      or to run OpenCL kernels on */
+  std::shared_ptr<detail::queue> owner_queue;
 
 
   /// Create a task from a submitting queue
-  task(detail::queue &q) : owner_queue { &q } {}
+  task(const std::shared_ptr<detail::queue> &q)
+    : owner_queue { q } {}
 
 
   /// Add a new task to the task graph and schedule for execution
@@ -168,6 +170,12 @@ struct task : public std::enable_shared_from_this<task>,
        producer list to wait on it before running the task core */
     if (latest_producer)
       producer_tasks.push_back(latest_producer);
+  }
+
+
+  /// Get the queue behind the task to run a kernel on
+  auto get_queue() {
+    return owner_queue;
   }
 
 };

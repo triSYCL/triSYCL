@@ -14,16 +14,19 @@
 #endif
 
 #include "CL/sycl/detail/cache.hpp"
+#include "CL/sycl/detail/debug.hpp"
 #include "CL/sycl/detail/unimplemented.hpp"
 //#include "CL/sycl/info/kernel.hpp"
 #include "CL/sycl/kernel/detail/kernel.hpp"
+#include "CL/sycl/queue/detail/queue.hpp"
 
 namespace cl {
 namespace sycl {
 namespace detail {
 
 /// An abstraction of the OpenCL kernel
-class opencl_kernel : public detail::kernel {
+class opencl_kernel : public detail::kernel,
+                      detail::debug<opencl_kernel> {
 
   /// Use the Boost Compute abstraction of the OpenCL kernel
   boost::compute::kernel k;
@@ -69,6 +72,29 @@ class opencl_kernel : public detail::kernel {
     detail::unimplemented();
   }
 #endif
+
+
+  /** Launch an OpenCL kernel with a range<>
+
+      Do not use a template since it does not work with virtual functions
+
+      \todo Think to a cleaner solution
+  */
+#define TRISYCL_ParallelForKernel_RANGE(N)                              \
+  void parallel_for(std::shared_ptr<detail::queue> q,                   \
+                    const range<N> &num_work_items) override {          \
+    q->get_boost_compute().enqueue_nd_range_kernel                      \
+      (k,                                                               \
+       static_cast<size_t>(N),                                          \
+       static_cast<const size_t *>(num_work_items.data()),              \
+       NULL,                                                            \
+       NULL);                                                           \
+  };
+
+  TRISYCL_ParallelForKernel_RANGE(1)
+  TRISYCL_ParallelForKernel_RANGE(2)
+  TRISYCL_ParallelForKernel_RANGE(3)
+#undef TRISYCL_ParallelForKernel_RANGE
 
 
   /// Unregister from the cache on destruction

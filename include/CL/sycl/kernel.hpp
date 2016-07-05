@@ -13,6 +13,7 @@
 #include <boost/compute.hpp>
 #endif
 
+#include "CL/sycl/detail/debug.hpp"
 #include "CL/sycl/detail/shared_ptr_implementation.hpp"
 #include "CL/sycl/detail/unimplemented.hpp"
 //#include "CL/sycl/info/kernel.hpp"
@@ -45,6 +46,9 @@ class kernel
 
   // Make the implementation member directly accessible in this class
   using implementation_t::implementation;
+
+  // The handler class uses the implementation
+  friend class handler;
 
  public:
 
