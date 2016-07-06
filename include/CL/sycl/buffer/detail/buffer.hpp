@@ -94,7 +94,7 @@ struct buffer : public detail::buffer_base,
          const range<Dimensions> &r)
     : buffer_base { false },
     access { host_data.get(), r },
-    shared_data { }
+    shared_data { host_data }
     {}
 
 

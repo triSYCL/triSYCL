@@ -229,12 +229,12 @@ struct buffer
   }
 
 
-  /**  Create a new allocated 1D buffer initialized from the given
-       elements ranging from first up to one before last
+  /** Create a new allocated 1D buffer initialized from the given
+      elements ranging from first up to one before last
 
-       The data is copied to an intermediate memory position by the
-       runtime. Data is written back to the same iterator set if the
-       iterator is not a const iterator.
+      The data is copied to an intermediate memory position by the
+      runtime. Data is written back to the same iterator set if the
+      iterator is not a const iterator.
 
       \param[inout] start_iterator points to the first element to copy
 
@@ -368,7 +368,7 @@ struct buffer
   accessor<T, Dimensions, Mode, Target>
   get_access() const {
     static_assert(Target == access::host_buffer,
-                  "get_access() without a command gtoup handler is only "
+                  "get_access() without a command group handler is only"
                   " for host_buffer accessor");
     return *implementation;
   }
@@ -378,17 +378,15 @@ struct buffer
       terms of number of elements in each dimension as passed to the
       constructor
 
-      \todo rename to the equivalent from array_view proposals? Such
+      \todo rename to the equivalent from array_ref proposals? Such
       as size() in
-      http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/p0009r0.html
-      or
-      http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/p0114r0.pdf
+      http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0009r2.html
   */
   auto get_range() const {
     /* Interpret the shape which is a pointer to the first element as an
        array of Dimensions elements so that the range<Dimensions>
        constructor is happy with this collection
-     */
+    */
     return implementation->get_range();
   }
 
