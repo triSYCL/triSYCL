@@ -34,7 +34,7 @@ struct task : public std::enable_shared_from_this<task>,
       \todo Use a set to check that some buffers are not used many
       times at least on writing
   */
-  std::vector<detail::buffer_base *> buffers_in_use;
+  std::vector<std::shared_ptr<detail::buffer_base>> buffers_in_use;
 
   /// The tasks producing the buffers used by this task
   std::vector<std::shared_ptr<detail::task>> producer_tasks;
@@ -149,7 +149,8 @@ struct task : public std::enable_shared_from_this<task>,
 
       This is how the dependency graph is incrementally built.
   */
-  void add_buffer(detail::buffer_base *buf, bool is_write_mode) {
+  void add_buffer(std::shared_ptr<detail::buffer_base> &buf,
+                  bool is_write_mode) {
     TRISYCL_DUMP_T("Add buffer " << buf << " in task " << this);
     /* Keep track of the use of the buffer to notify its release at
        the end of the execution */

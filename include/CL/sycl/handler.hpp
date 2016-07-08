@@ -325,7 +325,7 @@ namespace detail {
     This is a proxy function to avoid complicated type recursion.
 */
 static void add_buffer_to_task(handler *command_group_handler,
-                               detail::buffer_base *b,
+                               std::shared_ptr<detail::buffer_base> b,
                                bool is_write_mode) {
   command_group_handler->task->add_buffer(b, is_write_mode);
 }
