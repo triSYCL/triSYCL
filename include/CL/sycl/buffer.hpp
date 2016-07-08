@@ -53,7 +53,8 @@ struct buffer
   /* Use the underlying buffer implementation that can be shared in
      the SYCL model */
   : public detail::shared_ptr_implementation<buffer<T, Dimensions, Allocator>,
-                                             detail::buffer<T, Dimensions>> {
+                                             detail::buffer<T, Dimensions>>,
+    detail::debug<buffer<T, Dimensions, Allocator>> {
   /// The STL-like types
   using value_type = T;
   using reference = value_type&;
@@ -480,8 +481,7 @@ struct buffer
        detail::buffer and we need to make a difference between
        ownership by accessors and by buffers. Use shared_ptr of shared_ptr?
     */
-    if (implementation.unique())
-      implementation->wait_from_destructor();
+    implementation->wait_from_destructor();
   }
 
 };
