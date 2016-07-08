@@ -59,6 +59,10 @@ struct buffer : public detail::buffer_base,
       the host */
   shared_ptr_class<T> shared_data;
 
+  // Track if the buffer memory is provided as host memory
+  bool use_host = false;
+
+
   /// Create a new read-write buffer of size \param r
   buffer(const range<Dimensions> &r) : buffer_base { false },
                                        allocation { r },
@@ -69,7 +73,8 @@ struct buffer : public detail::buffer_base,
   /** Create a new read-write buffer from \param host_data of size
       \param r without further allocation */
   buffer(T *host_data, const range<Dimensions> &r) : buffer_base { false },
-                                                     access { host_data, r }
+                                                     access { host_data, r },
+                                                     use_host { true }
                                                      {}
 
 
@@ -78,7 +83,8 @@ struct buffer : public detail::buffer_base,
   buffer(const T *host_data, const range<Dimensions> &r) :
     /// \todo Need to solve this const buffer issue in a clean way
     buffer_base { true },
-    access { const_cast<T *>(host_data), r }
+    access { const_cast<T *>(host_data), r },
+    use_host { true }
     {}
 
 
@@ -188,6 +194,15 @@ struct buffer : public detail::buffer_base,
   */
   void set_final_data(weak_ptr_class<T> && finalData) {
     final_data = finalData;
+  }
+
+
+  /** Wait from inside the cl::sycl::buffer in case there is something
+      to copy back to the host */
+  void wait_from_destructor() {
+    // \todo Double check the specification and add unit tests
+    if (use_host || !final_data.expired() || shared_data)
+      wait();
   }
 
 };

@@ -54,7 +54,12 @@ struct accessor : public detail::debug<accessor<T,
                                                 Dimensions,
                                                 Mode,
                                                 Target>> {
-  /// Keep a reference to the accessed buffer
+  /** Keep a reference to the accessed buffer
+
+      \todo This should be a shared_ptr actually so the buffer
+      implementation can remain alive even if the SYCL buffer
+      disappears
+   */
   detail::buffer<T, Dimensions> *buf;
 
   /// The implementation is a multi_array_ref wrapper

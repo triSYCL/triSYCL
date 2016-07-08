@@ -469,6 +469,21 @@ struct buffer
     implementation->set_final_data(std::move(finalData));
   }
 
+
+  /** The buffer destructor waits for any data to be written back to
+      the host, if any
+  */
+  ~buffer() {
+    /* Only wait if we are the last buffer handle owning the underlying buffer
+
+       \todo At some point accessors will take a reference to the
+       detail::buffer and we need to make a difference between
+       ownership by accessors and by buffers. Use shared_ptr of shared_ptr?
+    */
+    if (implementation.unique())
+      implementation->wait_from_destructor();
+  }
+
 };
 
 /// @} End the data Doxygen group
