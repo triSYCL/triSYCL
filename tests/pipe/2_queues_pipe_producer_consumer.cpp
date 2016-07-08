@@ -48,7 +48,7 @@ int main() {
             while (!(p.write(ka[i])))
               ;
         });
-      }); //< The first queue goes out-of-scope: wait for completion!
+      });
 
     /* Launch the consumer that adds the pipe stream with B to C on
        its own queue */
@@ -63,8 +63,7 @@ int main() {
       cgh.single_task<class consumer>([=] {
           for (int i = 0; i != N; i++) {
             /* Declare a variable of the same type as what the pipe
-               can deal (a good example of single source advantage)
-            */
+               can deal (a good example of single source advantage) */
             decltype(p)::value_type e;
             // Try to read from the pipe up to success
             while (!(p.read(e)))
@@ -72,9 +71,8 @@ int main() {
             kc[i] = e + kb[i];
           }
         });
-      }); //< The second queue goes out-of-scope: wait for completion!
-  } /*< End scope, so we wait for the buffers to be unused, in this
-      case there is nothing to wait for */
+      });
+  } ///< End scope, so we wait for the buffer C to be unused
 
   std::cout << std::endl << "Result:" << std::endl;
   for (auto e : c)

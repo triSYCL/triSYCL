@@ -67,7 +67,7 @@ struct accessor : detail::accessor<DataType, Dimensions, AccessMode, Target> {
   accessor(buffer<DataType, Dimensions, Allocator> &target_buffer,
            handler &command_group_handler)
     : detail::accessor<DataType, Dimensions, AccessMode, Target> {
-    *target_buffer.implementation, command_group_handler } {
+    *target_buffer.implementation->implementation, command_group_handler } {
     static_assert(Target == access::target::global_buffer
                   || Target == access::target::constant_buffer,
                   "access target should be global_buffer or constant_buffer "
@@ -87,7 +87,7 @@ struct accessor : detail::accessor<DataType, Dimensions, AccessMode, Target> {
   template <typename Allocator>
   accessor(buffer<DataType, Dimensions, Allocator> &target_buffer)
     : detail::accessor<DataType, Dimensions, AccessMode, Target> {
-    *target_buffer.implementation } {
+    *target_buffer.implementation->implementation } {
     static_assert(Target == access::target::host_buffer,
                   "without a handler, access target should be host_buffer");
   }

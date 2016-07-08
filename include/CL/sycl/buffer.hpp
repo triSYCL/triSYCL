@@ -16,6 +16,7 @@
 #include "CL/sycl/access.hpp"
 #include "CL/sycl/accessor.hpp"
 #include "CL/sycl/buffer/detail/buffer.hpp"
+#include "CL/sycl/buffer/detail/buffer_waiter.hpp"
 #include "CL/sycl/buffer_allocator.hpp"
 #include "CL/sycl/detail/global_config.hpp"
 #include "CL/sycl/detail/shared_ptr_implementation.hpp"
@@ -43,6 +44,8 @@ namespace sycl {
     \todo There is a naming inconsistency in the specification between
     buffer and accessor on T versus datatype
 
+    \todo Finish allocator implementation
+
     \todo Think about the need of an allocator when constructing a buffer
     from other buffers
 */
@@ -52,8 +55,9 @@ template <typename T,
 struct buffer
   /* Use the underlying buffer implementation that can be shared in
      the SYCL model */
-  : public detail::shared_ptr_implementation<buffer<T, Dimensions, Allocator>,
-                                             detail::buffer<T, Dimensions>>,
+  : public detail::shared_ptr_implementation<
+                         buffer<T, Dimensions, Allocator>,
+                         detail::buffer_waiter<T, Dimensions, Allocator>>,
     detail::debug<buffer<T, Dimensions, Allocator>> {
   /// The STL-like types
   using value_type = T;
@@ -63,8 +67,9 @@ struct buffer
 
   // The type encapsulating the implementation
   using implementation_t =
-    detail::shared_ptr_implementation<buffer<T, Dimensions, Allocator>,
-                                      detail::buffer<T, Dimensions>>;
+    detail::shared_ptr_implementation<
+                         buffer<T, Dimensions, Allocator>,
+                         detail::buffer_waiter<T, Dimensions, Allocator>>;
 
   // Make the implementation member directly accessible in this class
   using implementation_t::implementation;
@@ -93,7 +98,9 @@ struct buffer
       \param[in] allocator is to be used by the SYCL runtime
   */
   buffer(const range<Dimensions> &r, Allocator allocator = {})
-    : implementation_t { new detail::buffer<T, Dimensions> { r } } {}
+    : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
+                                        { r }) }
+      {}
 
 
   /** Create a new buffer with associated host memory
@@ -118,7 +125,8 @@ struct buffer
   buffer(const T *host_data,
          const range<Dimensions> &r,
          Allocator allocator = {})
-    : implementation_t { new detail::buffer<T, Dimensions> { host_data, r } }
+    : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
+            { host_data, r }) }
   {}
 
 
@@ -139,7 +147,8 @@ struct buffer
       range<dimensions> defines the size.
   */
   buffer(T *host_data, const range<Dimensions> &r, Allocator allocator = {})
-    : implementation_t { new detail::buffer<T, Dimensions> { host_data, r } }
+    : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
+            { host_data, r }) }
   {}
 
 
@@ -195,8 +204,8 @@ struct buffer
   buffer(shared_ptr_class<T> host_data,
          const range<Dimensions> &buffer_range,
          Allocator allocator = {})
-    : implementation_t {
-    new detail::buffer<T, Dimensions> { host_data, buffer_range } }
+    : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
+            { host_data, buffer_range }) }
   {}
 
 
@@ -270,8 +279,8 @@ struct buffer
   buffer(InputIterator start_iterator,
          InputIterator end_iterator,
          Allocator allocator = {}) :
-    implementation_t { new detail::buffer<T, Dimensions> { start_iterator,
-                                                           end_iterator } }
+    implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
+            { start_iterator, end_iterator }) }
   {}
 
 
@@ -350,7 +359,7 @@ struct buffer
                   "get_access(handler) can only deal with access::global_buffer"
                   " or access::constant_buffer (for host_buffer accessor"
                   " do not use a command group handler");
-    return { *implementation, command_group_handler };
+    return { *implementation->implementation, command_group_handler };
   }
 
 
@@ -371,7 +380,7 @@ struct buffer
     static_assert(Target == access::host_buffer,
                   "get_access() without a command group handler is only"
                   " for host_buffer accessor");
-    return *implementation;
+    return *implementation->implementation;
   }
 
 
@@ -468,20 +477,6 @@ struct buffer
   */
   void set_final_data(weak_ptr_class<T> finalData) {
     implementation->set_final_data(std::move(finalData));
-  }
-
-
-  /** The buffer destructor waits for any data to be written back to
-      the host, if any
-  */
-  ~buffer() {
-    /* Only wait if we are the last buffer handle owning the underlying buffer
-
-       \todo At some point accessors will take a reference to the
-       detail::buffer and we need to make a difference between
-       ownership by accessors and by buffers. Use shared_ptr of shared_ptr?
-    */
-    implementation->wait_from_destructor();
   }
 
 };
