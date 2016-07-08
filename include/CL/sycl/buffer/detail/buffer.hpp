@@ -60,7 +60,7 @@ struct buffer : public detail::buffer_base,
   shared_ptr_class<T> shared_data;
 
   // Track if the buffer memory is provided as host memory
-  bool use_host = false;
+  bool host_write_back = false;
 
 
   /// Create a new read-write buffer of size \param r
@@ -74,17 +74,22 @@ struct buffer : public detail::buffer_base,
       \param r without further allocation */
   buffer(T *host_data, const range<Dimensions> &r) : buffer_base { false },
                                                      access { host_data, r },
-                                                     use_host { true }
+                                                     host_write_back { true }
                                                      {}
 
 
   /** Create a new read-only buffer from \param host_data of size \param r
-      without further allocation */
+      without further allocation
+
+      \todo Clarify the semantics in the spec. What happens if the
+      host change the host_data after buffer creation?
+  */
   buffer(const T *host_data, const range<Dimensions> &r) :
-    /// \todo Need to solve this const buffer issue in a clean way
+    /* \todo Need to solve this const buffer issue in a clean way
+
+       Just allocate memory? */
     buffer_base { true },
-    access { const_cast<T *>(host_data), r },
-    use_host { true }
+    access { const_cast<T *>(host_data), r }
     {}
 
 
@@ -201,8 +206,9 @@ struct buffer : public detail::buffer_base,
       to copy back to the host */
   void wait_from_destructor() {
     // \todo Double check the specification and add unit tests
-    if (use_host || !final_data.expired() || shared_data)
+    if (host_write_back || !final_data.expired() || shared_data) {
       wait();
+    }
   }
 
 };
