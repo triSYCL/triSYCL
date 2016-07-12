@@ -11,9 +11,13 @@
 
 #include <atomic>
 #include <condition_variable>
+#include <future>
 #include <memory>
 #include <mutex>
 #include <utility>
+
+// \todo Use C++17 optional when it is mainstream
+#include <boost/optional.hpp>
 
 #include "CL/sycl/access.hpp"
 
@@ -50,6 +54,13 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
   /// To protect the access to the condition variable
   std::mutex ready_mutex;
 
+  /** If the SYCL user buffer destructor is blocking, use this to
+      block until this buffer implementation is destroyed.
+
+      Use a void promise since there is no value to send, only
+      waiting */
+  boost::optional<std::promise<void>> notify_buffer_destructor;
+
 
   /// Create a buffer base
   buffer_base(bool read_only) : read_only { read_only },
@@ -59,6 +70,9 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
   /// The destructor wait for not being used anymore
   ~buffer_base() {
     wait();
+    // If there is the last SYCL user buffer waiting, notify it
+    if (notify_buffer_destructor)
+      notify_buffer_destructor->set_value();
   }
 
 

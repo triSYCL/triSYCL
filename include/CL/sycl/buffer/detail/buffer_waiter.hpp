@@ -10,6 +10,10 @@
 */
 
 #include <cstddef>
+#include <future>
+
+// \todo Use C++17 optional when it is mainstream
+#include <boost/optional.hpp>
 
 #include "CL/sycl/buffer/detail/buffer.hpp"
 #include "CL/sycl/buffer_allocator.hpp"
@@ -54,13 +58,18 @@ public:
       back to the host, if any
   */
   ~buffer_waiter() {
-    /* Only wait if we are the last buffer handle owning the underlying buffer
-
-       \todo At some point accessors will take a reference to the
-       detail::buffer and we need to make a difference between
-       ownership by accessors and by buffers. Use shared_ptr of shared_ptr?
-    */
-    implementation->wait_from_destructor();
+    /* Get a future from the implementation if we have to wait for its
+       destruction */
+    auto f = implementation->get_destructor_future();
+    if (f) {
+      /* No longer carry for the implementation buffer which is free to
+         live its life up to its destruction */
+      implementation.reset();
+      TRISYCL_DUMP_T("~buffer_waiter() is waiting");
+      // Then wait for its end in some other thread
+      f->wait();
+      TRISYCL_DUMP_T("~buffer_waiter() is done");
+    }
   }
 };
 

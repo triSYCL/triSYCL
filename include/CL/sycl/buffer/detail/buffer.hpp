@@ -204,11 +204,16 @@ struct buffer : public detail::buffer_base,
 
   /** Wait from inside the cl::sycl::buffer in case there is something
       to copy back to the host */
-  void wait_from_destructor() {
+  boost::optional<std::future<void>> get_destructor_future() {
+    boost::optional<std::future<void>> f;
     // \todo Double check the specification and add unit tests
     if (host_write_back || !final_data.expired() || shared_data) {
-      wait();
+      // Create a promise to wait for
+      notify_buffer_destructor = std::promise<void> {};
+      // And return the future to wait for it
+      f = notify_buffer_destructor->get_future();
     }
+    return f;
   }
 
 };
