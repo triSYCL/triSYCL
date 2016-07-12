@@ -59,4 +59,3 @@ int main() {
   DISPLAY_BUFFER_READ_ONLY_STATUS(z);
   return 0;
 }
-

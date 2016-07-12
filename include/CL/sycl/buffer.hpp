@@ -445,7 +445,9 @@ struct buffer
 
       \todo Add to specification
   */
-  bool is_read_only() const { return implementation->read_only; }
+  bool is_read_only() const {
+    return implementation->implementation->read_only;
+  }
 
 
   /** Set destination of buffer data on destruction
