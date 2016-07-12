@@ -40,8 +40,11 @@ struct accessor;
 template <typename T,
           access::mode AccessMode,
           access::target Target>
-struct pipe_accessor :
+class pipe_accessor :
     public detail::debug<detail::pipe_accessor<T, AccessMode, Target>> {
+
+public:
+
   static constexpr auto rank = 1;
   static constexpr auto mode = AccessMode;
   static constexpr auto target = Target;
@@ -52,6 +55,8 @@ struct pipe_accessor :
   using value_type = T;
   using reference = value_type&;
   using const_reference = const value_type&;
+
+private:
 
   /** The real pipe implementation behind the hood
 
@@ -74,6 +79,7 @@ struct pipe_accessor :
   */
   bool mutable ok = false;
 
+public:
 
   /** Construct a pipe accessor from an existing pipe
    */

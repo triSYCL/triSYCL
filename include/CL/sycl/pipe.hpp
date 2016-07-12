@@ -30,15 +30,21 @@ namespace sycl {
     to send some objects T from the input to the output
 */
 template <typename T>
-struct pipe {
+class pipe {
+
+public:
+
   /// The STL-like types
   /* Since a pipe element cannot be directly addressed without
      accessor, only define value_type here */
   using value_type = T;
 
+private:
+
   /// The implementation is defined elsewhere
   std::shared_ptr<detail::pipe<T>> implementation;
 
+public:
 
   /// Construct a pipe able to store up to capacity T objects
   pipe(std::size_t capacity)
