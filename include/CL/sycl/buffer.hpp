@@ -397,7 +397,7 @@ struct buffer
        array of Dimensions elements so that the range<Dimensions>
        constructor is happy with this collection
     */
-    return implementation->get_range();
+    return implementation->implementation->get_range();
   }
 
 
@@ -406,7 +406,7 @@ struct buffer
       Equal to get_range()[0] * ... * get_range()[dimensions-1].
   */
   auto get_count() const {
-    return implementation->get_count();
+    return implementation->implementation->get_count();
   }
 
 
@@ -476,7 +476,7 @@ struct buffer
       host that can not be undone
   */
   void set_final_data(weak_ptr_class<T> finalData) {
-    implementation->set_final_data(std::move(finalData));
+    implementation->implementation->set_final_data(std::move(finalData));
   }
 
 };
