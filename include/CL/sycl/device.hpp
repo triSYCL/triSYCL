@@ -47,10 +47,10 @@ class device
   using implementation_t =
     detail::shared_ptr_implementation<device, detail::device>;
 
+public:
+
   // Make the implementation member directly accessible in this class
   using implementation_t::implementation;
-
-public:
 
   /// The default constructor uses the SYCL host device
   device() : implementation_t { detail::host_device::instance() } {}

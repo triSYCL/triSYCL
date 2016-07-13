@@ -52,24 +52,30 @@ namespace sycl {
 template <typename T,
           std::size_t Dimensions = 1,
           typename Allocator = buffer_allocator<T>>
-struct buffer
+class buffer
   /* Use the underlying buffer implementation that can be shared in
      the SYCL model */
   : public detail::shared_ptr_implementation<
                          buffer<T, Dimensions, Allocator>,
                          detail::buffer_waiter<T, Dimensions, Allocator>>,
     detail::debug<buffer<T, Dimensions, Allocator>> {
+public:
+
   /// The STL-like types
   using value_type = T;
   using reference = value_type&;
   using const_reference = const value_type&;
   using allocator_type = Allocator;
 
+private:
+
   // The type encapsulating the implementation
   using implementation_t =
     detail::shared_ptr_implementation<
                          buffer<T, Dimensions, Allocator>,
                          detail::buffer_waiter<T, Dimensions, Allocator>>;
+
+public:
 
   // Make the implementation member directly accessible in this class
   using implementation_t::implementation;

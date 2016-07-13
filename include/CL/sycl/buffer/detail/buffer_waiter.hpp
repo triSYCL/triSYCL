@@ -45,8 +45,8 @@ class buffer_waiter :
     detail::shared_ptr_implementation<buffer_waiter<T, Dimensions, Allocator>,
                                       detail::buffer<T, Dimensions>>;
 
-
 public:
+
   // Make the implementation member directly accessible in this class
   using implementation_t::implementation;
 

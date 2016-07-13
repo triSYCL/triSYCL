@@ -22,7 +22,7 @@ template <typename T,
           std::size_t Dimensions,
           access::mode Mode,
           access::target Target>
-struct accessor;
+class accessor;
 
 /** \addtogroup data Data access and storage in SYCL
     @{

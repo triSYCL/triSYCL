@@ -27,7 +27,7 @@ class handler;
 namespace detail {
 
 // Forward declaration of detail::buffer for use in accessor
-template <typename T, std::size_t Dimensions> struct buffer;
+template <typename T, std::size_t Dimensions> class buffer;
 
 /** \addtogroup data Data access and storage in SYCL
     @{
@@ -50,10 +50,10 @@ template <typename T,
           std::size_t Dimensions,
           access::mode Mode,
           access::target Target /* = access::global_buffer */>
-struct accessor : public detail::debug<accessor<T,
-                                                Dimensions,
-                                                Mode,
-                                                Target>> {
+class accessor : public detail::debug<accessor<T,
+                                               Dimensions,
+                                               Mode,
+                                               Target>> {
   /** Keep a reference to the accessed buffer
 
       \todo This should be a shared_ptr actually so the buffer
@@ -77,6 +77,8 @@ struct accessor : public detail::debug<accessor<T,
       previously done in this implementation
    */
   mutable array_view_type array;
+
+public:
 
   /** \todo in the specification: store the dimension for user request
 
