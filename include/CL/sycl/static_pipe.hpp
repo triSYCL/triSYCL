@@ -47,17 +47,27 @@ namespace sycl {
     defined.
 */
 template <typename T, std::size_t Capacity>
-struct static_pipe {
+class static_pipe
+    /* Use the underlying pipe implementation that can be shared in
+       the SYCL model */
+  : public detail::shared_ptr_implementation<static_pipe<T, Capacity>,
+                                             detail::pipe<T>>,
+    detail::debug<static_pipe<T, Capacity>> {
+
+  // The type encapsulating the implementation
+  using implementation_t =
+    detail::shared_ptr_implementation<static_pipe<T, Capacity>,
+                                      detail::pipe<T>>;
+
+public:
+
   /// The STL-like types
   using value_type = T;
-
-  /// The implementation is defined elsewhere
-  std::shared_ptr<detail::pipe<T>> implementation;
 
 
   /// Construct a static-scoped pipe able to store up to Capacity T objects
   static_pipe()
-    : implementation { new detail::pipe<T> { Capacity } } { }
+    : implementation_t { new detail::pipe<T> { Capacity } } { }
 
 
   /** Get an accessor to the pipe with the required mode
