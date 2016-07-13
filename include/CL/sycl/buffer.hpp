@@ -29,7 +29,7 @@
 namespace cl {
 namespace sycl {
 
-/** \addtogroup data Data access and storage in SYCL
+/** \addtogro<T, Dimensions, Mode, Target>up data Data access and storage in SYCL
     @{
 */
 

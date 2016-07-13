@@ -16,6 +16,7 @@
 #include "CL/sycl/access.hpp"
 #include "CL/sycl/buffer/detail/accessor.hpp"
 #include "CL/sycl/buffer/detail/buffer_base.hpp"
+#include "CL/sycl/buffer/detail/buffer_waiter.hpp"
 #include "CL/sycl/range.hpp"
 
 namespace cl {
@@ -35,15 +36,28 @@ namespace detail {
 */
 template <typename T,
           std::size_t Dimensions = 1>
-struct buffer : public detail::buffer_base,
+class buffer : public detail::buffer_base,
                 public detail::debug<buffer<T, Dimensions>> {
+public:
+
   // Extension to SYCL: provide pieces of STL container interface
   using element = T;
   using value_type = T;
 
+private:
+
   /** If some allocation is requested, it is managed by this multi_array
       to ease initialization from data */
   boost::multi_array<T, Dimensions> allocation;
+
+  // \todo Replace U and D somehow by T and Dimensions
+  // To allow allocation access
+  template <typename U,
+            std::size_t D,
+            access::mode Mode,
+            access::target Target /* = access::global_buffer */>
+    friend class detail::accessor;
+
 
   /** This is the multi-dimensional interface to the data that may point
       to either allocation in the case of storage managed by SYCL itself
@@ -62,6 +76,7 @@ struct buffer : public detail::buffer_base,
   // Track if the buffer memory is provided as host memory
   bool host_write_back = false;
 
+public:
 
   /// Create a new read-write buffer of size \param r
   buffer(const range<Dimensions> &r) : buffer_base { false },
@@ -201,6 +216,7 @@ struct buffer : public detail::buffer_base,
     final_data = finalData;
   }
 
+private:
 
   /** Wait from inside the cl::sycl::buffer in case there is something
       to copy back to the host */
@@ -216,6 +232,8 @@ struct buffer : public detail::buffer_base,
     return f;
   }
 
+  // Allow buffer_waiter destructor to access get_destructor_future()
+  friend detail::buffer_waiter<T, Dimensions>::~buffer_waiter();
 };
 
 
