@@ -73,7 +73,7 @@ public:
                   || Target == access::blocking_pipe,
                   "get_access(handler) with pipes can only deal with "
                   "access::pipe or access::blocking_pipe");
-    return { *this->implementation, command_group_handler };
+    return { implementation, command_group_handler };
   }
 
 

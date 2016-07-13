@@ -10,6 +10,7 @@
 */
 
 #include <cstddef>
+#include <memory>
 #include <type_traits>
 
 #include "CL/sycl/access.hpp"
@@ -58,13 +59,8 @@ public:
 
 private:
 
-  /** The real pipe implementation behind the hood
-
-      Since it is a reference instead of value member, it is a mutable
-      state here, so that it can work with a [=] lambda capture
-      without having to declare the whole lambda as mutable
-  */
-  detail::pipe<T> &implementation;
+  /// The real pipe implementation behind the hood
+  std::shared_ptr<detail::pipe<T>> implementation;
 
   /** Store the success status of last pipe operation
 
@@ -83,22 +79,23 @@ public:
 
   /** Construct a pipe accessor from an existing pipe
    */
-  pipe_accessor(detail::pipe<value_type> &p, handler &command_group_handler) :
+  pipe_accessor(const std::shared_ptr<detail::pipe<T>> &p,
+                handler &command_group_handler) :
     implementation { p } {
     //    TRISYCL_DUMP_T("Create a kernel pipe accessor write = "
     //                 << is_write_access());
     // Verify that the pipe is not already used in the requested mode
     if (mode == access::write)
-      if (implementation.used_for_writing)
+      if (implementation->used_for_writing)
         /// \todo Use pipe_exception instead
         throw std::logic_error { "The pipe is already used for writing." };
       else
-        implementation.used_for_writing = true;
+        implementation->used_for_writing = true;
     else
-      if (implementation.used_for_reading)
+      if (implementation->used_for_reading)
         throw std::logic_error { "The pipe is already used for reading." };
       else
-        implementation.used_for_reading = true;
+        implementation->used_for_reading = true;
   }
 
 
@@ -107,7 +104,7 @@ public:
 
   /// Return the maximum number of elements that can fit in the pipe
   std::size_t capacity() const {
-    return implementation.capacity();
+    return implementation->capacity();
   }
 
   /** Get the current number of elements in the pipe
@@ -119,7 +116,7 @@ public:
       example on FPGA).
    */
   std::size_t size() const {
-    return implementation.size_with_lock();
+    return implementation->size_with_lock();
   }
 
 
@@ -132,7 +129,7 @@ public:
       write side (for example on FPGA).
    */
   bool empty() const {
-    return implementation.empty_with_lock();
+    return implementation->empty_with_lock();
   }
 
 
@@ -145,7 +142,7 @@ public:
       read side (for example on FPGA).
   */
   bool full() const {
-    return implementation.full_with_lock();
+    return implementation->full_with_lock();
   }
 
 
@@ -183,7 +180,7 @@ public:
     static_assert(mode == access::write,
                   "'.write(const value_type &value)' method on a pipe accessor"
                   " is only possible with write access mode");
-    ok = implementation.write(value, blocking);
+    ok = implementation->write(value, blocking);
     // Return a reference to *this so we can apply a sequence of write
     return *this;
   }
@@ -216,7 +213,7 @@ public:
     static_assert(mode == access::read,
                   "'.read(value_type &value)' method on a pipe accessor"
                   " is only possible with read access mode");
-    ok = implementation.read(value, blocking);
+    ok = implementation->read(value, blocking);
     // Return a reference to *this so we can apply a sequence of read
     return *this;
   }
@@ -239,7 +236,7 @@ public:
                   "'.read()' method on a pipe accessor is only possible"
                   " with a blocking pipe");
     value_type value;
-    implementation.read(value, blocking);
+    implementation->read(value, blocking);
     return value;
   }
 
@@ -256,13 +253,13 @@ public:
 
 
   detail::pipe_reservation<pipe_accessor> reserve(std::size_t size) const {
-    return { this->implementation, size };
+    return { *implementation, size };
   }
 
 
   /// Set debug mode
   void set_debug(bool enable) const {
-    implementation.debug_mode = enable;
+    implementation->debug_mode = enable;
   }
 
 
@@ -274,9 +271,9 @@ public:
   ~pipe_accessor() {
     /// Free the pipe for a future usage for the current mode
     if (mode == access::write)
-      implementation.used_for_writing = false;
+      implementation->used_for_writing = false;
     else
-      implementation.used_for_reading = false;
+      implementation->used_for_reading = false;
   }
 
 };

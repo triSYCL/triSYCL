@@ -164,7 +164,7 @@ public:
       access_target defines the form of access being obtained.
   */
   accessor(pipe<DataType> &p, handler &command_group_handler)
-    : accessor_detail { *p.implementation, command_group_handler } { }
+    : accessor_detail { p.implementation, command_group_handler } { }
 
   /// Make a reservation inside the pipe
   pipe_reservation<accessor> reserve(std::size_t size) const {
@@ -202,7 +202,7 @@ public:
       access_target defines the form of access being obtained.
   */
   accessor(pipe<DataType> &p, handler &command_group_handler)
-    : accessor_detail { *p.implementation, command_group_handler } { }
+    : accessor_detail { p.implementation, command_group_handler } { }
 
 
   /// Make a reservation inside the pipe

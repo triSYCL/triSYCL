@@ -59,6 +59,9 @@ class static_pipe
     detail::shared_ptr_implementation<static_pipe<T, Capacity>,
                                       detail::pipe<T>>;
 
+  // Make the implementation member directly accessible in this class
+  using implementation_t::implementation;
+
 public:
 
   /// The STL-like types
@@ -77,7 +80,7 @@ public:
       \param Target is the type of pipe access required
 
       \param[in] command_group_handler is the command group handler in
-      which the kernel is to be executed.
+      which the kernel is to be executed
   */
   template <access::mode Mode,
             access::target Target = access::pipe>
@@ -87,7 +90,7 @@ public:
                   || Target == access::blocking_pipe,
                   "get_access(handler) with pipes can only deal with "
                   "access::pipe or access::blocking_pipe");
-    return { *this->implementation, command_group_handler };
+    return { implementation, command_group_handler };
   }
 
 
