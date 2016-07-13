@@ -28,14 +28,18 @@ int test_main(int argc, char *argv[]) {
 
   // \todo add to spec section Defining kernels using OpenCL C kernel objects
   q.submit([&](handler &cgh) {
-      cgh.parallel_for(N, k);
+      cgh.parallel_for(43, k);
     });
+
+  /* Since the kernel does not use any buffer, wait for its completion
+     to be sure it is executed before the program exit */
+  q.wait();
 
 #if 0
   // \todo add to spec section Defining kernels using OpenCL C kernel objects
   // The same with the equivalent host fallback
   q.submit([&](handler &cgh) {
-      cgh.parallel_for<class empty>(N, kernel,
+      cgh.parallel_for<class empty>(N, k,
                                     // Host fallback
                                     [=] (int index) { }
                                     );

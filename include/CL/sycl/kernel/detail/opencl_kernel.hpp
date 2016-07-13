@@ -83,12 +83,18 @@ class opencl_kernel : public detail::kernel,
 #define TRISYCL_ParallelForKernel_RANGE(N)                              \
   void parallel_for(std::shared_ptr<detail::queue> q,                   \
                     const range<N> &num_work_items) override {          \
+    static_assert(sizeof(range<N>::value_type) == sizeof(size_t),       \
+                  "num_work_items::value_type compatible with "         \
+                  "Boost.Compute");                                     \
     q->get_boost_compute().enqueue_nd_range_kernel                      \
       (k,                                                               \
        static_cast<size_t>(N),                                          \
-       static_cast<const size_t *>(num_work_items.data()),              \
        NULL,                                                            \
+       static_cast<const size_t *>(num_work_items.data()),              \
        NULL);                                                           \
+    /* For now use a crude synchronization mechanism to map directly a  \
+       host task to an accelerator task */                              \
+    q->get_boost_compute().finish();                                    \
   };
 
   TRISYCL_ParallelForKernel_RANGE(1)

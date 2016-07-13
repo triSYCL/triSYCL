@@ -73,6 +73,9 @@ TRISYCL_INFO_PARAM_TRAITS(queue::context, context)
 /** SYCL queue, similar to the OpenCL queue concept.
 
     \todo The implementation is quite minimal for now. :-)
+
+    \todo All the queue methods should return a queue& instead of void
+    to it is possible to chain opoerations
 */
 class queue
     /* Use the underlying queue implementation that can be shared in
@@ -311,6 +314,9 @@ public:
 
       Use an explicit functor parameter taking a handler& so we can use
       "auto" in submit() lambda parameter.
+
+      \todo Add in the spec an implicit conversion of handler_event to
+      queue& so it is possible to chain operations on the queue
   */
   handler_event submit(std::function<void(handler &)> cgf) {
     handler command_group_handler { implementation };
