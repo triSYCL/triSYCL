@@ -20,9 +20,9 @@ namespace cl {
 namespace sycl {
 
 template <typename T, std::size_t Dimensions, typename Allocator>
-struct buffer;
+class buffer;
 template <typename T>
-struct pipe;
+class pipe;
 class handler;
 
 /** \addtogroup data Data access and storage in SYCL
@@ -38,15 +38,22 @@ template <typename DataType,
           std::size_t Dimensions,
           access::mode AccessMode,
           access::target Target = access::global_buffer>
-struct accessor : detail::accessor<DataType, Dimensions, AccessMode, Target> {
+class accessor :
+    public detail::accessor<DataType, Dimensions, AccessMode, Target> {
+public:
+
   /// \todo in the specification: store the dimension for user request
   static constexpr auto dimensionality = Dimensions;
   using value_type = DataType;
   using reference = value_type&;
   using const_reference = const value_type&;
 
+private:
+
   // Inherit of the constructors to have accessor constructor from detail
   using detail::accessor<DataType, Dimensions, AccessMode, Target>::accessor;
+
+public:
 
   /** Construct a buffer accessor from a buffer using a command group
       handler object from the command group scope
@@ -142,8 +149,10 @@ struct accessor : detail::accessor<DataType, Dimensions, AccessMode, Target> {
 */
 template <typename DataType,
           access::mode AccessMode>
-struct accessor<DataType, 1, AccessMode, access::pipe> :
-    detail::pipe_accessor<DataType, AccessMode, access::pipe> {
+class accessor<DataType, 1, AccessMode, access::pipe> :
+    public detail::pipe_accessor<DataType, AccessMode, access::pipe> {
+public:
+
   using accessor_detail =
     detail::pipe_accessor<DataType, AccessMode, access::pipe>;
   // Inherit of the constructors to have accessor constructor from detail
@@ -178,8 +187,10 @@ struct accessor<DataType, 1, AccessMode, access::pipe> :
 */
 template <typename DataType,
           access::mode AccessMode>
-struct accessor<DataType, 1, AccessMode, access::blocking_pipe> :
-    detail::pipe_accessor<DataType, AccessMode, access::blocking_pipe> {
+class accessor<DataType, 1, AccessMode, access::blocking_pipe> :
+    public detail::pipe_accessor<DataType, AccessMode, access::blocking_pipe> {
+public:
+
   using accessor_detail =
     detail::pipe_accessor<DataType, AccessMode, access::blocking_pipe>;
   // Inherit of the constructors to have accessor constructor from detail
