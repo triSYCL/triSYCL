@@ -16,13 +16,13 @@ int test_main(int argc, char *argv[]) {
   // Initialize the input buffers to some easy-to-compute values
   cl::sycl::buffer<Type> a { N };
   {
-    auto aa = a.get_access<cl::sycl::access::write>();
+    auto aa = a.get_access<cl::sycl::access::mode::write>();
     // Initialize buffer a with increasing integer starting at 0
     std::iota(aa.begin(), aa.end(), 0);
   }
   cl::sycl::buffer<Type> b { N };
   {
-    auto ab = b.get_access<cl::sycl::access::write>();
+    auto ab = b.get_access<cl::sycl::access::mode::write>();
     // Initialize buffer b starting from the end with increasing
     // integer starting at 42
     std::iota(ab.rbegin(), ab.rend(), 42);
@@ -42,9 +42,9 @@ int test_main(int argc, char *argv[]) {
   // Launch a producer to stream va to the pipe pa
   q.submit([&] (cl::sycl::handler &cgh) {
       // Get write access to the pipe
-      auto apa = pa.get_access<cl::sycl::access::write>(cgh);
+      auto apa = pa.get_access<cl::sycl::access::mode::write>(cgh);
       // Get read access to the data
-      auto aa = a.get_access<cl::sycl::access::read>(cgh);
+      auto aa = a.get_access<cl::sycl::access::mode::read>(cgh);
 
       cgh.single_task<class stream_a>([=] {
           for (int i = 0; i != N; i++)
@@ -56,9 +56,9 @@ int test_main(int argc, char *argv[]) {
   // Launch a producer to stream vb to the pipe pb
   q.submit([&] (cl::sycl::handler &cgh) {
       // Get write access to the pipe
-      auto apb = pb.get_access<cl::sycl::access::write>(cgh);
+      auto apb = pb.get_access<cl::sycl::access::mode::write>(cgh);
       // Get read access to the data
-      auto ab = b.get_access<cl::sycl::access::read>(cgh);
+      auto ab = b.get_access<cl::sycl::access::mode::read>(cgh);
 
       cgh.single_task<class stream_b>([=] {
           for (int i = 0; i != N; i++)
@@ -71,9 +71,9 @@ int test_main(int argc, char *argv[]) {
      producing on pipe pc */
   q.submit([&] (cl::sycl::handler &cgh) {
       // Get access to the pipes
-      auto apa = pa.get_access<cl::sycl::access::read>(cgh);
-      auto apb = pb.get_access<cl::sycl::access::read>(cgh);
-      auto apc = pc.get_access<cl::sycl::access::write>(cgh);
+      auto apa = pa.get_access<cl::sycl::access::mode::read>(cgh);
+      auto apb = pb.get_access<cl::sycl::access::mode::read>(cgh);
+      auto apc = pc.get_access<cl::sycl::access::mode::write>(cgh);
 
       cgh.single_task<class transformer>([=] {
           for (int i = 0; i != N; i++) {
@@ -95,9 +95,9 @@ int test_main(int argc, char *argv[]) {
   // Launch the consumer to read result from pipe pc to buffer c
   q.submit([&] (cl::sycl::handler &cgh) {
       // Get read access to the pipe
-      auto apc = pc.get_access<cl::sycl::access::read>(cgh);
+      auto apc = pc.get_access<cl::sycl::access::mode::read>(cgh);
       // Get write access to the data
-      auto ac = c.get_access<cl::sycl::access::write>(cgh);
+      auto ac = c.get_access<cl::sycl::access::mode::write>(cgh);
 
       cgh.single_task<class consumer>([=] {
           for (int i = 0; i != N; i++)
@@ -107,7 +107,7 @@ int test_main(int argc, char *argv[]) {
     });
 
   // Verify on the host the buffer content
-  for (auto e : c.get_access<cl::sycl::access::read>())
+  for (auto e : c.get_access<cl::sycl::access::mode::read>())
     BOOST_CHECK(e == N + 42 - 1);
 
   return 0;

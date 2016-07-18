@@ -26,7 +26,7 @@ int main() {
     // Launch a first asynchronous kernel to initialize a
     myQueue.submit([&](handler &cgh) {
         // The kernel write a, so construct a write accessor for it
-        auto A = accessor<double, 2, access::write> { a, cgh };
+        auto A = accessor<double, 2, access::mode::write> { a, cgh };
 
         // Enqueue a parallel kernel iterating on a N*M 2D iteration space
         cgh.parallel_for<class init_a>({ N, M },
@@ -38,7 +38,7 @@ int main() {
     // Launch an asynchronous kernel to initialize b
     myQueue.submit([&](handler &cgh) {
         // The kernel write b, so get a write accessor on it
-        auto B = accessor<double, 2, access::write> { b, cgh };
+        auto B = accessor<double, 2, access::mode::write> { b, cgh };
         /* From the access pattern above, the SYCL runtime detect this
            command_group is independant from the first one and can be
            scheduled independently */
@@ -53,9 +53,9 @@ int main() {
     // Launch an asynchronous kernel to compute matrix addition c = a + b
     myQueue.submit([&](handler &cgh) {
         // In the kernel a and b are read, but c is written
-        auto A = accessor<double, 2, access::read> { a, cgh };
-        auto B = accessor<double, 2, access::read> { b, cgh };
-        auto C = accessor<double, 2, access::write> { c, cgh };
+        auto A = accessor<double, 2, access::mode::read> { a, cgh };
+        auto B = accessor<double, 2, access::mode::read> { b, cgh };
+        auto C = accessor<double, 2, access::mode::write> { c, cgh };
         // From these accessors, the SYCL runtime will ensure that when
         // this kernel is run, the kernels computing a and b completed
 
@@ -68,7 +68,8 @@ int main() {
 
     /* Request an access to read c from the host-side. The SYCL runtime
        ensures that c is ready when the accessor is returned */
-    auto C = accessor<double, 2, access::read, access::host_buffer> { c };
+    auto C = accessor<double, 2,
+                      access::mode::read, access::target::host_buffer> { c };
     std::cout << std::endl << "Result:" << std::endl;
     for (size_t i = 0; i < N; i++)
       for (size_t j = 0; j < M; j++)

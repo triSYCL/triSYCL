@@ -74,7 +74,7 @@ public:
   template <typename DataType,
             std::size_t Dimensions,
             access::mode Mode,
-            access::target Target = access::global_buffer>
+            access::target Target = access::target::global_buffer>
   void set_arg(int arg_index,
                accessor<DataType, Dimensions, Mode, Target> acc_obj) {
     detail::unimplemented();

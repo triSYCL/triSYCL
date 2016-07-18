@@ -18,12 +18,12 @@ int main() {
     cl::sycl::buffer<int, 3> c({ N, M, P });
 
     // Test from the host
-    auto A = a.get_access<cl::sycl::access::read_write,
-                          cl::sycl::access::host_buffer>();
-    auto B = b.get_access<cl::sycl::access::read_write,
-                          cl::sycl::access::host_buffer>();
-    auto C = c.get_access<cl::sycl::access::read_write,
-                          cl::sycl::access::host_buffer>();
+    auto A = a.get_access<cl::sycl::access::mode::read_write,
+                          cl::sycl::access::target::host_buffer>();
+    auto B = b.get_access<cl::sycl::access::mode::read_write,
+                          cl::sycl::access::target::host_buffer>();
+    auto C = c.get_access<cl::sycl::access::mode::read_write,
+                          cl::sycl::access::target::host_buffer>();
 
     A[3]= 57;
     VERIFY_READ_WRITE_VALUE(A[3], 57);

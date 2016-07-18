@@ -30,7 +30,7 @@ template <typename PipeAccessor>
 struct pipe_reservation {
   using accessor_type = PipeAccessor;
   static constexpr bool blocking =
-    (accessor_type::target == cl::sycl::access::blocking_pipe);
+    (accessor_type::target == cl::sycl::access::target::blocking_pipe);
   using accessor_detail = typename accessor_type::accessor_detail;
   /// The STL-like types
   using value_type = typename accessor_type::value_type;

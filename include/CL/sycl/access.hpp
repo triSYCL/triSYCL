@@ -30,7 +30,7 @@ namespace access {
      more conform to the specification. */
 
   /// This describes the type of the access mode to be used via accessor
-  enum mode {
+  enum class mode {
     read = 42, /**< Read-only access. Insist on the fact that
                     read_write != read + write */
     write, ///< Write-only access, but previous content *not* discarded
@@ -45,7 +45,7 @@ namespace access {
   /** The target enumeration describes the type of object to be accessed
       via the accessor
   */
-  enum target {
+  enum class target {
     global_buffer = 2014, //< Just pick a random number...
     constant_buffer,
     local,

@@ -33,9 +33,9 @@ int main() {
        execution */
     myQueue.submit([&](handler &cgh) {
       // In the kernel A and B are read, but C is written
-      auto ka = A.get_access<access::read>(cgh);
-      auto kb = B.get_access<access::read>(cgh);
-      auto kc = C.get_access<access::write>(cgh);
+      auto ka = A.get_access<access::mode::read>(cgh);
+      auto kb = B.get_access<access::mode::read>(cgh);
+      auto kc = C.get_access<access::mode::write>(cgh);
 
       // Enqueue a single, simple task
       cgh.single_task<class sequential_vector>([=] () {

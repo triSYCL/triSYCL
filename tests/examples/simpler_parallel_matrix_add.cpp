@@ -26,9 +26,9 @@ int main() {
   // Enqueue some computation kernel task
   q.submit([&](handler& cgh) {
    // Define the data used/produced
-   auto ka = A.get_access<access::read>(cgh);
-   auto kb = B.get_access<access::read>(cgh);
-   auto kc = C.get_access<access::write>(cgh);
+   auto ka = A.get_access<access::mode::read>(cgh);
+   auto kb = B.get_access<access::mode::read>(cgh);
+   auto kc = C.get_access<access::mode::write>(cgh);
    // Create & call kernel named "mat_add"
    cgh.parallel_for<class mat_add>(range<2> { N, M },
       [=](id<2> i) { kc[i] = ka[i] + kb[i]; }

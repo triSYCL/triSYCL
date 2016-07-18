@@ -27,8 +27,8 @@ public:
 
   stencil_fxd2D(c_or0_s2D st0, c_or1_s2D st1) : st_left(st0), st_right(st1) {}
 
-  template<T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>)>
-  inline T eval(cl::sycl::accessor<T, 2, cl::sycl::access::read> a, int k, int l) const {
+  template<T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>)>
+  inline T eval(cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> a, int k, int l) const {
     return st_left.template eval<a_f>(a, a_f, k, l) + st_right.template eval<a_f>(a, k, l);
   }
   template<int ldc>
@@ -51,8 +51,8 @@ public:
 
   stencil_fxd2D_bis(c_or0_s2D st0) : st(st0) {}
 
-  template<T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>)>
-  inline T eval(cl::sycl::accessor<T, 2, cl::sycl::access::read> a, int k, int l) const {
+  template<T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>)>
+  inline T eval(cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> a, int k, int l) const {
     return st.template eval<a_f>(a, k, l);
   }
   template <int ldc>
@@ -77,8 +77,8 @@ public:
     return stencil_fxd2D_bis<coef_fxd2D<i, j>> {*this};
   }
 
-  template<T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>)>
-  inline T eval(cl::sycl::accessor<T, 2, cl::sycl::access::read> a, int k, int l) const {
+  template<T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>)>
+  inline T eval(cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> a, int k, int l) const {
     return coef * a_f(k+i,l+j,a); // template operator ? it would be cool
   }
   template<int ldc>
@@ -109,10 +109,10 @@ inline stencil_fxd2D<stencil_fxd2D<C1, C2, T>, stencil_fxd2D<C3, C4, T>, T> oper
   return stencil_fxd2D<stencil_fxd2D<C1, C2, T>, stencil_fxd2D<C3, C4, T>, T> {st0, st1};
 }
 
-template <typename T, cl::sycl::buffer<T,2> *_aB, T (*_a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>)>
+template <typename T, cl::sycl::buffer<T,2> *_aB, T (*_a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>)>
 class input_fxd2D {};
 
-template <typename T, class st, cl::sycl::buffer<T,2> *_aB, T (*_a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>)>
+template <typename T, class st, cl::sycl::buffer<T,2> *_aB, T (*_a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>)>
 class stencil_input_fxd2D {
 public:
   const st stencil;
@@ -120,7 +120,7 @@ public:
 };
 
 
-template <typename T, cl::sycl::buffer<T,2> *B, T& (*f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::write>), class st, cl::sycl::buffer<T,2> *aB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>)>
+template <typename T, cl::sycl::buffer<T,2> *B, T& (*f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write>), class st, cl::sycl::buffer<T,2> *aB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>)>
 class operation_fxd2D {
 public:
   static_assert(std::is_base_of<auth_in_op_fxd, st>::value, "An operation must be built with a stencil.");
@@ -175,13 +175,13 @@ public:
     //    nd_range = {range, cl::sycl::range<2> {li2D.nbi_wg0, li2D.nbi_wg1}, offset};
   }
 
-  inline void eval(cl::sycl::id<2> id, cl::sycl::accessor<T, 2, cl::sycl::access::write> *out, cl::sycl::accessor<T, 2, cl::sycl::access::read> *in) {
+  inline void eval(cl::sycl::id<2> id, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write> *out, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> *in) {
     int i = id.get(0) + of0;
     int j = id.get(1) + of1;
     f(i, j, *out) = stencil.template eval<a_f>(*in, i, j);
   }
 
-  inline void eval_local(cl::sycl::nd_item<2> it, cl::sycl::accessor<T, 2, cl::sycl::access::write> *out, T *local_tab, int glob_max0, int glob_max1) {
+  inline void eval_local(cl::sycl::nd_item<2> it, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write> *out, T *local_tab, int glob_max0, int glob_max1) {
     int i = it.get_global().get(0);
     int j = it.get_global().get(1);
     if (i >= glob_max0 || j >= glob_max1)
@@ -193,7 +193,7 @@ public:
     f(i, j, *out) = stencil.template eval_local<local_dim1>(local_tab, i_local, j_local);
   }
 
-  inline void store_local(T * local_tab, cl::sycl::accessor<T, 2, cl::sycl::access::read> *in, cl::sycl::nd_item<2> it, cl::sycl::group<2> gr, int glob_max0, int glob_max1) {
+  inline void store_local(T * local_tab, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> *in, cl::sycl::nd_item<2> it, cl::sycl::group<2> gr, int glob_max0, int glob_max1) {
     cl::sycl::range<2> l_range = it.get_local_range();
     cl::sycl::id<2> g_ind = gr.get(); //it.get_group_id(); error because ambiguous / operator redefinition 
     cl::sycl::id<2> l_ind = it.get_local();
@@ -237,8 +237,8 @@ public:
   //conversion not known in reference (&) for all sycl objects ...
   inline void doComputation(cl::sycl::queue queue){
     queue.submit([&](cl::sycl::handler &cgh) {
-        cl::sycl::accessor<T, 2, cl::sycl::access::write> *_B = new cl::sycl::accessor<T, 2, cl::sycl::access::write>(*B, cgh);
-        cl::sycl::accessor<T, 2, cl::sycl::access::read>  *_aB = new cl::sycl::accessor<T, 2, cl::sycl::access::read>(*aB, cgh);
+        cl::sycl::accessor<T, 2, cl::sycl::access::mode::write> *_B = new cl::sycl::accessor<T, 2, cl::sycl::access::mode::write>(*B, cgh);
+        cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>  *_aB = new cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>(*aB, cgh);
         cgh.parallel_for<class KernelCompute>(range, [=](cl::sycl::id<2> id){
             eval(id, _B, _aB);
           });
@@ -249,8 +249,8 @@ public:
 
   inline void doLocalComputation(cl::sycl::queue queue){
     queue.submit([&](cl::sycl::handler &cgh) {
-        cl::sycl::accessor<T, 2, cl::sycl::access::write> *_B = new cl::sycl::accessor<T, 2, cl::sycl::access::write>(*B, cgh);
-        cl::sycl::accessor<T, 2, cl::sycl::access::read>  *_aB = new cl::sycl::accessor<T, 2, cl::sycl::access::read>(*aB, cgh);
+        cl::sycl::accessor<T, 2, cl::sycl::access::mode::write> *_B = new cl::sycl::accessor<T, 2, cl::sycl::access::mode::write>(*B, cgh);
+        cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>  *_aB = new cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>(*aB, cgh);
         cgh.parallel_for_work_group<class KernelCompute>(nd_range, [=](cl::sycl::group<2> group){
             T * local = new T[local_dim0 * local_dim1];
             cl::sycl::parallel_for_work_item(group, [=](cl::sycl::nd_item<2> it){
@@ -277,7 +277,7 @@ public:
 };
 
 
-template <typename T, cl::sycl::buffer<T,2> *_B, T& (*_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::write>), class st>
+template <typename T, cl::sycl::buffer<T,2> *_B, T& (*_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write>), class st>
 class output_stencil_fxd2D {
 public:
   const st stencil;
@@ -286,36 +286,36 @@ public:
 
 
 
-template <typename T, cl::sycl::buffer<T,2> *B, T& (*f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::write>), class C1, class C2>
+template <typename T, cl::sycl::buffer<T,2> *B, T& (*f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write>), class C1, class C2>
 inline output_stencil_fxd2D<T, B, f, stencil_fxd2D<C1, C2, T>> operator<< (output_2D<T, B, f> out, stencil_fxd2D<C1, C2, T> in) {
   return output_stencil_fxd2D<T, B, f, stencil_fxd2D<C1, C2, T>> {in};
 }
 
-template <typename T, cl::sycl::buffer<T,2> *B, T& (*f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::write>), class C1>
+template <typename T, cl::sycl::buffer<T,2> *B, T& (*f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write>), class C1>
 inline output_stencil_fxd2D<T, B, f, stencil_fxd2D_bis<C1, T>> operator<< (output_2D<T, B, f> out, stencil_fxd2D_bis<C1, T> in) {
   return output_stencil_fxd2D<T, B, f, stencil_fxd2D_bis<C1, T>> {in};
 }
 
 
 
-template <typename T, class C1, class C2, cl::sycl::buffer<T,2> *aB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>)>
+template <typename T, class C1, class C2, cl::sycl::buffer<T,2> *aB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>)>
 inline stencil_input_fxd2D<T, stencil_fxd2D<C1, C2, T>, aB, a_f> operator<< (stencil_fxd2D<C1, C2, T> out, input_fxd2D<T, aB, a_f> in) {
   return stencil_input_fxd2D<T, stencil_fxd2D<C1, C2, T>, aB, a_f> {out};
 }
 
-template <typename T, class C1, cl::sycl::buffer<T,2> *aB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>)>
+template <typename T, class C1, cl::sycl::buffer<T,2> *aB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>)>
 inline stencil_input_fxd2D<T, stencil_fxd2D_bis<C1, T>, aB, a_f> operator<< (stencil_fxd2D_bis<C1, T> out, input_fxd2D<T, aB, a_f> in) {
   return stencil_input_fxd2D<T, stencil_fxd2D_bis<C1, T>, aB, a_f> {out};
 }
 
 
 
-template <typename T, cl::sycl::buffer<T,2> *B, T& (*f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::write>), class st, cl::sycl::buffer<T,2> *aB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>)>
+template <typename T, cl::sycl::buffer<T,2> *B, T& (*f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write>), class st, cl::sycl::buffer<T,2> *aB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>)>
 inline operation_fxd2D<T, B, f, st, aB, a_f> operator<< (output_stencil_fxd2D<T, B, f, st> out, input_fxd2D<T, aB, a_f> in) {
   return operation_fxd2D<T, B, f, st, aB, a_f> {out.stencil};
 }
 
-template <typename T, cl::sycl::buffer<T,2> *B, T& (*f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::write>), class st, cl::sycl::buffer<T,2> *aB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::read>)>
+template <typename T, cl::sycl::buffer<T,2> *B, T& (*f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write>), class st, cl::sycl::buffer<T,2> *aB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>)>
 inline operation_fxd2D<T, B, f, st, aB, a_f> operator<< (output_2D<T, B, f> out, stencil_input_fxd2D<T, st, aB, a_f> in) {
   return operation_fxd2D<T, B, f, st, aB, a_f> {in.stencil};
 }

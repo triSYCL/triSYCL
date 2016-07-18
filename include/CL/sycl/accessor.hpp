@@ -37,7 +37,7 @@ class handler;
 template <typename DataType,
           std::size_t Dimensions,
           access::mode AccessMode,
-          access::target Target = access::global_buffer>
+          access::target Target = access::target::global_buffer>
 class accessor :
     public detail::accessor<DataType, Dimensions, AccessMode, Target> {
 public:
@@ -149,12 +149,12 @@ public:
 */
 template <typename DataType,
           access::mode AccessMode>
-class accessor<DataType, 1, AccessMode, access::pipe> :
-    public detail::pipe_accessor<DataType, AccessMode, access::pipe> {
+class accessor<DataType, 1, AccessMode, access::target::pipe> :
+    public detail::pipe_accessor<DataType, AccessMode, access::target::pipe> {
 public:
 
   using accessor_detail =
-    detail::pipe_accessor<DataType, AccessMode, access::pipe>;
+    detail::pipe_accessor<DataType, AccessMode, access::target::pipe>;
   // Inherit of the constructors to have accessor constructor from detail
   using accessor_detail::accessor_detail;
 
@@ -187,12 +187,12 @@ public:
 */
 template <typename DataType,
           access::mode AccessMode>
-class accessor<DataType, 1, AccessMode, access::blocking_pipe> :
-    public detail::pipe_accessor<DataType, AccessMode, access::blocking_pipe> {
+class accessor<DataType, 1, AccessMode, access::target::blocking_pipe> :
+    public detail::pipe_accessor<DataType, AccessMode, access::target::blocking_pipe> {
 public:
 
   using accessor_detail =
-    detail::pipe_accessor<DataType, AccessMode, access::blocking_pipe>;
+    detail::pipe_accessor<DataType, AccessMode, access::target::blocking_pipe>;
   // Inherit of the constructors to have accessor constructor from detail
   using accessor_detail::accessor_detail;
 

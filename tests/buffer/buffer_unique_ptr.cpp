@@ -24,8 +24,8 @@ int test_main(int argc, char *argv[]) {
   buffer<int> b { N };
 
   queue {}.submit([&](handler &cgh) {
-      auto ka = a.get_access<access::read>(cgh);
-      auto kb = b.get_access<access::write>(cgh);
+      auto ka = a.get_access<access::mode::read>(cgh);
+      auto kb = b.get_access<access::mode::write>(cgh);
 
       cgh.parallel_for<class update>(range<1> { N },
                                      [=] (id<1> index) {
@@ -33,7 +33,7 @@ int test_main(int argc, char *argv[]) {
                                      });
     });
 
-  auto result = b.get_access<access::read, access::host_buffer>();
+  auto result = b.get_access<access::mode::read, access::target::host_buffer>();
   for (int i = 0; i != N; ++i) {
     //std::cerr << result[i] << ':' << i << std::endl;
     BOOST_CHECK(result[i] == 2*(314 + i));

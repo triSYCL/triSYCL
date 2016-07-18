@@ -48,6 +48,11 @@ namespace sycl {
 
     \todo Think about the need of an allocator when constructing a buffer
     from other buffers
+
+    \todo Add constructors from arrays so that in C++17 the range and
+    type can be infered from the constructor
+
+    \todo Add constructors from array_ref
 */
 template <typename T,
           std::size_t Dimensions = 1,
@@ -357,11 +362,11 @@ public:
       \todo for this implementation it is const for now
   */
   template <access::mode Mode,
-            access::target Target = access::global_buffer>
+            access::target Target = access::target::global_buffer>
   accessor<T, Dimensions, Mode, Target>
   get_access(handler &command_group_handler) const {
-    static_assert(Target == access::global_buffer
-                  || Target == access::constant_buffer,
+    static_assert(Target == access::target::global_buffer
+                  || Target == access::target::constant_buffer,
                   "get_access(handler) can only deal with access::global_buffer"
                   " or access::constant_buffer (for host_buffer accessor"
                   " do not use a command group handler");
@@ -380,10 +385,10 @@ public:
       \todo for this implementation it is const for now
   */
   template <access::mode Mode,
-            access::target Target = access::host_buffer>
+            access::target Target = access::target::host_buffer>
   accessor<T, Dimensions, Mode, Target>
   get_access() const {
-    static_assert(Target == access::host_buffer,
+    static_assert(Target == access::target::host_buffer,
                   "get_access() without a command group handler is only"
                   " for host_buffer accessor");
     return *implementation->implementation;

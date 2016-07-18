@@ -23,7 +23,7 @@ int test_main(int argc, char *argv[]) {
     buffer<int> b { data, N };
 
     queue {}.submit([&](handler &cgh) {
-        auto kb = b.get_access<access::read_write>(cgh);
+        auto kb = b.get_access<access::mode::read_write>(cgh);
 
         cgh.parallel_for<class generate>(range<1> { N },
                                          [=] (id<1> index) {

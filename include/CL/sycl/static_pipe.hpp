@@ -83,11 +83,11 @@ public:
       which the kernel is to be executed
   */
   template <access::mode Mode,
-            access::target Target = access::pipe>
+            access::target Target = access::target::pipe>
   accessor<value_type, 1, Mode, Target>
   get_access(handler &command_group_handler) {
-    static_assert(Target == access::pipe
-                  || Target == access::blocking_pipe,
+    static_assert(Target == access::target::pipe
+                  || Target == access::target::blocking_pipe,
                   "get_access(handler) with pipes can only deal with "
                   "access::pipe or access::blocking_pipe");
     return { implementation, command_group_handler };

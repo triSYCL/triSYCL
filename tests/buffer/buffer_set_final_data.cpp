@@ -24,7 +24,7 @@ int test_main(int argc, char *argv[]) {
     b.set_final_data(result);
 
     queue {}.submit([&](handler &cgh) {
-        auto a = b.get_access<access::write>(cgh);
+        auto a = b.get_access<access::mode::write>(cgh);
 
         cgh.parallel_for<class generate>(range<1> { N },
                                          [=] (id<1> index) {

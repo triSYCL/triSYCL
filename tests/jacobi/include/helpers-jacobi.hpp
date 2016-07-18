@@ -329,7 +329,7 @@ void print_host2D(float * tab) {
   }
 }
 
-void print_buffer2D(cl::sycl::accessor<float, 2, cl::sycl::access::read, cl::sycl::access::host_buffer> bufferAccessor) {
+void print_buffer2D(cl::sycl::accessor<float, 2, cl::sycl::access::mode::read, cl::sycl::access::target::host_buffer> bufferAccessor) {
   for (size_t i = 0; i < M; ++i){
     for(size_t j = 0; j < N; ++j){
       std::cout << bufferAccessor[i][j] << " " ;
@@ -368,7 +368,7 @@ void compute_jacobi2D(float * a_test, float * b_test, struct counters& timer){
 }
 
 // comp..
-void ute_and_are(float * a_test, float * b_test, cl::sycl::accessor<float, 2, cl::sycl::access::read, cl::sycl::access::host_buffer> C){
+void ute_and_are(float * a_test, float * b_test, cl::sycl::accessor<float, 2, cl::sycl::access::mode::read, cl::sycl::access::target::host_buffer> C){
   // compute result with cpu
   struct counters timer; //useless, but avoids writing the func twice
   compute_jacobi2D(a_test,b_test,timer);

@@ -50,7 +50,8 @@ public:
   static constexpr auto mode = AccessMode;
   static constexpr auto target = Target;
 
-  static constexpr bool blocking = (target == cl::sycl::access::blocking_pipe);
+  static constexpr bool blocking =
+    (target == cl::sycl::access::target::blocking_pipe);
 
   /// The STL-like types
   using value_type = T;
@@ -85,7 +86,7 @@ public:
     //    TRISYCL_DUMP_T("Create a kernel pipe accessor write = "
     //                 << is_write_access());
     // Verify that the pipe is not already used in the requested mode
-    if (mode == access::write)
+    if (mode == access::mode::write)
       if (implementation->used_for_writing)
         /// \todo Use pipe_exception instead
         throw std::logic_error { "The pipe is already used for writing." };
@@ -177,7 +178,7 @@ public:
       default
   */
   const pipe_accessor &write(const value_type &value) const {
-    static_assert(mode == access::write,
+    static_assert(mode == access::mode::write,
                   "'.write(const value_type &value)' method on a pipe accessor"
                   " is only possible with write access mode");
     ok = implementation->write(value, blocking);
@@ -189,7 +190,7 @@ public:
   /** Some syntactic sugar to use \code a << v \endcode instead of
       \code a.write(v) \endcode */
   const pipe_accessor &operator<<(const value_type &value) const {
-    static_assert(mode == access::write,
+    static_assert(mode == access::mode::write,
                   "'<<' operator on a pipe accessor is only possible"
                   " with write access mode");
     // Return a reference to *this so we can apply a sequence of >>
@@ -210,7 +211,7 @@ public:
       default
   */
   const pipe_accessor &read(value_type &value) const {
-    static_assert(mode == access::read,
+    static_assert(mode == access::mode::read,
                   "'.read(value_type &value)' method on a pipe accessor"
                   " is only possible with read access mode");
     ok = implementation->read(value, blocking);
@@ -229,7 +230,7 @@ public:
       default
   */
   value_type read() const {
-    static_assert(mode == access::read,
+    static_assert(mode == access::mode::read,
                   "'.read()' method on a pipe accessor is only possible"
                   " with read access mode");
     static_assert(blocking,
@@ -244,7 +245,7 @@ public:
   /** Some syntactic sugar to use \code a >> v \endcode instead of
       \code a.read(v) \endcode */
   const pipe_accessor &operator>>(value_type &value) const {
-    static_assert(mode == access::read,
+    static_assert(mode == access::mode::read,
                   "'>>' operator on a pipe accessor is only possible"
                   " with read access mode");
     // Return a reference to *this so we can apply a sequence of >>
@@ -270,7 +271,7 @@ public:
 
   ~pipe_accessor() {
     /// Free the pipe for a future usage for the current mode
-    if (mode == access::write)
+    if (mode == access::mode::write)
       implementation->used_for_writing = false;
     else
       implementation->used_for_reading = false;

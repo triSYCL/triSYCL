@@ -21,8 +21,8 @@ buffer<int> my_buffer(data, size);
 
 my_queue.submit([&](handler &cgh)
 {
-  auto in_access = my_buffer.get_access<access::read>(cgh);
-  auto out_access = my_buffer.get_access<access::write>(cgh);
+  auto in_access = my_buffer.get_access<access::mode::read>(cgh);
+  auto out_access = my_buffer.get_access<access::mode::write>(cgh);
 
   cgh.parallel_for_work_group<class hierarchical>(nd_range<>(range<>(size),
                                                              range<>(groupsize)),

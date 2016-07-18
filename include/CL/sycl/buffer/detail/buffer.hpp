@@ -173,7 +173,7 @@ public:
   /// Return an accessor of the required mode \param M
   /// \todo Remove if not used
   template <access::mode Mode,
-            access::target Target = access::global_buffer>
+            access::target Target = access::target::global_buffer>
   detail::accessor<T, Dimensions, Mode, Target> get_access() {
     return { *this };
   }

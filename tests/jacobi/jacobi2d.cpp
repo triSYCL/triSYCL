@@ -26,8 +26,8 @@ int main(int argc, char **argv) {
     for (size_t j = 0; j < N; ++j){
       float value = ((float) i*(j+2) + 10) / N;
       sycl::id<2> id = {i, j};
-      ioABuffer.get_access<sycl::access::write, sycl::access::host_buffer>()[id] = value;
-      ioBBuffer.get_access<sycl::access::write, sycl::access::host_buffer>()[id] = value;
+      ioABuffer.get_access<sycl::access::mode::write, sycl::access::target::host_buffer>()[id] = value;
+      ioBBuffer.get_access<sycl::access::mode::write, sycl::access::target::host_buffer>()[id] = value;
 #if DEBUG_STENCIL
       a_test[i*N+j] = value;
       b_test[i*N+j] = value;
@@ -38,15 +38,15 @@ int main(int argc, char **argv) {
   end_init(timer);
 
   // compute result with "gpu"
-  {    
+  {
     sycl::queue myQueue;
 
     begin_op(time_op);
 
     for (unsigned int i = 0; i < NB_ITER; ++i){
       myQueue.submit([&](sycl::handler &cgh) {
-          sycl::accessor<float, 2, sycl::access::read>  a(ioABuffer, cgh);
-          sycl::accessor<float, 2, sycl::access::write> b(ioBBuffer, cgh);
+          sycl::accessor<float, 2, sycl::access::mode::read>  a(ioABuffer, cgh);
+          sycl::accessor<float, 2, sycl::access::mode::write> b(ioBBuffer, cgh);
           cgh.parallel_for<class KernelCompute>(sycl::range<2> {M-2, N-2},
                                                 sycl::id<2> {1, 1},
                                                 [=] (sycl::item<2> it) {
@@ -67,8 +67,8 @@ int main(int argc, char **argv) {
 
 
       myQueue.submit([&](sycl::handler &cgh) {
-          sycl::accessor<float, 2, sycl::access::write> a(ioABuffer, cgh);
-          sycl::accessor<float, 2, sycl::access::read>  b(ioBBuffer, cgh);
+          sycl::accessor<float, 2, sycl::access::mode::write> a(ioABuffer, cgh);
+          sycl::accessor<float, 2, sycl::access::mode::read>  b(ioBBuffer, cgh);
           cgh.parallel_for<class KernelCopy>(sycl::range<2> {M-2, N-2},
                                              sycl::id<2> {1, 1},
                                              [=] (sycl::item<2> it) {
@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
 
 #if DEBUG_STENCIL
   // get the gpu result
-  auto C = ioABuffer.get_access<sycl::access::read, sycl::access::host_buffer>();
+  auto C = ioABuffer.get_access<sycl::access::mode::read, sycl::access::target::host_buffer>();
   ute_and_are(a_test,b_test,C);
   free(a_test);
   free(b_test);
