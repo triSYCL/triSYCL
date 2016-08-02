@@ -10,6 +10,7 @@
 */
 
 #include <cstddef>
+#include <memory>
 
 #include <boost/multi_array.hpp>
 
@@ -54,13 +55,8 @@ class accessor : public detail::debug<accessor<T,
                                                Dimensions,
                                                Mode,
                                                Target>> {
-  /** Keep a reference to the accessed buffer
-
-      \todo This should be a shared_ptr actually so the buffer
-      implementation can remain alive even if the SYCL buffer
-      disappears
-   */
-  detail::buffer<T, Dimensions> *buf;
+  /// Keep a reference to the accessed buffer
+  std::shared_ptr<detail::buffer<T, Dimensions>> buf;
 
   /// The implementation is a multi_array_ref wrapper
   using array_view_type = boost::multi_array_ref<T, Dimensions>;
@@ -109,8 +105,8 @@ public:
       \todo fix the specification to rename target that shadows
       template parm
   */
-  accessor(detail::buffer<T, Dimensions> &target_buffer) :
-    buf { &target_buffer }, array { target_buffer.access } {
+  accessor(std::shared_ptr<detail::buffer<T, Dimensions>> target_buffer) :
+    buf { target_buffer }, array { target_buffer->access } {
     TRISYCL_DUMP_T("Create a host accessor write = " << is_write_access());
     static_assert(Target == access::target::host_buffer,
                   "without a handler, access target should be host_buffer");
@@ -125,9 +121,9 @@ public:
       \todo fix the specification to rename target that shadows
       template parm
   */
-  accessor(detail::buffer<T, Dimensions> &target_buffer,
+  accessor(std::shared_ptr<detail::buffer<T, Dimensions>> target_buffer,
            handler &command_group_handler) :
-    buf { &target_buffer }, array { target_buffer.access } {
+    buf { target_buffer }, array { target_buffer->access } {
     TRISYCL_DUMP_T("Create a kernel accessor write = " << is_write_access());
     static_assert(Target == access::target::global_buffer
                   || Target == access::target::constant_buffer,

@@ -58,8 +58,8 @@ template <typename T,
           std::size_t Dimensions = 1,
           typename Allocator = buffer_allocator<T>>
 class buffer
-  /* Use the underlying buffer implementation that can be shared in
-     the SYCL model */
+  /* Use the underlying buffer waiter implementation that can be
+     shared in the SYCL model */
   : public detail::shared_ptr_implementation<
                          buffer<T, Dimensions, Allocator>,
                          detail::buffer_waiter<T, Dimensions, Allocator>>,
@@ -370,7 +370,7 @@ public:
                   "get_access(handler) can only deal with access::global_buffer"
                   " or access::constant_buffer (for host_buffer accessor"
                   " do not use a command group handler");
-    return { *implementation->implementation, command_group_handler };
+    return { implementation->implementation, command_group_handler };
   }
 
 
@@ -391,7 +391,7 @@ public:
     static_assert(Target == access::target::host_buffer,
                   "get_access() without a command group handler is only"
                   " for host_buffer accessor");
-    return *implementation->implementation;
+    return implementation->implementation;
   }
 
 

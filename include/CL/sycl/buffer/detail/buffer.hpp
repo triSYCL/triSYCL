@@ -37,7 +37,7 @@ namespace detail {
 template <typename T,
           std::size_t Dimensions = 1>
 class buffer : public detail::buffer_base,
-                public detail::debug<buffer<T, Dimensions>> {
+               public detail::debug<buffer<T, Dimensions>> {
 public:
 
   // Extension to SYCL: provide pieces of STL container interface
@@ -242,7 +242,7 @@ private:
     \todo To remove with some refactoring
 */
 template <typename BufferDetail>
-static void buffer_add_to_task(BufferDetail *buf,
+static void buffer_add_to_task(BufferDetail buf,
                                handler *command_group_handler,
                                bool is_write_mode) {
     buf->add_to_task(command_group_handler, is_write_mode);

@@ -1,7 +1,8 @@
 #ifndef TRISYCL_SYCL_BUFFER_DETAIL_BUFFER_BASE_HPP
 #define TRISYCL_SYCL_BUFFER_DETAIL_BUFFER_BASE_HPP
 
-/** \file The buffer_base behind the buffers
+/** \file The buffer_base behind the buffers, independent of the data
+    type
 
     Ronan at Keryell point FR
 
