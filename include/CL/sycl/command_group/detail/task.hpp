@@ -39,6 +39,12 @@ struct task : public std::enable_shared_from_this<task>,
   /// The tasks producing the buffers used by this task
   std::vector<std::shared_ptr<detail::task>> producer_tasks;
 
+  /// Keep track of any prologue to be executed before the kernel
+  std::vector<std::function<void(void)>> prologues;
+
+  /// Keep track of any epilogue to be executed after the kernel
+  std::vector<std::function<void(void)>> epilogues;
+
   /// Store if the execution ended, to be notified by task_ready
   bool execution_ended = false;
 
@@ -68,9 +74,11 @@ struct task : public std::enable_shared_from_this<task>,
     auto execution = [=] {
       // Wait for the required tasks to be ready
       task->wait_for_producers();
+      task->prelude();
       TRISYCL_DUMP_T("Execute the kernel");
       // Execute the kernel
       f();
+      task->postlude();
       // Release the buffers that have been written by this task
       task->release_buffers();
       // Notify the waiting tasks that we are done
@@ -171,6 +179,20 @@ struct task : public std::enable_shared_from_this<task>,
        producer list to wait on it before running the task core */
     if (latest_producer)
       producer_tasks.push_back(latest_producer);
+  }
+
+
+  /// Execute the prologues
+  void prelude() {
+    for (const auto &p : prologues)
+      p();
+  }
+
+
+  /// Execute the epilogues
+  void postlude() {
+    for (const auto &p : epilogues)
+      p();
   }
 
 

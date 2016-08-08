@@ -30,7 +30,7 @@ CXXFLAGS += -Wall -std=c++1y -I$(triSYCL_DIR)/include \
 	-I$(triSYCL_DIR)/tests/common
 
 # To use OpenMP to execute SYCL kernels:
-CXXFLAGS += -fopenmp
+#CXXFLAGS += -fopenmp
 
 # To use OpenCL
 CXXFLAGS += -DTRISYCL_OPENCL
