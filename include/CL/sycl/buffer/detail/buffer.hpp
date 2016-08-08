@@ -217,7 +217,8 @@ public:
   }
 
 private:
-
+  // \todo Work around to Clang bug https://llvm.org/bugs/show_bug.cgi?id=28873
+  
   /** Wait from inside the cl::sycl::buffer in case there is something
       to copy back to the host */
   boost::optional<std::future<void>> get_destructor_future() {
@@ -233,7 +234,11 @@ private:
   }
 
   // Allow buffer_waiter destructor to access get_destructor_future()
-  friend detail::buffer_waiter<T, Dimensions>::~buffer_waiter();
+  // friend detail::buffer_waiter<T, Dimensions>::~buffer_waiter();
+  /* \todo Work around to Clang bug
+     https://llvm.org/bugs/show_bug.cgi?id=28873 cannot use destructor
+     here */
+  friend detail::buffer_waiter<T, Dimensions>;
 };
 
 
