@@ -13,6 +13,10 @@
 
 #include "CL/sycl/access.hpp"
 #include "CL/sycl/buffer/detail/accessor.hpp"
+#include "CL/sycl/detail/shared_ptr_implementation.hpp"
+#include "CL/sycl/id.hpp"
+#include "CL/sycl/item.hpp"
+#include "CL/sycl/nd_item.hpp"
 #include "CL/sycl/pipe_reservation.hpp"
 #include "CL/sycl/pipe/detail/pipe_accessor.hpp"
 
@@ -39,7 +43,14 @@ template <typename DataType,
           access::mode AccessMode,
           access::target Target = access::target::global_buffer>
 class accessor :
-    public detail::accessor<DataType, Dimensions, AccessMode, Target> {
+    public detail::shared_ptr_implementation<accessor<DataType,
+						      Dimensions,
+						      AccessMode,
+						      Target>,
+					     detail::accessor<DataType,
+							      Dimensions,
+							      AccessMode,
+							      Target>> {
 public:
 
   /// \todo in the specification: store the dimension for user request
@@ -50,10 +61,23 @@ public:
 
 private:
 
-  // Inherit of the constructors to have accessor constructor from detail
-  using detail::accessor<DataType, Dimensions, AccessMode, Target>::accessor;
+  using accessor_detail = detail::accessor<DataType,
+					   Dimensions,
+					   AccessMode,
+					   Target>;
+  
+  // The type encapsulating the implementation
+  using implementation_t =
+    detail::shared_ptr_implementation<accessor<DataType,
+					       Dimensions,
+					       AccessMode,
+					       Target>,
+				      accessor_detail>;
 
-public:
+ public:
+
+  // Make the implementation member directly accessible in this class
+  using implementation_t::implementation;
 
   /** Construct a buffer accessor from a buffer using a command group
       handler object from the command group scope
@@ -72,13 +96,14 @@ public:
   */
   template <typename Allocator>
   accessor(buffer<DataType, Dimensions, Allocator> &target_buffer,
-           handler &command_group_handler)
-    : detail::accessor<DataType, Dimensions, AccessMode, Target> {
-    target_buffer.implementation->implementation, command_group_handler } {
+           handler &command_group_handler) : implementation_t {
+    new detail::accessor<DataType, Dimensions, AccessMode, Target> {
+      target_buffer.implementation->implementation, command_group_handler }
+  } {
     static_assert(Target == access::target::global_buffer
-                  || Target == access::target::constant_buffer,
-                  "access target should be global_buffer or constant_buffer "
-                  "when a handler is used");
+		  || Target == access::target::constant_buffer,
+		  "access target should be global_buffer or constant_buffer "
+		  "when a handler is used");
   }
 
 
@@ -93,8 +118,10 @@ public:
   */
   template <typename Allocator>
   accessor(buffer<DataType, Dimensions, Allocator> &target_buffer)
-    : detail::accessor<DataType, Dimensions, AccessMode, Target> {
-    target_buffer.implementation->implementation } {
+    : implementation_t {
+    new detail::accessor<DataType, Dimensions, AccessMode, Target> {
+      target_buffer.implementation->implementation }
+  } {
     static_assert(Target == access::target::host_buffer,
                   "without a handler, access target should be host_buffer");
   }
@@ -137,6 +164,158 @@ public:
   accessor(range<Dimensions> allocation_size,
            handler &command_group_handler) {
     detail::unimplemented();
+  }
+
+
+  /** Use the accessor with integers à la [][][]
+
+      Use array_view_type::reference instead of auto& because it does not
+      work in some dimensions.
+   */
+  typename accessor_detail::reference operator[](std::size_t index) {
+    return (*implementation)[index];
+  }
+
+
+  /// To use the accessor in with [id<>]
+  auto &operator[](id<dimensionality> index) {
+    return (*implementation)[index];
+  }
+
+
+  /// To use the accessor in with [id<>]
+  auto &operator[](id<dimensionality> index) const {
+    return (*implementation)[index];
+  }
+
+
+  /// To use an accessor with [item<>]
+  auto &operator[](item<dimensionality> index) {
+    return (*this)[index.get()];
+  }
+
+
+  /// To use an accessor with [item<>]
+  auto &operator[](item<dimensionality> index) const {
+    return (*this)[index.get()];
+  }
+
+
+  /** To use an accessor with an [nd_item<>]
+
+      \todo Add in the specification because used by HPC-GPU slide 22
+  */
+  auto &operator[](nd_item<dimensionality> index) {
+    return (*this)[index.get_global()];
+  }
+
+  /** To use an accessor with an [nd_item<>]
+
+      \todo Add in the specification because used by HPC-GPU slide 22
+  */
+  auto &operator[](nd_item<dimensionality> index) const {
+    return (*this)[index.get_global()];
+  }
+
+
+    /** Get the first element of the accessor
+
+      Useful with an accessor on a scalar for example.
+
+      \todo Add in the specification
+  */
+  typename accessor_detail::reference operator*() {
+    return **implementation;
+  }
+
+
+  /** Get the first element of the accessor
+
+      Useful with an accessor on a scalar for example.
+
+      \todo Add in the specification?
+
+      \todo Add the concept of 0-dim buffer and accessor for scalar
+      and use an implicit conversion to value_type reference to access
+      the value with the accessor?
+  */
+  typename accessor_detail::reference operator*() const {
+    return **implementation;
+  }
+
+  /** Forward all the iterator functions to the implementation
+
+      \todo Add these functions to the specification
+
+      \todo The fact that the lambda capture make a const copy of the
+      accessor is not yet elegantly managed... The issue is that
+      begin()/end() dispatch is made according to the accessor
+      constness and not from the array member constness...
+
+      \todo try to solve it by using some enable_if on array
+      constness?
+
+      \todo The issue is that the end may not be known if it is
+      implemented by a raw OpenCL cl_mem... So only provide on the
+      device the iterators related to the start? Actually the accessor
+      needs to know a part of the shape to have the multidimentional
+      addressing. So this only require a size_t more...
+
+      \todo Factor out these in a template helper
+  */
+
+
+  // iterator begin() { return array.begin(); }
+  typename accessor_detail::iterator begin() const {
+    return implementation->begin();
+  }
+
+
+  // iterator end() { return array.end(); }
+  typename accessor_detail::iterator end() const {
+    return implementation->end();
+  }
+
+
+  // const_iterator begin() const { return implementation->begin(); }
+
+
+  // const_iterator end() const { return implementation->end(); }
+
+
+  typename accessor_detail::const_iterator cbegin() const {
+    return implementation->cbegin();
+  }
+
+
+  typename accessor_detail::const_iterator cend() const {
+    return implementation->cend();
+  }
+
+
+  typename accessor_detail::reverse_iterator rbegin() const {
+    return implementation->rbegin();
+  };
+
+
+  typename accessor_detail::reverse_iterator rend() const {
+    return implementation->rend();
+  }
+
+
+  // const_reverse_iterator rbegin() const { return array.rbegin(); }
+
+
+  // const_reverse_iterator rend() const { return array.rend(); }
+
+
+  typename accessor_detail::const_reverse_iterator crbegin() const {
+    return implementation->rbegin();
+  }
+
+
+  typename accessor_detail::const_reverse_iterator crend() const {
+    return implementation->rend();
   }
 
 };

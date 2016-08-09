@@ -253,6 +253,8 @@ public:
       addressing. So this only require a size_t more...
 
       \todo Factor out these in a template helper
+
+      \todo Do we need this in detail::accessor too or only in accessor?
   */
 
 

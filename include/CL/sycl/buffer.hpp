@@ -358,19 +358,17 @@ public:
       a buffer object? It does make more sense for a host-side accessor.
 
       \todo Implement the modes and targets
-
-      \todo for this implementation it is const for now
   */
   template <access::mode Mode,
             access::target Target = access::target::global_buffer>
   accessor<T, Dimensions, Mode, Target>
-  get_access(handler &command_group_handler) const {
+  get_access(handler &command_group_handler) {
     static_assert(Target == access::target::global_buffer
                   || Target == access::target::constant_buffer,
                   "get_access(handler) can only deal with access::global_buffer"
                   " or access::constant_buffer (for host_buffer accessor"
                   " do not use a command group handler");
-    return { implementation->implementation, command_group_handler };
+    return { *this, command_group_handler };
   }
 
 
@@ -381,17 +379,15 @@ public:
       \todo Implement the modes
 
       \todo More elegant solution
-
-      \todo for this implementation it is const for now
   */
   template <access::mode Mode,
             access::target Target = access::target::host_buffer>
   accessor<T, Dimensions, Mode, Target>
-  get_access() const {
+  get_access() {
     static_assert(Target == access::target::host_buffer,
                   "get_access() without a command group handler is only"
                   " for host_buffer accessor");
-    return implementation->implementation;
+    return { *this };
   }
 
 
