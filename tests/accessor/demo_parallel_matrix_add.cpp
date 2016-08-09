@@ -62,7 +62,12 @@ int main() {
         // Enqueue a parallel kernel iterating on a N*M 2D iteration space
         cgh.parallel_for<class matrix_add>({ N, M },
                                            [=] (id<2> index) {
-                                             C[index] = A[index] + B[index];
+                                             /* Use explicit
+                                                coordinates for
+                                                testing */
+                                             C[index[0]][index[1]] =
+                                               A[index[0]][index[1]]
+                                               + B[index[0]][index[1]];
                                            });
       });
 

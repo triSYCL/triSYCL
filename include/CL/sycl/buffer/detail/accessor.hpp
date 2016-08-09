@@ -150,13 +150,23 @@ public:
   }
 
 
-  /// To use the accessor in with [id<>]
+  /** Use the accessor with integers à la [][][]
+
+      Use array_view_type::reference instead of auto& because it does not
+      work in some dimensions.
+   */
+  reference operator[](std::size_t index) const {
+    return array[index];
+  }
+
+
+  /// To use the accessor with [id<>]
   auto &operator[](id<dimensionality> index) {
     return array(index);
   }
 
 
-  /// To use the accessor in with [id<>]
+  /// To use the accessor with [id<>]
   auto &operator[](id<dimensionality> index) const {
     return array(index);
   }

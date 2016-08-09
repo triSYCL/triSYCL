@@ -44,13 +44,13 @@ template <typename DataType,
           access::target Target = access::target::global_buffer>
 class accessor :
     public detail::shared_ptr_implementation<accessor<DataType,
-						      Dimensions,
-						      AccessMode,
-						      Target>,
-					     detail::accessor<DataType,
-							      Dimensions,
-							      AccessMode,
-							      Target>> {
+                                                      Dimensions,
+                                                      AccessMode,
+                                                      Target>,
+                                             detail::accessor<DataType,
+                                                              Dimensions,
+                                                              AccessMode,
+                                                              Target>> {
 public:
 
   /// \todo in the specification: store the dimension for user request
@@ -62,17 +62,17 @@ public:
 private:
 
   using accessor_detail = detail::accessor<DataType,
-					   Dimensions,
-					   AccessMode,
-					   Target>;
-  
+                                           Dimensions,
+                                           AccessMode,
+                                           Target>;
+
   // The type encapsulating the implementation
   using implementation_t =
     detail::shared_ptr_implementation<accessor<DataType,
-					       Dimensions,
-					       AccessMode,
-					       Target>,
-				      accessor_detail>;
+                                               Dimensions,
+                                               AccessMode,
+                                               Target>,
+                                      accessor_detail>;
 
  public:
 
@@ -101,9 +101,9 @@ private:
       target_buffer.implementation->implementation, command_group_handler }
   } {
     static_assert(Target == access::target::global_buffer
-		  || Target == access::target::constant_buffer,
-		  "access target should be global_buffer or constant_buffer "
-		  "when a handler is used");
+                  || Target == access::target::constant_buffer,
+                  "access target should be global_buffer or constant_buffer "
+                  "when a handler is used");
   }
 
 
@@ -177,13 +177,23 @@ private:
   }
 
 
-  /// To use the accessor in with [id<>]
+  /** Use the accessor with integers à la [][][]
+
+      Use array_view_type::reference instead of auto& because it does not
+      work in some dimensions.
+   */
+  typename accessor_detail::reference operator[](std::size_t index) const {
+    return (*implementation)[index];
+  }
+
+
+  /// To use the accessor with [id<>]
   auto &operator[](id<dimensionality> index) {
     return (*implementation)[index];
   }
 
 
-  /// To use the accessor in with [id<>]
+  /// To use the accessor with [id<>]
   auto &operator[](id<dimensionality> index) const {
     return (*implementation)[index];
   }
