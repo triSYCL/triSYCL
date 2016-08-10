@@ -315,10 +315,14 @@ public:
     task->set_kernel(sycl_kernel.implementation);                       \
     std::cerr << "handler task" << (void *) task.get()  << std::endl;\
     std::cerr << "handler parallel_for q" << (void *) task->get_queue().get() << std::endl;\
+    /* Use an intermediate variable to capture task by copy because     \
+       otherwise it was this which is captured by reference and havoc   \
+       happens. Nasty bug to find... */                                 \
+    auto &t = task;                                                     \
     task->schedule(detail::trace_kernel<kernel>([=] {                   \
-              std::cerr << "capture task" << (void *) task.get()  << std::endl;\
-    std::cerr << "capture q" << (void *) task->get_queue().get() << std::endl;\
-          sycl_kernel.implementation->parallel_for(task, task->get_queue(),   \
+              std::cerr << "capture task" << (void *) t.get()  << std::endl;\
+    std::cerr << "capture q" << (void *) t->get_queue().get() << std::endl;\
+          sycl_kernel.implementation->parallel_for(t, t->get_queue(),   \
                                                    num_work_items); })); \
   }
 
