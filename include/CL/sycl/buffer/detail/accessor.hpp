@@ -379,7 +379,6 @@ private:
       : is_read_access() ? CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR
                          : CL_MEM_WRITE_ONLY;
 
-    std::cerr << "copy_in_cl_buffer()" << (void *) array.data() << std::endl;
     /* Create the OpenCL buffer and copy in data from the host if in
        read mode */
     cl_buf = { task->get_queue()->get_boost_compute().get_context(),

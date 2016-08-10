@@ -96,8 +96,6 @@ class opencl_kernel : public detail::kernel,
     static_assert(sizeof(range<N>::value_type) == sizeof(size_t),       \
                   "num_work_items::value_type compatible with "         \
                   "Boost.Compute");                                     \
-    std::cerr << "opencl_kernel task" << (void *) task.get()  << std::endl;\
-    std::cerr << "opencl_kernel q" << (void *) q.get() << std::endl;\
     q->get_boost_compute().enqueue_nd_range_kernel                      \
       (k,                                                               \
        static_cast<size_t>(N),                                          \

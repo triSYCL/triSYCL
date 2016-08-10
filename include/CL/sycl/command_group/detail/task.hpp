@@ -84,8 +84,6 @@ struct task : public std::enable_shared_from_this<task>,
       task->prelude();
       TRISYCL_DUMP_T("Execute the kernel");
       // Execute the kernel
-    std::cerr << "execution task" << (void *) this  << std::endl;\
-    std::cerr << "execution owner_queue" << (void *) owner_queue.get() << std::endl;\
       f();
       task->postlude();
       // Release the buffers that have been written by this task

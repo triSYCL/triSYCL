@@ -316,16 +316,12 @@ public:
        \todo Simplify this 2 step ugly interface                        \
     */                                                                  \
     task->set_kernel(sycl_kernel.implementation);                       \
-    std::cerr << "handler task" << (void *) task.get()  << std::endl;   \
-    std::cerr << "handler parallel_for q" << (void *) task->get_queue().get() << std::endl; \
     /* Use an intermediate variable to capture task by copy because     \
        otherwise "this" is captured by reference and havoc with task    \
        just accessing the dead "this". Nasty bug to find... */          \
     task->schedule(detail::trace_kernel<kernel>([=, t = task] {         \
-          std::cerr << "capture task" << (void *) t.get()  << std::endl; \
-    std::cerr << "capture q" << (void *) t->get_queue().get() << std::endl;\
-    sycl_kernel.implementation->parallel_for(t, t->get_queue(),         \
-                                             num_work_items); }));      \
+          sycl_kernel.implementation->parallel_for(t, t->get_queue(),   \
+                                                   num_work_items); })); \
   }
 
   /* Do not use a template parameter since otherwise the parallel_for
