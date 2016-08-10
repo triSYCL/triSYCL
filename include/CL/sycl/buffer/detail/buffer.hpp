@@ -206,6 +206,19 @@ public:
   }
 
 
+  /** Returns the size of the buffer storage in bytes
+
+      Equal to get_count()*sizeof(T).
+
+      \todo rename to something else. In
+      http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/p0122r0.pdf
+      it is named bytes() for example
+  */
+  size_t get_size() const {
+    return get_count()*sizeof(T);
+  }
+
+
   /** Set the weak pointer to copy back data on buffer deletion
 
       \todo Add a write kernel dependency on the buffer so the buffer
@@ -218,7 +231,7 @@ public:
 
 private:
   // \todo Work around to Clang bug https://llvm.org/bugs/show_bug.cgi?id=28873
-  
+
   /** Wait from inside the cl::sycl::buffer in case there is something
       to copy back to the host */
   boost::optional<std::future<void>> get_destructor_future() {

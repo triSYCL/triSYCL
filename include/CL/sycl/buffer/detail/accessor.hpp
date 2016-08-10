@@ -134,7 +134,10 @@ public:
   }
 
 
-  /// Returns the size of the underlying buffer in number of elements.
+  /** Returns the size of the underlying buffer in number of elements
+
+      \todo It is incompatible with buffer get_size() in the spec
+  */
   std::size_t get_size() const {
     return array.num_elements();
   }

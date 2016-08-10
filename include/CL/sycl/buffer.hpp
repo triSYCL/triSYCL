@@ -426,7 +426,7 @@ public:
       it is named bytes() for example
   */
   size_t get_size() const {
-    return get_count()*sizeof(T);
+    return implementation->implementation->get_size();
   }
 
 
