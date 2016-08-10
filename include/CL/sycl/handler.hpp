@@ -9,6 +9,12 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <memory>
+
+#ifdef TRISYCL_OPENCL
+#include <boost/compute.hpp>
+#endif
+
 #include "CL/sycl/accessor.hpp"
 #include "CL/sycl/command_group/detail/task.hpp"
 #include "CL/sycl/detail/unimplemented.hpp"
@@ -56,6 +62,7 @@ public:
   }
 
 
+#ifdef TRISYCL_OPENCL
   /** Set kernel args for an OpenCL kernel which is used through the
       SYCL/OpenCL interop interface
 
@@ -65,11 +72,12 @@ public:
 
       \todo Update the specification to use a ref to the accessor instead?
 
-      \todo It seems more logical to have these methods on kernel instead
-
       \todo add a variadic method that accepts accessors too
 
-      \todo To be implemented
+      \todo It is not that clean to have set_arg() associated to a
+      command handler. Rethink the specification?
+
+      \todo It seems more logical to have these methods on kernel instead
   */
   template <typename DataType,
             std::size_t Dimensions,
@@ -77,8 +85,21 @@ public:
             access::target Target = access::target::global_buffer>
   void set_arg(int arg_index,
                accessor<DataType, Dimensions, Mode, Target> acc_obj) {
-    detail::unimplemented();
+    /* Before running the kernel, make sure the cl_mem behind this
+       accessor is up-to-date on the device if needed and pass it to
+       the kernel */
+    task->add_prelude([=] {
+        acc_obj.implementation->copy_in_cl_buffer();
+        task->get_kernel().get_boost_compute()
+          .set_arg(arg_index, acc_obj.implementation->get_cl_buffer());
+      });
+    /* After running the kernel, make sure the cl_mem behind this
+       accessor is up-to-date on the host if needed */
+    task->add_postlude([=] {
+        acc_obj.implementation->copy_back_cl_buffer();
+      });
   }
+#endif
 
 
   /** Set kernel args for an OpenCL kernel which is used through the
@@ -87,6 +108,9 @@ public:
       The index value specifies which parameter of the OpenCL kernel is
       being set and the accessor object, which OpenCL buffer or image is
       going to be given as kernel argument.
+
+      \todo It is not that clean to have set_arg() associated to a
+      command handler. Rethink the specification?
 
       \todo To be implemented
   */
@@ -285,9 +309,16 @@ public:
        scheduling                                                       \
                                                                         \
        \todo Move the tracing inside the kernel implementation          \
+                                                                        \
+       \todo Simplify this 2 step ugly interface                        \
     */                                                                  \
+    task->set_kernel(sycl_kernel.implementation);                       \
+    std::cerr << "handler task" << (void *) task.get()  << std::endl;\
+    std::cerr << "handler parallel_for q" << (void *) task->get_queue().get() << std::endl;\
     task->schedule(detail::trace_kernel<kernel>([=] {                   \
-          sycl_kernel.implementation->parallel_for(task->get_queue(),   \
+              std::cerr << "capture task" << (void *) task.get()  << std::endl;\
+    std::cerr << "capture q" << (void *) task->get_queue().get() << std::endl;\
+          sycl_kernel.implementation->parallel_for(task, task->get_queue(),   \
                                                    num_work_items); })); \
   }
 
@@ -324,10 +355,12 @@ namespace detail {
 
     This is a proxy function to avoid complicated type recursion.
 */
-static void add_buffer_to_task(handler *command_group_handler,
-                               std::shared_ptr<detail::buffer_base> b,
-                               bool is_write_mode) {
+static std::shared_ptr<detail::task>
+add_buffer_to_task(handler *command_group_handler,
+                   std::shared_ptr<detail::buffer_base> b,
+                   bool is_write_mode) {
   command_group_handler->task->add_buffer(b, is_write_mode);
+  return command_group_handler->task;
 }
 
 }

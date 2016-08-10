@@ -49,9 +49,9 @@ int test_main(int argc, char *argv[]) {
     q.submit([&](handler &cgh) {
         /* The host-device copies are managed transparently by these
            accessors: */
-        cgh.set_arg(0, A.get_access<access::read>(cgh));
-        cgh.set_arg(1, B.get_access<access::read>(cgh));
-        cgh.set_arg(2, C.get_access<access::write>(cgh));
+        cgh.set_arg(0, A.get_access<access::mode::read>(cgh));
+        cgh.set_arg(1, B.get_access<access::mode::read>(cgh));
+        cgh.set_arg(2, C.get_access<access::mode::write>(cgh));
         cgh.parallel_for(N, k);
       }); //< End of our commands for this queue
   } //< Buffer C goes out of scope and copies back values to c

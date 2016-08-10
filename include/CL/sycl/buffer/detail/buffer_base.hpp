@@ -31,9 +31,10 @@ namespace detail {
 
 struct task;
 struct buffer_base;
-inline static void add_buffer_to_task(handler *command_group_handler,
-                                      std::shared_ptr<detail::buffer_base> b,
-                                      bool is_write_mode);
+inline static std::shared_ptr<detail::task>
+add_buffer_to_task(handler *command_group_handler,
+                   std::shared_ptr<detail::buffer_base> b,
+                   bool is_write_mode);
 
 /** Factorize some template independent buffer aspects in a base class
  */
@@ -125,10 +126,11 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
 
 
   /// Add a buffer to the task running the command group
-  void add_to_task(handler *command_group_handler, bool is_write_mode) {
-    add_buffer_to_task(command_group_handler,
-                       shared_from_this(),
-                       is_write_mode);
+  std::shared_ptr<detail::task>
+  add_to_task(handler *command_group_handler, bool is_write_mode) {
+    return add_buffer_to_task(command_group_handler,
+                              shared_from_this(),
+                              is_write_mode);
   }
 
 };

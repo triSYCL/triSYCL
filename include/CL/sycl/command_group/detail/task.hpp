@@ -13,8 +13,13 @@
 #include <memory>
 #include <thread>
 
+#ifdef TRISYCL_OPENCL
+#include <boost/compute.hpp>
+#endif
+
 #include "CL/sycl/buffer/detail/buffer_base.hpp"
 #include "CL/sycl/detail/debug.hpp"
+#include "CL/sycl/kernel.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"
 
 namespace cl {
@@ -58,6 +63,8 @@ struct task : public std::enable_shared_from_this<task>,
       or to run OpenCL kernels on */
   std::shared_ptr<detail::queue> owner_queue;
 
+  std::shared_ptr<cl::sycl::detail::kernel> kernel;
+
 
   /// Create a task from a submitting queue
   task(const std::shared_ptr<detail::queue> &q)
@@ -77,6 +84,8 @@ struct task : public std::enable_shared_from_this<task>,
       task->prelude();
       TRISYCL_DUMP_T("Execute the kernel");
       // Execute the kernel
+    std::cerr << "execution task" << (void *) this  << std::endl;\
+    std::cerr << "execution owner_queue" << (void *) owner_queue.get() << std::endl;\
       f();
       task->postlude();
       // Release the buffers that have been written by this task
@@ -196,9 +205,38 @@ struct task : public std::enable_shared_from_this<task>,
   }
 
 
+  /// Add a function to the prelude to run before kernel execution
+  void add_prelude(const std::function<void(void)> &f) {
+    prologues.push_back(f);
+  }
+
+
+  /// Add a function to the postlude to run after kernel execution
+  void add_postlude(const std::function<void(void)> &f) {
+    epilogues.push_back(f);
+  }
+
+
   /// Get the queue behind the task to run a kernel on
   auto get_queue() {
     return owner_queue;
+  }
+
+
+  /// Set the kernel running this task if any
+  void set_kernel(const std::shared_ptr<cl::sycl::detail::kernel> &k) {
+    kernel = k;
+  }
+
+
+  /** Get the kernel running if any
+
+      \todo Specify this error in the spec
+  */
+  cl::sycl::detail::kernel &get_kernel() {
+    if (!kernel)
+      throw non_cl_error("Cannot use an OpenCL kernel in this context");
+    return *kernel;
   }
 
 };

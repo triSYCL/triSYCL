@@ -61,6 +61,15 @@ class opencl_kernel : public detail::kernel,
   }
 
 
+  /** Return the Boost.Compute OpenCL kernel object for this kernel
+
+      This is an extension.
+  */
+  boost::compute::kernel get_boost_compute() const override {
+    return k;
+  }
+
+
   //context get_context() const override
 
   //program get_program() const override
@@ -81,11 +90,14 @@ class opencl_kernel : public detail::kernel,
       \todo Think to a cleaner solution
   */
 #define TRISYCL_ParallelForKernel_RANGE(N)                              \
-  void parallel_for(std::shared_ptr<detail::queue> q,                   \
+  void parallel_for(std::shared_ptr<detail::task> task,\
+  std::shared_ptr<detail::queue> q,                                     \
                     const range<N> &num_work_items) override {          \
     static_assert(sizeof(range<N>::value_type) == sizeof(size_t),       \
                   "num_work_items::value_type compatible with "         \
                   "Boost.Compute");                                     \
+    std::cerr << "opencl_kernel task" << (void *) task.get()  << std::endl;\
+    std::cerr << "opencl_kernel q" << (void *) q.get() << std::endl;\
     q->get_boost_compute().enqueue_nd_range_kernel                      \
       (k,                                                               \
        static_cast<size_t>(N),                                          \

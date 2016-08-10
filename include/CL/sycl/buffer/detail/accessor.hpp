@@ -12,9 +12,13 @@
 #include <cstddef>
 #include <memory>
 
+#ifdef TRISYCL_OPENCL
+#include <boost/compute.hpp>
+#endif
 #include <boost/multi_array.hpp>
 
 #include "CL/sycl/access.hpp"
+#include "CL/sycl/command_group/detail/task.hpp"
 #include "CL/sycl/detail/debug.hpp"
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/item.hpp"
@@ -74,6 +78,14 @@ class accessor : public detail::debug<accessor<T,
    */
   mutable array_view_type array;
 
+  /// The task where the accessor is used in
+  std::shared_ptr<detail::task> task;
+
+#ifdef TRISYCL_OPENCL
+  /// The OpenCL buffer used by an OpenCL accessor
+  boost::optional<boost::compute::buffer> cl_buf;
+#endif
+
 public:
 
   /** \todo in the specification: store the dimension for user request
@@ -130,7 +142,7 @@ public:
                   "access target should be global_buffer or constant_buffer "
                   "when a handler is used");
     // Register the buffer to the task dependencies
-    buffer_add_to_task(buf, &command_group_handler, is_write_access());
+    task = buffer_add_to_task(buf, &command_group_handler, is_write_access());
   }
 
 
@@ -238,6 +250,9 @@ public:
 
   /** Test if the accessor has a read access right
 
+      \todo Strangely, it is not really constexpr because it is not a
+      static method...
+
       \todo to move in the access::mode enum class and add to the
       specification ?
   */
@@ -249,6 +264,9 @@ public:
 
 
   /** Test if the accessor has a write access right
+
+      \todo Strangely, it is not really constexpr because it is not a
+      static method...
 
       \todo to move in the access::mode enum class and add to the
       specification ?
@@ -331,6 +349,50 @@ public:
 
 
   const_reverse_iterator crend() const { return array.rend(); }
+
+private:
+
+  // The following function are used from handler
+  friend handler;
+
+  /// Get the boost::compute::buffer or throw if unset
+  auto get_cl_buffer() const {
+    // This throws if not set
+    return cl_buf.value();
+  }
+
+
+  /** Lazily associate a CL buffer to the SYCL buffer and copy data in
+      if required
+
+      \todo Move this into the buffer with queue/device-based caching
+  */
+  void copy_in_cl_buffer() {
+    // This should be a constexpr
+    cl_mem_flags flags = is_read_access() && is_write_access() ?
+      CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR
+      : is_read_access() ? CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR
+                         : CL_MEM_WRITE_ONLY;
+
+    std::cerr << "copy_in_cl_buffer()" << (void *) array.data() << std::endl;
+    /* Create the OpenCL buffer and copy in data from the host if in
+       read mode */
+    cl_buf = { task->get_queue()->get_boost_compute().get_context(),
+               get_size()*sizeof(value_type),
+               flags,
+               is_read_access() ? array.data() : 0 };
+  }
+
+
+  void copy_back_cl_buffer() {
+    // \todo Use if constexpr in C++17
+    if (is_write_access())
+      task->get_queue()->get_boost_compute()
+        .enqueue_read_buffer(get_cl_buffer(),
+                             0 /*< Offset */,
+                             get_size()*sizeof(value_type),
+                             array.data());
+  }
 
 };
 

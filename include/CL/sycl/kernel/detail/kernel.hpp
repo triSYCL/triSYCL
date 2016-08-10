@@ -17,6 +17,7 @@
 #include "CL/sycl/detail/unimplemented.hpp"
 //#include "CL/sycl/info/kernel.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"
+#include "CL/sycl/range.hpp"
 
 namespace cl {
 namespace sycl {
@@ -38,6 +39,13 @@ class kernel : detail::debug<detail::kernel> {
       should release it when finished.
   */
   virtual cl_kernel get() const = 0;
+
+
+  /** Return the Boost.Compute OpenCL kernel object for this kernel
+
+      This is an extension.
+  */
+  virtual boost::compute::kernel get_boost_compute() const = 0;
 #endif
 
 
@@ -48,7 +56,7 @@ class kernel : detail::debug<detail::kernel> {
       \todo Think to a cleaner solution
   */
 #define TRISYCL_ParallelForKernel_RANGE(N)                        \
-  virtual void parallel_for(std::shared_ptr<detail::queue> q,     \
+  virtual void parallel_for(std::shared_ptr<detail::task> task, std::shared_ptr<detail::queue> q,     \
                             const range<N> &num_work_items) = 0;
 
   TRISYCL_ParallelForKernel_RANGE(1)
