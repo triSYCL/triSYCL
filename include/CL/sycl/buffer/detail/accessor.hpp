@@ -59,7 +59,12 @@ class accessor : public detail::debug<accessor<T,
                                                Dimensions,
                                                Mode,
                                                Target>> {
-  /// Keep a reference to the accessed buffer
+  /** Keep a reference to the accessed buffer
+
+      Beware that it owns the buffer, which means that the accessor
+      has to be destroyed to release the buffer and potentially
+      unblock a kernel at the end of its execution
+  */
   std::shared_ptr<detail::buffer<T, Dimensions>> buf;
 
   /// The implementation is a multi_array_ref wrapper

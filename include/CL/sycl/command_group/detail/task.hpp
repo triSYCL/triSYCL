@@ -195,6 +195,9 @@ struct task : public std::enable_shared_from_this<task>,
   void prelude() {
     for (const auto &p : prologues)
       p();
+    /* Free the functors that may own an accessor owning a buffer
+       preventing the command group to complete */
+    prologues.clear();
   }
 
 
@@ -202,6 +205,9 @@ struct task : public std::enable_shared_from_this<task>,
   void postlude() {
     for (const auto &p : epilogues)
       p();
+    /* Free the functors that may own an accessor owning a buffer
+       preventing the command group to complete */
+    epilogues.clear();
   }
 
 
