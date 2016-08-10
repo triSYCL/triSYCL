@@ -87,8 +87,11 @@ public:
                accessor<DataType, Dimensions, Mode, Target> acc_obj) {
     /* Before running the kernel, make sure the cl_mem behind this
        accessor is up-to-date on the device if needed and pass it to
-       the kernel */
-    task->add_prelude([=] {
+       the kernel.
+
+       Explicitly capture task by copy instead of having this captured
+       by reference and task by reference by side effect */
+    task->add_prelude([=, task = task] {
         acc_obj.implementation->copy_in_cl_buffer();
         task->get_kernel().get_boost_compute()
           .set_arg(arg_index, acc_obj.implementation->get_cl_buffer());
