@@ -1,18 +1,28 @@
 triSYCL
 +++++++
 
-NEWS
+News
 ----
 
-SYCL 2.2 provisional specification is out since 2016/04/18!
+- 2016/08/12: OpenCL kernels can be run with OpenCL kernel
+  interoperability mode now.
 
-This version implement SYCL 2.2 pipes and reservations plus the blocking
-pipe extension from Xilinx.
+- 2016/04/18:  SYCL 2.2 provisional specification is out
+
+- This version implement SYCL 2.2 pipes and reservations plus the blocking
+  pipe extension from Xilinx.
 
 .. section-numbering::
 
+
+Table of content
+----------------
+
 .. contents::
 
+
+Introduction
+------------
 
 triSYCL_ is an implementation test-bed to experiment with the
 specification of the OpenCL_ SYCL_ 2.2 `C++`_ layer and to give feedback
