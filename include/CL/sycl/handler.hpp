@@ -9,7 +9,9 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <cstddef>
 #include <memory>
+#include <tuple>
 
 #ifdef TRISYCL_OPENCL
 #include <boost/compute.hpp>
@@ -63,16 +65,14 @@ public:
 
 
 #ifdef TRISYCL_OPENCL
-  /** Set kernel args for an OpenCL kernel which is used through the
+  /** Set kernel arg for an OpenCL kernel which is used through the
       SYCL/OpenCL interop interface
 
       The index value specifies which parameter of the OpenCL kernel is
       being set and the accessor object, which OpenCL buffer or image is
       going to be given as kernel argument.
 
-      \todo Update the specification to use a ref to the accessor instead?
-
-      \todo add a variadic method that accepts accessors too
+      \todo Update the specification to use a ref && to the accessor instead?
 
       \todo It is not that clean to have set_arg() associated to a
       command handler. Rethink the specification?
@@ -102,7 +102,6 @@ public:
         acc_obj.implementation->copy_back_cl_buffer();
       });
   }
-#endif
 
 
   /** Set kernel args for an OpenCL kernel which is used through the
@@ -121,6 +120,40 @@ public:
   void set_arg(int arg_index, T scalar_value) {
     detail::unimplemented();
   }
+
+
+private:
+
+  /// Helper to individually call set_arg() for each argument
+  template <std::size_t... Is, typename... Ts>
+  void dispatch_set_arg(std::index_sequence<Is...>, Ts&&... args) {
+    // Use an intermediate tuple to ease individual argument access
+    auto &&t = std::make_tuple(std::forward<Ts>(args)...);
+    // Dispatch individual set_arg() for each argument
+    auto just_to_evaluate = {
+      0 /*< At least 1 element to deal with empty set_args() */,
+      ( set_arg(Is, std::forward<Ts>(std::get<Is>(t))), 0)...
+    };
+    // Remove the warning about unused variable
+    static_cast<void>(just_to_evaluate);
+  }
+
+public:
+
+  /** Set all kernel args for an OpenCL kernel which is used through the
+      SYCL/OpenCL interop interface
+
+      \todo Update the specification to add this function according to
+      https://cvs.khronos.org/bugzilla/show_bug.cgi?id=15978 proposal
+  */
+  template <typename... Ts>
+  void set_args(Ts&&... args) {
+    /* Construct a set of increasing argument index to be able to call
+       the real set_arg */
+    dispatch_set_arg(std::make_index_sequence<sizeof...(Ts)>{},
+                     std::forward<Ts>(args)...);
+  }
+#endif
 
 
   /** Kernel invocation method of a kernel defined as a lambda or
