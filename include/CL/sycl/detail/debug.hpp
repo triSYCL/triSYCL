@@ -21,6 +21,7 @@
 #include <string>
 #include <thread>
 #include <typeinfo>
+#include <type_traits>
 
 #include <boost/log/trivial.hpp>
 //#include <boost/type_index.hpp>
@@ -86,16 +87,38 @@ struct debug {
   }
 
 
-  /// Trace the copy construction with the compiler-dependent mangled
-  /// named
-  debug(debug const &) {
+  /** Trace the copy construction with the compiler-dependent mangled
+      named
+
+      Only add this constructor if T has itself the same constructor,
+      otherwise it may prevent the synthesis of default copy
+      constructor and assignment.
+  */
+  template <typename U = T>
+  debug(debug const &,
+        /* Use intermediate U type to have the type dependent for
+           enable_if to work
+
+        \todo Use is_copy_constructible_v when moving to C++17 */
+        std::enable_if_t<std::is_copy_constructible<U>::value> * = 0) {
     TRISYCL_DUMP("Copy of " << typeid(*this).name() << " " << (void*) this);
   }
 
 
-  /// Trace the move construction with the compiler-dependent mangled
-  /// named
-  debug(debug &&) {
+  /** Trace the move construction with the compiler-dependent mangled
+      named
+
+      Only add this constructor if T has itself the same constructor,
+      otherwise it may prevent the synthesis of default move
+      constructor and move assignment.
+  */
+  template <typename U = T>
+  debug(debug &&,
+        /* Use intermediate U type to have the type dependent for
+           enable_if to work
+
+        \todo Use is_move_constructible_v when moving to C++17 */
+        std::enable_if_t<std::is_move_constructible<U>::value> * = 0) {
     TRISYCL_DUMP("Move of " << typeid(*this).name() << " " << (void*) this);
   }
 
