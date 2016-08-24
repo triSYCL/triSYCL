@@ -44,6 +44,10 @@ int main() {
             This cannot work because the parallel for is executed in
             asynchronously, with the delete at the end already
             executed...
+
+            Furthermore, there is no guarantee that kcp would point on
+            the accessor on both host and device, since there is no
+            SVM...
         */
         cgh.parallel_for<class matrix_add>(range<2> { N, M },
                                            [=] (id<2> index) {
