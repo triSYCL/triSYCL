@@ -31,7 +31,7 @@ CXXFLAGS += -Wall -std=c++1y -I$(triSYCL_DIR)/include \
 	-I$(triSYCL_DIR)/tests/common
 
 # To use OpenMP to execute SYCL kernels:
-CXXFLAGS += -fopenmp
+#CXXFLAGS += -fopenmp
 
 # To use OpenCL
 #CXXFLAGS += -DTRISYCL_OPENCL
@@ -75,15 +75,11 @@ CHECKING_DIR ?= .
 
 # Set default compiler instead of default CXX=g++ value
 
-# Assume Clang 3.6 at least
-# There are still some limitations in Clang:
-# - no OpenMP;
-# - the "auto" return type methods that does not work with "-g" option
+# Assume Clang 3.8 at least
 #CXX = clang++
-
-# But everything works fine with GCC 5.2!
+# But everything works fine with GCC 5.4 at least
 CXX = g++
-#CXX = clang++-3.6
+
 
 # Some hack to force the compiler from the test infrastructure:
 ifdef FORCE_CXX
@@ -116,7 +112,7 @@ check: $(TARGETS_CC)
 check-compilers:
 	# Launch the check with various compilers
 	-FORCE_CXX=g++-4.9 $(MAKE) clean check
-	-FORCE_CXX=clang++-3.7 $(MAKE) clean check
+	-FORCE_CXX=clang++-3.8 $(MAKE) clean check
 	-FORCE_CXX=g++ $(MAKE) clean check
 
 # A special target to be called as from the test as "make execute
