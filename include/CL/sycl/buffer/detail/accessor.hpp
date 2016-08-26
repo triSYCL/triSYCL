@@ -360,6 +360,7 @@ private:
   // The following function are used from handler
   friend handler;
 
+#ifdef TRISYCL_OPENCL
   /// Get the boost::compute::buffer or throw if unset
   auto get_cl_buffer() const {
     // This throws if not set
@@ -388,6 +389,10 @@ private:
   }
 
 
+  /** Copy back the CL buffer to the SYCL if required
+
+      \todo Move this into the buffer with queue/device-based caching
+  */
   void copy_back_cl_buffer() {
     // \todo Use if constexpr in C++17
     if (is_write_access())
@@ -397,6 +402,7 @@ private:
                              get_size()*sizeof(value_type),
                              array.data());
   }
+#endif
 
 };
 
