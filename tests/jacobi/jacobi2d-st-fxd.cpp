@@ -16,9 +16,9 @@ int main(int argc, char **argv) {
   struct counters timer;
   start_measure(timer);
 
-  // declarations
+  // Assign new buffers to the global buffers
   ioBuffer = cl::sycl::buffer<float,2>(cl::sycl::range<2> {M, N});
-  ioABuffer = cl::sycl::buffer<float,2>(cl::sycl::range<2> {M, N}); 
+  ioABuffer = cl::sycl::buffer<float,2>(cl::sycl::range<2> {M, N});
 #if DEBUG_STENCIL
   float *a_test = (float *) malloc(sizeof(float)*M*N);
   float *b_test = (float *) malloc(sizeof(float)*M*N);

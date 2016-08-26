@@ -1,3 +1,4 @@
+
 ## To enable asynchronous kernels
 CXXFLAGS += -DTRISYCL_ASYNC=1
 # For asynchronous kernels when OpenMP is not enabled
@@ -33,8 +34,8 @@ CXXFLAGS += -Wall -std=c++1y -I$(triSYCL_DIR)/include \
 CXXFLAGS += -fopenmp
 
 # To use OpenCL
-CXXFLAGS += -DTRISYCL_OPENCL
-LDLIBS += -lOpenCL
+#CXXFLAGS += -DTRISYCL_OPENCL
+#LDLIBS += -lOpenCL
 
 # Specify where OpenCL includes files are with OpenCL_INCPATH
 ifdef OpenCL_INCPATH
@@ -65,9 +66,9 @@ CXXFLAGS += -g
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DTRISYCL_DEBUG_STRUCTORS -DBOOST_LOG_DYN_LINK
 #LDLIBS+=-lboost_log -lpthread
-#CXXFLAGS += -fsanitize=address -fno-omit-frame-pointer -fsanitize=thread
-#CXXFLAGS += -fsanitize=thread
-
+#CXXFLAGS += -fsanitize=address -fno-omit-frame-pointer
+#CXXFLAGS += -fsanitize=thread -fno-omit-frame-pointer
+#CXXFLAGS += -fsanitize=undefined -fno-omit-frame-pointer
 
 # By default run lit checking in the current directory
 CHECKING_DIR ?= .
