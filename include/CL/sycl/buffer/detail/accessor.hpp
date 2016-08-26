@@ -10,10 +10,15 @@
 */
 
 #include <cstddef>
+#include <memory>
 
+#ifdef TRISYCL_OPENCL
+#include <boost/compute.hpp>
+#endif
 #include <boost/multi_array.hpp>
 
 #include "CL/sycl/access.hpp"
+#include "CL/sycl/command_group/detail/task.hpp"
 #include "CL/sycl/detail/debug.hpp"
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/item.hpp"
@@ -27,7 +32,7 @@ class handler;
 namespace detail {
 
 // Forward declaration of detail::buffer for use in accessor
-template <typename T, std::size_t Dimensions> struct buffer;
+template <typename T, std::size_t Dimensions> class buffer;
 
 /** \addtogroup data Data access and storage in SYCL
     @{
@@ -50,12 +55,17 @@ template <typename T,
           std::size_t Dimensions,
           access::mode Mode,
           access::target Target /* = access::global_buffer */>
-struct accessor : public detail::debug<accessor<T,
-                                                Dimensions,
-                                                Mode,
-                                                Target>> {
-  /// Keep a reference to the accessed buffer
-  detail::buffer<T, Dimensions> *buf;
+class accessor : public detail::debug<accessor<T,
+                                               Dimensions,
+                                               Mode,
+                                               Target>> {
+  /** Keep a reference to the accessed buffer
+
+      Beware that it owns the buffer, which means that the accessor
+      has to be destroyed to release the buffer and potentially
+      unblock a kernel at the end of its execution
+  */
+  std::shared_ptr<detail::buffer<T, Dimensions>> buf;
 
   /// The implementation is a multi_array_ref wrapper
   using array_view_type = boost::multi_array_ref<T, Dimensions>;
@@ -72,6 +82,16 @@ struct accessor : public detail::debug<accessor<T,
       previously done in this implementation
    */
   mutable array_view_type array;
+
+  /// The task where the accessor is used in
+  std::shared_ptr<detail::task> task;
+
+#ifdef TRISYCL_OPENCL
+  /// The OpenCL buffer used by an OpenCL accessor
+  boost::optional<boost::compute::buffer> cl_buf;
+#endif
+
+public:
 
   /** \todo in the specification: store the dimension for user request
 
@@ -102,8 +122,8 @@ struct accessor : public detail::debug<accessor<T,
       \todo fix the specification to rename target that shadows
       template parm
   */
-  accessor(detail::buffer<T, Dimensions> &target_buffer) :
-    buf { &target_buffer }, array { target_buffer.access } {
+  accessor(std::shared_ptr<detail::buffer<T, Dimensions>> target_buffer) :
+    buf { target_buffer }, array { target_buffer->access } {
     TRISYCL_DUMP_T("Create a host accessor write = " << is_write_access());
     static_assert(Target == access::target::host_buffer,
                   "without a handler, access target should be host_buffer");
@@ -118,20 +138,23 @@ struct accessor : public detail::debug<accessor<T,
       \todo fix the specification to rename target that shadows
       template parm
   */
-  accessor(detail::buffer<T, Dimensions> &target_buffer,
+  accessor(std::shared_ptr<detail::buffer<T, Dimensions>> target_buffer,
            handler &command_group_handler) :
-    buf { &target_buffer }, array { target_buffer.access } {
+    buf { target_buffer }, array { target_buffer->access } {
     TRISYCL_DUMP_T("Create a kernel accessor write = " << is_write_access());
     static_assert(Target == access::target::global_buffer
                   || Target == access::target::constant_buffer,
                   "access target should be global_buffer or constant_buffer "
                   "when a handler is used");
     // Register the buffer to the task dependencies
-    buffer_add_to_task(buf, &command_group_handler, is_write_access());
+    task = buffer_add_to_task(buf, &command_group_handler, is_write_access());
   }
 
 
-  /// Returns the size of the underlying buffer in number of elements.
+  /** Returns the size of the underlying buffer in number of elements
+
+      \todo It is incompatible with buffer get_size() in the spec
+  */
   std::size_t get_size() const {
     return array.num_elements();
   }
@@ -147,13 +170,23 @@ struct accessor : public detail::debug<accessor<T,
   }
 
 
-  /// To use the accessor in with [id<>]
+  /** Use the accessor with integers à la [][][]
+
+      Use array_view_type::reference instead of auto& because it does not
+      work in some dimensions.
+   */
+  reference operator[](std::size_t index) const {
+    return array[index];
+  }
+
+
+  /// To use the accessor with [id<>]
   auto &operator[](id<dimensionality> index) {
     return array(index);
   }
 
 
-  /// To use the accessor in with [id<>]
+  /// To use the accessor with [id<>]
   auto &operator[](id<dimensionality> index) const {
     return array(index);
   }
@@ -220,10 +253,30 @@ struct accessor : public detail::debug<accessor<T,
   }
 
 
-  /// Test if the accessor as a write access right
+  /** Test if the accessor has a read access right
+
+      \todo Strangely, it is not really constexpr because it is not a
+      static method...
+
+      \todo to move in the access::mode enum class and add to the
+      specification ?
+  */
+  constexpr bool is_read_access() const {
+    return Mode == access::mode::read
+      || Mode == access::mode::read_write
+      || Mode == access::mode::discard_read_write;
+  }
+
+
+  /** Test if the accessor has a write access right
+
+      \todo Strangely, it is not really constexpr because it is not a
+      static method...
+
+      \todo to move in the access::mode enum class and add to the
+      specification ?
+  */
   constexpr bool is_write_access() const {
-    /** \todo to move in the access::mode enum class and add to the
-        specification ? */
     return Mode == access::mode::write
       || Mode == access::mode::read_write
       || Mode == access::mode::discard_write
@@ -250,6 +303,8 @@ struct accessor : public detail::debug<accessor<T,
       addressing. So this only require a size_t more...
 
       \todo Factor out these in a template helper
+
+      \todo Do we need this in detail::accessor too or only in accessor?
   */
 
 
@@ -299,6 +354,55 @@ struct accessor : public detail::debug<accessor<T,
 
 
   const_reverse_iterator crend() const { return array.rend(); }
+
+private:
+
+  // The following function are used from handler
+  friend handler;
+
+#ifdef TRISYCL_OPENCL
+  /// Get the boost::compute::buffer or throw if unset
+  auto get_cl_buffer() const {
+    // This throws if not set
+    return cl_buf.value();
+  }
+
+
+  /** Lazily associate a CL buffer to the SYCL buffer and copy data in
+      if required
+
+      \todo Move this into the buffer with queue/device-based caching
+  */
+  void copy_in_cl_buffer() {
+    // This should be a constexpr
+    cl_mem_flags flags = is_read_access() && is_write_access() ?
+      CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR
+      : is_read_access() ? CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR
+                         : CL_MEM_WRITE_ONLY;
+
+    /* Create the OpenCL buffer and copy in data from the host if in
+       read mode */
+    cl_buf = { task->get_queue()->get_boost_compute().get_context(),
+               get_size()*sizeof(value_type),
+               flags,
+               is_read_access() ? array.data() : 0 };
+  }
+
+
+  /** Copy back the CL buffer to the SYCL if required
+
+      \todo Move this into the buffer with queue/device-based caching
+  */
+  void copy_back_cl_buffer() {
+    // \todo Use if constexpr in C++17
+    if (is_write_access())
+      task->get_queue()->get_boost_compute()
+        .enqueue_read_buffer(get_cl_buffer(),
+                             0 /*< Offset */,
+                             get_size()*sizeof(value_type),
+                             array.data());
+  }
+#endif
 
 };
 

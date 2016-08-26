@@ -21,27 +21,21 @@
 #include <CL/sycl.hpp>
 #include <iostream>
 
+#include <boost/test/minimal.hpp>
+
+#include "basic_object_checks.hpp"
+#include "check_throwing_get.hpp"
+#include "display_platform.hpp"
+
 using namespace cl::sycl;
 
-
-void display(const platform &p) {
-  std::cout << "is_host() = " << p.is_host() << std::endl;
-  std::cout << "get_info<info::platform::profile>() = "
-            << p.get_info<info::platform::profile>() << std::endl;
-  std::cout << "get_info<info::platform:::version>() = "
-            << p.get_info<info::platform::version>() << std::endl;
-  std::cout << "get_info<info::platform::name>() = "
-            << p.get_info<info::platform::name>() << std::endl;
-  std::cout << "get_info<info::platform::vendor>() = "
-            << p.get_info<info::platform::vendor>() << std::endl;
-  std::cout << "get_info<info::platform::extensions>() = "
-            << p.get_info<info::platform::extensions>() << std::endl;
-}
-
-
-int main() {
+int test_main(int argc, char *argv[]) {
+  check_all<platform>();
   platform p;
   display(p);
+
+  // Check that it is the host platform by default
+  BOOST_CHECK(p.is_host());
 
   platform p2 { p };
 
@@ -54,6 +48,9 @@ int main() {
     std::cout << "Platform " << &p << ':' << std::endl;
     display(p);
   }
+
+  // Verify that get() throws since there is no OpenCL behind the curtain
+  check_throwing_get(p);
 
   return 0;
 }

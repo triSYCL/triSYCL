@@ -30,19 +30,30 @@ namespace sycl {
     to send some objects T from the input to the output
 */
 template <typename T>
-struct pipe {
+class pipe
+    /* Use the underlying pipe implementation that can be shared in
+       the SYCL model */
+  : public detail::shared_ptr_implementation<pipe<T>, detail::pipe<T>>,
+    detail::debug<pipe<T>> {
+
+  // The type encapsulating the implementation
+  using implementation_t =
+    detail::shared_ptr_implementation<pipe<T>, detail::pipe<T>>;
+
+  // Make the implementation member directly accessible in this class
+  using implementation_t::implementation;
+
+public:
+
   /// The STL-like types
   /* Since a pipe element cannot be directly addressed without
      accessor, only define value_type here */
   using value_type = T;
 
-  /// The implementation is defined elsewhere
-  std::shared_ptr<detail::pipe<T>> implementation;
-
 
   /// Construct a pipe able to store up to capacity T objects
   pipe(std::size_t capacity)
-    : implementation { new detail::pipe<T> { capacity } } { }
+    : implementation_t { new detail::pipe<T> { capacity } } { }
 
 
   /** Get an accessor to the pipe with the required mode
@@ -62,7 +73,7 @@ struct pipe {
                   || Target == access::target::blocking_pipe,
                   "get_access(handler) with pipes can only deal with "
                   "access::pipe or access::blocking_pipe");
-    return { *this->implementation, command_group_handler };
+    return { implementation, command_group_handler };
   }
 
 

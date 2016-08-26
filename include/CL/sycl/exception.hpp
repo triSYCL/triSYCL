@@ -9,83 +9,200 @@
     License. See LICENSE.TXT for details.
 */
 
-#include "CL/sycl/buffer.hpp"
-#include "CL/sycl/image.hpp"
+#include <exception>
 
 namespace cl {
 namespace sycl {
-
-class queue;
 
 /** \addtogroup error_handling Error handling
     @{
 */
 
-using async_handler = function_class<int/*cl::sycl::exception_list*/>;
 
-/**
-   Encapsulate a SYCL error information
+/** A shared pointer to an exception as in C++ specification
+
+    \todo Do we need this instead of reusing directly the one from C++11?
 */
-struct exception {
+using exception_ptr = std::exception_ptr;
+
+
+/** Exception list to store several exceptions
+
+    \todo Do we need to define it in SYCL or can we rely on plain C++17 one?
+*/
+struct exception_list : std::vector<exception_ptr> {
+  using std::vector<exception_ptr>::vector;
+};
+
+using async_handler = function_class<void, exception_list>;
+
+
+/// Encapsulate a SYCL error information
+class exception {
+
+  /// The error message to return
+  string_class message;
+
+public:
+
+  /// Construct an exception with a message for internal use
+  exception(const string_class &message) : message { message } {}
+
+  /// Returns a descriptive string for the error, if available
+  string_class what() const {
+    return message;
+  }
+
+
+  /** Returns the context that caused the error
+
+      Returns nullptr if not a buffer error.
+
+      \todo Cannot return nullptr. Use optional? Use a specific exception type?
+  */
+  //context get_context()
+
+};
+
+
+/// Returns the OpenCL error code encapsulated in the exception
+class cl_exception : public exception {
+
 #ifdef TRISYCL_OPENCL
-  /** Get the OpenCL error code
+  /// The OpenCL error code to return
 
-      \returns 0 if not an OpenCL error
+  cl_int cl_code;
 
-      \todo to be implemented
-  */
-  cl_int get_cl_code() { assert(0); }
+public:
 
+  /**  Construct an exception with a message and OpenCL error code for
+       internal use */
+  cl_exception(const string_class &message, cl_int cl_code)
+    : exception { message }, cl_code { cl_code } {}
 
-  /** Get the SYCL-specific error code
-
-      \returns 0 if not a SYCL-specific error
-
-      \todo to be implemented
-
-      \todo use something else instead of cl_int to be usable without
-      OpenCL
-  */
-  cl_int get_sycl_code() { assert(0); }
+  // thrown as a result of an OpenCL API error code
+  cl_int get_cl_code() const {
+    return cl_code;
+  }
 #endif
 
-  /** Get the queue that caused the error
-
-      \return nullptr if not a queue error
-
-      \todo Update specification to replace 0 by nullptr
-  */
-  queue *get_queue() { assert(0); }
-
-
-  /** Get the buffer that caused the error
-
-      \returns nullptr if not a buffer error
-
-      \todo Update specification to replace 0 by nullptr and add the
-      templated buffer
-
-      \todo to be implemented
-
-      \todo How to get the real buffer type? Update: has been removed in
-      new specification
-  */
-  template <typename T, int dimensions, typename Allocator>
-  buffer<T, dimensions, Allocator> *get_buffer() {
-    assert(0); }
-
-
-  /** Get the image that caused the error
-
-      \returns nullptr if not a image error
-
-      \todo Update specification to replace 0 by nullptr and add the
-      templated buffer
-
-      \todo to be implemented
-  */
-  template <std::size_t dimensions> image<dimensions> *get_image() { assert(0); }
 };
+
+
+/// An error stored in an exception_list for asynchronous errors
+struct async_exception : exception {
+  using exception::exception;
+};
+
+
+class runtime_error : public exception {
+  using exception::exception;
+};
+
+
+/// Error that occurred before or while enqueuing the SYCL kernel
+class kernel_error : public runtime_error {
+  using runtime_error::runtime_error;
+};
+
+
+/// Error regarding the cl::sycl::accessor objects defined
+class accessor_error : public runtime_error {
+  using runtime_error::runtime_error;
+};
+
+
+/// Error regarding the cl::sycl::nd_range specified for the SYCL kernel
+class nd_range_error : public runtime_error {
+  using runtime_error::runtime_error;
+};
+
+
+/// Error regarding associated cl::sycl::event objects
+class event_error : public runtime_error {
+  using runtime_error::runtime_error;
+};
+
+
+/** Error regarding parameters to the SYCL kernel, it may apply to any
+    captured parameters to the kernel lambda
+*/
+class invalid_parameter_error : public runtime_error {
+  using runtime_error::runtime_error;
+};
+
+
+/// The SYCL device will trigger this exception on error
+class device_error : public exception {
+  using exception::exception;
+};
+
+
+/// Error while compiling the SYCL kernel to a SYCL device
+class compile_program_error : public device_error {
+  using device_error::device_error;
+};
+
+
+/// Error while linking the SYCL kernel to a SYCL device
+class link_program_error : public device_error {
+  using device_error::device_error;
+};
+
+
+/// Error regarding any memory objects being used inside the kernel
+class invalid_object_error : public device_error {
+  using device_error::device_error;
+};
+
+
+/// Error on memory allocation on the SYCL device for a SYCL kernel
+class memory_allocation_error : public device_error {
+  using device_error::device_error;
+};
+
+
+/// A failing pipe error will trigger this exception on error
+class pipe_error : public runtime_error {
+  using runtime_error::runtime_error;
+};
+
+
+/// The SYCL platform will trigger this exception on error
+class platform_error : public device_error {
+  using device_error::device_error;
+};
+
+
+/** The SYCL runtime will trigger this error if there is an error when
+    profiling info is enabled
+*/
+class profiling_error : public device_error {
+  using device_error::device_error;
+};
+
+
+/** Exception thrown when an optional feature or extension is used in
+    a kernel but its not available on the device the SYCL kernel is
+    being enqueued on
+*/
+class feature_not_supported : public device_error {
+  using device_error::device_error;
+};
+
+
+/** Exception for an OpenCL operation requested in a non OpenCL area
+
+    \todo Add to the specification
+
+    \todo Clean implementation
+
+    \todo Exceptions are named error in C++
+*/
+class non_cl_error : public runtime_error {
+  using runtime_error::runtime_error;
+};
+
 
 /// @} End the error_handling Doxygen group
 

@@ -47,12 +47,12 @@ int main(int argc, char **argv) {
 
           cgh.parallel_for_work_group<class KernelCompute>(sycl::nd_range<2> {
               sycl::range<2> {M-2, N-2},
-                sycl::range<2> {CL_DEVICE_MAX_WORK_GROUP_SIZE0, CL_DEVICE_MAX_WORK_GROUP_SIZE1}, 
+                sycl::range<2> {J_CL_DEVICE_MAX_WORK_GROUP_SIZE0, J_CL_DEVICE_MAX_WORK_GROUP_SIZE1}, 
                   sycl::id<2> {1, 1}},
             [=,&timer](sycl::group<2> group){
               // tile to be load : (4+2)*(8+2)
               // dynamic bounds unauthorized
-              float * local = new float[(CL_DEVICE_MAX_WORK_GROUP_SIZE0+2)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2)];
+              float * local = new float[(J_CL_DEVICE_MAX_WORK_GROUP_SIZE0+2)*(J_CL_DEVICE_MAX_WORK_GROUP_SIZE1+2)];
 
               struct op_time time_op;
               begin_op(time_op);
@@ -67,15 +67,15 @@ int main(int argc, char **argv) {
                   sycl::id<2> id2(sycl::range<2> {1,0});
                   sycl::id<2> id1_s(sycl::range<2> {0,l_range.get(1)});
                   sycl::id<2> id2_s(sycl::range<2> {l_range.get(0),0});
-                  local[(l_ind+offset).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset).get(1)] = a[g_ind+offset];
+                  local[(l_ind+offset).get(0)*(J_CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset).get(1)] = a[g_ind+offset];
                   if (l_ind.get(0) == 0) {
                     // we should not have ourself to add the offset ...
                     local[(l_ind+offset).get(1)] = a[g_ind-id2+offset];
-                    local[(id2_s+offset).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset).get(1)] = a[g_ind+id2_s+offset];
+                    local[(id2_s+offset).get(0)*(J_CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset).get(1)] = a[g_ind+id2_s+offset];
                   }
                   if (l_ind.get(1) == 0) {
-                    local[(l_ind+offset).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2)] = a[g_ind-id1+offset];
-                    local[(l_ind+offset).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (id1_s+offset).get(1)] = a[g_ind+id1_s+offset];
+                    local[(l_ind+offset).get(0)*(J_CL_DEVICE_MAX_WORK_GROUP_SIZE1+2)] = a[g_ind-id1+offset];
+                    local[(l_ind+offset).get(0)*(J_CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (id1_s+offset).get(1)] = a[g_ind+id1_s+offset];
                   }
                 });
 
@@ -89,11 +89,11 @@ int main(int argc, char **argv) {
                   sycl::id<2> id1(sycl::range<2> {0,1});
                   sycl::id<2> id2(sycl::range<2> {1,0});
 
-                  b[g_ind+offset] = local[(l_ind+offset).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset).get(1)];
-                  b[g_ind+offset] += local[(l_ind+offset+id1).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset+id1).get(1)];
-                  b[g_ind+offset] += local[(l_ind+offset+id2).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset+id2).get(1)];
-                  b[g_ind+offset] += local[(l_ind+offset-id1).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset-id1).get(1)];
-                  b[g_ind+offset] += local[(l_ind+offset-id2).get(0)*(CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset-id2).get(1)];
+                  b[g_ind+offset] = local[(l_ind+offset).get(0)*(J_CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset).get(1)];
+                  b[g_ind+offset] += local[(l_ind+offset+id1).get(0)*(J_CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset+id1).get(1)];
+                  b[g_ind+offset] += local[(l_ind+offset+id2).get(0)*(J_CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset+id2).get(1)];
+                  b[g_ind+offset] += local[(l_ind+offset-id1).get(0)*(J_CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset-id1).get(1)];
+                  b[g_ind+offset] += local[(l_ind+offset-id2).get(0)*(J_CL_DEVICE_MAX_WORK_GROUP_SIZE1+2) + (l_ind+offset-id2).get(1)];
                 });
 
               delete [] local;

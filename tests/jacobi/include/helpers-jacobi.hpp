@@ -56,9 +56,9 @@ int es = PAPI_NULL; //event set
 #define USE_INIT_FT 1 // first touch accordingly to the sycl or malloc allocation
 #endif
 
-#define CL_DEVICE_LOCAL_MEM_SIZE 5000
-#define CL_DEVICE_CONST_WORK_GROUP_SIZE0 8
-#define CL_DEVICE_CONST_WORK_GROUP_SIZE1 8
+#define J_CL_DEVICE_LOCAL_MEM_SIZE 5000
+#define J_CL_DEVICE_CONST_WORK_GROUP_SIZE0 8
+#define J_CL_DEVICE_CONST_WORK_GROUP_SIZE1 8
 #define WG_MULT0 16
 #define WG_MULT1 16
 #define JACOBI_DELTA 2
@@ -75,10 +75,10 @@ int es = PAPI_NULL; //event set
 
 
 size_t NB_ITER = CONST_NB_ITER;
-size_t M = WG_MULT0*CL_DEVICE_CONST_WORK_GROUP_SIZE0+JACOBI_DELTA;
-size_t N = WG_MULT1*CL_DEVICE_CONST_WORK_GROUP_SIZE1+JACOBI_DELTA;
-size_t CL_DEVICE_MAX_WORK_GROUP_SIZE0 = CL_DEVICE_CONST_WORK_GROUP_SIZE0;
-size_t CL_DEVICE_MAX_WORK_GROUP_SIZE1 = CL_DEVICE_CONST_WORK_GROUP_SIZE1;
+size_t M = WG_MULT0*J_CL_DEVICE_CONST_WORK_GROUP_SIZE0+JACOBI_DELTA;
+size_t N = WG_MULT1*J_CL_DEVICE_CONST_WORK_GROUP_SIZE1+JACOBI_DELTA;
+size_t J_CL_DEVICE_MAX_WORK_GROUP_SIZE0 = J_CL_DEVICE_CONST_WORK_GROUP_SIZE0;
+size_t J_CL_DEVICE_MAX_WORK_GROUP_SIZE1 = J_CL_DEVICE_CONST_WORK_GROUP_SIZE1;
 
 struct op_time {
   struct timeval start;
@@ -270,8 +270,8 @@ void read_args(int argc, char **argv){
     using boost::lexical_cast;
     using boost::bad_lexical_cast;
     try {
-      CL_DEVICE_MAX_WORK_GROUP_SIZE0 = lexical_cast<size_t>(argv[4]);
-      CL_DEVICE_MAX_WORK_GROUP_SIZE1 = lexical_cast<size_t>(argv[5]);
+      J_CL_DEVICE_MAX_WORK_GROUP_SIZE0 = lexical_cast<size_t>(argv[4]);
+      J_CL_DEVICE_MAX_WORK_GROUP_SIZE1 = lexical_cast<size_t>(argv[5]);
     }
     catch(bad_lexical_cast &) {
       std::cout << "Bad number format." << std::endl;
@@ -301,8 +301,8 @@ void read_args(int argc, char **argv){
   std::cout << "Iterations  : " << NB_ITER << std::endl;
   std::cout << "Elements[0] : " << M << std::endl;
   std::cout << "Elements[1] : " << N << std::endl;
-  std::cout << "Tile[0]     : " << CL_DEVICE_MAX_WORK_GROUP_SIZE0 << std::endl;
-  std::cout << "Tile[1]     : " << CL_DEVICE_MAX_WORK_GROUP_SIZE1 << std::endl;
+  std::cout << "Tile[0]     : " << J_CL_DEVICE_MAX_WORK_GROUP_SIZE0 << std::endl;
+  std::cout << "Tile[1]     : " << J_CL_DEVICE_MAX_WORK_GROUP_SIZE1 << std::endl;
   std::cout << "Vec_size    : " << VEC_CONST_SIZE << std::endl;
 #ifdef _OPENMP
 #pragma omp parallel

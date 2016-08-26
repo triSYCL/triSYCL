@@ -6,6 +6,8 @@
 #include <iostream>
 #include <iterator>
 
+using namespace cl::sycl;
+
 constexpr size_t N = 3;
 using Vector = float[N];
 
@@ -14,34 +16,32 @@ int main() {
   Vector b = { 5, 6, 8 };
   Vector c;
 
-  { // By sticking all the SYCL work in a {} block, we ensure
-    // all SYCL tasks must complete before exiting the block
+  // Create a queue to work on
+  queue q;
 
-    // Create a queue to work on
-    cl::sycl::queue myQueue;
+  // Create buffers from a & b vectors
+  buffer<float> A { std::begin(a), std::end(a) };
+  buffer<float> B { std::begin(b), std::end(b) };
 
-    // Create buffers from a & b vectors
-    cl::sycl::buffer<float> A { std::begin(a), std::end(a) };
-    cl::sycl::buffer<float> B { std::begin(b), std::end(b) };
-
+  {
     // A buffer of N float using the storage of c
-    cl::sycl::buffer<float> C { c, N };
+    buffer<float> C { c, N };
 
     /* The command group describing all operations needed for the kernel
        execution */
-    myQueue.submit([&](cl::sycl::handler &cgh) {
-      // In the kernel A and B are read, but C is written
-      auto ka = A.get_access<cl::sycl::access::mode::read>(cgh);
-      auto kb = B.get_access<cl::sycl::access::mode::read>(cgh);
-      auto kc = C.get_access<cl::sycl::access::mode::write>(cgh);
+    q.submit([&](handler &cgh) {
+        // In the kernel A and B are read, but C is written
+        auto ka = A.get_access<access::mode::read>(cgh);
+        auto kb = B.get_access<access::mode::read>(cgh);
+        auto kc = C.get_access<access::mode::write>(cgh);
 
-      // Enqueue a parallel kernel
-      cgh.parallel_for<class vector_add>(cl::sycl::range<1> { N },
-                                         [=] (cl::sycl::id<1> index) {
-                                           kc[index] = ka[index] + kb[index];
-                                         });
-      }); // End of our commands for this queue
-  } // End scope, so we wait for the queue to complete
+        // Enqueue a parallel kernel
+        cgh.parallel_for<class vector_add>(N,
+                                           [=] (id<1> index) {
+                                             kc[index] = ka[index] + kb[index];
+                                           });
+      }); //< End of our commands for this queue
+  } //< Buffer C goes out of scope and copies back values to c
 
   std::cout << std::endl << "Result:" << std::endl;
   for (auto e : c)

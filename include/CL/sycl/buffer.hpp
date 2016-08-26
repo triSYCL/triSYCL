@@ -16,8 +16,10 @@
 #include "CL/sycl/access.hpp"
 #include "CL/sycl/accessor.hpp"
 #include "CL/sycl/buffer/detail/buffer.hpp"
+#include "CL/sycl/buffer/detail/buffer_waiter.hpp"
 #include "CL/sycl/buffer_allocator.hpp"
 #include "CL/sycl/detail/global_config.hpp"
+#include "CL/sycl/detail/shared_ptr_implementation.hpp"
 #include "CL/sycl/event.hpp"
 #include "CL/sycl/handler.hpp"
 #include "CL/sycl/id.hpp"
@@ -27,7 +29,7 @@
 namespace cl {
 namespace sycl {
 
-/** \addtogroup data Data access and storage in SYCL
+/** \addtogro<T, Dimensions, Mode, Target>up data Data access and storage in SYCL
     @{
 */
 
@@ -42,6 +44,8 @@ namespace sycl {
     \todo There is a naming inconsistency in the specification between
     buffer and accessor on T versus datatype
 
+    \todo Finish allocator implementation
+
     \todo Think about the need of an allocator when constructing a buffer
     from other buffers
 
@@ -53,23 +57,41 @@ namespace sycl {
 template <typename T,
           std::size_t Dimensions = 1,
           typename Allocator = buffer_allocator<T>>
-struct buffer {
+class buffer
+  /* Use the underlying buffer waiter implementation that can be
+     shared in the SYCL model */
+  : public detail::shared_ptr_implementation<
+                         buffer<T, Dimensions, Allocator>,
+                         detail::buffer_waiter<T, Dimensions, Allocator>>,
+    detail::debug<buffer<T, Dimensions, Allocator>> {
+public:
+
   /// The STL-like types
   using value_type = T;
   using reference = value_type&;
   using const_reference = const value_type&;
   using allocator_type = Allocator;
 
-  /** Point to the underlying buffer implementation that can be shared in
-      the SYCL model */
-  std::shared_ptr<detail::buffer<T, Dimensions>> implementation;
+private:
+
+  // The type encapsulating the implementation
+  using implementation_t =
+    detail::shared_ptr_implementation<
+                         buffer<T, Dimensions, Allocator>,
+                         detail::buffer_waiter<T, Dimensions, Allocator>>;
+
+public:
+
+  // Make the implementation member directly accessible in this class
+  using implementation_t::implementation;
 
   /** Use default constructors so that we can create a new buffer copy
       from another one, with either a l-value or an r-value (for
       std::move() for example).
 
-      Since we just copy the shared_ptr<> above, this is where/how the
-      sharing magic is happening with reference counting in this case.
+      Since we just copy the shared_ptr<> from the
+      shared_ptr_implementation above, this is where/how the sharing
+      magic is happening with reference counting in this case.
   */
   buffer() = default;
 
@@ -87,7 +109,9 @@ struct buffer {
       \param[in] allocator is to be used by the SYCL runtime
   */
   buffer(const range<Dimensions> &r, Allocator allocator = {})
-    : implementation { new detail::buffer<T, Dimensions> { r } } {}
+    : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
+                                        { r }) }
+      {}
 
 
   /** Create a new buffer with associated host memory
@@ -112,7 +136,9 @@ struct buffer {
   buffer(const T *host_data,
          const range<Dimensions> &r,
          Allocator allocator = {})
-    : implementation { new detail::buffer<T, Dimensions> { host_data, r } } {}
+    : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
+            { host_data, r }) }
+  {}
 
 
   /** Create a new buffer with associated host memory
@@ -132,7 +158,9 @@ struct buffer {
       range<dimensions> defines the size.
   */
   buffer(T *host_data, const range<Dimensions> &r, Allocator allocator = {})
-    : implementation { new detail::buffer<T, Dimensions> { host_data, r } } {}
+    : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
+            { host_data, r }) }
+  {}
 
 
   /** Create a new buffer with associated memory, using the data in
@@ -187,8 +215,8 @@ struct buffer {
   buffer(shared_ptr_class<T> host_data,
          const range<Dimensions> &buffer_range,
          Allocator allocator = {})
-    : implementation {
-    new detail::buffer<T, Dimensions> { host_data, buffer_range } }
+    : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
+            { host_data, buffer_range }) }
   {}
 
 
@@ -222,12 +250,12 @@ struct buffer {
   }
 
 
-  /**  Create a new allocated 1D buffer initialized from the given
-       elements ranging from first up to one before last
+  /** Create a new allocated 1D buffer initialized from the given
+      elements ranging from first up to one before last
 
-       The data is copied to an intermediate memory position by the
-       runtime. Data is written back to the same iterator set if the
-       iterator is not a const iterator.
+      The data is copied to an intermediate memory position by the
+      runtime. Data is written back to the same iterator set if the
+      iterator is not a const iterator.
 
       \param[inout] start_iterator points to the first element to copy
 
@@ -262,8 +290,8 @@ struct buffer {
   buffer(InputIterator start_iterator,
          InputIterator end_iterator,
          Allocator allocator = {}) :
-    implementation { new detail::buffer<T, Dimensions> { start_iterator,
-                                                         end_iterator } }
+    implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
+            { start_iterator, end_iterator }) }
   {}
 
 
@@ -330,19 +358,17 @@ struct buffer {
       a buffer object? It does make more sense for a host-side accessor.
 
       \todo Implement the modes and targets
-
-      \todo for this implementation it is const for now
   */
   template <access::mode Mode,
             access::target Target = access::target::global_buffer>
   accessor<T, Dimensions, Mode, Target>
-  get_access(handler &command_group_handler) const {
+  get_access(handler &command_group_handler) {
     static_assert(Target == access::target::global_buffer
                   || Target == access::target::constant_buffer,
                   "get_access(handler) can only deal with access::global_buffer"
                   " or access::constant_buffer (for host_buffer accessor"
                   " do not use a command group handler");
-    return { *implementation, command_group_handler };
+    return { *this, command_group_handler };
   }
 
 
@@ -353,17 +379,15 @@ struct buffer {
       \todo Implement the modes
 
       \todo More elegant solution
-
-      \todo for this implementation it is const for now
   */
   template <access::mode Mode,
             access::target Target = access::target::host_buffer>
   accessor<T, Dimensions, Mode, Target>
-  get_access() const {
+  get_access() {
     static_assert(Target == access::target::host_buffer,
-                  "get_access() without a command gtoup handler is only "
+                  "get_access() without a command group handler is only"
                   " for host_buffer accessor");
-    return *implementation;
+    return { *this };
   }
 
 
@@ -371,18 +395,16 @@ struct buffer {
       terms of number of elements in each dimension as passed to the
       constructor
 
-      \todo rename to the equivalent from array_view proposals? Such
+      \todo rename to the equivalent from array_ref proposals? Such
       as size() in
-      http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/p0009r0.html
-      or
-      http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/p0114r0.pdf
+      http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0009r2.html
   */
   auto get_range() const {
     /* Interpret the shape which is a pointer to the first element as an
        array of Dimensions elements so that the range<Dimensions>
        constructor is happy with this collection
-     */
-    return implementation->get_range();
+    */
+    return implementation->implementation->get_range();
   }
 
 
@@ -391,7 +413,7 @@ struct buffer {
       Equal to get_range()[0] * ... * get_range()[dimensions-1].
   */
   auto get_count() const {
-    return implementation->get_count();
+    return implementation->implementation->get_count();
   }
 
 
@@ -404,7 +426,7 @@ struct buffer {
       it is named bytes() for example
   */
   size_t get_size() const {
-    return get_count()*sizeof(T);
+    return implementation->implementation->get_size();
   }
 
 
@@ -430,7 +452,9 @@ struct buffer {
 
       \todo Add to specification
   */
-  bool is_read_only() const { return implementation->read_only; }
+  bool is_read_only() const {
+    return implementation->implementation->read_only;
+  }
 
 
   /** Set destination of buffer data on destruction
@@ -461,7 +485,7 @@ struct buffer {
       host that can not be undone
   */
   void set_final_data(weak_ptr_class<T> finalData) {
-    implementation->set_final_data(std::move(finalData));
+    implementation->implementation->set_final_data(std::move(finalData));
   }
 
 };
@@ -469,6 +493,27 @@ struct buffer {
 /// @} End the data Doxygen group
 
 }
+}
+
+/* Inject a custom specialization of std::hash to have the buffer
+   usable into an unordered associative container
+
+   \todo Add this to the spec
+*/
+namespace std {
+
+template <typename T,
+          std::size_t Dimensions,
+          typename Allocator>
+struct hash<cl::sycl::buffer<T, Dimensions, Allocator>> {
+
+  auto operator()(const cl::sycl::buffer<T, Dimensions, Allocator> &b) const {
+    // Forward the hashing to the implementation
+    return b.hash();
+  }
+
+};
+
 }
 
 /*
