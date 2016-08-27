@@ -13,6 +13,12 @@
 #include <condition_variable>
 #include <mutex>
 
+#ifdef TRISYCL_OPENCL
+#include <boost/compute.hpp>
+#endif
+
+#include "CL/sycl/context.hpp"
+#include "CL/sycl/device.hpp"
 #include "CL/sycl/detail/debug.hpp"
 
 namespace cl {
@@ -21,7 +27,7 @@ namespace detail {
 
 /** Some implementation details about the SYCL queue
  */
-struct queue {
+struct queue : detail::debug<detail::queue> {
   /// Track the number of kernels still running to wait for their completion
   std::atomic<size_t> running_kernels;
 
@@ -67,8 +73,45 @@ struct queue {
   }
 
 
+#ifdef TRISYCL_OPENCL
+  /** Return the underlying OpenCL command queue after doing a retain
+
+      This memory object is expected to be released by the developer.
+
+      Retain a reference to the returned cl_command_queue object.
+
+      Caller should release it when finished.
+
+      If the queue is a SYCL host queue then an exception is thrown.
+  */
+  virtual cl_command_queue get() const = 0;
+
+  /// Return the underlying Boost.Compute command queue
+  virtual boost::compute::command_queue &get_boost_compute() = 0;
+#endif
+
+
+  /** Return the SYCL queue's context
+
+      Report errors using SYCL exception classes.
+  */
+  virtual cl::sycl::context get_context() const = 0;
+
+
+  /** Return the SYCL device the queue is associated with
+
+      Report errors using SYCL exception classes.
+  */
+  virtual cl::sycl::device get_device() const = 0;
+
+
+  /// Return whether the queue is executing on a SYCL host device
+  virtual bool is_host() const = 0;
+
+
   /// Wait for all kernel completion before the queue destruction
-  ~queue() {
+  /// \todo Update according spec since queue destruction is non blocking
+  virtual ~queue() {
     wait_for_kernel_execution();
   }
 

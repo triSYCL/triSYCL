@@ -1,7 +1,8 @@
 #ifndef TRISYCL_SYCL_BUFFER_DETAIL_BUFFER_BASE_HPP
 #define TRISYCL_SYCL_BUFFER_DETAIL_BUFFER_BASE_HPP
 
-/** \file The buffer_base behind the buffers
+/** \file The buffer_base behind the buffers, independent of the data
+    type
 
     Ronan at Keryell point FR
 
@@ -11,9 +12,13 @@
 
 #include <atomic>
 #include <condition_variable>
+#include <future>
 #include <memory>
 #include <mutex>
 #include <utility>
+
+// \todo Use C++17 optional when it is mainstream
+#include <boost/optional.hpp>
 
 #include "CL/sycl/access.hpp"
 
@@ -26,13 +31,14 @@ namespace detail {
 
 struct task;
 struct buffer_base;
-inline static void add_buffer_to_task(handler *command_group_handler,
-                                      detail::buffer_base *b,
-                                      bool is_write_mode);
+inline static std::shared_ptr<detail::task>
+add_buffer_to_task(handler *command_group_handler,
+                   std::shared_ptr<detail::buffer_base> b,
+                   bool is_write_mode);
 
 /** Factorize some template independent buffer aspects in a base class
  */
-struct buffer_base {
+struct buffer_base : public std::enable_shared_from_this<buffer_base> {
   /// If the data are read-only, store the information for later optimization.
   /// \todo Replace this by a static read-only type for the buffer
   bool read_only;
@@ -40,8 +46,8 @@ struct buffer_base {
   //// Keep track of the number of kernel accessors using this buffer
   std::atomic<size_t> number_of_users;
 
-  /// Store the latest task to produce this buffer
-  std::shared_ptr<detail::task> latest_producer;
+  /// Track the latest task to produce this buffer
+  std::weak_ptr<detail::task> latest_producer;
   /// To protect the access to latest_producer
   std::mutex latest_producer_mutex;
 
@@ -49,6 +55,13 @@ struct buffer_base {
   std::condition_variable ready;
   /// To protect the access to the condition variable
   std::mutex ready_mutex;
+
+  /** If the SYCL user buffer destructor is blocking, use this to
+      block until this buffer implementation is destroyed.
+
+      Use a void promise since there is no value to send, only
+      waiting */
+  boost::optional<std::promise<void>> notify_buffer_destructor;
 
 
   /// Create a buffer base
@@ -59,6 +72,9 @@ struct buffer_base {
   /// The destructor wait for not being used anymore
   ~buffer_base() {
     wait();
+    // If there is the last SYCL user buffer waiting, notify it
+    if (notify_buffer_destructor)
+      notify_buffer_destructor->set_value();
   }
 
 
@@ -90,7 +106,8 @@ struct buffer_base {
   /// Return the latest producer for the buffer
   std::shared_ptr<detail::task> get_latest_producer() {
     std::lock_guard<std::mutex> lg { latest_producer_mutex };
-    return latest_producer;
+    // Return the valid shared_ptr to the task, if any
+    return latest_producer.lock();
   }
 
 
@@ -98,18 +115,22 @@ struct buffer_base {
       future producer
   */
   std::shared_ptr<detail::task>
-  set_latest_producer(std::shared_ptr<detail::task> newer_latest_producer) {
+  set_latest_producer(std::weak_ptr<detail::task> newer_latest_producer) {
     std::lock_guard<std::mutex> lg { latest_producer_mutex };
     using std::swap;
 
     swap(newer_latest_producer, latest_producer);
-    return newer_latest_producer;
+    // Return the valid shared_ptr to the previous producing task, if any
+    return newer_latest_producer.lock();
   }
 
 
   /// Add a buffer to the task running the command group
-  void add_to_task(handler *command_group_handler, bool is_write_mode) {
-    add_buffer_to_task(command_group_handler, this, is_write_mode);
+  std::shared_ptr<detail::task>
+  add_to_task(handler *command_group_handler, bool is_write_mode) {
+    return add_buffer_to_task(command_group_handler,
+                              shared_from_this(),
+                              is_write_mode);
   }
 
 };

@@ -36,6 +36,10 @@ int main() {
           std::cout << "Second" << std::endl;
             });
     });
+  /** Wait for the execution of the previous kernel before quitting,
+      since there is no buffer side effect that would block in the
+      buffer destructor */
+  q.wait();
 
   return 0;
 }

@@ -47,17 +47,30 @@ namespace sycl {
     defined.
 */
 template <typename T, std::size_t Capacity>
-struct static_pipe {
+class static_pipe
+    /* Use the underlying pipe implementation that can be shared in
+       the SYCL model */
+  : public detail::shared_ptr_implementation<static_pipe<T, Capacity>,
+                                             detail::pipe<T>>,
+    detail::debug<static_pipe<T, Capacity>> {
+
+  // The type encapsulating the implementation
+  using implementation_t =
+    detail::shared_ptr_implementation<static_pipe<T, Capacity>,
+                                      detail::pipe<T>>;
+
+  // Make the implementation member directly accessible in this class
+  using implementation_t::implementation;
+
+public:
+
   /// The STL-like types
   using value_type = T;
-
-  /// The implementation is defined elsewhere
-  std::shared_ptr<detail::pipe<T>> implementation;
 
 
   /// Construct a static-scoped pipe able to store up to Capacity T objects
   static_pipe()
-    : implementation { new detail::pipe<T> { Capacity } } { }
+    : implementation_t { new detail::pipe<T> { Capacity } } { }
 
 
   /** Get an accessor to the pipe with the required mode
@@ -67,7 +80,7 @@ struct static_pipe {
       \param Target is the type of pipe access required
 
       \param[in] command_group_handler is the command group handler in
-      which the kernel is to be executed.
+      which the kernel is to be executed
   */
   template <access::mode Mode,
             access::target Target = access::target::pipe>
@@ -77,7 +90,7 @@ struct static_pipe {
                   || Target == access::target::blocking_pipe,
                   "get_access(handler) with pipes can only deal with "
                   "access::pipe or access::blocking_pipe");
-    return { *this->implementation, command_group_handler };
+    return { implementation, command_group_handler };
   }
 
 

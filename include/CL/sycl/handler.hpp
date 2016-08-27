@@ -9,10 +9,19 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <cstddef>
+#include <memory>
+#include <tuple>
+
+#ifdef TRISYCL_OPENCL
+#include <boost/compute.hpp>
+#endif
+
 #include "CL/sycl/accessor.hpp"
 #include "CL/sycl/command_group/detail/task.hpp"
 #include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/exception.hpp"
+#include "CL/sycl/kernel.hpp"
 #include "CL/sycl/parallelism/detail/parallelism.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"
 
@@ -22,14 +31,6 @@ namespace sycl {
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
 */
-
-/** Kernel
-
-    \todo To be implemented
-*/
-class kernel {
-};
-
 
 /** Command group handler class
 
@@ -57,24 +58,26 @@ public:
 
      \todo Make this constructor private
   */
-  handler(detail::queue &q) {
+  handler(const std::shared_ptr<detail::queue> &q) {
     // Create a new task for this command_group
     task = std::make_shared<detail::task>(q);
   }
 
 
-  /** Set kernel args for an OpenCL kernel which is used through the
+#ifdef TRISYCL_OPENCL
+  /** Set kernel arg for an OpenCL kernel which is used through the
       SYCL/OpenCL interop interface
 
       The index value specifies which parameter of the OpenCL kernel is
       being set and the accessor object, which OpenCL buffer or image is
       going to be given as kernel argument.
 
-      \todo Update the specification to use a ref to the accessor instead?
+      \todo Update the specification to use a ref && to the accessor instead?
 
-      \todo add a variadic method that accepts accessors too
+      \todo It is not that clean to have set_arg() associated to a
+      command handler. Rethink the specification?
 
-      \todo To be implemented
+      \todo It seems more logical to have these methods on kernel instead
   */
   template <typename DataType,
             std::size_t Dimensions,
@@ -82,7 +85,22 @@ public:
             access::target Target = access::target::global_buffer>
   void set_arg(int arg_index,
                accessor<DataType, Dimensions, Mode, Target> acc_obj) {
-    detail::unimplemented();
+    /* Before running the kernel, make sure the cl_mem behind this
+       accessor is up-to-date on the device if needed and pass it to
+       the kernel.
+
+       Explicitly capture task by copy instead of having this captured
+       by reference and task by reference by side effect */
+    task->add_prelude([=, task = task] {
+        acc_obj.implementation->copy_in_cl_buffer();
+        task->get_kernel().get_boost_compute()
+          .set_arg(arg_index, acc_obj.implementation->get_cl_buffer());
+      });
+    /* After running the kernel, make sure the cl_mem behind this
+       accessor is up-to-date on the host if needed */
+    task->add_postlude([=] {
+        acc_obj.implementation->copy_back_cl_buffer();
+      });
   }
 
 
@@ -93,12 +111,49 @@ public:
       being set and the accessor object, which OpenCL buffer or image is
       going to be given as kernel argument.
 
+      \todo It is not that clean to have set_arg() associated to a
+      command handler. Rethink the specification?
+
       \todo To be implemented
   */
   template <typename T>
   void set_arg(int arg_index, T scalar_value) {
     detail::unimplemented();
   }
+
+
+private:
+
+  /// Helper to individually call set_arg() for each argument
+  template <std::size_t... Is, typename... Ts>
+  void dispatch_set_arg(std::index_sequence<Is...>, Ts&&... args) {
+    // Use an intermediate tuple to ease individual argument access
+    auto &&t = std::make_tuple(std::forward<Ts>(args)...);
+    // Dispatch individual set_arg() for each argument
+    auto just_to_evaluate = {
+      0 /*< At least 1 element to deal with empty set_args() */,
+      ( set_arg(Is, std::forward<Ts>(std::get<Is>(t))), 0)...
+    };
+    // Remove the warning about unused variable
+    static_cast<void>(just_to_evaluate);
+  }
+
+public:
+
+  /** Set all kernel args for an OpenCL kernel which is used through the
+      SYCL/OpenCL interop interface
+
+      \todo Update the specification to add this function according to
+      https://cvs.khronos.org/bugzilla/show_bug.cgi?id=15978 proposal
+  */
+  template <typename... Ts>
+  void set_args(Ts&&... args) {
+    /* Construct a set of increasing argument index to be able to call
+       the real set_arg */
+    dispatch_set_arg(std::make_index_sequence<sizeof...(Ts)>{},
+                     std::forward<Ts>(args)...);
+  }
+#endif
 
 
   /** Kernel invocation method of a kernel defined as a lambda or
@@ -264,6 +319,9 @@ public:
   /** Kernel invocation method of a kernel defined as pointer to a kernel
       object, described in detail in 3.5.3
 
+      \todo Add in the spec a version taking a kernel and a functor,
+      to have host fall-back
+
       \todo To be implemented
   */
   void single_task(kernel syclKernel) {
@@ -271,23 +329,51 @@ public:
   }
 
 
-  /** Kernel invocation method of a kernel defined as pointer to a kernel
-      object, for the specified range and given an id or item for indexing
-      in the indexing space defined by range, described in detail in 3.5.3
+  /** Kernel invocation method of a kernel defined as a kernel object,
+      for the specified range and given an id or item for indexing in
+      the indexing space defined by range, described in detail in
+      5.4.
 
-      \todo To be implemented
+      \todo Add in the spec a version taking a kernel and a functor,
+      to have host fall-back
   */
-  template <std::size_t Dimensions = 1>
-  void parallel_for(range<Dimensions> numWorkItems,
-                    kernel sycl_kernel) {
-    detail::unimplemented();
+#define TRISYCL_ParallelForKernel_RANGE(N)                              \
+  void parallel_for(range<N> num_work_items,                            \
+                    kernel sycl_kernel) {                               \
+    /* For now just use the usual host task system to schedule          \
+       manually the OpenCL kernels instead of using OpenCL event-based  \
+       scheduling                                                       \
+                                                                        \
+       \todo Move the tracing inside the kernel implementation          \
+                                                                        \
+       \todo Simplify this 2 step ugly interface                        \
+    */                                                                  \
+    task->set_kernel(sycl_kernel.implementation);                       \
+    /* Use an intermediate variable to capture task by copy because     \
+       otherwise "this" is captured by reference and havoc with task    \
+       just accessing the dead "this". Nasty bug to find... */          \
+    task->schedule(detail::trace_kernel<kernel>([=, t = task] {         \
+          sycl_kernel.implementation->parallel_for(t, t->get_queue(),   \
+                                                   num_work_items); })); \
   }
 
+  /* Do not use a template parameter since otherwise the parallel_for
+     functor is selected instead of this one
+
+     \todo Clean this
+  */
+  TRISYCL_ParallelForKernel_RANGE(1)
+  TRISYCL_ParallelForKernel_RANGE(2)
+  TRISYCL_ParallelForKernel_RANGE(3)
+#undef TRISYCL_ParallelForKernel_RANGE
 
   /** Kernel invocation method of a kernel defined as pointer to a kernel
       object, for the specified nd_range and given an nd_item for indexing
       in the indexing space defined by the nd_range, described in detail
       in 3.5.3
+
+      \todo Add in the spec a version taking a kernel and a functor,
+      to have host fall-back
 
       \todo To be implemented
   */
@@ -304,10 +390,12 @@ namespace detail {
 
     This is a proxy function to avoid complicated type recursion.
 */
-static void add_buffer_to_task(handler *command_group_handler,
-                               detail::buffer_base *b,
-                               bool is_write_mode) {
+static std::shared_ptr<detail::task>
+add_buffer_to_task(handler *command_group_handler,
+                   std::shared_ptr<detail::buffer_base> b,
+                   bool is_write_mode) {
   command_group_handler->task->add_buffer(b, is_write_mode);
+  return command_group_handler->task;
 }
 
 }

@@ -67,11 +67,16 @@ struct reserve_id {
     when the accessors are captured in a lambda.
 */
 template <typename T>
-struct pipe : public detail::debug<pipe<T>> {
+class pipe : public detail::debug<pipe<T>> {
+
+public:
+
   using value_type = T;
 
   /// Implement the pipe with a circular buffer
   using implementation_t = boost::circular_buffer<value_type>;
+
+private:
 
   /// The circular buffer to store the elements
   boost::circular_buffer<value_type> cb;
@@ -84,7 +89,12 @@ struct pipe : public detail::debug<pipe<T>> {
 
   /// The queue of pending write reservations
   std::deque<reserve_id<value_type>> w_rid_q;
+
+public:
+
   using rid_iterator = typename decltype(w_rid_q)::iterator;
+
+private:
 
   /// The queue of pending read reservations
   std::deque<reserve_id<value_type>> r_rid_q;
@@ -98,15 +108,16 @@ struct pipe : public detail::debug<pipe<T>> {
   /// To signal that a write has been successful
   std::condition_variable write_done;
 
+  /// To control the debug mode, disabled by default
+  bool debug_mode = false;
+
+public:
+
   /// True when the pipe is currently used for reading
   bool used_for_reading = false;
 
   /// True when the pipe is currently used for writing
   bool used_for_writing = false;
-
-  /// To control the debug mode, disabled by default
-  bool debug_mode = false;
-
 
   /// Create a pipe as a circular buffer of the required capacity
   pipe(std::size_t capacity) : cb { capacity }, read_reserved_frozen { 0 } { }

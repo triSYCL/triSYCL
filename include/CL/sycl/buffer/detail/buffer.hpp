@@ -16,6 +16,7 @@
 #include "CL/sycl/access.hpp"
 #include "CL/sycl/buffer/detail/accessor.hpp"
 #include "CL/sycl/buffer/detail/buffer_base.hpp"
+#include "CL/sycl/buffer/detail/buffer_waiter.hpp"
 #include "CL/sycl/range.hpp"
 
 namespace cl {
@@ -35,15 +36,28 @@ namespace detail {
 */
 template <typename T,
           std::size_t Dimensions = 1>
-struct buffer : public detail::buffer_base,
-                public detail::debug<buffer<T, Dimensions>> {
+class buffer : public detail::buffer_base,
+               public detail::debug<buffer<T, Dimensions>> {
+public:
+
   // Extension to SYCL: provide pieces of STL container interface
   using element = T;
   using value_type = T;
 
+private:
+
   /** If some allocation is requested, it is managed by this multi_array
       to ease initialization from data */
   boost::multi_array<T, Dimensions> allocation;
+
+  // \todo Replace U and D somehow by T and Dimensions
+  // To allow allocation access
+  template <typename U,
+            std::size_t D,
+            access::mode Mode,
+            access::target Target /* = access::global_buffer */>
+    friend class detail::accessor;
+
 
   /** This is the multi-dimensional interface to the data that may point
       to either allocation in the case of storage managed by SYCL itself
@@ -59,6 +73,11 @@ struct buffer : public detail::buffer_base,
       the host */
   shared_ptr_class<T> shared_data;
 
+  // Track if the buffer memory is provided as host memory
+  bool host_write_back = false;
+
+public:
+
   /// Create a new read-write buffer of size \param r
   buffer(const range<Dimensions> &r) : buffer_base { false },
                                        allocation { r },
@@ -69,14 +88,21 @@ struct buffer : public detail::buffer_base,
   /** Create a new read-write buffer from \param host_data of size
       \param r without further allocation */
   buffer(T *host_data, const range<Dimensions> &r) : buffer_base { false },
-                                                     access { host_data, r }
+                                                     access { host_data, r },
+                                                     host_write_back { true }
                                                      {}
 
 
   /** Create a new read-only buffer from \param host_data of size \param r
-      without further allocation */
+      without further allocation
+
+      \todo Clarify the semantics in the spec. What happens if the
+      host change the host_data after buffer creation?
+  */
   buffer(const T *host_data, const range<Dimensions> &r) :
-    /// \todo Need to solve this const buffer issue in a clean way
+    /* \todo Need to solve this const buffer issue in a clean way
+
+       Just allocate memory? */
     buffer_base { true },
     access { const_cast<T *>(host_data), r }
     {}
@@ -94,7 +120,7 @@ struct buffer : public detail::buffer_base,
          const range<Dimensions> &r)
     : buffer_base { false },
     access { host_data.get(), r },
-    shared_data { }
+    shared_data { host_data }
     {}
 
 
@@ -180,6 +206,19 @@ struct buffer : public detail::buffer_base,
   }
 
 
+  /** Returns the size of the buffer storage in bytes
+
+      Equal to get_count()*sizeof(T).
+
+      \todo rename to something else. In
+      http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/p0122r0.pdf
+      it is named bytes() for example
+  */
+  size_t get_size() const {
+    return get_count()*sizeof(T);
+  }
+
+
   /** Set the weak pointer to copy back data on buffer deletion
 
       \todo Add a write kernel dependency on the buffer so the buffer
@@ -190,18 +229,44 @@ struct buffer : public detail::buffer_base,
     final_data = finalData;
   }
 
+private:
+  // \todo Work around to Clang bug https://llvm.org/bugs/show_bug.cgi?id=28873
+
+  /** Wait from inside the cl::sycl::buffer in case there is something
+      to copy back to the host */
+  boost::optional<std::future<void>> get_destructor_future() {
+    boost::optional<std::future<void>> f;
+    // \todo Double check the specification and add unit tests
+    if (host_write_back || !final_data.expired() || shared_data) {
+      // Create a promise to wait for
+      notify_buffer_destructor = std::promise<void> {};
+      // And return the future to wait for it
+      f = notify_buffer_destructor->get_future();
+    }
+    return f;
+  }
+
+  // Allow buffer_waiter destructor to access get_destructor_future()
+  // friend detail::buffer_waiter<T, Dimensions>::~buffer_waiter();
+  /* \todo Work around to Clang bug
+     https://llvm.org/bugs/show_bug.cgi?id=28873 cannot use destructor
+     here */
+  friend detail::buffer_waiter<T, Dimensions>;
 };
 
 
 /** Proxy function to avoid some circular type recursion
 
+    \return a shared_ptr<task>
+
     \todo To remove with some refactoring
 */
 template <typename BufferDetail>
-static void buffer_add_to_task(BufferDetail *buf,
-                               handler *command_group_handler,
-                               bool is_write_mode) {
-    buf->add_to_task(command_group_handler, is_write_mode);
+static std::shared_ptr<detail::task>
+buffer_add_to_task(BufferDetail buf,
+                   handler *command_group_handler,
+                   bool is_write_mode) {
+    return buf->add_to_task(command_group_handler, is_write_mode);
   }
 
 /// @} End the data Doxygen group

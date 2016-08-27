@@ -1,7 +1,7 @@
 #ifndef TRISYCL_SYCL_INFO_PLATFORM_HPP
 #define TRISYCL_SYCL_INFO_PLATFORM_HPP
 
-/** \file The OpenCL SYCL platform
+/** \file The OpenCL SYCL platform information parameters
 
     Ronan at Keryell point FR
 
@@ -10,6 +10,7 @@
 */
 
 #include "CL/sycl/detail/global_config.hpp"
+#include "CL/sycl/info/param_traits.hpp"
 
 namespace cl {
 namespace sycl {
@@ -19,22 +20,10 @@ namespace sycl {
 */
 namespace info {
 
-enum class device_type : unsigned int {
-  cpu,
-  gpu,
-  accelerator,
-  custom,
-  defaults,
-  host,
-  all
-};
-
-
 /** Platform information descriptors
 
     A SYCL platform can be queried for all of the following information
-    using the get_info function. All SYCL contexts have valid devices for
-    them, including the SYCL host device.
+    using the get_info function.
 
     In this implementation, the values are mapped to OpenCL values to
     avoid further remapping later when OpenCL is used
@@ -65,7 +54,7 @@ enum class platform : unsigned int {
   */
   extensions TRISYCL_SKIP_OPENCL(= CL_PLATFORM_EXTENSIONS),
 
-#if CL_SYCL_LANGUAGE_VERSION >= 220
+#if CL_SYCL_LANGUAGE_VERSION >= 220 && defined(CL_VERSION_2_1)
   /** Returns the resolution of the host timer in nanoseconds as used by
       clGetDeviceAndHostTimer
   */
@@ -87,7 +76,7 @@ enum class platform : unsigned int {
 */
 TRISYCL_INFO_PARAM_TRAITS_ANY_T(info::platform, string_class)
 
-#if CL_SYCL_LANGUAGE_VERSION >= 220
+#if CL_SYCL_LANGUAGE_VERSION >= 220 && defined(CL_VERSION_2_1)
 ///  get_info<host_timer_resolution>() return a cl_ulong
 #ifdef TRISYCL_OPENCL
 TRISYCL_INFO_PARAM_TRAITS(info::platform::host_timer_resolution, cl_ulong)

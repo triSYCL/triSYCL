@@ -1,18 +1,28 @@
 triSYCL
 +++++++
 
-NEWS
+News
 ----
 
-SYCL 2.2 provisional specification is out since 2016/04/18!
+- 2016/08/12: OpenCL kernels can be run with OpenCL kernel
+  interoperability mode now.
 
-This version implement SYCL 2.2 pipes and reservations plus the blocking
-pipe extension from Xilinx.
+- 2016/04/18:  SYCL 2.2 provisional specification is out
+
+- This version implement SYCL 2.2 pipes and reservations plus the blocking
+  pipe extension from Xilinx.
 
 .. section-numbering::
 
+
+Table of content
+----------------
+
 .. contents::
 
+
+Introduction
+------------
 
 triSYCL_ is an implementation test-bed to experiment with the
 specification of the OpenCL_ SYCL_ 2.2 `C++`_ layer and to give feedback
@@ -343,12 +353,9 @@ http://amd.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
 Installation
 ------------
 
-Only Clang_ 3.6+ or GCC_ 4.9+, `Boost.MultiArray`_ (which adds to `C++`_
+Only Clang_ 3.9+ or GCC_ 5.2+, `Boost.MultiArray`_ (which adds to `C++`_
 the nice Fortran array semantics and syntax), Boost.Operators and a few
 other Boost libraries are needed.
-If you use the debug mode or OpenMP, this works only with GCC 4.9 since
-current Clang version does not fully support OpenMP yet or some C++14 with
-``-g``.
 
 To install them on latest Linux Debian/unstable (this should work on
 latest Ubuntu too, just adapt the compiler versions):
