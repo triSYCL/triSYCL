@@ -46,7 +46,7 @@ using namespace std::string_literals;
 
 /// Same as TRISYCL_DUMP() but with thread id first
 #define TRISYCL_DUMP_T(expression)                                      \
-  TRISYCL_DUMP("Thread " << std::ios_base::hex                          \
+  TRISYCL_DUMP("Thread " << std::hex                                    \
                << std::this_thread::get_id() << ": " << expression)
 #else
 #define TRISYCL_DUMP(expression) do { } while(0)
