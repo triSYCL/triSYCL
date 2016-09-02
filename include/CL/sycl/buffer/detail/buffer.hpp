@@ -230,21 +230,35 @@ public:
   }
 
 private:
-  // \todo Work around to Clang bug https://llvm.org/bugs/show_bug.cgi?id=28873
 
-  /** Wait from inside the cl::sycl::buffer in case there is something
-      to copy back to the host */
+  /** Get a \c future to wait from inside the \c cl::sycl::buffer in
+      case there is something to copy back to the host
+
+      \return A \c future in the \c optional if there is something to
+      wait for, otherwise an empty \c optional
+  */
   boost::optional<std::future<void>> get_destructor_future() {
     boost::optional<std::future<void>> f;
-    // \todo Double check the specification and add unit tests
-    if (host_write_back || !final_data.expired() || shared_data) {
-      // Create a promise to wait for
-      notify_buffer_destructor = std::promise<void> {};
-      // And return the future to wait for it
-      f = notify_buffer_destructor->get_future();
-    }
+    /* If there is only 1 shared_ptr user of the buffer, this is the
+       caller of this function, the \c buffer_waiter, so there is no
+       need to get a \ future otherwise there will be a dead-lock if
+       there is only 1 thread waiting for itself.
+
+       Since \c use_count() is applied to a \c shared_ptr just created
+       for this purpose, it actually increase locally the count by 1,
+       so check for 1 + 1 use count instead...
+    */
+    if (shared_from_this().use_count() > 2)
+      // \todo Double check the specification and add unit tests
+      if (host_write_back || !final_data.expired() || shared_data) {
+        // Create a promise to wait for
+        notify_buffer_destructor = std::promise<void> {};
+        // And return the future to wait for it
+        f = notify_buffer_destructor->get_future();
+      }
     return f;
   }
+
 
   // Allow buffer_waiter destructor to access get_destructor_future()
   // friend detail::buffer_waiter<T, Dimensions>::~buffer_waiter();
@@ -252,6 +266,7 @@ private:
      https://llvm.org/bugs/show_bug.cgi?id=28873 cannot use destructor
      here */
   friend detail::buffer_waiter<T, Dimensions>;
+
 };
 
 

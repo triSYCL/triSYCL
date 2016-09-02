@@ -1,8 +1,17 @@
 
 ## To enable asynchronous kernels
 CXXFLAGS += -DTRISYCL_ASYNC=1
+
+# To use OpenMP to execute SYCL kernels:
+CXXFLAGS += -fopenmp
+
 # For asynchronous kernels when OpenMP is not enabled
-LDLIBS += -lpthread
+#LDLIBS += -lpthread
+
+# To use OpenCL
+#CXXFLAGS += -DTRISYCL_OPENCL
+#LDLIBS += -lOpenCL
+
 
 # Compute the absolute directory name from the location of this Makefile
 # so that we can compile from anywhere even if we use make -f
@@ -29,13 +38,6 @@ CLEANING_TARGETS = $(TARGETS) $(FILES_C:%.C=%.o)
 # The implementation uses C++14 and OpenMP
 CXXFLAGS += -Wall -std=c++1z -I$(triSYCL_DIR)/include \
 	-I$(triSYCL_DIR)/tests/common
-
-# To use OpenMP to execute SYCL kernels:
-#CXXFLAGS += -fopenmp
-
-# To use OpenCL
-#CXXFLAGS += -DTRISYCL_OPENCL
-#LDLIBS += -lOpenCL
 
 # Specify where OpenCL includes files are with OpenCL_INCPATH
 ifdef OpenCL_INCPATH
@@ -64,8 +66,10 @@ endif
 CXXFLAGS += -g
 #CXXFLAGS += -g -DTRISYCL_TRACE_KERNEL -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
-#CXXFLAGS += -g -DTRISYCL_DEBUG -DTRISYCL_DEBUG_STRUCTORS -DBOOST_LOG_DYN_LINK
-#LDLIBS+=-lboost_log -lpthread
+#CXXFLAGS += -g -DTRISYCL_DEBUG -DTRISYCL_TRACE_KERNEL -DTRISYCL_DEBUG_STRUCTORS -DBOOST_LOG_DYN_LINK
+# To have DEBUG mode working
+#LDLIBS += -lboost_log -lpthread
+# To use Clang sanitizer modes
 #CXXFLAGS += -fsanitize=address -fno-omit-frame-pointer
 #CXXFLAGS += -fsanitize=thread -fno-omit-frame-pointer
 #CXXFLAGS += -fsanitize=undefined -fno-omit-frame-pointer

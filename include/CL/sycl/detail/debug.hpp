@@ -20,11 +20,9 @@
 #include <sstream>
 #include <string>
 #include <thread>
-#include <typeinfo>
-#include <type_traits>
 
 #include <boost/log/trivial.hpp>
-//#include <boost/type_index.hpp>
+#include <boost/type_index.hpp>
 
 // To be able to construct string literals like "blah"s
 using namespace std::string_literals;
@@ -46,7 +44,7 @@ using namespace std::string_literals;
 
 /// Same as TRISYCL_DUMP() but with thread id first
 #define TRISYCL_DUMP_T(expression)                                      \
-  TRISYCL_DUMP("Thread " << std::ios_base::hex                          \
+  TRISYCL_DUMP("Thread " << std::hex                                    \
                << std::this_thread::get_id() << ": " << expression)
 #else
 #define TRISYCL_DUMP(expression) do { } while(0)
@@ -61,16 +59,6 @@ namespace detail {
     @{
 */
 
-/* Not yet in Ubuntu 15.04
-/// To display the name of a type
-template <typename T>
-auto get_type_name() {
-  // Prettier output than typeid(T).name()
-  //return boost::typeindex::type_id<T>().pretty_name();
-}
-*/
-
-
 /** Class used to trace the construction, copy-construction,
     move-construction and destruction of classes that inherit from it
 
@@ -82,7 +70,8 @@ struct debug {
 #ifdef TRISYCL_DEBUG_STRUCTORS
   /// Trace the construction with the compiler-dependent mangled named
   debug() {
-    TRISYCL_DUMP("Constructor of " << typeid(*this).name()
+    TRISYCL_DUMP("Constructor of "
+                 << boost::typeindex::type_id<T>().pretty_name()
                  << " " << (void*) this);
   }
 
@@ -101,7 +90,8 @@ struct debug {
 
         \todo Use is_copy_constructible_v when moving to C++17 */
         std::enable_if_t<std::is_copy_constructible<U>::value> * = 0) {
-    TRISYCL_DUMP("Copy of " << typeid(*this).name() << " " << (void*) this);
+    TRISYCL_DUMP("Copy of " << boost::typeindex::type_id<T>().pretty_name()
+                 << " " << (void*) this);
   }
 
 
@@ -119,13 +109,15 @@ struct debug {
 
         \todo Use is_move_constructible_v when moving to C++17 */
         std::enable_if_t<std::is_move_constructible<U>::value> * = 0) {
-    TRISYCL_DUMP("Move of " << typeid(*this).name() << " " << (void*) this);
+    TRISYCL_DUMP("Move of " << boost::typeindex::type_id<T>().pretty_name()
+                 << " " << (void*) this);
   }
 
 
   /// Trace the destruction with the compiler-dependent mangled named
   ~debug() {
-    TRISYCL_DUMP("~ Destructor of " << typeid(*this).name()
+    TRISYCL_DUMP("~ Destructor of "
+                 << boost::typeindex::type_id<T>().pretty_name()
                  << " " << (void*) this);
   }
 #endif
@@ -139,12 +131,16 @@ auto trace_kernel(const Functor &f) {
 #ifdef TRISYCL_TRACE_KERNEL
   // Inject tracing message around the kernel
   return [=] {
-    /* Since the class KernelName may just declared and not be really
+    /* Since the class KernelName may just be declared and not really
        defined, just use it through a class pointer to have
        typeid().name() not complaining */
-    TRISYCL_INTERNAL_DUMP("Kernel started " << typeid(KernelName*).name());
+    TRISYCL_INTERNAL_DUMP(
+      "Kernel started "
+      << boost::typeindex::type_id<KernelName *>().pretty_name());
     f();
-    TRISYCL_INTERNAL_DUMP("Kernel stopped " << typeid(KernelName*).name());
+    TRISYCL_INTERNAL_DUMP(
+      "Kernel stopped "
+      << boost::typeindex::type_id<KernelName *>().pretty_name());
   };
 #else
   // Identity by default
@@ -166,7 +162,7 @@ struct display_vector {
   /// To debug and test
   void display() const {
 #ifdef TRISYCL_DEBUG
-    std::cout << typeid(T).name() << ":";
+    std::cout << boost::typeindex::type_id<T>().pretty_name() << ":";
 #endif
     // Get a pointer to the real object
     for (auto e : *static_cast<const T *>(this))
