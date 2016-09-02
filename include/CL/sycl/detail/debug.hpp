@@ -24,7 +24,7 @@
 #include <type_traits>
 
 #include <boost/log/trivial.hpp>
-//#include <boost/type_index.hpp>
+#include <boost/type_index.hpp>
 
 // To be able to construct string literals like "blah"s
 using namespace std::string_literals;
@@ -61,14 +61,12 @@ namespace detail {
     @{
 */
 
-/* Not yet in Ubuntu 15.04
 /// To display the name of a type
 template <typename T>
 auto get_type_name() {
   // Prettier output than typeid(T).name()
-  //return boost::typeindex::type_id<T>().pretty_name();
+  return boost::typeindex::type_id<T>().pretty_name();
 }
-*/
 
 
 /** Class used to trace the construction, copy-construction,
@@ -82,7 +80,7 @@ struct debug {
 #ifdef TRISYCL_DEBUG_STRUCTORS
   /// Trace the construction with the compiler-dependent mangled named
   debug() {
-    TRISYCL_DUMP("Constructor of " << typeid(*this).name()
+    TRISYCL_DUMP("Constructor of " << get_type_name<T>()
                  << " " << (void*) this);
   }
 
@@ -101,7 +99,7 @@ struct debug {
 
         \todo Use is_copy_constructible_v when moving to C++17 */
         std::enable_if_t<std::is_copy_constructible<U>::value> * = 0) {
-    TRISYCL_DUMP("Copy of " << typeid(*this).name() << " " << (void*) this);
+    TRISYCL_DUMP("Copy of " << get_type_name<T>() << " " << (void*) this);
   }
 
 
@@ -119,13 +117,13 @@ struct debug {
 
         \todo Use is_move_constructible_v when moving to C++17 */
         std::enable_if_t<std::is_move_constructible<U>::value> * = 0) {
-    TRISYCL_DUMP("Move of " << typeid(*this).name() << " " << (void*) this);
+    TRISYCL_DUMP("Move of " << get_type_name<T>() << " " << (void*) this);
   }
 
 
   /// Trace the destruction with the compiler-dependent mangled named
   ~debug() {
-    TRISYCL_DUMP("~ Destructor of " << typeid(*this).name()
+    TRISYCL_DUMP("~ Destructor of " << get_type_name<T>()
                  << " " << (void*) this);
   }
 #endif
@@ -142,9 +140,9 @@ auto trace_kernel(const Functor &f) {
     /* Since the class KernelName may just declared and not be really
        defined, just use it through a class pointer to have
        typeid().name() not complaining */
-    TRISYCL_INTERNAL_DUMP("Kernel started " << typeid(KernelName*).name());
+    TRISYCL_INTERNAL_DUMP("Kernel started " << get_type_name<KernelName>());
     f();
-    TRISYCL_INTERNAL_DUMP("Kernel stopped " << typeid(KernelName*).name());
+    TRISYCL_INTERNAL_DUMP("Kernel stopped " << get_type_name<KernelName>());
   };
 #else
   // Identity by default
