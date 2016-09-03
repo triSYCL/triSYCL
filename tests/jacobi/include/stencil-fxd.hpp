@@ -29,7 +29,7 @@ public:
 
   template<T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>)>
   inline T eval(cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> a, int k, int l) const {
-    return st_left.template eval<a_f>(a, a_f, k, l) + st_right.template eval<a_f>(a, k, l);
+    return st_left.template eval<a_f>(a, k, l) + st_right.template eval<a_f>(a, k, l);
   }
   template<int ldc>
   inline T eval_local(T *a, int k_local, int l_local) const {
@@ -175,13 +175,13 @@ public:
     //    nd_range = {range, cl::sycl::range<2> {li2D.nbi_wg0, li2D.nbi_wg1}, offset};
   }
 
-  inline void eval(cl::sycl::id<2> id, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write> *out, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> *in) {
+  inline void eval(cl::sycl::id<2> id, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write> out, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> in) {
     int i = id.get(0) + of0;
     int j = id.get(1) + of1;
-    f(i, j, *out) = stencil.template eval<a_f>(*in, i, j);
+    f(i, j, out) = stencil.template eval<a_f>(in, i, j);
   }
 
-  inline void eval_local(cl::sycl::nd_item<2> it, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write> *out, T *local_tab, int glob_max0, int glob_max1) {
+  inline void eval_local(cl::sycl::nd_item<2> it, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write> out, T *local_tab, int glob_max0, int glob_max1) {
     int i = it.get_global().get(0);
     int j = it.get_global().get(1);
     if (i >= glob_max0 || j >= glob_max1)
@@ -190,10 +190,10 @@ public:
     j += of1;
     int i_local = it.get_local().get(0) - st::min_ind0;
     int j_local = it.get_local().get(1) - st::min_ind1;
-    f(i, j, *out) = stencil.template eval_local<local_dim1>(local_tab, i_local, j_local);
+    f(i, j, out) = stencil.template eval_local<local_dim1>(local_tab, i_local, j_local);
   }
 
-  inline void store_local(T * local_tab, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> *in, cl::sycl::nd_item<2> it, cl::sycl::group<2> gr, int glob_max0, int glob_max1) {
+  inline void store_local(T * local_tab, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> in, cl::sycl::nd_item<2> it, cl::sycl::group<2> gr, int glob_max0, int glob_max1) {
     cl::sycl::range<2> l_range = it.get_local_range();
     cl::sycl::id<2> g_ind = gr.get(); //it.get_group_id(); error because ambiguous / operator redefinition 
     cl::sycl::id<2> l_ind = it.get_local();
@@ -223,7 +223,7 @@ public:
       int j;
       for (j = 0; j < total_block_dim1; ++j){
         if (global_ind0 < glob_max0 && global_ind1 < glob_max1)
-          local_tab[local_ind0 * local_dim1 + local_ind1] = a_f(global_ind0, global_ind1, *in);
+          local_tab[local_ind0 * local_dim1 + local_ind1] = a_f(global_ind0, global_ind1, in);
         local_ind1++;
         global_ind1++;
       }
@@ -237,20 +237,18 @@ public:
   //conversion not known in reference (&) for all sycl objects ...
   inline void doComputation(cl::sycl::queue queue){
     queue.submit([&](cl::sycl::handler &cgh) {
-        cl::sycl::accessor<T, 2, cl::sycl::access::mode::write> *_B = new cl::sycl::accessor<T, 2, cl::sycl::access::mode::write>(*B, cgh);
-        cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>  *_aB = new cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>(*aB, cgh);
+        cl::sycl::accessor<T, 2, cl::sycl::access::mode::write> _B {*B, cgh};
+        cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> _aB {*aB, cgh};
         cgh.parallel_for<class KernelCompute>(range, [=](cl::sycl::id<2> id){
             eval(id, _B, _aB);
           });
-        delete _B;
-        delete _aB;
       });
   }
 
   inline void doLocalComputation(cl::sycl::queue queue){
     queue.submit([&](cl::sycl::handler &cgh) {
-        cl::sycl::accessor<T, 2, cl::sycl::access::mode::write> *_B = new cl::sycl::accessor<T, 2, cl::sycl::access::mode::write>(*B, cgh);
-        cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>  *_aB = new cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>(*aB, cgh);
+        cl::sycl::accessor<T, 2, cl::sycl::access::mode::write> _B {*B, cgh};
+        cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> _aB {*aB, cgh};
         cgh.parallel_for_work_group<class KernelCompute>(nd_range, [=](cl::sycl::group<2> group){
             T * local = new T[local_dim0 * local_dim1];
             cl::sycl::parallel_for_work_item(group, [=](cl::sycl::nd_item<2> it){
@@ -268,8 +266,6 @@ public:
               });
             delete [] local;
           });
-        delete _B;
-        delete _aB;
       });
   }
 
