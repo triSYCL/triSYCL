@@ -36,7 +36,7 @@ FILES_C =$(wildcard */*.C)
 CLEANING_TARGETS = $(TARGETS) $(FILES_C:%.C=%.o)
 
 # The implementation uses C++14 and OpenMP
-CXXFLAGS += -Wall -std=c++1z -I$(triSYCL_DIR)/include \
+CXXFLAGS += -Wall -std=c++1y -I$(triSYCL_DIR)/include \
 	-I$(triSYCL_DIR)/tests/common
 
 # Specify where OpenCL includes files are with OpenCL_INCPATH
@@ -81,12 +81,9 @@ CHECKING_DIR ?= .
 
 # Assume Clang 3.8 at least
 #CXX = clang++
+# But everything works fine with GCC 5.4 at least
+CXX = g++
 
-# But everything works fine with GCC 5.4 at least!
-#CXX = g++
-CXX = /home/honorat/Documents/logiciels/gcc_build/bin/g++
-
-CXXFLAGS += -I/home/honorat/Documents/logiciels/boost_build/include
 
 # Some hack to force the compiler from the test infrastructure:
 ifdef FORCE_CXX
