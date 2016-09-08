@@ -25,6 +25,11 @@
 #include "CL/sycl/parallelism/detail/parallelism.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"
 
+/** Use a Clang user annotation attribute to mark arguments that takes
+    a kernel so the compiler can outline the kernels */
+#define __TRISYCL_KERNEL_MARK __attribute__((annotate("__triSYCL_kernel")))
+
+
 namespace cl {
 namespace sycl {
 
@@ -170,7 +175,7 @@ public:
       the underlying kernel
   */
   template <typename KernelName = std::nullptr_t>
-  void single_task(std::function<void(void)> F) {
+  void single_task(std::function<void(void)> F __TRISYCL_KERNEL_MARK) {
     task->schedule(detail::trace_kernel<KernelName>(F));
   }
 
@@ -199,14 +204,14 @@ public:
       function can not be templated, so instantiate it for all the
       dimensions
   */
-#define TRISYCL_parallel_for_functor_GLOBAL(N)                          \
-  template <typename KernelName = std::nullptr_t,                       \
-            typename ParallelForFunctor>                                \
-  void parallel_for(range<N> global_size,                               \
-                    ParallelForFunctor f) {                             \
-    task->schedule(detail::trace_kernel<KernelName>([=] {               \
-          detail::parallel_for(global_size, f);                         \
-        }));                                                            \
+#define TRISYCL_parallel_for_functor_GLOBAL(N)                    \
+  template <typename KernelName = std::nullptr_t,                 \
+            typename ParallelForFunctor>                          \
+  void parallel_for(range<N> global_size,                         \
+                    ParallelForFunctor f __TRISYCL_KERNEL_MARK) { \
+    task->schedule(detail::trace_kernel<KernelName>([=] {         \
+          detail::parallel_for(global_size, f);                   \
+        }));                                                      \
   }
 
   TRISYCL_parallel_for_functor_GLOBAL(1)
@@ -237,17 +242,17 @@ public:
       function can not be templated, so instantiate it for all the
       dimensions
   */
-#define TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(N)       \
-  template <typename KernelName = std::nullptr_t,         \
-            typename ParallelForFunctor>                  \
-  void parallel_for(range<N> global_size,                 \
-                    id<N> offset,                         \
-                    ParallelForFunctor f) {               \
-    task->schedule(detail::trace_kernel<KernelName>([=] { \
-          detail::parallel_for_global_offset(global_size, \
-                                             offset,      \
-                                             f);          \
-        }));                                              \
+#define TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(N)               \
+  template <typename KernelName = std::nullptr_t,                 \
+            typename ParallelForFunctor>                          \
+  void parallel_for(range<N> global_size,                         \
+                    id<N> offset,                                 \
+                    ParallelForFunctor f __TRISYCL_KERNEL_MARK) { \
+    task->schedule(detail::trace_kernel<KernelName>([=] {         \
+          detail::parallel_for_global_offset(global_size,         \
+                                             offset,              \
+                                             f);                  \
+        }));                                                      \
   }
 
   TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(1)
@@ -278,7 +283,8 @@ public:
   template <typename KernelName,
             std::size_t Dimensions,
             typename ParallelForFunctor>
-  void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {
+  void parallel_for(nd_range<Dimensions> r,
+                    ParallelForFunctor f __TRISYCL_KERNEL_MARK) {
     task->schedule(detail::trace_kernel<KernelName>([=] {
           detail::parallel_for(r, f);
         }));
@@ -310,7 +316,7 @@ public:
             std::size_t Dimensions = 1,
             typename ParallelForFunctor>
   void parallel_for_work_group(nd_range<Dimensions> r,
-                               ParallelForFunctor f) {
+                               ParallelForFunctor f __TRISYCL_KERNEL_MARK) {
     task->schedule(detail::trace_kernel<KernelName>([=] {
           detail::parallel_for_workgroup(r, f); }));
   }
