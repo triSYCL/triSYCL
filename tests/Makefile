@@ -142,3 +142,14 @@ clone-%:
 
 
 multiple_compilation_units/parallel_for: multiple_compilation_units/parallel_for_other.o
+
+# To debug the Clang/LLVM triSYCL compiler
+# Assume that CXX contains some Clang compiler version
+
+# The LLVM bitcode
+%.bc: %.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -c -o $@ $<
+
+# The LLVM assembly code
+%.ll: %.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -S -o $@ $<
