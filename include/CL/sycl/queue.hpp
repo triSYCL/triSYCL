@@ -317,11 +317,9 @@ public:
 
       \todo Add in the spec an implicit conversion of handler_event to
       queue& so it is possible to chain operations on the queue
-
-      \todo Update the spec to replace std::function by a templated
-      type to avoid memory allocation
   */
-  handler_event submit(std::function<void(handler &)> cgf) {
+  template <typename Handler_Functor>
+  handler_event submit(Handler_Functor cgf) {
     handler command_group_handler { implementation };
     cgf(command_group_handler);
     return {};
