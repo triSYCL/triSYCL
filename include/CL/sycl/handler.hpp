@@ -25,10 +25,36 @@
 #include "CL/sycl/parallelism/detail/parallelism.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"
 
+#ifdef TRISYCL_DEVICE
 /** Use a Clang user annotation attribute to mark arguments that takes
-    a kernel so the compiler can outline the kernels */
-#define __TRISYCL_KERNEL_MARK __attribute__((annotate("__triSYCL_kernel")))
+    a kernel so the compiler can outline the kernels
 
+    __attribute__((annotate("noinline"))) does not help at the Functor
+    parameter to avoid inlining of the final kernel use
+ */
+#define __TRISYCL_KERNEL_MARK __attribute__((annotate("__triSYCL_kernel")))
+#else
+#define __TRISYCL_KERNEL_MARK
+#endif
+
+
+namespace {
+
+/** Instantiate the template code
+
+    To have a clear view of what a kernel is at the LLVM IR level even
+    when a lot of optimizations are done (-O3), call the kernel from
+    this function marked as "noinline", otherwise the kernel code is
+    inlined directly where it is used.
+ */
+template <typename KernelName,
+          typename Functor>
+__attribute__((noinline))
+void instantiate_kernel(Functor f __TRISYCL_KERNEL_MARK) {
+  f();
+}
+
+}
 
 namespace cl {
 namespace sycl {
@@ -160,6 +186,27 @@ public:
   }
 #endif
 
+private:
+
+  /** Schedule the kernel
+
+      Add a traced version of the kernel in host mode or add the
+      kernel in an instantiater function for later extraction by the
+      compiler
+  */
+  template <typename KernelName,
+            typename Kernel>
+  void schedule_kernel(Kernel k) {
+#ifndef TRISYCL_DEVICE
+    task->schedule(detail::trace_kernel<KernelName>(k));
+#else
+    /* A simplified version for the device just to be able to extract
+       the kernel itself */
+    instantiate_kernel<KernelName>(k);
+#endif
+  }
+
+public:
 
   /** Kernel invocation method of a kernel defined as a lambda or
       functor. If it is a lambda function or the functor type is globally
@@ -174,9 +221,10 @@ public:
       \param KernelName is a class type that defines the name to be used for
       the underlying kernel
   */
-  template <typename KernelName = std::nullptr_t>
-  void single_task(std::function<void(void)> F __TRISYCL_KERNEL_MARK) {
-    task->schedule(detail::trace_kernel<KernelName>(F));
+  template <typename KernelName = std::nullptr_t,
+            typename ParallelForFunctor>
+  void single_task(ParallelForFunctor f) {
+    schedule_kernel<KernelName>(f);
   }
 
 
@@ -204,14 +252,14 @@ public:
       function can not be templated, so instantiate it for all the
       dimensions
   */
-#define TRISYCL_parallel_for_functor_GLOBAL(N)                    \
-  template <typename KernelName = std::nullptr_t,                 \
-            typename ParallelForFunctor>                          \
-  void parallel_for(range<N> global_size,                         \
-                    ParallelForFunctor f __TRISYCL_KERNEL_MARK) { \
-    task->schedule(detail::trace_kernel<KernelName>([=] {         \
-          detail::parallel_for(global_size, f);                   \
-        }));                                                      \
+#define TRISYCL_parallel_for_functor_GLOBAL(N)                          \
+  template <typename KernelName = std::nullptr_t,                       \
+            typename ParallelForFunctor>                                \
+  void parallel_for(range<N> global_size,                               \
+                    ParallelForFunctor f) {                             \
+    schedule_kernel<KernelName>([=] {                                   \
+        detail::parallel_for(global_size, f);                           \
+      });                                                               \
   }
 
   TRISYCL_parallel_for_functor_GLOBAL(1)
@@ -247,12 +295,12 @@ public:
             typename ParallelForFunctor>                          \
   void parallel_for(range<N> global_size,                         \
                     id<N> offset,                                 \
-                    ParallelForFunctor f __TRISYCL_KERNEL_MARK) { \
-    task->schedule(detail::trace_kernel<KernelName>([=] {         \
-          detail::parallel_for_global_offset(global_size,         \
-                                             offset,              \
-                                             f);                  \
-        }));                                                      \
+                    ParallelForFunctor f) {                       \
+    schedule_kernel<KernelName>([=] {                             \
+        detail::parallel_for_global_offset(global_size,           \
+                                           offset,                \
+                                           f);                    \
+      });                                                         \
   }
 
   TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(1)
@@ -285,9 +333,7 @@ public:
             typename ParallelForFunctor>
   void parallel_for(nd_range<Dimensions> r,
                     ParallelForFunctor f __TRISYCL_KERNEL_MARK) {
-    task->schedule(detail::trace_kernel<KernelName>([=] {
-          detail::parallel_for(r, f);
-        }));
+    schedule_kernel<KernelName>([=] { detail::parallel_for(r, f); });
   }
 
 
@@ -317,8 +363,9 @@ public:
             typename ParallelForFunctor>
   void parallel_for_work_group(nd_range<Dimensions> r,
                                ParallelForFunctor f __TRISYCL_KERNEL_MARK) {
-    task->schedule(detail::trace_kernel<KernelName>([=] {
-          detail::parallel_for_workgroup(r, f); }));
+    schedule_kernel<KernelName>([=] {
+        detail::parallel_for_workgroup(r, f);
+      });
   }
 
 

@@ -3,15 +3,17 @@
 CXXFLAGS += -DTRISYCL_ASYNC=1
 
 # To use OpenMP to execute SYCL kernels:
-CXXFLAGS += -fopenmp
+#CXXFLAGS += -fopenmp
 
 # For asynchronous kernels when OpenMP is not enabled
-#LDLIBS += -lpthread
+LDLIBS += -lpthread
 
 # To use OpenCL
 #CXXFLAGS += -DTRISYCL_OPENCL
 #LDLIBS += -lOpenCL
 
+# To compile for a device
+CXXFLAGS += -DTRISYCL_DEVICE
 
 # Compute the absolute directory name from the location of this Makefile
 # so that we can compile from anywhere even if we use make -f
@@ -63,7 +65,8 @@ endif
 
 # There are some tests using small array display() method
 # To enable debug and tracing:
-CXXFLAGS += -g
+#CXXFLAGS += -g
+CXXFLAGS += -O3
 #CXXFLAGS += -g -DTRISYCL_TRACE_KERNEL -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DTRISYCL_TRACE_KERNEL -DTRISYCL_DEBUG_STRUCTORS -DBOOST_LOG_DYN_LINK
@@ -83,6 +86,7 @@ CHECKING_DIR ?= .
 #CXX = clang++
 # But everything works fine with GCC 5.4 at least
 CXX = g++
+CXX = clang++
 
 
 # Some hack to force the compiler from the test infrastructure:

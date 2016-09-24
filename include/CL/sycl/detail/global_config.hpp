@@ -58,6 +58,10 @@
 #define TRISYCL_ASYNC 0
 #endif
 
+#ifdef TRISYCL_DEVICE
+// #define __SYCL_DEVICE_ONLY__
+#endif
+
 /// @} End the defaults Doxygen group
 
 /*
