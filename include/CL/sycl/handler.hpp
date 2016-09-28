@@ -191,7 +191,7 @@ private:
   /** Schedule the kernel
 
       Add a traced version of the kernel in host mode or add the
-      kernel in an instantiater function for later extraction by the
+      kernel in an instantiating function for later extraction by the
       compiler
   */
   template <typename KernelName,
@@ -201,7 +201,14 @@ private:
     task->schedule(detail::trace_kernel<KernelName>(k));
 #else
     /* A simplified version for the device just to be able to extract
-       the kernel itself */
+       the kernel itself.
+
+       It is not a real outlining but a good approximation to be
+       massaged by a compiler later.
+
+       Put the iteration space loops in the kernels for now, which
+       makes sense for CPU emulation or FPGA pipelined execution.
+    */
     instantiate_kernel<KernelName>(k);
 #endif
   }
