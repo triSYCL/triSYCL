@@ -25,4 +25,3 @@ doc-clean:
 
 publish:
 	./dev/publish_Doxygen
-
