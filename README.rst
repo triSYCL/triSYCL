@@ -10,7 +10,7 @@ News
 - 2016/04/18:  SYCL 2.2 provisional specification is out
 
 - This version implement SYCL 2.2 pipes and reservations plus the blocking
-  pipe extension from Xilinx.
+  pipe extension from Xilinx_.
 
 .. section-numbering::
 
@@ -47,7 +47,8 @@ where you can find more futuristic branches.
 This is provided as is, without any warranty, with the same license as
 LLVM_/Clang_.
 
-Technical lead: Ronan at keryell point FR
+Technical lead: Ronan at keryell point FR. Developments started first
+at AMD_ and are now mainly funded by Xilinx_.
 
 
 OpenCL SYCL
@@ -59,7 +60,7 @@ accelerators by leveraging the OpenCL_ language and concepts.
 
 OpenCL_ SYCL_ is developed inside the Khronos_ OpenCL_ SYCL_ committee and
 thus, for more information on SYCL_, look at
-http://www.khronos.org/opencl/sycl
+http://www.khronos.org/sycl
 
 
 Why you could use SYCL
@@ -346,8 +347,8 @@ OpenCL triSYCL code documentation
 ---------------------------------
 
 The documentation of the triSYCL_ implementation itself can be found in
-http://amd.github.io/triSYCL/Doxygen/triSYCL/html and
-http://amd.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
+http://xilinx.github.io/triSYCL/Doxygen/triSYCL/html and
+http://xilinx.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
 
 
 Installation
@@ -481,7 +482,7 @@ Some ideas of future developments where *you* can contribute too: :-)
 ..
   Somme useful link definitions:
 
-.. _AMD: http://www.amd/com
+.. _AMD: http://www.amd.com
 
 .. _Bolt: https://github.com/HSA-Libraries/Bolt
 
@@ -549,13 +550,15 @@ Some ideas of future developments where *you* can contribute too: :-)
 
 .. _Thrust: http://thrust.github.io/
 
-.. _triSYCL: http://www.khronos.org/opencl/sycl/
+.. _triSYCL: https://github.com/Xilinx/triSYCL
 
 .. _VexCL: http://ddemidov.github.io/vexcl/
 
 .. _ViennaCL: http://viennacl.sourceforge.net/
 
 .. _Vulkan: https://www.khronos.org/vulkan/
+
+.. _Xilinx: http://www.xilinx.com
 
 ..
     # Some Emacs stuff:
