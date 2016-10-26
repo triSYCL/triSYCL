@@ -171,6 +171,18 @@ example at these articles:
   the ACM.
 
 
+Some other implementations
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Some other known implementations:
+
+- Codeplay_ has a ComputeCpp_ product implementing SYCL_ based on
+  OpenCL_ SPIR_ with Clang_/LLVM_
+  https://www.codeplay.com/products/computesuite/computecpp
+
+- SYCL-GTX https://github.com/ProGTX/sycl-gtx
+
+
 Some presentations and publications related to SYCL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -279,18 +291,6 @@ By reverse chronological order:
 
 There are also many interesting articles in the `publication list from
 Codeplay <http://www.codeplay.com/company/publications.html>`_.
-
-
-Some other implementations
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Some other known implementations:
-
-- Codeplay_ has a ComputeCpp_ product implementing SYCL_ based on
-  OpenCL_ SPIR_ with Clang_/LLVM_
-  https://www.codeplay.com/products/computesuite/computecpp
-
-- SYCL-GTX https://github.com/ProGTX/sycl-gtx
 
 
 Related projects
