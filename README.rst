@@ -281,13 +281,14 @@ There are also many interesting articles in the `publication list from
 Codeplay <http://www.codeplay.com/company/publications.html>`_.
 
 
-Some implementations
-~~~~~~~~~~~~~~~~~~~~
+Some other implementations
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Some other known implementations:
 
-- CodePlay has a product implementing SYCL based on OpenCL SPIR with
-  Clang/LLVM http://codeplay.com/products
+- Codeplay_ has a ComputeCpp_ product implementing SYCL_ based on
+  OpenCL_ SPIR_ with Clang_/LLVM_
+  https://www.codeplay.com/products/computesuite/computecpp
 
 - SYCL-GTX https://github.com/ProGTX/sycl-gtx
 
@@ -499,6 +500,10 @@ Some ideas of future developments where *you* can contribute too: :-)
 .. _Clang: http://clang.llvm.org/
 
 .. _CLHPP: https://github.com/KhronosGroup/OpenCL-CLHPP
+
+.. _Codeplay: http://www.codeplay.com
+
+.. _ComputeCpp: https://www.codeplay.com/products/computesuite/computecpp
 
 .. _CUDA: https://developer.nvidia.com/cuda-zone
 
