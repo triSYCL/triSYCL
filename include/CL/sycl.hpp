@@ -6,7 +6,7 @@
     experiment with the OpenCL CL provisional specification.
 
     For more information about OpenCL SYCL:
-    http://www.khronos.org/opencl/sycl/
+    http://www.khronos.org/sycl/
 
     For more information on this project and to access to the source of
     this file, look at https://github.com/amd/triSYCL
