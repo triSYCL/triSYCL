@@ -1,0 +1,4 @@
+<map id="cl::sycl::accessor&lt; DataType, 1, AccessMode, access::target::pipe &gt;" name="cl::sycl::accessor&lt; DataType, 1, AccessMode, access::target::pipe &gt;">
+<area shape="rect" id="node2" href="$group__data.html" title="cl::sycl::detail::pipe\l_accessor\&lt; DataType, AccessMode,\l access::target::pipe \&gt;" alt="" coords="5,124,244,180"/>
+<area shape="rect" id="node3" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; detail::pipe_accessor\l\&lt; DataType, AccessMode,\l Target \&gt; \&gt;" alt="" coords="35,5,214,76"/>
+</map>

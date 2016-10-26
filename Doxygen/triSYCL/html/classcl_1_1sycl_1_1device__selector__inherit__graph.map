@@ -1,0 +1,4 @@
+<map id="cl::sycl::device_selector" name="cl::sycl::device_selector">
+<area shape="rect" id="node2" href="$group__execution.html#classcl_1_1sycl_1_1device__type__selector" title="A device selector by device_type. " alt="" coords="21,80,164,121"/>
+<area shape="rect" id="node3" href="$group__execution.html#classcl_1_1sycl_1_1device__typename__selector" title="Select a device by template device_type parameter. " alt="" coords="5,169,180,211"/>
+</map>

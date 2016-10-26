@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['nd_5frange',['ND_range',['../group__parallelism.html#ad3341ded4c2faf89e1c23e29a7de6b87',1,'cl::sycl::nd_item::ND_range()'],['../group__parallelism.html#a8f8139000ce81bae04b2af72895f2076',1,'cl::sycl::nd_item::ND_range()']]],
-  ['ndr',['ndr',['../group__parallelism.html#a0a8143d8777bc568ea2b2dc4abfd06e1',1,'cl::sycl::group']]],
-  ['next_5fgeneration',['next_generation',['../classcl_1_1sycl_1_1detail_1_1buffer__customer.html#a7b64e276b24f8899bd29d7e0a3e443ba',1,'cl::sycl::detail::buffer_customer']]]
+  ['global_5findex',['global_index',['../group__parallelism.html#a6fa8d3d9f3516add24501dd0257ebd41',1,'cl::sycl::item::global_index()'],['../group__parallelism.html#a57d11f5e561f555deca649a6564b3adc',1,'cl::sycl::nd_item::global_index()']]],
+  ['global_5frange',['global_range',['../group__parallelism.html#afd6d31b97aff46b5d126a56bb6fc3d18',1,'cl::sycl::item::global_range()'],['../group__parallelism.html#a2173f61a9190fefd27e5f95b60dc7b0e',1,'cl::sycl::nd_range::global_range()']]],
+  ['group_5fid',['group_id',['../group__parallelism.html#a52605ae9109c2879926dab12e53c7b59',1,'cl::sycl::group']]]
 ];

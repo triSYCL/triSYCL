@@ -1,0 +1,5 @@
+<map id="cl::sycl::detail::accessor::copy_in_cl_buffer" name="cl::sycl::detail::accessor::copy_in_cl_buffer">
+<area shape="rect" id="node2" href="$group__data.html#a46771a56082efbe4a1e98aec434ac0eb" title="Returns the size of the underlying buffer in number of elements. " alt="" coords="217,5,381,47"/>
+<area shape="rect" id="node3" href="$group__data.html#a3838bd01b40a30516effc65ac1d8822d" title="Test if the accessor has a read access right. " alt="" coords="217,71,381,112"/>
+<area shape="rect" id="node4" href="$group__data.html#a65dedf695e3113aabc2fd42720ac4af1" title="Test if the accessor has a write access right. " alt="" coords="217,136,381,177"/>
+</map>

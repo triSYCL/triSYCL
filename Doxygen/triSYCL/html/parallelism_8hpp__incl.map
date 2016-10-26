@@ -1,0 +1,14 @@
+<map id="include/CL/sycl/parallelism.hpp" name="include/CL/sycl/parallelism.hpp">
+<area shape="rect" id="node2" href="$parallelism_2detail_2parallelism_8hpp.html" title="Implement the detail of the parallel constructions to launch kernels. " alt="" coords="446,80,594,121"/>
+<area shape="rect" id="node5" href="$group_8hpp.html" title="CL/sycl/group.hpp" alt="" coords="144,169,272,196"/>
+<area shape="rect" id="node8" href="$id_8hpp.html" title="CL/sycl/id.hpp" alt="" coords="768,326,875,353"/>
+<area shape="rect" id="node21" href="$range_8hpp.html" title="CL/sycl/range.hpp" alt="" coords="419,408,547,435"/>
+<area shape="rect" id="node23" href="$nd__range_8hpp.html" title="CL/sycl/nd_range.hpp" alt="" coords="245,244,395,271"/>
+<area shape="rect" id="node24" href="$item_8hpp.html" title="CL/sycl/item.hpp" alt="" coords="521,244,642,271"/>
+<area shape="rect" id="node25" href="$nd__item_8hpp.html" title="CL/sycl/nd_item.hpp" alt="" coords="659,169,802,196"/>
+<area shape="rect" id="node7" href="$linear__id_8hpp.html" title="CL/sycl/detail/linear\l_id.hpp" alt="" coords="307,319,445,360"/>
+<area shape="rect" id="node10" href="$small__array_8hpp.html" title="CL/sycl/detail/small\l_array.hpp" alt="" coords="753,483,890,524"/>
+<area shape="rect" id="node14" href="$debug_8hpp.html" title="CL/sycl/detail/debug.hpp" alt="" coords="777,572,943,599"/>
+<area shape="rect" id="node26" href="$access_8hpp.html" title="CL/sycl/access.hpp" alt="" coords="768,244,907,271"/>
+<area shape="rect" id="node27" href="$unimplemented_8hpp.html" title="CL/sycl/detail/unimplemented.hpp" alt="" coords="968,408,1187,435"/>
+</map>

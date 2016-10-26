@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['_7edebug',['~debug',['../group__debug__trace.html#a6fc7d2f05a7532d279e1cda98f880b28',1,'cl::sycl::detail::debug']]]
+  ['vec',['vec',['../group__vector.html#abcdadd775e325d59c5359ded7be427d9',1,'cl::sycl::vec::vec(const Types...args)'],['../group__vector.html#a8f8c639bae2244e6499204419f145ec2',1,'cl::sycl::vec::vec()=default']]]
 ];

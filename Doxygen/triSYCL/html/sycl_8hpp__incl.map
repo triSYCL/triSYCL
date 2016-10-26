@@ -1,0 +1,41 @@
+<map id="include/CL/sycl.hpp" name="include/CL/sycl.hpp">
+<area shape="rect" id="node2" href="$global__config_8hpp.html" title="CL/sycl/detail/global\l_config.hpp" alt="" coords="678,616,818,657"/>
+<area shape="rect" id="node5" href="$default__classes_8hpp.html" title="CL/sycl/detail/default\l_classes.hpp" alt="" coords="421,616,566,657"/>
+<area shape="rect" id="node11" href="$access_8hpp.html" title="CL/sycl/access.hpp" alt="" coords="2315,623,2453,650"/>
+<area shape="rect" id="node12" href="$accessor_8hpp.html" title="CL/sycl/accessor.hpp" alt="" coords="2575,355,2724,382"/>
+<area shape="rect" id="node15" href="$id_8hpp.html" title="CL/sycl/id.hpp" alt="" coords="3312,705,3419,732"/>
+<area shape="rect" id="node17" href="$range_8hpp.html" title="CL/sycl/range.hpp" alt="" coords="3867,780,3995,807"/>
+<area shape="rect" id="node18" href="$item_8hpp.html" title="CL/sycl/item.hpp" alt="" coords="3305,623,3426,650"/>
+<area shape="rect" id="node19" href="$nd__item_8hpp.html" title="CL/sycl/nd_item.hpp" alt="" coords="3139,534,3282,561"/>
+<area shape="rect" id="node21" href="$nd__range_8hpp.html" title="CL/sycl/nd_range.hpp" alt="" coords="3856,623,4005,650"/>
+<area shape="rect" id="node23" href="$pipe__reservation_8hpp.html" title="CL/sycl/pipe_reservation.hpp" alt="" coords="3534,445,3725,471"/>
+<area shape="rect" id="node26" href="$address__space_8hpp.html" title="Implement OpenCL address spaces in SYCL with C++&#45;style. " alt="" coords="4104,95,4288,121"/>
+<area shape="rect" id="node28" href="$buffer_8hpp.html" title="CL/sycl/buffer.hpp" alt="" coords="2637,95,2766,121"/>
+<area shape="rect" id="node32" href="$event_8hpp.html" title="CL/sycl/event.hpp" alt="" coords="3357,191,3485,218"/>
+<area shape="rect" id="node33" href="$handler_8hpp.html" title="CL/sycl/handler.hpp" alt="" coords="1705,273,1844,300"/>
+<area shape="rect" id="node34" href="$exception_8hpp.html" title="CL/sycl/exception.hpp" alt="" coords="309,534,461,561"/>
+<area shape="rect" id="node35" href="$queue_8hpp.html" title="CL/sycl/queue.hpp" alt="" coords="1304,191,1435,218"/>
+<area shape="rect" id="node36" href="$context_8hpp.html" title="CL/sycl/context.hpp" alt="" coords="908,273,1047,300"/>
+<area shape="rect" id="node37" href="$device_8hpp.html" title="CL/sycl/device.hpp" alt="" coords="886,355,1021,382"/>
+<area shape="rect" id="node40" href="$platform_8hpp.html" title="CL/sycl/platform.hpp" alt="" coords="779,534,922,561"/>
+<area shape="rect" id="node41" href="$device__selector_8hpp.html" title="CL/sycl/device_selector.hpp" alt="" coords="1248,445,1435,471"/>
+<area shape="rect" id="node42" href="$parallelism_8hpp.html" title="Implement parallel constructions to launch kernels. " alt="" coords="491,273,650,300"/>
+<area shape="rect" id="node43" href="$error__handler_8hpp.html" title="CL/sycl/error_handler.hpp" alt="" coords="195,273,365,300"/>
+<area shape="rect" id="node44" href="$group_8hpp.html" title="CL/sycl/group.hpp" alt="" coords="3968,534,4096,561"/>
+<area shape="rect" id="node45" href="$image_8hpp.html" title="OpenCL SYCL image class. " alt="" coords="4312,95,4443,121"/>
+<area shape="rect" id="node46" href="$pipe_8hpp.html" title="CL/sycl/pipe.hpp" alt="" coords="2219,191,2339,218"/>
+<area shape="rect" id="node47" href="$static__pipe_8hpp.html" title="CL/sycl/static_pipe.hpp" alt="" coords="1967,191,2126,218"/>
+<area shape="rect" id="node48" href="$vec_8hpp.html" title="Implement the small OpenCL vector class. " alt="" coords="4467,95,4584,121"/>
+<area shape="rect" id="node49" href="$device__selector__tail_8hpp.html" title="CL/sycl/device_selector\l/detail/device_selector\l_tail.hpp" alt="" coords="4608,80,4771,136"/>
+<area shape="rect" id="node50" href="$device__tail_8hpp.html" title="CL/sycl/device/detail\l/device_tail.hpp" alt="" coords="4795,87,4939,129"/>
+<area shape="rect" id="node14" href="$buffer_2detail_2accessor_8hpp.html" title="CL/sycl/buffer/detail\l/accessor.hpp" alt="" coords="2904,437,3043,479"/>
+<area shape="rect" id="node22" href="$shared__ptr__implementation_8hpp.html" title="CL/sycl/detail/shared\l_ptr_implementation.hpp" alt="" coords="1675,616,1839,657"/>
+<area shape="rect" id="node25" href="$pipe__accessor_8hpp.html" title="CL/sycl/pipe/detail\l/pipe_accessor.hpp" alt="" coords="2574,527,2709,568"/>
+<area shape="rect" id="node20" href="$unimplemented_8hpp.html" title="CL/sycl/detail/unimplemented.hpp" alt="" coords="1179,623,1397,650"/>
+<area shape="rect" id="node27" href="$address__space_2detail_2address__space_8hpp.html" title="Implement OpenCL address spaces in SYCL with C++&#45;style. " alt="" coords="4109,184,4283,225"/>
+<area shape="rect" id="node29" href="$buffer_2detail_2buffer_8hpp.html" title="CL/sycl/buffer/detail\l/buffer.hpp" alt="" coords="3168,348,3307,389"/>
+<area shape="rect" id="node30" href="$buffer__waiter_8hpp.html" title="CL/sycl/buffer/detail\l/buffer_waiter.hpp" alt="" coords="3168,437,3307,479"/>
+<area shape="rect" id="node31" href="$buffer__allocator_8hpp.html" title="CL/sycl/buffer_allocator.hpp" alt="" coords="2790,623,2975,650"/>
+<area shape="rect" id="node39" href="$param__traits_8hpp.html" title="CL/sycl/info/param\l_traits.hpp" alt="" coords="1049,527,1181,568"/>
+<area shape="rect" id="node38" href="$host__device_8hpp.html" title="CL/sycl/device/detail\l/host_device.hpp" alt="" coords="877,437,1021,479"/>
+</map>

@@ -1,7 +1,9 @@
 var searchData=
 [
-  ['default_5fhandler',['default_handler',['../group__error__handling.html#a537d8088b4e63792cc5741a9196d9293',1,'cl::sycl::error_handler']]],
-  ['dimension',['dimension',['../group__helpers.html#a7cb001e682eb0140039b7a726f3c3448',1,'cl::sycl::detail::small_array']]],
-  ['dimensionality',['dimensionality',['../group__data.html#a9010bb70c438f9355a37a0fe2efc4e3a',1,'cl::sycl::detail::accessor::dimensionality()'],['../group__data.html#a9322d92925dc2cec40488952138220d9',1,'cl::sycl::accessor::dimensionality()'],['../group__helpers.html#a246b78fe11f1764328bccb7692b15a38',1,'cl::sycl::detail::small_array::dimensionality()'],['../group__parallelism.html#a771bbffd5cb87f4ba896066d6645b80c',1,'cl::sycl::group::dimensionality()'],['../group__parallelism.html#a452e5a9130ba203ac04b6bf50f314537',1,'cl::sycl::item::dimensionality()'],['../group__parallelism.html#a3cf24f874553124b9a2633e1c5c6dad8',1,'cl::sycl::nd_item::dimensionality()'],['../group__parallelism.html#a0d3da4f285d003cb65192ea6d876d732',1,'cl::sycl::nd_range::dimensionality()']]],
-  ['dimensions',['Dimensions',['../group__execution.html#ab229fd6e1eabd6e0e06f131afea570cd',1,'cl::sycl::handler']]]
+  ['c',['c',['../classcl_1_1sycl_1_1detail_1_1cache.html#a7ffccc8828d393d85f93a8c6dc35b34b',1,'cl::sycl::detail::cache']]],
+  ['cache',['cache',['../classcl_1_1sycl_1_1detail_1_1opencl__device.html#aff3f289e567f587edb8d691e6cf9c335',1,'cl::sycl::detail::opencl_device::cache()'],['../classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ac714df753c326dd1fcb71112cc6bc25c',1,'cl::sycl::detail::opencl_kernel::cache()'],['../group__execution.html#a003253db8b9594e2b8480b97ea41b446',1,'cl::sycl::detail::opencl_platform::cache()'],['../classcl_1_1sycl_1_1detail_1_1opencl__queue.html#ab4e28c257c0f5e850caf4079702a67ed',1,'cl::sycl::detail::opencl_queue::cache()']]],
+  ['cb',['cb',['../group__data.html#a1718449367b5bb326cf25161ae97c764',1,'cl::sycl::detail::pipe']]],
+  ['cb_5fmutex',['cb_mutex',['../group__data.html#afcd0798b6f39b24cbfa81122947a30e6',1,'cl::sycl::detail::pipe']]],
+  ['cl_5fbuf',['cl_buf',['../group__data.html#a8268d7864a1d13ca7322994ab1ace9aa',1,'cl::sycl::detail::accessor']]],
+  ['cl_5fcode',['cl_code',['../group__error__handling.html#ab5b86355f0f4cdf2a343a3152cceb621',1,'cl::sycl::cl_exception']]]
 ];

@@ -1,0 +1,20 @@
+<map id="include/CL/sycl/device/detail/opencl_device.hpp" name="include/CL/sycl/device/detail/opencl_device.hpp">
+<area shape="rect" id="node4" href="$default__classes_8hpp.html" title="CL/sycl/detail/default\l_classes.hpp" alt="" coords="1770,527,1915,568"/>
+<area shape="rect" id="node9" href="$cache_8hpp.html" title="CL/sycl/detail/cache.hpp" alt="" coords="145,355,311,382"/>
+<area shape="rect" id="node11" href="$unimplemented_8hpp.html" title="CL/sycl/detail/unimplemented.hpp" alt="" coords="1964,534,2183,561"/>
+<area shape="rect" id="node13" href="$device_2detail_2device_8hpp.html" title="CL/sycl/device/detail\l/device.hpp" alt="" coords="1903,95,2047,136"/>
+<area shape="rect" id="node14" href="$platform_8hpp.html" title="CL/sycl/platform.hpp" alt="" coords="1533,184,1675,211"/>
+<area shape="rect" id="node24" href="$exception_8hpp.html" title="CL/sycl/exception.hpp" alt="" coords="2219,534,2371,561"/>
+<area shape="rect" id="node26" href="$param__traits_8hpp.html" title="CL/sycl/info/param\l_traits.hpp" alt="" coords="958,527,1090,568"/>
+<area shape="rect" id="node15" href="$global__config_8hpp.html" title="CL/sycl/detail/global\l_config.hpp" alt="" coords="483,437,623,479"/>
+<area shape="rect" id="node17" href="$shared__ptr__implementation_8hpp.html" title="CL/sycl/detail/shared\l_ptr_implementation.hpp" alt="" coords="1251,527,1415,568"/>
+<area shape="rect" id="node19" href="$device_8hpp.html" title="CL/sycl/device.hpp" alt="" coords="1231,355,1366,382"/>
+<area shape="rect" id="node29" href="$host__platform_8hpp.html" title="CL/sycl/platform/detail\l/host_platform.hpp" alt="" coords="1642,259,1795,300"/>
+<area shape="rect" id="node30" href="$info_2platform_8hpp.html" title="CL/sycl/info/platform.hpp" alt="" coords="641,355,809,382"/>
+<area shape="rect" id="node31" href="$platform_2detail_2platform_8hpp.html" title="CL/sycl/platform/detail\l/platform.hpp" alt="" coords="2003,348,2157,389"/>
+<area shape="rect" id="node32" href="$opencl__platform_8hpp.html" title="CL/sycl/platform/detail\l/opencl_platform.hpp" alt="" coords="1338,259,1491,300"/>
+<area shape="rect" id="node21" href="$host__device_8hpp.html" title="CL/sycl/device/detail\l/host_device.hpp" alt="" coords="1749,437,1893,479"/>
+<area shape="rect" id="node27" href="$info_2device_8hpp.html" title="CL/sycl/info/device.hpp" alt="" coords="1051,445,1210,471"/>
+<area shape="rect" id="node28" href="$device__selector_8hpp.html" title="CL/sycl/device_selector.hpp" alt="" coords="1336,445,1523,471"/>
+<area shape="rect" id="node22" href="$singleton_8hpp.html" title="CL/sycl/detail/singleton.hpp" alt="" coords="1502,534,1685,561"/>
+</map>

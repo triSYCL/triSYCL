@@ -1,0 +1,4 @@
+<map id="cl::sycl::link_program_error" name="cl::sycl::link_program_error">
+<area shape="rect" id="node2" href="$group__error__handling.html#classcl_1_1sycl_1_1device__error" title="The SYCL device will trigger this exception on error. " alt="" coords="7,171,150,197"/>
+<area shape="rect" id="node3" href="$group__error__handling.html#classcl_1_1sycl_1_1exception" title="Encapsulate a SYCL error information. " alt="" coords="15,95,143,121"/>
+</map>

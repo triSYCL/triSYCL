@@ -1,0 +1,5 @@
+<map id="cl::sycl::static_pipe&lt; T, Capacity &gt;" name="cl::sycl::static_pipe&lt; T, Capacity &gt;">
+<area shape="rect" id="node2" href="$structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html" title="cl::sycl::detail::shared\l_ptr_implementation\&lt; static\l_pipe\&lt; T, Capacity \&gt;, detail\l::pipe\&lt; T \&gt; \&gt;" alt="" coords="357,24,541,95"/>
+<area shape="rect" id="node4" href="$classstd_1_1shared__ptr_3_01detail_1_1pipe_3_01T_01_4_01_4.html" title="shared_ptr\&lt; detail\l::pipe\&lt; T \&gt; \&gt;" alt="" coords="43,71,169,112"/>
+<area shape="rect" id="node5" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; static_pipe\&lt; T, Capacity \&gt; \&gt;" alt="" coords="348,119,549,160"/>
+</map>

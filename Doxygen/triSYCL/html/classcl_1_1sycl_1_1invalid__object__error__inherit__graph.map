@@ -1,0 +1,4 @@
+<map id="cl::sycl::invalid_object_error" name="cl::sycl::invalid_object_error">
+<area shape="rect" id="node2" href="$group__error__handling.html#classcl_1_1sycl_1_1device__error" title="The SYCL device will trigger this exception on error. " alt="" coords="9,80,152,107"/>
+<area shape="rect" id="node3" href="$group__error__handling.html#classcl_1_1sycl_1_1exception" title="Encapsulate a SYCL error information. " alt="" coords="17,5,145,32"/>
+</map>

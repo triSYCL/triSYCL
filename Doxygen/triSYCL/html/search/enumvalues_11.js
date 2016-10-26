@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['unsupported',['unsupported',['../group__execution.html#ggaa0e3e915db3c3a6049efb595141acfcda723c25877a86786664edc4b643c08a6f',1,'cl::sycl::info::unsupported()'],['../group__execution.html#gga51116d5add442d9bae6028c45e09eca4a723c25877a86786664edc4b643c08a6f',1,'cl::sycl::info::unsupported()']]]
+  ['trisycl_5fskip_5fopencl',['TRISYCL_SKIP_OPENCL',['../group__execution.html#gga3ea7e38ccbc7de5270c4f69bbae20463a0e1330168a88ee0256ec21b53a695c0f',1,'cl::sycl::info::TRISYCL_SKIP_OPENCL()'],['../group__execution.html#gga3ea7e38ccbc7de5270c4f69bbae20463a0e1330168a88ee0256ec21b53a695c0f',1,'cl::sycl::info::TRISYCL_SKIP_OPENCL()'],['../group__execution.html#gga3ea7e38ccbc7de5270c4f69bbae20463a0e1330168a88ee0256ec21b53a695c0f',1,'cl::sycl::info::TRISYCL_SKIP_OPENCL()'],['../group__execution.html#gga3ea7e38ccbc7de5270c4f69bbae20463a0e1330168a88ee0256ec21b53a695c0f',1,'cl::sycl::info::TRISYCL_SKIP_OPENCL()'],['../group__execution.html#gga3ea7e38ccbc7de5270c4f69bbae20463a0e1330168a88ee0256ec21b53a695c0f',1,'cl::sycl::info::TRISYCL_SKIP_OPENCL()']]]
 ];

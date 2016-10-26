@@ -1,0 +1,4 @@
+<map id="cl::sycl::detail::pipe_reservation::end" name="cl::sycl::detail::pipe_reservation::end">
+<area shape="rect" id="node2" href="$group__data.html#a46e5611c52eda124d4b8b9b556e162d8" title="Test that the reservation is in a usable state. " alt="" coords="188,5,383,47"/>
+<area shape="rect" id="node3" href="$group__data.html#a4748767d0d209350aaf522bba55e88e4" title="Get the current number of elements in the pipe that can be read. " alt="" coords="218,71,353,112"/>
+</map>

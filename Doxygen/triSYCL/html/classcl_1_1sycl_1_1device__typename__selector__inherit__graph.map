@@ -1,0 +1,4 @@
+<map id="cl::sycl::device_typename_selector&lt; DeviceType &gt;" name="cl::sycl::device_typename_selector&lt; DeviceType &gt;">
+<area shape="rect" id="node2" href="$group__execution.html#classcl_1_1sycl_1_1device__type__selector" title="A device selector by device_type. " alt="" coords="21,80,164,121"/>
+<area shape="rect" id="node3" href="$group__execution.html#classcl_1_1sycl_1_1device__selector" title="The SYCL heuristics to select a device. " alt="" coords="11,5,174,32"/>
+</map>

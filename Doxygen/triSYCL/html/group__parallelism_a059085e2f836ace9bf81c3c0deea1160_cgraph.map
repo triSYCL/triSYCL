@@ -1,0 +1,3 @@
+<map id="cl::sycl::nd_item::get_local_range" name="cl::sycl::nd_item::get_local_range">
+<area shape="rect" id="node2" href="$group__parallelism.html#a8af188fe187ca9307cb498f13bf36796" title="Return the nd_range&lt;&gt; of the current execution. " alt="" coords="180,5,307,47"/>
+</map>

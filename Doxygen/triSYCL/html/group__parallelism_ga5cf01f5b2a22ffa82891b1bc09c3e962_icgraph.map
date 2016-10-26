@@ -1,0 +1,5 @@
+<map id="cl::sycl::detail::parallel_for" name="cl::sycl::detail::parallel_for">
+<area shape="rect" id="node2" href="$group__parallelism.html#gabc76ab52eb1826aaaa49a2d704de43d4" title="Calls the appropriate ternary parallel_for overload based on the index type of the kernel function ob..." alt="" coords="228,5,403,32"/>
+<area shape="rect" id="node3" href="$group__execution.html#aa2dc753f75062bbc9cdfd14d98935a1f" title="cl::sycl::handler::\lparallel_for" alt="" coords="254,57,377,98"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#gadd585203df163dadc5975119f59f8bd8" title="Implementation of parallel_for with a range&lt;&gt; and an offset. " alt="" coords="239,122,391,163"/>
+</map>

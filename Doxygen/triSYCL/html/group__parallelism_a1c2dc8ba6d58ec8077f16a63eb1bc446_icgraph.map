@@ -1,0 +1,5 @@
+<map id="cl::sycl::group::get" name="cl::sycl::group::get">
+<area shape="rect" id="node2" href="$group__parallelism.html#ga3004da03b4f3be8dc72c49b58076107b" title="Implement the loop on the work&#45;items inside a work&#45;group. " alt="" coords="184,39,336,80"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#afbf5b8e03bf318545b9ef7c5c1f138ee" title="Loop on the work&#45;items inside a work&#45;group. " alt="" coords="384,5,537,47"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#ga929002a0e83ac349605e51f8dc35059c" title="SYCL parallel_for version that allows a Program object to be specified. " alt="" coords="404,71,517,112"/>
+</map>

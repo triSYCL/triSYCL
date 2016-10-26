@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['queue_5fprofiling',['queue_profiling',['../namespacecl_1_1sycl_1_1info.html#a03183ee18ed502bf29089e54fb2eb9bb',1,'cl::sycl::info']]]
+  ['multi_5fptr',['multi_ptr',['../group__address__spaces.html#ga9dafd4b1b4d7ad7fb7d93eab429942f9',1,'cl::sycl']]],
+  ['mutex_5fclass',['mutex_class',['../namespacecl_1_1sycl.html#a0e818f1ac2ba5084b08dd41ca813ef28',1,'cl::sycl']]]
 ];

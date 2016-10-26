@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['priv',['priv',['../group__address__spaces.html#ga02e3e5911ac85f86a3efd2353b6f13bd',1,'cl::sycl']]]
+  ['local',['local',['../group__address__spaces.html#ga84b28327ccb8c32ea971d6c1d5f3bca2',1,'cl::sycl']]]
 ];

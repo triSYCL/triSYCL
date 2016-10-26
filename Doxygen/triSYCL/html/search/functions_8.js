@@ -1,10 +1,6 @@
 var searchData=
 [
-  ['id',['id',['../group__parallelism.html#a765ae388bf8a9a3803ba5b8138005d00',1,'cl::sycl::id']]],
-  ['is_5faccelerator',['is_accelerator',['../group__execution.html#a900db8487f118d653017abc7f9949d1f',1,'cl::sycl::device']]],
-  ['is_5fcpu',['is_cpu',['../group__execution.html#a2ad8cb3462516a0f3069875640d44dc1',1,'cl::sycl::device']]],
-  ['is_5fgpu',['is_gpu',['../group__execution.html#a75b085b8e49d8bdd9511adb61aeeca37',1,'cl::sycl::device']]],
-  ['is_5fhost',['is_host',['../group__execution.html#a8a1fd3033f06bb991e025bb5f48801cf',1,'cl::sycl::context::is_host()'],['../group__execution.html#a5bef943886c69c9dff340479fd1525b8',1,'cl::sycl::device::is_host()'],['../group__execution.html#acacdc85cb00467d36fa3d1724074e6f6',1,'cl::sycl::platform::is_host()'],['../group__execution.html#affe18def9e9082f4a8bbdabea974fa92',1,'cl::sycl::queue::is_host()']]],
-  ['is_5fwrite_5faccess',['is_write_access',['../group__data.html#a65dedf695e3113aabc2fd42720ac4af1',1,'cl::sycl::detail::accessor']]],
-  ['item',['item',['../group__parallelism.html#a4cf03e235f8cee7866aa9444d2c4c37e',1,'cl::sycl::item::item(range&lt; dims &gt; global_size, id&lt; dims &gt; global_index, id&lt; dims &gt; offset={})'],['../group__parallelism.html#a687de13d5d391a590f6962009e1bbb9f',1,'cl::sycl::item::item()=default']]]
+  ['handler',['handler',['../group__execution.html#a7f32a429873f540e8ff32c37872fa2e2',1,'cl::sycl::handler']]],
+  ['has_5fextension',['has_extension',['../group__execution.html#a8ecad85a1b0a79988dcc6356ed64f793',1,'cl::sycl::detail::device::has_extension()'],['../classcl_1_1sycl_1_1detail_1_1host__device.html#a8f56be4d8e4c64f40497fa69f0046293',1,'cl::sycl::detail::host_device::has_extension()'],['../classcl_1_1sycl_1_1detail_1_1opencl__device.html#a6305b17c858194bc7ecde6254a001ccb',1,'cl::sycl::detail::opencl_device::has_extension()'],['../group__execution.html#aadac80e0ecf5f5cd82877a1e8beede20',1,'cl::sycl::device::has_extension()'],['../group__execution.html#aa1be92994f4909e112d7f4717a435988',1,'cl::sycl::detail::host_platform::has_extension()'],['../group__execution.html#aeac5d52afa9f645ab549cd6cbc64e593',1,'cl::sycl::detail::opencl_platform::has_extension()'],['../group__execution.html#a97804d94fa4649c3a59dda0e082b3f0d',1,'cl::sycl::detail::platform::has_extension()'],['../group__execution.html#a72f83879bad214c84079687f39506954',1,'cl::sycl::platform::has_extension()']]],
+  ['hash',['hash',['../structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html#a37d54fda7a26b050675625e095291620',1,'cl::sycl::detail::shared_ptr_implementation']]]
 ];

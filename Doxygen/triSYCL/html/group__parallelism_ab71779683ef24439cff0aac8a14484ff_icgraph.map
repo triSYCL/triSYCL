@@ -1,0 +1,4 @@
+<map id="cl::sycl::nd_item::get_group" name="cl::sycl::nd_item::get_group">
+<area shape="rect" id="node2" href="$group__parallelism.html#a73f33f7765b74a169a6ca1f0094fc9d5" title="Return the constituent element of the group id representing the work&#45;group;s position within the over..." alt="" coords="184,5,311,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#ae8a7125f4a4e63599b0302fdb4c6f534" title="Return the flattened id of the current work&#45;group. " alt="" coords="180,71,315,112"/>
+</map>

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['name',['name',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ab068931cc450442b63f5b3d276ea4297',1,'cl::sycl::info::name()'],['../group__execution.html#gga3ea7e38ccbc7de5270c4f69bbae20463ab068931cc450442b63f5b3d276ea4297',1,'cl::sycl::info::name()']]],
+  ['name',['name',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ab068931cc450442b63f5b3d276ea4297',1,'cl::sycl::info']]],
   ['native_5fvector_5fwitdth_5fchar',['native_vector_witdth_char',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a518eca5f4d506715cf398ea7ba23dc9f',1,'cl::sycl::info']]],
   ['native_5fvector_5fwitdth_5fdouble',['native_vector_witdth_double',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ae9ad26b30e893b6e8b92137c215a5ef3',1,'cl::sycl::info']]],
   ['native_5fvector_5fwitdth_5ffloat',['native_vector_witdth_float',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a6ab028332a59b2695a48e9ed882ff285',1,'cl::sycl::info']]],
@@ -11,6 +11,6 @@ var searchData=
   ['next_5fpartitionable',['next_partitionable',['../group__execution.html#gga51116d5add442d9bae6028c45e09eca4a9e50da16b6f86043b800814c259a6f5f',1,'cl::sycl::info']]],
   ['no_5fpartition',['no_partition',['../group__execution.html#gga88aea8ff69afd9cf81594eb915690b25a7f4266f4f9a51dde86e2c69df7ff52d3',1,'cl::sycl::info']]],
   ['none',['none',['../group__execution.html#ggad3cf44d11f60b23508e91d1ed61ad001a334c4a4c42fdb79d7ebc3e73b517e6f8',1,'cl::sycl::info::none()'],['../group__execution.html#gga8986fcccc4479065bdbf37d9b9d8def5a334c4a4c42fdb79d7ebc3e73b517e6f8',1,'cl::sycl::info::none()']]],
-  ['num_5fdevices',['num_devices',['../group__execution.html#gga1a5898274a448ac592ebbcee928939c1abf324a81d4e115643691b7aa4cc12828',1,'cl::sycl::info']]],
+  ['num_5fdevices',['num_devices',['../namespacecl_1_1sycl_1_1info.html#a1a5898274a448ac592ebbcee928939c1abf324a81d4e115643691b7aa4cc12828',1,'cl::sycl::info']]],
   ['numa',['numa',['../group__execution.html#gga51116d5add442d9bae6028c45e09eca4a0dfb2d09aeef6a0220a25c2e2d0fddbd',1,'cl::sycl::info::numa()'],['../group__execution.html#gga88aea8ff69afd9cf81594eb915690b25a0dfb2d09aeef6a0220a25c2e2d0fddbd',1,'cl::sycl::info::numa()']]]
 ];

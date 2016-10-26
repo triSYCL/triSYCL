@@ -1,0 +1,5 @@
+<map id="cl::sycl::range&lt; dims &gt;" name="cl::sycl::range&lt; dims &gt;">
+<area shape="rect" id="node2" href="$group__helpers.html" title="cl::sycl::detail::small\l_array_123\&lt; std::size\l_t, range\&lt; dims \&gt;, dims \&gt;" alt="" coords="463,129,636,185"/>
+<area shape="rect" id="node3" href="$group__helpers.html" title="cl::sycl::detail::small\l_array\&lt; std::size_t, range\l\&lt; dims \&gt;, Dims \&gt;" alt="" coords="244,129,415,185"/>
+<area shape="rect" id="node8" href="$group__debug__trace.html" title="cl::sycl::detail::display\l_vector\&lt; range\&lt; dims \&gt; \&gt;" alt="" coords="14,267,187,308"/>
+</map>

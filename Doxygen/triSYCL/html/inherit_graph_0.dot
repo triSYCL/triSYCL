@@ -1,9 +1,0 @@
-digraph "Graphical Class Hierarchy"
-{
- // INTERACTIVE_SVG=YES
-  bgcolor="transparent";
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  rankdir="LR";
-  Node1 [label="cl::sycl::buffer\< T,\l Dimensions, Allocator \>",height=0.2,width=0.4,color="black",URL="$group__data.html#structcl_1_1sycl_1_1buffer",tooltip="A SYCL buffer is a multidimensional variable length array (à la C99 VLA or even Fortran before) that ..."];
-}

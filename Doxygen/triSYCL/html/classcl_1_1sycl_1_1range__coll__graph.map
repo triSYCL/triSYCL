@@ -1,0 +1,6 @@
+<map id="cl::sycl::range&lt; dims &gt;" name="cl::sycl::range&lt; dims &gt;">
+<area shape="rect" id="node2" href="$group__helpers.html" title="cl::sycl::detail::small\l_array_123\&lt; std::size\l_t, range\&lt; dims \&gt;, dims \&gt;" alt="" coords="552,194,725,250"/>
+<area shape="rect" id="node3" href="$group__helpers.html" title="cl::sycl::detail::small\l_array\&lt; std::size_t, range\l\&lt; dims \&gt;, Dims \&gt;" alt="" coords="332,194,503,250"/>
+<area shape="rect" id="node8" href="$group__debug__trace.html" title="cl::sycl::detail::display\l_vector\&lt; range\&lt; dims \&gt; \&gt;" alt="" coords="14,267,187,308"/>
+<area shape="rect" id="node10" href="$classstatic_01const_01size__t.html" title="static const size_t" alt="" coords="36,383,165,410"/>
+</map>

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['offset',['offset',['../group__parallelism.html#ac6b3378f856e99325eec7bb61e5ddbf2',1,'cl::sycl::item::offset()'],['../group__parallelism.html#a1eff5da6b8f3bcc5d7421a8079b04362',1,'cl::sycl::nd_range::offset()']]]
+  ['handler',['handler',['../group__data.html#aa489d14286e6712c3fda6be1543975d9',1,'cl::sycl::detail::accessor']]],
+  ['host_5fwrite_5fback',['host_write_back',['../group__data.html#a7e70ec1f37655340fad83b0f196e8019',1,'cl::sycl::detail::buffer']]]
 ];

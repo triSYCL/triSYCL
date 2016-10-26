@@ -1,0 +1,4 @@
+<map id="cl::sycl::handler::parallel_for_work_group" name="cl::sycl::handler::parallel_for_work_group">
+<area shape="rect" id="node2" href="$group__parallelism.html#gaaa0f5e798ca65419dce78013af732580" title="Implement the loop on the work&#45;groups. " alt="" coords="212,5,364,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#ab5801b571109a937c22bd71b772386bb" title="Get the range of work&#45;groups needed to run this ND&#45;range. " alt="" coords="412,5,537,47"/>
+</map>

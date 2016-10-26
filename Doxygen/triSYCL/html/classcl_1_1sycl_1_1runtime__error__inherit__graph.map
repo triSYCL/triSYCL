@@ -1,0 +1,10 @@
+<map id="cl::sycl::runtime_error" name="cl::sycl::runtime_error">
+<area shape="rect" id="node3" href="$group__error__handling.html#classcl_1_1sycl_1_1accessor__error" title="Error regarding the cl::sycl::accessor objects defined. " alt="" coords="402,5,527,47"/>
+<area shape="rect" id="node4" href="$group__error__handling.html#classcl_1_1sycl_1_1event__error" title="Error regarding associated cl::sycl::event objects. " alt="" coords="396,71,533,98"/>
+<area shape="rect" id="node5" href="$group__error__handling.html#classcl_1_1sycl_1_1invalid__parameter__error" title="Error regarding parameters to the SYCL kernel, it may apply to any captured parameters to the kernel ..." alt="" coords="377,123,552,164"/>
+<area shape="rect" id="node6" href="$group__error__handling.html#classcl_1_1sycl_1_1kernel__error" title="Error that occurred before or while enqueuing the SYCL kernel. " alt="" coords="395,189,535,215"/>
+<area shape="rect" id="node7" href="$group__error__handling.html#classcl_1_1sycl_1_1nd__range__error" title="Error regarding the cl::sycl::nd_range specified for the SYCL kernel. " alt="" coords="402,240,527,281"/>
+<area shape="rect" id="node8" href="$group__error__handling.html#classcl_1_1sycl_1_1non__cl__error" title="Exception for an OpenCL operation requested in a non OpenCL area. " alt="" coords="393,306,536,333"/>
+<area shape="rect" id="node9" href="$group__error__handling.html#classcl_1_1sycl_1_1pipe__error" title="A failing pipe error will trigger this exception on error. " alt="" coords="400,357,529,383"/>
+<area shape="rect" id="node2" href="$group__error__handling.html#classcl_1_1sycl_1_1exception" title="Encapsulate a SYCL error information. " alt="" coords="5,189,133,215"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="cl::sycl::detail::cache::get_or_register" name="cl::sycl::detail::cache::get_or_register">
+<area shape="rect" id="node2" href="$classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#af8fbdabbbde85d55ac42cfd530a64b80" title="cl::sycl::detail::opencl\l_kernel::instance" alt="" coords="200,5,349,47"/>
+<area shape="rect" id="node4" href="$classcl_1_1sycl_1_1detail_1_1opencl__queue.html#a9a9eaaf110399a6680b924d1a02e1a1a" title="cl::sycl::detail::opencl\l_queue::instance" alt="" coords="200,71,349,112"/>
+<area shape="rect" id="node6" href="$group__execution.html#ac795a054d022a641d2c3ae52229d6fda" title="cl::sycl::detail::opencl\l_platform::instance" alt="" coords="200,136,349,177"/>
+<area shape="rect" id="node8" href="$classcl_1_1sycl_1_1detail_1_1opencl__device.html#aec6fec1e2dbdaf981781b4db3191db9e" title="cl::sycl::detail::opencl\l_device::instance" alt="" coords="200,201,349,243"/>
+<area shape="rect" id="node3" href="$group__execution.html#a038232c2856180eb934d69ec2d280544" title="Construct a kernel class instance using a boost::compute::kernel. " alt="" coords="400,13,551,39"/>
+<area shape="rect" id="node5" href="$group__execution.html#a906178d52d172cb327205632be70f732" title="Construct a queue instance using a boost::compute::command_queue. " alt="" coords="400,78,551,105"/>
+<area shape="rect" id="node7" href="$group__execution.html#a8b15b178d6f19233667a73df004cc08e" title="Construct a platform class instance using a boost::compute::platform. " alt="" coords="416,136,535,177"/>
+<area shape="rect" id="node9" href="$group__execution.html#a449e3c5dcf4ff08654340aa6a3b52e53" title="Construct a device class instance using a boost::compute::device. " alt="" coords="397,209,553,235"/>
+</map>

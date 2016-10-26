@@ -1,0 +1,4 @@
+<map id="cl::sycl::detail::opencl_device" name="cl::sycl::detail::opencl_device">
+<area shape="rect" id="node2" href="$group__execution.html#classcl_1_1sycl_1_1detail_1_1device" title="An abstract class representing various models of SYCL devices. " alt="" coords="217,5,367,32"/>
+<area shape="rect" id="node3" href="$classcl_1_1sycl_1_1detail_1_1cache.html" title="cl::sycl::detail::cache\l\&lt; cl_device_id, detail\l::cl::sycl::detail::opencl\l_device \&gt;" alt="" coords="213,57,371,127"/>
+</map>

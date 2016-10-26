@@ -1,0 +1,6 @@
+<map id="cl::sycl::detail::opencl_queue" name="cl::sycl::detail::opencl_queue">
+<area shape="rect" id="node2" href="$structcl_1_1sycl_1_1detail_1_1queue.html" title="Some implementation details about the SYCL queue. " alt="" coords="317,119,464,146"/>
+<area shape="rect" id="node3" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; detail::queue \&gt;" alt="" coords="5,5,152,47"/>
+<area shape="rect" id="node9" href="$classcl_1_1sycl_1_1detail_1_1cache.html" title="cl::sycl::detail::cache\l\&lt; cl_command_queue, detail\l::cl::sycl::detail::opencl\l_queue \&gt;" alt="" coords="296,188,485,259"/>
+<area shape="rect" id="node7" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; opencl_queue \&gt;" alt="" coords="317,283,464,324"/>
+</map>

@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['value_5ftype',['value_type',['../group__data.html#a5d1e50e51c8fe240063d25f8da69efb9',1,'cl::sycl::detail::accessor::value_type()'],['../group__data.html#ae2da845612ac5efa163ef56f0ed9e1da',1,'cl::sycl::accessor::value_type()'],['../group__data.html#a8821577189448eeefeb70b133eb7be02',1,'cl::sycl::detail::buffer::value_type()'],['../group__data.html#abf509183b12f7183dd8b065c05d651bd',1,'cl::sycl::buffer::value_type()']]],
-  ['vector_5fclass',['vector_class',['../namespacecl_1_1sycl.html#a0a3b58674c77d248758b6bee05800ac5',1,'cl::sycl']]]
+  ['shared_5fptr_5fclass',['shared_ptr_class',['../namespacecl_1_1sycl.html#a145741acbe1817e4b03338ffcfd21012',1,'cl::sycl']]],
+  ['size_5ftype',['size_type',['../group__data.html#a6f4ddc18370e4ecce63c4e8835bd7d6f',1,'cl::sycl::pipe_reservation']]],
+  ['string_5fclass',['string_class',['../namespacecl_1_1sycl.html#a20186da90261e9302b957e4823179f1b',1,'cl::sycl']]],
+  ['super',['super',['../group__address__spaces.html#ab49542b9e353567a0b70b7fd82a06445',1,'cl::sycl::detail::address_space_variable::super()'],['../group__address__spaces.html#a2144af10dcb5607bcde86493110096ea',1,'cl::sycl::detail::address_space_fundamental::super()'],['../group__address__spaces.html#a34968ca4293aafe8ab2808b4ef1d17b3',1,'cl::sycl::detail::address_space_ptr::super()'],['../group__address__spaces.html#a5973c3900ad79b40550d91ea386fef28',1,'cl::sycl::detail::address_space_array::super()']]]
 ];

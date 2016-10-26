@@ -1,0 +1,5 @@
+<map id="cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;" name="cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;">
+<area shape="rect" id="node2" href="$structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html" title="cl::sycl::detail::shared\l_ptr_implementation\&lt; buffer\l\&lt; T, Dimensions, Allocator\l \&gt;, detail::buffer_waiter\&lt;\l T, Dimensions, Allocator \&gt; \&gt;" alt="" coords="325,31,520,116"/>
+<area shape="rect" id="node4" href="$classstd_1_1shared__ptr_3_01detail_1_1buffer__waiter_3_01T_00_01Dimensions_00_01Allocator_01_4_01_4.html" title="shared_ptr\&lt; detail\l::buffer_waiter\&lt; T,\l Dimensions, Allocator \&gt; \&gt;" alt="" coords="5,85,184,141"/>
+<area shape="rect" id="node5" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; buffer\&lt; T, Dimensions,\l Allocator \&gt; \&gt;" alt="" coords="339,140,507,196"/>
+</map>

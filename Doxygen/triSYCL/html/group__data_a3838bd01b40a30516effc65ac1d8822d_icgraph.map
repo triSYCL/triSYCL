@@ -1,0 +1,3 @@
+<map id="cl::sycl::detail::accessor::is_read_access" name="cl::sycl::detail::accessor::is_read_access">
+<area shape="rect" id="node2" href="$group__data.html#a1764f8fc5824b392b8ff42d3bacc6ea3" title="Lazily associate a CL buffer to the SYCL buffer and copy data in if required. " alt="" coords="217,5,381,47"/>
+</map>

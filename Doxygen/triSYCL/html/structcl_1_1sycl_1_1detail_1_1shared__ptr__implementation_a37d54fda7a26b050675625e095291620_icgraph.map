@@ -1,0 +1,6 @@
+<map id="cl::sycl::detail::shared_ptr_implementation::hash" name="cl::sycl::detail::shared_ptr_implementation::hash">
+<area shape="rect" id="node2" href="$structstd_1_1hash_3_01cl_1_1sycl_1_1kernel_01_4.html#ad2a7c4cfd48a386ce72477c4884c3f4a" title="std::hash\&lt; cl::sycl\l::kernel \&gt;::operator()" alt="" coords="234,5,374,47"/>
+<area shape="rect" id="node3" href="$structstd_1_1hash_3_01cl_1_1sycl_1_1platform_01_4.html#ae9c283d7f284ac03174fae46e4c157df" title="std::hash\&lt; cl::sycl\l::platform \&gt;::operator()" alt="" coords="228,71,380,112"/>
+<area shape="rect" id="node4" href="$structstd_1_1hash_3_01cl_1_1sycl_1_1device_01_4.html#a6be25e8381b32782ae48efa50fecbc51" title="std::hash\&lt; cl::sycl\l::device \&gt;::operator()" alt="" coords="233,136,375,177"/>
+<area shape="rect" id="node5" href="$structstd_1_1hash_3_01cl_1_1sycl_1_1queue_01_4.html#aac88daf256681caa207e6bf064b8e3f0" title="std::hash\&lt; cl::sycl\l::queue \&gt;::operator()" alt="" coords="234,201,374,243"/>
+</map>

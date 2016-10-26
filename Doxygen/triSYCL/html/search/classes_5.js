@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['gpu_5fselector',['gpu_selector',['../group__execution.html#classcl_1_1sycl_1_1gpu__selector',1,'cl::sycl']]],
-  ['group',['group',['../group__parallelism.html#structcl_1_1sycl_1_1group',1,'cl::sycl']]]
+  ['feature_5fnot_5fsupported',['feature_not_supported',['../group__error__handling.html#classcl_1_1sycl_1_1feature__not__supported',1,'cl::sycl']]]
 ];
