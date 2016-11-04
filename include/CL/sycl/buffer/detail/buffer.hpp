@@ -202,7 +202,7 @@ public:
       Equal to get_range()[0] * ... * get_range()[dimensions-1].
   */
   auto get_count() const {
-    return allocation.num_elements();
+    return access.num_elements();
   }
 
 
