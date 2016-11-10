@@ -167,6 +167,52 @@ private:
   }
 
 
+  /** Return a range object representing the size of the buffer in
+      terms of number of elements in each dimension as passed to the
+      constructor
+
+      \todo Move on
+      https://cvs.khronos.org/bugzilla/show_bug.cgi?id=15564 and
+      https://cvs.khronos.org/bugzilla/show_bug.cgi?id=14404
+  */
+  auto get_range() const {
+    /* Interpret the shape which is a pointer to the first element as an
+       array of Dimensions elements so that the range<Dimensions>
+       constructor is happy with this collection
+
+       \todo Add also a constructor in range<> to accept a const
+       std::size_t *?
+    */
+    return implementation->get_range();
+  }
+
+
+  /** Returns the total number of elements behind the accessor
+
+      Equal to get_range()[0] * ... * get_range()[dimensions-1].
+
+      \todo Move on
+      https://cvs.khronos.org/bugzilla/show_bug.cgi?id=15564 and
+      https://cvs.khronos.org/bugzilla/show_bug.cgi?id=14404
+  */
+  auto get_count() const {
+    return implementation->get_count();
+  }
+
+
+  /** Returns the size of the underlying buffer in number of elements
+
+      \todo It is incompatible with buffer get_size() in the spec
+
+      \todo Move on
+      https://cvs.khronos.org/bugzilla/show_bug.cgi?id=15564 and
+      https://cvs.khronos.org/bugzilla/show_bug.cgi?id=14404
+  */
+  auto get_size() const {
+    return get_count()*sizeof(value_type);
+  }
+
+
   /** Use the accessor with integers à la [][][]
 
       Use array_view_type::reference instead of auto& because it does not
