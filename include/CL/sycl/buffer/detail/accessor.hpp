@@ -186,6 +186,17 @@ public:
   }
 
 
+  /** Returns the size of the underlying buffer in number of elements
+
+      \todo Move on
+      https://cvs.khronos.org/bugzilla/show_bug.cgi?id=15564 and
+      https://cvs.khronos.org/bugzilla/show_bug.cgi?id=14404
+  */
+  auto get_size() const {
+    return get_count()*sizeof(value_type);
+  }
+
+
   /** Use the accessor with integers à la [][][]
 
       Use array_view_type::reference instead of auto& because it does not
@@ -409,7 +420,7 @@ private:
     /* Create the OpenCL buffer and copy in data from the host if in
        read mode */
     cl_buf = { task->get_queue()->get_boost_compute().get_context(),
-               get_size()*sizeof(value_type),
+               get_size(),
                flags,
                is_read_access() ? array.data() : 0 };
   }
@@ -425,7 +436,7 @@ private:
       task->get_queue()->get_boost_compute()
         .enqueue_read_buffer(get_cl_buffer(),
                              0 /*< Offset */,
-                             get_size()*sizeof(value_type),
+                             get_size(),
                              array.data());
   }
 #endif
