@@ -52,6 +52,8 @@ class platform
   // Make the implementation member directly accessible in this class
   using implementation_t::implementation;
 
+  // Allows the comparison operation to access the implementation
+  friend implementation_t;
 
 public:
 
