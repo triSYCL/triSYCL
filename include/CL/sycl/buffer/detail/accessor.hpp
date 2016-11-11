@@ -151,12 +151,49 @@ public:
   }
 
 
+  /** Return a range object representing the size of the buffer in
+      terms of number of elements in each dimension as passed to the
+      constructor
+
+      \todo Move on
+      https://cvs.khronos.org/bugzilla/show_bug.cgi?id=15564 and
+      https://cvs.khronos.org/bugzilla/show_bug.cgi?id=14404
+  */
+  auto get_range() const {
+    /* Interpret the shape which is a pointer to the first element as an
+       array of Dimensions elements so that the range<Dimensions>
+       constructor is happy with this collection
+
+       \todo Add also a constructor in range<> to accept a const
+       std::size_t *?
+    */
+    return range<Dimensions> {
+      *(const std::size_t (*)[Dimensions])(array.shape())
+        };
+  }
+
+
+  /** Returns the total number of elements behind the accessor
+
+      Equal to get_range()[0] * ... * get_range()[dimensions-1].
+
+      \todo Move on
+      https://cvs.khronos.org/bugzilla/show_bug.cgi?id=15564 and
+      https://cvs.khronos.org/bugzilla/show_bug.cgi?id=14404
+  */
+  auto get_count() const {
+    return array.num_elements();
+  }
+
+
   /** Returns the size of the underlying buffer in number of elements
 
-      \todo It is incompatible with buffer get_size() in the spec
+      \todo Move on
+      https://cvs.khronos.org/bugzilla/show_bug.cgi?id=15564 and
+      https://cvs.khronos.org/bugzilla/show_bug.cgi?id=14404
   */
-  std::size_t get_size() const {
-    return array.num_elements();
+  auto get_size() const {
+    return get_count()*sizeof(value_type);
   }
 
 
@@ -383,7 +420,7 @@ private:
     /* Create the OpenCL buffer and copy in data from the host if in
        read mode */
     cl_buf = { task->get_queue()->get_boost_compute().get_context(),
-               get_size()*sizeof(value_type),
+               get_size(),
                flags,
                is_read_access() ? array.data() : 0 };
   }
@@ -399,7 +436,7 @@ private:
       task->get_queue()->get_boost_compute()
         .enqueue_read_buffer(get_cl_buffer(),
                              0 /*< Offset */,
-                             get_size()*sizeof(value_type),
+                             get_size(),
                              array.data());
   }
 #endif

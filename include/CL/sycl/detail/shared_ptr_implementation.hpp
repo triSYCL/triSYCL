@@ -42,8 +42,6 @@ struct shared_ptr_implementation : public boost::totally_ordered<Parent> {
   /// The implementation forward everything to this... implementation
   std::shared_ptr<Implementation> implementation;
 
-public:
-
   /// The implementation directly as a shared pointer
   shared_ptr_implementation(std::shared_ptr<Implementation> i)
     : implementation { i } {}
