@@ -209,14 +209,12 @@ public:
 
   /** Returns the size of the buffer storage in bytes
 
-      Equal to get_count()*sizeof(T).
-
       \todo rename to something else. In
       http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/p0122r0.pdf
       it is named bytes() for example
   */
-  size_t get_size() const {
-    return get_count()*sizeof(T);
+  auto get_size() const {
+    return get_count()*sizeof(value_type);
   }
 
 
