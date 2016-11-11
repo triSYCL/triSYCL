@@ -202,7 +202,8 @@ public:
       Equal to get_range()[0] * ... * get_range()[dimensions-1].
   */
   auto get_count() const {
-    return allocation.num_elements();
+    //return allocation.num_elements();
+	return access.num_elements();
   }
 
 
@@ -227,6 +228,10 @@ public:
   */
   void set_final_data(weak_ptr_class<T> && finalData) {
     final_data = finalData;
+  }
+  
+  void set_final_data(std::nullptr_t) {
+    final_data = {};
   }
 
 private:

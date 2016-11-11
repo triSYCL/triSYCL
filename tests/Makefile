@@ -1,3 +1,8 @@
+## environment variables
+BOOST_COMPUTE_INCPATH=$(HOME)/compute/include
+OpenCL_LIBPATH=/opt/AMDAPPSDK-3.0/lib/x86_64/sdk
+OpenCL_INCPATH=/opt/AMDAPPSDK-3.0/include
+LD_LIBRARY_PATH=$(OpenCL_LIBPATH)
 
 ## To enable asynchronous kernels
 CXXFLAGS += -DTRISYCL_ASYNC=1
@@ -9,8 +14,8 @@ CXXFLAGS += -fopenmp
 #LDLIBS += -lpthread
 
 # To use OpenCL
-#CXXFLAGS += -DTRISYCL_OPENCL
-#LDLIBS += -lOpenCL
+CXXFLAGS += -DTRISYCL_OPENCL
+LDLIBS += -lOpenCL
 
 
 # Compute the absolute directory name from the location of this Makefile

@@ -488,6 +488,11 @@ public:
     implementation->implementation->set_final_data(std::move(finalData));
   }
 
+
+  void set_final_data(std::nullptr_t) {
+    implementation->implementation->set_final_data(nullptr);
+  }
+
 };
 
 /// @} End the data Doxygen group

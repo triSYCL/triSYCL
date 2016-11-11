@@ -208,10 +208,13 @@ public:
       \todo
   */
   template <info::device Param>
-  auto get_info() const {
+  inline auto get_info() const {
     // Forward to the version where the info parameter is not a template
     //return get_info<typename info::param_traits_t<info::device, Param>>(Param);
+	assert(false);
+	return size_t(0);
   }
+
 
 
   /// Test if a specific extension is supported on the device
@@ -239,6 +242,13 @@ public:
 #endif
 
 };
+
+//TOUNHACK
+
+template <>
+inline auto device::get_info<info::device::max_work_group_size>() const {
+	return size_t(1024);
+}
 
 /// @} to end the Doxygen group
 
