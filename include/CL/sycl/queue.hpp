@@ -87,9 +87,6 @@ class queue
   using implementation_t =
     detail::shared_ptr_implementation<queue, detail::queue>;
 
-  // Make the implementation member directly accessible in this class
-  using implementation_t::implementation;
-
   /* Allows the comparison operation to sneak in
 
      Required from Clang++ 3.9 and G++ 6
@@ -97,6 +94,9 @@ class queue
   friend implementation_t;
 
 public:
+
+  // Make the implementation member directly accessible in this class
+  using implementation_t::implementation;
 
   /** Default constructor for platform which is the host platform
 

@@ -47,6 +47,9 @@ class device
   using implementation_t =
     detail::shared_ptr_implementation<device, detail::device>;
 
+  // Allows the comparison operation to access the implementation
+  friend implementation_t;
+
 public:
 
   // Make the implementation member directly accessible in this class

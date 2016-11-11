@@ -74,6 +74,9 @@ private:
                                                Target>,
                                       accessor_detail>;
 
+  // Allows the comparison operation to access the implementation
+  friend implementation_t;
+
  public:
 
   // Make the implementation member directly accessible in this class

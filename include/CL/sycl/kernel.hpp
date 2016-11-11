@@ -44,13 +44,13 @@ class kernel
   using implementation_t =
     detail::shared_ptr_implementation<kernel, detail::kernel>;
 
-  // Make the implementation member directly accessible in this class
-  using implementation_t::implementation;
-
   // The handler class uses the implementation
   friend class handler;
 
  public:
+
+  // Make the implementation member directly accessible in this class
+  using implementation_t::implementation;
 
   /** The default object is not valid because there is no program or
       \code cl_kernel \endcode associated with it */

@@ -40,10 +40,13 @@ class pipe
   using implementation_t =
     detail::shared_ptr_implementation<pipe<T>, detail::pipe<T>>;
 
-  // Make the implementation member directly accessible in this class
-  using implementation_t::implementation;
+  // Allows the comparison operation to access the implementation
+  friend implementation_t;
 
 public:
+
+  // Make the implementation member directly accessible in this class
+  using implementation_t::implementation;
 
   /// The STL-like types
   /* Since a pipe element cannot be directly addressed without
