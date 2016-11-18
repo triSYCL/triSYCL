@@ -4,10 +4,14 @@ triSYCL
 News
 ----
 
+- 2016/11/18: If you missed the free SYCL T-shirt on the Khronos booth
+  during SC16_, you can always buy some on
+  https://teespring.com/khronos-hpc (lady's sizes available!)
+
 - 2016/08/12: OpenCL kernels can be run with OpenCL kernel
   interoperability mode now.
 
-- 2016/04/18:  SYCL 2.2 provisional specification is out
+- 2016/04/18: SYCL 2.2 provisional specification is out.
 
 - This version implement SYCL 2.2 pipes and reservations plus the blocking
   pipe extension from Xilinx_.
@@ -544,6 +548,8 @@ Some ideas of future developments where *you* can contribute too: :-)
 .. _SYCL Parallel STL: https://github.com/KhronosGroup/SyclParallelSTL
 
 .. _RenderScript: http://en.wikipedia.org/wiki/Renderscript
+
+.. _SC16: http://sc16.supercomputing.org
 
 .. _SG14: https://groups.google.com/a/isocpp.org/forum/?fromgroups=#!forum/sg14
 
