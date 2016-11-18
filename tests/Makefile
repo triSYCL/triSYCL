@@ -4,13 +4,14 @@ CXXFLAGS += -DTRISYCL_ASYNC=1
 
 # To use OpenMP to execute SYCL kernels:
 CXXFLAGS += -fopenmp
+#CXXFLAGS += -I/usr/lib/gcc/x86_64-linux-gnu/6/include
 
 # For asynchronous kernels when OpenMP is not enabled
 #LDLIBS += -lpthread
 
 # To use OpenCL
-#CXXFLAGS += -DTRISYCL_OPENCL
-#LDLIBS += -lOpenCL
+CXXFLAGS += -DTRISYCL_OPENCL
+LDLIBS += -lOpenCL
 
 
 # Compute the absolute directory name from the location of this Makefile
@@ -80,7 +81,7 @@ CHECKING_DIR ?= .
 # Set default compiler instead of default CXX=g++ value
 
 # Assume Clang 3.8 at least
-#CXX = clang++
+#CXX = clang++-3.9
 # But everything works fine with GCC 5.4 at least
 CXX = g++
 

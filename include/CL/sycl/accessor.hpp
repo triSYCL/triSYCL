@@ -12,6 +12,7 @@
 #include <cstddef>
 
 #include "CL/sycl/access.hpp"
+#include "CL/sycl/accessor/detail/local_accessor.hpp"
 #include "CL/sycl/buffer/detail/accessor.hpp"
 #include "CL/sycl/detail/shared_ptr_implementation.hpp"
 #include "CL/sycl/id.hpp"
@@ -110,14 +111,11 @@ private:
   }
 
 
-  /** Construct a buffer accessor from a buffer using a command group
-      handler object from the command group scope
+  /** Construct a buffer accessor from a buffer
 
       Constructor only available for host_buffer target.
 
       access_target defines the form of access being obtained.
-
-      \todo add this lacking constructor to specification
   */
   template <typename Allocator>
   accessor(buffer<DataType, Dimensions, Allocator> &target_buffer)
@@ -139,9 +137,9 @@ private:
       offset+range[ for every dimension. Any other parts of the buffer
       will be unaffected.
 
-      Constructor only available for access modes global_buffer,
-      host_buffer or constant_buffer (see Table 3.25). access_target
-      defines the form of access being obtained (see Table 3.26).
+      Constructor only available for access modes global_buffer, and
+      constant_buffer (see Table "Buffer accessor constructors").
+      access_target defines the form of access being obtained.
 
       This accessor is recommended for discard-write and discard read
       write access modes, when the unaffected parts of the processing
@@ -150,8 +148,8 @@ private:
   template <typename Allocator>
   accessor(buffer<DataType, Dimensions, Allocator> &target_buffer,
            handler &command_group_handler,
-           range<Dimensions> offset,
-           range<Dimensions> range) {
+           const range<Dimensions> &offset,
+           const range<Dimensions> &range) {
     detail::unimplemented();
   }
 
@@ -164,9 +162,19 @@ private:
       command group scope. Constructor only available if AccessMode is
       local, see Table 3.25.
   */
-  accessor(range<Dimensions> allocation_size,
-           handler &command_group_handler) {
-    detail::unimplemented();
+  accessor(const range<Dimensions> &allocation_size,
+           handler &command_group_handler)
+    : implementation_t { new detail::accessor<DataType,
+                                              Dimensions,
+                                              AccessMode,
+                                              access::target::local> {
+      allocation_size, command_group_handler
+        }
+  }
+  {
+    static_assert(Target == access::target::local,
+                  "This accessor constructor requires "
+                  "access target be local");
   }
 
 
@@ -203,7 +211,7 @@ private:
   }
 
 
-  /** Returns the size of the underlying buffer in number of elements
+  /** Returns the size of the underlying buffer storage in bytes
 
       \todo It is incompatible with buffer get_size() in the spec
 

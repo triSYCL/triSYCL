@@ -1,7 +1,7 @@
-#ifndef TRISYCL_SYCL_ACCESSOR_DETAIL_ACCESSOR_HPP
-#define TRISYCL_SYCL_ACCESSOR_DETAIL_ACCESSOR_HPP
+#ifndef TRISYCL_SYCL_ACCESSOR_DETAIL_LOCAL_ACCESSOR_HPP
+#define TRISYCL_SYCL_ACCESSOR_DETAIL_LOCAL_ACCESSOR_HPP
 
-/** \file The OpenCL SYCL buffer accessor<> detail behind the scene
+/** \file The OpenCL SYCL local accessor<> detail behind the scene
 
     Ronan at Keryell point FR
 
@@ -31,48 +31,39 @@ class handler;
 
 namespace detail {
 
-// Forward declaration of detail::buffer for use in accessor
-template <typename T, std::size_t Dimensions> class buffer;
+// Forward declaration of detail::accessor to declare the specialization
+template <typename T,
+          std::size_t Dimensions,
+          access::mode Mode,
+          access::target Target>
+class accessor;
 
 /** \addtogroup data Data access and storage in SYCL
     @{
 */
 
-/** The buffer accessor abstracts the way buffer data are accessed
-    inside a kernel in a multidimensional variable length array way.
-
-    This implementation relies on boost::multi_array to provide this
-    nice syntax and behaviour.
-
-    Right now the aim of this class is just to access to the buffer in
-    a read-write mode, even if capturing the multi_array_ref from a
-    lambda make it const (since in examples we have lambda with [=]
-    without mutable lambda).
+/** The local accessor specialization abstracts the way local memory
+    is allocated to a kernel to be shared between work-items of the
+    same work-group.
 
     \todo Use the access::mode
 */
 template <typename T,
           std::size_t Dimensions,
-          access::mode Mode,
-          access::target Target /* = access::global_buffer */>
-class accessor : public detail::debug<accessor<T,
-                                               Dimensions,
-                                               Mode,
-                                               Target>> {
-  /** Keep a reference to the accessed buffer
-
-      Beware that it owns the buffer, which means that the accessor
-      has to be destroyed to release the buffer and potentially
-      unblock a kernel at the end of its execution
-  */
-  std::shared_ptr<detail::buffer<T, Dimensions>> buf;
+          access::mode Mode>
+class accessor<T, Dimensions, Mode, access::target::local> :
+    public detail::debug<accessor<T,
+                                  Dimensions,
+                                  Mode,
+                                  access::target::local>> {
 
   /// The implementation is a multi_array_ref wrapper
-  using array_view_type = boost::multi_array_ref<T, Dimensions>;
+  using array_type = boost::multi_array<T, Dimensions>;
 
   // The same type but writable
-  using writable_array_view_type =
-    typename std::remove_const<array_view_type>::type;
+  // \todo Only if T is non const actually
+  using writable_array_type =
+    typename std::remove_const<array_type>::type;
 
   /** The way the buffer is really accessed
 
@@ -81,15 +72,7 @@ class accessor : public detail::debug<accessor<T,
       the user to use mutable lambda or have a lot of const_cast as
       previously done in this implementation
    */
-  mutable array_view_type array;
-
-  /// The task where the accessor is used in
-  std::shared_ptr<detail::task> task;
-
-#ifdef TRISYCL_OPENCL
-  /// The OpenCL buffer used by an OpenCL accessor
-  boost::optional<boost::compute::buffer> cl_buf;
-#endif
+  mutable writable_array_type array;
 
 public:
 
@@ -103,34 +86,18 @@ public:
       or C++AMP */
   using value_type = T;
   using element = T;
-  using reference = typename array_view_type::reference;
-  using const_reference = typename array_view_type::const_reference;
+  using reference = typename array_type::reference;
+  using const_reference = typename array_type::const_reference;
 
   /** Inherit the iterator types from the implementation
 
       \todo Add iterators to accessors in the specification
   */
-  using iterator = typename array_view_type::iterator;
-  using const_iterator = typename array_view_type::const_iterator;
-  using reverse_iterator = typename array_view_type::reverse_iterator;
+  using iterator = typename array_type::iterator;
+  using const_iterator = typename array_type::const_iterator;
+  using reverse_iterator = typename array_type::reverse_iterator;
   using const_reverse_iterator =
-    typename array_view_type::const_reverse_iterator;
-
-
-  /** Construct a host accessor from an existing buffer
-
-      \todo fix the specification to rename target that shadows
-      template parm
-  */
-  accessor(std::shared_ptr<detail::buffer<T, Dimensions>> target_buffer) :
-    buf { target_buffer }, array { target_buffer->access } {
-    TRISYCL_DUMP_T("Create a host accessor write = " << is_write_access());
-    static_assert(Target == access::target::host_buffer,
-                  "without a handler, access target should be host_buffer");
-    /* The host needs to wait for all the producers of the buffer to
-       have finished */
-    buf->wait();
-  }
+    typename array_type::const_reverse_iterator;
 
 
   /** Construct a device accessor from an existing buffer
@@ -138,17 +105,9 @@ public:
       \todo fix the specification to rename target that shadows
       template parm
   */
-  accessor(std::shared_ptr<detail::buffer<T, Dimensions>> target_buffer,
+  accessor(const range<Dimensions> &allocation_size,
            handler &command_group_handler) :
-    buf { target_buffer }, array { target_buffer->access } {
-    TRISYCL_DUMP_T("Create a kernel accessor write = " << is_write_access());
-    static_assert(Target == access::target::global_buffer
-                  || Target == access::target::constant_buffer,
-                  "access target should be global_buffer or constant_buffer "
-                  "when a handler is used");
-    // Register the buffer to the task dependencies
-    task = buffer_add_to_task(buf, &command_group_handler, is_write_access());
-  }
+    array { allocation_size } {}
 
 
   /** Return a range object representing the size of the buffer in
@@ -284,12 +243,6 @@ public:
   }
 
 
-  /// Get the buffer used to create the accessor
-  detail::buffer<T, Dimensions> &get_buffer() {
-    return *buf;
-  }
-
-
   /** Test if the accessor has a read access right
 
       \todo Strangely, it is not really constexpr because it is not a
@@ -347,13 +300,13 @@ public:
 
   // iterator begin() { return array.begin(); }
   iterator begin() const {
-    return const_cast<writable_array_view_type &>(array).begin();
+    return const_cast<writable_array_type &>(array).begin();
   }
 
 
   // iterator end() { return array.end(); }
   iterator end() const {
-    return const_cast<writable_array_view_type &>(array).end();
+    return const_cast<writable_array_type &>(array).end();
   }
 
 
@@ -371,13 +324,13 @@ public:
 
   // reverse_iterator rbegin() { return array.rbegin(); }
   reverse_iterator rbegin() const {
-    return const_cast<writable_array_view_type &>(array).rbegin();
+    return const_cast<writable_array_type &>(array).rbegin();
   }
 
 
   // reverse_iterator rend() { return array.rend(); }
   reverse_iterator rend() const {
-    return const_cast<writable_array_view_type &>(array).rend();
+    return const_cast<writable_array_type &>(array).rend();
   }
 
 
@@ -397,50 +350,6 @@ private:
   // The following function are used from handler
   friend handler;
 
-#ifdef TRISYCL_OPENCL
-  /// Get the boost::compute::buffer or throw if unset
-  auto get_cl_buffer() const {
-    // This throws if not set
-    return cl_buf.value();
-  }
-
-
-  /** Lazily associate a CL buffer to the SYCL buffer and copy data in
-      if required
-
-      \todo Move this into the buffer with queue/device-based caching
-  */
-  void copy_in_cl_buffer() {
-    // This should be a constexpr
-    cl_mem_flags flags = is_read_access() && is_write_access() ?
-      CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR
-      : is_read_access() ? CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR
-                         : CL_MEM_WRITE_ONLY;
-
-    /* Create the OpenCL buffer and copy in data from the host if in
-       read mode */
-    cl_buf = { task->get_queue()->get_boost_compute().get_context(),
-               get_size(),
-               flags,
-               is_read_access() ? array.data() : 0 };
-  }
-
-
-  /** Copy back the CL buffer to the SYCL if required
-
-      \todo Move this into the buffer with queue/device-based caching
-  */
-  void copy_back_cl_buffer() {
-    // \todo Use if constexpr in C++17
-    if (is_write_access())
-      task->get_queue()->get_boost_compute()
-        .enqueue_read_buffer(get_cl_buffer(),
-                             0 /*< Offset */,
-                             get_size(),
-                             array.data());
-  }
-#endif
-
 };
 
 /// @} End the data Doxygen group
@@ -457,4 +366,4 @@ private:
     ### End:
 */
 
-#endif // TRISYCL_SYCL_ACCESSOR_DETAIL_ACCESSOR_HPP
+#endif // TRISYCL_SYCL_ACCESSOR_DETAIL_LOCAL_ACCESSOR_HPP
