@@ -19,42 +19,12 @@
 
 #include "CL/sycl/accessor.hpp"
 #include "CL/sycl/command_group/detail/task.hpp"
+#include "CL/sycl/detail/instantiate_kernel.hpp"
 #include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/exception.hpp"
 #include "CL/sycl/kernel.hpp"
 #include "CL/sycl/parallelism/detail/parallelism.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"
-
-#ifdef TRISYCL_DEVICE
-/** Use a Clang user annotation attribute to mark arguments that takes
-    a kernel so the compiler can outline the kernels
-
-    __attribute__((annotate("noinline"))) does not help at the Functor
-    parameter to avoid inlining of the final kernel use
- */
-#define __TRISYCL_KERNEL_MARK __attribute__((annotate("__triSYCL_kernel")))
-#else
-#define __TRISYCL_KERNEL_MARK
-#endif
-
-
-namespace {
-
-/** Instantiate the template code
-
-    To have a clear view of what a kernel is at the LLVM IR level even
-    when a lot of optimizations are done (-O3), call the kernel from
-    this function marked as "noinline", otherwise the kernel code is
-    inlined directly where it is used.
- */
-template <typename KernelName,
-          typename Functor>
-__attribute__((noinline))
-void instantiate_kernel(Functor f __TRISYCL_KERNEL_MARK) {
-  f();
-}
-
-}
 
 namespace cl {
 namespace sycl {
@@ -197,9 +167,7 @@ private:
   template <typename KernelName,
             typename Kernel>
   void schedule_kernel(Kernel k) {
-#ifndef TRISYCL_DEVICE
-    task->schedule(detail::trace_kernel<KernelName>(k));
-#else
+#ifdef TRISYCL_DEVICE
     /* A simplified version for the device just to be able to extract
        the kernel itself.
 
@@ -209,7 +177,9 @@ private:
        Put the iteration space loops in the kernels for now, which
        makes sense for CPU emulation or FPGA pipelined execution.
     */
-    instantiate_kernel<KernelName>(k);
+    ::cl::sycl::detail::instantiate_kernel<KernelName>(k);
+#else
+    task->schedule(detail::trace_kernel<KernelName>(k));
 #endif
   }
 
@@ -339,7 +309,7 @@ public:
             std::size_t Dimensions,
             typename ParallelForFunctor>
   void parallel_for(nd_range<Dimensions> r,
-                    ParallelForFunctor f __TRISYCL_KERNEL_MARK) {
+                    ParallelForFunctor f) {
     schedule_kernel<KernelName>([=] { detail::parallel_for(r, f); });
   }
 
@@ -369,7 +339,7 @@ public:
             std::size_t Dimensions = 1,
             typename ParallelForFunctor>
   void parallel_for_work_group(nd_range<Dimensions> r,
-                               ParallelForFunctor f __TRISYCL_KERNEL_MARK) {
+                               ParallelForFunctor f) {
     schedule_kernel<KernelName>([=] {
         detail::parallel_for_workgroup(r, f);
       });

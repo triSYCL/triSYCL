@@ -66,7 +66,8 @@ endif
 # There are some tests using small array display() method
 # To enable debug and tracing:
 #CXXFLAGS += -g
-CXXFLAGS += -O3
+# With optimization and without assertions
+CXXFLAGS += -O3 -DNDEBUG
 #CXXFLAGS += -g -DTRISYCL_TRACE_KERNEL -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DTRISYCL_TRACE_KERNEL -DTRISYCL_DEBUG_STRUCTORS -DBOOST_LOG_DYN_LINK
@@ -83,9 +84,9 @@ CHECKING_DIR ?= .
 # Set default compiler instead of default CXX=g++ value
 
 # Assume Clang 3.8 at least
-#CXX = clang++
+CXX = clang++-3.9
 # But everything works fine with GCC 5.4 at least
-CXX = g++
+#CXX = g++
 CXX = clang++
 
 
