@@ -158,3 +158,11 @@ multiple_compilation_units/parallel_for: multiple_compilation_units/parallel_for
 # The LLVM assembly code
 %.ll: %.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -S -o $@ $<
+
+# A pretty-printed C++ view of the Clang AST
+%.ast-c++: %.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-print -c -o $@ $<
+
+# The Clang AST
+%.ast: %.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-dump -fsyntax-only $< > $@
