@@ -245,14 +245,19 @@ public:
 
 
 template <>
-size_t device::get_info<info::device::max_work_group_size>() const {
+inline size_t device::get_info<info::device::max_work_group_size>() const {
 	return 1024;
 }
 
 
 template <>
-size_t device::get_info<info::device::max_compute_units>() const {
+inline size_t device::get_info<info::device::max_compute_units>() const {
 	return 1;
+}
+	
+template <>
+inline auto device::get_info<info::device::device_type>() const {
+	return info::device_type::cpu;
 }
 
 /// @} to end the Doxygen group
