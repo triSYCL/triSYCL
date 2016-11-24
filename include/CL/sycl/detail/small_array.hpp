@@ -95,8 +95,20 @@ struct small_array : std::array<BasicType, Dims>,
     // (*this)[0] is the first element of the underlying array
     std::copy_n(src, Dims, &(*this)[0]);
   }
-
-
+      
+  BasicType& x(){
+	  static_assert(Dims>=1, "can't access to small_array[0] if Dims<1");
+	  return (*this)[0];
+  }
+  BasicType& y(){
+	  static_assert(Dims>=2, "can't access to small_array[1] if Dims<2");
+	  return (*this)[1];
+  }
+  BasicType& z(){
+	  static_assert(Dims>=3, "can't access to small_array[2] if Dims<3");
+	  return (*this)[2];
+  }
+      
   /// A constructor from another small_array of the same size
   template <typename SourceBasicType,
             typename SourceFinalType,
