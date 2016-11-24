@@ -211,9 +211,8 @@ public:
   size_t get_info() const {
     // Forward to the version where the info parameter is not a template
     //return get_info<typename info::param_traits_t<info::device, Param>>(Param);
-	//static_assert(false, "non implemented feature, please contribute =)");
-	assert(false);
-	return 0;
+    detail::unimplemented();
+    return 0;
   }
 
 
