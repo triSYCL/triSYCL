@@ -192,6 +192,13 @@ Some presentations and publications related to SYCL
 
 By reverse chronological order:
 
+- `Experiments with triSYCL: poor (wo)man shared virtual memory
+  <https://github.com/keryell/ronan/raw/gh-pages/Talks/2016/2016-03-13-PPoPP-SYCL-triSYCL/2016-03-13-PPoPP-SYCL-triSYCL-expose.pdf>`_.
+  Ronan Keryell. `SYCL 2016 - 1st SYCL Programming Workshop
+  <http://conf.researchr.org/track/SYCL-2016/SYCL-2016-papers>`_,
+  collocated with `PPoPP'16 <http://ppopp16.sigplan.org/>`_,
+  Barcelona, Spain. March 13, 2016.
+
 - `Khronos's OpenCL SYCL to support Heterogeneous Devices for C++
   <http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0236r0.pdf>`_.
   Proposal for the C++ committee SG14 in Jacksonville, Florida, USA
