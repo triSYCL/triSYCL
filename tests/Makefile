@@ -1,6 +1,8 @@
 ## environment variables
 BOOST_COMPUTE_INCPATH=$(HOME)/compute/include
+#OpenCL_LIBPATH=/etc/alternatives
 OpenCL_LIBPATH=/opt/AMDAPPSDK-3.0/lib/x86_64/sdk
+#OpenCL_INCPATH=/opt/intel/intel-opencl-1.2-6.2.0.1760/opencl-sdk/include/
 OpenCL_INCPATH=/opt/AMDAPPSDK-3.0/include
 LD_LIBRARY_PATH=$(OpenCL_LIBPATH)
 

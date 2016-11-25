@@ -16,6 +16,10 @@
 namespace cl {
 namespace sycl {
 
+float sqrt(float x){
+	return std::sqrt(x);
+}
+
 /** \addtogroup vector Vector types in SYCL
 
     @{
@@ -181,6 +185,8 @@ private:
 
 /// @} End the vector Doxygen group
 
+
+typedef vec<float, 3> cl_float3;
 
 }
 }

@@ -96,6 +96,19 @@ struct small_array : std::array<BasicType, Dims>,
     std::copy_n(src, Dims, &(*this)[0]);
   }
 
+  BasicType& x(){
+	  static_assert(Dims>=1, "Dims>=1");
+	  return (*this)[0];
+  }
+  BasicType& y(){
+	  static_assert(Dims>=2, "Dims>=2");
+	  return (*this)[1];
+  }
+  BasicType& z(){
+	  static_assert(Dims>=3, "Dims>=3");
+	  return (*this)[2];
+  }
+
 
   /// A constructor from another small_array of the same size
   template <typename SourceBasicType,

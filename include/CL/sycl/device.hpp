@@ -208,10 +208,10 @@ public:
       \todo
   */
   template <info::device Param>
-  inline auto get_info() const {
+  inline auto get_info() const  {
     // Forward to the version where the info parameter is not a template
     //return get_info<typename info::param_traits_t<info::device, Param>>(Param);
-	assert(false);
+	detail::unimplemented();
 	return size_t(0);
   }
 
@@ -248,6 +248,12 @@ public:
 template <>
 inline auto device::get_info<info::device::max_work_group_size>() const {
 	return size_t(1024);
+}
+
+
+template <>
+inline auto device::get_info<info::device::device_type>() const {
+	return info::device_type::cpu;
 }
 
 /// @} to end the Doxygen group
