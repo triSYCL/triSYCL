@@ -209,7 +209,7 @@ private:
       https://cvs.khronos.org/bugzilla/show_bug.cgi?id=14404
   */
   auto get_size() const {
-    return get_count()*sizeof(value_type);
+    return implementation->get_size();
   }
 
 
