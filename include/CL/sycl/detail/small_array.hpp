@@ -97,6 +97,30 @@ struct small_array : std::array<BasicType, Dims>,
   }
 
 
+  /** An accessor to the first variable of a small array
+  */
+  BasicType& x(){
+    static_assert(Dims >= 1, "can't access to small_array[0] if Dims < 1");
+    return (*this)[0];
+  }
+
+
+  /** An accessor to the second variable of a small array
+  */
+  BasicType& y(){
+    static_assert(Dims >= 2, "can't access to small_array[1] if Dims < 2");
+    return (*this)[1];
+  }
+
+
+  /** An accessor to the third variable of a small array
+  */
+  BasicType& z(){
+    static_assert(Dims >= 3, "can't access to small_array[2] if Dims < 3");
+    return (*this)[2];
+  }
+
+
   /// A constructor from another small_array of the same size
   template <typename SourceBasicType,
             typename SourceFinalType,
