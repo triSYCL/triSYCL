@@ -211,7 +211,7 @@ public:
       \todo
   */
   template <info::device Param>
-  size_t get_info() const {
+  inline auto get_info() const {
     // Forward to the version where the info parameter is not a template
     //return get_info<typename info::param_traits_t<info::device, Param>>(Param);
     detail::unimplemented();
@@ -247,14 +247,14 @@ public:
 
 
 template <>
-inline size_t device::get_info<info::device::max_work_group_size>() const {
-	return 1024;
+inline auto device::get_info<info::device::max_work_group_size>() const {
+	return static_cast<size_t>(1024);
 }
 
 
 template <>
-inline size_t device::get_info<info::device::max_compute_units>() const {
-	return 1;
+inline auto device::get_info<info::device::max_compute_units>() const {
+	return static_cast<size_t>(1);
 }
 	
 template <>
