@@ -160,8 +160,9 @@ multiple_compilation_units/parallel_for: multiple_compilation_units/parallel_for
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -S -o $@ $<
 
 # Process bitcode with SYCL pass
-%.ll-kernel: %.ll
-	opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -stats -SYCL -debug $<
+%.bc-kernel: %.ll
+	opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -stats -SYCL -debug $< > $@
+	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -stats -SYCL -SYCL-annotation -debug $< > $@
 
 # A pretty-printed C++ view of the Clang AST
 %.ast-c++: %.cpp
