@@ -159,6 +159,10 @@ multiple_compilation_units/parallel_for: multiple_compilation_units/parallel_for
 %.ll: %.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -S -o $@ $<
 
+# Process bitcode with SYCL pass
+%.ll-kernel: %.ll
+	opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -stats -SYCL -debug $<
+
 # A pretty-printed C++ view of the Clang AST
 %.ast-c++: %.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-print -c -o $@ $<
