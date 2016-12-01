@@ -161,7 +161,10 @@ multiple_compilation_units/parallel_for: multiple_compilation_units/parallel_for
 
 # Process bitcode with SYCL pass
 %.bc-kernel: %.ll
-	opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -stats -SYCL -debug $< > $@
+	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -stats -SYCL -debug -print-after-all \
+	# -o $@ $<
+	opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -print-after-all -stats -SYCL -debug -globaldce \
+	 -o $@ $<
 	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -stats -SYCL -SYCL-annotation -debug $< > $@
 
 # A pretty-printed C++ view of the Clang AST
