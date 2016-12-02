@@ -163,8 +163,10 @@ multiple_compilation_units/parallel_for: multiple_compilation_units/parallel_for
 %.kernel.bc: %.ll
 	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -stats -SYCL -debug -print-after-all \
 	# -o $@ $<
-	opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -print-after-all -stats -SYCL -debug -globaldce \
+	opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats -SYCL -globaldce \
 	 -o $@ $<
+	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats -SYCL \
+	# -o $@ $<
 	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -stats -SYCL -SYCL-annotation -debug $< > $@
 
 # Generate LLVM assembly code from bit-code
