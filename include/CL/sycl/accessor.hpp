@@ -14,6 +14,7 @@
 #include "CL/sycl/access.hpp"
 #include "CL/sycl/accessor/detail/local_accessor.hpp"
 #include "CL/sycl/buffer/detail/accessor.hpp"
+#include "CL/sycl/detail/container_element_aspect.hpp"
 #include "CL/sycl/detail/shared_ptr_implementation.hpp"
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/item.hpp"
@@ -51,14 +52,12 @@ class accessor :
                                              detail::accessor<DataType,
                                                               Dimensions,
                                                               AccessMode,
-                                                              Target>> {
+                                                              Target>>,
+    public detail::container_element_aspect<DataType> {
 public:
 
   /// \todo in the specification: store the dimension for user request
   static constexpr auto dimensionality = Dimensions;
-  using value_type = DataType;
-  using reference = value_type&;
-  using const_reference = const value_type&;
 
 private:
 
