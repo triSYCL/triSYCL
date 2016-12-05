@@ -68,6 +68,15 @@ bool trisycl_verify_buffer_value(cl::sycl::buffer<dataType, dimensions> b,
 }
 
 
+/// Verify that a condition is true
+#define VERIFY_COND(cond)                                               \
+  if (!(cond)) {                                                        \
+    std::cout << "In file " __FILE__ " line " << __LINE__ << ": "       \
+              << #cond " not verified" << std::endl;                    \
+    exit(1);                                                            \
+  }
+
+
 /** Verify the value of a buffer against a function of the id<>
 
     Use a macro to capture the file and line of where it is invoked

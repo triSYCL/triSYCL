@@ -309,6 +309,16 @@ private:
     return **implementation;
   }
 
+
+  /** Get the pointer to the start of the data
+
+      \todo Should it be named data() instead? */
+  auto
+  get_pointer() {
+    return implementation->get_pointer();
+  }
+
+
   /** Forward all the iterator functions to the implementation
 
       \todo Add these functions to the specification

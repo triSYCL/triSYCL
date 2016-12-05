@@ -321,6 +321,16 @@ public:
   }
 
 
+  /** Return the pointer to the data
+
+      \todo Implement the various pointer address spaces
+  */
+  auto
+  get_pointer() {
+    return array.data();
+  }
+
+
   /** Forward all the iterator functions to the implementation
 
       \todo Add these functions to the specification

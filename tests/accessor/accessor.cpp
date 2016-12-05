@@ -56,5 +56,8 @@ int main() {
                                           nd_range<2>{ { N, M },
                                               { 4, 4 } })], 9);
 
+    // Check the pointer method
+    VERIFY_COND(*(A.get_pointer() + 3) == 57);
+
   return 0;
 }
