@@ -161,13 +161,14 @@ multiple_compilation_units/parallel_for: multiple_compilation_units/parallel_for
 
 # Process bitcode with SYCL pass
 %.kernel.bc: %.ll
-	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -stats -SYCL -debug -print-after-all \
-	# -o $@ $<
-	opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats -SYCL -globaldce \
-	 -o $@ $<
-	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats -SYCL \
-	# -o $@ $<
-	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -stats -SYCL -SYCL-annotation -debug $< > $@
+	opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats -SYCL-kernel-filter \
+	  -globaldce -o $@ $<
+	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -stats -SYCL-kernel-filter \
+	#  -debug -print-after-all -o $@ $<
+	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats -SYCL-kernel-filter \
+	#  -o $@ $<
+	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -stats  -debug \
+	#  -SYCL-annotation -SYCL-kernel-filter -o $@ $<
 
 # Generate LLVM assembly code from bit-code
 %.ll: %.bc
