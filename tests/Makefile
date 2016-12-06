@@ -4,13 +4,14 @@ CXXFLAGS += -DTRISYCL_ASYNC=1
 
 # To use OpenMP to execute SYCL kernels:
 #CXXFLAGS += -fopenmp
+#CXXFLAGS += -I/usr/lib/gcc/x86_64-linux-gnu/6/include
 
 # For asynchronous kernels when OpenMP is not enabled
 LDLIBS += -lpthread
 
 # To use OpenCL
-#CXXFLAGS += -DTRISYCL_OPENCL
-#LDLIBS += -lOpenCL
+CXXFLAGS += -DTRISYCL_OPENCL
+LDLIBS += -lOpenCL
 
 # To compile for a device
 CXXFLAGS += -DTRISYCL_DEVICE
@@ -46,7 +47,7 @@ ifdef OpenCL_INCPATH
 	CXXFLAGS += -I$(OpenCL_INCPATH)
 endif
 
-# Specify where Bost.Compute is with BOOST_COMPUTE_INCPATH
+# Specify where Boost.Compute is with BOOST_COMPUTE_INCPATH
 ifdef BOOST_COMPUTE_INCPATH
 	CXXFLAGS += -I$(BOOST_COMPUTE_INCPATH) \
 	-DBOOST_COMPUTE_DEBUG_KERNEL_COMPILATION \

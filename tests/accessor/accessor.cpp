@@ -1,7 +1,9 @@
 /* RUN: %{execute}%s
 */
 #include <CL/sycl.hpp>
+#include <cstddef>
 #include <iostream>
+#include <type_traits>
 #include "test-helpers.hpp"
 
 using namespace cl::sycl;
@@ -10,6 +12,11 @@ using namespace cl::sycl;
 constexpr size_t N = 20;
 constexpr size_t M = 30;
 constexpr size_t P = 40;
+
+#define TEST_TYPE(accessor_var, type_member, type)                      \
+  static_assert(std::is_same<type,                                      \
+                decltype(accessor_var)::type_member>::value,            \
+                #type_member " is an " #type)
 
 int main() {
     // Create read-write buffers for each rank
@@ -24,6 +31,13 @@ int main() {
                           cl::sycl::access::target::host_buffer>();
     auto C = c.get_access<cl::sycl::access::mode::read_write,
                           cl::sycl::access::target::host_buffer>();
+
+    // Test the STL-like accessor member types
+    TEST_TYPE(A, value_type, int);
+    TEST_TYPE(A, pointer, int *);
+    TEST_TYPE(B, const_pointer, const int *);
+    TEST_TYPE(B, reference, int &);
+    TEST_TYPE(C, const_reference, const int &);
 
     A[3]= 57;
     VERIFY_READ_WRITE_VALUE(A[3], 57);
@@ -41,6 +55,9 @@ int main() {
     VERIFY_READ_WRITE_VALUE(B[nd_item<2> ({ 7, 5 },
                                           nd_range<2>{ { N, M },
                                               { 4, 4 } })], 9);
+
+    // Check the pointer method
+    VERIFY_COND(*(A.get_pointer() + 3) == 57);
 
   return 0;
 }

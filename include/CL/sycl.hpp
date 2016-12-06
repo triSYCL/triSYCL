@@ -6,21 +6,21 @@
     experiment with the OpenCL CL provisional specification.
 
     For more information about OpenCL SYCL:
-    http://www.khronos.org/opencl/sycl/
+    http://www.khronos.org/sycl/
 
     For more information on this project and to access to the source of
-    this file, look at https://github.com/amd/triSYCL
+    this file, look at https://github.com/Xilinx/triSYCL
 
     The Doxygen version of the implementation itself is in
-    http://amd.github.io/triSYCL/Doxygen/triSYCL/html and
-    http://amd.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
+    http://Xilinx.github.io/triSYCL/Doxygen/triSYCL/html and
+    http://Xilinx.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
 
 
     Ronan at keryell dot FR
 
     Copyright 2014--2015 Advanced Micro Devices, Inc.
 
-    Copyright 2015 Xilinx, Inc.
+    Copyright 2015--2016 Xilinx, Inc.
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.

@@ -80,6 +80,9 @@ private:
                          buffer<T, Dimensions, Allocator>,
                          detail::buffer_waiter<T, Dimensions, Allocator>>;
 
+  // Allows the comparison operation to access the implementation
+  friend implementation_t;
+
 public:
 
   // Make the implementation member directly accessible in this class

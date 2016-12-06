@@ -49,11 +49,13 @@ class platform
   using implementation_t =
     detail::shared_ptr_implementation<platform, detail::platform>;
 
-  // Make the implementation member directly accessible in this class
-  using implementation_t::implementation;
-
+  // Allows the comparison operation to access the implementation
+  friend implementation_t;
 
 public:
+
+  // Make the implementation member directly accessible in this class
+  using implementation_t::implementation;
 
   /** Default constructor for platform which is the host platform
 

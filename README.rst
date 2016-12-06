@@ -4,13 +4,17 @@ triSYCL
 News
 ----
 
+- 2016/11/18: If you missed the free SYCL T-shirt on the Khronos booth
+  during SC16_, you can always buy some on
+  https://teespring.com/khronos-hpc (lady's sizes available!)
+
 - 2016/08/12: OpenCL kernels can be run with OpenCL kernel
   interoperability mode now.
 
-- 2016/04/18:  SYCL 2.2 provisional specification is out
+- 2016/04/18: SYCL 2.2 provisional specification is out.
 
 - This version implement SYCL 2.2 pipes and reservations plus the blocking
-  pipe extension from Xilinx.
+  pipe extension from Xilinx_.
 
 .. section-numbering::
 
@@ -47,7 +51,8 @@ where you can find more futuristic branches.
 This is provided as is, without any warranty, with the same license as
 LLVM_/Clang_.
 
-Technical lead: Ronan at keryell point FR
+Technical lead: Ronan at keryell point FR. Developments started first
+at AMD_ and are now mainly funded by Xilinx_.
 
 
 OpenCL SYCL
@@ -59,7 +64,7 @@ accelerators by leveraging the OpenCL_ language and concepts.
 
 OpenCL_ SYCL_ is developed inside the Khronos_ OpenCL_ SYCL_ committee and
 thus, for more information on SYCL_, look at
-http://www.khronos.org/opencl/sycl
+http://www.khronos.org/sycl
 
 
 Why you could use SYCL
@@ -170,10 +175,29 @@ example at these articles:
   the ACM.
 
 
+Some other implementations
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Some other known implementations:
+
+- Codeplay_ has a ComputeCpp_ product implementing SYCL_ based on
+  OpenCL_ SPIR_ with Clang_/LLVM_
+  https://www.codeplay.com/products/computesuite/computecpp
+
+- SYCL-GTX https://github.com/ProGTX/sycl-gtx
+
+
 Some presentations and publications related to SYCL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 By reverse chronological order:
+
+- `Experiments with triSYCL: poor (wo)man shared virtual memory
+  <https://github.com/keryell/ronan/raw/gh-pages/Talks/2016/2016-03-13-PPoPP-SYCL-triSYCL/2016-03-13-PPoPP-SYCL-triSYCL-expose.pdf>`_.
+  Ronan Keryell. `SYCL 2016 - 1st SYCL Programming Workshop
+  <http://conf.researchr.org/track/SYCL-2016/SYCL-2016-papers>`_,
+  collocated with `PPoPP'16 <http://ppopp16.sigplan.org/>`_,
+  Barcelona, Spain. March 13, 2016.
 
 - `Khronos's OpenCL SYCL to support Heterogeneous Devices for C++
   <http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0236r0.pdf>`_.
@@ -280,17 +304,6 @@ There are also many interesting articles in the `publication list from
 Codeplay <http://www.codeplay.com/company/publications.html>`_.
 
 
-Some implementations
-~~~~~~~~~~~~~~~~~~~~
-
-Some other known implementations:
-
-- CodePlay has a product implementing SYCL based on OpenCL SPIR with
-  Clang/LLVM http://codeplay.com/products
-
-- SYCL-GTX https://github.com/ProGTX/sycl-gtx
-
-
 Related projects
 ~~~~~~~~~~~~~~~~
 
@@ -346,8 +359,8 @@ OpenCL triSYCL code documentation
 ---------------------------------
 
 The documentation of the triSYCL_ implementation itself can be found in
-http://amd.github.io/triSYCL/Doxygen/triSYCL/html and
-http://amd.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
+http://xilinx.github.io/triSYCL/Doxygen/triSYCL/html and
+http://xilinx.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
 
 
 Installation
@@ -481,7 +494,7 @@ Some ideas of future developments where *you* can contribute too: :-)
 ..
   Somme useful link definitions:
 
-.. _AMD: http://www.amd/com
+.. _AMD: http://www.amd.com
 
 .. _Bolt: https://github.com/HSA-Libraries/Bolt
 
@@ -498,6 +511,10 @@ Some ideas of future developments where *you* can contribute too: :-)
 .. _Clang: http://clang.llvm.org/
 
 .. _CLHPP: https://github.com/KhronosGroup/OpenCL-CLHPP
+
+.. _Codeplay: http://www.codeplay.com
+
+.. _ComputeCpp: https://www.codeplay.com/products/computesuite/computecpp
 
 .. _CUDA: https://developer.nvidia.com/cuda-zone
 
@@ -539,6 +556,8 @@ Some ideas of future developments where *you* can contribute too: :-)
 
 .. _RenderScript: http://en.wikipedia.org/wiki/Renderscript
 
+.. _SC16: http://sc16.supercomputing.org
+
 .. _SG14: https://groups.google.com/a/isocpp.org/forum/?fromgroups=#!forum/sg14
 
 .. _SPIR: http://www.khronos.org/spir
@@ -549,13 +568,15 @@ Some ideas of future developments where *you* can contribute too: :-)
 
 .. _Thrust: http://thrust.github.io/
 
-.. _triSYCL: http://www.khronos.org/opencl/sycl/
+.. _triSYCL: https://github.com/Xilinx/triSYCL
 
 .. _VexCL: http://ddemidov.github.io/vexcl/
 
 .. _ViennaCL: http://viennacl.sourceforge.net/
 
 .. _Vulkan: https://www.khronos.org/vulkan/
+
+.. _Xilinx: http://www.xilinx.com
 
 ..
     # Some Emacs stuff:

@@ -47,6 +47,9 @@ class device
   using implementation_t =
     detail::shared_ptr_implementation<device, detail::device>;
 
+  // Allows the comparison operation to access the implementation
+  friend implementation_t;
+
 public:
 
   // Make the implementation member directly accessible in this class
@@ -208,9 +211,11 @@ public:
       \todo
   */
   template <info::device Param>
-  auto get_info() const {
+  inline auto get_info() const {
     // Forward to the version where the info parameter is not a template
     //return get_info<typename info::param_traits_t<info::device, Param>>(Param);
+    detail::unimplemented();
+    return 0;
   }
 
 
@@ -239,6 +244,23 @@ public:
 #endif
 
 };
+
+
+template <>
+inline auto device::get_info<info::device::max_work_group_size>() const {
+	return static_cast<size_t>(1024);
+}
+
+
+template <>
+inline auto device::get_info<info::device::max_compute_units>() const {
+	return static_cast<size_t>(1);
+}
+	
+template <>
+inline auto device::get_info<info::device::device_type>() const {
+	return info::device_type::cpu;
+}
 
 /// @} to end the Doxygen group
 
