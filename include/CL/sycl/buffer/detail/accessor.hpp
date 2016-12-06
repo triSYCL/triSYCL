@@ -326,7 +326,7 @@ public:
       \todo Implement the various pointer address spaces
   */
   auto
-  get_pointer() {
+  get_pointer() const {
     return array.data();
   }
 

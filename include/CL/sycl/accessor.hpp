@@ -317,7 +317,7 @@ private:
 
       \todo Should it be named data() instead? */
   auto
-  get_pointer() {
+  get_pointer() const {
     return implementation->get_pointer();
   }
 
