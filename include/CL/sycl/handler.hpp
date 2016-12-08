@@ -177,7 +177,9 @@ private:
        Put the iteration space loops in the kernels for now, which
        makes sense for CPU emulation or FPGA pipelined execution.
     */
-    ::cl::sycl::detail::instantiate_kernel<KernelName>(k);
+    task->schedule(detail::trace_kernel<KernelName>([=] {
+          ::cl::sycl::detail::instantiate_kernel<KernelName>(k);
+        }));
 #else
     task->schedule(detail::trace_kernel<KernelName>(k));
 #endif

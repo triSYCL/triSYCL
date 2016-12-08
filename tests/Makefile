@@ -14,7 +14,7 @@ CXXFLAGS += -DTRISYCL_OPENCL
 LDLIBS += -lOpenCL
 
 # To compile for a device
-#CXXFLAGS += -DTRISYCL_DEVICE
+CXXFLAGS += -DTRISYCL_DEVICE
 
 # Compute the absolute directory name from the location of this Makefile
 # so that we can compile from anywhere even if we use make -f
@@ -88,7 +88,7 @@ CHECKING_DIR ?= .
 CXX = clang++-3.9
 # But everything works fine with GCC 5.4 at least
 CXX = g++
-#CXX = clang++
+CXX = clang++
 
 
 # Some hack to force the compiler from the test infrastructure:
