@@ -37,8 +37,7 @@ class pipe
     detail::debug<pipe<T>> {
 
   // The type encapsulating the implementation
-  using implementation_t =
-    detail::shared_ptr_implementation<pipe<T>, detail::pipe<T>>;
+  using implementation_t = typename pipe::shared_ptr_implementation;
 
   // Allows the comparison operation to access the implementation
   friend implementation_t;

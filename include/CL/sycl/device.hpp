@@ -44,8 +44,7 @@ class device
   : public detail::shared_ptr_implementation<device, detail::device> {
 
   // The type encapsulating the implementation
-  using implementation_t =
-    detail::shared_ptr_implementation<device, detail::device>;
+  using implementation_t = typename device::shared_ptr_implementation;
 
   // Allows the comparison operation to access the implementation
   friend implementation_t;

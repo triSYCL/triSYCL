@@ -75,10 +75,7 @@ public:
 private:
 
   // The type encapsulating the implementation
-  using implementation_t =
-    detail::shared_ptr_implementation<
-                         buffer<T, Dimensions, Allocator>,
-                         detail::buffer_waiter<T, Dimensions, Allocator>>;
+  using implementation_t = typename buffer::shared_ptr_implementation;
 
   // Allows the comparison operation to access the implementation
   friend implementation_t;

@@ -41,9 +41,7 @@ class buffer_waiter :
     detail::debug<buffer_waiter<T, Dimensions, Allocator>> {
 
   // The type encapsulating the implementation
-  using implementation_t =
-    detail::shared_ptr_implementation<buffer_waiter<T, Dimensions, Allocator>,
-                                      detail::buffer<T, Dimensions>>;
+  using implementation_t = typename buffer_waiter::shared_ptr_implementation;
 
   // Allows the comparison operation to access the implementation
   friend implementation_t;

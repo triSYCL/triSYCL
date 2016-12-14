@@ -84,8 +84,7 @@ class queue
     detail::debug<queue> {
 
   // The type encapsulating the implementation
-  using implementation_t =
-    detail::shared_ptr_implementation<queue, detail::queue>;
+  using implementation_t = typename queue::shared_ptr_implementation;
 
   /* Allows the comparison operation to sneak in
 

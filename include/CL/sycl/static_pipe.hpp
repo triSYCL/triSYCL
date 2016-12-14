@@ -55,9 +55,7 @@ class static_pipe
     detail::debug<static_pipe<T, Capacity>> {
 
   // The type encapsulating the implementation
-  using implementation_t =
-    detail::shared_ptr_implementation<static_pipe<T, Capacity>,
-                                      detail::pipe<T>>;
+  using implementation_t = typename static_pipe::shared_ptr_implementation;
 
   // Make the implementation member directly accessible in this class
   using implementation_t::implementation;

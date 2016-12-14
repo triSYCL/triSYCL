@@ -61,18 +61,13 @@ public:
 
 private:
 
-  using accessor_detail = detail::accessor<DataType,
+  using accessor_detail = typename detail::accessor<DataType,
                                            Dimensions,
                                            AccessMode,
                                            Target>;
 
   // The type encapsulating the implementation
-  using implementation_t =
-    detail::shared_ptr_implementation<accessor<DataType,
-                                               Dimensions,
-                                               AccessMode,
-                                               Target>,
-                                      accessor_detail>;
+  using implementation_t = typename accessor::shared_ptr_implementation;
 
   // Allows the comparison operation to access the implementation
   friend implementation_t;
