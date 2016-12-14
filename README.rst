@@ -375,7 +375,7 @@ latest Ubuntu too, just adapt the compiler versions):
 
 .. code:: bash
 
-  sudo apt-get install clang-3.6 g++4.9 libboost-dev
+  sudo apt-get install clang-3.9 g++-6 libboost-dev
 
 There is nothing else to do for now to use the include files from triSYCL_
 ``include`` directory when compiling a program. Just add a
