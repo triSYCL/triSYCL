@@ -13,18 +13,6 @@ namespace cl {
 namespace sycl {
 namespace detail {
 
-#ifdef TRISYCL_DEVICE
-/** Use a Clang user annotation attribute to mark arguments that takes
-    a kernel so the compiler can outline the kernels
-
-    __attribute__((annotate("noinline"))) does not help at the Functor
-    parameter to avoid inlining of the final kernel use
- */
-#define __TRISYCL_KERNEL_MARK __attribute__((annotate("__triSYCL_kernel")))
-#else
-#define __TRISYCL_KERNEL_MARK
-#endif
-
 /** Instantiate the template code
 
     To have a clear view of what a kernel is at the LLVM IR level even
@@ -35,7 +23,7 @@ namespace detail {
 template <typename KernelName,
           typename Functor>
 __attribute__((noinline))
-void instantiate_kernel(Functor f __TRISYCL_KERNEL_MARK) noexcept {
+void instantiate_kernel(Functor f) noexcept {
   f();
 }
 
