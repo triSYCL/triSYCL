@@ -12,9 +12,6 @@
 #include <cstddef>
 #include <future>
 
-// \todo Use C++17 optional when it is mainstream
-#include <boost/optional.hpp>
-
 #include "CL/sycl/buffer/detail/buffer.hpp"
 #include "CL/sycl/buffer_allocator.hpp"
 #include "CL/sycl/detail/shared_ptr_implementation.hpp"

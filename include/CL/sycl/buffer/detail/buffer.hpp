@@ -12,6 +12,8 @@
 #include <cstddef>
 
 #include <boost/multi_array.hpp>
+// \todo Use C++17 optional when it is mainstream
+#include <boost/optional.hpp>
 
 #include "CL/sycl/access.hpp"
 #include "CL/sycl/buffer/detail/accessor.hpp"
