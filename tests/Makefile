@@ -19,24 +19,31 @@ CXXFLAGS += -DTRISYCL_DEVICE
 # Compute the absolute directory name from the location of this Makefile
 # so that we can compile from anywhere even if we use make -f
 # <this_makefile> ... as used by make check:
-triSYCL_DIR=$(abspath $(dir $(lastword $(MAKEFILE_LIST)))/..)
+triSYCL_DIR = $(abspath $(dir $(lastword $(MAKEFILE_LIST)))/..)
 
 # Use all the .cpp C++ files from the subdirectories that have a 1-1
 # mapping with the binaries to generate, that means the binary is made
 # from only one compilation unit (1 source file)
-TARGETS = $(basename $(wildcard */*.cpp))
+FILES_CPP = $(wildcard */*.cpp)
+TARGETS = $(basename $(FILES_CPP))
 
 # There are also .cc C++ files that are used to test binaries made from
 # multiple compilation units. There should be specific dependencies added
 # later to deal with other compilation units to be linked to the .cc main
 # executable. To avoid messing up with LLVM/LIT, the other compilation
 # units have .C extensions
-TARGETS_CC = $(basename $(wildcard */*.cc))
+FILES_CC = $(wildcard */*.cc)
+TARGETS_CC = $(basename $(FILES_CC))
 TARGETS += $(TARGETS_CC)
 
 # Since the .C files generates some .o, think to remove them
-FILES_C =$(wildcard */*.C)
+FILES_C = $(wildcard */*.C)
 CLEANING_TARGETS = $(TARGETS) $(FILES_C:%.C=%.o)
+
+# The kernel files
+KERNELS = $(FILES_CC:%.cc=%.kernel.ll) \
+	$(FILES_C:%.C=%.kernel.ll) \
+	$(FILES_CPP:%.cpp=%.kernel.ll)
 
 # The implementation uses C++14 and OpenMP
 CXXFLAGS += -Wall -std=c++1y -I$(triSYCL_DIR)/include \
@@ -96,8 +103,13 @@ ifdef FORCE_CXX
   CXX=$(FORCE_CXX)
 endif
 
+# Compile all the executables
 all: $(TARGETS)
 
+# Compile all the kernel bitcodes
+kernels: $(KERNELS)
+
+# Run all the tests, once compiled
 run: $(TARGETS)
 	# Execute each element of TARGETS
 	$(foreach command, $(TARGETS), echo; echo $(command):; ./$(command); )
@@ -152,17 +164,33 @@ multiple_compilation_units/parallel_for: multiple_compilation_units/parallel_for
 # To debug the Clang/LLVM triSYCL compiler
 # Assume that CXX contains some Clang compiler version
 
+.PRECIOUS: %.bc %.ll
+
 # The LLVM bitcode
 %.bc: %.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -c -o $@ $<
+%.bc: %.C
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -c -o $@ $<
+%.bc: %.cc
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -c -o $@ $<
 
 # The LLVM assembly code
 %.ll: %.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -S -o $@ $<
+%.ll: %.C
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -S -o $@ $<
+%.ll: %.cc
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -S -o $@ $<
 
 # Process bitcode with SYCL pass
 %.kernel.bc: %.ll
-	opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats -SYCL-kernel-filter \
+	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats \
+	#  -globalopt -deadargelim -SYCL-args-flattening -deadargelim \
+	#  -SYCL-kernel-filter \
+	#  -globaldce -o $@ $<
+	opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats \
+	  -globalopt -deadargelim -argpromotion -deadargelim \
+	  -SYCL-kernel-filter \
 	  -globaldce -o $@ $<
 	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -stats -SYCL-kernel-filter \
 	#  -debug -print-after-all -o $@ $<
@@ -178,7 +206,15 @@ multiple_compilation_units/parallel_for: multiple_compilation_units/parallel_for
 # A pretty-printed C++ view of the Clang AST
 %.ast-c++: %.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-print -c -o $@ $<
+%.ast-c++: %.C
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-print -c -o $@ $<
+%.ast-c++: %.cc
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-print -c -o $@ $<
 
 # The Clang AST
 %.ast: %.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-dump -fsyntax-only $< > $@
+%.ast: %.C
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-dump -fsyntax-only $< > $@
+%.ast: %.cc
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-dump -fsyntax-only $< > $@
