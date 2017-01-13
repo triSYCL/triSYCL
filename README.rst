@@ -4,6 +4,8 @@ triSYCL
 News
 ----
 
+- 2017/01/12: Add test case using compiler Xilinx_ FPGA
+
 - 2016/11/18: If you missed the free SYCL T-shirt on the Khronos booth
   during SC16_, you can always buy some on
   https://teespring.com/khronos-hpc (lady's sizes available!)

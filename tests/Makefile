@@ -41,6 +41,10 @@ CXXFLAGS += -g
 #CXXFLAGS += -fsanitize=thread -fno-omit-frame-pointer
 #CXXFLAGS += -fsanitize=undefined -fno-omit-frame-pointer
 
+# When XILINX_SDX environment variable is set, use the Xilinx SDx
+# OpenCL compiler with these flags:
+# Adapt to the real platform
+XOCCFLAGS=--platform xilinx:adm-pcie-7v3:1ddr:3.0
 
 
 
@@ -116,6 +120,26 @@ run: $(TARGETS)
 clean:
 	$(RM) $(CLEANING_TARGETS)
 
+# Add some explicit targets
+multiple_compilation_units/parallel_for: multiple_compilation_units/parallel_for_other.o
+
+ifdef XILINX_SDX
+# Compile explicit OpenCL kernels for Xilinx FPGA
+
+# Use "order-only" prerequisites for kernels since if the kernel are
+# changed, it does not imply to recompile the host part
+SDAccel/opencl_kernel_vector_add_args: | SDAccel/vector_add.xclbin
+
+# -lpthread is required by Xilinx OpenCL implementation
+LDLIBS += -pthread
+
+CLEANING_TARGETS += $(wildcard */*.xclbin)
+
+# How to compile OpenCL kernel to Xilinx FPGA
+%.xclbin: %.cl
+	xocc $(XOCCFLAGS) --target hw -o $@ $<
+endif
+
 # Force recompilation of $(TARGETS_CC) binaries through the Makefile since
 # LIT does not know the dependencies
 check: $(TARGETS_CC)
@@ -157,6 +181,3 @@ clone-%:
 	rm -rf test-clone
 	git clone --branch `git rev-parse --abbrev-ref HEAD` .. test-clone
 	cd test-clone/tests; $(MAKE) $*
-
-
-multiple_compilation_units/parallel_for: multiple_compilation_units/parallel_for_other.o
