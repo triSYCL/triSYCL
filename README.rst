@@ -491,8 +491,7 @@ Some ideas of future developments where *you* can contribute too: :-)
   SYJavaCL... It is not clear yet if SYFortranCL is possible with
   Fortran 2008 or 2015+.
 
-..
-  Somme useful link definitions:
+.. Some useful link definitions:
 
 .. _AMD: http://www.amd.com
 
