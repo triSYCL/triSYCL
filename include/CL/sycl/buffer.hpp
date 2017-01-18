@@ -244,7 +244,7 @@ public:
          const range<Dimensions> &buffer_range,
          Allocator allocator = {})
   // Just delegate to the constructor with normal pointer
-    : buffer(host_data.get(), buffer_range, allocator) {
+    : buffer { host_data.get(), buffer_range, allocator } {
     // Then release the host_data memory
     host_data.release();
   }
