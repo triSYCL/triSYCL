@@ -247,18 +247,23 @@ public:
 
 template <>
 inline auto device::get_info<info::device::max_work_group_size>() const {
-	return static_cast<size_t>(1024);
+  return static_cast<size_t>(1024);
 }
 
 
 template <>
 inline auto device::get_info<info::device::max_compute_units>() const {
-	return static_cast<size_t>(1);
+  return static_cast<size_t>(1);
 }
-	
+
 template <>
 inline auto device::get_info<info::device::device_type>() const {
-	return info::device_type::cpu;
+  return info::device_type::cpu;
+}
+
+template <>
+inline auto device::get_info<info::device::local_mem_size>() const {
+  return static_cast<size_t>(32000);
 }
 
 /// @} to end the Doxygen group
