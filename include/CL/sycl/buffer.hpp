@@ -75,7 +75,10 @@ public:
 private:
 
   // The type encapsulating the implementation
-  using implementation_t = typename buffer::shared_ptr_implementation;
+  using implementation_t =
+    detail::shared_ptr_implementation<
+                         buffer<T, Dimensions, Allocator>,
+                         detail::buffer_waiter<T, Dimensions, Allocator>>;
 
   // Allows the comparison operation to access the implementation
   friend implementation_t;
@@ -244,7 +247,7 @@ public:
          const range<Dimensions> &buffer_range,
          Allocator allocator = {})
   // Just delegate to the constructor with normal pointer
-    : buffer { host_data.get(), buffer_range, allocator } {
+    : buffer(host_data.get(), buffer_range, allocator) {
     // Then release the host_data memory
     host_data.release();
   }
@@ -291,8 +294,7 @@ public:
          InputIterator end_iterator,
          Allocator allocator = {}) :
     implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
-            { start_iterator, end_iterator }) }
-  {}
+            { start_iterator, end_iterator }) } {}
 
 
   /** Create a new sub-buffer without allocation to have separate
@@ -368,6 +370,7 @@ public:
                   "get_access(handler) can only deal with access::global_buffer"
                   " or access::constant_buffer (for host_buffer accessor"
                   " do not use a command group handler");
+    implementation->implementation->get_access<Mode, Target>();
     return { *this, command_group_handler };
   }
 
@@ -387,6 +390,7 @@ public:
     static_assert(Target == access::target::host_buffer,
                   "get_access() without a command group handler is only"
                   " for host_buffer accessor");
+    implementation->implementation->get_access<Mode, Target>();
     return { *this };
   }
 
@@ -486,6 +490,14 @@ public:
   */
   void set_final_data(weak_ptr_class<T> finalData) {
     implementation->implementation->set_final_data(std::move(finalData));
+  }
+  
+  void set_final_data(T* finalData) {
+    implementation->implementation->set_final_data(std::move(finalData));
+  }
+
+  void set_final_data(std::nullptr_t){
+    implementation->implementation->set_final_data(nullptr);
   }
 
 };
