@@ -145,13 +145,11 @@ public:
 private:
   template<typename Iterator, bool Mode>
   typename std::enable_if_t<Mode, void> constructor_for_iterator(Iterator begin){
-    std::cout << "buffer(const iterator)" <<  std::endl;
     final_write_back = boost::none;
   }
 
   template<typename Iterator, bool Mode>
   typename std::enable_if_t<!Mode, void> constructor_for_iterator(Iterator begin){
-    std::cout << "buffer(iterator)" <<  std::endl;
     final_write_back = [=] {
       std::copy_n(access.data(), access.num_elements(), begin);
     };
@@ -206,16 +204,8 @@ public:
 
     // const_buffer ? 'no copy' : (modified ? (host_data ? 'no copy' : 'copy') : (copy_if_node_modified ? 'copy' : 'no copy'))
     if((!const_buffer)&&(modified ? (!data_host) : copy_if_not_modified))
-    {
       if(final_write_back)
-      {
         (*final_write_back)();
-      }
-    }
-    else
-    {
-      std::cout << "D: " << const_buffer << modified << data_host << copy_if_not_modified << std::endl;
-    }
   }
 
   // Use BOOST_DISABLE_ASSERTS at some time to disable range checking
@@ -233,6 +223,7 @@ public:
       modified = true;
       if(copy_if_modified){
         //TODO
+        detail::unimplemented();
         assert(false);
       }
     }
