@@ -9,11 +9,9 @@
     License. See LICENSE.TXT for details.
 */
 
-
 #include <cstddef>
 
 #include <boost/multi_array.hpp>
-#include <boost/variant.hpp>
 
 #include "CL/sycl/access.hpp"
 #include "CL/sycl/buffer/detail/accessor.hpp"
