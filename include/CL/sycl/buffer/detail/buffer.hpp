@@ -9,11 +9,11 @@
     License. See LICENSE.TXT for details.
 */
 
+
 #include <cstddef>
 
 #include <boost/multi_array.hpp>
-// \todo Use C++17 optional when it is mainstream
-#include <boost/optional.hpp>
+#include <boost/variant.hpp>
 
 #include "CL/sycl/access.hpp"
 #include "CL/sycl/buffer/detail/accessor.hpp"
@@ -68,15 +68,19 @@ private:
   */
   boost::multi_array_ref<T, Dimensions> access;
 
-  /// The weak pointer to copy back data on buffer deletion
-  weak_ptr_class<T> final_data;
-
-  /** The shared pointer in the case the buffer memory is shared with
-      the host */
-  shared_ptr_class<T> shared_data;
+  // How to copy back data on buffer destruction, can be modified with set_final_data( ... )
+  boost::optional<std::function<void(void)>> final_write_back = boost::none;
 
   // Track if the buffer memory is provided as host memory
-  bool host_write_back = false;
+  bool data_host = false;
+  // Track if data should be written back if the buffer has not been modified when deleted
+  bool copy_if_not_modified = false;
+  // Track if data should be copied if a modification occurs
+  bool copy_if_modified = false;
+  // Track if data have been modified
+  bool modified  = false;
+  // Track if data are modifiable
+  bool const_buffer = false;
 
 public:
 
@@ -91,8 +95,12 @@ public:
       \param r without further allocation */
   buffer(T *host_data, const range<Dimensions> &r) : buffer_base { false },
                                                      access { host_data, r },
-                                                     host_write_back { true }
-                                                     {}
+                                                     data_host { true }
+  {
+    final_write_back = [=] {
+      std::copy_n(access.data(), access.num_elements(), host_data);
+    };
+  }
 
 
   /** Create a new read-only buffer from \param host_data of size \param r
@@ -106,8 +114,13 @@ public:
 
        Just allocate memory? */
     buffer_base { true },
-    access { const_cast<T *>(host_data), r }
-    {}
+    allocation { r },
+    access { allocation },
+    data_host { true },
+    copy_if_modified { true }
+    {
+      allocation.assign(host_data, host_data + allocation.size());
+    }
 
 
   /** Create a new buffer with associated memory, using the data in
@@ -122,9 +135,29 @@ public:
          const range<Dimensions> &r)
     : buffer_base { false },
     access { host_data.get(), r },
-    shared_data { host_data }
-    {}
+    data_host { true }
+    {
+      final_write_back = [=] {
+        std::copy_n(access.data(), access.num_elements(), host_data.get());
+      };
+    }
 
+private:
+  template<typename Iterator, bool Mode>
+  typename std::enable_if_t<Mode, void> constructor_for_iterator(Iterator begin){
+    std::cout << "buffer(const iterator)" <<  std::endl;
+    final_write_back = boost::none;
+  }
+
+  template<typename Iterator, bool Mode>
+  typename std::enable_if_t<!Mode, void> constructor_for_iterator(Iterator begin){
+    std::cout << "buffer(iterator)" <<  std::endl;
+    final_write_back = [=] {
+      std::copy_n(access.data(), access.num_elements(), begin);
+    };
+  }
+
+public:
 
   /// Create a new allocated 1D buffer from the given elements
   template <typename Iterator>
@@ -133,12 +166,16 @@ public:
     // The size of a multi_array is set at creation time
     allocation { boost::extents[std::distance(start_iterator, end_iterator)] },
     access { allocation }
+    // if iterators are const ones, then we do not write back
     {
       /* Then assign allocation since this is the only multi_array
          method with this iterator interface */
       allocation.assign(start_iterator, end_iterator);
+      constexpr bool isconst = std::is_const<typename std::remove_pointer_t<typename std::iterator_traits<Iterator>::pointer>>::value;
+      constructor_for_iterator<Iterator, isconst>(start_iterator);
     }
 
+  
 
   /** Create a new sub-buffer without allocation to have separate
       accessors later
@@ -159,27 +196,47 @@ public:
 
   /** The buffer content may be copied back on destruction to some
       final location */
+  
+
+
   ~buffer() {
     /* If there is a final_data set and that points to something
        alive, copy back the data through the shared pointer */
-    if (auto p = final_data.lock())
-      std::copy_n(access.data(), access.num_elements(), p.get());
-    /* If data are shared with the host but not concretely, we would
-       have to copy back the data to the host */
-    // else if (shared_data)
-    //   std::copy_n(access.data(), access.num_elements(), shared_data.get());
+    // Track if the buffer memory is provided as host memory
+
+    // const_buffer ? 'no copy' : (modified ? (host_data ? 'no copy' : 'copy') : (copy_if_node_modified ? 'copy' : 'no copy'))
+    if((!const_buffer)&&(modified ? (!data_host) : copy_if_not_modified))
+    {
+      if(final_write_back)
+      {
+        (*final_write_back)();
+      }
+    }
+    else
+    {
+      std::cout << "D: " << const_buffer << modified << data_host << copy_if_not_modified << std::endl;
+    }
   }
 
   // Use BOOST_DISABLE_ASSERTS at some time to disable range checking
 
-  /// Return an accessor of the required mode \param M
-  /// \todo Remove if not used
   template <access::mode Mode,
-            access::target Target = access::target::global_buffer>
-  detail::accessor<T, Dimensions, Mode, Target> get_access() {
-    return { *this };
+            access::target Target = access::target::host_buffer>
+  void get_access() {
+    if(Mode == access::mode::write
+        || Mode == access::mode::read_write
+        || Mode == access::mode::discard_write
+        || Mode == access::mode::discard_read_write
+        || Mode == access::mode::atomic)
+    {
+      assert(!const_buffer);
+      modified = true;
+      if(copy_if_modified){
+        //TODO
+        assert(false);
+      }
+    }
   }
-
 
  /** Return a range object representing the size of the buffer in
       terms of number of elements in each dimension as passed to the
@@ -218,6 +275,10 @@ public:
     return get_count()*sizeof(value_type);
   }
 
+/*  void set_final_data(std::function<void(void)> f) {
+    final_write_back.reset(f);
+  }*/
+
 
   /** Set the weak pointer to copy back data on buffer deletion
 
@@ -225,8 +286,43 @@ public:
       destructor has to wait for the kernel execution if the buffer is
       also accessed through a write accessor
   */
-  void set_final_data(weak_ptr_class<T> && finalData) {
-    final_data = finalData;
+  void set_final_data(std::weak_ptr<T> && final_data) {
+    copy_if_not_modified = true;
+    final_write_back = [=] {
+      if (auto sptr = final_data.lock())
+      {
+        std::copy_n(access.data(), access.num_elements(), sptr.get());
+      }
+    };
+  }
+
+  void set_final_data(std::shared_ptr<T> && final_data) {
+    copy_if_not_modified = true;
+    final_write_back = [=] {
+      std::copy_n(access.data(), access.num_elements(), final_data.get());
+    };
+  }
+
+  void set_final_data(T* final_data) {
+    copy_if_not_modified = true;
+    final_write_back = [=] {
+      std::copy_n(access.data(), access.num_elements(), final_data);
+    };
+  }
+
+  template <typename Iterator>
+  void set_final_data(Iterator final_data) {
+    typedef typename std::iterator_traits<Iterator>::value_type type_;
+    static_assert(std::is_same< type_ , T>::value, "buffer type mismatch");
+    static_assert(!(std::is_const< type_ >::value), "const iterator are not allowed");
+    copy_if_not_modified = true;
+    final_write_back = [=] {
+      std::copy_n(access.data(), access.num_elements(), final_data);
+    };
+  }
+
+  void set_final_data(std::nullptr_t){
+    final_write_back = boost::none;
   }
 
 private:
@@ -250,7 +346,8 @@ private:
     */
     if (shared_from_this().use_count() > 2)
       // \todo Double check the specification and add unit tests
-      if (host_write_back || !final_data.expired() || shared_data) {
+      if(final_write_back)
+      {
         // Create a promise to wait for
         notify_buffer_destructor = std::promise<void> {};
         // And return the future to wait for it
