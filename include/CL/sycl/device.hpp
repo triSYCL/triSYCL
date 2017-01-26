@@ -44,10 +44,8 @@ class device
   : public detail::shared_ptr_implementation<device, detail::device> {
 
   // The type encapsulating the implementation
-  using implementation_t = typename device::shared_ptr_implementation;
-
-  // Allows the comparison operation to access the implementation
-  friend implementation_t;
+  using implementation_t =
+    detail::shared_ptr_implementation<device, detail::device>;
 
 public:
 
@@ -187,9 +185,11 @@ public:
       Return synchronous errors via SYCL exception classes.
   */
   static vector_class<device>
-  get_devices(info::device_type device_type = info::device_type::all)
-    __attribute__((weak));
-
+      get_devices(info::device_type device_type = info::device_type::all)
+#ifndef _WIN32
+      __attribute__((weak))
+#endif
+      ;
 
   /** Query the device for OpenCL info::device info
 
