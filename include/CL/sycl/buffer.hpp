@@ -371,6 +371,9 @@ public:
     return { *this, command_group_handler };
   }
 
+  /**
+   */
+  void mark_as_written(){return implementation->implementation->mark_as_written();}
 
   /** Get a host accessor to the buffer with the required mode
 
@@ -485,6 +488,10 @@ public:
       way to write back some data or with some data sharing with the
       host that can not be undone
   */
+  void set_final_data(shared_ptr_class<T> finalData) {
+    implementation->implementation->set_final_data(std::move(finalData));
+  }
+
   void set_final_data(weak_ptr_class<T> finalData) {
     implementation->implementation->set_final_data(std::move(finalData));
   }
@@ -495,6 +502,11 @@ public:
 
   void set_final_data(std::nullptr_t){
     implementation->implementation->set_final_data(nullptr);
+  }
+
+  template<typename Iterator>
+  void set_final_data(Iterator finalData) {
+    implementation->implementation->set_final_data(std::move(finalData));
   }
 
 };

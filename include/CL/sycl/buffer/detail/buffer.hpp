@@ -23,6 +23,16 @@ namespace cl {
 namespace sycl {
 namespace detail {
 
+template<typename Iterator>
+struct iterator_value_type
+{
+  using value_type  = typename std::remove_pointer_t<typename std::iterator_traits<Iterator>::pointer>;
+  constexpr static bool is_const    = std::is_const<value_type>::value;
+};
+
+
+
+
 /** \addtogroup data Data access and storage in SYCL
     @{
 */
@@ -71,8 +81,6 @@ private:
 
   // Track if the buffer memory is provided as host memory
   bool data_host = false;
-  // Track if data should be written back if the buffer has not been modified when deleted
-  bool copy_if_not_modified = false;
   // Track if data should be copied if a modification occurs
   bool copy_if_modified = false;
   // Track if data have been modified
@@ -91,10 +99,13 @@ public:
 
   /** Create a new read-write buffer from \param host_data of size
       \param r without further allocation */
-  buffer(T *host_data, const range<Dimensions> &r) : buffer_base { false },
-                                                     access { host_data, r },
-                                                     data_host { true }
+  buffer(T *host_data, const range<Dimensions> &r) :
+    buffer_base { false },
+    allocation { r },
+    access { allocation }
   {
+    allocation.assign(host_data, host_data + access.num_elements());
+
     final_write_back = [=] {
       std::copy_n(access.data(), access.num_elements(), host_data);
     };
@@ -111,13 +122,13 @@ public:
     /* \todo Need to solve this const buffer issue in a clean way
 
        Just allocate memory? */
-    buffer_base { true },
+    buffer_base { false },
     allocation { r },
-    access { allocation },
-    data_host { true },
-    copy_if_modified { true }
+    access { allocation }
+    //data_host { true },
+    //copy_if_modified { true }
     {
-      allocation.assign(host_data, host_data + allocation.size());
+      allocation.assign(host_data, host_data + access.num_elements());
     }
 
 
@@ -132,9 +143,10 @@ public:
   buffer(shared_ptr_class<T> &host_data,
          const range<Dimensions> &r)
     : buffer_base { false },
-    access { host_data.get(), r },
-    data_host { true }
+    allocation { r },
+    access { allocation }
     {
+      allocation.assign(host_data.get(), host_data.get() + access.num_elements());
       final_write_back = [=] {
         std::copy_n(access.data(), access.num_elements(), host_data.get());
       };
@@ -167,8 +179,7 @@ public:
       /* Then assign allocation since this is the only multi_array
          method with this iterator interface */
       allocation.assign(start_iterator, end_iterator);
-      constexpr bool isconst = std::is_const<typename std::remove_pointer_t<typename std::iterator_traits<Iterator>::pointer>>::value;
-      constructor_for_iterator<Iterator, isconst>(start_iterator);
+      constructor_for_iterator<Iterator, iterator_value_type<Iterator>::is_const>(start_iterator);
     }
 
   
@@ -193,18 +204,25 @@ public:
   /** The buffer content may be copied back on destruction to some
       final location */
   
+  private:
+    /* *
+     *
+     *  returns true if a write back should trigered, false otherwise
+     *
+     * */
+    inline bool do_write_back() {
+      return modified && !data_host && final_write_back;
+    }
 
+  public:
 
   ~buffer() {
-    /* If there is a final_data set and that points to something
-       alive, copy back the data through the shared pointer */
-    // Track if the buffer memory is provided as host memory
-
-    // const_buffer ? 'no copy' : (modified ? (host_data ? 'no copy' : 'copy') : (copy_if_node_modified ? 'copy' : 'no copy'))
-    if((!const_buffer)&&(modified ? (!data_host) : copy_if_not_modified))
-      if(final_write_back)
-        (*final_write_back)();
+    // triggers a write-back if do_write_back() is true
+    if(do_write_back())
+      (*final_write_back)();
   }
+
+  void mark_as_written(){modified = true;}
 
   // Use BOOST_DISABLE_ASSERTS at some time to disable range checking
 
@@ -276,7 +294,6 @@ public:
       also accessed through a write accessor
   */
   void set_final_data(std::weak_ptr<T> && final_data) {
-    copy_if_not_modified = true;
     final_write_back = [=] {
       if (auto sptr = final_data.lock())
       {
@@ -286,25 +303,12 @@ public:
   }
 
   void set_final_data(std::shared_ptr<T> && final_data) {
-    copy_if_not_modified = true;
     final_write_back = [=] {
       std::copy_n(access.data(), access.num_elements(), final_data.get());
     };
   }
 
   void set_final_data(T* final_data) {
-    copy_if_not_modified = true;
-    final_write_back = [=] {
-      std::copy_n(access.data(), access.num_elements(), final_data);
-    };
-  }
-
-  template <typename Iterator>
-  void set_final_data(Iterator final_data) {
-    typedef typename std::iterator_traits<Iterator>::value_type type_;
-    static_assert(std::is_same< type_ , T>::value, "buffer type mismatch");
-    static_assert(!(std::is_const< type_ >::value), "const iterator are not allowed");
-    copy_if_not_modified = true;
     final_write_back = [=] {
       std::copy_n(access.data(), access.num_elements(), final_data);
     };
@@ -312,6 +316,15 @@ public:
 
   void set_final_data(std::nullptr_t){
     final_write_back = boost::none;
+  }
+
+  template <typename Iterator>
+  void set_final_data(Iterator final_data) {
+    static_assert(std::is_same<typename iterator_value_type<Iterator>::value_type , T>::value, "buffer type mismatch");
+    static_assert(!(iterator_value_type<Iterator>::is_const), "const iterator are not allowed");
+    final_write_back = [=] {
+      std::copy_n(access.data(), access.num_elements(), final_data);
+    };
   }
 
 private:
@@ -334,14 +347,16 @@ private:
        so check for 1 + 1 use count instead...
     */
     if (shared_from_this().use_count() > 2)
-      // \todo Double check the specification and add unit tests
-      if(final_write_back)
+    {
+      // if the buffer's destruction triggers a write-back, wait
+      if(do_write_back())
       {
         // Create a promise to wait for
         notify_buffer_destructor = std::promise<void> {};
         // And return the future to wait for it
         f = notify_buffer_destructor->get_future();
       }
+    }
     return f;
   }
 
