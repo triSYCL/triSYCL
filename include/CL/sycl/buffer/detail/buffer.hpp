@@ -12,6 +12,8 @@
 #include <cstddef>
 
 #include <boost/multi_array.hpp>
+// \todo Use C++17 optional when it is mainstream
+#include <boost/optional.hpp>
 
 #include "CL/sycl/access.hpp"
 #include "CL/sycl/buffer/detail/accessor.hpp"
@@ -207,7 +209,7 @@ public:
   private:
     /* *
      *
-     *  returns true if a write back should trigered, false otherwise
+     *  returns true if a write back should be trigered, false otherwise
      *
      * */
     inline bool do_write_back() {
@@ -217,7 +219,6 @@ public:
   public:
 
   ~buffer() {
-    // triggers a write-back if do_write_back() is true
     if(do_write_back())
       (*final_write_back)();
   }
@@ -228,12 +229,13 @@ public:
 
   template <access::mode Mode,
             access::target Target = access::target::host_buffer>
-  void get_access() {
-    if(Mode == access::mode::write
+  void track_access_mode() {
+    if(    Mode == access::mode::write
         || Mode == access::mode::read_write
         || Mode == access::mode::discard_write
         || Mode == access::mode::discard_read_write
-        || Mode == access::mode::atomic)
+        || Mode == access::mode::atomic
+      )
     {
       assert(!const_buffer);
       modified = true;
@@ -282,16 +284,8 @@ public:
     return get_count()*sizeof(value_type);
   }
 
-/*  void set_final_data(std::function<void(void)> f) {
-    final_write_back.reset(f);
-  }*/
 
-
-  /** Set the weak pointer to copy back data on buffer deletion
-
-      \todo Add a write kernel dependency on the buffer so the buffer
-      destructor has to wait for the kernel execution if the buffer is
-      also accessed through a write accessor
+  /** Set the weak pointer as destination for write-back on buffer destruction.
   */
   void set_final_data(std::weak_ptr<T> && final_data) {
     final_write_back = [=] {
@@ -302,22 +296,30 @@ public:
     };
   }
 
+  /** Set the shared pointer as destination for write-back on buffer destruction.
+  */
   void set_final_data(std::shared_ptr<T> && final_data) {
     final_write_back = [=] {
       std::copy_n(access.data(), access.num_elements(), final_data.get());
     };
   }
 
+  /** Set the pointer as destination for write-back on buffer destruction.
+  */
   void set_final_data(T* final_data) {
     final_write_back = [=] {
       std::copy_n(access.data(), access.num_elements(), final_data);
     };
   }
 
+  /** Set no destination for write-back on buffer destruction.
+  */
   void set_final_data(std::nullptr_t){
     final_write_back = boost::none;
   }
 
+  /** Set the iterator as destination for write-back on buffer destruction.
+  */
   template <typename Iterator>
   void set_final_data(Iterator final_data) {
     static_assert(std::is_same<typename iterator_value_type<Iterator>::value_type , T>::value, "buffer type mismatch");
