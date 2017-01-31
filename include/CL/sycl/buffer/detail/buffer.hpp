@@ -127,8 +127,6 @@ public:
     buffer_base { false },
     allocation { r },
     access { allocation }
-    //data_host { true },
-    //copy_if_modified { true }
     {
       allocation.assign(host_data, host_data + access.num_elements());
     }
@@ -155,6 +153,10 @@ public:
     }
 
 private:
+  /* These two methods are called by the constructor when used with two iterators
+   * if these iterators are const-iterators then the first method is called
+   * otherwise, the second method is called.
+   */
   template<typename Iterator, bool Mode>
   typename std::enable_if_t<Mode, void> constructor_for_iterator(Iterator begin){
     final_write_back = boost::none;
@@ -226,6 +228,11 @@ public:
   void mark_as_written(){modified = true;}
 
   // Use BOOST_DISABLE_ASSERTS at some time to disable range checking
+  //
+  /** This method is to be called whenever an acessor is created.
+   *  Its current purpose is to track if an accessor with write access
+   *  is created and acting acordingly.
+   */
 
   template <access::mode Mode,
             access::target Target = access::target::host_buffer>

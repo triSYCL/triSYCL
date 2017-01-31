@@ -495,15 +495,22 @@ public:
   void set_final_data(weak_ptr_class<T> finalData) {
     implementation->implementation->set_final_data(std::move(finalData));
   }
-  
+  /** WARNING: the user has to ensure that the object refered to by the pointer
+   *  will be alive after buffer destruction, otherwise the behaviour is undefined.
+   */
   void set_final_data(T* finalData) {
-    implementation->implementation->set_final_data(std::move(finalData));
+    implementation->implementation->set_final_data(finalData);
   }
 
+  /** Disable write-back on buffer destruction.
+   */
   void set_final_data(std::nullptr_t){
     implementation->implementation->set_final_data(nullptr);
   }
 
+  /** WARNING: the user has to ensure that the object refered to by the iterator
+   *  will be alive after buffer destruction, otherwise the behaviour is undefined.
+   */
   template<typename Iterator>
   void set_final_data(Iterator finalData) {
     implementation->implementation->set_final_data(std::move(finalData));
