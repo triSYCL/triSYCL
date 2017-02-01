@@ -6,7 +6,8 @@
    accessors.
 */
 
-/* RUN: %{execute}%s | %{filecheck} %s
+/* REQUIRES: xilinx-xocc
+   RUN: %{execute}%s | %{filecheck} %s
    CHECK: Result:
    CHECK-NEXT: 6 8 11
 */

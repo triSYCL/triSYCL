@@ -124,7 +124,9 @@ clean:
 multiple_compilation_units/parallel_for: multiple_compilation_units/parallel_for_other.o
 
 ifdef XILINX_SDX
-# Compile explicit OpenCL kernels for Xilinx FPGA
+# Compile explicit OpenCL kernels for Xilinx FPGA.
+# Note this variable enables also the Lit tests guarded
+# by "REQUIRES: xilinx-xocc"
 
 # Use "order-only" prerequisites for kernels since if the kernel are
 # changed, it does not imply to recompile the host part
