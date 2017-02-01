@@ -25,14 +25,17 @@ namespace cl {
 namespace sycl {
 namespace detail {
 
+/** Used to retrieve the type return by an Iterator,
+ *  in particular a const-iterator<T> returns const T.
+ *  The attribute is_const is true iff the iterator is
+ *  a const one
+ */
 template<typename Iterator>
 struct iterator_value_type
 {
   using value_type  = typename std::remove_pointer_t<typename std::iterator_traits<Iterator>::pointer>;
-  constexpr static bool is_const    = std::is_const<value_type>::value;
+  constexpr static bool is_const = std::is_const<value_type>::value;
 };
-
-
 
 
 /** \addtogroup data Data access and storage in SYCL
@@ -79,7 +82,7 @@ private:
   boost::multi_array_ref<T, Dimensions> access;
 
   // How to copy back data on buffer destruction, can be modified with set_final_data( ... )
-  boost::optional<std::function<void(void)>> final_write_back = boost::none;
+  boost::optional<std::function<void(void)>> final_write_back;
 
   // Track if the buffer memory is provided as host memory
   bool data_host = false;
@@ -152,15 +155,21 @@ public:
       };
     }
 
+
 private:
-  /* These two methods are called by the constructor when used with two iterators
-   * if these iterators are const-iterators then the first method is called
+
+
+  /* These two methods are called by the constructor when used with two iterators.
+   * If these iterators are const-iterators then the first method is called
    * otherwise, the second method is called.
+   *
+   * \todo replace both these methods by 'if constexpr' when/if available in C++17
    */
   template<typename Iterator, bool Mode>
   typename std::enable_if_t<Mode, void> constructor_for_iterator(Iterator begin){
     final_write_back = boost::none;
   }
+
 
   template<typename Iterator, bool Mode>
   typename std::enable_if_t<!Mode, void> constructor_for_iterator(Iterator begin){
@@ -169,7 +178,9 @@ private:
     };
   }
 
+
 public:
+
 
   /// Create a new allocated 1D buffer from the given elements
   template <typename Iterator>
@@ -178,15 +189,25 @@ public:
     // The size of a multi_array is set at creation time
     allocation { boost::extents[std::distance(start_iterator, end_iterator)] },
     access { allocation }
-    // if iterators are const ones, then we do not write back
+    // If iterators are const ones, then we do not write back
     {
       /* Then assign allocation since this is the only multi_array
          method with this iterator interface */
       allocation.assign(start_iterator, end_iterator);
       constructor_for_iterator<Iterator, iterator_value_type<Iterator>::is_const>(start_iterator);
+      /* \todo replace constructor_for_iterator by these lines
+       * when 'if constexpr' will be available in C++17
+
+      if constexpr (iterator_value_type<Iterator>::is_const) {
+        final_write_back = boost::none;
+      } else {
+        final_write_back = [=] {
+          std::copy_n(access.data(), access.num_elements(), begin);
+        };
+      }
+       */
     }
 
-  
 
   /** Create a new sub-buffer without allocation to have separate
       accessors later
@@ -205,35 +226,43 @@ public:
          event available_event)
   */
 
-  /** The buffer content may be copied back on destruction to some
-      final location */
-  
+
   private:
-    /* *
-     *
-     *  returns true if a write back should be trigered, false otherwise
-     *
-     * */
-    inline bool do_write_back() {
+
+
+    /** Returns true if a write back should be trigered, false otherwise
+     */
+    inline bool is_write_back_required() {
       return modified && !data_host && final_write_back;
     }
 
+
   public:
 
+
+  /** The buffer content may be copied back on destruction to some
+      final location */
   ~buffer() {
-    if(do_write_back())
+    if(is_write_back_required())
       (*final_write_back)();
   }
 
-  void mark_as_written(){modified = true;}
+
+  /** Enforce the buffer to be considered as being modified.
+   *  Same as creating an accessor with write access.
+   */
+  void mark_as_written() {
+    modified = true;
+  }
+
 
   // Use BOOST_DISABLE_ASSERTS at some time to disable range checking
-  //
+
+
   /** This method is to be called whenever an acessor is created.
    *  Its current purpose is to track if an accessor with write access
    *  is created and acting acordingly.
    */
-
   template <access::mode Mode,
             access::target Target = access::target::host_buffer>
   void track_access_mode() {
@@ -242,8 +271,7 @@ public:
         || Mode == access::mode::discard_write
         || Mode == access::mode::discard_read_write
         || Mode == access::mode::atomic
-      )
-    {
+      ) {
       assert(!const_buffer);
       modified = true;
       if(copy_if_modified){
@@ -253,6 +281,7 @@ public:
       }
     }
   }
+
 
  /** Return a range object representing the size of the buffer in
       terms of number of elements in each dimension as passed to the
@@ -296,14 +325,14 @@ public:
   */
   void set_final_data(std::weak_ptr<T> && final_data) {
     final_write_back = [=] {
-      if (auto sptr = final_data.lock())
-      {
+      if (auto sptr = final_data.lock()) {
         std::copy_n(access.data(), access.num_elements(), sptr.get());
       }
     };
   }
 
-  /** Set the shared pointer as destination for write-back on buffer destruction.
+
+  /** Provide destination for write-back on buffer destruction as a shared pointer.
   */
   void set_final_data(std::shared_ptr<T> && final_data) {
     final_write_back = [=] {
@@ -311,7 +340,8 @@ public:
     };
   }
 
-  /** Set the pointer as destination for write-back on buffer destruction.
+
+  /** Provide destination for write-back on buffer destruction as a pointer.
   */
   void set_final_data(T* final_data) {
     final_write_back = [=] {
@@ -319,24 +349,28 @@ public:
     };
   }
 
-  /** Set no destination for write-back on buffer destruction.
+
+  /** Disable write-back on buffer destruction as an iterator.
   */
   void set_final_data(std::nullptr_t){
     final_write_back = boost::none;
   }
 
-  /** Set the iterator as destination for write-back on buffer destruction.
+
+  /** Provide destination for write-back on buffer destruction as an iterator.
   */
   template <typename Iterator>
   void set_final_data(Iterator final_data) {
     static_assert(std::is_same<typename iterator_value_type<Iterator>::value_type , T>::value, "buffer type mismatch");
-    static_assert(!(iterator_value_type<Iterator>::is_const), "const iterator are not allowed");
+    static_assert(!(iterator_value_type<Iterator>::is_const), "const iterator is not allowed");
     final_write_back = [=] {
       std::copy_n(access.data(), access.num_elements(), final_data);
     };
   }
 
+
 private:
+
 
   /** Get a \c future to wait from inside the \c cl::sycl::buffer in
       case there is something to copy back to the host
@@ -357,8 +391,8 @@ private:
     */
     if (shared_from_this().use_count() > 2)
     {
-      // if the buffer's destruction triggers a write-back, wait
-      if(do_write_back())
+      // If the buffer's destruction triggers a write-back, wait
+      if(is_write_back_required())
       {
         // Create a promise to wait for
         notify_buffer_destructor = std::promise<void> {};

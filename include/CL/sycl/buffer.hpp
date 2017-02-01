@@ -371,9 +371,14 @@ public:
     return { *this, command_group_handler };
   }
 
-  /**
+
+  /** Force the buffer to behave like if we had created
+   *  an accessor in write mode.
    */
-  void mark_as_written(){return implementation->implementation->mark_as_written();}
+  void mark_as_written() {
+    return implementation->implementation->mark_as_written();
+  }
+
 
   /** Get a host accessor to the buffer with the required mode
 
@@ -492,9 +497,12 @@ public:
     implementation->implementation->set_final_data(std::move(finalData));
   }
 
+
   void set_final_data(weak_ptr_class<T> finalData) {
     implementation->implementation->set_final_data(std::move(finalData));
   }
+
+
   /** WARNING: the user has to ensure that the object refered to by the pointer
    *  will be alive after buffer destruction, otherwise the behaviour is undefined.
    */
@@ -502,11 +510,13 @@ public:
     implementation->implementation->set_final_data(finalData);
   }
 
+
   /** Disable write-back on buffer destruction.
    */
   void set_final_data(std::nullptr_t){
     implementation->implementation->set_final_data(nullptr);
   }
+
 
   /** WARNING: the user has to ensure that the object refered to by the iterator
    *  will be alive after buffer destruction, otherwise the behaviour is undefined.
