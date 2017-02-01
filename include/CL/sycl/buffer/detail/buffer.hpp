@@ -84,14 +84,15 @@ private:
   // How to copy back data on buffer destruction, can be modified with set_final_data( ... )
   boost::optional<std::function<void(void)>> final_write_back;
 
+  // Used to store the shared pointer used as argument of set_final_data
+  boost::optional<shared_ptr_class<T>> shared_pointer;
+
   // Track if the buffer memory is provided as host memory
   bool data_host = false;
   // Track if data should be copied if a modification occurs
   bool copy_if_modified = false;
   // Track if data have been modified
   bool modified  = false;
-  // Track if data are modifiable
-  bool const_buffer = false;
 
 public:
 
@@ -106,15 +107,9 @@ public:
       \param r without further allocation */
   buffer(T *host_data, const range<Dimensions> &r) :
     buffer_base { false },
-    allocation { r },
-    access { allocation }
-  {
-    allocation.assign(host_data, host_data + access.num_elements());
-
-    final_write_back = [=] {
-      std::copy_n(access.data(), access.num_elements(), host_data);
-    };
-  }
+    access { host_data, r },
+    data_host { true }
+  {}
 
 
   /** Create a new read-only buffer from \param host_data of size \param r
@@ -128,11 +123,12 @@ public:
 
        Just allocate memory? */
     buffer_base { false },
-    allocation { r },
-    access { allocation }
-    {
-      allocation.assign(host_data, host_data + access.num_elements());
-    }
+    access { const_cast<T *>(host_data), r },
+    data_host { true },
+    // We set copy_if_modified to true, so that if an accessor with write
+    // access is created, then data are copied before to be modified.
+    copy_if_modified { true }
+    {}
 
 
   /** Create a new buffer with associated memory, using the data in
@@ -144,35 +140,30 @@ public:
       used.
   */
   buffer(shared_ptr_class<T> &host_data,
-         const range<Dimensions> &r)
-    : buffer_base { false },
-    allocation { r },
-    access { allocation }
-    {
-      allocation.assign(host_data.get(), host_data.get() + access.num_elements());
-      final_write_back = [=] {
-        std::copy_n(access.data(), access.num_elements(), host_data.get());
-      };
-    }
+         const range<Dimensions> &r) :
+    buffer_base { false },
+    access { host_data.get(), r },
+    data_host { true }
+    {}
 
 
 private:
 
 
-  /* These two methods are called by the constructor when used with two iterators.
+  /* On these two methods are called by the constructor when used with two iterators.
    * If these iterators are const-iterators then the first method is called
    * otherwise, the second method is called.
    *
    * \todo replace both these methods by 'if constexpr' when/if available in C++17
    */
   template<typename Iterator, bool Mode>
-  typename std::enable_if_t<Mode, void> constructor_for_iterator(Iterator begin){
+  typename std::enable_if_t<Mode, void> constructor_for_iterator(Iterator begin) {
     final_write_back = boost::none;
   }
 
 
   template<typename Iterator, bool Mode>
-  typename std::enable_if_t<!Mode, void> constructor_for_iterator(Iterator begin){
+  typename std::enable_if_t<!Mode, void> constructor_for_iterator(Iterator begin) {
     final_write_back = [=] {
       std::copy_n(access.data(), access.num_elements(), begin);
     };
@@ -227,23 +218,10 @@ public:
   */
 
 
-  private:
-
-
-    /** Returns true if a write back should be trigered, false otherwise
-     */
-    inline bool is_write_back_required() {
-      return modified && !data_host && final_write_back;
-    }
-
-
-  public:
-
-
   /** The buffer content may be copied back on destruction to some
       final location */
   ~buffer() {
-    if(is_write_back_required())
+    if (modified && final_write_back)
       (*final_write_back)();
   }
 
@@ -266,18 +244,18 @@ public:
   template <access::mode Mode,
             access::target Target = access::target::host_buffer>
   void track_access_mode() {
-    if(    Mode == access::mode::write
+    if (   Mode == access::mode::write
         || Mode == access::mode::read_write
         || Mode == access::mode::discard_write
         || Mode == access::mode::discard_read_write
         || Mode == access::mode::atomic
-      ) {
-      assert(!const_buffer);
+       ) {
       modified = true;
-      if(copy_if_modified){
-        //TODO
-        detail::unimplemented();
-        assert(false);
+      if (copy_if_modified) {
+        copy_if_modified = false;
+        data_host = false;
+        allocation = boost::multi_array<T, Dimensions>{ access };
+        access = boost::multi_array_ref<T, Dimensions>{ allocation };
       }
     }
   }
@@ -296,7 +274,7 @@ public:
        std::size_t *?
     */
     return range<Dimensions> {
-      *(const std::size_t (*)[Dimensions])(allocation.shape())
+      *(const std::size_t (*)[Dimensions])(access.shape())
         };
   }
 
@@ -352,7 +330,7 @@ public:
 
   /** Disable write-back on buffer destruction as an iterator.
   */
-  void set_final_data(std::nullptr_t){
+  void set_final_data(std::nullptr_t) {
     final_write_back = boost::none;
   }
 
@@ -392,8 +370,7 @@ private:
     if (shared_from_this().use_count() > 2)
     {
       // If the buffer's destruction triggers a write-back, wait
-      if(is_write_back_required())
-      {
+      if (modified && (final_write_back || data_host)) {
         // Create a promise to wait for
         notify_buffer_destructor = std::promise<void> {};
         // And return the future to wait for it
