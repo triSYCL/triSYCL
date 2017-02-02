@@ -122,9 +122,6 @@ public:
       host change the host_data after buffer creation?
   */
   buffer(const T *host_data, const range<Dimensions> &r) :
-    /* \todo Need to solve this const buffer issue in a clean way
-
-       Just allocate memory? */
     buffer_base { false },
     access { const_cast<T *>(host_data), r },
     data_host { true },
