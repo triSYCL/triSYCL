@@ -30,13 +30,25 @@ public :
   {}
 
 
-  auto& x() {return self.s[0];}
+  /* Return the first element of the vector
+   */
+  auto& x() {
+    return self.s[0];
+  }
 
 
-  auto& y() {return self.s[1];}
+  /* Return the second element of the vector
+   */
+  auto& y() {
+    return self.s[1];
+  }
 
 
-  auto& z() {return self.s[2];}
+  /* Return the third element of the vector
+   */
+  auto& z() {
+    return self.s[2];
+  }
 
 };
 

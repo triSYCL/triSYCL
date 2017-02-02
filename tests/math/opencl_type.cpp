@@ -17,10 +17,3 @@ int test_main(int argc, char *argv[]) {
             << ", z: "  << vec.z() << std::endl;
   return 0;
 }
-
-#undef TRYSYCL_MATH_WRAPX
-#undef TRYSYCL_MATH_WRAPX2
-#undef TRYSYCL_MATH_WRAPX2s
-#undef TRYSYCL_MATH_WRAPX3
-#undef TRYSYCL_MATH_WRAPX3s
-#undef TRYSYCL_MATH_WRAPX3ss
