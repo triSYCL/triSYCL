@@ -283,7 +283,7 @@ void parallel_for_workgroup(nd_range<Dimensions> r,
 template <std::size_t Dimensions, typename ParallelForFunctor>
 void parallel_for_workitem(const group<Dimensions> &g,
                            ParallelForFunctor f) {
-#if defined(_OPENMP) && !defined(TRISYCL_NO_BARRIER)
+#if defined(_OPENMP) && (!defined(TRISYCL_NO_BARRIER) && !defined(_MSC_VER))
   /* To implement barriers With OpenMP, one thread is created for each
      work-item in the group and thus an OpenMP barrier has the same effect
      of an OpenCL barrier executed by the work-items in a workgroup
@@ -300,7 +300,7 @@ void parallel_for_workitem(const group<Dimensions> &g,
   // With OMP, one task is created for each work-item in the group
 
   range<Dimensions> l_r = g.get_nd_range().get_local();
-  int tot = l_r.get(0);
+  std::size_t tot = l_r.get(0);
   for (int i = 1; i < (int) Dimensions; ++i){
     tot *= l_r.get(i);
   }

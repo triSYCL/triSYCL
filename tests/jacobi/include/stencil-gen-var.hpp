@@ -148,7 +148,8 @@ public:
     if (r1 % li2D.nbi_wg1 != 0) {
       r1 = ((global_max1 / li2D.nbi_wg1) + 1) * li2D.nbi_wg1;
     }
-    nd_range = {cl::sycl::range<2> {(unsigned int) r0, (unsigned int) r1}, cl::sycl::range<2> {li2D.nbi_wg0, li2D.nbi_wg1}, offset};
+    nd_range = {cl::sycl::range<2> {(size_t) r0, (size_t)r1},
+                cl::sycl::range<2> {(size_t)li2D.nbi_wg0, (size_t)li2D.nbi_wg1}, offset};
     //    nd_range = {range, cl::sycl::range<2> {li2D.nbi_wg0, li2D.nbi_wg1}, offset};
   }
 

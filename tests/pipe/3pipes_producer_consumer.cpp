@@ -80,7 +80,11 @@ int test_main(int argc, char *argv[]) {
             /* Declare a variable of the same type as what the output
                pipe can deal with (a good example of single source
                advantage) */
-            decltype(pc)::value_type ea, eb, ec;
+#ifdef _MSC_VER
+              cl::sycl::accessor<Type, 1, cl::sycl::access::mode::write, cl::sycl::access::target::pipe>::value_type ea, eb, ec;
+#else
+              decltype(pc)::value_type ea, eb, ec;
+#endif
             // Try to read from the pipes 1 element up to success
             while (!(apa >> ea)) ;
             while (!(apb >> eb)) ;

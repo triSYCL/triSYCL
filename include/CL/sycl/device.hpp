@@ -27,6 +27,16 @@
 #include "CL/sycl/device_selector.hpp"
 #include "CL/sycl/platform.hpp"
 
+#ifndef WEAK_ATTRIB_PREFIX
+  #ifdef _MSC_VER
+    #define WEAK_ATTRIB_PREFIX __declspec(selectany)
+    #define WEAK_ATTRIB_SUFFIX
+  #else
+    #define WEAK_ATTRIB_PREFIX
+    #define WEAK_ATTRIB_SUFFIX __attribute__((weak))
+  #endif
+#endif 
+
 namespace cl {
 namespace sycl {
 
@@ -184,12 +194,12 @@ public:
 
       Return synchronous errors via SYCL exception classes.
   */
-  static vector_class<device>
-      get_devices(info::device_type device_type = info::device_type::all)
-#ifndef _WIN32
-      __attribute__((weak))
+#ifdef _MSC_VER
+  inline
 #endif
-      ;
+  static vector_class<device>
+    get_devices(info::device_type device_type = info::device_type::all)
+    WEAK_ATTRIB_SUFFIX;
 
   /** Query the device for OpenCL info::device info
 

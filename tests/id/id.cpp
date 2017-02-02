@@ -29,7 +29,7 @@ int main() {
   id<> i;
   id<3> i3;
   // Since i is not initialized, neither k
-  id<> k(i);
+  id<> k(i); // NOTE: MSVC throws exception here in Debug mode: Use of uninitialized variable 'i' (default constructed std::array holds indererminate values)
   (k - k).display();
   id<> j { 1 };
   i = j;
