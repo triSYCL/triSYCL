@@ -222,7 +222,7 @@ public:
 
   /** Create a new buffer which is initialized by host_data
 
-      \param[inout] host_data points to the storage and values used to
+      \param[in] host_data points to the storage and values used to
       initialize the buffer
 
       \param[in] r defines the size
@@ -239,15 +239,12 @@ public:
       unique_ptr_class/std::unique_ptr have the destructor type as
       dependent
   */
-  template <typename D = std::default_delete<T>>
-  buffer(unique_ptr_class<T, D> &&host_data,
-         const range<Dimensions> &buffer_range,
+  buffer(unique_ptr_class<T> &&host_data,
+         const range<Dimensions> &r,
          Allocator allocator = {})
-  // Just delegate to the constructor with normal pointer
-    : buffer { host_data.get(), buffer_range, allocator } {
-    // Then release the host_data memory
-    host_data.release();
-  }
+    : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
+            { std::move(host_data), r }) }
+  {}
 
 
   /** Create a new allocated 1D buffer initialized from the given

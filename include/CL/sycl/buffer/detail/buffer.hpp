@@ -90,6 +90,9 @@ private:
   // Used to store the shared pointer used as argument of set_final_data
   boost::optional<shared_ptr_class<T>> shared_pointer;
 
+  // Used to store the shared pointer used as argument of set_final_data
+  boost::optional<unique_ptr_class<T>> unique_pointer;
+
   // Track if the buffer memory is provided as host memory
   bool data_host = false;
   // Track if data should be copied if a modification occurs
@@ -128,7 +131,7 @@ public:
     // We set copy_if_modified to true, so that if an accessor with write
     // access is created, then data are copied before to be modified.
     copy_if_modified { true }
-    {}
+  {}
 
 
   /** Create a new buffer with associated memory, using the data in
@@ -143,8 +146,23 @@ public:
          const range<Dimensions> &r) :
     buffer_base { false },
     access { host_data.get(), r },
+    shared_pointer { host_data },
     data_host { true }
-    {}
+  {}
+
+
+  /** Create a new buffer with associated memory, using the data in
+   *  host_data.
+   *
+   *  SYCL's runtime has full ownership of the host_data.
+   */
+  buffer(unique_ptr_class<T> &&host_data,
+         const range<Dimensions> &r) :
+    buffer_base { false },
+    access { host_data.get(), r },
+    unique_pointer { host_data },
+    data_host { true }
+  {}
 
 
 private:
@@ -185,7 +203,8 @@ public:
       /* Then assign allocation since this is the only multi_array
          method with this iterator interface */
       allocation.assign(start_iterator, end_iterator);
-      constructor_for_iterator<Iterator, iterator_value_type<Iterator>::is_const>(start_iterator);
+      constexpr bool isconst = iterator_value_type<Iterator>::is_const;
+      constructor_for_iterator<Iterator, isconst>(start_iterator);
       /* \todo replace constructor_for_iterator by these lines
        * when 'if constexpr' will be available in C++17
 
