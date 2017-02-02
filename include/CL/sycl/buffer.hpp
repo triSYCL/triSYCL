@@ -291,7 +291,8 @@ public:
          InputIterator end_iterator,
          Allocator allocator = {}) :
     implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
-            { start_iterator, end_iterator }) } {}
+            { start_iterator, end_iterator }) }
+  {}
 
 
   /** Create a new sub-buffer without allocation to have separate

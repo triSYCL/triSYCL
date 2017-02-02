@@ -43,8 +43,8 @@ int main() {
   const int size = 10;
   std::vector<int> data(size);
   constexpr int groupsize = 2;
-  /* Put &data[0] instead of data.data() because it is not obvious in the
-     excerpt below it is a vector */
+/* Put &data[0] instead of data.data() because it is not obvious in the
+   excerpt below it is a vector */
 //////// Start slide
 buffer<int> input(&data[0], size);
 buffer<int> output(size);
