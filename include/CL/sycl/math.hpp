@@ -12,18 +12,30 @@
 
 namespace cl {
 namespace sycl {
-#define TRISYCL_MATH_WRAP(FUN) template<typename T> T FUN(T x) \
-  {return std::FUN(x);}
-#define TRISYCL_MATH_WRAP2(FUN) template<typename T> T FUN(T x, T y) \
-  {return std::FUN(x, y);}
-#define TRISYCL_MATH_WRAP2s(FUN) template<typename T, typename U> \
-  T FUN(T x, U y) {return std::FUN(x, y);}
-#define TRISYCL_MATH_WRAP3(FUN) template<typename T> T FUN(T x, T y, T z) \
-  {return std::FUN(x, y, z);}
-#define TRISYCL_MATH_WRAP3s(FUN) template<typename T, typename U> \
-  T FUN(T x, T y, U z) {return std::FUN(x, y, z);}
-#define TRISYCL_MATH_WRAP3ss(FUN) template<typename T, typename U> \
-  T FUN(T x, U y, U z) {return std::FUN(x, y, z);}
+#define TRISYCL_MATH_WRAP(FUN) template<typename T>                            \
+  T FUN(T x) {                                                                 \
+    return std::FUN(x);                                                        \
+  }
+#define TRISYCL_MATH_WRAP2(FUN) template<typename T>                           \
+  T FUN(T x, T y) {                                                            \
+    return std::FUN(x, y);                                                     \
+  }
+#define TRISYCL_MATH_WRAP2s(FUN) template<typename T, typename U>              \
+  T FUN(T x, U y) {                                                            \
+    return std::FUN(x, y);                                                     \
+  }
+#define TRISYCL_MATH_WRAP3(FUN) template<typename T>                           \
+  T FUN(T x, T y, T z) {                                                       \
+    return std::FUN(x, y, z);                                                  \
+  }
+#define TRISYCL_MATH_WRAP3s(FUN) template<typename T, typename U>              \
+  T FUN(T x, T y, U z) {                                                       \
+    return std::FUN(x, y, z);                                                  \
+  }
+#define TRISYCL_MATH_WRAP3ss(FUN) template<typename T, typename U>             \
+  T FUN(T x, U y, U z) {                                                       \
+    return std::FUN(x, y, z);                                                  \
+  }
 
 TRISYCL_MATH_WRAP(abs)//I
 //*TRISYCL_MATH_WRAP2(abs_diff)//I
