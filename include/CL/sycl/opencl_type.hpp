@@ -13,26 +13,30 @@
 namespace cl {
 namespace sycl {
 
-
 /** Wrapper of Boost::compute's cl_float3
  */
 class cl_float3 {
 
+  ::cl_float3 self;
 
-  ::cl_float3 yo; //yo: spannish word for I
-  //inline auto operator[] = internal.operator[];
 public :
-  cl_float3 (::cl_float3 yo_) :
-    yo { yo_ }
+
+
+  cl_float3 (::cl_float3 self_) : self { self_ }
   {}
 
-  cl_float3 (float x, float y, float z) :
-    yo { x, y, z }
+
+  cl_float3 (float x, float y, float z) : self { x, y, z }
   {}
 
-  auto& x() {return yo.s[0];}
-  auto& y() {return yo.s[1];}
-  auto& z() {return yo.s[2];}
+
+  auto& x() {return self.s[0];}
+
+
+  auto& y() {return self.s[1];}
+
+
+  auto& z() {return self.s[2];}
 
 };
 

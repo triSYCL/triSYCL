@@ -12,12 +12,18 @@
 
 namespace cl {
 namespace sycl {
-#define TRISYCL_MATH_WRAP(FUN) template<typename T> T FUN(T x) {return std::FUN(x);}
-#define TRISYCL_MATH_WRAP2(FUN) template<typename T> T FUN(T x, T y) {return std::FUN(x, y);}
-#define TRISYCL_MATH_WRAP2s(FUN) template<typename T, typename U> T FUN(T x, U y) {return std::FUN(x, y);}
-#define TRISYCL_MATH_WRAP3(FUN) template<typename T> T FUN(T x, T y, T z) {return std::FUN(x, y, z);}
-#define TRISYCL_MATH_WRAP3s(FUN) template<typename T, typename U> T FUN(T x, T y, U z) {return std::FUN(x, y, z);}
-#define TRISYCL_MATH_WRAP3ss(FUN) template<typename T, typename U> T FUN(T x, U y, U z) {return std::FUN(x, y, z);}
+#define TRISYCL_MATH_WRAP(FUN) template<typename T> T FUN(T x) \
+  {return std::FUN(x);}
+#define TRISYCL_MATH_WRAP2(FUN) template<typename T> T FUN(T x, T y) \
+  {return std::FUN(x, y);}
+#define TRISYCL_MATH_WRAP2s(FUN) template<typename T, typename U> \
+  T FUN(T x, U y) {return std::FUN(x, y);}
+#define TRISYCL_MATH_WRAP3(FUN) template<typename T> T FUN(T x, T y, T z) \
+  {return std::FUN(x, y, z);}
+#define TRISYCL_MATH_WRAP3s(FUN) template<typename T, typename U> \
+  T FUN(T x, T y, U z) {return std::FUN(x, y, z);}
+#define TRISYCL_MATH_WRAP3ss(FUN) template<typename T, typename U> \
+  T FUN(T x, U y, U z) {return std::FUN(x, y, z);}
 
 TRISYCL_MATH_WRAP(abs)//I
 //*TRISYCL_MATH_WRAP2(abs_diff)//I
@@ -78,7 +84,7 @@ TRISYCL_MATH_WRAP(logb)
 //
 //TRISYCL_MATH_WRAP3s(max) //I
 template<typename T>
-T max(T x, T y, T z){
+T max(T x, T y, T z) {
   return std::max(x, std::max(y, z));
 }
 /* geninteger max (geninteger, geninteger)
@@ -89,7 +95,7 @@ T max(T x, T y, T z){
 //
 //TRISYCL_MATH_WRAP3s(min) //I
 template<typename T>
-T min(T x, T y, T z){
+T min(T x, T y, T z) {
   return std::min(x, std::min(y, z));
 }
 /* geninteger min (geninteger, geninteger)
@@ -122,21 +128,20 @@ TRISYCL_MATH_WRAP(tanh)
 //*TRISYCL_MATH_WRAP(tanpi)
 TRISYCL_MATH_WRAP(tgamma)
 TRISYCL_MATH_WRAP(trunc)
-/*\ Integer concatenation
+/* Integer concatenation
  * shortn upsample (charn hi, ucharn lo)
  * ushortn upsample (ucharn hi, ucharn lo)
  * intn upsample (shortn hi, ushortn lo)
  * uintn upsample (ushortn hi, ushortn lo)
  * longlongn upsample(intn hi, uintn lo)
  * ulonglongn upsample(uintn hi, uintn l)
-\*/
+ */
 //*TRISYCL_MATH_WRAP(popcount)//I
 //*TRISYCL_MATH_WRAP3(mad24)
 //*TRISYCL_MATH_WRAP3(mul24)
 
 //
-namespace native
-{
+namespace native {
 TRISYCL_MATH_WRAP(cos)
 //*TRISYCL_MATH_WRAP2(divide)
 TRISYCL_MATH_WRAP(exp)

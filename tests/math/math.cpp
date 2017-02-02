@@ -17,8 +17,7 @@ using namespace cl::sycl;
 
 int test_main(int argc, char *argv[]) {
   constexpr auto N = 100;
-  for(int k = 0; k < N; k++)
-  {
+  for (auto k = 0; k < N; k++) {
     double i = k;
     TRYSYCL_MATH_WRAPX(abs, i)//I
     //*TRYSYCL_MATH_WRAPX2(abs_diff)//I
