@@ -33,7 +33,8 @@ namespace detail {
 template<typename Iterator>
 struct iterator_value_type
 {
-  using value_type  = typename std::remove_pointer_t<typename std::iterator_traits<Iterator>::pointer>;
+  using value_type  = typename std::remove_pointer_t<
+    typename std::iterator_traits<Iterator>::pointer>;
   constexpr static bool is_const = std::is_const<value_type>::value;
 };
 
@@ -81,7 +82,9 @@ private:
   */
   boost::multi_array_ref<T, Dimensions> access;
 
-  // How to copy back data on buffer destruction, can be modified with set_final_data( ... )
+  /* How to copy back data on buffer destruction, can be modified with
+   * set_final_data( ... )
+   */
   boost::optional<std::function<void(void)>> final_write_back;
 
   // Used to store the shared pointer used as argument of set_final_data
@@ -254,8 +257,8 @@ public:
       if (copy_if_modified) {
         copy_if_modified = false;
         data_host = false;
-        allocation = boost::multi_array<T, Dimensions>{ access };
-        access = boost::multi_array_ref<T, Dimensions>{ allocation };
+        allocation = boost::multi_array<T, Dimensions> { access };
+        access = boost::multi_array_ref<T, Dimensions> { allocation };
       }
     }
   }
@@ -302,6 +305,7 @@ public:
   /** Set the weak pointer as destination for write-back on buffer destruction.
   */
   void set_final_data(std::weak_ptr<T> && final_data) {
+    shared_pointer = boost::none;
     final_write_back = [=] {
       if (auto sptr = final_data.lock()) {
         std::copy_n(access.data(), access.num_elements(), sptr.get());
@@ -310,11 +314,13 @@ public:
   }
 
 
-  /** Provide destination for write-back on buffer destruction as a shared pointer.
-  */
+  /** Provide destination for write-back on buffer destruction as a
+   *  shared pointer.
+   */
   void set_final_data(std::shared_ptr<T> && final_data) {
+    shared_pointer = final_data;
     final_write_back = [=] {
-      std::copy_n(access.data(), access.num_elements(), final_data.get());
+      std::copy_n(access.data(), access.num_elements(), (*shared_pointer).get());
     };
   }
 
@@ -322,6 +328,7 @@ public:
   /** Provide destination for write-back on buffer destruction as a pointer.
   */
   void set_final_data(T* final_data) {
+    shared_pointer = boost::none;
     final_write_back = [=] {
       std::copy_n(access.data(), access.num_elements(), final_data);
     };
@@ -331,6 +338,7 @@ public:
   /** Disable write-back on buffer destruction as an iterator.
   */
   void set_final_data(std::nullptr_t) {
+    shared_pointer = boost::none;
     final_write_back = boost::none;
   }
 
@@ -339,8 +347,10 @@ public:
   */
   template <typename Iterator>
   void set_final_data(Iterator final_data) {
-    static_assert(std::is_same<typename iterator_value_type<Iterator>::value_type , T>::value, "buffer type mismatch");
-    static_assert(!(iterator_value_type<Iterator>::is_const), "const iterator is not allowed");
+    using type_ = typename iterator_value_type<Iterator>::value_type;
+    static_assert(std::is_same<type_, T>::value, "buffer type mismatch");
+    static_assert(!(std::is_const<type_>::value), "const iterator is not allowed");
+    shared_pointer = boost::none;
     final_write_back = [=] {
       std::copy_n(access.data(), access.num_elements(), final_data);
     };

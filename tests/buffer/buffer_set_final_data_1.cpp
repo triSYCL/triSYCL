@@ -71,7 +71,7 @@ int test_main(int argc, char *argv[]) {
     {
       buffer<int> mybuffer { v.begin(), v.end() };
       auto read = mybuffer.get_access<access::mode::read, access::target::host_buffer>();
-      for(int i = 0; i < N; ++i)
+      for (int i = 0; i < N; ++i)
         std::cout << read[i] << ", ";
       std::cout << std::endl;
       mybuffer.set_final_data(w.begin());

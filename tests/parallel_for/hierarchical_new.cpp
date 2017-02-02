@@ -45,31 +45,34 @@ int main() {
   constexpr int groupsize = 2;
   /* Put &data[0] instead of data.data() because it is not obvious in the
      excerpt below it is a vector */
-  //////// Start slide
-  buffer<int> input(&data[0], size);
-  buffer<int> output(size);
-  my_queue.submit([&](handler &cgh) {
-    auto in_access = input.get_access<access::mode::read>(cgh);
-    auto out_access = output.get_access<access::mode::write>(cgh);
+//////// Start slide
+buffer<int> input(&data[0], size);
+buffer<int> output(size);
+my_queue.submit([&](handler &cgh) {
+  auto in_access = input.get_access<access::mode::read>(cgh);
+  auto out_access = output.get_access<access::mode::write>(cgh);
 
-    cgh.parallel_for_work_group<class hierarchical>(nd_range<>(range<>(size),
-                                                               range<>(groupsize)),
-                                                    [=](group<> group) {
-      std::cout << "Group id = " << group.get(0) << std::endl;
+  cgh.parallel_for_work_group<class hierarchical>(nd_range<>(range<>(size),
+                                                             range<>(groupsize)),
+                                                  [=](group<> group) {
+    std::cout << "Group id = " << group.get(0) << std::endl;
 
-      group.parallel_for_work_item([=](nd_item<1> tile) {
-        std::cout << "Local id = " << tile.get_local(0)
-                  << " (global id = " << tile.get_global(0) << ")" << std::endl;
-        out_access[tile] = in_access[tile] * 2;
-      });
+    group.parallel_for_work_item([=](nd_item<1> tile) {
+      std::cout << "Local id = " << tile.get_local(0)
+                << " (global id = " << tile.get_global(0) << ")" << std::endl;
+      out_access[tile] = in_access[tile] * 2;
+    });
 
-      group.parallel_for_work_item([=](item<1> tile) {
-        std::cout << "Global id = " << tile[0] << std::endl;
-        out_access[tile] = in_access[tile] * 2;
-      });
+    group.parallel_for_work_item([=](item<1> tile) {
+      std::cout << "Global id = " << tile[0] << std::endl;
+      out_access[tile] = in_access[tile] * 2;
     });
   });
-  //////// End slide
+});
+//////// End slide
+  /* We must wait for for the queue to finish as none of buffer's destruction
+   * are blocking.
+   */
   my_queue.wait();
   return 0;
 }
