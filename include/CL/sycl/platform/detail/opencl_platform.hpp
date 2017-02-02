@@ -21,6 +21,17 @@
 #include "CL/sycl/info/param_traits.hpp"
 #include "CL/sycl/platform/detail/platform.hpp"
 
+#ifndef WEAK_ATTRIB_PREFIX
+  #ifdef _MSC_VER
+    #define WEAK_ATTRIB_PREFIX __declspec(selectany)
+    #define WEAK_ATTRIB_SUFFIX
+  #else
+    #define WEAK_ATTRIB_PREFIX
+    #define WEAK_ATTRIB_SUFFIX __attribute__((weak))
+  #endif
+#endif
+
+
 namespace cl {
 namespace sycl {
 
@@ -118,8 +129,9 @@ public:
    use a weak symbol so that only one remains when SYCL headers are
    used in different compilation units of a program
 */
+WEAK_ATTRIB_PREFIX
 detail::cache<cl_platform_id, detail::opencl_platform> opencl_platform::cache
-  __attribute__((weak));
+WEAK_ATTRIB_SUFFIX;
 
 /// @} to end the execution Doxygen group
 

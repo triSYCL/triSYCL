@@ -24,14 +24,12 @@ namespace detail {
 
     In the general case, do not add any OpenCL address space qualifier */
 template <typename T, address_space AS>
-//struct opencl_type {
-struct ocl_type {
+struct ocl_type { // NOTE: renamed from opencl_type because of MSVC bug
   using type = T;
 };
 
 /// Add an attribute for __constant address space
 template <typename T>
-//struct opencl_type<T, constant_address_space> {
 struct ocl_type<T, constant_address_space> {
   using type = T
 #ifdef __SYCL_DEVICE_ONLY__
@@ -44,7 +42,6 @@ struct ocl_type<T, constant_address_space> {
 
 /// Add an attribute for __generic address space
 template <typename T>
-//struct opencl_type<T, generic_address_space> {
 struct ocl_type<T, generic_address_space> {
   using type = T
 #ifdef __SYCL_DEVICE_ONLY__
@@ -57,7 +54,6 @@ struct ocl_type<T, generic_address_space> {
 
 /// Add an attribute for __global address space
 template <typename T>
-//struct opencl_type<T, global_address_space> {
 struct ocl_type<T, global_address_space> {
   using type = T
 #ifdef __SYCL_DEVICE_ONLY__
@@ -70,7 +66,6 @@ struct ocl_type<T, global_address_space> {
 
 /// Add an attribute for __local address space
 template <typename T>
-//struct opencl_type<T, local_address_space> {
 struct ocl_type<T, local_address_space> {
   using type = T
 #ifdef __SYCL_DEVICE_ONLY__
@@ -83,7 +78,6 @@ struct ocl_type<T, local_address_space> {
 
 /// Add an attribute for __private address space
 template <typename T>
-//struct opencl_type<T, private_address_space> {
 struct ocl_type<T, private_address_space> {
   using type = T
 #ifdef __SYCL_DEVICE_ONLY__
@@ -149,7 +143,6 @@ struct address_space_base {
 
       \todo Add to the specification
   */
-  //using opencl_type = typename opencl_type<T, AS>::type;
   using opencl_type = typename ocl_type<T, AS>::type;
 
   /** Set the address_space identifier that can be queried to know the
@@ -171,7 +164,6 @@ struct address_space_variable : public address_space_base<T, AS> {
 
       \todo Add to the specification
   */
-  //using opencl_type = typename opencl_type<T, AS>::type;
   using opencl_type = typename ocl_type<T, AS>::type;
 
   /// Keep track of the base class as a short-cut

@@ -1,6 +1,7 @@
 /* RUN: %{execute}%s
  */
 #include <cstdlib>
+#include <chrono>
 
 #include "include/jacobi-stencil.hpp"
 
@@ -25,7 +26,7 @@ Complex operator*(const Complex& a, const Complex& b) {
 }
 
 
-Complex coef(0.2,0.0);
+Complex coef(0.2f,0.0f);
 
 
 inline Complex& fdl_out(int a,int b, cl::sycl::accessor<Complex, 2, cl::sycl::access::mode::write> acc) {return acc[a][b];}
@@ -40,7 +41,7 @@ cl::sycl::buffer<Complex,1> ioBBuffer;
 
 int main(int argc, char **argv) {
   read_args(argc, argv);
-  struct counters timer;
+  counters timer;
   start_measure(timer);
 
   // declarations
@@ -78,8 +79,7 @@ int main(int argc, char **argv) {
   auto op_copy = copy_out << st_id << copy_in;
 
   end_init(timer);
-  struct op_time time_op;
-  begin_op(time_op);
+  auto begin_op = counters::clock_type::now();
 
   // compute result with "gpu"
   {   
@@ -91,7 +91,8 @@ int main(int argc, char **argv) {
     }
   }
 
-  end_op(time_op, timer.stencil_time);
+  auto end_op = counters::clock_type::now();
+  timer.stencil_time = std::chrono::duration_cast<counters::duration_type>(end_op - begin_op);
   // loading time is not watched
   end_measure(timer);
 
