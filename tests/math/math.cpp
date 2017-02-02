@@ -8,109 +8,109 @@
 
 using namespace cl::sycl;
 
-#define wrapX(FUN, i) std::cout << FUN(i) << std::endl;
-#define wrapX2(FUN, i) FUN(i, i);
-#define wrapX2s(FUN, i) FUN(i, i);
-#define wrapX3(FUN, i) FUN(i, i, i);
-#define wrapX3s(FUN, i) FUN(i, i, i);
-#define wrapX3ss(FUN, i) FUN(i, i, i);
+#define TRYSYCL_MATH_WRAPX(FUN, i) std::cout << FUN(i) << std::endl;
+#define TRYSYCL_MATH_WRAPX2(FUN, i) std::cout << FUN(i, i) << std::endl;
+#define TRYSYCL_MATH_WRAPX2s(FUN, i) std::cout << FUN(i, i) << std::endl;
+#define TRYSYCL_MATH_WRAPX3(FUN, i) std::cout << FUN(i, i, i) << std::endl;
+#define TRYSYCL_MATH_WRAPX3s(FUN, i) std::cout << FUN(i, i, i) << std::endl;
+#define TRYSYCL_MATH_WRAPX3ss(FUN, i) std::cout << FUN(i, i, i) << std::endl;
 
 int test_main(int argc, char *argv[]) {
   constexpr auto N = 100;
   for(int k = 0; k < N; k++)
   {
     double i = k;
-    wrapX(abs, i)//I
-    //*wrapX2(abs_diff)//I
-    //*wrapX2(add_sat)//I
-    wrapX(acos, i)
-    wrapX(acosh, i)
-    //*wrapX(acospi)
-    wrapX(asin, i)
-    wrapX(asinh, i)
-    //*wrapX(asinpi)
-    wrapX(atan, i) // atan(y/x)
-    wrapX2(atan2, i)
-    wrapX(atanh, i)
-    //*wrapX(atanpi)
-    //*wrapX2(atan2pi)
-    wrapX(cbrt, i)
-    wrapX(ceil, i)
-    //*wrapX3ss(clamp)//I
+    TRYSYCL_MATH_WRAPX(abs, i)//I
+    //*TRYSYCL_MATH_WRAPX2(abs_diff)//I
+    //*TRYSYCL_MATH_WRAPX2(add_sat)//I
+    TRYSYCL_MATH_WRAPX(acos, i)
+    TRYSYCL_MATH_WRAPX(acosh, i)
+    //*TRYSYCL_MATH_WRAPX(acospi)
+    TRYSYCL_MATH_WRAPX(asin, i)
+    TRYSYCL_MATH_WRAPX(asinh, i)
+    //*TRYSYCL_MATH_WRAPX(asinpi)
+    TRYSYCL_MATH_WRAPX(atan, i) // atan(y/x)
+    TRYSYCL_MATH_WRAPX2(atan2, i)
+    TRYSYCL_MATH_WRAPX(atanh, i)
+    //*TRYSYCL_MATH_WRAPX(atanpi)
+    //*TRYSYCL_MATH_WRAPX2(atan2pi)
+    TRYSYCL_MATH_WRAPX(cbrt, i)
+    TRYSYCL_MATH_WRAPX(ceil, i)
+    //*TRYSYCL_MATH_WRAPX3ss(clamp)//I
     //geninteger clamp(geninteger, sgeninteger, sgeninteger)
-    //*wrapX(clz)
-    wrapX2(copysign, i)
-    wrapX(cos, i)
-    wrapX(cosh, i)
-    //*wrapX(cospi)
-    wrapX(erfc, i)
-    wrapX(erf, i)
-    wrapX(exp, i)
-    wrapX(exp2, i)
-    //*wrapX(exp10)
-    wrapX(expm1, i)
-    wrapX(fabs, i)
-    wrapX2(fdim, i)
-    wrapX(floor, i)
-    wrapX3(fma, i)
+    //*TRYSYCL_MATH_WRAPX(clz)
+    TRYSYCL_MATH_WRAPX2(copysign, i)
+    TRYSYCL_MATH_WRAPX(cos, i)
+    TRYSYCL_MATH_WRAPX(cosh, i)
+    //*TRYSYCL_MATH_WRAPX(cospi)
+    TRYSYCL_MATH_WRAPX(erfc, i)
+    TRYSYCL_MATH_WRAPX(erf, i)
+    TRYSYCL_MATH_WRAPX(exp, i)
+    TRYSYCL_MATH_WRAPX(exp2, i)
+    //*TRYSYCL_MATH_WRAPX(exp10)
+    TRYSYCL_MATH_WRAPX(expm1, i)
+    TRYSYCL_MATH_WRAPX(fabs, i)
+    TRYSYCL_MATH_WRAPX2(fdim, i)
+    TRYSYCL_MATH_WRAPX(floor, i)
+    TRYSYCL_MATH_WRAPX3(fma, i)
     /* genfloat fmax ( genfloat x, genfloat y)
      * genfloat fmax ( genfloat x, sgenfloat y)
      */
-    wrapX2s(fmax, i)
-    wrapX2s(fmin, i)
-    wrapX2(fmod, i)
-    //*wrapX2s(fract)
-    //**wrapX2s(frexp)
-    //*wrapX(hadd)
-    wrapX2(hypot, i)
+    TRYSYCL_MATH_WRAPX2s(fmax, i)
+    TRYSYCL_MATH_WRAPX2s(fmin, i)
+    TRYSYCL_MATH_WRAPX2(fmod, i)
+    //*TRYSYCL_MATH_WRAPX2s(fract)
+    //**TRYSYCL_MATH_WRAPX2s(frexp)
+    //*TRYSYCL_MATH_WRAPX(hadd)
+    TRYSYCL_MATH_WRAPX2(hypot, i)
     //log
     //ilogb
     //ldexp
-    wrapX(lgamma, i)
-    //*wrapX2s(lgamma_r)
-    wrapX(log, i)
-    wrapX(log2, i)
-    wrapX(log10, i)
-    wrapX(log1p, i)
-    wrapX(logb, i)
-    //*wrapX3(mad)
-    //*wrapX3(mad_hi)//I
-    //*wrapX3(mad_sat)
-    wrapX3s(max, i) //I
+    TRYSYCL_MATH_WRAPX(lgamma, i)
+    //*TRYSYCL_MATH_WRAPX2s(lgamma_r)
+    TRYSYCL_MATH_WRAPX(log, i)
+    TRYSYCL_MATH_WRAPX(log2, i)
+    TRYSYCL_MATH_WRAPX(log10, i)
+    TRYSYCL_MATH_WRAPX(log1p, i)
+    TRYSYCL_MATH_WRAPX(logb, i)
+    //*TRYSYCL_MATH_WRAPX3(mad)
+    //*TRYSYCL_MATH_WRAPX3(mad_hi)//I
+    //*TRYSYCL_MATH_WRAPX3(mad_sat)
+    TRYSYCL_MATH_WRAPX3s(max, i) //I
     /* geninteger max (geninteger, geninteger)
      * geninteger max (geninteger, sgeninteger)
      */
-    //*wrapX2(maxmag)
-    wrapX3s(min, i) //I
+    //*TRYSYCL_MATH_WRAPX2(maxmag)
+    TRYSYCL_MATH_WRAPX3s(min, i) //I
     /* geninteger min (geninteger, geninteger)
      * geninteger min (geninteger, sgeninteger)
      */
-    //*wrapX2(minmag)
-    //**wrapX2s(modf)
-    //*wrapX2(mul_hi)//I
+    //*TRYSYCL_MATH_WRAPX2(minmag)
+    //**TRYSYCL_MATH_WRAPX2s(modf)
+    //*TRYSYCL_MATH_WRAPX2(mul_hi)//I
     //nan
-    wrapX2(pow, i)
-    //*wrapX2s(posn)
-    //*wrapX2(powr)
-    wrapX2(remainder, i)
-    //**wrapX3s(remquo)
-    //*wrapX(rhadd)//I
-    wrapX(rint, i)
-    //*wrapX3s(rootn)
-    //**wrapX2(rotate)//I
-    wrapX(round, i)
-    //*wrapX(rsqrt)
-    wrapX(sin, i)
-    //*wrapX2s(sincos)
-    wrapX(sinh, i)
-    //*wrapX(sinpi)
-    wrapX(sqrt, i)
-    //*wrapX2(sub_sat)
-    wrapX(tan, i)
-    wrapX(tanh, i)
-    //*wrapX(tanpi)
-    wrapX(tgamma, i)
-    wrapX(trunc, i)
+    TRYSYCL_MATH_WRAPX2(pow, i)
+    //*TRYSYCL_MATH_WRAPX2s(posn)
+    //*TRYSYCL_MATH_WRAPX2(powr)
+    TRYSYCL_MATH_WRAPX2(remainder, i)
+    //**TRYSYCL_MATH_WRAPX3s(remquo)
+    //*TRYSYCL_MATH_WRAPX(rhadd)//I
+    TRYSYCL_MATH_WRAPX(rint, i)
+    //*TRYSYCL_MATH_WRAPX3s(rootn)
+    //**TRYSYCL_MATH_WRAPX2(rotate)//I
+    TRYSYCL_MATH_WRAPX(round, i)
+    //*TRYSYCL_MATH_WRAPX(rsqrt)
+    TRYSYCL_MATH_WRAPX(sin, i)
+    //*TRYSYCL_MATH_WRAPX2s(sincos)
+    TRYSYCL_MATH_WRAPX(sinh, i)
+    //*TRYSYCL_MATH_WRAPX(sinpi)
+    TRYSYCL_MATH_WRAPX(sqrt, i)
+    //*TRYSYCL_MATH_WRAPX2(sub_sat)
+    TRYSYCL_MATH_WRAPX(tan, i)
+    TRYSYCL_MATH_WRAPX(tanh, i)
+    //*TRYSYCL_MATH_WRAPX(tanpi)
+    TRYSYCL_MATH_WRAPX(tgamma, i)
+    TRYSYCL_MATH_WRAPX(trunc, i)
     /*\ Integer concatenation
      * shortn upsample (charn hi, ucharn lo)
      * ushortn upsample (ucharn hi, ucharn lo)
@@ -119,7 +119,14 @@ int test_main(int argc, char *argv[]) {
      * longlongn upsample(intn hi, uintn lo)
      * ulonglongn upsample(uintn hi, uintn l)
     \*/
-    //*wrapX(popcount)//I
+    //*TRYSYCL_MATH_WRAPX(popcount)//I
   }
   return 0;
 }
+
+#undef TRYSYCL_MATH_WRAPX
+#undef TRYSYCL_MATH_WRAPX2
+#undef TRYSYCL_MATH_WRAPX2s
+#undef TRYSYCL_MATH_WRAPX3
+#undef TRYSYCL_MATH_WRAPX3s
+#undef TRYSYCL_MATH_WRAPX3ss

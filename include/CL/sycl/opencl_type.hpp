@@ -12,15 +12,25 @@
 
 namespace cl {
 namespace sycl {
-  typedef struct{
-    ::cl_float3 yo; //yo: spannish word for I
-    //inline auto operator[] = internal.operator[];
-    auto& x() {return yo.s[0];}
-    auto& y() {return yo.s[1];}
-    auto& z() {return yo.s[2];}
 
-  }cl_float3;
-  //using cl_float3 = ::cl_float3;
+
+/** Wrapper of Boost::compute's cl_float3
+ */
+class cl_float3 {
+
+
+  ::cl_float3 yo; //yo: spannish word for I
+  //inline auto operator[] = internal.operator[];
+public :
+  cl_float3 (::cl_float3 yo_) :
+    yo { yo_ }
+  {}
+
+  auto& x() {return yo.s[0];}
+  auto& y() {return yo.s[1];}
+  auto& z() {return yo.s[2];}
+
+};
 
 }
 }
