@@ -1,6 +1,6 @@
 /* RUN: %{execute}%s
 
-   Test some vec<> behaviour
+   Test the behaviour of math.cpp
 */
 #include <CL/sycl.hpp>
 #include <iostream>

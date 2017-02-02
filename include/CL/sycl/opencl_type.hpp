@@ -26,6 +26,10 @@ public :
     yo { yo_ }
   {}
 
+  cl_float3 (float x, float y, float z) :
+    yo { x, y, z }
+  {}
+
   auto& x() {return yo.s[0];}
   auto& y() {return yo.s[1];}
   auto& z() {return yo.s[2];}
