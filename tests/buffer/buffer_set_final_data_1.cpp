@@ -71,15 +71,43 @@ int test_main(int argc, char *argv[]) {
     {
       buffer<int> mybuffer { v.begin(), v.end() };
       auto read = mybuffer.get_access<access::mode::read, access::target::host_buffer>();
-      for (int i = 0; i < N; ++i)
-        std::cout << read[i] << ", ";
-      std::cout << std::endl;
       mybuffer.set_final_data(w.begin());
     }
 
     for (int i = 0; i < N; ++i) {
       // std::cerr << w[i] << ':' << i << std::endl;
       BOOST_CHECK(w[i] == 0);
+    }
+  }
+  {
+    std::vector<int> v(N);
+
+    {
+      buffer<int> mybuffer { v.begin(), v.end() };
+      mybuffer.set_final_data(v.begin());
+      auto write = mybuffer.get_access<access::mode::write, access::target::host_buffer>();
+      for (int i = 0; i < N; ++i)
+        write[i] = i;
+    }
+
+    for (int i = 0; i < N; ++i) {
+      // std::cout << i << " -> " << v[i] << std::endl;
+      BOOST_CHECK(v[i] == i);
+    }
+  }
+  {
+    std::vector<int> v(N);
+
+    {
+      buffer<int> mybuffer { v.cbegin(), v.cend() };
+      auto write = mybuffer.get_access<access::mode::write, access::target::host_buffer>();
+      for (int i = 0; i < N; ++i)
+        write[i] = i;
+    }
+
+    for (int i = 0; i < N; ++i) {
+      // std::cout << i << " -> " << v[i] << std::endl;
+      BOOST_CHECK(v[i] == 0);
     }
   }
 

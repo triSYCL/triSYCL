@@ -25,19 +25,6 @@ namespace cl {
 namespace sycl {
 namespace detail {
 
-/** Used to retrieve the type return by an Iterator,
- *  in particular a const-iterator<T> returns const T.
- *  The attribute is_const is true iff the iterator is
- *  a const one
- */
-template<typename Iterator>
-struct iterator_value_type
-{
-  using value_type  = typename std::remove_pointer_t<
-    typename std::iterator_traits<Iterator>::pointer>;
-  constexpr static bool is_const = std::is_const<value_type>::value;
-};
-
 
 /** \addtogroup data Data access and storage in SYCL
     @{
@@ -87,11 +74,15 @@ private:
    */
   boost::optional<std::function<void(void)>> final_write_back;
 
-  // Used to store the shared pointer used as argument of set_final_data
-  boost::optional<shared_ptr_class<T>> shared_pointer;
+  // Used to store the shared pointer used to create the buffer
+  shared_ptr_class<T> input_shared_pointer;
+
+  // Used to store the unique pointer used to create the buffer
+  std::unique_ptr<T> input_unique_pointer;
 
   // Used to store the shared pointer used as argument of set_final_data
-  boost::optional<unique_ptr_class<T>> unique_pointer;
+  shared_ptr_class<T> final_shared_pointer;
+
 
   // Track if the buffer memory is provided as host memory
   bool data_host = false;
@@ -146,7 +137,7 @@ public:
          const range<Dimensions> &r) :
     buffer_base { false },
     access { host_data.get(), r },
-    shared_pointer { host_data },
+    input_shared_pointer { host_data },
     data_host { true }
   {}
 
@@ -156,39 +147,13 @@ public:
    *
    *  SYCL's runtime has full ownership of the host_data.
    */
-  buffer(unique_ptr_class<T> &&host_data,
+  buffer(std::unique_ptr<T> &&host_data,
          const range<Dimensions> &r) :
     buffer_base { false },
     access { host_data.get(), r },
-    unique_pointer { host_data },
+    input_unique_pointer { host_data },
     data_host { true }
   {}
-
-
-private:
-
-
-  /* On these two methods are called by the constructor when used with two iterators.
-   * If these iterators are const-iterators then the first method is called
-   * otherwise, the second method is called.
-   *
-   * \todo replace both these methods by 'if constexpr' when/if available in C++17
-   */
-  template<typename Iterator, bool Mode>
-  typename std::enable_if_t<Mode, void> constructor_for_iterator(Iterator begin) {
-    final_write_back = boost::none;
-  }
-
-
-  template<typename Iterator, bool Mode>
-  typename std::enable_if_t<!Mode, void> constructor_for_iterator(Iterator begin) {
-    final_write_back = [=] {
-      std::copy_n(access.data(), access.num_elements(), begin);
-    };
-  }
-
-
-public:
 
 
   /// Create a new allocated 1D buffer from the given elements
@@ -203,19 +168,6 @@ public:
       /* Then assign allocation since this is the only multi_array
          method with this iterator interface */
       allocation.assign(start_iterator, end_iterator);
-      constexpr bool isconst = iterator_value_type<Iterator>::is_const;
-      constructor_for_iterator<Iterator, isconst>(start_iterator);
-      /* \todo replace constructor_for_iterator by these lines
-       * when 'if constexpr' will be available in C++17
-
-      if constexpr (iterator_value_type<Iterator>::is_const) {
-        final_write_back = boost::none;
-      } else {
-        final_write_back = [=] {
-          std::copy_n(access.data(), access.num_elements(), begin);
-        };
-      }
-       */
     }
 
 
@@ -321,7 +273,7 @@ public:
   /** Set the weak pointer as destination for write-back on buffer destruction.
   */
   void set_final_data(std::weak_ptr<T> && final_data) {
-    shared_pointer = boost::none;
+    final_shared_pointer = {};
     final_write_back = [=] {
       if (auto sptr = final_data.lock()) {
         std::copy_n(access.data(), access.num_elements(), sptr.get());
@@ -334,9 +286,9 @@ public:
    *  shared pointer.
    */
   void set_final_data(std::shared_ptr<T> && final_data) {
-    shared_pointer = final_data;
+    final_shared_pointer = final_data;
     final_write_back = [=] {
-      std::copy_n(access.data(), access.num_elements(), (*shared_pointer).get());
+      std::copy_n(access.data(), access.num_elements(), final_shared_pointer.get());
     };
   }
 
@@ -344,7 +296,7 @@ public:
   /** Provide destination for write-back on buffer destruction as a pointer.
   */
   void set_final_data(T* final_data) {
-    shared_pointer = boost::none;
+    final_shared_pointer = {};
     final_write_back = [=] {
       std::copy_n(access.data(), access.num_elements(), final_data);
     };
@@ -354,7 +306,7 @@ public:
   /** Disable write-back on buffer destruction as an iterator.
   */
   void set_final_data(std::nullptr_t) {
-    shared_pointer = boost::none;
+    final_shared_pointer = {};
     final_write_back = boost::none;
   }
 
@@ -363,10 +315,10 @@ public:
   */
   template <typename Iterator>
   void set_final_data(Iterator final_data) {
-    using type_ = typename iterator_value_type<Iterator>::value_type;
+ /*   using type_ = typename iterator_value_type<Iterator>::value_type;
     static_assert(std::is_same<type_, T>::value, "buffer type mismatch");
-    static_assert(!(std::is_const<type_>::value), "const iterator is not allowed");
-    shared_pointer = boost::none;
+    static_assert(!(std::is_const<type_>::value), "const iterator is not allowed");*/
+    final_shared_pointer = {};
     final_write_back = [=] {
       std::copy_n(access.data(), access.num_elements(), final_data);
     };
