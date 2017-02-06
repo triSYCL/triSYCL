@@ -496,6 +496,8 @@ public:
   }
 
 
+  /** Set destination of buffer data on destruction.
+   */
   void set_final_data(weak_ptr_class<T> finalData) {
     implementation->implementation->set_final_data(std::move(finalData));
   }
@@ -508,7 +510,9 @@ public:
   }
 
 
-  /** WARNING: the user has to ensure that the object refered to by the
+  /** Set destination of buffer data on destruction.
+
+      WARNING: the user has to ensure that the object refered to by the
       iterator will be alive after buffer destruction, otherwise the behaviour
       is undefined.
    */

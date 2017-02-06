@@ -77,17 +77,13 @@ private:
   // Used to store the shared pointer used to create the buffer
   shared_ptr_class<T> input_shared_pointer;
 
-  // Used to store the unique pointer used to create the buffer
-  std::unique_ptr<T> input_unique_pointer;
-
-  // Used to store the shared pointer used as argument of set_final_data
-  shared_ptr_class<T> final_shared_pointer;
-
 
   // Track if the buffer memory is provided as host memory
   bool data_host = false;
+
   // Track if data should be copied if a modification occurs
   bool copy_if_modified = false;
+
   // Track if data have been modified
   bool modified  = false;
 
@@ -146,10 +142,11 @@ public:
 
       SYCL's runtime has full ownership of the host_data.
    */
-  buffer(std::unique_ptr<T> &&host_data, const range<Dimensions> &r) :
+  template<typename D>
+  buffer(unique_ptr_class<T, D> &&host_data, const range<Dimensions> &r) :
     buffer_base { false },
     access { host_data.get(), r },
-    input_unique_pointer { host_data },
+    input_shared_pointer { std::move(host_data) },
     data_host { true }
   {}
 
@@ -213,6 +210,7 @@ public:
   template <access::mode Mode,
             access::target Target = access::target::host_buffer>
   void track_access_mode() {
+    // test if write access is required
     if (   Mode == access::mode::write
         || Mode == access::mode::read_write
         || Mode == access::mode::discard_write
@@ -271,7 +269,6 @@ public:
   /** Set the weak pointer as destination for write-back on buffer destruction.
   */
   void set_final_data(std::weak_ptr<T> && final_data) {
-    final_shared_pointer = {};
     final_write_back = [=] {
       if (auto sptr = final_data.lock()) {
         std::copy_n(access.data(), access.num_elements(), sptr.get());
@@ -284,9 +281,8 @@ public:
       shared pointer.
    */
   void set_final_data(std::shared_ptr<T> && final_data) {
-    final_shared_pointer = final_data;
     final_write_back = [=] {
-      std::copy_n(access.data(), access.num_elements(), final_shared_pointer.get());
+      std::copy_n(access.data(), access.num_elements(), final_data.get());
     };
   }
 
@@ -294,7 +290,6 @@ public:
   /** Disable write-back on buffer destruction as an iterator.
   */
   void set_final_data(std::nullptr_t) {
-    final_shared_pointer = {};
     final_write_back = boost::none;
   }
 
@@ -306,7 +301,6 @@ public:
  /*   using type_ = typename iterator_value_type<Iterator>::value_type;
     static_assert(std::is_same<type_, T>::value, "buffer type mismatch");
     static_assert(!(std::is_const<type_>::value), "const iterator is not allowed");*/
-    final_shared_pointer = {};
     final_write_back = [=] {
       std::copy_n(access.data(), access.num_elements(), final_data);
     };
