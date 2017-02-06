@@ -70,7 +70,7 @@ private:
   boost::multi_array_ref<T, Dimensions> access;
 
   /* How to copy back data on buffer destruction, can be modified with
-   * set_final_data( ... )
+     set_final_data( ... )
    */
   boost::optional<std::function<void(void)>> final_write_back;
 
