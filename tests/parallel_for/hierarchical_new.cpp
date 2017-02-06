@@ -71,7 +71,7 @@ my_queue.submit([&](handler &cgh) {
 });
 //////// End slide
   /* We must wait for for the queue to finish as none of buffer's destruction
-   * are blocking.
+     is blocking.
    */
   my_queue.wait();
   return 0;

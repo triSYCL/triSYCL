@@ -291,16 +291,6 @@ public:
   }
 
 
-  /** Provide destination for write-back on buffer destruction as a pointer.
-  */
-  void set_final_data(T* final_data) {
-    final_shared_pointer = {};
-    final_write_back = [=] {
-      std::copy_n(access.data(), access.num_elements(), final_data);
-    };
-  }
-
-
   /** Disable write-back on buffer destruction as an iterator.
   */
   void set_final_data(std::nullptr_t) {
@@ -325,7 +315,6 @@ public:
 
 private:
 
-
   /** Get a \c future to wait from inside the \c cl::sycl::buffer in
       case there is something to copy back to the host
 
@@ -333,7 +322,6 @@ private:
       wait for, otherwise an empty \c optional
   */
   boost::optional<std::future<void>> get_destructor_future() {
-    //boost::optional<std::future<void>> f;
     /* If there is only 1 shared_ptr user of the buffer, this is the
        caller of this function, the \c buffer_waiter, so there is no
        need to get a \ future otherwise there will be a dead-lock if
