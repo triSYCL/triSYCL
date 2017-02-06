@@ -133,8 +133,7 @@ public:
       runtime to use the same pointer, a cl::sycl::mutex_class is
       used.
   */
-  buffer(shared_ptr_class<T> &host_data,
-         const range<Dimensions> &r) :
+  buffer(shared_ptr_class<T> &host_data, const range<Dimensions> &r) :
     buffer_base { false },
     access { host_data.get(), r },
     input_shared_pointer { host_data },
@@ -143,12 +142,11 @@ public:
 
 
   /** Create a new buffer with associated memory, using the data in
-   *  host_data.
-   *
-   *  SYCL's runtime has full ownership of the host_data.
+      host_data.
+
+      SYCL's runtime has full ownership of the host_data.
    */
-  buffer(std::unique_ptr<T> &&host_data,
-         const range<Dimensions> &r) :
+  buffer(std::unique_ptr<T> &&host_data, const range<Dimensions> &r) :
     buffer_base { false },
     access { host_data.get(), r },
     input_unique_pointer { host_data },
@@ -198,7 +196,7 @@ public:
 
 
   /** Enforce the buffer to be considered as being modified.
-   *  Same as creating an accessor with write access.
+      Same as creating an accessor with write access.
    */
   void mark_as_written() {
     modified = true;
@@ -209,8 +207,8 @@ public:
 
 
   /** This method is to be called whenever an acessor is created.
-   *  Its current purpose is to track if an accessor with write access
-   *  is created and acting acordingly.
+      Its current purpose is to track if an accessor with write access
+      is created and acting acordingly.
    */
   template <access::mode Mode,
             access::target Target = access::target::host_buffer>
@@ -283,7 +281,7 @@ public:
 
 
   /** Provide destination for write-back on buffer destruction as a
-   *  shared pointer.
+      shared pointer.
    */
   void set_final_data(std::shared_ptr<T> && final_data) {
     final_shared_pointer = final_data;
@@ -335,7 +333,7 @@ private:
       wait for, otherwise an empty \c optional
   */
   boost::optional<std::future<void>> get_destructor_future() {
-    boost::optional<std::future<void>> f;
+    //boost::optional<std::future<void>> f;
     /* If there is only 1 shared_ptr user of the buffer, this is the
        caller of this function, the \c buffer_waiter, so there is no
        need to get a \ future otherwise there will be a dead-lock if
@@ -345,17 +343,15 @@ private:
        for this purpose, it actually increase locally the count by 1,
        so check for 1 + 1 use count instead...
     */
-    if (shared_from_this().use_count() > 2)
-    {
-      // If the buffer's destruction triggers a write-back, wait
-      if (modified && (final_write_back || data_host)) {
-        // Create a promise to wait for
-        notify_buffer_destructor = std::promise<void> {};
-        // And return the future to wait for it
-        f = notify_buffer_destructor->get_future();
-      }
+    // If the buffer's destruction triggers a write-back, wait
+    if ((shared_from_this().use_count() > 2) &&
+        modified && (final_write_back || data_host)) {
+      // Create a promise to wait for
+      notify_buffer_destructor = std::promise<void> {};
+      // And return the future to wait for it
+      return notify_buffer_destructor->get_future();
     }
-    return f;
+    return boost::none;
   }
 
 

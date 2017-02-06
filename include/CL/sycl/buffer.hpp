@@ -503,7 +503,7 @@ public:
 
   /** Disable write-back on buffer destruction.
    */
-  void set_final_data(std::nullptr_t){
+  void set_final_data(std::nullptr_t) {
     implementation->implementation->set_final_data(nullptr);
   }
 
