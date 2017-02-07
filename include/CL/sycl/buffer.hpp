@@ -222,7 +222,7 @@ public:
 
   /** Create a new buffer which is initialized by host_data
 
-      \param[inout] host_data points to the storage and values used to
+      \param[in] host_data points to the storage and values used to
       initialize the buffer
 
       \param[in] r defines the size
@@ -239,15 +239,12 @@ public:
       unique_ptr_class/std::unique_ptr have the destructor type as
       dependent
   */
-  template <typename D = std::default_delete<T>>
-  buffer(unique_ptr_class<T, D> &&host_data,
-         const range<Dimensions> &buffer_range,
+  buffer(unique_ptr_class<T> &&host_data,
+         const range<Dimensions> &r,
          Allocator allocator = {})
-  // Just delegate to the constructor with normal pointer
-    : buffer { host_data.get(), buffer_range, allocator } {
-    // Then release the host_data memory
-    host_data.release();
-  }
+    : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
+            { std::move(host_data), r }) }
+  {}
 
 
   /** Create a new allocated 1D buffer initialized from the given
@@ -368,7 +365,16 @@ public:
                   "get_access(handler) can only deal with access::global_buffer"
                   " or access::constant_buffer (for host_buffer accessor"
                   " do not use a command group handler");
+    implementation->implementation->template track_access_mode<Mode, Target>();
     return { *this, command_group_handler };
+  }
+
+
+  /** Force the buffer to behave like if we had created
+      an accessor in write mode.
+   */
+  void mark_as_written() {
+    return implementation->implementation->mark_as_written();
   }
 
 
@@ -387,6 +393,7 @@ public:
     static_assert(Target == access::target::host_buffer,
                   "get_access() without a command group handler is only"
                   " for host_buffer accessor");
+    implementation->implementation->template track_access_mode<Mode, Target>();
     return { *this };
   }
 
@@ -484,8 +491,35 @@ public:
       way to write back some data or with some data sharing with the
       host that can not be undone
   */
+  void set_final_data(shared_ptr_class<T> finalData) {
+    implementation->implementation->set_final_data(std::move(finalData));
+  }
+
+
+  /** Set destination of buffer data on destruction.
+   */
   void set_final_data(weak_ptr_class<T> finalData) {
     implementation->implementation->set_final_data(std::move(finalData));
+  }
+
+
+  /** Disable write-back on buffer destruction.
+   */
+  void set_final_data(std::nullptr_t) {
+    implementation->implementation->set_final_data(nullptr);
+  }
+
+
+  /** Set destination of buffer data on destruction.
+
+      WARNING: the user has to ensure that the object refered to by the
+      iterator will be alive after buffer destruction, otherwise the behaviour
+      is undefined.
+   */
+  template<typename Iterator>
+  void set_final_data(Iterator&& finalData) {
+    implementation->implementation->
+      set_final_data(std::forward<Iterator>(finalData));
   }
 
 };

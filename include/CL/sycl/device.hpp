@@ -210,12 +210,13 @@ public:
       \todo
   */
   template <info::device Param>
-  inline auto get_info() const {
+  inline auto get_info() const;
+  /*{
     // Forward to the version where the info parameter is not a template
     //return get_info<typename info::param_traits_t<info::device, Param>>(Param);
     detail::unimplemented();
     return 0;
-  }
+  }*/
 
 
   /// Test if a specific extension is supported on the device
@@ -247,18 +248,23 @@ public:
 
 template <>
 inline auto device::get_info<info::device::max_work_group_size>() const {
-	return static_cast<size_t>(1024);
+  return size_t { 63 };
 }
 
 
 template <>
 inline auto device::get_info<info::device::max_compute_units>() const {
-	return static_cast<size_t>(1);
+  return size_t { 56 };
 }
-	
+
 template <>
 inline auto device::get_info<info::device::device_type>() const {
-	return info::device_type::cpu;
+  return info::device_type::cpu;
+}
+
+template <>
+inline auto device::get_info<info::device::local_mem_size>() const {
+  return size_t { 32000 };
 }
 
 /// @} to end the Doxygen group
