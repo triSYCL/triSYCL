@@ -248,7 +248,7 @@ public:
 
 template <>
 inline auto device::get_info<info::device::max_work_group_size>() const {
-  return size_t { 53 };
+  return size_t { 63 };
 }
 
 
