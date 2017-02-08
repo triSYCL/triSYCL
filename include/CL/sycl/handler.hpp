@@ -84,7 +84,7 @@ public:
             access::mode Mode,
             access::target Target = access::target::global_buffer>
   void set_arg(int arg_index,
-               accessor<DataType, Dimensions, Mode, Target> acc_obj) {
+               accessor<DataType, Dimensions, Mode, Target> && acc_obj) {
     /* Before running the kernel, make sure the cl_mem behind this
        accessor is up-to-date on the device if needed and pass it to
        the kernel.
@@ -117,7 +117,7 @@ public:
       \todo To be implemented
   */
   template <typename T>
-  void set_arg(int arg_index, T scalar_value) {
+  void set_arg(int arg_index, T && scalar_value) {
     detail::unimplemented();
   }
 
@@ -147,7 +147,7 @@ public:
       https://cvs.khronos.org/bugzilla/show_bug.cgi?id=15978 proposal
   */
   template <typename... Ts>
-  void set_args(Ts&&... args) {
+  void set_args(Ts &&... args) {
     /* Construct a set of increasing argument index to be able to call
        the real set_arg */
     dispatch_set_arg(std::make_index_sequence<sizeof...(Ts)>{},
