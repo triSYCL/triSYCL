@@ -137,15 +137,27 @@ public:
   {}
 
 
-  /** Create a new buffer with associated memory, using the data in
-      host_data.
+  /** Create a new buffer with associated memory, using the data owned in
+      a unique pointer
 
       SYCL's runtime has full ownership of the host_data.
-   */
-  template<typename D>
-  buffer(unique_ptr_class<T, D> &&host_data, const range<Dimensions> &r) :
+  */
+  template<typename Deleter>
+  buffer(unique_ptr_class<T, Deleter> &&host_data,
+         const range<Dimensions> &r) :
     buffer_base { false },
     access { host_data.get(), r },
+      /* Use the fact that there is an implicit constructor of a \c
+         std::shared_ptr from a \c std::unique_ptr to avoid storing
+         the unique pointer. Doing so would need to implement
+         ourselves some type erasure on the \c Deleter to avoid it
+         leaking out of the \c buffer type and \c accessor type.
+
+         It still works as expected since, if we own a shared pointer,
+         the \c Deleter is correctly handled and if we own it and its
+         use-count is 1, we are the only owner and we can skip the
+         copy-back later.
+       */
     input_shared_pointer { std::move(host_data) },
     data_host { true }
   {}
