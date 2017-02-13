@@ -267,6 +267,11 @@ inline auto device::get_info<info::device::local_mem_size>() const {
   return size_t { 32000 };
 }
 
+template <>
+inline auto device::get_info<info::device::vendor>() const {
+  return string_class {};
+}
+
 /// @} to end the Doxygen group
 
 }
