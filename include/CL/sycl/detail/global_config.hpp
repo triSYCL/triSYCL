@@ -60,6 +60,17 @@
 
 /// @} End the defaults Doxygen group
 
+// Compiler specific weak linking (until changing to C++17 inline variables/functions)
+#ifndef WEAK_ATTRIB_PREFIX
+#ifdef _MSC_VER
+#define WEAK_ATTRIB_PREFIX __declspec(selectany)
+#define WEAK_ATTRIB_SUFFIX
+#else
+#define WEAK_ATTRIB_PREFIX
+#define WEAK_ATTRIB_SUFFIX __attribute__((weak))
+#endif
+#endif
+
 /*
     # Some Emacs stuff:
     ### Local Variables:

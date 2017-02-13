@@ -15,16 +15,6 @@
 #include "CL/sycl/device.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"
 
-#ifndef WEAK_ATTRIB_PREFIX
-  #ifdef _MSC_VER
-    #define WEAK_ATTRIB_PREFIX __declspec(selectany)
-    #define WEAK_ATTRIB_SUFFIX
-  #else
-    #define WEAK_ATTRIB_PREFIX
-    #define WEAK_ATTRIB_SUFFIX __attribute__((weak))
-  #endif
-#endif 
-
 namespace cl {
 namespace sycl {
 namespace detail {
