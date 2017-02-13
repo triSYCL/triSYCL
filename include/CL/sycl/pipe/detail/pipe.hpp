@@ -91,7 +91,7 @@ private:
   std::deque<reserve_id<value_type>> w_rid_q;
 
 public:
-#ifndef _WIN32
+#ifndef _MSC_VER
   using rid_iterator = typename decltype(w_rid_q)::iterator;
 #else
   using rid_iterator = typename std::deque<reserve_id<value_type>>::iterator;

@@ -331,12 +331,11 @@ void print_host2D(float * tab)
 }
 
 void print_buffer2D(cl::sycl::accessor<float, 2, cl::sycl::access::mode::read, cl::sycl::access::target::host_buffer> bufferAccessor) {
-  for (size_t i = 0; i < M; ++i)
-  {
-      for(size_t j = 0; j < N; ++j)
-          std::cout << bufferAccessor[i][j] << " " ;
-
-      std::cout << std::endl;
+  for (size_t i = 0; i < M; ++i){
+    for(size_t j = 0; j < N; ++j){
+      std::cout << bufferAccessor[i][j] << " " ;
+    }
+    std::cout << std::endl;
   }
 }
 

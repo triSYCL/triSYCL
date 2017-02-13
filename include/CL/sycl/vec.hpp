@@ -63,7 +63,7 @@ public:
 
 
   // Inherit of all the constructors
-  using basic_type::small_array;
+  using basic_type::basic_type;
 
 private:
 
