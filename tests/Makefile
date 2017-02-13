@@ -183,3 +183,24 @@ clone-%:
 	rm -rf test-clone
 	git clone --branch `git rev-parse --abbrev-ref HEAD` .. test-clone
 	cd test-clone/tests; $(MAKE) $*
+# To verify everything is self-contained, run the target in a new
+# work-tree of the current branch of the current repository.
+#
+# Forward any clone-T target into a clone and make T in it
+#
+# Use for example:
+# make clone-check
+clone-%:
+	# Remove some old tests
+	rm -rf test-clone
+	# The is a current issue when we create a lot of work-tree
+	# at the same place because they are not pruned if the directory exist.
+	#  So prune the old ones if any when the directory does not exist anymore
+	git worktree prune
+	# Create a work-tree from the same SHA-1 commit.
+	# Use a work-tree instead of clone so we can test directly
+	# from some remote commit.
+	# Use a detached work-tree so we do not need a branch
+	# and do not block an existing one
+	git worktree add --detach test-clone `git rev-parse HEAD`
+	cd test-clone/tests; $(MAKE) $*
