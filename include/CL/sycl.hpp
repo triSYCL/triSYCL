@@ -35,6 +35,7 @@
 /* All the SYCL components, one per file */
 #include "CL/sycl/access.hpp"
 #include "CL/sycl/accessor.hpp"
+#include "CL/sycl/allocator.hpp"
 #include "CL/sycl/address_space.hpp"
 #include "CL/sycl/buffer.hpp"
 #include "CL/sycl/context.hpp"
