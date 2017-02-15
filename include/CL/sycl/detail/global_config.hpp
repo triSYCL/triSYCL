@@ -71,6 +71,11 @@
 #endif
 #endif
 
+// Suppress usage/leak of macros originating from Visual C++ headers
+#ifdef _MSC_VER
+#define NOMINMAX
+#endif
+
 /*
     # Some Emacs stuff:
     ### Local Variables:
