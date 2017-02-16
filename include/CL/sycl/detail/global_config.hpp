@@ -49,15 +49,6 @@
 #define TRISYCL_SKIP_OPENCL(x)
 #endif
 
-/** Allow the asynchronous implementation of tasks */
-#ifndef TRISYCL_ASYNC
-/** Use asynchronous tasks by default.
-
-    Is set to 0, the functors are executed synchronously.
-*/
-#define TRISYCL_ASYNC 0
-#endif
-
 /// @} End the defaults Doxygen group
 
 /*

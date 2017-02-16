@@ -19,8 +19,8 @@ CXXFLAGS += -fopenmp
 # On Ubuntu, Clang has some issues to find omp.h, so use:
 #CXXFLAGS += -I/usr/lib/gcc/x86_64-linux-gnu/6/include
 
-## To enable asynchronous kernels, which is the default in SYCL
-CXXFLAGS += -DTRISYCL_ASYNC=1
+## To disable asynchronous kernels, which is the default in SYCL
+# CXXFLAGS += -DTRISYCL_NO_ASYNC
 
 # For asynchronous kernels when OpenMP is not enabled
 #LDLIBS += -lpthread
