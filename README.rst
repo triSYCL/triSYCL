@@ -383,6 +383,9 @@ There is nothing else to do for now to use the include files from triSYCL_
 ``include`` directory when compiling a program. Just add a
 ``-I.../include`` option and ``-std=c++1y`` when compiling.
 
+triSYCL_ is configurable through preprocessor macros described in
+`macros <doc/macros.rst>`_.
+
 Also use ``-fopenmp`` if you want to use multicore parallelism on the CPU.
 
 

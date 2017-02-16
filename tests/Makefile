@@ -1,4 +1,6 @@
-# Typical variables to tweak for the local environment
+# Typical variables to tweak for the local environment.
+
+# See doc/macros.rst for a description of triSYCL-specific macros.
 
 # Set default compiler instead of default CXX=g++ value
 # Assume Clang 3.9 at least
@@ -20,7 +22,7 @@ CXXFLAGS += -fopenmp
 #CXXFLAGS += -I/usr/lib/gcc/x86_64-linux-gnu/6/include
 
 ## To disable asynchronous kernels, which is the default in SYCL
-# CXXFLAGS += -DTRISYCL_NO_ASYNC
+#CXXFLAGS += -DTRISYCL_NO_ASYNC
 
 # For asynchronous kernels when OpenMP is not enabled
 #LDLIBS += -lpthread
@@ -70,7 +72,7 @@ TARGETS_CC = $(basename $(wildcard */*.cc))
 TARGETS += $(TARGETS_CC)
 
 # Since the .C files generates some .o, think to remove them
-FILES_C =$(wildcard */*.C)
+FILES_C = $(wildcard */*.C)
 CLEANING_TARGETS = $(TARGETS) $(FILES_C:%.C=%.o)
 
 # The implementation uses C++14
@@ -91,10 +93,6 @@ endif
 CXXFLAGS += -DBOOST_COMPUTE_DEBUG_KERNEL_COMPILATION \
 	-DBOOST_COMPUTE_HAVE_THREAD_LOCAL \
 	-DBOOST_COMPUTE_THREAD_SAFE
-
-# Work-around an old Boost.CircularBuffer bug if a pre 1.62 Boost
-# version is used
-CXXFLAGS += -DMAKE_BOOST_CIRCULARBUFFER_THREAD_SAFE
 
 # Specify where OpenCL library files are with OpenCL_LIBPATH
 ifdef OpenCL_LIBPATH
