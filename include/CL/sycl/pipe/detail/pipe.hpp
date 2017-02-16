@@ -14,7 +14,7 @@
 #include <mutex>
 #include <deque>
 
-#ifdef MAKE_BOOST_CIRCULARBUFFER_THREAD_SAFE
+#ifdef TRISYCL_MAKE_BOOST_CIRCULARBUFFER_THREAD_SAFE
 /* The debug mode of boost/circular_buffer.hpp has a nasty side effect
    in multithread applications using several iterators at the same
    time even in read-only mode because the library tracks them for

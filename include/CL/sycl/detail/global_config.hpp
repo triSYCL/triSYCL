@@ -28,6 +28,11 @@
 #define __SYCL_SINGLE_SOURCE__
 
 
+/* Work-around an old Boost.CircularBuffer bug if a pre 1.62 Boost
+   version is used */
+#define TRISYCL_MAKE_BOOST_CIRCULARBUFFER_THREAD_SAFE
+
+
 /** Define TRISYCL_OPENCL to add OpenCL
 
     triSYCL can indeed work without OpenCL if only host support is needed.
