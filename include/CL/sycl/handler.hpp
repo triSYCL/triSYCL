@@ -146,7 +146,7 @@ public:
   void set_args(Ts &&... args) {
     /* Construct a set of increasing argument index to be able to call
        the real set_arg */
-    dispatch_set_arg(std::make_index_sequence<sizeof...(Ts)>{},
+    dispatch_set_arg(std::index_sequence_for<Ts...>{},
                      std::forward<Ts>(args)...);
   }
 #endif
