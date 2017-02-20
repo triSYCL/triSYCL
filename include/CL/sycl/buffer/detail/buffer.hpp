@@ -109,6 +109,9 @@ public:
   /** Create a new read-only buffer from \param host_data of size \param r
       without further allocation
 
+      If the buffer is non const, use a copy-on-write mechanism with
+      internal writable memory.
+
       \todo Clarify the semantics in the spec. What happens if the
       host change the host_data after buffer creation?
 
@@ -118,10 +121,14 @@ public:
   template <typename Dependent = T,
             typename = std::enable_if_t<!std::is_const<Dependent>::value>>
   buffer(const T *host_data, const range<Dimensions> &r) :
+    /* The buffer is read-only, even if the internal multidimensional
+       wrapper is not. If a write accessor is requested, there should
+       be a copy on write. So this pointer should not be written and
+       this const_cast should be acceptable. */
     access { const_cast<T *>(host_data), r },
     data_host { true },
-    // We set copy_if_modified to true, so that if an accessor with write
-    // access is created, then data are copied before to be modified.
+    /* Set copy_if_modified to true, so that if an accessor with write
+       access is created, data are copied before to be modified. */
     copy_if_modified { true }
   {}
 
