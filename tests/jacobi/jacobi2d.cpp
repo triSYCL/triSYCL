@@ -1,39 +1,47 @@
 /* RUN: %{execute}%s
  */
-#include <cstdlib>
+
+// Jacobi
+#include "include/helpers-jacobi.hpp"
+
+// SYCL
 #include <CL/sycl.hpp>
 
-#include "include/helpers-jacobi.hpp"
+// ISO C++
+#include <vector>
 
 using namespace cl;
 
-int main(int argc, char **argv) {
-  read_args(argc, argv);
-  struct counters timer;
-  struct op_time time_op;
-  start_measure(timer);
+int main(int argc, char **argv)
+{
+    read_args(argc, argv);
+    counters timer;
+    start_measure(timer);
 
-  // declarations
-  sycl::buffer<float,2> ioABuffer = cl::sycl::buffer<float,2>(sycl::range<2> {M, N});
-  sycl::buffer<float,2> ioBBuffer = sycl::buffer<float,2>(sycl::range<2> {M, N}); 
+    // declarations
+    sycl::buffer<float, 2> ioABuffer = cl::sycl::buffer<float, 2>(sycl::range<2> {M, N});
+    sycl::buffer<float, 2> ioBBuffer = sycl::buffer<float, 2>(sycl::range<2> {M, N});
+
 #if DEBUG_STENCIL
-  float *a_test = (float *) malloc(sizeof(float)*M*N);
-  float *b_test = (float *) malloc(sizeof(float)*M*N);
+    std::vector<float> a_test(M * N);
+    std::vector<float> b_test(M * N);
 #endif
 
-  // initialization
-  for (size_t i = 0; i < M; ++i){
-    for (size_t j = 0; j < N; ++j){
-      float value = ((float) i*(j+2) + 10) / N;
-      sycl::id<2> id = {i, j};
-      ioABuffer.get_access<sycl::access::mode::write, sycl::access::target::host_buffer>()[id] = value;
-      ioBBuffer.get_access<sycl::access::mode::write, sycl::access::target::host_buffer>()[id] = value;
+    // initialization
+    for (size_t i = 0; i < M; ++i)
+    {
+        for (size_t j = 0; j < N; ++j)
+        {
+            float value = ((float)i*(j + 2) + 10) / N;
+            sycl::id<2> id = { i, j };
+            ioABuffer.get_access<sycl::access::mode::write, sycl::access::target::host_buffer>()[id] = value;
+            ioBBuffer.get_access<sycl::access::mode::write, sycl::access::target::host_buffer>()[id] = value;
 #if DEBUG_STENCIL
-      a_test[i*N+j] = value;
-      b_test[i*N+j] = value;
+            a_test[i*N + j] = value;
+            b_test[i*N + j] = value;
 #endif
+        }
     }
-  }
 
   end_init(timer);
 
@@ -41,7 +49,7 @@ int main(int argc, char **argv) {
   {
     sycl::queue myQueue;
 
-    begin_op(time_op);
+    auto op_start = counters::clock_type::now();
 
     for (unsigned int i = 0; i < NB_ITER; ++i){
       myQueue.submit([&](sycl::handler &cgh) {
@@ -62,8 +70,10 @@ int main(int argc, char **argv) {
                                                   });
         });
 
-      end_op(time_op, timer.stencil_time);
-      begin_op(time_op);
+      auto op_end = counters::clock_type::now();
+      timer.stencil_time = std::chrono::duration_cast<counters::duration_type>(op_end - op_start);
+
+      op_start = counters::clock_type::now();
 
 
       myQueue.submit([&](sycl::handler &cgh) {
@@ -75,7 +85,8 @@ int main(int argc, char **argv) {
                                                a[it] = MULT_COEF * b[it];
                                              });
         });
-      end_op(time_op, timer.copy_time);
+      op_end = counters::clock_type::now();
+      timer.copy_time = std::chrono::duration_cast<counters::duration_type>(op_end - op_start);
     }
   }
 
@@ -85,8 +96,6 @@ int main(int argc, char **argv) {
   // get the gpu result
   auto C = ioABuffer.get_access<sycl::access::mode::read, sycl::access::target::host_buffer>();
   ute_and_are(a_test,b_test,C);
-  free(a_test);
-  free(b_test);
 #endif
 
   return 0;

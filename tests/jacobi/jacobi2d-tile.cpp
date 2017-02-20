@@ -9,15 +9,15 @@ using namespace cl;
 
 int main(int argc, char **argv) {
   read_args(argc, argv);
-  struct counters timer;
+  counters timer;
   start_measure(timer);
 
   // declarations
   sycl::buffer<float,2> ioABuffer = cl::sycl::buffer<float,2>(sycl::range<2> {M, N});
   sycl::buffer<float,2> ioBBuffer = sycl::buffer<float,2>(sycl::range<2> {M, N}); 
 #if DEBUG_STENCIL
-  float *a_test = (float *) malloc(sizeof(float)*M*N);
-  float *b_test = (float *) malloc(sizeof(float)*M*N);
+  std::vector<float> a_test(M * N);
+  std::vector<float> b_test(M * N);
 #endif
 
   // initialization
@@ -54,8 +54,7 @@ int main(int argc, char **argv) {
               // dynamic bounds unauthorized
               float * local = new float[(J_CL_DEVICE_MAX_WORK_GROUP_SIZE0+2)*(J_CL_DEVICE_MAX_WORK_GROUP_SIZE1+2)];
 
-              struct op_time time_op;
-              begin_op(time_op);
+              auto begin_op = counters::clock_type::now();
 
               // tab_local has to be passed by reference
               sycl::parallel_for_work_item(group, [=,&local](sycl::nd_item<2> it){
@@ -79,8 +78,9 @@ int main(int argc, char **argv) {
                   }
                 });
 
-              end_op(time_op, timer.load_time);
-              begin_op(time_op);
+              auto end_op = counters::clock_type::now();
+              timer.load_time = std::chrono::duration_cast<counters::duration_type>(end_op - begin_op);
+              begin_op = counters::clock_type::now();
 
               sycl::parallel_for_work_item(group, [=,&local](sycl::nd_item<2> it){
                   sycl::id<2> g_ind = it.get_global();
@@ -97,13 +97,13 @@ int main(int argc, char **argv) {
                 });
 
               delete [] local;
-              end_op(time_op, timer.stencil_time);
+              end_op = counters::clock_type::now();
+              timer.stencil_time = std::chrono::duration_cast<counters::duration_type>(end_op - begin_op);
 
             });
         });
 
-      struct op_time time_op;
-      begin_op(time_op);
+      auto begin_op = counters::clock_type::now();
 
       myQueue.submit([&](sycl::handler &cgh) {
           sycl::accessor<float, 2, sycl::access::mode::write> a(ioABuffer, cgh);
@@ -114,7 +114,8 @@ int main(int argc, char **argv) {
                                                a[it] = MULT_COEF * b[it];
                                              });
         });
-      end_op(time_op, timer.copy_time);
+      auto end_op = counters::clock_type::now();
+      timer.copy_time = std::chrono::duration_cast<counters::duration_type>(end_op - begin_op);
     }
   }
 
@@ -124,8 +125,6 @@ int main(int argc, char **argv) {
   // get the gpu result
   auto C = ioABuffer.get_access<sycl::access::mode::read, sycl::access::target::host_buffer>();
   ute_and_are(a_test,b_test,C);
-  free(a_test);
-  free(b_test);
 #endif
 
   return 0;

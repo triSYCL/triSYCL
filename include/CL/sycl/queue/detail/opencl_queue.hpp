@@ -89,8 +89,9 @@ public:
    use a weak symbol so that only one remains when SYCL headers are
    used in different compilation units of a program
 */
+WEAK_ATTRIB_PREFIX
 detail::cache<cl_command_queue, detail::opencl_queue> opencl_queue::cache
-  __attribute__((weak));
+WEAK_ATTRIB_SUFFIX;
 
 }
 }

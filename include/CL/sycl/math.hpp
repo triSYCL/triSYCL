@@ -10,6 +10,16 @@
 
 #include <cmath>
 
+// Include order and configure insensitive treating of unwanted macros
+#ifdef _MSC_VER
+  #ifdef min
+    #undef min
+  #endif
+  #ifdef max
+    #undef max
+  #endif
+#endif
+
 namespace cl {
 namespace sycl {
 #define TRISYCL_MATH_WRAP(FUN) template<typename T>                            \

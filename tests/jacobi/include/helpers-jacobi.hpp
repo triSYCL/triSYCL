@@ -1,15 +1,22 @@
 #ifndef __JACOBI_CONSTANTS__HPP_
 #define __JACOBI_CONSTANTS__HPP_
 
-#include <fstream>
-
-#include <iostream>
-#include <cstdlib>
+// Boost
 #include <boost/lexical_cast.hpp>
 
-#include <sys/time.h>
+// ISO C++
+#include <fstream>
+#include <iostream>
+#include <cstdlib>
+#include <chrono>
 
+// SYCL
 #include <CL/sycl.hpp>
+
+// OpenMP
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 #ifndef USE_PAPI
 #define USE_PAPI 0
@@ -23,12 +30,6 @@ int nb_papi_event;
 long long *papi_values;
 int es = PAPI_NULL; //event set
 #endif
-
-#ifdef _OPENMP
-#include <omp.h>
-#endif
-
-#include <pthread.h>
 
 //pthread_mutex_t time_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -80,30 +81,22 @@ size_t N = WG_MULT1*J_CL_DEVICE_CONST_WORK_GROUP_SIZE1+JACOBI_DELTA;
 size_t J_CL_DEVICE_MAX_WORK_GROUP_SIZE0 = J_CL_DEVICE_CONST_WORK_GROUP_SIZE0;
 size_t J_CL_DEVICE_MAX_WORK_GROUP_SIZE1 = J_CL_DEVICE_CONST_WORK_GROUP_SIZE1;
 
-struct op_time {
-  struct timeval start;
-  struct timeval end;
-};
+struct counters
+{
+    using clock_type = typename std::chrono::high_resolution_clock;
+    using duration_type = typename std::chrono::milliseconds;
 
-struct counters {
-  struct timeval start;
-  struct timeval end_init;
-  struct timeval end;
-  unsigned long  init_time;
-  unsigned long  load_time;
-  unsigned long  stencil_time;
-  unsigned long  copy_time;
-  long long * papi_values_l;
-  long long * papi_values_s;
+    clock_type::time_point start, end_init, end;
+    duration_type init_time, load_time, stencil_time, copy_time;
+    long long * papi_values_l;
+    long long * papi_values_s;
 };
 
 
-inline void start_measure(struct counters& timer) {
-  gettimeofday(&(timer.start), NULL);
-  timer.init_time = 0;
-  timer.load_time = 0;
-  timer.stencil_time = 0;
-  timer.copy_time = 0;
+inline void start_measure(counters& timer)
+{
+    timer.start = counters::clock_type::now();
+
 #if USE_PAPI
   if (nb_papi_event > 0) {
     timer.papi_values_l = new long long [nb_papi_event];
@@ -116,21 +109,23 @@ inline void start_measure(struct counters& timer) {
 #endif
 }
 
-inline void end_init(struct counters& timer) {
-  gettimeofday(&(timer.end_init), NULL);
-  timer.init_time = (timer.end_init.tv_sec - timer.start.tv_sec)*1000 + (timer.end_init.tv_usec - timer.start.tv_usec)/1000;
+inline void end_init(counters& timer)
+{
+    timer.end_init = counters::clock_type::now();
+    timer.init_time = std::chrono::duration_cast<counters::duration_type>(timer.end_init - timer.start);
 }
 
-inline void begin_op(struct op_time& time) {
-  gettimeofday(&(time.start), NULL);
-}
-
-inline void end_op(struct op_time& time, unsigned long& var) {
-  gettimeofday(&(time.end), NULL);
-  //  pthread_mutex_lock(&time_mutex);
-  var += (time.end.tv_sec - time.start.tv_sec)*1000 + (time.end.tv_usec - time.start.tv_usec)/1000;
-  //  pthread_mutex_unlock(&time_mutex);
-}
+//inline void begin_op(struct op_time& time)
+//{
+//  gettimeofday(&(time.start), NULL);
+//}
+//
+//inline void end_op(struct op_time& time, unsigned long& var) {
+//  gettimeofday(&(time.end), NULL);
+//  //  pthread_mutex_lock(&time_mutex);
+//  var += (time.end.tv_sec - time.start.tv_sec)*1000 + (time.end.tv_usec - time.start.tv_usec)/1000;
+//  //  pthread_mutex_unlock(&time_mutex);
+//}
 
 #if USE_PAPI
 inline void start_papi_loading(struct counters& timer){
@@ -187,15 +182,17 @@ inline void stop_papi_stencil(struct counters& timer){}
 
 #endif
 
-inline void end_measure(struct counters& timer) {
-  gettimeofday(&(timer.end), NULL);
-  unsigned long tot_time = (timer.end.tv_sec - timer.start.tv_sec)*1000 + (timer.end.tv_usec - timer.start.tv_usec)/1000;
-  std::cout << "Initialization......time (ms) : " << timer.init_time << std::endl;
-  std::cout << "Stencil loading.....time (ms) : " << timer.load_time << std::endl;
-  std::cout << "Stencil computing...time (ms) : " << timer.stencil_time << std::endl;
-  std::cout << "Copy................time (ms) : " << timer.copy_time << std::endl;
-  std::cout << "Subtotal............time (ms) : " << timer.init_time + timer.load_time + timer.stencil_time + timer.copy_time << std::endl;
-  std::cout << "Total (with instr.) time (ms) : " << tot_time << std::endl;
+inline void end_measure(struct counters& timer)
+{
+    timer.end = counters::clock_type::now();
+    counters::duration_type tot_time = std::chrono::duration_cast<counters::duration_type>(timer.end - timer.start);
+
+    std::cout << "Initialization......time (ms) : " << timer.init_time.count() << std::endl;
+    std::cout << "Stencil loading.....time (ms) : " << timer.load_time.count() << std::endl;
+    std::cout << "Stencil computing...time (ms) : " << timer.stencil_time.count() << std::endl;
+    std::cout << "Copy................time (ms) : " << timer.copy_time.count() << std::endl;
+    std::cout << "Subtotal............time (ms) : " << (timer.init_time + timer.load_time + timer.stencil_time + timer.copy_time).count() << std::endl;
+    std::cout << "Total (with instr.) time (ms) : " << tot_time.count() << std::endl;
 #if USE_PAPI
   if (nb_papi_event > 0) {
     std::cout << "Loading counters" << std::endl;;
@@ -218,19 +215,20 @@ inline void end_measure(struct counters& timer) {
 }
 
 
-struct Vector_f {
-public:
+struct Vector_f
+{
   float tab[VEC_CONST_SIZE];
 };
 
-struct Matrix_f {
-public:
+struct Matrix_f
+{
   float tab[VEC_CONST_SIZE*VEC_CONST_SIZE];
 };
 
-void add_vec(struct Vector_f * vec_inout, struct Vector_f * vec_in) {
+void add_vec(Vector_f& vec_inout, const Vector_f& vec_in)
+{
   for (size_t i = 0; i < VEC_CONST_SIZE; ++i) {
-    vec_inout->tab[i] += vec_in->tab[i];
+    vec_inout.tab[i] += vec_in.tab[i];
   }
 }
 
@@ -246,7 +244,8 @@ void mat_vec(struct Matrix_f * mat, struct Vector_f * vec_in, struct Vector_f * 
 }
 
 
-void read_args(int argc, char **argv){
+void read_args(int argc, char **argv)
+{
 #ifdef NB_THREADS
 #ifdef _OPENMP
   omp_set_num_threads(NB_THREADS);
@@ -320,13 +319,15 @@ void read_args(int argc, char **argv){
 
 
 //print matrix : row major, i = line, j = column
-void print_host2D(float * tab) {
-  for (size_t i = 0; i < M; ++i){
-    for(size_t j = 0; j < N; ++j){
-      std::cout << tab[i*N+j] << " " ;
+void print_host2D(float * tab)
+{
+    for (size_t i = 0; i < M; ++i)
+    {
+        for(size_t j = 0; j < N; ++j)
+            std::cout << tab[i*N+j] << " " ;
+
+        std::cout << std::endl;
     }
-    std::cout << std::endl;
-  }
 }
 
 void print_buffer2D(cl::sycl::accessor<float, 2, cl::sycl::access::mode::read, cl::sycl::access::target::host_buffer> bufferAccessor) {
@@ -339,36 +340,47 @@ void print_buffer2D(cl::sycl::accessor<float, 2, cl::sycl::access::mode::read, c
 }
 
 
-void compute_jacobi2D(float * a_test, float * b_test, struct counters& timer){
-  for (unsigned int t = 0; t < NB_ITER; ++t){
+void compute_jacobi2D(std::vector<float>& a_test,
+                      std::vector<float>& b_test,
+                      counters& timer)
+{
+    for (unsigned int t = 0; t < NB_ITER; ++t)
+    {
+        auto being_op = counters::clock_type::now();
 
-    struct op_time time_op;
-    begin_op(time_op);
-
-    for (size_t i = 1; i < M - 1; ++i){
+        for (int i = 1; i < M - 1; ++i) {
 #ifdef _OPENMP
 #pragma omp parallel for
 #endif
-      for (size_t j = 1; j < N - 1; ++j){
-        b_test[i*N+j] = MULT_COEF * (a_test[i*N+j] + a_test[i*N+(j-1)] + a_test[i*N+(1+j)] + a_test[(1+i)*N+j] + a_test[(i-1)*N+j]);
-      }
+            for (int j = 1; j < N - 1; ++j) {
+                b_test[i*N + j] = MULT_COEF * (a_test[i*N + j] + a_test[i*N + (j - 1)] + a_test[i*N + (1 + j)] + a_test[(1 + i)*N + j] + a_test[(i - 1)*N + j]);
+            }
+        }
+
+        auto end_op = counters::clock_type::now();
+        timer.stencil_time = std::chrono::duration_cast<counters::duration_type>(end_op - being_op);
+
+        being_op = counters::clock_type::now();
+
+        for (int i = 1; i < M - 1; ++i) {
+            for (int j = 1; j < N - 1; ++j) {
+                a_test[i*N + j] = b_test[i*N + j];
+            }
+        }
+
+        end_op = counters::clock_type::now();
+        timer.copy_time = std::chrono::duration_cast<counters::duration_type>(end_op - being_op);
     }
-
-    end_op(time_op, timer.stencil_time);
-    begin_op(time_op);
-
-    for (size_t i = 1; i < M - 1; ++i){
-      for (size_t j = 1; j < N - 1; ++j){
-        a_test[i*N+j] = b_test[i*N+j];
-      }
-    }
-
-    end_op(time_op, timer.copy_time);
-  }
 }
 
 // comp..
-void ute_and_are(float * a_test, float * b_test, cl::sycl::accessor<float, 2, cl::sycl::access::mode::read, cl::sycl::access::target::host_buffer> C){
+void ute_and_are(std::vector<float>& a_test,
+    std::vector<float>& b_test,
+    cl::sycl::accessor<float,
+                       2,
+                       cl::sycl::access::mode::read,
+                       cl::sycl::access::target::host_buffer> C)
+{
   // compute result with cpu
   struct counters timer; //useless, but avoids writing the func twice
   compute_jacobi2D(a_test,b_test,timer);
