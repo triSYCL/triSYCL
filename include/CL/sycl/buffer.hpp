@@ -12,6 +12,7 @@
 #include <cstddef>
 #include <iterator>
 #include <memory>
+#include <type_traits>
 
 #include "CL/sycl/access.hpp"
 #include "CL/sycl/accessor.hpp"
@@ -36,11 +37,6 @@ namespace sycl {
 /** A SYCL buffer is a multidimensional variable length array (à la C99
     VLA or even Fortran before) that is used to store data to work on.
 
-    \todo We have some read-write buffers and some read-only buffers,
-    according to the constructor called. So we could have some static
-    checking for correctness with the accessors used, but we do not have a
-    way in the specification to have a read-only buffer type for this.
-
     \todo There is a naming inconsistency in the specification between
     buffer and accessor on T versus datatype
 
@@ -49,6 +45,10 @@ namespace sycl {
     \todo Think about the need of an allocator when constructing a buffer
     from other buffers
 
+    \todo Update the specification to have a non-const allocator for
+    const buffer? Or do we rely on rebind_alloc<T>. But does this work
+    with astate-full allocator?
+
     \todo Add constructors from arrays so that in C++17 the range and
     type can be infered from the constructor
 
@@ -56,7 +56,9 @@ namespace sycl {
 */
 template <typename T,
           std::size_t Dimensions = 1,
-          typename Allocator = buffer_allocator<T>>
+          /* Even a buffer of const T may need to allocate memory, so
+             need an allocator of non const T */
+          typename Allocator = buffer_allocator<std::remove_const_t<T>>>
 class buffer
   /* Use the underlying buffer waiter implementation that can be
      shared in the SYCL model */
@@ -110,7 +112,7 @@ public:
   */
   buffer(const range<Dimensions> &r, Allocator allocator = {})
     : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
-                                        { r }) }
+                         { r }) }
       {}
 
 
@@ -122,22 +124,30 @@ public:
       \param[in] r defines the size
 
       \param[in] allocator is to be used by the SYCL runtime, of type
-      cl::sycl::buffer_allocator<T> by default
+      \c cl::sycl::buffer_allocator<T> by default
 
-      The host address is const T, so the host accesses can be
-      read-only.
+      The host address is \code const T* \endcode, so the host memory
+      is read-only.
 
       However, the typename T is not const so the device accesses can
       be both read and write accesses. Since, the host_data is const,
       this buffer is only initialized with this memory and there is
       no write after its destruction, unless there is another final
       data address given after construction of the buffer.
+
+      Only enable this constructor if it is not the same as the one
+      with \code const T *host_data \endcode, which is when \c T is
+      already a constant type.
+
+      \todo Actually this is redundant.
   */
+  template <typename Dependent = T,
+            typename = std::enable_if_t<!std::is_const<Dependent>::value>>
   buffer(const T *host_data,
          const range<Dimensions> &r,
          Allocator allocator = {})
     : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
-            { host_data, r }) }
+                         { host_data, r }) }
   {}
 
 
@@ -157,9 +167,11 @@ public:
       points to the storage and values used by the buffer and
       range<dimensions> defines the size.
   */
-  buffer(T *host_data, const range<Dimensions> &r, Allocator allocator = {})
+  buffer(T *host_data,
+         const range<Dimensions> &r,
+         Allocator allocator = {})
     : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
-            { host_data, r }) }
+                         { host_data, r }) }
   {}
 
 
@@ -216,7 +228,7 @@ public:
          const range<Dimensions> &buffer_range,
          Allocator allocator = {})
     : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
-            { host_data, buffer_range }) }
+                         { host_data, buffer_range }) }
   {}
 
 
@@ -243,7 +255,7 @@ public:
          const range<Dimensions> &r,
          Allocator allocator = {})
     : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
-            { std::move(host_data), r }) }
+                         { std::move(host_data), r }) }
   {}
 
 
@@ -288,7 +300,7 @@ public:
          InputIterator end_iterator,
          Allocator allocator = {}) :
     implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
-            { start_iterator, end_iterator }) }
+                       { start_iterator, end_iterator }) }
   {}
 
 
@@ -459,8 +471,8 @@ public:
 
       \todo Add to specification
   */
-  bool is_read_only() const {
-    return implementation->implementation->read_only;
+  bool constexpr is_read_only() const {
+    return std::is_const<T>::value;
   }
 
 

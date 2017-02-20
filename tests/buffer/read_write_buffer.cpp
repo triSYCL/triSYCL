@@ -1,7 +1,8 @@
-/* RUN: %{execute}%s
+/* RUN: %{execute}%s | %{filecheck} %s
    CHECK: buffer "a" is read_only: 0
    CHECK-NEXT: buffer "b" is read_only: 0
-   CHECK-NEXT: buffer "c" is read_only: 1
+   CHECK-NEXT: buffer "c" is read_only: 0
+   CHECK-NEXT: buffer "cc" is read_only: 1
    CHECK-NEXT: buffer "vb" is read_only: 0
 */
 #include <CL/sycl.hpp>
@@ -27,11 +28,15 @@ int main() {
   cl::sycl::buffer<double, 2> b(&array[0][0], make_range(N, M));
   DISPLAY_BUFFER_READ_ONLY_STATUS(b);
 
-  // Create a read-only 2D buffer of size N*M upon host storage
+  // Create a read-write 2D buffer of size N*M upon host storage
   const double carray[N][M] = { { 0 } };
   cl::sycl::buffer<double, 2> c(&carray[0][0], make_range(N, M));
   DISPLAY_BUFFER_READ_ONLY_STATUS(c);
-  //cl::sycl::buffer<const double, 2> cc(&array[0][0], make_range(N, M));
+
+  // Create a read-only 2D buffer of size N*M upon host storage
+  const double ccarray[N][M] = { { 0 } };
+  cl::sycl::buffer<const double, 2> cc { &ccarray[0][0], make_range(N, M) };
+  DISPLAY_BUFFER_READ_ONLY_STATUS(cc);
 
   // Create a read-write 1D buffer initialized with copy of elements given
   // by a range. Since it is a copy, we can use another

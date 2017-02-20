@@ -29,7 +29,7 @@ namespace detail {
 */
 template <typename T,
           std::size_t Dimensions = 1,
-          typename Allocator = buffer_allocator<T>>
+          typename Allocator = buffer_allocator<std::remove_const_t<T>>>
 class buffer_waiter :
     public detail::shared_ptr_implementation<buffer_waiter<T,
                                                            Dimensions,

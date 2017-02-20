@@ -46,12 +46,15 @@ public:
   // Extension to SYCL: provide pieces of STL container interface
   using element = T;
   using value_type = T;
+  /* Even if the buffer is read-only use a non-const type so at
+     least the current implementation can copy the data too */
+  using non_const_value_type = std::remove_const_t<value_type>;
 
 private:
 
   /** If some allocation is requested, it is managed by this multi_array
       to ease initialization from data */
-  boost::multi_array<T, Dimensions> allocation;
+  boost::multi_array<non_const_value_type, Dimensions> allocation;
 
   // \todo Replace U and D somehow by T and Dimensions
   // To allow allocation access
@@ -67,7 +70,7 @@ private:
       or to some other memory location in the case of host memory or
       storage<> abstraction use
   */
-  boost::multi_array_ref<T, Dimensions> access;
+  boost::multi_array_ref<value_type, Dimensions> access;
 
   /* How to copy back data on buffer destruction, can be modified with
      set_final_data( ... )
@@ -85,13 +88,12 @@ private:
   bool copy_if_modified = false;
 
   // Track if data have been modified
-  bool modified  = false;
+  bool modified = false;
 
 public:
 
   /// Create a new read-write buffer of size \param r
-  buffer(const range<Dimensions> &r) : buffer_base { false },
-                                       allocation { r },
+  buffer(const range<Dimensions> &r) : allocation { r },
                                        access { allocation }
                                        {}
 
@@ -99,7 +101,6 @@ public:
   /** Create a new read-write buffer from \param host_data of size
       \param r without further allocation */
   buffer(T *host_data, const range<Dimensions> &r) :
-    buffer_base { false },
     access { host_data, r },
     data_host { true }
   {}
@@ -110,9 +111,13 @@ public:
 
       \todo Clarify the semantics in the spec. What happens if the
       host change the host_data after buffer creation?
+
+      Only enable this constructor if the value type is not constant,
+      because if it is constant, the buffer is constant too.
   */
+  template <typename Dependent = T,
+            typename = std::enable_if_t<!std::is_const<Dependent>::value>>
   buffer(const T *host_data, const range<Dimensions> &r) :
-    buffer_base { false },
     access { const_cast<T *>(host_data), r },
     data_host { true },
     // We set copy_if_modified to true, so that if an accessor with write
@@ -130,7 +135,6 @@ public:
       used.
   */
   buffer(shared_ptr_class<T> &host_data, const range<Dimensions> &r) :
-    buffer_base { false },
     access { host_data.get(), r },
     input_shared_pointer { host_data },
     data_host { true }
@@ -145,7 +149,6 @@ public:
   template<typename Deleter>
   buffer(unique_ptr_class<T, Deleter> &&host_data,
          const range<Dimensions> &r) :
-    buffer_base { false },
     access { host_data.get(), r },
       /* Use the fact that there is an implicit constructor of a \c
          std::shared_ptr from a \c std::unique_ptr to avoid storing
@@ -166,7 +169,6 @@ public:
   /// Create a new allocated 1D buffer from the given elements
   template <typename Iterator>
   buffer(Iterator start_iterator, Iterator end_iterator) :
-    buffer_base { false },
     // The size of a multi_array is set at creation time
     allocation { boost::extents[std::distance(start_iterator, end_iterator)] },
     access { allocation }
