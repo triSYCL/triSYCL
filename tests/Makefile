@@ -182,7 +182,7 @@ multiple_compilation_units/parallel_for: multiple_compilation_units/parallel_for
 %.ll: %.cc
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -S -o $@ $<
 
-# Process bitcode with SYCL pass
+# Process bitcode with SYCL pass to generate kernels
 %.kernel.bc: %.ll
 	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats \
 	#  -globalopt -deadargelim -SYCL-args-flattening -deadargelim \
@@ -198,6 +198,12 @@ multiple_compilation_units/parallel_for: multiple_compilation_units/parallel_for
 	#  -o $@ $<
 	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -stats  -debug \
 	#  -SYCL-annotation -SYCL-kernel-filter -o $@ $<
+
+# Process bitcode with SYCL pass to generate kernels
+%.kernel_caller.bc: %.ll
+	opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats \
+	  -globalopt -deadargelim -SYCL-serialize-arguments \
+	  -o $@ $<
 
 # Generate LLVM assembly code from bit-code
 %.ll: %.bc
