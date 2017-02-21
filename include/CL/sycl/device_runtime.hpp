@@ -64,6 +64,19 @@ public:
 
 };
 
+
+/** Set an argument value of the kernel
+
+    \param[in] index is the order of the argument to set (0 is the first one)
+
+    \param[in] arg point to the argument value
+
+    \param[in] arg_size is the size of the argument
+*/
+void
+serialize_arg(std::size_t index, void *arg, std::size_t arg_size) {
+}
+
 /// @} to end the Doxygen group
 
 }
