@@ -16,20 +16,20 @@ namespace sycl {
 namespace detail {
 
 /** Avoid the interprocedural optimization to remove these arguments
-    in the kernel instantiation by relying on some dummy external
-    function.
+    in the kernel instantiation by relying on some dummy static variables.
 
-    Using \c __attribute__((used)) in \c instantiate_kernel does not
-    prevent aggressive optimizations to remove the arguments, so use
-    this hack instead.
-
-    The name of the function itself should give a hint to an end user
-    trying to use this code as is without processing by the device
-    compiler
+    Using \c __attribute__((used)) does not work on arguments but only
+    on static variable, so use this function.
 */
-extern void
-to_be_massaged_by_outlining_compiler_(boost::compute::kernel &k,
-                                      boost::compute::command_queue &q);
+void
+prevent_arguments_from_optimization(boost::compute::kernel &k,
+                                    boost::compute::command_queue &q) {
+  /* Just keep track of the address, otherwise the objects are copied,
+     may throw, are registered for destruction with \c atexit(),
+     etc. */
+  static auto __attribute__((used)) sk = &k;
+  static auto __attribute__((used)) sq = &q;
+}
 
 
 /** Instantiate the template code
@@ -49,7 +49,9 @@ void instantiate_kernel(boost::compute::kernel &k,
      insert some calls to \c serialize_arg and so on using \c k and \c
      q */
   f();
-  to_be_massaged_by_outlining_compiler_(k, q);
+  /* Keep k and q alive here even through interprocedural dead code
+     elimination */
+  prevent_arguments_from_optimization(k, q);
 }
 
 }
