@@ -9,6 +9,8 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <tuple>
+
 #include <boost/compute.hpp>
 
 namespace cl {
@@ -21,15 +23,13 @@ namespace detail {
     Using \c __attribute__((used)) does not work on arguments but only
     on static variable, so use this function.
 */
-void
-prevent_arguments_from_optimization(boost::compute::kernel &k,
-                                    boost::compute::command_queue &q) {
-  /* Just keep track of the address, otherwise the objects are copied,
-     may throw, are registered for destruction with \c atexit(),
-     etc. */
-  static auto __attribute__((used)) sk = &k;
-  static auto __attribute__((used)) sq = &q;
-}
+auto
+prevent_arguments_from_optimization = [] (auto & ...args) {
+  /* Just keep track of the address of all the given objects,
+     otherwise the objects are copied, may throw, are registered for
+     destruction with \c atexit(), etc. */
+  static auto __attribute__((used)) keep = std::make_tuple(& args...);
+};
 
 
 /** Instantiate the template code
