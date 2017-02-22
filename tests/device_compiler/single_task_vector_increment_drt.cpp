@@ -48,6 +48,5 @@ int test_main(int argc, char *argv[]) {
   for (unsigned int i = 0 ; i < input.get_count(); ++i)
     BOOST_CHECK(a_output[i] == a_input[i] + 42);
 
-  drt::serialize_arg(1, (void*)&a_input, sizeof(a_input));
   return 0;
 }

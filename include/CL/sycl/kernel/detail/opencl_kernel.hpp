@@ -75,7 +75,7 @@ class opencl_kernel : public detail::kernel,
 
       This is an extension.
   */
-  boost::compute::kernel get_boost_compute() const override {
+  boost::compute::kernel &get_boost_compute() override {
     return k;
   }
 
