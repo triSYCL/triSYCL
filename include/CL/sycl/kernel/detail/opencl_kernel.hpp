@@ -20,6 +20,16 @@
 #include "CL/sycl/kernel/detail/kernel.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"
 
+#ifndef WEAK_ATTRIB_PREFIX
+  #ifdef _MSC_VER
+    #define WEAK_ATTRIB_PREFIX __declspec(selectany)
+    #define WEAK_ATTRIB_SUFFIX
+  #else
+    #define WEAK_ATTRIB_PREFIX
+    #define WEAK_ATTRIB_SUFFIX __attribute__((weak))
+  #endif
+#endif
+
 namespace cl {
 namespace sycl {
 namespace detail {
@@ -124,8 +134,9 @@ class opencl_kernel : public detail::kernel,
    use a weak symbol so that only one remains when SYCL headers are
    used in different compilation units of a program
 */
+WEAK_ATTRIB_PREFIX
 detail::cache<cl_kernel, detail::opencl_kernel> opencl_kernel::cache
-  __attribute__((weak));
+WEAK_ATTRIB_SUFFIX;
 
 }
 }

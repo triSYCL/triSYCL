@@ -12,6 +12,7 @@
 #include <cstddef>
 #include <iterator>
 #include <memory>
+#include <type_traits>
 
 #include "CL/sycl/access.hpp"
 #include "CL/sycl/accessor.hpp"
@@ -36,11 +37,6 @@ namespace sycl {
 /** A SYCL buffer is a multidimensional variable length array (à la C99
     VLA or even Fortran before) that is used to store data to work on.
 
-    \todo We have some read-write buffers and some read-only buffers,
-    according to the constructor called. So we could have some static
-    checking for correctness with the accessors used, but we do not have a
-    way in the specification to have a read-only buffer type for this.
-
     \todo There is a naming inconsistency in the specification between
     buffer and accessor on T versus datatype
 
@@ -49,6 +45,10 @@ namespace sycl {
     \todo Think about the need of an allocator when constructing a buffer
     from other buffers
 
+    \todo Update the specification to have a non-const allocator for
+    const buffer? Or do we rely on rebind_alloc<T>. But does this work
+    with astate-full allocator?
+
     \todo Add constructors from arrays so that in C++17 the range and
     type can be infered from the constructor
 
@@ -56,7 +56,9 @@ namespace sycl {
 */
 template <typename T,
           std::size_t Dimensions = 1,
-          typename Allocator = buffer_allocator<T>>
+          /* Even a buffer of const T may need to allocate memory, so
+             need an allocator of non const T */
+          typename Allocator = buffer_allocator<std::remove_const_t<T>>>
 class buffer
   /* Use the underlying buffer waiter implementation that can be
      shared in the SYCL model */
@@ -75,10 +77,7 @@ public:
 private:
 
   // The type encapsulating the implementation
-  using implementation_t =
-    detail::shared_ptr_implementation<
-                         buffer<T, Dimensions, Allocator>,
-                         detail::buffer_waiter<T, Dimensions, Allocator>>;
+  using implementation_t = typename buffer::shared_ptr_implementation;
 
   // Allows the comparison operation to access the implementation
   friend implementation_t;
@@ -113,7 +112,7 @@ public:
   */
   buffer(const range<Dimensions> &r, Allocator allocator = {})
     : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
-                                        { r }) }
+                         { r }) }
       {}
 
 
@@ -125,22 +124,30 @@ public:
       \param[in] r defines the size
 
       \param[in] allocator is to be used by the SYCL runtime, of type
-      cl::sycl::buffer_allocator<T> by default
+      \c cl::sycl::buffer_allocator<T> by default
 
-      The host address is const T, so the host accesses can be
-      read-only.
+      The host address is \code const T* \endcode, so the host memory
+      is read-only.
 
       However, the typename T is not const so the device accesses can
       be both read and write accesses. Since, the host_data is const,
       this buffer is only initialized with this memory and there is
       no write after its destruction, unless there is another final
       data address given after construction of the buffer.
+
+      Only enable this constructor if it is not the same as the one
+      with \code const T *host_data \endcode, which is when \c T is
+      already a constant type.
+
+      \todo Actually this is redundant.
   */
+  template <typename Dependent = T,
+            typename = std::enable_if_t<!std::is_const<Dependent>::value>>
   buffer(const T *host_data,
          const range<Dimensions> &r,
          Allocator allocator = {})
     : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
-            { host_data, r }) }
+                         { host_data, r }) }
   {}
 
 
@@ -160,9 +167,11 @@ public:
       points to the storage and values used by the buffer and
       range<dimensions> defines the size.
   */
-  buffer(T *host_data, const range<Dimensions> &r, Allocator allocator = {})
+  buffer(T *host_data,
+         const range<Dimensions> &r,
+         Allocator allocator = {})
     : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
-            { host_data, r }) }
+                         { host_data, r }) }
   {}
 
 
@@ -219,13 +228,13 @@ public:
          const range<Dimensions> &buffer_range,
          Allocator allocator = {})
     : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
-            { host_data, buffer_range }) }
+                         { host_data, buffer_range }) }
   {}
 
 
   /** Create a new buffer which is initialized by host_data
 
-      \param[inout] host_data points to the storage and values used to
+      \param[in] host_data points to the storage and values used to
       initialize the buffer
 
       \param[in] r defines the size
@@ -242,15 +251,12 @@ public:
       unique_ptr_class/std::unique_ptr have the destructor type as
       dependent
   */
-  template <typename D = std::default_delete<T>>
-  buffer(unique_ptr_class<T, D> &&host_data,
-         const range<Dimensions> &buffer_range,
+  buffer(unique_ptr_class<T> &&host_data,
+         const range<Dimensions> &r,
          Allocator allocator = {})
-  // Just delegate to the constructor with normal pointer
-    : buffer(host_data.get(), buffer_range, allocator) {
-    // Then release the host_data memory
-    host_data.release();
-  }
+    : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
+                         { std::move(host_data), r }) }
+  {}
 
 
   /** Create a new allocated 1D buffer initialized from the given
@@ -294,7 +300,7 @@ public:
          InputIterator end_iterator,
          Allocator allocator = {}) :
     implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
-            { start_iterator, end_iterator }) }
+                       { start_iterator, end_iterator }) }
   {}
 
 
@@ -371,7 +377,16 @@ public:
                   "get_access(handler) can only deal with access::global_buffer"
                   " or access::constant_buffer (for host_buffer accessor"
                   " do not use a command group handler");
+    implementation->implementation->template track_access_mode<Mode, Target>();
     return { *this, command_group_handler };
+  }
+
+
+  /** Force the buffer to behave like if we had created
+      an accessor in write mode.
+   */
+  void mark_as_written() {
+    return implementation->implementation->mark_as_written();
   }
 
 
@@ -390,6 +405,7 @@ public:
     static_assert(Target == access::target::host_buffer,
                   "get_access() without a command group handler is only"
                   " for host_buffer accessor");
+    implementation->implementation->template track_access_mode<Mode, Target>();
     return { *this };
   }
 
@@ -455,8 +471,8 @@ public:
 
       \todo Add to specification
   */
-  bool is_read_only() const {
-    return implementation->implementation->read_only;
+  bool constexpr is_read_only() const {
+    return std::is_const<T>::value;
   }
 
 
@@ -487,8 +503,35 @@ public:
       way to write back some data or with some data sharing with the
       host that can not be undone
   */
+  void set_final_data(shared_ptr_class<T> finalData) {
+    implementation->implementation->set_final_data(std::move(finalData));
+  }
+
+
+  /** Set destination of buffer data on destruction.
+   */
   void set_final_data(weak_ptr_class<T> finalData) {
     implementation->implementation->set_final_data(std::move(finalData));
+  }
+
+
+  /** Disable write-back on buffer destruction.
+   */
+  void set_final_data(std::nullptr_t) {
+    implementation->implementation->set_final_data(nullptr);
+  }
+
+
+  /** Set destination of buffer data on destruction.
+
+      WARNING: the user has to ensure that the object refered to by the
+      iterator will be alive after buffer destruction, otherwise the behaviour
+      is undefined.
+   */
+  template<typename Iterator>
+  void set_final_data(Iterator&& finalData) {
+    implementation->implementation->
+      set_final_data(std::forward<Iterator>(finalData));
   }
 
 };

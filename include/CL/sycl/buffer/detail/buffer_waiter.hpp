@@ -12,9 +12,6 @@
 #include <cstddef>
 #include <future>
 
-// \todo Use C++17 optional when it is mainstream
-#include <boost/optional.hpp>
-
 #include "CL/sycl/buffer/detail/buffer.hpp"
 #include "CL/sycl/buffer_allocator.hpp"
 #include "CL/sycl/detail/shared_ptr_implementation.hpp"
@@ -32,7 +29,7 @@ namespace detail {
 */
 template <typename T,
           std::size_t Dimensions = 1,
-          typename Allocator = buffer_allocator<T>>
+          typename Allocator = buffer_allocator<std::remove_const_t<T>>>
 class buffer_waiter :
     public detail::shared_ptr_implementation<buffer_waiter<T,
                                                            Dimensions,
@@ -41,9 +38,7 @@ class buffer_waiter :
     detail::debug<buffer_waiter<T, Dimensions, Allocator>> {
 
   // The type encapsulating the implementation
-  using implementation_t =
-    detail::shared_ptr_implementation<buffer_waiter<T, Dimensions, Allocator>,
-                                      detail::buffer<T, Dimensions>>;
+  using implementation_t = typename buffer_waiter::shared_ptr_implementation;
 
   // Allows the comparison operation to access the implementation
   friend implementation_t;

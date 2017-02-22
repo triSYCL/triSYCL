@@ -1,20 +1,63 @@
+# Typical variables to tweak for the local environment.
 
-## To enable asynchronous kernels
-CXXFLAGS += -DTRISYCL_ASYNC=1
+# See doc/macros.rst for a description of triSYCL-specific macros.
+
+# Set default compiler instead of default CXX=g++ value
+# Assume Clang 3.9 at least
+#CXX = clang++-3.9
+# But everything works fine with GCC 5.4 at least
+CXX = g++
+# To use device compiler
+CXX = clang++
+
+# Set OpenCL_INCPATH variable to where CL/cl.h like headers are if
+# required
+
+# Set OpenCL_LIBPATH variable to where OpenCL library files are
+
+# Set BOOST_COMPUTE_INCPATH variable to where a specific version of
+# Boost.Compute is if required
 
 # To use OpenMP to execute SYCL kernels:
 #CXXFLAGS += -fopenmp
+# On Ubuntu, Clang has some issues to find omp.h, so use:
 #CXXFLAGS += -I/usr/lib/gcc/x86_64-linux-gnu/6/include
+
+## To disable asynchronous kernels, which is the default in SYCL
+#CXXFLAGS += -DTRISYCL_NO_ASYNC
 
 # For asynchronous kernels when OpenMP is not enabled
 LDLIBS += -lpthread
 
-# To use OpenCL
+# To use OpenCL, set the TRISYCL_OPENCL flag
 CXXFLAGS += -DTRISYCL_OPENCL
 LDLIBS += -lOpenCL
 
 # To compile for a device
 CXXFLAGS += -DTRISYCL_DEVICE
+# To enable debug and tracing:
+#CXXFLAGS += -g
+# With optimization and without assertions
+CXXFLAGS += -O3 -DNDEBUG
+#CXXFLAGS += -g -DTRISYCL_TRACE_KERNEL -DBOOST_LOG_DYN_LINK
+#CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
+#CXXFLAGS += -g -DTRISYCL_DEBUG -DTRISYCL_TRACE_KERNEL -DTRISYCL_DEBUG_STRUCTORS -DBOOST_LOG_DYN_LINK
+# To have DEBUG mode working
+#LDLIBS += -lboost_log -lpthread
+# To use Clang sanitizer modes
+#CXXFLAGS += -fsanitize=address -fno-omit-frame-pointer
+#CXXFLAGS += -fsanitize=thread -fno-omit-frame-pointer
+#CXXFLAGS += -fsanitize=undefined -fno-omit-frame-pointer
+
+# When XILINX_SDX environment variable is set, use the Xilinx SDx
+# OpenCL compiler with these flags:
+# Adapt to the real platform
+XOCCFLAGS=--platform xilinx:adm-pcie-7v3:1ddr:3.0
+
+
+
+# The rest is the Makefile boiling plate and should not be changed normally
+
 
 # Compute the absolute directory name from the location of this Makefile
 # so that we can compile from anywhere even if we use make -f
@@ -45,7 +88,7 @@ KERNELS = $(FILES_CC:%.cc=%.kernel.ll) \
 	$(FILES_C:%.C=%.kernel.ll) \
 	$(FILES_CPP:%.cpp=%.kernel.ll)
 
-# The implementation uses C++14 and OpenMP
+# The implementation uses C++14
 CXXFLAGS += -Wall -std=c++1y -I$(triSYCL_DIR)/include \
 	-I$(triSYCL_DIR)/tests/common
 
@@ -56,49 +99,24 @@ endif
 
 # Specify where Boost.Compute is with BOOST_COMPUTE_INCPATH
 ifdef BOOST_COMPUTE_INCPATH
-	CXXFLAGS += -I$(BOOST_COMPUTE_INCPATH) \
-	-DBOOST_COMPUTE_DEBUG_KERNEL_COMPILATION \
-	-DBOOST_COMPUTE_HAVE_THREAD_LOCAL \
-	-DBOOST_COMPUTE_THREAD_SAFE
+	CXXFLAGS += -I$(BOOST_COMPUTE_INCPATH)
 endif
 
-# Work-around an old Boost.CircularBuffer bug if a pre 1.62 Boost
-# version is used
-CXXFLAGS += -DMAKE_BOOST_CIRCULARBUFFER_THREAD_SAFE
+# Specific flags for Boost.Compute
+CXXFLAGS += -DBOOST_COMPUTE_DEBUG_KERNEL_COMPILATION \
+	-DBOOST_COMPUTE_HAVE_THREAD_LOCAL \
+	-DBOOST_COMPUTE_THREAD_SAFE
 
 # Specify where OpenCL library files are with OpenCL_LIBPATH
 ifdef OpenCL_LIBPATH
   LDFLAGS += -L$(OpenCL_LIBPATH)
 endif
 
-# There are some tests using small array display() method
-# To enable debug and tracing:
-#CXXFLAGS += -g
-# With optimization and without assertions
-CXXFLAGS += -O3 -DNDEBUG
-#CXXFLAGS += -g -DTRISYCL_TRACE_KERNEL -DBOOST_LOG_DYN_LINK
-#CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
-#CXXFLAGS += -g -DTRISYCL_DEBUG -DTRISYCL_TRACE_KERNEL -DTRISYCL_DEBUG_STRUCTORS -DBOOST_LOG_DYN_LINK
-# To have DEBUG mode working
-#LDLIBS += -lboost_log -lpthread
-# To use Clang sanitizer modes
-#CXXFLAGS += -fsanitize=address -fno-omit-frame-pointer
-#CXXFLAGS += -fsanitize=thread -fno-omit-frame-pointer
-#CXXFLAGS += -fsanitize=undefined -fno-omit-frame-pointer
-
 # By default run lit checking in the current directory
 CHECKING_DIR ?= .
 
-# Set default compiler instead of default CXX=g++ value
-
-# Assume Clang 3.8 at least
-CXX = clang++-3.9
-# But everything works fine with GCC 5.4 at least
-CXX = g++
-CXX = clang++
-
-
-# Some hack to force the compiler from the test infrastructure:
+# Some hack to force the compiler from the test infrastructure with
+# reentrant make:
 ifdef FORCE_CXX
   CXX=$(FORCE_CXX)
 endif
@@ -118,6 +136,28 @@ run: $(TARGETS)
 clean:
 	$(RM) $(CLEANING_TARGETS)
 
+# Add some explicit targets
+multiple_compilation_units/parallel_for: multiple_compilation_units/parallel_for_other.o
+
+ifdef XILINX_SDX
+# Compile explicit OpenCL kernels for Xilinx FPGA.
+# Note this variable enables also the Lit tests guarded
+# by "REQUIRES: xilinx-xocc"
+
+# Use "order-only" prerequisites for kernels since if the kernel are
+# changed, it does not imply to recompile the host part
+SDAccel/opencl_kernel_vector_add_args: | SDAccel/vector_add.xclbin
+
+# -lpthread is required by Xilinx OpenCL implementation
+LDLIBS += -pthread
+
+CLEANING_TARGETS += $(wildcard */*.xclbin)
+
+# How to compile OpenCL kernel to Xilinx FPGA
+%.xclbin: %.cl
+	xocc $(XOCCFLAGS) --target hw -o $@ $<
+endif
+
 # Force recompilation of $(TARGETS_CC) binaries through the Makefile since
 # LIT does not know the dependencies
 check: $(TARGETS_CC)
@@ -128,13 +168,15 @@ check: $(TARGETS_CC)
 	# so try before running the check:
 	# export TRISYCL_LIT=/usr/lib/llvm-3.7/build/utils/lit/lit.py
 	# The config file for triSYCL needs at least Python 3.3
-	test "unset$$TRISYCL_LIT == unset" && echo 'Initialize TRISYCL_LIT variable to the path of "lit" command' ; echo 1
+	test "unset$$TRISYCL_LIT == unset" \
+	  && echo 'Initialize TRISYCL_LIT variable to the path of "lit" command' ; \
+	  echo 1
 	python3 $$TRISYCL_LIT $(LITFLAGS) $(CHECKING_DIR)
 
 check-compilers:
 	# Launch the check with various compilers
-	-FORCE_CXX=g++-4.9 $(MAKE) clean check
-	-FORCE_CXX=clang++-3.8 $(MAKE) clean check
+	-FORCE_CXX=g++-5 $(MAKE) clean check
+	-FORCE_CXX=clang++-3.9 $(MAKE) clean check
 	-FORCE_CXX=g++ $(MAKE) clean check
 
 # A special target to be called as from the test as "make execute
@@ -146,20 +188,6 @@ execute: $(basename $(TARGET))
 	# Execute the compiled binary
 	$<
 
-# To verify everything is self-contained, run the target in a clone of the
-# current branch of the current repository.
-#
-# Forward any clone-T target into a clone and make T in it
-#
-# Use for example:
-# make clone-check
-clone-%:
-	rm -rf test-clone
-	git clone --branch `git rev-parse --abbrev-ref HEAD` .. test-clone
-	cd test-clone/tests; $(MAKE) $*
-
-
-multiple_compilation_units/parallel_for: multiple_compilation_units/parallel_for_other.o
 
 # To debug the Clang/LLVM triSYCL compiler
 # Assume that CXX contains some Clang compiler version
@@ -224,3 +252,37 @@ multiple_compilation_units/parallel_for: multiple_compilation_units/parallel_for
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-dump -fsyntax-only $< > $@
 %.ast: %.cc
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-dump -fsyntax-only $< > $@
+
+
+# To verify everything is self-contained, run the target in a clone of the
+# current branch of the current repository.
+#
+# Forward any clone-T target into a clone and make T in it
+#
+# Use for example:
+# make clone-check
+clone-%:
+	rm -rf test-clone
+	git clone --branch `git rev-parse --abbrev-ref HEAD` .. test-clone
+	cd test-clone/tests; $(MAKE) $*
+# To verify everything is self-contained, run the target in a new
+# work-tree of the current branch of the current repository.
+#
+# Forward any clone-T target into a clone and make T in it
+#
+# Use for example:
+# make clone-check
+clone-%:
+	# Remove some old tests
+	rm -rf test-clone
+	# The is a current issue when we create a lot of work-tree
+	# at the same place because they are not pruned if the directory exist.
+	#  So prune the old ones if any when the directory does not exist anymore
+	git worktree prune
+	# Create a work-tree from the same SHA-1 commit.
+	# Use a work-tree instead of clone so we can test directly
+	# from some remote commit.
+	# Use a detached work-tree so we do not need a branch
+	# and do not block an existing one
+	git worktree add --detach test-clone `git rev-parse HEAD`
+	cd test-clone/tests; $(MAKE) $*

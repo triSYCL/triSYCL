@@ -28,6 +28,11 @@
 #define __SYCL_SINGLE_SOURCE__
 
 
+/* Work-around an old Boost.CircularBuffer bug if a pre 1.62 Boost
+   version is used */
+#define TRISYCL_MAKE_BOOST_CIRCULARBUFFER_THREAD_SAFE
+
+
 /** Define TRISYCL_OPENCL to add OpenCL
 
     triSYCL can indeed work without OpenCL if only host support is needed.
@@ -49,20 +54,27 @@
 #define TRISYCL_SKIP_OPENCL(x)
 #endif
 
-/** Allow the asynchronous implementation of tasks */
-#ifndef TRISYCL_ASYNC
-/** Use asynchronous tasks by default.
-
-    Is set to 0, the functors are executed synchronously.
-*/
-#define TRISYCL_ASYNC 0
-#endif
-
 #ifdef TRISYCL_DEVICE
 // #define __SYCL_DEVICE_ONLY__
 #endif
 
 /// @} End the defaults Doxygen group
+
+// Compiler specific weak linking (until changing to C++17 inline variables/functions)
+#ifndef WEAK_ATTRIB_PREFIX
+#ifdef _MSC_VER
+#define WEAK_ATTRIB_PREFIX __declspec(selectany)
+#define WEAK_ATTRIB_SUFFIX
+#else
+#define WEAK_ATTRIB_PREFIX
+#define WEAK_ATTRIB_SUFFIX __attribute__((weak))
+#endif
+#endif
+
+// Suppress usage/leak of macros originating from Visual C++ headers
+#ifdef _MSC_VER
+#define NOMINMAX
+#endif
 
 /*
     # Some Emacs stuff:

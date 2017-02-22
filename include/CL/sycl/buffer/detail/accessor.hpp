@@ -124,6 +124,7 @@ public:
   */
   accessor(std::shared_ptr<detail::buffer<T, Dimensions>> target_buffer) :
     buf { target_buffer }, array { target_buffer->access } {
+    target_buffer->template track_access_mode<Mode>();
     TRISYCL_DUMP_T("Create a host accessor write = " << is_write_access());
     static_assert(Target == access::target::host_buffer,
                   "without a handler, access target should be host_buffer");
@@ -141,6 +142,7 @@ public:
   accessor(std::shared_ptr<detail::buffer<T, Dimensions>> target_buffer,
            handler &command_group_handler) :
     buf { target_buffer }, array { target_buffer->access } {
+    target_buffer->template track_access_mode<Mode>();
     TRISYCL_DUMP_T("Create a kernel accessor write = " << is_write_access());
     static_assert(Target == access::target::global_buffer
                   || Target == access::target::constant_buffer,
@@ -429,10 +431,10 @@ private:
 
     /* Create the OpenCL buffer and copy in data from the host if in
        read mode */
-    cl_buf = { task->get_queue()->get_boost_compute().get_context(),
-               get_size(),
-               flags,
-               is_read_access() ? array.data() : 0 };
+    cl_buf = boost::compute::buffer{ task->get_queue()->get_boost_compute().get_context(),
+                                     get_size(),
+                                     flags,
+                                     is_read_access() ? array.data() : 0 };
   }
 
 

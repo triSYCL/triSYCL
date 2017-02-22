@@ -12,6 +12,8 @@
 #include <cstddef>
 
 #include <boost/multi_array.hpp>
+// \todo Use C++17 optional when it is mainstream
+#include <boost/optional.hpp>
 
 #include "CL/sycl/access.hpp"
 #include "CL/sycl/buffer/detail/accessor.hpp"
@@ -22,6 +24,7 @@
 namespace cl {
 namespace sycl {
 namespace detail {
+
 
 /** \addtogroup data Data access and storage in SYCL
     @{
@@ -43,12 +46,15 @@ public:
   // Extension to SYCL: provide pieces of STL container interface
   using element = T;
   using value_type = T;
+  /* Even if the buffer is read-only use a non-const type so at
+     least the current implementation can copy the data too */
+  using non_const_value_type = std::remove_const_t<value_type>;
 
 private:
 
   /** If some allocation is requested, it is managed by this multi_array
       to ease initialization from data */
-  boost::multi_array<T, Dimensions> allocation;
+  boost::multi_array<non_const_value_type, Dimensions> allocation;
 
   // \todo Replace U and D somehow by T and Dimensions
   // To allow allocation access
@@ -64,48 +70,67 @@ private:
       or to some other memory location in the case of host memory or
       storage<> abstraction use
   */
-  boost::multi_array_ref<T, Dimensions> access;
+  boost::multi_array_ref<value_type, Dimensions> access;
 
-  /// The weak pointer to copy back data on buffer deletion
-  weak_ptr_class<T> final_data;
+  /* How to copy back data on buffer destruction, can be modified with
+     set_final_data( ... )
+   */
+  boost::optional<std::function<void(void)>> final_write_back;
 
-  /** The shared pointer in the case the buffer memory is shared with
-      the host */
-  shared_ptr_class<T> shared_data;
+  // Used to store the shared pointer used to create the buffer
+  shared_ptr_class<T> input_shared_pointer;
+
 
   // Track if the buffer memory is provided as host memory
-  bool host_write_back = false;
+  bool data_host = false;
+
+  // Track if data should be copied if a modification occurs
+  bool copy_if_modified = false;
+
+  // Track if data have been modified
+  bool modified = false;
 
 public:
 
   /// Create a new read-write buffer of size \param r
-  buffer(const range<Dimensions> &r) : buffer_base { false },
-                                       allocation { r },
+  buffer(const range<Dimensions> &r) : allocation { r },
                                        access { allocation }
                                        {}
 
 
   /** Create a new read-write buffer from \param host_data of size
       \param r without further allocation */
-  buffer(T *host_data, const range<Dimensions> &r) : buffer_base { false },
-                                                     access { host_data, r },
-                                                     host_write_back { true }
-                                                     {}
+  buffer(T *host_data, const range<Dimensions> &r) :
+    access { host_data, r },
+    data_host { true }
+  {}
 
 
   /** Create a new read-only buffer from \param host_data of size \param r
       without further allocation
 
+      If the buffer is non const, use a copy-on-write mechanism with
+      internal writable memory.
+
       \todo Clarify the semantics in the spec. What happens if the
       host change the host_data after buffer creation?
-  */
-  buffer(const T *host_data, const range<Dimensions> &r) :
-    /* \todo Need to solve this const buffer issue in a clean way
 
-       Just allocate memory? */
-    buffer_base { true },
-    access { const_cast<T *>(host_data), r }
-    {}
+      Only enable this constructor if the value type is not constant,
+      because if it is constant, the buffer is constant too.
+  */
+  template <typename Dependent = T,
+            typename = std::enable_if_t<!std::is_const<Dependent>::value>>
+  buffer(const T *host_data, const range<Dimensions> &r) :
+    /* The buffer is read-only, even if the internal multidimensional
+       wrapper is not. If a write accessor is requested, there should
+       be a copy on write. So this pointer should not be written and
+       this const_cast should be acceptable. */
+    access { const_cast<T *>(host_data), r },
+    data_host { true },
+    /* Set copy_if_modified to true, so that if an accessor with write
+       access is created, data are copied before to be modified. */
+    copy_if_modified { true }
+  {}
 
 
   /** Create a new buffer with associated memory, using the data in
@@ -116,21 +141,45 @@ public:
       runtime to use the same pointer, a cl::sycl::mutex_class is
       used.
   */
-  buffer(shared_ptr_class<T> &host_data,
-         const range<Dimensions> &r)
-    : buffer_base { false },
+  buffer(shared_ptr_class<T> &host_data, const range<Dimensions> &r) :
     access { host_data.get(), r },
-    shared_data { host_data }
-    {}
+    input_shared_pointer { host_data },
+    data_host { true }
+  {}
+
+
+  /** Create a new buffer with associated memory, using the data owned in
+      a unique pointer
+
+      SYCL's runtime has full ownership of the host_data.
+  */
+  template<typename Deleter>
+  buffer(unique_ptr_class<T, Deleter> &&host_data,
+         const range<Dimensions> &r) :
+    access { host_data.get(), r },
+      /* Use the fact that there is an implicit constructor of a \c
+         std::shared_ptr from a \c std::unique_ptr to avoid storing
+         the unique pointer. Doing so would need to implement
+         ourselves some type erasure on the \c Deleter to avoid it
+         leaking out of the \c buffer type and \c accessor type.
+
+         It still works as expected since, if we own a shared pointer,
+         the \c Deleter is correctly handled and if we own it and its
+         use-count is 1, we are the only owner and we can skip the
+         copy-back later.
+       */
+    input_shared_pointer { std::move(host_data) },
+    data_host { true }
+  {}
 
 
   /// Create a new allocated 1D buffer from the given elements
   template <typename Iterator>
   buffer(Iterator start_iterator, Iterator end_iterator) :
-    buffer_base { false },
     // The size of a multi_array is set at creation time
     allocation { boost::extents[std::distance(start_iterator, end_iterator)] },
     access { allocation }
+    // If iterators are const ones, then we do not write back
     {
       /* Then assign allocation since this is the only multi_array
          method with this iterator interface */
@@ -155,27 +204,48 @@ public:
          event available_event)
   */
 
+
   /** The buffer content may be copied back on destruction to some
       final location */
   ~buffer() {
-    /* If there is a final_data set and that points to something
-       alive, copy back the data through the shared pointer */
-    if (auto p = final_data.lock())
-      std::copy_n(access.data(), access.num_elements(), p.get());
-    /* If data are shared with the host but not concretely, we would
-       have to copy back the data to the host */
-    // else if (shared_data)
-    //   std::copy_n(access.data(), access.num_elements(), shared_data.get());
+    if (modified && final_write_back)
+      (*final_write_back)();
   }
+
+
+  /** Enforce the buffer to be considered as being modified.
+      Same as creating an accessor with write access.
+   */
+  void mark_as_written() {
+    modified = true;
+  }
+
 
   // Use BOOST_DISABLE_ASSERTS at some time to disable range checking
 
-  /// Return an accessor of the required mode \param M
-  /// \todo Remove if not used
+
+  /** This method is to be called whenever an acessor is created.
+      Its current purpose is to track if an accessor with write access
+      is created and acting acordingly.
+   */
   template <access::mode Mode,
-            access::target Target = access::target::global_buffer>
-  detail::accessor<T, Dimensions, Mode, Target> get_access() {
-    return { *this };
+            access::target Target = access::target::host_buffer>
+  void track_access_mode() {
+    // test if write access is required
+    if (   Mode == access::mode::write
+        || Mode == access::mode::read_write
+        || Mode == access::mode::discard_write
+        || Mode == access::mode::discard_read_write
+        || Mode == access::mode::atomic
+       ) {
+      modified = true;
+      if (copy_if_modified) {
+        copy_if_modified = false;
+        data_host = false;
+        allocation = boost::multi_array<T, Dimensions> { access };
+        access = boost::multi_array_ref<T, Dimensions> { allocation };
+      }
+    }
   }
 
 
@@ -192,7 +262,7 @@ public:
        std::size_t *?
     */
     return range<Dimensions> {
-      *(const std::size_t (*)[Dimensions])(allocation.shape())
+      *(const std::size_t (*)[Dimensions])(access.shape())
         };
   }
 
@@ -217,15 +287,46 @@ public:
   }
 
 
-  /** Set the weak pointer to copy back data on buffer deletion
-
-      \todo Add a write kernel dependency on the buffer so the buffer
-      destructor has to wait for the kernel execution if the buffer is
-      also accessed through a write accessor
+  /** Set the weak pointer as destination for write-back on buffer destruction.
   */
-  void set_final_data(weak_ptr_class<T> && finalData) {
-    final_data = finalData;
+  void set_final_data(std::weak_ptr<T> && final_data) {
+    final_write_back = [=] {
+      if (auto sptr = final_data.lock()) {
+        std::copy_n(access.data(), access.num_elements(), sptr.get());
+      }
+    };
   }
+
+
+  /** Provide destination for write-back on buffer destruction as a
+      shared pointer.
+   */
+  void set_final_data(std::shared_ptr<T> && final_data) {
+    final_write_back = [=] {
+      std::copy_n(access.data(), access.num_elements(), final_data.get());
+    };
+  }
+
+
+  /** Disable write-back on buffer destruction as an iterator.
+  */
+  void set_final_data(std::nullptr_t) {
+    final_write_back = boost::none;
+  }
+
+
+  /** Provide destination for write-back on buffer destruction as an iterator.
+  */
+  template <typename Iterator>
+  void set_final_data(Iterator final_data) {
+ /*   using type_ = typename iterator_value_type<Iterator>::value_type;
+    static_assert(std::is_same<type_, T>::value, "buffer type mismatch");
+    static_assert(!(std::is_const<type_>::value), "const iterator is not allowed");*/
+    final_write_back = [=] {
+      std::copy_n(access.data(), access.num_elements(), final_data);
+    };
+  }
+
 
 private:
 
@@ -236,7 +337,6 @@ private:
       wait for, otherwise an empty \c optional
   */
   boost::optional<std::future<void>> get_destructor_future() {
-    boost::optional<std::future<void>> f;
     /* If there is only 1 shared_ptr user of the buffer, this is the
        caller of this function, the \c buffer_waiter, so there is no
        need to get a \ future otherwise there will be a dead-lock if
@@ -246,15 +346,15 @@ private:
        for this purpose, it actually increase locally the count by 1,
        so check for 1 + 1 use count instead...
     */
-    if (shared_from_this().use_count() > 2)
-      // \todo Double check the specification and add unit tests
-      if (host_write_back || !final_data.expired() || shared_data) {
-        // Create a promise to wait for
-        notify_buffer_destructor = std::promise<void> {};
-        // And return the future to wait for it
-        f = notify_buffer_destructor->get_future();
-      }
-    return f;
+    // If the buffer's destruction triggers a write-back, wait
+    if ((shared_from_this().use_count() > 2) &&
+        modified && (final_write_back || data_host)) {
+      // Create a promise to wait for
+      notify_buffer_destructor = std::promise<void> {};
+      // And return the future to wait for it
+      return notify_buffer_destructor->get_future();
+    }
+    return boost::none;
   }
 
 

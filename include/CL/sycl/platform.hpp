@@ -45,23 +45,20 @@ class platform
      SYCL model */
   : public detail::shared_ptr_implementation<platform, detail::platform> {
 
-  // The type encapsulating the implementation
-  using implementation_t =
-    detail::shared_ptr_implementation<platform, detail::platform>;
-
   // Allows the comparison operation to access the implementation
-  friend implementation_t;
+  friend shared_ptr_implementation;
 
 public:
 
   // Make the implementation member directly accessible in this class
-  using implementation_t::implementation;
+  using shared_ptr_implementation::implementation;
 
   /** Default constructor for platform which is the host platform
 
       Returns errors via the SYCL exception class.
   */
-  platform() : implementation_t { detail::host_platform::instance() } {}
+  platform() :
+    shared_ptr_implementation { detail::host_platform::instance() } {}
 
 
 #ifdef TRISYCL_OPENCL
@@ -83,7 +80,7 @@ public:
       Return synchronous errors via the SYCL exception class.
   */
   platform(const boost::compute::platform &p)
-    : implementation_t { detail::opencl_platform::instance(p) } {}
+    : shared_ptr_implementation { detail::opencl_platform::instance(p) } {}
 #endif
 
 

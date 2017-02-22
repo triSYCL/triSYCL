@@ -103,7 +103,7 @@ struct task : public std::enable_shared_from_this<task>,
     /* \todo it may be implementable with packaged_task that would
        deal with exceptions in kernels
     */
-#if TRISYCL_ASYNC
+#ifndef TRISYCL_NO_ASYNC
     /* If in asynchronous execution mode, execute the functor in a new
        thread */
     std::thread thread(execution);

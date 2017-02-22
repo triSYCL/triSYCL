@@ -26,8 +26,8 @@ int main(int argc, char **argv) {
   ioABuffer = cl::sycl::buffer<float,2>(cl::sycl::range<2> {M, N}); 
   ioBBuffer = cl::sycl::buffer<float,1>(ioB, cl::sycl::range<1> {1}); 
 #if DEBUG_STENCIL
-  float *a_test = (float *) malloc(sizeof(float)*M*N);
-  float *b_test = (float *) malloc(sizeof(float)*M*N);
+  std::vector<float> a_test(M * N);
+  std::vector<float> b_test(M * N);
 #endif
 
   // initialization
@@ -62,8 +62,8 @@ int main(int argc, char **argv) {
   auto op_copy = copy_out << st_id << copy_in;
 
   end_init(timer);
-  struct op_time time_op;
-  begin_op(time_op);
+
+  auto begin_op = counters::clock_type::now();
 
   // compute result with "gpu"
   {   
@@ -75,7 +75,8 @@ int main(int argc, char **argv) {
     }
   }
 
-  end_op(time_op, timer.stencil_time);
+  auto end_op = counters::clock_type::now();
+  timer.stencil_time = std::chrono::duration_cast<counters::duration_type>(end_op - begin_op);
   // loading time is not watched
   end_measure(timer);
 
@@ -83,8 +84,6 @@ int main(int argc, char **argv) {
   // get the gpu result
   auto C = (ioABuffer).get_access<cl::sycl::access::mode::read, cl::sycl::access::target::host_buffer>();
   ute_and_are(a_test,b_test,C);
-  free(a_test);
-  free(b_test);
 #endif
 
   return 0;

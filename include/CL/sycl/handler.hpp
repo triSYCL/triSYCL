@@ -66,7 +66,7 @@ public:
 
 
 #ifdef TRISYCL_OPENCL
-  /** Set kernel arg for an OpenCL kernel which is used through the
+  /** Set accessor kernel arg for an OpenCL kernel which is used through the
       SYCL/OpenCL interop interface
 
       The index value specifies which parameter of the OpenCL kernel is
@@ -85,7 +85,7 @@ public:
             access::mode Mode,
             access::target Target = access::target::global_buffer>
   void set_arg(int arg_index,
-               accessor<DataType, Dimensions, Mode, Target> acc_obj) {
+               accessor<DataType, Dimensions, Mode, Target> && acc_obj) {
     /* Before running the kernel, make sure the cl_mem behind this
        accessor is up-to-date on the device if needed and pass it to
        the kernel.
@@ -107,19 +107,15 @@ public:
 
   /** Set kernel args for an OpenCL kernel which is used through the
       SYCL/OpenCL interoperability interface
-
-      The index value specifies which parameter of the OpenCL kernel is
-      being set and the accessor object, which OpenCL buffer or image is
-      going to be given as kernel argument.
-
-      \todo It is not that clean to have set_arg() associated to a
-      command handler. Rethink the specification?
-
-      \todo To be implemented
   */
   template <typename T>
-  void set_arg(int arg_index, T scalar_value) {
-    detail::unimplemented();
+  void set_arg(int arg_index, T && scalar_value) {
+    /* Explicitly capture task by copy instead of having this captured
+       by reference and task by reference by side effect */
+    task->add_prelude([=, task = task] {
+        task->get_kernel().get_boost_compute()
+          .set_arg(arg_index, scalar_value);
+      });
   }
 
 
@@ -148,10 +144,10 @@ public:
       https://cvs.khronos.org/bugzilla/show_bug.cgi?id=15978 proposal
   */
   template <typename... Ts>
-  void set_args(Ts&&... args) {
+  void set_args(Ts &&... args) {
     /* Construct a set of increasing argument index to be able to call
        the real set_arg */
-    dispatch_set_arg(std::make_index_sequence<sizeof...(Ts)>{},
+    dispatch_set_arg(std::index_sequence_for<Ts...>{},
                      std::forward<Ts>(args)...);
   }
 #endif

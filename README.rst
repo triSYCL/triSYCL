@@ -4,6 +4,8 @@ triSYCL
 News
 ----
 
+- 2017/01/12: Add test case using compiler Xilinx_ FPGA
+
 - 2016/11/18: If you missed the free SYCL T-shirt on the Khronos booth
   during SC16_, you can always buy some on
   https://teespring.com/khronos-hpc (lady's sizes available!)
@@ -375,11 +377,14 @@ latest Ubuntu too, just adapt the compiler versions):
 
 .. code:: bash
 
-  sudo apt-get install clang-3.6 g++4.9 libboost-dev
+  sudo apt-get install clang-3.9 g++-6 libboost-dev
 
 There is nothing else to do for now to use the include files from triSYCL_
 ``include`` directory when compiling a program. Just add a
 ``-I.../include`` option and ``-std=c++1y`` when compiling.
+
+triSYCL_ is configurable through preprocessor macros described in
+`macros <doc/macros.rst>`_.
 
 Also use ``-fopenmp`` if you want to use multicore parallelism on the CPU.
 
@@ -491,8 +496,7 @@ Some ideas of future developments where *you* can contribute too: :-)
   SYJavaCL... It is not clear yet if SYFortranCL is possible with
   Fortran 2008 or 2015+.
 
-..
-  Somme useful link definitions:
+.. Some useful link definitions:
 
 .. _AMD: http://www.amd.com
 

@@ -90,7 +90,11 @@ int test_main(int argc, char *argv[]) {
           /* Use another approach different from the writing part to
              demonstrate the way to use an explicit commit as proposed
              by Alex Bourd */
-          cl::sycl:: pipe_reservation<decltype(apa)> r;
+#ifdef _MSC_VER
+          cl::sycl::pipe_reservation<cl::sycl::accessor<int, 1, cl::sycl::access::mode::read, cl::sycl::access::target::pipe>> r;
+#else
+          cl::sycl::pipe_reservation<decltype(apa)> r;
+#endif
           // Use a sequential loop in the work-group to stream chunks in order
           for (int start = 0; start != N; start += WI) {
             // Wait for the reservation to succeed
@@ -101,7 +105,7 @@ int test_main(int argc, char *argv[]) {
                parallel */
             group.parallel_for_work_item([=] (cl::sycl::item<> i) {
                 ac[start + i[0]] = r[i[0]];
-              });
+            });
             /** Explicit commit requested here. Note that in this
                 simple example, since there is nothing useful after
                 the commit, using the default destructor at the end of

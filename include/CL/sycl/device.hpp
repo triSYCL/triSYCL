@@ -47,9 +47,6 @@ class device
   using implementation_t =
     detail::shared_ptr_implementation<device, detail::device>;
 
-  // Allows the comparison operation to access the implementation
-  friend implementation_t;
-
 public:
 
   // Make the implementation member directly accessible in this class
@@ -187,10 +184,12 @@ public:
 
       Return synchronous errors via SYCL exception classes.
   */
+#ifdef _MSC_VER
+  inline
+#endif
   static vector_class<device>
-  get_devices(info::device_type device_type = info::device_type::all)
-    __attribute__((weak));
-
+    get_devices(info::device_type device_type = info::device_type::all)
+    WEAK_ATTRIB_SUFFIX;
 
   /** Query the device for OpenCL info::device info
 
@@ -211,12 +210,13 @@ public:
       \todo
   */
   template <info::device Param>
-  inline auto get_info() const {
+  inline auto get_info() const;
+  /*{
     // Forward to the version where the info parameter is not a template
     //return get_info<typename info::param_traits_t<info::device, Param>>(Param);
     detail::unimplemented();
     return 0;
-  }
+  }*/
 
 
   /// Test if a specific extension is supported on the device
@@ -248,18 +248,23 @@ public:
 
 template <>
 inline auto device::get_info<info::device::max_work_group_size>() const {
-	return static_cast<size_t>(1024);
+  return size_t { 63 };
 }
 
 
 template <>
 inline auto device::get_info<info::device::max_compute_units>() const {
-	return static_cast<size_t>(1);
+  return size_t { 56 };
 }
-	
+
 template <>
 inline auto device::get_info<info::device::device_type>() const {
-	return info::device_type::cpu;
+  return info::device_type::cpu;
+}
+
+template <>
+inline auto device::get_info<info::device::local_mem_size>() const {
+  return size_t { 32000 };
 }
 
 /// @} to end the Doxygen group

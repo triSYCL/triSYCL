@@ -39,9 +39,6 @@ add_buffer_to_task(handler *command_group_handler,
 /** Factorize some template independent buffer aspects in a base class
  */
 struct buffer_base : public std::enable_shared_from_this<buffer_base> {
-  /// If the data are read-only, store the information for later optimization.
-  /// \todo Replace this by a static read-only type for the buffer
-  bool read_only;
 
   //// Keep track of the number of kernel accessors using this buffer
   std::atomic<size_t> number_of_users;
@@ -65,8 +62,7 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
 
 
   /// Create a buffer base
-  buffer_base(bool read_only) : read_only { read_only },
-                                number_of_users { 0 } {}
+  buffer_base() : number_of_users { 0 } {}
 
 
   /// The destructor wait for not being used anymore

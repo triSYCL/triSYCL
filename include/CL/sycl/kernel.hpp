@@ -41,11 +41,13 @@ class kernel
   : public detail::shared_ptr_implementation<kernel, detail::kernel> {
 
   // The type encapsulating the implementation
-  using implementation_t =
-    detail::shared_ptr_implementation<kernel, detail::kernel>;
+  using implementation_t = typename kernel::shared_ptr_implementation;
 
   // The handler class uses the implementation
   friend class handler;
+
+  // Allows the comparison operation to access the implementation
+  friend implementation_t;
 
  public:
 
