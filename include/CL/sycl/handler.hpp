@@ -19,7 +19,9 @@
 
 #include "CL/sycl/accessor.hpp"
 #include "CL/sycl/command_group/detail/task.hpp"
+#ifdef TRISYCL_OPENCL
 #include "CL/sycl/detail/instantiate_kernel.hpp"
+#endif
 #include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/exception.hpp"
 #include "CL/sycl/kernel.hpp"
@@ -174,7 +176,10 @@ private:
        makes sense for CPU emulation or FPGA pipelined execution.
     */
     task->schedule(detail::trace_kernel<KernelName>([=] {
-          ::cl::sycl::detail::instantiate_kernel<KernelName>(k);
+          ::cl::sycl::detail::instantiate_kernel<KernelName>
+            (task->get_kernel().get_boost_compute(),
+             task->get_queue()->get_boost_compute(),
+             k);
         }));
 #else
     task->schedule(detail::trace_kernel<KernelName>(k));

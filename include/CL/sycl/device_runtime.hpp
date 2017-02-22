@@ -46,7 +46,7 @@ class accessor {
 
   /** The size of the accessor
 
-      The compiler should otptimize it out if it is unused */
+      The compiler should optimize it out if it is unused */
   std::size_t size;
 
 public:
@@ -73,8 +73,12 @@ public:
 
     \param[in] arg_size is the size of the argument
 */
-void
-serialize_arg(std::size_t index, void *arg, std::size_t arg_size) {
+void inline
+serialize_arg(boost::compute::kernel &k,
+              std::size_t index,
+              void *arg,
+              std::size_t arg_size) {
+  k.set_arg(index, arg_size, arg);
 }
 
 /// @} to end the Doxygen group
