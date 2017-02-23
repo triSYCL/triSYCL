@@ -18,6 +18,7 @@
 
 #include "CL/sycl/detail/default_classes.hpp"
 
+#include "CL/sycl/command_group/detail/task.hpp"
 #include "CL/sycl/detail/shared_ptr_implementation.hpp"
 #include "CL/sycl/device/detail/host_device.hpp"
 #ifdef TRISYCL_OPENCL
@@ -73,12 +74,12 @@ public:
 
     \param[in] arg_size is the size of the argument
 */
-void inline
-serialize_arg(boost::compute::kernel &k,
+TRISYCL_WEAK_ATTRIB_PREFIX void TRISYCL_WEAK_ATTRIB_SUFFIX
+serialize_arg(detail::task &task,
               std::size_t index,
               void *arg,
               std::size_t arg_size) {
-  k.set_arg(index, arg_size, arg);
+  task.get_kernel().get_boost_compute().set_arg(index, arg_size, arg);
 }
 
 /// @} to end the Doxygen group

@@ -11,7 +11,7 @@
 
 #include <tuple>
 
-#include <boost/compute.hpp>
+#include "CL/sycl/command_group/detail/task.hpp"
 
 namespace cl {
 namespace sycl {
@@ -23,8 +23,7 @@ namespace detail {
     Using \c __attribute__((used)) does not work on arguments but only
     on static variable, so use this function.
 */
-auto
-prevent_arguments_from_optimization = [] (auto & ...args) {
+auto prevent_arguments_from_optimization = [] (auto & ...args) {
   /* Just keep track of the address of all the given objects,
      otherwise the objects are copied, may throw, are registered for
      destruction with \c atexit(), etc. */
@@ -42,16 +41,16 @@ prevent_arguments_from_optimization = [] (auto & ...args) {
 template <typename KernelName,
           typename Functor>
 __attribute__((noinline))
-void instantiate_kernel(boost::compute::kernel &k,
-                        boost::compute::command_queue &q,
-                        Functor f) noexcept {
+void instantiate_kernel(detail::task &task, Functor f) noexcept {
   /* The outlining compiler is expected to do some massage here and to
      insert some calls to \c serialize_arg and so on using \c k and \c
      q */
   f();
-  /* Keep k and q alive here even through interprocedural dead code
-     elimination */
-  prevent_arguments_from_optimization(k, q);
+  /* Keep the task alive here even through interprocedural dead code
+     elimination because Clang/LLVM do not know that the device
+     compiler will further massage deeply this code by removing the
+     body and replace it by something completely different... */
+  prevent_arguments_from_optimization(task);
 }
 
 }

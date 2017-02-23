@@ -176,10 +176,7 @@ private:
        makes sense for CPU emulation or FPGA pipelined execution.
     */
     task->schedule(detail::trace_kernel<KernelName>([=] {
-          ::cl::sycl::detail::instantiate_kernel<KernelName>
-            (task->get_kernel().get_boost_compute(),
-             task->get_queue()->get_boost_compute(),
-             k);
+          ::cl::sycl::detail::instantiate_kernel<KernelName>(*task, k);
         }));
 #else
     task->schedule(detail::trace_kernel<KernelName>(k));
