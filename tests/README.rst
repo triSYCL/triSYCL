@@ -7,7 +7,8 @@ triSYCL testing
 
 Here are some simple examples and tests using triSYCL.
 
-Everything is under control of the GNU `Makefile`.
+Everything is under control of the GNU `Makefile` for now but there is
+a CMake version on-going.
 
 
 Compiling and execution
@@ -37,11 +38,12 @@ You can build the binary with different compilers with
 
 .. code:: bash
 
-  make CXX=g++-4.9
-  make CXX=clang++
+  make CXX=g++-6
+  make CXX=clang++-3.9
 
 To compile with some debug options, look around some setting of the
-``CXXFLAGS`` variable.
+``CXXFLAGS`` variable. You can configure triSYCL through various
+macros described in `../doc/macros.rst <../doc/macros.rst>`_
 
 To restrict the ``Makefile`` effect on some specific test cases, override
 the ``TARGETS`` variable with space-separated list of the binaries you
@@ -61,14 +63,14 @@ To install it on Debian or Ubuntu, use typically:
 
 .. code:: bash
 
-  sudo apt-get install llvm-3.6-tools
+  sudo apt-get install llvm-3.9-tools
 
 You should direct the following variable to where is LIT located on your
 machine, for example:
 
 .. code:: bash
 
-  export TRISYCL_LIT=/usr/lib/llvm-3.6/build/utils/lit/lit.py
+  export TRISYCL_LIT=/usr/lib/llvm-3.9/build/utils/lit/lit.py
 
 To run with the checker, try:
 
@@ -86,9 +88,9 @@ to be sure everything is recompiled from the current source. It is not
 made by default because when developing, you may keep some already
 compiled version with some specific flags, for example.
 
-You can set the ``LITFLAGS`` variable to run LIT_ with some options, such
-as ``-v``. The ``CHECKING_DIR``variable restrict the test on the given
-directory. For example:
+You can set the ``LITFLAGS`` variable to run LIT_ with some options,
+such as ``-v``. The ``CHECKING_DIR`` variable restrict the test on the
+given directory. For example:
 
 .. code:: bash
 
@@ -101,7 +103,7 @@ in the between, try:
 
   make check-compilers
 
-To check into a new clone to be sure you did not forget to commit some
+To check into a new work-tree to be sure you did not forget to commit some
 files, use the ``clone-T`` targets, such as:
 
 .. code:: bash
