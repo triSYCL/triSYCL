@@ -37,7 +37,7 @@ void parallel_for(Range r, Program p, ParallelForFunctor f) {
   template <std::size_t Dimensions = 1, typename ParallelForFunctor>
   void parallel_for_work_item(const group<Dimensions> &g,
                               ParallelForFunctor f) {
-    detail::parallel_for_workitem(g, f);
+    g.parallel_for_work_item(f);
   }
 
 
