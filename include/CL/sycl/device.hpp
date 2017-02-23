@@ -189,7 +189,7 @@ public:
 #endif
   static vector_class<device>
     get_devices(info::device_type device_type = info::device_type::all)
-    WEAK_ATTRIB_SUFFIX;
+    TRISYCL_WEAK_ATTRIB_SUFFIX;
 
   /** Query the device for OpenCL info::device info
 

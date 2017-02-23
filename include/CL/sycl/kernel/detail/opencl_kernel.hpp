@@ -125,9 +125,9 @@ class opencl_kernel : public detail::kernel,
    use a weak symbol so that only one remains when SYCL headers are
    used in different compilation units of a program
 */
-WEAK_ATTRIB_PREFIX
+TRISYCL_WEAK_ATTRIB_PREFIX
 detail::cache<cl_kernel, detail::opencl_kernel> opencl_kernel::cache
-WEAK_ATTRIB_SUFFIX;
+TRISYCL_WEAK_ATTRIB_SUFFIX;
 
 }
 }
