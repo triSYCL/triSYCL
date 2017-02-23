@@ -285,6 +285,9 @@ struct address_space_ptr : public address_space_fundamental<T, AS> {
   /// Inherit from base class constructors
   using super::address_space_fundamental;
 
+  using pointer_t = typename super::address_space_fundamental::type;
+  using reference_t = typename std::remove_pointer_t<pointer_t>&;
+
   /** Allow initialization of a pointer type from the address of an
       element with the same type and address space
   */
