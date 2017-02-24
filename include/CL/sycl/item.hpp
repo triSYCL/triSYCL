@@ -81,7 +81,7 @@ public:
   auto &operator[](int dimension) { return global_index[dimension]; }
 
 
-  /** Returns a range<> representing the Dimensions of the range of
+  /** Returns a range<> representing the dimensions of the range of
       possible values of the item
   */
   range<Dimensions> get_range() const { return global_range; }

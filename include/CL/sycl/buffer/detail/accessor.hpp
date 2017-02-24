@@ -435,7 +435,7 @@ private:
       task->get_queue()->get_boost_compute().get_context(),
       get_size(),
       flags,
-      is_read_access() ? array.data() : 0 
+      is_read_access() ? array.data() : 0
     };
   }
 

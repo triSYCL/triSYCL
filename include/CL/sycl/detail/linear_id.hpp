@@ -26,13 +26,13 @@ namespace detail {
 */
 template <typename Range, typename Id>
 size_t constexpr inline linear_id(Range range, Id id, Id offset = {}) {
-  auto Dimensions = std::distance(std::begin(range), std::end(range));
+  auto dims = std::distance(std::begin(range), std::end(range));
 
   size_t linear_id = 0;
   /* A good compiler should unroll this and do partial evaluation to
      remove the first multiplication by 0 of this Horner evaluation and
      remove the 0 offset evaluation */
-    for (int i = Dimensions - 1; i >= 0; --i)
+    for (int i = dims - 1; i >= 0; --i)
       linear_id = linear_id*range[i] + id[i] - offset[i];
 
     return linear_id;

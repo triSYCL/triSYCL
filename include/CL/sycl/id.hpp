@@ -28,7 +28,10 @@ template <int Dimensions> class item;
     item
 */
 template <int Dimensions = 1>
-class id : public detail::small_array_123<std::size_t, id<Dimensions>, Dimensions> {
+class id : public detail::small_array_123<
+             std::size_t,
+             id<Dimensions>,
+             Dimensions > {
 
 public:
 
@@ -43,7 +46,9 @@ public:
     /** Use the fact we have a constructor of a small_array from a another
         kind of small_array
      */
-    : detail::small_array_123<std::size_t, id<Dimensions>, Dimensions> { range_size } {}
+    : detail::small_array_123<std::size_t, id<Dimensions>, Dimensions>
+      { range_size }
+  {}
 
 
   /// Construct an id from an item global_id

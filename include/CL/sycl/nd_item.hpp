@@ -63,7 +63,8 @@ public:
           nd_range<Dimensions> ndr) :
     global_index { global_index },
     // Compute the local index using the offset and the group size
-    local_index { (global_index - ndr.get_offset())%id<Dimensions> { ndr.get_local() } },
+    local_index
+      { (global_index - ndr.get_offset())%id<Dimensions> { ndr.get_local() } },
     ND_range { ndr }
   {}
 
@@ -153,13 +154,13 @@ public:
   }
 
 
-  /// Return a range<> representing the Dimensions of the nd_range<>
+  /// Return a range<> representing the dimensions of the nd_range<>
   range<Dimensions> get_global_range() const {
     return get_nd_range().get_global();
   }
 
 
-  /// Return a range<> representing the Dimensions of the current work-group
+  /// Return a range<> representing the dimensions of the current work-group
   range<Dimensions> get_local_range() const {
     return get_nd_range().get_local();
   }

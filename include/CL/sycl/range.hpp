@@ -23,14 +23,18 @@ namespace sycl {
 /** A SYCL range defines a multi-dimensional index range that can be used
     to define launch parallel computation extent or buffer sizes.
 
-    \todo use std::size_t Dimensions instead of int Dimensions in the specification?
+    \todo use std::size_t Dimensions instead of int Dimensions in the
+        specification?
 
     \todo add to the specification this default parameter value?
 
     \todo add to the specification some way to specify an offset?
 */
 template <int Dimensions = 1>
-class range : public detail::small_array_123<std::size_t, range<Dimensions>, Dimensions> {
+class range : public detail::small_array_123<
+                std::size_t,
+                range<Dimensions>,
+                Dimensions > {
 
 public:
 

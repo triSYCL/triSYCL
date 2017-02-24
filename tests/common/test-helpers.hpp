@@ -8,7 +8,8 @@ struct trisycl_for_range_iterate {
                             cl::sycl::id<Dimensions> &it,
                             const Functor &f) {
     // Iterate in dimension level
-    for (typename cl::sycl::id<Dimensions>::value_type i = 0; r[level - 1] - i != 0; ++i) {
+    using value_type = typename cl::sycl::id<Dimensions>::value_type;
+    for (value_type i = 0; r[level - 1] - i != 0; ++i) {
       // Set current dimension
       it[level - 1] = i;
       // And then iterate at lower level
@@ -40,7 +41,8 @@ trisycl_for_range(const cl::sycl::range<Dimensions> &r,
 
 /// Output an id<> on a stream
 template <int Dimensions>
-std::ostream& operator<<(std::ostream& stream, const cl::sycl::id<Dimensions>& i) {
+std::ostream& operator<<(std::ostream& stream,
+                         const cl::sycl::id<Dimensions>& i) {
   for (auto e : i)
     stream<< e << " ";
   return stream;
@@ -53,9 +55,10 @@ template <typename dataType,
           cl::sycl::access::mode mode,
           cl::sycl::access::target target,
           typename Functor>
-bool trisycl_verify_buffer_value(cl::sycl::buffer<dataType, Dimensions> b,
-                                 cl::sycl::accessor<dataType, Dimensions, mode, target> a,
-                                 Functor f) {
+bool trisycl_verify_buffer_value(
+    cl::sycl::buffer<dataType, Dimensions> b,
+    cl::sycl::accessor<dataType, Dimensions, mode, target> a,
+    Functor f) {
   trisycl_for_range(b.get_range(), [&] (cl::sycl::id<Dimensions> i) {
       if (a[i] != f(i)) {
         std::stringstream message;
