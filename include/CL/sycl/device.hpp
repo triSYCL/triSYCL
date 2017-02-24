@@ -189,7 +189,7 @@ public:
 #endif
   static vector_class<device>
     get_devices(info::device_type device_type = info::device_type::all)
-    WEAK_ATTRIB_SUFFIX;
+    TRISYCL_WEAK_ATTRIB_SUFFIX;
 
   /** Query the device for OpenCL info::device info
 
@@ -265,6 +265,11 @@ inline auto device::get_info<info::device::device_type>() const {
 template <>
 inline auto device::get_info<info::device::local_mem_size>() const {
   return size_t { 32000 };
+}
+
+template <>
+inline auto device::get_info<info::device::vendor>() const {
+  return string_class {};
 }
 
 /// @} to end the Doxygen group

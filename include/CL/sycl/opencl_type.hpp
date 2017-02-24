@@ -21,6 +21,8 @@ class cl_float3 {
 
 public :
 
+  cl_float3 () = default;
+
 
   cl_float3 (::cl_float3 self_) : self { self_ }
   {}

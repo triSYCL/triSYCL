@@ -349,6 +349,36 @@ public:
   }
 
 
+  /** Hierarchical kernel invocation method of a kernel defined as a
+      lambda encoding the body of each work-group to launch
+
+      May contain multiple kernel built-in parallel_for_work_item
+      functions representing the execution on each work-item.
+
+      Launch num_work_groups work-groups of runtime-defined
+      size. Described in detail in 3.5.3.
+
+      \param r defines the iteration space with the work-group layout and
+      offset
+
+      \param Dimensions dimensionality of the iteration space
+
+      \param f is the kernel functor to execute
+
+      \param ParallelForFunctor is the kernel functor type
+
+      \param KernelName is a class type that defines the name to be used for
+      the underlying kernel
+  */
+  template <typename KernelName = std::nullptr_t,
+            std::size_t Dimensions = 1,
+            typename ParallelForFunctor>
+  void parallel_for_work_group(range<Dimensions> r1, range<Dimensions> r2,
+                               ParallelForFunctor f) {
+    parallel_for_work_group(nd_range<Dimensions> { r1, r2 }, f);
+  }
+
+
   /** Kernel invocation method of a kernel defined as pointer to a kernel
       object, described in detail in 3.5.3
 

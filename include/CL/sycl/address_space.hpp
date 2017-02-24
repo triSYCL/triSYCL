@@ -55,6 +55,14 @@ template <typename T>
 using constant = detail::addr_space<T, constant_address_space>;
 
 
+/** Declare a variable to be in the OpenCL constant address space
+
+    \param T is the type of the object
+*/
+template <typename T>
+using constant_ptr = constant<T*>;
+
+
 /** Declare a variable to be in the OpenCL 2 generic address space
 
     \param T is the type of the object
@@ -71,6 +79,15 @@ template <typename T>
 using global = detail::addr_space<T, global_address_space>;
 
 
+/** Declare a variable to be in the OpenCL global address space
+
+    \param T is the type of the object
+*/
+
+template <typename T>
+using global_ptr = global<T*>;
+
+
 /** Declare a variable to be in the OpenCL local address space
 
     \param T is the type of the object
@@ -79,12 +96,28 @@ template <typename T>
 using local = detail::addr_space<T, local_address_space>;
 
 
+/** Declare a variable to be in the OpenCL local address space
+
+    \param T is the type of the object
+*/
+template <typename T>
+using local_ptr = local<T*>;
+
+
 /** Declare a variable to be in the OpenCL private address space
 
     \param T is the type of the object
 */
 template <typename T>
 using priv = detail::addr_space<T, private_address_space>;
+
+
+/** Declare a variable to be in the OpenCL private address space
+
+    \param T is the type of the object
+*/
+template <typename T>
+using private_ptr = priv<T*>;
 
 
 /** A pointer that can be statically associated to any address-space
