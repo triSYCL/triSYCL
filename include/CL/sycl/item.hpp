@@ -25,20 +25,20 @@ namespace sycl {
 /** A SYCL item stores information on a work-item with some more context
     such as the definition range and offset.
 */
-template <std::size_t dims = 1>
+template <int Dimensions = 1>
 class item {
 
 public:
 
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
-  static constexpr auto dimensionality = dims;
+  static constexpr auto dimensionality = Dimensions;
 
 private:
 
-  range<dims> global_range;
-  id<dims> global_index;
-  id<dims> offset;
+  range<Dimensions> global_range;
+  id<Dimensions> global_index;
+  id<Dimensions> offset;
 
 public:
 
@@ -47,9 +47,9 @@ public:
       This constructor is used by the triSYCL implementation and the
       non-regression testing.
   */
-  item(range<dims> global_size,
-       id<dims> global_index,
-       id<dims> offset = {}) :
+  item(range<Dimensions> global_size,
+       id<Dimensions> global_index,
+       id<Dimensions> offset = {}) :
     global_range { global_size },
     global_index { global_index },
     offset { offset }
@@ -66,7 +66,7 @@ public:
   /** Return the constituent local or global id<> representing the
       work-item's position in the iteration space
   */
-  id<dims> get() const { return global_index; }
+  id<Dimensions> get() const { return global_index; }
 
 
   /** Return the requested dimension of the constituent id<> representing
@@ -81,10 +81,10 @@ public:
   auto &operator[](int dimension) { return global_index[dimension]; }
 
 
-  /** Returns a range<> representing the dimensions of the range of
+  /** Returns a range<> representing the Dimensions of the range of
       possible values of the item
   */
-  range<dims> get_range() const { return global_range; }
+  range<Dimensions> get_range() const { return global_range; }
 
 
   /** Returns an id<> representing the n-dimensional offset provided to
@@ -94,7 +94,7 @@ public:
       For an item representing a local range of where no offset was passed
       this will always return an id of all 0 values.
   */
-  id<dims> get_offset() const { return offset; }
+  id<Dimensions> get_offset() const { return offset; }
 
 
   /** Return the linearized ID in the item's range
@@ -110,7 +110,7 @@ public:
 
       \todo Move to private and add friends
   */
-  void set(id<dims> Index) { global_index = Index; }
+  void set(id<Dimensions> Index) { global_index = Index; }
 
 
   /// Display the value for debugging and validation purpose

@@ -23,7 +23,7 @@
 using namespace cl::sycl;
 
 // To test the inference of the range rank
-template<std::size_t N> void f(range<N> r) {
+template<int N> void f(range<N> r) {
   std::cout << "Range of dims " << N << std::endl;
 }
 

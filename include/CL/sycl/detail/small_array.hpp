@@ -230,7 +230,7 @@ struct small_array_123 : small_array<BasicType, FinalType, Dims> {
 /** Use some specializations so that some function overloads can be
     determined according to some implicit constructors and to have an
     implicit conversion from/to BasicType (such as an int typically) if
-    dims = 1
+    Dimensions = 1
 */
 template <typename BasicType, typename FinalType>
 struct small_array_123<BasicType, FinalType, 1>

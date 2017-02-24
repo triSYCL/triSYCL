@@ -52,7 +52,7 @@ struct parallel_for_iterate {
          _sycl_index++) {
       // Set the current value of the index for this dimension
       index[Range::dimensionality - level] = _sycl_index;
-      // Iterate further on lower dimensions
+      // Iterate further on lower Dimensions
       parallel_for_iterate<level - 1,
                            Range,
                            ParallelForFunctor,
@@ -92,7 +92,7 @@ struct parallel_OpenMP_for_iterate {
            _sycl_index++) {
         // Set the current value of the index for this dimension
         index[Range::dimensionality - level] = _sycl_index;
-        // Iterate further on lower dimensions
+        // Iterate further on lower Dimensions
         parallel_for_iterate<level - 1,
                              Range,
                              ParallelForFunctor,
@@ -118,7 +118,7 @@ struct parallel_for_iterate<0, Range, ParallelForFunctor, Id> {
 
     This implementation use OpenMP 3 if compiled with the right flag.
 */
-template <std::size_t Dimensions = 1, typename ParallelForFunctor, typename Id>
+template <int Dimensions = 1, typename ParallelForFunctor, typename Id>
 void parallel_for(range<Dimensions> r,
                   ParallelForFunctor f,
                   Id) {
@@ -144,7 +144,7 @@ void parallel_for(range<Dimensions> r,
 
     This implementation use OpenMP 3 if compiled with the right flag.
 */
-template <std::size_t Dimensions = 1, typename ParallelForFunctor>
+template <int Dimensions = 1, typename ParallelForFunctor>
 void parallel_for(range<Dimensions> r,
                   ParallelForFunctor f,
                   item<Dimensions>) {
@@ -175,7 +175,7 @@ void parallel_for(range<Dimensions> r,
     index type of the kernel function object f
 
 */
-template <std::size_t Dimensions = 1, typename ParallelForFunctor>
+template <int Dimensions = 1, typename ParallelForFunctor>
 void parallel_for(range<Dimensions> r, ParallelForFunctor f) {
   using mf_t  = decltype(std::mem_fn(&ParallelForFunctor::operator()));
   using arg_t = typename mf_t::second_argument_type;
@@ -184,7 +184,7 @@ void parallel_for(range<Dimensions> r, ParallelForFunctor f) {
 
 
 /** Implementation of parallel_for with a range<> and an offset */
-template <std::size_t Dimensions = 1, typename ParallelForFunctor>
+template <int Dimensions = 1, typename ParallelForFunctor>
 void parallel_for_global_offset(range<Dimensions> global_size,
                                 id<Dimensions> offset,
                                 ParallelForFunctor f) {
@@ -210,7 +210,7 @@ void parallel_for_global_offset(range<Dimensions> global_size,
 
     \todo Implement with parallel_for_workgroup()/parallel_for_workitem()
 */
-template <std::size_t Dimensions = 1, typename ParallelForFunctor>
+template <int Dimensions = 1, typename ParallelForFunctor>
 void parallel_for(nd_range<Dimensions> r,
                   ParallelForFunctor f) {
   // In a sequential execution there is only one index processed at a time
@@ -259,7 +259,7 @@ void parallel_for(nd_range<Dimensions> r,
 
 
 /// Implement the loop on the work-groups
-template <std::size_t Dimensions = 1, typename ParallelForFunctor>
+template <int Dimensions = 1, typename ParallelForFunctor>
 void parallel_for_workgroup(nd_range<Dimensions> r,
                             ParallelForFunctor f) {
   // In a sequential execution there is only one index processed at a time
@@ -280,7 +280,7 @@ void parallel_for_workgroup(nd_range<Dimensions> r,
 
     \todo Better type the functor
 */
-template <std::size_t Dimensions, typename ParallelForFunctor>
+template <int Dimensions, typename ParallelForFunctor>
 void parallel_for_workitem(const group<Dimensions> &g,
                            ParallelForFunctor f) {
 #if defined(_OPENMP) && (!defined(TRISYCL_NO_BARRIER) && !defined(_MSC_VER))

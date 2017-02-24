@@ -2,27 +2,27 @@
 #include <stdexcept>
 
 /// Define a level of multi-dimensional iterator
-template <std::size_t dimensions, typename Functor, std::size_t level>
+template <int Dimensions, typename Functor, std::size_t level>
 struct trisycl_for_range_iterate {
-  trisycl_for_range_iterate(const cl::sycl::range<dimensions> &r,
-                            cl::sycl::id<dimensions> &it,
+  trisycl_for_range_iterate(const cl::sycl::range<Dimensions> &r,
+                            cl::sycl::id<Dimensions> &it,
                             const Functor &f) {
     // Iterate in dimension level
-    for (typename cl::sycl::id<dimensions>::value_type i = 0; r[level - 1] - i != 0; ++i) {
+    for (typename cl::sycl::id<Dimensions>::value_type i = 0; r[level - 1] - i != 0; ++i) {
       // Set current dimension
       it[level - 1] = i;
       // And then iterate at lower level
-      trisycl_for_range_iterate<dimensions, Functor, level - 1>(r, it, f );
+      trisycl_for_range_iterate<Dimensions, Functor, level - 1>(r, it, f );
     }
   }
 };
 
 
 /// Once at level 0, just call the final function with the current coordinate
-template <std::size_t dimensions, typename Functor>
-struct trisycl_for_range_iterate<dimensions, Functor, 0> {
-  trisycl_for_range_iterate(const cl::sycl::range<dimensions> &r,
-                            cl::sycl::id<dimensions> &it,
+template <int Dimensions, typename Functor>
+struct trisycl_for_range_iterate<Dimensions, Functor, 0> {
+  trisycl_for_range_iterate(const cl::sycl::range<Dimensions> &r,
+                            cl::sycl::id<Dimensions> &it,
                             const Functor &f) {
     f(it);
   }
@@ -30,17 +30,17 @@ struct trisycl_for_range_iterate<dimensions, Functor, 0> {
 
 
 /// Apply a function on all the id<> of a range<>
-template <std::size_t dimensions, typename Functor>
+template <int Dimensions, typename Functor>
 void
-trisycl_for_range(const cl::sycl::range<dimensions> &r,
+trisycl_for_range(const cl::sycl::range<Dimensions> &r,
                   const Functor &f) {
-  cl::sycl::id<dimensions> it;
-  trisycl_for_range_iterate<dimensions, Functor, dimensions>(r, it, f);
+  cl::sycl::id<Dimensions> it;
+  trisycl_for_range_iterate<Dimensions, Functor, Dimensions>(r, it, f);
 }
 
 /// Output an id<> on a stream
-template <std::size_t dimensions>
-std::ostream& operator<<(std::ostream& stream, const cl::sycl::id<dimensions>& i) {
+template <int Dimensions>
+std::ostream& operator<<(std::ostream& stream, const cl::sycl::id<Dimensions>& i) {
   for (auto e : i)
     stream<< e << " ";
   return stream;
@@ -49,14 +49,14 @@ std::ostream& operator<<(std::ostream& stream, const cl::sycl::id<dimensions>& i
 
 /// Verify the value of a buffer against a function of the id<>
 template <typename dataType,
-          std::size_t dimensions,
+          int Dimensions,
           cl::sycl::access::mode mode,
           cl::sycl::access::target target,
           typename Functor>
-bool trisycl_verify_buffer_value(cl::sycl::buffer<dataType, dimensions> b,
-                                 cl::sycl::accessor<dataType, dimensions, mode, target> a,
+bool trisycl_verify_buffer_value(cl::sycl::buffer<dataType, Dimensions> b,
+                                 cl::sycl::accessor<dataType, Dimensions, mode, target> a,
                                  Functor f) {
-  trisycl_for_range(b.get_range(), [&] (cl::sycl::id<dimensions> i) {
+  trisycl_for_range(b.get_range(), [&] (cl::sycl::id<Dimensions> i) {
       if (a[i] != f(i)) {
         std::stringstream message;
         message << "Error: got " << a[i] << " instead of expected " << f(i)

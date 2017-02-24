@@ -144,7 +144,7 @@ private:
   bool operator==(const vec<dataT, numElements> &rhs) const;
   bool operator!=(const vec<dataT, numElements> &rhs) const;
   // Swizzle methods (see notes)
-  swizzled_vec<T, out_dims> swizzle<int s1, ...>();
+  swizzled_vec<T, out_Dimensions> swizzle<int s1, ...>();
 #ifdef SYCL_SIMPLE_SWIZZLES
   swizzled_vec<T, 4> xyzw();
   ...

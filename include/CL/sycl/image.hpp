@@ -20,7 +20,7 @@ namespace sycl {
 */
 
 /// \todo implement image
-template <std::size_t dimensions> struct image;
+template <int Dimensions> struct image;
 
 
 /// @} End the data Doxygen group

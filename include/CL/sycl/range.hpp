@@ -23,21 +23,21 @@ namespace sycl {
 /** A SYCL range defines a multi-dimensional index range that can be used
     to define launch parallel computation extent or buffer sizes.
 
-    \todo use std::size_t dims instead of int dims in the specification?
+    \todo use int Dimensions instead of int Dimensions in the specification?
 
     \todo add to the specification this default parameter value?
 
     \todo add to the specification some way to specify an offset?
 */
-template <std::size_t dims = 1>
-class range : public detail::small_array_123<std::size_t, range<dims>, dims> {
+template <int Dimensions = 1>
+class range : public detail::small_array_123<std::size_t, range<Dimensions>, Dimensions> {
 
 public:
 
   // Inherit of all the constructors
   using detail::small_array_123<std::size_t,
-                                range<dims>,
-                                dims>::small_array_123;
+                                range<Dimensions>,
+                                Dimensions>::small_array_123;
 
 
   /** Return the number of elements in the range
@@ -59,7 +59,7 @@ public:
 /** Implement a make_range to construct a range<> of the right dimension
     with implicit conversion from an initializer list for example.
 
-    Cannot use a template on the number of dimensions because the implicit
+    Cannot use a template on the number of Dimensions because the implicit
     conversion would not be tried.
 */
 inline auto make_range(range<1> r) { return r; }
