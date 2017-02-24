@@ -19,9 +19,9 @@
 #define CL_SYCL_LANGUAGE_VERSION 220
 #endif
 
-#ifndef CL_TRISYCL_LANGUAGE_VERSION
+#ifndef TRISYCL_CL_LANGUAGE_VERSION
 /// This implement triSYCL 2.2
-#define CL_TRISYCL_LANGUAGE_VERSION 220
+#define TRISYCL_CL_LANGUAGE_VERSION 220
 #endif
 
 /// This source is compiled by a single source compiler
