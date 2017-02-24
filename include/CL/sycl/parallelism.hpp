@@ -12,6 +12,7 @@
 */
 
 #include "CL/sycl/parallelism/detail/parallelism.hpp"
+#include "CL/sycl/id.hpp"
 
 namespace cl {
 namespace sycl {
@@ -34,7 +35,7 @@ void parallel_for(Range r, Program p, ParallelForFunctor f) {
       \todo Deprecate this function in the specification to use
       instead the group method
   */
-  template <std::size_t Dimensions = 1, typename ParallelForFunctor>
+  template <int Dimensions = 1, typename ParallelForFunctor>
   void parallel_for_work_item(const group<Dimensions> &g,
                               ParallelForFunctor f) {
     g.parallel_for_work_item(f);

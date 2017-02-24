@@ -19,7 +19,7 @@ namespace sycl {
 namespace detail {
 
 template <typename T,
-          std::size_t Dimensions,
+          int Dimensions,
           access::mode Mode,
           access::target Target>
 class accessor;

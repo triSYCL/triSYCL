@@ -55,7 +55,7 @@ namespace sycl {
     \todo Add constructors from array_ref
 */
 template <typename T,
-          std::size_t Dimensions = 1,
+          int Dimensions = 1,
           /* Even a buffer of const T may need to allocate memory, so
              need an allocator of non const T */
           typename Allocator = buffer_allocator<std::remove_const_t<T>>>
@@ -165,7 +165,7 @@ public:
       object.  Data is copied back to the host unless the user
       overrides the behavior using the set_final_data method. host_data
       points to the storage and values used by the buffer and
-      range<dimensions> defines the size.
+      range<Dimensions> defines the size.
   */
   buffer(T *host_data,
          const range<Dimensions> &r,
@@ -429,7 +429,7 @@ public:
 
   /** Returns the total number of elements in the buffer
 
-      Equal to get_range()[0] * ... * get_range()[dimensions-1].
+      Equal to get_range()[0] * ... * get_range()[Dimensions-1].
   */
   auto get_count() const {
     return implementation->implementation->get_count();
@@ -549,7 +549,7 @@ public:
 namespace std {
 
 template <typename T,
-          std::size_t Dimensions,
+          int Dimensions,
           typename Allocator>
 struct hash<cl::sycl::buffer<T, Dimensions, Allocator>> {
 

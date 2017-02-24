@@ -80,7 +80,7 @@ public:
       \todo It seems more logical to have these methods on kernel instead
   */
   template <typename DataType,
-            std::size_t Dimensions,
+            int Dimensions,
             access::mode Mode,
             access::target Target = access::target::global_buffer>
   void set_arg(int arg_index,
@@ -193,7 +193,7 @@ public:
 
       Unfortunately, to have implicit conversion to work on the range, the
       function can not be templated, so instantiate it for all the
-      dimensions
+      Dimensions
   */
 #define TRISYCL_parallel_for_functor_GLOBAL(N)                          \
   template <typename KernelName = std::nullptr_t,                       \
@@ -272,7 +272,7 @@ public:
       the underlying kernel
   */
   template <typename KernelName,
-            std::size_t Dimensions,
+            int Dimensions,
             typename ParallelForFunctor>
   void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {
     task->schedule(detail::trace_kernel<KernelName>([=] {
@@ -303,7 +303,7 @@ public:
       the underlying kernel
   */
   template <typename KernelName = std::nullptr_t,
-            std::size_t Dimensions = 1,
+            int Dimensions = 1,
             typename ParallelForFunctor>
   void parallel_for_work_group(nd_range<Dimensions> r,
                                ParallelForFunctor f) {
@@ -334,7 +334,7 @@ public:
       the underlying kernel
   */
   template <typename KernelName = std::nullptr_t,
-            std::size_t Dimensions = 1,
+            int Dimensions = 1,
             typename ParallelForFunctor>
   void parallel_for_work_group(range<Dimensions> r1, range<Dimensions> r2,
                                ParallelForFunctor f) {
@@ -403,7 +403,7 @@ public:
 
       \todo To be implemented
   */
-  template <std::size_t Dimensions = 1>
+  template <int Dimensions = 1>
   void parallel_for(nd_range<Dimensions>, kernel syclKernel) {
     detail::unimplemented();
   }
