@@ -202,7 +202,7 @@ public:
   /** Use the accessor with integers à la [][][]
 
       Use array_view_type::reference instead of auto& because it does not
-      work in some Dimensions.
+      work in some dimensions.
    */
   reference operator[](std::size_t index) {
     return array[index];
@@ -212,7 +212,7 @@ public:
   /** Use the accessor with integers à la [][][]
 
       Use array_view_type::reference instead of auto& because it does not
-      work in some Dimensions.
+      work in some dimensions.
    */
   reference operator[](std::size_t index) const {
     return array[index];

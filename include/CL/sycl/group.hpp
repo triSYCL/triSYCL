@@ -99,7 +99,7 @@ public:
   }
 
 
-  /** Return a range<> representing the Dimensions of the current
+  /** Return a range<> representing the dimensions of the current
       group
 
       This local range may have been provided by the programmer, or chosen

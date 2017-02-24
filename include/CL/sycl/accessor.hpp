@@ -148,7 +148,7 @@ private:
   }
 
 
-  /** Construct an accessor of Dimensions Dimensions with elements of type
+  /** Construct an accessor of dimension Dimensions with elements of type
       DataType using the passed range to specify the size in each
       dimension
 
@@ -221,7 +221,7 @@ private:
   /** Use the accessor with integers à la [][][]
 
       Use array_view_type::reference instead of auto& because it does not
-      work in some Dimensions.
+      work in some dimensions.
    */
   typename accessor_detail::reference operator[](std::size_t index) {
     return (*implementation)[index];
@@ -231,7 +231,7 @@ private:
   /** Use the accessor with integers à la [][][]
 
       Use array_view_type::reference instead of auto& because it does not
-      work in some Dimensions.
+      work in some dimensions.
    */
   typename accessor_detail::reference operator[](std::size_t index) const {
     return (*implementation)[index];

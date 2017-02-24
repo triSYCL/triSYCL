@@ -23,7 +23,7 @@ namespace sycl {
 /** A SYCL range defines a multi-dimensional index range that can be used
     to define launch parallel computation extent or buffer sizes.
 
-    \todo use int Dimensions instead of int Dimensions in the specification?
+    \todo use std::size_t Dimensions instead of int Dimensions in the specification?
 
     \todo add to the specification this default parameter value?
 
@@ -59,7 +59,7 @@ public:
 /** Implement a make_range to construct a range<> of the right dimension
     with implicit conversion from an initializer list for example.
 
-    Cannot use a template on the number of Dimensions because the implicit
+    Cannot use a template on the number of dimensions because the implicit
     conversion would not be tried.
 */
 inline auto make_range(range<1> r) { return r; }

@@ -52,7 +52,7 @@ struct parallel_for_iterate {
          _sycl_index++) {
       // Set the current value of the index for this dimension
       index[Range::dimensionality - level] = _sycl_index;
-      // Iterate further on lower Dimensions
+      // Iterate further on lower dimensions
       parallel_for_iterate<level - 1,
                            Range,
                            ParallelForFunctor,
@@ -92,7 +92,7 @@ struct parallel_OpenMP_for_iterate {
            _sycl_index++) {
         // Set the current value of the index for this dimension
         index[Range::dimensionality - level] = _sycl_index;
-        // Iterate further on lower Dimensions
+        // Iterate further on lower dimensions
         parallel_for_iterate<level - 1,
                              Range,
                              ParallelForFunctor,

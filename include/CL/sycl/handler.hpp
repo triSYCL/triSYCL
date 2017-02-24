@@ -231,7 +231,7 @@ public:
 
       Unfortunately, to have implicit conversion to work on the range, the
       function can not be templated, so instantiate it for all the
-      Dimensions
+      dimensions
   */
 #define TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(N)       \
   template <typename KernelName = std::nullptr_t,         \

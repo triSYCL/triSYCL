@@ -53,7 +53,7 @@ enum class device : int {
   device_type,
   vendor_id,
   max_compute_units,
-  max_work_item_Dimensions,
+  max_work_item_dimensions,
   max_work_item_sizes,
   max_work_group_size,
   preferred_vector_width_char,

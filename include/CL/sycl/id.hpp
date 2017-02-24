@@ -38,7 +38,7 @@ public:
                                 Dimensions>::small_array_123;
 
 
-  /// Construct an id from the Dimensions of a range
+  /// Construct an id from the dimensions of a range
   id(const range<Dimensions> &range_size)
     /** Use the fact we have a constructor of a small_array from a another
         kind of small_array
@@ -61,7 +61,7 @@ public:
 /** Implement a make_id to construct an id<> of the right dimension with
     implicit conversion from an initializer list for example.
 
-    Cannot use a template on the number of Dimensions because the implicit
+    Cannot use a template on the number of dimensions because the implicit
     conversion would not be tried. */
 inline auto make_id(id<1> i) { return i; }
 inline auto make_id(id<2> i) { return i; }

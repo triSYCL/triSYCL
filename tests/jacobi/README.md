@@ -1,6 +1,6 @@
 # Jacobi examples
 
-This directory contains six Jacobi examples in 2 Dimensions using triSYCL. Two
+This directory contains six Jacobi examples in 2 dimensions using triSYCL. Two
 are based directly on triSYCL, a simple version and a difficult one with tiling.
 The four others examples (suffixed by -st) are based on a stencil DSEL, itself
 based on triSYCL. It enables to have the same #LOC as the simple jacobi version
@@ -37,7 +37,7 @@ Some improvments are needed, two are really importants :
 The first one is not esay since we want avoid rewrite all the code for each 
 dimension case. So we need a way to store and access an arbitrary number of 
 const int in a template argument, which is maybe possible with 
-_variadic template_. And we need an adaptater to reduce higher Dimensions to the
+_variadic template_. And we need an adaptater to reduce higher dimensions to the
 maximum of 3 allowed in SYCL.
 
 The second one is simple but we need several implementations to achieve
