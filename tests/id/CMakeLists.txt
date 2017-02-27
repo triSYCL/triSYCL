@@ -1,4 +1,24 @@
 cmake_minimum_required (VERSION 3.0) # The minimum version of CMake necessary to build this project
 project (id) # The name of our project
 
-declare_trisycl_test(TARGET id)
+declare_trisycl_test(TARGET id TEST_REGEX
+" 0
+
+Result:
+1
+5 7
+3
+jj has changed
+jj is lexicographically lesser than before
+as_an_int = 42
+jj via e = 5
+jj via e = 3
+cjj via e = 5
+cjj via e = 3
+ 6 5
+ 4 4
+ 0 1
+ 12 15
+ 6 2
+ 1 2 3
+ 5 6")

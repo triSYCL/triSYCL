@@ -4,11 +4,11 @@ function(declare_trisycl_test)
 
   # Setup argument parsing
   set(options USES_OPENCL FORCE_SYNCRONOUS_EXEC XILINX_SPECIFIC)
-  set(oneValueArgs TARGET)
+  set(oneValueArgs TARGET TEST_REGEX)
   set(multiValueArgs HEADERS SOURCES KERNELS)
 
   # Parse function arguments
-  cmake_parse_arguments(declare_trisycl_test "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+  cmake_parse_arguments(declare_trisycl_test "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
   # Declare source code files
   set (Files_HDRS ${declare_trisycl_test_HEADERS})
@@ -30,28 +30,47 @@ function(declare_trisycl_test)
   source_group ("Sources" FILES ${Files_SRCS})
 
   set(TARGET_NAME "${PROJECT_NAME}_${declare_trisycl_test_TARGET}") # Disambiguates sources with identical names from different directories
+  set(TEST_NAME "${PROJECT_NAME}/${declare_trisycl_test_TARGET}") # Save for multiple uses later
 
   # Specify executable sources
   add_executable (${TARGET_NAME} ${Files_BUILD})
 
   # Add include directories to the "#include <>" paths
-  target_include_directories (${TARGET_NAME} PUBLIC $<$<BOOL:USES_OPENCL>:${OpenCL_INCLUDE_DIRS}>
-                                                    $<$<BOOL:UNIX>:${BOOST_COMPUTE_INCPATH}>)
+  target_include_directories (${TARGET_NAME} PUBLIC #$<$<BOOL:${declare_trisycl_test_USES_OPENCL}>:${OpenCL_INCLUDE_DIRS}> # include OpenCL headers if example uses it
+                                                    ${OpenCL_INCLUDE_DIRS}
+                                                    $<$<BOOL:${UNIX}>:${BOOST_COMPUTE_INCPATH}>
+                                                    ${Boost_INCLUDE_DIRS})
 
   # Link dependencies
-  target_link_libraries (${TARGET_NAME} PUBLIC $<$<BOOL:USES_OPENCL>:${OpenCL_LIBRARIES}> # Link to OpenCL if example requires
-                                               $<$<NOT:$<BOOL:WIN32>>:Threads::Threads> # If not on Windows, use some threading model
-                                               #$<$<AND:$<CXX_COMPILER_ID:GNU>,$<BOOL:USE_OPENMP>>:gomp> # g++ requires libgomp to use OpenMP
-                                               $<$<BOOL:WIN32>:Boost::disable_autolinking> # Boost can auto-link when used with MSVC, but relies on relative paths which CMake does not really like
+  target_link_libraries (${TARGET_NAME} PUBLIC #$<$<BOOL:${declare_trisycl_test_USES_OPENCL}>:${OpenCL_LIBRARIES}> # Link to OpenCL if example requires
+                                               ${OpenCL_LIBRARIES}
+                                               $<$<NOT:$<BOOL:${WIN32}>>:Threads::Threads> # If not on Windows, use some threading model
+                                               $<$<BOOL:${WIN32}>:Boost::disable_autolinking> # Boost can auto-link when used with MSVC, but relies on relative paths which CMake does not really like
+                                               $<$<OR:$<BOOL:${TRISYCL_DEBUG}>,$<BOOL:${TRISYCL_DEBUG_STRUCTORS}>>:Boost::log> # Link to Boost.log when triSYCL in debug mode
                                                Boost::chrono)
 
   # Compile definitions
-  target_compile_definitions(${TARGET_NAME} PUBLIC TRISYCL_ASYNC $<$<BOOL:USES_OPENCL>:TRISYCL_OPENCL>)
+  target_compile_definitions(${TARGET_NAME} PUBLIC $<$<BOOL:${TRISYCL_NO_ASYNC}>:TRISYCL_NO_ASYNC> # If opting for synchronous task exec
+                                                   $<$<BOOL:${declare_trisycl_test_USES_OPENCL}>:TRISYCL_OPENCL> # If the test uses OpenCL
+                                                   $<$<BOOL:${TRISYCL_DEBUG}>:TRISYCL_DEBUG>
+                                                   $<$<BOOL:${TRISYCL_DEBUG_STRUCTORS}>:TRISYCL_DEBUG_STRUCTORS>)
+
+  # OpenMP requirements
+  target_compile_options(${TARGET_NAME} PUBLIC $<$<BOOL:${TRISYCL_OPENMP}>:${OpenMP_CXX_FLAGS}>)
+
+  if(${TRISYCL_OPENMP} AND (NOT WIN32))
+    set_target_properties(${TARGET_NAME} PROPERTIES LINK_FLAGS ${OpenMP_CXX_FLAGS}) # Does not support generator expressions
+  endif(${TRISYCL_OPENMP} AND (NOT WIN32))
 
   # Add unit test
-  add_test(NAME "${PROJECT_NAME}/${declare_trisycl_test_TARGET}"
+  add_test(NAME ${TEST_NAME}
            COMMAND ${TARGET_NAME}
-           WORKING_DIRECTORY ${PROJECT_NAME})
+           WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+  
+  # If test uses regular expression
+  if(NOT ${declare_trisycl_test_TEST_REGEX} STREQUAL "")
+    set_tests_properties (${TEST_NAME} PROPERTIES PASS_REGULAR_EXPRESSION ${declare_trisycl_test_TEST_REGEX})
+  endif(NOT ${declare_trisycl_test_TEST_REGEX} STREQUAL "")
 
 endfunction(declare_trisycl_test)
 

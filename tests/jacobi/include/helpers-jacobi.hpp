@@ -83,8 +83,8 @@ size_t J_CL_DEVICE_MAX_WORK_GROUP_SIZE1 = J_CL_DEVICE_CONST_WORK_GROUP_SIZE1;
 
 struct counters
 {
-    using clock_type = typename std::chrono::high_resolution_clock;
-    using duration_type = typename std::chrono::milliseconds;
+    using clock_type = std::chrono::high_resolution_clock;
+    using duration_type = std::chrono::milliseconds;
 
     clock_type::time_point start, end_init, end;
     duration_type init_time, load_time, stencil_time, copy_time;

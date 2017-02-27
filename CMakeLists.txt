@@ -1,12 +1,18 @@
 cmake_minimum_required (VERSION 3.5) # The minimum version of CMake necessary to build this project
-project(triSYCL) # The name of the project
+project(triSYCL C CXX) # The name of the project (forward declare language )
 
 #
 # Behavioural options for the solution
 #
-  option (USE_OPENMP "triSYCL multi-threading with OpenMP" ON)
-  option (BUILD_OPENCL "triSYCL build OpenCL tests" ON)
-  option (BUILD_XILINX "triSYCL build Xilinx-specific tests" OFF)
+  option(TRISYCL_OPENMP "triSYCL multi-threading with OpenMP" ON)
+  option(TRISYCL_NO_ASYNC "triSYCL use synchronous kernel execution" OFF)
+  option(BUILD_OPENCL "triSYCL build OpenCL tests" ON)
+  option(BUILD_XILINX "triSYCL build Xilinx-specific tests" OFF)
+  option(TRISYCL_DEBUG "triSCYL use debug mode" OFF)
+  option(TRISYCL_DEBUG_STRUCTORS "triSYCL trace of object lifetimes" OFF)
+
+  set(CL_SYCL_LANGUAGE_VERSION 220 CACHE VERSION "Host language version to be used by trisYCL (default is: 220)")
+  set(TRISYCL_CL_LANGUAGE_VERSION 220 CACHE VERSION "Device language version to be used by trisYCL (default is: 220) (not used yet)")
 
 #
 # Platform/compiler-independant setup
@@ -14,21 +20,15 @@ project(triSYCL) # The name of the project
   set_property(GLOBAL PROPERTY USE_FOLDERS ON) # Use solution folders in IDEs
 
   # Find dependencies
-  if(USE_OPENMP)
+  if(TRISYCL_OPENMP)
     find_package(OpenMP REQUIRED)
-    add_compile_options(${OpenMP_CXX_FLAGS}) # Turn on OpenMP compiler directives
-    #string(APPEND CMAKE_EXE_LINKER_FLAGS $<$<NOT:$<BOOL:WIN32>>: ${OpenMP_CXX_FLAGS}>) # If not on Windows, instruct linker to link OpenMP library
-    if(NOT WIN32)
-      set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_CXX_FLAGS}") # If not on Windows, instruct linker to link OpenMP library
-    endif(NOT WIN32)
-  endif(USE_OPENMP)
+  endif(TRISYCL_OPENMP)
 
   if(BUILD_OPENCL)
     find_package(OpenCL REQUIRED)
   endif(BUILD_OPENCL)
 
-  find_package(Boost 1.58 REQUIRED COMPONENTS chrono)
-  include_directories(${Boost_INCLUDE_DIRS})
+  find_package(Boost 1.58 REQUIRED COMPONENTS chrono log)
 
   # Enable CTest
   include(CTest)
