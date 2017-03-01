@@ -40,20 +40,20 @@ project(triSYCL C CXX) # The name of the project (forward declare language )
 #
 # Platform-specific setup
 #
-  if (UNIX) # If compiling under Linux
+  if(UNIX) # If compiling under Linux
     set(BOOST_COMPUTE_INCPATH /usr/include/compute CACHE PATH "Path to Boost.Compute headers (default is: /usr/include/compute)")
     find_package(Threads REQUIRED)
-  endif (UNIX)
+  endif(UNIX)
   
-  if (APPLE) # If compiling under OSX
+  if(APPLE) # If compiling under OSX
     find_package(Threads REQUIRED)
-  endif (APPLE)
+  endif(APPLE)
 
 #
 # Set compiler-specific variables
 #
   # If compiling with MSVC++
-  if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+  if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     add_compile_options("/std:c++14") # Change to /std:c++latest once Boost::funtional is fixed (1.63.0 with toolset v141 not working)
     string(REGEX REPLACE "/W[0-9]" "/W4" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS}) # Replace default Warning Level 3 with 4 (/Wall is pretty-much useless on MSVC, system headers are plagued with warnings)
 
@@ -71,7 +71,7 @@ project(triSYCL C CXX) # The name of the project (forward declare language )
     add_compile_options("/wd4459") # warning C4459: declaration of '<id>' hides global declaration
     add_compile_options("/wd4127") # warning C4127: conditional expression is constant
     add_compile_options("/wd4456") # warning C4456: declaration of '<id>' hides previous local declaration
-  endif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+  endif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 		
   # If compiling with g++
   if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")

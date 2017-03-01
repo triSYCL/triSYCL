@@ -19,3 +19,4 @@ declare_trisycl_test(TARGET nd_range TEST_REGEX
  1
  6 4
  6 5")
+ 
