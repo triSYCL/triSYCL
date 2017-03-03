@@ -7,13 +7,24 @@ triSYCL testing
 
 Here are some simple examples and tests using triSYCL.
 
-Everything is under control of the GNU `Makefile` for now but there is
-a CMake version on-going.
+Everything is under control of either
+
+- a native GNU `Makefile`
+
+- or a `CMake`-based configuration.
 
 
 Compiling and execution
 =======================
 
+Using ``CMake``
+---------------
+
+See `../doc/cmake.rst <../doc/cmake.rst>`_
+
+
+Using ``make`` directly
+-----------------------
 
 To compile them:
 
@@ -56,6 +67,17 @@ want to run, such as:
 
 Testing
 =======
+
+Using ``CMake`` ``ctest``
+-------------------------
+
+See `../doc/cmake.rst <../doc/cmake.rst>`_
+
+Basically, just use ``ctest``.
+
+
+Using ``make`` and ``LIT``
+--------------------------
 
 The tests are based on the LIT_ tool from the LLVM_ infrastructure.
 
@@ -109,6 +131,7 @@ files, use the ``clone-T`` targets, such as:
 .. code:: bash
 
   make clone-check
+
 
 ..
   Somme useful link definitions:
