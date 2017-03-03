@@ -66,7 +66,7 @@ function(declare_trisycl_test)
   add_test(NAME ${TEST_NAME}
            COMMAND ${TARGET_NAME}
            WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-  
+
   # If test uses regular expression
   if(NOT ${declare_trisycl_test_TEST_REGEX} STREQUAL "")
     set_tests_properties (${TEST_NAME} PROPERTIES PASS_REGULAR_EXPRESSION ${declare_trisycl_test_TEST_REGEX})

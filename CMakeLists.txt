@@ -44,7 +44,7 @@ project(triSYCL C CXX) # The name of the project (forward declare language )
     set(BOOST_COMPUTE_INCPATH /usr/include/compute CACHE PATH "Path to Boost.Compute headers (default is: /usr/include/compute)")
     find_package(Threads REQUIRED)
   endif(UNIX)
-  
+
   if(APPLE) # If compiling under OSX
     find_package(Threads REQUIRED)
   endif(APPLE)
@@ -72,7 +72,7 @@ project(triSYCL C CXX) # The name of the project (forward declare language )
     add_compile_options("/wd4127") # warning C4127: conditional expression is constant
     add_compile_options("/wd4456") # warning C4456: declaration of '<id>' hides previous local declaration
   endif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-		
+
   # If compiling with g++
   if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     add_compile_options("-std=c++1z") # Use latest available C++ standard
