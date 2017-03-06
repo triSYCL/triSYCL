@@ -14,6 +14,56 @@ Everything is under control of either
 - or a `CMake`-based configuration.
 
 
+Environment variables
+=====================
+
+OpenCL tests use Boost.Compute and thus you can use to select the
+OpenCL device/environment/... you want to use by setting some of the
+following environment variables:
+
+- ``BOOST_COMPUTE_DEFAULT_DEVICE``
+
+- ``BOOST_COMPUTE_DEFAULT_DEVICE_TYPE``
+
+- ``BOOST_COMPUTE_DEFAULT_PLATFORM``
+
+- ``BOOST_COMPUTE_DEFAULT_VENDOR``
+
+For example to use PoCL http://portablecl.org
+
+.. code:: bash
+
+  export BOOST_COMPUTE_DEFAULT_PLATFORM="Portable Computing Language"
+
+To specify where the OpenCL include files and libraries are found
+outside of the standard directories, you can use the following
+variables:
+
+- ``OpenCL_INCPATH`` specifies where ``CL/cl.h`` can be found, for example;
+
+- ``OpenCL_LIBPATH`` specifies where to find the OpenCL library
+
+The Boost.Compute package has a specific importance for this project
+and sometime it is useful to test for a more modern version. This can
+be searched at a specific place through the following environment
+variable:
+
+- ``BOOST_COMPUTE_INCPATH``
+
+
+The tests based on the Makefile are using LLVM LIT, not the CMake
+ones, using ``ctest``. When using the Makefile tests, you need to
+specify where is LIT. For example with:
+
+.. code:: bash
+
+  export TRISYCL_LIT=/usr/lib/llvm-3.9/build/utils/lit/lit.py
+
+Installing the Xilinx SDx software providing OpenCL support for Xilinx
+FPGA sets normally the ``XILINX_SDX`` environment variable. This is
+used by the Makefile to run the Xilinx tests.
+
+
 Compiling and execution
 =======================
 
