@@ -51,9 +51,9 @@ variable:
 - ``BOOST_COMPUTE_INCPATH``
 
 
-The tests based on the Makefile are using LLVM LIT, not the CMake
-ones, using ``ctest``. When using the Makefile tests, you need to
-specify where is LIT. For example with:
+The tests based on the Makefile are using LLVM_ LIT_, not the CMake
+ones, using ``ctest``. So, when using the Makefile tests, you need to
+specify where is LIT_. For example with:
 
 .. code:: bash
 
@@ -62,6 +62,24 @@ specify where is LIT. For example with:
 Installing the Xilinx SDx software providing OpenCL support for Xilinx
 FPGA sets normally the ``XILINX_SDX`` environment variable. This is
 used by the Makefile to run the Xilinx tests.
+
+
+Test-specific Makefile variables
+================================
+
+``TARGETS`` allows to specify the test targets to work on, instead of
+deriving them from all the ``.cpp`` files found.
+
+You can set the flags given to Xilinx OpenCL ``xocc`` compiler with
+the ``XOCCFLAGS`` variable.
+
+When using LIT_ tests from the Makefile, you can use
+
+- ``CHECKING_DIR`` to specify which sub-directory to run the tests
+  from, instead of all the tests found in the current ``tests``
+  directory;
+
+- ``LITFLAGS`` to pass some options to LIT_.
 
 
 Compiling and execution
@@ -137,7 +155,7 @@ To install it on Debian or Ubuntu, use typically:
 
   sudo apt-get install llvm-3.9-tools
 
-You should direct the following variable to where is LIT located on your
+You should direct the following variable to where is LIT_ located on your
 machine, for example:
 
 .. code:: bash
