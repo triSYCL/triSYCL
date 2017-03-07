@@ -32,9 +32,9 @@ CXXFLAGS += -DTRISYCL_OPENCL
 # To use generic OpenCL:
 LDLIBS += -lOpenCL
 # To use PoCL directly instead of generic OpenCL:
-#LDFLAGS += `pkg-config --libs-only-L --libs-only-other pocl`
-#LDLIBS += `pkg-config --libs-only-l pocl`
-#CXXFLAGS += `pkg-config --cflags pocl`
+#LDFLAGS += $(shell pkg-config --libs-only-L --libs-only-other pocl)
+#LDLIBS += $(shell pkg-config --libs-only-l pocl)
+#CXXFLAGS += $(shell pkg-config --cflags pocl)
 
 # To enable debug and tracing:
 CXXFLAGS += -g
