@@ -29,7 +29,12 @@ CXXFLAGS += -fopenmp
 
 # To use OpenCL, set the TRISYCL_OPENCL flag
 CXXFLAGS += -DTRISYCL_OPENCL
+# To use generic OpenCL:
 LDLIBS += -lOpenCL
+# To use PoCL directly instead of generic OpenCL:
+#LDFLAGS += `pkg-config --libs-only-L --libs-only-other pocl`
+#LDLIBS += `pkg-config --libs-only-l pocl`
+#CXXFLAGS += `pkg-config --cflags pocl`
 
 # To enable debug and tracing:
 CXXFLAGS += -g
