@@ -33,7 +33,7 @@ namespace detail {
 
 // Forward declaration of detail::accessor to declare the specialization
 template <typename T,
-          std::size_t Dimensions,
+          int Dimensions,
           access::mode Mode,
           access::target Target>
 class accessor;
@@ -49,7 +49,7 @@ class accessor;
     \todo Use the access::mode
 */
 template <typename T,
-          std::size_t Dimensions,
+          int Dimensions,
           access::mode Mode>
 class accessor<T, Dimensions, Mode, access::target::local> :
     public detail::debug<accessor<T,
@@ -134,7 +134,7 @@ public:
 
   /** Returns the total number of elements behind the accessor
 
-      Equal to get_range()[0] * ... * get_range()[dimensions-1].
+      Equal to get_range()[0] * ... * get_range()[Dimensions-1].
 
       \todo Move on
       https://cvs.khronos.org/bugzilla/show_bug.cgi?id=15564 and

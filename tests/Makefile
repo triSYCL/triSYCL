@@ -31,7 +31,12 @@ LDLIBS += -lpthread
 
 # To use OpenCL, set the TRISYCL_OPENCL flag
 CXXFLAGS += -DTRISYCL_OPENCL
+# To use generic OpenCL:
 LDLIBS += -lOpenCL
+# To use PoCL directly instead of generic OpenCL:
+#LDFLAGS += $(shell pkg-config --libs-only-L --libs-only-other pocl)
+#LDLIBS += $(shell pkg-config --libs-only-l pocl)
+#CXXFLAGS += $(shell pkg-config --cflags pocl)
 
 # To compile for a device
 CXXFLAGS += -DTRISYCL_DEVICE
@@ -164,9 +169,9 @@ check: $(TARGETS_CC)
 	# Launch testing with lit tool from LLVM in current directory
 	echo Using $(CXX) compiler:
 	# lit can be found for example on Debian/Ubuntu in package
-	# llvm-3.7-tools in /usr/lib/llvm-3.7/build/utils/lit/lit.py
+	# llvm-3.9-tools in /usr/lib/llvm-3.9/build/utils/lit/lit.py
 	# so try before running the check:
-	# export TRISYCL_LIT=/usr/lib/llvm-3.7/build/utils/lit/lit.py
+	# export TRISYCL_LIT=/usr/lib/llvm-3.9/build/utils/lit/lit.py
 	# The config file for triSYCL needs at least Python 3.3
 	test "unset$$TRISYCL_LIT == unset" \
 	  && echo 'Initialize TRISYCL_LIT variable to the path of "lit" command' ; \

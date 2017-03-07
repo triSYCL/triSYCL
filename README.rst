@@ -4,6 +4,10 @@ triSYCL
 News
 ----
 
+- 2017/03/03: triSYCL can use CMake & ctest and works on Windows 10 with
+  Visual Studio 2017. It works also with Ubuntu WSL on Windows. :-)
+  `More info <doc/cmake.rst>`_
+
 - 2017/01/12: Add test case using the Xilinx_ compiler for FPGA
 
 - 2016/11/18: If you missed the free SYCL T-shirt on the Khronos booth
@@ -418,12 +422,14 @@ triSYCL_ is configurable through preprocessor macros described in
 
 Also use ``-fopenmp`` if you want to use multicore parallelism on the CPU.
 
+The ``CMake`` support is described in `doc/cmake.rst <doc/cmake.rst>`_.
+
 
 Examples and tests
 ------------------
 
-There are simple examples and tests in the ``tests`` directory.  Look at
-`tests/README.rst` description.
+There are simple examples and tests in the `tests <tests>`_ directory.
+Look at `tests/README.rst <tests/README.rst>`_ description.
 
 
 Generating the Doxygen documentation

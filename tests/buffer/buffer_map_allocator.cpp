@@ -14,7 +14,7 @@ int test_main(int argc, char *argv[]) {
 
   std::vector<int> vect(N, 42);
 
-  buffer<int, 1, map_allocator<int>> buff { vect.data(), range<1> { N } };
+  buffer<int, 1, map_allocator<int>> buff { vect.data(), range<1> { size_t(N) } };
 
   auto read = buff.get_access<access::mode::read,
                               access::target::host_buffer>();

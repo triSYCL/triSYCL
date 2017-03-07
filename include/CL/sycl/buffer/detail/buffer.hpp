@@ -38,7 +38,7 @@ namespace detail {
     any storage.
 */
 template <typename T,
-          std::size_t Dimensions = 1>
+          int Dimensions = 1>
 class buffer : public detail::buffer_base,
                public detail::debug<buffer<T, Dimensions>> {
 public:
@@ -59,7 +59,7 @@ private:
   // \todo Replace U and D somehow by T and Dimensions
   // To allow allocation access
   template <typename U,
-            std::size_t D,
+            int D,
             access::mode Mode,
             access::target Target /* = access::global_buffer */>
     friend class detail::accessor;
@@ -269,7 +269,7 @@ public:
 
   /** Returns the total number of elements in the buffer
 
-      Equal to get_range()[0] * ... * get_range()[dimensions-1].
+      Equal to get_range()[0] * ... * get_range()[Dimensions-1].
   */
   auto get_count() const {
     return access.num_elements();

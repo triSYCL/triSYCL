@@ -25,7 +25,7 @@
 namespace cl {
 namespace sycl {
 
-template <typename T, std::size_t Dimensions, typename Allocator>
+template <typename T, int Dimensions, typename Allocator>
 class buffer;
 template <typename T>
 class pipe;
@@ -41,7 +41,7 @@ class handler;
     \todo Implement it for images according so section 3.3.4.5
 */
 template <typename DataType,
-          std::size_t Dimensions,
+          int Dimensions,
           access::mode AccessMode,
           access::target Target = access::target::global_buffer>
 class accessor :
@@ -148,7 +148,7 @@ private:
   }
 
 
-  /** Construct an accessor of dimensions Dimensions with elements of type
+  /** Construct an accessor of dimension Dimensions with elements of type
       DataType using the passed range to specify the size in each
       dimension
 
@@ -194,7 +194,7 @@ private:
 
   /** Returns the total number of elements behind the accessor
 
-      Equal to get_range()[0] * ... * get_range()[dimensions-1].
+      Equal to get_range()[0] * ... * get_range()[Dimensions-1].
 
       \todo Move on
       https://cvs.khronos.org/bugzilla/show_bug.cgi?id=15564 and

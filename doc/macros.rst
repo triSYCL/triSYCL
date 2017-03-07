@@ -12,7 +12,7 @@ They are typically passed to the compiler by the build system.
   default value in triSYCL is ``220``.
 
 
-``CL_TRISYCL_LANGUAGE_VERSION``:
+``TRISYCL_CL_LANGUAGE_VERSION``:
 
     When defined, set the expected triSYCL version to be followed. The
     default value is ``220``.

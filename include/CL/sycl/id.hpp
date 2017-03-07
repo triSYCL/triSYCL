@@ -18,7 +18,7 @@
 namespace cl {
 namespace sycl {
 
-template <std::size_t dims> class item;
+template <int Dimensions> class item;
 
 /** \addtogroup parallelism Expressing parallelism through kernels
     @{
@@ -27,28 +27,33 @@ template <std::size_t dims> class item;
 /** Define a multi-dimensional index, used for example to locate a work
     item
 */
-template <std::size_t dims = 1>
-class id : public detail::small_array_123<std::size_t, id<dims>, dims> {
+template <int Dimensions = 1>
+class id : public detail::small_array_123<
+             std::size_t,
+             id<Dimensions>,
+             Dimensions > {
 
 public:
 
   // Inherit from all the constructors
   using detail::small_array_123<std::size_t,
-                                id<dims>,
-                                dims>::small_array_123;
+                                id<Dimensions>,
+                                Dimensions>::small_array_123;
 
 
   /// Construct an id from the dimensions of a range
-  id(const range<dims> &range_size)
+  id(const range<Dimensions> &range_size)
     /** Use the fact we have a constructor of a small_array from a another
         kind of small_array
      */
-    : detail::small_array_123<std::size_t, id<dims>, dims> { range_size } {}
+    : detail::small_array_123<std::size_t, id<Dimensions>, Dimensions>
+      { range_size }
+  {}
 
 
   /// Construct an id from an item global_id
-  id(const item<dims> &rhs)
-    : detail::small_array_123<std::size_t, id<dims>, dims>
+  id(const item<Dimensions> &rhs)
+    : detail::small_array_123<std::size_t, id<Dimensions>, Dimensions>
       { rhs.get() }
   {}
 

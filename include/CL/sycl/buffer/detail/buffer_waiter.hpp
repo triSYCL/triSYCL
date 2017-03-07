@@ -28,7 +28,7 @@ namespace detail {
     conditions for blocking are met
 */
 template <typename T,
-          std::size_t Dimensions = 1,
+          int Dimensions = 1,
           typename Allocator = buffer_allocator<std::remove_const_t<T>>>
 class buffer_waiter :
     public detail::shared_ptr_implementation<buffer_waiter<T,
@@ -74,7 +74,7 @@ public:
 
 /// Helper function to create a new buffer_waiter
 template <typename T,
-          std::size_t Dimensions = 1>
+          int Dimensions = 1>
 inline auto waiter(detail::buffer<T, Dimensions> *b) {
   return new buffer_waiter<T, Dimensions> { b };
 }

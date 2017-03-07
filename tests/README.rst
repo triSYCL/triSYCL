@@ -7,13 +7,92 @@ triSYCL testing
 
 Here are some simple examples and tests using triSYCL.
 
-Everything is under control of the GNU `Makefile` for now but there is
-a CMake version on-going.
+Everything is under control of either
+
+- a native GNU `Makefile`
+
+- or a `CMake`-based configuration.
+
+
+Environment variables
+=====================
+
+OpenCL tests use Boost.Compute and thus you can use to select the
+OpenCL device/environment/... you want to use by setting some of the
+following environment variables:
+
+- ``BOOST_COMPUTE_DEFAULT_DEVICE``
+
+- ``BOOST_COMPUTE_DEFAULT_DEVICE_TYPE``
+
+- ``BOOST_COMPUTE_DEFAULT_PLATFORM``
+
+- ``BOOST_COMPUTE_DEFAULT_VENDOR``
+
+For example to use PoCL http://portablecl.org
+
+.. code:: bash
+
+  export BOOST_COMPUTE_DEFAULT_PLATFORM="Portable Computing Language"
+
+To specify where the OpenCL include files and libraries are found
+outside of the standard directories, you can use the following
+variables:
+
+- ``OpenCL_INCPATH`` specifies where ``CL/cl.h`` can be found, for example;
+
+- ``OpenCL_LIBPATH`` specifies where to find the OpenCL library
+
+The Boost.Compute package has a specific importance for this project
+and sometime it is useful to test for a more modern version. This can
+be searched at a specific place through the following environment
+variable:
+
+- ``BOOST_COMPUTE_INCPATH``
+
+
+The tests based on the Makefile are using LLVM_ LIT_, not the CMake
+ones, using ``ctest``. So, when using the Makefile tests, you need to
+specify where is LIT_. For example with:
+
+.. code:: bash
+
+  export TRISYCL_LIT=/usr/lib/llvm-3.9/build/utils/lit/lit.py
+
+Installing the Xilinx SDx software providing OpenCL support for Xilinx
+FPGA sets normally the ``XILINX_SDX`` environment variable. This is
+used by the Makefile to run the Xilinx tests.
+
+
+Test-specific Makefile variables
+================================
+
+``TARGETS`` allows to specify the test targets to work on, instead of
+deriving them from all the ``.cpp`` files found.
+
+You can set the flags given to Xilinx OpenCL ``xocc`` compiler with
+the ``XOCCFLAGS`` variable.
+
+When using LIT_ tests from the Makefile, you can use
+
+- ``CHECKING_DIR`` to specify which sub-directory to run the tests
+  from, instead of all the tests found in the current ``tests``
+  directory;
+
+- ``LITFLAGS`` to pass some options to LIT_.
 
 
 Compiling and execution
 =======================
 
+Using ``CMake``
+---------------
+
+See `../doc/cmake.rst <../doc/cmake.rst>`_
+
+
+Using ``make`` directly
+-----------------------
 
 To compile them:
 
@@ -57,6 +136,17 @@ want to run, such as:
 Testing
 =======
 
+Using ``CMake`` ``ctest``
+-------------------------
+
+See `../doc/cmake.rst <../doc/cmake.rst>`_
+
+Basically, just use ``ctest``.
+
+
+Using ``make`` and ``LIT``
+--------------------------
+
 The tests are based on the LIT_ tool from the LLVM_ infrastructure.
 
 To install it on Debian or Ubuntu, use typically:
@@ -65,7 +155,7 @@ To install it on Debian or Ubuntu, use typically:
 
   sudo apt-get install llvm-3.9-tools
 
-You should direct the following variable to where is LIT located on your
+You should direct the following variable to where is LIT_ located on your
 machine, for example:
 
 .. code:: bash
@@ -109,6 +199,7 @@ files, use the ``clone-T`` targets, such as:
 .. code:: bash
 
   make clone-check
+
 
 ..
   Somme useful link definitions:

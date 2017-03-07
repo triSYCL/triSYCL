@@ -29,11 +29,11 @@ namespace sycl {
 
     \todo add copy constructors in the specification
 */
-template <std::size_t dims = 1>
+template <int Dimensions = 1>
 struct nd_range {
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
-  static constexpr auto dimensionality = dims;
+  static constexpr auto dimensionality = Dimensions;
 
 private:
 
@@ -47,19 +47,19 @@ public:
 
       By default use a zero offset, that is iterations start at 0
    */
-  nd_range(range<dims> global_size,
-           range<dims> local_size,
-           id<dims> offset = {}) :
+  nd_range(range<Dimensions> global_size,
+           range<Dimensions> local_size,
+           id<Dimensions> offset = {}) :
     global_range { global_size }, local_range { local_size }, offset { offset }
   { }
 
 
   /// Get the global iteration space range
-  range<dims> get_global() const { return global_range; }
+  range<Dimensions> get_global() const { return global_range; }
 
 
   /// Get the local part of the iteration space range
-  range<dims> get_local() const { return local_range; }
+  range<Dimensions> get_local() const { return local_range; }
 
 
   /// Get the range of work-groups needed to run this ND-range
@@ -68,12 +68,12 @@ public:
        next integer, in case the global eange is not a multiple of the
        local range. Note this is a motivating example to build a range
        from a scalar with a broadcasting constructor. */
-    return (global_range + local_range - range<dims>{ 1 })/local_range;
+    return (global_range + local_range - range<Dimensions>{ 1 })/local_range;
   }
 
 
   /// \todo get_offset() is lacking in the specification
-  id<dims> get_offset() const { return offset; }
+  id<Dimensions> get_offset() const { return offset; }
 
 
   /// Display the value for debugging and validation purpose

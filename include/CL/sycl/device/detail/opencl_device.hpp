@@ -55,19 +55,22 @@ public:
 
   /// Test if the OpenCL is a CPU device
   bool is_cpu() const override {
-    return d.type() == boost::compute::device::cpu;
+    // Even in Boost.Compute the type is a bit-field, so use & instead of ==
+    return d.type() & boost::compute::device::cpu;
   }
 
 
   /// Test if the OpenCL is a GPU device
   bool is_gpu() const override {
-    return d.type() == boost::compute::device::gpu;
+    // Even in Boost.Compute the type is a bit-field, so use & instead of ==
+    return d.type() & boost::compute::device::gpu;
   }
 
 
   /// Test if the OpenCL is an accelerator device
   bool is_accelerator() const override {
-    return d.type() == boost::compute::device::accelerator;
+    // Even in Boost.Compute the type is a bit-field, so use & instead of ==
+    return d.type() & boost::compute::device::accelerator;
   }
 
 

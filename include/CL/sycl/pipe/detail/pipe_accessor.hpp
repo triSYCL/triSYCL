@@ -27,7 +27,7 @@ namespace detail {
 
 // Forward declaration of detail::accessor to declare the specialization
 template <typename T,
-          std::size_t Dimensions,
+          int Dimensions,
           access::mode Mode,
           access::target Target>
 class accessor;
