@@ -28,22 +28,22 @@ auto equal = [] (auto const &v, auto const &verif) {
 */
 #define TRISYCL_CHECK(OPERATOR, TYPE, SIZE, VAL1, VAL2) \
   {                                                     \
-    std::initializer_list<TYPE> vil1 VAL1;              \
-    std::initializer_list<TYPE> vil2 VAL2;              \
-    using v = vec<TYPE, SIZE>;                          \
-    using va = std::valarray<TYPE>;                     \
-    v v1 VAL1;                                          \
-    v v2 VAL2;                                          \
-    v v3 = v1 OPERATOR v2;                              \
-    va va1 { vil1 };                                    \
-    va va2 { vil2 };                                    \
-    va va3 = va1 OPERATOR va2;                          \
-    BOOST_CHECK(equal(v1, va1));                        \
-    BOOST_CHECK(equal(v2, va2));                        \
-    BOOST_CHECK(equal(v3, va3));                        \
-    v3 OPERATOR##= v1;                                  \
-    va3 OPERATOR##= va1;                                \
-    BOOST_CHECK(equal(v3, va3));                        \
+    std::initializer_list<TYPE> _vil1 VAL1;             \
+    std::initializer_list<TYPE> _vil2 VAL2;             \
+    using _v = vec<TYPE, SIZE>;                         \
+    using _va = std::valarray<TYPE>;                    \
+    _v _v1 VAL1;                                        \
+    _v _v2 VAL2;                                        \
+    _v _v3 = _v1 OPERATOR _v2;                          \
+    _va _va1 { _vil1 };                                 \
+    _va _va2 { _vil2 };                                 \
+    _va _va3 = _va1 OPERATOR _va2;                      \
+    BOOST_CHECK(equal(_v1, _va1));                      \
+    BOOST_CHECK(equal(_v2, _va2));                      \
+    BOOST_CHECK(equal(_v3, _va3));                      \
+    _v3 OPERATOR##= _v1;                                \
+    _va3 OPERATOR##= _va1;                              \
+    BOOST_CHECK(equal(_v3, _va3));                      \
   }
 
 
