@@ -377,7 +377,7 @@ public:
                   "get_access(handler) can only deal with access::global_buffer"
                   " or access::constant_buffer (for host_buffer accessor"
                   " do not use a command group handler");
-    implementation->implementation->template track_access_mode<Mode, Target>();
+    implementation->implementation->template track_access_mode<Mode>();
     return { *this, command_group_handler };
   }
 
@@ -405,7 +405,7 @@ public:
     static_assert(Target == access::target::host_buffer,
                   "get_access() without a command group handler is only"
                   " for host_buffer accessor");
-    implementation->implementation->template track_access_mode<Mode, Target>();
+    implementation->implementation->template track_access_mode<Mode>();
     return { *this };
   }
 

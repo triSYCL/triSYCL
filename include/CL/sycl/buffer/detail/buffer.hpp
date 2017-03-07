@@ -227,26 +227,24 @@ public:
   /** This method is to be called whenever an acessor is created.
       Its current purpose is to track if an accessor with write access
       is created and acting acordingly.
+
+      Static dispatch to handling access mode.
    */
-  template <access::mode Mode,
-            access::target Target = access::target::host_buffer>
+  template <access::mode Mode>
   void track_access_mode() {
-    // test if write access is required
-    if (   Mode == access::mode::write
-        || Mode == access::mode::read_write
-        || Mode == access::mode::discard_write
-        || Mode == access::mode::discard_read_write
-        || Mode == access::mode::atomic
-       ) {
-      modified = true;
-      if (copy_if_modified) {
-        copy_if_modified = false;
-        data_host = false;
-        allocation = boost::multi_array<T, Dimensions> { access };
-        access = boost::multi_array_ref<T, Dimensions> { allocation };
-      }
+    modified = true;
+    if (copy_if_modified) {
+      copy_if_modified = false;
+      data_host = false;
+      allocation = boost::multi_array<T, Dimensions> { access };
+      access = boost::multi_array_ref<T, Dimensions> { allocation };
     }
   }
+
+  /** Template specialization implementing the no op branch
+  */
+  template <>
+  void track_access_mode<access::mode::read>() {}
 
 
  /** Return a range object representing the size of the buffer in
