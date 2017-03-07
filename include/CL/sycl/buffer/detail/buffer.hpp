@@ -59,7 +59,7 @@ private:
   // \todo Replace U and D somehow by T and Dimensions
   // To allow allocation access
   template <typename U,
-            std::size_t D,
+            int D,
             access::mode Mode,
             access::target Target /* = access::global_buffer */>
     friend class detail::accessor;
