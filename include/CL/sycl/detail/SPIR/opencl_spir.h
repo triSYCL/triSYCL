@@ -12,6 +12,10 @@
 #error "This header file should be used with SPIR target only."
 #endif
 
+/// Added according to pocl/examples/example1-spir64/generate_spir.sh
+/// \todo avoid this hack
+#pragma OPENCL EXTENSION cl_khr_fp64 : enable
+
 // Optimizations
 
 #define const_func __attribute__((const))
