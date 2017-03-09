@@ -145,6 +145,9 @@ clean:
 # Add some explicit targets
 multiple_compilation_units/parallel_for: multiple_compilation_units/parallel_for_other.o
 
+# Compile some kernels to SPIR as an "order-only" prerequisite:
+SPIR/opencl_kernel_vector_add_args: | SPIR/vector_add.spir64
+
 ifdef XILINX_SDX
 # Compile explicit OpenCL kernels for Xilinx FPGA.
 # Note this variable enables also the Lit tests guarded
@@ -198,7 +201,7 @@ execute: $(basename $(TARGET))
 # To debug the Clang/LLVM triSYCL compiler
 # Assume that CXX contains some Clang compiler version
 
-.PRECIOUS: %.bc %.ll
+.PRECIOUS: %.bc %.ll %.spir64
 
 # The LLVM bitcode
 %.bc: %.cpp
@@ -215,6 +218,12 @@ execute: $(basename $(TARGET))
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -S -o $@ $<
 %.ll: %.cc
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -S -o $@ $<
+
+# How to compile OpenCL kernel to 64-bit SPIR 2.0
+%.spir64: %.cl
+	# Assume here that CXX is actually a kind of clang++
+	$(CL_CXX) -cc1 -emit-llvm-bc -triple spir64-unknown-unknown \
+	  -include $(triSYCL_DIR)/include/CL/sycl/detail/SPIR/opencl_spir.h -o $@ $<
 
 # Process bitcode with SYCL pass to generate kernels
 %.kernel.bc: %.ll
@@ -241,6 +250,10 @@ execute: $(basename $(TARGET))
 
 # Generate LLVM assembly code from bit-code
 %.ll: %.bc
+	llvm-dis -o $@ $<
+
+# Generate LLVM assembly code from SPIR bit-code
+%.spir64.ll: %.spir64
 	llvm-dis -o $@ $<
 
 # A pretty-printed C++ view of the Clang AST
