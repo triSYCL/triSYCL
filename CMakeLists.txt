@@ -49,6 +49,14 @@ project(triSYCL C CXX) # The name of the project (forward declare language )
     find_package(Threads REQUIRED)
   endif(APPLE)
 
+  if(WIN32)
+    if(CMAKE_VERSION MATCHES "MSVC")
+      message(STATUS "Visual Studio IDE integration detected.")
+	  message(STATUS "Disabling CMake's automatic reconfiguration in favor of IDE detection.")
+	  set(CMAKE_SUPPRESS_REGENERATION ON CACHE BOOL "Disables pre-build rule of checking script timestamps")
+	endif(CMAKE_VERSION MATCHES "MSVC")
+  endif(WIN32)
+
 #
 # Set compiler-specific variables
 #

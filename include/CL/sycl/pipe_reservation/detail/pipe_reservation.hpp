@@ -72,6 +72,22 @@ public:
     assert(ok);
   }
 
+  template <access::mode Mode> void ctor_dispatch(std::size_t s) {
+    ok = p.reserve_read(s, rid, blocking);
+  }
+
+  template <> void ctor_dispatch<access::mode::write>(std::size_t s) {
+    ok = p.reserve_write(s, rid, blocking);
+  }
+
+  template <access::mode Mode> void commit_dispatch() {
+    p.move_read_reservation_forward();
+  }
+
+  template <> void commit_dispatch<access::mode::write>() {
+    p.move_write_reservation_forward();
+  }
+
 public:
 
   /// Create a pipe reservation station that reserves the pipe itself
@@ -84,10 +100,7 @@ public:
     /* Since this test is constexpr and dependent of a template
        parameter, it should be equivalent to a specialization of the
        method but in a clearer way */
-    if (mode == access::mode::write)
-      ok = p.reserve_write(s, rid, blocking);
-    else
-      ok = p.reserve_read(s, rid, blocking);
+    ctor_dispatch<mode>(s);
   }
 
 
@@ -172,10 +185,7 @@ public:
       // If the reservation is in a committable state, commit
       TRISYCL_DUMP_T("Commit");
       rid->ready = true;
-      if (mode == access::mode::write)
-        p.move_write_reservation_forward();
-      else
-        p.move_read_reservation_forward();
+      commit_dispatch<mode>();
       ok = false;
     }
   }

@@ -44,9 +44,9 @@ int test_main(int argc, char *argv[]) {
 //  std::cout << "(p == p2) should be printed as 1: " << (p == p2) << std::endl
 //            << std::endl;
 
-  for (const auto &p : platform::get_platforms()) {
-    std::cout << "Platform " << &p << ':' << std::endl;
-    display(p);
+  for (const auto &plat : platform::get_platforms()) {
+    std::cout << "Platform " << &plat << ':' << std::endl;
+    display(plat);
   }
 
   // Verify that get() throws since there is no OpenCL behind the curtain
