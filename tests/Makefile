@@ -7,8 +7,9 @@
 #CXX = clang++-3.9
 # But everything works fine with GCC 5.4 at least
 CXX = g++
-# To use device compiler
-CXX = clang++
+
+# The device compiler to use
+CL_CXX = clang++
 
 # Set OpenCL_INCPATH variable to where CL/cl.h like headers are if
 # required
@@ -19,7 +20,7 @@ CXX = clang++
 # Boost.Compute is if required
 
 # To use OpenMP to execute SYCL kernels:
-#CXXFLAGS += -fopenmp
+CXXFLAGS += -fopenmp
 # On Ubuntu, Clang has some issues to find omp.h, so use:
 #CXXFLAGS += -I/usr/lib/gcc/x86_64-linux-gnu/6/include
 
@@ -27,7 +28,7 @@ CXX = clang++
 #CXXFLAGS += -DTRISYCL_NO_ASYNC
 
 # For asynchronous kernels when OpenMP is not enabled
-LDLIBS += -lpthread
+#LDLIBS += -lpthread
 
 # To use OpenCL, set the TRISYCL_OPENCL flag
 CXXFLAGS += -DTRISYCL_OPENCL
@@ -41,9 +42,9 @@ LDLIBS += -lOpenCL
 # To compile for a device
 CXXFLAGS += -DTRISYCL_DEVICE
 # To enable debug and tracing:
-#CXXFLAGS += -g
+CXXFLAGS += -g
 # With optimization and without assertions
-CXXFLAGS += -O3 -DNDEBUG
+#CXXFLAGS += -O3 -DNDEBUG
 #CXXFLAGS += -g -DTRISYCL_TRACE_KERNEL -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DTRISYCL_TRACE_KERNEL -DTRISYCL_DEBUG_STRUCTORS -DBOOST_LOG_DYN_LINK
@@ -201,19 +202,19 @@ execute: $(basename $(TARGET))
 
 # The LLVM bitcode
 %.bc: %.cpp
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -c -o $@ $<
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -c -o $@ $<
 %.bc: %.C
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -c -o $@ $<
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -c -o $@ $<
 %.bc: %.cc
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -c -o $@ $<
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -c -o $@ $<
 
 # The LLVM assembly code
 %.ll: %.cpp
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -S -o $@ $<
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -S -o $@ $<
 %.ll: %.C
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -S -o $@ $<
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -S -o $@ $<
 %.ll: %.cc
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -S -o $@ $<
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -S -o $@ $<
 
 # Process bitcode with SYCL pass to generate kernels
 %.kernel.bc: %.ll
@@ -244,19 +245,19 @@ execute: $(basename $(TARGET))
 
 # A pretty-printed C++ view of the Clang AST
 %.ast-c++: %.cpp
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-print -c -o $@ $<
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-print -c -o $@ $<
 %.ast-c++: %.C
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-print -c -o $@ $<
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-print -c -o $@ $<
 %.ast-c++: %.cc
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-print -c -o $@ $<
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-print -c -o $@ $<
 
 # The Clang AST
 %.ast: %.cpp
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-dump -fsyntax-only $< > $@
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-dump -fsyntax-only $< > $@
 %.ast: %.C
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-dump -fsyntax-only $< > $@
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-dump -fsyntax-only $< > $@
 %.ast: %.cc
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-dump -fsyntax-only $< > $@
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-dump -fsyntax-only $< > $@
 
 
 # To verify everything is self-contained, run the target in a clone of the
