@@ -259,6 +259,18 @@ execute: $(basename $(TARGET))
 	  -globalopt -deadargelim -SYCL-serialize-arguments \
 	  -o $@ $<
 
+# Construct the object file of the kernel caller from the target assembly
+# Rely on the default Make built-in rules for now
+#%.kernel_caller.o: %.kernel_caller.s
+
+# Generate optimized target machine assembly code from LLVM IR
+%.kernel_caller.s: %.kernel_caller.ll
+	llc -O=3 -o $@ $<
+
+# Link the C++-generated kernel caller to the final program
+%.kernel_caller: %.kernel_caller.o
+	$(CL_CXX) $(LDFLAGS) -o $@ $< $(LOADLIBES) $(LDLIBS)
+
 # Generate LLVM assembly code from bit-code
 %.ll: %.bc
 	llvm-dis -o $@ $<
