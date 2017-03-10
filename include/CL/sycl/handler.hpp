@@ -176,7 +176,13 @@ private:
        makes sense for CPU emulation or FPGA pipelined execution.
     */
     task->schedule(detail::trace_kernel<KernelName>([=] {
-          ::cl::sycl::detail::instantiate_kernel<KernelName>(*task, k);
+          ::cl::sycl::detail::instantiate_kernel<KernelName>(
+#ifdef TRISYCL_GENERATE_KERNEL_CALLER
+      /* If we generate the kernel calling code, pass the task
+         information too */
+                                                             *task,
+#endif
+                                                             k);
         }));
 #else
     task->schedule(detail::trace_kernel<KernelName>(k));

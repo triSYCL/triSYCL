@@ -4,12 +4,12 @@
 
 # Set default compiler instead of default CXX=g++ value
 # Assume Clang 3.9 at least
-#CXX = clang++-3.9
+CXX = clang++-3.9
 # But everything works fine with GCC 5.4 at least
-CXX = g++
+#CXX = g++
 
 # The device compiler to use
-CL_CXX = clang++
+CL_CXX = clang++-3.9
 
 # Set OpenCL_INCPATH variable to where CL/cl.h like headers are if
 # required
@@ -20,7 +20,7 @@ CL_CXX = clang++
 # Boost.Compute is if required
 
 # To use OpenMP to execute SYCL kernels:
-CXXFLAGS += -fopenmp
+#CXXFLAGS += -fopenmp
 # On Ubuntu, Clang has some issues to find omp.h, so use:
 #CXXFLAGS += -I/usr/lib/gcc/x86_64-linux-gnu/6/include
 
@@ -28,7 +28,7 @@ CXXFLAGS += -fopenmp
 #CXXFLAGS += -DTRISYCL_NO_ASYNC
 
 # For asynchronous kernels when OpenMP is not enabled
-#LDLIBS += -lpthread
+LDLIBS += -lpthread
 
 # To use OpenCL, set the TRISYCL_OPENCL flag
 CXXFLAGS += -DTRISYCL_OPENCL
@@ -42,9 +42,9 @@ LDLIBS += -lOpenCL
 # To compile for a device
 CXXFLAGS += -DTRISYCL_DEVICE
 # To enable debug and tracing:
-CXXFLAGS += -g
+#CXXFLAGS += -g
 # With optimization and without assertions
-#CXXFLAGS += -O3 -DNDEBUG
+CXXFLAGS += -O3 -DNDEBUG
 #CXXFLAGS += -g -DTRISYCL_TRACE_KERNEL -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DTRISYCL_TRACE_KERNEL -DTRISYCL_DEBUG_STRUCTORS -DBOOST_LOG_DYN_LINK
@@ -201,7 +201,7 @@ execute: $(basename $(TARGET))
 # To debug the Clang/LLVM triSYCL compiler
 # Assume that CXX contains some Clang compiler version
 
-.PRECIOUS: %.bc %.ll %.spir64
+.PRECIOUS: %.bc %.ll %.spir64 %.pre_kernel_caller.ll
 
 # The LLVM bitcode
 %.bc: %.cpp
@@ -218,6 +218,17 @@ execute: $(basename $(TARGET))
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -S -o $@ $<
 %.ll: %.cc
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -S -o $@ $<
+
+# The LLVM assembly code for the code expected to call the kernels
+%.pre_kernel_caller.ll: %.cpp
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_GENERATE_KERNEL_CALLER \
+	  -emit-llvm -S -o $@ $<
+%.pre_kernel_caller.ll: %.C
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_GENERATE_KERNEL_CALLER \
+	  -emit-llvm -S -o $@ $<
+%.pre_kernel_caller.ll: %.cc
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_GENERATE_KERNEL_CALLER \
+	  -emit-llvm -S -o $@ $<
 
 # How to compile OpenCL kernel to 64-bit SPIR 2.0
 %.spir64: %.cl
@@ -243,7 +254,7 @@ execute: $(basename $(TARGET))
 	#  -SYCL-annotation -SYCL-kernel-filter -o $@ $<
 
 # Process bitcode with SYCL pass to generate kernels
-%.kernel_caller.bc: %.ll
+%.kernel_caller.bc: %.pre_kernel_caller.ll
 	opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats \
 	  -globalopt -deadargelim -SYCL-serialize-arguments \
 	  -o $@ $<
