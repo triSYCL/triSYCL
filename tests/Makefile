@@ -42,9 +42,9 @@ LDLIBS += -lOpenCL
 # To compile for a device
 CXXFLAGS += -DTRISYCL_DEVICE
 # To enable debug and tracing:
-#CXXFLAGS += -g
+CXXFLAGS += -g
 # With optimization and without assertions
-CXXFLAGS += -O3 -DNDEBUG
+#CXXFLAGS += -O3 -DNDEBUG
 #CXXFLAGS += -g -DTRISYCL_TRACE_KERNEL -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DTRISYCL_TRACE_KERNEL -DTRISYCL_DEBUG_STRUCTORS -DBOOST_LOG_DYN_LINK
@@ -272,8 +272,8 @@ execute: $(basename $(TARGET))
 	llc -O=3 -o $@ $<
 
 # Link the C++-generated kernel caller to the final program
-%.kernel_caller: %.kernel_caller.o
-	$(CL_CXX) $(LDFLAGS) -o $@ $< $(LOADLIBES) $(LDLIBS)
+%.kernel_caller: %.kernel_caller.ll
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@ $< $(LOADLIBES) $(LDLIBS)
 
 # Generate LLVM assembly code from bit-code
 %.ll: %.bc
