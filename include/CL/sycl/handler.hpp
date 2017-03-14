@@ -165,28 +165,28 @@ private:
   template <typename KernelName,
             typename Kernel>
   void schedule_kernel(Kernel k) {
-#ifdef TRISYCL_DEVICE
-    /* A simplified version for the device just to be able to extract
-       the kernel itself.
+    task->schedule(detail::trace_kernel<KernelName>([=, t = task] () mutable {
+          if (t->owner_queue->is_host())
+            k();
+          else
+            /* A simplified version for the device just to be able to
+               extract the kernel itself.
 
-       It is not a real outlining but a good approximation to be
-       massaged by a compiler later.
+               It is not a real outlining but a good approximation to
+               be massaged by a compiler later.
 
-       Put the iteration space loops in the kernels for now, which
-       makes sense for CPU emulation or FPGA pipelined execution.
-    */
-    task->schedule(detail::trace_kernel<KernelName>([=] {
-          ::cl::sycl::detail::instantiate_kernel<KernelName>(
+               Put the iteration space loops in the kernels for now,
+               which makes sense for CPU emulation or FPGA pipelined
+               execution.
+            */
+            ::cl::sycl::detail::instantiate_kernel<KernelName>(
 #ifdef TRISYCL_GENERATE_KERNEL_CALLER
-      /* If we generate the kernel calling code, pass the task
-         information too */
-                                                             *task,
+              /* If we generate the kernel calling code, pass the task
+                 information too */
+                                                               *t,
 #endif
-                                                             k);
+                                                               k);
         }));
-#else
-    task->schedule(detail::trace_kernel<KernelName>(k));
-#endif
   }
 
 public:

@@ -68,6 +68,8 @@ public:
 
 /** Set an argument value of the kernel
 
+    \param[in] task is the implementation detail of a triSYCL kernel
+
     \param[in] index is the order of the argument to set (0 is the first one)
 
     \param[in] arg point to the argument value
@@ -79,7 +81,8 @@ serialize_arg(detail::task &task,
               std::size_t index,
               void *arg,
               std::size_t arg_size) {
-  task.get_kernel().get_boost_compute().set_arg(index, arg_size, arg);
+  std::cerr << "serialize_arg" << std::endl;
+  //task.get_kernel().get_boost_compute().set_arg(index, arg_size, arg);
 }
 
 /// @} to end the Doxygen group

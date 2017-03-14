@@ -24,8 +24,10 @@ int test_main(int argc, char *argv[]) {
     std::iota(a_input.begin(), a_input.end(), 0);
   }
 
-  // Create a queue to launch the kernel
-  queue q;
+  /// \todo implement queue construction from device_selector
+  // Create an OpenCL queue to launch the kernel
+  auto oq = boost::compute::system::default_queue();
+  queue q { oq };
 
   // Launch a kernel to do the summation
   q.submit([&] (handler &cgh) {
