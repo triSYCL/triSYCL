@@ -13,6 +13,10 @@
     License. See LICENSE.TXT for details.
 */
 
+#ifdef TRISYCL_OPENCL
+#include <boost/compute.hpp>
+#endif
+
 namespace cl {
 namespace sycl {
 
@@ -44,14 +48,20 @@ public:
   device_type_selector(info::device_type device_type)
     : device_type { device_type } {
     // The default device selection heuristic
+#ifdef TRISYCL_OPENCL
     if (device_type == info::device_type::defaults) {
-      auto devices = device::get_devices(info::device_type::opencl);
-      /* If there is an OpenCL device, pick the first one as the
-         default device, other wise it is the host device */
-      if (!devices.empty())
-        default_device = devices[0];
+      // Ask Boost.Compute for the default OpenCL device
+      try {
+        default_device = boost::compute::system::default_device();
+      }
+      catch (...) {
+        /* If there is no OpenCL device, just keep the
+           default-constructed device, which is the host device */
+      }
     }
-}
+#endif
+  }
+
 
   // To select only the requested device_type
   int operator()(const device &dev) const override {
@@ -90,6 +100,17 @@ public:
 /** Devices selected by heuristics of the system
 
     If no OpenCL device is found then it defaults to the SYCL host device.
+
+    To influence the default device selection, use the Boost.Compute
+    environment variables:
+
+    - \c BOOST_COMPUTE_DEFAULT_DEVICE
+
+    - \c BOOST_COMPUTE_DEFAULT_DEVICE_TYPE
+
+    - \c BOOST_COMPUTE_DEFAULT_PLATFORM
+
+    - \c BOOST_COMPUTE_DEFAULT_VENDOR
 */
 using default_selector = device_typename_selector<info::device_type::defaults>;
 
