@@ -175,6 +175,11 @@ execute: $(basename $(TARGET))
 	# Execute the compiled binary
 	$<
 
+# Feed the test into Clang-based RTags indexer to be used inside Emacs IDE
+# with make some_cpp_file.rtags
+%.rtags: %.cpp
+	$(MAKE) --just-print --assume-new=$< $* | rc -c -
+
 # To verify everything is self-contained, run the target in a clone of the
 # current branch of the current repository.
 #
