@@ -85,6 +85,21 @@ serialize_arg(detail::task &task,
   //task.get_kernel().get_boost_compute().set_arg(index, arg_size, arg);
 }
 
+
+/** Launch the kernel
+
+    \param[in] task is the implementation detail of a triSYCL kernel
+
+    \param[in] kernel_name is set by the device compiler to identify
+    the kernel to call
+*/
+TRISYCL_WEAK_ATTRIB_PREFIX void TRISYCL_WEAK_ATTRIB_SUFFIX
+launch_kernel(detail::task &task,
+              const char *kernel_name) {
+  std::cerr << kernel_name << std::endl;
+  //task.launch_kernel(kernel_name);
+}
+
 /// @} to end the Doxygen group
 
 }
