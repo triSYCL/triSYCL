@@ -1,6 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; detail::kernel \&gt;" alt="" coords="5,5,152,47"/>
-<area shape="rect" id="node2" href="$group__execution.html#classcl_1_1sycl_1_1detail_1_1kernel" title="Abstract SYCL kernel. " alt="" coords="200,13,347,39"/>
-<area shape="rect" id="node3" href="$classcl_1_1sycl_1_1detail_1_1opencl__kernel.html" title="An abstraction of the OpenCL kernel. " alt="" coords="395,35,544,76"/>
-<area shape="rect" id="node4" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; opencl_kernel \&gt;" alt="" coords="200,64,347,105"/>
+<area shape="rect" id="node1" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; detail::pipe_accessor\l\&lt; DataType, AccessMode,\l Target \&gt; \&gt;" alt="" coords="5,38,184,109"/>
+<area shape="rect" id="node2" href="$group__data.html" title="cl::sycl::detail::pipe\l_accessor\&lt; DataType, AccessMode,\l access::target::blocking_pipe \&gt;" alt="" coords="232,5,471,61"/>
+<area shape="rect" id="node4" href="$group__data.html" title="cl::sycl::detail::pipe\l_accessor\&lt; DataType, AccessMode,\l access::target::pipe \&gt;" alt="" coords="232,85,471,141"/>
+<area shape="rect" id="node3" href="$group__data.html#classcl_1_1sycl_1_1accessor_3_01DataType_00_011_00_01AccessMode_00_01access_1_1target_1_1blocking__pipe_01_4" title="The pipe accessor abstracts the way pipe data are accessed inside a kernel. " alt="" coords="519,5,727,61"/>
+<area shape="rect" id="node5" href="$group__data.html#classcl_1_1sycl_1_1accessor_3_01DataType_00_011_00_01AccessMode_00_01access_1_1target_1_1pipe_01_4" title="The pipe accessor abstracts the way pipe data are accessed inside a kernel. " alt="" coords="525,85,720,141"/>
 </map>

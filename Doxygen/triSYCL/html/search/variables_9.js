@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['implementation',['implementation',['../structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html#a5da30706edae995aa3f51436de112c54',1,'cl::sycl::detail::shared_ptr_implementation::implementation()'],['../group__data.html#aa8c9a3b1fe77fbdba0d859857642ab56',1,'cl::sycl::detail::pipe_accessor::implementation()'],['../group__data.html#a6328f4fcdd020e2bb391ea255fd1381b',1,'cl::sycl::pipe_reservation::implementation()']]]
+  ['k',['k',['../classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c',1,'cl::sycl::detail::opencl_kernel']]],
+  ['kernel',['kernel',['../structcl_1_1sycl_1_1detail_1_1task.html#a2176c268a6335e8921a3d08310ef6b1f',1,'cl::sycl::detail::task']]]
 ];

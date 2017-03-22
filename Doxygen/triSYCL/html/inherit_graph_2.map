@@ -1,8 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1address__space__base" title="Implementation of the base infrastructure to wrap something in an OpenCL address space. " alt="" coords="5,67,163,108"/>
-<area shape="rect" id="node2" href="$group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1address__space__object" title="Implementation of an object type with an OpenCL address space. " alt="" coords="216,5,380,47"/>
-<area shape="rect" id="node3" href="$group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1address__space__variable" title="Implementation of a variable with an OpenCL address space. " alt="" coords="211,71,385,112"/>
-<area shape="rect" id="node4" href="$group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1address__space__array" title="Implementation of an array variable with an OpenCL address space. " alt="" coords="454,37,613,79"/>
-<area shape="rect" id="node5" href="$group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1address__space__fundamental" title="Implementation of a fundamental type with an OpenCL address space. " alt="" coords="433,103,633,144"/>
-<area shape="rect" id="node6" href="$group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1address__space__ptr" title="Implementation for an OpenCL address space pointer. " alt="" coords="681,103,839,144"/>
+<area shape="rect" id="node1" href="$group__execution.html#classcl_1_1sycl_1_1context" title="SYCL context. " alt="" coords="5,5,120,32"/>
 </map>

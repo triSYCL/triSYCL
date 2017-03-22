@@ -105,17 +105,17 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a667030585ebd83f62bbc19bd2954a1dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;typename T, std::size_t Dimensions, typename Allocator&gt;<br />
+<div class="textblock"><h3>template&lt;typename T, int Dimensions, typename Allocator&gt;<br />
 struct std::hash&lt; cl::sycl::buffer&lt; T, Dimensions, Allocator &gt; &gt;</h3>
 
 
-<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00508">508</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00554">554</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a class="anchor" id="a667030585ebd83f62bbc19bd2954a1dc"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T , std::size_t Dimensions, typename Allocator &gt; </div>
+template&lt;typename T , int Dimensions, typename Allocator &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -135,10 +135,10 @@ template&lt;typename T , std::size_t Dimensions, typename Allocator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00510">510</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00556">556</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
 
-<p>References <a class="el" href="shared__ptr__implementation_8hpp_source.html#l00085">cl::sycl::detail::shared_ptr_implementation&lt; buffer&lt; T, Dimensions, Allocator &gt;, detail::buffer_waiter&lt; T, Dimensions, Allocator &gt; &gt;::hash()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;                                                                         {</div><div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;    <span class="comment">// Forward the hashing to the implementation</span></div><div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160;    <span class="keywordflow">return</span> b.<a class="code" href="structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html#a37d54fda7a26b050675625e095291620">hash</a>();</div><div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;  }</div><div class="ttc" id="structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation_html_a37d54fda7a26b050675625e095291620"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html#a37d54fda7a26b050675625e095291620">cl::sycl::detail::shared_ptr_implementation&lt; buffer&lt; T, Dimensions, Allocator &gt;, detail::buffer_waiter&lt; T, Dimensions, Allocator &gt; &gt;::hash</a></div><div class="ttdeci">auto hash() const</div><div class="ttdoc">Forward the hashing for unordered containers to the implementation. </div><div class="ttdef"><b>Definition:</b> <a href="shared__ptr__implementation_8hpp_source.html#l00085">shared_ptr_implementation.hpp:85</a></div></div>
+<p>References <a class="el" href="shared__ptr__implementation_8hpp_source.html#l00083">cl::sycl::detail::shared_ptr_implementation&lt; buffer&lt; T, Dimensions, Allocator &gt;, detail::buffer_waiter&lt; T, Dimensions, Allocator &gt; &gt;::hash()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00556"></a><span class="lineno">  556</span>&#160;                                                                         {</div><div class="line"><a name="l00557"></a><span class="lineno">  557</span>&#160;    <span class="comment">// Forward the hashing to the implementation</span></div><div class="line"><a name="l00558"></a><span class="lineno">  558</span>&#160;    <span class="keywordflow">return</span> b.<a class="code" href="structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html#a37d54fda7a26b050675625e095291620">hash</a>();</div><div class="line"><a name="l00559"></a><span class="lineno">  559</span>&#160;  }</div><div class="ttc" id="structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation_html_a37d54fda7a26b050675625e095291620"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html#a37d54fda7a26b050675625e095291620">cl::sycl::detail::shared_ptr_implementation&lt; buffer&lt; T, Dimensions, Allocator &gt;, detail::buffer_waiter&lt; T, Dimensions, Allocator &gt; &gt;::hash</a></div><div class="ttdeci">auto hash() const</div><div class="ttdoc">Forward the hashing for unordered containers to the implementation. </div><div class="ttdef"><b>Definition:</b> <a href="shared__ptr__implementation_8hpp_source.html#l00083">shared_ptr_implementation.hpp:83</a></div></div>
 </div><!-- fragment -->
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -158,7 +158,7 @@ Here is the call graph for this function:</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 26 2016 12:28:40 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 22 2017 16:15:51 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

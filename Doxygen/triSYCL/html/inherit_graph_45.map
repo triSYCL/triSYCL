@@ -1,3 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$group__parallelism.html#structcl_1_1sycl_1_1nd__item" title="A SYCL nd_item stores information on a work&#45;item within a work&#45;group, with some more context such as ..." alt="" coords="5,5,132,47"/>
+<area shape="rect" id="node1" href="$group__data.html#structcl_1_1sycl_1_1image" title="cl::sycl::image\&lt; Dimensions \&gt;" alt="" coords="5,5,205,32"/>
 </map>

@@ -259,7 +259,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="opencl__queue_8hpp_source.html#l00082">82</a> of file <a class="el" href="opencl__queue_8hpp_source.html">opencl_queue.hpp</a>.</p>
 
-<p>References <a class="el" href="group__execution.html#ga8cd30e440dbf7eaa63a748bf2caa08cb">cl::sycl::detail::__attribute__</a>, <a class="el" href="opencl__queue_8hpp_source.html#l00033">cache</a>, and <a class="el" href="cache_8hpp_source.html#l00083">cl::sycl::detail::cache&lt; Key, Value &gt;::remove()</a>.</p>
+<p>References <a class="el" href="opencl__queue_8hpp_source.html#l00033">cache</a>, <a class="el" href="cache_8hpp_source.html#l00083">cl::sycl::detail::cache&lt; Key, Value &gt;::remove()</a>, <a class="el" href="global__config_8hpp_source.html#l00065">TRISYCL_WEAK_ATTRIB_PREFIX</a>, and <a class="el" href="opencl__device_8hpp_source.html#l00140">cl::sycl::detail::TRISYCL_WEAK_ATTRIB_SUFFIX</a>.</p>
 <div class="fragment"><div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;                           {</div><div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__queue.html#ab4e28c257c0f5e850caf4079702a67ed">cache</a>.remove(<a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__queue.html#a8b66ae85656ef03eaf361b46e62ea2c1">q</a>.get());</div><div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  }</div><div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__queue_html_ab4e28c257c0f5e850caf4079702a67ed"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__queue.html#ab4e28c257c0f5e850caf4079702a67ed">cl::sycl::detail::opencl_queue::cache</a></div><div class="ttdeci">static detail::cache&lt; cl_command_queue, detail::opencl_queue &gt; cache</div><div class="ttdoc">A cache to always return the same alive queue for a given OpenCL command queue. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__queue_8hpp_source.html#l00033">opencl_queue.hpp:33</a></div></div>
 <div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__queue_html_a8b66ae85656ef03eaf361b46e62ea2c1"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__queue.html#a8b66ae85656ef03eaf361b46e62ea2c1">cl::sycl::detail::opencl_queue::q</a></div><div class="ttdeci">boost::compute::command_queue q</div><div class="ttdoc">Use the Boost Compute abstraction of the OpenCL command queue. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__queue_8hpp_source.html#l00026">opencl_queue.hpp:26</a></div></div>
 </div><!-- fragment -->
@@ -360,7 +360,7 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Return the SYCL context associated to the queue. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000192">Todo:</a></b></dt><dd>Finish context </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000221">Todo:</a></b></dt><dd>Finish context </dd></dl>
 
 <p>Implements <a class="el" href="structcl_1_1sycl_1_1detail_1_1queue.html#af1cd015538fb40d6e960c2fa7071f9fc">cl::sycl::detail::queue</a>.</p>
 
@@ -424,7 +424,7 @@ Here is the call graph for this function:</div>
 
 <p>References <a class="el" href="cache_8hpp_source.html#l00062">cl::sycl::detail::cache&lt; Key, Value &gt;::get_or_register()</a>.</p>
 
-<p>Referenced by <a class="el" href="queue_8hpp_source.html#l00221">cl::sycl::queue::queue()</a>.</p>
+<p>Referenced by <a class="el" href="queue_8hpp_source.html#l00227">cl::sycl::queue::queue()</a>.</p>
 <div class="fragment"><div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                                               {</div><div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__queue.html#ab4e28c257c0f5e850caf4079702a67ed">cache</a>.get_or_register(<a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__queue.html#a8b66ae85656ef03eaf361b46e62ea2c1">q</a>.get(),</div><div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;                                 [&amp;] { <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__queue.html#ad1301d278bd2d46dc0746f2a07f0b925">opencl_queue</a> { <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__queue.html#a8b66ae85656ef03eaf361b46e62ea2c1">q</a> }; });</div><div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  }</div><div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__queue_html_ab4e28c257c0f5e850caf4079702a67ed"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__queue.html#ab4e28c257c0f5e850caf4079702a67ed">cl::sycl::detail::opencl_queue::cache</a></div><div class="ttdeci">static detail::cache&lt; cl_command_queue, detail::opencl_queue &gt; cache</div><div class="ttdoc">A cache to always return the same alive queue for a given OpenCL command queue. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__queue_8hpp_source.html#l00033">opencl_queue.hpp:33</a></div></div>
 <div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__queue_html_a8b66ae85656ef03eaf361b46e62ea2c1"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__queue.html#a8b66ae85656ef03eaf361b46e62ea2c1">cl::sycl::detail::opencl_queue::q</a></div><div class="ttdeci">boost::compute::command_queue q</div><div class="ttdoc">Use the Boost Compute abstraction of the OpenCL command queue. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__queue_8hpp_source.html#l00026">opencl_queue.hpp:26</a></div></div>
 <div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__queue_html_ad1301d278bd2d46dc0746f2a07f0b925"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__queue.html#ad1301d278bd2d46dc0746f2a07f0b925">cl::sycl::detail::opencl_queue::opencl_queue</a></div><div class="ttdeci">opencl_queue(const boost::compute::command_queue &amp;q)</div><div class="ttdoc">Only the instance factory can built it. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__queue_8hpp_source.html#l00069">opencl_queue.hpp:69</a></div></div>
@@ -540,7 +540,7 @@ Here is the caller graph for this function:</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 26 2016 12:28:40 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 22 2017 16:15:51 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

@@ -1,7 +1,7 @@
 var searchData=
 [
   ['helpers_20to_20do_20array_20and_20tuple_20conversion',['Helpers to do array and tuple conversion',['../group__array__tuple__helpers.html',1,'']]],
-  ['handler',['handler',['../group__data.html#aa489d14286e6712c3fda6be1543975d9',1,'cl::sycl::detail::accessor::handler()'],['../group__execution.html#a72db39b889f34257a4c691d6acd383ab',1,'cl::sycl::kernel::handler()'],['../group__execution.html#a7f32a429873f540e8ff32c37872fa2e2',1,'cl::sycl::handler::handler()']]],
+  ['handler',['handler',['../group__data.html#a5c040ac8604fcbccd12a03ac15a9683d',1,'cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;::handler()'],['../group__data.html#aa489d14286e6712c3fda6be1543975d9',1,'cl::sycl::detail::accessor::handler()'],['../group__execution.html#a72db39b889f34257a4c691d6acd383ab',1,'cl::sycl::kernel::handler()'],['../group__execution.html#a7f32a429873f540e8ff32c37872fa2e2',1,'cl::sycl::handler::handler()']]],
   ['handler',['handler',['../group__execution.html#classcl_1_1sycl_1_1handler',1,'cl::sycl']]],
   ['handler_2ehpp',['handler.hpp',['../handler_8hpp.html',1,'']]],
   ['handler_5fevent',['handler_event',['../classhandler__event.html',1,'']]],
@@ -23,6 +23,5 @@ var searchData=
   ['host_5fqueue',['host_queue',['../classcl_1_1sycl_1_1detail_1_1host__queue.html',1,'cl::sycl::detail']]],
   ['host_5fqueue_2ehpp',['host_queue.hpp',['../host__queue_8hpp.html',1,'']]],
   ['host_5fselector',['host_selector',['../group__execution.html#gae4bda49129ccbcd73e4dbf372d37ea10',1,'cl::sycl']]],
-  ['host_5funified_5fmemory',['host_unified_memory',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a0fbdc8bcd6c762ac073157f9e77b2437',1,'cl::sycl::info']]],
-  ['host_5fwrite_5fback',['host_write_back',['../group__data.html#a7e70ec1f37655340fad83b0f196e8019',1,'cl::sycl::detail::buffer']]]
+  ['host_5funified_5fmemory',['host_unified_memory',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a0fbdc8bcd6c762ac073157f9e77b2437',1,'cl::sycl::info']]]
 ];

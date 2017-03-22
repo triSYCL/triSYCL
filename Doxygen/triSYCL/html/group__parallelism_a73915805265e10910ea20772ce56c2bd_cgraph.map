@@ -1,6 +1,0 @@
-<map id="cl::sycl::nd_item::get_local_linear_id" name="cl::sycl::nd_item::get_local_linear_id">
-<area shape="rect" id="node2" href="$group__parallelism.html#abc2214a0cbfb0ccbf1e548f972876dbe" title="Return the constituent local id representing the work&#45;item&#39;s position within the current work&#45;group..." alt="" coords="199,5,325,47"/>
-<area shape="rect" id="node3" href="$group__parallelism.html#a059085e2f836ace9bf81c3c0deea1160" title="Return a range&lt;&gt; representing the dimensions of the current work&#45;group. " alt="" coords="199,71,325,112"/>
-<area shape="rect" id="node5" href="$group__helpers.html#ga8ccbed3e03e1b92e0a4f01b691c093cf" title="Compute a linearized array access used in the OpenCL 2 world. " alt="" coords="183,137,341,163"/>
-<area shape="rect" id="node4" href="$group__parallelism.html#a8af188fe187ca9307cb498f13bf36796" title="Return the nd_range&lt;&gt; of the current execution. " alt="" coords="389,71,516,112"/>
-</map>

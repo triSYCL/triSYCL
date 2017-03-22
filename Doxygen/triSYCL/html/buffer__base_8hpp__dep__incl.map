@@ -1,13 +1,14 @@
 <map id="include/CL/sycl/buffer/detail/buffer_base.hpp" name="include/CL/sycl/buffer/detail/buffer_base.hpp">
-<area shape="rect" id="node2" href="$buffer_2detail_2buffer_8hpp.html" title="include/CL/sycl/buffer\l/detail/buffer.hpp" alt="" coords="181,273,330,315"/>
-<area shape="rect" id="node6" href="$task_8hpp.html" title="include/CL/sycl/command\l_group/detail/task.hpp" alt="" coords="306,95,479,136"/>
-<area shape="rect" id="node3" href="$buffer__waiter_8hpp.html" title="include/CL/sycl/buffer\l/detail/buffer_waiter.hpp" alt="" coords="5,363,167,404"/>
-<area shape="rect" id="node4" href="$buffer_8hpp.html" title="include/CL/sycl/buffer.hpp" alt="" coords="193,541,368,568"/>
-<area shape="rect" id="node5" href="$sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="528,616,665,643"/>
-<area shape="rect" id="node7" href="$buffer_2detail_2accessor_8hpp.html" title="include/CL/sycl/buffer\l/detail/accessor.hpp" alt="" coords="318,184,467,225"/>
-<area shape="rect" id="node9" href="$handler_8hpp.html" title="include/CL/sycl/handler.hpp" alt="" coords="448,370,631,397"/>
-<area shape="rect" id="node8" href="$accessor_8hpp.html" title="include/CL/sycl/accessor.hpp" alt="" coords="569,281,763,307"/>
-<area shape="rect" id="node10" href="$pipe_8hpp.html" title="include/CL/sycl/pipe.hpp" alt="" coords="767,459,933,486"/>
-<area shape="rect" id="node12" href="$static__pipe_8hpp.html" title="include/CL/sycl/static\l_pipe.hpp" alt="" coords="595,452,743,493"/>
-<area shape="rect" id="node11" href="$queue_8hpp.html" title="include/CL/sycl/queue.hpp" alt="" coords="343,459,519,486"/>
+<area shape="rect" id="node2" href="$buffer_2detail_2buffer_8hpp.html" title="include/CL/sycl/buffer\l/detail/buffer.hpp" alt="" coords="30,273,179,315"/>
+<area shape="rect" id="node6" href="$task_8hpp.html" title="include/CL/sycl/command\l_group/detail/task.hpp" alt="" coords="229,95,402,136"/>
+<area shape="rect" id="node3" href="$buffer__waiter_8hpp.html" title="include/CL/sycl/buffer\l/detail/buffer_waiter.hpp" alt="" coords="24,363,185,404"/>
+<area shape="rect" id="node4" href="$buffer_8hpp.html" title="include/CL/sycl/buffer.hpp" alt="" coords="92,541,267,568"/>
+<area shape="rect" id="node5" href="$sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="443,616,580,643"/>
+<area shape="rect" id="node7" href="$local__accessor_8hpp.html" title="include/CL/sycl/accessor\l/detail/local_accessor.hpp" alt="" coords="315,184,489,225"/>
+<area shape="rect" id="node9" href="$handler_8hpp.html" title="include/CL/sycl/handler.hpp" alt="" coords="440,370,623,397"/>
+<area shape="rect" id="node13" href="$buffer_2detail_2accessor_8hpp.html" title="include/CL/sycl/buffer\l/detail/accessor.hpp" alt="" coords="142,184,291,225"/>
+<area shape="rect" id="node8" href="$accessor_8hpp.html" title="include/CL/sycl/accessor.hpp" alt="" coords="299,281,494,307"/>
+<area shape="rect" id="node10" href="$pipe_8hpp.html" title="include/CL/sycl/pipe.hpp" alt="" coords="593,459,758,486"/>
+<area shape="rect" id="node12" href="$static__pipe_8hpp.html" title="include/CL/sycl/static\l_pipe.hpp" alt="" coords="783,452,931,493"/>
+<area shape="rect" id="node11" href="$queue_8hpp.html" title="include/CL/sycl/queue.hpp" alt="" coords="342,459,518,486"/>
 </map>

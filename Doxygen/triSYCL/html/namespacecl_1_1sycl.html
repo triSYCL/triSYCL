@@ -92,7 +92,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">cl::sycl Namespace Reference<div class="ingroups"><a class="el" href="group__address__spaces.html">Dealing with OpenCL address spaces</a> &#124; <a class="el" href="group__parallelism.html">Expressing parallelism through kernels</a></div></div>  </div>
 </div><!--header-->
@@ -133,6 +134,9 @@ Classes</h2></td></tr>
 <tr class="memitem:classcl_1_1sycl_1_1cl__exception"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__error__handling.html#classcl_1_1sycl_1_1cl__exception">cl_exception</a></td></tr>
 <tr class="memdesc:classcl_1_1sycl_1_1cl__exception"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the OpenCL error code encapsulated in the exception.  <a href="group__error__handling.html#classcl_1_1sycl_1_1cl__exception">More...</a><br /></td></tr>
 <tr class="separator:classcl_1_1sycl_1_1cl__exception"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcl_1_1sycl_1_1cl__float3.html">cl_float3</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wrapper of Boost::compute's <a class="el" href="classcl_1_1sycl_1_1cl__float3.html" title="Wrapper of Boost::compute&#39;s cl_float3. ">cl_float3</a>.  <a href="classcl_1_1sycl_1_1cl__float3.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:classcl_1_1sycl_1_1compile__program__error"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__error__handling.html#classcl_1_1sycl_1_1compile__program__error">compile_program_error</a></td></tr>
 <tr class="memdesc:classcl_1_1sycl_1_1compile__program__error"><td class="mdescLeft">&#160;</td><td class="mdescRight">Error while compiling the SYCL kernel to a SYCL device.  <a href="group__error__handling.html#classcl_1_1sycl_1_1compile__program__error">More...</a><br /></td></tr>
 <tr class="separator:classcl_1_1sycl_1_1compile__program__error"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -254,6 +258,10 @@ Typedefs</h2></td></tr>
 <tr class="memitem:ga8d4ad590125ccc3fb732809cac191d4f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga8d4ad590125ccc3fb732809cac191d4f">constant</a> = <a class="el" href="group__address__spaces.html#ga90cdf1e6090ab9bb11a53b55ee19452d">detail::addr_space</a>&lt; T, <a class="el" href="group__address__spaces.html#gga03ea3501c0e52ba48d2cdf36ff00f0a7a541bdaa4314885d18557e8c622222659">constant_address_space</a> &gt;</td></tr>
 <tr class="memdesc:ga8d4ad590125ccc3fb732809cac191d4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL constant address space.  <a href="group__address__spaces.html#ga8d4ad590125ccc3fb732809cac191d4f">More...</a><br /></td></tr>
 <tr class="separator:ga8d4ad590125ccc3fb732809cac191d4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga171a0e0131c2cb6703a218f5504e2310"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga171a0e0131c2cb6703a218f5504e2310"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga171a0e0131c2cb6703a218f5504e2310">constant_ptr</a> = <a class="el" href="group__address__spaces.html#ga8d4ad590125ccc3fb732809cac191d4f">constant</a>&lt; T * &gt;</td></tr>
+<tr class="memdesc:ga171a0e0131c2cb6703a218f5504e2310"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL constant address space.  <a href="group__address__spaces.html#ga171a0e0131c2cb6703a218f5504e2310">More...</a><br /></td></tr>
+<tr class="separator:ga171a0e0131c2cb6703a218f5504e2310"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga06b918e29b91e69ff65607992f6e395b"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga06b918e29b91e69ff65607992f6e395b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga06b918e29b91e69ff65607992f6e395b">generic</a> = <a class="el" href="group__address__spaces.html#ga90cdf1e6090ab9bb11a53b55ee19452d">detail::addr_space</a>&lt; T, <a class="el" href="group__address__spaces.html#gga03ea3501c0e52ba48d2cdf36ff00f0a7a6552359007d72e6bc8c7b4371205be85">generic_address_space</a> &gt;</td></tr>
 <tr class="memdesc:ga06b918e29b91e69ff65607992f6e395b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL 2 generic address space.  <a href="group__address__spaces.html#ga06b918e29b91e69ff65607992f6e395b">More...</a><br /></td></tr>
@@ -262,22 +270,42 @@ Typedefs</h2></td></tr>
 <tr class="memitem:ga3882a38ef2f8afbca5e6e0e48637d1f6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga3882a38ef2f8afbca5e6e0e48637d1f6">global</a> = <a class="el" href="group__address__spaces.html#ga90cdf1e6090ab9bb11a53b55ee19452d">detail::addr_space</a>&lt; T, <a class="el" href="group__address__spaces.html#gga03ea3501c0e52ba48d2cdf36ff00f0a7a3cfdd7e85b6c75ca1e4d39409e1fee0d">global_address_space</a> &gt;</td></tr>
 <tr class="memdesc:ga3882a38ef2f8afbca5e6e0e48637d1f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL global address space.  <a href="group__address__spaces.html#ga3882a38ef2f8afbca5e6e0e48637d1f6">More...</a><br /></td></tr>
 <tr class="separator:ga3882a38ef2f8afbca5e6e0e48637d1f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7f2b1f5f8d938b1abc395e55554ba16a"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga7f2b1f5f8d938b1abc395e55554ba16a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga7f2b1f5f8d938b1abc395e55554ba16a">global_ptr</a> = <a class="el" href="group__address__spaces.html#ga3882a38ef2f8afbca5e6e0e48637d1f6">global</a>&lt; T * &gt;</td></tr>
+<tr class="memdesc:ga7f2b1f5f8d938b1abc395e55554ba16a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL global address space.  <a href="group__address__spaces.html#ga7f2b1f5f8d938b1abc395e55554ba16a">More...</a><br /></td></tr>
+<tr class="separator:ga7f2b1f5f8d938b1abc395e55554ba16a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga84b28327ccb8c32ea971d6c1d5f3bca2"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga84b28327ccb8c32ea971d6c1d5f3bca2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga84b28327ccb8c32ea971d6c1d5f3bca2">local</a> = <a class="el" href="group__address__spaces.html#ga90cdf1e6090ab9bb11a53b55ee19452d">detail::addr_space</a>&lt; T, <a class="el" href="group__address__spaces.html#gga03ea3501c0e52ba48d2cdf36ff00f0a7aefbe66b6f240d78e68c0b7297f3d98c6">local_address_space</a> &gt;</td></tr>
 <tr class="memdesc:ga84b28327ccb8c32ea971d6c1d5f3bca2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL local address space.  <a href="group__address__spaces.html#ga84b28327ccb8c32ea971d6c1d5f3bca2">More...</a><br /></td></tr>
 <tr class="separator:ga84b28327ccb8c32ea971d6c1d5f3bca2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5c0e2468bb7dc8ac85e64f7ce1586ef2"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga5c0e2468bb7dc8ac85e64f7ce1586ef2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga5c0e2468bb7dc8ac85e64f7ce1586ef2">local_ptr</a> = <a class="el" href="group__address__spaces.html#ga84b28327ccb8c32ea971d6c1d5f3bca2">local</a>&lt; T * &gt;</td></tr>
+<tr class="memdesc:ga5c0e2468bb7dc8ac85e64f7ce1586ef2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL local address space.  <a href="group__address__spaces.html#ga5c0e2468bb7dc8ac85e64f7ce1586ef2">More...</a><br /></td></tr>
+<tr class="separator:ga5c0e2468bb7dc8ac85e64f7ce1586ef2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga02e3e5911ac85f86a3efd2353b6f13bd"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga02e3e5911ac85f86a3efd2353b6f13bd"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga02e3e5911ac85f86a3efd2353b6f13bd">priv</a> = <a class="el" href="group__address__spaces.html#ga90cdf1e6090ab9bb11a53b55ee19452d">detail::addr_space</a>&lt; T, <a class="el" href="group__address__spaces.html#gga03ea3501c0e52ba48d2cdf36ff00f0a7a609235bf7830cbb437a74c2b682bbaf4">private_address_space</a> &gt;</td></tr>
 <tr class="memdesc:ga02e3e5911ac85f86a3efd2353b6f13bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL private address space.  <a href="group__address__spaces.html#ga02e3e5911ac85f86a3efd2353b6f13bd">More...</a><br /></td></tr>
 <tr class="separator:ga02e3e5911ac85f86a3efd2353b6f13bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaae6ba26f7808ba467ed324b7296e7ad4"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:gaae6ba26f7808ba467ed324b7296e7ad4"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#gaae6ba26f7808ba467ed324b7296e7ad4">private_ptr</a> = <a class="el" href="group__address__spaces.html#ga02e3e5911ac85f86a3efd2353b6f13bd">priv</a>&lt; T * &gt;</td></tr>
+<tr class="memdesc:gaae6ba26f7808ba467ed324b7296e7ad4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL private address space.  <a href="group__address__spaces.html#gaae6ba26f7808ba467ed324b7296e7ad4">More...</a><br /></td></tr>
+<tr class="separator:gaae6ba26f7808ba467ed324b7296e7ad4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9dafd4b1b4d7ad7fb7d93eab429942f9"><td class="memTemplParams" colspan="2">template&lt;typename Pointer , address_space AS&gt; </td></tr>
 <tr class="memitem:ga9dafd4b1b4d7ad7fb7d93eab429942f9"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga9dafd4b1b4d7ad7fb7d93eab429942f9">multi_ptr</a> = <a class="el" href="group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1address__space__ptr">detail::address_space_ptr</a>&lt; Pointer, AS &gt;</td></tr>
 <tr class="memdesc:ga9dafd4b1b4d7ad7fb7d93eab429942f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">A pointer that can be statically associated to any address-space.  <a href="group__address__spaces.html#ga9dafd4b1b4d7ad7fb7d93eab429942f9">More...</a><br /></td></tr>
 <tr class="separator:ga9dafd4b1b4d7ad7fb7d93eab429942f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac9d61f5d9836dfcb2cbfb41a895dc04b"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:gac9d61f5d9836dfcb2cbfb41a895dc04b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__data.html#gac9d61f5d9836dfcb2cbfb41a895dc04b">buffer_allocator</a> = std::allocator&lt; T &gt;</td></tr>
-<tr class="memdesc:gac9d61f5d9836dfcb2cbfb41a895dc04b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default buffer allocator used by the runtime, when no allocator is defined by the user.  <a href="group__data.html#gac9d61f5d9836dfcb2cbfb41a895dc04b">More...</a><br /></td></tr>
+<tr class="memdesc:gac9d61f5d9836dfcb2cbfb41a895dc04b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The allocator objects give the programmer some control on how the memory is allocated inside SYCL.  <a href="group__data.html#gac9d61f5d9836dfcb2cbfb41a895dc04b">More...</a><br /></td></tr>
 <tr class="separator:gac9d61f5d9836dfcb2cbfb41a895dc04b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5140d8924158de304207ec4522d9466d"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga5140d8924158de304207ec4522d9466d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__data.html#ga5140d8924158de304207ec4522d9466d">image_allocator</a> = std::allocator&lt; T &gt;</td></tr>
+<tr class="memdesc:ga5140d8924158de304207ec4522d9466d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The allocator used for the <code>image</code> inside SYCL.  <a href="group__data.html#ga5140d8924158de304207ec4522d9466d">More...</a><br /></td></tr>
+<tr class="separator:ga5140d8924158de304207ec4522d9466d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa5ab7472bc98afc7f70032036e6cc501"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:gaa5ab7472bc98afc7f70032036e6cc501"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__data.html#gaa5ab7472bc98afc7f70032036e6cc501">map_allocator</a> = std::allocator&lt; T &gt;</td></tr>
+<tr class="memdesc:gaa5ab7472bc98afc7f70032036e6cc501"><td class="mdescLeft">&#160;</td><td class="mdescRight">The allocator used to map the memory at the same place.  <a href="group__data.html#gaa5ab7472bc98afc7f70032036e6cc501">More...</a><br /></td></tr>
+<tr class="separator:gaa5ab7472bc98afc7f70032036e6cc501"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a3b58674c77d248758b6bee05800ac5"><td class="memTemplParams" colspan="2">template&lt;class T , class Alloc  = std::allocator&lt;T&gt;&gt; </td></tr>
 <tr class="memitem:a0a3b58674c77d248758b6bee05800ac5"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html#a0a3b58674c77d248758b6bee05800ac5">vector_class</a> = std::vector&lt; T, Alloc &gt;</td></tr>
 <tr class="separator:a0a3b58674c77d248758b6bee05800ac5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -339,6 +367,21 @@ Functions</h2></td></tr>
 <tr class="memitem:gad49feb5469dfdcee64f7d5a6da0bb56b"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__address__spaces.html#ga9dafd4b1b4d7ad7fb7d93eab429942f9">multi_ptr</a>&lt; T, AS &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#gad49feb5469dfdcee64f7d5a6da0bb56b">make_multi</a> (<a class="el" href="group__address__spaces.html#ga9dafd4b1b4d7ad7fb7d93eab429942f9">multi_ptr</a>&lt; T, AS &gt; pointer)</td></tr>
 <tr class="memdesc:gad49feb5469dfdcee64f7d5a6da0bb56b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <a class="el" href="group__address__spaces.html#ga9dafd4b1b4d7ad7fb7d93eab429942f9" title="A pointer that can be statically associated to any address-space. ">cl::sycl::multi_ptr&lt;&gt;</a> with the right type.  <a href="group__address__spaces.html#gad49feb5469dfdcee64f7d5a6da0bb56b">More...</a><br /></td></tr>
 <tr class="separator:gad49feb5469dfdcee64f7d5a6da0bb56b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4a2b39bb6f1b2ff03ab99fddd085c81a"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:ga4a2b39bb6f1b2ff03ab99fddd085c81a"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__execution.html#ga4a2b39bb6f1b2ff03ab99fddd085c81a">device::get_info&lt; info::device::max_work_group_size &gt;</a> () const </td></tr>
+<tr class="separator:ga4a2b39bb6f1b2ff03ab99fddd085c81a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad4cfa69665080932b7abf284569a8684"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:gad4cfa69665080932b7abf284569a8684"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__execution.html#gad4cfa69665080932b7abf284569a8684">device::get_info&lt; info::device::max_compute_units &gt;</a> () const </td></tr>
+<tr class="separator:gad4cfa69665080932b7abf284569a8684"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab158e80ef74f1b6d4622e96252fc1100"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:gab158e80ef74f1b6d4622e96252fc1100"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__execution.html#gab158e80ef74f1b6d4622e96252fc1100">device::get_info&lt; info::device::device_type &gt;</a> () const </td></tr>
+<tr class="separator:gab158e80ef74f1b6d4622e96252fc1100"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga253026656d472bfeb9b5bde71f992911"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:ga253026656d472bfeb9b5bde71f992911"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__execution.html#ga253026656d472bfeb9b5bde71f992911">device::get_info&lt; info::device::local_mem_size &gt;</a> () const </td></tr>
+<tr class="separator:ga253026656d472bfeb9b5bde71f992911"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa11d5b090180a7af5ea597442fac61ce"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:gaa11d5b090180a7af5ea597442fac61ce"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__execution.html#gaa11d5b090180a7af5ea597442fac61ce">device::get_info&lt; info::device::vendor &gt;</a> () const </td></tr>
+<tr class="separator:gaa11d5b090180a7af5ea597442fac61ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gafbc9d7c4a1a2ae2844c1f7ee95c3ee42"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__parallelism.html#gafbc9d7c4a1a2ae2844c1f7ee95c3ee42">make_id</a> (<a class="el" href="group__parallelism.html#classcl_1_1sycl_1_1id">id</a>&lt; 1 &gt; i)</td></tr>
 <tr class="memdesc:gafbc9d7c4a1a2ae2844c1f7ee95c3ee42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implement a make_id to construct an id&lt;&gt; of the right dimension with implicit conversion from an initializer list for example.  <a href="group__parallelism.html#gafbc9d7c4a1a2ae2844c1f7ee95c3ee42">More...</a><br /></td></tr>
 <tr class="separator:gafbc9d7c4a1a2ae2844c1f7ee95c3ee42"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -350,7 +393,14 @@ Functions</h2></td></tr>
 <tr class="memitem:gaa6bedcf659c5928fed508c2da620670c"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__parallelism.html#gaa6bedcf659c5928fed508c2da620670c">make_id</a> (BasicType...Args)</td></tr>
 <tr class="memdesc:gaa6bedcf659c5928fed508c2da620670c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct an id&lt;&gt; from a function call with arguments, like make_id(1, 2, 3)  <a href="group__parallelism.html#gaa6bedcf659c5928fed508c2da620670c">More...</a><br /></td></tr>
 <tr class="separator:gaa6bedcf659c5928fed508c2da620670c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga929002a0e83ac349605e51f8dc35059c"><td class="memTemplParams" colspan="2">template&lt;std::size_t Dimensions = 1, typename ParallelForFunctor &gt; </td></tr>
+<tr class="memitem:a0a2785865ab87030daa5e09933655620"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html#a0a2785865ab87030daa5e09933655620">TRISYCL_MATH_WRAP</a> (abs) TRISYCL_MATH_WRAP(atan) <a class="el" href="namespacecl_1_1sycl.html#a34a4d8f8f5c4655941d396a6d440ebb6">TRISYCL_MATH_WRAP2s</a>(fmax) <a class="el" href="namespacecl_1_1sycl.html#a34a4d8f8f5c4655941d396a6d440ebb6">TRISYCL_MATH_WRAP2s</a>(fmin) <a class="el" href="namespacecl_1_1sycl.html#a34a4d8f8f5c4655941d396a6d440ebb6">TRISYCL_MATH_WRAP2s</a>(frexp) template&lt; typename T &gt; T max(T x</td></tr>
+<tr class="separator:a0a2785865ab87030daa5e09933655620"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa013761cdd3d25b487bce79096b605d5"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:aa013761cdd3d25b487bce79096b605d5"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html#aa013761cdd3d25b487bce79096b605d5">min</a> (T x, T <a class="el" href="namespacecl_1_1sycl.html#ae88a2c531d62f0f155400689cb1ad180">y</a>, T <a class="el" href="namespacecl_1_1sycl.html#ab3ec95c29bc2d5f5180f0774ab7b775d">z</a>)</td></tr>
+<tr class="separator:aa013761cdd3d25b487bce79096b605d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34a4d8f8f5c4655941d396a6d440ebb6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html#a34a4d8f8f5c4655941d396a6d440ebb6">TRISYCL_MATH_WRAP2s</a> (modf) <a class="el" href="math_8hpp.html#aa0c1666ab96a1dcd4017c83ed582c5de">TRISYCL_MATH_WRAP3s</a>(remquo) <a class="el" href="math_8hpp.html#a0799aca751eb81418817b67402662b54">TRISYCL_MATH_WRAP2</a>(rotate) namespace native</td></tr>
+<tr class="separator:a34a4d8f8f5c4655941d396a6d440ebb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga929002a0e83ac349605e51f8dc35059c"><td class="memTemplParams" colspan="2">template&lt;int Dimensions = 1, typename ParallelForFunctor &gt; </td></tr>
 <tr class="memitem:ga929002a0e83ac349605e51f8dc35059c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__parallelism.html#ga929002a0e83ac349605e51f8dc35059c">parallel_for_work_item</a> (const <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1group">group</a>&lt; Dimensions &gt; &amp;g, ParallelForFunctor f)</td></tr>
 <tr class="memdesc:ga929002a0e83ac349605e51f8dc35059c"><td class="mdescLeft">&#160;</td><td class="mdescRight">SYCL parallel_for version that allows a Program object to be specified.  <a href="group__parallelism.html#ga929002a0e83ac349605e51f8dc35059c">More...</a><br /></td></tr>
 <tr class="separator:ga929002a0e83ac349605e51f8dc35059c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -365,6 +415,13 @@ Functions</h2></td></tr>
 <tr class="memitem:gadb5d5b3743cc7477928e6e19da001d84"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__parallelism.html#gadb5d5b3743cc7477928e6e19da001d84">make_range</a> (BasicType...Args)</td></tr>
 <tr class="memdesc:gadb5d5b3743cc7477928e6e19da001d84"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a range&lt;&gt; from a function call with arguments, like make_range(1, 2, 3)  <a href="group__parallelism.html#gadb5d5b3743cc7477928e6e19da001d84">More...</a><br /></td></tr>
 <tr class="separator:gadb5d5b3743cc7477928e6e19da001d84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ae88a2c531d62f0f155400689cb1ad180"><td class="memItemLeft" align="right" valign="top">T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html#ae88a2c531d62f0f155400689cb1ad180">y</a></td></tr>
+<tr class="separator:ae88a2c531d62f0f155400689cb1ad180"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3ec95c29bc2d5f5180f0774ab7b775d"><td class="memItemLeft" align="right" valign="top">T T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html#ab3ec95c29bc2d5f5180f0774ab7b775d">z</a></td></tr>
+<tr class="separator:ab3ec95c29bc2d5f5180f0774ab7b775d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a class="anchor" id="a427c818ec6c3428c273fbc8a17d0b185"></a>
@@ -475,10 +532,140 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
+<h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="aa013761cdd3d25b487bce79096b605d5"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">T cl::sycl::min </td>
+          <td>(</td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>z</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="math_8hpp_source.html#l00120">120</a> of file <a class="el" href="math_8hpp_source.html">math.hpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;                     {</div><div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;  <span class="keywordflow">return</span> <a class="code" href="namespacecl_1_1sycl.html#aa013761cdd3d25b487bce79096b605d5">std::min</a>(x, <a class="code" href="namespacecl_1_1sycl.html#aa013761cdd3d25b487bce79096b605d5">std::min</a>(<a class="code" href="namespacecl_1_1sycl.html#ae88a2c531d62f0f155400689cb1ad180">y</a>, <a class="code" href="namespacecl_1_1sycl.html#ab3ec95c29bc2d5f5180f0774ab7b775d">z</a>));</div><div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;}</div><div class="ttc" id="namespacecl_1_1sycl_html_ae88a2c531d62f0f155400689cb1ad180"><div class="ttname"><a href="namespacecl_1_1sycl.html#ae88a2c531d62f0f155400689cb1ad180">cl::sycl::y</a></div><div class="ttdeci">T y</div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00109">math.hpp:109</a></div></div>
+<div class="ttc" id="namespacecl_1_1sycl_html_aa013761cdd3d25b487bce79096b605d5"><div class="ttname"><a href="namespacecl_1_1sycl.html#aa013761cdd3d25b487bce79096b605d5">cl::sycl::min</a></div><div class="ttdeci">T min(T x, T y, T z)</div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00120">math.hpp:120</a></div></div>
+<div class="ttc" id="namespacecl_1_1sycl_html_ab3ec95c29bc2d5f5180f0774ab7b775d"><div class="ttname"><a href="namespacecl_1_1sycl.html#ab3ec95c29bc2d5f5180f0774ab7b775d">cl::sycl::z</a></div><div class="ttdeci">T T z</div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00109">math.hpp:109</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a0a2785865ab87030daa5e09933655620"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cl::sycl::TRISYCL_MATH_WRAP </td>
+          <td>(</td>
+          <td class="paramtype">abs&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="math_8hpp_source.html#l00128">TRISYCL_MATH_WRAP2s()</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacecl_1_1sycl_a0a2785865ab87030daa5e09933655620_icgraph.png" border="0" usemap="#namespacecl_1_1sycl_a0a2785865ab87030daa5e09933655620_icgraph" alt=""/></div>
+<map name="namespacecl_1_1sycl_a0a2785865ab87030daa5e09933655620_icgraph" id="namespacecl_1_1sycl_a0a2785865ab87030daa5e09933655620_icgraph">
+<area shape="rect" id="node2" href="namespacecl_1_1sycl.html#a34a4d8f8f5c4655941d396a6d440ebb6" title="cl::sycl::TRISYCL_MATH\l_WRAP2s" alt="" coords="276,5,451,47"/>
+</map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a34a4d8f8f5c4655941d396a6d440ebb6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cl::sycl::TRISYCL_MATH_WRAP2s </td>
+          <td>(</td>
+          <td class="paramtype">modf&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="math_8hpp_source.html#l00128">128</a> of file <a class="el" href="math_8hpp_source.html">math.hpp</a>.</p>
+
+<p>References <a class="el" href="namespacecl_1_1sycl.html#a0a2785865ab87030daa5e09933655620">TRISYCL_MATH_WRAP()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;                 {</div><div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(cos)</div><div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;<span class="comment">//*TRISYCL_MATH_WRAP2(divide)</span></div><div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(exp)</div><div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(exp2)</div><div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;<span class="comment">//*TRISYCL_MATH_WRAP(exp10)</span></div><div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(log)</div><div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(log2)</div><div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(log10)</div><div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;<span class="comment">//*TRISYCL_MATH_WRAP(powr)</span></div><div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;<span class="comment">//*TRISYCL_MATH_WRAP(recip)</span></div><div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;<span class="comment">//*TRISYCL_MATH_WRAP(rsqrt)</span></div><div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(sin)</div><div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(sqrt)</div><div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(tan)</div><div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;}</div><div class="ttc" id="math_8hpp_html_a0e4bf35ec5f57ce2c341ecd8884d54a9"><div class="ttname"><a href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a></div><div class="ttdeci">#define TRISYCL_MATH_WRAP(FUN)</div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00025">math.hpp:25</a></div></div>
+</div><!-- fragment -->
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacecl_1_1sycl_a34a4d8f8f5c4655941d396a6d440ebb6_cgraph.png" border="0" usemap="#namespacecl_1_1sycl_a34a4d8f8f5c4655941d396a6d440ebb6_cgraph" alt=""/></div>
+<map name="namespacecl_1_1sycl_a34a4d8f8f5c4655941d396a6d440ebb6_cgraph" id="namespacecl_1_1sycl_a34a4d8f8f5c4655941d396a6d440ebb6_cgraph">
+<area shape="rect" id="node2" href="namespacecl_1_1sycl.html#a0a2785865ab87030daa5e09933655620" title="cl::sycl::TRISYCL_MATH_WRAP" alt="" coords="228,13,451,39"/>
+</map>
+</div>
+</p>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a class="anchor" id="ae88a2c531d62f0f155400689cb1ad180"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">T cl::sycl::y</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="math_8hpp_source.html#l00109">109</a> of file <a class="el" href="math_8hpp_source.html">math.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab3ec95c29bc2d5f5180f0774ab7b775d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">T T cl::sycl::z</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div><div class="line">  <span class="keywordflow">return</span> std::max(x, std::max(<a class="code" href="namespacecl_1_1sycl.html#ae88a2c531d62f0f155400689cb1ad180">y</a>, <a class="code" href="namespacecl_1_1sycl.html#ab3ec95c29bc2d5f5180f0774ab7b775d">z</a>))</div><div class="ttc" id="namespacecl_1_1sycl_html_ae88a2c531d62f0f155400689cb1ad180"><div class="ttname"><a href="namespacecl_1_1sycl.html#ae88a2c531d62f0f155400689cb1ad180">cl::sycl::y</a></div><div class="ttdeci">T y</div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00109">math.hpp:109</a></div></div>
+<div class="ttc" id="namespacecl_1_1sycl_html_ab3ec95c29bc2d5f5180f0774ab7b775d"><div class="ttname"><a href="namespacecl_1_1sycl.html#ab3ec95c29bc2d5f5180f0774ab7b775d">cl::sycl::z</a></div><div class="ttdeci">T T z</div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00109">math.hpp:109</a></div></div>
+</div><!-- fragment -->
+<p>Definition at line <a class="el" href="math_8hpp_source.html#l00109">109</a> of file <a class="el" href="math_8hpp_source.html">math.hpp</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 26 2016 12:28:40 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 22 2017 16:15:51 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

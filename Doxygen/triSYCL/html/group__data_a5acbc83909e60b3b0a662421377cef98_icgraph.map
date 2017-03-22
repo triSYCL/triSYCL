@@ -1,0 +1,6 @@
+<map id="cl::sycl::detail::accessor::get_count" name="cl::sycl::detail::accessor::get_count">
+<area shape="rect" id="node2" href="$group__data.html#a9cec38916ddb0c9c6e6eaeb5f5d2b6a8" title="Returns the size of the underlying buffer storage in bytes. " alt="" coords="217,5,427,61"/>
+<area shape="rect" id="node3" href="$group__data.html#a63315a7658f7c720fac86a5ee4c18fda" title="Returns the size of the underlying buffer storage in bytes. " alt="" coords="240,86,404,127"/>
+<area shape="rect" id="node4" href="$group__data.html#a1764f8fc5824b392b8ff42d3bacc6ea3" title="Lazily associate a CL buffer to the SYCL buffer and copy data in if required. " alt="" coords="475,53,639,94"/>
+<area shape="rect" id="node5" href="$group__data.html#a31a49c015242ed032eb3611f3828c6c3" title="Copy back the CL buffer to the SYCL if required. " alt="" coords="475,118,639,159"/>
+</map>

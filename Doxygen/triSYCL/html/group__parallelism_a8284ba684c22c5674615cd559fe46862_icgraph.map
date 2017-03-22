@@ -1,5 +1,0 @@
-<map id="cl::sycl::item::get" name="cl::sycl::item::get">
-<area shape="rect" id="node2" href="$group__parallelism.html#a765ae388bf8a9a3803ba5b8138005d00" title="Construct an id from the dimensions of a range. " alt="" coords="176,5,353,47"/>
-<area shape="rect" id="node3" href="$group__data.html#ada9c761cc3d629a00f78d8c8493e3a9f" title="To use an accessor with [item&lt;&gt;]. " alt="" coords="183,71,347,112"/>
-<area shape="rect" id="node4" href="$group__data.html#a4b7a26763437479ee5cc92d9ce08936a" title="To use an accessor with [item&lt;&gt;]. " alt="" coords="202,136,327,177"/>
-</map>

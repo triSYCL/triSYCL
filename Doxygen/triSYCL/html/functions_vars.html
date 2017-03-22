@@ -124,16 +124,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <h3><a class="anchor" id="index_a"></a>- a -</h3><ul>
 <li>access
-: <a class="el" href="group__data.html#aeda17cd5edc24480eff418cef8b64972">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
+: <a class="el" href="group__data.html#afaef5dac2d23161a54412d133e0b8a98">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
 </li>
 <li>address_space
 : <a class="el" href="group__address__spaces.html#a7896b1c3f0cf5bd961febc91388ad599">cl::sycl::detail::address_space_base&lt; T, AS &gt;</a>
 </li>
 <li>allocation
-: <a class="el" href="group__data.html#a6fd39c5562ed5b108bcabba81660897f">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
+: <a class="el" href="group__data.html#abe1df9207e5d43ee03b9d809311c3fe7">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
 </li>
 <li>array
 : <a class="el" href="group__data.html#ad3e968477237a7e8e31f0f75906ede6d">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+, <a class="el" href="group__data.html#ac7bc8b3b0b67d7311c831160dfe369eb">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 </li>
 </ul>
 
@@ -175,12 +176,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>cl_code
 : <a class="el" href="group__error__handling.html#ab5b86355f0f4cdf2a343a3152cceb621">cl::sycl::cl_exception</a>
 </li>
+<li>copy_if_modified
+: <a class="el" href="group__data.html#a87caeacbaf61814d6e1c24fac608d68c">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
+</li>
 </ul>
 
 
 <h3><a class="anchor" id="index_d"></a>- d -</h3><ul>
 <li>d
 : <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__device.html#a3551438d812cd61e0a193305ed8ca58a">cl::sycl::detail::opencl_device</a>
+</li>
+<li>data_host
+: <a class="el" href="group__data.html#a336d09c9ea673a8a38186f27a562c26d">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
 </li>
 <li>debug_mode
 : <a class="el" href="group__data.html#a59f2726a30d8853a10d6098027d1fcc3">cl::sycl::detail::pipe&lt; T &gt;</a>
@@ -200,14 +207,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>dimensionality
 : <a class="el" href="group__data.html#a9322d92925dc2cec40488952138220d9">cl::sycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;</a>
 , <a class="el" href="group__data.html#a6ad0dc00629a14e557907cb3021692b1">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+, <a class="el" href="group__data.html#a5da039f767f4cae6b6b266310905e5fc">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 , <a class="el" href="group__helpers.html#a246b78fe11f1764328bccb7692b15a38">cl::sycl::detail::small_array&lt; BasicType, FinalType, Dims, EnableArgsConstructor &gt;</a>
-, <a class="el" href="group__parallelism.html#a771bbffd5cb87f4ba896066d6645b80c">cl::sycl::group&lt; dims &gt;</a>
-, <a class="el" href="group__parallelism.html#a452e5a9130ba203ac04b6bf50f314537">cl::sycl::item&lt; dims &gt;</a>
-, <a class="el" href="group__parallelism.html#a3cf24f874553124b9a2633e1c5c6dad8">cl::sycl::nd_item&lt; dims &gt;</a>
-, <a class="el" href="group__parallelism.html#a0d3da4f285d003cb65192ea6d876d732">cl::sycl::nd_range&lt; dims &gt;</a>
+, <a class="el" href="group__parallelism.html#afb7b6568a084904520da8bc9aaa9286e">cl::sycl::group&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#abc5d4783e43d820cc7f4bf2a9ebe3133">cl::sycl::item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#a0e0b6ffae70ba27083647fe9ac26d20e">cl::sycl::nd_item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#a8c59727927661e408cacdd32e2613029">cl::sycl::nd_range&lt; Dimensions &gt;</a>
 </li>
 <li>Dimensions
-: <a class="el" href="group__execution.html#ab229fd6e1eabd6e0e06f131afea570cd">cl::sycl::handler</a>
+: <a class="el" href="group__execution.html#a650de0b16a6d98215d7dc49b34c77a15">cl::sycl::handler</a>
 </li>
 </ul>
 
@@ -223,8 +231,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <h3><a class="anchor" id="index_f"></a>- f -</h3><ul>
-<li>final_data
-: <a class="el" href="group__data.html#aae5eae0289a55406b5fd88f713f81b46">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
+<li>final_write_back
+: <a class="el" href="group__data.html#a26b81339faedcdb7b236bb4187767678">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
 </li>
 <li>finished
 : <a class="el" href="structcl_1_1sycl_1_1detail_1_1queue.html#a66059a5ed00f836854db954cc3e2007b">cl::sycl::detail::queue</a>
@@ -237,15 +245,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <h3><a class="anchor" id="index_g"></a>- g -</h3><ul>
 <li>global_index
-: <a class="el" href="group__parallelism.html#a6fa8d3d9f3516add24501dd0257ebd41">cl::sycl::item&lt; dims &gt;</a>
-, <a class="el" href="group__parallelism.html#a57d11f5e561f555deca649a6564b3adc">cl::sycl::nd_item&lt; dims &gt;</a>
+: <a class="el" href="group__parallelism.html#a9a5696ed1929336a7a982598b67bdb66">cl::sycl::item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#a20bc042572c9f11b2c1fac3de92835eb">cl::sycl::nd_item&lt; Dimensions &gt;</a>
 </li>
 <li>global_range
-: <a class="el" href="group__parallelism.html#afd6d31b97aff46b5d126a56bb6fc3d18">cl::sycl::item&lt; dims &gt;</a>
-, <a class="el" href="group__parallelism.html#a2173f61a9190fefd27e5f95b60dc7b0e">cl::sycl::nd_range&lt; dims &gt;</a>
+: <a class="el" href="group__parallelism.html#af7da3134cdf58f770f42ad2c77f818f3">cl::sycl::item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#af19ba6425b3a425f2962a76027582d57">cl::sycl::nd_range&lt; Dimensions &gt;</a>
 </li>
 <li>group_id
-: <a class="el" href="group__parallelism.html#a52605ae9109c2879926dab12e53c7b59">cl::sycl::group&lt; dims &gt;</a>
+: <a class="el" href="group__parallelism.html#a5973132989bccf1b6109d7e221b89ac3">cl::sycl::group&lt; Dimensions &gt;</a>
 </li>
 </ul>
 
@@ -253,9 +261,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <h3><a class="anchor" id="index_h"></a>- h -</h3><ul>
 <li>handler
 : <a class="el" href="group__data.html#aa489d14286e6712c3fda6be1543975d9">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
-</li>
-<li>host_write_back
-: <a class="el" href="group__data.html#a7e70ec1f37655340fad83b0f196e8019">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
+, <a class="el" href="group__data.html#a5c040ac8604fcbccd12a03ac15a9683d">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 </li>
 </ul>
 
@@ -265,6 +271,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="group__data.html#aa8c9a3b1fe77fbdba0d859857642ab56">cl::sycl::detail::pipe_accessor&lt; T, AccessMode, Target &gt;</a>
 , <a class="el" href="structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html#a5da30706edae995aa3f51436de112c54">cl::sycl::detail::shared_ptr_implementation&lt; Parent, Implementation &gt;</a>
 , <a class="el" href="group__data.html#a6328f4fcdd020e2bb391ea255fd1381b">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
+</li>
+<li>implementation_t
+: <a class="el" href="group__data.html#acedaa23129c1c21fd84bced0e3cd3510">cl::sycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;</a>
+, <a class="el" href="classcl_1_1sycl_1_1buffer.html#af90f1b1c78ad4e9a56f411bb2dd74123">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
+, <a class="el" href="group__data.html#ae2309f9b3ad14e2d81309cdf9a838b04">cl::sycl::detail::buffer_waiter&lt; T, Dimensions, Allocator &gt;</a>
+, <a class="el" href="group__execution.html#abcb77998f4d28377e7e0bc498ff3fcc4">cl::sycl::kernel</a>
+, <a class="el" href="group__data.html#acc0aba2b4b0b9bc09caa9718612fb415">cl::sycl::pipe&lt; T &gt;</a>
+, <a class="el" href="group__execution.html#a6378f74398e8baaf216bd3f4e565e3d8">cl::sycl::queue</a>
+, <a class="el" href="group__data.html#af66608b756bd07c9b844b71121412001">cl::sycl::static_pipe&lt; T, Capacity &gt;</a>
+</li>
+<li>input_shared_pointer
+: <a class="el" href="group__data.html#a37e3033127d82d3ae59f332b08daca9e">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
 </li>
 </ul>
 
@@ -287,10 +305,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="structcl_1_1sycl_1_1detail_1_1buffer__base.html#ab79460339b0aa9c8900e566409f81f8b">cl::sycl::detail::buffer_base</a>
 </li>
 <li>local_index
-: <a class="el" href="group__parallelism.html#ab4df6252ec4076d6eb068923c1ec469c">cl::sycl::nd_item&lt; dims &gt;</a>
+: <a class="el" href="group__parallelism.html#a7c9482d0adcd85c0ce7ad7eacb2ccfbf">cl::sycl::nd_item&lt; Dimensions &gt;</a>
 </li>
 <li>local_range
-: <a class="el" href="group__parallelism.html#a6c8336ac99ac255955c0df9923d49c04">cl::sycl::nd_range&lt; dims &gt;</a>
+: <a class="el" href="group__parallelism.html#aebb1366b561f4b2e89a4226647a085a9">cl::sycl::nd_range&lt; Dimensions &gt;</a>
 </li>
 </ul>
 
@@ -306,15 +324,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="group__data.html#aa0b74486ec9d5709d377db3c61b08f19">cl::sycl::detail::pipe_accessor&lt; T, AccessMode, Target &gt;</a>
 , <a class="el" href="group__data.html#a87c4d59f3edc4f6e93ed46be2c2a0550">cl::sycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
 </li>
+<li>modified
+: <a class="el" href="group__data.html#a484eecab0b3c6d272ff79e5c2ec67310">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
+</li>
 </ul>
 
 
 <h3><a class="anchor" id="index_n"></a>- n -</h3><ul>
 <li>ND_range
-: <a class="el" href="group__parallelism.html#ad3341ded4c2faf89e1c23e29a7de6b87">cl::sycl::nd_item&lt; dims &gt;</a>
+: <a class="el" href="group__parallelism.html#a4e1ca412e9216920a4a9cafa8789026d">cl::sycl::nd_item&lt; Dimensions &gt;</a>
 </li>
 <li>ndr
-: <a class="el" href="group__parallelism.html#a0a8143d8777bc568ea2b2dc4abfd06e1">cl::sycl::group&lt; dims &gt;</a>
+: <a class="el" href="group__parallelism.html#aa760464d4425d1cc65fffbd0a92cd7f3">cl::sycl::group&lt; Dimensions &gt;</a>
 </li>
 <li>notify_buffer_destructor
 : <a class="el" href="structcl_1_1sycl_1_1detail_1_1buffer__base.html#a65b6d27502f4153143a8162a894780cf">cl::sycl::detail::buffer_base</a>
@@ -327,8 +348,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <h3><a class="anchor" id="index_o"></a>- o -</h3><ul>
 <li>offset
-: <a class="el" href="group__parallelism.html#ac6b3378f856e99325eec7bb61e5ddbf2">cl::sycl::item&lt; dims &gt;</a>
-, <a class="el" href="group__parallelism.html#a1eff5da6b8f3bcc5d7421a8079b04362">cl::sycl::nd_range&lt; dims &gt;</a>
+: <a class="el" href="group__parallelism.html#a3105c3ba931ffd046d0965b87ead65ce">cl::sycl::item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#a55b9eca352ad480983ede376f77c6747">cl::sycl::nd_range&lt; Dimensions &gt;</a>
 </li>
 <li>ok
 : <a class="el" href="group__data.html#ab40ee4d2e02f5f4720b54baf78076fbf">cl::sycl::detail::pipe_accessor&lt; T, AccessMode, Target &gt;</a>
@@ -374,9 +395,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>read_done
 : <a class="el" href="group__data.html#a80a041f6acf9e2424b481bccdf6bdf7a">cl::sycl::detail::pipe&lt; T &gt;</a>
 </li>
-<li>read_only
-: <a class="el" href="structcl_1_1sycl_1_1detail_1_1buffer__base.html#a7e72cd8cdf696b3f81c14adc3b5e4fe2">cl::sycl::detail::buffer_base</a>
-</li>
 <li>read_reserved_frozen
 : <a class="el" href="group__data.html#af007d984745fcf3012eddc15577c785d">cl::sycl::detail::pipe&lt; T &gt;</a>
 </li>
@@ -399,8 +417,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <h3><a class="anchor" id="index_s"></a>- s -</h3><ul>
-<li>shared_data
-: <a class="el" href="group__data.html#a2408a246a0ffd637bf7be3127679930e">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
+<li>self
+: <a class="el" href="classcl_1_1sycl_1_1cl__float3.html#a09f4fd6054986576810d0bc015e88564">cl::sycl::cl_float3</a>
+</li>
+<li>shared_ptr_implementation
+: <a class="el" href="group__execution.html#a94aa6a9bd1be6c9bd3e00b446f0c4fd5">cl::sycl::platform</a>
 </li>
 <li>size
 : <a class="el" href="group__data.html#a58738a41cdd3a2993541d5c34e642e99">cl::sycl::detail::reserve_id&lt; T &gt;</a>
@@ -451,7 +472,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 26 2016 12:28:41 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 22 2017 16:15:51 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

@@ -102,6 +102,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="functions_u.html#index_u"><span>u</span></a></li>
       <li><a href="functions_v.html#index_v"><span>v</span></a></li>
       <li><a href="functions_w.html#index_w"><span>w</span></a></li>
+      <li><a href="functions_x.html#index_x"><span>x</span></a></li>
+      <li><a href="functions_y.html#index_y"><span>y</span></a></li>
+      <li><a href="functions_z.html#index_z"><span>z</span></a></li>
       <li><a href="functions_0x7e.html#index_0x7e"><span>~</span></a></li>
     </ul>
   </div>
@@ -127,6 +130,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>d
 : <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__device.html#a3551438d812cd61e0a193305ed8ca58a">cl::sycl::detail::opencl_device</a>
 </li>
+<li>data_host
+: <a class="el" href="group__data.html#a336d09c9ea673a8a38186f27a562c26d">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
+</li>
 <li>debug_mode
 : <a class="el" href="group__data.html#a59f2726a30d8853a10d6098027d1fcc3">cl::sycl::detail::pipe&lt; T &gt;</a>
 </li>
@@ -140,7 +146,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="group__data.html#ab08f084bec0b5b516e0a88ded211cb94">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
 </li>
 <li>device()
-: <a class="el" href="group__execution.html#a449e3c5dcf4ff08654340aa6a3b52e53">cl::sycl::device</a>
+: <a class="el" href="group__execution.html#a29fc2e9c351b35ae60a8c0dd8e1f32df">cl::sycl::device</a>
 </li>
 <li>device_type
 : <a class="el" href="group__execution.html#a3a4b6e3ed80f5c9e8360545c27593a4e">cl::sycl::device_type_selector</a>
@@ -160,28 +166,29 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>dimensionality
 : <a class="el" href="group__data.html#a9322d92925dc2cec40488952138220d9">cl::sycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;</a>
 , <a class="el" href="group__data.html#a6ad0dc00629a14e557907cb3021692b1">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+, <a class="el" href="group__data.html#a5da039f767f4cae6b6b266310905e5fc">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 , <a class="el" href="group__helpers.html#a246b78fe11f1764328bccb7692b15a38">cl::sycl::detail::small_array&lt; BasicType, FinalType, Dims, EnableArgsConstructor &gt;</a>
-, <a class="el" href="group__parallelism.html#a771bbffd5cb87f4ba896066d6645b80c">cl::sycl::group&lt; dims &gt;</a>
-, <a class="el" href="group__parallelism.html#a452e5a9130ba203ac04b6bf50f314537">cl::sycl::item&lt; dims &gt;</a>
-, <a class="el" href="group__parallelism.html#a3cf24f874553124b9a2633e1c5c6dad8">cl::sycl::nd_item&lt; dims &gt;</a>
-, <a class="el" href="group__parallelism.html#a0d3da4f285d003cb65192ea6d876d732">cl::sycl::nd_range&lt; dims &gt;</a>
+, <a class="el" href="group__parallelism.html#afb7b6568a084904520da8bc9aaa9286e">cl::sycl::group&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#abc5d4783e43d820cc7f4bf2a9ebe3133">cl::sycl::item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#a0e0b6ffae70ba27083647fe9ac26d20e">cl::sycl::nd_item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#a8c59727927661e408cacdd32e2613029">cl::sycl::nd_range&lt; Dimensions &gt;</a>
 </li>
 <li>Dimensions
-: <a class="el" href="group__execution.html#ab229fd6e1eabd6e0e06f131afea570cd">cl::sycl::handler</a>
+: <a class="el" href="group__execution.html#a650de0b16a6d98215d7dc49b34c77a15">cl::sycl::handler</a>
 </li>
 <li>dispatch_set_arg()
 : <a class="el" href="group__execution.html#a35f4e0ca6ad987c5f354389b1092fa2b">cl::sycl::handler</a>
 </li>
 <li>display()
 : <a class="el" href="group__debug__trace.html#a85390e89223c32e7e6cadecfdb84de5d">cl::sycl::detail::display_vector&lt; T &gt;</a>
-, <a class="el" href="group__parallelism.html#a8a2de6f519ae93528ebdf8b5884f0db0">cl::sycl::item&lt; dims &gt;</a>
-, <a class="el" href="group__parallelism.html#a07be65b77be5ffd05fdc5a559886dc03">cl::sycl::nd_range&lt; dims &gt;</a>
+, <a class="el" href="group__parallelism.html#a5f32f88d30ffb9623ff41de9d14a79af">cl::sycl::item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#ac0f2a032b1dafa22a3b7b710f901dd87">cl::sycl::nd_range&lt; Dimensions &gt;</a>
 </li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 26 2016 12:28:40 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 22 2017 16:15:51 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

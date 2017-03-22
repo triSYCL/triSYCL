@@ -1,3 +1,8 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$group__debug__trace.html#structcl_1_1sycl_1_1detail_1_1display__vector" title="Class used to display a vector&#45;like type of classes that inherit from it. " alt="" coords="5,5,157,47"/>
+<area shape="rect" id="node1" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; detail::queue \&gt;" alt="" coords="5,64,152,105"/>
+<area shape="rect" id="node2" href="$structcl_1_1sycl_1_1detail_1_1queue.html" title="Some implementation details about the SYCL queue. " alt="" coords="200,71,347,98"/>
+<area shape="rect" id="node3" href="$classcl_1_1sycl_1_1detail_1_1host__queue.html" title="Some implementation details about the SYCL queue. " alt="" coords="401,19,537,60"/>
+<area shape="rect" id="node4" href="$classcl_1_1sycl_1_1detail_1_1opencl__queue.html" title="Some implementation details about the SYCL queue. " alt="" coords="395,97,544,139"/>
+<area shape="rect" id="node5" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; host_queue \&gt;" alt="" coords="200,5,347,47"/>
+<area shape="rect" id="node6" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; opencl_queue \&gt;" alt="" coords="200,123,347,164"/>
 </map>

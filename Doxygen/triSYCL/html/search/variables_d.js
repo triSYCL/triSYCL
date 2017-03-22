@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['nd_5frange',['ND_range',['../group__parallelism.html#ad3341ded4c2faf89e1c23e29a7de6b87',1,'cl::sycl::nd_item']]],
-  ['ndr',['ndr',['../group__parallelism.html#a0a8143d8777bc568ea2b2dc4abfd06e1',1,'cl::sycl::group']]],
-  ['notify_5fbuffer_5fdestructor',['notify_buffer_destructor',['../structcl_1_1sycl_1_1detail_1_1buffer__base.html#a65b6d27502f4153143a8162a894780cf',1,'cl::sycl::detail::buffer_base']]],
-  ['number_5fof_5fusers',['number_of_users',['../structcl_1_1sycl_1_1detail_1_1buffer__base.html#a772d5f61997bd86e5629726ed75819d3',1,'cl::sycl::detail::buffer_base']]]
+  ['offset',['offset',['../group__parallelism.html#a3105c3ba931ffd046d0965b87ead65ce',1,'cl::sycl::item::offset()'],['../group__parallelism.html#a55b9eca352ad480983ede376f77c6747',1,'cl::sycl::nd_range::offset()']]],
+  ['ok',['ok',['../group__data.html#ab40ee4d2e02f5f4720b54baf78076fbf',1,'cl::sycl::detail::pipe_accessor::ok()'],['../group__data.html#a1f62051391f8273dfb8884b01dd72e0e',1,'cl::sycl::detail::pipe_reservation::ok()']]],
+  ['owner_5fqueue',['owner_queue',['../structcl_1_1sycl_1_1detail_1_1task.html#afcbb785de925a7e09e0b29a55503b0b4',1,'cl::sycl::detail::task']]]
 ];

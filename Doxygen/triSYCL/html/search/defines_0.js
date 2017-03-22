@@ -5,7 +5,15 @@ var searchData=
   ['trisycl_5finfo_5fparam_5ftraits',['TRISYCL_INFO_PARAM_TRAITS',['../param__traits_8hpp.html#a21ff5ae118ffb342a0cffb6d3ed035c9',1,'param_traits.hpp']]],
   ['trisycl_5finfo_5fparam_5ftraits_5fany_5ft',['TRISYCL_INFO_PARAM_TRAITS_ANY_T',['../param__traits_8hpp.html#a3f35e62a675e6191b13f03d30604f354',1,'param_traits.hpp']]],
   ['trisycl_5finternal_5fdump',['TRISYCL_INTERNAL_DUMP',['../debug_8hpp.html#a4b983cc4ee08e6b3a3cdf299c4fe8fd1',1,'debug.hpp']]],
+  ['trisycl_5fmath_5fwrap',['TRISYCL_MATH_WRAP',['../math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9',1,'math.hpp']]],
+  ['trisycl_5fmath_5fwrap2',['TRISYCL_MATH_WRAP2',['../math_8hpp.html#a0799aca751eb81418817b67402662b54',1,'math.hpp']]],
+  ['trisycl_5fmath_5fwrap2s',['TRISYCL_MATH_WRAP2s',['../math_8hpp.html#ad7993d98b68e43ce1611a030fbcb8c38',1,'math.hpp']]],
+  ['trisycl_5fmath_5fwrap3',['TRISYCL_MATH_WRAP3',['../math_8hpp.html#aced16189229105b6aa6f2ff9bdfe393a',1,'math.hpp']]],
+  ['trisycl_5fmath_5fwrap3s',['TRISYCL_MATH_WRAP3s',['../math_8hpp.html#aa0c1666ab96a1dcd4017c83ed582c5de',1,'math.hpp']]],
+  ['trisycl_5fmath_5fwrap3ss',['TRISYCL_MATH_WRAP3ss',['../math_8hpp.html#a302da21353f5bf7f5048ef65fd84889b',1,'math.hpp']]],
   ['trisycl_5fparallel_5ffor_5ffunctor_5fglobal',['TRISYCL_parallel_for_functor_GLOBAL',['../handler_8hpp.html#ad26870978d25ea83d36d36d3ea9fca35',1,'handler.hpp']]],
   ['trisycl_5fparallelforfunctor_5fglobal_5foffset',['TRISYCL_ParallelForFunctor_GLOBAL_OFFSET',['../handler_8hpp.html#a8057420b6dd308a3e2d1e0f57ea2a765',1,'handler.hpp']]],
-  ['trisycl_5fparallelforkernel_5frange',['TRISYCL_ParallelForKernel_RANGE',['../handler_8hpp.html#a4f7139c7f8f7a4ff82e6678f7c6d44ec',1,'TRISYCL_ParallelForKernel_RANGE():&#160;handler.hpp'],['../kernel_2detail_2kernel_8hpp.html#a4f7139c7f8f7a4ff82e6678f7c6d44ec',1,'TRISYCL_ParallelForKernel_RANGE():&#160;kernel.hpp'],['../opencl__kernel_8hpp.html#a4f7139c7f8f7a4ff82e6678f7c6d44ec',1,'TRISYCL_ParallelForKernel_RANGE():&#160;opencl_kernel.hpp']]]
+  ['trisycl_5fparallelforkernel_5frange',['TRISYCL_ParallelForKernel_RANGE',['../handler_8hpp.html#a4f7139c7f8f7a4ff82e6678f7c6d44ec',1,'TRISYCL_ParallelForKernel_RANGE():&#160;handler.hpp'],['../kernel_2detail_2kernel_8hpp.html#a4f7139c7f8f7a4ff82e6678f7c6d44ec',1,'TRISYCL_ParallelForKernel_RANGE():&#160;kernel.hpp'],['../opencl__kernel_8hpp.html#a4f7139c7f8f7a4ff82e6678f7c6d44ec',1,'TRISYCL_ParallelForKernel_RANGE():&#160;opencl_kernel.hpp']]],
+  ['trisycl_5fweak_5fattrib_5fprefix',['TRISYCL_WEAK_ATTRIB_PREFIX',['../global__config_8hpp.html#a2618b1336076abbe7158ea65cdb274c7',1,'global_config.hpp']]],
+  ['trisycl_5fweak_5fattrib_5fsuffix',['TRISYCL_WEAK_ATTRIB_SUFFIX',['../global__config_8hpp.html#a422f23837fbd70cbb50416ec00ada6db',1,'global_config.hpp']]]
 ];

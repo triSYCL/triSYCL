@@ -1,4 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; detail::pipe_reservation\l\&lt; PipeAccessor \&gt; \&gt;" alt="" coords="5,5,173,61"/>
-<area shape="rect" id="node2" href="$group__data.html#classcl_1_1sycl_1_1detail_1_1pipe__reservation" title="The implementation of the pipe reservation station. " alt="" coords="221,13,420,54"/>
+<area shape="rect" id="node1" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; accessor\&lt; T, Dimensions,\l Mode, Target \&gt; \&gt;" alt="" coords="5,5,193,61"/>
+<area shape="rect" id="node2" href="$group__data.html#classcl_1_1sycl_1_1detail_1_1accessor" title="The buffer accessor abstracts the way buffer data are accessed inside a kernel in a multidimensional ..." alt="" coords="241,13,457,54"/>
 </map>

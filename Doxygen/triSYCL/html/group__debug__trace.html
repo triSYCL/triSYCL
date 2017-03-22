@@ -183,14 +183,14 @@ template&lt;typename T&gt; </div>
 
 <p>Definition at line <a class="el" href="debug_8hpp_source.html#l00163">163</a> of file <a class="el" href="debug_8hpp_source.html">debug.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="nd__range_8hpp_source.html#l00080">cl::sycl::nd_range&lt; dims &gt;::display()</a>.</p>
+<p>Referenced by <a class="el" href="nd__range_8hpp_source.html#l00080">cl::sycl::nd_range&lt; Dimensions &gt;::display()</a>.</p>
 <div class="fragment"><div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;                       {</div><div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;<span class="preprocessor">#ifdef TRISYCL_DEBUG</span></div><div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    std::cout &lt;&lt; boost::typeindex::type_id&lt;T&gt;().pretty_name() &lt;&lt; <span class="stringliteral">&quot;:&quot;</span>;</div><div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;<span class="preprocessor">#endif</span></div><div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <span class="comment">// Get a pointer to the real object</span></div><div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> e : *static_cast&lt;const T *&gt;(<span class="keyword">this</span>))</div><div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;      std::cout &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; e;</div><div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    std::cout &lt;&lt; std::endl;</div><div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;  }</div></div><!-- fragment -->
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__debug__trace_a85390e89223c32e7e6cadecfdb84de5d_icgraph.png" border="0" usemap="#group__debug__trace_a85390e89223c32e7e6cadecfdb84de5d_icgraph" alt=""/></div>
 <map name="group__debug__trace_a85390e89223c32e7e6cadecfdb84de5d_icgraph" id="group__debug__trace_a85390e89223c32e7e6cadecfdb84de5d_icgraph">
-<area shape="rect" id="node2" href="group__parallelism.html#a07be65b77be5ffd05fdc5a559886dc03" title="Display the value for debugging and validation purpose. " alt="" coords="205,5,331,47"/>
+<area shape="rect" id="node2" href="group__parallelism.html#ac0f2a032b1dafa22a3b7b710f901dd87" title="Display the value for debugging and validation purpose. " alt="" coords="205,5,331,47"/>
 </map>
 </div>
 </p>
@@ -231,7 +231,7 @@ template&lt;typename KernelName , typename Functor &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 26 2016 12:28:40 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 22 2017 16:15:50 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

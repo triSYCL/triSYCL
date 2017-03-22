@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['final_5fdata',['final_data',['../group__data.html#aae5eae0289a55406b5fd88f713f81b46',1,'cl::sycl::detail::buffer']]],
-  ['finished',['finished',['../structcl_1_1sycl_1_1detail_1_1queue.html#a66059a5ed00f836854db954cc3e2007b',1,'cl::sycl::detail::queue']]],
-  ['finished_5fmutex',['finished_mutex',['../structcl_1_1sycl_1_1detail_1_1queue.html#a5626146574f7c0ec06a56e72ee36be58',1,'cl::sycl::detail::queue']]]
+  ['global_5findex',['global_index',['../group__parallelism.html#a9a5696ed1929336a7a982598b67bdb66',1,'cl::sycl::item::global_index()'],['../group__parallelism.html#a20bc042572c9f11b2c1fac3de92835eb',1,'cl::sycl::nd_item::global_index()']]],
+  ['global_5frange',['global_range',['../group__parallelism.html#af7da3134cdf58f770f42ad2c77f818f3',1,'cl::sycl::item::global_range()'],['../group__parallelism.html#af19ba6425b3a425f2962a76027582d57',1,'cl::sycl::nd_range::global_range()']]],
+  ['group_5fid',['group_id',['../group__parallelism.html#a5973132989bccf1b6109d7e221b89ac3',1,'cl::sycl::group']]]
 ];

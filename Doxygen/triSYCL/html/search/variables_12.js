@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['shared_5fdata',['shared_data',['../group__data.html#a2408a246a0ffd637bf7be3127679930e',1,'cl::sycl::detail::buffer']]],
-  ['size',['size',['../group__data.html#a58738a41cdd3a2993541d5c34e642e99',1,'cl::sycl::detail::reserve_id']]],
-  ['start',['start',['../group__data.html#ab130f28b7c0c840fa67a1c1c8e4d600c',1,'cl::sycl::detail::reserve_id']]]
+  ['target',['target',['../group__data.html#acea03f136b77dc577124c0b148ed22a7',1,'cl::sycl::detail::pipe_accessor::target()'],['../group__data.html#aad918cd64ed27e7559745578e130c76b',1,'cl::sycl::detail::pipe_reservation::target()']]],
+  ['task',['task',['../group__data.html#a43d8c27aae9232de3dddfef533fe9392',1,'cl::sycl::detail::accessor::task()'],['../group__execution.html#ae9ae22b417cdf08613cec2736b511c87',1,'cl::sycl::handler::task()']]],
+  ['trisycl_5fweak_5fattrib_5fsuffix',['TRISYCL_WEAK_ATTRIB_SUFFIX',['../group__execution.html#gad15fbbd878f5654946f6020e80b8aedb',1,'cl::sycl::detail']]]
 ];

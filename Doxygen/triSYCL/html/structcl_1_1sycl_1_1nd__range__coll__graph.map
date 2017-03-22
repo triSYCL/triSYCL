@@ -1,11 +1,11 @@
-<map id="cl::sycl::nd_range&lt; dims &gt;" name="cl::sycl::nd_range&lt; dims &gt;">
-<area shape="rect" id="node2" href="$group__parallelism.html" title="cl::sycl::id\&lt; dimensionality \&gt;" alt="" coords="785,237,975,263"/>
-<area shape="rect" id="node3" href="$group__helpers.html" title="cl::sycl::detail::small\l_array_123\&lt; std::size\l_t, id\&lt; dims \&gt;, dims \&gt;" alt="" coords="563,197,714,253"/>
-<area shape="rect" id="node4" href="$group__helpers.html" title="cl::sycl::detail::small\l_array\&lt; std::size_t, id\l\&lt; dims \&gt;, Dims \&gt;" alt="" coords="343,193,492,249"/>
-<area shape="rect" id="node15" href="$group__helpers.html" title="cl::sycl::detail::small\l_array\&lt; std::size_t, range\l\&lt; dims \&gt;, Dims \&gt;" alt="" coords="332,447,503,503"/>
-<area shape="rect" id="node9" href="$group__debug__trace.html" title="cl::sycl::detail::display\l_vector\&lt; id\&lt; dims \&gt; \&gt;" alt="" coords="25,201,177,243"/>
-<area shape="rect" id="node11" href="$classstatic_01const_01size__t.html" title="static const size_t" alt="" coords="36,385,165,411"/>
-<area shape="rect" id="node13" href="$group__parallelism.html" title="cl::sycl::range\&lt; dimensionality \&gt;" alt="" coords="775,422,985,449"/>
-<area shape="rect" id="node14" href="$group__helpers.html" title="cl::sycl::detail::small\l_array_123\&lt; std::size\l_t, range\&lt; dims \&gt;, dims \&gt;" alt="" coords="552,445,725,501"/>
-<area shape="rect" id="node19" href="$group__debug__trace.html" title="cl::sycl::detail::display\l_vector\&lt; range\&lt; dims \&gt; \&gt;" alt="" coords="14,501,187,543"/>
+<map id="cl::sycl::nd_range&lt; Dimensions &gt;" name="cl::sycl::nd_range&lt; Dimensions &gt;">
+<area shape="rect" id="node2" href="$group__parallelism.html" title="cl::sycl::id\&lt; dimensionality \&gt;" alt="" coords="887,237,1076,263"/>
+<area shape="rect" id="node3" href="$group__helpers.html" title="cl::sycl::detail::small\l_array_123\&lt; std::size\l_t, id\&lt; Dimensions \&gt;, Dimensions \&gt;" alt="" coords="593,197,827,253"/>
+<area shape="rect" id="node4" href="$group__helpers.html" title="cl::sycl::detail::small\l_array\&lt; std::size_t, id\l\&lt; Dimensions \&gt;, Dims \&gt;" alt="" coords="375,193,542,249"/>
+<area shape="rect" id="node15" href="$group__helpers.html" title="cl::sycl::detail::small\l_array\&lt; std::size_t, range\l\&lt; Dimensions \&gt;, Dims \&gt;" alt="" coords="373,447,544,503"/>
+<area shape="rect" id="node9" href="$group__debug__trace.html" title="cl::sycl::detail::display\l_vector\&lt; id\&lt; Dimensions \&gt; \&gt;" alt="" coords="25,201,217,243"/>
+<area shape="rect" id="node11" href="$classstatic_01const_01size__t.html" title="static const size_t" alt="" coords="57,385,186,411"/>
+<area shape="rect" id="node13" href="$group__parallelism.html" title="cl::sycl::range\&lt; dimensionality \&gt;" alt="" coords="876,422,1087,449"/>
+<area shape="rect" id="node14" href="$group__helpers.html" title="cl::sycl::detail::small\l_array_123\&lt; std::size\l_t, range\&lt; Dimensions \&gt;\l, Dimensions \&gt;" alt="" coords="627,437,793,508"/>
+<area shape="rect" id="node19" href="$group__debug__trace.html" title="cl::sycl::detail::display\l_vector\&lt; range\&lt; Dimensions \&gt; \&gt;" alt="" coords="14,501,229,543"/>
 </map>

@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['epilogues',['epilogues',['../structcl_1_1sycl_1_1detail_1_1task.html#a9e457b8331522939dc10cd56f1f000fa',1,'cl::sycl::detail::task']]],
-  ['execution_5fended',['execution_ended',['../structcl_1_1sycl_1_1detail_1_1task.html#af24bc44bd88469b222627dee47548e23',1,'cl::sycl::detail::task']]]
+  ['final_5fwrite_5fback',['final_write_back',['../group__data.html#a26b81339faedcdb7b236bb4187767678',1,'cl::sycl::detail::buffer']]],
+  ['finished',['finished',['../structcl_1_1sycl_1_1detail_1_1queue.html#a66059a5ed00f836854db954cc3e2007b',1,'cl::sycl::detail::queue']]],
+  ['finished_5fmutex',['finished_mutex',['../structcl_1_1sycl_1_1detail_1_1queue.html#a5626146574f7c0ec06a56e72ee36be58',1,'cl::sycl::detail::queue']]]
 ];

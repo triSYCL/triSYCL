@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['target',['target',['../group__data.html#acea03f136b77dc577124c0b148ed22a7',1,'cl::sycl::detail::pipe_accessor::target()'],['../group__data.html#aad918cd64ed27e7559745578e130c76b',1,'cl::sycl::detail::pipe_reservation::target()']]],
-  ['task',['task',['../group__data.html#a43d8c27aae9232de3dddfef533fe9392',1,'cl::sycl::detail::accessor::task()'],['../group__execution.html#ae9ae22b417cdf08613cec2736b511c87',1,'cl::sycl::handler::task()']]]
+  ['used_5ffor_5freading',['used_for_reading',['../group__data.html#a1bfd345a504f028b34108fba8a765835',1,'cl::sycl::detail::pipe']]],
+  ['used_5ffor_5fwriting',['used_for_writing',['../group__data.html#a3a9c0543074863d7f12c5b27dd2651f9',1,'cl::sycl::detail::pipe']]]
 ];

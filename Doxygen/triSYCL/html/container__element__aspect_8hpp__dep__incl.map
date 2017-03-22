@@ -1,0 +1,9 @@
+<map id="include/CL/sycl/detail/container_element_aspect.hpp" name="include/CL/sycl/detail/container_element_aspect.hpp">
+<area shape="rect" id="node2" href="$accessor_8hpp.html" title="include/CL/sycl/accessor.hpp" alt="" coords="232,95,427,121"/>
+<area shape="rect" id="node3" href="$buffer_8hpp.html" title="include/CL/sycl/buffer.hpp" alt="" coords="38,333,213,360"/>
+<area shape="rect" id="node4" href="$sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="238,408,376,435"/>
+<area shape="rect" id="node5" href="$handler_8hpp.html" title="include/CL/sycl/handler.hpp" alt="" coords="238,169,421,196"/>
+<area shape="rect" id="node6" href="$pipe_8hpp.html" title="include/CL/sycl/pipe.hpp" alt="" coords="376,251,542,278"/>
+<area shape="rect" id="node8" href="$static__pipe_8hpp.html" title="include/CL/sycl/static\l_pipe.hpp" alt="" coords="566,244,714,285"/>
+<area shape="rect" id="node7" href="$queue_8hpp.html" title="include/CL/sycl/queue.hpp" alt="" coords="126,251,302,278"/>
+</map>

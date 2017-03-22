@@ -121,7 +121,7 @@ Include dependency graph for parallelism.hpp:</div>
 <area shape="rect" id="node9" href="small__array_8hpp.html" title="CL/sycl/detail/small\l_array.hpp" alt="" coords="753,408,890,449"/>
 <area shape="rect" id="node13" href="debug_8hpp.html" title="CL/sycl/detail/debug.hpp" alt="" coords="777,497,943,524"/>
 <area shape="rect" id="node25" href="access_8hpp.html" title="CL/sycl/access.hpp" alt="" coords="768,169,907,196"/>
-<area shape="rect" id="node26" href="unimplemented_8hpp.html" title="CL/sycl/detail/unimplemented.hpp" alt="" coords="968,333,1187,360"/>
+<area shape="rect" id="node26" href="unimplemented_8hpp.html" title="CL/sycl/detail/unimplemented.hpp" alt="" coords="969,333,1188,360"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -165,31 +165,31 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga5cf01f5b2a22ffa82891b1bc09c3e962"><td class="memTemplParams" colspan="2">template&lt;std::size_t Dimensions = 1, typename ParallelForFunctor , typename Id &gt; </td></tr>
+<tr class="memitem:ga5cf01f5b2a22ffa82891b1bc09c3e962"><td class="memTemplParams" colspan="2">template&lt;int Dimensions = 1, typename ParallelForFunctor , typename Id &gt; </td></tr>
 <tr class="memitem:ga5cf01f5b2a22ffa82891b1bc09c3e962"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__parallelism.html#ga5cf01f5b2a22ffa82891b1bc09c3e962">cl::sycl::detail::parallel_for</a> (range&lt; Dimensions &gt; r, ParallelForFunctor f, Id)</td></tr>
 <tr class="memdesc:ga5cf01f5b2a22ffa82891b1bc09c3e962"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of a data parallel computation with parallelism specified at launch time by a range&lt;&gt;.  <a href="group__parallelism.html#ga5cf01f5b2a22ffa82891b1bc09c3e962">More...</a><br /></td></tr>
 <tr class="separator:ga5cf01f5b2a22ffa82891b1bc09c3e962"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1a6d6492773c7728926bee97c90e9ba5"><td class="memTemplParams" colspan="2">template&lt;std::size_t Dimensions = 1, typename ParallelForFunctor &gt; </td></tr>
+<tr class="memitem:ga1a6d6492773c7728926bee97c90e9ba5"><td class="memTemplParams" colspan="2">template&lt;int Dimensions = 1, typename ParallelForFunctor &gt; </td></tr>
 <tr class="memitem:ga1a6d6492773c7728926bee97c90e9ba5"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__parallelism.html#ga1a6d6492773c7728926bee97c90e9ba5">cl::sycl::detail::parallel_for</a> (range&lt; Dimensions &gt; r, ParallelForFunctor f, item&lt; Dimensions &gt;)</td></tr>
 <tr class="memdesc:ga1a6d6492773c7728926bee97c90e9ba5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of a data parallel computation with parallelism specified at launch time by a range&lt;&gt;.  <a href="group__parallelism.html#ga1a6d6492773c7728926bee97c90e9ba5">More...</a><br /></td></tr>
 <tr class="separator:ga1a6d6492773c7728926bee97c90e9ba5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabc76ab52eb1826aaaa49a2d704de43d4"><td class="memTemplParams" colspan="2">template&lt;std::size_t Dimensions = 1, typename ParallelForFunctor &gt; </td></tr>
+<tr class="memitem:gabc76ab52eb1826aaaa49a2d704de43d4"><td class="memTemplParams" colspan="2">template&lt;int Dimensions = 1, typename ParallelForFunctor &gt; </td></tr>
 <tr class="memitem:gabc76ab52eb1826aaaa49a2d704de43d4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__parallelism.html#gabc76ab52eb1826aaaa49a2d704de43d4">cl::sycl::detail::parallel_for</a> (range&lt; Dimensions &gt; r, ParallelForFunctor f)</td></tr>
 <tr class="memdesc:gabc76ab52eb1826aaaa49a2d704de43d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls the appropriate ternary parallel_for overload based on the index type of the kernel function object f.  <a href="group__parallelism.html#gabc76ab52eb1826aaaa49a2d704de43d4">More...</a><br /></td></tr>
 <tr class="separator:gabc76ab52eb1826aaaa49a2d704de43d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gadd585203df163dadc5975119f59f8bd8"><td class="memTemplParams" colspan="2">template&lt;std::size_t Dimensions = 1, typename ParallelForFunctor &gt; </td></tr>
+<tr class="memitem:gadd585203df163dadc5975119f59f8bd8"><td class="memTemplParams" colspan="2">template&lt;int Dimensions = 1, typename ParallelForFunctor &gt; </td></tr>
 <tr class="memitem:gadd585203df163dadc5975119f59f8bd8"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__parallelism.html#gadd585203df163dadc5975119f59f8bd8">cl::sycl::detail::parallel_for_global_offset</a> (range&lt; Dimensions &gt; global_size, id&lt; Dimensions &gt; offset, ParallelForFunctor f)</td></tr>
 <tr class="memdesc:gadd585203df163dadc5975119f59f8bd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of parallel_for with a range&lt;&gt; and an offset.  <a href="group__parallelism.html#gadd585203df163dadc5975119f59f8bd8">More...</a><br /></td></tr>
 <tr class="separator:gadd585203df163dadc5975119f59f8bd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3156c9a9179d62eb40321f2b86448cea"><td class="memTemplParams" colspan="2">template&lt;std::size_t Dimensions = 1, typename ParallelForFunctor &gt; </td></tr>
+<tr class="memitem:ga3156c9a9179d62eb40321f2b86448cea"><td class="memTemplParams" colspan="2">template&lt;int Dimensions = 1, typename ParallelForFunctor &gt; </td></tr>
 <tr class="memitem:ga3156c9a9179d62eb40321f2b86448cea"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__parallelism.html#ga3156c9a9179d62eb40321f2b86448cea">cl::sycl::detail::parallel_for</a> (nd_range&lt; Dimensions &gt; r, ParallelForFunctor f)</td></tr>
 <tr class="memdesc:ga3156c9a9179d62eb40321f2b86448cea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implement a variation of parallel_for to take into account a nd_range&lt;&gt;  <a href="group__parallelism.html#ga3156c9a9179d62eb40321f2b86448cea">More...</a><br /></td></tr>
 <tr class="separator:ga3156c9a9179d62eb40321f2b86448cea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaaa0f5e798ca65419dce78013af732580"><td class="memTemplParams" colspan="2">template&lt;std::size_t Dimensions = 1, typename ParallelForFunctor &gt; </td></tr>
+<tr class="memitem:gaaa0f5e798ca65419dce78013af732580"><td class="memTemplParams" colspan="2">template&lt;int Dimensions = 1, typename ParallelForFunctor &gt; </td></tr>
 <tr class="memitem:gaaa0f5e798ca65419dce78013af732580"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__parallelism.html#gaaa0f5e798ca65419dce78013af732580">cl::sycl::detail::parallel_for_workgroup</a> (nd_range&lt; Dimensions &gt; r, ParallelForFunctor f)</td></tr>
 <tr class="memdesc:gaaa0f5e798ca65419dce78013af732580"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implement the loop on the work-groups.  <a href="group__parallelism.html#gaaa0f5e798ca65419dce78013af732580">More...</a><br /></td></tr>
 <tr class="separator:gaaa0f5e798ca65419dce78013af732580"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3004da03b4f3be8dc72c49b58076107b"><td class="memTemplParams" colspan="2">template&lt;std::size_t Dimensions = 1, typename ParallelForFunctor &gt; </td></tr>
+<tr class="memitem:ga3004da03b4f3be8dc72c49b58076107b"><td class="memTemplParams" colspan="2">template&lt;int Dimensions = 1, typename ParallelForFunctor &gt; </td></tr>
 <tr class="memitem:ga3004da03b4f3be8dc72c49b58076107b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__parallelism.html#ga3004da03b4f3be8dc72c49b58076107b">cl::sycl::detail::parallel_for_workitem</a> (const group&lt; Dimensions &gt; &amp;g, ParallelForFunctor f)</td></tr>
 <tr class="memdesc:ga3004da03b4f3be8dc72c49b58076107b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implement the loop on the work-items inside a work-group.  <a href="group__parallelism.html#ga3004da03b4f3be8dc72c49b58076107b">More...</a><br /></td></tr>
 <tr class="separator:ga3004da03b4f3be8dc72c49b58076107b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -203,7 +203,7 @@ Functions</h2></td></tr>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 26 2016 12:28:40 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 22 2017 16:15:50 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

@@ -1,10 +1,10 @@
 var searchData=
 [
-  ['element',['element',['../group__data.html#a8b3f6cfc5029101a6cb23cdd4cd26d6a',1,'cl::sycl::detail::accessor::element()'],['../group__data.html#ad0994dbca2c28c62501effcdfabb4591',1,'cl::sycl::detail::buffer::element()']]],
+  ['element',['element',['../group__data.html#a324e73490da511091fd9af88a72c2e47',1,'cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;::element()'],['../group__data.html#a8b3f6cfc5029101a6cb23cdd4cd26d6a',1,'cl::sycl::detail::accessor::element()'],['../group__data.html#ad0994dbca2c28c62501effcdfabb4591',1,'cl::sycl::detail::buffer::element()']]],
   ['element_5ftype',['element_type',['../group__helpers.html#a1cdbabd8537ecb267b05acb538068e06',1,'cl::sycl::detail::small_array']]],
   ['empty',['empty',['../group__data.html#acad6887dc41c9e2cad0581a63593fdd9',1,'cl::sycl::detail::pipe::empty()'],['../group__data.html#acce143fee11778ece5a25090d67fbaf5',1,'cl::sycl::detail::pipe_accessor::empty()']]],
   ['empty_5fwith_5flock',['empty_with_lock',['../group__data.html#a996db84ef5666d07acea421668301999',1,'cl::sycl::detail::pipe']]],
-  ['end',['end',['../group__data.html#a2f731d70fc9b432efadb6a6343d62366',1,'cl::sycl::accessor::end()'],['../group__data.html#a76e0591fddb73ea913b82ade0896dcac',1,'cl::sycl::detail::accessor::end()'],['../group__data.html#a17897be72442497dba6520ca17cc5e29',1,'cl::sycl::detail::pipe_reservation::end()'],['../group__data.html#ae8286f6bbabb3d26bbd981db65884133',1,'cl::sycl::pipe_reservation::end()']]],
+  ['end',['end',['../group__data.html#ae4498832b73d662bc6c6bf71943879a0',1,'cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;::end()'],['../group__data.html#a2f731d70fc9b432efadb6a6343d62366',1,'cl::sycl::accessor::end()'],['../group__data.html#a76e0591fddb73ea913b82ade0896dcac',1,'cl::sycl::detail::accessor::end()'],['../group__data.html#a17897be72442497dba6520ca17cc5e29',1,'cl::sycl::detail::pipe_reservation::end()'],['../group__data.html#ae8286f6bbabb3d26bbd981db65884133',1,'cl::sycl::pipe_reservation::end()']]],
   ['endian_5flittle',['endian_little',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a1ee2cf1adadda40ea92349e1d8f11ed6',1,'cl::sycl::info']]],
   ['epilogues',['epilogues',['../structcl_1_1sycl_1_1detail_1_1task.html#a9e457b8331522939dc10cd56f1f000fa',1,'cl::sycl::detail::task']]],
   ['error_5fcorrection_5fsupport',['error_correction_support',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a419c736fc210de1c55decd67e8ac9f61',1,'cl::sycl::info']]],

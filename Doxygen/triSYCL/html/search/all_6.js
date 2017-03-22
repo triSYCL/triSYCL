@@ -3,7 +3,7 @@ var searchData=
   ['feature_5fnot_5fsupported',['feature_not_supported',['../group__error__handling.html#classcl_1_1sycl_1_1feature__not__supported',1,'cl::sycl']]],
   ['fence_5fspace',['fence_space',['../namespacecl_1_1sycl_1_1access.html#a1e26dc60d7c93fcc056d6be0c41d1d42',1,'cl::sycl::access']]],
   ['fill_5ftuple',['fill_tuple',['../group__array__tuple__helpers.html#gaaa1125f5f5cc3cc88c1d56abfdd67188',1,'cl::sycl::detail::expand_to_vector&lt; V, Tuple, true &gt;']]],
-  ['final_5fdata',['final_data',['../group__data.html#aae5eae0289a55406b5fd88f713f81b46',1,'cl::sycl::detail::buffer']]],
+  ['final_5fwrite_5fback',['final_write_back',['../group__data.html#a26b81339faedcdb7b236bb4187767678',1,'cl::sycl::detail::buffer']]],
   ['finished',['finished',['../structcl_1_1sycl_1_1detail_1_1queue.html#a66059a5ed00f836854db954cc3e2007b',1,'cl::sycl::detail::queue']]],
   ['finished_5fmutex',['finished_mutex',['../structcl_1_1sycl_1_1detail_1_1queue.html#a5626146574f7c0ec06a56e72ee36be58',1,'cl::sycl::detail::queue']]],
   ['flatten',['flatten',['../group__vector.html#a120503e994c94fbeeffd4ea5b89eaf72',1,'cl::sycl::vec::flatten(const vec&lt; Element, s &gt; i)'],['../group__vector.html#a9b7c11957de1c65cb66d495ad24ca7fb',1,'cl::sycl::vec::flatten(const Type i)']]],

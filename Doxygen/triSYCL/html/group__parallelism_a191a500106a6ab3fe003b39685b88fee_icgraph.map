@@ -1,0 +1,6 @@
+<map id="cl::sycl::nd_range::get_group" name="cl::sycl::nd_range::get_group">
+<area shape="rect" id="node2" href="$group__parallelism.html#ga3156c9a9179d62eb40321f2b86448cea" title="Implement a variation of parallel_for to take into account a nd_range&lt;&gt; " alt="" coords="179,5,353,32"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#gaaa0f5e798ca65419dce78013af732580" title="Implement the loop on the work&#45;groups. " alt="" coords="190,57,342,98"/>
+<area shape="rect" id="node4" href="$group__execution.html#a5ae74565e39d4763c7efdba3581d087b" title="Hierarchical kernel invocation method of a kernel defined as a lambda encoding the body of each work&#45;..." alt="" coords="401,57,560,98"/>
+<area shape="rect" id="node5" href="$group__execution.html#ae027732012b54eea62f2b7ffd9104f46" title="Hierarchical kernel invocation method of a kernel defined as a lambda encoding the body of each work&#45;..." alt="" coords="608,57,767,98"/>
+</map>

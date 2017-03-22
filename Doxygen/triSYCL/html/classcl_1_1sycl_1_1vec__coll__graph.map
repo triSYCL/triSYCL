@@ -1,5 +1,5 @@
 <map id="cl::sycl::vec&lt; DataType, NumElements &gt;" name="cl::sycl::vec&lt; DataType, NumElements &gt;">
-<area shape="rect" id="node2" href="$group__helpers.html" title="cl::sycl::detail::small\l_array\&lt; DataType, vec\l\&lt; DataType, NumElements\l \&gt;, NumElements \&gt;" alt="" coords="348,200,531,271"/>
-<area shape="rect" id="node7" href="$group__debug__trace.html" title="cl::sycl::detail::display\l_vector\&lt; vec\&lt; DataType,\l NumElements \&gt; \&gt;" alt="" coords="23,279,194,335"/>
-<area shape="rect" id="node9" href="$classstatic_01const_01size__t.html" title="static const size_t" alt="" coords="44,410,173,437"/>
+<area shape="rect" id="node2" href="$group__helpers.html" title="cl::sycl::detail::small\l_array\&lt; DataType, vec\l\&lt; DataType, NumElements\l \&gt;, NumElements \&gt;" alt="" coords="348,203,531,273"/>
+<area shape="rect" id="node7" href="$group__debug__trace.html" title="cl::sycl::detail::display\l_vector\&lt; vec\&lt; DataType,\l NumElements \&gt; \&gt;" alt="" coords="23,283,194,339"/>
+<area shape="rect" id="node9" href="$classstatic_01const_01size__t.html" title="static const size_t" alt="" coords="44,414,173,441"/>
 </map>

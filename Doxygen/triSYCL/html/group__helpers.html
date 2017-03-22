@@ -88,6 +88,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:structcl_1_1sycl_1_1detail_1_1container__element__aspect"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#structcl_1_1sycl_1_1detail_1_1container__element__aspect">cl::sycl::detail::container_element_aspect&lt; T &gt;</a></td></tr>
+<tr class="memdesc:structcl_1_1sycl_1_1detail_1_1container__element__aspect"><td class="mdescLeft">&#160;</td><td class="mdescRight">A mix-in to add some container element aspects.  <a href="group__helpers.html#structcl_1_1sycl_1_1detail_1_1container__element__aspect">More...</a><br /></td></tr>
+<tr class="separator:structcl_1_1sycl_1_1detail_1_1container__element__aspect"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structcl_1_1sycl_1_1detail_1_1small__array"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#structcl_1_1sycl_1_1detail_1_1small__array">cl::sycl::detail::small_array&lt; BasicType, FinalType, Dims, EnableArgsConstructor &gt;</a></td></tr>
 <tr class="memdesc:structcl_1_1sycl_1_1detail_1_1small__array"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define a multi-dimensional index, used for example to locate a work item or a buffer element.  <a href="group__helpers.html#structcl_1_1sycl_1_1detail_1_1small__array">More...</a><br /></td></tr>
 <tr class="separator:structcl_1_1sycl_1_1detail_1_1small__array"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -95,7 +98,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:structcl_1_1sycl_1_1detail_1_1small__array__123"><td class="mdescLeft">&#160;</td><td class="mdescRight">A small array of 1, 2 or 3 elements with the implicit constructors.  <a href="group__helpers.html#structcl_1_1sycl_1_1detail_1_1small__array__123">More...</a><br /></td></tr>
 <tr class="separator:structcl_1_1sycl_1_1detail_1_1small__array__123"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structcl_1_1sycl_1_1detail_1_1small__array__123_3_01BasicType_00_01FinalType_00_011_01_4"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#structcl_1_1sycl_1_1detail_1_1small__array__123_3_01BasicType_00_01FinalType_00_011_01_4">cl::sycl::detail::small_array_123&lt; BasicType, FinalType, 1 &gt;</a></td></tr>
-<tr class="memdesc:structcl_1_1sycl_1_1detail_1_1small__array__123_3_01BasicType_00_01FinalType_00_011_01_4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use some specializations so that some function overloads can be determined according to some implicit constructors and to have an implicit conversion from/to BasicType (such as an int typically) if dims = 1.  <a href="group__helpers.html#structcl_1_1sycl_1_1detail_1_1small__array__123_3_01BasicType_00_01FinalType_00_011_01_4">More...</a><br /></td></tr>
+<tr class="memdesc:structcl_1_1sycl_1_1detail_1_1small__array__123_3_01BasicType_00_01FinalType_00_011_01_4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use some specializations so that some function overloads can be determined according to some implicit constructors and to have an implicit conversion from/to BasicType (such as an int typically) if Dimensions = 1.  <a href="group__helpers.html#structcl_1_1sycl_1_1detail_1_1small__array__123_3_01BasicType_00_01FinalType_00_011_01_4">More...</a><br /></td></tr>
 <tr class="separator:structcl_1_1sycl_1_1detail_1_1small__array__123_3_01BasicType_00_01FinalType_00_011_01_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structcl_1_1sycl_1_1detail_1_1small__array__123_3_01BasicType_00_01FinalType_00_012_01_4"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#structcl_1_1sycl_1_1detail_1_1small__array__123_3_01BasicType_00_01FinalType_00_012_01_4">cl::sycl::detail::small_array_123&lt; BasicType, FinalType, 2 &gt;</a></td></tr>
 <tr class="separator:structcl_1_1sycl_1_1detail_1_1small__array__123_3_01BasicType_00_01FinalType_00_012_01_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -120,6 +123,118 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <hr/><h2 class="groupheader">Class Documentation</h2>
+<a name="structcl_1_1sycl_1_1detail_1_1container__element__aspect" id="structcl_1_1sycl_1_1detail_1_1container__element__aspect"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct cl::sycl::detail::container_element_aspect</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"><h3>template&lt;typename T&gt;<br />
+struct cl::sycl::detail::container_element_aspect&lt; T &gt;</h3>
+
+<p>A mix-in to add some container element aspects. </p>
+
+<p>Definition at line <a class="el" href="container__element__aspect_8hpp_source.html#l00023">23</a> of file <a class="el" href="container__element__aspect_8hpp_source.html">container_element_aspect.hpp</a>.</p>
+</div><table class="memberdecls">
+<tr><td colspan="2"><h3>Public Types</h3></td></tr>
+<tr class="memitem:a70dca993571b23ac0c9b27ffcb005189"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#a70dca993571b23ac0c9b27ffcb005189">value_type</a> = T</td></tr>
+<tr class="separator:a70dca993571b23ac0c9b27ffcb005189"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42008d2e8bc144a76b2fa03901bbd6ac"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#a42008d2e8bc144a76b2fa03901bbd6ac">pointer</a> = <a class="el" href="group__helpers.html#a70dca993571b23ac0c9b27ffcb005189">value_type</a> *</td></tr>
+<tr class="separator:a42008d2e8bc144a76b2fa03901bbd6ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ec892b0cb5fa67f5a83dfa682ec7d89"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#a2ec892b0cb5fa67f5a83dfa682ec7d89">const_pointer</a> = const <a class="el" href="group__helpers.html#a70dca993571b23ac0c9b27ffcb005189">value_type</a> *</td></tr>
+<tr class="separator:a2ec892b0cb5fa67f5a83dfa682ec7d89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6403452e6faf0c6e05f77b4a8502234"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#aa6403452e6faf0c6e05f77b4a8502234">reference</a> = <a class="el" href="group__helpers.html#a70dca993571b23ac0c9b27ffcb005189">value_type</a> &amp;</td></tr>
+<tr class="separator:aa6403452e6faf0c6e05f77b4a8502234"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9647c61c8b59e41c41f9ceeb90219ae"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#aa9647c61c8b59e41c41f9ceeb90219ae">const_reference</a> = const <a class="el" href="group__helpers.html#a70dca993571b23ac0c9b27ffcb005189">value_type</a> &amp;</td></tr>
+<tr class="separator:aa9647c61c8b59e41c41f9ceeb90219ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h4 class="groupheader">Member Typedef Documentation</h4>
+<a class="anchor" id="a2ec892b0cb5fa67f5a83dfa682ec7d89"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="group__helpers.html#structcl_1_1sycl_1_1detail_1_1container__element__aspect">cl::sycl::detail::container_element_aspect</a>&lt; T &gt;::<a class="el" href="group__helpers.html#a2ec892b0cb5fa67f5a83dfa682ec7d89">const_pointer</a> =  const <a class="el" href="group__helpers.html#a70dca993571b23ac0c9b27ffcb005189">value_type</a>*</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="container__element__aspect_8hpp_source.html#l00027">27</a> of file <a class="el" href="container__element__aspect_8hpp_source.html">container_element_aspect.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa9647c61c8b59e41c41f9ceeb90219ae"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="group__helpers.html#structcl_1_1sycl_1_1detail_1_1container__element__aspect">cl::sycl::detail::container_element_aspect</a>&lt; T &gt;::<a class="el" href="group__helpers.html#aa9647c61c8b59e41c41f9ceeb90219ae">const_reference</a> =  const <a class="el" href="group__helpers.html#a70dca993571b23ac0c9b27ffcb005189">value_type</a>&amp;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="container__element__aspect_8hpp_source.html#l00029">29</a> of file <a class="el" href="container__element__aspect_8hpp_source.html">container_element_aspect.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a42008d2e8bc144a76b2fa03901bbd6ac"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="group__helpers.html#structcl_1_1sycl_1_1detail_1_1container__element__aspect">cl::sycl::detail::container_element_aspect</a>&lt; T &gt;::<a class="el" href="group__helpers.html#a42008d2e8bc144a76b2fa03901bbd6ac">pointer</a> =  <a class="el" href="group__helpers.html#a70dca993571b23ac0c9b27ffcb005189">value_type</a>*</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="container__element__aspect_8hpp_source.html#l00026">26</a> of file <a class="el" href="container__element__aspect_8hpp_source.html">container_element_aspect.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa6403452e6faf0c6e05f77b4a8502234"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="group__helpers.html#structcl_1_1sycl_1_1detail_1_1container__element__aspect">cl::sycl::detail::container_element_aspect</a>&lt; T &gt;::<a class="el" href="group__helpers.html#aa6403452e6faf0c6e05f77b4a8502234">reference</a> =  <a class="el" href="group__helpers.html#a70dca993571b23ac0c9b27ffcb005189">value_type</a>&amp;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="container__element__aspect_8hpp_source.html#l00028">28</a> of file <a class="el" href="container__element__aspect_8hpp_source.html">container_element_aspect.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a70dca993571b23ac0c9b27ffcb005189"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="group__helpers.html#structcl_1_1sycl_1_1detail_1_1container__element__aspect">cl::sycl::detail::container_element_aspect</a>&lt; T &gt;::<a class="el" href="group__helpers.html#a70dca993571b23ac0c9b27ffcb005189">value_type</a> =  T</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="container__element__aspect_8hpp_source.html#l00025">25</a> of file <a class="el" href="container__element__aspect_8hpp_source.html">container_element_aspect.hpp</a>.</p>
+
+</div>
+</div>
+
+</div>
+</div>
 <a name="structcl_1_1sycl_1_1detail_1_1small__array" id="structcl_1_1sycl_1_1detail_1_1small__array"></a>
 <div class="memitem">
 <div class="memproto">
@@ -171,6 +286,15 @@ Collaboration diagram for cl::sycl::detail::small_array&lt; BasicType, FinalType
 <tr class="memitem:a21a2a5d6e5b2e974dd6e2cab016c5c55"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__helpers.html#a21a2a5d6e5b2e974dd6e2cab016c5c55">small_array</a> (const SourceType src[Dims])</td></tr>
 <tr class="memdesc:a21a2a5d6e5b2e974dd6e2cab016c5c55"><td class="mdescLeft">&#160;</td><td class="mdescRight">A constructor from another array.  <a href="#a21a2a5d6e5b2e974dd6e2cab016c5c55">More...</a><br /></td></tr>
 <tr class="separator:a21a2a5d6e5b2e974dd6e2cab016c5c55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abbcefb16591cb0160d01ae3f28546e51"><td class="memItemLeft" align="right" valign="top">BasicType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#abbcefb16591cb0160d01ae3f28546e51">x</a> ()</td></tr>
+<tr class="memdesc:abbcefb16591cb0160d01ae3f28546e51"><td class="mdescLeft">&#160;</td><td class="mdescRight">An accessor to the first variable of a small array.  <a href="#abbcefb16591cb0160d01ae3f28546e51">More...</a><br /></td></tr>
+<tr class="separator:abbcefb16591cb0160d01ae3f28546e51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e5edce948800131ed61f95174969cc9"><td class="memItemLeft" align="right" valign="top">BasicType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#a0e5edce948800131ed61f95174969cc9">y</a> ()</td></tr>
+<tr class="memdesc:a0e5edce948800131ed61f95174969cc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">An accessor to the second variable of a small array.  <a href="#a0e5edce948800131ed61f95174969cc9">More...</a><br /></td></tr>
+<tr class="separator:a0e5edce948800131ed61f95174969cc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05fbad577e46deccf3ac902ed817902c"><td class="memItemLeft" align="right" valign="top">BasicType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#a05fbad577e46deccf3ac902ed817902c">z</a> ()</td></tr>
+<tr class="memdesc:a05fbad577e46deccf3ac902ed817902c"><td class="mdescLeft">&#160;</td><td class="mdescRight">An accessor to the third variable of a small array.  <a href="#a05fbad577e46deccf3ac902ed817902c">More...</a><br /></td></tr>
+<tr class="separator:a05fbad577e46deccf3ac902ed817902c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac95c419f9323c9798d44a0e536cba0af"><td class="memTemplParams" colspan="2">template&lt;typename SourceBasicType , typename SourceFinalType , bool SourceEnableArgsConstructor&gt; </td></tr>
 <tr class="memitem:ac95c419f9323c9798d44a0e536cba0af"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__helpers.html#ac95c419f9323c9798d44a0e536cba0af">small_array</a> (const <a class="el" href="group__helpers.html#structcl_1_1sycl_1_1detail_1_1small__array">small_array</a>&lt; SourceBasicType, SourceFinalType, Dims, SourceEnableArgsConstructor &gt; &amp;src)</td></tr>
 <tr class="memdesc:ac95c419f9323c9798d44a0e536cba0af"><td class="mdescLeft">&#160;</td><td class="mdescRight">A constructor from another <a class="el" href="group__helpers.html#structcl_1_1sycl_1_1detail_1_1small__array" title="Define a multi-dimensional index, used for example to locate a work item or a buffer element...">small_array</a> of the same size.  <a href="#ac95c419f9323c9798d44a0e536cba0af">More...</a><br /></td></tr>
@@ -281,8 +405,8 @@ template&lt;typename SourceBasicType , typename SourceFinalType , bool SourceEna
 
 <p>A constructor from another <a class="el" href="group__helpers.html#structcl_1_1sycl_1_1detail_1_1small__array" title="Define a multi-dimensional index, used for example to locate a work item or a buffer element...">small_array</a> of the same size. </p>
 
-<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00104">104</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                                                 {</div><div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    std::copy_n(&amp;src[0], Dims, &amp;(*<span class="keyword">this</span>)[0]);</div><div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;  }</div></div><!-- fragment -->
+<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00128">128</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;                                                 {</div><div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    std::copy_n(&amp;src[0], Dims, &amp;(*<span class="keyword">this</span>)[0]);</div><div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;  }</div></div><!-- fragment -->
 </div>
 </div>
 <a class="anchor" id="a61e2a8695bdfe9912db5eac60ff6dbf4"></a>
@@ -315,8 +439,8 @@ template&lt;typename... Types, bool Depend = true, typename  = typename std::ena
 <p>Strangely, even when using the array constructors, the initialization of the aggregate is not available. So recreate an equivalent here.</p>
 <p>Since there are inherited types that defines some constructors with some conflicts, make it optional here, according to EnableArgsConstructor template parameter. </p>
 
-<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00127">127</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    : std::array&lt;BasicType, Dims&gt; {</div><div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="comment">// Allow a loss of precision in initialization with the static_cast</span></div><div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    { <span class="keyword">static_cast&lt;</span>BasicType<span class="keyword">&gt;</span>(args)... }</div><div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;  }</div></div><!-- fragment -->
+<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00151">151</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    : std::array&lt;BasicType, Dims&gt; {</div><div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    <span class="comment">// Allow a loss of precision in initialization with the static_cast</span></div><div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    { <span class="keyword">static_cast&lt;</span>BasicType<span class="keyword">&gt;</span>(args)... }</div><div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;  }</div></div><!-- fragment -->
 </div>
 </div>
 <a class="anchor" id="a1ac4c2ac8fd4dc31bcdf9ccb78e1fea1"></a>
@@ -347,8 +471,8 @@ template&lt;typename SourceBasicType &gt; </div>
 
 <p>Construct a <a class="el" href="group__helpers.html#structcl_1_1sycl_1_1detail_1_1small__array" title="Define a multi-dimensional index, used for example to locate a work item or a buffer element...">small_array</a> from a std::array. </p>
 
-<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00141">141</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;  : std::array&lt;BasicType, Dims&gt;(src) {}</div></div><!-- fragment -->
+<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00165">165</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;  : std::array&lt;BasicType, Dims&gt;(src) {}</div></div><!-- fragment -->
 </div>
 </div>
 <a class="anchor" id="afdc1a4250b3757bdaba747c222918e2e"></a>
@@ -376,7 +500,7 @@ template&lt;typename BasicType, typename FinalType, std::size_t Dims, bool Enabl
 
 <p>Keep the synthesized constructors. </p>
 
-<p>Referenced by <a class="el" href="small__array_8hpp_source.html#l00141">cl::sycl::detail::small_array&lt; BasicType, FinalType, 3 &gt;::small_array()</a>.</p>
+<p>Referenced by <a class="el" href="small__array_8hpp_source.html#l00165">cl::sycl::detail::small_array&lt; BasicType, FinalType, 3 &gt;::small_array()</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -417,8 +541,8 @@ template&lt;typename BasicType, typename FinalType, std::size_t Dims, bool Enabl
 
 <p>Return the element of the array. </p>
 
-<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00152">152</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;                                  {</div><div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)[index];</div><div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;  }</div></div><!-- fragment -->
+<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00176">176</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;                                  {</div><div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)[index];</div><div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;  }</div></div><!-- fragment -->
 </div>
 </div>
 <a class="anchor" id="ac168ef8ad3e7afa4c8335ce785c3e658"></a>
@@ -447,8 +571,134 @@ template&lt;typename BasicType, typename FinalType, std::size_t Dims, bool Enabl
 <p>Add + like operations on the id&lt;&gt; and others. </p>
 <p>Add - like operations on the id&lt;&gt; and others Add * like operations on the id&lt;&gt; and others Add / like operations on the id&lt;&gt; and others Add % like operations on the id&lt;&gt; and others Add &lt;&lt; like operations on the id&lt;&gt; and others Add &gt;&gt; like operations on the id&lt;&gt; and others Add &amp; like operations on the id&lt;&gt; and others Add ^ like operations on the id&lt;&gt; and others Add | like operations on the id&lt;&gt; and others Since the boost::operator work on the <a class="el" href="group__helpers.html#structcl_1_1sycl_1_1detail_1_1small__array" title="Define a multi-dimensional index, used for example to locate a work item or a buffer element...">small_array</a>, add an implicit conversion to produce the expected type </p>
 
-<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00191">191</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;                        {</div><div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    <span class="keywordflow">return</span> *<span class="keyword">static_cast&lt;</span>FinalType *<span class="keyword">&gt;</span>(<span class="keyword">this</span>);</div><div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;  }</div></div><!-- fragment -->
+<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00215">215</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;                        {</div><div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    <span class="keywordflow">return</span> *<span class="keyword">static_cast&lt;</span>FinalType *<span class="keyword">&gt;</span>(<span class="keyword">this</span>);</div><div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;  }</div></div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="abbcefb16591cb0160d01ae3f28546e51"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename BasicType, typename FinalType, std::size_t Dims, bool EnableArgsConstructor = false&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">BasicType&amp; <a class="el" href="group__helpers.html#structcl_1_1sycl_1_1detail_1_1small__array">cl::sycl::detail::small_array</a>&lt; BasicType, FinalType, Dims, EnableArgsConstructor &gt;::x </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>An accessor to the first variable of a small array. </p>
+
+<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00102">102</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="small__array_8hpp_source.html#l00240">cl::sycl::detail::small_array_123&lt; BasicType, FinalType, 1 &gt;::small_array_123()</a>, <a class="el" href="small__array_8hpp_source.html#l00263">cl::sycl::detail::small_array_123&lt; BasicType, FinalType, 2 &gt;::small_array_123()</a>, and <a class="el" href="small__array_8hpp_source.html#l00289">cl::sycl::detail::small_array_123&lt; BasicType, FinalType, 3 &gt;::small_array_123()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;                {</div><div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    static_assert(Dims &gt;= 1, <span class="stringliteral">&quot;can&#39;t access to small_array[0] if Dims &lt; 1&quot;</span>);</div><div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)[0];</div><div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;  }</div></div><!-- fragment -->
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="group__helpers_abbcefb16591cb0160d01ae3f28546e51_icgraph.png" border="0" usemap="#group__helpers_abbcefb16591cb0160d01ae3f28546e51_icgraph" alt=""/></div>
+<map name="group__helpers_abbcefb16591cb0160d01ae3f28546e51_icgraph" id="group__helpers_abbcefb16591cb0160d01ae3f28546e51_icgraph">
+<area shape="rect" id="node2" href="group__helpers.html#acb178825b70641a24f8590d13662328b" title="A 1&#45;D constructor to have implicit conversion from from 1 integer and automatic inference of the dime..." alt="" coords="196,5,360,76"/>
+<area shape="rect" id="node3" href="group__helpers.html#abf83c44bc386a675a95090a4ee2388bd" title="A 2&#45;D constructor to have implicit conversion from from 2 integers and automatic inference of the dim..." alt="" coords="196,100,360,171"/>
+<area shape="rect" id="node4" href="group__helpers.html#a624c04be5fcf8fcd6e34b347223e2c88" title="A 3&#45;D constructor to have implicit conversion from from 3 integers and automatic inference of the dim..." alt="" coords="196,195,360,265"/>
+</map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a0e5edce948800131ed61f95174969cc9"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename BasicType, typename FinalType, std::size_t Dims, bool EnableArgsConstructor = false&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">BasicType&amp; <a class="el" href="group__helpers.html#structcl_1_1sycl_1_1detail_1_1small__array">cl::sycl::detail::small_array</a>&lt; BasicType, FinalType, Dims, EnableArgsConstructor &gt;::y </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>An accessor to the second variable of a small array. </p>
+
+<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00110">110</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="small__array_8hpp_source.html#l00263">cl::sycl::detail::small_array_123&lt; BasicType, FinalType, 2 &gt;::small_array_123()</a>, and <a class="el" href="small__array_8hpp_source.html#l00289">cl::sycl::detail::small_array_123&lt; BasicType, FinalType, 3 &gt;::small_array_123()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;                {</div><div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    static_assert(Dims &gt;= 2, <span class="stringliteral">&quot;can&#39;t access to small_array[1] if Dims &lt; 2&quot;</span>);</div><div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)[1];</div><div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  }</div></div><!-- fragment -->
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="group__helpers_a0e5edce948800131ed61f95174969cc9_icgraph.png" border="0" usemap="#group__helpers_a0e5edce948800131ed61f95174969cc9_icgraph" alt=""/></div>
+<map name="group__helpers_a0e5edce948800131ed61f95174969cc9_icgraph" id="group__helpers_a0e5edce948800131ed61f95174969cc9_icgraph">
+<area shape="rect" id="node2" href="group__helpers.html#abf83c44bc386a675a95090a4ee2388bd" title="A 2&#45;D constructor to have implicit conversion from from 2 integers and automatic inference of the dim..." alt="" coords="196,5,360,76"/>
+<area shape="rect" id="node3" href="group__helpers.html#a624c04be5fcf8fcd6e34b347223e2c88" title="A 3&#45;D constructor to have implicit conversion from from 3 integers and automatic inference of the dim..." alt="" coords="196,100,360,171"/>
+</map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a05fbad577e46deccf3ac902ed817902c"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename BasicType, typename FinalType, std::size_t Dims, bool EnableArgsConstructor = false&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">BasicType&amp; <a class="el" href="group__helpers.html#structcl_1_1sycl_1_1detail_1_1small__array">cl::sycl::detail::small_array</a>&lt; BasicType, FinalType, Dims, EnableArgsConstructor &gt;::z </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>An accessor to the third variable of a small array. </p>
+
+<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00118">118</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="small__array_8hpp_source.html#l00289">cl::sycl::detail::small_array_123&lt; BasicType, FinalType, 3 &gt;::small_array_123()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;                {</div><div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    static_assert(Dims &gt;= 3, <span class="stringliteral">&quot;can&#39;t access to small_array[2] if Dims &lt; 3&quot;</span>);</div><div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)[2];</div><div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;  }</div></div><!-- fragment -->
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="group__helpers_a05fbad577e46deccf3ac902ed817902c_icgraph.png" border="0" usemap="#group__helpers_a05fbad577e46deccf3ac902ed817902c_icgraph" alt=""/></div>
+<map name="group__helpers_a05fbad577e46deccf3ac902ed817902c_icgraph" id="group__helpers_a05fbad577e46deccf3ac902ed817902c_icgraph">
+<area shape="rect" id="node2" href="group__helpers.html#a624c04be5fcf8fcd6e34b347223e2c88" title="A 3&#45;D constructor to have implicit conversion from from 3 integers and automatic inference of the dim..." alt="" coords="196,5,360,76"/>
+</map>
+</div>
+</p>
+
 </div>
 </div>
 <h4 class="groupheader">Member Data Documentation</h4>
@@ -495,7 +745,7 @@ template&lt;typename BasicType, typename FinalType, std::size_t Dims, bool Enabl
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000099">Todo:</a></b></dt><dd>add this Boost::multi_array or STL concept to the specification? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000130">Todo:</a></b></dt><dd>add this Boost::multi_array or STL concept to the specification? </dd></dl>
 
 <p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00080">80</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
 
@@ -518,7 +768,7 @@ struct cl::sycl::detail::small_array_123&lt; BasicType, FinalType, Dims &gt;</h3
 
 <p>A small array of 1, 2 or 3 elements with the implicit constructors. </p>
 
-<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00200">200</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
+<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00224">224</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
 </div><div class="dynheader">
 Inheritance diagram for cl::sycl::detail::small_array_123&lt; BasicType, FinalType, Dims &gt;:</div>
 <div class="dyncontent">
@@ -560,6 +810,15 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:afdc1a4250b3757bdaba747c222918e2e inherit pub_methods_group__helpers"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#afdc1a4250b3757bdaba747c222918e2e">small_array</a> ()=default</td></tr>
 <tr class="memdesc:afdc1a4250b3757bdaba747c222918e2e inherit pub_methods_group__helpers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Keep the synthesized constructors.  <a href="#afdc1a4250b3757bdaba747c222918e2e">More...</a><br /></td></tr>
 <tr class="separator:afdc1a4250b3757bdaba747c222918e2e inherit pub_methods_group__helpers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abbcefb16591cb0160d01ae3f28546e51 inherit pub_methods_group__helpers"><td class="memItemLeft" align="right" valign="top">BasicType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#abbcefb16591cb0160d01ae3f28546e51">x</a> ()</td></tr>
+<tr class="memdesc:abbcefb16591cb0160d01ae3f28546e51 inherit pub_methods_group__helpers"><td class="mdescLeft">&#160;</td><td class="mdescRight">An accessor to the first variable of a small array.  <a href="#abbcefb16591cb0160d01ae3f28546e51">More...</a><br /></td></tr>
+<tr class="separator:abbcefb16591cb0160d01ae3f28546e51 inherit pub_methods_group__helpers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e5edce948800131ed61f95174969cc9 inherit pub_methods_group__helpers"><td class="memItemLeft" align="right" valign="top">BasicType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#a0e5edce948800131ed61f95174969cc9">y</a> ()</td></tr>
+<tr class="memdesc:a0e5edce948800131ed61f95174969cc9 inherit pub_methods_group__helpers"><td class="mdescLeft">&#160;</td><td class="mdescRight">An accessor to the second variable of a small array.  <a href="#a0e5edce948800131ed61f95174969cc9">More...</a><br /></td></tr>
+<tr class="separator:a0e5edce948800131ed61f95174969cc9 inherit pub_methods_group__helpers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05fbad577e46deccf3ac902ed817902c inherit pub_methods_group__helpers"><td class="memItemLeft" align="right" valign="top">BasicType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#a05fbad577e46deccf3ac902ed817902c">z</a> ()</td></tr>
+<tr class="memdesc:a05fbad577e46deccf3ac902ed817902c inherit pub_methods_group__helpers"><td class="mdescLeft">&#160;</td><td class="mdescRight">An accessor to the third variable of a small array.  <a href="#a05fbad577e46deccf3ac902ed817902c">More...</a><br /></td></tr>
+<tr class="separator:a05fbad577e46deccf3ac902ed817902c inherit pub_methods_group__helpers"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17609386a684ec2649347c0328f82050 inherit pub_methods_group__helpers"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#a17609386a684ec2649347c0328f82050">get</a> (std::size_t index) const</td></tr>
 <tr class="memdesc:a17609386a684ec2649347c0328f82050 inherit pub_methods_group__helpers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the element of the array.  <a href="#a17609386a684ec2649347c0328f82050">More...</a><br /></td></tr>
 <tr class="separator:a17609386a684ec2649347c0328f82050 inherit pub_methods_group__helpers"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -591,9 +850,9 @@ Additional Inherited Members</h2></td></tr>
 <div class="textblock"><h3>template&lt;typename BasicType, typename FinalType&gt;<br />
 struct cl::sycl::detail::small_array_123&lt; BasicType, FinalType, 1 &gt;</h3>
 
-<p>Use some specializations so that some function overloads can be determined according to some implicit constructors and to have an implicit conversion from/to BasicType (such as an int typically) if dims = 1. </p>
+<p>Use some specializations so that some function overloads can be determined according to some implicit constructors and to have an implicit conversion from/to BasicType (such as an int typically) if Dimensions = 1. </p>
 
-<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00212">212</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
+<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00236">236</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
 </div><div class="dynheader">
 Inheritance diagram for cl::sycl::detail::small_array_123&lt; BasicType, FinalType, 1 &gt;:</div>
 <div class="dyncontent">
@@ -615,7 +874,7 @@ Collaboration diagram for cl::sycl::detail::small_array_123&lt; BasicType, Final
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr><td colspan="2"><h3>Public Member Functions</h3></td></tr>
-<tr class="memitem:acb178825b70641a24f8590d13662328b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#acb178825b70641a24f8590d13662328b">small_array_123</a> (BasicType x)</td></tr>
+<tr class="memitem:acb178825b70641a24f8590d13662328b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#acb178825b70641a24f8590d13662328b">small_array_123</a> (BasicType <a class="el" href="group__helpers.html#abbcefb16591cb0160d01ae3f28546e51">x</a>)</td></tr>
 <tr class="memdesc:acb178825b70641a24f8590d13662328b"><td class="mdescLeft">&#160;</td><td class="mdescRight">A 1-D constructor to have implicit conversion from from 1 integer and automatic inference of the dimensionality.  <a href="#acb178825b70641a24f8590d13662328b">More...</a><br /></td></tr>
 <tr class="separator:acb178825b70641a24f8590d13662328b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05f135a139697fd61b3c84abcdbf6010"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#a05f135a139697fd61b3c84abcdbf6010">small_array_123</a> ()=default</td></tr>
@@ -640,6 +899,15 @@ Collaboration diagram for cl::sycl::detail::small_array_123&lt; BasicType, Final
 <tr class="memitem:afdc1a4250b3757bdaba747c222918e2e inherit pub_methods_group__helpers"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#afdc1a4250b3757bdaba747c222918e2e">small_array</a> ()=default</td></tr>
 <tr class="memdesc:afdc1a4250b3757bdaba747c222918e2e inherit pub_methods_group__helpers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Keep the synthesized constructors.  <a href="#afdc1a4250b3757bdaba747c222918e2e">More...</a><br /></td></tr>
 <tr class="separator:afdc1a4250b3757bdaba747c222918e2e inherit pub_methods_group__helpers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abbcefb16591cb0160d01ae3f28546e51 inherit pub_methods_group__helpers"><td class="memItemLeft" align="right" valign="top">BasicType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#abbcefb16591cb0160d01ae3f28546e51">x</a> ()</td></tr>
+<tr class="memdesc:abbcefb16591cb0160d01ae3f28546e51 inherit pub_methods_group__helpers"><td class="mdescLeft">&#160;</td><td class="mdescRight">An accessor to the first variable of a small array.  <a href="#abbcefb16591cb0160d01ae3f28546e51">More...</a><br /></td></tr>
+<tr class="separator:abbcefb16591cb0160d01ae3f28546e51 inherit pub_methods_group__helpers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e5edce948800131ed61f95174969cc9 inherit pub_methods_group__helpers"><td class="memItemLeft" align="right" valign="top">BasicType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#a0e5edce948800131ed61f95174969cc9">y</a> ()</td></tr>
+<tr class="memdesc:a0e5edce948800131ed61f95174969cc9 inherit pub_methods_group__helpers"><td class="mdescLeft">&#160;</td><td class="mdescRight">An accessor to the second variable of a small array.  <a href="#a0e5edce948800131ed61f95174969cc9">More...</a><br /></td></tr>
+<tr class="separator:a0e5edce948800131ed61f95174969cc9 inherit pub_methods_group__helpers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05fbad577e46deccf3ac902ed817902c inherit pub_methods_group__helpers"><td class="memItemLeft" align="right" valign="top">BasicType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#a05fbad577e46deccf3ac902ed817902c">z</a> ()</td></tr>
+<tr class="memdesc:a05fbad577e46deccf3ac902ed817902c inherit pub_methods_group__helpers"><td class="mdescLeft">&#160;</td><td class="mdescRight">An accessor to the third variable of a small array.  <a href="#a05fbad577e46deccf3ac902ed817902c">More...</a><br /></td></tr>
+<tr class="separator:a05fbad577e46deccf3ac902ed817902c inherit pub_methods_group__helpers"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17609386a684ec2649347c0328f82050 inherit pub_methods_group__helpers"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#a17609386a684ec2649347c0328f82050">get</a> (std::size_t index) const</td></tr>
 <tr class="memdesc:a17609386a684ec2649347c0328f82050 inherit pub_methods_group__helpers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the element of the array.  <a href="#a17609386a684ec2649347c0328f82050">More...</a><br /></td></tr>
 <tr class="separator:a17609386a684ec2649347c0328f82050 inherit pub_methods_group__helpers"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -689,8 +957,21 @@ template&lt;typename BasicType , typename FinalType &gt; </div>
 
 <p>A 1-D constructor to have implicit conversion from from 1 integer and automatic inference of the dimensionality. </p>
 
-<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00216">216</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;                               {</div><div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    (*this)[0] = x;</div><div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;  }</div></div><!-- fragment -->
+<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00240">240</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
+
+<p>References <a class="el" href="small__array_8hpp_source.html#l00102">cl::sycl::detail::small_array&lt; BasicType, FinalType, Dims, EnableArgsConstructor &gt;::x()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;                               {</div><div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;    (*this)[0] = <a class="code" href="group__helpers.html#abbcefb16591cb0160d01ae3f28546e51">x</a>;</div><div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;  }</div><div class="ttc" id="group__helpers_html_abbcefb16591cb0160d01ae3f28546e51"><div class="ttname"><a href="group__helpers.html#abbcefb16591cb0160d01ae3f28546e51">cl::sycl::detail::small_array&lt; BasicType, FinalType, 1 &gt;::x</a></div><div class="ttdeci">BasicType &amp; x()</div><div class="ttdoc">An accessor to the first variable of a small array. </div><div class="ttdef"><b>Definition:</b> <a href="small__array_8hpp_source.html#l00102">small_array.hpp:102</a></div></div>
+</div><!-- fragment -->
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="group__helpers_acb178825b70641a24f8590d13662328b_cgraph.png" border="0" usemap="#group__helpers_acb178825b70641a24f8590d13662328b_cgraph" alt=""/></div>
+<map name="group__helpers_acb178825b70641a24f8590d13662328b_cgraph" id="group__helpers_acb178825b70641a24f8590d13662328b_cgraph">
+<area shape="rect" id="node2" href="group__helpers.html#abbcefb16591cb0160d01ae3f28546e51" title="An accessor to the first variable of a small array. " alt="" coords="217,20,360,61"/>
+</map>
+</div>
+</p>
+
 </div>
 </div>
 <a class="anchor" id="a05f135a139697fd61b3c84abcdbf6010"></a>
@@ -746,8 +1027,8 @@ template&lt;typename BasicType , typename FinalType &gt; </div>
 
 <p>Conversion so that an for example an id&lt;1&gt; can basically be used like an integer. </p>
 
-<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00228">228</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;                             {</div><div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)[0];</div><div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;  }</div></div><!-- fragment -->
+<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00252">252</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;                             {</div><div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)[0];</div><div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;  }</div></div><!-- fragment -->
 </div>
 </div>
 
@@ -766,7 +1047,7 @@ template&lt;typename BasicType , typename FinalType &gt; </div>
 struct cl::sycl::detail::small_array_123&lt; BasicType, FinalType, 2 &gt;</h3>
 
 
-<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00235">235</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
+<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00259">259</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
 </div><div class="dynheader">
 Inheritance diagram for cl::sycl::detail::small_array_123&lt; BasicType, FinalType, 2 &gt;:</div>
 <div class="dyncontent">
@@ -788,7 +1069,7 @@ Collaboration diagram for cl::sycl::detail::small_array_123&lt; BasicType, Final
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr><td colspan="2"><h3>Public Member Functions</h3></td></tr>
-<tr class="memitem:abf83c44bc386a675a95090a4ee2388bd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#abf83c44bc386a675a95090a4ee2388bd">small_array_123</a> (BasicType x, BasicType y)</td></tr>
+<tr class="memitem:abf83c44bc386a675a95090a4ee2388bd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#abf83c44bc386a675a95090a4ee2388bd">small_array_123</a> (BasicType <a class="el" href="group__helpers.html#abbcefb16591cb0160d01ae3f28546e51">x</a>, BasicType <a class="el" href="group__helpers.html#a0e5edce948800131ed61f95174969cc9">y</a>)</td></tr>
 <tr class="memdesc:abf83c44bc386a675a95090a4ee2388bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">A 2-D constructor to have implicit conversion from from 2 integers and automatic inference of the dimensionality.  <a href="#abf83c44bc386a675a95090a4ee2388bd">More...</a><br /></td></tr>
 <tr class="separator:abf83c44bc386a675a95090a4ee2388bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d8aa9537aabf761e1bdfcdc0dbb217d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#a0d8aa9537aabf761e1bdfcdc0dbb217d">small_array_123</a> (BasicType e)</td></tr>
@@ -813,6 +1094,15 @@ Collaboration diagram for cl::sycl::detail::small_array_123&lt; BasicType, Final
 <tr class="memitem:afdc1a4250b3757bdaba747c222918e2e inherit pub_methods_group__helpers"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#afdc1a4250b3757bdaba747c222918e2e">small_array</a> ()=default</td></tr>
 <tr class="memdesc:afdc1a4250b3757bdaba747c222918e2e inherit pub_methods_group__helpers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Keep the synthesized constructors.  <a href="#afdc1a4250b3757bdaba747c222918e2e">More...</a><br /></td></tr>
 <tr class="separator:afdc1a4250b3757bdaba747c222918e2e inherit pub_methods_group__helpers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abbcefb16591cb0160d01ae3f28546e51 inherit pub_methods_group__helpers"><td class="memItemLeft" align="right" valign="top">BasicType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#abbcefb16591cb0160d01ae3f28546e51">x</a> ()</td></tr>
+<tr class="memdesc:abbcefb16591cb0160d01ae3f28546e51 inherit pub_methods_group__helpers"><td class="mdescLeft">&#160;</td><td class="mdescRight">An accessor to the first variable of a small array.  <a href="#abbcefb16591cb0160d01ae3f28546e51">More...</a><br /></td></tr>
+<tr class="separator:abbcefb16591cb0160d01ae3f28546e51 inherit pub_methods_group__helpers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e5edce948800131ed61f95174969cc9 inherit pub_methods_group__helpers"><td class="memItemLeft" align="right" valign="top">BasicType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#a0e5edce948800131ed61f95174969cc9">y</a> ()</td></tr>
+<tr class="memdesc:a0e5edce948800131ed61f95174969cc9 inherit pub_methods_group__helpers"><td class="mdescLeft">&#160;</td><td class="mdescRight">An accessor to the second variable of a small array.  <a href="#a0e5edce948800131ed61f95174969cc9">More...</a><br /></td></tr>
+<tr class="separator:a0e5edce948800131ed61f95174969cc9 inherit pub_methods_group__helpers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05fbad577e46deccf3ac902ed817902c inherit pub_methods_group__helpers"><td class="memItemLeft" align="right" valign="top">BasicType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#a05fbad577e46deccf3ac902ed817902c">z</a> ()</td></tr>
+<tr class="memdesc:a05fbad577e46deccf3ac902ed817902c inherit pub_methods_group__helpers"><td class="mdescLeft">&#160;</td><td class="mdescRight">An accessor to the third variable of a small array.  <a href="#a05fbad577e46deccf3ac902ed817902c">More...</a><br /></td></tr>
+<tr class="separator:a05fbad577e46deccf3ac902ed817902c inherit pub_methods_group__helpers"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17609386a684ec2649347c0328f82050 inherit pub_methods_group__helpers"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#a17609386a684ec2649347c0328f82050">get</a> (std::size_t index) const</td></tr>
 <tr class="memdesc:a17609386a684ec2649347c0328f82050 inherit pub_methods_group__helpers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the element of the array.  <a href="#a17609386a684ec2649347c0328f82050">More...</a><br /></td></tr>
 <tr class="separator:a17609386a684ec2649347c0328f82050 inherit pub_methods_group__helpers"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -872,8 +1162,23 @@ template&lt;typename BasicType , typename FinalType &gt; </div>
 
 <p>A 2-D constructor to have implicit conversion from from 2 integers and automatic inference of the dimensionality. </p>
 
-<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00239">239</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;                                            {</div><div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;    (*this)[0] = x;</div><div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;    (*this)[1] = y;</div><div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;  }</div></div><!-- fragment -->
+<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00263">263</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
+
+<p>References <a class="el" href="small__array_8hpp_source.html#l00102">cl::sycl::detail::small_array&lt; BasicType, FinalType, Dims, EnableArgsConstructor &gt;::x()</a>, and <a class="el" href="small__array_8hpp_source.html#l00110">cl::sycl::detail::small_array&lt; BasicType, FinalType, Dims, EnableArgsConstructor &gt;::y()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;                                            {</div><div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    (*this)[0] = <a class="code" href="group__helpers.html#abbcefb16591cb0160d01ae3f28546e51">x</a>;</div><div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    (*this)[1] = <a class="code" href="group__helpers.html#a0e5edce948800131ed61f95174969cc9">y</a>;</div><div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;  }</div><div class="ttc" id="group__helpers_html_abbcefb16591cb0160d01ae3f28546e51"><div class="ttname"><a href="group__helpers.html#abbcefb16591cb0160d01ae3f28546e51">cl::sycl::detail::small_array&lt; BasicType, FinalType, 2 &gt;::x</a></div><div class="ttdeci">BasicType &amp; x()</div><div class="ttdoc">An accessor to the first variable of a small array. </div><div class="ttdef"><b>Definition:</b> <a href="small__array_8hpp_source.html#l00102">small_array.hpp:102</a></div></div>
+<div class="ttc" id="group__helpers_html_a0e5edce948800131ed61f95174969cc9"><div class="ttname"><a href="group__helpers.html#a0e5edce948800131ed61f95174969cc9">cl::sycl::detail::small_array&lt; BasicType, FinalType, 2 &gt;::y</a></div><div class="ttdeci">BasicType &amp; y()</div><div class="ttdoc">An accessor to the second variable of a small array. </div><div class="ttdef"><b>Definition:</b> <a href="small__array_8hpp_source.html#l00110">small_array.hpp:110</a></div></div>
+</div><!-- fragment -->
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="group__helpers_abf83c44bc386a675a95090a4ee2388bd_cgraph.png" border="0" usemap="#group__helpers_abf83c44bc386a675a95090a4ee2388bd_cgraph" alt=""/></div>
+<map name="group__helpers_abf83c44bc386a675a95090a4ee2388bd_cgraph" id="group__helpers_abf83c44bc386a675a95090a4ee2388bd_cgraph">
+<area shape="rect" id="node2" href="group__helpers.html#abbcefb16591cb0160d01ae3f28546e51" title="An accessor to the first variable of a small array. " alt="" coords="217,5,360,47"/>
+<area shape="rect" id="node3" href="group__helpers.html#a0e5edce948800131ed61f95174969cc9" title="An accessor to the second variable of a small array. " alt="" coords="217,71,360,112"/>
+</map>
+</div>
+</p>
+
 </div>
 </div>
 <a class="anchor" id="a0d8aa9537aabf761e1bdfcdc0dbb217d"></a>
@@ -901,10 +1206,10 @@ template&lt;typename BasicType , typename FinalType &gt; </div>
 </div><div class="memdoc">
 
 <p>Broadcasting constructor initializing all the elements with the same value. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000100">Todo:</a></b></dt><dd>Add to the specification of the range, id... </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000131">Todo:</a></b></dt><dd>Add to the specification of the range, id... </dd></dl>
 
-<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00250">250</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;: <a class="code" href="group__helpers.html#a15d9209744f36743647192da780328e7">small_array_123</a> { e, e } { }</div><div class="ttc" id="group__helpers_html_a15d9209744f36743647192da780328e7"><div class="ttname"><a href="group__helpers.html#a15d9209744f36743647192da780328e7">cl::sycl::detail::small_array_123&lt; BasicType, FinalType, 2 &gt;::small_array_123</a></div><div class="ttdeci">small_array_123()=default</div><div class="ttdoc">Keep other constructors. </div></div>
+<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00274">274</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;: <a class="code" href="group__helpers.html#a15d9209744f36743647192da780328e7">small_array_123</a> { e, e } { }</div><div class="ttc" id="group__helpers_html_a15d9209744f36743647192da780328e7"><div class="ttname"><a href="group__helpers.html#a15d9209744f36743647192da780328e7">cl::sycl::detail::small_array_123&lt; BasicType, FinalType, 2 &gt;::small_array_123</a></div><div class="ttdeci">small_array_123()=default</div><div class="ttdoc">Keep other constructors. </div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -951,7 +1256,7 @@ template&lt;typename BasicType , typename FinalType &gt; </div>
 struct cl::sycl::detail::small_array_123&lt; BasicType, FinalType, 3 &gt;</h3>
 
 
-<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00261">261</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
+<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00285">285</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
 </div><div class="dynheader">
 Inheritance diagram for cl::sycl::detail::small_array_123&lt; BasicType, FinalType, 3 &gt;:</div>
 <div class="dyncontent">
@@ -973,7 +1278,7 @@ Collaboration diagram for cl::sycl::detail::small_array_123&lt; BasicType, Final
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr><td colspan="2"><h3>Public Member Functions</h3></td></tr>
-<tr class="memitem:a624c04be5fcf8fcd6e34b347223e2c88"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#a624c04be5fcf8fcd6e34b347223e2c88">small_array_123</a> (BasicType x, BasicType y, BasicType z)</td></tr>
+<tr class="memitem:a624c04be5fcf8fcd6e34b347223e2c88"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#a624c04be5fcf8fcd6e34b347223e2c88">small_array_123</a> (BasicType <a class="el" href="group__helpers.html#abbcefb16591cb0160d01ae3f28546e51">x</a>, BasicType <a class="el" href="group__helpers.html#a0e5edce948800131ed61f95174969cc9">y</a>, BasicType <a class="el" href="group__helpers.html#a05fbad577e46deccf3ac902ed817902c">z</a>)</td></tr>
 <tr class="memdesc:a624c04be5fcf8fcd6e34b347223e2c88"><td class="mdescLeft">&#160;</td><td class="mdescRight">A 3-D constructor to have implicit conversion from from 3 integers and automatic inference of the dimensionality.  <a href="#a624c04be5fcf8fcd6e34b347223e2c88">More...</a><br /></td></tr>
 <tr class="separator:a624c04be5fcf8fcd6e34b347223e2c88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa48f55deb5ab61f0c31650f6d4b191ce"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#aa48f55deb5ab61f0c31650f6d4b191ce">small_array_123</a> (BasicType e)</td></tr>
@@ -998,6 +1303,15 @@ Collaboration diagram for cl::sycl::detail::small_array_123&lt; BasicType, Final
 <tr class="memitem:afdc1a4250b3757bdaba747c222918e2e inherit pub_methods_group__helpers"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#afdc1a4250b3757bdaba747c222918e2e">small_array</a> ()=default</td></tr>
 <tr class="memdesc:afdc1a4250b3757bdaba747c222918e2e inherit pub_methods_group__helpers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Keep the synthesized constructors.  <a href="#afdc1a4250b3757bdaba747c222918e2e">More...</a><br /></td></tr>
 <tr class="separator:afdc1a4250b3757bdaba747c222918e2e inherit pub_methods_group__helpers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abbcefb16591cb0160d01ae3f28546e51 inherit pub_methods_group__helpers"><td class="memItemLeft" align="right" valign="top">BasicType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#abbcefb16591cb0160d01ae3f28546e51">x</a> ()</td></tr>
+<tr class="memdesc:abbcefb16591cb0160d01ae3f28546e51 inherit pub_methods_group__helpers"><td class="mdescLeft">&#160;</td><td class="mdescRight">An accessor to the first variable of a small array.  <a href="#abbcefb16591cb0160d01ae3f28546e51">More...</a><br /></td></tr>
+<tr class="separator:abbcefb16591cb0160d01ae3f28546e51 inherit pub_methods_group__helpers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e5edce948800131ed61f95174969cc9 inherit pub_methods_group__helpers"><td class="memItemLeft" align="right" valign="top">BasicType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#a0e5edce948800131ed61f95174969cc9">y</a> ()</td></tr>
+<tr class="memdesc:a0e5edce948800131ed61f95174969cc9 inherit pub_methods_group__helpers"><td class="mdescLeft">&#160;</td><td class="mdescRight">An accessor to the second variable of a small array.  <a href="#a0e5edce948800131ed61f95174969cc9">More...</a><br /></td></tr>
+<tr class="separator:a0e5edce948800131ed61f95174969cc9 inherit pub_methods_group__helpers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05fbad577e46deccf3ac902ed817902c inherit pub_methods_group__helpers"><td class="memItemLeft" align="right" valign="top">BasicType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#a05fbad577e46deccf3ac902ed817902c">z</a> ()</td></tr>
+<tr class="memdesc:a05fbad577e46deccf3ac902ed817902c inherit pub_methods_group__helpers"><td class="mdescLeft">&#160;</td><td class="mdescRight">An accessor to the third variable of a small array.  <a href="#a05fbad577e46deccf3ac902ed817902c">More...</a><br /></td></tr>
+<tr class="separator:a05fbad577e46deccf3ac902ed817902c inherit pub_methods_group__helpers"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17609386a684ec2649347c0328f82050 inherit pub_methods_group__helpers"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__helpers.html#a17609386a684ec2649347c0328f82050">get</a> (std::size_t index) const</td></tr>
 <tr class="memdesc:a17609386a684ec2649347c0328f82050 inherit pub_methods_group__helpers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the element of the array.  <a href="#a17609386a684ec2649347c0328f82050">More...</a><br /></td></tr>
 <tr class="separator:a17609386a684ec2649347c0328f82050 inherit pub_methods_group__helpers"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1063,8 +1377,25 @@ template&lt;typename BasicType , typename FinalType &gt; </div>
 
 <p>A 3-D constructor to have implicit conversion from from 3 integers and automatic inference of the dimensionality. </p>
 
-<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00265">265</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;                                                         {</div><div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;    (*this)[0] = x;</div><div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;    (*this)[1] = y;</div><div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    (*this)[2] = z;</div><div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;  }</div></div><!-- fragment -->
+<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00289">289</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
+
+<p>References <a class="el" href="small__array_8hpp_source.html#l00102">cl::sycl::detail::small_array&lt; BasicType, FinalType, Dims, EnableArgsConstructor &gt;::x()</a>, <a class="el" href="small__array_8hpp_source.html#l00110">cl::sycl::detail::small_array&lt; BasicType, FinalType, Dims, EnableArgsConstructor &gt;::y()</a>, and <a class="el" href="small__array_8hpp_source.html#l00118">cl::sycl::detail::small_array&lt; BasicType, FinalType, Dims, EnableArgsConstructor &gt;::z()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;                                                         {</div><div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;    (*this)[0] = <a class="code" href="group__helpers.html#abbcefb16591cb0160d01ae3f28546e51">x</a>;</div><div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;    (*this)[1] = <a class="code" href="group__helpers.html#a0e5edce948800131ed61f95174969cc9">y</a>;</div><div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;    (*this)[2] = <a class="code" href="group__helpers.html#a05fbad577e46deccf3ac902ed817902c">z</a>;</div><div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;  }</div><div class="ttc" id="group__helpers_html_abbcefb16591cb0160d01ae3f28546e51"><div class="ttname"><a href="group__helpers.html#abbcefb16591cb0160d01ae3f28546e51">cl::sycl::detail::small_array&lt; BasicType, FinalType, 3 &gt;::x</a></div><div class="ttdeci">BasicType &amp; x()</div><div class="ttdoc">An accessor to the first variable of a small array. </div><div class="ttdef"><b>Definition:</b> <a href="small__array_8hpp_source.html#l00102">small_array.hpp:102</a></div></div>
+<div class="ttc" id="group__helpers_html_a0e5edce948800131ed61f95174969cc9"><div class="ttname"><a href="group__helpers.html#a0e5edce948800131ed61f95174969cc9">cl::sycl::detail::small_array&lt; BasicType, FinalType, 3 &gt;::y</a></div><div class="ttdeci">BasicType &amp; y()</div><div class="ttdoc">An accessor to the second variable of a small array. </div><div class="ttdef"><b>Definition:</b> <a href="small__array_8hpp_source.html#l00110">small_array.hpp:110</a></div></div>
+<div class="ttc" id="group__helpers_html_a05fbad577e46deccf3ac902ed817902c"><div class="ttname"><a href="group__helpers.html#a05fbad577e46deccf3ac902ed817902c">cl::sycl::detail::small_array&lt; BasicType, FinalType, 3 &gt;::z</a></div><div class="ttdeci">BasicType &amp; z()</div><div class="ttdoc">An accessor to the third variable of a small array. </div><div class="ttdef"><b>Definition:</b> <a href="small__array_8hpp_source.html#l00118">small_array.hpp:118</a></div></div>
+</div><!-- fragment -->
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="group__helpers_a624c04be5fcf8fcd6e34b347223e2c88_cgraph.png" border="0" usemap="#group__helpers_a624c04be5fcf8fcd6e34b347223e2c88_cgraph" alt=""/></div>
+<map name="group__helpers_a624c04be5fcf8fcd6e34b347223e2c88_cgraph" id="group__helpers_a624c04be5fcf8fcd6e34b347223e2c88_cgraph">
+<area shape="rect" id="node2" href="group__helpers.html#abbcefb16591cb0160d01ae3f28546e51" title="An accessor to the first variable of a small array. " alt="" coords="217,5,360,47"/>
+<area shape="rect" id="node3" href="group__helpers.html#a0e5edce948800131ed61f95174969cc9" title="An accessor to the second variable of a small array. " alt="" coords="217,71,360,112"/>
+<area shape="rect" id="node4" href="group__helpers.html#a05fbad577e46deccf3ac902ed817902c" title="An accessor to the third variable of a small array. " alt="" coords="217,136,360,177"/>
+</map>
+</div>
+</p>
+
 </div>
 </div>
 <a class="anchor" id="aa48f55deb5ab61f0c31650f6d4b191ce"></a>
@@ -1092,10 +1423,10 @@ template&lt;typename BasicType , typename FinalType &gt; </div>
 </div><div class="memdoc">
 
 <p>Broadcasting constructor initializing all the elements with the same value. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000101">Todo:</a></b></dt><dd>Add to the specification of the range, id... </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000132">Todo:</a></b></dt><dd>Add to the specification of the range, id... </dd></dl>
 
-<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00277">277</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;: <a class="code" href="group__helpers.html#a784d98aaaa0a0f9f92300171ffb2036c">small_array_123</a> { e, e, e } { }</div><div class="ttc" id="group__helpers_html_a784d98aaaa0a0f9f92300171ffb2036c"><div class="ttname"><a href="group__helpers.html#a784d98aaaa0a0f9f92300171ffb2036c">cl::sycl::detail::small_array_123&lt; BasicType, FinalType, 3 &gt;::small_array_123</a></div><div class="ttdeci">small_array_123()=default</div><div class="ttdoc">Keep other constructors. </div></div>
+<p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00301">301</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;: <a class="code" href="group__helpers.html#a784d98aaaa0a0f9f92300171ffb2036c">small_array_123</a> { e, e, e } { }</div><div class="ttc" id="group__helpers_html_a784d98aaaa0a0f9f92300171ffb2036c"><div class="ttname"><a href="group__helpers.html#a784d98aaaa0a0f9f92300171ffb2036c">cl::sycl::detail::small_array_123&lt; BasicType, FinalType, 3 &gt;::small_array_123</a></div><div class="ttdeci">small_array_123()=default</div><div class="ttdoc">Keep other constructors. </div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1150,7 +1481,7 @@ template&lt;typename BasicType , typename FinalType &gt; </div>
 
 <p>Definition at line <a class="el" href="small__array_8hpp_source.html#l00033">33</a> of file <a class="el" href="small__array_8hpp_source.html">small_array.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="small__array_8hpp_source.html#l00152">cl::sycl::detail::small_array&lt; BasicType, FinalType, 3 &gt;::get()</a>.</p>
+<p>Referenced by <a class="el" href="small__array_8hpp_source.html#l00176">cl::sycl::detail::small_array&lt; BasicType, FinalType, 3 &gt;::get()</a>.</p>
 
 </div>
 </div>
@@ -1202,7 +1533,7 @@ template&lt;typename Range , typename Id &gt; </div>
 
 <p>Definition at line <a class="el" href="linear__id_8hpp_source.html#l00028">28</a> of file <a class="el" href="linear__id_8hpp_source.html">linear_id.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="nd__item_8hpp_source.html#l00094">cl::sycl::nd_item&lt; dims &gt;::get_global_linear_id()</a>, <a class="el" href="nd__item_8hpp_source.html#l00140">cl::sycl::nd_item&lt; dims &gt;::get_group_linear_id()</a>, <a class="el" href="group_8hpp_source.html#l00168">cl::sycl::group&lt; dims &gt;::get_linear()</a>, <a class="el" href="item_8hpp_source.html#l00104">cl::sycl::item&lt; dims &gt;::get_linear_id()</a>, and <a class="el" href="nd__item_8hpp_source.html#l00115">cl::sycl::nd_item&lt; dims &gt;::get_local_linear_id()</a>.</p>
+<p>Referenced by <a class="el" href="nd__item_8hpp_source.html#l00095">cl::sycl::nd_item&lt; Dimensions &gt;::get_global_linear_id()</a>, <a class="el" href="nd__item_8hpp_source.html#l00141">cl::sycl::nd_item&lt; Dimensions &gt;::get_group_linear_id()</a>, <a class="el" href="group_8hpp_source.html#l00172">cl::sycl::group&lt; Dimensions &gt;::get_linear()</a>, <a class="el" href="item_8hpp_source.html#l00104">cl::sycl::item&lt; Dimensions &gt;::get_linear_id()</a>, and <a class="el" href="nd__item_8hpp_source.html#l00116">cl::sycl::nd_item&lt; Dimensions &gt;::get_local_linear_id()</a>.</p>
 <div class="fragment"><div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;                                                                  {}) {</div><div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;  <span class="keyword">auto</span> dims = std::distance(std::begin(range), std::end(range));</div><div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div><div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;  <span class="keywordtype">size_t</span> <a class="code" href="group__helpers.html#ga8ccbed3e03e1b92e0a4f01b691c093cf">linear_id</a> = 0;</div><div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;  <span class="comment">/* A good compiler should unroll this and do partial evaluation to</span></div><div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">     remove the first multiplication by 0 of this Horner evaluation and</span></div><div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">     remove the 0 offset evaluation */</span></div><div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = dims - 1; i &gt;= 0; --i)</div><div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;      linear_id = linear_id*range[i] + <span class="keywordtype">id</span>[i] - offset[i];</div><div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div><div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="group__helpers.html#ga8ccbed3e03e1b92e0a4f01b691c093cf">linear_id</a>;</div><div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  }</div><div class="ttc" id="group__helpers_html_ga8ccbed3e03e1b92e0a4f01b691c093cf"><div class="ttname"><a href="group__helpers.html#ga8ccbed3e03e1b92e0a4f01b691c093cf">cl::sycl::detail::linear_id</a></div><div class="ttdeci">size_t constexpr linear_id(Range range, Id id, Id offset={})</div><div class="ttdoc">Compute a linearized array access used in the OpenCL 2 world. </div><div class="ttdef"><b>Definition:</b> <a href="linear__id_8hpp_source.html#l00028">linear_id.hpp:28</a></div></div>
 </div><!-- fragment -->
 <p><div class="dynheader">
@@ -1210,11 +1541,11 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__helpers_ga8ccbed3e03e1b92e0a4f01b691c093cf_icgraph.png" border="0" usemap="#group__helpers_ga8ccbed3e03e1b92e0a4f01b691c093cf_icgraph" alt=""/></div>
 <map name="group__helpers_ga8ccbed3e03e1b92e0a4f01b691c093cf_icgraph" id="group__helpers_ga8ccbed3e03e1b92e0a4f01b691c093cf_icgraph">
-<area shape="rect" id="node2" href="group__parallelism.html#acc67cb2b23256eef16d82938fdd8ca5c" title="Return the flattened id of the current work&#45;item after subtracting the offset. " alt="" coords="212,5,348,47"/>
-<area shape="rect" id="node3" href="group__parallelism.html#ae8a7125f4a4e63599b0302fdb4c6f534" title="Return the flattened id of the current work&#45;group. " alt="" coords="213,71,347,112"/>
-<area shape="rect" id="node4" href="group__parallelism.html#ab45b66ab7f7fa9d453334fbc1837018e" title="Get a linearized version of the group ID. " alt="" coords="215,136,345,177"/>
-<area shape="rect" id="node5" href="group__parallelism.html#a6e08a4ab9ce69ef4c22e0249a3b8c607" title="Return the linearized ID in the item&#39;s range. " alt="" coords="219,201,341,243"/>
-<area shape="rect" id="node6" href="group__parallelism.html#a73915805265e10910ea20772ce56c2bd" title="Return the flattened id of the current work&#45;item within the current work&#45;group. " alt="" coords="215,267,345,308"/>
+<area shape="rect" id="node2" href="group__parallelism.html#a32d3b5a52f4dd787890e255c01a34d9a" title="Return the flattened id of the current work&#45;item after subtracting the offset. " alt="" coords="212,5,348,47"/>
+<area shape="rect" id="node3" href="group__parallelism.html#a21a39b69f6f74f18a09b83671a067691" title="Return the flattened id of the current work&#45;group. " alt="" coords="213,71,347,112"/>
+<area shape="rect" id="node4" href="group__parallelism.html#afcfa339d762195a0f37a5a0e26211d68" title="Get a linearized version of the group ID. " alt="" coords="215,136,345,177"/>
+<area shape="rect" id="node5" href="group__parallelism.html#a694b7694955ca21370f07df8bc9939c3" title="Return the linearized ID in the item&#39;s range. " alt="" coords="219,201,341,243"/>
+<area shape="rect" id="node6" href="group__parallelism.html#af03e24ed3baa7f57bc1917091bc4819b" title="Return the flattened id of the current work&#45;item within the current work&#45;group. " alt="" coords="215,267,345,308"/>
 </map>
 </div>
 </p>
@@ -1249,39 +1580,37 @@ Here is the caller graph for this function:</div>
 
 <p>Definition at line <a class="el" href="unimplemented_8hpp_source.html#l00025">25</a> of file <a class="el" href="unimplemented_8hpp_source.html">unimplemented.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="accessor_8hpp_source.html#l00148">cl::sycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;::accessor()</a>, <a class="el" href="nd__item_8hpp_source.html#l00198">cl::sycl::nd_item&lt; dims &gt;::barrier()</a>, <a class="el" href="buffer_8hpp_source.html#l00187">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;::buffer()</a>, <a class="el" href="context_8hpp_source.html#l00076">cl::sycl::context::context()</a>, <a class="el" href="kernel_8hpp_source.html#l00085">cl::sycl::kernel::get()</a>, <a class="el" href="context_8hpp_source.html#l00165">cl::sycl::context::get()</a>, <a class="el" href="opencl__kernel_8hpp_source.html#l00068">cl::sycl::detail::opencl_kernel::get_boost_compute()</a>, <a class="el" href="context_8hpp_source.html#l00189">cl::sycl::context::get_devices()</a>, <a class="el" href="context_8hpp_source.html#l00200">cl::sycl::context::get_info()</a>, <a class="el" href="queue_8hpp_source.html#l00306">cl::sycl::queue::get_info()</a>, <a class="el" href="host__device_8hpp_source.html#l00078">cl::sycl::detail::host_device::get_platform()</a>, <a class="el" href="opencl__device_8hpp_source.html#l00080">cl::sycl::detail::opencl_device::get_platform()</a>, <a class="el" href="platform_8hpp_source.html#l00113">cl::sycl::platform::get_platforms()</a>, <a class="el" href="host__device_8hpp_source.html#l00102">cl::sycl::detail::host_device::has_extension()</a>, <a class="el" href="opencl__device_8hpp_source.html#l00104">cl::sycl::detail::opencl_device::has_extension()</a>, <a class="el" href="host__platform_8hpp_source.html#l00111">cl::sycl::detail::host_platform::has_extension()</a>, <a class="el" href="host__platform_8hpp_source.html#l00052">cl::sycl::detail::host_platform::is_host()</a>, <a class="el" href="opencl__platform_8hpp_source.html#l00057">cl::sycl::detail::opencl_platform::is_host()</a>, <a class="el" href="platform_8hpp_source.html#l00093">cl::sycl::platform::platform()</a>, <a class="el" href="queue_8hpp_source.html#l00117">cl::sycl::queue::queue()</a>, <a class="el" href="handler_8hpp_source.html#l00120">cl::sycl::handler::set_arg()</a>, <a class="el" href="handler_8hpp_source.html#l00327">cl::sycl::handler::single_task()</a>, <a class="el" href="queue_8hpp_source.html#l00340">cl::sycl::queue::submit()</a>, <a class="el" href="queue_8hpp_source.html#l00299">cl::sycl::queue::throw_asynchronous()</a>, <a class="el" href="handler_8hpp_source.html#l00365">cl::sycl::handler::TRISYCL_ParallelForKernel_RANGE()</a>, and <a class="el" href="queue_8hpp_source.html#l00287">cl::sycl::queue::wait_and_throw()</a>.</p>
+<p>Referenced by <a class="el" href="accessor_8hpp_source.html#l00143">cl::sycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;::accessor()</a>, <a class="el" href="nd__item_8hpp_source.html#l00199">cl::sycl::nd_item&lt; Dimensions &gt;::barrier()</a>, <a class="el" href="buffer_8hpp_source.html#l00199">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;::buffer()</a>, <a class="el" href="context_8hpp_source.html#l00077">cl::sycl::context::context()</a>, <a class="el" href="kernel_8hpp_source.html#l00087">cl::sycl::kernel::get()</a>, <a class="el" href="context_8hpp_source.html#l00166">cl::sycl::context::get()</a>, <a class="el" href="opencl__kernel_8hpp_source.html#l00069">cl::sycl::detail::opencl_kernel::get_boost_compute()</a>, <a class="el" href="context_8hpp_source.html#l00190">cl::sycl::context::get_devices()</a>, <a class="el" href="context_8hpp_source.html#l00201">cl::sycl::context::get_info()</a>, <a class="el" href="queue_8hpp_source.html#l00312">cl::sycl::queue::get_info()</a>, <a class="el" href="host__device_8hpp_source.html#l00078">cl::sycl::detail::host_device::get_platform()</a>, <a class="el" href="opencl__device_8hpp_source.html#l00083">cl::sycl::detail::opencl_device::get_platform()</a>, <a class="el" href="platform_8hpp_source.html#l00112">cl::sycl::platform::get_platforms()</a>, <a class="el" href="host__device_8hpp_source.html#l00102">cl::sycl::detail::host_device::has_extension()</a>, <a class="el" href="opencl__device_8hpp_source.html#l00107">cl::sycl::detail::opencl_device::has_extension()</a>, <a class="el" href="host__platform_8hpp_source.html#l00111">cl::sycl::detail::host_platform::has_extension()</a>, <a class="el" href="host__platform_8hpp_source.html#l00052">cl::sycl::detail::host_platform::is_host()</a>, <a class="el" href="opencl__platform_8hpp_source.html#l00057">cl::sycl::detail::opencl_platform::is_host()</a>, <a class="el" href="platform_8hpp_source.html#l00092">cl::sycl::platform::platform()</a>, <a class="el" href="queue_8hpp_source.html#l00123">cl::sycl::queue::queue()</a>, <a class="el" href="handler_8hpp_source.html#l00353">cl::sycl::handler::single_task()</a>, <a class="el" href="queue_8hpp_source.html#l00346">cl::sycl::queue::submit()</a>, <a class="el" href="queue_8hpp_source.html#l00305">cl::sycl::queue::throw_asynchronous()</a>, and <a class="el" href="queue_8hpp_source.html#l00293">cl::sycl::queue::wait_and_throw()</a>.</p>
 <div class="fragment"><div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;                            {</div><div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;  std::cerr &lt;&lt; <span class="stringliteral">&quot;Error: using a non implemented feature!!!&quot;</span> &lt;&lt; std::endl</div><div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Please contribute to the open source implementation. :-)&quot;</span></div><div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;            &lt;&lt; std::endl;</div><div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;}</div></div><!-- fragment -->
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__helpers_gabc18198696a1e2ec4ea6c231a8c90391_icgraph.png" border="0" usemap="#group__helpers_gabc18198696a1e2ec4ea6c231a8c90391_icgraph" alt=""/></div>
 <map name="group__helpers_gabc18198696a1e2ec4ea6c231a8c90391_icgraph" id="group__helpers_gabc18198696a1e2ec4ea6c231a8c90391_icgraph">
-<area shape="rect" id="node2" href="group__data.html#a1f2a8a694f447a0a653580886e67cdc4" title="Construct a buffer accessor from a buffer given a specific range for access permissions and an offset..." alt="" coords="285,5,411,47"/>
-<area shape="rect" id="node3" href="group__parallelism.html#a9b7505034c0a22fbe8be199169b86d0a" title="Execute a barrier with memory ordering on the local address space, global address space or both based..." alt="" coords="285,71,411,112"/>
-<area shape="rect" id="node4" href="classcl_1_1sycl_1_1buffer.html#a3205caa44c59fe4f0553861fdc81a80f" title="Create a new buffer with associated memory, using the data in host_data. " alt="" coords="275,137,421,163"/>
-<area shape="rect" id="node5" href="group__execution.html#a0b58a056d08076460e1a6274e912d5c7" title="Constructs a context object for SYCL host using an async_handler for handling asynchronous errors..." alt="" coords="287,188,409,229"/>
-<area shape="rect" id="node6" href="group__execution.html#a45886e6ab7c6bfb421dfee65dfd6cf5d" title="Return the OpenCL kernel object for this kernel. " alt="" coords="281,254,415,281"/>
-<area shape="rect" id="node7" href="group__execution.html#a744ad885bc0ff01c30d0cbcdf457eafb" title="cl::sycl::context::get" alt="" coords="277,305,419,331"/>
-<area shape="rect" id="node8" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#a6ca5e07fbf0cb6997133b7b29859669d" title="Return the Boost.Compute OpenCL kernel object for this kernel. " alt="" coords="255,356,441,397"/>
-<area shape="rect" id="node9" href="group__execution.html#af9c31b58d2afdd7b134b70923bebe758" title="Returns the set of devices that are part of this context. " alt="" coords="287,421,409,463"/>
-<area shape="rect" id="node10" href="group__execution.html#a7c734b8e445e974b8df923eda189abaf" title="Queries OpenCL information for the under&#45;lying cl context. " alt="" coords="287,487,409,528"/>
-<area shape="rect" id="node11" href="group__execution.html#af077e29c7384869ae7d80b3ef4c44e20" title="Queries the platform for cl_command_queue info. " alt="" coords="267,553,429,579"/>
-<area shape="rect" id="node12" href="classcl_1_1sycl_1_1detail_1_1host__device.html#a9f76f664d4afc961fc8bbf6313d2dcbe" title="Return the platform of device. " alt="" coords="275,604,421,645"/>
-<area shape="rect" id="node13" href="classcl_1_1sycl_1_1detail_1_1opencl__device.html#a28ac3d33e032f28ef8ac247126902a01" title="Return the platform of device. " alt="" coords="273,669,423,711"/>
-<area shape="rect" id="node14" href="group__execution.html#aabb03c54d8e57513595cbb363b52af96" title="Get the list of all the platforms available to the application. " alt="" coords="289,735,407,776"/>
-<area shape="rect" id="node15" href="classcl_1_1sycl_1_1detail_1_1host__device.html#a8f56be4d8e4c64f40497fa69f0046293" title="Specify whether a specific extension is supported on the device. " alt="" coords="269,800,427,841"/>
-<area shape="rect" id="node16" href="classcl_1_1sycl_1_1detail_1_1opencl__device.html#a6305b17c858194bc7ecde6254a001ccb" title="Specify whether a specific extension is supported on the device. " alt="" coords="269,865,427,907"/>
-<area shape="rect" id="node17" href="group__execution.html#aa1be92994f4909e112d7f4717a435988" title="Specify whether a specific extension is supported on the platform. " alt="" coords="264,931,432,972"/>
-<area shape="rect" id="node18" href="group__execution.html#a4a41166d2c11219d9c77e53e053c8fb7" title="Return true since this platform is the SYCL host platform. " alt="" coords="280,996,416,1037"/>
-<area shape="rect" id="node19" href="group__execution.html#af35cee14d1bfa74124dab70c89e16f75" title="Return false since an OpenCL platform is not the SYCL host platform. " alt="" coords="273,1061,423,1103"/>
-<area shape="rect" id="node20" href="group__execution.html#aa82f9c674ad0852797a14908a4c33e07" title="Construct a platform object from the device selected by a device selector of the user&#39;s choice..." alt="" coords="289,1127,407,1168"/>
-<area shape="rect" id="node21" href="group__execution.html#aa6716dec650fed3005217afa456d0ff8" title="This constructor creates a SYCL queue from an OpenCL queue. " alt="" coords="273,1193,423,1219"/>
-<area shape="rect" id="node22" href="group__execution.html#abd6c5f61582513fa790c8fb08d638235" title="Set kernel args for an OpenCL kernel which is used through the SYCL/OpenCL interoperability interface..." alt="" coords="287,1244,409,1285"/>
-<area shape="rect" id="node23" href="group__execution.html#a753a7db9214d40fb8d43ac6c8b6833e2" title="Kernel invocation method of a kernel defined as pointer to a kernel object, described in detail in 3..." alt="" coords="287,1309,409,1351"/>
-<area shape="rect" id="node24" href="group__execution.html#ae9f65c6cbb74bcfccbe1c04df52d5170" title="Submit a command group functor to the queue, in order to be scheduled for execution on the device..." alt="" coords="271,1375,425,1402"/>
-<area shape="rect" id="node25" href="group__execution.html#ae5c39ed682422e4e525fe0a01e8b7ad9" title="Checks to see if any asynchronous errors have been produced by the queue and if so reports them by pa..." alt="" coords="275,1427,421,1468"/>
-<area shape="rect" id="node26" href="group__execution.html#a8da3b8774f0948dddee520a66e2003da" title="Kernel invocation method of a kernel defined as pointer to a kernel object, for the specified nd_rang..." alt="" coords="252,1491,444,1547"/>
-<area shape="rect" id="node27" href="group__execution.html#abfa510446db9f4edd0c16270b199a232" title="Perform a blocking wait for the completion all enqueued tasks in the queue. " alt="" coords="279,1571,417,1612"/>
+<area shape="rect" id="node2" href="group__data.html#a5cead950ba2c4c8364797563c66e9f94" title="Construct a buffer accessor from a buffer given a specific range for access permissions and an offset..." alt="" coords="283,5,408,47"/>
+<area shape="rect" id="node3" href="group__parallelism.html#a105999ad6147e9a9e1ab8c772235ed27" title="Execute a barrier with memory ordering on the local address space, global address space or both based..." alt="" coords="282,71,409,112"/>
+<area shape="rect" id="node4" href="classcl_1_1sycl_1_1buffer.html#a3205caa44c59fe4f0553861fdc81a80f" title="Create a new buffer with associated memory, using the data in host_data. " alt="" coords="272,137,419,163"/>
+<area shape="rect" id="node5" href="group__execution.html#a0b58a056d08076460e1a6274e912d5c7" title="Constructs a context object for SYCL host using an async_handler for handling asynchronous errors..." alt="" coords="284,188,407,229"/>
+<area shape="rect" id="node6" href="group__execution.html#a45886e6ab7c6bfb421dfee65dfd6cf5d" title="Return the OpenCL kernel object for this kernel. " alt="" coords="279,254,412,281"/>
+<area shape="rect" id="node7" href="group__execution.html#a744ad885bc0ff01c30d0cbcdf457eafb" title="cl::sycl::context::get" alt="" coords="275,305,416,331"/>
+<area shape="rect" id="node8" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#a6ca5e07fbf0cb6997133b7b29859669d" title="Return the Boost.Compute OpenCL kernel object for this kernel. " alt="" coords="252,356,439,397"/>
+<area shape="rect" id="node9" href="group__execution.html#af9c31b58d2afdd7b134b70923bebe758" title="Returns the set of devices that are part of this context. " alt="" coords="284,421,407,463"/>
+<area shape="rect" id="node10" href="group__execution.html#a7c734b8e445e974b8df923eda189abaf" title="Queries OpenCL information for the under&#45;lying cl context. " alt="" coords="284,487,407,528"/>
+<area shape="rect" id="node11" href="group__execution.html#af077e29c7384869ae7d80b3ef4c44e20" title="Queries the platform for cl_command_queue info. " alt="" coords="265,553,426,579"/>
+<area shape="rect" id="node12" href="classcl_1_1sycl_1_1detail_1_1host__device.html#a9f76f664d4afc961fc8bbf6313d2dcbe" title="Return the platform of device. " alt="" coords="272,604,419,645"/>
+<area shape="rect" id="node13" href="classcl_1_1sycl_1_1detail_1_1opencl__device.html#a28ac3d33e032f28ef8ac247126902a01" title="Return the platform of device. " alt="" coords="271,669,420,711"/>
+<area shape="rect" id="node14" href="group__execution.html#aabb03c54d8e57513595cbb363b52af96" title="Get the list of all the platforms available to the application. " alt="" coords="286,735,405,776"/>
+<area shape="rect" id="node15" href="classcl_1_1sycl_1_1detail_1_1host__device.html#a8f56be4d8e4c64f40497fa69f0046293" title="Specify whether a specific extension is supported on the device. " alt="" coords="266,800,425,841"/>
+<area shape="rect" id="node16" href="classcl_1_1sycl_1_1detail_1_1opencl__device.html#a6305b17c858194bc7ecde6254a001ccb" title="Specify whether a specific extension is supported on the device. " alt="" coords="266,865,425,907"/>
+<area shape="rect" id="node17" href="group__execution.html#aa1be92994f4909e112d7f4717a435988" title="Specify whether a specific extension is supported on the platform. " alt="" coords="261,931,429,972"/>
+<area shape="rect" id="node18" href="group__execution.html#a4a41166d2c11219d9c77e53e053c8fb7" title="Return true since this platform is the SYCL host platform. " alt="" coords="277,996,413,1037"/>
+<area shape="rect" id="node19" href="group__execution.html#af35cee14d1bfa74124dab70c89e16f75" title="Return false since an OpenCL platform is not the SYCL host platform. " alt="" coords="271,1061,420,1103"/>
+<area shape="rect" id="node20" href="group__execution.html#aa82f9c674ad0852797a14908a4c33e07" title="Construct a platform object from the device selected by a device selector of the user&#39;s choice..." alt="" coords="286,1127,405,1168"/>
+<area shape="rect" id="node21" href="group__execution.html#aa6716dec650fed3005217afa456d0ff8" title="This constructor creates a SYCL queue from an OpenCL queue. " alt="" coords="270,1193,421,1219"/>
+<area shape="rect" id="node22" href="group__execution.html#a753a7db9214d40fb8d43ac6c8b6833e2" title="Kernel invocation method of a kernel defined as pointer to a kernel object, described in detail in 3..." alt="" coords="284,1244,407,1285"/>
+<area shape="rect" id="node23" href="group__execution.html#ae9f65c6cbb74bcfccbe1c04df52d5170" title="Submit a command group functor to the queue, in order to be scheduled for execution on the device..." alt="" coords="268,1310,423,1337"/>
+<area shape="rect" id="node24" href="group__execution.html#ae5c39ed682422e4e525fe0a01e8b7ad9" title="Checks to see if any asynchronous errors have been produced by the queue and if so reports them by pa..." alt="" coords="272,1361,419,1403"/>
+<area shape="rect" id="node25" href="group__execution.html#abfa510446db9f4edd0c16270b199a232" title="Perform a blocking wait for the completion all enqueued tasks in the queue. " alt="" coords="276,1427,415,1468"/>
 </map>
 </div>
 </p>
@@ -1291,7 +1620,7 @@ Here is the caller graph for this function:</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 26 2016 12:28:40 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 22 2017 16:15:50 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

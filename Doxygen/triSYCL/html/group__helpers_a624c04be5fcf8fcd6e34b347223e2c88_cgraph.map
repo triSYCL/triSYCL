@@ -1,0 +1,5 @@
+<map id="cl::sycl::detail::small_array_123&lt; BasicType, FinalType, 3 &gt;::small_array_123" name="cl::sycl::detail::small_array_123&lt; BasicType, FinalType, 3 &gt;::small_array_123">
+<area shape="rect" id="node2" href="$group__helpers.html#abbcefb16591cb0160d01ae3f28546e51" title="An accessor to the first variable of a small array. " alt="" coords="217,5,360,47"/>
+<area shape="rect" id="node3" href="$group__helpers.html#a0e5edce948800131ed61f95174969cc9" title="An accessor to the second variable of a small array. " alt="" coords="217,71,360,112"/>
+<area shape="rect" id="node4" href="$group__helpers.html#a05fbad577e46deccf3ac902ed817902c" title="An accessor to the third variable of a small array. " alt="" coords="217,136,360,177"/>
+</map>

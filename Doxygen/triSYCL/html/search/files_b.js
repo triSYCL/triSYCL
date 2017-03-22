@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['opencl_5fdevice_2ehpp',['opencl_device.hpp',['../opencl__device_8hpp.html',1,'']]],
-  ['opencl_5fkernel_2ehpp',['opencl_kernel.hpp',['../opencl__kernel_8hpp.html',1,'']]],
-  ['opencl_5fplatform_2ehpp',['opencl_platform.hpp',['../opencl__platform_8hpp.html',1,'']]],
-  ['opencl_5fqueue_2ehpp',['opencl_queue.hpp',['../opencl__queue_8hpp.html',1,'']]]
+  ['nd_5fitem_2ehpp',['nd_item.hpp',['../nd__item_8hpp.html',1,'']]],
+  ['nd_5frange_2ehpp',['nd_range.hpp',['../nd__range_8hpp.html',1,'']]]
 ];

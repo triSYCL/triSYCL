@@ -1,0 +1,10 @@
+<map id="cl::sycl::nd_item::get_global" name="cl::sycl::nd_item::get_global">
+<area shape="rect" id="node2" href="$group__parallelism.html#a32d3b5a52f4dd787890e255c01a34d9a" title="Return the flattened id of the current work&#45;item after subtracting the offset. " alt="" coords="217,5,353,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#aa01fd5fa1117abcecd508e572a40179a" title="Return the constituent group group representing the work&#45;group&#39;s position within the overall nd_range..." alt="" coords="221,71,348,112"/>
+<area shape="rect" id="node6" href="$group__parallelism.html#adbc692cf1460579e86f4abb9573c3441" title="Allows projection down to an item. " alt="" coords="221,136,348,177"/>
+<area shape="rect" id="node7" href="$group__data.html#a12298e054f242ca5e62f0fbcb5965fa6" title="To use an accessor with an [nd_item&lt;&gt;]. " alt="" coords="180,202,389,258"/>
+<area shape="rect" id="node8" href="$group__data.html#a44db0bd1307342b958566c333d28d041" title="To use an accessor with an [nd_item&lt;&gt;]. " alt="" coords="203,283,367,324"/>
+<area shape="rect" id="node9" href="$group__data.html#ad11b3f7327547e3859bfee763bd92957" title="To use an accessor with an [nd_item&lt;&gt;]. " alt="" coords="222,348,347,389"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#a5bf97fb716fae85366698cf20b0eb07e" title="Return the constituent element of the group id representing the work&#45;group;s position within the over..." alt="" coords="441,39,568,80"/>
+<area shape="rect" id="node5" href="$group__parallelism.html#a21a39b69f6f74f18a09b83671a067691" title="Return the flattened id of the current work&#45;group. " alt="" coords="437,104,572,145"/>
+</map>

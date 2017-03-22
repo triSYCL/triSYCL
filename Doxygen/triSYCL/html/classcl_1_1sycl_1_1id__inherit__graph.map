@@ -1,5 +1,5 @@
-<map id="cl::sycl::id&lt; dims &gt;" name="cl::sycl::id&lt; dims &gt;">
-<area shape="rect" id="node2" href="$group__helpers.html" title="cl::sycl::detail::small\l_array_123\&lt; std::size\l_t, id\&lt; dims \&gt;, dims \&gt;" alt="" coords="420,129,571,185"/>
-<area shape="rect" id="node3" href="$group__helpers.html" title="cl::sycl::detail::small\l_array\&lt; std::size_t, id\l\&lt; dims \&gt;, Dims \&gt;" alt="" coords="223,129,372,185"/>
-<area shape="rect" id="node8" href="$group__debug__trace.html" title="cl::sycl::detail::display\l_vector\&lt; id\&lt; dims \&gt; \&gt;" alt="" coords="14,267,166,308"/>
+<map id="cl::sycl::id&lt; Dimensions &gt;" name="cl::sycl::id&lt; Dimensions &gt;">
+<area shape="rect" id="node2" href="$group__helpers.html" title="cl::sycl::detail::small\l_array_123\&lt; std::size\l_t, id\&lt; Dimensions \&gt;, Dimensions \&gt;" alt="" coords="479,129,712,185"/>
+<area shape="rect" id="node3" href="$group__helpers.html" title="cl::sycl::detail::small\l_array\&lt; std::size_t, id\l\&lt; Dimensions \&gt;, Dims \&gt;" alt="" coords="264,129,431,185"/>
+<area shape="rect" id="node8" href="$group__debug__trace.html" title="cl::sycl::detail::display\l_vector\&lt; id\&lt; Dimensions \&gt; \&gt;" alt="" coords="15,267,207,308"/>
 </map>

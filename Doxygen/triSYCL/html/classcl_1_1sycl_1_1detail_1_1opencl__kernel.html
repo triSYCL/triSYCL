@@ -168,7 +168,7 @@ Static Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>An abstraction of the OpenCL kernel. </p>
 
-<p>Definition at line <a class="el" href="opencl__kernel_8hpp_source.html#l00028">28</a> of file <a class="el" href="opencl__kernel_8hpp_source.html">opencl_kernel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="opencl__kernel_8hpp_source.html#l00029">29</a> of file <a class="el" href="opencl__kernel_8hpp_source.html">opencl_kernel.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="ae546c3d8ace63f52112bee4b2786472a"></a>
 <div class="memitem">
@@ -192,8 +192,8 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="opencl__kernel_8hpp_source.html#l00041">41</a> of file <a class="el" href="opencl__kernel_8hpp_source.html">opencl_kernel.hpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;: <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">k</a> { <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">k</a> } {}</div><div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__kernel_html_ad41f1b2f9188a77c62cb3c8898853c8c"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">cl::sycl::detail::opencl_kernel::k</a></div><div class="ttdeci">boost::compute::kernel k</div><div class="ttdoc">Use the Boost Compute abstraction of the OpenCL kernel. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__kernel_8hpp_source.html#l00032">opencl_kernel.hpp:32</a></div></div>
+<p>Definition at line <a class="el" href="opencl__kernel_8hpp_source.html#l00042">42</a> of file <a class="el" href="opencl__kernel_8hpp_source.html">opencl_kernel.hpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;: <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">k</a> { <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">k</a> } {}</div><div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__kernel_html_ad41f1b2f9188a77c62cb3c8898853c8c"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">cl::sycl::detail::opencl_kernel::k</a></div><div class="ttdeci">boost::compute::kernel k</div><div class="ttdoc">Use the Boost Compute abstraction of the OpenCL kernel. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__kernel_8hpp_source.html#l00033">opencl_kernel.hpp:33</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -220,13 +220,13 @@ Static Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Return the underlying OpenCL object. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000162">Todo:</a></b></dt><dd>Improve the spec to deprecate C OpenCL host API and move to C++ instead to avoid this ugly ownership management </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000163">Todo:</a></b></dt><dd>Test error and throw. Externalize this feature in Boost.Compute? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000191">Todo:</a></b></dt><dd>Improve the spec to deprecate C OpenCL host API and move to C++ instead to avoid this ugly ownership management </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000192">Todo:</a></b></dt><dd>Test error and throw. Externalize this feature in Boost.Compute? </dd></dl>
 
 <p>Implements <a class="el" href="group__execution.html#a20e4d40730888d8f233a8b5ac3cebac1">cl::sycl::detail::kernel</a>.</p>
 
-<p>Definition at line <a class="el" href="opencl__kernel_8hpp_source.html#l00057">57</a> of file <a class="el" href="opencl__kernel_8hpp_source.html">opencl_kernel.hpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;                                 {<span class="comment"></span></div><div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">    /// \todo Test error and throw. Externalize this feature in Boost.Compute?</span></div><div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment"></span>    clRetainKernel(<a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">k</a>);</div><div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">k</a>.get();</div><div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  }</div><div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__kernel_html_ad41f1b2f9188a77c62cb3c8898853c8c"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">cl::sycl::detail::opencl_kernel::k</a></div><div class="ttdeci">boost::compute::kernel k</div><div class="ttdoc">Use the Boost Compute abstraction of the OpenCL kernel. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__kernel_8hpp_source.html#l00032">opencl_kernel.hpp:32</a></div></div>
+<p>Definition at line <a class="el" href="opencl__kernel_8hpp_source.html#l00058">58</a> of file <a class="el" href="opencl__kernel_8hpp_source.html">opencl_kernel.hpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                                 {<span class="comment"></span></div><div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">    /// \todo Test error and throw. Externalize this feature in Boost.Compute?</span></div><div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment"></span>    clRetainKernel(<a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">k</a>);</div><div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">k</a>.get();</div><div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  }</div><div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__kernel_html_ad41f1b2f9188a77c62cb3c8898853c8c"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">cl::sycl::detail::opencl_kernel::k</a></div><div class="ttdeci">boost::compute::kernel k</div><div class="ttdoc">Use the Boost Compute abstraction of the OpenCL kernel. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__kernel_8hpp_source.html#l00033">opencl_kernel.hpp:33</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -256,10 +256,10 @@ Static Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="group__execution.html#a616095c5ebe7fddfcf9d865c6d97f674">cl::sycl::detail::kernel</a>.</p>
 
-<p>Definition at line <a class="el" href="opencl__kernel_8hpp_source.html#l00068">68</a> of file <a class="el" href="opencl__kernel_8hpp_source.html">opencl_kernel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="opencl__kernel_8hpp_source.html#l00069">69</a> of file <a class="el" href="opencl__kernel_8hpp_source.html">opencl_kernel.hpp</a>.</p>
 
-<p>References <a class="el" href="opencl__kernel_8hpp_source.html#l00032">k</a>, and <a class="el" href="unimplemented_8hpp_source.html#l00025">cl::sycl::detail::unimplemented()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                                                        {</div><div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">k</a>;</div><div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  }</div><div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__kernel_html_ad41f1b2f9188a77c62cb3c8898853c8c"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">cl::sycl::detail::opencl_kernel::k</a></div><div class="ttdeci">boost::compute::kernel k</div><div class="ttdoc">Use the Boost Compute abstraction of the OpenCL kernel. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__kernel_8hpp_source.html#l00032">opencl_kernel.hpp:32</a></div></div>
+<p>References <a class="el" href="opencl__kernel_8hpp_source.html#l00033">k</a>, and <a class="el" href="unimplemented_8hpp_source.html#l00025">cl::sycl::detail::unimplemented()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                                                        {</div><div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">k</a>;</div><div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  }</div><div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__kernel_html_ad41f1b2f9188a77c62cb3c8898853c8c"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">cl::sycl::detail::opencl_kernel::k</a></div><div class="ttdeci">boost::compute::kernel k</div><div class="ttdoc">Use the Boost Compute abstraction of the OpenCL kernel. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__kernel_8hpp_source.html#l00033">opencl_kernel.hpp:33</a></div></div>
 </div><!-- fragment -->
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -295,14 +295,14 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="opencl__kernel_8hpp_source.html#l00047">47</a> of file <a class="el" href="opencl__kernel_8hpp_source.html">opencl_kernel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="opencl__kernel_8hpp_source.html#l00048">48</a> of file <a class="el" href="opencl__kernel_8hpp_source.html">opencl_kernel.hpp</a>.</p>
 
 <p>References <a class="el" href="cache_8hpp_source.html#l00062">cl::sycl::detail::cache&lt; Key, Value &gt;::get_or_register()</a>.</p>
 
-<p>Referenced by <a class="el" href="kernel_8hpp_source.html#l00076">cl::sycl::kernel::kernel()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                                        {</div><div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ac714df753c326dd1fcb71112cc6bc25c">cache</a>.get_or_register(<a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">k</a>.get(),</div><div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                                 [&amp;] { <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ae546c3d8ace63f52112bee4b2786472a">opencl_kernel</a> { <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">k</a> }; });</div><div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  }</div><div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__kernel_html_ad41f1b2f9188a77c62cb3c8898853c8c"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">cl::sycl::detail::opencl_kernel::k</a></div><div class="ttdeci">boost::compute::kernel k</div><div class="ttdoc">Use the Boost Compute abstraction of the OpenCL kernel. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__kernel_8hpp_source.html#l00032">opencl_kernel.hpp:32</a></div></div>
-<div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__kernel_html_ac714df753c326dd1fcb71112cc6bc25c"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ac714df753c326dd1fcb71112cc6bc25c">cl::sycl::detail::opencl_kernel::cache</a></div><div class="ttdeci">static detail::cache&lt; cl_kernel, detail::opencl_kernel &gt; cache</div><div class="ttdoc">A cache to always return the same alive kernel for a given OpenCL kernel. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__kernel_8hpp_source.html#l00039">opencl_kernel.hpp:39</a></div></div>
-<div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__kernel_html_ae546c3d8ace63f52112bee4b2786472a"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ae546c3d8ace63f52112bee4b2786472a">cl::sycl::detail::opencl_kernel::opencl_kernel</a></div><div class="ttdeci">opencl_kernel(const boost::compute::kernel &amp;k)</div><div class="ttdef"><b>Definition:</b> <a href="opencl__kernel_8hpp_source.html#l00041">opencl_kernel.hpp:41</a></div></div>
+<p>Referenced by <a class="el" href="kernel_8hpp_source.html#l00078">cl::sycl::kernel::kernel()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                                        {</div><div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ac714df753c326dd1fcb71112cc6bc25c">cache</a>.get_or_register(<a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">k</a>.get(),</div><div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;                                 [&amp;] { <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ae546c3d8ace63f52112bee4b2786472a">opencl_kernel</a> { <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">k</a> }; });</div><div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  }</div><div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__kernel_html_ad41f1b2f9188a77c62cb3c8898853c8c"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">cl::sycl::detail::opencl_kernel::k</a></div><div class="ttdeci">boost::compute::kernel k</div><div class="ttdoc">Use the Boost Compute abstraction of the OpenCL kernel. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__kernel_8hpp_source.html#l00033">opencl_kernel.hpp:33</a></div></div>
+<div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__kernel_html_ac714df753c326dd1fcb71112cc6bc25c"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ac714df753c326dd1fcb71112cc6bc25c">cl::sycl::detail::opencl_kernel::cache</a></div><div class="ttdeci">static detail::cache&lt; cl_kernel, detail::opencl_kernel &gt; cache</div><div class="ttdoc">A cache to always return the same alive kernel for a given OpenCL kernel. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__kernel_8hpp_source.html#l00040">opencl_kernel.hpp:40</a></div></div>
+<div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__kernel_html_ae546c3d8ace63f52112bee4b2786472a"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ae546c3d8ace63f52112bee4b2786472a">cl::sycl::detail::opencl_kernel::opencl_kernel</a></div><div class="ttdeci">opencl_kernel(const boost::compute::kernel &amp;k)</div><div class="ttdef"><b>Definition:</b> <a href="opencl__kernel_8hpp_source.html#l00042">opencl_kernel.hpp:42</a></div></div>
 </div><!-- fragment -->
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -350,11 +350,11 @@ Here is the caller graph for this function:</div>
 
 <p>Unregister from the cache on destruction. </p>
 
-<p>Definition at line <a class="el" href="opencl__kernel_8hpp_source.html#l00110">110</a> of file <a class="el" href="opencl__kernel_8hpp_source.html">opencl_kernel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="opencl__kernel_8hpp_source.html#l00111">111</a> of file <a class="el" href="opencl__kernel_8hpp_source.html">opencl_kernel.hpp</a>.</p>
 
-<p>References <a class="el" href="group__execution.html#ga8cd30e440dbf7eaa63a748bf2caa08cb">cl::sycl::detail::__attribute__</a>, <a class="el" href="opencl__kernel_8hpp_source.html#l00039">cache</a>, and <a class="el" href="cache_8hpp_source.html#l00083">cl::sycl::detail::cache&lt; Key, Value &gt;::remove()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                            {</div><div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ac714df753c326dd1fcb71112cc6bc25c">cache</a>.remove(<a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">k</a>.get());</div><div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;  }</div><div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__kernel_html_ad41f1b2f9188a77c62cb3c8898853c8c"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">cl::sycl::detail::opencl_kernel::k</a></div><div class="ttdeci">boost::compute::kernel k</div><div class="ttdoc">Use the Boost Compute abstraction of the OpenCL kernel. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__kernel_8hpp_source.html#l00032">opencl_kernel.hpp:32</a></div></div>
-<div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__kernel_html_ac714df753c326dd1fcb71112cc6bc25c"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ac714df753c326dd1fcb71112cc6bc25c">cl::sycl::detail::opencl_kernel::cache</a></div><div class="ttdeci">static detail::cache&lt; cl_kernel, detail::opencl_kernel &gt; cache</div><div class="ttdoc">A cache to always return the same alive kernel for a given OpenCL kernel. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__kernel_8hpp_source.html#l00039">opencl_kernel.hpp:39</a></div></div>
+<p>References <a class="el" href="opencl__kernel_8hpp_source.html#l00040">cache</a>, <a class="el" href="cache_8hpp_source.html#l00083">cl::sycl::detail::cache&lt; Key, Value &gt;::remove()</a>, <a class="el" href="global__config_8hpp_source.html#l00065">TRISYCL_WEAK_ATTRIB_PREFIX</a>, and <a class="el" href="opencl__device_8hpp_source.html#l00140">cl::sycl::detail::TRISYCL_WEAK_ATTRIB_SUFFIX</a>.</p>
+<div class="fragment"><div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;                            {</div><div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ac714df753c326dd1fcb71112cc6bc25c">cache</a>.remove(<a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">k</a>.get());</div><div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;  }</div><div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__kernel_html_ad41f1b2f9188a77c62cb3c8898853c8c"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ad41f1b2f9188a77c62cb3c8898853c8c">cl::sycl::detail::opencl_kernel::k</a></div><div class="ttdeci">boost::compute::kernel k</div><div class="ttdoc">Use the Boost Compute abstraction of the OpenCL kernel. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__kernel_8hpp_source.html#l00033">opencl_kernel.hpp:33</a></div></div>
+<div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__kernel_html_ac714df753c326dd1fcb71112cc6bc25c"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#ac714df753c326dd1fcb71112cc6bc25c">cl::sycl::detail::opencl_kernel::cache</a></div><div class="ttdeci">static detail::cache&lt; cl_kernel, detail::opencl_kernel &gt; cache</div><div class="ttdoc">A cache to always return the same alive kernel for a given OpenCL kernel. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__kernel_8hpp_source.html#l00040">opencl_kernel.hpp:40</a></div></div>
 </div><!-- fragment -->
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -390,9 +390,9 @@ Here is the call graph for this function:</div>
 <p>A cache to always return the same alive kernel for a given OpenCL kernel. </p>
 <p>C++11 guaranties the static construction is thread-safe </p>
 
-<p>Definition at line <a class="el" href="opencl__kernel_8hpp_source.html#l00039">39</a> of file <a class="el" href="opencl__kernel_8hpp_source.html">opencl_kernel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="opencl__kernel_8hpp_source.html#l00040">40</a> of file <a class="el" href="opencl__kernel_8hpp_source.html">opencl_kernel.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="opencl__kernel_8hpp_source.html#l00110">TRISYCL_ParallelForKernel_RANGE()</a>.</p>
+<p>Referenced by <a class="el" href="opencl__kernel_8hpp_source.html#l00111">TRISYCL_ParallelForKernel_RANGE()</a>.</p>
 
 </div>
 </div>
@@ -416,9 +416,9 @@ Here is the call graph for this function:</div>
 
 <p>Use the Boost Compute abstraction of the OpenCL kernel. </p>
 
-<p>Definition at line <a class="el" href="opencl__kernel_8hpp_source.html#l00032">32</a> of file <a class="el" href="opencl__kernel_8hpp_source.html">opencl_kernel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="opencl__kernel_8hpp_source.html#l00033">33</a> of file <a class="el" href="opencl__kernel_8hpp_source.html">opencl_kernel.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="opencl__kernel_8hpp_source.html#l00068">get_boost_compute()</a>.</p>
+<p>Referenced by <a class="el" href="opencl__kernel_8hpp_source.html#l00069">get_boost_compute()</a>.</p>
 
 </div>
 </div>
@@ -428,7 +428,7 @@ Here is the call graph for this function:</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 26 2016 12:28:40 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 22 2017 16:15:51 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

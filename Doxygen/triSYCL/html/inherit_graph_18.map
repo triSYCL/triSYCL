@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$group__array__tuple__helpers.html#structcl_1_1sycl_1_1detail_1_1expand__to__vector" title="Allows optional expansion of a 1&#45;element tuple to a V::dimension tuple to replicate scalar values in ..." alt="" coords="5,5,228,47"/>
+<area shape="rect" id="node1" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; pipe\&lt; value_type \&gt; \&gt;" alt="" coords="5,5,163,47"/>
+<area shape="rect" id="node2" href="$group__data.html" title="cl::sycl::detail::pipe\l\&lt; value_type \&gt;" alt="" coords="211,5,345,47"/>
 </map>

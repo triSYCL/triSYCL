@@ -8,6 +8,7 @@ var searchData=
   ['waiter',['waiter',['../group__data.html#ga8ab7a85d388ba8446c5435cdb1927102',1,'cl::sycl::detail']]],
   ['weak_5fptr_5fclass',['weak_ptr_class',['../namespacecl_1_1sycl.html#a8cc65d5e679773a053245819fa2a13de',1,'cl::sycl']]],
   ['what',['what',['../group__error__handling.html#a2ae0db45aa95af872603e5cfdf5f3b89',1,'cl::sycl::exception']]],
+  ['writable_5farray_5ftype',['writable_array_type',['../group__data.html#aaa01116d1e6eceecefdd3b6d30b64873',1,'cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;']]],
   ['writable_5farray_5fview_5ftype',['writable_array_view_type',['../group__data.html#a56dddc4f7bc02b93e936e1c30c0d9b6b',1,'cl::sycl::detail::accessor']]],
   ['write',['write',['../group__data.html#ab2336f619ca77560c413b8ae33bdbf43',1,'cl::sycl::detail::pipe::write()'],['../group__data.html#a169eef87c32221b0cd572f77a420c54b',1,'cl::sycl::detail::pipe_accessor::write()'],['../namespacecl_1_1sycl_1_1access.html#a9ae8c23f772316322be407bbb6498b17aefb2a684e4afb7d55e6147fbe5a332ee',1,'cl::sycl::access::write()']]],
   ['write_5fdone',['write_done',['../group__data.html#a7a7df3d5199a3a00c8ab655234fe7189',1,'cl::sycl::detail::pipe']]],

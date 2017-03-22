@@ -1,0 +1,4 @@
+<map id="cl::sycl::device::get_devices" name="cl::sycl::device::get_devices">
+<area shape="rect" id="node2" href="$group__execution.html#a0031b748d05443b57bfeffb08e530427" title="Construct a device class instance using the device selector provided. " alt="" coords="189,5,345,32"/>
+<area shape="rect" id="node3" href="$group__execution.html#a1f2447bfc916e8f382b0f49ecbfb7b2c" title="Return the platform of device. " alt="" coords="199,57,335,98"/>
+</map>

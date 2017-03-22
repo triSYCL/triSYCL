@@ -87,6 +87,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="#index_e"><span>e</span></a></li>
       <li><a href="#index_i"><span>i</span></a></li>
       <li><a href="#index_k"><span>k</span></a></li>
+      <li><a href="#index_n"><span>n</span></a></li>
       <li><a href="#index_o"><span>o</span></a></li>
       <li><a href="#index_p"><span>p</span></a></li>
       <li><a href="#index_r"><span>r</span></a></li>
@@ -116,7 +117,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <h3><a class="anchor" id="index_a"></a>- a -</h3><ul>
 <li>accessor_detail
-: <a class="el" href="group__data.html#a95ac4dd4047ecce0f205a1805715e7f4">cl::sycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;</a>
+: <a class="el" href="group__data.html#a071e0503daa2e10412616a395f063d11">cl::sycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;</a>
 , <a class="el" href="group__data.html#a98508558a03f6e8c13730d737bfc23c1">cl::sycl::accessor&lt; DataType, 1, AccessMode, access::target::blocking_pipe &gt;</a>
 , <a class="el" href="group__data.html#af5a8097ac549e2486bdca0234813e748">cl::sycl::accessor&lt; DataType, 1, AccessMode, access::target::pipe &gt;</a>
 , <a class="el" href="group__data.html#afcf49bc69d599d4a1423b364e58d6c06">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
@@ -127,6 +128,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>allocator_type
 : <a class="el" href="classcl_1_1sycl_1_1buffer.html#ac573e8eaa158a09ea84df760434d6f26">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
+</li>
+<li>array_type
+: <a class="el" href="group__data.html#a39bb954e4f4949153a827af2f0dd539f">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 </li>
 <li>array_view_type
 : <a class="el" href="group__data.html#a66282fabc215ea1f290cd5fa28f1ee6a">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
@@ -144,21 +148,25 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <h3><a class="anchor" id="index_c"></a>- c -</h3><ul>
 <li>const_iterator
 : <a class="el" href="group__data.html#af1d7488962e1aa48f6664b647bc2c4a5">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+, <a class="el" href="group__data.html#a9f0ce10d4bf285522a6c1f9b2d63171f">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 , <a class="el" href="group__data.html#aff43addb79dfdaf3d7b4e5d88bf292e2">cl::sycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
 , <a class="el" href="group__data.html#a20e551c45fdd5b7786a1674a4b479772">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
 </li>
 <li>const_pointer
-: <a class="el" href="group__data.html#a760f5c3c2db96a6cde03e518ca358337">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
+: <a class="el" href="group__helpers.html#a2ec892b0cb5fa67f5a83dfa682ec7d89">cl::sycl::detail::container_element_aspect&lt; T &gt;</a>
+, <a class="el" href="group__data.html#a760f5c3c2db96a6cde03e518ca358337">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
 </li>
 <li>const_reference
-: <a class="el" href="group__data.html#a4291a778fe5abb1ef9b176310691f3f1">cl::sycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;</a>
-, <a class="el" href="classcl_1_1sycl_1_1buffer.html#a5529e4c07422297be4814e19e02def0f">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
+: <a class="el" href="classcl_1_1sycl_1_1buffer.html#a5529e4c07422297be4814e19e02def0f">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
 , <a class="el" href="group__data.html#ac440122946b23951fdeaa1d2136187ae">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+, <a class="el" href="group__data.html#ab8b4cbae8c9df3fd86690fbf2bb1e1d6">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
+, <a class="el" href="group__helpers.html#aa9647c61c8b59e41c41f9ceeb90219ae">cl::sycl::detail::container_element_aspect&lt; T &gt;</a>
 , <a class="el" href="group__data.html#acb92e9db09d7c64414ef90712e29b01d">cl::sycl::detail::pipe_accessor&lt; T, AccessMode, Target &gt;</a>
 , <a class="el" href="group__data.html#ac6726fdc8b1bca23c2cdfbc02fa1eea5">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
 </li>
 <li>const_reverse_iterator
 : <a class="el" href="group__data.html#a826d411397872c8e25bb1a0772f33300">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+, <a class="el" href="group__data.html#aee8f3be038e611611ff6cb11ac60d8e2">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 , <a class="el" href="group__data.html#a36e75084a3bcb4d5237b9114f7c62d4e">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
 </li>
 </ul>
@@ -174,6 +182,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <h3><a class="anchor" id="index_e"></a>- e -</h3><ul>
 <li>element
 : <a class="el" href="group__data.html#a8b3f6cfc5029101a6cb23cdd4cd26d6a">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+, <a class="el" href="group__data.html#a324e73490da511091fd9af88a72c2e47">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 , <a class="el" href="group__data.html#ad0994dbca2c28c62501effcdfabb4591">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
 </li>
 <li>element_type
@@ -184,19 +193,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <h3><a class="anchor" id="index_i"></a>- i -</h3><ul>
 <li>implementation_t
-: <a class="el" href="group__data.html#acfa0cb82a80e54d61d2bb7a00477e9bf">cl::sycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;</a>
-, <a class="el" href="classcl_1_1sycl_1_1buffer.html#aa7af4601cd80726f31c011162e0a3876">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
-, <a class="el" href="group__data.html#a58e160d770e5cb0c658b57113311b630">cl::sycl::detail::buffer_waiter&lt; T, Dimensions, Allocator &gt;</a>
+: <a class="el" href="group__data.html#a5fecc3cc87635d3a7e274b1dc79eeddf">cl::sycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;</a>
+, <a class="el" href="classcl_1_1sycl_1_1buffer.html#aec497bae2519cd9efa911822009ba3e3">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
+, <a class="el" href="group__data.html#adfeb51fca445ee8a14b813f2586c2f7d">cl::sycl::detail::buffer_waiter&lt; T, Dimensions, Allocator &gt;</a>
 , <a class="el" href="group__data.html#a2b8ffbe4e0912183dcc0da79631c23a2">cl::sycl::detail::pipe&lt; T &gt;</a>
 , <a class="el" href="group__execution.html#ac5fff15fb7c96232738cef785ea29033">cl::sycl::device</a>
-, <a class="el" href="group__execution.html#a1c5c29bdb3acad21d8e8df9c16b038bf">cl::sycl::kernel</a>
-, <a class="el" href="group__data.html#afedfe18fe56e8d74915f122ea847857e">cl::sycl::pipe&lt; T &gt;</a>
-, <a class="el" href="group__execution.html#a831bca743b0ecc65f46b93737cfa4234">cl::sycl::platform</a>
-, <a class="el" href="group__execution.html#a04b3d6b2ae63773adceeb5b9b8f95fd5">cl::sycl::queue</a>
-, <a class="el" href="group__data.html#a2378bfea57d9c495689bf4e0a9030733">cl::sycl::static_pipe&lt; T, Capacity &gt;</a>
+, <a class="el" href="group__execution.html#a0df7fa408feef1c5560e6904718c1591">cl::sycl::kernel</a>
+, <a class="el" href="group__data.html#aae23a3df5143ff6041f2bc521563212b">cl::sycl::pipe&lt; T &gt;</a>
+, <a class="el" href="group__execution.html#ad4935855c321feba0130854c68bbd158">cl::sycl::queue</a>
+, <a class="el" href="group__data.html#ae661d4393e31e898e2a3771bee472a02">cl::sycl::static_pipe&lt; T, Capacity &gt;</a>
 </li>
 <li>iterator
 : <a class="el" href="group__data.html#a05d9cb27cc80b7769c81c4a4e0c03308">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+, <a class="el" href="group__data.html#a68d306d368e8979efa16fbd451c760cc">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 , <a class="el" href="group__data.html#a07b1cd1f37e8e43d55758be53b780450">cl::sycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
 , <a class="el" href="group__data.html#a5f5d788e23c0c4d45ed2dc334b93a9ce">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
 </li>
@@ -210,33 +219,49 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </ul>
 
 
+<h3><a class="anchor" id="index_n"></a>- n -</h3><ul>
+<li>non_const_value_type
+: <a class="el" href="group__data.html#a64a54d662dc842748b1d57b0b0c438b1">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
+</li>
+</ul>
+
+
 <h3><a class="anchor" id="index_o"></a>- o -</h3><ul>
 <li>opencl_type
-: <a class="el" href="group__address__spaces.html#a35f896edae2683ef3afb23f2f0c99e50">cl::sycl::detail::address_space_base&lt; T, AS &gt;</a>
-, <a class="el" href="group__address__spaces.html#a31abdee87fcb0c75d9c45561e339d09a">cl::sycl::detail::address_space_object&lt; T, AS &gt;</a>
-, <a class="el" href="group__address__spaces.html#a54e76d5610ce0284fb63458b7ac75b3b">cl::sycl::detail::address_space_variable&lt; T, AS &gt;</a>
+: <a class="el" href="group__address__spaces.html#a1abb0d0ed5b5d7da5263130a98468f81">cl::sycl::detail::address_space_base&lt; T, AS &gt;</a>
+, <a class="el" href="group__address__spaces.html#af0ca2f136c15b231f646b688e2addae3">cl::sycl::detail::address_space_object&lt; T, AS &gt;</a>
+, <a class="el" href="group__address__spaces.html#aac96a0b4381cba2e3191536eb50a42dd">cl::sycl::detail::address_space_variable&lt; T, AS &gt;</a>
 </li>
 </ul>
 
 
 <h3><a class="anchor" id="index_p"></a>- p -</h3><ul>
 <li>pointer
-: <a class="el" href="group__data.html#ae3baac9f42ddbf464584059222a83eb4">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
+: <a class="el" href="group__helpers.html#a42008d2e8bc144a76b2fa03901bbd6ac">cl::sycl::detail::container_element_aspect&lt; T &gt;</a>
+, <a class="el" href="group__data.html#ae3baac9f42ddbf464584059222a83eb4">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
+</li>
+<li>pointer_t
+: <a class="el" href="group__address__spaces.html#ac44e6d02be06dd5b262ab5585a6a17ff">cl::sycl::detail::address_space_ptr&lt; T, AS &gt;</a>
 </li>
 </ul>
 
 
 <h3><a class="anchor" id="index_r"></a>- r -</h3><ul>
 <li>reference
-: <a class="el" href="group__data.html#a549abd336dbe1134bd4546a450836536">cl::sycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;</a>
-, <a class="el" href="classcl_1_1sycl_1_1buffer.html#a8326722c12afd6532d7cbf9f3e31ebc3">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
+: <a class="el" href="classcl_1_1sycl_1_1buffer.html#a8326722c12afd6532d7cbf9f3e31ebc3">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
 , <a class="el" href="group__data.html#aada3fa2ad2e97c273ec819b159938caf">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+, <a class="el" href="group__data.html#a609f946bb7ff327f0ac44bc6627e73df">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
+, <a class="el" href="group__helpers.html#aa6403452e6faf0c6e05f77b4a8502234">cl::sycl::detail::container_element_aspect&lt; T &gt;</a>
 , <a class="el" href="group__data.html#af6de3d4de5d5a09c58c6ebc439d0f707">cl::sycl::detail::pipe_accessor&lt; T, AccessMode, Target &gt;</a>
 , <a class="el" href="group__data.html#a0fcf9c908f54480b092d60ef3bf18928">cl::sycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
 , <a class="el" href="group__data.html#a55644c9befb1e34de84b9511e9b66f0d">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
 </li>
+<li>reference_t
+: <a class="el" href="group__address__spaces.html#a7b6e64220fd6fcdb20ab3456fbb7d16b">cl::sycl::detail::address_space_ptr&lt; T, AS &gt;</a>
+</li>
 <li>reverse_iterator
 : <a class="el" href="group__data.html#a0c90b32d38cfe7f85b1578c76d59cecc">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+, <a class="el" href="group__data.html#a78f4468f7963e2ac651f0e6368a730ed">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 , <a class="el" href="group__data.html#acec44de1f2ce79df21baedefd183adfc">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
 </li>
 <li>rid_iterator
@@ -261,23 +286,24 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <h3><a class="anchor" id="index_t"></a>- t -</h3><ul>
 <li>type
 : <a class="el" href="group__address__spaces.html#ad7c5bd48239875e82fd2bb43c98b134d">cl::sycl::detail::address_space_base&lt; T, AS &gt;</a>
-, <a class="el" href="group__address__spaces.html#a93f691bc5079c0cc4060d0ebd5bb85d2">cl::sycl::detail::opencl_type&lt; T, AS &gt;</a>
-, <a class="el" href="group__address__spaces.html#a4811b634da9f140f99ae2520405d4413">cl::sycl::detail::opencl_type&lt; T, constant_address_space &gt;</a>
-, <a class="el" href="group__address__spaces.html#a064b91c581b6d1335b9dad457d22141c">cl::sycl::detail::opencl_type&lt; T, generic_address_space &gt;</a>
-, <a class="el" href="group__address__spaces.html#abe1e849476ace1f83783486f196f2bfd">cl::sycl::detail::opencl_type&lt; T, global_address_space &gt;</a>
-, <a class="el" href="group__address__spaces.html#ac07baadcb005bce684ac0028085f543a">cl::sycl::detail::opencl_type&lt; T, local_address_space &gt;</a>
-, <a class="el" href="group__address__spaces.html#a8844e2b9c39124f3cf20f7eba4fbb623">cl::sycl::detail::opencl_type&lt; T, private_address_space &gt;</a>
+, <a class="el" href="group__address__spaces.html#a27d1bcf84032cb1f4eed1a51a0ea492e">cl::sycl::detail::ocl_type&lt; T, AS &gt;</a>
+, <a class="el" href="group__address__spaces.html#afe111d706f29357c26bea7ed1a650135">cl::sycl::detail::ocl_type&lt; T, constant_address_space &gt;</a>
+, <a class="el" href="group__address__spaces.html#a1004a318e8bbe141d71c32ce714adab5">cl::sycl::detail::ocl_type&lt; T, generic_address_space &gt;</a>
+, <a class="el" href="group__address__spaces.html#a4599f770fab728e23b233c5c40013b29">cl::sycl::detail::ocl_type&lt; T, global_address_space &gt;</a>
+, <a class="el" href="group__address__spaces.html#a3ba3792c0c18750aa4e307dff64540e6">cl::sycl::detail::ocl_type&lt; T, local_address_space &gt;</a>
+, <a class="el" href="group__address__spaces.html#a416880c11b313529ce480020d8b00644">cl::sycl::detail::ocl_type&lt; T, private_address_space &gt;</a>
 </li>
 </ul>
 
 
 <h3><a class="anchor" id="index_v"></a>- v -</h3><ul>
 <li>value_type
-: <a class="el" href="group__data.html#ae2da845612ac5efa163ef56f0ed9e1da">cl::sycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;</a>
-, <a class="el" href="classcl_1_1sycl_1_1buffer.html#abf509183b12f7183dd8b065c05d651bd">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
+: <a class="el" href="classcl_1_1sycl_1_1buffer.html#abf509183b12f7183dd8b065c05d651bd">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
 , <a class="el" href="group__data.html#a5d1e50e51c8fe240063d25f8da69efb9">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+, <a class="el" href="group__data.html#ab9e18000b6c49195c556a93b50decc48">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 , <a class="el" href="group__data.html#a8821577189448eeefeb70b133eb7be02">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
 , <a class="el" href="classcl_1_1sycl_1_1detail_1_1cache.html#ac00d07214346281587a26f5f23ae8627">cl::sycl::detail::cache&lt; Key, Value &gt;</a>
+, <a class="el" href="group__helpers.html#a70dca993571b23ac0c9b27ffcb005189">cl::sycl::detail::container_element_aspect&lt; T &gt;</a>
 , <a class="el" href="group__data.html#a23de6c2090d9d4bbc72abea6e4306b30">cl::sycl::detail::pipe&lt; T &gt;</a>
 , <a class="el" href="group__data.html#ad09a908a72903abfcee731d2baacb280">cl::sycl::detail::pipe_accessor&lt; T, AccessMode, Target &gt;</a>
 , <a class="el" href="group__data.html#a8f2e9eb3908980726be3e7eb3df5d02b">cl::sycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
@@ -289,6 +315,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <h3><a class="anchor" id="index_w"></a>- w -</h3><ul>
+<li>writable_array_type
+: <a class="el" href="group__data.html#aaa01116d1e6eceecefdd3b6d30b64873">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
+</li>
 <li>writable_array_view_type
 : <a class="el" href="group__data.html#a56dddc4f7bc02b93e936e1c30c0d9b6b">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
 </li>
@@ -296,7 +325,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 26 2016 12:28:41 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 22 2017 16:15:51 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

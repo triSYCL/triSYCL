@@ -1,5 +1,6 @@
 <map id="cl::sycl::detail::accessor::copy_back_cl_buffer" name="cl::sycl::detail::accessor::copy_back_cl_buffer">
 <area shape="rect" id="node2" href="$group__data.html#a99f7bfcf1fd4f84cc355b81075056b28" title="Get the boost::compute::buffer or throw if unset. " alt="" coords="217,5,381,47"/>
-<area shape="rect" id="node3" href="$group__data.html#a46771a56082efbe4a1e98aec434ac0eb" title="Returns the size of the underlying buffer in number of elements. " alt="" coords="217,71,381,112"/>
-<area shape="rect" id="node4" href="$group__data.html#a65dedf695e3113aabc2fd42720ac4af1" title="Test if the accessor has a write access right. " alt="" coords="217,136,381,177"/>
+<area shape="rect" id="node3" href="$group__data.html#a63315a7658f7c720fac86a5ee4c18fda" title="Returns the size of the underlying buffer storage in bytes. " alt="" coords="217,71,381,112"/>
+<area shape="rect" id="node5" href="$group__data.html#a65dedf695e3113aabc2fd42720ac4af1" title="Test if the accessor has a write access right. " alt="" coords="217,136,381,177"/>
+<area shape="rect" id="node4" href="$group__data.html#a5acbc83909e60b3b0a662421377cef98" title="Returns the total number of elements behind the accessor. " alt="" coords="429,71,593,112"/>
 </map>

@@ -119,6 +119,7 @@ Typedefs</h2></td></tr>
 Enumerations</h2></td></tr>
 <tr class="memitem:a1a5898274a448ac592ebbcee928939c1"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl_1_1info.html#a1a5898274a448ac592ebbcee928939c1">context</a> : int { <a class="el" href="namespacecl_1_1sycl_1_1info.html#a1a5898274a448ac592ebbcee928939c1a40d852658166dc8a786c23023cb20f92">context::reference_count</a>, 
 <a class="el" href="namespacecl_1_1sycl_1_1info.html#a1a5898274a448ac592ebbcee928939c1abf324a81d4e115643691b7aa4cc12828">context::num_devices</a>, 
+<a class="el" href="namespacecl_1_1sycl_1_1info.html#a1a5898274a448ac592ebbcee928939c1ae0212e54ec3a2a120ca0d321b3a60c78">context::devices</a>, 
 <a class="el" href="namespacecl_1_1sycl_1_1info.html#a1a5898274a448ac592ebbcee928939c1a9d19ae6573a7d4f99ebc6818a92687f5">context::gl_interop</a>
  }<tr class="memdesc:a1a5898274a448ac592ebbcee928939c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Context information descriptors.  <a href="namespacecl_1_1sycl_1_1info.html#a1a5898274a448ac592ebbcee928939c1">More...</a><br /></td></tr>
 </td></tr>
@@ -358,18 +359,21 @@ Enumerations</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Context information descriptors. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000093">Todo:</a></b></dt><dd>Should be unsigned int to be consistent with others? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000124">Todo:</a></b></dt><dd>Should be unsigned int to be consistent with others? </dd></dl>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a class="anchor" id="a1a5898274a448ac592ebbcee928939c1a40d852658166dc8a786c23023cb20f92"></a>reference_count&#160;</td><td class="fielddoc">
 </td></tr>
 <tr><td class="fieldname"><a class="anchor" id="a1a5898274a448ac592ebbcee928939c1abf324a81d4e115643691b7aa4cc12828"></a>num_devices&#160;</td><td class="fielddoc">
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a1a5898274a448ac592ebbcee928939c1ae0212e54ec3a2a120ca0d321b3a60c78"></a>devices&#160;</td><td class="fielddoc">
 </td></tr>
 <tr><td class="fieldname"><a class="anchor" id="a1a5898274a448ac592ebbcee928939c1a9d19ae6573a7d4f99ebc6818a92687f5"></a>gl_interop&#160;</td><td class="fielddoc">
 </td></tr>
 </table>
 
 <p>Definition at line <a class="el" href="context_8hpp_source.html#l00037">37</a> of file <a class="el" href="context_8hpp_source.html">context.hpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;                   : <span class="keywordtype">int</span> {</div><div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  <a class="code" href="namespacecl_1_1sycl_1_1info.html#a1a5898274a448ac592ebbcee928939c1a40d852658166dc8a786c23023cb20f92">reference_count</a>,</div><div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  <a class="code" href="namespacecl_1_1sycl_1_1info.html#a1a5898274a448ac592ebbcee928939c1abf324a81d4e115643691b7aa4cc12828">num_devices</a>,</div><div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;  <a class="code" href="namespacecl_1_1sycl_1_1info.html#a1a5898274a448ac592ebbcee928939c1a9d19ae6573a7d4f99ebc6818a92687f5">gl_interop</a></div><div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;};</div><div class="ttc" id="namespacecl_1_1sycl_1_1info_html_a1a5898274a448ac592ebbcee928939c1a9d19ae6573a7d4f99ebc6818a92687f5"><div class="ttname"><a href="namespacecl_1_1sycl_1_1info.html#a1a5898274a448ac592ebbcee928939c1a9d19ae6573a7d4f99ebc6818a92687f5">cl::sycl::info::context::gl_interop</a></div></div>
+<div class="fragment"><div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;                   : <span class="keywordtype">int</span> {</div><div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  <a class="code" href="namespacecl_1_1sycl_1_1info.html#a1a5898274a448ac592ebbcee928939c1a40d852658166dc8a786c23023cb20f92">reference_count</a>,</div><div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  <a class="code" href="namespacecl_1_1sycl_1_1info.html#a1a5898274a448ac592ebbcee928939c1abf324a81d4e115643691b7aa4cc12828">num_devices</a>,</div><div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;  <a class="code" href="namespacecl_1_1sycl_1_1info.html#a1a5898274a448ac592ebbcee928939c1ae0212e54ec3a2a120ca0d321b3a60c78">devices</a>,</div><div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  <a class="code" href="namespacecl_1_1sycl_1_1info.html#a1a5898274a448ac592ebbcee928939c1a9d19ae6573a7d4f99ebc6818a92687f5">gl_interop</a></div><div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;};</div><div class="ttc" id="namespacecl_1_1sycl_1_1info_html_a1a5898274a448ac592ebbcee928939c1ae0212e54ec3a2a120ca0d321b3a60c78"><div class="ttname"><a href="namespacecl_1_1sycl_1_1info.html#a1a5898274a448ac592ebbcee928939c1ae0212e54ec3a2a120ca0d321b3a60c78">cl::sycl::info::context::devices</a></div></div>
+<div class="ttc" id="namespacecl_1_1sycl_1_1info_html_a1a5898274a448ac592ebbcee928939c1a9d19ae6573a7d4f99ebc6818a92687f5"><div class="ttname"><a href="namespacecl_1_1sycl_1_1info.html#a1a5898274a448ac592ebbcee928939c1a9d19ae6573a7d4f99ebc6818a92687f5">cl::sycl::info::context::gl_interop</a></div></div>
 <div class="ttc" id="namespacecl_1_1sycl_1_1info_html_a1a5898274a448ac592ebbcee928939c1a40d852658166dc8a786c23023cb20f92"><div class="ttname"><a href="namespacecl_1_1sycl_1_1info.html#a1a5898274a448ac592ebbcee928939c1a40d852658166dc8a786c23023cb20f92">cl::sycl::info::context::reference_count</a></div></div>
 <div class="ttc" id="namespacecl_1_1sycl_1_1info_html_a1a5898274a448ac592ebbcee928939c1abf324a81d4e115643691b7aa4cc12828"><div class="ttname"><a href="namespacecl_1_1sycl_1_1info.html#a1a5898274a448ac592ebbcee928939c1abf324a81d4e115643691b7aa4cc12828">cl::sycl::info::context::num_devices</a></div></div>
 </div><!-- fragment -->
@@ -395,8 +399,8 @@ Enumerations</h2></td></tr>
 
 <p>Queue information descriptors. </p>
 <p>From specification C.4</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000196">Todo:</a></b></dt><dd>unsigned int?</dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000197">Todo:</a></b></dt><dd>To be implemented </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000225">Todo:</a></b></dt><dd>unsigned int?</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000226">Todo:</a></b></dt><dd>To be implemented </dd></dl>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a class="anchor" id="a86e91e6deadca35d20f77932c0550426a5c18ef72771564b7f43c497dc507aeab"></a>context&#160;</td><td class="fielddoc">
 </td></tr>
@@ -419,7 +423,7 @@ Enumerations</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 26 2016 12:28:40 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 22 2017 16:15:51 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>
