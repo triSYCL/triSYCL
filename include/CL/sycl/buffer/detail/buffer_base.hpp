@@ -16,9 +16,15 @@
 #include <memory>
 #include <mutex>
 #include <utility>
+#include <unordered_map>
 
 // \todo Use C++17 optional when it is mainstream
 #include <boost/optional.hpp>
+
+#ifdef TRISYCL_OPENCL
+#include <boost/compute.hpp>
+#endif
+
 
 #include "CL/sycl/access.hpp"
 
@@ -60,7 +66,12 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
       waiting */
   boost::optional<std::promise<void>> notify_buffer_destructor;
 
-
+#ifdef TRISYCL_OPENCL
+  //boost::optional<boost::compute::buffer> cl_buf;
+  std::unordered_map<cl_context, cl_buffer> ctx;
+#endif
+  
+  
   /// Create a buffer base
   buffer_base() : number_of_users { 0 } {}
 
@@ -129,8 +140,33 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
                               is_write_mode);
   }
 
-};
+#ifdef TRISYCL_OPENCL
+  auto get_cl_buffer(boost::compute::context context) const {
+    return ctx[context].value();
+  }
 
+  void copy_in_cl_buffer(std::weak_ptr<detail::task> task,
+			 cl_mem_flags flags, bool is_write,
+			 std::size_t size, void* data_ptr) {
+    auto context = task->get_queue()->get_boost_compute().get_context();
+    if(cxt.find(context) == cxt.end || is_write){
+      ctx[context] = boost::compute::buffer {
+	context , size, flags, data_ptr };
+    }
+  }
+
+  void copy_back_cl_buffer(std::weak_ptr<detail::task> task, std::size_t size,
+			   void* data_ptr) {
+    auto compute = task->get_queue()->get_boost_compute();
+    compute.enqueue_read_buffer(ctx[compute.get_context()],
+				0 /*< Offset */,
+				size,
+				data_ptr);
+  }
+#endif
+
+};
+  
 }
 }
 }

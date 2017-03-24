@@ -12,9 +12,6 @@
 #include <cstddef>
 #include <memory>
 
-#ifdef TRISYCL_OPENCL
-#include <boost/compute.hpp>
-#endif
 #include <boost/multi_array.hpp>
 
 #include "CL/sycl/access.hpp"
@@ -88,7 +85,7 @@ class accessor : public detail::debug<accessor<T,
 
 #ifdef TRISYCL_OPENCL
   /// The OpenCL buffer used by an OpenCL accessor
-  boost::optional<boost::compute::buffer> cl_buf;
+  //  boost::optional<boost::compute::buffer> cl_buf;
 #endif
 
 public:
@@ -413,7 +410,8 @@ private:
   /// Get the boost::compute::buffer or throw if unset
   auto get_cl_buffer() const {
     // This throws if not set
-    return cl_buf.value();
+    //return cl_buf.value();
+    buf->get_cl_buffer(task->get_queue()->get_boost_compute().get_context());
   }
 
 
@@ -431,12 +429,14 @@ private:
 
     /* Create the OpenCL buffer and copy in data from the host if in
        read mode */
-    cl_buf = boost::compute::buffer {
-      task->get_queue()->get_boost_compute().get_context(),
-      get_size(),
-      flags,
-      is_read_access() ? array.data() : 0
-    };
+    //    cl_buf = boost::compute::buffer {
+    //  task->get_queue()->get_boost_compute().get_context(),
+    //  get_size(),
+    //  flags,
+    //  is_read_access() ? array.data() : 0
+    //};
+    buf->copy_in_cl_buffer(task, flags, is_write_access(),
+			   get_size(), is_read_access() ? array.data() : 0);
   }
 
 
@@ -447,11 +447,12 @@ private:
   void copy_back_cl_buffer() {
     // \todo Use if constexpr in C++17
     if (is_write_access())
-      task->get_queue()->get_boost_compute()
-        .enqueue_read_buffer(get_cl_buffer(),
-                             0 /*< Offset */,
-                             get_size(),
-                             array.data());
+      buf->copy_back_cl_buffer(task, get_size(), array.data());
+    //task->get_queue()->get_boost_compute()
+    //  .enqueue_read_buffer(get_cl_buffer(),
+    //                       0 /*< Offset */,
+    //                       get_size(),
+    //                       array.data());
   }
 #endif
 
