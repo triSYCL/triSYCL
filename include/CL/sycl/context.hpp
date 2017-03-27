@@ -19,6 +19,13 @@
 #include "CL/sycl/info/param_traits.hpp"
 #include "CL/sycl/platform.hpp"
 
+#ifdef TRISYCL_OPENCL
+#include "CL/sycl/context/detail/opencl_context"
+#endif
+#include "CL/sycl/context/detail/host_context"
+#include "CL/sycl/detail/shared_ptr_implementation.hpp"
+
+
 namespace cl {
 namespace sycl {
 
@@ -64,10 +71,20 @@ TRISYCL_INFO_PARAM_TRAITS_ANY_T(info::context, void)
 
     \todo The implementation is quite minimal for now.
 */
-class context {
-
+  class context
+  /* Use the underlying device implementation that can be shared in the
+     SYCL model */
+    : public detail::share_ptr_implementation<context, detail::context> {
+    
+    // The type encapsulating the implementation
+    using implementation_t =
+      detail::shared_ptr_implementation<context, detail::context>;
+    
 public:
 
+    // Make the implementation member directly accessible in this class
+  using implementation_t::implementation;
+    
   /** Constructs a context object for SYCL host using an async_handler for
       handling asynchronous errors
 
@@ -180,7 +197,10 @@ public:
 
       \todo To be implemented
   */
-  platform get_platform();
+    platform get_platform() const {
+      detail::unimplemented();
+      return {};
+    }
 
 
   /** Returns the set of devices that are part of this context
@@ -208,6 +228,16 @@ public:
 /// @} to end the execution Doxygen group
 
 }
+}
+
+namespace std {
+
+  template <> struct hash<cl::sycl::context> {
+    hash<cl::sycl::context> operator()(const cl::sycl::context &c) const {
+      return 
+    }
+  };
+
 }
 
 /*
