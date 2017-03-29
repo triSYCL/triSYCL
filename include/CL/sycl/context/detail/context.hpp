@@ -19,6 +19,8 @@ public:
 #ifdef TRISYCL_OPENCL
   /// Returns the cl_context of the underlying OpenCL context
   virtual cl_context get() const = 0;
+
+  virtual boost::compute::context get_boost_compute() const = 0;
 #endif
 
   /// Returns true is the context is a SYCL host context
@@ -35,7 +37,7 @@ public:
   
   virtual vector_class<cl::sycl::device> get_devices() const = 0;
 
-  // Virtual to call the real destructor
+  ///Virtual to call the real destructor
   virtual ~context() {}
   
 };

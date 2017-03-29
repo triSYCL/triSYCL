@@ -411,7 +411,7 @@ private:
   auto get_cl_buffer() const {
     // This throws if not set
     //return cl_buf.value();
-    buf->get_cl_buffer(task->get_queue()->get_boost_compute().get_context());
+      return buf->get_cl_buffer(task->get_queue()->get_context());
   }
 
 
@@ -435,7 +435,8 @@ private:
     //  flags,
     //  is_read_access() ? array.data() : 0
     //};
-    buf->copy_in_cl_buffer(task, flags, is_write_access(),
+    buf->copy_in_cl_buffer(task->get_queue()->get_context(),
+			   flags, is_write_access(),
 			   get_size(), is_read_access() ? array.data() : 0);
   }
 
@@ -444,10 +445,12 @@ private:
 
       \todo Move this into the buffer with queue/device-based caching
   */
-  void copy_back_cl_buffer() {
+  void copy_back_cl_buffer() const{
     // \todo Use if constexpr in C++17
     if (is_write_access())
-      buf->copy_back_cl_buffer(task, get_size(), array.data());
+	buf->copy_back_cl_buffer(task->get_queue()->get_boost_compute(),
+				 task->get_queue()->get_context(),
+				 get_size(), array.data());
     //task->get_queue()->get_boost_compute()
     //  .enqueue_read_buffer(get_cl_buffer(),
     //                       0 /*< Offset */,

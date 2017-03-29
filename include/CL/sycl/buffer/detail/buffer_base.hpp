@@ -27,7 +27,7 @@
 #endif
 
 #include "CL/sycl/access.hpp"
-
+#include "CL/sycl/command_group/detail/task.hpp"
 namespace cl {
 namespace sycl {
 
@@ -68,7 +68,7 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
 
 #ifdef TRISYCL_OPENCL
   //boost::optional<boost::compute::buffer> cl_buf;
-  std::unordered_map<cl::sycl::context, boost::compute::buffer&> ctx;
+  std::unordered_map<cl::sycl::context, boost::compute::buffer> ctx;
 #endif
   
   
@@ -141,32 +141,31 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
   }
 
 #ifdef TRISYCL_OPENCL
-  auto get_cl_buffer(cl::sycl::context context) const {
-    return ctx[context].value();
+  auto get_cl_buffer(cl::sycl::context context) {
+    return ctx[context];
   }
-
-  void copy_in_cl_buffer(std::weak_ptr<detail::task> task,
+    
+  void copy_in_cl_buffer(cl::sycl::context context,
 			 cl_mem_flags flags, bool is_write,
 			 std::size_t size, void* data_ptr) {
-    auto queue = task->get_queue();
-    if(cxt.find(queue->get_context()) == cxt.end || is_write){
-      ctx[queue->get_boost_compute().get_context()] = boost::compute::buffer {
-	task->g , size, flags, data_ptr };
+    if(ctx.find(context) == ctx.end() || is_write){
+	ctx[context] =
+	    boost::compute::buffer
+	    { context.get_boost_compute(), size, flags, data_ptr};
     }
   }
 
-  void copy_back_cl_buffer(std::weak_ptr<detail::task> task, std::size_t size,
+  void copy_back_cl_buffer(boost::compute::command_queue q,
+			   cl::sycl::context context, std::size_t size,
 			   void* data_ptr) {
-    auto queue = task->get_queue();
-    queue->get_boost_compute().enqueue_read_buffer(ctx[queue->get_context()],
-				0 /*< Offset */,
-				size,
-				data_ptr);
+      q.enqueue_read_buffer(ctx[context],
+			    0 /*< Offset */,
+			    size,
+			    data_ptr);
   }
 #endif
 
 };
-  
 }
 }
 }
