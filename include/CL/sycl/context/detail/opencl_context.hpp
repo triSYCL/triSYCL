@@ -13,74 +13,104 @@
 #include <boost/compute.hpp>
 
 #include "CL/sycl/detail/default_classes.hpp"
+#include "CL/sycl/detail/unimplemented.hpp"
+#include "CL/sycl/detail/cache.hpp"
 
+#include "CL/sycl/context/detail/context.hpp"
 #include "CL/sycl/platform.hpp"
 #include "CL/sycl/info/param_traits.hpp"
 #include "CL/sycl/exception.hpp"
-#include "CL/sycl/context/detail/context.hpp"
-#include "CL/sycl/detail/unimplemented.hpp"
-#include "CL/sycl/detail/cache.hpp"
 
 
 namespace cl {
 namespace sycl {
 namespace detail {
 
+/// SYCL OpenCL context
 class opencl_context : public detail::context {
 
-    boost::compute::context c;
+  /// User the Boost Compute abstraction of the OpenCL context
+  boost::compute::context c;
 
-    /** A cache to always return the same alive context for a given OpenCL
+  /** A cache to always return the same alive context for a given OpenCL
       context
 
       C++11 guaranties the static construction is thread-safe
   */
   static detail::cache<cl_context, detail::opencl_context> cache;
 
-private:
-  opencl_context(const boost::compute::context &c) : c { c } {}
-  
-  
 public:
-    cl_context get() const override {
-	return c.get();
-    }
 
-    boost::compute::context get_boost_compute() const override {
-	return c;
-    }
+  /// Return the underlying cl_context of the cl::sycl::context
+  cl_context get() const override {
+    return c.get();
+  }
 
-    bool is_host() const override {
-	return false;
-    }
-    
+
+  /// Return the underlying boost::compute::context of the cl::sycl::context
+  boost::compute::context &get_boost_compute() override {
+    return c;
+  }
+
+
+  /// Return false because the context is not a SYCL host context
+  bool is_host() const override {
+    return false;
+  }
+
+
 #if 0
-    template <info::context Param>
-    typename info::param_traits<info::context, Param>::type
-    get_info() const override{
-	detail::unimplemented();
-	return {};
-    }
+  /** Query the context for OpenCL info::context info
+
+      Return synchronous errors via the SYCL exception class.
+
+      \todo To be implemented
+  */
+  template <info::context Param>
+  typename info::param_traits<info::context, Param>::type
+  get_info() const override{
+    detail::unimplemented();
+    return {};
+  }
 #endif
-    
-    cl::sycl::platform get_platform() const override {
-	detail::unimplemented();
-	return {};
-    }
 
-    vector_class<cl::sycl::device>
-    get_devices() const override {
-	detail::unimplemented();
-	return {};
-    }
 
-  ///// Get a singleton instance of the opencl_queue
+  /** Return the platform of the context
+
+      Return synchronous errors via the SYCL exception class.
+
+      \todo To be implemented
+  */
+  cl::sycl::platform get_platform() const override {
+    detail::unimplemented();
+    return {};
+  }
+
+
+  /** Returns the set of devices that are part of this context.
+
+      \todo To be implemented
+  */
+  vector_class<cl::sycl::device> get_devices() const override {
+    detail::unimplemented();
+    return {};
+  }
+
+  /// Get a singleton instance of the opencl_context
   static std::shared_ptr<opencl_context>
   instance(const boost::compute::context &c) {
     return cache.get_or_register(c.get(),
                                  [&] { return new opencl_context { c }; });
   }
 
+private:
+
+  /// Only the instance factory can build it
+  opencl_context(const boost::compute::context &c) : c { c } {}
+
+
+public:
+  /// Unregister from the cache on destruction
   ~opencl_context() override {
     cache.remove(c.get());
   }
@@ -95,8 +125,6 @@ TRISYCL_WEAK_ATTRIB_PREFIX
 detail::cache<cl_context, detail::opencl_context> opencl_context::cache
 TRISYCL_WEAK_ATTRIB_SUFFIX;
 
-
-  
 }
 }
 }

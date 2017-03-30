@@ -19,11 +19,11 @@
 #include "CL/sycl/platform.hpp"
 
 #include "CL/sycl/detail/shared_ptr_implementation.hpp"
+#include "CL/sycl/info/context.hpp"
 #include "CL/sycl/context/detail/host_context.hpp"
 #ifdef TRISYCL_OPENCL
 #include "CL/sycl/context/detail/opencl_context.hpp"
 #endif
-#include "CL/sycl/info/context.hpp"
 
 
 namespace cl {
@@ -47,19 +47,20 @@ namespace sycl {
     \todo The implementation is quite minimal for now.
 */
   class context
-  /* Use the underlying device implementation that can be shared in the
+
+  /* Use the underlying context implementation that can be shared in the
      SYCL model */
     : public detail::shared_ptr_implementation<context, detail::context> {
-    
+
     // The type encapsulating the implementation
     using implementation_t =
       detail::shared_ptr_implementation<context, detail::context>;
-    
+
 public:
 
     // Make the implementation member directly accessible in this class
   using implementation_t::implementation;
-    
+
   /** Constructs a context object for SYCL host using an async_handler for
       handling asynchronous errors
 
@@ -83,7 +84,8 @@ public:
   context(cl_context clContext, async_handler asyncHandler = nullptr)
     : context { boost::compute::context { clContext }, asyncHandler } {}
 
-  context(const boost::compute::context &c, async_handler asyncHandler = nullptr)
+  context(const boost::compute::context &c,
+          async_handler asyncHandler = nullptr)
     : implementation_t { detail::opencl_context::instance(c) } {}
 #endif
 
@@ -147,7 +149,7 @@ public:
 
       Get the default constructors back.
   */
-      context() : implementation_t { detail::host_context::instance () } {}
+  context() : implementation_t { detail::host_context::instance () } {}
 
 
 #ifdef TRISYCL_OPENCL
@@ -158,11 +160,11 @@ public:
      Caller should release it when finished.
   */
   cl_context get() const {
-      return implementation->get();
+    return implementation->get();
   }
 
-   boost::compute::context get_boost_compute() const {
-       return implementation->get_boost_compute();
+  boost::compute::context &get_boost_compute() {
+    return implementation->get_boost_compute();
    }
 #endif
 
@@ -177,10 +179,7 @@ public:
 
       \todo To be implemented
   */
-    platform get_platform() const {
-      detail::unimplemented();
-      return {};
-    }
+  platform get_platform();
 
 
   /** Returns the set of devices that are part of this context
@@ -214,7 +213,7 @@ namespace std {
 
   template <> struct hash<cl::sycl::context> {
     auto operator()(const cl::sycl::context &c) const {
-	return c.hash();
+    return c.hash();
     }
   };
 

@@ -24,55 +24,81 @@ namespace detail {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
+
+    SYCL host context
+
+    \todo The implementation is quite minimal for now. :-)
 */
-    
-    class host_context : public detail::context,
-			 public detail::singleton<host_context>{
+class host_context : public detail::context,
+                     public detail::singleton<host_context> {
 
 public:
 
 #ifdef TRISYCL_OPENCL
-  /** Return the cl_device_id of the underlying OpenCL platform
+  /** Return the underlying cl_context of the cl::sycl::context
 
-      This throws an error since there is no OpenCL device associated
+      This throws an error since there is no OpenCL context associated
       to the host device.
   */
   cl_context get() const override {
     throw non_cl_error("The host device has no OpenCL context");
   }
 
-  boost::compute::context get_boost_compute() const override {
-    int i = 1/0;
+
+  /** Returns the SYCL platform that the context is initialized for
+
+      This throws an error since there is no boost::compute context associated
+      to the host device.
+  */
+  boost::compute::context &get_boost_compute() override {
     throw non_cl_error("The host device has no boost context");
   }
 #endif
 
-    bool is_host() const override {
-	return true;
-    }
 
-    
-    cl::sycl::platform get_platform() const override {
-	detail::unimplemented();
-	return {};
-    }
+  /// Return true since the context is a SYCL host context
+  bool is_host() const override {
+    return true;
+  }
+
+  /** Return the platform of the context
+
+      Return synchronous errors via the SYCL exception class.
+
+      \todo To be implemented
+  */
+  cl::sycl::platform get_platform() const override {
+    detail::unimplemented();
+    return {};
+  }
 
 #if 0
-    template <info::context Param>
-    typename info::param_traits<info::context, Param>::type
-    get_info() const override {
-	detail::unimplemented();
-	return {};
-    }
+  /** Query the context for OpenCL info::context info
+
+      Return synchronous errors via the SYCL exception class.
+
+      \todo To be implemented
+  */
+  template <info::context Param>
+  typename info::param_traits<info::context, Param>::type
+  get_info() const override {
+    detail::unimplemented();
+    return {};
+  }
 #endif
-	
-   vector_class<cl::sycl::device>
-    get_devices() const override {
-	detail::unimplemented();
-	return {};
-    }
+
+  /** Returns the set of devices that are part of this context.
+      It should only return the host device itself.
+
+      \todo To be implemented
+  */
+  vector_class<cl::sycl::device>
+  get_devices() const override {
+    detail::unimplemented();
+    return {};
+  }
 };
-    
+
 /// @} to end the execution Doxygen group
 
 }

@@ -1,6 +1,14 @@
 #ifndef TRISYCL_SYCL_INFO_CONTEXT_HPP
 #define TRISYCL_SYCL_INFO_CONTEXT_HPP
 
+/** \file The OpenCL SYCL context information parameters
+
+    Ronan at Keryell point FR
+
+    This file is distributed under the University of Illinois Open Source
+    License. See LICENSE.TXT for details.
+*/
+
 #include "CL/sycl/info/param_traits.hpp"
 
 namespace cl {
@@ -9,7 +17,6 @@ namespace sycl {
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
 */
-
 namespace info {
 
 using gl_context_interop = bool;
@@ -24,7 +31,6 @@ enum class context : int {
   devices,
   gl_interop
 };
-
 
 
 /** Query the return type for get_info() on context stuff

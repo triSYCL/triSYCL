@@ -45,10 +45,8 @@ class opencl_queue : public detail::queue,
 
 
   /// Return the SYCL context associated to the queue
-  /// \todo Finish context
   cl::sycl::context get_context() const override {
-    return cl::sycl::context {q.get_context()};
-    //return {};
+    return q.get_context();
   }
 
 
