@@ -259,7 +259,7 @@ execute: $(basename $(TARGET))
 	#  -globaldce -o $@ $<
 	opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats \
 	  -globalopt -deadargelim -argpromotion -deadargelim \
-	  -SYCL-kernel-filter \
+	  -SYCL-kernel-filter -SPIRify \
 	  -globaldce -o $@ $<
 	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -stats -SYCL-kernel-filter \
 	#  -debug -print-after-all -o $@ $<
