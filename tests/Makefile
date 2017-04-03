@@ -293,11 +293,14 @@ execute: $(basename $(TARGET))
 
 # The Clang AST
 %.ast: %.cpp
-	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-dump -fsyntax-only $< > $@
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-dump \
+	  -fno-color-diagnostics -fsyntax-only $< > $@
 %.ast: %.C
-	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-dump -fsyntax-only $< > $@
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-dump \
+	  --fno-color-diagnostics -fsyntax-only $< > $@
 %.ast: %.cc
-	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-dump -fsyntax-only $< > $@
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-dump \
+	  --fno-color-diagnostics -fsyntax-only $< > $@
 
 
 # To verify everything is self-contained, run the target in a clone of the
