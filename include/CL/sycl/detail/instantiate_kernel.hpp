@@ -41,6 +41,7 @@ auto prevent_arguments_from_optimization = [] (auto & ...args) {
 template <typename KernelName,
           typename Functor>
 __attribute__((noinline))
+__kernel
 void instantiate_kernel(
 #ifdef TRISYCL_GENERATE_KERNEL_CALLER
       /* If we generate the kernel calling code, pass the task

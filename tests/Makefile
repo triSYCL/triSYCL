@@ -225,14 +225,25 @@ execute: $(basename $(TARGET))
 
 # The LLVM assembly code for the code expected to call the kernels
 %.pre_kernel_caller.ll: %.cpp
-	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_GENERATE_KERNEL_CALLER \
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl -DTRISYCL_GENERATE_KERNEL_CALLER \
 	  -emit-llvm -S -o $@ $<
 %.pre_kernel_caller.ll: %.C
-	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_GENERATE_KERNEL_CALLER \
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl -DTRISYCL_GENERATE_KERNEL_CALLER \
 	  -emit-llvm -S -o $@ $<
 %.pre_kernel_caller.ll: %.cc
-	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_GENERATE_KERNEL_CALLER \
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl -DTRISYCL_GENERATE_KERNEL_CALLER \
 	  -emit-llvm -S -o $@ $<
+
+# The LLVM assembly code for the code before kernels
+%.pre_kernel.ll: %.cpp
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl -sycl-is-device \
+	  -DTRISYCL_GENERATE_KERNEL_CALLER -emit-llvm -S -o $@ $<
+%.pre_kernel.ll: %.C
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl -sycl-is-device \
+	  -DTRISYCL_GENERATE_KERNEL_CALLER -emit-llvm -S -o $@ $<
+%.pre_kernel.ll: %.cc
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl -sycl-is-device \
+	  -DTRISYCL_GENERATE_KERNEL_CALLER -emit-llvm -S -o $@ $<
 
 # How to compile OpenCL kernel to 64-bit SPIR 2.0
 %.spir64: %.cl
@@ -241,7 +252,7 @@ execute: $(basename $(TARGET))
 	  -include $(triSYCL_DIR)/include/CL/sycl/detail/SPIR/opencl_spir.h -o $@ $<
 
 # Process bitcode with SYCL pass to generate kernels
-%.kernel.bc: %.ll
+%.kernel.bc: %.pre_kernel.ll
 	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats \
 	#  -globalopt -deadargelim -SYCL-args-flattening -deadargelim \
 	#  -SYCL-kernel-filter \
