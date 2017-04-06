@@ -23,10 +23,10 @@
 
 #ifdef TRISYCL_OPENCL
 #include <boost/compute.hpp>
+#include "CL/sycl/context.hpp"
 #endif
 
-
-#include "CL/sycl/access.hpp"
+#include "CL/sycl/command_group/detail/task.hpp"
 
 namespace cl {
 namespace sycl {
@@ -35,12 +35,18 @@ class handler;
 
 namespace detail {
 
+/** \addtogroup data Data access and storage in SYCL
+    @{
+*/
+
 struct task;
 struct buffer_base;
 inline static std::shared_ptr<detail::task>
 add_buffer_to_task(handler *command_group_handler,
                    std::shared_ptr<detail::buffer_base> b,
                    bool is_write_mode);
+
+
 
 /** Factorize some template independent buffer aspects in a base class
  */
@@ -67,11 +73,13 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
   boost::optional<std::promise<void>> notify_buffer_destructor;
 
 #ifdef TRISYCL_OPENCL
-  //boost::optional<boost::compute::buffer> cl_buf;
-  std::unordered_map<cl_context, cl_buffer> ctx;
+  /** Buffer side cache that keeps the boost::compute::buffer (and the
+      underlying cl_buffer) so that if the buffer already exists inside
+      the same context it is not recreated.
+   */
+  std::unordered_map<cl::sycl::context, boost::compute::buffer> buffer_cache;
 #endif
-  
-  
+
   /// Create a buffer base
   buffer_base() : number_of_users { 0 } {}
 
@@ -141,32 +149,38 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
   }
 
 #ifdef TRISYCL_OPENCL
-  auto get_cl_buffer(boost::compute::context context) const {
-    return ctx[context].value();
+  /// Returns the cl_buffer for a given context.
+  boost::compute::buffer get_cl_buffer(cl::sycl::context context) {
+    return buffer_cache[context];
   }
 
-  void copy_in_cl_buffer(std::weak_ptr<detail::task> task,
-			 cl_mem_flags flags, bool is_write,
-			 std::size_t size, void* data_ptr) {
-    auto context = task->get_queue()->get_boost_compute().get_context();
-    if(cxt.find(context) == cxt.end || is_write){
-      ctx[context] = boost::compute::buffer {
-	context , size, flags, data_ptr };
+
+  /** Create the OpenCL buffer and copy in data from the host if it doesn't
+   already exists for a given context or if the buffer is in write mode */
+  void copy_in_cl_buffer(cl::sycl::context context,
+                         cl_mem_flags flags, bool is_write,
+                         std::size_t size, void* data_ptr) {
+    if (buffer_cache.find(context) == buffer_cache.end() || is_write) {
+      buffer_cache[context] = boost::compute::buffer
+        { context.get_boost_compute(), size, flags, data_ptr };
     }
   }
 
-  void copy_back_cl_buffer(std::weak_ptr<detail::task> task, std::size_t size,
-			   void* data_ptr) {
-    auto compute = task->get_queue()->get_boost_compute();
-    compute.enqueue_read_buffer(ctx[compute.get_context()],
-				0 /*< Offset */,
-				size,
-				data_ptr);
+  /// Copy back the CL buffer to the SYCL host if required
+  void copy_back_cl_buffer(boost::compute::command_queue q,
+                           cl::sycl::context context, std::size_t size,
+                           void* data_ptr) {
+    q.enqueue_read_buffer(buffer_cache[context],
+                          0 /*< Offset */,
+                          size,
+                          data_ptr);
   }
 #endif
 
 };
-  
+
+/// @} End the data Doxygen group
+
 }
 }
 }

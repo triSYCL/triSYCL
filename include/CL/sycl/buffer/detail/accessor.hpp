@@ -83,11 +83,6 @@ class accessor : public detail::debug<accessor<T,
   /// The task where the accessor is used in
   std::shared_ptr<detail::task> task;
 
-#ifdef TRISYCL_OPENCL
-  /// The OpenCL buffer used by an OpenCL accessor
-  //  boost::optional<boost::compute::buffer> cl_buf;
-#endif
-
 public:
 
   /** \todo in the specification: store the dimension for user request
@@ -410,49 +405,36 @@ private:
   /// Get the boost::compute::buffer or throw if unset
   auto get_cl_buffer() const {
     // This throws if not set
-    //return cl_buf.value();
-    buf->get_cl_buffer(task->get_queue()->get_boost_compute().get_context());
+    return buf->get_cl_buffer(task->get_queue()->get_context());
   }
 
 
   /** Lazily associate a CL buffer to the SYCL buffer and copy data in
       if required
-
-      \todo Move this into the buffer with queue/device-based caching
   */
   void copy_in_cl_buffer() {
     // This should be a constexpr
     cl_mem_flags flags = is_read_access() && is_write_access() ?
       CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR
       : is_read_access() ? CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR
-                         : CL_MEM_WRITE_ONLY;
+      : CL_MEM_WRITE_ONLY;
 
     /* Create the OpenCL buffer and copy in data from the host if in
        read mode */
-    //    cl_buf = boost::compute::buffer {
-    //  task->get_queue()->get_boost_compute().get_context(),
-    //  get_size(),
-    //  flags,
-    //  is_read_access() ? array.data() : 0
-    //};
-    buf->copy_in_cl_buffer(task, flags, is_write_access(),
+    buf->copy_in_cl_buffer(task->get_queue()->get_context(),
+			   flags, is_write_access(),
 			   get_size(), is_read_access() ? array.data() : 0);
   }
 
 
   /** Copy back the CL buffer to the SYCL if required
-
-      \todo Move this into the buffer with queue/device-based caching
   */
   void copy_back_cl_buffer() {
     // \todo Use if constexpr in C++17
     if (is_write_access())
-      buf->copy_back_cl_buffer(task, get_size(), array.data());
-    //task->get_queue()->get_boost_compute()
-    //  .enqueue_read_buffer(get_cl_buffer(),
-    //                       0 /*< Offset */,
-    //                       get_size(),
-    //                       array.data());
+      buf->copy_back_cl_buffer(task->get_queue()->get_boost_compute(),
+			       task->get_queue()->get_context(),
+			       get_size(), array.data());
   }
 #endif
 
