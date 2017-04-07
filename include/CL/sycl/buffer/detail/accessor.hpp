@@ -417,13 +417,13 @@ private:
     cl_mem_flags flags = is_read_access() && is_write_access() ?
       CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR
       : is_read_access() ? CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR
-      : CL_MEM_WRITE_ONLY;
+                         : CL_MEM_WRITE_ONLY;
 
     /* Create the OpenCL buffer and copy in data from the host if in
        read mode */
     buf->copy_in_cl_buffer(task->get_queue()->get_context(),
-			   flags, is_write_access(),
-			   get_size(), is_read_access() ? array.data() : 0);
+                           flags, is_write_access(),
+                           get_size(), is_read_access() ? array.data() : 0);
   }
 
 
@@ -433,8 +433,8 @@ private:
     // \todo Use if constexpr in C++17
     if (is_write_access())
       buf->copy_back_cl_buffer(task->get_queue()->get_boost_compute(),
-			       task->get_queue()->get_context(),
-			       get_size(), array.data());
+                               task->get_queue()->get_context(),
+                               get_size(), array.data());
   }
 #endif
 

@@ -1,7 +1,7 @@
 #ifndef TRISYCL_SYCL_CONTEXT_DETAIL_HOST_CONTEXT_HPP
 #define TRISYCL_SYCL_CONTEXT_DETAIL_HOST_CONTEXT_HPP
 
-/** \file The OpenCL SYCL host device implementation
+/** \file The OpenCL SYCL host context implementation
 
     Ronan at Keryell point FR
 
