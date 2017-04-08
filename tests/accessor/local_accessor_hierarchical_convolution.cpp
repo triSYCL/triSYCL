@@ -11,11 +11,11 @@
 
 using namespace cl::sycl;
 
-constexpr size_t N = 300;
-using Type = int;
-
 
 int test_main(int argc, char *argv[]) {
+  constexpr size_t N = 300;
+  using Type = int;
+
   // The convolution kernel
   const std::vector<Type> conv_kernel_init = { 1, 2, 4 };
   buffer<Type> conv_kernel { conv_kernel_init.begin(),

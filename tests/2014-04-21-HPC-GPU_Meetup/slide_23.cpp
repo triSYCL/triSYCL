@@ -10,7 +10,7 @@
 // To have FunctionObject working without explicit closure, put the
 // accessor as a global variable. But that means to pull many things as a
 // global variable...
-int result; //< this is where we will write our result
+
 // wrap our result variable in a buffer
 cl::sycl::buffer<int> resultBuf(1);
 
@@ -25,6 +25,7 @@ struct FunctionObject {
 };
 int main()
 {
+  int result; //< this is where we will write our result
 
   { // by sticking all the SYCL work in a {} block, we ensure
     // all SYCL tasks must complete before exiting the block

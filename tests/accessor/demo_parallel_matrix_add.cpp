@@ -7,11 +7,12 @@
 
 using namespace cl::sycl;
 
-// Size of the matrices
-const size_t N = 2000;
-const size_t M = 3000;
 
 int main() {
+  // Size of the matrices
+  const size_t N = 2000;
+  const size_t M = 3000;
+
   { // By sticking all the SYCL work in a {} block, we ensure
     // all SYCL tasks must complete before exiting the block
 

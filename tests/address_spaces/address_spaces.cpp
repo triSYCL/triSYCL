@@ -20,9 +20,6 @@
 
 using namespace cl::sycl;
 
-constexpr size_t N = 3;
-using Vector = float[N];
-
 
 struct Range {
   float low, high;
@@ -36,6 +33,8 @@ static_assert(std::is_object<std::string>::value,
               "T must be a pointer type");
 
 int main() {
+  constexpr size_t N = 3;
+  using Vector = float[N];
 
   float c[N];
 

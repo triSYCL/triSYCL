@@ -53,7 +53,8 @@ function(declare_trisycl_test)
   target_compile_definitions(${TARGET_NAME} PUBLIC $<$<BOOL:${TRISYCL_NO_ASYNC}>:TRISYCL_NO_ASYNC> # If opting for synchronous task exec
                                                    $<$<BOOL:${declare_trisycl_test_USES_OPENCL}>:TRISYCL_OPENCL> # If the test uses OpenCL
                                                    $<$<BOOL:${TRISYCL_DEBUG}>:TRISYCL_DEBUG>
-                                                   $<$<BOOL:${TRISYCL_DEBUG_STRUCTORS}>:TRISYCL_DEBUG_STRUCTORS>)
+                                                   $<$<BOOL:${TRISYCL_DEBUG_STRUCTORS}>:TRISYCL_DEBUG_STRUCTORS>
+												   $<$<BOOL:${WIN32}>:BOOST_MULTI_ARRAY_NO_GENERATORS>)
 
   # OpenMP requirements
   target_compile_options(${TARGET_NAME} PUBLIC $<$<BOOL:${TRISYCL_OPENMP}>:${OpenMP_CXX_FLAGS}>)

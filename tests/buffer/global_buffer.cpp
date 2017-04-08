@@ -13,9 +13,6 @@
 
 using namespace cl::sycl;
 
-constexpr size_t N = 2;
-constexpr size_t M = 3;
-using Matrix = float[N][M];
 
 // Test with global default buffers
 buffer<float, 2> A;
@@ -23,6 +20,10 @@ buffer<float, 2> B;
 buffer<float, 2> C;
 
 int main() {
+  constexpr size_t N = 2;
+  constexpr size_t M = 3;
+  using Matrix = float[N][M];
+
   Matrix a = { { 1, 2, 3 }, { 4, 5, 6 } };
   Matrix b = { { 2, 3, 4 }, { 5, 6, 7 } };
 

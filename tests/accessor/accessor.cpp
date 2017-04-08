@@ -8,17 +8,17 @@
 
 using namespace cl::sycl;
 
-// Size of the buffers
-constexpr size_t N = 20;
-constexpr size_t M = 30;
-constexpr size_t P = 40;
-
 #define TEST_TYPE(accessor_var, type_member, type)                      \
   static_assert(std::is_same<type,                                      \
                 decltype(accessor_var)::type_member>::value,            \
                 #type_member " is an " #type)
 
 int main() {
+    // Size of the buffers
+    constexpr size_t N = 20;
+    constexpr size_t M = 30;
+    constexpr size_t P = 40;
+
     // Create read-write buffers for each rank
     cl::sycl::buffer<int, 1> a(N);
     cl::sycl::buffer<int, 2> b({ N, M });

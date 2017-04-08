@@ -177,7 +177,7 @@ public:
   template <typename Iterator>
   buffer(Iterator start_iterator, Iterator end_iterator) :
     // The size of a multi_array is set at creation time
-    allocation { boost::extents[std::distance(start_iterator, end_iterator)] },
+    allocation{ boost::multi_array_types::extent_gen{}[std::distance(start_iterator, end_iterator)] },
     access { allocation }
     // If iterators are const ones, then we do not write back
     {
