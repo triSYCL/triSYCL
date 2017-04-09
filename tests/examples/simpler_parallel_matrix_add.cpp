@@ -6,12 +6,13 @@
 
 using namespace cl::sycl;
 
-constexpr size_t N = 2;
-constexpr size_t M = 3;
-using Matrix = float[N][M];
 
 // Compute sum of matrices a and b into c
 int main() {
+  constexpr size_t N = 2;
+  constexpr size_t M = 3;
+  using Matrix = float[N][M];
+
  Matrix a = { { 1, 2, 3 }, { 4, 5, 6 } };
  Matrix b = { { 2, 3, 4 }, { 5, 6, 7 } };
 

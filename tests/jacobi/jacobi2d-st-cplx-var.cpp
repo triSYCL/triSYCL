@@ -26,12 +26,12 @@ Complex operator*(const Complex& a, const Complex& b) {
 }
 
 
-Complex coef(0.2f,0.0f);
+Complex coeff(0.2f,0.0f);
 
 
 inline Complex& fdl_out(int a,int b, cl::sycl::accessor<Complex, 2, cl::sycl::access::mode::write> acc) {return acc[a][b];}
 inline Complex  fdl_in(int a,int b, cl::sycl::accessor<Complex, 2, cl::sycl::access::mode::read>  acc) {return acc[a][b];}
-inline Complex  fac(int a,int b, int c, int d, cl::sycl::accessor<Complex, 1, cl::sycl::access::mode::read>  acc) {return coef*acc[0];}
+inline Complex  fac(int a,int b, int c, int d, cl::sycl::accessor<Complex, 1, cl::sycl::access::mode::read>  acc) {return coeff*acc[0];}
 inline Complex  fac_id(int a,int b, int c, int d, cl::sycl::accessor<Complex, 1, cl::sycl::access::mode::read>  acc) {return acc[0];}
 
 // static declaration to use pointers
@@ -46,14 +46,14 @@ int main(int argc, char **argv) {
 
   // declarations
   Complex ioB(1.0, 1.0);
-  ioBuffer = cl::sycl::buffer<Complex,2>(cl::sycl::range<2> {M, N});
-  ioABuffer = cl::sycl::buffer<Complex,2>(cl::sycl::range<2> {M, N}); 
+  ioBuffer = cl::sycl::buffer<Complex,2>(cl::sycl::range<2> {M, K});
+  ioABuffer = cl::sycl::buffer<Complex,2>(cl::sycl::range<2> {M, K}); 
   ioBBuffer = cl::sycl::buffer<Complex,1>(&ioB, cl::sycl::range<1> {1}); 
 
   // initialization
   for (size_t i = 0; i < M; ++i){
-    for (size_t j = 0; j < N; ++j){
-      float tmp = (float) (i*(j+2) + 10) / N;
+    for (size_t j = 0; j < K; ++j){
+      float tmp = (float) (i*(j+2) + 10) / K;
       Complex value(tmp, tmp);
       cl::sycl::id<2> id = {i, j};
       ioBuffer.get_access<cl::sycl::access::mode::write, cl::sycl::access::target::host_buffer>()[id] = value;

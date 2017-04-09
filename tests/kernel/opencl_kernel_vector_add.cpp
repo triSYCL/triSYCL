@@ -11,10 +11,10 @@
 
 using namespace cl::sycl;
 
-constexpr size_t N = 3;
-using Vector = float[N];
-
 int test_main(int argc, char *argv[]) {
+  constexpr size_t N = 3;
+  using Vector = float[N];
+
   Vector a = { 1, 2, 3 };
   Vector b = { 5, 6, 8 };
   Vector c;

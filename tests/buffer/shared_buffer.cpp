@@ -10,12 +10,13 @@
 
 using namespace cl::sycl;
 
-// Size of the buffers
-constexpr size_t N = 20;
 
 
 // To verify it works through function return
 cl::sycl::buffer<int, 1> f(void) {
+  // Size of the buffers
+  constexpr size_t N = 20;
+
   // Create a read-write 1D buffer of size N
   cl::sycl::buffer<int, 1> a(N);
   DISPLAY_BUFFER_USE_COUNT(a);

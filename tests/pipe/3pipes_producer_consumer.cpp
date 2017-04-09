@@ -9,10 +9,10 @@
 
 #include <boost/test/minimal.hpp>
 
-constexpr size_t N = 300;
-using Type = int;
-
 int test_main(int argc, char *argv[]) {
+  constexpr size_t N = 300;
+  using Type = int;
+
   // Initialize the input buffers to some easy-to-compute values
   cl::sycl::buffer<Type> a { N };
   {

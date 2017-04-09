@@ -10,10 +10,11 @@
 #include <iostream>
 #include <iterator>
 
-constexpr size_t N = 3;
-using Vector = float[N];
 
 int main() {
+  constexpr size_t N = 3;
+  using Vector = float[N];
+
   Vector a = { 1, 2, 3 };
   Vector b = { 5, 6, 8 };
   Vector c;

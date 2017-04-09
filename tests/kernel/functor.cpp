@@ -9,8 +9,6 @@
 
 using namespace cl::sycl;
 
-constexpr size_t N = 30;
-
 // A kernel described as a functor for a parallel for
 class ParallelFor {
  using accessor_type = accessor<unsigned int,
@@ -67,6 +65,8 @@ public:
 
 
 int main() {
+  constexpr size_t N = 30;
+
   {
     queue q;
 

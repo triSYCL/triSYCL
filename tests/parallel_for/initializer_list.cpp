@@ -5,9 +5,9 @@
 #include "test-helpers.hpp"
 using namespace cl::sycl;
 
-constexpr size_t N = 5;
-
 int main() {
+  constexpr size_t N = 5;
+
   {
     queue myQueue;
 

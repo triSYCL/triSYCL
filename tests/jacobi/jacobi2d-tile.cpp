@@ -13,23 +13,23 @@ int main(int argc, char **argv) {
   start_measure(timer);
 
   // declarations
-  sycl::buffer<float,2> ioABuffer = cl::sycl::buffer<float,2>(sycl::range<2> {M, N});
-  sycl::buffer<float,2> ioBBuffer = sycl::buffer<float,2>(sycl::range<2> {M, N}); 
+  sycl::buffer<float,2> ioABuffer = cl::sycl::buffer<float,2>(sycl::range<2> {M, K});
+  sycl::buffer<float,2> ioBBuffer = sycl::buffer<float,2>(sycl::range<2> {M, K}); 
 #if DEBUG_STENCIL
-  std::vector<float> a_test(M * N);
-  std::vector<float> b_test(M * N);
+  std::vector<float> a_test(M * K);
+  std::vector<float> b_test(M * K);
 #endif
 
   // initialization
   for (size_t i = 0; i < M; ++i){
-    for (size_t j = 0; j < N; ++j){
-      float value = ((float) i*(j+2) + 10) / N;
+    for (size_t j = 0; j < K; ++j){
+      float value = ((float) i*(j+2) + 10) / K;
       sycl::id<2> id = {i, j};
       ioABuffer.get_access<sycl::access::mode::write, sycl::access::target::host_buffer>()[id] = value;
       ioBBuffer.get_access<sycl::access::mode::write, sycl::access::target::host_buffer>()[id] = value;
 #if DEBUG_STENCIL
-      a_test[i*N+j] = value;
-      b_test[i*N+j] = value;
+      a_test[i*K+j] = value;
+      b_test[i*K+j] = value;
 #endif
     }
   }
@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
           sycl::accessor<float, 2, sycl::access::mode::write> b(ioBBuffer, cgh);
 
           cgh.parallel_for_work_group<class KernelCompute>(sycl::nd_range<2> {
-              sycl::range<2> {M-2, N-2},
+              sycl::range<2> {M-2, K-2},
                 sycl::range<2> {J_CL_DEVICE_MAX_WORK_GROUP_SIZE0, J_CL_DEVICE_MAX_WORK_GROUP_SIZE1}, 
                   sycl::id<2> {1, 1}},
             [=,&timer](sycl::group<2> group){
@@ -108,7 +108,7 @@ int main(int argc, char **argv) {
       myQueue.submit([&](sycl::handler &cgh) {
           sycl::accessor<float, 2, sycl::access::mode::write> a(ioABuffer, cgh);
           sycl::accessor<float, 2, sycl::access::mode::read>  b(ioBBuffer, cgh);
-          cgh.parallel_for<class KernelCopy>(sycl::range<2> {M-2, N-2},
+          cgh.parallel_for<class KernelCopy>(sycl::range<2> {M-2, K-2},
                                              sycl::id<2> {1, 1},
                                              [=] (sycl::item<2> it) {
                                                a[it] = MULT_COEF * b[it];

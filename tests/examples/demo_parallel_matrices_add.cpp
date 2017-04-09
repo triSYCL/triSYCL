@@ -5,11 +5,12 @@
 
 using namespace cl::sycl;
 
-// Size of the matrices
-const size_t N = 2000;
-const size_t M = 3000;
 
 int main() {
+  // Size of the matrices
+  const size_t N = 2000;
+  const size_t M = 3000;
+
   // Create a queue to work on
   queue myQueue;
 

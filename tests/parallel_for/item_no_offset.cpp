@@ -6,9 +6,9 @@
 
 using namespace cl::sycl;
 
-constexpr size_t N = 30;
-
 int main() {
+  constexpr size_t N = 30;
+
   {
     queue myQueue;
 

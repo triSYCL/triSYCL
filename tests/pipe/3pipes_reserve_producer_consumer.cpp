@@ -8,15 +8,15 @@
 #include <numeric>
 #include <boost/test/minimal.hpp>
 
-// Size of the buffers
-constexpr size_t N = 200;
-// Number of work-item per work-group
-constexpr size_t WI = 20;
-static_assert(N == WI*(N/WI), "N needs to be a multiple of WI");
-
-using Type = int;
-
 int test_main(int argc, char *argv[]) {
+  // Size of the buffers
+  constexpr size_t N = 200;
+  // Number of work-item per work-group
+  constexpr size_t WI = 20;
+  static_assert(N == WI*(N / WI), "N needs to be a multiple of WI");
+
+  using Type = int;
+
   // Initialize the input buffers to some easy-to-compute values
   cl::sycl::buffer<Type> a { N };
   {

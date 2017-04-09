@@ -6,13 +6,13 @@
 #include <iostream>
 #include <iterator>
 
-constexpr size_t N = 3;
-using Vector = float[N];
-
 // A static-scoped pipe of 4 float elements
-cl::sycl::static_pipe<float, 4> p;
+cl::sycl::static_pipe<float, 4> pipe;
 
 int main() {
+  constexpr size_t N = 3;
+  using Vector = float[N];
+
   Vector va = { 1, 2, 3 };
   Vector vb = { 5, 6, 8 };
   Vector vc;
@@ -31,7 +31,7 @@ int main() {
     // Launch the producer to stream A to the pipe
     q.submit([&](cl::sycl::handler &cgh) {
       // Get write access to the pipe
-      auto kp = p.get_access<cl::sycl::access::mode::write>(cgh);
+      auto kp = pipe.get_access<cl::sycl::access::mode::write>(cgh);
       // Get read access to the data
       auto ka = ba.get_access<cl::sycl::access::mode::read>(cgh);
 
@@ -46,7 +46,7 @@ int main() {
     // Launch the consumer that adds the pipe stream with B to C
     q.submit([&](cl::sycl::handler &cgh) {
       // Get read access to the pipe
-      auto kp = p.get_access<cl::sycl::access::mode::read>(cgh);
+      auto kp = pipe.get_access<cl::sycl::access::mode::read>(cgh);
 
       // Get access to the input/output buffers
       auto kb = bb.get_access<cl::sycl::access::mode::read>(cgh);

@@ -9,10 +9,10 @@
 #include <iostream>
 #include <iterator>
 
-constexpr size_t N = 3;
-using Vector = float[N];
-
 int main() {
+  constexpr size_t N = 3;
+  using Vector = float[N];
+
   Vector va = { 1, 2, 3 };
   Vector vb = { 5, 6, 8 };
   Vector vc;
