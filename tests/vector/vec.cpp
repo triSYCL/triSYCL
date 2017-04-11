@@ -25,7 +25,7 @@ bool equal(const Vec &v, const Vec &verif) {
 
 
 
-int test_main(int argc, char *argv[]) {
+int test_main(int /*argc*/, char** /**argv[]*/) {
 
   constexpr size_t N = 16;
   { // By sticking all the SYCL work in a {} block, we ensure
@@ -43,7 +43,7 @@ int test_main(int argc, char *argv[]) {
       auto kc = C.get_access<access::mode::write>(cgh);
 
       cgh.parallel_for<class generate>(range<1> { N },
-                                       [=] (id<1> index) {
+                                       [=] (id<1>) {
         vec<float, 16> v;
         float1 v1 = 1.5F;
         BOOST_CHECK(equal(v1, { 1.5F }));

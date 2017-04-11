@@ -171,13 +171,13 @@ inline void stop_papi_stencil(struct counters& timer){
 }
 
 #else // else #USE_PAPI
-inline void start_papi_loading(struct counters& timer){}
+inline void start_papi_loading(struct counters& /*timer*/){}
 
-inline void stop_papi_loading(struct counters& timer){}
+inline void stop_papi_loading(struct counters& /*timer*/){}
 
-inline void start_papi_stencil(struct counters& timer){}
+inline void start_papi_stencil(struct counters& /*timer*/){}
 
-inline void stop_papi_stencil(struct counters& timer){}
+inline void stop_papi_stencil(struct counters& /*timer*/){}
 
 
 #endif

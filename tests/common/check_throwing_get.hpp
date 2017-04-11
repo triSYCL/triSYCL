@@ -3,7 +3,11 @@
 */
 
 template <typename T>
-void check_throwing_get(const T &o) {
+void check_throwing_get(const T&
+#ifdef TRISYCL_OPENCL
+    o
+#endif
+) {
 // Some OpenCL specific tests
 #ifdef TRISYCL_OPENCL
   bool exception_seen = false;

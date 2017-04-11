@@ -10,7 +10,7 @@
 
 #include <boost/test/minimal.hpp>
 
-int test_main(int argc, char *argv[]) {
+int test_main(int /*argc*/, char** /**argv[]*/) {
   // Size of the buffers
   constexpr size_t N = 200;
   // Number of work-item per work-group

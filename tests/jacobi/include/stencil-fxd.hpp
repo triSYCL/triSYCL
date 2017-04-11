@@ -284,36 +284,36 @@ public:
 
 
 template <typename T, cl::sycl::buffer<T,2> *B, T& (*f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write>), class C1, class C2>
-inline output_stencil_fxd2D<T, B, f, stencil_fxd2D<C1, C2, T>> operator<< (output_2D<T, B, f> out, stencil_fxd2D<C1, C2, T> in) {
+inline output_stencil_fxd2D<T, B, f, stencil_fxd2D<C1, C2, T>> operator<< (output_2D<T, B, f> /*out*/, stencil_fxd2D<C1, C2, T> in) {
   return output_stencil_fxd2D<T, B, f, stencil_fxd2D<C1, C2, T>> {in};
 }
 
 template <typename T, cl::sycl::buffer<T,2> *B, T& (*f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write>), class C1>
-inline output_stencil_fxd2D<T, B, f, stencil_fxd2D_bis<C1, T>> operator<< (output_2D<T, B, f> out, stencil_fxd2D_bis<C1, T> in) {
+inline output_stencil_fxd2D<T, B, f, stencil_fxd2D_bis<C1, T>> operator<< (output_2D<T, B, f> /*out*/, stencil_fxd2D_bis<C1, T> in) {
   return output_stencil_fxd2D<T, B, f, stencil_fxd2D_bis<C1, T>> {in};
 }
 
 
 
 template <typename T, class C1, class C2, cl::sycl::buffer<T,2> *aB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>)>
-inline stencil_input_fxd2D<T, stencil_fxd2D<C1, C2, T>, aB, a_f> operator<< (stencil_fxd2D<C1, C2, T> out, input_fxd2D<T, aB, a_f> in) {
+inline stencil_input_fxd2D<T, stencil_fxd2D<C1, C2, T>, aB, a_f> operator<< (stencil_fxd2D<C1, C2, T> out, input_fxd2D<T, aB, a_f> /*in*/) {
   return stencil_input_fxd2D<T, stencil_fxd2D<C1, C2, T>, aB, a_f> {out};
 }
 
 template <typename T, class C1, cl::sycl::buffer<T,2> *aB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>)>
-inline stencil_input_fxd2D<T, stencil_fxd2D_bis<C1, T>, aB, a_f> operator<< (stencil_fxd2D_bis<C1, T> out, input_fxd2D<T, aB, a_f> in) {
+inline stencil_input_fxd2D<T, stencil_fxd2D_bis<C1, T>, aB, a_f> operator<< (stencil_fxd2D_bis<C1, T> out, input_fxd2D<T, aB, a_f> /*in*/) {
   return stencil_input_fxd2D<T, stencil_fxd2D_bis<C1, T>, aB, a_f> {out};
 }
 
 
 
 template <typename T, cl::sycl::buffer<T,2> *B, T& (*f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write>), class st, cl::sycl::buffer<T,2> *aB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>)>
-inline operation_fxd2D<T, B, f, st, aB, a_f> operator<< (output_stencil_fxd2D<T, B, f, st> out, input_fxd2D<T, aB, a_f> in) {
+inline operation_fxd2D<T, B, f, st, aB, a_f> operator<< (output_stencil_fxd2D<T, B, f, st> out, input_fxd2D<T, aB, a_f> /*in*/) {
   return operation_fxd2D<T, B, f, st, aB, a_f> {out.stencil};
 }
 
 template <typename T, cl::sycl::buffer<T,2> *B, T& (*f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write>), class st, cl::sycl::buffer<T,2> *aB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>)>
-inline operation_fxd2D<T, B, f, st, aB, a_f> operator<< (output_2D<T, B, f> out, stencil_input_fxd2D<T, st, aB, a_f> in) {
+inline operation_fxd2D<T, B, f, st, aB, a_f> operator<< (output_2D<T, B, f> /*out*/, stencil_input_fxd2D<T, st, aB, a_f> in) {
   return operation_fxd2D<T, B, f, st, aB, a_f> {in.stencil};
 }
 

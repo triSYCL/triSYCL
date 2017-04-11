@@ -198,6 +198,10 @@ public:
   */
   void barrier(access::fence_space flag =
                access::fence_space::global_and_local) const {
+    /** warning C4100: 'flag': unreferenced formal parameter
+    */
+    flag;
+
 #if defined(_OPENMP) && !defined(TRISYCL_NO_BARRIER)
     /* Use OpenMP barrier in the implementation with 1 OpenMP thread per
        work-item of the work-group */

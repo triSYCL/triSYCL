@@ -9,7 +9,7 @@
 
 using namespace cl::sycl;
 
-int test_main(int argc, char *argv[]) {
+int test_main(int /*argc*/, char** /**argv[]*/) {
   std::vector<int> v(10);
   size_t bufferSize = std::distance(v.begin(), v.end()); 
   std::shared_ptr<int> ptr { new int[bufferSize], std::default_delete<int[]>() };

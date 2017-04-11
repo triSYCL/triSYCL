@@ -108,7 +108,7 @@ public:
 
       \todo To be implemented
   */
-  bool has_extension(const string_class &extension) const override {
+  bool has_extension(const string_class& /*extension*/) const override {
     detail::unimplemented();
     return {};
   }

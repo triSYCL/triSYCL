@@ -9,7 +9,7 @@
 
 using namespace cl::sycl;
 
-int test_main(int argc, char *argv[]) {
+int test_main(int /*argc*/, char** /**argv[]*/) {
   // Start from an OpenCL queue
   auto oq = boost::compute::system::default_queue();
   // Construct a SYCL queue from it

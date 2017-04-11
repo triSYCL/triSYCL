@@ -36,7 +36,7 @@ bool equal(const detail::small_array<T, U, N, true> &v,
 }
 
 
-int test_main(int argc, char *argv[]) {
+int test_main(int /*argc*/, char** /**argv[]*/) {
   sa1 a;
   sa1 a1 { 3 };
   BOOST_CHECK(a1[0] == 3);

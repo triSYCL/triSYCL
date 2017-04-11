@@ -75,7 +75,7 @@ project(triSYCL C CXX) # The name of the project (forward declare language )
     add_compile_options("/wd4189") # warning C4189: '<id>': local variable is initialized but not referenced
 
     # Disabling Warning Level 4 output
-    add_compile_options("/wd4100") # warning C4100: '<param>': unreferenced formal parameter
+    #add_compile_options("/wd4100") # warning C4100: '<param>': unreferenced formal parameter
     #add_compile_options("/wd4459") # warning C4459: declaration of '<id>' hides global declaration
     #add_compile_options("/wd4127") # warning C4127: conditional expression is constant
     #add_compile_options("/wd4456") # warning C4456: declaration of '<id>' hides previous local declaration

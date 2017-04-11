@@ -86,7 +86,7 @@ int main() {
         cgh.single_task(SingleTask { 42, acc });
       });
     // Verify that b[0] == 42
-    VERIFY_BUFFER_VALUE(b, [](id<1> i) { return 42; });
+    VERIFY_BUFFER_VALUE(b, [](id<1>) { return 42; });
 
   }
   return 0;

@@ -133,7 +133,7 @@ public:
       report asynchronous errors via the async_handler callback
       function if and only if there is an async_handler provided.
   */
-  queue(const device_selector &deviceSelector,
+  queue(const device_selector& /*deviceSelector*/,
         async_handler asyncHandler = nullptr) : queue { } {
     detail::unimplemented();
   }
@@ -143,7 +143,7 @@ public:
 
       Return asynchronous errors via the async_handler callback function.
   */
-  queue(const device &syclDevice,
+  queue(const device& /*syclDevice*/,
         async_handler asyncHandler = nullptr) : queue { } {
     detail::unimplemented();
   };
@@ -160,8 +160,8 @@ public:
       asynchronous errors via the async_handler callback function in
       conjunction with the synchronization and throw methods.
   */
-  queue(const context &syclContext,
-        const device_selector &deviceSelector,
+  queue(const context& /*syclContext*/,
+        const device_selector& /*deviceSelector*/,
         async_handler asyncHandler = nullptr) : queue { } {
     detail::unimplemented();
   }
@@ -176,8 +176,8 @@ public:
       asynchronous errors via the async_handler callback function in
       conjunction with the synchronization and throw methods.
   */
-  queue(const context &syclContext,
-        const device &syclDevice,
+  queue(const context& /*syclContext*/,
+        const device& /*syclDevice*/,
         async_handler asyncHandler = nullptr) : queue { } {
     detail::unimplemented();
   }
@@ -194,9 +194,9 @@ public:
       asynchronous errors via the async_handler callback function in
       conjunction with the synchronization and throw methods.
   */
-  queue(const context &syclContext,
-        const device &syclDevice,
-        info::queue_profiling profilingFlag,
+  queue(const context& /*syclContext*/,
+        const device& /*syclDevice*/,
+        info::queue_profiling /*profilingFlag*/,
         async_handler asyncHandler = nullptr) : queue { } {
     detail::unimplemented();
   }
@@ -343,7 +343,7 @@ public:
       Return a command group functor event, which is corresponds to the
       queue the command group functor is being enqueued on.
   */
-  handler_event submit(std::function<void(handler &)> cgf, queue &secondaryQueue) {
+  handler_event submit(std::function<void(handler &)> cgf, queue& /*secondaryQueue*/) {
     detail::unimplemented();
     // Since it is not implemented, always submit on the main queue
     return submit(cgf);

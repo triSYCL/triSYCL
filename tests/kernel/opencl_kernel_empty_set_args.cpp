@@ -12,7 +12,7 @@
 
 using namespace cl::sycl;
 
-int test_main(int argc, char *argv[]) {
+int test_main(int /*argc*/, char** /**argv[]*/) {
   // Construct an OpenCL program from the source string
   auto program = boost::compute::program::create_with_source(R"(
     __kernel void empty() {

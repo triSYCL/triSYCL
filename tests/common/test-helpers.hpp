@@ -22,7 +22,7 @@ struct trisycl_for_range_iterate {
 /// Once at level 0, just call the final function with the current coordinate
 template <int Dimensions, typename Functor>
 struct trisycl_for_range_iterate<Dimensions, Functor, 0> {
-  trisycl_for_range_iterate(const cl::sycl::range<Dimensions> &r,
+  trisycl_for_range_iterate(const cl::sycl::range<Dimensions>& /*r*/,
                             cl::sycl::id<Dimensions> &it,
                             const Functor &f) {
     f(it);

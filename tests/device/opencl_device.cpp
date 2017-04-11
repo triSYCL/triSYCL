@@ -15,7 +15,7 @@
 
 using namespace cl::sycl;
 
-int test_main(int argc, char *argv[]) {
+int test_main(int /*argc*/, char** /**argv[]*/) {
   // Create an OpenCL device
   check_all<device>(boost::compute::system::devices()[0]);
 

@@ -107,7 +107,7 @@ struct parallel_OpenMP_for_iterate {
     kernel functor with the constructed id */
 template <typename Range, typename ParallelForFunctor, typename Id>
 struct parallel_for_iterate<0, Range, ParallelForFunctor, Id> {
-  parallel_for_iterate(Range r, ParallelForFunctor &f, Id &index) {
+  parallel_for_iterate(Range /*r*/, ParallelForFunctor &f, Id &index) {
     f(index);
   }
 };
@@ -224,7 +224,7 @@ void parallel_for(nd_range<Dimensions> r,
   range<Dimensions> local_range = r.get_local();
 
   // Reconstruct the nd_item from its group and local id
-  auto reconstruct_item = [&] (id<Dimensions> l) {
+  auto reconstruct_item = [&] (id<Dimensions> /*l*/) {
     //local.display();
     // Reconstruct the global nd_item
     index.set_local(local);
@@ -237,7 +237,7 @@ void parallel_for(nd_range<Dimensions> r,
   /* To recycle the parallel_for on range<>, wrap the ParallelForFunctor f
      into another functor that iterates inside the work-group and then
      calls f */
-  auto iterate_in_work_group = [&] (id<Dimensions> g) {
+  auto iterate_in_work_group = [&] (id<Dimensions> /*g*/) {
     //group.display();
     // Then iterate on the local work-groups
     parallel_for_iterate<Dimensions,
@@ -339,7 +339,7 @@ void parallel_for_workitem(const group<Dimensions> &g,
   id<Dimensions> local;
 
   // Reconstruct the nd_item from its group and local id
-  auto reconstruct_item = [&] (id<Dimensions> l) {
+  auto reconstruct_item = [&] (id<Dimensions> /*l*/) {
     //local.display();
     //l.display();
     // Reconstruct the global nd_item

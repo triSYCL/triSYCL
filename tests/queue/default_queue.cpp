@@ -10,7 +10,7 @@
 
 using namespace cl::sycl;
 
-int test_main(int argc, char *argv[]) {
+int test_main(int /*argc*/, char** /**argv[]*/) {
   check_all<queue>({});
   queue q;
 

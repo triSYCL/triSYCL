@@ -19,7 +19,7 @@ using namespace cl::sycl;
               == a.get_count()*sizeof(decltype(a)::value_type));
 
 
-int test_main(int argc, char *argv[]) {
+int test_main(int /*argc*/, char** /**argv[]*/) {
   range<1> r1 { 8 };
   buffer<double> b1 { r1 };
   CHECK_RANGE_ACCESSOR(r1, (b1.get_access<access::mode::read_write,

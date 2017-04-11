@@ -73,22 +73,22 @@ public:
 };
 
 template <int i, int j, int k, int l>
-inline stencil_var2D<coef_var2D<i, j>, coef_var2D<k, l>> operator+ (coef_var2D<i, j> coef0, coef_var2D<k, l> coef1) {
+inline stencil_var2D<coef_var2D<i, j>, coef_var2D<k, l>> operator+ (coef_var2D<i, j> /*coef0*/, coef_var2D<k, l> /*coef1*/) {
   return stencil_var2D<coef_var2D<i, j>, coef_var2D<k, l>> {};
 }
 
 template <int k, int l, class C1, class C2>
-inline stencil_var2D<stencil_var2D<C1, C2>, coef_var2D<k, l>> operator+ (stencil_var2D<C1, C2> st0, coef_var2D<k, l> coef1) {
+inline stencil_var2D<stencil_var2D<C1, C2>, coef_var2D<k, l>> operator+ (stencil_var2D<C1, C2> /*st0*/, coef_var2D<k, l> /*coef1*/) {
   return stencil_var2D<stencil_var2D<C1, C2>, coef_var2D<k, l>> {};
 }
 
 template <int k, int l, class C1, class C2>
-inline stencil_var2D<coef_var2D<k, l>, stencil_var2D<C1, C2>> operator+ (coef_var2D<k, l> coef0, stencil_var2D<C1, C2> st1) {
+inline stencil_var2D<coef_var2D<k, l>, stencil_var2D<C1, C2>> operator+ (coef_var2D<k, l> /*coef0*/, stencil_var2D<C1, C2> /*st1*/) {
   return stencil_var2D<coef_var2D<k, l>, stencil_var2D<C1, C2>> {};
 }
 
 template <class C1, class C2, class C3, class C4>
-inline stencil_var2D<stencil_var2D<C1, C2>, stencil_var2D<C3, C4>> operator+ (stencil_var2D<C1, C2> st0, stencil_var2D<C3, C4> st1) {
+inline stencil_var2D<stencil_var2D<C1, C2>, stencil_var2D<C3, C4>> operator+ (stencil_var2D<C1, C2> /*st0*/, stencil_var2D<C3, C4> /*st1*/) {
   return stencil_var2D<stencil_var2D<C1, C2>, stencil_var2D<C3, C4>> {};
 }
 
@@ -262,36 +262,36 @@ class output_stencil_var2D {};
 
 
 template <typename T, cl::sycl::buffer<T,2> *B, T& (*f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write>), class C1, class C2>
-inline output_stencil_var2D<T, B, f, stencil_var2D<C1, C2>> operator<< (output_2D<T, B, f> out, stencil_var2D<C1, C2> in) {
+inline output_stencil_var2D<T, B, f, stencil_var2D<C1, C2>> operator<< (output_2D<T, B, f> /*out*/, stencil_var2D<C1, C2> /*in*/) {
   return output_stencil_var2D<T, B, f, stencil_var2D<C1, C2>> {};
 }
 
 template <typename T, cl::sycl::buffer<T,2> *B, T& (*f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write>), class C1>
-inline output_stencil_var2D<T, B, f, stencil_var2D_bis<C1>> operator<< (output_2D<T, B, f> out, stencil_var2D_bis<C1> in) {
+inline output_stencil_var2D<T, B, f, stencil_var2D_bis<C1>> operator<< (output_2D<T, B, f> /*out*/, stencil_var2D_bis<C1> /*in*/) {
   return output_stencil_var2D<T, B, f, stencil_var2D_bis<C1>> {};
 }
 
 
 
 template <typename T, class C1, class C2, cl::sycl::buffer<T,2> *aB, cl::sycl::buffer<T,1> *bB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::mode::read>)>
-inline stencil_input_var2D<T, stencil_var2D<C1, C2>, aB, bB, a_f, b_f> operator<< (stencil_var2D<C1, C2> out, input_var2D<T, aB, bB, a_f, b_f> in) {
+inline stencil_input_var2D<T, stencil_var2D<C1, C2>, aB, bB, a_f, b_f> operator<< (stencil_var2D<C1, C2> /*out*/, input_var2D<T, aB, bB, a_f, b_f> /*in*/) {
   return stencil_input_var2D<T, stencil_var2D<C1, C2>, aB, bB, a_f, b_f> {};
 }
 
 template <typename T, class C1, cl::sycl::buffer<T,2> *aB, cl::sycl::buffer<T,1> *bB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::mode::read>)>
-inline stencil_input_var2D<T, stencil_var2D_bis<C1>, aB, bB, a_f, b_f> operator<< (stencil_var2D_bis<C1> out, input_var2D<T, aB, bB, a_f, b_f> in) {
+inline stencil_input_var2D<T, stencil_var2D_bis<C1>, aB, bB, a_f, b_f> operator<< (stencil_var2D_bis<C1> /*out*/, input_var2D<T, aB, bB, a_f, b_f> /*in*/) {
   return stencil_input_var2D<T, stencil_var2D_bis<C1>, aB, bB, a_f, b_f> {};
 }
 
 
 
 template <typename T, cl::sycl::buffer<T,2> *B, T& (*f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write>), class st, cl::sycl::buffer<T,2> *aB, cl::sycl::buffer<T,1> *bB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::mode::read>)>
-inline operation_var2D<T, B, f, st, aB, bB, a_f, b_f> operator<< (output_stencil_var2D<T, B, f, st> out, input_var2D<T, aB, bB, a_f, b_f> in) {
+inline operation_var2D<T, B, f, st, aB, bB, a_f, b_f> operator<< (output_stencil_var2D<T, B, f, st> /*out*/, input_var2D<T, aB, bB, a_f, b_f> /*in*/) {
   return operation_var2D<T, B, f, st, aB, bB, a_f, b_f> {};
 }
 
 template <typename T, cl::sycl::buffer<T,2> *B, T& (*f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write>), class st, cl::sycl::buffer<T,2> *aB, cl::sycl::buffer<T,1> *bB, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::mode::read>)>
-inline operation_var2D<T, B, f, st, aB, bB, a_f, b_f> operator<< (output_2D<T, B, f> out, stencil_input_var2D<T, st, aB, bB, a_f, b_f> in) {
+inline operation_var2D<T, B, f, st, aB, bB, a_f, b_f> operator<< (output_2D<T, B, f> /*out*/, stencil_input_var2D<T, st, aB, bB, a_f, b_f> /*in*/) {
   return operation_var2D<T, B, f, st, aB, bB, a_f, b_f> {};
 }
 

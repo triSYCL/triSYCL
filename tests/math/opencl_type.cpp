@@ -10,7 +10,7 @@
 #include <boost/test/minimal.hpp>
 
 
-int test_main(int argc, char *argv[]) {
+int test_main(int /*argc*/, char** /**argv[]*/) {
   cl::sycl::cl_float3 vec { 0, 1, 2 };
   std::cout << "x: "    << vec.x()
             << ", y: "  << vec.y()

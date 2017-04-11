@@ -113,7 +113,14 @@ public:
   buffer(const range<Dimensions> &r, Allocator allocator = {})
     : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
                          { r }) }
-      {}
+  {
+    /** warning C4100: 'allocator': unreferenced formal parameter
+
+    Why don't we use the allocator when the API suggests it should
+    be used (moreover modified) inside the function body?
+    */
+    allocator;
+  }
 
 
   /** Create a new buffer with associated host memory
@@ -148,7 +155,14 @@ public:
          Allocator allocator = {})
     : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
                          { host_data, r }) }
-  {}
+  {
+    /** warning C4100: 'allocator': unreferenced formal parameter
+
+    Why don't we use the allocator when the API suggests it should
+    be used (moreover modified) inside the function body?
+    */
+    allocator;
+  }
 
 
   /** Create a new buffer with associated host memory
@@ -172,7 +186,14 @@ public:
          Allocator allocator = {})
     : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
                          { host_data, r }) }
-  {}
+  {
+    /** warning C4100: 'allocator': unreferenced formal parameter
+
+        Why don't we use the allocator when the API suggests it should
+        be used (moreover modified) inside the function body?
+    */
+    allocator;
+  }
 
 
   /** Create a new buffer with associated memory, using the data in
@@ -229,7 +250,14 @@ public:
          Allocator allocator = {})
     : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
                          { host_data, buffer_range }) }
-  {}
+  {
+    /** warning C4100: 'allocator': unreferenced formal parameter
+
+    Why don't we use the allocator when the API suggests it should
+    be used (moreover modified) inside the function body?
+    */
+    allocator;
+  }
 
 
   /** Create a new buffer which is initialized by host_data
@@ -301,7 +329,14 @@ public:
          Allocator allocator = {}) :
     implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
                        { start_iterator, end_iterator }) }
-  {}
+  {
+    /** warning C4100: 'allocator': unreferenced formal parameter
+
+    Why don't we use the allocator when the API suggests it should
+    be used (moreover modified) inside the function body?
+    */
+    allocator;
+  }
 
 
   /** Create a new sub-buffer without allocation to have separate

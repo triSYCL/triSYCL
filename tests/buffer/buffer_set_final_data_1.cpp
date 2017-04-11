@@ -8,7 +8,7 @@
 
 using namespace cl::sycl;
 
-int test_main(int argc, char *argv[]) {
+int test_main(int /*argc*/, char** /**argv[]*/) {
   constexpr int N = 16;
   {
     std::vector<int> v(N);

@@ -89,7 +89,7 @@ public:
 
        Returns errors via the SYCL exception class.
   */
-  explicit platform(const device_selector &dev_selector) {
+  explicit platform(const device_selector& /*dev_selector*/) {
     detail::unimplemented();
   }
 

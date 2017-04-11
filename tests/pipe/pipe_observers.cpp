@@ -57,7 +57,7 @@ MAKE_GET_OBSERVER(size, std::size_t);
 MAKE_GET_OBSERVER(capacity, std::size_t);
 
 
-int test_main(int argc, char *argv[]) {
+int test_main(int /*argc*/, char** /**argv[]*/) {
   constexpr size_t N = 3;
 
   // A pipe of N char elements

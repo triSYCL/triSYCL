@@ -88,7 +88,7 @@ public:
      Return synchronous errors via the SYCL exception class and
      asynchronous errors are handled via the async_handler, if provided.
   */
-  context(cl_context clContext, async_handler asyncHandler = nullptr) {
+  context(cl_context /*clContext*/, async_handler asyncHandler = nullptr) {
     detail::unimplemented();
   }
 #endif
@@ -101,8 +101,8 @@ public:
       Return synchronous errors via the SYCL exception class and
       asynchronous errors are handled via the async_handler, if provided.
   */
-  context(const device_selector &deviceSelector,
-          info::gl_context_interop interopFlag,
+  context(const device_selector& /*deviceSelector*/,
+          info::gl_context_interop /*interopFlag*/,
           async_handler asyncHandler = nullptr) {
     detail::unimplemented();
   }
@@ -113,8 +113,8 @@ public:
       Return synchronous errors via the SYCL exception class and
       asynchronous errors are handled via the async_handler, if provided.
   */
-  context(const device &dev,
-          info::gl_context_interop interopFlag,
+  context(const device& /*dev*/,
+          info::gl_context_interop /*interopFlag*/,
           async_handler asyncHandler = nullptr) {
     detail::unimplemented();
   }
@@ -125,8 +125,8 @@ public:
       Return synchronous errors via the SYCL exception class and
       asynchronous errors are handled via the async_handler, if provided.
   */
-  context(const platform &plt,
-          info::gl_context_interop interopFlag,
+  context(const platform& /*plt*/,
+          info::gl_context_interop /*interopFlag*/,
           async_handler asyncHandler = nullptr) {
     detail::unimplemented();
   }
@@ -140,8 +140,8 @@ public:
      \todo Update the specification to replace vector by collection
      concept.
   */
-  context(const vector_class<device> &deviceList,
-          info::gl_context_interop interopFlag,
+  context(const vector_class<device>& /*deviceList*/,
+          info::gl_context_interop /*interopFlag*/,
           async_handler asyncHandler = nullptr) {
     detail::unimplemented();
   }

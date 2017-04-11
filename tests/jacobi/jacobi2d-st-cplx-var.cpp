@@ -31,8 +31,8 @@ Complex coeff(0.2f,0.0f);
 
 inline Complex& fdl_out(int a,int b, cl::sycl::accessor<Complex, 2, cl::sycl::access::mode::write> acc) {return acc[a][b];}
 inline Complex  fdl_in(int a,int b, cl::sycl::accessor<Complex, 2, cl::sycl::access::mode::read>  acc) {return acc[a][b];}
-inline Complex  fac(int a,int b, int c, int d, cl::sycl::accessor<Complex, 1, cl::sycl::access::mode::read>  acc) {return coeff*acc[0];}
-inline Complex  fac_id(int a,int b, int c, int d, cl::sycl::accessor<Complex, 1, cl::sycl::access::mode::read>  acc) {return acc[0];}
+inline Complex  fac(int /*a*/,int /*b*/, int /*c*/, int /*d*/, cl::sycl::accessor<Complex, 1, cl::sycl::access::mode::read>  acc) {return coeff*acc[0];}
+inline Complex  fac_id(int /*a*/,int /*b*/, int /*c*/, int /*d*/, cl::sycl::accessor<Complex, 1, cl::sycl::access::mode::read>  acc) {return acc[0];}
 
 // static declaration to use pointers
 cl::sycl::buffer<Complex,2> ioBuffer;

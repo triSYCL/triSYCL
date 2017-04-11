@@ -104,7 +104,7 @@ public:
   /** Construct a pipe accessor from an existing pipe
    */
   pipe_accessor(const std::shared_ptr<detail::pipe<T>> &p,
-                handler &command_group_handler) :
+                handler& /*command_group_handler*/) :
     implementation { p } {
     //    TRISYCL_DUMP_T("Create a kernel pipe accessor write = "
     //                 << is_write_access());

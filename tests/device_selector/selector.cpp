@@ -6,7 +6,7 @@
 
 using namespace cl::sycl;
 
-int test_main(int argc, char *argv[]) {
+int test_main(int /*argc*/, char** /**argv[]*/) {
   // For all device_type
   for (auto const &t : { info::device_type::host,
                          info::device_type::cpu,

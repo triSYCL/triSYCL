@@ -11,8 +11,8 @@ inline float reduc_op(float el1, float el2) {return el1+el2;}
 // acces functions
 inline float& fdl_out(int a,int b, cl::sycl::accessor<float, 2, cl::sycl::access::mode::write> acc) {return acc[a][b];}
 inline float  fdl_in(int a,int b, cl::sycl::accessor<float, 2, cl::sycl::access::mode::read>  acc) {return acc[a][b];}
-inline float  fac(int a,int b, int c, int d, cl::sycl::accessor<float, 1, cl::sycl::access::mode::read>  acc) {return MULT_COEF*acc[0];}
-inline float  fac_id(int a,int b, int c, int d, cl::sycl::accessor<float, 1, cl::sycl::access::mode::read>  acc) {return acc[0];}
+inline float  fac(int /*a*/,int /*b*/, int /*c*/, int /*d*/, cl::sycl::accessor<float, 1, cl::sycl::access::mode::read>  acc) {return MULT_COEF*acc[0];}
+inline float  fac_id(int /*a*/,int /*b*/, int /*c*/, int /*d*/, cl::sycl::accessor<float, 1, cl::sycl::access::mode::read>  acc) {return acc[0];}
 
 // static declaration to use pointers
 cl::sycl::buffer<float,2> ioBuffer;

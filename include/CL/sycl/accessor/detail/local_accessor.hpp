@@ -106,7 +106,7 @@ public:
       template parm
   */
   accessor(const range<Dimensions> &allocation_size,
-           handler &command_group_handler) :
+           handler& /*command_group_handler*/) :
     array { allocation_size } {}
 
 
