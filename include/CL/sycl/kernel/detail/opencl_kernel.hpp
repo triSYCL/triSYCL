@@ -84,15 +84,30 @@ class opencl_kernel : public detail::kernel,
 #endif
 
 
+  /** Launch a single task of the OpenCL kernel
+
+      \todo Remove either task or q
+   */
+  void single_task(std::shared_ptr<detail::task> task,
+                   std::shared_ptr<detail::queue> q) override {
+    q->get_boost_compute().enqueue_task(k);
+    /* For now use a crude synchronization mechanism to map directly a
+       host task to an accelerator task */
+    q->get_boost_compute().finish();
+  }
+
+
   /** Launch an OpenCL kernel with a range<>
 
       Do not use a template since it does not work with virtual functions
 
       \todo Think to a cleaner solution
+
+      \todo Remove either task or q
   */
 #define TRISYCL_ParallelForKernel_RANGE(N)                              \
-  void parallel_for(std::shared_ptr<detail::task> task,\
-  std::shared_ptr<detail::queue> q,                                     \
+  void parallel_for(std::shared_ptr<detail::task> task,                 \
+                    std::shared_ptr<detail::queue> q,                   \
                     const range<N> &num_work_items) override {          \
     static_assert(sizeof(range<N>::value_type) == sizeof(size_t),       \
                   "num_work_items::value_type compatible with "         \
