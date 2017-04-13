@@ -132,6 +132,8 @@ private:
     };
     // Remove the warning about unused variable
     static_cast<void>(just_to_evaluate);
+    // Empty set_args() leaves 't' unreferenced, triggering warning C4189
+    static_cast<void>(t);
   }
 
 public:
