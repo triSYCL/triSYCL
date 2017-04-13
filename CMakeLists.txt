@@ -70,7 +70,7 @@ project(triSYCL C CXX) # The name of the project (forward declare language )
     add_compile_options("/wd4267") # warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
     add_compile_options("/wd4244") # warning C4244: '=': conversion from 'size_t' to 'double', possible loss of data
     add_compile_options("/wd4305") # warning C4305: '<op>': truncation from 'double' to 'float'
-    add_compile_options("/wd4101") # warning C4101: '<id>': unreferenced local variable
+    #add_compile_options("/wd4101") # warning C4101: '<id>': unreferenced local variable
     #add_compile_options("/wd4700") # warning C4700: uninitialized local variable '<id>' used
     #add_compile_options("/wd4189") # warning C4189: '<id>': local variable is initialized but not referenced
 

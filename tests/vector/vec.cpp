@@ -44,7 +44,7 @@ int test_main(int /*argc*/, char*[] /*argv*/) {
 
       cgh.parallel_for<class generate>(range<1> { N },
                                        [=] (id<1>) {
-        vec<float, 16> v;
+        vec<float, 16> v; static_cast<void>(v); //unused local var
         float1 v1 = 1.5F;
         BOOST_CHECK(equal(v1, { 1.5F }));
         auto v1_1 = v1 + v1;

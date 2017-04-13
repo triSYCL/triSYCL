@@ -92,6 +92,9 @@ int main() {
           *ppd = 5.5;
           auto p_c_p = make_multi(c_p);
           *ppd += *p_c_p;
+          // Silence unused local variable
+          static_cast<void>(g_p);
+          static_cast<void>(l_p);
 
           global<float> global_float;
           global_float = f[0];

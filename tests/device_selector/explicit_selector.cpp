@@ -21,7 +21,7 @@ void test_device(info::device_type type) {
     BOOST_CHECK(f != ds.cend());
   }
   /// \todo put the final exception class here
-  catch (std::domain_error &e) {
+  catch (std::domain_error&) {
   }
 }
 
