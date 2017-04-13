@@ -17,23 +17,23 @@ int main(int argc, char **argv) {
   start_measure(timer);
 
   // Assign new buffers to the global buffers
-  ioBuffer = cl::sycl::buffer<float,2>(cl::sycl::range<2> {M, K});
-  ioABuffer = cl::sycl::buffer<float,2>(cl::sycl::range<2> {M, K});
+  ioBuffer = cl::sycl::buffer<float,2>(cl::sycl::range<2> {M, N});
+  ioABuffer = cl::sycl::buffer<float,2>(cl::sycl::range<2> {M, N});
 #if DEBUG_STENCIL
-  std::vector<float> a_test(M * K);
-  std::vector<float> b_test(M * K);
+  std::vector<float> a_test(M * N);
+  std::vector<float> b_test(M * N);
 #endif
 
   // initialization
   for (size_t i = 0; i < M; ++i){
-    for (size_t j = 0; j < K; ++j){
-      float value = ((float) i*(j+2) + 10) / K;
+    for (size_t j = 0; j < N; ++j){
+      float value = ((float) i*(j+2) + 10) / N;
       cl::sycl::id<2> id = {i, j};
       ioBuffer.get_access<cl::sycl::access::mode::write, cl::sycl::access::target::host_buffer>()[id] = value;
       ioABuffer.get_access<cl::sycl::access::mode::write, cl::sycl::access::target::host_buffer>()[id] = value;
 #if DEBUG_STENCIL
-      a_test[i*K+j] = value;
-      b_test[i*K+j] = value;
+      a_test[i*N+j] = value;
+      b_test[i*N+j] = value;
 #endif
     }
   }

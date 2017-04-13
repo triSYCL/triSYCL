@@ -14,7 +14,7 @@
 
 using namespace cl::sycl;
 
-int test_main(int /*argc*/, char** /**argv[]*/) {
+int test_main(int /*argc*/, char*[] /*argv*/) {
   check_all<platform>(boost::compute::system::platforms()[0]);
   platform p { boost::compute::system::platforms()[0] };
   display(p);

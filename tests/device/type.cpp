@@ -6,7 +6,7 @@
 
 using namespace cl::sycl;
 
-int test_main(int /*argc*/, char** /**argv[]*/) {
+int test_main(int /*argc*/, char*[] /*argv*/) {
   // Get all the devices
   auto devices = device::get_devices();
   // Verify that the device_type returned match what is expected

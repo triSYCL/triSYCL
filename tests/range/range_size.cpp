@@ -8,7 +8,7 @@
 
 using namespace cl::sycl;
 
-int test_main(int /*argc*/, char** /**argv[]*/) {
+int test_main(int /*argc*/, char*[] /*argv*/) {
   range<1> r1 { 8 };
   BOOST_CHECK(r1.size() == 1);
   BOOST_CHECK(r1.get_count() == 8);

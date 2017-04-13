@@ -15,7 +15,7 @@ using namespace cl::sycl;
 #define TRYSYCL_MATH_WRAPX3s(FUN, i) std::cout << FUN(i, i, i) << std::endl;
 #define TRYSYCL_MATH_WRAPX3ss(FUN, i) std::cout << FUN(i, i, i) << std::endl;
 
-int test_main(int /*argc*/, char** /**argv[]*/) {
+int test_main(int /*argc*/, char*[] /*argv*/) {
   constexpr auto N = 100;
   for (auto k = 0; k < N; k++) {
     double i = k;

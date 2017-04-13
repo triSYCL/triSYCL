@@ -14,7 +14,7 @@
 
 using namespace cl::sycl;
 
-int test_main(int /*argc*/, char** /**argv[]*/) {
+int test_main(int /*argc*/, char*[] /*argv*/) {
   // Create a default device which is the host device
   device d;
 

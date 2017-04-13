@@ -19,26 +19,26 @@ int main(int argc, char **argv)
     start_measure(timer);
 
     // declarations
-    sycl::buffer<float, 2> ioABuffer = cl::sycl::buffer<float, 2>(sycl::range<2> {M, K});
-    sycl::buffer<float, 2> ioBBuffer = sycl::buffer<float, 2>(sycl::range<2> {M, K});
+    sycl::buffer<float, 2> ioABuffer = cl::sycl::buffer<float, 2>(sycl::range<2> {M, N});
+    sycl::buffer<float, 2> ioBBuffer = sycl::buffer<float, 2>(sycl::range<2> {M, N});
 
 #if DEBUG_STENCIL
-    std::vector<float> a_test(M * K);
-    std::vector<float> b_test(M * K);
+    std::vector<float> a_test(M * N);
+    std::vector<float> b_test(M * N);
 #endif
 
     // initialization
     for (size_t i = 0; i < M; ++i)
     {
-        for (size_t j = 0; j < K; ++j)
+        for (size_t j = 0; j < N; ++j)
         {
-            float value = ((float)i*(j + 2) + 10) / K;
+            float value = ((float)i*(j + 2) + 10) / N;
             sycl::id<2> id = { i, j };
             ioABuffer.get_access<sycl::access::mode::write, sycl::access::target::host_buffer>()[id] = value;
             ioBBuffer.get_access<sycl::access::mode::write, sycl::access::target::host_buffer>()[id] = value;
 #if DEBUG_STENCIL
-            a_test[i*K + j] = value;
-            b_test[i*K + j] = value;
+            a_test[i*N + j] = value;
+            b_test[i*N + j] = value;
 #endif
         }
     }
@@ -55,7 +55,7 @@ int main(int argc, char **argv)
       myQueue.submit([&](sycl::handler &cgh) {
           sycl::accessor<float, 2, sycl::access::mode::read>  a(ioABuffer, cgh);
           sycl::accessor<float, 2, sycl::access::mode::write> b(ioBBuffer, cgh);
-          cgh.parallel_for<class KernelCompute>(sycl::range<2> {M-2, K-2},
+          cgh.parallel_for<class KernelCompute>(sycl::range<2> {M-2, N-2},
                                                 sycl::id<2> {1, 1},
                                                 [=] (sycl::item<2> it) {
                                  sycl::id<2> index = it.get();
@@ -79,7 +79,7 @@ int main(int argc, char **argv)
       myQueue.submit([&](sycl::handler &cgh) {
           sycl::accessor<float, 2, sycl::access::mode::write> a(ioABuffer, cgh);
           sycl::accessor<float, 2, sycl::access::mode::read>  b(ioBBuffer, cgh);
-          cgh.parallel_for<class KernelCopy>(sycl::range<2> {M-2, K-2},
+          cgh.parallel_for<class KernelCopy>(sycl::range<2> {M-2, N-2},
                                              sycl::id<2> {1, 1},
                                              [=] (sycl::item<2> it) {
                                                a[it] = MULT_COEF * b[it];

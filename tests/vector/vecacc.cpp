@@ -8,7 +8,7 @@
 
 using namespace cl::sycl;
 
-int test_main(int /*argc*/, char** /**argv[]*/) {
+int test_main(int /*argc*/, char*[] /*argv*/) {
 	vec<int, 3> v = {1, 2, 3};
 	BOOST_CHECK(v.x() == 1);
 	BOOST_CHECK(v.y() == 2);

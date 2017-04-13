@@ -25,7 +25,7 @@ bool equal(const Vec &v, const Vec &verif) {
 
 
 
-int test_main(int /*argc*/, char** /**argv[]*/) {
+int test_main(int /*argc*/, char*[] /*argv*/) {
 
   constexpr size_t N = 16;
   { // By sticking all the SYCL work in a {} block, we ensure

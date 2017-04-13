@@ -16,7 +16,7 @@ using namespace cl::sycl;
               == b.get_count()*sizeof(decltype(b)::value_type));
 
 
-int test_main(int /*argc*/, char** /**argv[]*/) {
+int test_main(int /*argc*/, char*[] /*argv*/) {
   range<1> r1 { 8 };
   buffer<double> b1 { r1 };
   CHECK_RANGE_BUFFER(r1, b1);

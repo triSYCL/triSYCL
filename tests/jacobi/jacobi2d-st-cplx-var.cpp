@@ -46,14 +46,14 @@ int main(int argc, char **argv) {
 
   // declarations
   Complex ioB(1.0, 1.0);
-  ioBuffer = cl::sycl::buffer<Complex,2>(cl::sycl::range<2> {M, K});
-  ioABuffer = cl::sycl::buffer<Complex,2>(cl::sycl::range<2> {M, K}); 
+  ioBuffer = cl::sycl::buffer<Complex,2>(cl::sycl::range<2> {M, N});
+  ioABuffer = cl::sycl::buffer<Complex,2>(cl::sycl::range<2> {M, N}); 
   ioBBuffer = cl::sycl::buffer<Complex,1>(&ioB, cl::sycl::range<1> {1}); 
 
   // initialization
   for (size_t i = 0; i < M; ++i){
-    for (size_t j = 0; j < K; ++j){
-      float tmp = (float) (i*(j+2) + 10) / K;
+    for (size_t j = 0; j < N; ++j){
+      float tmp = (float) (i*(j+2) + 10) / N;
       Complex value(tmp, tmp);
       cl::sycl::id<2> id = {i, j};
       ioBuffer.get_access<cl::sycl::access::mode::write, cl::sycl::access::target::host_buffer>()[id] = value;

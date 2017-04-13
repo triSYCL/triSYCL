@@ -9,13 +9,11 @@
 using namespace cl::sycl;
 
 
+constexpr size_t N = 16;
 
+buffer<int> buf{ N };
 
-int test_main(int /*argc*/, char** /**argv[]*/) {
-  constexpr size_t N = 16;
-  
-  buffer<int> buf{ N };
-
+int test_main(int /*argc*/, char*[] /*argv*/) {
   /** There is a draft for shared_ptr of arrays for C++17, but it is
       not here... So use a shared pointer with an explicit destructor
       waiting for 2017 */

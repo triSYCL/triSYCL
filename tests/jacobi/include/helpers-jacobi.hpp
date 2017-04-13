@@ -77,7 +77,7 @@ int es = PAPI_NULL; //event set
 
 size_t NB_ITER = CONST_NB_ITER;
 size_t M = WG_MULT0*J_CL_DEVICE_CONST_WORK_GROUP_SIZE0+JACOBI_DELTA;
-size_t K = WG_MULT1*J_CL_DEVICE_CONST_WORK_GROUP_SIZE1+JACOBI_DELTA;
+size_t N = WG_MULT1*J_CL_DEVICE_CONST_WORK_GROUP_SIZE1+JACOBI_DELTA;
 size_t J_CL_DEVICE_MAX_WORK_GROUP_SIZE0 = J_CL_DEVICE_CONST_WORK_GROUP_SIZE0;
 size_t J_CL_DEVICE_MAX_WORK_GROUP_SIZE1 = J_CL_DEVICE_CONST_WORK_GROUP_SIZE1;
 
@@ -258,7 +258,7 @@ void read_args(int argc, char **argv)
     try {
       NB_ITER = lexical_cast<size_t>(argv[1]);
       M = lexical_cast<size_t>(argv[2]);
-      K = lexical_cast<size_t>(argv[3]);
+      N = lexical_cast<size_t>(argv[3]);
     }
     catch(bad_lexical_cast &) {
       std::cout << "Bad number format." << std::endl;
@@ -299,7 +299,7 @@ void read_args(int argc, char **argv)
 
   std::cout << "Iterations  : " << NB_ITER << std::endl;
   std::cout << "Elements[0] : " << M << std::endl;
-  std::cout << "Elements[1] : " << K << std::endl;
+  std::cout << "Elements[1] : " << N << std::endl;
   std::cout << "Tile[0]     : " << J_CL_DEVICE_MAX_WORK_GROUP_SIZE0 << std::endl;
   std::cout << "Tile[1]     : " << J_CL_DEVICE_MAX_WORK_GROUP_SIZE1 << std::endl;
   std::cout << "Vec_size    : " << VEC_CONST_SIZE << std::endl;
@@ -323,8 +323,8 @@ void print_host2D(float * tab)
 {
     for (size_t i = 0; i < M; ++i)
     {
-        for(size_t j = 0; j < K; ++j)
-            std::cout << tab[i*K+j] << " " ;
+        for(size_t j = 0; j < N; ++j)
+            std::cout << tab[i*N+j] << " " ;
 
         std::cout << std::endl;
     }
@@ -332,7 +332,7 @@ void print_host2D(float * tab)
 
 void print_buffer2D(cl::sycl::accessor<float, 2, cl::sycl::access::mode::read, cl::sycl::access::target::host_buffer> bufferAccessor) {
   for (size_t i = 0; i < M; ++i){
-    for(size_t j = 0; j < K; ++j){
+    for(size_t j = 0; j < N; ++j){
       std::cout << bufferAccessor[i][j] << " " ;
     }
     std::cout << std::endl;
@@ -352,8 +352,8 @@ void compute_jacobi2D(std::vector<float>& a_test,
 #ifdef _OPENMP
 #pragma omp parallel for
 #endif
-            for (int j = 1; j < K - 1; ++j) {
-                b_test[i*K + j] = MULT_COEF * (a_test[i*K + j] + a_test[i*K + (j - 1)] + a_test[i*K + (1 + j)] + a_test[(1 + i)*K + j] + a_test[(i - 1)*K + j]);
+            for (int j = 1; j < N - 1; ++j) {
+                b_test[i*N + j] = MULT_COEF * (a_test[i*N + j] + a_test[i*N + (j - 1)] + a_test[i*N + (1 + j)] + a_test[(1 + i)*N + j] + a_test[(i - 1)*N + j]);
             }
         }
 
@@ -363,8 +363,8 @@ void compute_jacobi2D(std::vector<float>& a_test,
         being_op = counters::clock_type::now();
 
         for (int i = 1; i < M - 1; ++i) {
-            for (int j = 1; j < K - 1; ++j) {
-                a_test[i*K + j] = b_test[i*K + j];
+            for (int j = 1; j < N - 1; ++j) {
+                a_test[i*N + j] = b_test[i*N + j];
             }
         }
 
@@ -388,9 +388,9 @@ void ute_and_are(std::vector<float>& a_test,
   // compare with cpu result
   std::cout << "Result:" << std::endl;
   for(size_t i = 0; i < M; ++i){
-    for(size_t j = 0; j < K; ++j){
+    for(size_t j = 0; j < N; ++j){
       // Compare the result to the analytic value
-      float err = ABS((C[i][j] - a_test[i*K+j]) / a_test[i*K+j]);
+      float err = ABS((C[i][j] - a_test[i*N+j]) / a_test[i*N+j]);
       if ( err > ERR_MAX) {
         std::cout << "Wrong value " << C[i][j] << " on element "
                   << i << ' ' << j << " (error : " << err << ")" << std::endl;
