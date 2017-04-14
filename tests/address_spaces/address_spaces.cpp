@@ -104,7 +104,7 @@ int main() {
           global_float = 7;
 
           global<float> global_float2 = global_float;
-          global_float2 += .1;
+          global_float2 += .1f;
           priv<double> priv_double = global_float;
           priv<double> priv_double2 { priv_double };
 
