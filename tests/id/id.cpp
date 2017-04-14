@@ -63,7 +63,7 @@ int main() {
   for (auto const & e: jj)
     std::cout << "jj via e = " << e << std::endl;
 
-  std::vector<float> cjj(std::begin(jj), std::end(jj));
+  std::vector<std::size_t> cjj(std::begin(jj), std::end(jj));
 
   for (auto e: cjj)
     std::cout << "cjj via e = " << e << std::endl;

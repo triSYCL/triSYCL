@@ -32,7 +32,9 @@ int main() {
         // Enqueue a parallel kernel iterating on a N*M 2D iteration space
         cgh.parallel_for<class init_a>({ N, M },
                                        [=] (id<2> index) {
-                                         A[index] = index[0]*2 + index[1];
+                                         // cast silences warning of implicit cast between integral
+                                         // and floating types. Promise is made that no data is lost
+                                         A[index] = static_cast<double>(index[0]*2 + index[1]);
                                        });
       });
 
@@ -47,7 +49,9 @@ int main() {
         // Enqueue a parallel kernel iterating on a N*M 2D iteration space
         cgh.parallel_for<class init_b>({ N, M },
                                        [=] (id<2> index) {
-                                         B[index] = index[0]*2014 + index[1]*42;
+                                         // cast silences warning of implicit cast between integral
+                                         // and floating types. Promise is made that no data is lost
+                                         B[index] = static_cast<double>(index[0]*2014 + index[1]*42);
                                        });
       });
 
