@@ -12,7 +12,7 @@ int main() {
   {
     queue myQueue;
 
-    buffer<unsigned int,1> a(range<1>{N});
+    buffer<size_t,1> a(range<1>{N});
     myQueue.submit([&](handler &cgh) {
         auto acc = a.get_access<access::mode::write>(cgh);
         cgh.parallel_for<class nothing>(range<1>{N}, [=] (item<1> index) {

@@ -51,7 +51,7 @@ int test_main(int /*argc*/, char*[] /*argv*/) {
         { WI, WI },
         [=] (auto group) {
           // Use a sequential loop in the work-group to stream chunks in order
-          for (int start = 0; start != N; start += WI) {
+          for (int start = 0; start != (int)N; start += (int)WI) {
             /* To keep the reservation status outside the scope of the
                reservation itself */
             bool ok;
@@ -96,7 +96,7 @@ int test_main(int /*argc*/, char*[] /*argv*/) {
           cl::sycl::pipe_reservation<decltype(apa)> r;
 #endif
           // Use a sequential loop in the work-group to stream chunks in order
-          for (int start = 0; start != N; start += WI) {
+          for (int start = 0; start != (int)N; start += (int)WI) {
             // Wait for the reservation to succeed
             while (!(r = apa.reserve(WI)))
               ;

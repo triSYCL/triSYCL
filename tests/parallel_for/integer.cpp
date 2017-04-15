@@ -12,7 +12,7 @@ int main() {
   {
     queue myQueue;
 
-    buffer<unsigned int,1> a(N);
+    buffer<int,1> a(N);
     myQueue.submit([&](handler &cgh) {
         auto acc = a.get_access<access::mode::write>(cgh);
         // Show that we can use a simple parallel_for with int, for example

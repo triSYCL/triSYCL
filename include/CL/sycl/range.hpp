@@ -54,7 +54,7 @@ public:
     // Return the product of the sizes in each dimension
     return std::accumulate(this->cbegin(),
                            this->cend(),
-                           1,
+                           static_cast<size_t>(1),
                            std::multiplies<size_t> {});
   }
 };

@@ -11,7 +11,7 @@ using namespace cl::sycl;
 
 // A kernel described as a functor for a parallel for
 class ParallelFor {
- using accessor_type = accessor<unsigned int,
+ using accessor_type = accessor<size_t,
                                 1,
                                 access::mode::write,
                                 access::target::global_buffer>;
@@ -70,7 +70,7 @@ int main() {
   {
     queue q;
 
-    buffer<unsigned int, 1> a { range<1>{N} };
+    buffer<size_t, 1> a { range<1>{N} };
     q.submit([&](handler &cgh) {
         auto acc = a.get_access<access::mode::write>(cgh);
         cgh.parallel_for(range<1>{N}, ParallelFor { acc });

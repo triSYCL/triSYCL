@@ -58,7 +58,7 @@ using namespace cl::sycl;
 
 #define DISPLAY_ELEMENTS(method)                                \
   do {                                                          \
-    for (size_t i = 0; i != decltype(ndi)::dimensionality; ++i) \
+    for (int i = 0; i != decltype(ndi)::dimensionality; ++i)    \
       std::cout << ndi.method(i) << ' ';                        \
     std::cout << std::endl;                                     \
   } while (0)

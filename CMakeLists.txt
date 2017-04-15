@@ -67,7 +67,7 @@ project(triSYCL C CXX) # The name of the project (forward declare language )
 
     # Disabling (default) Warning Level 3 output
     add_compile_options("/wd4996") # warning C4996: Call to '<algorithm name>' with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct.
-    add_compile_options("/wd4267") # warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+    #add_compile_options("/wd4267") # warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
     #add_compile_options("/wd4244") # warning C4244: '=': conversion from 'size_t' to 'double', possible loss of data
     #add_compile_options("/wd4305") # warning C4305: '<op>': truncation from 'double' to 'float'
     #add_compile_options("/wd4101") # warning C4101: '<id>': unreferenced local variable

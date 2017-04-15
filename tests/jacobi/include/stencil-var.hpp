@@ -130,16 +130,16 @@ public:
   cl::sycl::range<2> range;
   cl::sycl::nd_range<2> nd_range = {cl::sycl::range<2> {}, cl::sycl::range<2> {}, cl::sycl::id<2> {}};
 
-  int global_max0;
-  int global_max1;
+  size_t global_max0;
+  size_t global_max1;
 
   operation_var2D() {
     cl::sycl::range<2> rg1 = aB->get_range();
     cl::sycl::range<2> rg2 = B->get_range();
     assert(rg1 == rg2); //seems a bad idea, indeed ! we will not do that ...
     range = rg1-d;
-    int r0 = range.get(0);
-    int r1 = range.get(1);
+    size_t r0 = range.get(0);
+    size_t r1 = range.get(1);
     global_max0 = r0;
     global_max1 = r1;
     if (r0 % li2D.nbi_wg0 != 0) {
@@ -155,56 +155,56 @@ public:
   }
 
   static inline void eval(cl::sycl::id<2> id, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write> out, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> in, cl::sycl::accessor<T, 1, cl::sycl::access::mode::read> coef) {
-    int i = id.get(0) + of0;
-    int j = id.get(1) + of1;
-    f(i, j, out) = st::template eval<T, a_f, b_f>(in, coef, i, j);
+    size_t i = id.get(0) + of0;
+    size_t j = id.get(1) + of1;
+    f((int)i, (int)j, out) = st::template eval<T, a_f, b_f>(in, coef, (int)i, (int)j);
   }
 
   // Not really static because of the use of global_max (which is passed by args)
   static inline void eval_local(cl::sycl::nd_item<2> it, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write> out, T *local_tab, cl::sycl::accessor<T, 1, cl::sycl::access::mode::read> coef, int glob_max0, int glob_max1) {
-    int i = it.get_global().get(0);
-    int j = it.get_global().get(1);
+    size_t i = it.get_global().get(0);
+    size_t j = it.get_global().get(1);
     if (i >= glob_max0 || j >= glob_max1)
       return;
     i += of0;
     j += of1;
-    int i_local = it.get_local().get(0) - st::min_ind0;
-    int j_local = it.get_local().get(1) - st::min_ind1;
-    f(i, j, out) = st::template eval_local<T, local_dim1, b_f>(local_tab, coef, i, j, i_local, j_local);
+    size_t i_local = it.get_local().get(0) - st::min_ind0;
+    size_t j_local = it.get_local().get(1) - st::min_ind1;
+    f((int)i, (int)j, out) = st::template eval_local<T, local_dim1, b_f>(local_tab, coef, (int)i, (int)j, (int)i_local, (int)j_local);
   }
 
   // Not really static because of the use of global_max (which is passed by args)
-  static inline void store_local(T * local_tab, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> in, cl::sycl::nd_item<2> it, cl::sycl::group<2> gr, int glob_max0, int glob_max1) {
+  static inline void store_local(T * local_tab, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> in, cl::sycl::nd_item<2> it, cl::sycl::group<2> gr, size_t glob_max0, size_t glob_max1) {
     cl::sycl::range<2> l_range = it.get_local_range();
     cl::sycl::id<2> g_ind = gr.get(); //it.get_group_id(); error because ambiguous / operator redefinition 
     cl::sycl::id<2> l_ind = it.get_local();
 
-    int l_range0 = l_range.get(0);
-    int l_range1 = l_range.get(1);
-    int l_ind0 = l_ind.get(0);
-    int l_ind1 = l_ind.get(1);
-    int gr_ind0 = g_ind.get(0);
-    int gr_ind1 = g_ind.get(1);
+    size_t l_range0 = l_range.get(0);
+    size_t l_range1 = l_range.get(1);
+    size_t l_ind0 = l_ind.get(0);
+    size_t l_ind1 = l_ind.get(1);
+    size_t gr_ind0 = g_ind.get(0);
+    size_t gr_ind1 = g_ind.get(1);
 
-    int block_dim0 = local_dim0 / l_range0;
-    int block_dim1 = local_dim1 / l_range1;
-    int total_block_dim0 = block_dim0;
-    int total_block_dim1 = block_dim1;
+    size_t block_dim0 = local_dim0 / l_range0;
+    size_t block_dim1 = local_dim1 / l_range1;
+    size_t total_block_dim0 = block_dim0;
+    size_t total_block_dim1 = block_dim1;
     if (l_ind0 == l_range0 - 1)
       total_block_dim0 += local_dim0 % l_range0;
     if (l_ind1 == l_range1 - 1)
       total_block_dim1 += local_dim1 % l_range1;
 
-    int local_ind0 = l_ind0 * block_dim0;
-    int local_ind1 = l_ind1 * block_dim1;
-    int global_ind0 = gr_ind0 * l_range0 + local_ind0 + of0 + st::min_ind0;
-    int global_ind1 = gr_ind1 * l_range1 + local_ind1 + of1 + st::min_ind1;
+    size_t local_ind0 = l_ind0 * block_dim0;
+    size_t local_ind1 = l_ind1 * block_dim1;
+    size_t global_ind0 = gr_ind0 * l_range0 + local_ind0 + of0 + st::min_ind0;
+    size_t global_ind1 = gr_ind1 * l_range1 + local_ind1 + of1 + st::min_ind1;
 
     for (int i = 0; i < total_block_dim0; ++i){
       int j;
       for (j = 0; j < total_block_dim1; ++j){
         if (global_ind0 < glob_max0 && global_ind1 < glob_max1)
-          local_tab[local_ind0 * local_dim1 + local_ind1] = a_f(global_ind0, global_ind1, in);
+          local_tab[local_ind0 * local_dim1 + local_ind1] = a_f((int)global_ind0, (int)global_ind1, in);
         local_ind1++;
         global_ind1++;
       }
@@ -239,13 +239,13 @@ public:
                 /* group shoudn't be needed, neither global max*/
                 /* static function needed for st use a priori, but static not compatible
                    with dynamic filed as global_max */
-                store_local(local, _aB, it, group, global_max0+d0, global_max1+d1); 
+                store_local(local, _aB, it, group, static_cast<int>(global_max0+d0), static_cast<int>(global_max1+d1)); 
               });
             //synchro
             cl::sycl::parallel_for_work_item(group, [=](cl::sycl::nd_item<2> it){
                 //computing
                 /*operation_var2D<T, B, f, st, aB, bB, a_f, b_f>::*/
-                eval_local(it, _B, local, _bB, global_max0, global_max1);
+                eval_local(it, _B, local, _bB, static_cast<int>(global_max0), static_cast<int>(global_max1));
               });
             delete [] local;
           });
@@ -296,4 +296,3 @@ inline operation_var2D<T, B, f, st, aB, bB, a_f, b_f> operator<< (output_2D<T, B
 }
 
 #endif
-

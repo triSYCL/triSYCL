@@ -11,7 +11,7 @@ using namespace cl::sycl;
 
 // A kernel described as a functor for a parallel for
 class ParallelFor {
- using accessor_type = accessor<unsigned int,
+ using accessor_type = accessor<size_t,
                                 1,
                                 access::mode::write,
                                 access::target::global_buffer>;
@@ -29,7 +29,7 @@ public:
      Since it is to be used in a 1D parallel_for, it takes a item<1>
      or even an integer as a parameter
   */
-  void operator()(int index) {
+  void operator()(size_t index) {
     a[index] = index;
   }
 
@@ -70,7 +70,7 @@ int main() {
   {
     queue q;
 
-    buffer<unsigned int, 1> a { N };
+    buffer<size_t, 1> a { N };
     q.submit([&](handler &cgh) {
         auto acc = a.get_access<access::mode::write>(cgh);
         // Show that we can use a simple parallel_for with int, for example
