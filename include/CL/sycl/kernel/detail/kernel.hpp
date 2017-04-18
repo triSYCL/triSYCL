@@ -49,6 +49,11 @@ class kernel : detail::debug<detail::kernel> {
 #endif
 
 
+  /// Launch a single task of the kernel
+  virtual void single_task(std::shared_ptr<detail::task> task,
+                           std::shared_ptr<detail::queue> q) = 0;
+
+
   /** Launch a kernel with a range<>
 
       Do not use a template since it does not work with virtual functions

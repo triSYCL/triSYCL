@@ -2,16 +2,26 @@
 #define TRISYCL_SYCL_OPENCL_TYPE_HPP
 
 /** \file
-    triSYCL wrapper for openCL types
+    triSYCL wrapper for OpenCL types
+
     Joan DOT Thibault AT ens-rennes DOT fr
+
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
 */
+
+// Only provide OpenCL interoperability types when OpenCL is in use
+#ifdef TRISYCL_OPENCL
 
 #include <boost/compute.hpp>
 
 namespace cl {
 namespace sycl {
+
+/** Implement OpenCL interoperability types
+
+    \todo Implement all of them
+*/
 
 /** Wrapper of Boost::compute's cl_float3
  */
@@ -56,6 +66,8 @@ public :
 
 }
 }
+
+#endif
 
 /*
     # Some Emacs stuff:
