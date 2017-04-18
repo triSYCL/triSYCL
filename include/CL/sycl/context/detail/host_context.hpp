@@ -45,13 +45,23 @@ public:
   }
 
 
-  /** Returns the SYCL platform that the context is initialized for
+  /** Return the SYCL platform that the context is initialized for
 
       This throws an error since there is no boost::compute context associated
       to the host device.
   */
   boost::compute::context &get_boost_compute() override {
     throw non_cl_error("The host device has no boost context");
+  }
+
+
+  /** Return the queue that is associated to the context
+
+      This throws an error since there is no boost::command_queue context
+      associated to the host device.
+  */
+  boost::compute::command_queue &get_boost_queue() {
+    throw non_cl_error("The host device has no boost queue");
   }
 #endif
 

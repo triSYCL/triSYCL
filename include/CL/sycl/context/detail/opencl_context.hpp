@@ -32,6 +32,11 @@ class opencl_context : public detail::context {
   /// User the Boost Compute abstraction of the OpenCL context
   boost::compute::context c;
 
+  /** A boost command_queue associated to an OpenCL context for
+      when we need to transfer data but no queue is given
+  */
+  boost::compute::command_queue q;
+
   /** A cache to always return the same alive context for a given OpenCL
       context
 
@@ -50,6 +55,12 @@ public:
   /// Return the underlying boost::compute::context of the cl::sycl::context
   boost::compute::context &get_boost_compute() override {
     return c;
+  }
+
+
+  /// Return the queue that is associated to the context
+  boost::compute::command_queue &get_boost_queue() {
+    return q;
   }
 
 
@@ -106,7 +117,9 @@ public:
 private:
 
   /// Only the instance factory can build it
-  opencl_context(const boost::compute::context &c) : c { c } {}
+  opencl_context(const boost::compute::context &c) : 
+    c { c },
+    q { boost::compute::command_queue { c, c.get_device() } } {}
 
 
 public:

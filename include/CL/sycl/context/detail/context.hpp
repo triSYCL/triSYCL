@@ -28,8 +28,13 @@ public:
   /// Return the underlying cl_context of the cl::sycl::context
   virtual cl_context get() const = 0;
 
-  /// Returns the underlying boost::compute::context of the cl::sycl::context
+  /// Return the underlying boost::compute::context of the cl::sycl::context
   virtual boost::compute::context &get_boost_compute() = 0;
+
+  /** Return the underlying boost::compute::command_queue associated
+      with the context
+  */
+  virtual boost::compute::command_queue &get_boost_queue() = 0;
 #endif
 
   /// Returns true is the context is a SYCL host context

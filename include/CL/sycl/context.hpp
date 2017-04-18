@@ -172,7 +172,7 @@ public:
 
   /// Specifies whether the context is in SYCL Host Execution Mode.
   bool is_host() const {
-    return true;
+    return implementation->is_host();
   }
 
 
