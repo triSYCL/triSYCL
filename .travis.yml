@@ -9,7 +9,7 @@ env:
     - CC_BUILD=gcc-6
       CXX_BUILD=g++-6
       OPENMP=ON
-      OPENCL=OFF      
+      OPENCL=OFF
 
     - CC_BUILD=clang-3.9
       CXX_BUILD=clang++-3.9

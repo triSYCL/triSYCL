@@ -3,7 +3,7 @@
 
 /** \file The OpenCL SYCL host context implementation
 
-    Ronan at Keryell point FR
+    Anastasi at Xilinx dot com
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
@@ -60,6 +60,7 @@ public:
   bool is_host() const override {
     return true;
   }
+
 
   /** Return the platform of the context
 

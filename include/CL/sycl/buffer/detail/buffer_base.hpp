@@ -47,7 +47,6 @@ add_buffer_to_task(handler *command_group_handler,
                    bool is_write_mode);
 
 
-
 /** Factorize some template independent buffer aspects in a base class
  */
 struct buffer_base : public std::enable_shared_from_this<buffer_base> {
@@ -156,7 +155,7 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
 
 
   /** Create the OpenCL buffer and copy in data from the host if it doesn't
-   already exists for a given context or if the buffer is in write mode */
+   already exists for a given context */
   void copy_in_cl_buffer(cl::sycl::context context,
                          cl_mem_flags flags, bool is_write,
                          std::size_t size, void* data_ptr) {
@@ -165,6 +164,7 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
         { context.get_boost_compute(), size, flags, data_ptr };
     }
   }
+
 
   /// Copy back the CL buffer to the SYCL host if required
   void copy_back_cl_buffer(boost::compute::command_queue q,

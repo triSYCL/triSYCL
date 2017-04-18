@@ -420,7 +420,7 @@ private:
                          : CL_MEM_WRITE_ONLY;
 
     /* Create the OpenCL buffer and copy in data from the host if in
-       read mode */
+       the buffer doesn't already exists */
     buf->copy_in_cl_buffer(task->get_queue()->get_context(),
                            flags, is_write_access(),
                            get_size(), is_read_access() ? array.data() : 0);

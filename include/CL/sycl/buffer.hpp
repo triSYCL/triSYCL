@@ -30,7 +30,7 @@
 namespace cl {
 namespace sycl {
 
-/** \addtogroup<T, Dimensions, Mode, Target>up data Data access and storage in SYCL
+/** \addtogroup data Data access and storage in SYCL
     @{
 */
 
@@ -110,6 +110,7 @@ public:
 
       \param[in] allocator is to be used by the SYCL runtime
   */
+
   buffer(const range<Dimensions> &r, Allocator allocator = {})
     : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
                          { r }) }

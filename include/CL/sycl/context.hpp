@@ -46,15 +46,15 @@ namespace sycl {
 
     \todo The implementation is quite minimal for now.
 */
-  class context
+class context
 
   /* Use the underlying context implementation that can be shared in the
      SYCL model */
-    : public detail::shared_ptr_implementation<context, detail::context> {
+  : public detail::shared_ptr_implementation<context, detail::context> {
 
-    // The type encapsulating the implementation
-    using implementation_t =
-      detail::shared_ptr_implementation<context, detail::context>;
+  // The type encapsulating the implementation
+  using implementation_t =
+    detail::shared_ptr_implementation<context, detail::context>;
 
 public:
 
@@ -149,7 +149,7 @@ public:
 
       Get the default constructors back.
   */
-  context() : implementation_t { detail::host_context::instance () } {}
+  context() : implementation_t { detail::host_context::instance() } {}
 
 
 #ifdef TRISYCL_OPENCL
@@ -162,6 +162,7 @@ public:
   cl_context get() const {
     return implementation->get();
   }
+
 
   boost::compute::context &get_boost_compute() {
     return implementation->get_boost_compute();
