@@ -117,7 +117,7 @@ public:
 private:
 
   /// Only the instance factory can build it
-  opencl_context(const boost::compute::context &c) : 
+  opencl_context(const boost::compute::context &c) :
     c { c },
     q { boost::compute::command_queue { c, c.get_device() } } {}
 

@@ -226,7 +226,7 @@ public:
 
   /** This method is to be called whenever an acessor is created.
       Its current purpose is to track if an accessor with write access
-      is created and acting acordingly.
+      is created and acting accordingly.
    */
   template <access::mode Mode,
             access::target Target = access::target::host_buffer>

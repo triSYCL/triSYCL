@@ -166,7 +166,11 @@ public:
 
   boost::compute::context &get_boost_compute() {
     return implementation->get_boost_compute();
-   }
+  }
+
+  boost::compute::command_queue &get_boost_queue() {
+    return implementation->get_boost_queue();
+  }
 #endif
 
 

@@ -123,6 +123,15 @@ public:
     /* The host needs to wait for all the producers of the buffer to
        have finished */
     buf->wait();
+
+#ifdef TRISYCL_OPENCL
+    /* When dealing with OpenCL buffers we can decide if we need to transfer
+       the data when the accessor is created, here the target context
+       is the host context
+     */
+    buf->update_fresh(cl::sycl::context {}, Mode,
+                      get_size(), array.data());
+#endif
   }
 
 
@@ -142,6 +151,12 @@ public:
                   "when a handler is used");
     // Register the buffer to the task dependencies
     task = buffer_add_to_task(buf, &command_group_handler, is_write_access());
+
+#ifdef TRISYCL_OPENCL
+    // We transfer or create the buffer to the device if needed
+    buf->update_fresh(task->get_queue()->get_context(), Mode,
+                      get_size(), array.data());
+#endif
   }
 
 
@@ -421,14 +436,13 @@ private:
 
     /* Create the OpenCL buffer and copy in data from the host if in
        the buffer doesn't already exists */
-    buf->copy_in_cl_buffer(task->get_queue()->get_context(),
-                           flags, is_write_access(),
-                           get_size(), is_read_access() ? array.data() : 0);
+    buf->copy_in_cl_buffer(task->get_queue()->get_boost_compute(),
+                           task->get_queue()->get_context(),
+                           flags, get_size(), array.data());
   }
 
 
-  /** Copy back the CL buffer to the SYCL if required
-  */
+  /// Copy back the CL buffer to the SYCL if required
   void copy_back_cl_buffer() {
     // \todo Use if constexpr in C++17
     if (is_write_access())
