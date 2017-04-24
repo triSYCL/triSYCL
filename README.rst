@@ -1,6 +1,34 @@
 triSYCL
 +++++++
 
+State of the Eigen Tests (https://bitbucket.org/ArchonSTB/opencl)
+
+test -> compile / run
+
+cxx11\_tensor\_argmax\_sycl.cpp -> ok/ok
+cxx11\_tensor\_broadcast\_sycl.cpp -> ok/ok
+cxx11\_tensor\_builtins\_sycl.cpp -> ok/ok
+cxx11\_tensor\_chipping\_sycl.cpp -> ok/ok?
+cxx11\_tensor\_concatenation\_sycl.cpp -> ok/ok
+cxx11\_tensor\_contract\_sycl.cpp -> fail
+cxx11\_tensor\_convolution\_sycl.cpp -> ok/fail (wrong result)
+cxx11\_tensor\_custom\_op\_sycl.cpp -> fail
+cxx11\_tensor\_device\_sycl.cpp -> ok/ok
+cxx11\_tensor\_forced\_eval\_sycl.cpp -> ok/ok
+cxx11\_tensor\_generator\_sycl.cpp -> ok/ok
+cxx11\_tensor\_image\_patch\_sycl.cpp -> ??
+cxx11\_tensor\_inflation\_sycl.cpp -> ok/ok
+cxx11\_tensor\_layout\_swap\_sycl.cpp -> ok/ok
+cxx11\_tensor\_morphing\_sycl.cpp -> ok/ok
+cxx11\_tensor\_padding\_sycl.cpp -> ok/ok
+cxx11\_tensor\_patch\_sycl.cpp -> ok/ok
+cxx11\_tensor\_reduction\_sycl.cpp -> ok/fail (double free)
+cxx11\_tensor\_reverse\_sycl.cpp -> ok/ok
+cxx11\_tensor\_shuffling\_sycl.cpp -> ok/ok
+cxx11\_tensor\_striding\_sycl.cpp -> ok/ok
+cxx11\_tensor\_sycl.cpp -> ok/fail (wrong result)
+cxx11\_tensor\_volume\_patch\_sycl.cpp -> ??
+
 News
 ----
 
