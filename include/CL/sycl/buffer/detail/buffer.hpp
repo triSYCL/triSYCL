@@ -328,13 +328,12 @@ public:
   }
 
 
-private:
-
   /** Get a \c future to wait from inside the \c cl::sycl::buffer in
       case there is something to copy back to the host
 
       \return A \c future in the \c optional if there is something to
       wait for, otherwise an empty \c optional
+      \todo Change the function back to private
   */
   boost::optional<std::future<void>> get_destructor_future() {
     /* If there is only 1 shared_ptr user of the buffer, this is the
@@ -357,6 +356,7 @@ private:
     return boost::none;
   }
 
+private:
 
   // Allow buffer_waiter destructor to access get_destructor_future()
   // friend detail::buffer_waiter<T, Dimensions>::~buffer_waiter();
