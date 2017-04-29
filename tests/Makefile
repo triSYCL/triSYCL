@@ -42,9 +42,9 @@ LDLIBS += -lOpenCL
 # To compile for a device
 CXXFLAGS += -DTRISYCL_DEVICE
 # To enable debug and tracing:
-CXXFLAGS += -g
+#CXXFLAGS += -g
 # With optimization and without assertions
-#CXXFLAGS += -O3 -DNDEBUG
+CXXFLAGS += -O3 -DNDEBUG
 #CXXFLAGS += -g -DTRISYCL_TRACE_KERNEL -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DTRISYCL_TRACE_KERNEL -DTRISYCL_DEBUG_STRUCTORS -DBOOST_LOG_DYN_LINK
@@ -226,24 +226,24 @@ execute: $(basename $(TARGET))
 # The LLVM assembly code for the code expected to call the kernels
 %.pre_kernel_caller.ll: %.cpp
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl -DTRISYCL_GENERATE_KERNEL_CALLER \
-	  -emit-llvm -S -o $@ $<
+	  -DTRISYCL_GENERATE_KERNEL_CALLER -emit-llvm -S -o $@ $<
 %.pre_kernel_caller.ll: %.C
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl -DTRISYCL_GENERATE_KERNEL_CALLER \
-	  -emit-llvm -S -o $@ $<
+	  -DTRISYCL_GENERATE_KERNEL_CALLER -emit-llvm -S -o $@ $<
 %.pre_kernel_caller.ll: %.cc
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl -DTRISYCL_GENERATE_KERNEL_CALLER \
-	  -emit-llvm -S -o $@ $<
+	  -DTRISYCL_GENERATE_KERNEL_CALLER -emit-llvm -S -o $@ $<
 
 # The LLVM assembly code for the code before kernels
 %.pre_kernel.ll: %.cpp
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl -sycl-is-device \
-	  -DTRISYCL_GENERATE_KERNEL_CALLER -emit-llvm -S -o $@ $<
+	  -emit-llvm -S -o $@ $<
 %.pre_kernel.ll: %.C
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl -sycl-is-device \
-	  -DTRISYCL_GENERATE_KERNEL_CALLER -emit-llvm -S -o $@ $<
+	  -emit-llvm -S -o $@ $<
 %.pre_kernel.ll: %.cc
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl -sycl-is-device \
-	  -DTRISYCL_GENERATE_KERNEL_CALLER -emit-llvm -S -o $@ $<
+	  -emit-llvm -S -o $@ $<
 
 # How to compile OpenCL kernel to 64-bit SPIR 2.0
 %.spir64: %.cl
