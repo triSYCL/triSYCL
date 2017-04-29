@@ -39,8 +39,6 @@ LDLIBS += -lOpenCL
 #LDLIBS += $(shell pkg-config --libs-only-l pocl)
 #CXXFLAGS += $(shell pkg-config --cflags pocl)
 
-# To compile for a device
-CXXFLAGS += -DTRISYCL_DEVICE
 # To enable debug and tracing:
 #CXXFLAGS += -g
 # With optimization and without assertions
@@ -236,13 +234,13 @@ execute: $(basename $(TARGET))
 
 # The LLVM assembly code for the code before kernels
 %.pre_kernel.ll: %.cpp
-	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl -sycl-is-device \
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_DEVICE -sycl -sycl-is-device \
 	  -emit-llvm -S -o $@ $<
 %.pre_kernel.ll: %.C
-	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl -sycl-is-device \
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_DEVICE -sycl -sycl-is-device \
 	  -emit-llvm -S -o $@ $<
 %.pre_kernel.ll: %.cc
-	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl -sycl-is-device \
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_DEVICE -sycl -sycl-is-device \
 	  -emit-llvm -S -o $@ $<
 
 # How to compile OpenCL kernel to 64-bit SPIR 2.0
