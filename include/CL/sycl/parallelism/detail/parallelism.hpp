@@ -290,6 +290,8 @@ void parallel_for_workitem(const group<Dimensions> &g,
 
      The issue is that the parallel_for_workitem() execution is slow even
      when nd_item::barrier() is not used
+
+     \todo Simplify by just using omp parallel for collapse
   */
 
 
@@ -300,7 +302,7 @@ void parallel_for_workitem(const group<Dimensions> &g,
   // With OMP, one task is created for each work-item in the group
 
   range<Dimensions> l_r = g.get_nd_range().get_local();
-  std::size_t tot = l_r.get(0);
+  auto tot = l_r.get(0);
   for (int i = 1; i < (int) Dimensions; ++i){
     tot *= l_r.get(i);
   }
@@ -308,13 +310,13 @@ void parallel_for_workitem(const group<Dimensions> &g,
   {
 #pragma omp single nowait
     {
-      for (int th_id = 0; th_id < tot; ++th_id) {
+      for (std::size_t th_id = 0; th_id != tot; ++th_id) {
 #pragma omp task firstprivate(th_id)
         {
           nd_item<Dimensions> index { g.get_nd_range() };
-          id<Dimensions> local; // to initialize correctly
+          id<Dimensions> local {};
 
-          if (Dimensions ==1) {
+          if (Dimensions == 1 ) {
             local[0] = th_id;
           } else if (Dimensions == 2) {
             local[0] = th_id / l_r.get(1);
