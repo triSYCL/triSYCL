@@ -203,7 +203,8 @@ execute: $(basename $(TARGET))
 # To debug the Clang/LLVM triSYCL compiler
 # Assume that CXX contains some Clang compiler version
 
-.PRECIOUS: %.bc %.ll %.spir64 %.pre_kernel_caller.ll
+# Keep intermediate file for debuging purpose
+.PRECIOUS: %.bc %.ll %.spir64 %.pre_kernel.ll %.pre_kernel_caller.ll
 
 # The LLVM bitcode
 %.bc: %.cpp
