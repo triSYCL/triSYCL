@@ -15,13 +15,13 @@
 
 // The following symbols can be set to implement a different version
 #ifndef CL_SYCL_LANGUAGE_VERSION
-/// This implement SYCL 2.2
-#define CL_SYCL_LANGUAGE_VERSION 220
+/// This implement SYCL 1.2
+#define CL_SYCL_LANGUAGE_VERSION 120
 #endif
 
 #ifndef TRISYCL_CL_LANGUAGE_VERSION
-/// This implement triSYCL 2.2
-#define TRISYCL_CL_LANGUAGE_VERSION 220
+/// This implement triSYCL 1.2
+#define TRISYCL_CL_LANGUAGE_VERSION 120
 #endif
 
 /// This source is compiled by a single source compiler
@@ -55,7 +55,7 @@
 #endif
 
 #ifdef TRISYCL_DEVICE
-// #define __SYCL_DEVICE_ONLY__
+#define __SYCL_DEVICE_ONLY__
 #endif
 
 /// @} End the defaults Doxygen group

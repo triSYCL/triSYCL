@@ -43,7 +43,7 @@ template <typename T>
 class accessor {
 
   /// The pointer to the data
-  typename T::pointer buffer;
+  TRISYCL_GLOBAL_AS typename T::value_type *buffer;
 
   /** The size of the accessor
 
@@ -54,7 +54,9 @@ public:
 
   /// Capture the minimal accessor features
   accessor(const T &a) :
-    buffer { const_cast<typename T::pointer>(a.get_pointer()) },
+    /* Do not really initialize the buffer since it will be overriden
+       with the kernel argument by the serializer at run-time */
+    buffer {},
     size { a.get_count() } {}
 
 
