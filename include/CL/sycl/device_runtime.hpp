@@ -42,7 +42,17 @@ namespace drt {
 template <typename T>
 class accessor {
 
-  /// The pointer to the data
+  /** The pointer to the data
+
+      For now none of the following works yet for various reasons:
+      \code
+      cl::sycl::global_ptr<typename T::value_type> buffer;
+      cl::sycl::global<typename T::value_type *> buffer;
+     __global typename T::pointer buffer;
+     \endcode
+
+     So use a more trivial approach
+  */
   TRISYCL_GLOBAL_AS typename T::value_type *buffer;
 
   /** The size of the accessor

@@ -67,63 +67,53 @@ struct ocl_type { // NOTE: renamed from opencl_type because of MSVC bug
 /// Add an attribute for __constant address space
 template <typename T>
 struct ocl_type<T, constant_address_space> {
-  using type = T
+  using type =
 #ifdef __SYCL_DEVICE_ONLY__
-    /* Put the address space qualifier after the type so that we can
-       construct pointer type with qualifier */
     TRISYCL_CONSTANT_AS
 #endif
-    ;
+    T;
 };
 
 #if TRISYCL_CL_LANGUAGE_VERSION >= 200
 /// Add an attribute for __generic address space
 template <typename T>
 struct ocl_type<T, generic_address_space> {
-  using type = T
+  using type =
 #ifdef __SYCL_DEVICE_ONLY__
-    /* Put the address space qualifier after the type so that we can
-       construct pointer type with qualifier */
     TRISYCL_GENERIC_AS
 #endif
-    ;
+    T;
 };
 #endif
 
 /// Add an attribute for __global address space
 template <typename T>
 struct ocl_type<T, global_address_space> {
-  using type = T
+  using type =
 #ifdef __SYCL_DEVICE_ONLY__
-    /* Put the address space qualifier after the type so that we can
-       construct pointer type with qualifier */
     TRISYCL_GLOBAL_AS
 #endif
-    ;
+    T;
 };
 
 /// Add an attribute for __local address space
 template <typename T>
 struct ocl_type<T, local_address_space> {
-  using type = T
+  using type =
 #ifdef __SYCL_DEVICE_ONLY__
-    /* Put the address space qualifier after the type so that we can
-       construct pointer type with qualifier */
     TRISYCL_LOCAL_AS
 #endif
-    ;
+    T;
 };
 
 /// Add an attribute for __private address space
 template <typename T>
 struct ocl_type<T, private_address_space> {
-  using type = T
+  using type =
 #ifdef __SYCL_DEVICE_ONLY__
-    /* Put the address space qualifier after the type so that we can
-       construct pointer type with qualifier */
     TRISYCL_PRIVATE_AS
 #endif
-    ;
+    T;
 };
 
 
