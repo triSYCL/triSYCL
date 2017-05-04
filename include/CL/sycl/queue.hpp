@@ -291,9 +291,9 @@ public:
       be lost.
   */
   void wait_and_throw() {
-    // \todo Remove this temporary fix
+    // \todo Implement the throw part of wait_and_throw
     wait();
-    //detail::unimplemented();
+    detail::unimplemented();
   }
 
 

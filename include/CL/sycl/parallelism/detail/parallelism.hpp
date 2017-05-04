@@ -1,4 +1,3 @@
-
 #ifndef TRISYCL_SYCL_PARALLELISM_DETAIL_PARALLELISM_HPP
 #define TRISYCL_SYCL_PARALLELISM_DETAIL_PARALLELISM_HPP
 
@@ -44,7 +43,10 @@ namespace detail {
     C++14, use a class template instead with everything in the
     constructor.
 */
-template <std::size_t level, typename Range, typename ParallelForFunctor, typename Id>
+template <std::size_t level,
+          typename Range,
+          typename ParallelForFunctor,
+          typename Id>
 struct parallel_for_iterate {
   parallel_for_iterate(Range r, ParallelForFunctor &f, Id &index) {
     for (boost::multi_array_types::index _sycl_index = 0,
@@ -214,7 +216,6 @@ void parallel_for_global_offset(range<Dimensions> global_size,
 template <int Dimensions = 1, typename ParallelForFunctor>
 void parallel_for(nd_range<Dimensions> r,
                   ParallelForFunctor f) {
-
   // To iterate on the work-group
   id<Dimensions> group;
   range<Dimensions> group_range = r.get_group();
@@ -312,9 +313,6 @@ void parallel_for_workitem(const group<Dimensions> &g,
      \todo Simplify by just using omp parallel for collapse
   */
 
-
-  // Is the above comment true anymore ?
-  // Maybe the following will be enough
   range<Dimensions> l_r = g.get_nd_range().get_local();
   auto tot = l_r.get(0);
   for (int i = 1; i < (int) Dimensions; ++i){
@@ -324,7 +322,7 @@ void parallel_for_workitem(const group<Dimensions> &g,
   {
     nd_item<Dimensions> index { g.get_nd_range() };
     id<Dimensions> local; // to initialize correctly
-#pragma omp for nowait shared(g)
+#pragma omp for nowait
     for (int th_id = 0; th_id < tot; ++th_id) {
       if (Dimensions == 1) {
         local[0] = th_id;
