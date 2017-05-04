@@ -58,7 +58,7 @@ class accessor<T, Dimensions, Mode, access::target::local> :
                                   access::target::local>> {
 
   /// The implementation is a multi_array_ref wrapper
-  using array_type = boost::multi_array<T, Dimensions>;
+  using array_type = boost::multi_array_ref<T, Dimensions>;
 
   // The same type but writable
   // \todo Only if T is non const actually
@@ -73,6 +73,13 @@ class accessor<T, Dimensions, Mode, access::target::local> :
       previously done in this implementation
    */
   mutable writable_array_type array;
+
+  /** The allocation on the host for the local accessor
+
+      Note that this is uninitialized memory, as stated in SYCL
+      specification.
+  */
+  mutable T *allocation = nullptr;
 
 public:
 
@@ -107,7 +114,13 @@ public:
   */
   accessor(const range<Dimensions> &allocation_size,
            handler &command_group_handler) :
-    array { allocation_size } {}
+    array { allocate_accessor(allocation_size) } {}
+
+
+  // Deallocate the memory
+  ~accessor() {
+    deallocate_accessor();
+  }
 
 
   /** Return a range object representing the size of the buffer in
@@ -347,8 +360,24 @@ public:
 
 private:
 
+  /// Allocate uninitialized buffer memory
+  auto allocate_accessor(const range<Dimensions> &r) {
+    auto count = r.get_count();
+    // Allocate uninitialized memory
+    allocation = std::allocator<value_type>{}.allocate(count);
+    return boost::multi_array_ref<value_type, Dimensions> { allocation, r };
+  }
+
+
+  /// Deallocate accessor memory
+  void deallocate_accessor() {
+    std::allocator<value_type>{}.deallocate(allocation, array.num_elements());
+  }
+
+
   // The following function are used from handler
   friend handler;
+
 
 };
 
