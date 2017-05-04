@@ -248,13 +248,13 @@ public:
 
 template <>
 inline auto device::get_info<info::device::max_work_group_size>() const {
-  return size_t { 63 };
+  return size_t { 8 };
 }
 
 
 template <>
 inline auto device::get_info<info::device::max_compute_units>() const {
-  return size_t { 56 };
+  return size_t { 8 };
 }
 
 template <>

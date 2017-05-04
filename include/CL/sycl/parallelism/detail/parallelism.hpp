@@ -1,3 +1,4 @@
+
 #ifndef TRISYCL_SYCL_PARALLELISM_DETAIL_PARALLELISM_HPP
 #define TRISYCL_SYCL_PARALLELISM_DETAIL_PARALLELISM_HPP
 
@@ -213,14 +214,29 @@ void parallel_for_global_offset(range<Dimensions> global_size,
 template <int Dimensions = 1, typename ParallelForFunctor>
 void parallel_for(nd_range<Dimensions> r,
                   ParallelForFunctor f) {
-  // In a sequential execution there is only one index processed at a time
-  nd_item<Dimensions> index { r };
+
   // To iterate on the work-group
   id<Dimensions> group;
   range<Dimensions> group_range = r.get_group();
+
+#ifdef _OPENMP
+
+  auto iterate_in_work_group = [&] (id<Dimensions> g) {
+    //group.display();
+
+    // Then iterate on the local work-groups
+    cl::sycl::group<Dimensions> wg {g, r};
+    parallel_for_workitem<Dimensions,
+                          decltype(f)>(wg, f);
+  };
+
+#else
+
+  // In a sequential execution there is only one index processed at a time
+  nd_item<Dimensions> index { r };
+
   // To iterate on the local work-item
   id<Dimensions> local;
-
   range<Dimensions> local_range = r.get_local();
 
   // Reconstruct the nd_item from its group and local id
@@ -248,13 +264,15 @@ void parallel_for(nd_range<Dimensions> r,
                                            local };
   };
 
+#endif
+
   // First iterate on all the work-groups
   parallel_for_iterate<Dimensions,
                        range<Dimensions>,
                        decltype(iterate_in_work_group),
                        id<Dimensions>> { group_range,
                                          iterate_in_work_group,
-      group };
+                                         group };
 }
 
 
@@ -295,41 +313,30 @@ void parallel_for_workitem(const group<Dimensions> &g,
 
   // Is the above comment true anymore ?
   // Maybe the following will be enough
-  // #ifdef _OPENMP
-
-  // With OMP, one task is created for each work-item in the group
-
   range<Dimensions> l_r = g.get_nd_range().get_local();
   std::size_t tot = l_r.get(0);
   for (int i = 1; i < (int) Dimensions; ++i){
     tot *= l_r.get(i);
   }
-#pragma omp parallel
+#pragma omp parallel num_threads(tot)
   {
-#pragma omp single nowait
-    {
-      for (int th_id = 0; th_id < tot; ++th_id) {
-#pragma omp task firstprivate(th_id)
-        {
-          nd_item<Dimensions> index { g.get_nd_range() };
-          id<Dimensions> local; // to initialize correctly
-
-          if (Dimensions ==1) {
-            local[0] = th_id;
-          } else if (Dimensions == 2) {
-            local[0] = th_id / l_r.get(1);
-            local[1] = th_id - local[0]*l_r.get(1);
-          } else if (Dimensions == 3) {
-            int tmp = l_r.get(1)*l_r.get(2);
-            local[0] = th_id / tmp;
-            local[1] = (th_id - local[0]*tmp) / l_r.get(1);
-            local[2] = th_id - local[0]*tmp - local[1]*l_r.get(1);
-          }
-          index.set_local(local);
-          index.set_global(local + id<Dimensions>(l_r)*g.get());
-          f(index);
-        }
+    nd_item<Dimensions> index { g.get_nd_range() };
+    id<Dimensions> local; // to initialize correctly
+#pragma omp for nowait shared(g)
+    for (int th_id = 0; th_id < tot; ++th_id) {
+      if (Dimensions == 1) {
+        local[0] = th_id;
+      } else if (Dimensions == 2) {
+        local[0] = th_id / l_r.get(1);
+        local[1] = th_id % l_r.get(1);
+      } else if (Dimensions == 3) {
+        local[0] = th_id / (l_r.get(1)*l_r.get(2));
+        local[1] = (th_id / l_r.get(2)) % l_r.get(1);
+        local[2] = th_id % l_r.get(2);
       }
+      index.set_local(local);
+      index.set_global(local + id<Dimensions>(l_r)*g.get());
+      f(index);
     }
   }
 #else
