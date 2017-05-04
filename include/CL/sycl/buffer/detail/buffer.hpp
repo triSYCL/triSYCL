@@ -354,11 +354,8 @@ private:
   /// Allocate uninitialized buffer memory
   auto allocate_buffer(const range<Dimensions> &r) {
     auto count = r.get_count();
-    /* Allocate memory and register deallocate() to be executed on
-       destruction
-    */
+    // Allocate uninitialized memory
     allocation = alloc.allocate(count);
-    // Strange notation to work-around the explicit \c multi_array constructor
     return boost::multi_array_ref<value_type, Dimensions> { allocation, r };
   }
 
