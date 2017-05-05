@@ -349,6 +349,25 @@ public:
   }
 
 
+private:
+
+  /// Allocate uninitialized buffer memory
+  auto allocate_buffer(const range<Dimensions> &r) {
+    auto count = r.get_count();
+    // Allocate uninitialized memory
+    allocation = alloc.allocate(count);
+    return boost::multi_array_ref<value_type, Dimensions> { allocation, r };
+  }
+
+
+  /// Deallocate buffer memory if required
+  void deallocate_buffer() {
+    if (allocation)
+      alloc.deallocate(allocation, access.num_elements());
+  }
+
+public:
+
   /** Get a \c future to wait from inside the \c cl::sycl::buffer in
       case there is something to copy back to the host
 
@@ -378,23 +397,6 @@ public:
   }
 
 private:
-
-
-  /// Allocate uninitialized buffer memory
-  auto allocate_buffer(const range<Dimensions> &r) {
-    auto count = r.get_count();
-    // Allocate uninitialized memory
-    allocation = alloc.allocate(count);
-    return boost::multi_array_ref<value_type, Dimensions> { allocation, r };
-  }
-
-
-  /// Deallocate buffer memory if required
-  void deallocate_buffer() {
-    if (allocation)
-      alloc.deallocate(allocation, access.num_elements());
-  }
-
 
   // Allow buffer_waiter destructor to access get_destructor_future()
   // friend detail::buffer_waiter<T, Dimensions>::~buffer_waiter();

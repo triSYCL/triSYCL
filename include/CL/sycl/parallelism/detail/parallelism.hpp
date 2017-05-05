@@ -323,7 +323,7 @@ void parallel_for_workitem(const group<Dimensions> &g,
     nd_item<Dimensions> index { g.get_nd_range() };
     id<Dimensions> local; // to initialize correctly
 #pragma omp for nowait
-    for (int th_id = 0; th_id < tot; ++th_id) {
+    for (std::size_t th_id = 0; th_id < tot; ++th_id) {
       if (Dimensions == 1) {
         local[0] = th_id;
       } else if (Dimensions == 2) {
