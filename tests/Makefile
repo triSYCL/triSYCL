@@ -225,13 +225,13 @@ execute: $(basename $(TARGET))
 # The LLVM assembly code for the code expected to call the kernels
 %.pre_kernel_caller.ll: %.cpp
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl -DTRISYCL_GENERATE_KERNEL_CALLER \
-	  -DTRISYCL_GENERATE_KERNEL_CALLER -emit-llvm -S -o $@ $<
+	  -emit-llvm -S -o $@ $<
 %.pre_kernel_caller.ll: %.C
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl -DTRISYCL_GENERATE_KERNEL_CALLER \
-	  -DTRISYCL_GENERATE_KERNEL_CALLER -emit-llvm -S -o $@ $<
+	  -emit-llvm -S -o $@ $<
 %.pre_kernel_caller.ll: %.cc
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl -DTRISYCL_GENERATE_KERNEL_CALLER \
-	  -DTRISYCL_GENERATE_KERNEL_CALLER -emit-llvm -S -o $@ $<
+	  -emit-llvm -S -o $@ $<
 
 # The LLVM assembly code for the code before kernels
 %.pre_kernel.ll: %.cpp
