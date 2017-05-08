@@ -348,11 +348,11 @@ void compute_jacobi2D(std::vector<float>& a_test,
     {
         auto being_op = counters::clock_type::now();
 
-        for (int i = 1; i < M - 1; ++i) {
+        for (std::size_t i = 1; i < M - 1; ++i) {
 #ifdef _OPENMP
 #pragma omp parallel for
 #endif
-            for (int j = 1; j < N - 1; ++j) {
+            for (std::size_t j = 1; j < N - 1; ++j) {
                 b_test[i*N + j] = MULT_COEF * (a_test[i*N + j] + a_test[i*N + (j - 1)] + a_test[i*N + (1 + j)] + a_test[(1 + i)*N + j] + a_test[(i - 1)*N + j]);
             }
         }
@@ -362,8 +362,8 @@ void compute_jacobi2D(std::vector<float>& a_test,
 
         being_op = counters::clock_type::now();
 
-        for (int i = 1; i < M - 1; ++i) {
-            for (int j = 1; j < N - 1; ++j) {
+        for (std::size_t i = 1; i < M - 1; ++i) {
+            for (std::size_t j = 1; j < N - 1; ++j) {
                 a_test[i*N + j] = b_test[i*N + j];
             }
         }
