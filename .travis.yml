@@ -11,8 +11,8 @@ env:
       OPENMP=ON
       OPENCL=OFF
 
-    - CC_BUILD=clang-3.9
-      CXX_BUILD=clang++-3.9
+    - CC_BUILD=clang-4.0
+      CXX_BUILD=clang++-4.0
       OPENMP=OFF
       OPENCL=OFF
 
