@@ -74,9 +74,10 @@ public:
 
 /// Helper function to create a new buffer_waiter
 template <typename T,
-          int Dimensions = 1>
+          int Dimensions = 1,
+          typename Allocator = buffer_allocator<std::remove_const_t<T>>>
 inline auto waiter(detail::buffer<T, Dimensions> *b) {
-  return new buffer_waiter<T, Dimensions> { b };
+  return new buffer_waiter<T, Dimensions, Allocator> { b };
 }
 
 /// @} End the data Doxygen group

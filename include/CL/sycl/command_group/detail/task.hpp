@@ -142,7 +142,10 @@ struct task : public std::enable_shared_from_this<task>,
   /// Notify the waiting tasks that we are done
   void notify_consumers() {
     TRISYCL_DUMP_T("Notify all the task waiting for this task " << this);
-    execution_ended = true;
+   {
+     std::unique_lock<std::mutex> ul { ready_mutex };
+     execution_ended = true;
+   }
     /* \todo Verify that the memory model with the notify does not
        require some fence or atomic */
     ready.notify_all();

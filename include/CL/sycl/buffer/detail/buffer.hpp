@@ -366,12 +366,14 @@ private:
       alloc.deallocate(allocation, access.num_elements());
   }
 
+public:
 
   /** Get a \c future to wait from inside the \c cl::sycl::buffer in
       case there is something to copy back to the host
 
       \return A \c future in the \c optional if there is something to
       wait for, otherwise an empty \c optional
+      \todo Make the function private again
   */
   boost::optional<std::future<void>> get_destructor_future() {
     /* If there is only 1 shared_ptr user of the buffer, this is the
@@ -394,12 +396,15 @@ private:
     return boost::none;
   }
 
+private:
 
   // Allow buffer_waiter destructor to access get_destructor_future()
   // friend detail::buffer_waiter<T, Dimensions>::~buffer_waiter();
   /* \todo Work around to Clang bug
      https://llvm.org/bugs/show_bug.cgi?id=28873 cannot use destructor
      here */
+  /* \todo solve the fact that get_destructor_future is not accessible
+     when private and buffer_waiter uses a custom allocator */
   friend detail::buffer_waiter<T, Dimensions>;
 
 };

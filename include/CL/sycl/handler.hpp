@@ -271,7 +271,7 @@ public:
       \param KernelName is a class type that defines the name to be used for
       the underlying kernel
   */
-  template <typename KernelName,
+  template <typename KernelName = std::nullptr_t,
             int Dimensions,
             typename ParallelForFunctor>
   void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {

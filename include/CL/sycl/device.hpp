@@ -272,6 +272,11 @@ inline auto device::get_info<info::device::vendor>() const {
   return string_class {};
 }
 
+template <>
+inline auto device::get_info<info::device::name>() const {
+  return string_class {};
+}
+
 /// @} to end the Doxygen group
 
 }

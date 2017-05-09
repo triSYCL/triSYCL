@@ -111,8 +111,8 @@ public:
       \param[in] allocator is to be used by the SYCL runtime
   */
   buffer(const range<Dimensions> &r, Allocator allocator = {})
-    : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
-                         { r }) }
+    : implementation_t { detail::waiter<T, Dimensions, Allocator>(
+                         new detail::buffer<T, Dimensions> { r }) }
       {}
 
 

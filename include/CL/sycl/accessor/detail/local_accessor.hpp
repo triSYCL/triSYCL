@@ -110,7 +110,7 @@ public:
   /** Construct a device accessor from an existing buffer
 
       \todo fix the specification to rename target that shadows
-      template parm
+      template param
   */
   accessor(const range<Dimensions> &allocation_size,
            handler &command_group_handler) :
