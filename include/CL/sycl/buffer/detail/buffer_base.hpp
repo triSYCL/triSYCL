@@ -155,13 +155,13 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
 
 #ifdef TRISYCL_OPENCL
   /// Check if the data of this buffer is up-to-date in a certain context
-  bool data_is_up_to_date(cl::sycl::context ctx) {
+  bool data_is_up_to_date(cl::sycl::context& ctx) {
     return fresh_ctx.find(ctx) != fresh_ctx.end();
   }
 
 
   /// Check if the buffer is already cached for a certain context
-  bool is_cached(cl::sycl::context ctx) {
+  bool is_cached(cl::sycl::context& ctx) {
     return buffer_cache.find(ctx) != buffer_cache.end();
   }
 
@@ -169,7 +169,7 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
   /** Create a boost::compute::buffer for this cl::sycl::buffer in the
       cache and associate it with a given context
   */
-  void create_in_cache(cl::sycl::context ctx, size_t size,
+  void create_in_cache(cl::sycl::context& ctx, size_t size,
                        cl_mem_flags flags, void* data) {
     buffer_cache[ctx] = boost::compute::buffer
       { ctx.get_boost_compute(),
@@ -232,7 +232,6 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
       return;
     }
 
-
     if((   mode == access::mode::read_write
         || mode == access::mode::write
         || mode == access::mode::atomic) && !data_is_up_to_date(target_ctx)) {
@@ -293,7 +292,7 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
   /** Create the OpenCL buffer and copy in data from the host if it doesn't
       already exists for a given context
   */
-  void copy_in_cl_buffer(boost::compute::command_queue q,
+  void copy_in_cl_buffer(boost::compute::command_queue& q,
                          cl::sycl::context context,
                          cl_mem_flags flags, std::size_t size, void* data) {
     // The data in the buffer is up to date, nothing to do
@@ -316,8 +315,7 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
 
 
   /// Copy back the CL buffer to the SYCL host if required
-  void copy_back_cl_buffer(boost::compute::command_queue q,
-                           cl::sycl::context context, std::size_t size,
+  void copy_back_cl_buffer(cl::sycl::context context, std::size_t size,
                            void* data) {
     // host context
     cl::sycl::context host_context {};

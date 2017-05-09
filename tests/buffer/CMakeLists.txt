@@ -38,3 +38,6 @@ buffer \"a\" use_count\\(\\) is: 20
 buffer \"z\" use_count\\(\\) is: 20
 buffer \"z\" is read_only: 0")
 declare_trisycl_test(TARGET uninitialized_buffer)
+if(${BUILD_OPENCL})
+  declare_trisycl_test(TARGET buffer_data_tracking USES_OPENCL TEST_REGEX "0 0 0")
+endif(${BUILD_OPENCL})

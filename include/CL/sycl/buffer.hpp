@@ -110,7 +110,6 @@ public:
 
       \param[in] allocator is to be used by the SYCL runtime
   */
-
   buffer(const range<Dimensions> &r, Allocator allocator = {})
     : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
                          { r }) }
@@ -522,6 +521,16 @@ public:
     implementation->implementation->set_final_data(nullptr);
   }
 
+
+#ifdef TRISYCL_OPENCL
+  bool is_cached(cl::sycl::context& ctx) {
+    return implementation->implementation->is_cached(ctx);
+  }
+
+  bool data_is_up_to_date(cl::sycl::context& ctx) {
+    return implementation->implementation->data_is_up_to_date(ctx);
+  }
+#endif
 
   /** Set destination of buffer data on destruction.
 

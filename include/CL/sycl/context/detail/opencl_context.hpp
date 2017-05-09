@@ -59,7 +59,7 @@ public:
 
 
   /// Return the queue that is associated to the context
-  boost::compute::command_queue &get_boost_queue() {
+  boost::compute::command_queue &get_boost_queue() override {
     return q;
   }
 

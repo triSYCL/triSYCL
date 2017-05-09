@@ -446,8 +446,7 @@ private:
   void copy_back_cl_buffer() {
     // \todo Use if constexpr in C++17
     if (is_write_access())
-      buf->copy_back_cl_buffer(task->get_queue()->get_boost_compute(),
-                               task->get_queue()->get_context(),
+      buf->copy_back_cl_buffer(task->get_queue()->get_context(),
                                get_size(), array.data());
   }
 #endif
