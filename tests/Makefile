@@ -270,8 +270,8 @@ execute: $(basename $(TARGET))
 # Process bitcode with SYCL pass to generate kernels
 %.kernel_caller.bc: %.pre_kernel_caller.ll
 	opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats \
-	  -globalopt -deadargelim -SYCL-serialize-arguments \
-	  -o $@ $<
+	  -globalopt -deadargelim -SYCL-args-flattening \
+	  -SYCL-serialize-arguments-inside -deadargelim -o $@ $<
 
 # Construct the object file of the kernel caller from the target assembly
 # Rely on the default Make built-in rules for now
