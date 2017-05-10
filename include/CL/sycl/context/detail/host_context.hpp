@@ -50,7 +50,7 @@ public:
       This throws an error since there is no boost::compute context associated
       to the host device.
   */
-  boost::compute::context &get_boost_compute() const override {
+  boost::compute::context &get_boost_compute() override {
     throw non_cl_error("The host context has no boost context");
   }
 
@@ -60,7 +60,7 @@ public:
       This throws an error since there is no boost::command_queue context
       associated to the host device.
   */
-  boost::compute::command_queue &get_boost_queue() const override {
+  boost::compute::command_queue &get_boost_queue() override {
     throw non_cl_error("The host context has no boost queue");
   }
 #endif

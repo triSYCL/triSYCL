@@ -54,13 +54,13 @@ public:
 
 
   /// Return the underlying boost::compute::context of the cl::sycl::context
-  boost::compute::context &get_boost_compute() const override {
+  boost::compute::context &get_boost_compute() override {
     return c;
   }
 
 
   /// Return the queue that is associated to the context
-  boost::compute::command_queue &get_boost_queue() const override {
+  boost::compute::command_queue &get_boost_queue() override {
     return q;
   }
 
