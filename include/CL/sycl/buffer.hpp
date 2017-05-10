@@ -523,10 +523,15 @@ public:
 
 
 #ifdef TRISYCL_OPENCL
+  /** Check if the buffer is already cached in a certain context
+   */
   bool is_cached(cl::sycl::context& ctx) {
     return implementation->implementation->is_cached(ctx);
   }
 
+
+  /** Check if the data stored in the buffer is up to date in a certain context
+   */
   bool data_is_up_to_date(cl::sycl::context& ctx) {
     return implementation->implementation->data_is_up_to_date(ctx);
   }

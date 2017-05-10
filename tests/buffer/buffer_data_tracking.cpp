@@ -12,24 +12,24 @@ constexpr size_t N = 3;
 using Vector = float[N];
 
 int main() {
-  Vector a = { 1, 2, 3};
+  Vector a = { 1, 2, 3 };
 
   boost::compute::context context { boost::compute::system::default_context() };
   boost::compute::command_queue b_queue { context, context.get_device() };
   auto program = boost::compute::program::create_with_source(R"(
-    __kernel void nullify(__global int *a) {
+    __kernel void zeroify(__global int *a) {
       a[get_global_id(0)] = 0;
     }
     )", context);
-    
+
   program.build();
 
-  kernel k { boost::compute::kernel { program, "nullify" } };
+  kernel k { boost::compute::kernel { program, "zeroify" } };
 
   queue q { b_queue };
   cl::sycl::context host_context {};
   cl::sycl::context device_context = q.get_context();
-  
+
   buffer<int> A {std::begin(a), std::end(a)};
 
   VERIFY_COND(A.data_is_up_to_date(host_context));
@@ -49,6 +49,6 @@ int main() {
   for (auto e : acc)
     std::cout << e << " ";
   std::cout << std::endl;
-  
+
   return 0;
 }

@@ -24,6 +24,7 @@
 #ifdef TRISYCL_OPENCL
 #include <boost/compute.hpp>
 #endif
+
 #include "CL/sycl/context.hpp"
 #include "CL/sycl/command_group/detail/task.hpp"
 
@@ -44,7 +45,6 @@ inline static std::shared_ptr<detail::task>
 add_buffer_to_task(handler *command_group_handler,
                    std::shared_ptr<detail::buffer_base> b,
                    bool is_write_mode);
-
 
 /** Factorize some template independent buffer aspects in a base class
  */
@@ -155,13 +155,13 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
 
 #ifdef TRISYCL_OPENCL
   /// Check if the data of this buffer is up-to-date in a certain context
-  bool data_is_up_to_date(cl::sycl::context& ctx) {
+  bool data_is_up_to_date(const cl::sycl::context& ctx) {
     return fresh_ctx.find(ctx) != fresh_ctx.end();
   }
 
 
   /// Check if the buffer is already cached for a certain context
-  bool is_cached(cl::sycl::context& ctx) {
+  bool is_cached(const cl::sycl::context& ctx) {
     return buffer_cache.find(ctx) != buffer_cache.end();
   }
 
@@ -169,7 +169,7 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
   /** Create a boost::compute::buffer for this cl::sycl::buffer in the
       cache and associate it with a given context
   */
-  void create_in_cache(cl::sycl::context& ctx, size_t size,
+  void create_in_cache(const cl::sycl::context& ctx, size_t size,
                        cl_mem_flags flags, void* data) {
     buffer_cache[ctx] = boost::compute::buffer
       { ctx.get_boost_compute(),
@@ -181,7 +181,7 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
 
 
   /** Transfer the most up-to-date version of the data to the host
-      if the host is not already up-to-date
+      if the hosts version is not already up-to-date
   */
   void sync_with_host(std::size_t size, void* data) {
     cl::sycl::context host_context {};
@@ -197,11 +197,11 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
 
 
   /** When a new accessor is created this function is called, it will
-      update the state of the buffer according to the context for which
+      update the state of the buffer according to the context in which
       the accessor is created and the access mode
   */
-  void update_fresh(cl::sycl::context target_ctx, access::mode mode,
-                    std::size_t size, void* data) {
+  void update_buffer_state(const cl::sycl::context& target_ctx, access::mode mode,
+                           std::size_t size, void* data) {
     // If read mode and the data is up-to-date there is nothing to do
     if(mode == access::mode::read && data_is_up_to_date(target_ctx)) return;
 
@@ -251,7 +251,6 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
           flags |= CL_MEM_COPY_HOST_PTR;
           create_in_cache(target_ctx, size, flags, data);
         }
-
         else {
           // We update the buffer associated with the target context
           boost::compute::command_queue q = target_ctx.get_boost_queue();
@@ -284,7 +283,7 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
 
 
   /// Returns the cl_buffer for a given context.
-  boost::compute::buffer get_cl_buffer(cl::sycl::context context) {
+  boost::compute::buffer get_cl_buffer(const cl::sycl::context& context) {
     return buffer_cache[context];
   }
 
@@ -293,16 +292,17 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
       already exists for a given context
   */
   void copy_in_cl_buffer(boost::compute::command_queue& q,
-                         cl::sycl::context context,
+                         const cl::sycl::context& context,
                          cl_mem_flags flags, std::size_t size, void* data) {
     // The data in the buffer is up to date, nothing to do
     if(data_is_up_to_date(context)) return;
 
     // We want to be sure that the host hold the most recent version of the data
+    // We can't transfer data directly from one device to another for the moment
     sync_with_host(size, data);
 
     if(is_cached(context)) {
-      // If the data in the context is not up to date, we update it
+      // The data in the context is not up to date, we update it
       q.enqueue_write_buffer(buffer_cache[context], 0, size, data);
       fresh_ctx.insert(context);
       return;
@@ -315,8 +315,7 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
 
 
   /// Copy back the CL buffer to the SYCL host if required
-  void copy_back_cl_buffer(cl::sycl::context context, std::size_t size,
-                           void* data) {
+  void copy_back_cl_buffer(std::size_t size, void* data) {
     // host context
     cl::sycl::context host_context {};
 

@@ -1,6 +1,6 @@
 sudo: required
 
-language: c++
+language: cpp
 
 services:
     - docker
@@ -13,7 +13,7 @@ env:
 
     - CC_BUILD=clang-4.0
       CXX_BUILD=clang++-4.0
-      OPENMP=OFF
+      OPENMP=ON
       OPENCL=OFF
 
 before_install:

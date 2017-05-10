@@ -129,8 +129,8 @@ public:
        the data when the accessor is created, here the target context
        is the host context
      */
-    buf->update_fresh(cl::sycl::context {}, Mode,
-                      get_size(), array.data());
+    auto ctx = cl::sycl::context {};
+    buf->update_buffer_state(ctx, Mode, get_size(), array.data());
 #endif
   }
 
@@ -154,8 +154,8 @@ public:
 
 #ifdef TRISYCL_OPENCL
     // We transfer or create the buffer to the device if needed
-    buf->update_fresh(task->get_queue()->get_context(), Mode,
-                      get_size(), array.data());
+    auto ctx = task->get_queue()->get_context();
+    buf->update_buffer_state(ctx, Mode, get_size(), array.data());
 #endif
   }
 
@@ -420,7 +420,8 @@ private:
   /// Get the boost::compute::buffer or throw if unset
   auto get_cl_buffer() const {
     // This throws if not set
-    return buf->get_cl_buffer(task->get_queue()->get_context());
+    auto ctx = task->get_queue()->get_context();
+    return buf->get_cl_buffer(ctx);
   }
 
 
@@ -432,22 +433,22 @@ private:
     cl_mem_flags flags = is_read_access() && is_write_access() ?
       CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR
       : is_read_access() ? CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR
-                         : CL_MEM_WRITE_ONLY;
+      : CL_MEM_WRITE_ONLY;
 
-    /* Create the OpenCL buffer and copy in data from the host if in
+    /* Create the OpenCL buffer and copy in it the data from the host if
        the buffer doesn't already exists */
+    auto ctx = task->get_queue()->get_context();
     buf->copy_in_cl_buffer(task->get_queue()->get_boost_compute(),
-                           task->get_queue()->get_context(),
-                           flags, get_size(), array.data());
+                           ctx, flags, get_size(), array.data());
   }
 
 
   /// Copy back the CL buffer to the SYCL if required
   void copy_back_cl_buffer() {
     // \todo Use if constexpr in C++17
-    if (is_write_access())
-      buf->copy_back_cl_buffer(task->get_queue()->get_context(),
-                               get_size(), array.data());
+    if (is_write_access()) {
+      buf->copy_back_cl_buffer(get_size(), array.data());
+    }
   }
 #endif
 

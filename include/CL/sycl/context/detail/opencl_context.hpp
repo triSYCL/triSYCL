@@ -34,6 +34,7 @@ class opencl_context : public detail::context {
 
   /** A boost command_queue associated to an OpenCL context for
       when we need to transfer data but no queue is given
+      (eg. When an buffer accessor is created)
   */
   boost::compute::command_queue q;
 
@@ -53,13 +54,13 @@ public:
 
 
   /// Return the underlying boost::compute::context of the cl::sycl::context
-  boost::compute::context &get_boost_compute() override {
+  boost::compute::context &get_boost_compute() const override {
     return c;
   }
 
 
   /// Return the queue that is associated to the context
-  boost::compute::command_queue &get_boost_queue() override {
+  boost::compute::command_queue &get_boost_queue() const override {
     return q;
   }
 
@@ -68,7 +69,6 @@ public:
   bool is_host() const override {
     return false;
   }
-
 
 #if 0
   /** Query the context for OpenCL info::context info
@@ -84,7 +84,6 @@ public:
     return {};
   }
 #endif
-
 
   /** Return the platform of the context
 
@@ -114,6 +113,7 @@ public:
                                  [&] { return new opencl_context { c }; });
   }
 
+
 private:
 
   /// Only the instance factory can build it
@@ -129,6 +129,7 @@ public:
   }
 
 };
+
 
 /* Allocate the cache here but since this is a pure-header library,
    use a weak symbol so that only one remains when SYCL headers are
