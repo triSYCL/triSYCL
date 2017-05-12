@@ -127,7 +127,8 @@ public:
 #ifdef TRISYCL_OPENCL
     /* For the host context, we are obligated to update the buffer state
        during the accessors creation, otherwise we have no way of knowing
-       if a buffer was modified on the host.
+       if a buffer was modified on the host. This is only true because
+       host accessors are blocking
      */
     cl::sycl::context ctx;
     buf->update_buffer_state(ctx, Mode, get_size(), array.data());

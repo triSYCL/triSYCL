@@ -214,10 +214,11 @@ public:
       final location */
   ~buffer() {
 #ifdef TRISYCL_OPENCL
-    /* We ensure that the host has the most up to date version of the data
+    /* We ensure that the host has the most up-to-date version of the data
        before the buffer is destroyed. This is necessary because we do not
        systematically transfer the data back from a device with
        copy_back_cl_buffer any more.
+       \todo Optimize for the case the buffer is not based on host memory
     */
     cl::sycl::context ctx;
     auto size = access.num_elements() * sizeof(value_type);

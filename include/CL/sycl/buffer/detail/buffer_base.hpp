@@ -184,7 +184,7 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
   */
   void sync_with_host(std::size_t size, void* data) {
     cl::sycl::context host_context;
-    if (!is_data_up_to_date(host_context) && fresh_ctx.size() > 0) {
+    if (!is_data_up_to_date(host_context) && !fresh_ctx.empty()) {
       // We know that the context(s) in fresh_ctx hold the most recent version
       // of the buffer
       auto fresh_context = *(fresh_ctx.begin());
@@ -206,7 +206,7 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
        be able to write to it if it is accessed through a write accessor
        in the future
      */
-    auto flag = CL_MEM_READ_WRITE;
+    auto constexpr flag = CL_MEM_READ_WRITE;
 
     /* The buffer is accessed in read mode, we want to transfer the data only if
        necessary. We start a transfer if the data on the target context is not
@@ -214,8 +214,9 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
      */
     if (mode == access::mode::read) {
 
-      if (is_data_up_to_date(target_ctx)) return;
-      // If read mode and the data is up-to-date there is nothing to do
+      if (is_data_up_to_date(target_ctx))
+        // If read mode and the data is up-to-date there is nothing to do
+        return;
 
       // The data is not up-to-date, we need a transfer
       // We also want to be sure that the host holds the most recent data

@@ -15,7 +15,7 @@ using Vector = float[N];
 
 Vector a = { 1, 2, 3 };
 
-void test1(auto program, auto b_queue) {
+auto test1 = [](auto program, auto b_queue) {
 
   kernel k { boost::compute::kernel { program, "zeroify" } };
 
@@ -48,9 +48,9 @@ void test1(auto program, auto b_queue) {
 
   for (auto e : acc)
     std::cout << e << " ";
-}
+};
 
-void test2(auto program, auto b_queue) {
+auto test2 = [](auto program, auto b_queue) {
   kernel k1 { boost::compute::kernel { program, "oneify" } };
   kernel k2 { boost::compute::kernel { program, "addone" } };
 
@@ -92,10 +92,10 @@ void test2(auto program, auto b_queue) {
 
   for (auto e : acc2)
     std::cout << e << " ";
-}
+};
 
 
-void test3(auto program, auto b_queue) {
+auto test3 = [](auto program, auto b_queue) {
   kernel k1 { boost::compute::kernel { program, "zeroify" } };
   kernel k2 { boost::compute::kernel { program, "addone" } };
 
@@ -130,7 +130,7 @@ void test3(auto program, auto b_queue) {
   for (auto e : acc)
     std::cout << e << " ";
   std::cout << std::endl;
-}
+};
 
 
 int main() {
