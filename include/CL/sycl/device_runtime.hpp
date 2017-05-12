@@ -38,22 +38,26 @@ namespace sycl {
 /// The device-side runtime
 namespace drt {
 
+/// Some function providing a cl_mem
+extern TRISYCL_GLOBAL_AS void *get_some_cl_mem_hidden_in_a_buffer(const void *);
+
+
 /// SYCL accessor seen from a device perspective
-template <typename T>
+template <typename Accessor>
 class accessor {
 
   /** The pointer to the data
 
       For now none of the following works yet for various reasons:
       \code
-      cl::sycl::global_ptr<typename T::value_type> buffer;
-      cl::sycl::global<typename T::value_type *> buffer;
-     __global typename T::pointer buffer;
+      cl::sycl::global_ptr<typename Accessor::value_type> buffer;
+      cl::sycl::global<typename Accessor::value_type *> buffer;
+     __global typename Accessor::pointer buffer;
      \endcode
 
      So use a more trivial approach
   */
-  TRISYCL_GLOBAL_AS typename T::value_type *buffer;
+  TRISYCL_GLOBAL_AS typename Accessor::value_type *buffer;
 
   /** The size of the accessor
 
@@ -63,14 +67,21 @@ class accessor {
 public:
 
   /// Capture the minimal accessor features
-  accessor(const T &a) :
-    /* Do not really initialize the buffer since it will be overriden
-       with the kernel argument by the serializer at run-time */
-    buffer {},
-    size { a.get_count() } {}
+  accessor(const Accessor &a) :
+    /* Initialize the buffer with actually a \c cl_mem since it will be
+       overridden with the kernel argument by the serializer at
+       run-time, but at least from the kernel point of view it has to
+       look like an \c Accessor::value_type * for the kernel
+       outlining */
+    buffer {
+      (TRISYCL_GLOBAL_AS typename Accessor::value_type *)
+        get_some_cl_mem_hidden_in_a_buffer((const void *)&a)
+    },
+    size { a.get_count() }
+  {}
 
 
-  /// Use the accessor with integers à la []
+  /// use the accessor with integers à la []
   auto &operator[](std::size_t index) const {
     return buffer[index];
   }
