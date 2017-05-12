@@ -3,7 +3,7 @@
 
 /** \file The OpenCL SYCL host context implementation
 
-    Anastasi at Xilinx dot com
+    a-doumoulakis at gmail dot com (Anastasios Doumoulakis)
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.

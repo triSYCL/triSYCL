@@ -125,11 +125,11 @@ public:
     buf->wait();
 
 #ifdef TRISYCL_OPENCL
-    /* When dealing with OpenCL buffers we can decide if we need to transfer
-       the data when the accessor is created, here the target context
-       is the host context
+    /* For the host context, we are obligated to update the buffer state
+       during the accessors creation, otherwise we have no way of knowing
+       if a buffer was modified on the host.
      */
-    auto ctx = cl::sycl::context {};
+    cl::sycl::context ctx;
     buf->update_buffer_state(ctx, Mode, get_size(), array.data());
 #endif
   }
@@ -151,12 +151,6 @@ public:
                   "when a handler is used");
     // Register the buffer to the task dependencies
     task = buffer_add_to_task(buf, &command_group_handler, is_write_access());
-
-#ifdef TRISYCL_OPENCL
-    // We transfer or create the buffer to the device if needed
-    auto ctx = task->get_queue()->get_context();
-    buf->update_buffer_state(ctx, Mode, get_size(), array.data());
-#endif
   }
 
 
@@ -425,30 +419,25 @@ private:
   }
 
 
-  /** Lazily associate a CL buffer to the SYCL buffer and copy data in
-      if required
+  /** Lazily associate a CL buffer to the SYCL buffer and copy data in it
+      if required, updates the state of the data in the buffer across contexts
   */
   void copy_in_cl_buffer() {
-    // This should be a constexpr
-    cl_mem_flags flags = is_read_access() && is_write_access() ?
-      CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR
-      : is_read_access() ? CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR
-      : CL_MEM_WRITE_ONLY;
-
     /* Create the OpenCL buffer and copy in it the data from the host if
-       the buffer doesn't already exists */
+       the buffer doesn't already exists or if the data is not up to date
+    */
     auto ctx = task->get_queue()->get_context();
-    buf->copy_in_cl_buffer(task->get_queue()->get_boost_compute(),
-                           ctx, flags, get_size(), array.data());
+    buf->update_buffer_state(ctx, Mode, get_size(), array.data());
   }
 
 
-  /// Copy back the CL buffer to the SYCL if required
+  /// Does nothing
   void copy_back_cl_buffer() {
-    // \todo Use if constexpr in C++17
-    if (is_write_access()) {
-      buf->copy_back_cl_buffer(get_size(), array.data());
-    }
+    /* The copy back is handled by the host accessor and the buffer destructor.
+       We don't need to systematically transfer the data after the
+       kernel execution
+       \todo Figure out what to do with this function
+    */
   }
 #endif
 

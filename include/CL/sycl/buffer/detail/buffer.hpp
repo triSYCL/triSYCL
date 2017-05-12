@@ -213,6 +213,17 @@ public:
   /** The buffer content may be copied back on destruction to some
       final location */
   ~buffer() {
+#ifdef TRISYCL_OPENCL
+    /* We ensure that the host has the most up to date version of the data
+       before the buffer is destroyed. This is necessary because we do not
+       systematically transfer the data back from a device with
+       copy_back_cl_buffer any more.
+    */
+    cl::sycl::context ctx;
+    auto size = access.num_elements() * sizeof(value_type);
+    update_buffer_state(ctx, access::mode::read, size,
+                        access.data());
+#endif
     if (modified && final_write_back)
       (*final_write_back)();
     // Allocate explicitly allocated memory if required

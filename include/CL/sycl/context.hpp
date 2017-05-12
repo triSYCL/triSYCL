@@ -11,20 +11,19 @@
 
 #include <cstddef>
 
-#include "CL/sycl/detail/default_classes.hpp"
-#include "CL/sycl/detail/unimplemented.hpp"
-#include "CL/sycl/device.hpp"
-#include "CL/sycl/device_selector.hpp"
-#include "CL/sycl/exception.hpp"
-#include "CL/sycl/platform.hpp"
-
-#include "CL/sycl/detail/shared_ptr_implementation.hpp"
-#include "CL/sycl/info/context.hpp"
 #include "CL/sycl/context/detail/host_context.hpp"
 #ifdef TRISYCL_OPENCL
 #include "CL/sycl/context/detail/opencl_context.hpp"
 #endif
 
+#include "CL/sycl/detail/default_classes.hpp"
+#include "CL/sycl/detail/shared_ptr_implementation.hpp"
+#include "CL/sycl/detail/unimplemented.hpp"
+#include "CL/sycl/device.hpp"
+#include "CL/sycl/device_selector.hpp"
+#include "CL/sycl/exception.hpp"
+#include "CL/sycl/info/context.hpp"
+#include "CL/sycl/platform.hpp"
 
 namespace cl {
 namespace sycl {
