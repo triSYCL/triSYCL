@@ -41,27 +41,21 @@ auto prevent_arguments_from_optimization = [] (auto & ...args) {
 template <typename KernelName,
           typename Functor>
 __attribute__((noinline))
-__kernel
-void instantiate_kernel(
-#ifdef TRISYCL_GENERATE_KERNEL_CALLER
-      /* If we generate the kernel calling code, pass the task
-         information too */
-                        detail::task &task,
-#endif
-                        Functor f) noexcept {
-#ifdef TRISYCL_GENERATE_KERNEL_CALLER
-  /* Keep the task alive here even through interprocedural dead code
-     elimination because Clang/LLVM do not know that the device
-     compiler will further massage deeply this code by removing the
-     body and replace it by something completely different... */
-  prevent_arguments_from_optimization(task);
-#endif
-
-  /* The outlining compiler is expected to do some massage here and to
-     insert some calls to \c serialize_arg and so on using \c k and \c
-     q */
+void instantiate_kernel(Functor f) {
+  /* The outlining compiler is expected to do some massage here or
+     around and to insert some calls to \c serialize_arg and so on */
   f();
 }
+
+
+/** Set the task to be used to launch the kernel
+
+    This is actually a dummy task so that the device compiler can just
+    grab the task for passing it to the argument serialization
+    functions
+*/
+extern void set_kernel_task_marker(detail::task &task);
+
 
 }
 }

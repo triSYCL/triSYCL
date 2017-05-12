@@ -168,7 +168,11 @@ private:
     task->schedule(detail::trace_kernel<KernelName>([=, t = task] () mutable {
           if (t->owner_queue->is_host())
             k();
-          else
+          else {
+            /** Setup the task to be used to launch the kernel.
+
+                This is used by the outlining compiler. */
+            detail::set_kernel_task_marker(*t);
             /* A simplified version for the device just to be able to
                extract the kernel itself.
 
@@ -179,13 +183,8 @@ private:
                which makes sense for CPU emulation or FPGA pipelined
                execution.
             */
-            ::cl::sycl::detail::instantiate_kernel<KernelName>(
-#ifdef TRISYCL_GENERATE_KERNEL_CALLER
-              /* If we generate the kernel calling code, pass the task
-                 information too */
-                                                               *t,
-#endif
-                                                               k);
+            detail::instantiate_kernel<KernelName>(k);
+          }
         }));
   }
 

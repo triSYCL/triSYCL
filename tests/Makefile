@@ -43,6 +43,7 @@ LDLIBS += -lOpenCL
 #CXXFLAGS += -g
 # With optimization and without assertions
 CXXFLAGS += -O3 -DNDEBUG
+#CXXFLAGS += -DNDEBUG
 #CXXFLAGS += -g -DTRISYCL_TRACE_KERNEL -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DTRISYCL_TRACE_KERNEL -DTRISYCL_DEBUG_STRUCTORS -DBOOST_LOG_DYN_LINK
@@ -224,13 +225,13 @@ execute: $(basename $(TARGET))
 
 # The LLVM assembly code for the code expected to call the kernels
 %.pre_kernel_caller.ll: %.cpp
-	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl -DTRISYCL_GENERATE_KERNEL_CALLER \
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl \
 	  -emit-llvm -S -o $@ $<
 %.pre_kernel_caller.ll: %.C
-	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl -DTRISYCL_GENERATE_KERNEL_CALLER \
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl \
 	  -emit-llvm -S -o $@ $<
 %.pre_kernel_caller.ll: %.cc
-	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl -DTRISYCL_GENERATE_KERNEL_CALLER \
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl \
 	  -emit-llvm -S -o $@ $<
 
 # The LLVM assembly code for the code before kernels
@@ -271,7 +272,7 @@ execute: $(basename $(TARGET))
 %.kernel_caller.bc: %.pre_kernel_caller.ll
 	opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats \
 	  -globalopt -deadargelim -SYCL-args-flattening \
-	  -SYCL-serialize-arguments-inside -deadargelim -o $@ $<
+	  -SYCL-serialize-arguments -deadargelim -o $@ $<
 
 # Construct the object file of the kernel caller from the target assembly
 # Rely on the default Make built-in rules for now
