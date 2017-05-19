@@ -243,6 +243,31 @@ struct task : public std::enable_shared_from_this<task>,
     return *kernel;
   }
 
+
+  /// Set a kernel argument by address
+  void set_arg(int arg_index, std::size_t arg_size, const void *scalar_value) {
+#ifdef TRISYCL_OPENCL
+    // Forward to the OpenCL kernel
+    get_kernel().get_boost_compute().set_arg(arg_index,
+                                             arg_size,
+                                             scalar_value);
+#else
+    throw non_cl_error("Not compiled with OpenCL support");
+#endif
+  }
+
+
+  /// Set a kernel argument by value
+  template <typename T>
+  void set_arg(int arg_index, const T &scalar_value) {
+#ifdef TRISYCL_OPENCL
+    // Forward to the OpenCL kernel
+    get_kernel().get_boost_compute().set_arg(arg_index, scalar_value);
+#else
+    throw non_cl_error("Not compiled with OpenCL support");
+#endif
+  }
+
 };
 
 }

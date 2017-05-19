@@ -12,6 +12,7 @@
 #include <cstddef>
 #include <memory>
 #include <tuple>
+#include <utility>
 
 #ifdef TRISYCL_OPENCL
 #include <boost/compute.hpp>
@@ -19,9 +20,7 @@
 
 #include "CL/sycl/accessor.hpp"
 #include "CL/sycl/command_group/detail/task.hpp"
-#ifdef TRISYCL_OPENCL
 #include "CL/sycl/detail/instantiate_kernel.hpp"
-#endif
 #include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/exception.hpp"
 #include "CL/sycl/kernel.hpp"
@@ -96,8 +95,7 @@ public:
        by reference and task by reference by side effect */
     task->add_prelude([=, task = task] {
         acc_obj.implementation->copy_in_cl_buffer();
-        task->get_kernel().get_boost_compute()
-          .set_arg(arg_index, acc_obj.implementation->get_cl_buffer());
+        task->set_arg(arg_index, acc_obj.implementation->get_cl_buffer());
       });
     /* After running the kernel, make sure the cl_mem behind this
        accessor is up-to-date on the host if needed */
@@ -115,8 +113,7 @@ public:
     /* Explicitly capture task by copy instead of having this captured
        by reference and task by reference by side effect */
     task->add_prelude([=, task = task] {
-        task->get_kernel().get_boost_compute()
-          .set_arg(arg_index, scalar_value);
+        task->set_arg(arg_index, std::forward<T>(scalar_value));
       });
   }
 
