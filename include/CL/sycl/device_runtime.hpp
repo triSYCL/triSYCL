@@ -3,6 +3,9 @@
 
 /** \file The OpenCL SYCL device-side runtime
 
+    This code is expected to be called once some Clang & LLVM passes
+    of the device compiler has been applied.
+
     Ronan at Keryell point FR
 
     This file is distributed under the University of Illinois Open Source
@@ -38,8 +41,24 @@ namespace sycl {
 /// The device-side runtime
 namespace drt {
 
-/// Some function providing a cl_mem
-extern TRISYCL_GLOBAL_AS void *get_some_cl_mem_hidden_in_a_buffer(const void *);
+/** Some function providing a cl_mem
+
+    It is better to use a weak linkage than having this function with
+    extern linkage:
+
+    - if the device compiler is used the function is kept by the
+      compiler because full link and LTO is not applied before the
+      device compiler passes are applied. So there is no partial
+      evaluation in the compiler according to what is returned by this
+      function;
+
+    - if the device compiler is not used, the code still links and can
+      be compiled.
+*/
+TRISYCL_WEAK_ATTRIB_PREFIX TRISYCL_GLOBAL_AS void *TRISYCL_WEAK_ATTRIB_SUFFIX
+get_some_cl_mem_hidden_in_a_buffer(const void *accessor) {
+  return nullptr;
+}
 
 
 /// SYCL accessor seen from a device perspective

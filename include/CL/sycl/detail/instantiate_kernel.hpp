@@ -50,11 +50,25 @@ void instantiate_kernel(Functor f) {
 
 /** Set the task to be used to launch the kernel
 
-    This is actually a dummy task so that the device compiler can just
-    grab the task for passing it to the argument serialization
-    functions
+    This is actually a dummy function so that the device compiler can
+    just grab the task for passing it to the argument serialization
+    functions from the device runtime.
+
+    It is better to use a weak linkage than having this function with
+    extern linkage:
+
+    - if the device compiler is used the function is kept by the
+      compiler because full link and LTO is not applied before the
+      device compiler passes are applied. So there is no partial
+      evaluation in the compiler according to what is returned by this
+      function;
+
+    - if the device compiler is not used, the code still links and can
+      be compiled.
 */
-extern void set_kernel_task_marker(detail::task &task);
+TRISYCL_WEAK_ATTRIB_PREFIX void TRISYCL_WEAK_ATTRIB_SUFFIX
+set_kernel_task_marker(detail::task &) {
+}
 
 
 }
