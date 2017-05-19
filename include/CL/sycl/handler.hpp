@@ -307,7 +307,7 @@ public:
       \param KernelName is a class type that defines the name to be used for
       the underlying kernel
   */
-  template <typename KernelName,
+  template <typename KernelName = std::nullptr_t,
             int Dimensions,
             typename ParallelForFunctor>
   void parallel_for(nd_range<Dimensions> r,
@@ -383,11 +383,20 @@ public:
 
       \todo Add in the spec a version taking a kernel and a functor,
       to have host fall-back
-
-      \todo To be implemented
   */
-  void single_task(kernel syclKernel) {
-    detail::unimplemented();
+  void single_task(kernel sycl_kernel) {
+    /* For now just use the usual host task system to schedule          \
+       manually the OpenCL kernels instead of using OpenCL event-based  \
+       scheduling                                                       \
+                                                                        \
+       \todo Move the tracing inside the kernel implementation          \
+                                                                        \
+       \todo Simplify this 2 step ugly interface                        \
+    */                                                                  \
+    task->set_kernel(sycl_kernel.implementation);                       \
+    task->schedule(detail::trace_kernel<kernel>([=, t = task] {         \
+          sycl_kernel.implementation->single_task(t, t->get_queue());   \
+        }));                                                            \
   }
 
 
@@ -418,6 +427,7 @@ public:
           sycl_kernel.implementation->parallel_for(t, t->get_queue(),   \
                                                    num_work_items); })); \
   }
+
 
   /* Do not use a template parameter since otherwise the parallel_for
      functor is selected instead of this one

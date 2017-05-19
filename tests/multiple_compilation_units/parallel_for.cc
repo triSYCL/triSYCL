@@ -1,68 +1,57 @@
-/* RUN: %{execute}%s | %{filecheck} %s
-   CHECK: Group id = 0
-   CHECK: Local id = 0 (global id = 0)
-   CHECK: Local id = 1 (global id = 1)
-   CHECK: Group id = 1
-   CHECK: Local id = 0 (global id = 2)
-   CHECK: Local id = 1 (global id = 3)
-   CHECK: Group id = 2
-   CHECK: Local id = 0 (global id = 4)
-   CHECK: Local id = 1 (global id = 5)
-   CHECK: Group id = 3
-   CHECK: Local id = 0 (global id = 6)
-   CHECK: Local id = 1 (global id = 7)
-   CHECK: Group id = 4
-   CHECK: Local id = 0 (global id = 8)
-   CHECK: Local id = 1 (global id = 9)
+/** \file Test that it works with SYCL code in several compute units
 
-   // In other()
-   CHECK: 6 8 11
+
+   RUN: %{execute}%s
+
 */
 #include <vector>
-
-/* The OpenMP based barrier use nested parallelism that makes order of
-   execution in parallel_for_workitem non deterministic so disable it on
-   this test
-*/
-#define TRISYCL_NO_BARRIER
+#include <iostream>
 
 #include <CL/sycl.hpp>
 
-extern void other();
+#include <boost/test/minimal.hpp>
+
+constexpr size_t N = 3;
+using Vector = float[N];
+
+extern void other(Vector &, Vector &, Vector &);
 
 using namespace cl::sycl;
 
-int main() {
+int test_main(int argc, char *argv[]) {
   queue my_queue;
-  const int size = 10;
-  std::vector<int> data(size);
-  const int groupsize = 2;
-/* Put &data[0] instead of data.data() because it is not obvious in the
-   excerpt below it is a vector */
-//////// Start slide
-buffer<int> input(&data[0], size);
-buffer<int> output(size);
-my_queue.submit([&](handler &cgh)
-{
-  auto in_access = input.get_access<access::mode::read>(cgh);
-  auto out_access = output.get_access<access::mode::write>(cgh);
+  constexpr int size = 10;
+  constexpr int groupsize = 2;
+  buffer<int> output { size };
+  my_queue.submit([&](handler &cgh) {
+      auto out_access = output.get_access<access::mode::discard_write>(cgh);
 
-  cgh.parallel_for_work_group<class hierarchical>(nd_range<>(range<>(size),
-                                                             range<>(groupsize)),
-                                                  [=](group<> group)
-  {
-    std::cout << "Group id = " << group.get(0) << std::endl;
-
-    parallel_for_work_item(group, [=](nd_item<1> tile)
-    {
-      std::cout << "Local id = " << tile.get_local(0)
-                << " (global id = " << tile.get_global(0) << ")" << std::endl;
-      out_access[tile] = in_access[tile] * 2;
+      cgh.parallel_for_work_group<class hierarchical>(
+        nd_range<> { range<> { size }, range<> { groupsize } },
+        [=](group<> group) {
+          parallel_for_work_item(group, [=](nd_item<1> tile) {
+              out_access[tile] = 1000*group.get(0) + tile.get_local(0);
+            });
+        });
     });
-  });
-});
-//////// End slide
 
-  other();
+  auto o = output.get_access<access::mode::read>();
+
+  Vector a = { 1, 2, 3 };
+  Vector b = { 5, 6, 8 };
+  Vector c;
+
+
+  other(a, b, c);
+
+  // Check the computation above
+  for (auto g = 0; g != size/groupsize; ++g)
+    for (auto l = 0; l != groupsize; ++l)
+       BOOST_CHECK(o[g*groupsize + l] == g*1000 + l);
+
+  // Check the computation above
+  for (int i = 0; i != N; i++)
+    BOOST_CHECK(c[i] == a[i] + b[i]);
+
   return 0;
 }

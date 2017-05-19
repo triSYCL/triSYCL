@@ -50,7 +50,7 @@ public:
 
       \todo add this method to the specification
   */
-  size_t get_count() {
+  size_t get_count() const {
     // Return the product of the sizes in each dimension
     return std::accumulate(this->cbegin(),
                            this->cend(),

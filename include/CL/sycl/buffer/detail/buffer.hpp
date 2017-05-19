@@ -10,6 +10,7 @@
 */
 
 #include <cstddef>
+#include <memory>
 
 #include <boost/multi_array.hpp>
 // \todo Use C++17 optional when it is mainstream
@@ -52,10 +53,6 @@ public:
 
 private:
 
-  /** If some allocation is requested, it is managed by this multi_array
-      to ease initialization from data */
-  boost::multi_array<non_const_value_type, Dimensions> allocation;
-
   // \todo Replace U and D somehow by T and Dimensions
   // To allow allocation access
   template <typename U,
@@ -64,6 +61,11 @@ private:
             access::target Target /* = access::global_buffer */>
     friend class detail::accessor;
 
+  /** The allocator to be used when some memory is needed
+
+      \todo Implement user-provided allocator
+  */
+  std::allocator<non_const_value_type> alloc;
 
   /** This is the multi-dimensional interface to the data that may point
       to either allocation in the case of storage managed by SYCL itself
@@ -72,12 +74,20 @@ private:
   */
   boost::multi_array_ref<value_type, Dimensions> access;
 
+  /** If some allocation is requested on the host for the buffer
+      memory, this is where the memory is attached to.
+
+      Note that this is uninitialized memory, as stated in SYCL
+      specification.
+  */
+  non_const_value_type *allocation = nullptr;
+
   /* How to copy back data on buffer destruction, can be modified with
      set_final_data( ... )
    */
   boost::optional<std::function<void(void)>> final_write_back;
 
-  // Used to store the shared pointer used to create the buffer
+  // Keep the shared pointer used to create the buffer
   shared_ptr_class<T> input_shared_pointer;
 
 
@@ -93,9 +103,7 @@ private:
 public:
 
   /// Create a new read-write buffer of size \param r
-  buffer(const range<Dimensions> &r) : allocation { r },
-                                       access { allocation }
-                                       {}
+  buffer(const range<Dimensions> &r) : access { allocate_buffer(r) } {}
 
 
   /** Create a new read-write buffer from \param host_data of size
@@ -176,14 +184,11 @@ public:
   /// Create a new allocated 1D buffer from the given elements
   template <typename Iterator>
   buffer(Iterator start_iterator, Iterator end_iterator) :
-    // The size of a multi_array is set at creation time
-    allocation { boost::extents[std::distance(start_iterator, end_iterator)] },
-    access { allocation }
-    // If iterators are const ones, then we do not write back
+    access { allocate_buffer(std::distance(start_iterator, end_iterator)) }
     {
       /* Then assign allocation since this is the only multi_array
          method with this iterator interface */
-      allocation.assign(start_iterator, end_iterator);
+      access.assign(start_iterator, end_iterator);
     }
 
 
@@ -210,6 +215,8 @@ public:
   ~buffer() {
     if (modified && final_write_back)
       (*final_write_back)();
+    // Allocate explicitly allocated memory if required
+    deallocate_buffer();
   }
 
 
@@ -221,12 +228,10 @@ public:
   }
 
 
-  // Use BOOST_DISABLE_ASSERTS at some time to disable range checking
+  /** This method is to be called whenever an accessor is created
 
-
-  /** This method is to be called whenever an acessor is created.
       Its current purpose is to track if an accessor with write access
-      is created and acting acordingly.
+      is created and acting accordingly.
    */
   template <access::mode Mode,
             access::target Target = access::target::host_buffer>
@@ -240,10 +245,23 @@ public:
        ) {
       modified = true;
       if (copy_if_modified) {
+        // Implement the allocate & copy-on-write optimization
         copy_if_modified = false;
         data_host = false;
-        allocation = boost::multi_array<T, Dimensions> { access };
-        access = boost::multi_array_ref<T, Dimensions> { allocation };
+        // Since \c allocate_buffer() changes \c access, keep a copy first
+        auto current_access = access;
+        /* The range is actually computed from \c access itself, so
+           save it */
+        auto current_range = get_range();
+        allocate_buffer(current_range);
+        /* Then move everything to the new place
+
+           \todo Use std::uninitialized_move instead, when we switch
+           to full C++17
+        */
+        std::copy(current_access.begin(),
+                  current_access.end(),
+                  access.begin());
       }
     }
   }
@@ -287,7 +305,8 @@ public:
   }
 
 
-  /** Set the weak pointer as destination for write-back on buffer destruction.
+  /** Set the weak pointer as destination for write-back on buffer
+      destruction
   */
   void set_final_data(std::weak_ptr<T> && final_data) {
     final_write_back = [=] {
@@ -315,13 +334,15 @@ public:
   }
 
 
-  /** Provide destination for write-back on buffer destruction as an iterator.
+  /** Provide destination for write-back on buffer destruction as an
+      iterator
   */
   template <typename Iterator>
   void set_final_data(Iterator final_data) {
  /*   using type_ = typename iterator_value_type<Iterator>::value_type;
     static_assert(std::is_same<type_, T>::value, "buffer type mismatch");
-    static_assert(!(std::is_const<type_>::value), "const iterator is not allowed");*/
+    static_assert(!(std::is_const<type_>::value),
+                  "const iterator is not allowed");*/
     final_write_back = [=] {
       std::copy_n(access.data(), access.num_elements(), final_data);
     };
@@ -330,11 +351,29 @@ public:
 
 private:
 
+  /// Allocate uninitialized buffer memory
+  auto allocate_buffer(const range<Dimensions> &r) {
+    auto count = r.get_count();
+    // Allocate uninitialized memory
+    allocation = alloc.allocate(count);
+    return boost::multi_array_ref<value_type, Dimensions> { allocation, r };
+  }
+
+
+  /// Deallocate buffer memory if required
+  void deallocate_buffer() {
+    if (allocation)
+      alloc.deallocate(allocation, access.num_elements());
+  }
+
+public:
+
   /** Get a \c future to wait from inside the \c cl::sycl::buffer in
       case there is something to copy back to the host
 
       \return A \c future in the \c optional if there is something to
       wait for, otherwise an empty \c optional
+      \todo Make the function private again
   */
   boost::optional<std::future<void>> get_destructor_future() {
     /* If there is only 1 shared_ptr user of the buffer, this is the
@@ -357,12 +396,15 @@ private:
     return boost::none;
   }
 
+private:
 
   // Allow buffer_waiter destructor to access get_destructor_future()
   // friend detail::buffer_waiter<T, Dimensions>::~buffer_waiter();
   /* \todo Work around to Clang bug
      https://llvm.org/bugs/show_bug.cgi?id=28873 cannot use destructor
      here */
+  /* \todo solve the fact that get_destructor_future is not accessible
+     when private and buffer_waiter uses a custom allocator */
   friend detail::buffer_waiter<T, Dimensions>;
 
 };

@@ -37,3 +37,4 @@ buffer \"c\" use_count\\(\\) is: 20
 buffer \"a\" use_count\\(\\) is: 20
 buffer \"z\" use_count\\(\\) is: 20
 buffer \"z\" is read_only: 0")
+declare_trisycl_test(TARGET uninitialized_buffer)
