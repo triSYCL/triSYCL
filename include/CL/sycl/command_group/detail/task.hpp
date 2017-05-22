@@ -187,7 +187,7 @@ struct task : public std::enable_shared_from_this<task>,
 
     /* If the buffer is to be produced by a task, add the task in the
        producer list to wait on it before running the task core */
-    if (latest_producer)
+    if (latest_producer && latest_producer != shared_from_this())
       producer_tasks.push_back(latest_producer);
   }
 

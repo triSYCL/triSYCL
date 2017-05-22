@@ -1,80 +1,60 @@
-#ifndef TRISYCL_SYCL_OPENCL_TYPE_HPP
-#define TRISYCL_SYCL_OPENCL_TYPE_HPP
+#ifndef TRISYCL_SYCL_TYPES_SCALAR_HPP
+#define TRISYCL_SYCL_TYPES_SCALAR_HPP
 
-/** \file
-    triSYCL wrapper for OpenCL types
+#include "CL/sycl/vec.hpp"
 
-    Joan DOT Thibault AT ens-rennes DOT fr
-
-    This file is distributed under the University of Illinois Open Source
-    License. See LICENSE.TXT for details.
-*/
-
-// Only provide OpenCL interoperability types when OpenCL is in use
-#ifdef TRISYCL_OPENCL
-
-#include <boost/compute.hpp>
+#include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/control/if.hpp>
+#include <boost/preprocessor/tuple/to_list.hpp>
+#include <boost/preprocessor/tuple/elem.hpp>
+#include <boost/preprocessor/comparison/equal.hpp>
+#include <boost/preprocessor/list/for_each.hpp>
 
 namespace cl {
 namespace sycl {
 
-/** Implement OpenCL interoperability types
 
-    \todo Implement all of them
-*/
+# define TYPE_NAME(T)         BOOST_PP_TUPLE_ELEM(2, 0, T)
+# define TYPE_CL_NAME(T)      BOOST_PP_TUPLE_ELEM(2, 1, T)
 
-/** Wrapper of Boost::compute's cl_float3
- */
-class cl_float3 {
+# define SIZED_NAME(T, size)                     \
+  BOOST_PP_IF(                                   \
+    BOOST_PP_EQUAL(size, 1), T,                  \
+    BOOST_PP_CAT(T, size))
 
-  ::cl_float3 self;
+# define SCALAR_TYPES                            \
+  BOOST_PP_TUPLE_TO_LIST(                        \
+    10,                                          \
+    (                                            \
+      ( char   ,cl_char),                        \
+      ( uchar  ,cl_uchar),                       \
+      ( short  ,cl_short),                       \
+      ( ushort ,cl_ushort),                      \
+      ( int    ,cl_int),                         \
+      ( uint   ,cl_uint),                        \
+      ( long   ,cl_long),                        \
+      ( ulong  ,cl_ulong),                       \
+      ( float  ,cl_float),                       \
+      ( double ,cl_double)                       \
+      )                                          \
+    )                                            \
 
-public :
+# define TYPEDEF_TYPE(scalar, i)                 \
+  using SIZED_NAME(TYPE_CL_NAME(scalar), i) =    \
+        BOOST_PP_CAT(TYPE_NAME(scalar), i);
 
-  cl_float3 () = default;
+#define DECLARE_CL_TYPES(r, data, scalar)        \
+  TYPEDEF_TYPE(scalar, 1)                        \
+  TYPEDEF_TYPE(scalar, 2)                        \
+  TYPEDEF_TYPE(scalar, 3)                        \
+  TYPEDEF_TYPE(scalar, 4)                        \
+  TYPEDEF_TYPE(scalar, 8)                        \
+  TYPEDEF_TYPE(scalar, 16)                       \
 
+BOOST_PP_LIST_FOR_EACH(DECLARE_CL_TYPES, _, SCALAR_TYPES)
 
-  cl_float3 (::cl_float3 self_) : self { self_ }
-  {}
-
-
-  cl_float3 (float x, float y, float z) : self { x, y, z }
-  {}
-
-
-  /* Return the first element of the vector
-   */
-  auto& x() {
-    return self.s[0];
-  }
-
-
-  /* Return the second element of the vector
-   */
-  auto& y() {
-    return self.s[1];
-  }
-
-
-  /* Return the third element of the vector
-   */
-  auto& z() {
-    return self.s[2];
-  }
-
-};
 
 }
 }
 
-#endif
-
-/*
-    # Some Emacs stuff:
-    ### Local Variables:
-    ### ispell-local-dictionary: "american"
-    ### eval: (flyspell-prog-mode)
-    ### End:
-*/
-
-#endif //  TRISYCL_SYCL_OPENCL_TYPE_HPP
+#endif // TRISYCL_SYCL_TYPES_SCALAR_HPP
