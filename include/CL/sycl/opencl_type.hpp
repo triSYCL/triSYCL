@@ -13,16 +13,7 @@
 namespace cl {
 namespace sycl {
 
-
-# define TYPE_NAME(T)         BOOST_PP_TUPLE_ELEM(2, 0, T)
-# define TYPE_CL_NAME(T)      BOOST_PP_TUPLE_ELEM(2, 1, T)
-
-# define SIZED_NAME(T, size)                     \
-  BOOST_PP_IF(                                   \
-    BOOST_PP_EQUAL(size, 1), T,                  \
-    BOOST_PP_CAT(T, size))
-
-# define SCALAR_TYPES                            \
+#define SCALAR_TYPES                             \
   BOOST_PP_TUPLE_TO_LIST(                        \
     10,                                          \
     (                                            \
@@ -39,7 +30,15 @@ namespace sycl {
       )                                          \
     )                                            \
 
-# define TYPEDEF_TYPE(scalar, i)                 \
+#define TYPE_NAME(T)         BOOST_PP_TUPLE_ELEM(2, 0, T)
+#define TYPE_CL_NAME(T)      BOOST_PP_TUPLE_ELEM(2, 1, T)
+
+#define SIZED_NAME(T, size)                      \
+  BOOST_PP_IF(                                   \
+    BOOST_PP_EQUAL(size, 1), T,                  \
+    BOOST_PP_CAT(T, size))
+
+#define TYPEDEF_TYPE(scalar, i)                  \
   using SIZED_NAME(TYPE_CL_NAME(scalar), i) =    \
         BOOST_PP_CAT(TYPE_NAME(scalar), i);
 
@@ -54,7 +53,7 @@ namespace sycl {
 BOOST_PP_LIST_FOR_EACH(DECLARE_CL_TYPES, _, SCALAR_TYPES)
 
 
-}
-}
+} // sycl
+} // cl
 
 #endif // TRISYCL_SYCL_TYPES_SCALAR_HPP
