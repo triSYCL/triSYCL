@@ -11,6 +11,7 @@
 
 #include <cstddef>
 #include <memory>
+#include <type_traits>
 
 #include <boost/multi_array.hpp>
 // \todo Use C++17 optional when it is mainstream
@@ -217,13 +218,13 @@ public:
     /* We ensure that the host has the most up-to-date version of the data
        before the buffer is destroyed. This is necessary because we do not
        systematically transfer the data back from a device with
-       copy_back_cl_buffer any more.
+       \c copy_back_cl_buffer any more.
        \todo Optimize for the case the buffer is not based on host memory
     */
     cl::sycl::context ctx;
     auto size = access.num_elements() * sizeof(value_type);
-    update_buffer_state(ctx, access::mode::read, size,
-                        access.data());
+    call_update_buffer_state(ctx, access::mode::read, size, access.data());
+
 #endif
     if (modified && final_write_back)
       (*final_write_back)();
@@ -377,6 +378,26 @@ private:
     if (allocation)
       alloc.deallocate(allocation, access.num_elements());
   }
+
+  /** Function pair to work around the fact that T might be a \c const type.
+      We call update_buffer_state only if T is not \c const, we have to
+      use \c enable_if otherwise the compiler will try to cast \c const
+      \c void* to \c void* if we create a buffer with a \c const type
+
+      \todo Use \c if \c constexpr when it is available with C++17
+  */
+  template <typename TD>
+  std::enable_if_t<!std::is_const<T>::value>
+  call_update_buffer_state(cl::sycl::context ctx, access::mode mode,
+                           size_t size, TD* data) {
+    update_buffer_state(ctx, mode, size, data);
+  }
+
+  template <typename TD>
+  std::enable_if_t<std::is_const<T>::value>
+  call_update_buffer_state(cl::sycl::context ctx, access::mode mode,
+                           size_t size, TD* data) { }
+
 
 public:
 

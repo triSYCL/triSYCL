@@ -70,7 +70,7 @@ auto test2 = [](auto program, auto b_queue) {
 
   auto acc1 = A.get_access<access::mode::discard_write>();
 
-  for (int i = 0; i < N; ++i) acc1[i] += 1;
+  for (size_t i = 0; i < N; ++i) acc1[i] += 1;
 
   VERIFY_COND(A.is_data_up_to_date(host_context));
   VERIFY_COND(!A.is_data_up_to_date(device_context));
