@@ -152,9 +152,10 @@ public:
 
 
 #ifdef TRISYCL_OPENCL
-  /** Return the underlying cl_context object, after retaining the cl_context.
+  /** Return the underlying \c cl_context object, after retaining
+      the \c cl_context.
 
-     Retains a reference to the returned cl_context object.
+     Retains a reference to the returned \c cl_context object.
 
      Caller should release it when finished.
   */
@@ -162,7 +163,9 @@ public:
     return implementation->get();
   }
 
-  /// Return the underlying boost::compute::context of the cl::sycl::context
+  /** Return the underlying \c boost::compute::context
+      of the \c cl::sycl::context
+  */
   boost::compute::context &get_boost_compute() const {
     return implementation->get_boost_compute();
   }

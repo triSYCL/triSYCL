@@ -68,12 +68,12 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
       waiting */
   boost::optional<std::promise<void>> notify_buffer_destructor;
 
-  /// To track contexts in which the data is up to date
+  /// To track contexts in which the data is up-to-date
   std::unordered_set<cl::sycl::context> fresh_ctx;
 
 #ifdef TRISYCL_OPENCL
-  /** Buffer side cache that keeps the boost::compute::buffer (and the
-      underlying cl_buffer) so that if the buffer already exists inside
+  /** Buffer-side cache that keeps the \c boost::compute::buffer (and the
+      underlying \c cl_buffer ) so that if the buffer already exists inside
       the same context it is not recreated.
    */
   std::unordered_map<cl::sycl::context, boost::compute::buffer> buffer_cache;
@@ -165,7 +165,7 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
   }
 
 
-  /** Create a boost::compute::buffer for this cl::sycl::buffer in the
+  /** Create a \c boost::compute::buffer for this \c cl::sycl::buffer in the
       cache and associate it with a given context
   */
   void create_in_cache(const cl::sycl::context& ctx, size_t size,
@@ -180,13 +180,14 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
 
 
   /** Transfer the most up-to-date version of the data to the host
-      if the hosts version is not already up-to-date
+      if the host version is not already up-to-date
   */
   void sync_with_host(std::size_t size, void* data) {
     cl::sycl::context host_context;
     if (!is_data_up_to_date(host_context) && !fresh_ctx.empty()) {
-      // We know that the context(s) in fresh_ctx hold the most recent version
-      // of the buffer
+      /* We know that the context(s) in \c fresh_ctx hold the most recent
+         version of the buffer
+      */
       auto fresh_context = *(fresh_ctx.begin());
       auto fresh_q = fresh_context.get_boost_queue();
       fresh_q.enqueue_read_buffer(buffer_cache[fresh_context], 0, size, data);
@@ -201,10 +202,10 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
   */
   void update_buffer_state(const cl::sycl::context& target_ctx,
                            access::mode mode, std::size_t size, void* data) {
-    /* The cl_buffer we put in the cache might get accessed again in the future,
-       this means that we have to always to create it in read/write mode to
-       be able to write to it if it is accessed through a write accessor
-       in the future
+    /* The \c cl_buffer we put in the cache might get accessed again in the
+       future, this means that we have to always to create it in read/write
+       mode to be able to write to it if it is accessed through a
+       write accessor in the future
      */
     auto constexpr flag = CL_MEM_READ_WRITE;
 
@@ -277,7 +278,7 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
       }
 
       /* When in discard mode we don't need to transfer any data, we just create
-         the cl_buffer if it doesn't exist in the cache
+         the \c cl_buffer if it doesn't exist in the cache
       */
       if (   mode == access::mode::discard_write
           || mode == access::mode::discard_read_write) {
@@ -285,9 +286,9 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
            but without copying any data because of the discard mode
         */
         if (!target_ctx.is_host() && !is_cached(target_ctx)) {
-          // If the context doesn't exist we create it
+          // If the context doesn't exist we create it.
           /* We don't want to transfer any data so we don't
-             add CL_MEM_COPY_HOST_PTR
+             add \c CL_MEM_COPY_HOST_PTR
           */
           create_in_cache(target_ctx, size, flag, 0);
         }

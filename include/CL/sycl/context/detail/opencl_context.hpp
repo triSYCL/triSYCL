@@ -47,13 +47,15 @@ class opencl_context : public detail::context {
 
 public:
 
-  /// Return the underlying cl_context of the cl::sycl::context
+  /// Return the underlying \c cl_context of the \c cl::sycl::context
   cl_context get() const override {
     return c.get();
   }
 
 
-  /// Return the underlying boost::compute::context of the cl::sycl::context
+  /** Return the underlying \c boost::compute::context
+      of the \c cl::sycl::context
+  */
   boost::compute::context &get_boost_compute() override {
     return c;
   }
@@ -71,7 +73,7 @@ public:
   }
 
 #if 0
-  /** Query the context for OpenCL info::context info
+  /** Query the context for OpenCL \c info::context info
 
       Return synchronous errors via the SYCL exception class.
 
@@ -106,7 +108,7 @@ public:
     return {};
   }
 
-  /// Get a singleton instance of the opencl_context
+  /// Get a singleton instance of the \c opencl_context
   static std::shared_ptr<opencl_context>
   instance(const boost::compute::context &c) {
     return cache.get_or_register(c.get(),

@@ -530,7 +530,7 @@ public:
   }
 
 
-  /** Check if the data stored in the buffer is up to date in a certain context
+  /** Check if the data stored in the buffer is up-to-date in a certain context
    */
   bool is_data_up_to_date(cl::sycl::context& ctx) {
     return implementation->implementation->is_data_up_to_date(ctx);

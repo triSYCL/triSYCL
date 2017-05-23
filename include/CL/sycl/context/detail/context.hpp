@@ -25,13 +25,15 @@ class context {
 public:
 
 #ifdef TRISYCL_OPENCL
-  /// Return the underlying cl_context of the cl::sycl::context
+  /// Return the underlying \c cl_context of the \c cl::sycl::context
   virtual cl_context get() const = 0;
 
-  /// Return the underlying boost::compute::context of the cl::sycl::context
+  /** Return the underlying \c boost::compute::context
+      of the \c cl::sycl::context
+  */
   virtual boost::compute::context &get_boost_compute() = 0;
 
-  /** Return the underlying boost::compute::command_queue associated
+  /** Return the underlying \c boost::compute::command_queue associated
       with the context
   */
   virtual boost::compute::command_queue &get_boost_queue() = 0;

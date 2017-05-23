@@ -35,7 +35,7 @@ class host_context : public detail::context,
 public:
 
 #ifdef TRISYCL_OPENCL
-  /** Return the underlying cl_context of the cl::sycl::context
+  /** Return the underlying \c cl_context of the \c cl::sycl::context
 
       This throws an error since there is no OpenCL context associated
       to the host device.
@@ -47,8 +47,8 @@ public:
 
   /** Return the SYCL platform that the context is initialized for
 
-      This throws an error since there is no boost::compute context associated
-      to the host device.
+      This throws an error since there is no \c boost::compute context
+      associated to the host device.
   */
   boost::compute::context &get_boost_compute() override {
     throw non_cl_error("The host context has no boost context");
@@ -57,7 +57,7 @@ public:
 
   /** Return the queue that is associated to the context
 
-      This throws an error since there is no boost::command_queue context
+      This throws an error since there is no \c boost::command_queue context
       associated to the host device.
   */
   boost::compute::command_queue &get_boost_queue() override {
@@ -84,7 +84,7 @@ public:
   }
 
 #if 0
-  /** Query the context for OpenCL info::context info
+  /** Query the context for OpenCL \c info::context info
 
       Return synchronous errors via the SYCL exception class.
 

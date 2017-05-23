@@ -23,7 +23,7 @@ auto test1 = [](auto program, auto b_queue) {
   cl::sycl::context host_context;
   cl::sycl::context device_context = q.get_context();
 
-  buffer<int> A {std::begin(a), std::end(a)};
+  buffer<int> A { std::begin(a), std::end(a) };
 
   VERIFY_COND(A.is_data_up_to_date(host_context));
   VERIFY_COND(!A.is_data_up_to_date(device_context));
@@ -58,7 +58,7 @@ auto test2 = [](auto program, auto b_queue) {
   cl::sycl::context host_context;
   cl::sycl::context device_context = q.get_context();
 
-  buffer<int> A {std::begin(a), std::end(a)};
+  buffer<int> A { std::begin(a), std::end(a) };
 
   VERIFY_COND(A.is_data_up_to_date(host_context));
   VERIFY_COND(!A.is_data_up_to_date(device_context));
@@ -103,7 +103,7 @@ auto test3 = [](auto program, auto b_queue) {
   cl::sycl::context host_context;
   cl::sycl::context device_context = q.get_context();
 
-  buffer<int> A {std::begin(a), std::end(a)};
+  buffer<int> A { std::begin(a), std::end(a) };
 
   VERIFY_COND(A.is_data_up_to_date(host_context));
   VERIFY_COND(!A.is_data_up_to_date(device_context));
