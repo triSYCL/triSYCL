@@ -32,7 +32,7 @@ class opencl_context : public detail::context {
   /// User the Boost Compute abstraction of the OpenCL context
   boost::compute::context c;
 
-  /** A boost command_queue associated to an OpenCL context for
+  /** A boost \c command_queue associated to an OpenCL context for
       when we need to transfer data but no queue is given
       (eg. When an buffer accessor is created)
   */
