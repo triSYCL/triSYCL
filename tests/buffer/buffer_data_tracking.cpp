@@ -33,9 +33,6 @@ auto test1 = [](auto program, auto b_queue) {
       cgh.parallel_for(N, k);
     });
 
-  VERIFY_COND(A.is_data_up_to_date(host_context));
-  VERIFY_COND(!A.is_data_up_to_date(device_context));
-
   q.wait();
 
   VERIFY_COND(!A.is_data_up_to_date(host_context));
@@ -48,6 +45,7 @@ auto test1 = [](auto program, auto b_queue) {
 
   for (auto e : acc)
     std::cout << e << " ";
+  std::cout << std::endl;
 };
 
 auto test2 = [](auto program, auto b_queue) {
@@ -92,6 +90,7 @@ auto test2 = [](auto program, auto b_queue) {
 
   for (auto e : acc2)
     std::cout << e << " ";
+  std::cout << std::endl;
 };
 
 
