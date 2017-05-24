@@ -119,7 +119,7 @@ public:
 
 private:
 
-  /// Only the instance factory can built it
+  /// Only the instance factory can build it
   opencl_device(const boost::compute::device &d) : d { d } {}
 
 public:

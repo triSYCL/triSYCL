@@ -30,7 +30,7 @@
 namespace cl {
 namespace sycl {
 
-/** \addtogro<T, Dimensions, Mode, Target>up data Data access and storage in SYCL
+/** \addtogroup data Data access and storage in SYCL
     @{
 */
 
@@ -521,6 +521,21 @@ public:
     implementation->implementation->set_final_data(nullptr);
   }
 
+
+#ifdef TRISYCL_OPENCL
+  /** Check if the buffer is already cached in a certain context
+   */
+  bool is_cached(cl::sycl::context& ctx) {
+    return implementation->implementation->is_cached(ctx);
+  }
+
+
+  /** Check if the data stored in the buffer is up-to-date in a certain context
+   */
+  bool is_data_up_to_date(cl::sycl::context& ctx) {
+    return implementation->implementation->is_data_up_to_date(ctx);
+  }
+#endif
 
   /** Set destination of buffer data on destruction.
 

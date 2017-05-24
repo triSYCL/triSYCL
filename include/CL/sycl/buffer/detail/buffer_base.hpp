@@ -11,16 +11,20 @@
 */
 
 #include <atomic>
+#ifdef TRISYCL_OPENCL
+#include <boost/compute.hpp>
+#endif
+// \todo Use C++17 optional when it is mainstream
+#include <boost/optional.hpp>
 #include <condition_variable>
 #include <future>
 #include <memory>
 #include <mutex>
+#include <unordered_set>
 #include <utility>
 
-// \todo Use C++17 optional when it is mainstream
-#include <boost/optional.hpp>
-
-#include "CL/sycl/access.hpp"
+#include "CL/sycl/command_group/detail/task.hpp"
+#include "CL/sycl/context.hpp"
 
 namespace cl {
 namespace sycl {
@@ -28,6 +32,10 @@ namespace sycl {
 class handler;
 
 namespace detail {
+
+/** \addtogroup data Data access and storage in SYCL
+    @{
+*/
 
 struct task;
 struct buffer_base;
@@ -60,9 +68,23 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
       waiting */
   boost::optional<std::promise<void>> notify_buffer_destructor;
 
+  /// To track contexts in which the data is up-to-date
+  std::unordered_set<cl::sycl::context> fresh_ctx;
 
-  /// Create a buffer base
-  buffer_base() : number_of_users { 0 } {}
+#ifdef TRISYCL_OPENCL
+  /** Buffer-side cache that keeps the \c boost::compute::buffer (and the
+      underlying \c cl_buffer ) so that if the buffer already exists inside
+      the same context it is not recreated.
+   */
+  std::unordered_map<cl::sycl::context, boost::compute::buffer> buffer_cache;
+#endif
+
+  /** Create a buffer base and marks the host context as the context that
+      holds the most recent version of the data
+      \todo Use lazy allocation for the context tracking set
+   */
+  buffer_base() : number_of_users { 0 },
+                  fresh_ctx { cl::sycl::context {} } {}
 
 
   /// The destructor wait for not being used anymore
@@ -129,7 +151,168 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
                               is_write_mode);
   }
 
+
+#ifdef TRISYCL_OPENCL
+  /// Check if the data of this buffer is up-to-date in a certain context
+  bool is_data_up_to_date(const cl::sycl::context& ctx) {
+    return fresh_ctx.count(ctx);
+  }
+
+
+  /// Check if the buffer is already cached for a certain context
+  bool is_cached(const cl::sycl::context& ctx) {
+    return buffer_cache.count(ctx);
+  }
+
+
+  /** Create a \c boost::compute::buffer for this \c cl::sycl::buffer in the
+      cache and associate it with a given context
+  */
+  void create_in_cache(const cl::sycl::context& ctx, size_t size,
+                       cl_mem_flags flags, void* data) {
+    buffer_cache[ctx] = boost::compute::buffer
+      { ctx.get_boost_compute(),
+        size,
+        flags,
+        data
+      };
+  }
+
+
+  /** Transfer the most up-to-date version of the data to the host
+      if the host version is not already up-to-date
+  */
+  void sync_with_host(std::size_t size, void* data) {
+    cl::sycl::context host_context;
+    if (!is_data_up_to_date(host_context) && !fresh_ctx.empty()) {
+      /* We know that the context(s) in \c fresh_ctx hold the most recent
+         version of the buffer
+      */
+      auto fresh_context = *(fresh_ctx.begin());
+      auto fresh_q = fresh_context.get_boost_queue();
+      fresh_q.enqueue_read_buffer(buffer_cache[fresh_context], 0, size, data);
+      fresh_ctx.insert(host_context);
+    }
+  }
+
+
+  /** When a transfer is requested this function is called, it will
+      update the state of the buffer according to the context in which
+      the accessor is created and the access mode
+  */
+  void update_buffer_state(const cl::sycl::context& target_ctx,
+                           access::mode mode, std::size_t size, void* data) {
+    /* The \c cl_buffer we put in the cache might get accessed again in the
+       future, this means that we have to always to create it in read/write
+       mode to be able to write to it if it is accessed through a
+       write accessor in the future
+     */
+    auto constexpr flag = CL_MEM_READ_WRITE;
+
+    /* The buffer is accessed in read mode, we want to transfer the data only if
+       necessary. We start a transfer if the data on the target context is not
+       up to date and then update the fresh context set.
+     */
+    if (mode == access::mode::read) {
+
+      if (is_data_up_to_date(target_ctx))
+        // If read mode and the data is up-to-date there is nothing to do
+        return;
+
+      // The data is not up-to-date, we need a transfer
+      // We also want to be sure that the host holds the most recent data
+      sync_with_host(size, data);
+
+      if (!target_ctx.is_host()) {
+        // If the target context is a device context
+        if (!is_cached(target_ctx)) {
+          /* If not cached, we create the buffer and copy the data
+             at the same time
+          */
+          create_in_cache(target_ctx, size,
+                          (flag | CL_MEM_COPY_HOST_PTR), data);
+          fresh_ctx.insert(target_ctx);
+          return;
+        }
+
+        /* Else we transfer the data to the existing buffer associated
+           with the target context buffer
+        */
+        auto q = target_ctx.get_boost_queue();
+        q.enqueue_write_buffer(buffer_cache[target_ctx], 0, size, data);
+        fresh_ctx.insert(target_ctx);
+      }
+      return;
+    }
+
+    /* The buffer might be written to, this means that we have to consider
+       every version of the data obsolete except in the target context
+
+       We go through the same process as in read mode but in addition
+       we empty the fresh context set and just add the target context
+
+       If the data is up to date on the target we just have to update
+       the context set and nothing else
+    */
+    if (!is_data_up_to_date(target_ctx)) {
+
+      if (   mode == access::mode::read_write
+          || mode == access::mode::write
+          || mode == access::mode::atomic) {
+        // If the data is not up-to-date in the target context
+        // We want to host to be up-to-date
+        sync_with_host(size, data);
+
+        if (!target_ctx.is_host()) {
+          // If the target context is a device context
+          if (!is_cached(target_ctx)) {
+            create_in_cache(target_ctx, size,
+                            (flag | CL_MEM_COPY_HOST_PTR), data);
+          }
+          else {
+            // We update the buffer associated with the target context
+            auto q = target_ctx.get_boost_queue();
+            q.enqueue_write_buffer(buffer_cache[target_ctx], 0, size, data);
+          }
+        }
+      }
+
+      /* When in discard mode we don't need to transfer any data, we just create
+         the \c cl_buffer if it doesn't exist in the cache
+      */
+      if (   mode == access::mode::discard_write
+          || mode == access::mode::discard_read_write) {
+        /* We only need to create the buffer if it doesn't exist
+           but without copying any data because of the discard mode
+        */
+        if (!target_ctx.is_host() && !is_cached(target_ctx)) {
+          // If the context doesn't exist we create it.
+          /* We don't want to transfer any data so we don't
+             add \c CL_MEM_COPY_HOST_PTR
+          */
+          create_in_cache(target_ctx, size, flag, 0);
+        }
+      }
+    }
+    /* Here we are sure that we are in some kind of write mode,
+       we indicate that all contexts except the target context
+       are not up-to-date anymore
+    */
+    fresh_ctx.clear();
+    fresh_ctx.insert(target_ctx);
+  }
+
+
+  /// Returns the cl_buffer for a given context.
+  boost::compute::buffer get_cl_buffer(const cl::sycl::context& context) {
+    return buffer_cache[context];
+  }
+
+#endif
+
 };
+
+/// @} End the data Doxygen group
 
 }
 }
