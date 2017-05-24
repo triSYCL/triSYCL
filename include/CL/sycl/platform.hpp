@@ -18,13 +18,13 @@
 
 #include "CL/sycl/detail/shared_ptr_implementation.hpp"
 #include "CL/sycl/detail/unimplemented.hpp"
-#include "CL/sycl/device.hpp"
+#include "CL/sycl/info/device.hpp"
+#include "CL/sycl/info/platform.hpp"
 #include "CL/sycl/platform/detail/host_platform.hpp"
 #ifdef TRISYCL_OPENCL
 #include "CL/sycl/platform/detail/opencl_platform.hpp"
 #endif
 #include "CL/sycl/platform/detail/platform.hpp"
-#include "CL/sycl/info/platform.hpp"
 
 namespace cl {
 namespace sycl {
@@ -122,21 +122,6 @@ public:
     return platforms;
   }
 
-#if 0
-  /** Returns all the available devices for this platform, of type device
-      type, which is defaulted to info::device_type::all
-
-      By default returns all the devices.
-
-      \todo To be implemented
-  */
-  vector_class<device>
-  get_devices(info::device_type device_type = info::device_type::all) const {
-    detail::unimplemented();
-    return {};
-  }
-#endif
-
 
   /** Get the OpenCL information about the requested parameter
 
@@ -172,6 +157,18 @@ public:
   bool is_host() const {
     return implementation->is_host();
   }
+
+
+    /** Returns all the available devices for this platform, of type device
+      type, which is defaulted to info::device_type::all
+
+      By default returns all the devices.
+
+      \todo To be implemented
+  */
+  vector_class<device>
+  get_devices(info::device_type device_type = info::device_type::all) const
+  TRISYCL_WEAK_ATTRIB_SUFFIX;
 
 };
 
