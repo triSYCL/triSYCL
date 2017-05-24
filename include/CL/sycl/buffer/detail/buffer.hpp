@@ -379,6 +379,7 @@ private:
       alloc.deallocate(allocation, access.num_elements());
   }
 
+
   /** Function pair to work around the fact that T might be a \c const type.
       We call update_buffer_state only if T is not \c const, we have to
       use \c enable_if otherwise the compiler will try to cast \c const
@@ -386,17 +387,23 @@ private:
 
       \todo Use \c if \c constexpr when it is available with C++17
   */
-  template <typename TD>
-  std::enable_if_t<!std::is_const<T>::value>
-  call_update_buffer_state(cl::sycl::context ctx, access::mode mode,
-                           size_t size, TD* data) {
+  template <typename BaseType = T, typename DataType>
+  void call_update_buffer_state(cl::sycl::context ctx, access::mode mode,
+                                size_t size, DataType* data,
+                                std::enable_if_t<!std::is_const<BaseType>
+                                ::value>* = 0) {
     update_buffer_state(ctx, mode, size, data);
   }
 
-  template <typename TD>
-  std::enable_if_t<std::is_const<T>::value>
-  call_update_buffer_state(cl::sycl::context ctx, access::mode mode,
-                           size_t size, TD* data) { }
+
+  /** Version of \c call_update_buffer_state that does nothing. It is called if
+      the type of the data in the buffer is \c const
+   */
+  template <typename BaseType = T, typename DataType>
+  void call_update_buffer_state(cl::sycl::context ctx, access::mode mode,
+                                size_t size, DataType* data,
+                                std::enable_if_t<std::is_const<BaseType>
+                                ::value>* = 0) { }
 
 
 public:

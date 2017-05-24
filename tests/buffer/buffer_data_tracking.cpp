@@ -1,6 +1,6 @@
 /* RUN: %{execute}%s | %{filecheck} %s
-   CHECK: 0 0 0 
-   CHECK-NEXT: 3 4 5 
+   CHECK: 0 0 0
+   CHECK-NEXT: 3 4 5
    CHECK-NEXT: 1 1 1
 */
 #include <CL/sycl.hpp>
@@ -43,7 +43,7 @@ auto test1 = [](auto program, auto b_queue) {
   VERIFY_COND(!A.is_data_up_to_date(device_context));
 
   for (auto e : acc)
-    std::cout << e << " ";
+    std::cout << " " << e;
   std::cout << std::endl;
 };
 
@@ -88,7 +88,7 @@ auto test2 = [](auto program, auto b_queue) {
   VERIFY_COND(A.is_data_up_to_date(device_context));
 
   for (auto e : acc2)
-    std::cout << e << " ";
+    std::cout << " " << e;
   std::cout << std::endl;
 };
 
@@ -126,7 +126,7 @@ auto test3 = [](auto program, auto b_queue) {
   VERIFY_COND(A.is_data_up_to_date(device_context));
 
   for (auto e : acc)
-    std::cout << e << " ";
+    std::cout << " " << e;
   std::cout << std::endl;
 };
 
