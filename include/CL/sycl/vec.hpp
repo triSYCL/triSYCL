@@ -153,7 +153,7 @@ private:
 };
 
   /** A macro to define type alias, such as for type=uchar, size=4 and
-      real_type=unsigned char, uchar4 is equivalent to vec<float, 4>
+      actual_type=unsigned char, uchar4 is equivalent to vec<unsigned char, 4>
   */
 #define TRISYCL_DEFINE_VEC_TYPE_SIZE(type, size, actual_type) \
   using type##size = vec<actual_type, size>;

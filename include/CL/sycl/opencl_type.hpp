@@ -28,7 +28,7 @@ namespace sycl {
       ( float  ,cl_float),                       \
       ( double ,cl_double)                       \
       )                                          \
-    )                                            \
+    )
 
 #define TYPE_NAME(T)         BOOST_PP_TUPLE_ELEM(2, 0, T)
 #define TYPE_CL_NAME(T)      BOOST_PP_TUPLE_ELEM(2, 1, T)
