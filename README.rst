@@ -1,6 +1,9 @@
 triSYCL
 +++++++
 
+.. image:: https://travis-ci.org/triSYCL/triSYCL.svg?branch=master
+    :target: https://travis-ci.org/triSYCL/triSYCL
+
 News
 ----
 
