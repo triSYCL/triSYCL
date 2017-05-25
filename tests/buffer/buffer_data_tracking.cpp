@@ -1,6 +1,5 @@
 /* RUN: %{execute}%s | %{filecheck} %s
-   CHECK: Result:
-   CHECK-NEXT: 0 0 0
+   CHECK: 0 0 0
    CHECK-NEXT: 3 4 5
    CHECK-NEXT: 1 1 1
 */
@@ -33,9 +32,6 @@ auto test1 = [](auto program, auto b_queue) {
       cgh.parallel_for(N, k);
     });
 
-  VERIFY_COND(A.is_data_up_to_date(host_context));
-  VERIFY_COND(!A.is_data_up_to_date(device_context));
-
   q.wait();
 
   VERIFY_COND(!A.is_data_up_to_date(host_context));
@@ -47,7 +43,8 @@ auto test1 = [](auto program, auto b_queue) {
   VERIFY_COND(!A.is_data_up_to_date(device_context));
 
   for (auto e : acc)
-    std::cout << e << " ";
+    std::cout << " " << e;
+  std::cout << std::endl;
 };
 
 auto test2 = [](auto program, auto b_queue) {
@@ -70,7 +67,7 @@ auto test2 = [](auto program, auto b_queue) {
 
   auto acc1 = A.get_access<access::mode::discard_write>();
 
-  for (int i = 0; i < N; ++i) acc1[i] += 1;
+  for (size_t i = 0; i < N; ++i) acc1[i] += 1;
 
   VERIFY_COND(A.is_data_up_to_date(host_context));
   VERIFY_COND(!A.is_data_up_to_date(device_context));
@@ -91,7 +88,8 @@ auto test2 = [](auto program, auto b_queue) {
   VERIFY_COND(A.is_data_up_to_date(device_context));
 
   for (auto e : acc2)
-    std::cout << e << " ";
+    std::cout << " " << e;
+  std::cout << std::endl;
 };
 
 
@@ -128,7 +126,7 @@ auto test3 = [](auto program, auto b_queue) {
   VERIFY_COND(A.is_data_up_to_date(device_context));
 
   for (auto e : acc)
-    std::cout << e << " ";
+    std::cout << " " << e;
   std::cout << std::endl;
 };
 
