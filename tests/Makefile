@@ -146,6 +146,7 @@ multiple_compilation_units/parallel_for: multiple_compilation_units/parallel_for
 
 # Compile some kernels to SPIR as an "order-only" prerequisite:
 SPIR/opencl_kernel_vector_add_args: | SPIR/vector_add.spir64
+SPIR/opencl_kernel_output_42: | SPIR/output_42.spir64
 SPIR/single_task_vector_increment_drt: | SPIR/add_42.spir64
 
 ifdef XILINX_SDX
