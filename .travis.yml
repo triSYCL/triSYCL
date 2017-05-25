@@ -4,6 +4,7 @@ language: cpp
 
 services:
     - docker
+
 env:
   matrix:
     - CC_BUILD=gcc-6
@@ -16,10 +17,34 @@ env:
       OPENMP=ON
       OPENCL=OFF
 
+    - CC_BUILD=gcc-6
+      CXX_BUILD=g++-6
+      OPENMP=ON
+      OPENCL=ON
+
+    - CC_BUILD=clang-4.0
+      CXX_BUILD=clang++-4.0
+      OPENMP=ON
+      OPENCL=ON
+
 before_install:
-    - docker build -t trisycl .
+    - |
+      if [[ ${TRAVIS_PULL_REQUEST} == "false" ]]; then
+         export GIT_SLUG=${TRAVIS_REPO_SLUG}
+         export GIT_BRANCH=${TRAVIS_BRANCH}
+      else
+         export GIT_SLUG=${TRAVIS_PULL_REQUEST_SLUG}
+         export GIT_BRANCH=${TRAVIS_PULL_REQUEST_BRANCH}
+      fi
+    - echo "Git repo | branch -> ${GIT_SLUG} | ${GIT_BRANCH}"
+    - docker build --build-arg cxx_compiler=${CXX_BUILD}
+                   --build-arg c_compiler=${CC_BUILD}
+                   --build-arg git_branch=${GIT_BRANCH}
+                   --build-arg git_slug=${GIT_SLUG}
+                   --build-arg openmp=${OPENMP}
+                   --build-arg opencl=${OPENCL} -t trisycl .
     - docker ps -a
     - docker images
 
 script:
-    - docker run -e COMPILER=${CXX_BUILD} -e C_COMPILER=${CC_BUILD} -e OPENMP=${OPENMP} -e OPENCL=${OPENCL} trisycl
+    - docker run trisycl
