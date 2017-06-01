@@ -162,6 +162,8 @@ private:
   template <typename KernelName,
             typename Kernel>
   void schedule_kernel(Kernel k) {
+    /* Explicitly capture task by copy instead of having this captured
+       by reference and task by reference by side effect */
     task->schedule(detail::trace_kernel<KernelName>([=, t = task] () mutable {
           if (t->owner_queue->is_host())
             k();
@@ -181,6 +183,8 @@ private:
                execution.
             */
             detail::instantiate_kernel<KernelName>(k);
+            // \todo for now only deal with 1 physical work-item only
+            t->get_kernel().single_task(t, t->get_queue());
           }
         }));
   }

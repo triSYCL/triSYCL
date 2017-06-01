@@ -13,7 +13,9 @@
 */
 
 #include <algorithm>
+#include <map>
 #include <memory>
+#include <vector>
 
 #ifdef TRISYCL_OPENCL
 #include <boost/compute.hpp>
@@ -124,11 +126,18 @@ serialize_arg(detail::task &task,
               void *arg,
               std::size_t arg_size) {
   std::cerr << "serialize_arg" << std::endl;
-  //task.get_kernel().get_boost_compute().set_arg(index, arg_size, arg);
+  task.set_arg(index, arg_size, arg);
 }
 
 
-/** Launch the kernel
+/** The code of the kernels arranged by name
+
+  \todo use std::byte when moving to C++17
+*/
+std::map<std::string, std::vector<unsigned char>> kernel_IR;
+
+
+/** Set the kernel for a later invocation
 
     \param[in] task is the implementation detail of a triSYCL kernel
 
@@ -136,10 +145,21 @@ serialize_arg(detail::task &task,
     the kernel to call
 */
 TRISYCL_WEAK_ATTRIB_PREFIX void TRISYCL_WEAK_ATTRIB_SUFFIX
-launch_kernel(detail::task &task,
-              const char *kernel_name) {
-  std::cerr << kernel_name << std::endl;
-  //task.launch_kernel(kernel_name);
+set_kernel(detail::task &task,
+           const char *kernel_name) {
+  std::cerr << "Launch " << kernel_name << std::endl;
+  // \todo Add kernel caching per device
+  auto binary = kernel_IR[kernel_name];
+  auto context = task.get_queue()->get_boost_compute().get_context();
+  // Construct an OpenCL program from the precompiled kernel file
+  auto program = boost::compute::program::create_with_binary(binary, context);
+  // Build the OpenCL program
+  program.build();
+
+  // Build a SYCL kernel from the OpenCL kernel
+  kernel k { boost::compute::kernel { program, kernel_name } };
+
+  task.set_kernel(k.implementation );
 }
 
 /// @} to end the Doxygen group
