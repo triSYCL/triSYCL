@@ -215,6 +215,13 @@ By reverse chronological order:
 
 - `Post-modern C++17 abstractions for heterogeneous computing with
   Khronos OpenCL SYCL
+  <https://github.com/keryell/ronan/raw/gh-pages/Talks/2017/2017-04-10-Dublin_C++_meetup_SYCL/2017-04-10-Dublin_C++_meetup_SYCL-expose.pdf>`_.
+  Ronan Keryell. `Dublin C++ User Group Meetup
+  <https://www.meetup.com/cppdug/events/238673768/>`_,
+  Dublin, Ireland. April 10, 2017.
+
+- `Post-modern C++17 abstractions for heterogeneous computing with
+  Khronos OpenCL SYCL
   <https://github.com/keryell/ronan/raw/gh-pages/Talks/2017/2017-01-19-Paris_C++_meetup_SYCL/2017-01-19-Paris_C++_meetup_SYCL-expose.pdf>`_.
   Ronan Keryell. `Paris C++ User Group Meetup
   <https://www.meetup.com/User-Group-Cpp-Francophone/events/236788136/>`_,
