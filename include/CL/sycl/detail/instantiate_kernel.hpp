@@ -1,7 +1,11 @@
 #ifndef TRISYCL_SYCL_DETAIL_INSTANTIATE_KERNEL_HPP
 #define TRISYCL_SYCL_DETAIL_INSTANTIATE_KERNEL_HPP
 
-/** \file A function to outline a SYCL kernel at a specific place
+/** \file Some helpers to share information between the SYCL program
+    and the device compiler.
+
+    For example, this brings a function to outline a SYCL kernel at a
+    specific place.
 
     Ronan at Keryell point FR
 
@@ -31,17 +35,22 @@ auto prevent_arguments_from_optimization = [] (auto & ...args) {
 };
 
 
-/** Instantiate the template code
+/** Instantiate the kernel code
 
     To have a clear view of what a kernel is at the LLVM IR level even
     when a lot of optimizations are done (-O3), call the kernel from
-    this function marked as "noinline", otherwise the kernel code is
+    this function marked as \c noinline, otherwise the kernel code is
     inlined directly where it is used.
+
+    Actually some optimizations/code restructuring might duplicate the
+    call to \c instantiate_kernel but the \c noduplicate attribute
+    seems incompatible with \c noinline in Clang/LLVM 3.9.1, because
+    the inlining happen when both attributes are used...
 */
 template <typename KernelName,
           typename Functor>
-__attribute__((noinline))
-void instantiate_kernel(Functor f) {
+__attribute__((noinline)) void
+instantiate_kernel(Functor f) noexcept {
   /* The outlining compiler is expected to do some massage here or
      around and to insert some calls to \c serialize_arg and so on */
   f();
@@ -67,9 +76,37 @@ void instantiate_kernel(Functor f) {
       be compiled.
 */
 TRISYCL_WEAK_ATTRIB_PREFIX void TRISYCL_WEAK_ATTRIB_SUFFIX
-set_kernel_task_marker(detail::task &) {
+set_kernel_task_marker(detail::task &) noexcept {
 }
 
+
+/** Gather in a single function what is necessary for the device
+    compiler to outline the kernel or to set up the kernel and
+    serialize the arguments.
+
+    The \c noinline attribute is used to force this to appear as a
+    real function the device compiler can massage.
+*/
+template <typename KernelName,
+          typename Kernel>
+__attribute__((noinline))
+void launch_device_kernel(detail::task &t,
+                          Kernel k) noexcept {
+  /** Setup the task to be used to launch the kernel.
+
+      This is used by the outlining compiler. */
+  detail::set_kernel_task_marker(t);
+  /* A simplified version for the device just to be able to extract
+     the kernel itself.
+
+     It is not a real outlining but a good approximation to be
+     massaged by a compiler later.
+
+     Put the iteration space loops in the kernels for now, which makes
+     sense for CPU emulation or FPGA pipelined execution.
+  */
+  instantiate_kernel<KernelName>(k);
+}
 
 }
 }

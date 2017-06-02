@@ -134,7 +134,8 @@ serialize_arg(detail::task &task,
 
   \todo use std::byte when moving to C++17
 */
-std::map<std::string, std::vector<unsigned char>> kernel_IR;
+TRISYCL_WEAK_ATTRIB_PREFIX std::map<std::string, std::vector<unsigned char>>
+TRISYCL_WEAK_ATTRIB_SUFFIX kernel_IR;
 
 
 /** Set the kernel for a later invocation

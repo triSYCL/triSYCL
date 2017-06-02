@@ -168,21 +168,8 @@ private:
           if (t->owner_queue->is_host())
             k();
           else {
-            /** Setup the task to be used to launch the kernel.
-
-                This is used by the outlining compiler. */
-            detail::set_kernel_task_marker(*t);
-            /* A simplified version for the device just to be able to
-               extract the kernel itself.
-
-               It is not a real outlining but a good approximation to
-               be massaged by a compiler later.
-
-               Put the iteration space loops in the kernels for now,
-               which makes sense for CPU emulation or FPGA pipelined
-               execution.
-            */
-            detail::instantiate_kernel<KernelName>(k);
+            // Structure the kernel code so it can be outlined and called
+            detail::launch_device_kernel<KernelName>(*t, k);
             // \todo for now only deal with 1 physical work-item only
             t->get_kernel().single_task(t, t->get_queue());
           }
