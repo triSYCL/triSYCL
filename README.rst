@@ -213,6 +213,16 @@ Some presentations and publications related to SYCL
 
 By reverse chronological order:
 
+- `SYCL C++ and OpenCL interoperability experimentation with triSYCL
+  <https://github.com/keryell/ronan/raw/gh-pages/publications/conf/2017/IWOCL-DHCPP/triSYCL/2017-05-16-IWOCL-DHPCC-triSYCL.pdf>`_.
+  Anastasios Doumoulakis, Ronan Keryell & Kenneth
+  O'Brien. `Distributed & Heterogeneous Programming for C/C++ workshop
+  (DHPCC++ 2017)
+  <http://sycl.tech/distributed-heterogeneous-programming-in-c-cpp-dhpccpp17.html>`_,
+  collocated with `IWOCL'17
+  <http://www.iwocl.org/iwocl-2017/conference-program/>`_, Toronto,
+  Canada. May 16, 2017.
+
 - `Post-modern C++17 abstractions for heterogeneous computing with
   Khronos OpenCL SYCL
   <https://github.com/keryell/ronan/raw/gh-pages/Talks/2017/2017-04-10-Dublin_C++_meetup_SYCL/2017-04-10-Dublin_C++_meetup_SYCL-expose.pdf>`_.
