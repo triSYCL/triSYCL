@@ -34,8 +34,10 @@ int test_main(int argc, char *argv[]) {
 
   q.submit([&] (handler &cgh) {
       auto a_output = output.get_access<access::mode::discard_write>(cgh);
-      cgh.single_task([=] {
-          *a_output = 42;
+      cgh.single_task([=,
+                       a_output =
+                       drt::accessor<decltype(a_output)> { a_output }] {
+          a_output[0] = 42;
         });
     });
 
