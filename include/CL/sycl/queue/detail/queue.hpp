@@ -68,7 +68,7 @@ struct queue : detail::debug<detail::queue> {
     if (--running_kernels == 0) {
       /* It was the last kernel running, so signal the queue just in
          case it was working for it for completion */
-      finished.notify_one();
+      finished.notify_all();
     }
   }
 
