@@ -39,7 +39,7 @@ device::get_devices(info::device_type device_type) {
 
   // Return the devices with the good criterion according to the selector
   std::copy_if(devices.begin(), devices.end(), std::back_inserter(sd),
-               [&](const device &e ) { return s(e) >= 0; });
+               [&](const device &e) { return s(e) >= 0; });
   return sd;
 }
 

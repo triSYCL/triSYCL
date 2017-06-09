@@ -159,12 +159,15 @@ public:
   }
 
 
-    /** Returns all the available devices for this platform, of type device
-      type, which is defaulted to info::device_type::all
+  /** Get all the available devices for this platform
 
-      By default returns all the devices.
+      \param[in] device_type is the device type to filter the selection
+      or \c info::device_type::all by default to return all the
+      devices
 
-      \todo To be implemented
+      \return the device list
+
+      \todo To be fully implemented
   */
   vector_class<device>
   get_devices(info::device_type device_type = info::device_type::all) const

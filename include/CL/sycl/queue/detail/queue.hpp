@@ -67,7 +67,12 @@ struct queue : detail::debug<detail::queue> {
     TRISYCL_DUMP_T("A kernel of the queue ended");
     if (--running_kernels == 0) {
       /* It was the last kernel running, so signal the queue just in
-         case it was working for it for completion */
+         case it was working for it for completion
+
+         In some cases two different thread might want to wait on the
+         same queue, because of this \c notify_one might not be enough
+         and a \c notify_all is needed
+      */
       finished.notify_all();
     }
   }
