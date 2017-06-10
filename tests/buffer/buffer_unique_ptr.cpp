@@ -14,7 +14,7 @@ int test_main(int argc, char *argv[]) {
   constexpr size_t N = 16;
 
   // Allocate some memory to test ownership give-away
-  std::unique_ptr<int[]> init { new int[N] };
+  std::unique_ptr<int> init { new int[N] };
   std::iota(init.get(), init.get() + N, 314);
 
   buffer<int> a { std::move(init), N };
