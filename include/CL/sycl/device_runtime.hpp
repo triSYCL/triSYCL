@@ -147,8 +147,10 @@ TRISYCL_WEAK_ATTRIB_SUFFIX kernel_IR;
 */
 TRISYCL_WEAK_ATTRIB_PREFIX void TRISYCL_WEAK_ATTRIB_SUFFIX
 set_kernel(detail::task &task,
-           const char *kernel_name) {
+           const char *kernel_name,
+           const char *kernel_short_name) {
   std::cerr << "Launch " << kernel_name << std::endl;
+  std::cerr << "aka " << kernel_short_name << std::endl;
   // \todo Add kernel caching per device
   auto binary = kernel_IR[kernel_name];
   auto context = task.get_queue()->get_boost_compute().get_context();
