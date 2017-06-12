@@ -261,8 +261,8 @@ execute: $(basename $(TARGET))
 	#  -globaldce -o $@ $<
 	opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats \
 	  -globalopt -deadargelim -argpromotion -deadargelim \
-	  -SYCL-kernel-filter -inSPIRation \
-	  -globaldce -o $@ $<
+	  -SYCL-kernel-filter -globaldce -RELGCD -inSPIRation \
+	  -o $@ $<
 	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -stats -SYCL-kernel-filter \
 	#  -debug -print-after-all -o $@ $<
 	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats -SYCL-kernel-filter \
