@@ -55,7 +55,13 @@
 #endif
 
 #ifdef TRISYCL_DEVICE
+/// Define the SYCL marker according to specification
 #define __SYCL_DEVICE_ONLY__
+// To keep something when in device mode
+#define TRISYCL_DEVICE_ONLY(X) X
+#else
+// Do not keep when not in device mode
+#define TRISYCL_DEVICE_ONLY(X)
 #endif
 
 /// @} End the defaults Doxygen group

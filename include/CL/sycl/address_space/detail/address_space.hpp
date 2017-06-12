@@ -32,16 +32,18 @@
 */
 
 /// Address space for OpenCL __global
-#define TRISYCL_GLOBAL_AS __attribute__((address_space(1)))
+#define TRISYCL_GLOBAL_AS TRISYCL_DEVICE_ONLY(__attribute__((address_space(1))))
 
 /// Address space for OpenCL __local
-#define TRISYCL_LOCAL_AS __attribute__((address_space(3)))
+#define TRISYCL_LOCAL_AS TRISYCL_DEVICE_ONLY(__attribute__((address_space(3))))
 
 /// Address space for OpenCL __constant
-#define TRISYCL_CONSTANT_AS __attribute__((address_space(2)))
+#define TRISYCL_CONSTANT_AS                               \
+  TRISYCL_DEVICE_ONLY(__attribute__((address_space(2))))
 
 /// Address space for OpenCL __generic
-#define TRISYCL_GENERIC_AS __attribute__((address_space(4)))
+#define TRISYCL_GENERIC_AS                                \
+  TRISYCL_DEVICE_ONLY(__attribute__((address_space(4))))
 
 /// Address space for OpenCL __private
 #define TRISYCL_PRIVATE_AS
@@ -67,53 +69,33 @@ struct ocl_type { // NOTE: renamed from opencl_type because of MSVC bug
 /// Add an attribute for __constant address space
 template <typename T>
 struct ocl_type<T, constant_address_space> {
-  using type =
-#ifdef __SYCL_DEVICE_ONLY__
-    TRISYCL_CONSTANT_AS
-#endif
-    T;
+  using type = TRISYCL_CONSTANT_AS T;
 };
 
 #if TRISYCL_CL_LANGUAGE_VERSION >= 200
 /// Add an attribute for __generic address space
 template <typename T>
 struct ocl_type<T, generic_address_space> {
-  using type =
-#ifdef __SYCL_DEVICE_ONLY__
-    TRISYCL_GENERIC_AS
-#endif
-    T;
+  using type = TRISYCL_GENERIC_AS T;
 };
 #endif
 
 /// Add an attribute for __global address space
 template <typename T>
 struct ocl_type<T, global_address_space> {
-  using type =
-#ifdef __SYCL_DEVICE_ONLY__
-    TRISYCL_GLOBAL_AS
-#endif
-    T;
+  using type = TRISYCL_GLOBAL_AS T;
 };
 
 /// Add an attribute for __local address space
 template <typename T>
 struct ocl_type<T, local_address_space> {
-  using type =
-#ifdef __SYCL_DEVICE_ONLY__
-    TRISYCL_LOCAL_AS
-#endif
-    T;
+  using type = TRISYCL_LOCAL_AS T;
 };
 
 /// Add an attribute for __private address space
 template <typename T>
 struct ocl_type<T, private_address_space> {
-  using type =
-#ifdef __SYCL_DEVICE_ONLY__
-    TRISYCL_PRIVATE_AS
-#endif
-    T;
+  using type = TRISYCL_PRIVATE_AS T;
 };
 
 
