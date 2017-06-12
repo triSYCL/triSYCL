@@ -189,7 +189,7 @@ struct task : public std::enable_shared_from_this<task>,
        producer list to wait on it before running the task core
 
        If a buffer is accessed first in write mode and then in read mode,
-       the task will add himself as a producer and will wait for himself
+       the task will add itself as a producer and will wait for itself
        when calling \c wait_for_producers, we avoid this by checking that
        \c latest_producer is not \c this
     */
