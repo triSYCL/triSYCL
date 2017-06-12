@@ -44,3 +44,4 @@ if(${BUILD_OPENCL})
  3 4 5
  1 1 1")
 endif(${BUILD_OPENCL})
+declare_trisycl_test(TARGET buffer_write_order)

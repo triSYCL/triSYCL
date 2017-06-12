@@ -1,11 +1,11 @@
-#ifndef TRISYCL_SYCL_DEVICE_DETAIL_DEVICE_TAIL_HPP
-#define TRISYCL_SYCL_DEVICE_DETAIL_DEVICE_TAIL_HPP
+#ifndef TRISYCL_SYCL_PLATFORM_DETAIL_PLATFORM_TAIL_HPP
+#define TRISYCL_SYCL_PLATFORM_DETAIL_PLATFORM_TAIL_HPP
 
-/** \file The ending part of of OpenCL SYCL device
+/** \file The ending part of of OpenCL SYCL platform
 
-    This is here to break a dependence between device and device_selector
+    This is here to break a dependency between platform and device
 
-    Ronan at Keryell point FR
+    a-doumoulakis at gmail dot com
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
@@ -23,7 +23,7 @@ namespace sycl {
     Return synchronous errors via SYCL exception classes.
 */
 vector_class<device>
-device::get_devices(info::device_type device_type) {
+platform::get_devices(info::device_type device_type) const {
   // Start with the default device
   vector_class<device> devices = { {} };
 
@@ -56,4 +56,4 @@ device::get_devices(info::device_type device_type) {
     ### End:
 */
 
-#endif // TRISYCL_SYCL_DEVICE_DETAIL_DEVICE_TAIL_HPP
+#endif // TRISYCL_SYCL_PLATFORM_DETAIL_PLATFORM_TAIL_HPP

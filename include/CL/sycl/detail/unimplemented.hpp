@@ -23,9 +23,11 @@ namespace detail {
     Can be changed to call assert(0) or whatever.
 */
 inline void unimplemented() {
+#ifndef NDEBUG
   std::cerr << "Error: using a non implemented feature!!!" << std::endl
             << "Please contribute to the open source implementation. :-)"
             << std::endl;
+#endif
 }
 
 /// @} End the helpers Doxygen group

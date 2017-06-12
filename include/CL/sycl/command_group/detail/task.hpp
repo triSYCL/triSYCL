@@ -186,8 +186,14 @@ struct task : public std::enable_shared_from_this<task>,
       latest_producer = buf->get_latest_producer();
 
     /* If the buffer is to be produced by a task, add the task in the
-       producer list to wait on it before running the task core */
-    if (latest_producer)
+       producer list to wait on it before running the task core
+
+       If a buffer is accessed first in write mode and then in read mode,
+       the task will add itself as a producer and will wait for itself
+       when calling \c wait_for_producers, we avoid this by checking that
+       \c latest_producer is not \c this
+    */
+    if (latest_producer && latest_producer != shared_from_this())
       producer_tasks.push_back(latest_producer);
   }
 
