@@ -37,11 +37,13 @@ namespace detail {
     return *this;                                       \
   }
 
+
 #define TRISYCL_LOGICAL_OPERATOR_VECTOR_OP(op)          \
-  FinaleType operator op(const FinalType &rhs) {        \
+  FinalType operator op(const FinalType &rhs) {         \
+    FinalType res;                                      \
     for (std::size_t i = 0; i != Dims; ++i)             \
-      (*this)[i] = (*this)[i] op rhs[i];                \
-    return *this;                                       \
+      res[i] = (*this)[i] op rhs[i];                    \
+    return res;                                         \
   }
 
 

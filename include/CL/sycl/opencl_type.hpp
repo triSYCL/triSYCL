@@ -1,14 +1,16 @@
-#ifndef TRISYCL_SYCL_TYPES_SCALAR_HPP
-#define TRISYCL_SYCL_TYPES_SCALAR_HPP
+#ifndef TRISYCL_SYCL_OPENCL_TYPES_HPP
+#define TRISYCL_SYCL_OPENCL_TYPES_HPP
 
 #include "CL/sycl/vec.hpp"
 
 #include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/comparison/equal.hpp>
 #include <boost/preprocessor/control/if.hpp>
+#include <boost/preprocessor/list/for_each.hpp>
+#include <boost/preprocessor/seq/for_each.hpp>
 #include <boost/preprocessor/tuple/to_list.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
-#include <boost/preprocessor/comparison/equal.hpp>
-#include <boost/preprocessor/list/for_each.hpp>
+
 
 namespace cl {
 namespace sycl {
@@ -52,8 +54,14 @@ namespace sycl {
 
 BOOST_PP_LIST_FOR_EACH(DECLARE_CL_TYPES, _, SCALAR_TYPES)
 
-
 } // sycl
 } // cl
 
-#endif // TRISYCL_SYCL_TYPES_SCALAR_HPP
+#undef SCALAR_TYPES
+#undef TYPE_NAME
+#undef TYPE_CL_NAME
+#undef SIZED_NAME
+#undef TYPEDEF_TYPE
+#undef DECLARE_CL_TYPES
+
+#endif // TRISYCL_SYCL_OPENCL_TYPES_HPP
