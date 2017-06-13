@@ -51,17 +51,18 @@ public:
       associated to the host device.
   */
   boost::compute::context &get_boost_compute() override {
-    throw non_cl_error("The host context has no boost context");
+    throw non_cl_error("The host context has no OpenCL context");
   }
 
 
-  /** Return the queue that is associated to the context
+  /** Return the internal OpenCL queue that is associated to the host
+      context
 
-      This throws an error since there is no \c boost::command_queue context
-      associated to the host device.
+      This throws an error since there is no \c
+      boost::compute::command_queue associated to the host context..
   */
   boost::compute::command_queue &get_boost_queue() override {
-    throw non_cl_error("The host context has no boost queue");
+    throw non_cl_error("The host context cannot have an OpenCL queue");
   }
 #endif
 
@@ -75,11 +76,9 @@ public:
   /** Return the platform of the context
 
       Return synchronous errors via the SYCL exception class.
-
-      \todo To be implemented
   */
   cl::sycl::platform get_platform() const override {
-    detail::unimplemented();
+    // Return the host platform
     return {};
   }
 
@@ -98,6 +97,7 @@ public:
   }
 #endif
 
+
   /** Returns the set of devices that are part of this context.
       It should only return the host device itself.
 
@@ -105,8 +105,8 @@ public:
   */
   vector_class<cl::sycl::device>
   get_devices() const override {
-    detail::unimplemented();
-    return {};
+    // Return just the host device
+    return { {} };
   }
 };
 

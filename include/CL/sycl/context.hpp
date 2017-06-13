@@ -72,17 +72,19 @@ public:
 
 
 #ifdef TRISYCL_OPENCL
-  /* Context constructor, where the underlying OpenCL context is given as
-     a parameter
+  /** Make a SYCL context from an OpenCL context
 
-     The constructor executes a retain on the cl_context.
+      The constructor executes a retain on the \c cl_context.
 
-     Return synchronous errors via the SYCL exception class and
-     asynchronous errors are handled via the async_handler, if provided.
+      Return synchronous errors via the SYCL exception class and
+      asynchronous errors are handled via the \c async_handler, if
+      provided.
   */
   context(cl_context clContext, async_handler asyncHandler = nullptr)
     : context { boost::compute::context { clContext }, asyncHandler } {}
 
+
+  /// Build a SYCL context from a Boost.Compute context
   context(const boost::compute::context &c,
           async_handler asyncHandler = nullptr)
     : implementation_t { detail::opencl_context::instance(c) } {}
@@ -170,7 +172,10 @@ public:
     return implementation->get_boost_compute();
   }
 
-  /// Return the queue that is associated to the context
+  /** Return the internal queue that is associated to the context and
+      used by triSYCL to move data between some different contests for
+      example
+  */
   boost::compute::command_queue &get_boost_queue() const {
     return implementation->get_boost_queue();
   }
