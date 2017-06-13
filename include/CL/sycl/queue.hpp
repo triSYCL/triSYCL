@@ -100,6 +100,9 @@ public:
   /** Default constructor for platform which is the host platform
 
       Returns errors via the SYCL exception class.
+
+      \todo Check with the specification if it is the host queue or
+      the one related to the default device selector.
   */
   queue() : implementation_t { new detail::host_queue } {}
 
@@ -130,23 +133,31 @@ public:
       If no device is selected, an error is reported.
 
       Return synchronous errors regarding the creation of the queue and
-      report asynchronous errors via the async_handler callback
-      function if and only if there is an async_handler provided.
+      report asynchronous errors via the \c async_handler callback
+      function if and only if there is an \c async_handler provided.
   */
   queue(const device_selector &deviceSelector,
-        async_handler asyncHandler = nullptr) : queue { } {
-    detail::unimplemented();
-  }
+        async_handler asyncHandler = nullptr)
+    // Just create the queue from the selected device
+    : queue { device { deviceSelector }, asyncHandler} { }
 
 
-  /** A queue is created for syclDevice
+  /** A queue is created for a SYCL device
 
-      Return asynchronous errors via the async_handler callback function.
+      Return asynchronous errors via the \c async_handler callback
+      function.
   */
-  queue(const device &syclDevice,
-        async_handler asyncHandler = nullptr) : queue { } {
-    detail::unimplemented();
-  };
+  queue(const device &d,
+        async_handler asyncHandler = nullptr) : implementation_t {
+#ifdef TRISYCL_OPENCL
+    d.is_host()
+      ? std::shared_ptr<detail::queue>{ new detail::host_queue }
+      : detail::opencl_queue::instance(d)
+#else
+    new detail::host_queue
+#endif
+
+  } { }
 
 
   /** This constructor chooses a device based on the provided
@@ -242,6 +253,16 @@ public:
   */
   cl_command_queue get() const {
     return implementation->get();
+  }
+
+
+  /** Return the underlying Boost.Compute command queue if it is an
+      OpenCL queue
+
+      This is a triSYCL extension
+  */
+  boost::compute::command_queue get_boost_compute() const {
+    return implementation->get_boost_compute();
   }
 #endif
 
