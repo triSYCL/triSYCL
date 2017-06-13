@@ -41,6 +41,9 @@ struct error_handler {
       \todo add this concept to the specification?
   */
   static trisycl::default_error_handler default_handler;
+
+
+  virtual ~error_handler() = 0;
 };
 
 
