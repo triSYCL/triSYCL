@@ -124,6 +124,16 @@ public:
   cl_device_id get() const {
     return implementation->get();
   }
+
+
+  /** Return the underlying Boost.Compute device if it is an
+      OpenCL device
+
+      This is a triSYCL extension
+  */
+  boost::compute::device get_boost_compute() const {
+    return implementation->get_boost_compute();
+  }
 #endif
 
 

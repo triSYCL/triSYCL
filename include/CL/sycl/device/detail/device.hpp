@@ -29,6 +29,9 @@ public:
 #ifdef TRISYCL_OPENCL
   /// Return the cl_device_id of the underlying OpenCL platform
   virtual cl_device_id get() const = 0;
+
+  /// Return the underlying Boost.Compute device, if any
+  virtual boost::compute::device &get_boost_compute() = 0;
 #endif
 
 

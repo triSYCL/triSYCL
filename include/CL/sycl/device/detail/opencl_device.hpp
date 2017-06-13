@@ -47,6 +47,12 @@ public:
   }
 
 
+  /// Return the underlying Boost.Compute device
+  boost::compute::device &get_boost_compute() override {
+    return d;
+  }
+
+
   /// Return false since an OpenCL device is not the SYCL host device
   bool is_host() const override {
     return false;

@@ -42,6 +42,16 @@ public:
   cl_device_id get() const override {
     throw non_cl_error("The host device has no OpenCL device");
   }
+
+
+  /** Return the underlying Boost.Compute device
+
+      This throws an error since there is no OpenCL device associated
+      to the host device.
+  */
+  boost::compute::device &get_boost_compute() override {
+    throw non_cl_error("The host device has no underlying OpenCL device");
+  }
 #endif
 
 
