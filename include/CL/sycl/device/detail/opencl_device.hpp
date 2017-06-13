@@ -47,6 +47,12 @@ public:
   }
 
 
+  /// Return the underlying Boost.Compute device
+  boost::compute::device &get_boost_compute() override {
+    return d;
+  }
+
+
   /// Return false since an OpenCL device is not the SYCL host device
   bool is_host() const override {
     return false;
@@ -119,7 +125,7 @@ public:
 
 private:
 
-  /// Only the instance factory can built it
+  /// Only the instance factory can build it
   opencl_device(const boost::compute::device &d) : d { d } {}
 
 public:

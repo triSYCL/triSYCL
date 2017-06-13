@@ -59,25 +59,6 @@ public:
   }
 
 
-#if 0
-  /** Returns at most the host device for this platform, according to
-      the requested kind
-
-      By default returns all the devices, which is obviously the host
-      one here
-
-      \todo To be implemented
-  */
-  vector_class<cl::sycl::device>
-  get_devices(info::device_type device_type = info::device_type::all)
-    const override
-  {
-    detail::unimplemented();
-    return {};
-  }
-#endif
-
-
   /// Returning the information string parameters for the OpenCL platform
   string_class get_info_string(info::platform param) const override {
     /* Use the fact that the triSYCL info values are the same as the

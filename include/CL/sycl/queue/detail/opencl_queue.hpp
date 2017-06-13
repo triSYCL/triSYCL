@@ -45,10 +45,8 @@ class opencl_queue : public detail::queue,
 
 
   /// Return the SYCL context associated to the queue
-  /// \todo Finish context
   cl::sycl::context get_context() const override {
-//    return q.get_context();
-    return {};
+    return q.get_context();
   }
 
 
@@ -76,6 +74,25 @@ public:
     return cache.get_or_register(q.get(),
                                  [&] { return new opencl_queue { q }; });
   }
+
+
+  /** Create a new queue associated to this device
+
+      \todo Check with SYCL committee what is the expected behaviour
+      here about the context. Is this a new context everytime, or
+      always the same for a given device?
+  */
+  static std::shared_ptr<detail::queue>
+  instance(const cl::sycl::device &d) {
+    return instance (boost::compute::command_queue {
+        // For now, create a new context every time
+        boost::compute::context { d.get_boost_compute() },
+        d.get_boost_compute()
+          });
+  }
+
+
+  opencl_queue(const boost::compute::device &d) : q { q } {}
 
 
   /// Unregister from the cache on destruction

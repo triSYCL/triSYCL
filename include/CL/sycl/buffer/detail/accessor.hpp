@@ -12,9 +12,6 @@
 #include <cstddef>
 #include <memory>
 
-#ifdef TRISYCL_OPENCL
-#include <boost/compute.hpp>
-#endif
 #include <boost/multi_array.hpp>
 
 #include "CL/sycl/access.hpp"
@@ -86,11 +83,6 @@ class accessor : public detail::debug<accessor<T,
   /// The task where the accessor is used in
   std::shared_ptr<detail::task> task;
 
-#ifdef TRISYCL_OPENCL
-  /// The OpenCL buffer used by an OpenCL accessor
-  boost::optional<boost::compute::buffer> cl_buf;
-#endif
-
 public:
 
   /** \todo in the specification: store the dimension for user request
@@ -131,6 +123,16 @@ public:
     /* The host needs to wait for all the producers of the buffer to
        have finished */
     buf->wait();
+
+#ifdef TRISYCL_OPENCL
+    /* For the host context, we are obligated to update the buffer state
+       during the accessors creation, otherwise we have no way of knowing
+       if a buffer was modified on the host. This is only true because
+       host accessors are blocking
+     */
+    cl::sycl::context ctx;
+    buf->update_buffer_state(ctx, Mode, get_size(), array.data());
+#endif
   }
 
 
@@ -413,45 +415,30 @@ private:
   /// Get the boost::compute::buffer or throw if unset
   auto get_cl_buffer() const {
     // This throws if not set
-    return cl_buf.value();
+    auto ctx = task->get_queue()->get_context();
+    return buf->get_cl_buffer(ctx);
   }
 
 
-  /** Lazily associate a CL buffer to the SYCL buffer and copy data in
-      if required
-
-      \todo Move this into the buffer with queue/device-based caching
+  /** Lazily associate a CL buffer to the SYCL buffer and copy data in it
+      if required, updates the state of the data in the buffer across contexts
   */
   void copy_in_cl_buffer() {
-    // This should be a constexpr
-    cl_mem_flags flags = is_read_access() && is_write_access() ?
-      CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR
-      : is_read_access() ? CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR
-                         : CL_MEM_WRITE_ONLY;
-
-    /* Create the OpenCL buffer and copy in data from the host if in
-       read mode */
-    cl_buf = boost::compute::buffer {
-      task->get_queue()->get_boost_compute().get_context(),
-      get_size(),
-      flags,
-      is_read_access() ? array.data() : 0
-    };
+    /* Create the OpenCL buffer and copy in it the data from the host if
+       the buffer doesn't already exists or if the data is not up to date
+    */
+    auto ctx = task->get_queue()->get_context();
+    buf->update_buffer_state(ctx, Mode, get_size(), array.data());
   }
 
 
-  /** Copy back the CL buffer to the SYCL if required
-
-      \todo Move this into the buffer with queue/device-based caching
-  */
+  /// Does nothing
   void copy_back_cl_buffer() {
-    // \todo Use if constexpr in C++17
-    if (is_write_access())
-      task->get_queue()->get_boost_compute()
-        .enqueue_read_buffer(get_cl_buffer(),
-                             0 /*< Offset */,
-                             get_size(),
-                             array.data());
+    /* The copy back is handled by the host accessor and the buffer destructor.
+       We don't need to systematically transfer the data after the
+       kernel execution
+       \todo Figure out what to do with this function
+    */
   }
 #endif
 

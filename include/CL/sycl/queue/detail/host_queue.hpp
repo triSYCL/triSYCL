@@ -24,7 +24,8 @@ namespace detail {
 
 /** Some implementation details about the SYCL queue
 
-    \todo Once a triSYCL queue is no longer blocking, make this a singleton
+    Note that the host queue is not a singleton, compared to host
+    device or host platform, for example.
  */
 class host_queue : public detail::queue,
                    detail::debug<host_queue> {

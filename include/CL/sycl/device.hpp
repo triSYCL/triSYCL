@@ -124,6 +124,16 @@ public:
   cl_device_id get() const {
     return implementation->get();
   }
+
+
+  /** Return the underlying Boost.Compute device if it is an
+      OpenCL device
+
+      This is a triSYCL extension
+  */
+  boost::compute::device get_boost_compute() const {
+    return implementation->get_boost_compute();
+  }
 #endif
 
 
@@ -251,7 +261,6 @@ inline auto device::get_info<info::device::max_work_group_size>() const {
   return size_t { 8 };
 }
 
-
 template <>
 inline auto device::get_info<info::device::max_compute_units>() const {
   return size_t { 8 };
@@ -275,6 +284,11 @@ inline auto device::get_info<info::device::vendor>() const {
 template <>
 inline auto device::get_info<info::device::name>() const {
   return string_class {};
+}
+
+template <>
+inline auto device::get_info<info::device::profile>() const {
+  return string_class { "FULL_PROFILE" };
 }
 
 /// @} to end the Doxygen group

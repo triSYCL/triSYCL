@@ -11,6 +11,7 @@
 
 #include <cstddef>
 #include <memory>
+#include <type_traits>
 
 #include <boost/multi_array.hpp>
 // \todo Use C++17 optional when it is mainstream
@@ -213,6 +214,18 @@ public:
   /** The buffer content may be copied back on destruction to some
       final location */
   ~buffer() {
+#ifdef TRISYCL_OPENCL
+    /* We ensure that the host has the most up-to-date version of the data
+       before the buffer is destroyed. This is necessary because we do not
+       systematically transfer the data back from a device with
+       \c copy_back_cl_buffer any more.
+       \todo Optimize for the case the buffer is not based on host memory
+    */
+    cl::sycl::context ctx;
+    auto size = access.num_elements() * sizeof(value_type);
+    call_update_buffer_state(ctx, access::mode::read, size, access.data());
+
+#endif
     if (modified && final_write_back)
       (*final_write_back)();
     // Allocate explicitly allocated memory if required
@@ -365,6 +378,33 @@ private:
     if (allocation)
       alloc.deallocate(allocation, access.num_elements());
   }
+
+
+  /** Function pair to work around the fact that T might be a \c const type.
+      We call update_buffer_state only if T is not \c const, we have to
+      use \c enable_if otherwise the compiler will try to cast \c const
+      \c void* to \c void* if we create a buffer with a \c const type
+
+      \todo Use \c if \c constexpr when it is available with C++17
+  */
+  template <typename BaseType = T, typename DataType>
+  void call_update_buffer_state(cl::sycl::context ctx, access::mode mode,
+                                size_t size, DataType* data,
+                                std::enable_if_t<!std::is_const<BaseType>
+                                ::value>* = 0) {
+    update_buffer_state(ctx, mode, size, data);
+  }
+
+
+  /** Version of \c call_update_buffer_state that does nothing. It is called if
+      the type of the data in the buffer is \c const
+   */
+  template <typename BaseType = T, typename DataType>
+  void call_update_buffer_state(cl::sycl::context ctx, access::mode mode,
+                                size_t size, DataType* data,
+                                std::enable_if_t<std::is_const<BaseType>
+                                ::value>* = 0) { }
+
 
 public:
 
