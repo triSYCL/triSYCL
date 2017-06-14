@@ -13,13 +13,6 @@ function(declare_trisycl_test)
   # Declare source code files
   set (Files_HDRS ${declare_trisycl_test_HEADERS})
 
-  # If debug or trace we need boost log
-  if(TRISYCL_DEBUG OR TRISYCL_DEBUG_STRUCTORS OR TRISYCL_TRACE_KERNEL)
-    set(LOG_NEEDED ON)
-  else()
-    set(LOG_NEEDED OFF)
-  endif()
-
   # If sources are defined, use them; otherwise default to TARGET.cpp
   if("${declare_trisycl_test_SOURCES}" STREQUAL "")
     set (Files_SRCS "${PROJECT_SOURCE_DIR}/${declare_trisycl_test_TARGET}.cpp")
@@ -43,30 +36,24 @@ function(declare_trisycl_test)
   add_executable (${TARGET_NAME} ${Files_BUILD})
 
   # Add include directories to the "#include <>" paths
-  target_include_directories (${TARGET_NAME} PUBLIC
-    ${TRISYCL_INCLUDE_DIR}
-    ${Boost_INCLUDE_DIRS}
-    $<$<BOOL:${TRISYCL_OPENCL}>:${OpenCL_INCLUDE_DIRS}>
-    $<$<BOOL:${TRISYCL_OPENCL}>:${BOOST_COMPUTE_INCPATH}>)
+  target_include_directories (${TARGET_NAME} PUBLIC #$<$<BOOL:${declare_trisycl_test_USES_OPENCL}>:${OpenCL_INCLUDE_DIRS}> # include OpenCL headers if example uses it
+                                                    ${OpenCL_INCLUDE_DIRS}
+                                                    $<$<BOOL:${UNIX}>:${BOOST_COMPUTE_INCPATH}>
+                                                    ${Boost_INCLUDE_DIRS})
 
   # Link dependencies
-  target_link_libraries(${TARGET_NAME} PUBLIC
-    $<$<BOOL:${TRISYCL_OPENCL}>:${OpenCL_LIBRARIES}>
-    $<$<NOT:$<BOOL:${WIN32}>>:Threads::Threads>
-    $<$<BOOL:${WIN32}>:Boost::disable_autolinking>
-    $<$<BOOL:${LOG_NEEDED}>:Boost::log>
-    Boost::chrono)
-
+  target_link_libraries (${TARGET_NAME} PUBLIC #$<$<BOOL:${declare_trisycl_test_USES_OPENCL}>:${OpenCL_LIBRARIES}> # Link to OpenCL if example requires
+                                               ${OpenCL_LIBRARIES}
+                                               $<$<NOT:$<BOOL:${WIN32}>>:Threads::Threads> # If not on Windows, use some threading model
+                                               $<$<BOOL:${WIN32}>:Boost::disable_autolinking> # Boost can auto-link when used with MSVC, but relies on relative paths which CMake does not really like
+                                               $<$<OR:$<BOOL:${TRISYCL_DEBUG}>,$<BOOL:${TRISYCL_DEBUG_STRUCTORS}>>:Boost::log> # Link to Boost.log when triSYCL in debug mode
+                                               Boost::chrono)
 
   # Compile definitions
-  target_compile_definitions(${TARGET_NAME} PUBLIC
-    $<$<BOOL:${TRISYCL_NO_ASYNC}>:TRISYCL_NO_ASYNC>
-    $<$<BOOL:${declare_trisycl_test_USES_OPENCL}>:TRISYCL_OPENCL>
-    $<$<BOOL:${TRISYCL_DEBUG}>:TRISYCL_DEBUG>
-    $<$<BOOL:${TRISYCL_DEBUG_STRUCTORS}>:TRISYCL_DEBUG_STRUCTORS>
-    $<$<BOOL:${TRISYCL_TRACE_KERNEL}>:TRISYCL_TRACE_KERNEL>
-    $<$<BOOL:${LOG_NEEDED}>:BOOST_LOG_DYN_LINK>)
-
+  target_compile_definitions(${TARGET_NAME} PUBLIC $<$<BOOL:${TRISYCL_NO_ASYNC}>:TRISYCL_NO_ASYNC> # If opting for synchronous task exec
+                                                   $<$<BOOL:${declare_trisycl_test_USES_OPENCL}>:TRISYCL_OPENCL> # If the test uses OpenCL
+                                                   $<$<BOOL:${TRISYCL_DEBUG}>:TRISYCL_DEBUG>
+                                                   $<$<BOOL:${TRISYCL_DEBUG_STRUCTORS}>:TRISYCL_DEBUG_STRUCTORS>)
 
   # OpenMP requirements
   target_compile_options(${TARGET_NAME} PUBLIC $<$<BOOL:${TRISYCL_OPENMP}>:${OpenMP_CXX_FLAGS}>)
