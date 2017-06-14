@@ -69,8 +69,8 @@ auto equal = [] (auto const &v, auto const &verif) {
       )                                                                        \
     )
 
-/* Test to operator by comparing the result of the same operation
-   on a \c valarray
+/* Test an operator by comparing the result of the same operation
+   on a \c valarray and on a \c cl_type
 */
 #define TRISYCL_CHECK(OPERATOR, TYPE, CL_TYPE, SIZE, VAL1, VAL2, OUT)          \
   {                                                                            \

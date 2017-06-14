@@ -4,8 +4,7 @@ project(triSYCL C CXX) # The name of the project (forward declare language )
 #
 # Behavioural options for the solution
 #
-  option(TRISYCL_OPENMP "triSYCL multi-threading with OpenMP" ON)
-  option(TRISYCL_OPENCL "triSYCL OpenCL interoperability" ON)
+  option(TRISYCL_OPENMP "triSYCL multi-threading with OpenMP" ON) 
   option(TRISYCL_NO_ASYNC "triSYCL use synchronous kernel execution" OFF)
   option(BUILD_OPENCL "triSYCL build OpenCL tests" ON)
   option(BUILD_XILINX "triSYCL build Xilinx-specific tests" OFF)

@@ -16,7 +16,9 @@ using Vector = float[N];
 
 int main() {
   queue q;
+
   buffer<int> A(N);
+
   q.submit([&] (handler &cgh) {
       auto ka = A.get_access<access::mode::write>(cgh);
       auto stub = A.get_access<access::mode::read>(cgh);
