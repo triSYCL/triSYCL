@@ -22,9 +22,10 @@ auto equal = [] (auto const &v, auto const &verif) {
   return true;
 };
 
-/* Accessors for the type tuples (name, cl_name) */
-#define TYPE_NAME(T)       BOOST_PP_TUPLE_ELEM(2, 0, T)
-#define TYPE_CL_NAME(T)    BOOST_PP_TUPLE_ELEM(2, 1, T)
+/* Accessors for the type tuples (name, cl_name, is_float) */
+#define TYPE_NAME(T)      BOOST_PP_TUPLE_ELEM(3, 0, T)
+#define TYPE_CL_NAME(T)   BOOST_PP_TUPLE_ELEM(3, 1, T)
+#define TYPE_IS_FLOAT(T)  BOOST_PP_TUPLE_ELEM(3, 2, T)
 
 /* To generate the sized types (eg. \c cl_int3) */
 #define SIZED_NAME(T, size)                                                    \
@@ -105,17 +106,20 @@ auto equal = [] (auto const &v, auto const &verif) {
 
 #define VAL_16 { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 }
 
-// Accessor for the tuple \c (type, size)
-#define ACCESS_TUPLE_TYPE(T) BOOST_PP_TUPLE_ELEM(2, 0, T)
-#define ACCESS_TUPLE_SIZE(T) BOOST_PP_TUPLE_ELEM(2, 1, T)
+// Accessor for the tuple \c (type, size, is_float)
+#define ACCESS_TUPLE_TYPE(T)  BOOST_PP_TUPLE_ELEM(3, 0, T)
+#define ACCESS_TUPLE_SIZE(T)  BOOST_PP_TUPLE_ELEM(3, 1, T)
+
+// Does nothing
+#define EMPTY(a, b, c) BOOST_PP_EMPTY()
 
 // Wrapper around \c TRISYCL_CHECK
 #define CALL_CHECK(op, data, out)                                              \
   TRISYCL_CHECK(OP_SYMBOL(op), TYPE_NAME(ACCESS_TUPLE_TYPE(data)),             \
-                       TYPE_CL_NAME(ACCESS_TUPLE_TYPE(data)),                  \
-                       ACCESS_TUPLE_SIZE(data),                                \
-                       BOOST_PP_CAT(VAL_, ACCESS_TUPLE_SIZE(data)),            \
-                       BOOST_PP_CAT(VAL_, ACCESS_TUPLE_SIZE(data)), out);
+                TYPE_CL_NAME(ACCESS_TUPLE_TYPE(data)),                         \
+                ACCESS_TUPLE_SIZE(data),                                       \
+                BOOST_PP_CAT(VAL_, ACCESS_TUPLE_SIZE(data)),                   \
+                BOOST_PP_CAT(VAL_, ACCESS_TUPLE_SIZE(data)), out);
 
 // Determine if the \c valarray with the result will be bool or not
 #define GET_OUT_TYPE(op, type)                                                 \
@@ -124,9 +128,16 @@ auto equal = [] (auto const &v, auto const &verif) {
     bool,                                                                      \
     TYPE_NAME(type))
 
-// Wrapper around \c CALL_CHECK
+// Check if the operation is compatible with float types
+#define VERIF_FLOAT(op, data, out)                                             \
+  BOOST_PP_IF(                                                                 \
+    BOOST_PP_OR(OP_IS_FLOATING(op),                                            \
+                BOOST_PP_NOT(TYPE_IS_FLOAT(ACCESS_TUPLE_TYPE(data)))),         \
+    CALL_CHECK, EMPTY)(op, data, out)
+
+// Wrapper around \c VERIF_FLOAT
 #define GENERATE_TEST_OPERATOR(r, data, op)                                    \
-    CALL_CHECK(op, data, GET_OUT_TYPE(op, ACCESS_TUPLE_TYPE(data)))
+    VERIF_FLOAT(op, data, GET_OUT_TYPE(op, ACCESS_TUPLE_TYPE(data)))
 
 // Iterate over the operations
 #define GENERATE_TEST_SIZE(r, type, size)                                      \
@@ -139,16 +150,16 @@ auto equal = [] (auto const &v, auto const &verif) {
   BOOST_PP_SEQ_FOR_EACH(GENERATE_TEST_SIZE, type, SIZES)
 
 #define ALL_TESTS                                                              \
-  GENERATE_TEST_TYPE((char, cl_char))                                          \
-  GENERATE_TEST_TYPE((uchar, cl_uchar))                                        \
-  GENERATE_TEST_TYPE((short, cl_short))                                        \
-  GENERATE_TEST_TYPE((ushort, cl_ushort))                                      \
-  GENERATE_TEST_TYPE((int, cl_int))                                            \
-  GENERATE_TEST_TYPE((uint, cl_uint))                                          \
-  GENERATE_TEST_TYPE((long, cl_long))                                          \
-  GENERATE_TEST_TYPE((ulong, cl_ulong))                                        \
-  GENERATE_TEST_TYPE((float, cl_float))                                        \
-  GENERATE_TEST_TYPE((double, cl_double))
+  GENERATE_TEST_TYPE((char, cl_char, 0));                                      \
+  GENERATE_TEST_TYPE((unsigned char, cl_uchar, 0));                            \
+  GENERATE_TEST_TYPE((short, cl_short, 0));                                    \
+  GENERATE_TEST_TYPE((short int, cl_ushort, 0));                               \
+  GENERATE_TEST_TYPE((int, cl_int, 0));                                        \
+  GENERATE_TEST_TYPE((unsigned int, cl_uint, 0));                              \
+  GENERATE_TEST_TYPE((long, cl_long, 0));                                      \
+  GENERATE_TEST_TYPE((unsigned long int, cl_ulong, 0));                        \
+  GENERATE_TEST_TYPE((float, cl_float, 1));                                    \
+  GENERATE_TEST_TYPE((double, cl_double, 1));
 
 int test_main(int argc, char *argv[]) {
   constexpr size_t N = 16;

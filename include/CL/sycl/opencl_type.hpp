@@ -3,15 +3,6 @@
 
 #include "CL/sycl/vec.hpp"
 
-#include <boost/preprocessor/cat.hpp>
-#include <boost/preprocessor/comparison/equal.hpp>
-#include <boost/preprocessor/control/if.hpp>
-#include <boost/preprocessor/list/for_each.hpp>
-#include <boost/preprocessor/seq/for_each.hpp>
-#include <boost/preprocessor/tuple/to_list.hpp>
-#include <boost/preprocessor/tuple/elem.hpp>
-
-
 namespace cl {
 namespace sycl {
 
