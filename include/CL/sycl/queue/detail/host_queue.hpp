@@ -24,7 +24,7 @@ namespace detail {
 
 /** Some implementation details about the SYCL queue
 
-    Note that the host queue is not a singleton, compared to host
+    Note that a host queue is not a singleton, compared to host
     device or host platform, for example.
  */
 class host_queue : public detail::queue,
