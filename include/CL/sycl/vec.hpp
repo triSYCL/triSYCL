@@ -152,6 +152,7 @@ private:
 #endif
 };
 
+
  /** A macro to define type alias, such as for type=uchar, size=4 and
       actual_type=unsigned char, uchar4 is equivalent to vec<unsigned char, 4>
   */
