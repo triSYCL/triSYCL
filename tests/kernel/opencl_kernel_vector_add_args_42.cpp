@@ -54,9 +54,7 @@ int test_main(int argc, char *argv[]) {
         cgh.set_args(A.get_access<access::mode::read>(cgh),
                      B.get_access<access::mode::read>(cgh),
                      C.get_access<access::mode::write>(cgh),
-                     /* TODO: use cl::sycl::cl_int { 42 } for portability
-                        when it is implemented */
-                     42);
+                     cl::sycl::cl_int { 42 } );
         cgh.parallel_for(N, k);
       }); //< End of our commands for this queue
   } //< Buffer C goes out of scope and copies back values to c

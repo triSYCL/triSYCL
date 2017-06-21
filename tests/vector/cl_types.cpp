@@ -1,6 +1,7 @@
 /* RUN: %{execute}%s
 
    Test the operators defined for the different cl_types
+   When not running in OpenCL interoperability mode
 */
 
 #include <CL/sycl.hpp>
@@ -150,16 +151,16 @@ auto equal = [] (auto const &v, auto const &verif) {
   BOOST_PP_SEQ_FOR_EACH(GENERATE_TEST_SIZE, type, SIZES)
 
 #define ALL_TESTS                                                              \
-  GENERATE_TEST_TYPE((char, cl_char, 0));                                      \
-  GENERATE_TEST_TYPE((unsigned char, cl_uchar, 0));                            \
-  GENERATE_TEST_TYPE((short, cl_short, 0));                                    \
-  GENERATE_TEST_TYPE((short int, cl_ushort, 0));                               \
-  GENERATE_TEST_TYPE((int, cl_int, 0));                                        \
-  GENERATE_TEST_TYPE((unsigned int, cl_uint, 0));                              \
-  GENERATE_TEST_TYPE((long, cl_long, 0));                                      \
-  GENERATE_TEST_TYPE((unsigned long int, cl_ulong, 0));                        \
-  GENERATE_TEST_TYPE((float, cl_float, 1));                                    \
-  GENERATE_TEST_TYPE((double, cl_double, 1));
+  GENERATE_TEST_TYPE((char,              cl_char,   0));                       \
+  GENERATE_TEST_TYPE((unsigned char,     cl_uchar,  0));                       \
+  GENERATE_TEST_TYPE((short,             cl_short,  0));                       \
+  GENERATE_TEST_TYPE((short int,         cl_ushort, 0));                       \
+  GENERATE_TEST_TYPE((int,               cl_int,    0));                       \
+  GENERATE_TEST_TYPE((unsigned int,      cl_uint,   0));                       \
+  GENERATE_TEST_TYPE((long,              cl_long,   0));                       \
+  GENERATE_TEST_TYPE((unsigned long int, cl_ulong,  0));                       \
+  GENERATE_TEST_TYPE((float,             cl_float,  1));                       \
+  GENERATE_TEST_TYPE((double,            cl_double, 1));
 
 int test_main(int argc, char *argv[]) {
   constexpr size_t N = 16;
@@ -177,7 +178,9 @@ int test_main(int argc, char *argv[]) {
         auto kc = C.get_access<access::mode::write>(cgh);
         cgh.parallel_for<class generate>(range<1> { N },
                                          [=] (id<1> index) {
+#ifndef TRISYCL_OPENCL
           ALL_TESTS
+#endif
         }); // End of our commands for this queue
       });
   } // End scope, so we wait for the queue to complete
