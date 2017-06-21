@@ -59,7 +59,7 @@ public:
       context
 
       This throws an error since there is no \c
-      boost::compute::command_queue associated to the host context..
+      boost::compute::command_queue associated to the host context.
   */
   boost::compute::command_queue &get_boost_queue() override {
     throw non_cl_error("The host context cannot have an OpenCL queue");

@@ -68,7 +68,7 @@ private:
 
 public:
 
-  ///// Get a singleton instance of the opencl_queue
+  /// Get a singleton instance of the opencl_queue
   static std::shared_ptr<opencl_queue>
   instance(const boost::compute::command_queue &q) {
     return cache.get_or_register(q.get(),
@@ -90,9 +90,6 @@ public:
         d.get_boost_compute()
           });
   }
-
-
-  opencl_queue(const boost::compute::device &d) : q { q } {}
 
 
   /// Unregister from the cache on destruction

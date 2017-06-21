@@ -26,7 +26,12 @@ int main() {
         sycl::buffer<int> inputBBuffer(inputB.data(), inputB.size());
         sycl::buffer<int> outputBuffer(output.data(), output.size());
 
-        sycl::queue myQueue(sycl::gpu_selector { });
+        sycl::queue myQueue;
+        // Ask for a GPU queue, if available
+        try {
+          myQueue = { sycl::gpu_selector { } };
+        } catch (...) {
+        }
 
         myQueue.submit([&](sycl::handler &cgh) {
             sycl::accessor<int, 1, sycl::access::mode::read>   a(inputABuffer, cgh);
