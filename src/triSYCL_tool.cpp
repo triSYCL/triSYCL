@@ -21,12 +21,13 @@ const char binary[] = {
 )";
 
   for (;;) {
-    unsigned char c;
-    input_file >> c;
+    char c;
+    input_file.get(c);
     if (!input_file)
       break;
     output_file << "'\\x" << std::hex << std::setw(2) << std::setfill('0')
-                << static_cast<unsigned int>(c) << "', ";
+                << static_cast<unsigned int>(static_cast<unsigned char>(c))
+                << "', ";
   }
   output_file << R"(
 };
