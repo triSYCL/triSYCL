@@ -20,17 +20,15 @@ There is nothing else to do for now to use the include files from triSYCL_
 ``-I.../include`` option and ``-std=c++1y`` when compiling.
 
 triSYCL_ is configurable through preprocessor macros described in
-`macros <doc/macros.rst>`_.
+`macros <macros.rst>`_.
 
 Also use ``-fopenmp`` if you want to use multicore parallelism on the CPU.
 
-The ``CMake`` support is described in `doc/cmake.rst <doc/cmake.rst>`_.
+The ``CMake`` support is described in `cmake.rst <cmake.rst>`_.
 
 
 Examples and tests
 ------------------
 
-There are simple examples and tests in the `tests <tests>`_ directory.
-Look at `tests/README.rst <tests/README.rst>`_ description.
-
-
+There are simple examples and tests in the `tests </tests>`_ directory.
+Look at `/tests/README.rst </tests/README.rst>`_ description.
