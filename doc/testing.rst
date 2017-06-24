@@ -31,4 +31,4 @@ Examples and tests
 ------------------
 
 There are simple examples and tests in the `tests </tests>`_ directory.
-Look at `/tests/README.rst </tests/README.rst>`_ description.
+Look at `tests/README.rst </tests/README.rst>`_ description.
