@@ -37,4 +37,4 @@ triSYCL is available under the [LLVM Release License](https://github.com/triSYCL
 ## triSYCL in the news
 
 - Ronan Keryell presented triSYCL at [DHPC++ 2017](http://www.iwocl.org/iwocl-2017/conference-program/): ["SYCL C++ and OpenCL interoperability experimentation with triSYCL"](https://github.com/keryell/ronan/raw/gh-pages/publications/conf/2017/IWOCL-DHCPP/triSYCL/2017-05-16-IWOCL-DHPCC-triSYCL.pdf), by Doumoulakis, Keryell and O'Brien
-- actually, he's presented triSYCL "once or twice" before [about SYCL](about-sycl.rst)
+- actually, he's presented triSYCL "once or twice" before :-) [about SYCL](doc/about-sycl.rst)
