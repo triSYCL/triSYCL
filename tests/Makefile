@@ -207,7 +207,9 @@ execute: $(basename $(TARGET))
 # Assume that CXX contains some Clang compiler version
 
 # Keep intermediate file for debuging purpose
-.PRECIOUS: %.bc %.ll %.spir64 %.pre_kernel.ll %.pre_kernel_caller.ll
+.PRECIOUS: %.bc %.ll %.spir64 %.kernel.spir.cpp \
+	%.pre_kernel.bc %.pre_kernel.ll %.pre_kernel_caller.ll \
+	%.kernel.bc %.kernel.ll
 
 # The LLVM bitcode
 %.bc: %.cpp
@@ -259,16 +261,20 @@ execute: $(basename $(TARGET))
 	#  -globalopt -deadargelim -SYCL-args-flattening -deadargelim \
 	#  -SYCL-kernel-filter \
 	#  -globaldce -o $@ $<
-	opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats \
-	  -globalopt -deadargelim -argpromotion -deadargelim \
-	  -SYCL-kernel-filter -globaldce -RELGCD -inSPIRation \
-	  -o $@ $<
 	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -stats -SYCL-kernel-filter \
 	#  -debug -print-after-all -o $@ $<
 	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats -SYCL-kernel-filter \
 	#  -o $@ $<
 	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -stats  -debug \
 	#  -SYCL-annotation -SYCL-kernel-filter -o $@ $<
+	opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats \
+	  -globalopt -deadargelim -argpromotion -deadargelim \
+	  -SYCL-kernel-filter -globaldce -RELGCD -inSPIRation \
+	  -o $@ $<
+
+# Internalize the bitcode into cl::sycl::drt::code::program with a C++ file
+%.kernel.spir.cpp: %.kernel.bc
+	triSYCL_tool --source-in $< --output $@
 
 # Process bitcode with SYCL pass to generate kernels
 %.kernel_caller.bc: %.pre_kernel_caller.ll
@@ -285,8 +291,8 @@ execute: $(basename $(TARGET))
 	llc -O=3 -o $@ $<
 
 # Link the C++-generated kernel caller to the final program
-%.kernel_caller: %.kernel_caller.ll
-	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@ $< $(LOADLIBES) $(LDLIBS)
+%.kernel_caller: %.kernel_caller.ll %.kernel.spir.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@ $^ $(LOADLIBES) $(LDLIBS)
 
 # Generate LLVM assembly code from bit-code
 %.ll: %.bc
