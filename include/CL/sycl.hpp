@@ -52,7 +52,7 @@
 #include "CL/sycl/math.hpp"
 #include "CL/sycl/nd_item.hpp"
 #include "CL/sycl/nd_range.hpp"
-#include "CL/sycl/opencl_type.hpp"
+#include "CL/sycl/opencl_types.hpp"
 #include "CL/sycl/parallelism.hpp"
 #include "CL/sycl/pipe.hpp"
 #include "CL/sycl/pipe_reservation.hpp"

@@ -38,6 +38,15 @@ namespace detail {
   }
 
 
+#define TRISYCL_LOGICAL_OPERATOR_VECTOR_OP(op)          \
+  FinalType operator op(const FinalType &rhs) {         \
+    FinalType res;                                      \
+    for (std::size_t i = 0; i != Dims; ++i)             \
+      res[i] = (*this)[i] op rhs[i];                    \
+    return res;                                         \
+  }
+
+
 /** Define a multi-dimensional index, used for example to locate a work
     item or a buffer element
 
@@ -208,6 +217,10 @@ struct small_array : std::array<BasicType, Dims>,
 
   /// Add | like operations on the id<> and others
   TRISYCL_BOOST_OPERATOR_VECTOR_OP(|=)
+
+  TRISYCL_LOGICAL_OPERATOR_VECTOR_OP(&&)
+
+  TRISYCL_LOGICAL_OPERATOR_VECTOR_OP(||)
 
 
   /** Since the boost::operator work on the small_array, add an implicit
