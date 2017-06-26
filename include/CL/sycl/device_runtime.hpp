@@ -125,7 +125,8 @@ serialize_arg(detail::task &task,
               std::size_t index,
               void *arg,
               std::size_t arg_size) {
-  std::cerr << "serialize_arg" << std::endl;
+  std::cerr << "serialize_arg index = " << index << ", size = " << arg_size
+            << ", arg = " << arg << std::endl;
   task.set_arg(index, arg_size, arg);
 }
 
@@ -149,8 +150,8 @@ TRISYCL_WEAK_ATTRIB_PREFIX void TRISYCL_WEAK_ATTRIB_SUFFIX
 set_kernel(detail::task &task,
            const char *kernel_name,
            const char *kernel_short_name) {
-  std::cerr << "Launch " << kernel_name << std::endl;
-  std::cerr << "aka " << kernel_short_name << std::endl;
+  std::cerr << "Setting up  " << kernel_name << std::endl;
+  std::cerr << " aka " << kernel_short_name << std::endl;
   // \todo Add kernel caching per device
   auto binary = kernel_IR[kernel_name];
   auto context = task.get_queue()->get_boost_compute().get_context();
@@ -160,9 +161,9 @@ set_kernel(detail::task &task,
   program.build();
 
   // Build a SYCL kernel from the OpenCL kernel
-  kernel k { boost::compute::kernel { program, kernel_name } };
+  cl::sycl::kernel k { boost::compute::kernel { program, kernel_short_name } };
 
-  task.set_kernel(k.implementation );
+  task.set_kernel(k.implementation);
 }
 
 /// @} to end the Doxygen group
