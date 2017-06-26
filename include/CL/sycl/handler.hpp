@@ -24,6 +24,7 @@
 #include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/exception.hpp"
 #include "CL/sycl/kernel.hpp"
+#include "CL/sycl/opencl_types.hpp"
 #include "CL/sycl/parallelism/detail/parallelism.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"
 
@@ -106,17 +107,32 @@ public:
 
 
   /** Set kernel args for an OpenCL kernel which is used through the
-      SYCL/OpenCL interoperability interface
+      SYCL/OpenCL interoperability interface with a wrapper type
   */
-  template <typename T>
+  template <typename T, typename = std::enable_if_t<is_wrapper<T>::value> >
   void set_arg(int arg_index, T && scalar_value) {
     /* Explicitly capture task by copy instead of having this captured
        by reference and task by reference by side effect */
     task->add_prelude([=, task = task] {
-        task->set_arg(arg_index, std::forward<T>(scalar_value));
+        task->get_kernel().get_boost_compute()
+          .set_arg(arg_index, scalar_value.unwrap());
       });
   }
 
+
+  /** Set kernel args for an OpenCL kernel which is used through the
+      SYCL/OpenCL interoperability interface without a wrapper type
+  */
+  template <typename T>
+  std::enable_if_t<!is_wrapper<T>::value>
+  set_arg(int arg_index, T && scalar_value) {
+    /* Explicitly capture task by copy instead of having this captured
+       by reference and task by reference by side effect */
+    task->add_prelude([=, task = task] {
+        task->get_kernel().get_boost_compute()
+          .set_arg(arg_index, scalar_value);
+      });
+  }
 
 private:
 
