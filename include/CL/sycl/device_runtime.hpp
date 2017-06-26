@@ -20,6 +20,7 @@
 #ifdef TRISYCL_OPENCL
 #include <boost/compute.hpp>
 #endif
+#include <boost/optional.hpp>
 
 #include "CL/sycl/detail/default_classes.hpp"
 
@@ -131,6 +132,34 @@ serialize_arg(detail::task &task,
 }
 
 
+/// The binary code of the kernels
+namespace code {
+
+  /// A binary program containing some kernels
+  struct program {
+    /// The size of a binary program
+    std::size_t binary_size;
+    /// The bytes of program. Use this type for \c boost::compute
+    unsigned const char *binary;
+
+    /** The current program
+
+        \todo Deal with several programs
+    */
+    static boost::optional<program> p;
+
+    program(std::size_t binary_size, const char *binary)
+      : binary_size { binary_size }
+      , binary { reinterpret_cast<unsigned const char *>(binary) } {
+        p = *this;
+        std::cerr << "binary_size = " << binary_size << std::endl;
+      }
+  };
+
+  inline boost::optional<program> program::p;
+
+}
+
 /** The code of the kernels arranged by name
 
   \todo use std::byte when moving to C++17
@@ -153,10 +182,16 @@ set_kernel(detail::task &task,
   std::cerr << "Setting up  " << kernel_name << std::endl;
   std::cerr << " aka " << kernel_short_name << std::endl;
   // \todo Add kernel caching per device
-  auto binary = kernel_IR[kernel_name];
+  // auto binary = kernel_IR.find(kernel_name);
+  // if (binary == kernel_IR.end()) {
   auto context = task.get_queue()->get_boost_compute().get_context();
   // Construct an OpenCL program from the precompiled kernel file
-  auto program = boost::compute::program::create_with_binary(binary, context);
+  auto program = boost::compute::program::create_with_binary
+    (code::program::p->binary,
+     code::program::p->binary_size,
+     context);
+  std::cerr << "Name device " << task.get_queue()->get_boost_compute().get_device().name()
+            << std::endl;
   // Build the OpenCL program
   program.build();
 
