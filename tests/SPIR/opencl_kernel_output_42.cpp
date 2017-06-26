@@ -24,13 +24,11 @@ int test_main(int argc, char *argv[]) {
      export BOOST_COMPUTE_DEFAULT_VENDOR=Xilinx
      will probably select for execution a Xilinx FPGA on the machine
   */
-  auto opencl_q { boost::compute::system::default_queue() };
-  queue q { opencl_q };
+  queue q { default_selector { } };
 
   // Construct an OpenCL program from the precompiled kernel file
-  auto program =
-    boost::compute::program::create_with_binary_file("output_42.spir64",
-                                                     opencl_q.get_context());
+  auto program = boost::compute::program::create_with_binary_file
+    ("output_42.spir64", q.get_boost_compute().get_context());
 
   // Build the OpenCL program
   program.build();
