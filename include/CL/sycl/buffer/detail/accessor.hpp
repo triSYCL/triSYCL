@@ -152,6 +152,21 @@ public:
                   "when a handler is used");
     // Register the buffer to the task dependencies
     task = buffer_add_to_task(buf, &command_group_handler, is_write_access());
+
+#ifdef TRISYCL_OPENCL
+    if (!task->get_queue()->is_host()) {
+      /* Before running the kernel, make sure the cl_mem behind this
+         accessor is up-to-date on the device if needed and pass it to
+         the kernel */
+      task->add_prelude([&] {
+          copy_in_cl_buffer();
+        });
+      // After running the kernel, deal with some copy-back if needed
+      task->add_postlude([&] {
+          copy_back_cl_buffer();
+        });
+    }
+#endif
   }
 
 
@@ -437,6 +452,7 @@ private:
     /* The copy back is handled by the host accessor and the buffer destructor.
        We don't need to systematically transfer the data after the
        kernel execution
+
        \todo Figure out what to do with this function
     */
   }
