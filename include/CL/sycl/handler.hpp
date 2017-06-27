@@ -41,7 +41,7 @@ namespace sycl {
     parameter an instance of the command group handler and all the kernel
     invocation functions are methods of this class.
 */
-class handler {
+class handler : public detail::debug<handler> {
 
 public:
 

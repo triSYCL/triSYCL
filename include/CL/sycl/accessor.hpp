@@ -54,17 +54,18 @@ class accessor :
                                                               AccessMode,
                                                               Target>>,
     public detail::container_element_aspect<DataType> {
-public:
+
+ public:
 
   /// \todo in the specification: store the dimension for user request
   static constexpr auto dimensionality = Dimensions;
 
-private:
+ private:
 
   using accessor_detail = typename detail::accessor<DataType,
-                                           Dimensions,
-                                           AccessMode,
-                                           Target>;
+                                                    Dimensions,
+                                                    AccessMode,
+                                                    Target>;
 
   // The type encapsulating the implementation
   using implementation_t = typename accessor::shared_ptr_implementation;
