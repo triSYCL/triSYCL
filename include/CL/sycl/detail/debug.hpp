@@ -127,10 +127,10 @@ struct debug {
 /** Wrap a kernel functor in some tracing messages to have start/stop
     information when TRISYCL_TRACE_KERNEL macro is defined */
 template <typename KernelName, typename Functor>
-auto trace_kernel(const Functor &f) {
+auto trace_kernel(Functor f) {
 #ifdef TRISYCL_TRACE_KERNEL
   // Inject tracing message around the kernel
-  return [=] {
+  return [=] () mutable {
     /* Since the class KernelName may just be declared and not really
        defined, just use it through a class pointer to have
        typeid().name() not complaining */
