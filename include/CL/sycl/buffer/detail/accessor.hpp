@@ -52,10 +52,15 @@ template <typename T,
           int Dimensions,
           access::mode Mode,
           access::target Target /* = access::global_buffer */>
-class accessor : public detail::debug<accessor<T,
-                                               Dimensions,
-                                               Mode,
-                                               Target>> {
+class accessor :
+    public std::enable_shared_from_this<accessor<T,
+                                                 Dimensions,
+                                                 Mode,
+                                                 Target>>,
+    public detail::debug<accessor<T,
+                                  Dimensions,
+                                  Mode,
+                                  Target>> {
   /** Keep a reference to the accessed buffer
 
       Beware that it owns the buffer, which means that the accessor
@@ -152,6 +157,38 @@ public:
                   "when a handler is used");
     // Register the buffer to the task dependencies
     task = buffer_add_to_task(buf, &command_group_handler, is_write_access());
+  }
+
+
+  /** Register the accessor once a \c std::shared_ptr is created on it
+
+      This is to be called from outside once the object is created. It
+      has been tried directly inside the contructor, but calling \c
+      shared_from_this() from the constructor dead-lock with
+      libstdc++6
+
+      \todo Double-check with the C++ committee on this issue.
+  */
+  void register_accessor() {
+#ifdef TRISYCL_OPENCL
+    if (!task->get_queue()->is_host()) {
+      // To keep alive this accessor in the following lambdas
+      auto acc = this->shared_from_this();
+      /* Before running the kernel, make sure the cl_mem behind this
+         accessor is up-to-date on the device if needed and pass it to
+         the kernel */
+      task->add_prelude([=] {
+          acc->copy_in_cl_buffer();
+        });
+      // After running the kernel, deal with some copy-back if needed
+      task->add_postlude([=] {
+          /* Even if this function does nothing, it is required to
+             have the capture of acc to keep the accessor alive across
+             the kernel execution up to the execution postlude */
+          acc->copy_back_cl_buffer();
+        });
+    }
+#endif
   }
 
 
@@ -437,6 +474,7 @@ private:
     /* The copy back is handled by the host accessor and the buffer destructor.
        We don't need to systematically transfer the data after the
        kernel execution
+
        \todo Figure out what to do with this function
     */
   }

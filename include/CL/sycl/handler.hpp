@@ -43,7 +43,7 @@ namespace sycl {
     parameter an instance of the command group handler and all the kernel
     invocation functions are methods of this class.
 */
-class handler {
+class handler : public detail::debug<handler> {
 
 public:
 
@@ -88,20 +88,13 @@ public:
             access::target Target = access::target::global_buffer>
   void set_arg(int arg_index,
                accessor<DataType, Dimensions, Mode, Target> && acc_obj) {
-    /* Before running the kernel, make sure the cl_mem behind this
-       accessor is up-to-date on the device if needed and pass it to
+    /* Think about setting the kernel argument before actually calling
        the kernel.
 
        Explicitly capture task by copy instead of having this captured
        by reference and task by reference by side effect */
     task->add_prelude([=, task = task] {
-        acc_obj.implementation->copy_in_cl_buffer();
         task->set_arg(arg_index, acc_obj.implementation->get_cl_buffer());
-      });
-    /* After running the kernel, make sure the cl_mem behind this
-       accessor is up-to-date on the host if needed */
-    task->add_postlude([=] {
-        acc_obj.implementation->copy_back_cl_buffer();
       });
   }
 
@@ -114,8 +107,7 @@ public:
     /* Explicitly capture task by copy instead of having this captured
        by reference and task by reference by side effect */
     task->add_prelude([=, task = task] {
-        task->get_kernel().get_boost_compute()
-          .set_arg(arg_index, scalar_value.unwrap());
+        task->set_arg(arg_index, scalar_value.unwrap());
       });
   }
 
@@ -129,8 +121,7 @@ public:
     /* Explicitly capture task by copy instead of having this captured
        by reference and task by reference by side effect */
     task->add_prelude([=, task = task] {
-        task->get_kernel().get_boost_compute()
-          .set_arg(arg_index, scalar_value);
+        task->set_arg(arg_index, scalar_value);
       });
   }
 
