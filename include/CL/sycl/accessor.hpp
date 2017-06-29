@@ -103,6 +103,8 @@ class accessor :
                   || Target == access::target::constant_buffer,
                   "access target should be global_buffer or constant_buffer "
                   "when a handler is used");
+    // Now the implementation is created, register it
+    implementation->register_accessor();
   }
 
 
