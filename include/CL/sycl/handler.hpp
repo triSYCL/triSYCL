@@ -175,6 +175,10 @@ private:
           if (t->owner_queue->is_host())
             k();
           else {
+    std::cerr << "schedule_kernel &k = "
+              << (void *) &k
+              << std::endl;
+
             // Structure the kernel code so it can be outlined and called
             detail::launch_device_kernel<KernelName>(*t, k);
             // \todo for now only deal with 1 physical work-item only
@@ -200,8 +204,11 @@ public:
   */
   template <typename KernelName = std::nullptr_t,
             typename ParallelForFunctor>
-  void single_task(ParallelForFunctor f) {
-    schedule_kernel<KernelName>(f);
+  void single_task(ParallelForFunctor &&f) {
+    std::cerr << "single_task &f = "
+              << (void *) &f
+              << std::endl;
+    schedule_kernel<KernelName>(std::forward<ParallelForFunctor>(f));
   }
 
 

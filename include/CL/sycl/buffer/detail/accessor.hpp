@@ -443,12 +443,48 @@ public:
 
   const_reverse_iterator crend() const { return array.rend(); }
 
+
+#ifdef TRISYCL_OPENCL
+
+  /** Register a buffer address to update with the address of the
+      cl_mem before kernel launch
+
+      \todo Add private and friend
+  */
+  void register_buffer_update(value_type * &buffer) {
+    std::cerr << "accessor register_buffer_update queue "
+              << (void *) task->get_queue().get()
+              << std::endl;
+    std::cerr << "get_boost_compute() "
+              << (void *) task->get_queue().get()->get_boost_compute()
+              << std::endl;
+    std::cerr << "&buffer "
+              << (void *) &buffer
+              << std::endl;
+    std::cerr << "buffer "
+              << (void *) buffer
+              << std::endl;
+    task->add_prelude([=, &buffer] {
+        /* Update the buffer member of the \c drt::accessor with the
+           address of the the \c cl_mem once it is allocated and
+           before calling the final argument setting.
+
+           Since boost::compute::buffer returns a reference to the
+           cl_mem, the address remains valid. */
+        std::cerr << "prelude buffer " << (void *) buffer << std::endl;
+        buffer = reinterpret_cast<value_type *>(&get_cl_buffer().get());
+        std::cerr << "prelude buffer " << (void *) buffer << std::endl;
+        std::cerr << "&buffer "
+                  << (void *) &buffer
+                  << std::endl;
+      });
+  }
+
 private:
 
   // The following function are used from handler
   friend handler;
 
-#ifdef TRISYCL_OPENCL
   /// Get the boost::compute::buffer or throw if unset
   auto get_cl_buffer() const {
     // This throws if not set

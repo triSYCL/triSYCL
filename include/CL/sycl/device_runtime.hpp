@@ -24,6 +24,7 @@
 
 #include "CL/sycl/detail/default_classes.hpp"
 
+#include "CL/sycl/accessor.hpp"
 #include "CL/sycl/command_group/detail/task.hpp"
 #include "CL/sycl/detail/shared_ptr_implementation.hpp"
 #include "CL/sycl/device/detail/host_device.hpp"
@@ -60,7 +61,7 @@ namespace drt {
 */
 TRISYCL_WEAK_ATTRIB_PREFIX TRISYCL_GLOBAL_AS void *TRISYCL_WEAK_ATTRIB_SUFFIX
 get_some_cl_mem_hidden_in_a_buffer(const void *accessor) {
-  return nullptr;
+  return (void *)23 /*nullptr*/;
 }
 
 
@@ -79,6 +80,10 @@ class accessor {
 
      So use a more trivial approach
   */
+/*  union buffer {
+    TRISYCL_GLOBAL_AS typename Accessor::value_type *global;
+    typename Accessor::value_type *host;
+  };*/
   TRISYCL_GLOBAL_AS typename Accessor::value_type *buffer;
 
   /** The size of the accessor
@@ -89,7 +94,7 @@ class accessor {
 public:
 
   /// Capture the minimal accessor features
-  accessor(const Accessor &a) :
+  accessor(Accessor &a) :
     /* Initialize the buffer with actually a \c cl_mem since it will be
        overridden with the kernel argument by the serializer at
        run-time, but at least from the kernel point of view it has to
@@ -100,11 +105,25 @@ public:
         get_some_cl_mem_hidden_in_a_buffer((const void *)&a)
     },
     size { a.get_count() }
-  {}
+  {
+#ifndef TRISYCL_DEVICE
+    /* Register the buffer address to be updated with the final
+       version before the kernel set arg */
+    std::cerr << "accessor(Accessor &a) : a.register_buffer_update(buffer);"
+              << (void *) &a
+              << std::endl;
+    std::cerr << " &buffer ="
+              << (void *) &buffer
+              << std::endl;
+    assert(sizeof(cl_mem) == sizeof(void *));
+    buffer = (int *) 456;
+    a.implementation->register_buffer_update(buffer);
+#endif
+  }
 
 
   /// use the accessor with integers à la []
-  auto &operator[](std::size_t index) const {
+  auto &operator[](std::size_t index) const noexcept {
     return buffer[index];
   }
 
