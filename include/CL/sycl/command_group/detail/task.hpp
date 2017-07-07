@@ -63,6 +63,7 @@ struct task : public std::enable_shared_from_this<task>,
       or to run OpenCL kernels on */
   std::shared_ptr<detail::queue> owner_queue;
 
+  /// The OpenCL-compatible kernel run by this task, if any
   std::shared_ptr<cl::sycl::detail::kernel> kernel;
 
 
@@ -241,7 +242,7 @@ struct task : public std::enable_shared_from_this<task>,
   }
 
 
-  /// Set the kernel running this task if any
+  /// Set the OpenCL-compatible kernel running this task if any
   void set_kernel(const std::shared_ptr<cl::sycl::detail::kernel> &k) {
     kernel = k;
   }
