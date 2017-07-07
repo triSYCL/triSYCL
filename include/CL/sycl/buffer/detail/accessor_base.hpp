@@ -13,6 +13,10 @@
 #include <cstddef>
 #include <memory>
 
+#ifdef TRISYCL_OPENCL
+#include <boost/compute.hpp>
+#endif
+
 #include "CL/sycl/command_group/detail/task.hpp"
 #include "CL/sycl/detail/debug.hpp"
 
@@ -39,8 +43,10 @@ protected:
 
 private:
 
+#ifdef TRISYCL_OPENCL
   /// Get the boost::compute::buffer or throw if unset
   virtual boost::compute::buffer get_cl_buffer() const = 0;
+#endif
 
 };
 

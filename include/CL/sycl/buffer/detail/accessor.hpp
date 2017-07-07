@@ -12,6 +12,9 @@
 #include <cstddef>
 #include <memory>
 
+#ifdef TRISYCL_OPENCL
+#include <boost/compute.hpp>
+#endif
 #include <boost/multi_array.hpp>
 
 #include "CL/sycl/access.hpp"

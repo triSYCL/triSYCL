@@ -117,7 +117,9 @@ public:
               << std::endl;
     assert(sizeof(cl_mem) == sizeof(void *));
     buffer = (int *) 456;
+#ifdef TRISYCL_OPENCL
     a.implementation->register_buffer_update(buffer);
+#endif
 #endif
   }
 
@@ -203,6 +205,7 @@ set_kernel(detail::task &task,
   // \todo Add kernel caching per device
   // auto binary = kernel_IR.find(kernel_name);
   // if (binary == kernel_IR.end()) {
+#ifdef TRISYCL_OPENCL
   auto context = task.get_queue()->get_boost_compute().get_context();
   // Construct an OpenCL program from the precompiled kernel file
   auto program = boost::compute::program::create_with_binary
@@ -218,6 +221,7 @@ set_kernel(detail::task &task,
   cl::sycl::kernel k { boost::compute::kernel { program, kernel_short_name } };
 
   task.set_kernel(k.implementation);
+#endif
 }
 
 /// @} to end the Doxygen group
