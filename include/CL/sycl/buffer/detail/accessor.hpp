@@ -15,6 +15,7 @@
 #include <boost/multi_array.hpp>
 
 #include "CL/sycl/access.hpp"
+#include "CL/sycl/buffer/detail/accessor_base.hpp"
 #include "CL/sycl/command_group/detail/task.hpp"
 #include "CL/sycl/detail/debug.hpp"
 #include "CL/sycl/id.hpp"
@@ -53,6 +54,7 @@ template <typename T,
           access::mode Mode,
           access::target Target /* = access::global_buffer */>
 class accessor :
+    public detail::accessor_base,
     public std::enable_shared_from_this<accessor<T,
                                                  Dimensions,
                                                  Mode,
@@ -84,9 +86,6 @@ class accessor :
       previously done in this implementation
    */
   mutable array_view_type array;
-
-  /// The task where the accessor is used in
-  std::shared_ptr<detail::task> task;
 
 public:
 
@@ -486,7 +485,7 @@ private:
   friend handler;
 
   /// Get the boost::compute::buffer or throw if unset
-  auto get_cl_buffer() const {
+  boost::compute::buffer get_cl_buffer() const override {
     // This throws if not set
     auto ctx = task->get_queue()->get_context();
     return buf->get_cl_buffer(ctx);
