@@ -19,8 +19,8 @@
 #include <boost/compute.hpp>
 #endif
 
+#include "CL/sycl/accessor/detail/accessor_base.hpp"
 #include "CL/sycl/buffer/detail/buffer_base.hpp"
-#include "CL/sycl/buffer/detail/accessor_base.hpp"
 #include "CL/sycl/detail/debug.hpp"
 #include "CL/sycl/kernel.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"

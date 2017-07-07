@@ -27,6 +27,8 @@ class handler;
 
 namespace detail {
 
+struct task;
+
 /** \addtogroup data Data access and storage in SYCL
     @{
 */

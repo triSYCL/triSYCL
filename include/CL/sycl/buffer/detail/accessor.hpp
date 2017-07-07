@@ -1,5 +1,5 @@
-#ifndef TRISYCL_SYCL_ACCESSOR_DETAIL_ACCESSOR_HPP
-#define TRISYCL_SYCL_ACCESSOR_DETAIL_ACCESSOR_HPP
+#ifndef TRISYCL_SYCL_BUFFER_DETAIL_ACCESSOR_HPP
+#define TRISYCL_SYCL_BUFFER_DETAIL_ACCESSOR_HPP
 
 /** \file The OpenCL SYCL buffer accessor<> detail behind the scene
 
@@ -18,7 +18,7 @@
 #include <boost/multi_array.hpp>
 
 #include "CL/sycl/access.hpp"
-#include "CL/sycl/buffer/detail/accessor_base.hpp"
+#include "CL/sycl/accessor/detail/accessor_base.hpp"
 #include "CL/sycl/command_group/detail/task.hpp"
 #include "CL/sycl/detail/debug.hpp"
 #include "CL/sycl/id.hpp"
@@ -500,4 +500,4 @@ private:
     ### End:
 */
 
-#endif // TRISYCL_SYCL_ACCESSOR_DETAIL_ACCESSOR_HPP
+#endif // TRISYCL_SYCL_BUFFER_DETAIL_ACCESSOR_HPP
