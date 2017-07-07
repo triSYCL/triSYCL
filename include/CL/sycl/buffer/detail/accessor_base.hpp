@@ -41,7 +41,22 @@ protected:
   /// The task where the accessor is used in
   std::shared_ptr<detail::task> task;
 
-private:
+  /// The declaration order of the accessor
+  std::size_t order;
+
+public:
+
+  /// Set the order of the accessor
+  void set_order(std::size_t o) {
+    order = o;
+  }
+
+
+  /// Get the order of the accessor
+  auto get_order() {
+    return order;
+  }
+
 
 #ifdef TRISYCL_OPENCL
   /// Get the boost::compute::buffer or throw if unset

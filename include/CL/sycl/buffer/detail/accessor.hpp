@@ -172,10 +172,12 @@ public:
       \todo Double-check with the C++ committee on this issue.
   */
   void register_accessor() {
-#ifdef TRISYCL_OPENCL
     if (!task->get_queue()->is_host()) {
       // To keep alive this accessor in the following lambdas
       auto acc = this->shared_from_this();
+      // Attach the accessor to the task and get its order
+      set_order(task->register_accessor(acc));
+#ifdef TRISYCL_OPENCL
       /* Before running the kernel, make sure the cl_mem behind this
          accessor is up-to-date on the device if needed and pass it to
          the kernel */
@@ -189,8 +191,8 @@ public:
              the kernel execution up to the execution postlude */
           acc->copy_back_cl_buffer();
         });
-    }
 #endif
+    }
   }
 
 
@@ -445,45 +447,9 @@ public:
 
   const_reverse_iterator crend() const { return array.rend(); }
 
-
-#ifdef TRISYCL_OPENCL
-
-  /** Register a buffer address to update with the address of the
-      cl_mem before kernel launch
-
-      \todo Add private and friend
-  */
-  void register_buffer_update(value_type * &buffer) {
-    std::cerr << "accessor register_buffer_update queue "
-              << (void *) task->get_queue().get()
-              << std::endl;
-    std::cerr << "get_boost_compute() "
-              << (void *) task->get_queue().get()->get_boost_compute()
-              << std::endl;
-    std::cerr << "&buffer "
-              << (void *) &buffer
-              << std::endl;
-    std::cerr << "buffer "
-              << (void *) buffer
-              << std::endl;
-    task->add_prelude([=, &buffer] {
-        /* Update the buffer member of the \c drt::accessor with the
-           address of the the \c cl_mem once it is allocated and
-           before calling the final argument setting.
-
-           Since boost::compute::buffer returns a reference to the
-           cl_mem, the address remains valid. */
-        std::cerr << "prelude buffer " << (void *) buffer << std::endl;
-        buffer = reinterpret_cast<value_type *>(&get_cl_buffer().get());
-        std::cerr << "prelude buffer " << (void *) buffer << std::endl;
-        std::cerr << "&buffer "
-                  << (void *) &buffer
-                  << std::endl;
-      });
-  }
-
 private:
 
+#ifdef TRISYCL_OPENCL
   // The following function are used from handler
   friend handler;
 

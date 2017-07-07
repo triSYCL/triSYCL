@@ -11,13 +11,16 @@
 
 #include <condition_variable>
 #include <memory>
+#include <mutex>
 #include <thread>
+#include <vector>
 
 #ifdef TRISYCL_OPENCL
 #include <boost/compute.hpp>
 #endif
 
 #include "CL/sycl/buffer/detail/buffer_base.hpp"
+#include "CL/sycl/buffer/detail/accessor_base.hpp"
 #include "CL/sycl/detail/debug.hpp"
 #include "CL/sycl/kernel.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"
@@ -64,7 +67,13 @@ struct task : public std::enable_shared_from_this<task>,
   std::shared_ptr<detail::queue> owner_queue;
 
   /// The OpenCL-compatible kernel run by this task, if any
-  std::shared_ptr<cl::sycl::detail::kernel> kernel;
+  std::shared_ptr<detail::kernel> kernel;
+
+  /** The accessors indexed by their creation order
+
+      This is used to relate a kernel parameter of a kernel generated
+      by the device compiler to its accessor. */
+  std::vector<std::weak_ptr<detail::accessor_base>> accessors;
 
 
   /// Create a task from a submitting queue
@@ -282,6 +291,25 @@ struct task : public std::enable_shared_from_this<task>,
     throw non_cl_error("Not compiled with OpenCL support");
 #endif
   }
+
+
+#ifdef TRISYCL_OPENCL
+  /// Get the Boost.Compute buffer for an accessor of the task
+  auto get_compute_buffer(std::size_t order) {
+    return accessors[order].lock()->get_cl_buffer();
+  }
+#endif
+
+
+/** Register an accessor and return its registration order
+
+    I would prefer to name this method \c register but this is a C++
+    keyword...
+*/
+std::size_t register_accessor(std::weak_ptr<detail::accessor_base> a) {
+  accessors.push_back(a);
+  return accessors.size() - 1;
+}
 
 };
 

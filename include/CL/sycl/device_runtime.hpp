@@ -45,26 +45,6 @@ namespace sycl {
 /// The device-side runtime
 namespace drt {
 
-/** Some function providing a cl_mem
-
-    It is better to use a weak linkage than having this function with
-    extern linkage:
-
-    - if the device compiler is used the function is kept by the
-      compiler because full link and LTO is not applied before the
-      device compiler passes are applied. So there is no partial
-      evaluation in the compiler according to what is returned by this
-      function;
-
-    - if the device compiler is not used, the code still links and can
-      be compiled.
-*/
-TRISYCL_WEAK_ATTRIB_PREFIX TRISYCL_GLOBAL_AS void *TRISYCL_WEAK_ATTRIB_SUFFIX
-get_some_cl_mem_hidden_in_a_buffer(const void *accessor) {
-  return (void *)23 /*nullptr*/;
-}
-
-
 /// SYCL accessor seen from a device perspective
 template <typename Accessor>
 class accessor {
@@ -80,10 +60,6 @@ class accessor {
 
      So use a more trivial approach
   */
-/*  union buffer {
-    TRISYCL_GLOBAL_AS typename Accessor::value_type *global;
-    typename Accessor::value_type *host;
-  };*/
   TRISYCL_GLOBAL_AS typename Accessor::value_type *buffer;
 
   /** The size of the accessor
@@ -101,25 +77,20 @@ public:
        look like an \c Accessor::value_type * for the kernel
        outlining */
     buffer {
-      (TRISYCL_GLOBAL_AS typename Accessor::value_type *)
-        get_some_cl_mem_hidden_in_a_buffer((const void *)&a)
-    },
+      reinterpret_cast<TRISYCL_GLOBAL_AS typename Accessor::value_type *>
+        (a.implementation->get_order())
+        },
     size { a.get_count() }
   {
 #ifndef TRISYCL_DEVICE
     /* Register the buffer address to be updated with the final
        version before the kernel set arg */
-    std::cerr << "accessor(Accessor &a) : a.register_buffer_update(buffer);"
+    std::cerr << "accessor(Accessor &a) : &a = "
               << (void *) &a
               << std::endl;
     std::cerr << " &buffer ="
               << (void *) &buffer
               << std::endl;
-    assert(sizeof(cl_mem) == sizeof(void *));
-    buffer = (int *) 456;
-#ifdef TRISYCL_OPENCL
-    a.implementation->register_buffer_update(buffer);
-#endif
 #endif
   }
 
@@ -150,6 +121,34 @@ serialize_arg(detail::task &task,
   std::cerr << "serialize_arg index = " << index << ", size = " << arg_size
             << ", arg = " << arg << std::endl;
   task.set_arg(index, arg_size, arg);
+}
+
+
+/** Set an accessor argument of the kernel
+
+    \param[in] task is the implementation detail of a triSYCL kernel
+
+    \param[in] index is the order of the argument to set (0 is the first one)
+
+    \param[in] arg point to the argument value
+
+    \param[in] arg_size is the size of the argument
+*/
+TRISYCL_WEAK_ATTRIB_PREFIX void TRISYCL_WEAK_ATTRIB_SUFFIX
+serialize_accessor_arg(detail::task &task,
+                       std::size_t index,
+                       void *arg,
+                       std::size_t arg_size) {
+  std::cerr << "serialize_accessor_arg index =" << index
+            << ", size = " << arg_size
+            << ", arg = " << arg << std::endl;
+#ifdef TRISYCL_OPENCL
+  /* The address of the argument has been actually initialized by the
+     accessor constructor to the accessor order to relate an argument
+     to its accessor */
+  task.set_arg(index,
+               task.get_compute_buffer(reinterpret_cast<std::size_t>(arg)));
+#endif
 }
 
 
