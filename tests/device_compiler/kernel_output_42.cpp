@@ -21,7 +21,7 @@ int test_main(int argc, char *argv[]) {
      BOOST_COMPUTE_DEFAULT_VENDOR
 
      for example doing in bash
-     export BOOST_COMPUTE_DEFAULT_VENDOR=Xilinx
+     export BOOST_COMPUTE_DEFAULT_PLATFORM=Xilinx
      will probably select for execution a Xilinx FPGA on the machine
 
      export BOOST_COMPUTE_DEFAULT_PLATFORM="Portable Computing Language"

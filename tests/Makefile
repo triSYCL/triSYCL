@@ -4,7 +4,7 @@
 
 # Set default compiler instead of default CXX=g++ value
 # Assume Clang 3.9 at least
-CXX = clang++
+CXX = clang++-4.0
 # But everything works fine with GCC 5.4 at least
 #CXX = g++
 
@@ -187,7 +187,7 @@ check: $(TARGETS_CC)
 check-compilers:
 	# Launch the check with various compilers
 	-FORCE_CXX=g++-5 $(MAKE) clean check
-	-FORCE_CXX=clang++-3.9 $(MAKE) clean check
+	-FORCE_CXX=clang++-4.0 $(MAKE) clean check
 	-FORCE_CXX=g++ $(MAKE) clean check
 
 # A special target to be called as from the test as "make execute
