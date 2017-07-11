@@ -208,9 +208,10 @@ execute: $(basename $(TARGET))
 # Assume that CXX contains some Clang compiler version
 
 # Keep intermediate file for debuging purpose
-.PRECIOUS: %.bc %.ll %.spir64 %.kernel.spir.cpp \
+.PRECIOUS: %.bc %.ll %.spir64 %.kernel.internalized.cpp \
+	%.kernel_caller.bc \
 	%.pre_kernel.bc %.pre_kernel.ll %.pre_kernel_caller.ll \
-	%.kernel.bc %.kernel.ll
+	%.kernel.bc %.kernel.bin %.kernel.ll
 
 # The LLVM bitcode
 %.bc: %.cpp
@@ -273,8 +274,23 @@ execute: $(basename $(TARGET))
 	  -SYCL-kernel-filter -globaldce -RELGCD -inSPIRation \
 	  -o $@ $<
 
-# Internalize the bitcode into cl::sycl::drt::code::program with a C++ file
-%.kernel.spir.cpp: %.kernel.bc
+ifdef XILINX_SDX
+#  If the target is a Xilinx FPGA kernel, use the Xilinx compiler with
+#  the required extension for the SPIR input file
+%.kernel.bin: %.kernel.bc
+	cp -p $< $*.xpirbc
+	# TODO: deal with several kernels
+	SDACCEL_DEBUG='yes' SDX_USE_CLANG_39='yes' xocc $(XOCCFLAGS) --target hw \
+	  -k TRISYCL_kernel_0 -o $@ $*.xpirbc
+else
+# If the target is SPIR, just use the bitcode as the kernel binary
+%.kernel.bin: %.kernel.bc
+	cp -p $< $@
+endif
+
+# Internalize the kernel binary into cl::sycl::drt::code::program with
+# a C++ file
+%.kernel.internalized.cpp: %.kernel.bin
 	triSYCL_tool --source-in $< --output $@
 
 # Process bitcode with SYCL pass to generate kernels
@@ -292,7 +308,7 @@ execute: $(basename $(TARGET))
 	llc -O=3 -o $@ $<
 
 # Link the C++-generated kernel caller to the final program
-%.kernel_caller: %.kernel_caller.ll %.kernel.spir.cpp
+%.kernel_caller: %.kernel_caller.ll %.kernel.internalized.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@ $^ $(LOADLIBES) $(LDLIBS)
 
 # Generate LLVM assembly code from bit-code
