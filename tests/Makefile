@@ -4,7 +4,7 @@
 
 # Set default compiler instead of default CXX=g++ value
 # Assume Clang 3.9 at least
-CXX = clang++-3.9
+CXX = clang++
 # But everything works fine with GCC 5.4 at least
 #CXX = g++
 
@@ -268,7 +268,7 @@ execute: $(basename $(TARGET))
 	#  -o $@ $<
 	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -stats  -debug \
 	#  -SYCL-annotation -SYCL-kernel-filter -o $@ $<
-	opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats \
+	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats \
 	  -globalopt -deadargelim -argpromotion -deadargelim \
 	  -SYCL-kernel-filter -globaldce -RELGCD -inSPIRation \
 	  -o $@ $<
@@ -279,7 +279,7 @@ execute: $(basename $(TARGET))
 
 # Process bitcode with SYCL pass to generate kernels
 %.kernel_caller.bc: %.pre_kernel_caller.ll
-	opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats \
+	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats \
 	  -globalopt -deadargelim -SYCL-args-flattening \
 	  -SYCL-serialize-arguments -deadargelim -o $@ $<
 
