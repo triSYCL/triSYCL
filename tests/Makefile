@@ -208,7 +208,7 @@ execute: $(basename $(TARGET))
 # Assume that CXX contains some Clang compiler version
 
 # Keep intermediate file for debuging purpose
-.PRECIOUS: %.bc %.ll %.spir64 %.kernel.internalized.cpp \
+.PRECIOUS: %.bc %.ll %.spir64 %.kernel.internalized.cxx \
 	%.kernel_caller.bc \
 	%.pre_kernel.bc %.pre_kernel.ll %.pre_kernel_caller.ll \
 	%.kernel.bc %.kernel.bin %.kernel.ll
@@ -290,7 +290,7 @@ endif
 
 # Internalize the kernel binary into cl::sycl::drt::code::program with
 # a C++ file
-%.kernel.internalized.cpp: %.kernel.bin
+%.kernel.internalized.cxx: %.kernel.bin
 	triSYCL_tool --source-in $< --output $@
 
 # Process bitcode with SYCL pass to generate kernels
@@ -308,7 +308,7 @@ endif
 	llc -O=3 -o $@ $<
 
 # Link the C++-generated kernel caller to the final program
-%.kernel_caller: %.kernel_caller.ll %.kernel.internalized.cpp
+%.kernel_caller: %.kernel_caller.ll %.kernel.internalized.cxx
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@ $^ $(LOADLIBES) $(LDLIBS)
 
 # Generate LLVM assembly code from bit-code
