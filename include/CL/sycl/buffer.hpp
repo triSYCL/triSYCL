@@ -232,33 +232,6 @@ public:
   {}
 
 
-  /** Create a new buffer which is initialized by host_data
-
-      \param[in] host_data points to the storage and values used to
-      initialize the buffer
-
-      \param[in] r defines the size
-
-      \param[in] allocator is to be used by the SYCL runtime, of type
-      cl::sycl::buffer_allocator<T> by default
-
-      The SYCL runtime receives full ownership of the host_data unique_ptr
-      and there in effect there is no synchronization with the application
-      code using host_data.
-
-      \todo Update the API to add template <typename D =
-      std::default_delete<T>> because the
-      unique_ptr_class/std::unique_ptr have the destructor type as
-      dependent
-  */
-  buffer(unique_ptr_class<T> &&host_data,
-         const range<Dimensions> &r,
-         Allocator allocator = {})
-    : implementation_t { detail::waiter(new detail::buffer<T, Dimensions>
-                         { std::move(host_data), r }) }
-  {}
-
-
   /** Create a new allocated 1D buffer initialized from the given
       elements ranging from first up to one before last
 
