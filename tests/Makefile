@@ -209,9 +209,11 @@ execute: $(basename $(TARGET))
 
 # Keep intermediate file for debuging purpose
 .PRECIOUS: %.bc %.ll %.spir64 %.kernel.internalized.cxx \
-	%.kernel_caller.bc \
-	%.pre_kernel.bc %.pre_kernel.ll %.pre_kernel_caller.ll \
-	%.kernel.bc %.kernel.bin %.kernel.ll
+  %.kernel_caller.bc %.kernel_caller.ll \
+  %.pre_kernel.bc %.pre_kernel.ll \
+  %.pre_kernel_caller.bc %.pre_kernel_caller.ll \
+  %.pre_kernel.bc %.pre_kernel.ll %.pre_kernel_caller.ll \
+  %.kernel.bc %.kernel.bin %.kernel.ll
 
 # The LLVM bitcode
 %.bc: %.cpp
@@ -257,7 +259,7 @@ execute: $(basename $(TARGET))
 	$(CL_CXX) -cc1 -emit-llvm-bc -triple spir64-unknown-unknown \
 	  -include $(triSYCL_DIR)/include/CL/sycl/detail/SPIR/opencl_spir.h -o $@ $<
 
-# Process bitcode with SYCL pass to generate kernels
+# Process bitcode with SYCL passes to generate kernels
 %.kernel.bc: %.pre_kernel.ll
 	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats \
 	#  -globalopt -deadargelim -SYCL-args-flattening -deadargelim \
@@ -293,7 +295,7 @@ endif
 %.kernel.internalized.cxx: %.kernel.bin
 	triSYCL_tool --source-in $< --output $@
 
-# Process bitcode with SYCL pass to generate kernels
+# Process bitcode with SYCL passes to generate kernels
 %.kernel_caller.bc: %.pre_kernel_caller.ll
 	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats \
 	  -globalopt -deadargelim -SYCL-args-flattening \
@@ -313,11 +315,11 @@ endif
 
 # Generate LLVM assembly code from bit-code
 %.ll: %.bc
-	llvm-dis -o $@ $<
+	$(LLVM_BUILD_DIR)/bin/llvm-dis -o $@ $<
 
 # Generate LLVM assembly code from SPIR bit-code
 %.spir64.ll: %.spir64
-	llvm-dis -o $@ $<
+	$(LLVM_BUILD_DIR)/bin/llvm-dis -o $@ $<
 
 # A pretty-printed C++ view of the Clang AST
 %.ast-c++: %.cpp
