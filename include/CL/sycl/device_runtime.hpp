@@ -176,7 +176,8 @@ namespace code {
       }
   };
 
-  inline boost::optional<program> program::p;
+  TRISYCL_WEAK_ATTRIB_PREFIX boost::optional<program>
+  TRISYCL_WEAK_ATTRIB_SUFFIX program::p;
 
 }
 
