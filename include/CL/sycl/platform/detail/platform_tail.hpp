@@ -39,7 +39,10 @@ platform::get_devices(info::device_type device_type) const {
 
   // Return the devices with the good criterion according to the selector
   std::copy_if(devices.begin(), devices.end(), std::back_inserter(sd),
-               [&](const device &e) { return s(e) >= 0; });
+               [&](const device &e) {
+                 return s(e) >= 0 &&
+                   e.get_platform().get_info<info::platform::name>() == this->get_info<info::platform::name>();
+               });
   return sd;
 }
 
