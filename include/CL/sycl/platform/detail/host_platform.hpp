@@ -45,6 +45,17 @@ public:
   cl_platform_id get() const override {
     throw non_cl_error("The host platform has no OpenCL platform");
   }
+
+
+  /** Return the underlying Boost.Compute platform
+
+      This throws an error since there is no Boost Compute platform associated
+      to the host platform.
+   */
+  boost::compute::platform &get_boost_compute() override {
+    throw
+      non_cl_error("The host device has no underlying Boost Compute platform");
+  }
 #endif
 
 

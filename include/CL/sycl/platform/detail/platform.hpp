@@ -29,6 +29,10 @@ public:
 #ifdef TRISYCL_OPENCL
   /// Return the cl_platform_id of the underlying OpenCL platform
   virtual cl_platform_id get() const = 0;
+
+
+  /// Return the underlying Boost.Compute platform, if any
+  virtual boost::compute::platform &get_boost_compute() = 0;
 #endif
 
 

@@ -85,7 +85,7 @@ public:
       Return synchronous errors via the SYCL exception class.
   */
   cl::sycl::platform get_platform() const override {
-    return { d.platform() };
+    return d.platform();
   }
 
 #if 0

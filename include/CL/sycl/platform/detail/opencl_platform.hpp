@@ -53,6 +53,12 @@ public:
   }
 
 
+  /// Return the underlying Boost.Compute platform
+  boost::compute::platform &get_boost_compute() override {
+    return p;
+  }
+
+
   /// Return false since an OpenCL platform is not the SYCL host platform
   bool is_host() const override {
     return false;

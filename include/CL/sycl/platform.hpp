@@ -105,6 +105,16 @@ public:
   cl_platform_id get() const {
     return implementation->get();
   }
+
+
+  /** Return the underlying Boost.Compute platform if it is an
+      OpenCL platform
+
+      This is a triSYCL extension
+  */
+  boost::compute::platform get_boost_compute() const {
+    return implementation->get_boost_compute();
+  }
 #endif
 
 

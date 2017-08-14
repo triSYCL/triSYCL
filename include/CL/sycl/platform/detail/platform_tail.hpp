@@ -18,32 +18,35 @@ namespace sycl {
     @{
 */
 
-/** Return a list of all available devices
+/** Returns a vector class containing all SYCL devices associated with
+    this SYCL platform.
 
     Return synchronous errors via SYCL exception classes.
 */
 vector_class<device>
 platform::get_devices(info::device_type device_type) const {
-  // Start with the default device
-  vector_class<device> devices = { {} };
+  /** If \c get_devices is called with the host platform,
+      returns the host_device.
+  */
+  if(is_host()) return { {} };
 
-#ifdef TRISYCL_OPENCL
-  // Then add all the OpenCL devices
-  for (const auto &d : boost::compute::system::devices())
-    devices.emplace_back(d);
-#endif
-
-  // The selected devices
-  vector_class<device> sd;
+  vector_class<device> devices;
   device_type_selector s { device_type };
 
-  // Return the devices with the good criterion according to the selector
-  std::copy_if(devices.begin(), devices.end(), std::back_inserter(sd),
-               [&](const device &e) {
-                 return s(e) >= 0 &&
-                   e.get_platform().get_info<info::platform::name>() == this->get_info<info::platform::name>();
-               });
-  return sd;
+#ifdef TRISYCL_OPENCL
+  // Add the desired OpenCL devices
+  for (const auto &d : get_boost_compute().devices()) {
+    // Get the SYCL device from the Boost Compute device
+    cl::sycl::device sycl_dev { d };
+    /* Return the devices with the good criterion according to the selector
+       and the \c cl_platform_id of the device platform and the instance
+    */
+    if(s(sycl_dev) >= 0 && sycl_dev.get_platform().get() == get())
+      devices.push_back(sycl_dev);
+  }
+#endif
+
+  return devices;
 }
 
 /// @} to end the Doxygen group
