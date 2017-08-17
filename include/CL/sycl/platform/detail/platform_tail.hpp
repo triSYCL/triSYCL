@@ -25,13 +25,21 @@ namespace sycl {
 */
 vector_class<device>
 platform::get_devices(info::device_type device_type) const {
-  /** If \c get_devices is called with the host platform,
-      returns the host_device.
+
+  device_type_selector s { device_type };
+
+  /** If \c get_devices is called with the host platform
+      and the right device type, returns the host_device.
   */
-  if(is_host()) return { {} };
+  if (is_host()) {
+    cl::sycl::device host_dev;
+    if (s(host_dev) > 0)
+      return { host_dev };
+    else
+      return {};
+  }
 
   vector_class<device> devices;
-  device_type_selector s { device_type };
 
 #ifdef TRISYCL_OPENCL
   // Add the desired OpenCL devices
@@ -41,7 +49,7 @@ platform::get_devices(info::device_type device_type) const {
     /* Return the devices with the good criterion according to the selector
        and the \c cl_platform_id of the device platform and the instance
     */
-    if(s(sycl_dev) >= 0 && sycl_dev.get_platform().get() == get())
+    if (s(sycl_dev) > 0)
       devices.push_back(sycl_dev);
   }
 #endif
