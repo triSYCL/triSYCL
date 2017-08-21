@@ -18,11 +18,12 @@ start off as:
   # Behavioural options for the solution
   #
     option(TRISYCL_OPENMP "triSYCL multi-threading with OpenMP" ON)
+    option(TRISYCL_OPENCL "triSYCL OpenCL interoperability mode" OFF)
     option(TRISYCL_NO_ASYNC "triSYCL use synchronous kernel execution" OFF)
-    option(BUILD_OPENCL "triSYCL build OpenCL tests" ON)
-    option(BUILD_XILINX "triSYCL build Xilinx-specific tests" OFF)
     option(TRISYCL_DEBUG "triSCYL use debug mode" OFF)
     option(TRISYCL_DEBUG_STRUCTORS "triSYCL trace of object lifetimes" OFF)
+    option(TRISYCL_TRACE_KERNEL "triSYCL trace of kernel execution" OFF)
+
 
     set(CL_SYCL_LANGUAGE_VERSION 220 CACHE VERSION "Host language version to be used by trisYCL (default is: 220)")
     set(TRISYCL_CL_LANGUAGE_VERSION 220 CACHE VERSION "Device language version to be used by trisYCL (default is: 220) (not used yet)")
