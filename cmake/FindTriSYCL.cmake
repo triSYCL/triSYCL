@@ -117,7 +117,7 @@ endif()
 
 #triSYCL options
 option(TRISYCL_OPENMP "triSYCL multi-threading with OpenMP" ON)
-option(TRISYCL_OPENCL "triSYCL OpenCL interoperability mode" ON)
+option(TRISYCL_OPENCL "triSYCL OpenCL interoperability mode" OFF)
 option(TRISYCL_NO_ASYNC "triSYCL use synchronous kernel execution" OFF)
 option(TRISYCL_DEBUG "triSCYL use debug mode" OFF)
 option(TRISYCL_DEBUG_STRUCTORS "triSYCL trace of object lifetimes" OFF)
