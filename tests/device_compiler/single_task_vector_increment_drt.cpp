@@ -24,10 +24,22 @@ int test_main(int argc, char *argv[]) {
     std::iota(a_input.begin(), a_input.end(), 0);
   }
 
-  /// \todo implement queue construction from device_selector
-  // Create an OpenCL queue to launch the kernel
-  auto oq = boost::compute::system::default_queue();
-  queue q { oq };
+  /* Construct the queue from the default OpenCL one.
+
+     You can use the following environment variables to select
+     the device to be chosen at runtime
+     BOOST_COMPUTE_DEFAULT_DEVICE
+     BOOST_COMPUTE_DEFAULT_DEVICE_TYPE
+     BOOST_COMPUTE_DEFAULT_ENFORCE
+     BOOST_COMPUTE_DEFAULT_PLATFORM
+     BOOST_COMPUTE_DEFAULT_VENDOR
+
+     for example doing in bash
+     export BOOST_COMPUTE_DEFAULT_VENDOR=Xilinx
+     export BOOST_COMPUTE_DEFAULT_ENFORCE=1
+     will select for execution a Xilinx FPGA on the machine
+  */
+  queue q { default_selector {} };
 
   // Launch a kernel to do the summation
   q.submit([&] (handler &cgh) {
