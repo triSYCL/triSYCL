@@ -53,6 +53,12 @@ public:
   }
 
 
+  /// Return the underlying Boost.Compute platform
+  const boost::compute::platform &get_boost_compute() const override {
+    return p;
+  }
+
+
   /// Return false since an OpenCL platform is not the SYCL host platform
   bool is_host() const override {
     return false;
@@ -80,6 +86,18 @@ public:
     return cache.get_or_register(p.id(),
                                  [&] { return new opencl_platform { p }; });
   }
+
+
+  /** Get all the available devices for this OpenCL platform
+
+      \param[in] device_type is the device type to filter the selection
+      or \c info::device_type::all by default to return all the
+      devices
+
+      \return the device list
+  */
+  vector_class<cl::sycl::device>
+  get_devices(info::device_type device_type) const override;
 
 private:
 

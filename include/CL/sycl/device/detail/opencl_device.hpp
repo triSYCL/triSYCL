@@ -83,12 +83,9 @@ public:
   /** Return the platform of device
 
       Return synchronous errors via the SYCL exception class.
-
-      \todo To be implemented
   */
   cl::sycl::platform get_platform() const override {
-    detail::unimplemented();
-    return {};
+    return d.platform();
   }
 
 #if 0

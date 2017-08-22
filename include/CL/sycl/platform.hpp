@@ -19,7 +19,6 @@
 #include "CL/sycl/detail/shared_ptr_implementation.hpp"
 #include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/info/device.hpp"
-#include "CL/sycl/info/platform.hpp"
 #include "CL/sycl/platform/detail/host_platform.hpp"
 #ifdef TRISYCL_OPENCL
 #include "CL/sycl/platform/detail/opencl_platform.hpp"
@@ -105,6 +104,16 @@ public:
   cl_platform_id get() const {
     return implementation->get();
   }
+
+
+  /** Return the underlying Boost.Compute platform if it is an
+      OpenCL platform
+
+      This is a triSYCL extension
+  */
+  const boost::compute::platform get_boost_compute() const {
+    return implementation->get_boost_compute();
+  }
 #endif
 
 
@@ -166,12 +175,11 @@ public:
       devices
 
       \return the device list
-
-      \todo To be fully implemented
   */
   vector_class<device>
-  get_devices(info::device_type device_type = info::device_type::all) const
-  TRISYCL_WEAK_ATTRIB_SUFFIX;
+  get_devices(info::device_type device_type = info::device_type::all) const {
+    return implementation->get_devices(device_type);
+  }
 
 };
 

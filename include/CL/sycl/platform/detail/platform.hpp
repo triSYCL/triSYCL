@@ -15,6 +15,9 @@
 
 namespace cl {
 namespace sycl {
+
+class device;
+
 namespace detail {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
@@ -29,6 +32,10 @@ public:
 #ifdef TRISYCL_OPENCL
   /// Return the cl_platform_id of the underlying OpenCL platform
   virtual cl_platform_id get() const = 0;
+
+
+  /// Return the underlying Boost.Compute platform, if any
+  virtual const boost::compute::platform &get_boost_compute() const = 0;
 #endif
 
 
@@ -43,6 +50,16 @@ public:
   /// Specify whether a specific extension is supported on the platform.
   virtual bool has_extension(const string_class &extension) const = 0;
 
+  /** Get all the available devices for this platform
+
+      \param[in] device_type is the device type to filter the selection
+      or \c info::device_type::all by default to return all the
+      devices
+
+      \return the device list
+  */
+  virtual vector_class<device>
+  get_devices(info::device_type device_type) const = 0;
 
   // Virtual to call the real destructor
   virtual ~platform() {}

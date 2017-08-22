@@ -45,6 +45,17 @@ public:
   cl_platform_id get() const override {
     throw non_cl_error("The host platform has no OpenCL platform");
   }
+
+
+  /** Return the underlying Boost.Compute platform
+
+      This throws an error since there is no Boost Compute platform associated
+      to the host platform.
+   */
+  boost::compute::platform &get_boost_compute() const override {
+    throw
+      non_cl_error("The host device has no underlying Boost Compute platform");
+  }
 #endif
 
 
@@ -93,6 +104,17 @@ public:
     detail::unimplemented();
     return {};
   }
+
+  /** Get all the available devices for the host platform
+
+      \param[in] device_type is the device type to filter the selection
+      or \c info::device_type::all by default to return all the
+      devices
+
+      \return the device list
+  */
+  vector_class<cl::sycl::device>
+  get_devices(info::device_type device_type) const override;
 
 };
 
