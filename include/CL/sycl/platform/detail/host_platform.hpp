@@ -52,7 +52,7 @@ public:
       This throws an error since there is no Boost Compute platform associated
       to the host platform.
    */
-  boost::compute::platform &get_boost_compute() override {
+  boost::compute::platform &get_boost_compute() const override {
     throw
       non_cl_error("The host device has no underlying Boost Compute platform");
   }
@@ -104,6 +104,17 @@ public:
     detail::unimplemented();
     return {};
   }
+
+  /** Get all the available devices for the host platform
+
+      \param[in] device_type is the device type to filter the selection
+      or \c info::device_type::all by default to return all the
+      devices
+
+      \return the device list
+  */
+  vector_class<cl::sycl::device>
+  get_devices(info::device_type device_type) const;
 
 };
 

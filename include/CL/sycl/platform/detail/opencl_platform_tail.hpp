@@ -1,7 +1,7 @@
-#ifndef TRISYCL_SYCL_PLATFORM_DETAIL_PLATFORM_TAIL_HPP
-#define TRISYCL_SYCL_PLATFORM_DETAIL_PLATFORM_TAIL_HPP
+#ifndef TRISYCL_SYCL_PLATFORM_DETAIL_OPENCL_PLATFORM_TAIL_HPP
+#define TRISYCL_SYCL_PLATFORM_DETAIL_OPENCL_PLATFORM_TAIL_HPP
 
-/** \file The ending part of of OpenCL SYCL platform
+/** \file The ending part of the SYCL host platform
 
     This is here to break a dependency between platform and device
 
@@ -13,35 +13,25 @@
 
 namespace cl {
 namespace sycl {
+namespace detail {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
 */
 
 /** Returns a vector class containing all SYCL devices associated with
-    this SYCL platform and of the \c info::device_type given.
+    this OpenCL platform
 
-    Return synchronous errors via SYCL exception classes.
+    \param[in] device_type is the device type to filter the selection
+    or \c info::device_type::all by default to return all the
+    devices
+
+    \return the device list
 */
-vector_class<device>
-platform::get_devices(info::device_type device_type) const {
-
-  device_type_selector s { device_type };
-
-  /** If \c get_devices is called with the host platform
-      and the right device type, returns the host_device.
-  */
-  if (is_host()) {
-    cl::sycl::device host_dev;
-    if (s(host_dev) > 0)
-      return { host_dev };
-    else
-      return {};
-  }
-
-  vector_class<device> devices;
-
-#ifdef TRISYCL_OPENCL
+vector_class<cl::sycl::device>
+inline opencl_platform::get_devices(info::device_type device_type) const {
+  vector_class<cl::sycl::device> devices;
+    device_type_selector ds { device_type };
   // Add the desired OpenCL devices
   for (const auto &d : get_boost_compute().devices()) {
     // Get the SYCL device from the Boost Compute device
@@ -50,16 +40,16 @@ platform::get_devices(info::device_type device_type) const {
        By calling devices on the \c boost::compute::platform we know that
        we iterate only over the device belonging to the current platform,
     */
-    if (s(sycl_dev) > 0)
+    if (ds(sycl_dev) > 0)
       devices.push_back(sycl_dev);
   }
-#endif
 
   return devices;
 }
 
 /// @} to end the Doxygen group
 
+}
 }
 }
 
@@ -71,4 +61,4 @@ platform::get_devices(info::device_type device_type) const {
     ### End:
 */
 
-#endif // TRISYCL_SYCL_PLATFORM_DETAIL_PLATFORM_TAIL_HPP
+#endif // TRISYCL_SYCL_PLATFORM_DETAIL_OPENCL_PLATFORM_TAIL_HPP
