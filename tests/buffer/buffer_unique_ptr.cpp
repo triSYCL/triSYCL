@@ -13,8 +13,26 @@ int test_main(int argc, char *argv[]) {
 
   constexpr size_t N = 16;
 
-  // Allocate some memory to test ownership give-away
-  std::unique_ptr<int[]> init { new int[N] };
+  /* Allocate some memory to test ownership give-away
+
+     Interestingly, we cannot have directly
+     \code
+     std::unique_ptr<int[]> init { new int[N] };
+     \endcode
+     because there is the buffer constructor take a \c
+     std::shared_ptr<T> and in C++17 there is an implicit conversion
+     from \c std::unique_ptr<T[]> to \c std::shared_ptr<T[]> and
+     another one \c std::shared_ptr<T[]> to \c std::shared_ptr<T>, but
+     globally it requires chaining more than 1 implicit conversion and
+     thus it is not tried.
+
+     Should we provide a \c std::unique_ptr<T[]> for buffer in the
+     SYCL specification?
+
+     Or is there a missing \c std::shared_ptr<T> constructor from a \c
+     std::unique_ptr<T[]> in C++17?
+  */
+  std::unique_ptr<int, std::default_delete<int[]>> init { new int[N] };
   std::iota(init.get(), init.get() + N, 314);
 
   buffer<int> a { std::move(init), N };

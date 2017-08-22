@@ -3,8 +3,11 @@
 # See doc/macros.rst for a description of triSYCL-specific macros.
 
 # Set default compiler instead of default CXX=g++ value
-# Assume Clang 3.9 at least
+# Assume Clang 3.9 and libc++ or Clang 4.0 with libstdc++ at least
 CXX = clang++-4.0
+# To use libc++ instead of libstdc++, from libc++-dev & libc++abi-dev packages
+#CXXFLAGS += -stdlib=libc++
+
 # But everything works fine with GCC 5.4 at least
 #CXX = g++
 
@@ -19,10 +22,8 @@ CL_CXX = clang++-3.9
 # Set BOOST_COMPUTE_INCPATH variable to where a specific version of
 # Boost.Compute is if required
 
-# To use OpenMP to execute SYCL kernels:
+# To use OpenMP to execute SYCL kernels (Clang needs libomp-dev package)
 #CXXFLAGS += -fopenmp
-# On Ubuntu, Clang has some issues to find omp.h, so use:
-#CXXFLAGS += -I/usr/lib/gcc/x86_64-linux-gnu/6/include
 
 ## To disable asynchronous kernels, which is the default in SYCL
 #CXXFLAGS += -DTRISYCL_NO_ASYNC

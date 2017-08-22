@@ -29,6 +29,8 @@ following environment variables:
 
 - ``BOOST_COMPUTE_DEFAULT_VENDOR``
 
+- ``BOOST_COMPUTE_DEFAULT_ENFORCE``
+
 For example to use PoCL http://portablecl.org
 
 .. code:: bash

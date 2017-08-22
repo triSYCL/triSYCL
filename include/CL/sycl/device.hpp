@@ -277,6 +277,11 @@ inline auto device::get_info<info::device::local_mem_size>() const {
 }
 
 template <>
+inline auto device::get_info<info::device::max_mem_alloc_size>() const {
+  return size_t { 32000 };
+}
+
+template <>
 inline auto device::get_info<info::device::vendor>() const {
   return string_class {};
 }
