@@ -208,11 +208,18 @@ set_kernel(detail::task &task,
 #ifdef TRISYCL_OPENCL
   auto context = task.get_queue()->get_boost_compute().get_context();
   // Construct an OpenCL program from the precompiled kernel file
-  auto program = boost::compute::program::create_with_binary
+  auto
+#ifdef SDX_KERNEL_PROGRAM_OWNING_BUG
+    /* There is a bug in Xilinx OpenCL runtime where the cl_kernel
+       does not keep alive its own cl_program */
+    static
+#endif
+    program = boost::compute::program::create_with_binary
     (code::program::p->binary,
      code::program::p->binary_size,
      context);
-  std::cerr << "Name device " << task.get_queue()->get_boost_compute().get_device().name()
+  std::cerr << "Name device "
+            << task.get_queue()->get_boost_compute().get_device().name()
             << std::endl;
   // Build the OpenCL program
   program.build();
