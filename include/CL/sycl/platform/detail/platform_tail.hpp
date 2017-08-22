@@ -19,7 +19,7 @@ namespace sycl {
 */
 
 /** Returns a vector class containing all SYCL devices associated with
-    this SYCL platform.
+    this SYCL platform and of the \c info::device_type given.
 
     Return synchronous errors via SYCL exception classes.
 */
@@ -46,8 +46,9 @@ platform::get_devices(info::device_type device_type) const {
   for (const auto &d : get_boost_compute().devices()) {
     // Get the SYCL device from the Boost Compute device
     cl::sycl::device sycl_dev { d };
-    /* Return the devices with the good criterion according to the selector
-       and the \c cl_platform_id of the device platform and the instance
+    /* Return the devices with the good criterion according to the selector.
+       By calling devices on the \c boost::compute::platform we know that
+       we iterate only over the device belonging to the current platform,
     */
     if (s(sycl_dev) > 0)
       devices.push_back(sycl_dev);
