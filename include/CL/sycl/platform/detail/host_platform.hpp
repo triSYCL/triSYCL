@@ -114,7 +114,7 @@ public:
       \return the device list
   */
   vector_class<cl::sycl::device>
-  get_devices(info::device_type device_type) const;
+  get_devices(info::device_type device_type) const override;
 
 };
 
