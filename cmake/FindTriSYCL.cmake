@@ -9,10 +9,10 @@
 #  FindTriSYCL.cmake
 #########################
 #
-#  Tools for finding and building with TriSYCL.
+# Tools for finding and building with triSYCL.
 #
-#  User must define TRISYCL_INCLUDE_DIR pointing to the triSYCL
-#  include directory.
+# To use this file with another project please remove
+# ${PROJECT_SOURCE_DIR}/tests/common from the add_sycl_to_target function
 #
 # Requite CMake version 3.5 or higher
 
@@ -122,6 +122,7 @@ option(TRISYCL_NO_ASYNC "triSYCL use synchronous kernel execution" OFF)
 option(TRISYCL_DEBUG "triSCYL use debug mode" OFF)
 option(TRISYCL_DEBUG_STRUCTORS "triSYCL trace of object lifetimes" OFF)
 option(TRISYCL_TRACE_KERNEL "triSYCL trace of kernel execution" OFF)
+option(TRISYCL_INCLUDE_DIR  "triSYCL include directory" OFF)
 
 mark_as_advanced(TRISYCL_OPENMP)
 mark_as_advanced(TRISYCL_OPENCL)
@@ -129,6 +130,7 @@ mark_as_advanced(TRISYCL_NO_ASYNC)
 mark_as_advanced(TRISYCL_DEBUG)
 mark_as_advanced(TRISYCL_DEBUG_STRUCTORS)
 mark_as_advanced(TRISYCL_TRACE_KERNEL)
+mark_as_advanced(TRISYCL_INCLUDE_DIR)
 
 #triSYCL definitions
 set(CL_SYCL_LANGUAGE_VERSION 220 CACHE VERSION
@@ -137,6 +139,17 @@ set(TRISYCL_CL_LANGUAGE_VERSION 220 CACHE VERSION
   "Device language version to be used by trisYCL (default is: 220)")
 set(CMAKE_CXX_STANDARD 14)
 set(CXX_STANDARD_REQUIRED ON)
+
+if(NOT TRISYCL_INCLUDE_DIR)
+  set(TRISYCL_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
+endif()
+
+if(EXISTS ${TRISYCL_INCLUDE_DIR})
+  message(STATUS "Found triSYCL include directory: " ${TRISYCL_INCLUDE_DIR})
+else()
+  message(FATAL_ERROR "triSYCL include directory - no found! "
+    ${TRISYCL_INCLUDE_DIR})
+endif()
 
 
 # Find OpenCL package
@@ -163,6 +176,21 @@ else()
   set(LOG_NEEDED OFF)
 endif()
 
+option(TRISYCL_OPENMP "triSYCL multi-threading with OpenMP" ON)
+option(TRISYCL_OPENCL "triSYCL OpenCL interoperability mode" OFF)
+option(TRISYCL_NO_ASYNC "triSYCL use synchronous kernel execution" OFF)
+option(TRISYCL_DEBUG "triSCYL use debug mode" OFF)
+option(TRISYCL_DEBUG_STRUCTORS "triSYCL trace of object lifetimes" OFF)
+option(TRISYCL_TRACE_KERNEL "triSYCL trace of kernel execution" OFF)
+option(TRISYCL_INCLUDE_DIR  "triSYCL include directory" OFF)
+
+message(STATUS "triSYCL OpenMP:                   ${TRISYCL_OPENMP}")
+message(STATUS "triSYCL OpenCL:                   ${TRISYCL_OPENCL}")
+message(STATUS "triSYCL synchronous execution:    ${TRISYCL_NO_ASYNC}")
+message(STATUS "triSYCL debug mode:               ${TRISYCL_DEBUG}")
+message(STATUS "triSYCL object trace:             ${TRISYCL_DEBUG_STRUCTORS}")
+message(STATUS "triSYCL kernel trace:             ${TRISYCL_TRACE_KERNEL}")
+
 find_package(Threads REQUIRED)
 
 #######################
@@ -176,7 +204,7 @@ find_package(Threads REQUIRED)
 function(add_sycl_to_target targetName)
   # Add include directories to the "#include <>" paths
   target_include_directories (${targetName} PUBLIC
-    ${PROJECT_SOURCE_DIR}/include
+    ${TRISYCL_INCLUDE_DIR}
     ${PROJECT_SOURCE_DIR}/tests/common
     ${Boost_INCLUDE_DIRS}
     $<$<BOOL:${TRISYCL_OPENCL}>:${OpenCL_INCLUDE_DIRS}>
@@ -197,8 +225,7 @@ function(add_sycl_to_target targetName)
     $<$<BOOL:${TRISYCL_DEBUG}>:TRISYCL_DEBUG>
     $<$<BOOL:${TRISYCL_DEBUG_STRUCTORS}>:TRISYCL_DEBUG_STRUCTORS>
     $<$<BOOL:${TRISYCL_TRACE_KERNEL}>:TRISYCL_TRACE_KERNEL>
-    $<$<BOOL:${LOG_NEEDED}>:BOOST_LOG_DYN_LINK>
-    EIGEN_SYCL_TRISYCL)
+    $<$<BOOL:${LOG_NEEDED}>:BOOST_LOG_DYN_LINK>)
 
   # C++ and OpenMP requirements
   target_compile_options(${targetName} PUBLIC
