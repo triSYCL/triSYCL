@@ -7,7 +7,7 @@ declare_trisycl_test(TARGET queue)
 declare_trisycl_test(TARGET wait TEST_REGEX
 "First
 Second")
-if(${BUILD_OPENCL})
+if(${TRISYCL_OPENCL})
   declare_trisycl_test(TARGET opencl_queue USES_OPENCL)
-endif(${BUILD_OPENCL})
+endif(${TRISYCL_OPENCL})
 declare_trisycl_test(TARGET double_wait)
