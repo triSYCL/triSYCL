@@ -1,6 +1,12 @@
 /* RUN: %{execute}%s
 
    A simple typical FPGA-like kernel
+
+   Replace a loop by some explicit iteration instances to debug loop
+   issues.
+
+   With no loop at all is it better to test if the basic runtime works
+   on moving buffers around.
 */
 #include <CL/sycl.hpp>
 #include <iostream>

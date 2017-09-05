@@ -22,10 +22,10 @@ int test_main(int argc, char *argv[]) {
 
      for example doing in bash
      export BOOST_COMPUTE_DEFAULT_PLATFORM=Xilinx
-     will probably select for execution a Xilinx FPGA on the machine
+     will probably select for execution a Xilinx FPGA on the machine.
 
      export BOOST_COMPUTE_DEFAULT_PLATFORM="Portable Computing Language"
-     will select PoCL/
+     will select PoCL.
   */
   queue q { default_selector { } };
 
