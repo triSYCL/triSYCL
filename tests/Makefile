@@ -63,7 +63,7 @@ CXXFLAGS_KERNEL = -fno-vectorize -fno-unroll-loops
 # When XILINX_SDX environment variable is set, use the Xilinx SDx
 # OpenCL compiler with these flags:
 # Adapt to the real platform
-XOCCFLAGS=--platform xilinx:adm-pcie-7v3:1ddr:3.0
+XOCCFLAGS = --platform xilinx:adm-pcie-7v3:1ddr:3.0
 
 
 
@@ -277,7 +277,7 @@ execute: $(basename $(TARGET))
 	#  -o $@ $<
 	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -stats  -debug \
 	#  -SYCL-annotation -SYCL-kernel-filter -o $@ $<
-	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats \
+	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so \
 	  -globalopt -deadargelim -argpromotion -deadargelim \
 	  -SYCL-kernel-filter -globaldce -RELGCD -inSPIRation \
 	  -o $@ $<
@@ -303,7 +303,7 @@ endif
 
 # Process bitcode with SYCL passes to generate kernels
 %.kernel_caller.bc: %.pre_kernel_caller.ll
-	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats \
+	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so \
 	  -globalopt -deadargelim -SYCL-args-flattening \
 	  -SYCL-serialize-arguments -deadargelim -o $@ $<
 
