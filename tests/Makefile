@@ -259,6 +259,12 @@ execute: $(basename $(TARGET))
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_DEVICE -sycl -sycl-is-device \
 	  $(CXXFLAGS_KERNEL) -emit-llvm -S -o $@ $<
 
+# The Clang AST of the pre-kernel code
+%.pre_kernel.ast: %.cpp
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRIYCL_DEVICE -sycl -sycl-is-device \
+	  $(CXXFLAGS_KERNEL) -Xclang -ast-dump \
+	  -fsyntax-only $< > $@
+
 # How to compile OpenCL kernel to 64-bit SPIR 2.0
 %.spir64: %.cl
 	# Assume here that CXX is actually a kind of clang++
