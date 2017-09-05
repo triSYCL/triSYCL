@@ -55,6 +55,11 @@ CXXFLAGS += -O3 -DNDEBUG
 #CXXFLAGS += -fsanitize=thread -fno-omit-frame-pointer
 #CXXFLAGS += -fsanitize=undefined -fno-omit-frame-pointer
 
+# More flags for the kernel compilation flow:
+# Counterbalance the effect of -O3 by avoiding vector types in SPIR output
+# or inlining that might duplicate the code too early
+CXXFLAGS_KERNEL = -fno-vectorize -fno-unroll-loops
+
 # When XILINX_SDX environment variable is set, use the Xilinx SDx
 # OpenCL compiler with these flags:
 # Adapt to the real platform
@@ -246,13 +251,13 @@ execute: $(basename $(TARGET))
 # The LLVM assembly code for the code before kernels
 %.pre_kernel.ll: %.cpp
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_DEVICE -sycl -sycl-is-device \
-	  -emit-llvm -S -o $@ $<
+	  $(CXXFLAGS_KERNEL) -emit-llvm -S -o $@ $<
 %.pre_kernel.ll: %.C
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_DEVICE -sycl -sycl-is-device \
-	  -emit-llvm -S -o $@ $<
+	  $(CXXFLAGS_KERNEL) -emit-llvm -S -o $@ $<
 %.pre_kernel.ll: %.cc
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_DEVICE -sycl -sycl-is-device \
-	  -emit-llvm -S -o $@ $<
+	  $(CXXFLAGS_KERNEL) -emit-llvm -S -o $@ $<
 
 # How to compile OpenCL kernel to 64-bit SPIR 2.0
 %.spir64: %.cl
