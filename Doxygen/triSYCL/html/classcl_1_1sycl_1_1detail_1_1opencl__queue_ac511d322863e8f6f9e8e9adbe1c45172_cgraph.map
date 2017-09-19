@@ -1,0 +1,5 @@
+<map id="cl::sycl::detail::opencl_queue::instance" name="cl::sycl::detail::opencl_queue::instance">
+<area shape="rect" id="node2" href="$group__execution.html#aedd3d5cf537f70451c47c73503a4f085" title="Return the underlying Boost.Compute device if it is an OpenCL device. " alt="" coords="209,5,345,47"/>
+<area shape="rect" id="node3" href="$classcl_1_1sycl_1_1detail_1_1opencl__queue.html#a9a9eaaf110399a6680b924d1a02e1a1a" title="Get a singleton instance of the opencl_queue. " alt="" coords="203,71,352,112"/>
+<area shape="rect" id="node4" href="$classcl_1_1sycl_1_1detail_1_1cache.html#a9a918c2a5233b5538b248a195c3446c3" title="Get a value stored in the cache if present or insert by calling a generator function. " alt="" coords="400,71,547,112"/>
+</map>

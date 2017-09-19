@@ -1,7 +1,0 @@
-<map id="cl::sycl::group::parallel_for_work_item" name="cl::sycl::group::parallel_for_work_item">
-<area shape="rect" id="node2" href="$group__parallelism.html#ga3004da03b4f3be8dc72c49b58076107b" title="Implement the loop on the work&#45;items inside a work&#45;group. " alt="" coords="207,112,359,153"/>
-<area shape="rect" id="node3" href="$group__parallelism.html#a5423a9a150d2ace40b402a29b5f66aff" title="cl::sycl::group::get\l_nd_range" alt="" coords="437,5,568,47"/>
-<area shape="rect" id="node4" href="$group__helpers.html#a17609386a684ec2649347c0328f82050" title="Return the element of the array. " alt="" coords="407,71,599,127"/>
-<area shape="rect" id="node5" href="$group__parallelism.html#af49da6aef507a4dd81dd2401ae20e66c" title="Return an id representing the index of the group within the nd_range for every dimension. " alt="" coords="437,151,568,178"/>
-<area shape="rect" id="node6" href="$group__parallelism.html#a4c9a7eaa71fcfc0691e3e810102c9029" title="Get the local range for this work_group. " alt="" coords="437,203,568,244"/>
-</map>

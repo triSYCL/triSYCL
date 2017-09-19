@@ -1,7 +1,7 @@
 <map id="cl::sycl::accessor&lt; DataType, 1, AccessMode, access::target::blocking_pipe &gt;" name="cl::sycl::accessor&lt; DataType, 1, AccessMode, access::target::blocking_pipe &gt;">
-<area shape="rect" id="node2" href="$group__data.html" title="cl::sycl::detail::pipe\l_accessor\&lt; DataType, AccessMode,\l access::target::blocking_pipe \&gt;" alt="" coords="325,134,564,190"/>
-<area shape="rect" id="node3" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; detail::pipe_accessor\l\&lt; DataType, AccessMode,\l Target \&gt; \&gt;" alt="" coords="5,5,184,76"/>
-<area shape="rect" id="node4" href="$classstatic_01constexpr_01bool.html" title="static constexpr bool" alt="" coords="23,101,166,127"/>
-<area shape="rect" id="node5" href="$classbool.html" title="bool" alt="" coords="71,151,118,178"/>
-<area shape="rect" id="node7" href="$classstd_1_1shared__ptr_3_01detail_1_1cl_1_1sycl_1_1detail_1_1pipe_3_01DataType_01_4_01_4.html" title="shared_ptr\&lt; detail\l::cl::sycl::detail::\lpipe\&lt; DataType \&gt; \&gt;" alt="" coords="25,274,164,330"/>
+<area shape="rect" id="node2" href="$group__data.html" title="cl::sycl::detail::pipe\l_accessor\&lt; DataType, AccessMode,\l access::target::blocking_pipe \&gt;" alt="" coords="333,145,572,201"/>
+<area shape="rect" id="node3" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; detail::pipe_accessor\l\&lt; DataType, AccessMode,\l Target \&gt; \&gt;" alt="" coords="9,5,188,76"/>
+<area shape="rect" id="node4" href="$classstatic_01constexpr_01bool.html" title="static constexpr bool" alt="" coords="27,101,170,127"/>
+<area shape="rect" id="node5" href="$classstd_1_1shared__ptr_3_01cl_1_1sycl_1_1detail_1_1pipe_3_01DataType_01_4_01_4.html" title="shared_ptr\&lt; cl::sycl\l::detail::pipe\&lt; DataType \&gt; \&gt;" alt="" coords="5,152,192,193"/>
+<area shape="rect" id="node6" href="$classbool.html" title="bool" alt="" coords="75,218,122,245"/>
 </map>

@@ -1,7 +1,7 @@
 <map id="cl::sycl::device_type_selector::operator()" name="cl::sycl::device_type_selector::operator()">
-<area shape="rect" id="node2" href="$group__execution.html#a5bef943886c69c9dff340479fd1525b8" title="Return true if the device is the SYCL host device. " alt="" coords="387,5,547,32"/>
-<area shape="rect" id="node3" href="$group__execution.html#a5c8924af860a6ac9a054a7a76991fff8" title="Return the device_type of a device. " alt="" coords="196,64,339,91"/>
-<area shape="rect" id="node4" href="$group__execution.html#a900db8487f118d653017abc7f9949d1f" title="Return true if the device is an OpenCL accelerator device. " alt="" coords="403,57,531,98"/>
-<area shape="rect" id="node5" href="$group__execution.html#a2ad8cb3462516a0f3069875640d44dc1" title="Return true if the device is an OpenCL CPU device. " alt="" coords="389,123,545,149"/>
-<area shape="rect" id="node6" href="$group__execution.html#a75b085b8e49d8bdd9511adb61aeeca37" title="Return true if the device is an OpenCL GPU device. " alt="" coords="389,173,545,200"/>
+<area shape="rect" id="node2" href="$group__execution.html#af563f0e0d74afdadb195bb80c20a3d32" title="Return true if the device is the SYCL host device. " alt="" coords="387,5,547,32"/>
+<area shape="rect" id="node3" href="$group__execution.html#accdadd6fafa11f1ef766d17659f00c20" title="Return the device_type of a device. " alt="" coords="196,64,339,91"/>
+<area shape="rect" id="node4" href="$group__execution.html#a4c46ad9dfc37b0ae3aee39e1ea98ca03" title="Return true if the device is an OpenCL accelerator device. " alt="" coords="403,57,531,98"/>
+<area shape="rect" id="node5" href="$group__execution.html#af232cc1464ff46474750f3511243e017" title="Return true if the device is an OpenCL CPU device. " alt="" coords="389,123,545,149"/>
+<area shape="rect" id="node6" href="$group__execution.html#aa21e8acf32bdacb8b55e8a150f7357be" title="Return true if the device is an OpenCL GPU device. " alt="" coords="389,173,545,200"/>
 </map>

@@ -1,4 +1,4 @@
 <map id="cl::sycl::handler::set_arg" name="cl::sycl::handler::set_arg">
-<area shape="rect" id="node2" href="$group__execution.html#a35f4e0ca6ad987c5f354389b1092fa2b" title="Helper to individually call set_arg() for each argument. " alt="" coords="176,5,299,47"/>
-<area shape="rect" id="node3" href="$group__execution.html#a7dfc0809b14b8953c842f6114e013e58" title="Set all kernel args for an OpenCL kernel which is used through the SYCL/OpenCL interop interface..." alt="" coords="347,5,469,47"/>
+<area shape="rect" id="node2" href="$group__execution.html#a39bd46dc4e8b2838e5602b5752fb117d" title="Helper to individually call set_arg() for each argument. " alt="" coords="176,5,299,47"/>
+<area shape="rect" id="node3" href="$group__execution.html#a529b800f175828a7edc07b0d1a19a176" title="Set all kernel args for an OpenCL kernel which is used through the SYCL/OpenCL interop interface..." alt="" coords="347,5,469,47"/>
 </map>

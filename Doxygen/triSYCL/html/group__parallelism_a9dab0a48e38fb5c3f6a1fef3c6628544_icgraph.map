@@ -1,0 +1,6 @@
+<map id="cl::sycl::group::get_nd_range" name="cl::sycl::group::get_nd_range">
+<area shape="rect" id="node2" href="$group__parallelism.html#ga3004da03b4f3be8dc72c49b58076107b" title="Implement the loop on the work&#45;items inside a work&#45;group. " alt="" coords="184,35,336,76"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#a81a75a6cd3a7e747a29e527c06f03d9d" title="Loop on the work&#45;items inside a work&#45;group. " alt="" coords="395,5,548,47"/>
+<area shape="rect" id="node5" href="$group__parallelism.html#ga3156c9a9179d62eb40321f2b86448cea" title="Implement a variation of parallel_for to take into account a nd_range&lt;&gt; " alt="" coords="384,71,559,98"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#ga929002a0e83ac349605e51f8dc35059c" title="SYCL parallel_for version that allows a Program object to be specified. " alt="" coords="607,5,720,47"/>
+</map>

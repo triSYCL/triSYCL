@@ -1,6 +1,7 @@
 <map id="cl::sycl::detail::cache::remove" name="cl::sycl::detail::cache::remove">
-<area shape="rect" id="node2" href="$classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#a4a1f51fa2dc3cec58be61f40c4c146c2" title="Unregister from the cache on destruction. " alt="" coords="200,5,491,47"/>
-<area shape="rect" id="node3" href="$classcl_1_1sycl_1_1detail_1_1opencl__device.html#ae9fe23d18a4e3d074f090b6ba673748d" title="Unregister from the cache on destruction. " alt="" coords="262,71,429,112"/>
-<area shape="rect" id="node4" href="$group__execution.html#acac224488ab755fc8cfd64f856cf2d79" title="Unregister from the cache on destruction. " alt="" coords="253,136,437,177"/>
-<area shape="rect" id="node5" href="$classcl_1_1sycl_1_1detail_1_1opencl__queue.html#ae3d4a50f0c35b58635c852ec4a7c53bf" title="Unregister from the cache on destruction. " alt="" coords="265,201,425,243"/>
+<area shape="rect" id="node2" href="$classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#aa2c379092664aacbe2005d6b55e7bf0e" title="Unregister from the cache on destruction. " alt="" coords="200,5,491,47"/>
+<area shape="rect" id="node3" href="$classcl_1_1sycl_1_1detail_1_1opencl__context.html#ae149a9bf5435c823170ba87c998b4977" title="Unregister from the cache on destruction. " alt="" coords="257,71,433,112"/>
+<area shape="rect" id="node4" href="$classcl_1_1sycl_1_1detail_1_1opencl__device.html#ae9fe23d18a4e3d074f090b6ba673748d" title="Unregister from the cache on destruction. " alt="" coords="262,136,429,177"/>
+<area shape="rect" id="node5" href="$group__execution.html#acac224488ab755fc8cfd64f856cf2d79" title="Unregister from the cache on destruction. " alt="" coords="253,201,437,243"/>
+<area shape="rect" id="node6" href="$classcl_1_1sycl_1_1detail_1_1opencl__queue.html#ae3d4a50f0c35b58635c852ec4a7c53bf" title="Unregister from the cache on destruction. " alt="" coords="265,267,425,308"/>
 </map>

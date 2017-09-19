@@ -1,4 +1,5 @@
 <map id="cl::sycl::detail::parallel_for_workitem" name="cl::sycl::detail::parallel_for_workitem">
-<area shape="rect" id="node2" href="$group__parallelism.html#a69b4cf133052f7605d489af0e60ef978" title="Loop on the work&#45;items inside a work&#45;group. " alt="" coords="205,5,359,47"/>
-<area shape="rect" id="node3" href="$group__parallelism.html#ga929002a0e83ac349605e51f8dc35059c" title="SYCL parallel_for version that allows a Program object to be specified. " alt="" coords="407,5,520,47"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#ga3156c9a9179d62eb40321f2b86448cea" title="Implement a variation of parallel_for to take into account a nd_range&lt;&gt; " alt="" coords="205,5,380,32"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#a81a75a6cd3a7e747a29e527c06f03d9d" title="Loop on the work&#45;items inside a work&#45;group. " alt="" coords="216,57,369,98"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#ga929002a0e83ac349605e51f8dc35059c" title="SYCL parallel_for version that allows a Program object to be specified. " alt="" coords="428,57,541,98"/>
 </map>

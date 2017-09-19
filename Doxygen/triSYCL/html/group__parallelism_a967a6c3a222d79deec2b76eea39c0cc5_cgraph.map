@@ -1,0 +1,6 @@
+<map id="cl::sycl::nd_item::get_item" name="cl::sycl::nd_item::get_item">
+<area shape="rect" id="node2" href="$group__parallelism.html#a76f60881c4d17eba5d87f48b4e42197f" title="Return the constituent global id representing the work&#45;item&#39;s position in the global iteration space..." alt="" coords="180,5,307,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#a38089b11659fd98faf4ceb90ee7f7c01" title="Return a range&lt;&gt; representing the dimensions of the nd_range&lt;&gt; " alt="" coords="180,71,307,112"/>
+<area shape="rect" id="node5" href="$group__parallelism.html#ae236a5a8ca6260e5d587d90824fff703" title="Return an id&lt;&gt; representing the n&#45;dimensional offset provided to the constructor of the nd_range&lt;&gt; an..." alt="" coords="180,136,307,177"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#a7d95d596dd580eee98a811bcad002f59" title="Return the nd_range&lt;&gt; of the current execution. " alt="" coords="355,104,481,145"/>
+</map>

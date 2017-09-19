@@ -1,0 +1,8 @@
+<map id="include/CL/sycl/opencl_types.hpp" name="include/CL/sycl/opencl_types.hpp">
+<area shape="rect" id="node2" href="$handler_8hpp.html" title="include/CL/sycl/handler.hpp" alt="" coords="206,95,389,121"/>
+<area shape="rect" id="node4" href="$sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="229,333,366,360"/>
+<area shape="rect" id="node3" href="$buffer_8hpp.html" title="include/CL/sycl/buffer.hpp" alt="" coords="273,259,448,285"/>
+<area shape="rect" id="node5" href="$pipe_8hpp.html" title="include/CL/sycl/pipe.hpp" alt="" coords="32,259,198,285"/>
+<area shape="rect" id="node6" href="$queue_8hpp.html" title="include/CL/sycl/queue.hpp" alt="" coords="147,177,323,203"/>
+<area shape="rect" id="node7" href="$static__pipe_8hpp.html" title="include/CL/sycl/static\l_pipe.hpp" alt="" coords="398,169,546,211"/>
+</map>

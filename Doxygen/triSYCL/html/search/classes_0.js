@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['accessor',['accessor',['../group__data.html#classcl_1_1sycl_1_1detail_1_1accessor',1,'cl::sycl::detail']]],
-  ['accessor',['accessor',['../group__data.html#classcl_1_1sycl_1_1accessor',1,'cl::sycl']]],
+  ['accessor',['accessor',['../group__data.html#classcl_1_1sycl_1_1detail_1_1accessor',1,'cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;'],['../group__data.html#classcl_1_1sycl_1_1accessor',1,'cl::sycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;']]],
   ['accessor_3c_20datatype_2c_201_2c_20accessmode_2c_20access_3a_3atarget_3a_3ablocking_5fpipe_20_3e',['accessor&lt; DataType, 1, AccessMode, access::target::blocking_pipe &gt;',['../group__data.html#classcl_1_1sycl_1_1accessor_3_01DataType_00_011_00_01AccessMode_00_01access_1_1target_1_1blocking__pipe_01_4',1,'cl::sycl']]],
   ['accessor_3c_20datatype_2c_201_2c_20accessmode_2c_20access_3a_3atarget_3a_3apipe_20_3e',['accessor&lt; DataType, 1, AccessMode, access::target::pipe &gt;',['../group__data.html#classcl_1_1sycl_1_1accessor_3_01DataType_00_011_00_01AccessMode_00_01access_1_1target_1_1pipe_01_4',1,'cl::sycl']]],
   ['accessor_3c_20t_2c_20dimensions_2c_20mode_2c_20access_3a_3atarget_3a_3alocal_20_3e',['accessor&lt; T, Dimensions, Mode, access::target::local &gt;',['../group__data.html#classcl_1_1sycl_1_1detail_1_1accessor_3_01T_00_01Dimensions_00_01Mode_00_01access_1_1target_1_1local_01_4',1,'cl::sycl::detail']]],

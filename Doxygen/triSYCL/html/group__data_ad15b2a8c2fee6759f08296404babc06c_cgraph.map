@@ -1,0 +1,5 @@
+<map id="cl::sycl::detail::buffer::track_access_mode" name="cl::sycl::detail::buffer::track_access_mode">
+<area shape="rect" id="node2" href="$group__data.html#a8943f21cc4899c224952811286689deb" title="Allocate uninitialized buffer memory. " alt="" coords="200,5,344,47"/>
+<area shape="rect" id="node4" href="$group__data.html#ae8e2f94b9a72bfaa6ac2e10632c602ab" title="Return a range object representing the size of the buffer in terms of number of elements in each dime..." alt="" coords="200,71,344,112"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#ab066b2903dc968d82c6f512e2ddc2d23" title="Return the number of elements in the range. " alt="" coords="392,5,523,47"/>
+</map>

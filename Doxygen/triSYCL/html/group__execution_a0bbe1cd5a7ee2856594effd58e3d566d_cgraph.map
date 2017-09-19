@@ -1,0 +1,4 @@
+<map id="cl::sycl::context::context" name="cl::sycl::context::context">
+<area shape="rect" id="node2" href="$classcl_1_1sycl_1_1detail_1_1opencl__context.html#a470a3c9c0c3db21d2fa0fc18ef4f1bc5" title="Get a singleton instance of the opencl_context. " alt="" coords="176,5,325,47"/>
+<area shape="rect" id="node3" href="$classcl_1_1sycl_1_1detail_1_1cache.html#a9a918c2a5233b5538b248a195c3446c3" title="Get a value stored in the cache if present or insert by calling a generator function. " alt="" coords="373,5,520,47"/>
+</map>

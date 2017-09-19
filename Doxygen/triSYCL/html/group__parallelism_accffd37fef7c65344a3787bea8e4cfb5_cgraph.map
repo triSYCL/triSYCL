@@ -1,0 +1,4 @@
+<map id="cl::sycl::nd_item::get_num_groups" name="cl::sycl::nd_item::get_num_groups">
+<area shape="rect" id="node2" href="$group__parallelism.html#ab0f6ad9c1fb09f841c2fdbba706b0746" title="Return the number of groups in the nd_range. " alt="" coords="180,5,307,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#a7d95d596dd580eee98a811bcad002f59" title="Return the nd_range&lt;&gt; of the current execution. " alt="" coords="355,5,481,47"/>
+</map>

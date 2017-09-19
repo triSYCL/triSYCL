@@ -1,7 +1,7 @@
 <map id="cl::sycl::detail::linear_id" name="cl::sycl::detail::linear_id">
-<area shape="rect" id="node2" href="$group__parallelism.html#a32d3b5a52f4dd787890e255c01a34d9a" title="Return the flattened id of the current work&#45;item after subtracting the offset. " alt="" coords="212,5,348,47"/>
-<area shape="rect" id="node3" href="$group__parallelism.html#a21a39b69f6f74f18a09b83671a067691" title="Return the flattened id of the current work&#45;group. " alt="" coords="213,71,347,112"/>
-<area shape="rect" id="node4" href="$group__parallelism.html#afcfa339d762195a0f37a5a0e26211d68" title="Get a linearized version of the group ID. " alt="" coords="215,136,345,177"/>
-<area shape="rect" id="node5" href="$group__parallelism.html#a694b7694955ca21370f07df8bc9939c3" title="Return the linearized ID in the item&#39;s range. " alt="" coords="219,201,341,243"/>
-<area shape="rect" id="node6" href="$group__parallelism.html#af03e24ed3baa7f57bc1917091bc4819b" title="Return the flattened id of the current work&#45;item within the current work&#45;group. " alt="" coords="215,267,345,308"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#af71c043b404fb2c2a4d40294ca27bf88" title="Return the flattened id of the current work&#45;item after subtracting the offset. " alt="" coords="212,5,348,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#afa1bd2ba568fd80c4a18bd442a26f4b0" title="Return the flattened id of the current work&#45;group. " alt="" coords="213,71,347,112"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#a75c57c2f211bfe2358fb4c8d468ad35a" title="Get a linearized version of the group ID. " alt="" coords="215,136,345,177"/>
+<area shape="rect" id="node5" href="$group__parallelism.html#ac10ea8dfb777dd363f7ae17e0865dd46" title="Return the linearized ID in the item&#39;s range. " alt="" coords="219,201,341,243"/>
+<area shape="rect" id="node6" href="$group__parallelism.html#aacd5c740a37eb0f20d8490c37caa0cc2" title="Return the flattened id of the current work&#45;item within the current work&#45;group. " alt="" coords="215,267,345,308"/>
 </map>

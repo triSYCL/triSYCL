@@ -1,4 +1,0 @@
-<map id="cl::sycl::nd_item::get_offset" name="cl::sycl::nd_item::get_offset">
-<area shape="rect" id="node2" href="$group__parallelism.html#a32d3b5a52f4dd787890e255c01a34d9a" title="Return the flattened id of the current work&#45;item after subtracting the offset. " alt="" coords="180,5,316,47"/>
-<area shape="rect" id="node3" href="$group__parallelism.html#adbc692cf1460579e86f4abb9573c3441" title="Allows projection down to an item. " alt="" coords="185,71,311,112"/>
-</map>

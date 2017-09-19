@@ -1,0 +1,4 @@
+<map id="cl::sycl::detail::buffer::buffer" name="cl::sycl::detail::buffer::buffer">
+<area shape="rect" id="node2" href="$group__data.html#a8943f21cc4899c224952811286689deb" title="Allocate uninitialized buffer memory. " alt="" coords="197,5,341,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#ab066b2903dc968d82c6f512e2ddc2d23" title="Return the number of elements in the range. " alt="" coords="389,5,520,47"/>
+</map>

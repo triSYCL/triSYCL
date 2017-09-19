@@ -1,0 +1,5 @@
+<map id="cl::sycl::queue::queue" name="cl::sycl::queue::queue">
+<area shape="rect" id="node2" href="$classcl_1_1sycl_1_1detail_1_1opencl__queue.html#a9a9eaaf110399a6680b924d1a02e1a1a" title="Get a singleton instance of the opencl_queue. " alt="" coords="209,5,359,47"/>
+<area shape="rect" id="node4" href="$group__execution.html#af563f0e0d74afdadb195bb80c20a3d32" title="Return true if the device is the SYCL host device. " alt="" coords="204,71,364,98"/>
+<area shape="rect" id="node3" href="$classcl_1_1sycl_1_1detail_1_1cache.html#a9a918c2a5233b5538b248a195c3446c3" title="Get a value stored in the cache if present or insert by calling a generator function. " alt="" coords="412,5,559,47"/>
+</map>

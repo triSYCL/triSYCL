@@ -1,0 +1,4 @@
+<map id="cl::sycl::detail::buffer_base::sync_with_host" name="cl::sycl::detail::buffer_base::sync_with_host">
+<area shape="rect" id="node2" href="$group__execution.html#af3f1956843e297fc1858deb034ce113c" title="Return the internal OpenCL queue that is associated to the host context. " alt="" coords="209,5,388,47"/>
+<area shape="rect" id="node3" href="$group__data.html#aedd08e42f3de59dd807d247898521e46" title="Check if the data of this buffer is up&#45;to&#45;date in a certain context. " alt="" coords="209,71,388,112"/>
+</map>

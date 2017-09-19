@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$group__helpers.html#structcl_1_1sycl_1_1detail_1_1container__element__aspect" title="A mix&#45;in to add some container element aspects. " alt="" coords="5,5,169,47"/>
+<area shape="rect" id="node1" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; accessor\&lt; T, Dimensions,\l Mode, access::target::local \&gt; \&gt;" alt="" coords="5,5,213,61"/>
+<area shape="rect" id="node2" href="$group__data.html#classcl_1_1sycl_1_1detail_1_1accessor_3_01T_00_01Dimensions_00_01Mode_00_01access_1_1target_1_1local_01_4" title="The local accessor specialization abstracts the way local memory is allocated to a kernel to be share..." alt="" coords="261,5,471,61"/>
 </map>

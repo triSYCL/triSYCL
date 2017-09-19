@@ -1,3 +1,4 @@
 <map id="cl::sycl::detail::opencl_queue::instance" name="cl::sycl::detail::opencl_queue::instance">
-<area shape="rect" id="node2" href="$group__execution.html#a906178d52d172cb327205632be70f732" title="Construct a queue instance using a boost::compute::command_queue. " alt="" coords="203,13,353,39"/>
+<area shape="rect" id="node2" href="$classcl_1_1sycl_1_1detail_1_1opencl__queue.html#ac511d322863e8f6f9e8e9adbe1c45172" title="Create a new queue associated to this device. " alt="" coords="203,5,353,47"/>
+<area shape="rect" id="node3" href="$group__execution.html#a2d5922c1141c216552601b9de64b06f6" title="A queue is created for a SYCL device. " alt="" coords="203,71,353,98"/>
 </map>

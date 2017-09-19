@@ -1,4 +1,0 @@
-<map id="cl::sycl::detail::accessor::get_size" name="cl::sycl::detail::accessor::get_size">
-<area shape="rect" id="node2" href="$group__data.html#a31a49c015242ed032eb3611f3828c6c3" title="Copy back the CL buffer to the SYCL if required. " alt="" coords="217,5,381,47"/>
-<area shape="rect" id="node3" href="$group__data.html#a1764f8fc5824b392b8ff42d3bacc6ea3" title="Lazily associate a CL buffer to the SYCL buffer and copy data in if required. " alt="" coords="217,71,381,112"/>
-</map>

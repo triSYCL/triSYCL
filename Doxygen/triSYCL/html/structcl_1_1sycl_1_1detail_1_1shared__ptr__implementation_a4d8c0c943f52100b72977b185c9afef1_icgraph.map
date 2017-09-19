@@ -1,0 +1,7 @@
+<map id="cl::sycl::detail::shared_ptr_implementation::hash" name="cl::sycl::detail::shared_ptr_implementation::hash">
+<area shape="rect" id="node2" href="$structstd_1_1hash_3_01cl_1_1sycl_1_1kernel_01_4.html#a73d29a4ffd3815cf38f52af5110c1c9a" title="std::hash\&lt; cl::sycl\l::kernel \&gt;::operator()" alt="" coords="234,5,374,47"/>
+<area shape="rect" id="node3" href="$structstd_1_1hash_3_01cl_1_1sycl_1_1platform_01_4.html#a52ed141b9857746bd252411adf74f216" title="std::hash\&lt; cl::sycl\l::platform \&gt;::operator()" alt="" coords="228,71,380,112"/>
+<area shape="rect" id="node4" href="$structstd_1_1hash_3_01cl_1_1sycl_1_1context_01_4.html#a6f01b90515733fe6f52d3aad57a47e47" title="std::hash\&lt; cl::sycl\l::context \&gt;::operator()" alt="" coords="230,136,378,177"/>
+<area shape="rect" id="node5" href="$structstd_1_1hash_3_01cl_1_1sycl_1_1device_01_4.html#a8252b8334e4f73949701d8614536c6db" title="std::hash\&lt; cl::sycl\l::device \&gt;::operator()" alt="" coords="233,201,375,243"/>
+<area shape="rect" id="node6" href="$structstd_1_1hash_3_01cl_1_1sycl_1_1queue_01_4.html#a1939ba712e872e49049d7de73c96c48f" title="std::hash\&lt; cl::sycl\l::queue \&gt;::operator()" alt="" coords="234,267,374,308"/>
+</map>

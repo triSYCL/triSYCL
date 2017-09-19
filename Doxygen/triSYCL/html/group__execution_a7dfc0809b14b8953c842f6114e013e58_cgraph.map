@@ -1,4 +1,0 @@
-<map id="cl::sycl::handler::set_args" name="cl::sycl::handler::set_args">
-<area shape="rect" id="node2" href="$group__execution.html#a35f4e0ca6ad987c5f354389b1092fa2b" title="Helper to individually call set_arg() for each argument. " alt="" coords="176,5,299,47"/>
-<area shape="rect" id="node3" href="$group__execution.html#a793bbb61e9ca0eac78be9e7a0b186cd0" title="Set accessor kernel arg for an OpenCL kernel which is used through the SYCL/OpenCL interop interface..." alt="" coords="347,5,469,47"/>
-</map>

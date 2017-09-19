@@ -6,6 +6,7 @@ var searchData=
   ['ocl_5ftype_3c_20t_2c_20global_5faddress_5fspace_20_3e',['ocl_type&lt; T, global_address_space &gt;',['../group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01global__address__space_01_4',1,'cl::sycl::detail']]],
   ['ocl_5ftype_3c_20t_2c_20local_5faddress_5fspace_20_3e',['ocl_type&lt; T, local_address_space &gt;',['../group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01local__address__space_01_4',1,'cl::sycl::detail']]],
   ['ocl_5ftype_3c_20t_2c_20private_5faddress_5fspace_20_3e',['ocl_type&lt; T, private_address_space &gt;',['../group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01private__address__space_01_4',1,'cl::sycl::detail']]],
+  ['opencl_5fcontext',['opencl_context',['../classcl_1_1sycl_1_1detail_1_1opencl__context.html',1,'cl::sycl::detail']]],
   ['opencl_5fdevice',['opencl_device',['../classcl_1_1sycl_1_1detail_1_1opencl__device.html',1,'cl::sycl::detail']]],
   ['opencl_5fkernel',['opencl_kernel',['../classcl_1_1sycl_1_1detail_1_1opencl__kernel.html',1,'cl::sycl::detail']]],
   ['opencl_5fplatform',['opencl_platform',['../group__execution.html#classcl_1_1sycl_1_1detail_1_1opencl__platform',1,'cl::sycl::detail']]],

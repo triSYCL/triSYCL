@@ -1,0 +1,11 @@
+<map id="cl::sycl::detail::buffer_base::update_buffer_state" name="cl::sycl::detail::buffer_base::update_buffer_state">
+<area shape="rect" id="node2" href="$group__data.html#af70e3fb4ab62104b4478f1d6262cae71" title="Create a boost::compute::buffer for this cl::sycl::buffer in the cache and associate it with a given ..." alt="" coords="233,5,393,47"/>
+<area shape="rect" id="node4" href="$group__execution.html#ace67765bcc5e47cd83c909c9dfcc2ea6" title="Return the internal queue that is associated to the context and used by triSYCL to move data between ..." alt="" coords="252,71,375,112"/>
+<area shape="rect" id="node5" href="$group__data.html#a7be35ab8e3552d46596dc094ebc8350b" title="Check if the buffer is already cached for a certain context. " alt="" coords="241,136,385,177"/>
+<area shape="rect" id="node6" href="$group__data.html#aedd08e42f3de59dd807d247898521e46" title="Check if the data of this buffer is up&#45;to&#45;date in a certain context. " alt="" coords="441,192,620,233"/>
+<area shape="rect" id="node7" href="$group__execution.html#a86e0d2c756c13114e0464cc42956dd66" title="Specifies whether the context is in SYCL Host Execution Mode. " alt="" coords="252,320,375,361"/>
+<area shape="rect" id="node9" href="$group__data.html#a74166dd335ea6d43de5298cc3ade8dbd" title="Transfer the most up&#45;to&#45;date version of the data to the host if the host version is not already up&#45;to..." alt="" coords="235,253,391,295"/>
+<area shape="rect" id="node3" href="$group__execution.html#a5b37e2f8b065d926ac2050252a5a196e" title="Return the underlying boost::compute::context of the cl::sycl::context. " alt="" coords="463,5,599,47"/>
+<area shape="rect" id="node8" href="$group__execution.html#af7581e4c1857ab79e8a7636d2c0dd063" title="Returns the SYCL platform that the context is initialized for. " alt="" coords="469,323,592,364"/>
+<area shape="rect" id="node10" href="$group__execution.html#af3f1956843e297fc1858deb034ce113c" title="Return the internal OpenCL queue that is associated to the host context. " alt="" coords="441,257,620,299"/>
+</map>
