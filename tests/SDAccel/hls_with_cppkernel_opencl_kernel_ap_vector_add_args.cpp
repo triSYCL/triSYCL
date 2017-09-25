@@ -18,12 +18,15 @@
 
 #include <CL/sycl.hpp>
 
+//#include "cnl/FPGA/Xilinx/include/ap_int.h"
+//#include "/proj/xbuilds/2017.2_sdx_qualified_latest/installs/lin64/SDx/2017.2/Vivado_HLS/include/ap_int.h"
+#include "ap_int.h"
+
 using namespace cl::sycl;
 
 constexpr size_t N = 3;
-using Vector = float[N];
+using Vector = ap_int<256>[N];
 
-//int main(int argc, char *argv[]) {
 int test_main(int argc, char *argv[]) {
   Vector a = { 1, 2, 3 };
   Vector b = { 5, 6, 8 };
@@ -47,7 +50,7 @@ int test_main(int argc, char *argv[]) {
 
   // Construct an OpenCL program from the precompiled kernel file
   auto program =
-    boost::compute::program::create_with_binary_file("vector_add.xclbin",
+    boost::compute::program::create_with_binary_file("hls_ap_vector_add_kernel.xclbin",
                                                      opencl_q.get_context());
 
   // Build the OpenCL program
@@ -58,12 +61,12 @@ int test_main(int argc, char *argv[]) {
 
 
   // Create buffers from a & b vectors
-  buffer<float> A { std::begin(a), std::end(a) };
-  buffer<float> B { std::begin(b), std::end(b) };
+  buffer<ap_int<256>> A { std::begin(a), std::end(a) };
+  buffer<ap_int<256>> B { std::begin(b), std::end(b) };
 
   {
-    // A buffer of N float using the storage of c
-    buffer<float> C { c, N };
+    // A buffer of N ap_int<256> using the storage of c
+    buffer<ap_int<256>> C { c, N };
 
     // Launch the vector parallel addition
     q.submit([&] (handler &cgh) {
@@ -72,7 +75,7 @@ int test_main(int argc, char *argv[]) {
         cgh.set_args(A.get_access<access::mode::read>(cgh),
                      B.get_access<access::mode::read>(cgh),
                      C.get_access<access::mode::write>(cgh));
-        cgh.parallel_for(N, k);
+        cgh.single_task(k);
       }); //< End of our commands for this queue
   } //< Buffer C goes out of scope and copies back values to c
 
