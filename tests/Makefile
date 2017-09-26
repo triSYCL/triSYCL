@@ -32,7 +32,7 @@ CXXFLAGS += -fopenmp
 CXXFLAGS += -DTRISYCL_OPENCL
 # To use generic OpenCL:
 LDLIBS += -lOpenCL
-#To use Xilinx OpenCL
+#To use Xilinx OpenCL library without ICD
 #LDLIBS += -lxilinxopencl
 # To use PoCL directly instead of generic OpenCL:
 #LDFLAGS += $(shell pkg-config --libs-only-L --libs-only-other pocl)
@@ -55,9 +55,9 @@ CXXFLAGS += -g
 # OpenCL compiler with these flags:
 # Adapt to the real platform
 XOCCFLAGS=--platform xilinx:adm-pcie-7v3:1ddr:3.0
-# xocc parameter to specify cpp version
+# xocc parameter to specify C++ version
 XOCCCPPPARAM=--xp prop:kernel.vector_add.kernel_flags=-std=c++0x
-# xocc parameter to work LLVM 3.9 flow
+# xocc parameter to work Clang/LLVM 3.9 flow
 XOCC39PARAM=--xp param:compiler.version=3.9
 
 
@@ -90,17 +90,12 @@ CLEANING_TARGETS = $(TARGETS) $(FILES_C:%.C=%.o)
 CXXFLAGS += -Wall -std=c++1y -I$(triSYCL_DIR)/include \
 	-I$(triSYCL_DIR)/tests/common
 
-# Vivado HLS path 
+# Vivado HLS path
 ifdef HLS_PATH
 	CXXFLAGS += -I$(HLS_PATH)/include \
 		-I$(HLS_PATH)/common/technology/autopilot
-#	XOCCFLAGS += -I$(HLS_PATH)/common/technology/autopilot \
-#		-I$(HLS_PATH)/include 
-endif
-
-# Fixed-point type uses CNL Library
-ifdef CNL_DIR
-  CNLFLAGS = -I$(CNL_DIR)/include
+#  XOCCFLAGS += -I$(HLS_PATH)/common/technology/autopilot \
+#		-I$(HLS_PATH)/include
 endif
 
 # Specify where OpenCL includes files are with OpenCL_INCPATH
@@ -120,7 +115,7 @@ CXXFLAGS += -DBOOST_COMPUTE_DEBUG_KERNEL_COMPILATION \
 
 # Specify where OpenCL library files are with OpenCL_LIBPATH
 ifdef OpenCL_LIBPATH
-  LDFLAGS += -L$(OpenCL_LIBPATH)
+	LDFLAGS += -L$(OpenCL_LIBPATH)
 endif
 
 # By default run lit checking in the current directory
@@ -129,7 +124,7 @@ CHECKING_DIR ?= .
 # Some hack to force the compiler from the test infrastructure with
 # reentrant make:
 ifdef FORCE_CXX
-  CXX=$(FORCE_CXX)
+	CXX=$(FORCE_CXX)
 endif
 
 all: $(TARGETS)
@@ -165,18 +160,11 @@ CLEANING_TARGETS += $(wildcard */*.xclbin)
 %.xclbin: %.cl
 	xocc $(XOCCFLAGS) --target hw -o $@ $<
 
-# How to compile CPP kernel to Xilinx FPGA
-#SDAccel/vector_add.xclbin: SDAccel/hls_vector_add_kernel.cxx
-#	xocc --kernel vector_add --input_files hls_vector_add_kernel.cxx $(XOCCFLAGS) $(CNLFLAGS) --target hw -o $@
+# How to compile Vivado HLS C++ kernel to Xilinx FPGA
 SDAccel/hls_int_vector_add_kernel.xclbin:
-	xocc --kernel vector_add --input_files SDAccel/hls_int_vector_add_kernel.cxx $(XOCCFLAGS) --target hw -o $@
+	xocc --kernel vector_add --input_files SDAccel/hls_int_vector_add_kernel.cxx $(XOCCCPPPARAM) $(XOCCFLAGS) --target hw -o $@
 SDAccel/hls_ap_vector_add_kernel.xclbin: SDAccel/hls_ap_vector_add_kernel.cxx
-	xocc --kernel vector_add --input_files SDAccel/hls_ap_vector_add_kernel.cxx $(XOCCFLAGS) --target hw -o $@
-
-# Specific flags for Boost.Compute
-# Force to be OpenCL 1.2
-CXXFLAGS += -DBOOST_COMPUTE_MAX_CL_VERSION=102
-
+	xocc --kernel vector_add --input_files SDAccel/hls_ap_vector_add_kernel.cxx $(XOCCCPPPARAM) $(XOCCFLAGS) --target hw -o $@
 endif
 
 # Force recompilation of $(TARGETS_CC) binaries through the Makefile since
