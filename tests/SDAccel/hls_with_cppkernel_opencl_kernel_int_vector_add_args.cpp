@@ -1,5 +1,5 @@
-/* Simple OpenCL vector addition using SYCL in OpenCL interoperability
-   mode Boost.Compute C++ host API and precompiled kernel.
+/* Simple vector addition using SYCL in OpenCL interoperability mode
+   Boost.Compute C++ host API and precompiled Vivado HLS C++ kernel.
 
    Compared to using plain Boost.Compute OpenCL host API, in SYCL the
    buffer transfers between host and device are implicits with the
@@ -46,8 +46,8 @@ int test_main(int argc, char *argv[]) {
 
   // Construct an OpenCL program from the precompiled kernel file
   auto program =
-    boost::compute::program::create_with_binary_file("hls_int_vector_add_kernel.xclbin",
-                                                     opencl_q.get_context());
+    boost::compute::program::create_with_binary_file(
+      "hls_int_vector_add_kernel.xclbin", opencl_q.get_context());
 
   // Build the OpenCL program
   program.build();
@@ -71,6 +71,9 @@ int test_main(int argc, char *argv[]) {
         cgh.set_args(A.get_access<access::mode::read>(cgh),
                      B.get_access<access::mode::read>(cgh),
                      C.get_access<access::mode::write>(cgh));
+        /* For Vivado HLS C++ kernel, single_task is called here.
+           Parallelism can be achieved by specifying pragma in Vivado HLS
+           C++ kernel.*/
         cgh.single_task(k);
       }); //< End of our commands for this queue
   } //< Buffer C goes out of scope and copies back values to c
