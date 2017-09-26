@@ -45,7 +45,6 @@
 #else
 #include <CL/cl.h>
 #endif
-
 // But the triSYCL OpenCL implementation is actually based on Boost.Compute
 #include <boost/compute.hpp>
 /// A macro to keep some stuff in OpenCL mode
