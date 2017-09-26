@@ -23,7 +23,6 @@ using namespace cl::sycl;
 constexpr size_t N = 3;
 using Vector = float[N];
 
-//int main(int argc, char *argv[]) {
 int test_main(int argc, char *argv[]) {
   Vector a = { 1, 2, 3 };
   Vector b = { 5, 6, 8 };
