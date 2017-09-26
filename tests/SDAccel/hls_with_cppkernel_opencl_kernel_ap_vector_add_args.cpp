@@ -1,5 +1,8 @@
-/* Simple OpenCL vector addition using SYCL in OpenCL interoperability
-   mode Boost.Compute C++ host API and precompiled kernel.
+/* Simple vector addition using SYCL in OpenCL interoperability mode
+   Boost.Compute C++ host API and precompiled Vivado HLS C++ kernel.
+
+   ap_int type in Vivado HLS arbitrary precision data types library
+   is used to hold value in this example.
 
    Compared to using plain Boost.Compute OpenCL host API, in SYCL the
    buffer transfers between host and device are implicits with the
@@ -13,19 +16,20 @@
 */
 #include <iostream>
 #include <iterator>
+#include <array>
 #include <boost/compute.hpp>
 #include <boost/test/minimal.hpp>
 
 #include <CL/sycl.hpp>
 
-//#include "cnl/FPGA/Xilinx/include/ap_int.h"
-//#include "/proj/xbuilds/2017.2_sdx_qualified_latest/installs/lin64/SDx/2017.2/Vivado_HLS/include/ap_int.h"
 #include "ap_int.h"
 
 using namespace cl::sycl;
 
 constexpr size_t N = 3;
-using Vector = ap_int<256>[N];
+
+// Each element in Vector has an 256-bit signed integer data type
+using Vector = std::array<ap_int<256>, N>;;
 
 int test_main(int argc, char *argv[]) {
   Vector a = { 1, 2, 3 };
@@ -50,8 +54,8 @@ int test_main(int argc, char *argv[]) {
 
   // Construct an OpenCL program from the precompiled kernel file
   auto program =
-    boost::compute::program::create_with_binary_file("hls_ap_vector_add_kernel.xclbin",
-                                                     opencl_q.get_context());
+    boost::compute::program::create_with_binary_file(
+      "hls_ap_vector_add_kernel.xclbin", opencl_q.get_context());
 
   // Build the OpenCL program
   program.build();
@@ -75,6 +79,9 @@ int test_main(int argc, char *argv[]) {
         cgh.set_args(A.get_access<access::mode::read>(cgh),
                      B.get_access<access::mode::read>(cgh),
                      C.get_access<access::mode::write>(cgh));
+        /* For Vivado HLS C++ kernel, single_task is called here.
+           Parallelism can be achieved by specifying pragma in Vivado HLS
+           C++ kernel.*/
         cgh.single_task(k);
       }); //< End of our commands for this queue
   } //< Buffer C goes out of scope and copies back values to c
