@@ -175,9 +175,7 @@ private:
           if (t->owner_queue->is_host())
             k();
           else {
-    std::cerr << "schedule_kernel &k = "
-              << (void *) &k
-              << std::endl;
+            TRISYCL_DUMP_T("schedule_kernel &k = " << (void *) &k);
 
             // Structure the kernel code so it can be outlined and called
             detail::launch_device_kernel<KernelName>(*t, k);
@@ -205,9 +203,8 @@ public:
   template <typename KernelName = std::nullptr_t,
             typename ParallelForFunctor>
   void single_task(ParallelForFunctor &&f) {
-    std::cerr << "single_task &f = "
-              << (void *) &f
-              << std::endl;
+    TRISYCL_DUMP_T("single_task &f = " << (void *) &f);
+
     schedule_kernel<KernelName>(std::forward<ParallelForFunctor>(f));
   }
 

@@ -6,6 +6,9 @@
     This code is expected to be called once some Clang & LLVM passes
     of the device compiler has been applied.
 
+    \todo Refactor to be more modular and OpenCL-independent so it can
+    more easily be retargeted to some other runtime API.
+
     Ronan at Keryell point FR
 
     This file is distributed under the University of Illinois Open Source
@@ -85,12 +88,10 @@ public:
 #ifndef TRISYCL_DEVICE
     /* Register the buffer address to be updated with the final
        version before the kernel set arg */
-    std::cerr << "accessor(Accessor &a) : &a = "
-              << (void *) &a
-              << std::endl;
-    std::cerr << " &buffer ="
-              << (void *) &buffer
-              << std::endl;
+    TRISYCL_DUMP_T("accessor(Accessor &a) : &a = "
+                   << (void *) &a << '\n'
+                   << "\t&buffer = "
+                   << (void *) &buffer);
 #endif
   }
 
@@ -109,7 +110,7 @@ public:
 
     \param[in] index is the order of the argument to set (0 is the first one)
 
-    \param[in] arg point to the argument value
+    \param[in] arg points to the argument value
 
     \param[in] arg_size is the size of the argument
 */
@@ -118,8 +119,8 @@ serialize_arg(detail::task &task,
               std::size_t index,
               void *arg,
               std::size_t arg_size) {
-  std::cerr << "serialize_arg index = " << index << ", size = " << arg_size
-            << ", arg = " << arg << std::endl;
+  TRISYCL_DUMP_T("serialize_arg index = " << index
+                 << ", size = " << arg_size << ", arg = " << arg);
   task.set_arg(index, arg_size, arg);
 }
 
@@ -130,7 +131,7 @@ serialize_arg(detail::task &task,
 
     \param[in] index is the order of the argument to set (0 is the first one)
 
-    \param[in] arg point to the argument value
+    \param[in] arg points to the argument value
 
     \param[in] arg_size is the size of the argument
 */
@@ -139,9 +140,8 @@ serialize_accessor_arg(detail::task &task,
                        std::size_t index,
                        void *arg,
                        std::size_t arg_size) {
-  std::cerr << "serialize_accessor_arg index =" << index
-            << ", size = " << arg_size
-            << ", arg = " << arg << std::endl;
+  TRISYCL_DUMP_T("serialize_accessor_arg index = " << index
+                 << ", size = " << arg_size << ", arg = " << arg);
 #ifdef TRISYCL_OPENCL
   /* The address of the argument has been actually initialized by the
      accessor constructor to the accessor order to relate an argument
@@ -172,7 +172,7 @@ namespace code {
       : binary_size { binary_size }
       , binary { reinterpret_cast<unsigned const char *>(binary) } {
         p = *this;
-        std::cerr << "binary_size = " << binary_size << std::endl;
+        TRISYCL_DUMP_T("Create program with binary size = 0x" << binary_size);
       }
   };
 
@@ -200,8 +200,8 @@ TRISYCL_WEAK_ATTRIB_PREFIX void TRISYCL_WEAK_ATTRIB_SUFFIX
 set_kernel(detail::task &task,
            const char *kernel_name,
            const char *kernel_short_name) {
-  std::cerr << "Setting up  " << kernel_name << std::endl;
-  std::cerr << " aka " << kernel_short_name << std::endl;
+  TRISYCL_DUMP_T("set_kernel setting up " << kernel_name
+                 << "\n\taka " << kernel_short_name);
   // \todo Add kernel caching per device
   // auto binary = kernel_IR.find(kernel_name);
   // if (binary == kernel_IR.end()) {
@@ -218,9 +218,8 @@ set_kernel(detail::task &task,
     (code::program::p->binary,
      code::program::p->binary_size,
      context);
-  std::cerr << "Name device "
-            << task.get_queue()->get_boost_compute().get_device().name()
-            << std::endl;
+  TRISYCL_DUMP_T("...on device with name "
+                 << task.get_queue()->get_boost_compute().get_device().name());
   // Build the OpenCL program
   program.build();
 

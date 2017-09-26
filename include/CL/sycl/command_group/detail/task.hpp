@@ -210,8 +210,8 @@ struct task : public std::enable_shared_from_this<task>,
 
   /// Execute the prologues
   void prelude() {
-    std::cerr << "task::prelude"
-              << std::endl;
+    TRISYCL_DUMP_T("task::prelude");
+
     for (const auto &p : prologues)
       p();
     /* Free the functors that may own an accessor owning a buffer
@@ -232,8 +232,7 @@ struct task : public std::enable_shared_from_this<task>,
 
   /// Add a function to the prelude to run before kernel execution
   void add_prelude(const std::function<void(void)> &f) {
-    std::cerr << "task::add_prelude"
-              << std::endl;
+    TRISYCL_DUMP_T("task::add_prelude");
 
     prologues.push_back(f);
   }
