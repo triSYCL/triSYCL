@@ -29,7 +29,6 @@ using namespace cl::sycl;
 constexpr size_t N = 3;
 
 // Each element in Vector has an 256-bit signed integer data type
-// using Vector = ap_int<256>[N];
 using Vector = std::array<ap_int<256>, N>;
 
 int test_main(int argc, char *argv[]) {
