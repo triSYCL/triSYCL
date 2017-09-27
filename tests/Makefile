@@ -91,21 +91,21 @@ CXXFLAGS += -Wall -std=c++1y -I$(triSYCL_DIR)/include \
 	-I$(triSYCL_DIR)/tests/common
 
 # Vivado HLS path
-ifdef HLS_PATH
-	CXXFLAGS += -I$(HLS_PATH)/include \
-		-I$(HLS_PATH)/common/technology/autopilot
-#  XOCCFLAGS += -I$(HLS_PATH)/common/technology/autopilot \
-#		-I$(HLS_PATH)/include
+ifdef XILINX_SDX
+  CXXFLAGS += -I$(XILINX_SDX)/Vivado_HLS/include \
+		-I$(XILINX_PATH)/Vivado_HLS/common/technology/autopilot
+#  XOCCFLAGS += -I$(XILINX_PATH)/Vivado_HLS/common/technology/autopilot \
+#		-I$(XILINX_PATH)/Vivado_HLS/include
 endif
 
 # Specify where OpenCL includes files are with OpenCL_INCPATH
 ifdef OpenCL_INCPATH
-	CXXFLAGS += -I$(OpenCL_INCPATH)
+  CXXFLAGS += -I$(OpenCL_INCPATH)
 endif
 
 # Specify where Boost.Compute is with BOOST_COMPUTE_INCPATH
 ifdef BOOST_COMPUTE_INCPATH
-	CXXFLAGS += -I$(BOOST_COMPUTE_INCPATH)
+  CXXFLAGS += -I$(BOOST_COMPUTE_INCPATH)
 endif
 
 # Specific flags for Boost.Compute
@@ -115,7 +115,7 @@ CXXFLAGS += -DBOOST_COMPUTE_DEBUG_KERNEL_COMPILATION \
 
 # Specify where OpenCL library files are with OpenCL_LIBPATH
 ifdef OpenCL_LIBPATH
-	LDFLAGS += -L$(OpenCL_LIBPATH)
+  LDFLAGS += -L$(OpenCL_LIBPATH)
 endif
 
 # By default run lit checking in the current directory
@@ -124,7 +124,7 @@ CHECKING_DIR ?= .
 # Some hack to force the compiler from the test infrastructure with
 # reentrant make:
 ifdef FORCE_CXX
-	CXX=$(FORCE_CXX)
+  CXX=$(FORCE_CXX)
 endif
 
 all: $(TARGETS)
