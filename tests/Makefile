@@ -161,15 +161,13 @@ CLEANING_TARGETS += $(wildcard */*.xclbin)
 	xocc $(XOCCFLAGS) --target hw -o $@ $<
 
 # How to compile Vivado HLS C++ kernel to Xilinx FPGA
-SDAccel/hls_int_vector_add_kernel.xclbin:
-	xocc --kernel vector_add --input_files SDAccel/hls_int_vector_add_kernel.cxx $(XOCCCPPPARAM) $(XOCCFLAGS) --target hw -o $@
-SDAccel/hls_ap_vector_add_kernel.xclbin: SDAccel/hls_ap_vector_add_kernel.cxx
-	xocc --kernel vector_add --input_files SDAccel/hls_ap_vector_add_kernel.cxx $(XOCCCPPPARAM) $(XOCCFLAGS) --target hw -o $@
+%.xclbin: %.cxx
+	xocc --kernel vector_add --input_files $< $(XOCCCPPPARAM) $(XOCCFLAGS) --target hw -o $@
 endif
 
 # Force recompilation of $(TARGETS_CC) binaries through the Makefile since
 # LIT does not know the dependencies
-check: $(TARGETS_CC)
+check:  $(TARGETS_CC)
 	# Launch testing with lit tool from LLVM in current directory
 	echo Using $(CXX) compiler:
 	# lit can be found for example on Debian/Ubuntu in package
