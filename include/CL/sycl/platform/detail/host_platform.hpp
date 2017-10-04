@@ -68,7 +68,8 @@ public:
   /** Returning the information parameters for the host platform
       implementation
   */
-  string_class get_info_string(info::platform param) const override {
+  //string_class get_info_string(info::platform param) const override {
+  string_class get_info(info::platform param) const override {
     switch (param) {
     case info::platform::profile:
       /* Well... Is the host platform really a full profile whereas it

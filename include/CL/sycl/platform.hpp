@@ -139,20 +139,21 @@ public:
   template <typename ReturnT>
   ReturnT get_info(info::platform param) const {
     // Only strings are needed here
-    return implementation->get_info_string(param);
+    //return implementation->get_info_string(param);
+    return implementation->get_info(param);
   }
 
 
   /// Get the OpenCL information about the requested template parameter
   template <info::platform Param>
-  typename info::param_traits<info::platform, Param>::type
+  typename info::param_traits<info::platform, Param>::return_type
   get_info() const {
     /* Forward to the implementation without using template parameter
        but with a parameter instead, since it is incompatible with
        virtual function and because fortunately only strings are
        needed here */
     return get_info<typename info::param_traits<info::platform,
-                                                Param>::type>(Param);
+                                                Param>::return_type>(Param);
   }
 
 

@@ -66,7 +66,8 @@ public:
 
 
   /// Returning the information string parameters for the OpenCL platform
-  string_class get_info_string(info::platform param) const override {
+  //string_class get_info_string(info::platform param) const override {
+  string_class get_info(info::platform param) const override {
     /* Use the fact that the triSYCL info values are the same as the
        OpenCL ones used in Boost.Compute to just cast the enum class
        to the int value */

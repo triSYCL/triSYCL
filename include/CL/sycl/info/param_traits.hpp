@@ -26,7 +26,7 @@ struct param_traits {
 #define TRISYCL_INFO_PARAM_TRAITS_ANY_T(T, RETURN_TYPE)     \
   template <T Param>                                        \
   struct param_traits<T, Param> {                           \
-    using type = RETURN_TYPE;                               \
+    using return_type = RETURN_TYPE;                               \
   };
 
 
@@ -36,7 +36,7 @@ struct param_traits {
 #define TRISYCL_INFO_PARAM_TRAITS(VALUE, RETURN_TYPE)       \
   template <>                                               \
   struct param_traits<decltype(VALUE), VALUE> {             \
-    using type = RETURN_TYPE;                               \
+    using return_type = RETURN_TYPE;                               \
   };
 
 }
