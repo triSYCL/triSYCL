@@ -245,10 +245,10 @@ public:
   */
   vector_class<device>
   create_sub_devices(info::device_partition_type partition_type,
-                     info::device_partition_property partition_property,
-                     info::device_affinity_domain affinity_domain) const {
+                     info::partition_property device_partition_property,
+                     info::partition_affinity_domain affinity_domain) const {
     return implementation->create_sub_devices(partition_type,
-                                              partition_property,
+                                              device_partition_property,
                                               affinity_domain);
   }
 #endif
