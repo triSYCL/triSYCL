@@ -1,0 +1,5 @@
+*.csv
+.Xil/
+*.dir/
+*.xclbin
+*.swp

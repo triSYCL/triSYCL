@@ -32,6 +32,8 @@ CXXFLAGS += -fopenmp
 CXXFLAGS += -DTRISYCL_OPENCL
 # To use generic OpenCL:
 LDLIBS += -lOpenCL
+#To use Xilinx OpenCL library without ICD
+#LDLIBS += -lxilinxopencl
 # To use PoCL directly instead of generic OpenCL:
 #LDFLAGS += $(shell pkg-config --libs-only-L --libs-only-other pocl)
 #LDLIBS += $(shell pkg-config --libs-only-l pocl)
@@ -53,7 +55,10 @@ CXXFLAGS += -g
 # OpenCL compiler with these flags:
 # Adapt to the real platform
 XOCCFLAGS=--platform xilinx:adm-pcie-7v3:1ddr:3.0
-
+# xocc parameter to specify C++ version
+XOCCCPPPARAM=--xp prop:kernel.vector_add.kernel_flags=-std=c++0x
+# xocc parameter to work Clang/LLVM 3.9 flow
+XOCC39PARAM=--xp param:compiler.version=3.9
 
 
 # The rest is the Makefile boiling plate and should not be changed normally
@@ -85,14 +90,22 @@ CLEANING_TARGETS = $(TARGETS) $(FILES_C:%.C=%.o)
 CXXFLAGS += -Wall -std=c++1y -I$(triSYCL_DIR)/include \
 	-I$(triSYCL_DIR)/tests/common
 
+# Vivado HLS path
+ifdef XILINX_SDX
+  CXXFLAGS += -I$(XILINX_SDX)/Vivado_HLS/include \
+		-I$(XILINX_PATH)/Vivado_HLS/common/technology/autopilot
+#  XOCCFLAGS += -I$(XILINX_PATH)/Vivado_HLS/common/technology/autopilot \
+#		-I$(XILINX_PATH)/Vivado_HLS/include
+endif
+
 # Specify where OpenCL includes files are with OpenCL_INCPATH
 ifdef OpenCL_INCPATH
-	CXXFLAGS += -I$(OpenCL_INCPATH)
+  CXXFLAGS += -I$(OpenCL_INCPATH)
 endif
 
 # Specify where Boost.Compute is with BOOST_COMPUTE_INCPATH
 ifdef BOOST_COMPUTE_INCPATH
-	CXXFLAGS += -I$(BOOST_COMPUTE_INCPATH)
+  CXXFLAGS += -I$(BOOST_COMPUTE_INCPATH)
 endif
 
 # Specific flags for Boost.Compute
@@ -135,6 +148,8 @@ ifdef XILINX_SDX
 # Use "order-only" prerequisites for kernels since if the kernel are
 # changed, it does not imply to recompile the host part
 SDAccel/opencl_kernel_vector_add_args: | SDAccel/vector_add.xclbin
+SDAccel/hls_with_cppkernel_opencl_kernel_int_vector_add_args: | SDAccel/hls_int_vector_add_kernel.xclbin
+SDAccel/hls_with_cppkernel_opencl_kernel_ap_vector_add_args: | SDAccel/hls_ap_vector_add_kernel.xclbin
 
 # -lpthread is required by Xilinx OpenCL implementation
 LDLIBS += -pthread
@@ -144,11 +159,15 @@ CLEANING_TARGETS += $(wildcard */*.xclbin)
 # How to compile OpenCL kernel to Xilinx FPGA
 %.xclbin: %.cl
 	xocc $(XOCCFLAGS) --target hw -o $@ $<
+
+# How to compile Vivado HLS C++ kernel to Xilinx FPGA
+%.xclbin: %.cxx
+	xocc --kernel vector_add --input_files $< $(XOCCCPPPARAM) $(XOCCFLAGS) --target hw -o $@
 endif
 
 # Force recompilation of $(TARGETS_CC) binaries through the Makefile since
 # LIT does not know the dependencies
-check: $(TARGETS_CC)
+check:  $(TARGETS_CC)
 	# Launch testing with lit tool from LLVM in current directory
 	echo Using $(CXX) compiler:
 	# lit can be found for example on Debian/Ubuntu in package
