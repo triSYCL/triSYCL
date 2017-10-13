@@ -335,7 +335,7 @@ void parallel_for_workitem(const group<Dimensions> &g,
         local[2] = th_id % l_r.get(2);
       }
       index.set_local(local);
-      index.set_global(local + id<Dimensions>(l_r)*g.get());
+      index.set_global(local + id<Dimensions>(l_r)*g.get_id());
       f(index);
     }
   }
