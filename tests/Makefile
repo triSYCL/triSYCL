@@ -284,7 +284,7 @@ execute: $(basename $(TARGET))
 	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -stats  -debug \
 	#  -SYCL-annotation -SYCL-kernel-filter -o $@ $<
 	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so \
-	  -globalopt -deadargelim -argpromotion -deadargelim \
+	  -globalopt -deadargelim -SYCL-args-flattening -deadargelim \
 	  -SYCL-kernel-filter -globaldce -RELGCD -inSPIRation \
 	  -o $@ $<
 
