@@ -117,6 +117,22 @@ using weak_ptr_class = std::weak_ptr<T>;
 }
 #endif
 
+
+#ifndef CL_SYCL_NO_STD_HASH
+/** The hash type to be used as SYCL hash
+ */
+#include <functional>
+namespace cl {
+namespace sycl {
+
+template <class T>
+using hash_class = std::hash<T>;
+
+}
+}
+#endif
+
+
 /// @} End the defaults Doxygen group
 
 /*
