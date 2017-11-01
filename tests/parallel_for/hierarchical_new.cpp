@@ -55,7 +55,7 @@ my_queue.submit([&](handler &cgh) {
   cgh.parallel_for_work_group<class hierarchical>(nd_range<>(range<>(size),
                                                              range<>(groupsize)),
                                                   [=](group<> group) {
-    std::cout << "Group id = " << group.get(0) << std::endl;
+    std::cout << "Group id = " << group.get_id(0) << std::endl;
 
     group.parallel_for_work_item([=](nd_item<1> tile) {
       std::cout << "Local id = " << tile.get_local(0)

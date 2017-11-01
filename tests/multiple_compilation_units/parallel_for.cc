@@ -30,7 +30,7 @@ int test_main(int argc, char *argv[]) {
         nd_range<> { range<> { size }, range<> { groupsize } },
         [=](group<> group) {
           parallel_for_work_item(group, [=](nd_item<1> tile) {
-              out_access[tile] = 1000*group.get(0) + tile.get_local(0);
+              out_access[tile] = 1000*group.get_id(0) + tile.get_local(0);
             });
         });
     });
