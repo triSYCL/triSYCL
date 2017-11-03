@@ -273,16 +273,7 @@ execute: $(basename $(TARGET))
 
 # Process bitcode with SYCL passes to generate kernels
 %.kernel.bc: %.pre_kernel.ll
-	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats \
-	#  -globalopt -deadargelim -SYCL-args-flattening -deadargelim \
-	#  -SYCL-kernel-filter \
-	#  -globaldce -o $@ $<
-	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -stats -SYCL-kernel-filter \
-	#  -debug -print-after-all -o $@ $<
-	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -debug -stats -SYCL-kernel-filter \
-	#  -o $@ $<
-	#opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so -stats  -debug \
-	#  -SYCL-annotation -SYCL-kernel-filter -o $@ $<
+	# To debug, think about using options like -debug -stats -print-after-all...
 	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so \
 	  -globalopt -deadargelim -SYCL-args-flattening -deadargelim \
 	  -SYCL-kernel-filter -globaldce -RELGCD -inSPIRation \
@@ -309,6 +300,7 @@ endif
 
 # Process bitcode with SYCL passes to generate kernel callers
 %.kernel_caller.bc: %.pre_kernel_caller.ll
+	# To debug, think about using options like -debug -stats -print-after-all...
 	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so \
 	  -globalopt -deadargelim -SYCL-args-flattening -deadargelim \
 	  -SYCL-serialize-arguments -deadargelim -o $@ $<
@@ -322,6 +314,7 @@ endif
 	llc -O=3 -o $@ $<
 
 # Link the C++-generated kernel caller to the final program
+# \todo Do not use .ll everywhere but .bc since it is not upward compatible
 %.kernel_caller: %.kernel_caller.ll %.kernel.internalized.cxx
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@ $^ $(LOADLIBES) $(LDLIBS)
 
