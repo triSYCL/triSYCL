@@ -55,7 +55,7 @@ int test_main(int argc, char *argv[]) {
       auto a_c = c.get_access<access::mode::read>(cgh);
 
       // A typical FPGA-style pipelined kernel
-      cgh.single_task<class add>([=,
+      cgh.single_task<class add>([
           d_a = drt::accessor<decltype(a_a)> { a_a },
           d_b = drt::accessor<decltype(a_b)> { a_b },
           d_c = drt::accessor<decltype(a_c)> { a_c }] {
