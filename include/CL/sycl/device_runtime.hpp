@@ -88,10 +88,10 @@ public:
 #ifndef TRISYCL_DEVICE
     /* Register the buffer address to be updated with the final
        version before the kernel set arg */
-    TRISYCL_DUMP_T("accessor(Accessor &a) : &a = "
+    TRISYCL_DUMP_T("drt::accessor(Accessor &a) : &a = "
                    << (void *) &a << '\n'
-                   << "\t&buffer = "
-                   << (void *) &buffer);
+                   << "\t&buffer = " << (void *) &buffer
+                   << ", Order = " << a.implementation->get_order());
 #endif
   }
 
