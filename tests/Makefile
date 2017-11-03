@@ -310,7 +310,7 @@ endif
 # Process bitcode with SYCL passes to generate kernel callers
 %.kernel_caller.bc: %.pre_kernel_caller.ll
 	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so \
-	  -globalopt -deadargelim -SYCL-args-flattening \
+	  -globalopt -deadargelim -SYCL-args-flattening -deadargelim \
 	  -SYCL-serialize-arguments -deadargelim -o $@ $<
 
 # Construct the object file of the kernel caller from the target assembly
