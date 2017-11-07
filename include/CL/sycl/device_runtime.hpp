@@ -50,7 +50,8 @@ namespace drt {
 
 /// SYCL accessor seen from a device perspective
 template <typename Accessor>
-class accessor {
+class accessor :
+    public detail::container_element_aspect<typename Accessor::value_type> {
 
   /** The pointer to the data
 
