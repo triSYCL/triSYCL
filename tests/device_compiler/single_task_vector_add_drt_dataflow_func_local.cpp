@@ -1,7 +1,8 @@
 /* RUN: %{execute}%s
 
    A simple typical FPGA-like kernel copying contents from array, and add a fixed alpha value for each.
-   This example will fail on executing when NUM_ROWS=4, WORD_PER_ROW=4, and BLOCK_SIZE=16.
+   This example will fail on compiling on Xilinx FPGA.
+   This example will fail on executing on POCL when NUM_ROWS=4, WORD_PER_ROW=4, and BLOCK_SIZE=16.
 */
 #include <CL/sycl.hpp>
 #include <iostream>
