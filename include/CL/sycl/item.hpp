@@ -66,13 +66,13 @@ public:
   /** Return the constituent local or global id<> representing the
       work-item's position in the iteration space
   */
-  id<Dimensions> get() const { return global_index; }
+  id<Dimensions> get_id() const { return global_index; }
 
 
   /** Return the requested dimension of the constituent id<> representing
       the work-item's position in the iteration space
   */
-  size_t get(int dimension) const { return get()[dimension]; }
+  size_t get_id(int dimension) const { return get_id()[dimension]; }
 
 
   /** Return the constituent id<> l-value representing the work-item's
@@ -102,7 +102,7 @@ public:
       Computed as the flatted ID after the offset is subtracted.
   */
   size_t get_linear_id() const {
-    return detail::linear_id(get_range(), get(), get_offset());
+    return detail::linear_id(get_range(), get_id(), get_offset());
   }
 
 

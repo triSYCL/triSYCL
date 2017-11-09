@@ -255,13 +255,13 @@ class accessor :
 
   /// To use an accessor with [item<>]
   auto &operator[](item<dimensionality> index) {
-    return (*this)[index.get()];
+    return (*this)[index.get_id()];
   }
 
 
   /// To use an accessor with [item<>]
   auto &operator[](item<dimensionality> index) const {
-    return (*this)[index.get()];
+    return (*this)[index.get_id()];
   }
 
 
