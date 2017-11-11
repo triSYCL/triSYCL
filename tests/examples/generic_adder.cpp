@@ -6,11 +6,9 @@
 #include <CL/sycl.hpp>
 #include <functional>
 #include <iostream>
-#include <utility>
 #include <boost/hana.hpp>
 
 using namespace cl::sycl;
-//using namespace boost::hana::literals;
 
 constexpr size_t N = 3;
 
@@ -21,27 +19,17 @@ auto generic_adder = [] (auto... inputs) {
     { std::begin(inputs),
       std::end(inputs) }...);
 
+  /* The basic computation
+
+     Note that we could use HANA to add some hierarchy in computation
+     (Wallace's tree...) or to sort by type to minimize the hardware
+     usage... */
   auto compute = [] (auto args) {
     return boost::hana::fold_left(args, [] (auto x, auto y) { return x + y; });
   };
-/*
-  using return_value_type =
-    decltype(compute(boost::hana::transform(a, [&] (auto b) {
-            return std::declval<typename decltype(b)::value_type>();
-          })));
-*/
 
   // Make a pseudo-computation on the input to infer the result type
   auto pseudo_result = compute(boost::hana::make_tuple(*std::begin(inputs)...));
-  /* Also working:
-  auto pseudo_result = compute(boost::hana::transform(a, [&] (auto b) {
-            return typename decltype(b)::value_type {};
-          }));
-          */
-/*examples/generic_adder.cpp:37:72: error: lambda expression in an unevaluated
-      operand
-  using return_value_type = decltype(compute(boost::hana::transform(a, [&] (aut...
-*/
   using return_value_type = decltype(pseudo_result);
 
   buffer<return_value_type> output { N };
