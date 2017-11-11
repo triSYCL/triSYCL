@@ -6,6 +6,7 @@
 #include <CL/sycl.hpp>
 #include <functional>
 #include <iostream>
+#include <utility>
 #include <boost/hana.hpp>
 
 using namespace cl::sycl;
@@ -20,7 +21,30 @@ auto generic_adder = [] (auto... inputs) {
     { std::begin(inputs),
       std::end(inputs) }...);
 
-  buffer<int, 1> output { N };
+  auto compute = [] (auto args) {
+    return boost::hana::fold_left(args, [] (auto x, auto y) { return x + y; });
+  };
+/*
+  using return_value_type =
+    decltype(compute(boost::hana::transform(a, [&] (auto b) {
+            return std::declval<typename decltype(b)::value_type>();
+          })));
+*/
+
+  // Make a pseudo-computation on the input to infer the result type
+  auto pseudo_result = compute(boost::hana::make_tuple(*std::begin(inputs)...));
+  /* Also working:
+  auto pseudo_result = compute(boost::hana::transform(a, [&] (auto b) {
+            return typename decltype(b)::value_type {};
+          }));
+          */
+/*examples/generic_adder.cpp:37:72: error: lambda expression in an unevaluated
+      operand
+  using return_value_type = decltype(compute(boost::hana::transform(a, [&] (aut...
+*/
+  using return_value_type = decltype(pseudo_result);
+
+  buffer<return_value_type> output { N };
 
   queue {}.submit([&] (handler& cgh) {
       // Define the data used as a tuple of read accessors
@@ -28,7 +52,7 @@ auto generic_adder = [] (auto... inputs) {
           return b.template get_access<access::mode::read>(cgh);
         });
       // Define the data produced with a write accessor to the output buffer
-      auto ko = output.get_access<access::mode::discard_write>(cgh);
+      auto ko = output.template get_access<access::mode::discard_write>(cgh);
 
       // Define the data-parallel kernel
       cgh.parallel_for<class gen_add>(N, [=] (id<1> i) {
@@ -41,7 +65,7 @@ auto generic_adder = [] (auto... inputs) {
         });
   });
   // Return a host accessor on the output buffer
-  return output.get_access<access::mode::read_write>();
+  return output.template get_access<access::mode::read_write>();
 };
 
 int main() {
