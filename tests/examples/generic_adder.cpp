@@ -9,8 +9,7 @@
 #include <boost/hana.hpp>
 
 using namespace cl::sycl;
-
-constexpr size_t N = 3;
+using namespace boost::hana::literals;
 
 // A generic function taking any number of arguments of any type
 auto generic_adder = [] (auto... inputs) {
@@ -32,7 +31,12 @@ auto generic_adder = [] (auto... inputs) {
   auto pseudo_result = compute(boost::hana::make_tuple(*std::begin(inputs)...));
   using return_value_type = decltype(pseudo_result);
 
-  buffer<return_value_type> output { N };
+  /* Use the range of the first argument as the range of the result
+     and computation */
+  auto size = a[0_c].get_count();
+
+  // Allocate the buffer for the result
+  buffer<return_value_type> output { size };
 
   queue {}.submit([&] (handler& cgh) {
       // Define the data used as a tuple of read accessors
@@ -43,7 +47,7 @@ auto generic_adder = [] (auto... inputs) {
       auto ko = output.template get_access<access::mode::discard_write>(cgh);
 
       // Define the data-parallel kernel
-      cgh.parallel_for<class gen_add>(N, [=] (id<1> i) {
+      cgh.parallel_for<class gen_add>(size, [=] (id<1> i) {
           // Extract the operands for an elemental computation in a tuple
           auto operands = boost::hana::transform(ka, [&] (auto acc) {
               return acc[i]; });
