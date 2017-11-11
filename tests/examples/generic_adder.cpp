@@ -1,11 +1,15 @@
 /* RUN: %{execute}%s | %{filecheck} %s
    CHECK: 6 8 10
+   CHECK: -52 14 1.75 17.125
 
    Simple example showing how SYCL provide single-source genericity
 */
 #include <CL/sycl.hpp>
 #include <functional>
 #include <iostream>
+#include <list>
+#include <set>
+#include <vector>
 #include <boost/hana.hpp>
 
 using namespace cl::sycl;
@@ -50,10 +54,10 @@ auto generic_adder = [] (auto... inputs) {
       cgh.parallel_for<class gen_add>(size, [=] (id<1> i) {
           // Extract the operands for an elemental computation in a tuple
           auto operands = boost::hana::transform(ka, [&] (auto acc) {
-              return acc[i]; });
-          // Then fold the operands into the elemental result
-          ko[i] = boost::hana::fold_left(operands, [] (auto x, auto y) {
-              return x + y; });
+              return acc[i];
+            });
+          // Do the computation on the operands into the elemental result
+          ko[i] = compute(operands);
         });
   });
   // Return a host accessor on the output buffer
@@ -62,9 +66,17 @@ auto generic_adder = [] (auto... inputs) {
 
 int main() {
   std::vector<int> u { 1, 2, 3 };
-  std::vector<int> v { 5, 6, 7 };
+  std::vector<float> v { 5, 6, 7 };
 
   for (auto e : generic_adder(u, v))
+    std::cout << e << ' ';
+  std::cout << std::endl;
+
+  // Just for kidding
+  std::vector<double> a { 1, 2.5, 3.25, 10.125 };
+  std::set<char> b { 5, 6, 7, 2 };
+  std::list<float> c { -55, 6.5, -7.5, 0 };
+  for (auto e : generic_adder(a, b, c))
     std::cout << e << ' ';
   std::cout << std::endl;
 
