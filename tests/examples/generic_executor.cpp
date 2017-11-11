@@ -1,8 +1,10 @@
 /* RUN: %{execute}%s | %{filecheck} %s
    CHECK: 6 8 10
-   CHECK: -52 14 1.75 17.125
+   CHECK: 352 -128 -44.25 -55.875
+
 
    Simple example showing how SYCL provide single-source genericity
+   enabling writing generic templated libraries
 */
 #include <CL/sycl.hpp>
 #include <functional>
@@ -15,8 +17,9 @@
 using namespace cl::sycl;
 using namespace boost::hana::literals;
 
-// A generic function taking any number of arguments of any type
-auto generic_adder = [] (auto... inputs) {
+/* A generic function taking any number of arguments of any type and
+   folding them with a given generic operator */
+auto generic_executor = [] (auto op, auto... inputs) {
   // Construct a tupple of heterogeneous buffers wrapping the inputs
   auto a = boost::hana::make_tuple(buffer<typename decltype(inputs)::value_type>
     { std::begin(inputs),
@@ -27,8 +30,8 @@ auto generic_adder = [] (auto... inputs) {
      Note that we could use HANA to add some hierarchy in the
      computation (Wallace's tree...) or to sort by type to minimize
      the hardware usage... */
-  auto compute = [] (auto args) {
-    return boost::hana::fold_left(args, [] (auto x, auto y) { return x + y; });
+  auto compute = [&] (auto args) {
+    return boost::hana::fold_left(args, op);
   };
 
   // Make a pseudo-computation on the input to infer the result type
@@ -68,7 +71,8 @@ int main() {
   std::vector<int> u { 1, 2, 3 };
   std::vector<float> v { 5, 6, 7 };
 
-  for (auto e : generic_adder(u, v))
+  // Do not use std::plus because it forces the same type for both operands
+  for (auto e : generic_executor([] (auto x, auto y) { return x + y; }, u, v))
     std::cout << e << ' ';
   std::cout << std::endl;
 
@@ -76,7 +80,8 @@ int main() {
   std::vector<double> a { 1, 2.5, 3.25, 10.125 };
   std::set<char> b { 5, 6, 7, 2 };
   std::list<float> c { -55, 6.5, -7.5, 0 };
-  for (auto e : generic_adder(a, b, c))
+  for (auto e : generic_executor([] (auto x, auto y) { return 3*x - 7*y; },
+                                 a, b, c))
     std::cout << e << ' ';
   std::cout << std::endl;
 
