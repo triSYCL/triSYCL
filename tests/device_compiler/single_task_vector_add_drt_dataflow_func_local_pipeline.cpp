@@ -1,6 +1,7 @@
 /* RUN: %{execute}%s
 
-   A simple typical FPGA-like kernel copying contents from array, and add a fixed alpha value for each.
+   A simple typical FPGA-like kernel with dataflow optimization while copying contents from array, and add a fixed alpha value for each.
+   This example is With dataflow and pipeline optimization.
 */
 #include <CL/sycl.hpp>
 #include <iostream>
@@ -16,10 +17,12 @@ extern "C" {
   // Interface operations
 
   void _ssdm_op_SpecDataflowPipeline(...) __attribute__ ((nothrow, noinline, weak));
+  void _ssdm_op_SpecPipeline(...) __attribute__ ((nothrow, noinline, weak));
 
 }
 #else
 #define _ssdm_op_SpecDataflowPipeline(...)
+#define _ssdm_op_SpecPipeline(...)
 #endif
 
 
@@ -29,47 +32,48 @@ using namespace cl::sycl;
 //         NUM_ROWS:            matrix height
 //         WORD_PER_ROW:        number of words in a row
 //         BLOCK_SIZE:          number of words in an array
-constexpr size_t NUM_ROWS = 2;
-constexpr size_t WORD_PER_ROW = 2;
-constexpr size_t BLOCK_SIZE = 4;
+constexpr size_t NUM_ROWS = 64;
+constexpr size_t WORD_PER_ROW = 64;
+constexpr size_t BLOCK_SIZE = NUM_ROWS * WORD_PER_ROW;
 constexpr size_t ALPHA = 3;
 
 using Type = int;
 
 template<typename T, typename U>
-static void readInput(T (&buffer_in)[BLOCK_SIZE], const U &d_b) {
-for(int i = 0; i < NUM_ROWS; ++i) {
-  for (int j = 0; j < WORD_PER_ROW; ++j) {
-    buffer_in[WORD_PER_ROW*i+j] = d_b[WORD_PER_ROW*i+j];
-  }
-}
-}
-
-template<typename T, typename U>
-static void compute(T (&buffer_in)[BLOCK_SIZE], U (&buffer_out)[BLOCK_SIZE]) {
-for(int i = 0; i < NUM_ROWS; ++i) {
-  for (int j = 0; j < WORD_PER_ROW; ++j) {
-    int inTmp = buffer_in[WORD_PER_ROW*i+j];
-    int outTmp = inTmp * ALPHA;
-    buffer_out[WORD_PER_ROW*i+j] = outTmp;
-  }
-}
-}
-
-template<typename T, typename U>
-static void writeOutput(T (&buffer_out)[BLOCK_SIZE], const U &d_a) {
-for(int i = 0; i < NUM_ROWS; ++i) {
-  for (int j = 0; j < WORD_PER_ROW; ++j) {
-    d_a[WORD_PER_ROW*i+j] = buffer_out[WORD_PER_ROW*i+j];
+void readInput(T (&buffer_in)[BLOCK_SIZE], const U &d_b) {
+  for(int i = 0; i < NUM_ROWS; ++i) {
+    for (int j = 0; j < WORD_PER_ROW; ++j) {
+_ssdm_op_SpecPipeline(-1, 1, 1, 0, "");
+      buffer_in[WORD_PER_ROW*i+j] = d_b[WORD_PER_ROW*i+j];
     }
+  }
 }
+
+template<typename T, typename U>
+void compute(T (&buffer_in)[BLOCK_SIZE], U (&buffer_out)[BLOCK_SIZE]) {
+  for(int i = 0; i < NUM_ROWS; ++i) {
+    for (int j = 0; j < WORD_PER_ROW; ++j) {
+_ssdm_op_SpecPipeline(-1, 1, 1, 0, "");
+      int inTmp = buffer_in[WORD_PER_ROW*i+j];
+      int outTmp = inTmp * ALPHA;
+      buffer_out[WORD_PER_ROW*i+j] = outTmp;
+    }
+  }
+}
+
+template<typename T, typename U>
+void writeOutput(T (&buffer_out)[BLOCK_SIZE], const U &d_a) {
+  for(int i = 0; i < NUM_ROWS; ++i) {
+    for (int j = 0; j < WORD_PER_ROW; ++j) {
+_ssdm_op_SpecPipeline(-1, 1, 1, 0, "");
+      d_a[WORD_PER_ROW*i+j] = buffer_out[WORD_PER_ROW*i+j];
+      }
+  }
 }
 
 int test_main(int argc, char *argv[]) {
   buffer<Type> a { BLOCK_SIZE };
   buffer<Type> b { BLOCK_SIZE }; 
-  //buffer<Type> buff_in { BLOCK_SIZE }; 
-  //buffer<Type> buff_out { BLOCK_SIZE }; 
   buffer<Type> res { BLOCK_SIZE }; 
 
   {
@@ -111,7 +115,7 @@ int test_main(int argc, char *argv[]) {
 
      export BOOST_COMPUTE_DEFAULT_PLATFORM="Portable Computing Language"
      will select PoCL. */
-  queue q { host_selector {} };
+  queue q { default_selector {} };
 
   // Launch a kernel to do the summation
   q.submit([&] (handler &cgh) {
@@ -120,13 +124,17 @@ int test_main(int argc, char *argv[]) {
       auto a_b = b.get_access<access::mode::read>(cgh);
 
       // A typical FPGA-style pipelined kernel
-      cgh.single_task<class add>([=]
-				  {
+      cgh.single_task<class add>([=,
+                                  d_a = drt::accessor<decltype(a_a)> { a_a },
+                                  d_b = drt::accessor<decltype(a_b)> { a_b }
+				  ] {
   				  int buffer_in[BLOCK_SIZE]; 
   				  int buffer_out[BLOCK_SIZE];
-				  readInput(buffer_in, a_b);
+_ssdm_op_SpecDataflowPipeline(-1, "");
+				  readInput(buffer_in, d_b);
 				  compute(buffer_in, buffer_out);
-				  writeOutput(buffer_out, a_a);
+				  writeOutput(buffer_out, d_a);
+
                                  });
     });
 

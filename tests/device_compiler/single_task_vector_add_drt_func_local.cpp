@@ -1,28 +1,12 @@
 /* RUN: %{execute}%s
 
    A simple typical FPGA-like kernel copying contents from array, and add a fixed alpha value for each.
-   This example will fail on compiling on Xilinx FPGA.
-   This example will fail on executing on POCL when NUM_ROWS=4, WORD_PER_ROW=4, and BLOCK_SIZE=16.
 */
 #include <CL/sycl.hpp>
 #include <iostream>
 #include <numeric>
 
 #include <boost/test/minimal.hpp>
-
-#ifdef TRISYCL_DEVICE
-
-extern "C" {
-
-  /****** SSDM Intrinsics: OPERATIONS ***/
-  // Interface operations
-
-  void _ssdm_op_SpecDataflowPipeline(...) __attribute__ ((nothrow, noinline, weak));
-
-}
-#else
-#define _ssdm_op_SpecDataflowPipeline(...)
-#endif
 
 
 using namespace cl::sycl;
@@ -39,32 +23,32 @@ constexpr size_t ALPHA = 3;
 using Type = int;
 
 template<typename T, typename U>
-static void readInput(T (&buffer_in)[BLOCK_SIZE], const U &d_b) {
-for(int i = 0; i < NUM_ROWS; ++i) {
-  for (int j = 0; j < WORD_PER_ROW; ++j) {
-    buffer_in[WORD_PER_ROW*i+j] = d_b[WORD_PER_ROW*i+j];
-  }
-}
-}
-
-template<typename T, typename U>
-static void compute(T (&buffer_in)[BLOCK_SIZE], U (&buffer_out)[BLOCK_SIZE]) {
-for(int i = 0; i < NUM_ROWS; ++i) {
-  for (int j = 0; j < WORD_PER_ROW; ++j) {
-    int inTmp = buffer_in[WORD_PER_ROW*i+j];
-    int outTmp = inTmp * ALPHA;
-    buffer_out[WORD_PER_ROW*i+j] = outTmp;
-  }
-}
-}
-
-template<typename T, typename U>
-static void writeOutput(T (&buffer_out)[BLOCK_SIZE], const U &d_a) {
-for(int i = 0; i < NUM_ROWS; ++i) {
-  for (int j = 0; j < WORD_PER_ROW; ++j) {
-    d_a[WORD_PER_ROW*i+j] = buffer_out[WORD_PER_ROW*i+j];
+void readInput(T (&buffer_in)[BLOCK_SIZE], const U &d_b) {
+  for(int i = 0; i < NUM_ROWS; ++i) {
+    for (int j = 0; j < WORD_PER_ROW; ++j) {
+      buffer_in[WORD_PER_ROW*i+j] = d_b[WORD_PER_ROW*i+j];
     }
+  }
 }
+
+template<typename T, typename U>
+void compute(T (&buffer_in)[BLOCK_SIZE], U (&buffer_out)[BLOCK_SIZE]) {
+  for(int i = 0; i < NUM_ROWS; ++i) {
+    for (int j = 0; j < WORD_PER_ROW; ++j) {
+      int inTmp = buffer_in[WORD_PER_ROW*i+j];
+      int outTmp = inTmp * ALPHA;
+      buffer_out[WORD_PER_ROW*i+j] = outTmp;
+    }
+  }
+}
+
+template<typename T, typename U>
+void writeOutput(T (&buffer_out)[BLOCK_SIZE], const U &d_a) {
+  for(int i = 0; i < NUM_ROWS; ++i) {
+    for (int j = 0; j < WORD_PER_ROW; ++j) {
+      d_a[WORD_PER_ROW*i+j] = buffer_out[WORD_PER_ROW*i+j];
+    }
+  }
 }
 
 int test_main(int argc, char *argv[]) {
@@ -118,8 +102,6 @@ int test_main(int argc, char *argv[]) {
       // Get access to the data
       auto a_a = a.get_access<access::mode::discard_write>(cgh);
       auto a_b = b.get_access<access::mode::read>(cgh);
-      //auto b_in = buff_in.get_access<access::mode::discard_read_write>(cgh);
-      //auto b_out = buff_out.get_access<access::mode::discard_read_write>(cgh);
 
       // A typical FPGA-style pipelined kernel
       cgh.single_task<class add>([=,
