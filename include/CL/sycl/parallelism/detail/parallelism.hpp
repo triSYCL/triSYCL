@@ -352,7 +352,7 @@ void parallel_for_workitem(const group<Dimensions> &g,
     // Reconstruct the global nd_item
     index.set_local(local);
     // \todo Some strength reduction here
-    index.set_global(local + id<Dimensions>(g.get_local_range())*g.get());
+    index.set_global(local + id<Dimensions>(g.get_local_range())*g.get_id());
     // Call the user kernel at last
     f(index);
   };
