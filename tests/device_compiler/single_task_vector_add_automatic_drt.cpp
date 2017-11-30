@@ -61,8 +61,9 @@ int test_main(int argc, char *argv[]) {
           d_c = drt::accessor<decltype(a_c)> { a_c }] () {
           // Use an intermediate automatic array
           decltype(d_b)::value_type array[N];
-          // This should no generate a call to
+          // This should not generate a call to
           // @llvm.memcpy.p0i8.p1i8.i64 in the SPIR output
+          // because it makes argument promotion not working
           for (unsigned int i = 0 ; i < N; ++i)
             array[i] = d_b[i];
           for (unsigned int i = 0 ; i < N; ++i)
