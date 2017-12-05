@@ -277,6 +277,7 @@ execute: $(basename $(TARGET))
 	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so \
 	  -globalopt -deadargelim -SYCL-args-flattening -deadargelim \
 	  -SYCL-kernel-filter -globaldce -RELGCD -reqd-workgroup-size-1 -inSPIRation \
+	  -SYCL-modify-SPIR-func-name \
 	  -o $@ $<
 
 ifdef XILINX_SDX
