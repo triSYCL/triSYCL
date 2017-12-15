@@ -18,6 +18,7 @@
 #include <boost/multi_array.hpp>
 
 #include "CL/sycl/access.hpp"
+#include "CL/sycl/accessor/detail/accessor_traits.hpp"
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/item.hpp"
 #include "CL/sycl/nd_item.hpp"
@@ -30,9 +31,15 @@ template <typename T,
           int Dimensions,
           access::mode Mode,
           access::target Target>
-class buffer_accessor_view {
+class buffer_accessor_view :
+    public detail::accessor_traits<T, Dimensions, Mode, Target> {
 
 public:
+
+  // To make these accessor traits directly usable inside this class
+  using typename
+    detail::accessor_traits<T, Dimensions, Mode, Target>::value_type;
+  using detail::accessor_traits<T, Dimensions, Mode, Target>::dimensionality;
 
   /// The implementation is a multi_array_ref wrapper
   using array_view_type = boost::multi_array_ref<T, Dimensions>;
@@ -41,22 +48,8 @@ public:
   using writable_array_view_type =
     typename std::remove_const<array_view_type>::type;
 
-  /** \todo in the specification: store the dimension for user request
-
-      \todo Use another name, such as from C++2a committee discussions.
-   */
-  static constexpr auto dimensionality = Dimensions;
-
-  //* \todo in the specification: store the mode for user request
-  static constexpr auto mode = Mode;
-
-  //* \todo in the specification: store the target for user request
-  static constexpr auto target = Target;
-
-  /** \todo in the specification: store the types for user request as STL
-      or C++AMP */
-  using value_type = T;
-  using element = T;
+  // Override the accessor traits by the implementation details to
+  // have multidimensional arrays working
   using reference = typename array_view_type::reference;
   using const_reference = typename array_view_type::const_reference;
 
