@@ -71,6 +71,10 @@
 #include "CL/sycl/platform/detail/opencl_platform_tail.hpp"
 #endif
 
+#include "CL/sycl/vendor/Xilinx/ssdm_inst.hpp"
+#include "CL/sycl/vendor/Xilinx/partition_array.hpp"
+#include "CL/sycl/vendor/Xilinx/dataflow.hpp"
+
 /*
     # Some Emacs stuff:
     ### Local Variables:
