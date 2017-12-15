@@ -73,7 +73,7 @@
 
 #include "CL/sycl/vendor/Xilinx/ssdm_inst.hpp"
 #include "CL/sycl/vendor/Xilinx/partition_array.hpp"
-#include "CL/sycl/vendor/Xilinx/dataflow.hpp"
+#include "CL/sycl/vendor/Xilinx/opt_decorate_func.hpp"
 
 /*
     # Some Emacs stuff:
