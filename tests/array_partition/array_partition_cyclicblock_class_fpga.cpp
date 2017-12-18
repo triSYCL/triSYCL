@@ -129,13 +129,13 @@ int test_main(int argc, char *argv[]) {
                 //As A and B are partition correctly so loop pipelining is applied
                 // at 2nd level loop and which will eventually unroll the lower loop
                 for (int j = 0; j < DIM ; j++) {
-              vendor::pipeline([&] {
+                  vendor::pipeline([&] {
                     int result = 0;
                     for (int k = 0; k < MAX_DIM; k++) {
                         result += A[i * MAX_DIM +  k] * B[k * MAX_DIM + j];
                     }
                     C[i*MAX_DIM + j] = result;
-              });
+                  });
                 }
             }
 

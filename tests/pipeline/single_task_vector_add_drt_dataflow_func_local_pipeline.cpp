@@ -117,10 +117,6 @@ int test_main(int argc, char *argv[]) {
                                   ] {
                                    int buffer_in[BLOCK_SIZE];
                                    int buffer_out[BLOCK_SIZE];
-                                   //_ssdm_op_SpecDataflowPipeline(-1, "");
-                                   //readInput(buffer_in, d_b);
-                                   //compute(buffer_in, buffer_out);
-                                   //writeOutput(buffer_out, d_a);
                                    vendor::dataflow([&] {
                                        readInput(buffer_in, d_b);
                                        compute(buffer_in, buffer_out);
