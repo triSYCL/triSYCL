@@ -63,12 +63,13 @@ CXXFLAGS_KERNEL = -fno-vectorize -fno-unroll-loops
 # When XILINX_SDX environment variable is set, use the Xilinx SDx
 # OpenCL compiler with these flags:
 # Adapt to the real platform
+ifdef VERSION_2017_4
+XOCCFLAGS = --platform xilinx_adm-pcie-7v3_1ddr_3_0 --save-temps
+else
 XOCCFLAGS = --platform xilinx:adm-pcie-7v3:1ddr:3.0 --save-temps
-
-
+endif
 
 # The rest is the Makefile boiling plate and should not be changed normally
-
 
 # Compute the absolute directory name from the location of this Makefile
 # so that we can compile from anywhere even if we use make -f
