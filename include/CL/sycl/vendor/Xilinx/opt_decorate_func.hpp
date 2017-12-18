@@ -29,14 +29,14 @@ void dataflow(Functor f) noexcept {
 
 /** Applying pipeline on loops
 
-    pipeline function taking  that user wants to
-    apply pipeline on as arguments.
+    pipeline function taking the loops which wraps in a lambda function that
+    user wants to apply pipeline on as arguments.
 */
 template <typename Functor>
 void pipeline(Functor f) noexcept {
   /* ssdm instruction is inserted before the argument functor to guide xocc to
      do pipeline. */
-  _ssdm_op_SpecPipeline(-1, 1, 1, 0, "");
+  _ssdm_op_SpecPipeline(1, 1, 0, 0, "");
   f();
 }
 
