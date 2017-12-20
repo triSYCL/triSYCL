@@ -78,28 +78,6 @@ http://xilinx.github.io/triSYCL/Doxygen/triSYCL/html and
 http://xilinx.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
 
 
-Generating the Doxygen documentation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-In the top directory, run
-
-.. code:: bash
-
-  make
-
-that will produce ``tmp/Doxygen/SYCL`` with the API documentation and
-``tmp/Doxygen/triSYCL`` with the documented triSYCL_ implementation
-source code.
-
-To publish the documentation on GitHub:
-
-.. code:: bash
-
-  make publish
-
-and finish as explained by the ``make`` output.
-
-
 Possible futures
 ----------------
 
