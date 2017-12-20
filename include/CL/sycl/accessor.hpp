@@ -12,9 +12,9 @@
 #include <cstddef>
 
 #include "CL/sycl/access.hpp"
+#include "CL/sycl/accessor/detail/accessor_traits.hpp"
 #include "CL/sycl/accessor/detail/local_accessor.hpp"
 #include "CL/sycl/buffer/detail/accessor.hpp"
-#include "CL/sycl/detail/container_element_aspect.hpp"
 #include "CL/sycl/detail/shared_ptr_implementation.hpp"
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/item.hpp"
@@ -53,7 +53,7 @@ class accessor :
                                                               Dimensions,
                                                               AccessMode,
                                                               Target>>,
-    public detail::container_element_aspect<DataType> {
+    public detail::accessor_traits<DataType, Dimensions, AccessMode, Target> {
 
  public:
 
@@ -444,7 +444,9 @@ public:
 template <typename DataType,
           access::mode AccessMode>
 class accessor<DataType, 1, AccessMode, access::target::blocking_pipe> :
-    public detail::pipe_accessor<DataType, AccessMode, access::target::blocking_pipe> {
+    public detail::pipe_accessor<DataType,
+                                 AccessMode,
+                                 access::target::blocking_pipe> {
 public:
 
   using accessor_detail =

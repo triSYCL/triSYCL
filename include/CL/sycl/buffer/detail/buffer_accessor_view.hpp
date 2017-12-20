@@ -37,9 +37,11 @@ class buffer_accessor_view :
 public:
 
   // To make these accessor traits directly usable inside this class
+  using detail::accessor_traits<T, Dimensions, Mode, Target>::dimensionality;
+  using typename
+    detail::accessor_traits<T, Dimensions, Mode, Target>::pointer;
   using typename
     detail::accessor_traits<T, Dimensions, Mode, Target>::value_type;
-  using detail::accessor_traits<T, Dimensions, Mode, Target>::dimensionality;
 
   /// The implementation is a multi_array_ref wrapper
   using array_view_type = boost::multi_array_ref<T, Dimensions>;
@@ -74,8 +76,15 @@ public:
   */
   mutable array_view_type array;
 
+  //* Make a buffer_accessor_view from implementation detail
   buffer_accessor_view(const array_view_type &access)
     : array { access }
+  {}
+
+
+  //* Make a buffer_accessor_view from storage and sizes
+  buffer_accessor_view(pointer storage, const range<Dimensions> &r)
+    : buffer_accessor_view { array_view_type { storage, r } }
   {}
 
 

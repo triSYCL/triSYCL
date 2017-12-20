@@ -9,6 +9,7 @@
     License. See LICENSE.TXT for details.
 */
 
+#include "CL/sycl/detail/container_element_aspect.hpp"
 
 namespace cl {
 namespace sycl {
@@ -22,7 +23,7 @@ template <typename T,
           int Dimensions,
           access::mode Mode,
           access::target Target>
-class accessor_traits {
+class accessor_traits : public detail::container_element_aspect<T> {
 
 public:
 
@@ -37,13 +38,6 @@ public:
 
   //* \todo in the specification: store the target for user request
   static constexpr auto target = Target;
-
-  /** \todo in the specification: store the types for user request as STL
-      or C++AMP */
-  using value_type = T;
-  using element = T;
-  using reference = value_type &;
-  using const_reference = const value_type &;
 
 };
 
