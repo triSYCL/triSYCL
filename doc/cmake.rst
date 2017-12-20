@@ -2,6 +2,8 @@
  CMake infrastructure
 ======================
 
+.. include:: common-includes.rst
+
 Features
 ========
 

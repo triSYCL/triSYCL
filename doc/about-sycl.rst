@@ -1,6 +1,8 @@
 About SYCL
 ++++++++++
 
+.. include:: common-includes.rst
+
 SYCL_ has a lot of interesting advantages compared to plain OpenCL_ or
 other approaches:
 

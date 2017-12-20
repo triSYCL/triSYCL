@@ -1,6 +1,8 @@
 Testing
 +++++++
 
+.. include:: common-includes.rst
+
 Installation
 ------------
 

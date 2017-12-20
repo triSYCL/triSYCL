@@ -1,6 +1,8 @@
 triSYCL
 +++++++
 
+.. include:: doc/common-includes.rst
+
 .. image:: https://travis-ci.org/triSYCL/triSYCL.svg?branch=master
     :target: https://travis-ci.org/triSYCL/triSYCL
 

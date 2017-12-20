@@ -1,6 +1,8 @@
 Possible Futures
 ++++++++++++++++
 
+.. include:: common-includes.rst
+
 Some ideas of future developments where *you* can contribute too: :-)
 
 - finish implementation of basic classes without any OpenCL_ support;
