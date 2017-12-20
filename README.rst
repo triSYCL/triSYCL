@@ -61,7 +61,13 @@ For the SYCL_ ecosystem, look at http://sycl.tech
 Why you could use SYCL
 ~~~~~~~~~~~~~~~~~~~~~~
 
-- Please see [about SYCL](doc/about-sycl.rst)
+- Please see `about SYCL <doc/about-sycl.rst>`_
+
+
+Installation & testing
+----------------------
+
+See `Testing <doc/testing.rst>`_
 
 
 OpenCL triSYCL code documentation
@@ -70,6 +76,7 @@ OpenCL triSYCL code documentation
 The documentation of the triSYCL_ implementation itself can be found in
 http://xilinx.github.io/triSYCL/Doxygen/triSYCL/html and
 http://xilinx.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
+
 
 Generating the Doxygen documentation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -96,7 +103,8 @@ and finish as explained by the ``make`` output.
 Possible futures
 ----------------
 
-See `Possible futuress <doc/possible-futures.rst>`
+See `Possible futures <doc/possible-futures.rst>`_
+
 
 News
 ----
