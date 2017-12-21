@@ -2,8 +2,6 @@
  Pre-processor macros used in triSYCL
 ======================================
 
-.. include:: common-includes.rst
-
 triSYCL can be configured to some pre-processor macros.
 
 They are typically passed to the compiler by the build system.

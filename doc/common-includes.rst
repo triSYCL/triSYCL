@@ -1,6 +1,12 @@
 ..
   Some common definitions to be used by other ReST files
 
+..
+  Actually include:: doc/common-includes.rst does not work in GitHub
+  :-( https://github.com/github/markup/issues/172
+
+  So manual inline of the following everywhere... :-(
+
 .. Some useful link definitions:
 
 .. _AMD: http://www.amd.com
