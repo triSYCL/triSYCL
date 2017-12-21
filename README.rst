@@ -3,6 +3,8 @@ triSYCL
 
 .. include:: doc/common-includes.rst
 
+.. highlight:: C++
+
 .. image:: https://travis-ci.org/triSYCL/triSYCL.svg?branch=master
     :target: https://travis-ci.org/triSYCL/triSYCL
 
@@ -45,6 +47,17 @@ OpenCL_ SYCL_ is a single-source C++14/C++17-based DSEL_ (Domain Specific
 Embedded Language) aimed at facilitating the programming of heterogeneous
 accelerators by leveraging the OpenCL_ language and concepts.
 
+A typical kernel with its launch looks like::
+
+  auto cg = [&](handler & h) {
+      auto accA = buf.get_access<access::mode::read >(h);
+      auto accB = buf.get_access<access::mode::write >(h);
+      h.parallel_for<class myKernel>(myRange, [=](item i) {
+          accA [i] = accB [i];
+      });
+  };
+  someQueue.submit(cg);
+
 Note that even if the concepts behind SYCL_ are inspired by OpenCL_
 concepts, the SYCL_ programming model is a very general asynchronous
 task graph model for heterogeneous computing with *no* relation with
@@ -66,6 +79,10 @@ Why you could use SYCL
 
 Installation & testing
 ----------------------
+
+SYCL is a template library, so no real installation is required.
+
+There are some examples you can build however.
 
 See `Testing <doc/testing.rst>`_
 
