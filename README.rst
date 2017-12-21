@@ -49,16 +49,15 @@ OpenCL_ SYCL_ is a single-source C++14/C++17-based DSEL_ (Domain Specific
 Embedded Language) aimed at facilitating the programming of heterogeneous
 accelerators by leveraging the OpenCL_ language and concepts.
 
-A typical kernel with its launch looks like::
+A typical kernel with its launch looks like this pure modern C++ code::
 
-  auto cg = [&](handler &h) {
-      auto accA = buf.get_access<access::mode::read>(h);
-      auto accB = buf.get_access<access::mode::write>(h);
+  queue {}.submit([&](handler &h) {
+      auto accA = bufA.get_access<access::mode::read>(h);
+      auto accB = bufB.get_access<access::mode::write>(h);
       h.parallel_for<class myKernel>(myRange, [=](item i) {
-          accA [i] = accB [i];
+          accA[i] = accB[i] + 1;
       });
-  };
-  someQueue.submit(cg);
+  });
 
 Look for example at
 https://github.com/triSYCL/triSYCL/blob/master/tests/examples/demo_parallel_matrix_add.cpp
