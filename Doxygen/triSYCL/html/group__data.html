@@ -1300,17 +1300,7 @@ template&lt;typename T , int Dimensions, access::mode Mode&gt; </div>
 <p>To use an accessor with [item&lt;&gt;]. </p>
 
 <p class="definition">Definition at line <a class="el" href="local__accessor_8hpp_source.html#l00205">205</a> of file <a class="el" href="local__accessor_8hpp_source.html">local_accessor.hpp</a>.</p>
-
-<p class="reference">References <a class="el" href="item_8hpp_source.html#l00069">cl::sycl::item&lt; Dimensions &gt;::get()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;                                               {</div><div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)[index.get()];</div><div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;  }</div></div><!-- fragment --><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="group__data_a55af342108b451d0dffbdcc331a417bd_cgraph.png" border="0" usemap="#group__data_a55af342108b451d0dffbdcc331a417bd_cgraph" alt=""/></div>
-<map name="group__data_a55af342108b451d0dffbdcc331a417bd_cgraph" id="group__data_a55af342108b451d0dffbdcc331a417bd_cgraph">
-<area shape="rect" id="node2" href="group__parallelism.html#a83ac1ded56b13b5f5fee189c3aea92cd" title="Return the constituent local or global id&lt;&gt; representing the work&#45;item&#39;s position in the iteration sp..." alt="" coords="263,20,385,47"/>
-</map>
-</div>
-
+<div class="fragment"><div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;                                               {</div><div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)[index.get()];</div><div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;  }</div></div><!-- fragment -->
 </div>
 </div>
 <a id="ac740f5f1e7abab0a94fa36815f1ad550"></a>
@@ -1342,17 +1332,7 @@ template&lt;typename T , int Dimensions, access::mode Mode&gt; </div>
 <p>To use an accessor with [item&lt;&gt;]. </p>
 
 <p class="definition">Definition at line <a class="el" href="local__accessor_8hpp_source.html#l00211">211</a> of file <a class="el" href="local__accessor_8hpp_source.html">local_accessor.hpp</a>.</p>
-
-<p class="reference">References <a class="el" href="item_8hpp_source.html#l00069">cl::sycl::item&lt; Dimensions &gt;::get()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;                                                     {</div><div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)[index.get()];</div><div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;  }</div></div><!-- fragment --><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="group__data_ac740f5f1e7abab0a94fa36815f1ad550_cgraph.png" border="0" usemap="#group__data_ac740f5f1e7abab0a94fa36815f1ad550_cgraph" alt=""/></div>
-<map name="group__data_ac740f5f1e7abab0a94fa36815f1ad550_cgraph" id="group__data_ac740f5f1e7abab0a94fa36815f1ad550_cgraph">
-<area shape="rect" id="node2" href="group__parallelism.html#a83ac1ded56b13b5f5fee189c3aea92cd" title="Return the constituent local or global id&lt;&gt; representing the work&#45;item&#39;s position in the iteration sp..." alt="" coords="263,20,385,47"/>
-</map>
-</div>
-
+<div class="fragment"><div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;                                                     {</div><div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)[index.get()];</div><div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;  }</div></div><!-- fragment -->
 </div>
 </div>
 <a id="a12298e054f242ca5e62f0fbcb5965fa6"></a>
@@ -2655,13 +2635,13 @@ template&lt;typename DataType , int Dimensions, access::mode AccessMode, access:
 
 <p class="definition">Definition at line <a class="el" href="accessor_8hpp_source.html#l00257">257</a> of file <a class="el" href="accessor_8hpp_source.html">accessor.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="item_8hpp_source.html#l00069">cl::sycl::item&lt; Dimensions &gt;::get()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;                                               {</div><div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)[index.get()];</div><div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;  }</div></div><!-- fragment --><div class="dynheader">
+<p class="reference">References <a class="el" href="item_8hpp_source.html#l00069">cl::sycl::item&lt; Dimensions &gt;::get_id()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;                                               {</div><div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)[index.get_id()];</div><div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;  }</div></div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__data_a4b7a26763437479ee5cc92d9ce08936a_cgraph.png" border="0" usemap="#group__data_a4b7a26763437479ee5cc92d9ce08936a_cgraph" alt=""/></div>
 <map name="group__data_a4b7a26763437479ee5cc92d9ce08936a_cgraph" id="group__data_a4b7a26763437479ee5cc92d9ce08936a_cgraph">
-<area shape="rect" id="node2" href="group__parallelism.html#a83ac1ded56b13b5f5fee189c3aea92cd" title="Return the constituent local or global id&lt;&gt; representing the work&#45;item&#39;s position in the iteration sp..." alt="" coords="179,13,301,39"/>
+<area shape="rect" id="node2" href="group__parallelism.html#ac5734bcae3294471e6cac2f1baba8def" title="Return the constituent local or global id&lt;&gt; representing the work&#45;item&#39;s position in the iteration sp..." alt="" coords="179,13,319,39"/>
 </map>
 </div>
 
@@ -2697,13 +2677,13 @@ template&lt;typename DataType , int Dimensions, access::mode AccessMode, access:
 
 <p class="definition">Definition at line <a class="el" href="accessor_8hpp_source.html#l00263">263</a> of file <a class="el" href="accessor_8hpp_source.html">accessor.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="item_8hpp_source.html#l00069">cl::sycl::item&lt; Dimensions &gt;::get()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;                                                     {</div><div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)[index.get()];</div><div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;  }</div></div><!-- fragment --><div class="dynheader">
+<p class="reference">References <a class="el" href="item_8hpp_source.html#l00069">cl::sycl::item&lt; Dimensions &gt;::get_id()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;                                                     {</div><div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)[index.get_id()];</div><div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;  }</div></div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__data_a58da9cf0636f66cca800e652c2f289b0_cgraph.png" border="0" usemap="#group__data_a58da9cf0636f66cca800e652c2f289b0_cgraph" alt=""/></div>
 <map name="group__data_a58da9cf0636f66cca800e652c2f289b0_cgraph" id="group__data_a58da9cf0636f66cca800e652c2f289b0_cgraph">
-<area shape="rect" id="node2" href="group__parallelism.html#a83ac1ded56b13b5f5fee189c3aea92cd" title="Return the constituent local or global id&lt;&gt; representing the work&#45;item&#39;s position in the iteration sp..." alt="" coords="179,13,301,39"/>
+<area shape="rect" id="node2" href="group__parallelism.html#ac5734bcae3294471e6cac2f1baba8def" title="Return the constituent local or global id&lt;&gt; representing the work&#45;item&#39;s position in the iteration sp..." alt="" coords="179,13,319,39"/>
 </map>
 </div>
 
@@ -4780,17 +4760,7 @@ template&lt;typename T , int Dimensions, access::mode Mode, access::target Targe
 <p>To use an accessor with [item&lt;&gt;]. </p>
 
 <p class="definition">Definition at line <a class="el" href="buffer_2detail_2accessor_8hpp_source.html#l00274">274</a> of file <a class="el" href="buffer_2detail_2accessor_8hpp_source.html">accessor.hpp</a>.</p>
-
-<p class="reference">References <a class="el" href="item_8hpp_source.html#l00069">cl::sycl::item&lt; Dimensions &gt;::get()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;                                               {</div><div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)[index.get()];</div><div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;  }</div></div><!-- fragment --><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="group__data_ada9c761cc3d629a00f78d8c8493e3a9f_cgraph.png" border="0" usemap="#group__data_ada9c761cc3d629a00f78d8c8493e3a9f_cgraph" alt=""/></div>
-<map name="group__data_ada9c761cc3d629a00f78d8c8493e3a9f_cgraph" id="group__data_ada9c761cc3d629a00f78d8c8493e3a9f_cgraph">
-<area shape="rect" id="node2" href="group__parallelism.html#a83ac1ded56b13b5f5fee189c3aea92cd" title="Return the constituent local or global id&lt;&gt; representing the work&#45;item&#39;s position in the iteration sp..." alt="" coords="217,13,340,39"/>
-</map>
-</div>
-
+<div class="fragment"><div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;                                               {</div><div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)[index.get()];</div><div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;  }</div></div><!-- fragment -->
 </div>
 </div>
 <a id="a87ef68030f34e48294c6488172c3cf5c"></a>
@@ -4822,17 +4792,7 @@ template&lt;typename T , int Dimensions, access::mode Mode, access::target Targe
 <p>To use an accessor with [item&lt;&gt;]. </p>
 
 <p class="definition">Definition at line <a class="el" href="buffer_2detail_2accessor_8hpp_source.html#l00280">280</a> of file <a class="el" href="buffer_2detail_2accessor_8hpp_source.html">accessor.hpp</a>.</p>
-
-<p class="reference">References <a class="el" href="item_8hpp_source.html#l00069">cl::sycl::item&lt; Dimensions &gt;::get()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;                                                     {</div><div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)[index.get()];</div><div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;  }</div></div><!-- fragment --><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="group__data_a87ef68030f34e48294c6488172c3cf5c_cgraph.png" border="0" usemap="#group__data_a87ef68030f34e48294c6488172c3cf5c_cgraph" alt=""/></div>
-<map name="group__data_a87ef68030f34e48294c6488172c3cf5c_cgraph" id="group__data_a87ef68030f34e48294c6488172c3cf5c_cgraph">
-<area shape="rect" id="node2" href="group__parallelism.html#a83ac1ded56b13b5f5fee189c3aea92cd" title="Return the constituent local or global id&lt;&gt; representing the work&#45;item&#39;s position in the iteration sp..." alt="" coords="217,13,340,39"/>
-</map>
-</div>
-
+<div class="fragment"><div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;                                                     {</div><div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)[index.get()];</div><div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;  }</div></div><!-- fragment -->
 </div>
 </div>
 <a id="a44db0bd1307342b958566c333d28d041"></a>
@@ -14255,7 +14215,7 @@ Here is the caller graph for this function:</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 19 2017 02:07:26 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Dec 21 2017 23:24:12 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

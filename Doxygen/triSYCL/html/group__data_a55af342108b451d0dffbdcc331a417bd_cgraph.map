@@ -1,3 +1,0 @@
-<map id="cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;::operator[]" name="cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;::operator[]">
-<area shape="rect" id="node2" href="$group__parallelism.html#a83ac1ded56b13b5f5fee189c3aea92cd" title="Return the constituent local or global id&lt;&gt; representing the work&#45;item&#39;s position in the iteration sp..." alt="" coords="263,20,385,47"/>
-</map>
