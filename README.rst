@@ -18,7 +18,7 @@ the specification of the OpenCL_ SYCL_ 1.2.1 and 2.2 `C++`_ layer and
 to give feedback to the Khronos_ OpenCL_ SYCL_ and OpenCL_ C++ 2.2
 kernel language committees.
 
-This SYCL_ implementation is mainly based on C++1z (2017?) and OpenMP_
+This SYCL_ implementation is mainly based on C++17 and OpenMP_
 with execution on the CPU right now, but some parts of the non
 single-source OpenCL_ interoperability layer are implemented and the
 device compiler development is on-going for SPIR_ and SPIR-V_. Since in
@@ -51,14 +51,18 @@ accelerators by leveraging the OpenCL_ language and concepts.
 
 A typical kernel with its launch looks like::
 
-  auto cg = [&](handler & h) {
-      auto accA = buf.get_access<access::mode::read >(h);
-      auto accB = buf.get_access<access::mode::write >(h);
+  auto cg = [&](handler &h) {
+      auto accA = buf.get_access<access::mode::read>(h);
+      auto accB = buf.get_access<access::mode::write>(h);
       h.parallel_for<class myKernel>(myRange, [=](item i) {
           accA [i] = accB [i];
       });
   };
   someQueue.submit(cg);
+
+Look for example at
+https://github.com/triSYCL/triSYCL/blob/master/tests/examples/demo_parallel_matrix_add.cpp
+for a complete example.
 
 Note that even if the concepts behind SYCL_ are inspired by OpenCL_
 concepts, the SYCL_ programming model is a very general asynchronous
@@ -105,6 +109,11 @@ See `Possible futures <doc/possible-futures.rst>`_
 
 News
 ----
+
+- 2017/09/19: there is a prototype of device compiler based on
+  Clang_/LLVM_ generating SPIR 2.0 "de facto" and working at least
+  with PoCL and Xilinx SDx `xocc` for FPGA. Look at the `device`
+  branch in https://github.com/triSYCL/triSYCL/tree/device
 
 - 2017/03/03: triSYCL can use CMake & ctest and works on Windows 10 with
   Visual Studio 2017. It works also with Ubuntu WSL on Windows. :-)

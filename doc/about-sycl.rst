@@ -98,7 +98,7 @@ other approaches:
   fashion. This relieves the programmer to reorganize her application to
   work around these limitation, which can be quite a cumbersome work.
 
-for introduction material on the interest of DSEL_ in this area, look for
+For introduction material on the interest of DSEL_ in this area, look for
 example at these articles:
 
 - `Domain-specific Languages and Code Synthesis Using Haskell
@@ -127,6 +127,9 @@ Some presentations and publications related to SYCL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 By reverse chronological order:
+
+- Some talks at SuperComputing SC17 (November 2017) around SYCL with slides and
+  videos: https://www.khronos.org/news/events/supercomputing-2017
 
 - `SYCL C++ and OpenCL interoperability experimentation with triSYCL
   <https://github.com/keryell/ronan/raw/gh-pages/publications/conf/2017/IWOCL-DHCPP/triSYCL/2017-05-16-IWOCL-DHPCC-triSYCL.pdf>`_.
