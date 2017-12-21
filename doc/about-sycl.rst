@@ -311,6 +311,11 @@ Related projects
 
 - Thrust_
 
+- CUDA_
+
+- Coriander, a CUDA compiler and runtime for OpenCL
+  https://github.com/hughperkins/coriander
+
 - `C++AMP`_
 
 - HCC https://bitbucket.org/multicoreware/hcc/wiki/Home
@@ -323,8 +328,6 @@ Related projects
 - Intel SPMD Program Compiler https://ispc.github.io/
 
 - Intel Lab's iHRC https://github.com/IntelLabs/iHRC
-
-- CUDA_
 
 - Metal_
 
