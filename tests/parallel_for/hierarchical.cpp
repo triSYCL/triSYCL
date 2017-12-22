@@ -47,7 +47,7 @@ my_queue.submit([&](handler &cgh)
                                                              range<>(groupsize)),
                                                   [=](group<> group)
   {
-    std::cout << "Group id = " << group.get(0) << std::endl;
+    std::cout << "Group id = " << group.get_id(0) << std::endl;
 
     parallel_for_work_item(group, [=](nd_item<1> tile)
     {

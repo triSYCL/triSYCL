@@ -97,7 +97,7 @@ B buffer_map2reduce(ExecutionPolicy &snp,
       sum { cl::sycl::range<1>(d.nb_work_item), cgh };
     auto sumX = cl::sycl::local_ptr<B> { sum };
     cgh.parallel_for_work_group<class wg>(rng, [=](cl::sycl::group<1> grp) {
-      size_t group_id = grp.get(0);
+      size_t group_id = grp.get_id(0);
       //assert(group_id < d.nb_work_group);
       size_t group_begin = group_id * d.size_per_work_group;
       size_t group_end = min((group_id+1) * d.size_per_work_group, d.size);

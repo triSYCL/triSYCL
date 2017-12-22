@@ -80,11 +80,11 @@ public:
   /** Return an id representing the index of the group within the nd_range
       for every dimension
   */
-  id<Dimensions> get() const { return group_id; }
+  id<Dimensions> get_id() const { return group_id; }
 
 
   /// Return the index of the group in the given dimension
-  size_t get(int dimension) const { return get()[dimension]; }
+  size_t get_id(int dimension) const { return get_id()[dimension]; }
 
 
   /** Return the index of the group in the given dimension within the
@@ -170,7 +170,7 @@ public:
 
    */
   size_t get_linear() const {
-    return detail::linear_id(get_group_range(), get());
+    return detail::linear_id(get_group_range(), get_id());
   }
 
 

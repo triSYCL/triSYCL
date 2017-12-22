@@ -176,7 +176,7 @@ public:
   // Not really static because of the use of global_max (which is passed by args)
   static inline void store_local(T * local_tab, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> in, cl::sycl::nd_item<2> it, cl::sycl::group<2> gr, int glob_max0, int glob_max1) {
     cl::sycl::range<2> l_range = it.get_local_range();
-    cl::sycl::id<2> g_ind = gr.get(); //it.get_group_id(); error because ambiguous / operator redefinition 
+    cl::sycl::id<2> g_ind = gr.get_id(); //it.get_group_id(); error because ambiguous / operator redefinition 
     cl::sycl::id<2> l_ind = it.get_local();
 
     int l_range0 = l_range.get(0);
