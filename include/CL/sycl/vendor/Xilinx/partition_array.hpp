@@ -67,12 +67,6 @@ namespace partition {
     partition help us to partition single array to multiple memories that can
     be access simultaneously getting higher memory bandwidth.
 
-    Unfortunately, even if std::array is an aggregate class allowing
-    native list initialization, it is no longer an aggregate if we derive
-    from an aggregate. Thus we have to redeclare the constructors.
-    Reference: https://stackoverflow.com/questions/24280521/stdarray-constructor
-    -inheritance
-
     \param BasicType is the type of element, it needs to be complete type,
     such as int
 
@@ -84,9 +78,6 @@ namespace partition {
 
     \param PDims is the array dimension the user want to partition.
 
-    \param EnableArgsConstructor adds a constructors from Dims variadic
-    elements when true. It is false by default.
-
     \todo cyclic and block string can be generated automatically for
     _ssdm_SpecArrayPartition function.
 */
@@ -94,11 +85,9 @@ template <typename BasicType,
           std::size_t Dims,
           int Factor = 1,
           int PDim = 1,
-          partition::par_type PartitionType = partition::par_type::none,
-          bool EnableArgsConstructor = false>
-struct array : std::array<BasicType, Dims> {
-  /* Note that constexpr size() from the underlying std::array provides
-     the same functionality */
+          partition::par_type PartitionType = partition::par_type::none>
+struct array {
+  BasicType elems[Dims];
   static const size_t dimension = Dims;
   static const int factor = Factor;
   static const int partition_dim = PDim;
@@ -106,15 +95,26 @@ struct array : std::array<BasicType, Dims> {
   using element_type = BasicType;
 
 
+  /// Provide iterator
+  BasicType* begin() { return elems; }
+  const BasicType* begin() const { return elems; }
+  BasicType* end() { return elems+Dims; }
+  const BasicType* end() const { return elems+Dims; }
+
+
+  /// Evaluate size
+  constexpr std::size_t size() const noexcept {
+    return Dims;
+  }
+
+
   /// A constructor from another array of the same size
-  template <typename SourceBasicType,
-            bool SourceEnableArgsConstructor>
+  template <typename SourceBasicType>
   array(const array<SourceBasicType,
               Dims,
               Factor,
               PDim,
-              PartitionType,
-              SourceEnableArgsConstructor> &src) {
+              PartitionType> &src) {
     std::copy_n(&src[0], Dims, &(*this)[0]);
     if (PartitionType == partition::par_type::cyclic)
       _ssdm_SpecArrayPartition( &(*this)[0], 1, "CYCLIC", Factor, "");
@@ -123,41 +123,15 @@ struct array : std::array<BasicType, Dims> {
   }
 
 
-  /** Initialize the array from a list of elements
-
-      Strangely, even when using the array constructors, the
-      initialization of the aggregate is not available. So recreate an
-      equivalent here.
-
-      Since there are inherited types that defines some constructors with
-      some conflicts, make it optional here, according to
-      EnableArgsConstructor template parameter.
-   */
-  template <typename... Types,
-            // Just to make enable_if depend of the template and work
-            bool Depend = true,
-            typename = typename std::enable_if_t<EnableArgsConstructor
-                                                 && Depend>>
-  array(const Types &... args)
-    : std::array<BasicType, Dims> {
-    // Allow a loss of precision in initialization with the static_cast
-    { static_cast<BasicType>(args)... }
-  }
-  {
-    static_assert(sizeof...(args) == Dims,
-                  "The number of initializing elements should match "
-                  "the dimension");
-    if (PartitionType == partition::par_type::cyclic)
-      _ssdm_SpecArrayPartition( &(*this)[0], 1, "CYCLIC", Factor, "");
-    if (PartitionType == partition::par_type::block)
-      _ssdm_SpecArrayPartition( &(*this)[0], 1, "BLOCK", Factor, "");
-  }
-
-
-  /// Construct a array from a std::array
+  /// Construct an array from a std::array
   template <typename SourceBasicType>
-  array(const std::array<SourceBasicType, Dims> &src)
-  : std::array<BasicType, Dims>(src) {
+  array(const std::array<SourceBasicType, Dims> &src) {
+    std::copy_n(&src[0], Dims, &(*this)[0]);
+  }
+
+
+  /// Construct an array
+  array() {
     if (PartitionType == partition::par_type::cyclic)
       _ssdm_SpecArrayPartition( &(*this)[0], 1, "CYCLIC", Factor, "");
     if (PartitionType == partition::par_type::block)
@@ -165,12 +139,27 @@ struct array : std::array<BasicType, Dims> {
   }
 
 
-  /// Construct a array
-  array() : std::array<BasicType, Dims>() {
+  /// Construct an array from initializer_list
+  template <typename SourceBasicType>
+  array(std::initializer_list<SourceBasicType> l) {
+    int i = 0;
+    for (auto itr = l.begin(); itr != l.end(); itr++)
+      (*this)[i++] = *itr;
     if (PartitionType == partition::par_type::cyclic)
       _ssdm_SpecArrayPartition( &(*this)[0], 1, "CYCLIC", Factor, "");
     if (PartitionType == partition::par_type::block)
       _ssdm_SpecArrayPartition( &(*this)[0], 1, "BLOCK", Factor, "");
+  }
+
+
+  /// Provide a subscript operator
+  BasicType& operator[](std::size_t i) {
+    return elems[i];
+  }
+
+
+  constexpr const BasicType& operator[](std::size_t i) const {
+    return elems[i];
   }
 
 
