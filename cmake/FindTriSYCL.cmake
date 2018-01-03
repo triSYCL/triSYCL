@@ -73,7 +73,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     add_compile_options("-Wno-undefined-var-template")
 
   endif()
-elseif ("${CMAKE_CXX_COMPILIER_ID}" STREQUAL "MSVC")
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
   # Change to /std:c++latest once Boost::funtional is fixed
   # (1.63.0 with toolset v141 not working)
   add_compile_options("/std:c++14")
