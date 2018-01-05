@@ -116,9 +116,9 @@ struct array {
               PDim,
               PartitionType> &src) {
     std::copy_n(&src[0], Dims, &(*this)[0]);
-    if (PartitionType == partition::par_type::cyclic)
+    if constexpr (PartitionType == partition::par_type::cyclic)
       _ssdm_SpecArrayPartition( &(*this)[0], 1, "CYCLIC", Factor, "");
-    if (PartitionType == partition::par_type::block)
+    if constexpr (PartitionType == partition::par_type::block)
       _ssdm_SpecArrayPartition( &(*this)[0], 1, "BLOCK", Factor, "");
   }
 
@@ -132,9 +132,9 @@ struct array {
 
   /// Construct an array
   array() {
-    if (PartitionType == partition::par_type::cyclic)
+    if constexpr (PartitionType == partition::par_type::cyclic)
       _ssdm_SpecArrayPartition( &(*this)[0], 1, "CYCLIC", Factor, "");
-    if (PartitionType == partition::par_type::block)
+    if constexpr (PartitionType == partition::par_type::block)
       _ssdm_SpecArrayPartition( &(*this)[0], 1, "BLOCK", Factor, "");
   }
 
@@ -145,9 +145,9 @@ struct array {
     int i = 0;
     for (auto itr = l.begin(); itr != l.end(); itr++)
       (*this)[i++] = *itr;
-    if (PartitionType == partition::par_type::cyclic)
+    if constexpr (PartitionType == partition::par_type::cyclic)
       _ssdm_SpecArrayPartition( &(*this)[0], 1, "CYCLIC", Factor, "");
-    if (PartitionType == partition::par_type::block)
+    if constexpr (PartitionType == partition::par_type::block)
       _ssdm_SpecArrayPartition( &(*this)[0], 1, "BLOCK", Factor, "");
   }
 
@@ -186,4 +186,4 @@ struct array {
     ### End:
 */
 
-#endif // TRISYCL_SYCL_VENDOR_ARRAY_PARTITION_HPP
+#endif// TRISYCL_SYCL_VENDOR_ARRAY_PARTITION_HPP
