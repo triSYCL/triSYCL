@@ -30,6 +30,6 @@ int test_main(int argc, char *argv[]) {
   test_device<host_selector>(info::device_type::host);
   test_device<cpu_selector>(info::device_type::cpu);
   test_device<gpu_selector>(info::device_type::gpu);
-  test_device<default_selector>(info::device_type::defaults);
+  test_device<default_selector>(info::device_type::automatic);
   return 0;
 }

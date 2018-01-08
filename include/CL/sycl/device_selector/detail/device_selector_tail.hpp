@@ -49,7 +49,7 @@ public:
     : device_type { device_type } {
     // The default device selection heuristic
 #ifdef TRISYCL_OPENCL
-    if (device_type == info::device_type::defaults) {
+    if (device_type == info::device_type::automatic) {
       // Ask Boost.Compute for the default OpenCL device
       try {
         default_device = boost::compute::system::default_device();
@@ -69,7 +69,7 @@ public:
       // All devices fit all
       return 1;
 
-    if (device_type == info::device_type::defaults)
+    if (device_type == info::device_type::automatic)
       // Only select the default device
       return dev == default_device ? 1 : -1;
 
@@ -112,7 +112,7 @@ public:
 
     - \c BOOST_COMPUTE_DEFAULT_VENDOR
 */
-using default_selector = device_typename_selector<info::device_type::defaults>;
+using default_selector = device_typename_selector<info::device_type::automatic>;
 
 
   /** Select devices according to device type info::device::device_type::gpu
