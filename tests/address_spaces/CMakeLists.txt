@@ -17,3 +17,5 @@ ps = yo manyo man Size = 12
 e-salut
 e-= Mont a ra mat\\?
 3")
+declare_trisycl_test(TARGET address_spaces_pstl)
+declare_trisycl_test(TARGET address_spaces_ptr)
