@@ -276,7 +276,7 @@ execute: $(basename $(TARGET))
 	# To debug, think about using options like -debug -stats -print-after-all...
 	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so \
 	  -globalopt -deadargelim -SYCL-args-flattening -deadargelim \
-	  -SYCL-kernel-filter -globaldce -RELGCD -reqd-workgroup-size-fpga -inSPIRation \
+	  -SYCL-kernel-filter -globaldce -RELGCD -reqd-workgroup-size-1 -inSPIRation \
 	  -o $@ $<
 
 ifdef XILINX_SDX
