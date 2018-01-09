@@ -86,8 +86,10 @@ TARGETS += $(TARGETS_CC)
 FILES_C = $(wildcard */*.C)
 CLEANING_TARGETS = $(TARGETS) $(FILES_C:%.C=%.o)
 
-# The implementation uses C++14
-CXXFLAGS += -Wall -std=c++1y -I$(triSYCL_DIR)/include \
+# The implementation uses C++14.
+# Use -Wno-ignored-attributes to avoid a lot of warning with
+# Boost.Compute and g++ version >= 6
+CXXFLAGS += -Wall -Wno-ignored-attributes -std=c++1y -I$(triSYCL_DIR)/include \
 	-I$(triSYCL_DIR)/tests/common
 
 # Vivado HLS path
