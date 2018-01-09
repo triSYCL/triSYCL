@@ -8,6 +8,7 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <algorithm>
 #include <cmath>
 
 // Include order and configure insensitive treating of unwanted macros
@@ -112,6 +113,8 @@ T max(T x, T y, T z) {
 /* geninteger max (geninteger, geninteger)
  * geninteger max (geninteger, sgeninteger)
  */
+  // Just import std::max from <algorithm>
+  using std::max;
 
 //*TRISYCL_MATH_WRAP2(maxmag)
 //
@@ -123,6 +126,8 @@ T min(T x, T y, T z) {
 /* geninteger min (geninteger, geninteger)
  * geninteger min (geninteger, sgeninteger)
  */
+  // Just import std::min from <algorithm>
+  using std::min;
 
 //*TRISYCL_MATH_WRAP2(minmag)
 TRISYCL_MATH_WRAP2s(modf)
