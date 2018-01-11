@@ -303,7 +303,7 @@ endif
 %.kernel_caller.bc: %.pre_kernel_caller.ll
 	# To debug, think about using options like -debug -stats -print-after-all...
 	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so \
-	  -globalopt -deadargelim -SYCL-args-flattening -deadargelim \
+	  -globalopt -deadargelim -SYCL-args-flattening -loop-idiom -deadargelim \
 	  -SYCL-serialize-arguments -deadargelim -o $@ $<
 
 # Construct the object file of the kernel caller from the target assembly
