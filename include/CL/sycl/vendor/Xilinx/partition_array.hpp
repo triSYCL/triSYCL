@@ -30,33 +30,40 @@ namespace vendor {
 namespace partition {
   /** Three partition type:
 
-      cyclic: The single array would be partitioned into several small physical
-              memories in this case. These small physical memories can be
-              accessed simultaneously which drive the performance. Each element
-              in the array would be partition to each memory in order and
-              cyclically.
+      cyclic:   The single array would be partitioned into several small physical
+                memories in this case. These small physical memories can be
+                accessed simultaneously which drive the performance. Each
+                element in the array would be partition to each memory in order
+                and cyclically.
 
-              That is if we have a 4-element array which contains 4 integer 0,
-              1, 2, and three. If we set factor to 2, and partition dimension to
-              1 for this cyclic partition array. Then, the contents of this
-              array will be distribute to 2 physical memories: one contains 1,3
-              and the other contains 2,4.
+                That is if we have a 4-element array which contains 4 integer 0,
+                1, 2, and three. If we set factor to 2, and partition dimension
+                to 1 for this cyclic partition array. Then, the contents of this
+                array will be distribute to 2 physical memories: one contains 1,
+                3 and the other contains 2,4.
 
-      block:  The single array would be partitioned into several small physical
-              memories and can be accessed simultaneously, too. However, the
-              first physical memory will be filled up first, then the next.
+      block:    The single array would be partitioned into several small
+                physical memories and can be accessed simultaneously, too.
+                However,the first physical memory will be filled up first, then
+                the next.
 
-              That is if we have a 4-element array which contains 4 integer 0,
-              1, 2, and three. If we set factor to 2, and partition dimension to
-              1 for this cyclic partition array. Then, the contents of this
-              array will be distribute to 2 physical memories: one contains 1,2
-              and the other contains 3,4.
+                That is if we have a 4-element array which contains 4 integer 0,
+                1, 2, and three. If we set factor to 2, and partition dimension
+                to 1 for this cyclic partition array. Then, the contents of this
+                array will be distribute to 2 physical memories: one contains 1,
+                2 and the other contains 3,4.
+
+      complete: The single array would be partitioned into individual elements.
+                That is if we have a 4-element array with one dimension, the
+                array is completely partitioned into distributed RAM or 4
+                independent registers.
 
       none:   Same as std::array.
   */
   enum class par_type {
     cyclic,
     block,
+    complete,
     none
   };
 }
@@ -120,6 +127,8 @@ struct array {
       _ssdm_SpecArrayPartition( &(*this)[0], 1, "CYCLIC", Factor, "");
     if constexpr (PartitionType == partition::par_type::block)
       _ssdm_SpecArrayPartition( &(*this)[0], 1, "BLOCK", Factor, "");
+    if constexpr (PartitionType == partition::par_type::complete)
+      _ssdm_SpecArrayPartition( &(*this)[0], PDim, "COMPLETE", 0, "");
   }
 
 
@@ -136,6 +145,8 @@ struct array {
       _ssdm_SpecArrayPartition( &(*this)[0], 1, "CYCLIC", Factor, "");
     if constexpr (PartitionType == partition::par_type::block)
       _ssdm_SpecArrayPartition( &(*this)[0], 1, "BLOCK", Factor, "");
+    if constexpr (PartitionType == partition::par_type::complete)
+      _ssdm_SpecArrayPartition( &(*this)[0], PDim, "COMPLETE", 0, "");
   }
 
 
@@ -149,6 +160,8 @@ struct array {
       _ssdm_SpecArrayPartition( &(*this)[0], 1, "CYCLIC", Factor, "");
     if constexpr (PartitionType == partition::par_type::block)
       _ssdm_SpecArrayPartition( &(*this)[0], 1, "BLOCK", Factor, "");
+    if constexpr (PartitionType == partition::par_type::complete)
+      _ssdm_SpecArrayPartition( &(*this)[0], PDim, "COMPLETE", 0, "");
   }
 
 
