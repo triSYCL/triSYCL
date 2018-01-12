@@ -17,7 +17,7 @@
 # Requite CMake version 3.5 or higher
 
 cmake_minimum_required (VERSION 3.5)
-project(triSYCL C CXX) # The name of the project (forward declare language )
+project(triSYCL C CXX) # The name of the project (forward declare language)
 
 # Check that a supported host compiler can be found
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -134,9 +134,9 @@ mark_as_advanced(TRISYCL_INCLUDE_DIR)
 
 #triSYCL definitions
 set(CL_SYCL_LANGUAGE_VERSION 220 CACHE VERSION
-  "Host language version to be used by trisYCL (default is: 220)")
+  "Host language version to be used by triSYCL (default is: 220)")
 set(TRISYCL_CL_LANGUAGE_VERSION 220 CACHE VERSION
-  "Device language version to be used by trisYCL (default is: 220)")
+  "Device language version to be used by triSYCL (default is: 220)")
 set(CMAKE_CXX_STANDARD 14)
 set(CXX_STANDARD_REQUIRED ON)
 
