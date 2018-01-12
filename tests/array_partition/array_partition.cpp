@@ -1,8 +1,8 @@
-#include <CL/sycl.hpp>
 #include <array>
+#include <CL/sycl.hpp>
+#include <iostream>
 #include <string>
 #include <type_traits>
-#include <iostream>
 
 using namespace cl::sycl;
 
