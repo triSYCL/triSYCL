@@ -1,8 +1,9 @@
-#ifndef TRISYCL_SYCL_VENDOR_SSDM_HPP
-#define TRISYCL_SYCL_VENDOR_SSDM_HPP
+#ifndef TRISYCL_SYCL_VENDOR_XILINX_SSDM_INST_HPP
+#define TRISYCL_SYCL_VENDOR_XILINX_SSDM_INST_HPP
 
 
-/** \file This file includes SSDM Intrinsics supported in Xilinx tools.
+/** \file This file includes some of the SSDM Intrinsics supported in Xilinx
+    tools.
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
@@ -19,6 +20,7 @@ extern "C" {
   void _ssdm_SpecArrayPartition(...) __attribute__ ((nothrow, noinline, weak));
 }
 #else
+/// If not on device, just remove the intrinsics as defining them as empty macros
 #define _ssdm_op_SpecDataflowPipeline(...)
 #define _ssdm_op_SpecPipeline(...)
 #define _ssdm_SpecArrayPartition(...)
@@ -33,4 +35,4 @@ extern "C" {
     ### End:
 */
 
-#endif // TRISYCL_SYCL_VENDOR_SSDM_HPP
+#endif // TRISYCL_SYCL_VENDOR_XILINX_SSDM_INST_HPP

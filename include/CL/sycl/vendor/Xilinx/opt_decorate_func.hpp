@@ -1,5 +1,5 @@
-#ifndef TRISYCL_SYCL_VENDOR_DECORATE_FUNC_HPP
-#define TRISYCL_SYCL_VENDOR_DECORATE_FUNC_HPP
+#ifndef TRISYCL_SYCL_VENDOR_XILINX_OPT_DECORATE_FUNC_HPP
+#define TRISYCL_SYCL_VENDOR_XILINX_OPT_DECORATE_FUNC_HPP
 
 /** \file This file includes some decorating functions for Xilinx tools
     supported optimization.
@@ -10,13 +10,22 @@
 
 namespace cl {
 namespace sycl {
-namespace vendor {
+namespace xilinx {
 
 
-/** Applying dataflow on functions
+/** Applying dataflow on functions or loops
 
-    dataflow function taking functions that user wants to apply dataflow on as
-    arguments.
+    Xilinx tools analyzes the dataflow between sequential functions or loops
+    and create channels (based on pingpong RAMs or FIFOs) that allow consumer
+    functions or loops to start operation before the producer functions or
+    loops have completed.
+
+    This allows functions or loops to operate in parallel, which decreases
+    latency and improves the
+    throughput.
+
+    \param[in] f is a function that functions or loops in f will be executed
+    in a dataflow manner.
 */
 template <typename Functor>
 void dataflow(Functor f) noexcept {
@@ -27,10 +36,13 @@ void dataflow(Functor f) noexcept {
 }
 
 
-/** Applying pipeline on loops
+/** Execute loops in a pipelined manner
 
-    pipeline function taking the loops which wraps in a lambda function that
-    user wants to apply pipeline on as arguments.
+    A loop with pipeline processes a new input every clock cycle. This allows
+    the operations of the loop to be implemented in a concurrent manner.
+
+    \param[in] f is a function with an innermost loop to be executed in a
+    pipeline way.
 */
 template <typename Functor>
 void pipeline(Functor f) noexcept {
@@ -53,4 +65,4 @@ void pipeline(Functor f) noexcept {
     ### End:
 */
 
-#endif // TRISYCL_SYCL_VENDOR_DECORATE_FUNC_HPP
+#endif // TRISYCL_SYCL_VENDOR_XILINX_OPT_DECORATE_FUNC_HPP
