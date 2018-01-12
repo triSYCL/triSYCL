@@ -20,10 +20,10 @@ void validateFunc (std::string name, ArrayType arr) {
   std::cout << name << std::endl;
 
   // Evaluate size
-  std::cout << "Size: " << arr.size() << std::endl;
+  std::cout << "Size: " << arr.get_size() << std::endl;
 
   // Show partition type
-  std::cout << "Partition type: " << asInt(arr.getParType()) << std::endl;
+  std::cout << "Partition type: " << asInt(arr.get_partition_type()) << std::endl;
 
   // Test iterator
   std::cout << "Content from iterator: ";
@@ -33,41 +33,42 @@ void validateFunc (std::string name, ArrayType arr) {
 
   // Test subscript operator
   std::cout << "Content from operator: ";
-  for (int i = 0; i < arr.size(); i++)
+  for (int i = 0; i < arr.get_size(); i++)
     std::cout << arr[i] << " ";
   std::cout << "\n";
 }
 
 int main() {
 
-  // Construct a array from a list of number
-  vendor::array<Type, SIZE> A = {1, 2, 3, 4};
+  // Construct a partition_array from a list of number
+  xilinx::partition_array<Type, SIZE> A = {1, 2, 3, 4};
   validateFunc("A", A);
 
-  // Construct a array from another array of the same size
-  vendor::array<Type, SIZE> B(A);
+  // Construct a partition_array from another partition_array of the same size
+  xilinx::partition_array<Type, SIZE> B(A);
   validateFunc("B", B);
 
-  // Construct a array from a std::array
+  // Construct a partition_array from a std::array
   std::array<Type, SIZE> toC = {5, 6, 7, 8};
-  vendor::array<Type, SIZE> C(toC);
+  xilinx::partition_array<Type, SIZE> C(toC);
   validateFunc("C", C);
 
-  // Construct a array
-  vendor::array<Type, SIZE> D;
+  // Construct a partition_array
+  xilinx::partition_array<Type, SIZE> D;
   validateFunc("D", D);
 
   // Cyclic Partition for E
-  vendor::array<Type, SIZE, SIZE, 1,
-                vendor::partition::par_type::cyclic> E = {1, 2, 3, 4};
+  xilinx::partition_array<Type, SIZE,
+                          xilinx::partition::cyclic<SIZE, 1>> E = {1, 2, 3, 4};
   validateFunc("E", E);
 
-  vendor::array<Type, SIZE, SIZE, 1,
-                vendor::partition::par_type::cyclic> F(E);
+  xilinx::partition_array<Type, SIZE,
+                          xilinx::partition::cyclic<SIZE, 1>> F(E);
   validateFunc("F", F);
 
   // Block Partition for G
-  vendor::array<Type, SIZE, SIZE, 1, vendor::partition::par_type::block> G;
+  xilinx::partition_array<Type, SIZE,
+                          xilinx::partition::block<SIZE, 1>> G;
   validateFunc("G", G);
 
   return 0;

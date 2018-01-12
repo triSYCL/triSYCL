@@ -14,11 +14,11 @@ using namespace cl::sycl;
 
 //Parameters Description:
 //         NUM_ROWS:            matrix height
-//         WORD_PER_ROW:        number of words in a row
-//         BLOCK_SIZE:          number of words in an array
+//         ELE_PER_ROW:        number of elements in a row
+//         BLOCK_SIZE:          number of elements in an array
 constexpr size_t NUM_ROWS = 64;
-constexpr size_t WORD_PER_ROW = 64;
-constexpr size_t BLOCK_SIZE = NUM_ROWS * WORD_PER_ROW;
+constexpr size_t ELE_PER_ROW = 64;
+constexpr size_t BLOCK_SIZE = NUM_ROWS * ELE_PER_ROW;
 constexpr size_t MAX_DIM = 64;
 constexpr size_t DIM = 64;
 
@@ -53,13 +53,10 @@ int test_main(int argc, char *argv[]) {
     auto a_r1 = in1.get_access<access::mode::read>();
     auto a_r2 = in2.get_access<access::mode::read>();
     auto res_b = res.get_access<access::mode::discard_write>();
-    for (int k = 0; k < DIM; k++) {
-      for (int j = 0; j < DIM; j++) {
-        for (int i = 0; i < DIM; i++) {
+    for (int k = 0; k < DIM; k++)
+      for (int j = 0; j < DIM; j++)
+        for (int i = 0; i < DIM; i++)
           res_b[k * DIM + j] += a_r1[k * DIM + i] * a_r2[i * DIM + j];
-        }
-      }
-    }
   }
 
   //{
@@ -89,9 +86,12 @@ int test_main(int argc, char *argv[]) {
   // Launch a kernel to do the summation
   q.submit([&] (handler &cgh) {
       // Get access to the data
-      auto a_out = out.get_access<access::mode::discard_write, access::target::global_buffer>(cgh);
-      auto a_in1 = in1.get_access<access::mode::read, access::target::global_buffer>(cgh);
-      auto a_in2 = in2.get_access<access::mode::read, access::target::global_buffer>(cgh);
+      auto a_out = out.get_access<access::mode::discard_write,
+                                  access::target::global_buffer>(cgh);
+      auto a_in1 = in1.get_access<access::mode::read,
+                                  access::target::global_buffer>(cgh);
+      auto a_in2 = in2.get_access<access::mode::read,
+                                  access::target::global_buffer>(cgh);
 
       // A typical FPGA-style pipelined kernel
       cgh.single_task<class add>([=,
@@ -99,19 +99,24 @@ int test_main(int argc, char *argv[]) {
                                   d_in1 = drt::accessor<decltype(a_in1)> { a_in1 },
                                   d_in2 = drt::accessor<decltype(a_in2)> { a_in2 }
       ] {
-            //Cyclic Partition for A as matrix multiplication needs row-wise parallel access
-            vendor::array<Type, BLOCK_SIZE, MAX_DIM, 1, vendor::partition::par_type::cyclic> A;
-            //Block Partition for B as matrix multiplication needs column-wise parallel access
-            vendor::array<Type, BLOCK_SIZE, MAX_DIM, 1, vendor::partition::par_type::block> B;
-            vendor::array<Type, BLOCK_SIZE> C;
+            // Cyclic Partition for A as matrix multiplication needs row-wise
+            // parallel access
+            xilinx::partition_array<Type, BLOCK_SIZE,
+                                    xilinx::partition::cyclic<MAX_DIM, 1>> A;
+            // Block Partition for B as matrix multiplication needs column-wise
+            // parallel access
+            xilinx::partition_array<Type, BLOCK_SIZE,
+                                    xilinx::partition::block<MAX_DIM, 1>> B;
+            xilinx::partition_array<Type, BLOCK_SIZE> C;
 
-            //As A and B Matrix are partitioned with the factor of MAX_DIM, so to get 
-            // parallel row/column access, input square matrix[DIMXDIM] should be written
-            // into local Array in MATRIX[MAX_DIM * MAX_DIM] format
+            // As A and B Matrix are partitioned with the factor of MAX_DIM, so
+            // to get parallel row/column access, input square matrix[DIMXDIM]
+            // should be written into local Array in MATRIX[MAX_DIM * MAX_DIM]
+            // format
 
             // Burst read for matrix A
             for (int itr = 0, i = 0, j = 0; itr < DIM * DIM; itr++, j++) {
-              vendor::pipeline([&] {
+              xilinx::pipeline([&] {
                 if (j == DIM) { j = 0; i++; }
                 A[i*MAX_DIM + j] = d_in1[itr];
               });
@@ -119,30 +124,31 @@ int test_main(int argc, char *argv[]) {
 
             // Burst read for matrix B
             for (int itr = 0, i = 0, j = 0; itr < DIM * DIM; itr++, j++) {
-              vendor::pipeline([&] {
+              xilinx::pipeline([&] {
                 if (j == DIM) { j = 0; i++; }
                 B[i * MAX_DIM + j] = d_in2[itr];
               });
             }
 
             for (int i = 0; i < DIM; i++) {
-                //As A and B are partition correctly so loop pipelining is applied
-                // at 2nd level loop and which will eventually unroll the lower loop
-                for (int j = 0; j < DIM ; j++) {
-                  vendor::pipeline([&] {
-                    int result = 0;
-                    for (int k = 0; k < MAX_DIM; k++) {
-                        result += A[i * MAX_DIM +  k] * B[k * MAX_DIM + j];
-                    }
-                    C[i*MAX_DIM + j] = result;
-                  });
-                }
+              // As A and B are partition correctly so loop pipelining is
+              // applied at 2nd level loop and which will eventually unroll
+              // the lower loop
+              for (int j = 0; j < DIM ; j++) {
+                xilinx::pipeline([&] {
+                  int result = 0;
+                  for (int k = 0; k < MAX_DIM; k++) {
+                      result += A[i * MAX_DIM +  k] * B[k * MAX_DIM + j];
+                  }
+                  C[i*MAX_DIM + j] = result;
+                });
+              }
             }
 
             // Burst write from output matrices to global memory
             // Burst write from matrix C
             for (int itr = 0, i = 0, j = 0; itr < DIM * DIM; itr++, j++) {
-              vendor::pipeline([&] {
+              xilinx::pipeline([&] {
                 if (j == DIM) { j = 0; i++; }
                 d_out[itr] = C[i * MAX_DIM + j];
               });

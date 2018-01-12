@@ -1,5 +1,5 @@
-#ifndef TRISYCL_SYCL_VENDOR_ARRAY_PARTITION_HPP
-#define TRISYCL_SYCL_VENDOR_ARRAY_PARTITION_HPP
+#ifndef TRISYCL_SYCL_VENDOR_XILINX_PARTITION_ARRAY_HPP
+#define TRISYCL_SYCL_VENDOR_XILINX_PARTITION_ARRAY_HPP
 
 /** \file This is a class for arrays that can be partitioned.
 
@@ -15,7 +15,7 @@
 
 namespace cl {
 namespace sycl {
-namespace vendor {
+namespace xilinx {
 
 /** \addtogroup helpers Some helpers for the implementation
     @{
@@ -28,160 +28,197 @@ namespace vendor {
     kernel.
 */
 namespace partition {
-  /** Three partition type:
+  /** Three partition type: cyclic, block, complete.
 
-      cyclic:   The single array would be partitioned into several small physical
-                memories in this case. These small physical memories can be
-                accessed simultaneously which drive the performance. Each
-                element in the array would be partition to each memory in order
-                and cyclically.
-
-                That is if we have a 4-element array which contains 4 integer 0,
-                1, 2, and three. If we set factor to 2, and partition dimension
-                to 1 for this cyclic partition array. Then, the contents of this
-                array will be distribute to 2 physical memories: one contains 1,
-                3 and the other contains 2,4.
-
-      block:    The single array would be partitioned into several small
-                physical memories and can be accessed simultaneously, too.
-                However,the first physical memory will be filled up first, then
-                the next.
-
-                That is if we have a 4-element array which contains 4 integer 0,
-                1, 2, and three. If we set factor to 2, and partition dimension
-                to 1 for this cyclic partition array. Then, the contents of this
-                array will be distribute to 2 physical memories: one contains 1,
-                2 and the other contains 3,4.
-
-      complete: The single array would be partitioned into individual elements.
-                That is if we have a 4-element array with one dimension, the
-                array is completely partitioned into distributed RAM or 4
-                independent registers.
-
-      none:   Same as std::array.
+      none reperesnts standard array. 
   */
-  enum class par_type {
+  enum class type {
     cyclic,
     block,
     complete,
     none
   };
+
+
+  /** Define a cyclic type class.
+
+      The single array would be partitioned into several small physical
+      memories in this case. These small physical memories can be
+      accessed simultaneously which drive the performance. Each
+      element in the array would be partition to each memory in order
+      and cyclically.
+
+      That is if we have a 4-element array which contains 4 integers
+      0, 1, 2, and three. If we set factor to 2, and partition
+      dimension to 1 for this cyclic partition array. Then, the
+      contents of this array will be distributed to 2 physical
+      memories: one contains 1, 3 and the other contains 2,4.
+
+      \param PhyMemNum is the number of phsycal memories that user wants to
+      have.
+
+      \param PDim is the dimension that user wants to apply cyclic partition on.
+      If PDim is 0, all dimensions will be partitioned with cyclic order.
+  */
+  template <std::size_t PhyMemNum = 1, std::size_t PDim = 1>
+  struct cyclic {
+    static constexpr auto phsycal_mem_num = PhyMemNum;
+    static constexpr auto partition_dim = PDim;
+    static constexpr auto partition_type = type::cyclic;
+  };
+
+
+  /** Define a block type class.
+
+      The single array would be partitioned into several small
+      physical memories and can be accessed simultaneously, too.
+      However,the first physical memory will be filled up first, then
+      the next.
+
+      That is if we have a 4-element array which contains 4 integers
+      0, 1, 2, and three. If we set factor to 2, and partition
+      dimension to 1 for this cyclic partition array. Then, the
+      contents of this array will be distributed to 2 physical
+      memories: one contains 1, 2 and the other contains 3,4.
+
+      \param ElmInEachPhyMem is the number of elements in each phsycal memory
+      that user wants to have.
+
+      \param PDim is the dimension that user wants to apply block partition on.
+      If PDim is 0, all dimensions will be partitioned with block order.
+  */
+  template <std::size_t ElmInEachPhyMem = 1, std::size_t PDim = 1>
+  struct block {
+    static constexpr auto ele_in_each_phsycal_mem = ElmInEachPhyMem;
+    static constexpr auto partition_dim = PDim;
+    static constexpr auto partition_type = type::block;
+  };
+
+
+  /** Define a complete type class.
+
+      The single array would be partitioned into individual elements.
+      That is if we have a 4-element array with one dimension, the
+      array is completely partitioned into distributed RAM or 4
+      independent registers.
+
+      \param PDim is the dimension that user wants to apply complete partition
+      on. If PDim is 0, all dimensions will be completely partitioned.
+  */
+  template <std::size_t PDim = 1>
+  struct complete {
+    static constexpr auto partition_dim = PDim;
+    static constexpr auto partition_type = type::complete;
+  };
+
+
+  /** Define a none type class.
+
+      The single array would be the same as std::array.
+  */
+  struct none {
+    static constexpr auto partition_type = type::none;
+  };
 }
 
 
-/** Define a array class with partition feature. Since on FPGA, users can
-    customize the memory architecture in the system and within the CU. array
-    partition help us to partition single array to multiple memories that can
-    be access simultaneously getting higher memory bandwidth.
+/** Define an array class with partition feature.
 
-    \param BasicType is the type of element, it needs to be complete type,
-    such as int
+    Since on FPGA, users can customize the memory architecture in the system
+    and within the CU. array partition help us to partition single array to
+    multiple memories that can be access simultaneously getting higher memory
+    bandwidth.
 
-    \param Dims is the array dimension number
+    \param ValueType is the type of element.
 
-    \param Factor means different in cyclic and block  partition array.
-      cyclic: The number of physical memories to partition.
-      block: The number of elements to store in each  physical memory.
+    \param Size is the size of the array.
 
-    \param PDims is the array dimension the user want to partition.
+    \param PartitionType is the array partition type: cyclic, block, and
+    complete. The default type is none.
 
-    \todo cyclic and block string can be generated automatically for
-    _ssdm_SpecArrayPartition function.
+    \todo Deal with multi-dimension array.
 */
-template <typename BasicType,
-          std::size_t Dims,
-          int Factor = 1,
-          int PDim = 1,
-          partition::par_type PartitionType = partition::par_type::none>
-struct array {
-  BasicType elems[Dims];
-  static const size_t dimension = Dims;
-  static const int factor = Factor;
-  static const int partition_dim = PDim;
-  static const partition::par_type partition_type = PartitionType;
-  using element_type = BasicType;
+template <typename ValueType,
+          std::size_t Size,
+          typename PartitionType = partition::none>
+struct partition_array {
+
+  ValueType elems[Size];
+  static constexpr auto size = Size;
+  static constexpr auto partition_type = PartitionType::partition_type;
+  using element_type = ValueType;
 
 
   /// Provide iterator
-  BasicType* begin() { return elems; }
-  const BasicType* begin() const { return elems; }
-  BasicType* end() { return elems+Dims; }
-  const BasicType* end() const { return elems+Dims; }
+  auto begin() { return elems; }
+  const auto begin() const { return elems; }
+  auto end() { return elems+Size; }
+  const auto end() const { return elems+Size; }
 
 
   /// Evaluate size
-  constexpr std::size_t size() const noexcept {
-    return Dims;
+  constexpr auto get_size() const noexcept {
+    return Size;
+  }
+
+
+  /// Construct an array
+  partition_array() {
+    if constexpr (partition_type == partition::type::cyclic)
+      _ssdm_SpecArrayPartition(&(*this)[0], PartitionType::partition_dim,
+                               "CYCLIC", PartitionType::phsycal_mem_num, "");
+    if constexpr (partition_type == partition::type::block)
+      _ssdm_SpecArrayPartition(&(*this)[0], PartitionType::partition_dim,
+                               "BLOCK", PartitionType::ele_in_each_phsycal_mem,
+                               "");
+    if constexpr (partition_type == partition::type::complete)
+      _ssdm_SpecArrayPartition(&(*this)[0], PartitionType::partition_dim,
+                               "COMPLETE", 0, "");
   }
 
 
   /// A constructor from another array of the same size
   template <typename SourceBasicType>
-  array(const array<SourceBasicType,
-              Dims,
-              Factor,
-              PDim,
-              PartitionType> &src) {
-    std::copy_n(&src[0], Dims, &(*this)[0]);
-    if constexpr (PartitionType == partition::par_type::cyclic)
-      _ssdm_SpecArrayPartition( &(*this)[0], 1, "CYCLIC", Factor, "");
-    if constexpr (PartitionType == partition::par_type::block)
-      _ssdm_SpecArrayPartition( &(*this)[0], 1, "BLOCK", Factor, "");
-    if constexpr (PartitionType == partition::par_type::complete)
-      _ssdm_SpecArrayPartition( &(*this)[0], PDim, "COMPLETE", 0, "");
+  partition_array(const partition_array<PartitionType, Size,
+                  SourceBasicType> &src)
+    : partition_array() {
+    std::copy_n(&src[0], Size, &(*this)[0]);
   }
 
 
   /// Construct an array from a std::array
   template <typename SourceBasicType>
-  array(const std::array<SourceBasicType, Dims> &src) {
-    std::copy_n(&src[0], Dims, &(*this)[0]);
-  }
-
-
-  /// Construct an array
-  array() {
-    if constexpr (PartitionType == partition::par_type::cyclic)
-      _ssdm_SpecArrayPartition( &(*this)[0], 1, "CYCLIC", Factor, "");
-    if constexpr (PartitionType == partition::par_type::block)
-      _ssdm_SpecArrayPartition( &(*this)[0], 1, "BLOCK", Factor, "");
-    if constexpr (PartitionType == partition::par_type::complete)
-      _ssdm_SpecArrayPartition( &(*this)[0], PDim, "COMPLETE", 0, "");
+  partition_array(const std::array<SourceBasicType, Size> &src)
+    : partition_array() {
+    std::copy_n(&src[0], Size, &(*this)[0]);
   }
 
 
   /// Construct an array from initializer_list
   template <typename SourceBasicType>
-  array(std::initializer_list<SourceBasicType> l) {
-    int i = 0;
+  partition_array(std::initializer_list<SourceBasicType> l)
+    : partition_array() {
+    std::size_t i = 0;
     for (auto itr = l.begin(); itr != l.end(); itr++)
       (*this)[i++] = *itr;
-    if constexpr (PartitionType == partition::par_type::cyclic)
-      _ssdm_SpecArrayPartition( &(*this)[0], 1, "CYCLIC", Factor, "");
-    if constexpr (PartitionType == partition::par_type::block)
-      _ssdm_SpecArrayPartition( &(*this)[0], 1, "BLOCK", Factor, "");
-    if constexpr (PartitionType == partition::par_type::complete)
-      _ssdm_SpecArrayPartition( &(*this)[0], PDim, "COMPLETE", 0, "");
   }
 
 
   /// Provide a subscript operator
-  BasicType& operator[](std::size_t i) {
+  constexpr ValueType& operator[](std::size_t i) {
     return elems[i];
   }
 
 
-  constexpr const BasicType& operator[](std::size_t i) const {
+  constexpr const ValueType& operator[](std::size_t i) const {
     return elems[i];
   }
 
 
   /// Return the partition type of the array
-  auto getParType() const {
+  constexpr auto get_partition_type() const {
     return partition_type;
   }
-
-
 };
 
 
@@ -199,4 +236,4 @@ struct array {
     ### End:
 */
 
-#endif// TRISYCL_SYCL_VENDOR_ARRAY_PARTITION_HPP
+#endif// TRISYCL_SYCL_VENDOR_XILINX_PARTITION_ARRAY_HPP

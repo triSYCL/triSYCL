@@ -14,11 +14,11 @@ using namespace cl::sycl;
 
 //Parameters Description:
 //         NUM_ROWS:            matrix height
-//         WORD_PER_ROW:        number of words in a row
-//         BLOCK_SIZE:          number of words in an array
+//         ELE_PER_ROW:        number of elements in a row
+//         BLOCK_SIZE:          number of elements in an array
 constexpr size_t NUM_ROWS = 64;
-constexpr size_t WORD_PER_ROW = 64;
-constexpr size_t BLOCK_SIZE = NUM_ROWS * WORD_PER_ROW;
+constexpr size_t ELE_PER_ROW = 64;
+constexpr size_t BLOCK_SIZE = NUM_ROWS * ELE_PER_ROW;
 constexpr size_t MAX_DIM = 64;
 constexpr size_t DIM = 64;
 
@@ -53,13 +53,10 @@ int test_main(int argc, char *argv[]) {
     auto a_r1 = in1.get_access<access::mode::read>();
     auto a_r2 = in2.get_access<access::mode::read>();
     auto res_b = res.get_access<access::mode::discard_write>();
-    for (int k = 0; k < DIM; k++) {
-      for (int j = 0; j < DIM; j++) {
-        for (int i = 0; i < DIM; i++) {
+    for (int k = 0; k < DIM; k++)
+      for (int j = 0; j < DIM; j++)
+        for (int i = 0; i < DIM; i++)
           res_b[k * DIM + j] += a_r1[k * DIM + i] * a_r2[i * DIM + j];
-        }
-      }
-    }
   }
 
   //{
@@ -89,9 +86,12 @@ int test_main(int argc, char *argv[]) {
   // Launch a kernel to do the summation
   q.submit([&] (handler &cgh) {
       // Get access to the data
-      auto a_out = out.get_access<access::mode::discard_write, access::target::global_buffer>(cgh);
-      auto a_in1 = in1.get_access<access::mode::read, access::target::global_buffer>(cgh);
-      auto a_in2 = in2.get_access<access::mode::read, access::target::global_buffer>(cgh);
+      auto a_out = out.get_access<access::mode::discard_write,
+                                  access::target::global_buffer>(cgh);
+      auto a_in1 = in1.get_access<access::mode::read,
+                                  access::target::global_buffer>(cgh);
+      auto a_in2 = in2.get_access<access::mode::read,
+                                  access::target::global_buffer>(cgh);
 
       // A typical FPGA-style pipelined kernel
       cgh.single_task<class add>([=,
@@ -99,9 +99,9 @@ int test_main(int argc, char *argv[]) {
                                   d_in1 = drt::accessor<decltype(a_in1)> { a_in1 },
                                   d_in2 = drt::accessor<decltype(a_in2)> { a_in2 }
       ] {
-                                   vendor::array<Type, BLOCK_SIZE> A;
-                                   vendor::array<Type, BLOCK_SIZE> B;
-                                   vendor::array<Type, BLOCK_SIZE> C;
+            xilinx::partition_array<Type, BLOCK_SIZE> A;
+            xilinx::partition_array<Type, BLOCK_SIZE> B;
+            xilinx::partition_array<Type, BLOCK_SIZE> C;
 
             for (int i = 0 ; i < DIM * DIM; i++) {
                 A[i]  = d_in1[i];
@@ -112,13 +112,13 @@ int test_main(int argc, char *argv[]) {
             }
 
             for (int i = 0; i < DIM; i++) {
-                for (int j = 0; j < MAX_DIM; j++) {
-                    int result = 0;
-                    for (int k = 0; k < DIM; k++) {
-                        result += A[i * DIM +  k] * B[k * DIM + j];
-                    }
-                    C[i*DIM + j] = result;
+              for (int j = 0; j < MAX_DIM; j++) {
+                int result = 0;
+                for (int k = 0; k < DIM; k++) {
+                    result += A[i * DIM +  k] * B[k * DIM + j];
                 }
+                C[i*DIM + j] = result;
+              }
             }
 
             for (int i = 0; i < DIM * DIM; i++) {
