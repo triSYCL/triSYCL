@@ -76,8 +76,8 @@ http://www.khronos.org/sycl
 For the SYCL_ ecosystem, look at http://sycl.tech
 
 
-Why you could use SYCL
-~~~~~~~~~~~~~~~~~~~~~~
+Some reasons to use SYCL
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Please see `about SYCL <doc/about-sycl.rst>`_
 
@@ -109,6 +109,19 @@ See `Possible futures <doc/possible-futures.rst>`_
 News
 ----
 
+- 2018/01/05 there are some internship openings at Xilinx to work on
+  triSYCL for FPGA
+  https://xilinx.referrals.selectminds.com/jobs/compiler-engineer-intern-on-sycl-for-fpga-4685
+  and more generally Xilinx is hiring in compilation, runtime, C++,
+  SYCL, OpenCL, machine-learning...
+
+- 2017/12/06: the brand-new SYCL 1.2.1 specification is out and
+  triSYCL starts moving to it
+
+- 2017/11/17: the presentations and videos from `SC17
+  <http://sc17.supercomputing.org>`_ on SYCL and triSYCL are now
+  online https://www.khronos.org/news/events/supercomputing-2017
+
 - 2017/09/19: there is a prototype of device compiler based on
   Clang_/LLVM_ generating SPIR 2.0 "de facto" and working at least
   with PoCL and Xilinx SDx `xocc` for FPGA. Look at the `device`
@@ -128,10 +141,9 @@ News
 - 2016/08/12: OpenCL_ kernels can be run with OpenCL kernel
   interoperability mode now.
 
-- 2016/04/18: SYCL_ 2.2 provisional specification is out.
-
-- This version implement SYCL_ 2.2 pipes and reservations plus the blocking
-  pipe extension from Xilinx_.
+- 2016/04/18: SYCL_ 2.2 provisional specification is out. This version
+  implement SYCL_ 2.2 pipes and reservations plus the blocking pipe
+  extension from Xilinx_.
 
 
 ..
