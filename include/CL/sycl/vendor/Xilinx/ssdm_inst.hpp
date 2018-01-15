@@ -2,7 +2,7 @@
 #define TRISYCL_SYCL_VENDOR_XILINX_SSDM_INST_HPP
 
 
-/** \file This file includes some of the SSDM Intrinsics supported in Xilinx
+/** \file This file defines some of the SSDM Intrinsics supported in Xilinx
     tools.
 
     This file is distributed under the University of Illinois Open Source

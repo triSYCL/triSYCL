@@ -3,7 +3,7 @@
 
 /** \file This is a class for arrays that can be partitioned.
 
-    Since the limitation in Xilinx xocc, the implementation now cam only
+    Since the limitation in Silence xocc, the implementation now cam only
     support 1-dim arrays partition.
 
     This file is distributed under the University of Illinois Open Source
@@ -22,15 +22,15 @@ namespace xilinx {
 */
 
 
-/** For specifying the array partition type.
+/** For specifying the array partition types.
 
     To be used when define or declare a vendor supported partition array in
     kernel.
 */
 namespace partition {
-  /** Three partition type: cyclic, block, complete.
+  /** Three partition types: cyclic, block, complete.
 
-      none reperesnts standard array. 
+      none represents standard array.
   */
   enum class type {
     cyclic,
@@ -40,21 +40,21 @@ namespace partition {
   };
 
 
-  /** Define a cyclic type class.
+  /** Represent a cyclic partition.
 
       The single array would be partitioned into several small physical
       memories in this case. These small physical memories can be
       accessed simultaneously which drive the performance. Each
-      element in the array would be partition to each memory in order
+      element in the array would be partitioned to each memory in order
       and cyclically.
 
       That is if we have a 4-element array which contains 4 integers
-      0, 1, 2, and three. If we set factor to 2, and partition
+      0, 1, 2, and 3. If we set factor to 2, and partition
       dimension to 1 for this cyclic partition array. Then, the
       contents of this array will be distributed to 2 physical
       memories: one contains 1, 3 and the other contains 2,4.
 
-      \param PhyMemNum is the number of phsycal memories that user wants to
+      \param PhyMemNum is the number of physical memories that user wants to
       have.
 
       \param PDim is the dimension that user wants to apply cyclic partition on.
@@ -68,20 +68,20 @@ namespace partition {
   };
 
 
-  /** Define a block type class.
+  /** Represent a block partition.
 
       The single array would be partitioned into several small
       physical memories and can be accessed simultaneously, too.
-      However,the first physical memory will be filled up first, then
+      However, the first physical memory will be filled up first, then
       the next.
 
       That is if we have a 4-element array which contains 4 integers
-      0, 1, 2, and three. If we set factor to 2, and partition
+      0, 1, 2, and 3. If we set factor to 2, and partition
       dimension to 1 for this cyclic partition array. Then, the
       contents of this array will be distributed to 2 physical
       memories: one contains 1, 2 and the other contains 3,4.
 
-      \param ElmInEachPhyMem is the number of elements in each phsycal memory
+      \param ElmInEachPhyMem is the number of elements in each physical memory
       that user wants to have.
 
       \param PDim is the dimension that user wants to apply block partition on.
@@ -95,7 +95,7 @@ namespace partition {
   };
 
 
-  /** Define a complete type class.
+  /** Represent a complete partition.
 
       The single array would be partitioned into individual elements.
       That is if we have a 4-element array with one dimension, the
@@ -112,7 +112,7 @@ namespace partition {
   };
 
 
-  /** Define a none type class.
+  /** Represent a none partition.
 
       The single array would be the same as std::array.
   */
@@ -125,8 +125,8 @@ namespace partition {
 /** Define an array class with partition feature.
 
     Since on FPGA, users can customize the memory architecture in the system
-    and within the CU. array partition help us to partition single array to
-    multiple memories that can be access simultaneously getting higher memory
+    and within the CU. Array partition help us to partition single array to
+    multiple memories that can be accessed simultaneously getting higher memory
     bandwidth.
 
     \param ValueType is the type of element.
@@ -144,7 +144,7 @@ template <typename ValueType,
 struct partition_array {
 
   ValueType elems[Size];
-  static constexpr auto size = Size;
+  static constexpr auto array_size = Size;
   static constexpr auto partition_type = PartitionType::partition_type;
   using element_type = ValueType;
 
@@ -157,13 +157,15 @@ struct partition_array {
 
 
   /// Evaluate size
-  constexpr auto get_size() const noexcept {
+  constexpr auto size() const noexcept {
     return Size;
   }
 
 
   /// Construct an array
   partition_array() {
+    // Add the intrinsic according expressing to the target compiler the
+    // partitioning to use
     if constexpr (partition_type == partition::type::cyclic)
       _ssdm_SpecArrayPartition(&(*this)[0], PartitionType::partition_dim,
                                "CYCLIC", PartitionType::phsycal_mem_num, "");
@@ -181,7 +183,7 @@ struct partition_array {
   template <typename SourceBasicType>
   partition_array(const partition_array<PartitionType, Size,
                   SourceBasicType> &src)
-    : partition_array() {
+    : partition_array{ } {
     std::copy_n(&src[0], Size, &(*this)[0]);
   }
 
@@ -189,7 +191,7 @@ struct partition_array {
   /// Construct an array from a std::array
   template <typename SourceBasicType>
   partition_array(const std::array<SourceBasicType, Size> &src)
-    : partition_array() {
+    : partition_array{ } {
     std::copy_n(&src[0], Size, &(*this)[0]);
   }
 
@@ -197,7 +199,7 @@ struct partition_array {
   /// Construct an array from initializer_list
   template <typename SourceBasicType>
   partition_array(std::initializer_list<SourceBasicType> l)
-    : partition_array() {
+    : partition_array{ } {
     std::size_t i = 0;
     for (auto itr = l.begin(); itr != l.end(); itr++)
       (*this)[i++] = *itr;

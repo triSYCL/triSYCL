@@ -1,4 +1,4 @@
-#include <array>
+;#include <array>
 #include <CL/sycl.hpp>
 #include <iostream>
 #include <string>
@@ -20,7 +20,7 @@ void validateFunc (std::string name, ArrayType arr) {
   std::cout << name << std::endl;
 
   // Evaluate size
-  std::cout << "Size: " << arr.get_size() << std::endl;
+  std::cout << "Size: " << arr.size() << std::endl;
 
   // Show partition type
   std::cout << "Partition type: " << asInt(arr.get_partition_type()) << std::endl;
@@ -33,7 +33,7 @@ void validateFunc (std::string name, ArrayType arr) {
 
   // Test subscript operator
   std::cout << "Content from operator: ";
-  for (int i = 0; i < arr.get_size(); i++)
+  for (int i = 0; i < arr.size(); i++)
     std::cout << arr[i] << " ";
   std::cout << "\n";
 }
@@ -45,12 +45,12 @@ int main() {
   validateFunc("A", A);
 
   // Construct a partition_array from another partition_array of the same size
-  xilinx::partition_array<Type, SIZE> B(A);
+  xilinx::partition_array<Type, SIZE> B { A };
   validateFunc("B", B);
 
   // Construct a partition_array from a std::array
   std::array<Type, SIZE> toC = {5, 6, 7, 8};
-  xilinx::partition_array<Type, SIZE> C(toC);
+  xilinx::partition_array<Type, SIZE> C { toC };
   validateFunc("C", C);
 
   // Construct a partition_array
@@ -63,7 +63,7 @@ int main() {
   validateFunc("E", E);
 
   xilinx::partition_array<Type, SIZE,
-                          xilinx::partition::cyclic<SIZE, 1>> F(E);
+                          xilinx::partition::cyclic<SIZE, 1>> F { E };
   validateFunc("F", F);
 
   // Block Partition for G
