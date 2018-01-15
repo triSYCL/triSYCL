@@ -3,8 +3,11 @@
 
 /** \file This is a class for arrays that can be partitioned.
 
-    Since the limitation in Silence xocc, the implementation now cam only
-    support 1-dim arrays partition.
+    While Xilinx xocc supports multidimensional C arrays, the current
+    implementation only support 1-dim array partition.
+
+    \todo Extend this with multidimensional C++ arrays, such as with future
+    array_ref C++20 syntax.
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
@@ -59,6 +62,9 @@ namespace partition {
 
       \param PDim is the dimension that user wants to apply cyclic partition on.
       If PDim is 0, all dimensions will be partitioned with cyclic order.
+
+      \todo Deal with multi-dimension array. Now, since we can only deal with
+      1-dim, PDim is set to 1 by default.
   */
   template <std::size_t PhyMemNum = 1, std::size_t PDim = 1>
   struct cyclic {
@@ -86,6 +92,9 @@ namespace partition {
 
       \param PDim is the dimension that user wants to apply block partition on.
       If PDim is 0, all dimensions will be partitioned with block order.
+
+      \todo Deal with multi-dimension array. Now, since we can only deal with
+      1-dim, PDim is set to 1 by default.
   */
   template <std::size_t ElmInEachPhyMem = 1, std::size_t PDim = 1>
   struct block {
@@ -104,6 +113,9 @@ namespace partition {
 
       \param PDim is the dimension that user wants to apply complete partition
       on. If PDim is 0, all dimensions will be completely partitioned.
+
+      \todo Deal with multi-dimension array. Now, since we can only deal with
+      1-dim, PDim is set to 1 by default.
   */
   template <std::size_t PDim = 1>
   struct complete {
