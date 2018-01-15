@@ -261,7 +261,7 @@ execute: $(basename $(TARGET))
 
 # The Clang AST of the pre-kernel code
 %.pre_kernel.ast: %.cpp
-	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRIYCL_DEVICE -sycl -sycl-is-device \
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_DEVICE -sycl -sycl-is-device \
 	  $(CXXFLAGS_KERNEL) -Xclang -ast-dump \
 	  -fsyntax-only $< > $@
 
@@ -276,7 +276,7 @@ execute: $(basename $(TARGET))
 	# To debug, think about using options like -debug -stats -print-after-all...
 	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so \
 	  -globalopt -deadargelim -SYCL-args-flattening -deadargelim \
-	  -SYCL-kernel-filter -globaldce -RELGCD -inSPIRation \
+	  -SYCL-kernel-filter -globaldce -RELGCD -reqd-workgroup-size-fpga -inSPIRation \
 	  -o $@ $<
 
 ifdef XILINX_SDX
