@@ -99,7 +99,6 @@ public:
       asynchronous errors are handled via the async_handler, if provided.
   */
   context(const device_selector &deviceSelector,
-          info::gl_context_interop interopFlag,
           async_handler asyncHandler = nullptr) {
     detail::unimplemented();
   }
@@ -111,7 +110,6 @@ public:
       asynchronous errors are handled via the async_handler, if provided.
   */
   context(const device &dev,
-          info::gl_context_interop interopFlag,
           async_handler asyncHandler = nullptr) {
     detail::unimplemented();
   }
@@ -123,7 +121,6 @@ public:
       asynchronous errors are handled via the async_handler, if provided.
   */
   context(const platform &plt,
-          info::gl_context_interop interopFlag,
           async_handler asyncHandler = nullptr) {
     detail::unimplemented();
   }
@@ -138,7 +135,6 @@ public:
      concept.
   */
   context(const vector_class<device> &deviceList,
-          info::gl_context_interop interopFlag,
           async_handler asyncHandler = nullptr) {
     detail::unimplemented();
   }
