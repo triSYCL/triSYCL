@@ -58,7 +58,7 @@ int main(int argc, char **argv)
           cgh.parallel_for<class KernelCompute>(sycl::range<2> {M-2, N-2},
                                                 sycl::id<2> {1, 1},
                                                 [=] (sycl::item<2> it) {
-                                 sycl::id<2> index = it.get();
+                                 sycl::id<2> index = it.get_id();
                                  sycl::id<2> id1(sycl::range<2> {0,1});
                                  sycl::id<2> id2(sycl::range<2> {1,0});
                                  b[index] = a[index];

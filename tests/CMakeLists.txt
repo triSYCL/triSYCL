@@ -35,32 +35,7 @@ function(declare_trisycl_test)
   # Specify executable sources
   add_executable (${TARGET_NAME} ${Files_BUILD})
 
-  # Add include directories to the "#include <>" paths
-  target_include_directories (${TARGET_NAME} PUBLIC #$<$<BOOL:${declare_trisycl_test_USES_OPENCL}>:${OpenCL_INCLUDE_DIRS}> # include OpenCL headers if example uses it
-                                                    ${OpenCL_INCLUDE_DIRS}
-                                                    $<$<BOOL:${UNIX}>:${BOOST_COMPUTE_INCPATH}>
-                                                    ${Boost_INCLUDE_DIRS})
-
-  # Link dependencies
-  target_link_libraries (${TARGET_NAME} PUBLIC #$<$<BOOL:${declare_trisycl_test_USES_OPENCL}>:${OpenCL_LIBRARIES}> # Link to OpenCL if example requires
-                                               ${OpenCL_LIBRARIES}
-                                               $<$<NOT:$<BOOL:${WIN32}>>:Threads::Threads> # If not on Windows, use some threading model
-                                               $<$<BOOL:${WIN32}>:Boost::disable_autolinking> # Boost can auto-link when used with MSVC, but relies on relative paths which CMake does not really like
-                                               $<$<OR:$<BOOL:${TRISYCL_DEBUG}>,$<BOOL:${TRISYCL_DEBUG_STRUCTORS}>>:Boost::log> # Link to Boost.log when triSYCL in debug mode
-                                               Boost::chrono)
-
-  # Compile definitions
-  target_compile_definitions(${TARGET_NAME} PUBLIC $<$<BOOL:${TRISYCL_NO_ASYNC}>:TRISYCL_NO_ASYNC> # If opting for synchronous task exec
-                                                   $<$<BOOL:${declare_trisycl_test_USES_OPENCL}>:TRISYCL_OPENCL> # If the test uses OpenCL
-                                                   $<$<BOOL:${TRISYCL_DEBUG}>:TRISYCL_DEBUG>
-                                                   $<$<BOOL:${TRISYCL_DEBUG_STRUCTORS}>:TRISYCL_DEBUG_STRUCTORS>)
-
-  # OpenMP requirements
-  target_compile_options(${TARGET_NAME} PUBLIC $<$<BOOL:${TRISYCL_OPENMP}>:${OpenMP_CXX_FLAGS}>)
-
-  if(${TRISYCL_OPENMP} AND (NOT WIN32))
-    set_target_properties(${TARGET_NAME} PROPERTIES LINK_FLAGS ${OpenMP_CXX_FLAGS}) # Does not support generator expressions
-  endif(${TRISYCL_OPENMP} AND (NOT WIN32))
+  add_sycl_to_target(${TARGET_NAME})
 
   # Add unit test
   add_test(NAME ${TEST_NAME}

@@ -10,3 +10,4 @@
 *.bin
 *.cxx
 *.xpirbc
+build/

@@ -65,8 +65,9 @@ public:
 
     auto i = c.find(k);
     if (i != c.end())
-      // Return the found element
-      return std::shared_ptr<value_type>{ i->second };
+      if (auto observe = i->second.lock())
+        // Returns \c shared_ptr only if target object is still alive
+        return observe;
 
     // Otherwise create and insert a new element
     std::shared_ptr<value_type> e { create_element() };

@@ -79,11 +79,13 @@ int test_main(int argc, char *argv[]) {
     /* geninteger max (geninteger, geninteger)
      * geninteger max (geninteger, sgeninteger)
      */
+    TRYSYCL_MATH_WRAPX2(max, i)
     //*TRYSYCL_MATH_WRAPX2(maxmag)
     TRYSYCL_MATH_WRAPX3s(min, i) //I
     /* geninteger min (geninteger, geninteger)
      * geninteger min (geninteger, sgeninteger)
      */
+    TRYSYCL_MATH_WRAPX2(min, i)
     //*TRYSYCL_MATH_WRAPX2(minmag)
     //**TRYSYCL_MATH_WRAPX2s(modf)
     //*TRYSYCL_MATH_WRAPX2(mul_hi)//I

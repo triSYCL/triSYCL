@@ -36,7 +36,7 @@ enum class device_type : unsigned int {
   gpu,
   accelerator,
   custom,
-  defaults,
+  automatic,
   host,
   opencl,
   all

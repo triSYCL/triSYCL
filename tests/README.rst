@@ -138,6 +138,17 @@ want to run, such as:
 Testing
 =======
 
+There are actually 2 ways to run the unit tests, either using a
+Makefile/LIT path or a CMake file, because some experimental tests can
+only run with ``make`` for now (device compiler & FPGA...).
+
+So to have an idea about which tests are run with which path, try for
+example::
+
+  make check LITFLAGS=--show-tests | awk '$2 == "::" { split($3, fields, "."); print fields[1] }' | sort
+  ctest -N | awk '$2 ~ "#" { print $3 }' | sort
+
+
 Using ``CMake`` ``ctest``
 -------------------------
 

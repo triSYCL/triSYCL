@@ -5,6 +5,7 @@
 */
 #include <CL/sycl.hpp>
 #include <iostream>
+#include <boost/compute.hpp>
 #include "test-helpers.hpp"
 
 using namespace cl::sycl;

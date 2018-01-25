@@ -7,23 +7,23 @@ services:
 
 env:
   matrix:
-    - CC_BUILD=gcc-6
-      CXX_BUILD=g++-6
+    - CC_BUILD=gcc-7
+      CXX_BUILD=g++-7
       OPENMP=ON
       OPENCL=OFF
 
-    - CC_BUILD=clang-4.0
-      CXX_BUILD=clang++-4.0
+    - CC_BUILD=clang-5.0
+      CXX_BUILD=clang++-5.0
       OPENMP=ON
       OPENCL=OFF
 
-    - CC_BUILD=gcc-6
-      CXX_BUILD=g++-6
+    - CC_BUILD=gcc-7
+      CXX_BUILD=g++-7
       OPENMP=ON
       OPENCL=ON
 
-    - CC_BUILD=clang-4.0
-      CXX_BUILD=clang++-4.0
+    - CC_BUILD=clang-5.0
+      CXX_BUILD=clang++-5.0
       OPENMP=ON
       OPENCL=ON
 

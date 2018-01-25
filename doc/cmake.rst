@@ -9,28 +9,33 @@ Building
 --------
 
 The scripts intended to mimic the capabilities of the original GNU
-Makefiles but enhance them with a little CMake awesome. The scripts
-start off as:
+Makefiles but enhance them with a little CMake awesome. The script
+has the following options:
 
 .. code:: CMake
 
-  #
-  # Behavioural options for the solution
-  #
     option(TRISYCL_OPENMP "triSYCL multi-threading with OpenMP" ON)
+    option(TRISYCL_OPENCL "triSYCL OpenCL interoperability mode" OFF)
     option(TRISYCL_NO_ASYNC "triSYCL use synchronous kernel execution" OFF)
-    option(BUILD_OPENCL "triSYCL build OpenCL tests" ON)
-    option(BUILD_XILINX "triSYCL build Xilinx-specific tests" OFF)
-    option(TRISYCL_DEBUG "triSCYL use debug mode" OFF)
+    option(TRISYCL_DEBUG "triSYCL use debug mode" OFF)
     option(TRISYCL_DEBUG_STRUCTORS "triSYCL trace of object lifetimes" OFF)
+    option(TRISYCL_TRACE_KERNEL "triSYCL trace of kernel execution" OFF)
+    option(TRISYCL_INCLUDE_DIR  "Use triSYCL include directory" OFF)
 
-    set(CL_SYCL_LANGUAGE_VERSION 220 CACHE VERSION "Host language version to be used by trisYCL (default is: 220)")
-    set(TRISYCL_CL_LANGUAGE_VERSION 220 CACHE VERSION "Device language version to be used by trisYCL (default is: 220) (not used yet)")
+
+    set(CL_SYCL_LANGUAGE_VERSION 220 CACHE VERSION "Host language version to be used by triSYCL (default is: 220)")
+    set(TRISYCL_CL_LANGUAGE_VERSION 220 CACHE VERSION "Device language version to be used by triSYCL (default is: 220) (not used yet)")
 
 These variables can be set from the command-line at configuration
 time. The default values I hope make sense for the vast majority of
 development scenarios.
 
+To compile the tests with OpenCL, use for example on Unix::
+
+  mkdir build
+  cd build
+  cmake .. -DTRISYCL_OPENCL=ON
+  make -j
 
 Testing
 -------
@@ -40,6 +45,10 @@ framework. These scripts **do not rely on LIT** being present (one
 less dependency), because none of the unit tests used any features
 that are not present in CTest. CTest produces similarly sexy output as
 LIT, can test exit codes and match stdout vs. a regex.
+
+To run the tests once compiled, use for example::
+
+  ctest -j
 
 
 Warning-free
