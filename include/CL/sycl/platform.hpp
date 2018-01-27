@@ -139,8 +139,7 @@ public:
   template <typename ReturnT>
   ReturnT get_info(info::platform param) const {
     // Only strings are needed here
-    //return implementation->get_info_string(param);
-    return implementation->get_info(param);
+    return implementation->get_info_string(param);
   }
 
 
