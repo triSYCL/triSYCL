@@ -41,6 +41,10 @@ LLVM_/Clang_.
 Technical lead: Ronan at keryell point FR. Developments started first
 at AMD_ and are now mainly funded by Xilinx_.
 
+It is possible to have a paid internship around triSYCL, if you have
+some skills related to this project. Contact the technical lead about
+this. Xilinx in also hiring in this area... :-)
+
 
 OpenCL SYCL
 -----------
@@ -201,6 +205,8 @@ News
 .. _MPI: http://en.wikipedia.org/wiki/Message_Passing_Interface
 
 .. _OpenACC: http://www.openacc-standard.org/
+
+.. _OpenAMP: https://www.multicore-association.org/workgroup/oamp.php
 
 .. _OpenCL: http://www.khronos.org/opencl/
 

@@ -45,6 +45,8 @@
 
 .. _GOOPAX: http://www.goopax.com/
 
+.. _HCC: https://github.com/RadeonOpenCompute/hcc
+
 .. _HSA: http://www.hsafoundation.com/
 
 .. _Khronos: https://www.khronos.org/
@@ -56,6 +58,8 @@
 .. _MPI: http://en.wikipedia.org/wiki/Message_Passing_Interface
 
 .. _OpenACC: http://www.openacc-standard.org/
+
+.. _OpenAMP: https://www.multicore-association.org/workgroup/oamp.php
 
 .. _OpenCL: http://www.khronos.org/opencl/
 
