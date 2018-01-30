@@ -37,7 +37,6 @@ enum class device_type : unsigned int {
   accelerator,
   custom,
   automatic,
-  defaults,
   host,
   opencl,
   all
@@ -129,16 +128,13 @@ enum class device : int {
 };
 
 enum class partition_property : int {
-  unsupported,
   no_partition,
   partition_equally,
   partition_by_counts,
-  partition_by_affinity_domain,
-  partition_affinity_domain_next_partitionable
+  partition_by_affinity_domain
 };
 
 enum class partition_affinity_domain : int {
-  unsupported,
   not_applicable,
   numa,
   L4_cache,
