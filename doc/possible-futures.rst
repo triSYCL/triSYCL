@@ -27,6 +27,14 @@ Some ideas of future developments where *you* can contribute too: :-)
   standard with Boost.Test. Status: started) instead of having some
   tests using LIT to test some textual output;
 
+- update the dataflow SYCL infrastructure from plain C++ ``std::thread``
+  and ``std::condition_variable`` to some more efficient library, such
+  as TBB;
+
+- implement the dataflow SYCL infrastructure directly on top of OpenCL
+  event-framework instead of layering the CPU dataflow dependency
+  graph on top of it;
+
 - add vector swizzle support by following ideas from
   https://github.com/gwiazdorrr/CxxSwizzle http://glm.g-truc.net
   http://jojendersie.de/performance-optimal-vector-swizzling-in-c
