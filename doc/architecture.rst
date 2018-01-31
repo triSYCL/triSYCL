@@ -93,7 +93,8 @@ and finish as explained by the ``make`` output.
 triSYCL architecture for CPU
 ============================
 
-The implementation for CPU is a pure C++17 templated header library.
+The implementation for CPU is a pure C++17 templated header library
+and does not require a specific C++ or SYCL compiler.
 
 The dataflow SYCL infrastructure between kernels related by
 buffer/accessors dependencies is implemented in
@@ -119,6 +120,120 @@ Otherwise, using an OpenCL target on CPU can be used to rely on the
 CPU OpenCL stack to do CPU-friendly SIMD-ization of the
 barrier-spaghetti code. But this relies on the triSYCL device
 compiler...
+
+
+
+triSYCL architecture for accelerator
+====================================
+
+When targeting an accelerator, even if SYCL is a pure C++ DSEL, a
+specific compiler is required to extract the kernel code and compile
+it to some target device and at the same time to compile on the host side
+some glue code around the extraction boundary to transfer data to and
+from the device and call the kernel itself.
+
+The device compiler is based on Clang/LLVM 3.9 for now.
+
+Since it is quite more experimental than the CPU path, it is not yet
+merged into the main branches:
+
+- device branch of triSYCL:
+  https://github.com/triSYCL/triSYCL/tree/device
+
+- Clang supporting triSYCL:
+  https://github.com/triSYCL/clang/tree/sycl/release_39/master
+
+- LLVM supporting triSYCL:
+  https://github.com/triSYCL/llvm/tree/sycl/release_39/master
+
+
+Installation & compilation
+--------------------------
+
+First download or clone the device compiler repositories, for example
+with::
+
+  git clone --branch sycl/release_39/master git@github.com:triSYCL/llvm.git
+  cd llvm/tools
+  git clone --branch sycl/release_39/master git@github.com:triSYCL/clang.git
+  cd ../..
+
+Then compile for example with::
+
+  mkdir build
+  cd build
+  cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
+    -DLLVM_ENABLE_CXX1Y=On \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DLLVM_TARGETS_TO_BUILD="X86" \
+    -DLLVM_BUILD_LLVM_DYLIB:BOOL=ON \
+    -DLLVM_LINK_LLVM_DYLIB:BOOL=ON \
+    ../llvm
+  # Use -j8 to speed up compilation if you have 8 cores for example
+  make -j8
+
+You might replace the ``Release`` by ``Debug`` above if you want to
+debug the compiler itself. Look at https://llvm.org/docs/CMake.html
+for more information.
+
+Compilation and installation of the triSYCL runtime::
+
+  git clone --branch device git@github.com:triSYCL/triSYCL.git
+  # Compile the triSYCL_tool command
+  cd triSYCL/src
+  make
+
+
+Usage
+-----
+
+Unfortunately there is no driver yet to generate directly the host and
+device part and it is up to the end-user for now, since it is still
+experimental and in development. So using the compiler
+is... painful. :-(
+
+It is expected to be used as for example with examples from
+`<../tests/device_compiler>`_. Everything is done from
+`<../tests/Makefile>`_ when making a target ending with the
+``.kernel_caller`` extension such as
+``tests/device_compiler/single_task_vector_add_drt.kernel_caller``.
+
+triSYCL assumes some recent Clang/LLVM installed, independently from
+the one used by device compiler which might not be new enough.
+
+A recent version of Boost is required. It is available with package
+``libboost-all-dev`` on Debian/Ubuntu or with some more modern
+specific versions such as ``libboost1.63-all-dev``.
+
+The device compiler generates the kernels as SPIR-df (*de-facto*),
+which is SPIR 2.0 encoded with LLVM IR of a more recent version than
+LLVM 3.4 expected by the SPIR specification. So a very modern SPIR
+consumer is required, such as a recent PoCL. It is not the version
+available in Ubuntu 17.10 for example, so you might compile and
+install PoCL on your own...
+
+Set up the environment::
+
+  export LLVM_BUILD_DIR=<directory_where_LLVM_is_built>
+  # Use PoCL OpenCL stack
+  export BOOST_COMPUTE_DEFAULT_PLATFORM='Portable Computing Language'
+  # Do not use another OpenCL stack if the one requested is not available
+  export BOOST_COMPUTE_DEFAULT_ENFORCE=1
+
+Compile and execute a small example::
+
+  cd tests
+  make -j2 device_compiler/single_task_vector_add_drt.kernel_caller
+  device_compiler/single_task_vector_add_drt.kernel_caller
+    [...]
+    Queue waiting for kernel completion
+
+    **** no errors detected
+
+
+
+Workflow
+--------
 
 
 Testing infrastructure
