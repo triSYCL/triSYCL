@@ -14,7 +14,7 @@ CXX = clang++-4.0
 # The device compiler to use.
 # Assume that the device compiler is in $(LLVM_BUILD_DIR) and this
 # environment variable is set.
-CL_CXX = $(LLVM_BUILD_DIR)/bin/clang++-3.9
+CL_CXX = $(LLVM_BUILD_DIR)/bin/clang++
 
 # Set OpenCL_INCPATH variable to where CL/cl.h like headers are if
 # required
