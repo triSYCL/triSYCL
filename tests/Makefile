@@ -103,10 +103,32 @@ TARGETS += $(TARGETS_CC)
 FILES_C = $(wildcard */*.C)
 CLEANING_TARGETS = $(TARGETS) $(FILES_C:%.C=%.o)
 
-# The kernel files
-KERNELS = $(FILES_CC:%.cc=%.kernel.ll) \
+# The kernel files, mainly defined here for debug or cleaning purpose:
+# Kernel LLVM assembly code
+KERNELS_LL = $(FILES_CC:%.cc=%.kernel.ll) \
 	$(FILES_C:%.C=%.kernel.ll) \
 	$(FILES_CPP:%.cpp=%.kernel.ll)
+# Kernel LLVM assembly code
+KERNELS_BC = $(KERNELS_LL:%.kernel.ll=%.kernel.bc)
+# The kernel binary to be internalized into the host code, typically
+# SPIR or FPGA bit-stream
+KERNELS_BIN = $(KERNELS_LL:%.kernel.ll=%.kernel.bin)
+# The kernel binary internalized into the host code as a C++ program
+KERNELS_INTERNALIZED_CXX = $(KERNELS_LL:%.kernel.ll=%.kernel.internalized.cxx)
+# The pre-kernel in LLVM assembly, directly output from Clang
+PRE_KERNELS_LL = $(KERNELS_LL:%.kernel.ll=%.pre_kernel.ll)
+# The pre-kernel caller in LLVM assembly, directly output from Clang
+PRE_KERNELS_CALLER_LL = $(KERNELS_LL:%.kernel.ll=%.pre_kernel_caller.ll)
+# The kernel caller in LLVM assembly
+KERNELS_CALLER_LL = $(KERNELS_LL:%.kernel.ll=%.kernel_caller.ll)
+# The kernel caller in LLVM bitcode
+KERNELS_CALLER_BC = $(KERNELS_LL:%.kernel.ll=%.kernel_caller.bc)
+# The final kernel caller executable
+KERNELS_CALLER = $(KERNELS_LL:%.kernel.ll=%.kernel_caller)
+
+CLEANING_TARGETS += $(KERNELS_BC) $(KERNELS_BIN) $(KERNELS_INTERNALIZED_CXX) \
+	$(PRE_KERNELS_LL) $(PRE_KERNELS_CALLER_LL) $(KERNELS_CALLER_LL) \
+	$(KERNELS_CALLER_BC) $(KERNELS_CALLER)
 
 # The implementation uses C++14.
 # Use -Wno-ignored-attributes to avoid a lot of warning with
@@ -155,7 +177,7 @@ endif
 all: $(TARGETS)
 
 # Compile all the kernel bitcodes
-kernels: $(KERNELS)
+kernels: $(KERNELS_LL)
 
 # Run all the tests, once compiled
 run: $(TARGETS)
@@ -183,8 +205,10 @@ ifdef XILINX_SDX
 # Use "order-only" prerequisites for kernels since if the kernel are
 # changed, it does not imply to recompile the host part
 SDAccel/opencl_kernel_vector_add_args: | SDAccel/vector_add.xclbin
-SDAccel/hls_with_cppkernel_opencl_kernel_int_vector_add_args: | SDAccel/hls_int_vector_add_kernel.xclbin
-SDAccel/hls_with_cppkernel_opencl_kernel_ap_vector_add_args: | SDAccel/hls_ap_vector_add_kernel.xclbin
+SDAccel/hls_with_cppkernel_opencl_kernel_int_vector_add_args: | \
+	SDAccel/hls_int_vector_add_kernel.xclbin
+SDAccel/hls_with_cppkernel_opencl_kernel_ap_vector_add_args: | \
+	SDAccel/hls_ap_vector_add_kernel.xclbin
 
 # -lpthread is required by Xilinx OpenCL implementation
 LDLIBS += -pthread
