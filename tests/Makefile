@@ -11,8 +11,10 @@ CXX = clang++-4.0
 # But everything works fine with GCC 5.4 at least
 #CXX = g++
 
-# The device compiler to use
-CL_CXX = clang++-3.9
+# The device compiler to use.
+# Assume that the device compiler is in $(LLVM_BUILD_DIR) and this
+# environment variable is set.
+CL_CXX = $(LLVM_BUILD_DIR)/bin/clang++-3.9
 
 # Set OpenCL_INCPATH variable to where CL/cl.h like headers are if
 # required
@@ -319,7 +321,7 @@ endif
 # Internalize the kernel binary into cl::sycl::drt::code::program with
 # a C++ file
 %.kernel.internalized.cxx: %.kernel.bin
-	triSYCL_tool --source-in $< --output $@
+	$(triSYCL_DIR)/src/triSYCL_tool --source-in $< --output $@
 
 # Process bitcode with SYCL passes to generate kernel callers
 %.kernel_caller.bc: %.pre_kernel_caller.ll
