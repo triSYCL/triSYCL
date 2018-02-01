@@ -6,7 +6,7 @@
 
 .. contents::
 
-.. highlight:: C++
+.. highlight:: Bash
 
 
 triSYCL is a pure C++17 header runtime library to provide SYCL support
@@ -205,6 +205,10 @@ A recent version of Boost is required. It is available with package
 ``libboost-all-dev`` on Debian/Ubuntu or with some more modern
 specific versions such as ``libboost1.63-all-dev``.
 
+
+Using OpenCL PoCL on CPU
+~~~~~~~~~~~~~~~~~~~~~~~~
+
 The device compiler generates the kernels as SPIR-df (*de-facto*),
 which is SPIR 2.0 encoded with LLVM IR of a more recent version than
 LLVM 3.4 expected by the SPIR specification. So a very modern SPIR
@@ -231,9 +235,34 @@ Compile and execute a small example::
     **** no errors detected
 
 
+Using Xilinx SDx xocc for FPGA
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Workflow
---------
+Let's assume you have installed Xilinx SDx somewhere. Initialize the
+environment with something like::
+
+  export XILINX_SDX=/opt/Xilinx/SDx/2017.2
+  PATH=$PATH:$XILINX_SDX/bin
+
+  export LLVM_BUILD_DIR=<directory_where_LLVM_is_built>
+  # Use the Xilinx OpenCL stack
+  export BOOST_COMPUTE_DEFAULT_PLATFORM=Xilinx
+  # Do not use another OpenCL stack if the one requested is not available
+  export BOOST_COMPUTE_DEFAULT_ENFORCE=1
+
+Compile and execute a small example::
+
+  cd tests
+  make -j2 device_compiler/single_task_vector_add_drt.kernel_caller
+  device_compiler/single_task_vector_add_drt.kernel_caller
+    [...]
+    Queue waiting for kernel completion
+
+    **** no errors detected
+
+Note that since the final code contains the FPGA bit-stream
+configuration file and not the SPIR representation, it takes quite a
+lot of time to be generated through SDx...
 
 
 Testing infrastructure
@@ -251,4 +280,5 @@ Travis CI is used to validate triSYCL with its test suite from `tests/
 
 The device compiler is not tested yet through Travis CI.
 
-Look at ``.travis.yml`` and ``Dockerfile`` for the configuration.
+Look at `<../.travis.yml>`_ and `<../Dockerfile>`_ for the
+configuration.
