@@ -312,6 +312,17 @@ self-contained and can start the kernel on the device without having
 to load the binary from an external file.
 
 
+Low-level view of device compiler workflow
+------------------------------------------
+
+.. figure:: images/triSYCL-device-compiler-workflow.svg
+   :width: 100%
+   :alt: Low-level compilation workflow in triSYCL
+   :name: Figure 2
+
+   Figure 2: Low-level view of the compilation workflow in triSYCL.
+
+
 Testing infrastructure
 ======================
 
