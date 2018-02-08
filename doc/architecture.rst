@@ -206,6 +206,12 @@ A recent version of Boost is required. It is available with package
 ``libboost-all-dev`` on Debian/Ubuntu or with some more modern
 specific versions such as ``libboost1.63-all-dev``.
 
+The following assumes that you have an `OpenCL ICD
+<https://www.khronos.org/news/permalink/opencl-installable-client-driver-icd-loader>`_
+installed on the machine, to allow several OpenCL platforms usable at
+the same time on the machine. For example the ``ocl-icd-libopencl1``
+package on Debian/Ubuntu.
+
 
 Using OpenCL PoCL on CPU
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -219,7 +225,9 @@ install PoCL on your own...
 
 Set up the environment::
 
+  # Used by the tests Makefile to find the device compiler
   export LLVM_BUILD_DIR=<directory_where_LLVM_is_built>
+
   # Use PoCL OpenCL stack
   export BOOST_COMPUTE_DEFAULT_PLATFORM='Portable Computing Language'
   # Do not use another OpenCL stack if the one requested is not available
@@ -239,13 +247,20 @@ Compile and execute a small example::
 Using Xilinx SDx xocc for FPGA
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Let's assume you have installed Xilinx SDx somewhere. Initialize the
-environment with something like::
+Let's assume you have installed Xilinx SDx somewhere, and probably a
+``/etc/OpenCL/vendors/xilinx.icd`` file containing the string
+``libxilinxopencl.so`` to have the OpenCL ICD indirection
+working.
+
+Initialize the environment with something like::
 
   export XILINX_SDX=/opt/Xilinx/SDx/2017.2
   PATH=$PATH:$XILINX_SDX/bin
+  export LD_LIBRARY_PATH=$XILINX_SDX/runtime/lib/x86_64:$XILINX_SDX/lib/lnx64.o
 
+  # Used by the tests Makefile to find the device compiler
   export LLVM_BUILD_DIR=<directory_where_LLVM_is_built>
+
   # Use the Xilinx OpenCL stack
   export BOOST_COMPUTE_DEFAULT_PLATFORM=Xilinx
   # Do not use another OpenCL stack if the one requested is not available
