@@ -407,12 +407,16 @@ is based on LLVM ``opt`` to apply a sequence of LLVM passes:
   replaces a kernel function call by some calls to the runtime to
   select the kernel and serialize all the kernel arguments.
 
-  The input code from the triSYCL headers of the form::
+  The input code from the triSYCL headers of the form
+
+  .. code-block:: C++
 
      cl::sycl::detail::set_kernel_task_marker(t);
      cl::sycl::detail::instantiate_kernel<KernelName>(/* flatten args */);
 
-  is replaced by::
+  is replaced by
+
+  .. code-block:: C++
 
      cl::sycl::drt::set_kernel(detail::task &task, const char *kernel_name,
                                const char *kernel_short_name);
