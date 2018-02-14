@@ -1,13 +1,13 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_PARTITION_ARRAY_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_PARTITION_ARRAY_HPP
 
-/** \file This is a class for arrays that can be partitioned.
+/** \file This is a class expressing arrays that can be partitioned.
 
-    While Xilinx xocc supports multidimensional C arrays, the current
-    implementation only support 1-dim array partition.
+    \todo While Xilinx xocc supports multidimensional C arrays, the
+    current implementation only support 1-dim array partition.
 
     \todo Extend this with multidimensional C++ arrays, such as with future
-    array_ref C++20 syntax.
+    mdspan C++20 syntax.
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
@@ -16,24 +16,23 @@
 #include <array>
 #include <cstddef>
 
+/** \addtogroup Xilinx Xilinx vendor extensions
+    @{
+*/
+
 namespace cl {
 namespace sycl {
 namespace xilinx {
 
-/** \addtogroup helpers Some helpers for the implementation
-    @{
-*/
+/** Kind of array partition
 
-
-/** For specifying the array partition types.
-
-    To be used when define or declare a vendor supported partition array in
-    kernel.
+    To be used when defining or declaring a vendor-supported partition
+    array in kernel.
 */
 namespace partition {
-  /** Three partition types: cyclic, block, complete.
+  /** Three real partition types: cyclic, block, complete.
 
-      none represents standard array.
+      none represents non partitioned standard array.
   */
   enum class type {
     cyclic,
@@ -68,7 +67,7 @@ namespace partition {
   */
   template <std::size_t PhyMemNum = 1, std::size_t PDim = 1>
   struct cyclic {
-    static constexpr auto phsycal_mem_num = PhyMemNum;
+    static constexpr auto physical_mem_num = PhyMemNum;
     static constexpr auto partition_dim = PDim;
     static constexpr auto partition_type = type::cyclic;
   };
@@ -98,7 +97,7 @@ namespace partition {
   */
   template <std::size_t ElmInEachPhyMem = 1, std::size_t PDim = 1>
   struct block {
-    static constexpr auto ele_in_each_phsycal_mem = ElmInEachPhyMem;
+    static constexpr auto ele_in_each_physical_mem = ElmInEachPhyMem;
     static constexpr auto partition_dim = PDim;
     static constexpr auto partition_type = type::block;
   };
@@ -180,10 +179,10 @@ struct partition_array {
     // partitioning to use
     if constexpr (partition_type == partition::type::cyclic)
       _ssdm_SpecArrayPartition(&(*this)[0], PartitionType::partition_dim,
-                               "CYCLIC", PartitionType::phsycal_mem_num, "");
+                               "CYCLIC", PartitionType::physical_mem_num, "");
     if constexpr (partition_type == partition::type::block)
       _ssdm_SpecArrayPartition(&(*this)[0], PartitionType::partition_dim,
-                               "BLOCK", PartitionType::ele_in_each_phsycal_mem,
+                               "BLOCK", PartitionType::ele_in_each_physical_mem,
                                "");
     if constexpr (partition_type == partition::type::complete)
       _ssdm_SpecArrayPartition(&(*this)[0], PartitionType::partition_dim,
@@ -235,8 +234,7 @@ struct partition_array {
   }
 };
 
-
-/// @} End the helpers Doxygen group
+/// @} End the Xilinx Doxygen group
 
 }
 }
