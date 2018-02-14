@@ -1,4 +1,4 @@
-;#include <array>
+#include <array>
 #include <CL/sycl.hpp>
 #include <iostream>
 #include <string>
@@ -23,7 +23,8 @@ void validateFunc (std::string name, ArrayType arr) {
   std::cout << "Size: " << arr.size() << std::endl;
 
   // Show partition type
-  std::cout << "Partition type: " << asInt(arr.get_partition_type()) << std::endl;
+  std::cout << "Partition type: " << asInt(arr.get_partition_type())
+            << std::endl;
 
   // Test iterator
   std::cout << "Content from iterator: ";
@@ -33,8 +34,8 @@ void validateFunc (std::string name, ArrayType arr) {
 
   // Test subscript operator
   std::cout << "Content from operator: ";
-  for (int i = 0; i < arr.size(); i++)
-    std::cout << arr[i] << " ";
+  for (auto e : arr)
+    std::cout << e << " ";
   std::cout << "\n";
 }
 
@@ -65,6 +66,10 @@ int main() {
   xilinx::partition_array<Type, SIZE,
                           xilinx::partition::cyclic<SIZE, 1>> F { E };
   validateFunc("F", F);
+
+  F = C;
+
+  validateFunc("FC", F);
 
   // Block Partition for G
   xilinx::partition_array<Type, SIZE,

@@ -15,6 +15,7 @@
 
 #include <array>
 #include <cstddef>
+#include <type_traits>
 
 /** \addtogroup Xilinx Xilinx vendor extensions
     @{
@@ -190,30 +191,30 @@ struct partition_array {
   }
 
 
-  /// A constructor from another array of the same size
-  template <typename SourceBasicType>
-  partition_array(const partition_array<PartitionType, Size,
-                  SourceBasicType> &src)
-    : partition_array{ } {
-    std::copy_n(&src[0], Size, &(*this)[0]);
-  }
-
-
-  /// Construct an array from a std::array
-  template <typename SourceBasicType>
-  partition_array(const std::array<SourceBasicType, Size> &src)
-    : partition_array{ } {
-    std::copy_n(&src[0], Size, &(*this)[0]);
+  /// A constructor from some container
+  template <typename SomeContainer>
+  partition_array(const SomeContainer &src)
+    : partition_array { } {
+    /// \todo Find a way to specialize this with a safer
+    /// implementation when the size of src is at least constexpr
+    std::copy_n(std::begin(src), Size, begin());
   }
 
 
   /// Construct an array from initializer_list
-  template <typename SourceBasicType>
-  partition_array(std::initializer_list<SourceBasicType> l)
-    : partition_array{ } {
-    std::size_t i = 0;
-    for (auto itr = l.begin(); itr != l.end(); itr++)
-      (*this)[i++] = *itr;
+  template <typename SourceBasicType,
+            // Only use this constructor for a real element-oriented
+            // initializer_list we can assign, not for the case
+            // partition_array<> a = { some_other_array }
+            typename = std::enable_if_t<std::is_convertible<SourceBasicType,
+                                                            ValueType>::value>>
+  constexpr partition_array(std::initializer_list<SourceBasicType> l)
+    : partition_array { } {
+    /// \todo Find a way to specialize this with a safer
+    /// implementation when the size of src is at least constexpr
+    /// This does not work...
+    /// static_assert(l.size() == Size);
+    std::copy_n(std::begin(l), Size, begin());
   }
 
 
