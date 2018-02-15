@@ -1,80 +1,81 @@
+/* Test that the partition_array works on normal host code
+
+   RUN: %{execute}%s
+*/
+
+#include <algorithm>
 #include <array>
-#include <CL/sycl.hpp>
 #include <iostream>
 #include <string>
 #include <type_traits>
 
+#include <boost/test/minimal.hpp>
+
+#include <CL/sycl.hpp>
+
 using namespace cl::sycl;
+using namespace cl::sycl::xilinx::partition;
 
 constexpr size_t SIZE = 4;
 
 using Type = int;
 
-template <typename Enum>
-auto asInt (const Enum e) {
-  return static_cast<typename std::underlying_type<Enum>::type>(e);
-}
+#define TRISYCL_CHECK(ARRAY, PARTITION_TYPE, EXPECTED_VALUE)            \
+  {                                                                     \
+    std::array<Type, SIZE> expected_value EXPECTED_VALUE;               \
+    BOOST_CHECK(decltype(ARRAY)::partition_type == PARTITION_TYPE);     \
+    /* Evaluate size */                                                 \
+    BOOST_CHECK(ARRAY.size() == expected_value.size());                 \
+    /* Test subscript operator */                                       \
+    for (std::size_t i = 0; i != ARRAY.size(); ++i)                     \
+      BOOST_CHECK(ARRAY[i] == expected_value[i]);                       \
+    /* Test iterator */                                                 \
+    BOOST_CHECK(std::equal(ARRAY.begin(), ARRAY.end(),                  \
+                           expected_value.begin(), expected_value.end())); \
+  }
 
-template <typename ArrayType>
-void validateFunc (std::string name, ArrayType arr) {
-  std::cout << name << std::endl;
-
-  // Evaluate size
-  std::cout << "Size: " << arr.size() << std::endl;
-
-  // Show partition type
-  std::cout << "Partition type: " << asInt(arr.get_partition_type())
-            << std::endl;
-
-  // Test iterator
-  std::cout << "Content from iterator: ";
-  for (auto i = arr.begin(); i != arr.end(); i++)
-    std::cout << *i << " ";
-  std::cout << "\n";
-
-  // Test subscript operator
-  std::cout << "Content from operator: ";
-  for (auto e : arr)
-    std::cout << e << " ";
-  std::cout << "\n";
-}
-
-int main() {
-
+int test_main(int argc, char *argv[]) {
   // Construct a partition_array from a list of number
   xilinx::partition_array<Type, SIZE> A = {1, 2, 3, 4};
-  validateFunc("A", A);
+  TRISYCL_CHECK(A, type::none, ({1, 2, 3, 4}))
 
   // Construct a partition_array from another partition_array of the same size
   xilinx::partition_array<Type, SIZE> B { A };
-  validateFunc("B", B);
+  TRISYCL_CHECK(B, type::none, ({1, 2, 3, 4}));
 
   // Construct a partition_array from a std::array
   std::array<Type, SIZE> toC = {5, 6, 7, 8};
   xilinx::partition_array<Type, SIZE> C { toC };
-  validateFunc("C", C);
+  TRISYCL_CHECK(C, type::none, ({5, 6, 7, 8}));
 
-  // Construct a partition_array
+  // Construct a partition_array by default
   xilinx::partition_array<Type, SIZE> D;
-  validateFunc("D", D);
+  D = B;
+  TRISYCL_CHECK(D, type::none, ({1, 2, 3, 4}));
 
   // Cyclic Partition for E
   xilinx::partition_array<Type, SIZE,
                           xilinx::partition::cyclic<SIZE, 1>> E = {1, 2, 3, 4};
-  validateFunc("E", E);
+  TRISYCL_CHECK(E, type::cyclic, ({1, 2, 3, 4}));
 
   xilinx::partition_array<Type, SIZE,
                           xilinx::partition::cyclic<SIZE, 1>> F { E };
-  validateFunc("F", F);
+  TRISYCL_CHECK(F, type::cyclic, ({1, 2, 3, 4}));
 
   F = C;
 
-  validateFunc("FC", F);
+  TRISYCL_CHECK(F, type::cyclic, ({5, 6, 7, 8}));
 
   // Block Partition for G
   xilinx::partition_array<Type, SIZE,
-                          xilinx::partition::block<SIZE, 1>> G;
-  validateFunc("G", G);
+                          xilinx::partition::block<SIZE, 1>> G = F;
+  TRISYCL_CHECK(G, type::block, ({5, 6, 7, 8}));
+
+  // Block Partition for H
+  xilinx::partition_array<Type, SIZE,
+                          xilinx::partition::complete<>> H;
+  H = toC;
+  TRISYCL_CHECK(H, type::complete, ({5, 6, 7, 8}));
 
   return 0;
 }
