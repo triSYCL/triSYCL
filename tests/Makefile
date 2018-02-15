@@ -4,7 +4,7 @@
 
 # Set default compiler instead of default CXX=g++ value
 # Assume Clang 3.9 and libc++ or Clang 4.0 with libstdc++ at least
-CXX = clang++-4.0
+CXX = clang++-5.0
 # To use libc++ instead of libstdc++, from libc++-dev & libc++abi-dev packages
 #CXXFLAGS += -stdlib=libc++
 
