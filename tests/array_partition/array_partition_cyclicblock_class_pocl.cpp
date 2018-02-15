@@ -1,4 +1,5 @@
 /* RUN: %{execute}%s
+   REQUIRES: this-test-does-not-run-with-lit-yet
 
    A simple typical FPGA-like kernel doing matrix multiplying.
    This example is aim to show how to use array block and cyclic partitioning.
