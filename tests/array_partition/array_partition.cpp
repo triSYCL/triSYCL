@@ -55,11 +55,11 @@ int test_main(int argc, char *argv[]) {
 
   // Cyclic Partition for E
   xilinx::partition_array<Type, SIZE,
-                          xilinx::partition::cyclic<SIZE, 1>> E = {1, 2, 3, 4};
+                          xilinx::partition::cyclic<SIZE>> E = {1, 2, 3, 4};
   TRISYCL_CHECK(E, type::cyclic, ({1, 2, 3, 4}));
 
   xilinx::partition_array<Type, SIZE,
-                          xilinx::partition::cyclic<SIZE, 1>> F { E };
+                          xilinx::partition::cyclic<SIZE>> F { E };
   TRISYCL_CHECK(F, type::cyclic, ({1, 2, 3, 4}));
 
   F = C;
@@ -68,7 +68,7 @@ int test_main(int argc, char *argv[]) {
 
   // Block Partition for G
   xilinx::partition_array<Type, SIZE,
-                          xilinx::partition::block<SIZE, 1>> G = F;
+                          xilinx::partition::block<SIZE>> G = F;
   TRISYCL_CHECK(G, type::block, ({5, 6, 7, 8}));
 
   // Block Partition for H
