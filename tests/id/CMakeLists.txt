@@ -2,9 +2,7 @@ cmake_minimum_required (VERSION 3.0) # The minimum version of CMake necessary to
 project (id) # The name of our project
 
 declare_trisycl_test(TARGET id TEST_REGEX
-" 0
-
-Result:
+"Result:
 1
 5 7
 3
