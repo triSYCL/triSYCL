@@ -427,3 +427,9 @@ clone-%:
 	# and do not block an existing one
 	git worktree add --detach test-clone `git rev-parse HEAD`
 	cd test-clone/tests; $(MAKE) $*
+
+
+# Test with cmake/ctest
+ctest:
+	mkdir -p build
+	cd build; cmake ../.. -DTRISYCL_OPENCL=ON; make -j7; ctest -j7
