@@ -154,10 +154,17 @@ template <typename ValueType,
           std::size_t Size,
           typename PartitionType = partition::none>
 struct partition_array {
+  /** Store the array elements.
 
+      Note that it means default initialization for partition_array
+      elements, which is lazily convenient for heterogeneous
+      computing */
   ValueType elems[Size];
+  /// The number of elements of the 1-D array
   static constexpr auto array_size = Size;
+  /// The kind of partitioning
   static constexpr auto partition_type = PartitionType::partition_type;
+  /// Type of array elements
   using element_type = ValueType;
 
 
