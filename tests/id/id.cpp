@@ -1,5 +1,4 @@
 /* RUN: %{execute}%s | %{filecheck} %s
-   CHECK: 0
    CHECK: Result:
    CHECK-NEXT: 1
    CHECK-NEXT: 5 7
@@ -28,9 +27,6 @@ using namespace cl::sycl;
 int main() {
   id<> i;
   id<3> i3;
-  // Since i is not initialized, neither k
-  id<> k(i); // NOTE: MSVC throws exception here in Debug mode: Use of uninitialized variable 'i' (default constructed std::array holds indererminate values)
-  (k - k).display();
   id<> j { 1 };
   i = j;
   id<2> ii;

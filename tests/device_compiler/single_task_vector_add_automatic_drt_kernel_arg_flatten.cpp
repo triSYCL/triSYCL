@@ -1,4 +1,5 @@
 /* RUN: %{execute}%s
+   REQUIRES: this-test-does-not-run-with-lit-yet
 
    A simple kernel to copy contents from an array, and add a fixed alpha value
    for each element inside. Then, do the same stuff again.

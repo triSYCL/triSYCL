@@ -1,4 +1,5 @@
 /* RUN: %{execute}%s
+   REQUIRES: this-test-does-not-run-with-lit-yet
 
    A simple typical FPGA-like kernel with dataflow optimization while copying contents from array, and add a fixed alpha value for each.
 */

@@ -7,6 +7,8 @@
 */
 
 /* RUN: %{execute}%s
+   REQUIRES: this-test-does-not-run-with-lit-yet
+
 */
 #include <iostream>
 #include <iterator>

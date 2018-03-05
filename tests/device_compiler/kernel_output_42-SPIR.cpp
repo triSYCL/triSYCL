@@ -2,6 +2,7 @@
  */
 
 /* RUN: %{execute}%s
+   REQUIRES: this-test-does-not-run-with-lit-yet
  */
 #include <boost/compute.hpp>
 #include <boost/test/minimal.hpp>
