@@ -41,6 +41,10 @@ LLVM_/Clang_.
 Technical lead: Ronan at keryell point FR. Developments started first
 at AMD_ and are now mainly funded by Xilinx_.
 
+It is possible to have a paid internship around triSYCL, if you have
+some skills related to this project. Contact the technical lead about
+this. Xilinx in also hiring in this area... :-)
+
 
 OpenCL SYCL
 -----------
@@ -108,6 +112,12 @@ See `Possible futures <doc/possible-futures.rst>`_
 
 News
 ----
+
+- 2018/02/01 there is now some documentation about the architecture of
+  triSYCL on GPU and accelerators with its device compiler based on
+  Clang/LLVM in `<doc/architecture.rst>`_. While this is wildly
+  experimental, there is a growing interested around it and it is
+  always useful to get started as a contributor.
 
 - 2018/01/05 there are some internship openings at Xilinx to work on
   triSYCL for FPGA
@@ -201,6 +211,8 @@ News
 .. _MPI: http://en.wikipedia.org/wiki/Message_Passing_Interface
 
 .. _OpenACC: http://www.openacc-standard.org/
+
+.. _OpenAMP: https://www.multicore-association.org/workgroup/oamp.php
 
 .. _OpenCL: http://www.khronos.org/opencl/
 

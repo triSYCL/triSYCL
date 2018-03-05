@@ -19,17 +19,14 @@ namespace sycl {
 */
 namespace info {
 
-using gl_context_interop = bool;
-
 /** Context information descriptors
 
     \todo Should be unsigned int to be consistent with others?
 */
 enum class context : int {
   reference_count,
-  num_devices,
-  devices,
-  gl_interop
+  platform,
+  devices
 };
 
 

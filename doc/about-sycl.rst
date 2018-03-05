@@ -318,7 +318,7 @@ Related projects
 
 - `C++AMP`_
 
-- HCC https://bitbucket.org/multicoreware/hcc/wiki/Home
+- HCC_
 
 - GOOPAX_ is a product providing a C++11 framework for single-source
   OpenCL;
@@ -375,6 +375,8 @@ Related projects
 .. _GCC: http://gcc.gnu.org/
 
 .. _GOOPAX: http://www.goopax.com/
+
+.. _HCC: https://github.com/RadeonOpenCompute/hcc
 
 .. _HSA: http://www.hsafoundation.com/
 

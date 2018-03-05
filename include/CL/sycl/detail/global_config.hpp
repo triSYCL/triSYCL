@@ -15,13 +15,13 @@
 
 // The following symbols can be set to implement a different version
 #ifndef CL_SYCL_LANGUAGE_VERSION
-/// This implement SYCL 1.2
-#define CL_SYCL_LANGUAGE_VERSION 120
+/// This implements SYCL 1.2.1
+#define CL_SYCL_LANGUAGE_VERSION 121
 #endif
 
 #ifndef TRISYCL_CL_LANGUAGE_VERSION
-/// This implement triSYCL 1.2
-#define TRISYCL_CL_LANGUAGE_VERSION 120
+/// This implements triSYCL 1.2.1
+#define TRISYCL_CL_LANGUAGE_VERSION 121
 #endif
 
 /// This source is compiled by a single source compiler

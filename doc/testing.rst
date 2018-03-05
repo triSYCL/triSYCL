@@ -41,28 +41,6 @@ There are simple examples and tests in the `tests </tests>`_ directory.
 Look at `tests/README.rst </tests/README.rst>`_ description.
 
 
-Generating the Doxygen documentation
-------------------------------------
-
-In the top directory, run
-
-.. code:: bash
-
-  make
-
-that will produce ``tmp/Doxygen/SYCL`` with the API documentation and
-``tmp/Doxygen/triSYCL`` with the documented triSYCL_ implementation
-source code.
-
-To publish the documentation on GitHub:
-
-.. code:: bash
-
-  make publish
-
-and finish as explained by the ``make`` output.
-
-
 ..
   Actually include:: doc/common-includes.rst does not work in GitHub
   :-( https://github.com/github/markup/issues/172

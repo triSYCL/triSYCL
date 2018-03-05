@@ -133,6 +133,20 @@ using hash_class = std::hash<T>;
 #endif
 
 
+#ifndef CL_SYCL_NO_STD_EXCEPT
+/** The exception pointer type to be used as SYCL exception pointer
+ */
+#include <exception>
+namespace cl {
+namespace sycl {
+
+using exception_ptr_class = std::exception_ptr;
+
+}
+}
+#endif
+
+
 /// @} End the defaults Doxygen group
 
 /*

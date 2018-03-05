@@ -23,7 +23,7 @@ int main() {
 
   // Launch a first asynchronous kernel to initialize a
   q.submit([&] (handler &cgh) {
-      // The kernel write a, so get a write accessor on it
+      // The kernel writes a, so get a write accessor on it
       auto A = a.get_access<access::mode::write>(cgh);
 
       // Enqueue a parallel kernel iterating on a N*M 2D iteration space
@@ -35,9 +35,9 @@ int main() {
 
   // Launch an asynchronous kernel to initialize b
   q.submit([&] (handler &cgh) {
-      // The kernel write b, so get a write accessor on it
+      // The kernel writes b, so get a write accessor on it
       auto B = b.get_access<access::mode::write>(cgh);
-      /* From the access pattern above, the SYCL runtime detect this
+      /* From the access pattern above, the SYCL runtime detects this
          command group is independent from the first one and can be
          scheduled independently */
 
@@ -64,7 +64,7 @@ int main() {
                                            });
       });
 
-    /* Request an access to read c from the host-side. The SYCL runtime
+    /* Request an accessor to read c from the host-side. The SYCL runtime
        ensures that c is ready when the accessor is returned */
     auto C = c.get_access<access::mode::read>();
     std::cout << std::endl << "Result:" << std::endl;
@@ -77,7 +77,7 @@ int main() {
           exit(-1);
         }
 
-  std::cout << "Good computation!" << std::endl;
+  std::cout << "Accurate computation!" << std::endl;
   return 0;
 }
 
