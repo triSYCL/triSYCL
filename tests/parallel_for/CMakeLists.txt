@@ -1,6 +1,7 @@
 cmake_minimum_required (VERSION 3.0) # The minimum version of CMake necessary to build this project
 project (parallel_for) # The name of our project
 
+declare_trisycl_test(TARGET capture_scalars)
 declare_trisycl_test(TARGET hierarchical_new FORCE_SYNCRONOUS_EXEC TEST_REGEX
 "Group id = 0
 Local id = 0 \\(global id = 0\\)
