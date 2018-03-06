@@ -239,6 +239,12 @@ check:  $(TARGETS_CC)
 	  echo 1
 	python3 $$TRISYCL_LIT $(LITFLAGS) $(CHECKING_DIR)
 
+# Display the list of LIT tests
+check-list:
+	python3 $$TRISYCL_LIT --show-tests $(LITFLAGS) $(CHECKING_DIR) | \
+	  sed -e '1,/-- Available Tests --/d' -e 's/.\(cpp\|cc\)$$//' -e 's/  triSYCL :: //' | sort
+
+
 check-compilers:
 	# Launch the check with various compilers
 	-FORCE_CXX=g++-5 $(MAKE) clean check
@@ -431,5 +437,11 @@ clone-%:
 
 # Test with cmake/ctest
 ctest:
-	mkdir -p build
-	cd build; cmake ../.. -DTRISYCL_OPENCL=ON; make -j7; ctest -j7
+	mkdir -p ../build
+	cd ../build; cmake .. -DTRISYCL_OPENCL=ON; make -j7; ctest -j7
+
+# Only display the test list
+ctest-list:
+	mkdir -p ../build
+	cd ../build; cmake .. -DTRISYCL_OPENCL=ON; \
+	  ctest --show-only | sed -e '1d' -e '/^$$/,$$d' -e 's/.*: //' | sort

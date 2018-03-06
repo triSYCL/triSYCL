@@ -145,8 +145,10 @@ only run with ``make`` for now (device compiler & FPGA...).
 So to have an idea about which tests are run with which path, try for
 example::
 
-  make check LITFLAGS=--show-tests | awk '$2 == "::" { split($3, fields, "."); print fields[1] }' | sort
-  ctest -N | awk '$2 ~ "#" { print $3 }' | sort
+  # Display the list of tests using LIT:
+  make check-list
+  # Display the list of tests using CMake & ctest:
+  make ctest-list
 
 
 Using ``CMake`` ``ctest``
