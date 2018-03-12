@@ -45,7 +45,7 @@ class kernel : detail::debug<detail::kernel> {
 
       This is an extension.
   */
-  virtual boost::compute::kernel get_boost_compute() const = 0;
+  virtual boost::compute::kernel &get_boost_compute() = 0;
 #endif
 
 

@@ -11,12 +11,15 @@
 
 #include <condition_variable>
 #include <memory>
+#include <mutex>
 #include <thread>
+#include <vector>
 
 #ifdef TRISYCL_OPENCL
 #include <boost/compute.hpp>
 #endif
 
+#include "CL/sycl/accessor/detail/accessor_base.hpp"
 #include "CL/sycl/buffer/detail/buffer_base.hpp"
 #include "CL/sycl/detail/debug.hpp"
 #include "CL/sycl/kernel.hpp"
@@ -63,7 +66,14 @@ struct task : public std::enable_shared_from_this<task>,
       or to run OpenCL kernels on */
   std::shared_ptr<detail::queue> owner_queue;
 
-  std::shared_ptr<cl::sycl::detail::kernel> kernel;
+  /// The OpenCL-compatible kernel run by this task, if any
+  std::shared_ptr<detail::kernel> kernel;
+
+  /** The accessors indexed by their creation order
+
+      This is used to relate a kernel parameter of a kernel generated
+      by the device compiler to its accessor. */
+  std::vector<std::weak_ptr<detail::accessor_base>> accessors;
 
 
   /// Create a task from a submitting queue
@@ -200,6 +210,8 @@ struct task : public std::enable_shared_from_this<task>,
 
   /// Execute the prologues
   void prelude() {
+    TRISYCL_DUMP_T("task::prelude");
+
     for (const auto &p : prologues)
       p();
     /* Free the functors that may own an accessor owning a buffer
@@ -220,6 +232,8 @@ struct task : public std::enable_shared_from_this<task>,
 
   /// Add a function to the prelude to run before kernel execution
   void add_prelude(const std::function<void(void)> &f) {
+    TRISYCL_DUMP_T("task::add_prelude");
+
     prologues.push_back(f);
   }
 
@@ -236,7 +250,7 @@ struct task : public std::enable_shared_from_this<task>,
   }
 
 
-  /// Set the kernel running this task if any
+  /// Set the OpenCL-compatible kernel running this task if any
   void set_kernel(const std::shared_ptr<cl::sycl::detail::kernel> &k) {
     kernel = k;
   }
@@ -251,6 +265,50 @@ struct task : public std::enable_shared_from_this<task>,
       throw non_cl_error("Cannot use an OpenCL kernel in this context");
     return *kernel;
   }
+
+
+  /// Set a kernel argument by address
+  void set_arg(int arg_index, std::size_t arg_size, const void *scalar_value) {
+#ifdef TRISYCL_OPENCL
+    // Forward to the OpenCL kernel
+    get_kernel().get_boost_compute().set_arg(arg_index,
+                                             arg_size,
+                                             scalar_value);
+#else
+    throw non_cl_error("Not compiled with OpenCL support");
+#endif
+  }
+
+
+  /// Set a kernel argument by value
+  template <typename T>
+  void set_arg(int arg_index, const T &scalar_value) {
+#ifdef TRISYCL_OPENCL
+    // Forward to the OpenCL kernel
+    get_kernel().get_boost_compute().set_arg(arg_index, scalar_value);
+#else
+    throw non_cl_error("Not compiled with OpenCL support");
+#endif
+  }
+
+
+#ifdef TRISYCL_OPENCL
+  /// Get the Boost.Compute buffer for an accessor of the task
+  auto get_compute_buffer(std::size_t order) {
+    return accessors[order].lock()->get_cl_buffer();
+  }
+#endif
+
+
+/** Register an accessor and return its registration order
+
+    I would prefer to name this method \c register but this is a C++
+    keyword...
+*/
+std::size_t register_accessor(std::weak_ptr<detail::accessor_base> a) {
+  accessors.push_back(a);
+  return accessors.size() - 1;
+}
 
 };
 

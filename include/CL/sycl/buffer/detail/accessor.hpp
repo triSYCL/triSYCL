@@ -1,5 +1,5 @@
-#ifndef TRISYCL_SYCL_ACCESSOR_DETAIL_ACCESSOR_HPP
-#define TRISYCL_SYCL_ACCESSOR_DETAIL_ACCESSOR_HPP
+#ifndef TRISYCL_SYCL_BUFFER_DETAIL_ACCESSOR_HPP
+#define TRISYCL_SYCL_BUFFER_DETAIL_ACCESSOR_HPP
 
 /** \file The OpenCL SYCL buffer accessor<> detail behind the scene
 
@@ -12,9 +12,13 @@
 #include <cstddef>
 #include <memory>
 
+#ifdef TRISYCL_OPENCL
+#include <boost/compute.hpp>
+#endif
 #include <boost/multi_array.hpp>
 
 #include "CL/sycl/access.hpp"
+#include "CL/sycl/accessor/detail/accessor_base.hpp"
 #include "CL/sycl/command_group/detail/task.hpp"
 #include "CL/sycl/detail/debug.hpp"
 #include "CL/sycl/id.hpp"
@@ -53,6 +57,7 @@ template <typename T,
           access::mode Mode,
           access::target Target /* = access::global_buffer */>
 class accessor :
+    public detail::accessor_base,
     public std::enable_shared_from_this<accessor<T,
                                                  Dimensions,
                                                  Mode,
@@ -84,9 +89,6 @@ class accessor :
       previously done in this implementation
    */
   mutable array_view_type array;
-
-  /// The task where the accessor is used in
-  std::shared_ptr<detail::task> task;
 
 public:
 
@@ -170,10 +172,12 @@ public:
       \todo Double-check with the C++ committee on this issue.
   */
   void register_accessor() {
-#ifdef TRISYCL_OPENCL
     if (!task->get_queue()->is_host()) {
       // To keep alive this accessor in the following lambdas
       auto acc = this->shared_from_this();
+      // Attach the accessor to the task and get its order
+      set_order(task->register_accessor(acc));
+#ifdef TRISYCL_OPENCL
       /* Before running the kernel, make sure the cl_mem behind this
          accessor is up-to-date on the device if needed and pass it to
          the kernel */
@@ -187,8 +191,8 @@ public:
              the kernel execution up to the execution postlude */
           acc->copy_back_cl_buffer();
         });
-    }
 #endif
+    }
   }
 
 
@@ -367,7 +371,7 @@ public:
       \todo Implement the various pointer address spaces
   */
   auto
-  get_pointer() {
+  get_pointer() const {
     return array.data();
   }
 
@@ -445,12 +449,12 @@ public:
 
 private:
 
+#ifdef TRISYCL_OPENCL
   // The following function are used from handler
   friend handler;
 
-#ifdef TRISYCL_OPENCL
   /// Get the boost::compute::buffer or throw if unset
-  auto get_cl_buffer() const {
+  boost::compute::buffer get_cl_buffer() const override {
     // This throws if not set
     auto ctx = task->get_queue()->get_context();
     return buf->get_cl_buffer(ctx);
@@ -496,4 +500,4 @@ private:
     ### End:
 */
 
-#endif // TRISYCL_SYCL_ACCESSOR_DETAIL_ACCESSOR_HPP
+#endif // TRISYCL_SYCL_BUFFER_DETAIL_ACCESSOR_HPP

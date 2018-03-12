@@ -33,12 +33,13 @@ class handler;
 
 namespace detail {
 
+struct task;
+struct buffer_base;
+
 /** \addtogroup data Data access and storage in SYCL
     @{
 */
 
-struct task;
-struct buffer_base;
 inline static std::shared_ptr<detail::task>
 add_buffer_to_task(handler *command_group_handler,
                    std::shared_ptr<detail::buffer_base> b,

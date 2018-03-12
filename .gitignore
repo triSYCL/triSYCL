@@ -1,6 +1,13 @@
 *.csv
+*.html
 .Xil/
 *.dir/
 *.xclbin
 *.swp
+*.kernel_caller
+*.bc
+*.ll
+*.bin
+*.cxx
+*.xpirbc
 build/

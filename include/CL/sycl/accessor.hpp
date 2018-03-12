@@ -227,7 +227,10 @@ class accessor :
       work in some dimensions.
    */
   typename accessor_detail::reference operator[](std::size_t index) {
+//#ifdef TRISYCL_DEVICE
+//#else
     return (*implementation)[index];
+//#endif
   }
 
 

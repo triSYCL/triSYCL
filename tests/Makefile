@@ -4,12 +4,17 @@
 
 # Set default compiler instead of default CXX=g++ value
 # Assume Clang 3.9 and libc++ or Clang 4.0 with libstdc++ at least
-#CXX = clang++-4.0
+CXX = clang++-5.0
 # To use libc++ instead of libstdc++, from libc++-dev & libc++abi-dev packages
 #CXXFLAGS += -stdlib=libc++
 
 # But everything works fine with GCC 5.4 at least
-CXX = g++
+#CXX = g++
+
+# The device compiler to use.
+# Assume that the device compiler is in $(LLVM_BUILD_DIR) and this
+# environment variable is set.
+CL_CXX = $(LLVM_BUILD_DIR)/bin/clang++
 
 # Set OpenCL_INCPATH variable to where CL/cl.h like headers are if
 # required
@@ -20,13 +25,13 @@ CXX = g++
 # Boost.Compute is if required
 
 # To use OpenMP to execute SYCL kernels (Clang needs libomp-dev package)
-CXXFLAGS += -fopenmp
+#CXXFLAGS += -fopenmp
 
 ## To disable asynchronous kernels, which is the default in SYCL
 #CXXFLAGS += -DTRISYCL_NO_ASYNC
 
 # For asynchronous kernels when OpenMP is not enabled
-#LDLIBS += -lpthread
+LDLIBS += -lpthread
 
 # To use OpenCL, set the TRISYCL_OPENCL flag
 CXXFLAGS += -DTRISYCL_OPENCL
@@ -40,51 +45,90 @@ LDLIBS += -lOpenCL
 #CXXFLAGS += $(shell pkg-config --cflags pocl)
 
 # To enable debug and tracing:
-CXXFLAGS += -g
+#CXXFLAGS += -g
+# With optimization and without assertions
+CXXFLAGS += -O3 -DNDEBUG -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
+#CXXFLAGS += -DNDEBUG
 #CXXFLAGS += -g -DTRISYCL_TRACE_KERNEL -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DTRISYCL_TRACE_KERNEL -DTRISYCL_DEBUG_STRUCTORS -DBOOST_LOG_DYN_LINK
 # To have DEBUG mode working
-#LDLIBS += -lboost_log -lpthread
+LDLIBS += -lboost_log -lpthread
 # To use Clang sanitizer modes
 #CXXFLAGS += -fsanitize=address -fno-omit-frame-pointer
 #CXXFLAGS += -fsanitize=thread -fno-omit-frame-pointer
 #CXXFLAGS += -fsanitize=undefined -fno-omit-frame-pointer
 
+# More flags for the kernel compilation flow:
+# Counterbalance the effect of -O3 by avoiding vector types in SPIR output
+# or inlining that might duplicate the code too early
+CXXFLAGS_KERNEL = -fno-vectorize -fno-unroll-loops
+
 # When XILINX_SDX environment variable is set, use the Xilinx SDx
 # OpenCL compiler with these flags:
 # Adapt to the real platform
-XOCCFLAGS=--platform xilinx:adm-pcie-7v3:1ddr:3.0
+ifdef VERSION_2017_4
+XOCCFLAGS = --platform xilinx_adm-pcie-7v3_1ddr_3_0 --save-temps
+else
+XOCCFLAGS = --platform xilinx:adm-pcie-7v3:1ddr:3.0 --save-temps
+endif
 # xocc parameter to specify C++ version
 XOCCCPPPARAM=--xp prop:kernel.vector_add.kernel_flags=-std=c++0x
 # xocc parameter to work Clang/LLVM 3.9 flow
 XOCC39PARAM=--xp param:compiler.version=3.9
 
-
 # The rest is the Makefile boiling plate and should not be changed normally
-
 
 # Compute the absolute directory name from the location of this Makefile
 # so that we can compile from anywhere even if we use make -f
 # <this_makefile> ... as used by make check:
-triSYCL_DIR=$(abspath $(dir $(lastword $(MAKEFILE_LIST)))/..)
+triSYCL_DIR = $(abspath $(dir $(lastword $(MAKEFILE_LIST)))/..)
 
 # Use all the .cpp C++ files from the subdirectories that have a 1-1
 # mapping with the binaries to generate, that means the binary is made
 # from only one compilation unit (1 source file)
-TARGETS = $(basename $(wildcard */*.cpp))
+FILES_CPP = $(wildcard */*.cpp)
+TARGETS = $(basename $(FILES_CPP))
 
 # There are also .cc C++ files that are used to test binaries made from
 # multiple compilation units. There should be specific dependencies added
 # later to deal with other compilation units to be linked to the .cc main
 # executable. To avoid messing up with LLVM/LIT, the other compilation
 # units have .C extensions
-TARGETS_CC = $(basename $(wildcard */*.cc))
+FILES_CC = $(wildcard */*.cc)
+TARGETS_CC = $(basename $(FILES_CC))
 TARGETS += $(TARGETS_CC)
 
 # Since the .C files generates some .o, think to remove them
 FILES_C = $(wildcard */*.C)
 CLEANING_TARGETS = $(TARGETS) $(FILES_C:%.C=%.o)
+
+# The kernel files, mainly defined here for debug or cleaning purpose:
+# Kernel LLVM assembly code
+KERNELS_LL = $(FILES_CC:%.cc=%.kernel.ll) \
+	$(FILES_C:%.C=%.kernel.ll) \
+	$(FILES_CPP:%.cpp=%.kernel.ll)
+# Kernel LLVM assembly code
+KERNELS_BC = $(KERNELS_LL:%.kernel.ll=%.kernel.bc)
+# The kernel binary to be internalized into the host code, typically
+# SPIR or FPGA bit-stream
+KERNELS_BIN = $(KERNELS_LL:%.kernel.ll=%.kernel.bin)
+# The kernel binary internalized into the host code as a C++ program
+KERNELS_INTERNALIZED_CXX = $(KERNELS_LL:%.kernel.ll=%.kernel.internalized.cxx)
+# The pre-kernel in LLVM assembly, directly output from Clang
+PRE_KERNELS_LL = $(KERNELS_LL:%.kernel.ll=%.pre_kernel.ll)
+# The pre-kernel caller in LLVM assembly, directly output from Clang
+PRE_KERNELS_CALLER_LL = $(KERNELS_LL:%.kernel.ll=%.pre_kernel_caller.ll)
+# The kernel caller in LLVM assembly
+KERNELS_CALLER_LL = $(KERNELS_LL:%.kernel.ll=%.kernel_caller.ll)
+# The kernel caller in LLVM bitcode
+KERNELS_CALLER_BC = $(KERNELS_LL:%.kernel.ll=%.kernel_caller.bc)
+# The final kernel caller executable
+KERNELS_CALLER = $(KERNELS_LL:%.kernel.ll=%.kernel_caller)
+
+CLEANING_TARGETS += $(KERNELS_BC) $(KERNELS_BIN) $(KERNELS_INTERNALIZED_CXX) \
+	$(PRE_KERNELS_LL) $(PRE_KERNELS_CALLER_LL) $(KERNELS_CALLER_LL) \
+	$(KERNELS_CALLER_BC) $(KERNELS_CALLER)
 
 # The implementation uses C++14.
 # Use -Wno-ignored-attributes to avoid a lot of warning with
@@ -129,8 +173,13 @@ ifdef FORCE_CXX
   CXX=$(FORCE_CXX)
 endif
 
+# Compile all the executables
 all: $(TARGETS)
 
+# Compile all the kernel bitcodes
+kernels: $(KERNELS_LL)
+
+# Run all the tests, once compiled
 run: $(TARGETS)
 	# Execute each element of TARGETS
 	$(foreach command, $(TARGETS), echo; echo $(command):; ./$(command); )
@@ -142,6 +191,12 @@ clean:
 # Add some explicit targets
 multiple_compilation_units/parallel_for: multiple_compilation_units/parallel_for_other.o
 
+# Compile some kernels to SPIR as an "order-only" prerequisite:
+SPIR/opencl_kernel_output_42: | SPIR/output_42.spir64
+SPIR/opencl_kernel_vector_add_args: | SPIR/vector_add.spir64
+SPIR/opencl_kernel_vector_add_int: | SPIR/vector_add_int.spir64
+SPIR/single_task_vector_increment_drt: | SPIR/add_42.spir64
+
 ifdef XILINX_SDX
 # Compile explicit OpenCL kernels for Xilinx FPGA.
 # Note this variable enables also the Lit tests guarded
@@ -150,8 +205,10 @@ ifdef XILINX_SDX
 # Use "order-only" prerequisites for kernels since if the kernel are
 # changed, it does not imply to recompile the host part
 SDAccel/opencl_kernel_vector_add_args: | SDAccel/vector_add.xclbin
-SDAccel/hls_with_cppkernel_opencl_kernel_int_vector_add_args: | SDAccel/hls_int_vector_add_kernel.xclbin
-SDAccel/hls_with_cppkernel_opencl_kernel_ap_vector_add_args: | SDAccel/hls_ap_vector_add_kernel.xclbin
+SDAccel/hls_with_cppkernel_opencl_kernel_int_vector_add_args: | \
+	SDAccel/hls_int_vector_add_kernel.xclbin
+SDAccel/hls_with_cppkernel_opencl_kernel_ap_vector_add_args: | \
+	SDAccel/hls_ap_vector_add_kernel.xclbin
 
 # -lpthread is required by Xilinx OpenCL implementation
 LDLIBS += -pthread
@@ -182,10 +239,16 @@ check:  $(TARGETS_CC)
 	  echo 1
 	python3 $$TRISYCL_LIT $(LITFLAGS) $(CHECKING_DIR)
 
+# Display the list of LIT tests
+check-list:
+	python3 $$TRISYCL_LIT --show-tests $(LITFLAGS) $(CHECKING_DIR) | \
+	  sed -e '1,/-- Available Tests --/d' -e 's/.\(cpp\|cc\)$$//' -e 's/  triSYCL :: //' | sort
+
+
 check-compilers:
 	# Launch the check with various compilers
 	-FORCE_CXX=g++-5 $(MAKE) clean check
-	-FORCE_CXX=clang++-3.9 $(MAKE) clean check
+	-FORCE_CXX=clang++-4.0 $(MAKE) clean check
 	-FORCE_CXX=g++ $(MAKE) clean check
 
 # A special target to be called as from the test as "make execute
@@ -201,6 +264,142 @@ execute: $(basename $(TARGET))
 # with make some_cpp_file.rtags
 %.rtags: %.cpp
 	$(MAKE) --just-print --assume-new=$< $* | rc -c -
+
+# To debug the Clang/LLVM triSYCL compiler
+# Assume that CXX contains some Clang compiler version
+
+# Keep intermediate file for debuging purpose
+.PRECIOUS: %.bc %.ll %.spir64 %.kernel.internalized.cxx \
+  %.kernel_caller.bc %.kernel_caller.ll \
+  %.pre_kernel.bc %.pre_kernel.ll \
+  %.pre_kernel_caller.bc %.pre_kernel_caller.ll \
+  %.pre_kernel.bc %.pre_kernel.ll %.pre_kernel_caller.ll \
+  %.kernel.bc %.kernel.bin %.kernel.ll
+
+# The LLVM bitcode
+%.bc: %.cpp
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -c -o $@ $<
+%.bc: %.C
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -c -o $@ $<
+%.bc: %.cc
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -c -o $@ $<
+
+# The LLVM assembly code
+%.ll: %.cpp
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -S -o $@ $<
+%.ll: %.C
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -S -o $@ $<
+%.ll: %.cc
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -emit-llvm -S -o $@ $<
+
+# The LLVM assembly code for the code expected to call the kernels
+%.pre_kernel_caller.ll: %.cpp
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl \
+	  -emit-llvm -S -o $@ $<
+%.pre_kernel_caller.ll: %.C
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl \
+	  -emit-llvm -S -o $@ $<
+%.pre_kernel_caller.ll: %.cc
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl \
+	  -emit-llvm -S -o $@ $<
+
+# The LLVM assembly code for the code before kernels
+%.pre_kernel.ll: %.cpp
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_DEVICE -sycl -sycl-is-device \
+	  $(CXXFLAGS_KERNEL) -emit-llvm -S -o $@ $<
+%.pre_kernel.ll: %.C
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_DEVICE -sycl -sycl-is-device \
+	  $(CXXFLAGS_KERNEL) -emit-llvm -S -o $@ $<
+%.pre_kernel.ll: %.cc
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_DEVICE -sycl -sycl-is-device \
+	  $(CXXFLAGS_KERNEL) -emit-llvm -S -o $@ $<
+
+# The Clang AST of the pre-kernel code
+%.pre_kernel.ast: %.cpp
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_DEVICE -sycl -sycl-is-device \
+	  $(CXXFLAGS_KERNEL) -Xclang -ast-dump \
+	  -fsyntax-only $< > $@
+
+# How to compile OpenCL kernel to 64-bit SPIR 2.0
+%.spir64: %.cl
+	# Assume here that CXX is actually a kind of clang++
+	$(CL_CXX) -cc1 -emit-llvm-bc -triple spir64-unknown-unknown \
+	  -include $(triSYCL_DIR)/include/CL/sycl/detail/SPIR/opencl_spir.h -o $@ $<
+
+# Process bitcode with SYCL passes to generate kernels
+%.kernel.bc: %.pre_kernel.ll
+	# To debug, think about using options like -debug -stats -print-after-all...
+	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so \
+	  -globalopt -deadargelim -SYCL-args-flattening -deadargelim \
+	  -SYCL-kernel-filter -globaldce -RELGCD -reqd-workgroup-size-1 -inSPIRation \
+	  -o $@ $<
+
+ifdef XILINX_SDX
+#  If the target is a Xilinx FPGA kernel, use the Xilinx compiler with
+#  the required extension for the SPIR input file
+%.kernel.bin: %.kernel.bc
+	cp -p $< $*.xpirbc
+	# TODO: deal with several kernels
+	SDACCEL_DEBUG='yes' SDX_USE_CLANG_39='yes' xocc $(XOCCFLAGS) --target hw \
+	  -k TRISYCL_kernel_0 -o $@ $*.xpirbc
+else
+# If the target is SPIR, just use the bitcode as the kernel binary
+%.kernel.bin: %.kernel.bc
+	cp -p $< $@
+endif
+
+# Internalize the kernel binary into cl::sycl::drt::code::program with
+# a C++ file
+%.kernel.internalized.cxx: %.kernel.bin
+	$(triSYCL_DIR)/src/triSYCL_tool --source-in $< --output $@
+
+# Process bitcode with SYCL passes to generate kernel callers
+%.kernel_caller.bc: %.pre_kernel_caller.ll
+	# To debug, think about using options like -debug -stats -print-after-all...
+	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so \
+	  -globalopt -deadargelim -SYCL-args-flattening -loop-idiom -deadargelim \
+	  -SYCL-serialize-arguments -deadargelim -o $@ $<
+
+# Construct the object file of the kernel caller from the target assembly
+# Rely on the default Make built-in rules for now
+#%.kernel_caller.o: %.kernel_caller.s
+
+# Generate optimized target machine assembly code from LLVM IR
+%.kernel_caller.s: %.kernel_caller.ll
+	llc -O=3 -o $@ $<
+
+# Link the C++-generated kernel caller to the final program
+# \todo Do not use .ll everywhere but .bc since it is not upward compatible
+%.kernel_caller: %.kernel_caller.ll %.kernel.internalized.cxx
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@ $^ $(LOADLIBES) $(LDLIBS)
+
+# Generate LLVM assembly code from bit-code
+%.ll: %.bc
+	$(LLVM_BUILD_DIR)/bin/llvm-dis -o $@ $<
+
+# Generate LLVM assembly code from SPIR bit-code
+%.spir64.ll: %.spir64
+	$(LLVM_BUILD_DIR)/bin/llvm-dis -o $@ $<
+
+# A pretty-printed C++ view of the Clang AST
+%.ast-c++: %.cpp
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-print -c -o $@ $<
+%.ast-c++: %.C
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-print -c -o $@ $<
+%.ast-c++: %.cc
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-print -c -o $@ $<
+
+# The Clang AST
+%.ast: %.cpp
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-dump \
+	  -fno-color-diagnostics -fsyntax-only $< > $@
+%.ast: %.C
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-dump \
+	  --fno-color-diagnostics -fsyntax-only $< > $@
+%.ast: %.cc
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -Xclang -ast-dump \
+	  --fno-color-diagnostics -fsyntax-only $< > $@
+
 
 # To verify everything is self-contained, run the target in a clone of the
 # current branch of the current repository.
@@ -234,3 +433,15 @@ clone-%:
 	# and do not block an existing one
 	git worktree add --detach test-clone `git rev-parse HEAD`
 	cd test-clone/tests; $(MAKE) $*
+
+
+# Test with cmake/ctest
+ctest:
+	mkdir -p ../build
+	cd ../build; cmake .. -DTRISYCL_OPENCL=ON; make -j7; ctest -j7
+
+# Only display the test list
+ctest-list:
+	mkdir -p ../build
+	cd ../build; cmake .. -DTRISYCL_OPENCL=ON; \
+	  ctest --show-only | sed -e '1d' -e '/^$$/,$$d' -e 's/.*: //' | sort

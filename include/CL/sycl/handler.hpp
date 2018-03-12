@@ -12,6 +12,7 @@
 #include <cstddef>
 #include <memory>
 #include <tuple>
+#include <utility>
 
 #ifdef TRISYCL_OPENCL
 #include <boost/compute.hpp>
@@ -19,6 +20,7 @@
 
 #include "CL/sycl/accessor.hpp"
 #include "CL/sycl/command_group/detail/task.hpp"
+#include "CL/sycl/detail/instantiate_kernel.hpp"
 #include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/exception.hpp"
 #include "CL/sycl/kernel.hpp"
@@ -92,8 +94,7 @@ public:
        Explicitly capture task by copy instead of having this captured
        by reference and task by reference by side effect */
     task->add_prelude([=, task = task] {
-        task->get_kernel().get_boost_compute()
-          .set_arg(arg_index, acc_obj.implementation->get_cl_buffer());
+        task->set_arg(arg_index, acc_obj.implementation->get_cl_buffer());
       });
   }
 
@@ -106,8 +107,7 @@ public:
     /* Explicitly capture task by copy instead of having this captured
        by reference and task by reference by side effect */
     task->add_prelude([=, task = task] {
-        task->get_kernel().get_boost_compute()
-          .set_arg(arg_index, scalar_value.unwrap());
+        task->set_arg(arg_index, scalar_value.unwrap());
       });
   }
 
@@ -121,8 +121,7 @@ public:
     /* Explicitly capture task by copy instead of having this captured
        by reference and task by reference by side effect */
     task->add_prelude([=, task = task] {
-        task->get_kernel().get_boost_compute()
-          .set_arg(arg_index, scalar_value);
+        task->set_arg(arg_index, scalar_value);
       });
   }
 
@@ -159,6 +158,34 @@ public:
   }
 #endif
 
+private:
+
+  /** Schedule the kernel
+
+      Add a traced version of the kernel in host mode or add the
+      kernel in an instantiating function for later extraction by the
+      compiler
+  */
+  template <typename KernelName,
+            typename Kernel>
+  void schedule_kernel(Kernel k) {
+    /* Explicitly capture task by copy instead of having this captured
+       by reference and task by reference by side effect */
+    task->schedule(detail::trace_kernel<KernelName>([=, t = task] () mutable {
+          if (t->owner_queue->is_host())
+            k();
+          else {
+            TRISYCL_DUMP_T("schedule_kernel &k = " << (void *) &k);
+
+            // Structure the kernel code so it can be outlined and called
+            detail::launch_device_kernel<KernelName>(*t, k);
+            // \todo for now only deal with 1 physical work-item only
+            t->get_kernel().single_task(t, t->get_queue());
+          }
+        }));
+  }
+
+public:
 
   /** Kernel invocation method of a kernel defined as a lambda or
       functor. If it is a lambda function or the functor type is globally
@@ -173,9 +200,12 @@ public:
       \param KernelName is a class type that defines the name to be used for
       the underlying kernel
   */
-  template <typename KernelName = std::nullptr_t>
-  void single_task(std::function<void(void)> F) {
-    task->schedule(detail::trace_kernel<KernelName>(F));
+  template <typename KernelName = std::nullptr_t,
+            typename ParallelForFunctor>
+  void single_task(ParallelForFunctor &&f) {
+    TRISYCL_DUMP_T("single_task &f = " << (void *) &f);
+
+    schedule_kernel<KernelName>(std::forward<ParallelForFunctor>(f));
   }
 
 
@@ -208,9 +238,9 @@ public:
             typename ParallelForFunctor>                                \
   void parallel_for(range<N> global_size,                               \
                     ParallelForFunctor f) {                             \
-    task->schedule(detail::trace_kernel<KernelName>([=] {               \
-          detail::parallel_for(global_size, f);                         \
-        }));                                                            \
+    schedule_kernel<KernelName>([=] {                                   \
+        detail::parallel_for(global_size, f);                           \
+      });                                                               \
   }
 
   TRISYCL_parallel_for_functor_GLOBAL(1)
@@ -241,17 +271,17 @@ public:
       function can not be templated, so instantiate it for all the
       dimensions
   */
-#define TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(N)       \
-  template <typename KernelName = std::nullptr_t,         \
-            typename ParallelForFunctor>                  \
-  void parallel_for(range<N> global_size,                 \
-                    id<N> offset,                         \
-                    ParallelForFunctor f) {               \
-    task->schedule(detail::trace_kernel<KernelName>([=] { \
-          detail::parallel_for_global_offset(global_size, \
-                                             offset,      \
-                                             f);          \
-        }));                                              \
+#define TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(N)               \
+  template <typename KernelName = std::nullptr_t,                 \
+            typename ParallelForFunctor>                          \
+  void parallel_for(range<N> global_size,                         \
+                    id<N> offset,                                 \
+                    ParallelForFunctor f) {                       \
+    schedule_kernel<KernelName>([=] {                             \
+        detail::parallel_for_global_offset(global_size,           \
+                                           offset,                \
+                                           f);                    \
+      });                                                         \
   }
 
   TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(1)
@@ -282,10 +312,9 @@ public:
   template <typename KernelName = std::nullptr_t,
             int Dimensions,
             typename ParallelForFunctor>
-  void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f) {
-    task->schedule(detail::trace_kernel<KernelName>([=] {
-          detail::parallel_for(r, f);
-        }));
+  void parallel_for(nd_range<Dimensions> r,
+                    ParallelForFunctor f) {
+    schedule_kernel<KernelName>([=] { detail::parallel_for(r, f); });
   }
 
 
@@ -315,8 +344,9 @@ public:
             typename ParallelForFunctor>
   void parallel_for_work_group(nd_range<Dimensions> r,
                                ParallelForFunctor f) {
-    task->schedule(detail::trace_kernel<KernelName>([=] {
-          detail::parallel_for_workgroup(r, f); }));
+    schedule_kernel<KernelName>([=] {
+        detail::parallel_for_workgroup(r, f);
+      });
   }
 
 

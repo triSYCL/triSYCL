@@ -11,6 +11,44 @@
     License. See LICENSE.TXT for details.
 */
 
+
+/* Use macros for address spaces to be able to retarget more easily to
+   different runtimes & compilers.
+
+   For example can have OpenCL address spaces even if the address
+   space parsing is off in Clang/LLVM. Look at SPIRAddrSpaceMap in
+   tools/clang/lib/Basic/Targets.cpp:
+   \code
+     static const unsigned SPIRAddrSpaceMap[] = {
+         1, // opencl_global
+         3, // opencl_local
+         2, // opencl_constant
+         4, // opencl_generic
+         0, // cuda_device
+         0, // cuda_constant
+         0  // cuda_shared
+     };
+   \endcode
+*/
+
+/// Address space for OpenCL __global
+#define TRISYCL_GLOBAL_AS TRISYCL_DEVICE_ONLY(__attribute__((address_space(1))))
+
+/// Address space for OpenCL __local
+#define TRISYCL_LOCAL_AS TRISYCL_DEVICE_ONLY(__attribute__((address_space(3))))
+
+/// Address space for OpenCL __constant
+#define TRISYCL_CONSTANT_AS                               \
+  TRISYCL_DEVICE_ONLY(__attribute__((address_space(2))))
+
+/// Address space for OpenCL __generic
+#define TRISYCL_GENERIC_AS                                \
+  TRISYCL_DEVICE_ONLY(__attribute__((address_space(4))))
+
+/// Address space for OpenCL __private
+#define TRISYCL_PRIVATE_AS
+
+
 namespace cl {
 namespace sycl {
 namespace detail {
@@ -31,61 +69,33 @@ struct ocl_type { // NOTE: renamed from opencl_type because of MSVC bug
 /// Add an attribute for __constant address space
 template <typename T>
 struct ocl_type<T, constant_address_space> {
-  using type = T
-#ifdef __SYCL_DEVICE_ONLY__
-    /* Put the address space qualifier after the type so that we can
-       construct pointer type with qualifier */
-    __constant
-#endif
-    ;
+  using type = TRISYCL_CONSTANT_AS T;
 };
 
+#if TRISYCL_CL_LANGUAGE_VERSION >= 200
 /// Add an attribute for __generic address space
 template <typename T>
 struct ocl_type<T, generic_address_space> {
-  using type = T
-#ifdef __SYCL_DEVICE_ONLY__
-    /* Put the address space qualifier after the type so that we can
-       construct pointer type with qualifier */
-    __generic
-#endif
-    ;
+  using type = TRISYCL_GENERIC_AS T;
 };
+#endif
 
 /// Add an attribute for __global address space
 template <typename T>
 struct ocl_type<T, global_address_space> {
-  using type = T
-#ifdef __SYCL_DEVICE_ONLY__
-    /* Put the address space qualifier after the type so that we can
-       construct pointer type with qualifier */
-    __global
-#endif
-    ;
+  using type = TRISYCL_GLOBAL_AS T;
 };
 
 /// Add an attribute for __local address space
 template <typename T>
 struct ocl_type<T, local_address_space> {
-  using type = T
-#ifdef __SYCL_DEVICE_ONLY__
-    /* Put the address space qualifier after the type so that we can
-       construct pointer type with qualifier */
-    __local
-#endif
-    ;
+  using type = TRISYCL_LOCAL_AS T;
 };
 
 /// Add an attribute for __private address space
 template <typename T>
 struct ocl_type<T, private_address_space> {
-  using type = T
-#ifdef __SYCL_DEVICE_ONLY__
-    /* Put the address space qualifier after the type so that we can
-       construct pointer type with qualifier */
-    __private
-#endif
-    ;
+  using type = TRISYCL_PRIVATE_AS T;
 };
 
 
@@ -271,7 +281,7 @@ struct address_space_fundamental : public address_space_variable<T, AS> {
     Note that if \a T is not a pointer type, it is an error.
 
     All the address space pointers inherit from it, which makes trivial
-    the implementation of cl::sycl::multi_ptr<T, AS>
+    the implementation of \c cl::sycl::multi_ptr<T, AS>
 */
 template <typename T, address_space AS>
 struct address_space_ptr : public address_space_fundamental<T, AS> {

@@ -15,12 +15,12 @@
 
 // The following symbols can be set to implement a different version
 #ifndef CL_SYCL_LANGUAGE_VERSION
-/// This implement SYCL 1.2.1
+/// This implements SYCL 1.2.1
 #define CL_SYCL_LANGUAGE_VERSION 121
 #endif
 
 #ifndef TRISYCL_CL_LANGUAGE_VERSION
-/// This implement triSYCL 1.2.1
+/// This implements triSYCL 1.2.1
 #define TRISYCL_CL_LANGUAGE_VERSION 121
 #endif
 
@@ -39,6 +39,10 @@
 */
 #ifdef TRISYCL_OPENCL
 
+/* There is a bug in Xilinx OpenCL runtime where the cl_kernel does
+   not keep alive its own cl_program */
+#define SDX_KERNEL_PROGRAM_OWNING_BUG
+
 // SYCL interoperation API with OpenCL requires some OpenCL C types:
 #if defined(__APPLE__)
 #include <OpenCL/cl.h>
@@ -52,6 +56,16 @@
 #else
 /// A macro to skip stuff when not supporting OpenCL
 #define TRISYCL_SKIP_OPENCL(x)
+#endif
+
+#ifdef TRISYCL_DEVICE
+/// Define the SYCL marker according to specification
+#define __SYCL_DEVICE_ONLY__
+// To keep something when in device mode
+#define TRISYCL_DEVICE_ONLY(X) X
+#else
+// Do not keep when not in device mode
+#define TRISYCL_DEVICE_ONLY(X)
 #endif
 
 /// @} End the defaults Doxygen group
