@@ -8,11 +8,11 @@ Testing
 Installation
 ------------
 
-Only Clang_ 3.9+ or GCC_ 5.4+, `Boost.MultiArray`_ (which adds to `C++`_
+Only Clang_ 5+ or GCC_ 7+, `Boost.MultiArray`_ (which adds to `C++`_
 the nice Fortran array semantics and syntax), Boost.Operators and a few
 other Boost libraries are needed.
 
-To have all tests compiling, it is better to use Clang_ 5.0+ or GCC_
+To have all the tests compiling, it is better to use Clang_ 5.0+ or GCC_
 7+.
 
 To install them on latest Linux Debian/unstable (this should work on
@@ -24,7 +24,7 @@ latest Ubuntu too, just adapt the compiler versions):
 
 There is nothing else to do for now to use the include files from triSYCL_
 ``include`` directory when compiling a program. Just add a
-``-I.../include`` option and ``-std=c++14`` or ``-std=c++17`` when compiling.
+``-I.../include`` option and ``-std=c++1z`` or ``-std=c++17`` when compiling.
 
 triSYCL_ is configurable through preprocessor macros described in
 `macros <macros.rst>`_.
