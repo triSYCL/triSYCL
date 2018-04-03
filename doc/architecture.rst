@@ -409,7 +409,7 @@ is based on LLVM ``opt`` to apply a sequence of LLVM passes:
   with all the parameters explicitly passed as arguments. This makes
   the classical OpenCL-style kernel parameter to show up;
 
-``-loop-idiom -deadargelim``
+``-loop-idiom``
   then the loop-idiom detection pass which was not applied before to
   avoid choking the ``SYCL-args-flattening`` pass can now be applied
   to optimize some loops and generate the LLVM intrinsics representing
