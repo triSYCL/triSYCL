@@ -85,6 +85,9 @@
 #include "CL/sycl/vendor/Xilinx/opt_decorate_func.hpp"
 #include "CL/sycl/vendor/Xilinx/partition_array.hpp"
 
+// An extension about constexpr host introspection API
+#include "CL/sycl/extension/ce/platform.hpp"
+
 /*
     # Some Emacs stuff:
     ### Local Variables:
