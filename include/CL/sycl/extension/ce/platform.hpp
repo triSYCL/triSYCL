@@ -9,6 +9,8 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <boost/hana.hpp>
+
 namespace cl {
 namespace sycl {
 namespace extension {
@@ -22,7 +24,19 @@ namespace ce {
  */
 class platform {
 
+  const char * name;
+
 public:
+
+  constexpr platform(const char * name)
+  : name { name }
+  {}
+
+
+  auto constexpr get_name() const {
+    return name;
+  }
+
 
   // Return the default platform
   static auto get_default() {
@@ -43,7 +57,9 @@ public:
 
   /// Get the list of all the platforms available to the application
   static auto get_platforms() {
-    return 123;
+    return boost::hana::make_tuple(platform { "host" },
+                                   platform { "pocl" },
+                                   platform { "xilinx" });
   }
 
 
