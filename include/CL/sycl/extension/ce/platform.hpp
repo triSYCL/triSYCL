@@ -16,6 +16,9 @@ namespace sycl {
 namespace extension {
 namespace ce {
 
+namespace bh = boost::hana;
+using namespace std::literals;
+
 /** \addtogroup ce_execution Constexpr introspection for platforms, contexts, devices
     @{
 */
@@ -26,7 +29,55 @@ class platform {
 
   const char * name;
 
+  /// The architecture of the available platforms at compile time
+  static constexpr auto architecture =
+    bh::make_tuple(
+      bh::make_pair(
+          bh::type_c<cl::sycl::host_selector>
+        , bh::make_tuple(
+            [] { return cl::sycl::platform {}; }
+            // \todo The following information should be used in
+            // include/CL/sycl/platform/detail/host_platform.hpp too
+          , bh::make_tuple(
+                  bh::make_pair(info::platform::profile,
+                                "FULL_PROFILE")
+                , bh::make_pair(info::platform::version,
+                                "1.2")
+                , bh::make_pair(info::platform::name,
+                                "triSYCL host platform")
+                , bh::make_pair(info::platform::vendor,
+                                "triSYCL Open Source project")
+                , bh::make_pair(info::platform::extensions,
+                                detail::host_platform::platform_extensions)
+                           )
+                         )
+                    )
+    , bh::make_pair(
+          bh::type_c<cl::sycl::cpu_selector>
+        , bh::make_tuple(
+            [] { return cl::sycl::platform { cl::sycl::cpu_selector {} }; }
+          , bh::make_tuple(
+                  bh::make_pair(info::platform::profile,
+                                "FULL_PROFILE")
+                , bh::make_pair(info::platform::version,
+                                "OpenCL 1.2 pocl 1.2-pre Debug+Asserts, LLVM 7.0.0svn, SPIR, SLEEF, POCL_DEBUG")
+                , bh::make_pair(info::platform::name,
+                                "Portable Computing Language")
+                , bh::make_pair(info::platform::vendor,
+                                "The pocl project")
+                , bh::make_pair(info::platform::extensions,
+                                "cl_khr_byte_addressable_store cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_khr_3d_image_writes cl_khr_spir cl_khr_fp64 cl_khr_int64_base_atomics cl_khr_int64_extended_atomics cl_khr_fp64")
+                           )
+                         )
+                    )
+                   );
+
 public:
+
+  constexpr platform()
+  : platform { "host" }
+  {}
+
 
   constexpr platform(const char * name)
   : name { name }
@@ -57,7 +108,7 @@ public:
 
   /// Get the list of all the platforms available to the application
   static auto get_platforms() {
-    return boost::hana::make_tuple(platform { "host" },
+    return bh::make_tuple(platform { "host" },
                                    platform { "pocl" },
                                    platform { "xilinx" });
   }
