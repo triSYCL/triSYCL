@@ -74,9 +74,11 @@ $(function() {
 <div class="textblock"><code>#include &lt;cstddef&gt;</code><br />
 <code>#include &lt;memory&gt;</code><br />
 <code>#include &lt;tuple&gt;</code><br />
+<code>#include &lt;utility&gt;</code><br />
 <code>#include &lt;boost/compute.hpp&gt;</code><br />
 <code>#include &quot;<a class="el" href="accessor_8hpp_source.html">CL/sycl/accessor.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="task_8hpp_source.html">CL/sycl/command_group/detail/task.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="instantiate__kernel_8hpp_source.html">CL/sycl/detail/instantiate_kernel.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="unimplemented_8hpp_source.html">CL/sycl/detail/unimplemented.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="exception_8hpp_source.html">CL/sycl/exception.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="kernel_8hpp_source.html">CL/sycl/kernel.hpp</a>&quot;</code><br />
@@ -88,33 +90,32 @@ Include dependency graph for handler.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="handler_8hpp__incl.png" border="0" usemap="#include_2CL_2sycl_2handler_8hpp" alt=""/></div>
 <map name="include_2CL_2sycl_2handler_8hpp" id="include_2CL_2sycl_2handler_8hpp">
-<area shape="rect" id="node6" href="accessor_8hpp.html" title="CL/sycl/accessor.hpp" alt="" coords="2088,80,2237,107"/>
-<area shape="rect" id="node10" href="task_8hpp.html" title="CL/sycl/command_group\l/detail/task.hpp" alt="" coords="1329,244,1495,285"/>
-<area shape="rect" id="node18" href="unimplemented_8hpp.html" title="CL/sycl/detail/unimplemented.hpp" alt="" coords="43,751,261,777"/>
-<area shape="rect" id="node21" href="exception_8hpp.html" title="CL/sycl/exception.hpp" alt="" coords="336,751,488,777"/>
-<area shape="rect" id="node24" href="kernel_8hpp.html" title="CL/sycl/kernel.hpp" alt="" coords="788,333,919,360"/>
-<area shape="rect" id="node26" href="queue_2detail_2queue_8hpp.html" title="CL/sycl/queue/detail\l/queue.hpp" alt="" coords="1235,587,1376,628"/>
-<area shape="rect" id="node37" href="opencl__types_8hpp.html" title="triSYCL wrapper for OpenCL types " alt="" coords="4236,80,4409,107"/>
-<area shape="rect" id="node49" href="parallelism_2detail_2parallelism_8hpp.html" title="Implement the detail of the parallel constructions to launch kernels. " alt="" coords="3003,155,3151,196"/>
-<area shape="rect" id="node7" href="access_8hpp.html" title="CL/sycl/access.hpp" alt="" coords="2011,333,2149,360"/>
-<area shape="rect" id="node8" href="local__accessor_8hpp.html" title="CL/sycl/accessor/detail\l/local_accessor.hpp" alt="" coords="2142,155,2301,196"/>
-<area shape="rect" id="node17" href="shared__ptr__implementation_8hpp.html" title="CL/sycl/detail/shared\l_ptr_implementation.hpp" alt="" coords="1542,825,1706,867"/>
-<area shape="rect" id="node29" href="id_8hpp.html" title="CL/sycl/id.hpp" alt="" coords="2795,415,2901,442"/>
-<area shape="rect" id="node30" href="item_8hpp.html" title="CL/sycl/item.hpp" alt="" coords="2519,333,2641,360"/>
-<area shape="rect" id="node31" href="nd__item_8hpp.html" title="CL/sycl/nd_item.hpp" alt="" coords="2366,251,2509,278"/>
-<area shape="rect" id="node33" href="buffer_2detail_2accessor_8hpp.html" title="CL/sycl/buffer/detail\l/accessor.hpp" alt="" coords="2325,155,2464,196"/>
-<area shape="rect" id="node34" href="container__element__aspect_8hpp.html" title="CL/sycl/detail/container\l_element_aspect.hpp" alt="" coords="1857,155,2015,196"/>
-<area shape="rect" id="node35" href="pipe__reservation_8hpp.html" title="CL/sycl/pipe_reservation.hpp" alt="" coords="1998,676,2189,703"/>
-<area shape="rect" id="node36" href="pipe__accessor_8hpp.html" title="CL/sycl/pipe/detail\l/pipe_accessor.hpp" alt="" coords="1801,244,1935,285"/>
-<area shape="rect" id="node23" href="debug_8hpp.html" title="CL/sycl/detail/debug.hpp" alt="" coords="766,676,933,703"/>
-<area shape="rect" id="node13" href="buffer__base_8hpp.html" title="CL/sycl/buffer/detail\l/buffer_base.hpp" alt="" coords="1400,587,1539,628"/>
-<area shape="rect" id="node16" href="context_8hpp.html" title="CL/sycl/context.hpp" alt="" coords="1192,676,1331,703"/>
-<area shape="rect" id="node20" href="device_8hpp.html" title="CL/sycl/device.hpp" alt="" coords="1401,751,1535,777"/>
-<area shape="rect" id="node25" href="kernel_2detail_2kernel_8hpp.html" title="CL/sycl/kernel/detail\l/kernel.hpp" alt="" coords="664,497,805,539"/>
-<area shape="rect" id="node28" href="opencl__kernel_8hpp.html" title="CL/sycl/kernel/detail\l/opencl_kernel.hpp" alt="" coords="609,408,751,449"/>
-<area shape="rect" id="node27" href="range_8hpp.html" title="CL/sycl/range.hpp" alt="" coords="2784,594,2912,621"/>
-<area shape="rect" id="node32" href="nd__range_8hpp.html" title="CL/sycl/nd_range.hpp" alt="" coords="3037,333,3187,360"/>
-<area shape="rect" id="node50" href="group_8hpp.html" title="CL/sycl/group.hpp" alt="" coords="3160,251,3288,278"/>
+<area shape="rect" id="node7" href="accessor_8hpp.html" title="CL/sycl/accessor.hpp" alt="" coords="1347,87,1496,114"/>
+<area shape="rect" id="node11" href="task_8hpp.html" title="CL/sycl/command_group\l/detail/task.hpp" alt="" coords="2222,259,2389,300"/>
+<area shape="rect" id="node20" href="kernel_8hpp.html" title="CL/sycl/kernel.hpp" alt="" coords="2828,348,2959,375"/>
+<area shape="rect" id="node22" href="unimplemented_8hpp.html" title="CL/sycl/detail/unimplemented.hpp" alt="" coords="3028,609,3247,635"/>
+<area shape="rect" id="node24" href="queue_2detail_2queue_8hpp.html" title="CL/sycl/queue/detail\l/queue.hpp" alt="" coords="2588,601,2729,643"/>
+<area shape="rect" id="node34" href="instantiate__kernel_8hpp.html" title="CL/sycl/detail/instantiate\l_kernel.hpp" alt="" coords="2586,80,2753,121"/>
+<area shape="rect" id="node35" href="exception_8hpp.html" title="CL/sycl/exception.hpp" alt="" coords="2929,87,3081,114"/>
+<area shape="rect" id="node37" href="opencl__types_8hpp.html" title="triSYCL wrapper for OpenCL types " alt="" coords="3727,87,3900,114"/>
+<area shape="rect" id="node49" href="parallelism_2detail_2parallelism_8hpp.html" title="Implement the detail of the parallel constructions to launch kernels. " alt="" coords="297,169,445,211"/>
+<area shape="rect" id="node8" href="access_8hpp.html" title="CL/sycl/access.hpp" alt="" coords="1265,348,1404,375"/>
+<area shape="rect" id="node9" href="local__accessor_8hpp.html" title="CL/sycl/accessor/detail\l/local_accessor.hpp" alt="" coords="1035,169,1194,211"/>
+<area shape="rect" id="node21" href="shared__ptr__implementation_8hpp.html" title="CL/sycl/detail/shared\l_ptr_implementation.hpp" alt="" coords="2589,423,2753,464"/>
+<area shape="rect" id="node26" href="id_8hpp.html" title="CL/sycl/id.hpp" alt="" coords="533,430,640,457"/>
+<area shape="rect" id="node27" href="item_8hpp.html" title="CL/sycl/item.hpp" alt="" coords="571,348,693,375"/>
+<area shape="rect" id="node28" href="nd__item_8hpp.html" title="CL/sycl/nd_item.hpp" alt="" coords="662,266,805,293"/>
+<area shape="rect" id="node30" href="buffer_2detail_2accessor_8hpp.html" title="CL/sycl/buffer/detail\l/accessor.hpp" alt="" coords="1405,169,1544,211"/>
+<area shape="rect" id="node31" href="container__element__aspect_8hpp.html" title="CL/sycl/detail/container\l_element_aspect.hpp" alt="" coords="1619,169,1778,211"/>
+<area shape="rect" id="node32" href="pipe__reservation_8hpp.html" title="CL/sycl/pipe_reservation.hpp" alt="" coords="1703,430,1894,457"/>
+<area shape="rect" id="node33" href="pipe__accessor_8hpp.html" title="CL/sycl/pipe/detail\l/pipe_accessor.hpp" alt="" coords="1710,259,1845,300"/>
+<area shape="rect" id="node17" href="debug_8hpp.html" title="CL/sycl/detail/debug.hpp" alt="" coords="2487,691,2654,717"/>
+<area shape="rect" id="node16" href="accessor__base_8hpp.html" title="CL/sycl/accessor/detail\l/accessor_base.hpp" alt="" coords="1469,423,1627,464"/>
+<area shape="rect" id="node19" href="buffer__base_8hpp.html" title="CL/sycl/buffer/detail\l/buffer_base.hpp" alt="" coords="2223,423,2361,464"/>
+<area shape="rect" id="node23" href="kernel_2detail_2kernel_8hpp.html" title="CL/sycl/kernel/detail\l/kernel.hpp" alt="" coords="2929,512,3071,553"/>
+<area shape="rect" id="node25" href="opencl__kernel_8hpp.html" title="CL/sycl/kernel/detail\l/opencl_kernel.hpp" alt="" coords="2929,423,3071,464"/>
+<area shape="rect" id="node29" href="nd__range_8hpp.html" title="CL/sycl/nd_range.hpp" alt="" coords="245,348,395,375"/>
+<area shape="rect" id="node50" href="group_8hpp.html" title="CL/sycl/group.hpp" alt="" coords="149,266,277,293"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -161,7 +162,7 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aae348f7dd0791acc1096b1f2204ff7af"><td class="memItemLeft" align="right" valign="top">static std::shared_ptr&lt; detail::task &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl_1_1detail.html#aae348f7dd0791acc1096b1f2204ff7af">cl::sycl::detail::add_buffer_to_task</a> (handler *command_group_handler, std::shared_ptr&lt; detail::buffer_base &gt; b, <a class="el" href="classbool.html">bool</a> is_write_mode)</td></tr>
+<tr class="memitem:aae348f7dd0791acc1096b1f2204ff7af"><td class="memItemLeft" align="right" valign="top">static std::shared_ptr&lt; detail::task &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl_1_1detail.html#aae348f7dd0791acc1096b1f2204ff7af">cl::sycl::detail::add_buffer_to_task</a> (handler *command_group_handler, std::shared_ptr&lt; detail::buffer_base &gt; <a class="el" href="opencl__spir_8h.html#a3fd8c63fddfb0d3ba796ef725a8cc5ce">b</a>, <a class="el" href="classbool.html">bool</a> is_write_mode)</td></tr>
 <tr class="memdesc:aae348f7dd0791acc1096b1f2204ff7af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a buffer as used by a task.  <a href="namespacecl_1_1sycl_1_1detail.html#aae348f7dd0791acc1096b1f2204ff7af">More...</a><br /></td></tr>
 <tr class="separator:aae348f7dd0791acc1096b1f2204ff7af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -181,7 +182,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> KernelName = std::nullptr_t,                       \</div><div class="line">            typename ParallelForFunctor&gt;                                \</div><div class="line">  void <a class="code" href="group__parallelism.html#ga5cf01f5b2a22ffa82891b1bc09c3e962">parallel_for</a>(range&lt;N&gt; global_size,                               \</div><div class="line">                    ParallelForFunctor f) {                             \</div><div class="line">    task-&gt;schedule(detail::trace_kernel&lt;KernelName&gt;([=] {               <a class="code" href="group__parallelism.html#ga5cf01f5b2a22ffa82891b1bc09c3e962">\</a></div><div class="line"><a class="code" href="group__parallelism.html#ga5cf01f5b2a22ffa82891b1bc09c3e962">          detail::parallel_for</a>(global_size, f);                         \</div><div class="line">        }));                                                            \</div><div class="line">  }</div><div class="ttc" id="group__parallelism_html_ga5cf01f5b2a22ffa82891b1bc09c3e962"><div class="ttname"><a href="group__parallelism.html#ga5cf01f5b2a22ffa82891b1bc09c3e962">cl::sycl::detail::parallel_for</a></div><div class="ttdeci">void parallel_for(range&lt; Dimensions &gt; r, ParallelForFunctor f, Id)</div><div class="ttdoc">Implementation of a data parallel computation with parallelism specified at launch time by a range&lt;&gt;...</div><div class="ttdef"><b>Definition:</b> <a href="parallelism_2detail_2parallelism_8hpp_source.html#l00125">parallelism.hpp:125</a></div></div>
+<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> KernelName = std::nullptr_t,                       \</div><div class="line">            typename ParallelForFunctor&gt;                                \</div><div class="line">  void <a class="code" href="group__parallelism.html#ga5cf01f5b2a22ffa82891b1bc09c3e962">parallel_for</a>(range&lt;N&gt; global_size,                               \</div><div class="line">                    ParallelForFunctor f) {                             \</div><div class="line">    schedule_kernel&lt;KernelName&gt;([=] {                                   <a class="code" href="group__parallelism.html#ga5cf01f5b2a22ffa82891b1bc09c3e962">\</a></div><div class="line"><a class="code" href="group__parallelism.html#ga5cf01f5b2a22ffa82891b1bc09c3e962">        detail::parallel_for</a>(global_size, f);                           \</div><div class="line">      });                                                               \</div><div class="line">  }</div><div class="ttc" id="group__parallelism_html_ga5cf01f5b2a22ffa82891b1bc09c3e962"><div class="ttname"><a href="group__parallelism.html#ga5cf01f5b2a22ffa82891b1bc09c3e962">cl::sycl::detail::parallel_for</a></div><div class="ttdeci">void parallel_for(range&lt; Dimensions &gt; r, ParallelForFunctor f, Id)</div><div class="ttdoc">Implementation of a data parallel computation with parallelism specified at launch time by a range&lt;&gt;...</div><div class="ttdef"><b>Definition:</b> <a href="parallelism_2detail_2parallelism_8hpp_source.html#l00125">parallelism.hpp:125</a></div></div>
 </div><!-- fragment -->
 <p>SYCL parallel_for launches a data parallel computation with parallelism specified at launch time by a range&lt;&gt; </p>
 <p>Kernel invocation method of a kernel defined as a lambda or functor, for the specified range and given an id or item for indexing in the indexing space defined by range.</p>
@@ -197,7 +198,7 @@ Functions</h2></td></tr>
 </dl>
 <p>Unfortunately, to have implicit conversion to work on the range, the function can not be templated, so instantiate it for all the Dimensions </p>
 
-<p class="definition">Definition at line <a class="el" href="handler_8hpp_source.html#l00206">206</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="handler_8hpp_source.html#l00236">236</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
 
 </div>
 </div>
@@ -216,7 +217,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> KernelName = std::nullptr_t,         \</div><div class="line">            typename ParallelForFunctor&gt;                  \</div><div class="line">  void <a class="code" href="group__parallelism.html#ga5cf01f5b2a22ffa82891b1bc09c3e962">parallel_for</a>(range&lt;N&gt; global_size,                 \</div><div class="line">                    id&lt;N&gt; offset,                         \</div><div class="line">                    ParallelForFunctor f) {               \</div><div class="line">    task-&gt;schedule(detail::trace_kernel&lt;KernelName&gt;([=] { <a class="code" href="group__parallelism.html#gadd585203df163dadc5975119f59f8bd8">\</a></div><div class="line"><a class="code" href="group__parallelism.html#gadd585203df163dadc5975119f59f8bd8">          detail::parallel_for_global_offset</a>(global_size, \</div><div class="line">                                             offset,      \</div><div class="line">                                             f);          \</div><div class="line">        }));                                              \</div><div class="line">  }</div><div class="ttc" id="group__parallelism_html_gadd585203df163dadc5975119f59f8bd8"><div class="ttname"><a href="group__parallelism.html#gadd585203df163dadc5975119f59f8bd8">cl::sycl::detail::parallel_for_global_offset</a></div><div class="ttdeci">void parallel_for_global_offset(range&lt; Dimensions &gt; global_size, id&lt; Dimensions &gt; offset, ParallelForFunctor f)</div><div class="ttdoc">Implementation of parallel_for with a range&lt;&gt; and an offset. </div><div class="ttdef"><b>Definition:</b> <a href="parallelism_2detail_2parallelism_8hpp_source.html#l00191">parallelism.hpp:191</a></div></div>
+<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> KernelName = std::nullptr_t,                 \</div><div class="line">            typename ParallelForFunctor&gt;                          \</div><div class="line">  void <a class="code" href="group__parallelism.html#ga5cf01f5b2a22ffa82891b1bc09c3e962">parallel_for</a>(range&lt;N&gt; global_size,                         \</div><div class="line">                    id&lt;N&gt; <a class="code" href="opencl__spir_8h.html#a30c1789509ffb2ea07b060fc6e1344c1">offset</a>,                                 \</div><div class="line">                    ParallelForFunctor f) {                       \</div><div class="line">    schedule_kernel&lt;KernelName&gt;([=] {                             <a class="code" href="group__parallelism.html#gadd585203df163dadc5975119f59f8bd8">\</a></div><div class="line"><a class="code" href="group__parallelism.html#gadd585203df163dadc5975119f59f8bd8">        detail::parallel_for_global_offset</a>(global_size,           \</div><div class="line">                                           offset,                \</div><div class="line">                                           f);                    \</div><div class="line">      });                                                         \</div><div class="line">  }</div><div class="ttc" id="opencl__spir_8h_html_a30c1789509ffb2ea07b060fc6e1344c1"><div class="ttname"><a href="opencl__spir_8h.html#a30c1789509ffb2ea07b060fc6e1344c1">offset</a></div><div class="ttdeci">void size_t offset</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l05062">opencl_spir.h:5062</a></div></div>
+<div class="ttc" id="group__parallelism_html_gadd585203df163dadc5975119f59f8bd8"><div class="ttname"><a href="group__parallelism.html#gadd585203df163dadc5975119f59f8bd8">cl::sycl::detail::parallel_for_global_offset</a></div><div class="ttdeci">void parallel_for_global_offset(range&lt; Dimensions &gt; global_size, id&lt; Dimensions &gt; offset, ParallelForFunctor f)</div><div class="ttdoc">Implementation of parallel_for with a range&lt;&gt; and an offset. </div><div class="ttdef"><b>Definition:</b> <a href="parallelism_2detail_2parallelism_8hpp_source.html#l00191">parallelism.hpp:191</a></div></div>
 <div class="ttc" id="group__parallelism_html_ga5cf01f5b2a22ffa82891b1bc09c3e962"><div class="ttname"><a href="group__parallelism.html#ga5cf01f5b2a22ffa82891b1bc09c3e962">cl::sycl::detail::parallel_for</a></div><div class="ttdeci">void parallel_for(range&lt; Dimensions &gt; r, ParallelForFunctor f, Id)</div><div class="ttdoc">Implementation of a data parallel computation with parallelism specified at launch time by a range&lt;&gt;...</div><div class="ttdef"><b>Definition:</b> <a href="parallelism_2detail_2parallelism_8hpp_source.html#l00125">parallelism.hpp:125</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -239,16 +241,16 @@ Functions</h2></td></tr>
 <b>Value:</b><div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code" href="group__parallelism.html#ga5cf01f5b2a22ffa82891b1bc09c3e962">parallel_for</a>(range&lt;N&gt; num_work_items,                            \</div><div class="line">                    kernel sycl_kernel) {                               \</div><div class="line">    <span class="comment">/* For now just use the usual host task system to schedule          \</span></div><div class="line"><span class="comment">       manually the OpenCL kernels instead of using OpenCL event-based  \</span></div><div class="line"><span class="comment">       scheduling                                                       \</span></div><div class="line"><span class="comment">                                                                        \</span></div><div class="line"><span class="comment">       \todo Move the tracing inside the kernel implementation          \</span></div><div class="line"><span class="comment">                                                                        \</span></div><div class="line"><span class="comment">       \todo Simplify this 2 step ugly interface                        \</span></div><div class="line"><span class="comment">    */</span>                                                                  \</div><div class="line">    task-&gt;set_kernel(sycl_kernel.implementation);                       \</div><div class="line">    <span class="comment">/* Use an intermediate variable to capture task by copy because     \</span></div><div class="line"><span class="comment">       otherwise &quot;this&quot; is captured by reference and havoc with task    \</span></div><div class="line"><span class="comment">       just accessing the dead &quot;this&quot;. Nasty bug to find... */</span>          \</div><div class="line">    task-&gt;schedule(detail::trace_kernel&lt;kernel&gt;([=, t = task] {         \</div><div class="line">          sycl_kernel.implementation-&gt;parallel_for(t, t-&gt;get_queue(),   \</div><div class="line">                                                   num_work_items); })); \</div><div class="line">  }</div><div class="ttc" id="group__parallelism_html_ga5cf01f5b2a22ffa82891b1bc09c3e962"><div class="ttname"><a href="group__parallelism.html#ga5cf01f5b2a22ffa82891b1bc09c3e962">cl::sycl::detail::parallel_for</a></div><div class="ttdeci">void parallel_for(range&lt; Dimensions &gt; r, ParallelForFunctor f, Id)</div><div class="ttdoc">Implementation of a data parallel computation with parallelism specified at launch time by a range&lt;&gt;...</div><div class="ttdef"><b>Definition:</b> <a href="parallelism_2detail_2parallelism_8hpp_source.html#l00125">parallelism.hpp:125</a></div></div>
 </div><!-- fragment -->
 <p>Kernel invocation method of a kernel defined as a kernel object, for the specified range and given an id or item for indexing in the indexing space defined by range, described in detail in 5.4. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000179">Todo:</a></b></dt><dd>Add in the spec a version taking a kernel and a functor, to have host fall-back </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000183">Todo:</a></b></dt><dd>Add in the spec a version taking a kernel and a functor, to have host fall-back </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="handler_8hpp_source.html#l00383">383</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="handler_8hpp_source.html#l00413">413</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Dec 22 2017 02:39:43 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Apr 20 2018 19:26:23 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

@@ -1,8 +1,11 @@
 var searchData=
 [
-  ['default_5fselector',['default_selector',['../group__execution.html#ga3ceefd96aa7cbfec9e0e8ef525bc8940',1,'cl::sycl']]],
-  ['device_5fexec_5fcapabilities',['device_exec_capabilities',['../group__execution.html#gac5ac9066c5ce7d0a10dcffaddfa0769a',1,'cl::sycl::info']]],
-  ['device_5ffp_5fconfig',['device_fp_config',['../group__execution.html#gae9c4c661cca884e4d9e2f39ebcf49116',1,'cl::sycl::info']]],
-  ['device_5fqueue_5fproperties',['device_queue_properties',['../group__execution.html#gad4ea7703299d04277a837ac58ba36834',1,'cl::sycl::info']]],
-  ['difference_5ftype',['difference_type',['../group__data.html#adaa37496b0cc6a543049b5027c6261c0',1,'cl::sycl::pipe_reservation']]]
+  ['cl_5fmem_5ffence_5fflags',['cl_mem_fence_flags',['../opencl__spir_8h.html#a5797d9de1a2cd74ff3b3cb4585d26ca6',1,'opencl_spir.h']]],
+  ['const_5fiterator',['const_iterator',['../group__data.html#a9f0ce10d4bf285522a6c1f9b2d63171f',1,'cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;::const_iterator()'],['../group__data.html#af1d7488962e1aa48f6664b647bc2c4a5',1,'cl::sycl::detail::accessor::const_iterator()'],['../group__data.html#aff43addb79dfdaf3d7b4e5d88bf292e2',1,'cl::sycl::detail::pipe_reservation::const_iterator()'],['../group__data.html#a20e551c45fdd5b7786a1674a4b479772',1,'cl::sycl::pipe_reservation::const_iterator()']]],
+  ['const_5fpointer',['const_pointer',['../group__helpers.html#a2ec892b0cb5fa67f5a83dfa682ec7d89',1,'cl::sycl::detail::container_element_aspect::const_pointer()'],['../group__data.html#a760f5c3c2db96a6cde03e518ca358337',1,'cl::sycl::pipe_reservation::const_pointer()']]],
+  ['const_5freference',['const_reference',['../group__data.html#ab8b4cbae8c9df3fd86690fbf2bb1e1d6',1,'cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;::const_reference()'],['../group__data.html#ac440122946b23951fdeaa1d2136187ae',1,'cl::sycl::detail::accessor::const_reference()'],['../group__data.html#a5529e4c07422297be4814e19e02def0f',1,'cl::sycl::buffer::const_reference()'],['../group__helpers.html#aa9647c61c8b59e41c41f9ceeb90219ae',1,'cl::sycl::detail::container_element_aspect::const_reference()'],['../group__data.html#acb92e9db09d7c64414ef90712e29b01d',1,'cl::sycl::detail::pipe_accessor::const_reference()'],['../group__data.html#ac6726fdc8b1bca23c2cdfbc02fa1eea5',1,'cl::sycl::pipe_reservation::const_reference()']]],
+  ['const_5freverse_5fiterator',['const_reverse_iterator',['../group__data.html#aee8f3be038e611611ff6cb11ac60d8e2',1,'cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;::const_reverse_iterator()'],['../group__data.html#a826d411397872c8e25bb1a0772f33300',1,'cl::sycl::detail::accessor::const_reverse_iterator()'],['../group__data.html#a36e75084a3bcb4d5237b9114f7c62d4e',1,'cl::sycl::pipe_reservation::const_reverse_iterator()']]],
+  ['constant',['constant',['../group__address__spaces.html#ga8d4ad590125ccc3fb732809cac191d4f',1,'cl::sycl']]],
+  ['constant_5fptr',['constant_ptr',['../group__address__spaces.html#ga171a0e0131c2cb6703a218f5504e2310',1,'cl::sycl']]],
+  ['cpu_5fselector',['cpu_selector',['../group__execution.html#ga8a3f68939e9439d0045ee44bb900265d',1,'cl::sycl']]]
 ];

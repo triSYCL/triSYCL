@@ -1,3 +1,4 @@
 <map id="Manage default configuration and types" name="Manage default configuration and types">
-<area shape="rect" id="node2" href="$group__parallelism.html" title="Expressing parallelism\l through kernels" alt="" coords="253,5,407,47"/>
+<area shape="rect" id="node1" href="$group__Xilinx.html" title="Xilinx vendor extensions" alt="" coords="253,5,417,32"/>
+<area shape="rect" id="node3" href="$group__parallelism.html" title="Expressing parallelism\l through kernels" alt="" coords="259,57,412,98"/>
 </map>

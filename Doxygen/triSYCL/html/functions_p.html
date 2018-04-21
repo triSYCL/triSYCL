@@ -64,6 +64,7 @@ $(function() {
 <li>p
 : <a class="el" href="group__execution.html#ab9937c0dc035989cd764edc1e31f1944">cl::sycl::detail::opencl_platform</a>
 , <a class="el" href="group__data.html#aeb2052d947c4c379122de7253cc03fca">cl::sycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
+, <a class="el" href="structcl_1_1sycl_1_1drt_1_1code_1_1program.html#a3acb7ac6ccd71164b32e0f7571d98dfa">cl::sycl::drt::code::program</a>
 </li>
 <li>parallel_for()
 : <a class="el" href="group__execution.html#a212c72af3a1b7ffaec88354ae6e8900d">cl::sycl::handler</a>
@@ -73,7 +74,7 @@ $(function() {
 , <a class="el" href="group__parallelism.html#a8c037e7dd5a462b03a454a1621bee206">cl::sycl::detail::parallel_for_iterate&lt; 0, Range, ParallelForFunctor, Id &gt;</a>
 </li>
 <li>parallel_for_work_group()
-: <a class="el" href="group__execution.html#a5ae74565e39d4763c7efdba3581d087b">cl::sycl::handler</a>
+: <a class="el" href="group__execution.html#ae027732012b54eea62f2b7ffd9104f46">cl::sycl::handler</a>
 </li>
 <li>parallel_for_work_item()
 : <a class="el" href="group__parallelism.html#a81a75a6cd3a7e747a29e527c06f03d9d">cl::sycl::group&lt; Dimensions &gt;</a>
@@ -81,19 +82,37 @@ $(function() {
 <li>parallel_OpenMP_for_iterate()
 : <a class="el" href="group__parallelism.html#a23695122fac23fd8c657981ee9992f4b">cl::sycl::detail::parallel_OpenMP_for_iterate&lt; level, Range, ParallelForFunctor, Id &gt;</a>
 </li>
+<li>partition_array()
+: <a class="el" href="group__Xilinx.html#a3b2a218d1b16e53a07386ff84becb8c4">cl::sycl::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;</a>
+</li>
+<li>partition_dim
+: <a class="el" href="structcl_1_1sycl_1_1xilinx_1_1partition_1_1block.html#a41bafd98f8bd77b1b985833812790dd1">cl::sycl::xilinx::partition::block&lt; ElmInEachPhyMem, PDim &gt;</a>
+, <a class="el" href="structcl_1_1sycl_1_1xilinx_1_1partition_1_1complete.html#a56e983c0a9d0fda3815c1801be6875e0">cl::sycl::xilinx::partition::complete&lt; PDim &gt;</a>
+, <a class="el" href="structcl_1_1sycl_1_1xilinx_1_1partition_1_1cyclic.html#a1ec13f54656118be1b95d6beb891ccc3">cl::sycl::xilinx::partition::cyclic&lt; PhyMemNum, PDim &gt;</a>
+</li>
+<li>partition_type
+: <a class="el" href="structcl_1_1sycl_1_1xilinx_1_1partition_1_1block.html#a87393c3b499144d5ccbe65adae3cc1b1">cl::sycl::xilinx::partition::block&lt; ElmInEachPhyMem, PDim &gt;</a>
+, <a class="el" href="structcl_1_1sycl_1_1xilinx_1_1partition_1_1complete.html#ac305ff2f73292a165c3409971f81ead1">cl::sycl::xilinx::partition::complete&lt; PDim &gt;</a>
+, <a class="el" href="structcl_1_1sycl_1_1xilinx_1_1partition_1_1cyclic.html#af9708623b4e9ae1b86c4ce2b4a657bb5">cl::sycl::xilinx::partition::cyclic&lt; PhyMemNum, PDim &gt;</a>
+, <a class="el" href="structcl_1_1sycl_1_1xilinx_1_1partition_1_1none.html#a7a6ec9a18d6861139d0849137df2169d">cl::sycl::xilinx::partition::none</a>
+, <a class="el" href="group__Xilinx.html#a42d70c4bd94a74524fc00c10f42bd50e">cl::sycl::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;</a>
+</li>
+<li>physical_mem_num
+: <a class="el" href="structcl_1_1sycl_1_1xilinx_1_1partition_1_1cyclic.html#a09b8328c20a7b1994a6374df1601adce">cl::sycl::xilinx::partition::cyclic&lt; PhyMemNum, PDim &gt;</a>
+</li>
 <li>pipe()
 : <a class="el" href="group__data.html#a91b79417e857a3acb489f3625d004eaa">cl::sycl::detail::pipe&lt; T &gt;</a>
 , <a class="el" href="group__data.html#a9b4bd20a90997c2210ccbc74bb0b3127">cl::sycl::pipe&lt; T &gt;</a>
 </li>
 <li>pipe_accessor()
-: <a class="el" href="group__data.html#ab76a7bde312b11111fb473c7a8846ade">cl::sycl::detail::pipe_accessor&lt; T, AccessMode, Target &gt;</a>
+: <a class="el" href="group__data.html#a2d87d5e35ad6088955a32c54c7c66947">cl::sycl::detail::pipe_accessor&lt; T, AccessMode, Target &gt;</a>
 </li>
 <li>pipe_reservation()
-: <a class="el" href="group__data.html#a7fb32ba88ac30a375608b874630b1774">cl::sycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
+: <a class="el" href="group__data.html#a5800f657e50cbab3cf70bc259c96906c">cl::sycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
 , <a class="el" href="group__data.html#aa1f5e1be018022c1ab270c1eeea621b5">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
 </li>
 <li>platform()
-: <a class="el" href="group__execution.html#ac766c25f9104682dd44f2bfce9ee1e1b">cl::sycl::platform</a>
+: <a class="el" href="group__execution.html#a3759ea385eb84ffc5e830ed4176b32fa">cl::sycl::platform</a>
 </li>
 <li>platform_extensions
 : <a class="el" href="group__execution.html#a24c04deb1b5461b557cd2660992c30a0">cl::sycl::detail::host_platform</a>
@@ -114,6 +133,9 @@ $(function() {
 <li>producer_tasks
 : <a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#ac022fb4cbc8c6ae4ed388aa70dde2d3f">cl::sycl::detail::task</a>
 </li>
+<li>program()
+: <a class="el" href="structcl_1_1sycl_1_1drt_1_1code_1_1program.html#a9be7628f3fa7b2ef9d215c6f063ba891">cl::sycl::drt::code::program</a>
+</li>
 <li>prologues
 : <a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#ab03b590ef7c93fccb74456c52a60d4e6">cl::sycl::detail::task</a>
 </li>
@@ -121,7 +143,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Dec 22 2017 02:39:44 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Apr 20 2018 19:26:25 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

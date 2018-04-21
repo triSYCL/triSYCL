@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['element',['element',['../group__data.html#a324e73490da511091fd9af88a72c2e47',1,'cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;::element()'],['../group__data.html#a8b3f6cfc5029101a6cb23cdd4cd26d6a',1,'cl::sycl::detail::accessor::element()'],['../group__data.html#ad0994dbca2c28c62501effcdfabb4591',1,'cl::sycl::detail::buffer::element()']]],
-  ['element_5ftype',['element_type',['../group__helpers.html#a1cdbabd8537ecb267b05acb538068e06',1,'cl::sycl::detail::small_array']]],
-  ['exception_5fptr',['exception_ptr',['../group__error__handling.html#ga6a4702500d2bdd07839eade575d0b4e4',1,'cl::sycl']]]
+  ['default_5fselector',['default_selector',['../group__execution.html#gae931bd992a57ff1688115d595fbe071b',1,'cl::sycl']]],
+  ['device_5fexec_5fcapabilities',['device_exec_capabilities',['../group__execution.html#gac5ac9066c5ce7d0a10dcffaddfa0769a',1,'cl::sycl::info']]],
+  ['device_5ffp_5fconfig',['device_fp_config',['../group__execution.html#gae9c4c661cca884e4d9e2f39ebcf49116',1,'cl::sycl::info']]],
+  ['device_5fqueue_5fproperties',['device_queue_properties',['../group__execution.html#gad4ea7703299d04277a837ac58ba36834',1,'cl::sycl::info']]],
+  ['difference_5ftype',['difference_type',['../group__data.html#adaa37496b0cc6a543049b5027c6261c0',1,'cl::sycl::pipe_reservation']]]
 ];

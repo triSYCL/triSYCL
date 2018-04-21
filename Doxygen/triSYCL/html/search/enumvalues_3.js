@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['defaults',['defaults',['../group__execution.html#gga839771ab6b37e25ae67d5c8a2d4d97f8aa4a918a45181164207929d52aec36aec',1,'cl::sycl::info']]],
   ['denorm',['denorm',['../group__execution.html#gga1f763ed06ac5c82a02a7425bd7739745ad14934558f81f7ea5012ab4de4031017',1,'cl::sycl::info']]],
   ['device',['device',['../namespacecl_1_1sycl_1_1info.html#a86e91e6deadca35d20f77932c0550426a913f9c49dcb544e2087cee284f4a00b7',1,'cl::sycl::info']]],
   ['device_5ftype',['device_type',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ac09593f6075100eef79c8f4da08afa16',1,'cl::sycl::info']]],

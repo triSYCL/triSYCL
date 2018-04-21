@@ -4,7 +4,7 @@
 <area shape="rect" id="node4" href="$group__data.html#a3205caa44c59fe4f0553861fdc81a80f" title="Create a new buffer with associated memory, using the data in host_data. " alt="" coords="272,137,419,163"/>
 <area shape="rect" id="node5" href="$group__execution.html#a0b58a056d08076460e1a6274e912d5c7" title="Constructs a context object for SYCL host using an async_handler for handling asynchronous errors..." alt="" coords="284,188,407,229"/>
 <area shape="rect" id="node6" href="$group__execution.html#a75a071360a293e0d0eea6e98dd545658" title="Return the OpenCL kernel object for this kernel. " alt="" coords="279,254,412,281"/>
-<area shape="rect" id="node7" href="$classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#a6ca5e07fbf0cb6997133b7b29859669d" title="Return the Boost.Compute OpenCL kernel object for this kernel. " alt="" coords="252,305,439,347"/>
+<area shape="rect" id="node7" href="$classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#a01cf3b409707399a16854b33632bdc79" title="Return the Boost.Compute OpenCL kernel object for this kernel. " alt="" coords="252,305,439,347"/>
 <area shape="rect" id="node8" href="$classcl_1_1sycl_1_1detail_1_1opencl__context.html#a28c14d7804ef0fea3e48bd18dcf1a44c" title="Returns the set of devices that are part of this context. " alt="" coords="270,371,421,412"/>
 <area shape="rect" id="node9" href="$group__execution.html#a61d96003363497ad3766bef24bcc892c" title="Returns the set of devices that are part of this context. " alt="" coords="284,436,407,477"/>
 <area shape="rect" id="node10" href="$group__execution.html#a135e824e11658f487a602234f1216ac0" title="Queries OpenCL information for the under&#45;lying cl context. " alt="" coords="284,501,407,543"/>

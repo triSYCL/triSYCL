@@ -79,8 +79,6 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ga5175660b1ec299ffb370f7e8c56a5b16"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#ga5175660b1ec299ffb370f7e8c56a5b16">gl_context_interop</a> = <a class="el" href="classbool.html">bool</a></td></tr>
-<tr class="separator:ga5175660b1ec299ffb370f7e8c56a5b16"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae9c4c661cca884e4d9e2f39ebcf49116"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#gae9c4c661cca884e4d9e2f39ebcf49116">device_fp_config</a> = unsigned int</td></tr>
 <tr class="separator:gae9c4c661cca884e4d9e2f39ebcf49116"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac5ac9066c5ce7d0a10dcffaddfa0769a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#gac5ac9066c5ce7d0a10dcffaddfa0769a">device_exec_capabilities</a> = unsigned int</td></tr>
@@ -93,9 +91,8 @@ Typedefs</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
 <tr class="memitem:ga1a5898274a448ac592ebbcee928939c1"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#ga1a5898274a448ac592ebbcee928939c1">context</a> : int { <a class="el" href="group__execution.html#gga1a5898274a448ac592ebbcee928939c1a40d852658166dc8a786c23023cb20f92">context::reference_count</a>, 
-<a class="el" href="group__execution.html#gga1a5898274a448ac592ebbcee928939c1abf324a81d4e115643691b7aa4cc12828">context::num_devices</a>, 
-<a class="el" href="group__execution.html#gga1a5898274a448ac592ebbcee928939c1ae0212e54ec3a2a120ca0d321b3a60c78">context::devices</a>, 
-<a class="el" href="group__execution.html#gga1a5898274a448ac592ebbcee928939c1a9d19ae6573a7d4f99ebc6818a92687f5">context::gl_interop</a>
+<a class="el" href="group__execution.html#gga1a5898274a448ac592ebbcee928939c1a34a6e5d64ade17ef4e51612c50dd72f5">context::platform</a>, 
+<a class="el" href="group__execution.html#gga1a5898274a448ac592ebbcee928939c1ae0212e54ec3a2a120ca0d321b3a60c78">context::devices</a>
  }<tr class="memdesc:ga1a5898274a448ac592ebbcee928939c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Context information descriptors.  <a href="group__execution.html#ga1a5898274a448ac592ebbcee928939c1">More...</a><br /></td></tr>
 </td></tr>
 <tr class="separator:ga1a5898274a448ac592ebbcee928939c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -105,7 +102,7 @@ Enumerations</h2></td></tr>
 <a class="el" href="group__execution.html#gga839771ab6b37e25ae67d5c8a2d4d97f8a226522b5dff606dbd2bc2538e0d26f6c">device_type::accelerator</a>, 
 <a class="el" href="group__execution.html#gga839771ab6b37e25ae67d5c8a2d4d97f8a8b9035807842a4e4dbe009f3f1478127">device_type::custom</a>, 
 <br />
-&#160;&#160;<a class="el" href="group__execution.html#gga839771ab6b37e25ae67d5c8a2d4d97f8aa4a918a45181164207929d52aec36aec">device_type::defaults</a>, 
+&#160;&#160;<a class="el" href="group__execution.html#gga839771ab6b37e25ae67d5c8a2d4d97f8a2bd9c0ed00116be1258e0cc66617d7c8">device_type::automatic</a>, 
 <a class="el" href="group__execution.html#gga839771ab6b37e25ae67d5c8a2d4d97f8a67b3dba8bc6778101892eb77249db32e">device_type::host</a>, 
 <a class="el" href="group__execution.html#gga839771ab6b37e25ae67d5c8a2d4d97f8a93195db1ad73788fe96193503a7d8887">device_type::opencl</a>, 
 <a class="el" href="group__execution.html#gga839771ab6b37e25ae67d5c8a2d4d97f8aa181a603769c1f98ad927e7367c7aa51">device_type::all</a>
@@ -325,8 +322,8 @@ Enumerations</h2></td></tr>
 
 <p>Queue information descriptors. </p>
 <p>From specification C.4</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000231">Todo:</a></b></dt><dd>unsigned int?</dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000232">Todo:</a></b></dt><dd>To be implemented </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000235">Todo:</a></b></dt><dd>unsigned int?</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000236">Todo:</a></b></dt><dd>To be implemented </dd></dl>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a86e91e6deadca35d20f77932c0550426a5c18ef72771564b7f43c497dc507aeab"></a>context&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a86e91e6deadca35d20f77932c0550426a913f9c49dcb544e2087cee284f4a00b7"></a>device&#160;</td><td class="fielddoc"></td></tr>
@@ -335,7 +332,7 @@ Enumerations</h2></td></tr>
 </table>
 
 <p class="definition">Definition at line <a class="el" href="queue_8hpp_source.html#l00056">56</a> of file <a class="el" href="queue_8hpp_source.html">queue.hpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;                 : <span class="keywordtype">int</span> {</div><div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <a class="code" href="group__execution.html#ga1a5898274a448ac592ebbcee928939c1">context</a>,</div><div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <a class="code" href="group__execution.html#ga51f4189fcf4ca86d768d0fcce34d8bc5">device</a>,</div><div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <a class="code" href="group__execution.html#gga1a5898274a448ac592ebbcee928939c1a40d852658166dc8a786c23023cb20f92">reference_count</a>,</div><div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  <a class="code" href="namespacecl_1_1sycl_1_1info.html#a86e91e6deadca35d20f77932c0550426a74693d2fc58b46bd06410f278e39aa71">properties</a></div><div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;};</div><div class="ttc" id="group__execution_html_ga1a5898274a448ac592ebbcee928939c1"><div class="ttname"><a href="group__execution.html#ga1a5898274a448ac592ebbcee928939c1">cl::sycl::info::context</a></div><div class="ttdeci">context</div><div class="ttdoc">Context information descriptors. </div><div class="ttdef"><b>Definition:</b> <a href="info_2context_8hpp_source.html#l00028">context.hpp:28</a></div></div>
+<div class="fragment"><div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;                 : <span class="keywordtype">int</span> {</div><div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <a class="code" href="group__execution.html#ga1a5898274a448ac592ebbcee928939c1">context</a>,</div><div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <a class="code" href="group__execution.html#ga51f4189fcf4ca86d768d0fcce34d8bc5">device</a>,</div><div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <a class="code" href="group__execution.html#gga1a5898274a448ac592ebbcee928939c1a40d852658166dc8a786c23023cb20f92">reference_count</a>,</div><div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  <a class="code" href="namespacecl_1_1sycl_1_1info.html#a86e91e6deadca35d20f77932c0550426a74693d2fc58b46bd06410f278e39aa71">properties</a></div><div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;};</div><div class="ttc" id="group__execution_html_ga1a5898274a448ac592ebbcee928939c1"><div class="ttname"><a href="group__execution.html#ga1a5898274a448ac592ebbcee928939c1">cl::sycl::info::context</a></div><div class="ttdeci">context</div><div class="ttdoc">Context information descriptors. </div><div class="ttdef"><b>Definition:</b> <a href="info_2context_8hpp_source.html#l00026">context.hpp:26</a></div></div>
 <div class="ttc" id="group__execution_html_ga51f4189fcf4ca86d768d0fcce34d8bc5"><div class="ttname"><a href="group__execution.html#ga51f4189fcf4ca86d768d0fcce34d8bc5">cl::sycl::info::device</a></div><div class="ttdeci">device</div><div class="ttdoc">Device information descriptors. </div><div class="ttdef"><b>Definition:</b> <a href="info_2device_8hpp_source.html#l00052">device.hpp:52</a></div></div>
 <div class="ttc" id="namespacecl_1_1sycl_1_1info_html_a86e91e6deadca35d20f77932c0550426a74693d2fc58b46bd06410f278e39aa71"><div class="ttname"><a href="namespacecl_1_1sycl_1_1info.html#a86e91e6deadca35d20f77932c0550426a74693d2fc58b46bd06410f278e39aa71">cl::sycl::info::queue::properties</a></div></div>
 <div class="ttc" id="group__execution_html_gga1a5898274a448ac592ebbcee928939c1a40d852658166dc8a786c23023cb20f92"><div class="ttname"><a href="group__execution.html#gga1a5898274a448ac592ebbcee928939c1a40d852658166dc8a786c23023cb20f92">cl::sycl::info::context::reference_count</a></div></div>
@@ -345,7 +342,7 @@ Enumerations</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Dec 22 2017 02:39:44 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Apr 20 2018 19:26:24 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

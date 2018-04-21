@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['unique_5fptr_5fclass',['unique_ptr_class',['../namespacecl_1_1sycl.html#a7297c7f7107f609a00c08c1808f4b765',1,'cl::sycl']]]
+  ['type',['type',['../group__address__spaces.html#a27d1bcf84032cb1f4eed1a51a0ea492e',1,'cl::sycl::detail::ocl_type::type()'],['../group__address__spaces.html#a953ca6738c696070fafd7e6e6ea53dc5',1,'cl::sycl::detail::ocl_type&lt; T, constant_address_space &gt;::type()'],['../group__address__spaces.html#a1276d074845057d3890de1de5f3270f0',1,'cl::sycl::detail::ocl_type&lt; T, global_address_space &gt;::type()'],['../group__address__spaces.html#a22eab928c79ff9fb6f7280694a5aea8a',1,'cl::sycl::detail::ocl_type&lt; T, local_address_space &gt;::type()'],['../group__address__spaces.html#adf68926833af8a064ecc2ed566ecc2f2',1,'cl::sycl::detail::ocl_type&lt; T, private_address_space &gt;::type()'],['../group__address__spaces.html#ad7c5bd48239875e82fd2bb43c98b134d',1,'cl::sycl::detail::address_space_base::type()']]]
 ];

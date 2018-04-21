@@ -70,6 +70,7 @@ $(function() {
 , <a class="el" href="group__data.html#acb01cef35915110e872d705947732302">cl::sycl::accessor&lt; DataType, 1, AccessMode, access::target::pipe &gt;</a>
 , <a class="el" href="group__data.html#a36ccb33843403b0ac59fd673bc776712">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
 , <a class="el" href="group__data.html#a25bf1a6581440965bb09abcfc2237af2">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
+, <a class="el" href="group__device__runtime.html#a20d72f6d052b1c983aef9dbd611b1d55">cl::sycl::drt::accessor&lt; Accessor &gt;</a>
 </li>
 <li>accessor_detail
 : <a class="el" href="group__data.html#a071e0503daa2e10412616a395f063d11">cl::sycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;</a>
@@ -80,6 +81,9 @@ $(function() {
 <li>accessor_type
 : <a class="el" href="group__data.html#a0b22e137e942abc279adae689bcc4013">cl::sycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
 , <a class="el" href="group__data.html#a7b3aa39fd98136a8584e5dce163d5013">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
+</li>
+<li>accessors
+: <a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#a6dd6d9ed9eb53763fd37941a304f6c5a">cl::sycl::detail::task</a>
 </li>
 <li>add_buffer()
 : <a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#a38207171392f82ed70bfd48f0d7c62d6">cl::sycl::detail::task</a>
@@ -97,10 +101,10 @@ $(function() {
 : <a class="el" href="group__address__spaces.html#a7896b1c3f0cf5bd961febc91388ad599">cl::sycl::detail::address_space_base&lt; T, AS &gt;</a>
 </li>
 <li>address_space_array()
-: <a class="el" href="group__address__spaces.html#a6d75cad305874dc5377efc33a40f4ad2">cl::sycl::detail::address_space_array&lt; T, AS &gt;</a>
+: <a class="el" href="group__address__spaces.html#a71118a65a5b9951ebf74854fb97667df">cl::sycl::detail::address_space_array&lt; T, AS &gt;</a>
 </li>
 <li>address_space_fundamental()
-: <a class="el" href="group__address__spaces.html#a05baa4801c2b1e1ba1a8439aec5400bf">cl::sycl::detail::address_space_fundamental&lt; T, AS &gt;</a>
+: <a class="el" href="group__address__spaces.html#a9c54d40734d14ce01ccbd1b9266c6057">cl::sycl::detail::address_space_fundamental&lt; T, AS &gt;</a>
 </li>
 <li>address_space_object()
 : <a class="el" href="group__address__spaces.html#aa68a76f29f098ade216c9ac534339daa">cl::sycl::detail::address_space_object&lt; T, AS &gt;</a>
@@ -131,6 +135,9 @@ $(function() {
 : <a class="el" href="group__data.html#ad3e968477237a7e8e31f0f75906ede6d">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
 , <a class="el" href="group__data.html#ac7bc8b3b0b67d7311c831160dfe369eb">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 </li>
+<li>array_size
+: <a class="el" href="group__Xilinx.html#af5b68cb108a899d0fa51c62c6c99e4ad">cl::sycl::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;</a>
+</li>
 <li>array_type
 : <a class="el" href="group__data.html#adabd5ed47e053a172a9e853c7eea084f">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 </li>
@@ -144,7 +151,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Dec 22 2017 02:39:44 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Apr 20 2018 19:26:25 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

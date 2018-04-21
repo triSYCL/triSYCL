@@ -88,8 +88,8 @@ Collaboration diagram for cl::sycl::detail::task:</div>
 <div class="dyncontent">
 <div class="center"><img src="structcl_1_1sycl_1_1detail_1_1task__coll__graph.png" border="0" usemap="#cl_1_1sycl_1_1detail_1_1task_coll__map" alt="Collaboration graph"/></div>
 <map name="cl_1_1sycl_1_1detail_1_1task_coll__map" id="cl_1_1sycl_1_1detail_1_1task_coll__map">
-<area shape="rect" id="node3" href="group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; task \&gt;" alt="" coords="5,71,152,112"/>
-<area shape="rect" id="node10" href="classbool.html" title="bool" alt="" coords="55,530,102,557"/>
+<area shape="rect" id="node3" href="group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; task \&gt;" alt="" coords="20,71,167,112"/>
+<area shape="rect" id="node11" href="classbool.html" title="bool" alt="" coords="70,610,117,637"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -132,11 +132,24 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a11f2b6d13ebe35956f57985a7808218f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the queue behind the task to run a kernel on.  <a href="#a11f2b6d13ebe35956f57985a7808218f">More...</a><br /></td></tr>
 <tr class="separator:a11f2b6d13ebe35956f57985a7808218f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a845d535dec2d784c9fa6299ea9c07f1c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#a845d535dec2d784c9fa6299ea9c07f1c">set_kernel</a> (const std::shared_ptr&lt; <a class="el" href="group__execution.html#classcl_1_1sycl_1_1detail_1_1kernel">cl::sycl::detail::kernel</a> &gt; &amp;k)</td></tr>
-<tr class="memdesc:a845d535dec2d784c9fa6299ea9c07f1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the kernel running this task if any.  <a href="#a845d535dec2d784c9fa6299ea9c07f1c">More...</a><br /></td></tr>
+<tr class="memdesc:a845d535dec2d784c9fa6299ea9c07f1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the OpenCL-compatible kernel running this task if any.  <a href="#a845d535dec2d784c9fa6299ea9c07f1c">More...</a><br /></td></tr>
 <tr class="separator:a845d535dec2d784c9fa6299ea9c07f1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7dc8fc39b9dfe9de9b1d5bd6be174c7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__execution.html#classcl_1_1sycl_1_1detail_1_1kernel">cl::sycl::detail::kernel</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#ae7dc8fc39b9dfe9de9b1d5bd6be174c7">get_kernel</a> ()</td></tr>
 <tr class="memdesc:ae7dc8fc39b9dfe9de9b1d5bd6be174c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the kernel running if any.  <a href="#ae7dc8fc39b9dfe9de9b1d5bd6be174c7">More...</a><br /></td></tr>
 <tr class="separator:ae7dc8fc39b9dfe9de9b1d5bd6be174c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1141090d4da31755a9761a6dca2be534"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#a1141090d4da31755a9761a6dca2be534">set_arg</a> (int arg_index, std::size_t arg_size, const void *scalar_value)</td></tr>
+<tr class="memdesc:a1141090d4da31755a9761a6dca2be534"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a kernel argument by address.  <a href="#a1141090d4da31755a9761a6dca2be534">More...</a><br /></td></tr>
+<tr class="separator:a1141090d4da31755a9761a6dca2be534"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a8d9a6cf9b41ed7a28a0d64454f7e85"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a7a8d9a6cf9b41ed7a28a0d64454f7e85"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#a7a8d9a6cf9b41ed7a28a0d64454f7e85">set_arg</a> (int arg_index, const T &amp;scalar_value)</td></tr>
+<tr class="memdesc:a7a8d9a6cf9b41ed7a28a0d64454f7e85"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a kernel argument by value.  <a href="#a7a8d9a6cf9b41ed7a28a0d64454f7e85">More...</a><br /></td></tr>
+<tr class="separator:a7a8d9a6cf9b41ed7a28a0d64454f7e85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5903381a3034cf853ef0179c0c95ba40"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#a5903381a3034cf853ef0179c0c95ba40">get_compute_buffer</a> (std::size_t order)</td></tr>
+<tr class="memdesc:a5903381a3034cf853ef0179c0c95ba40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the Boost.Compute buffer for an accessor of the task.  <a href="#a5903381a3034cf853ef0179c0c95ba40">More...</a><br /></td></tr>
+<tr class="separator:a5903381a3034cf853ef0179c0c95ba40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac106f3add8256f0bd00c74c7d66a6b75"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#ac106f3add8256f0bd00c74c7d66a6b75">register_accessor</a> (std::weak_ptr&lt; <a class="el" href="group__data.html#classcl_1_1sycl_1_1detail_1_1accessor__base">detail::accessor_base</a> &gt; <a class="el" href="opencl__spir_8h.html#afce50bc7a23ec77afc73ea78f6f569e9">a</a>)</td></tr>
+<tr class="memdesc:ac106f3add8256f0bd00c74c7d66a6b75"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register an accessor and return its registration order.  <a href="#ac106f3add8256f0bd00c74c7d66a6b75">More...</a><br /></td></tr>
+<tr class="separator:ac106f3add8256f0bd00c74c7d66a6b75"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -164,14 +177,18 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:afcbb785de925a7e09e0b29a55503b0b4"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="structcl_1_1sycl_1_1detail_1_1queue.html">detail::queue</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#afcbb785de925a7e09e0b29a55503b0b4">owner_queue</a></td></tr>
 <tr class="memdesc:afcbb785de925a7e09e0b29a55503b0b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Keep track of the queue used to submission to notify kernel completion or to run OpenCL kernels on.  <a href="#afcbb785de925a7e09e0b29a55503b0b4">More...</a><br /></td></tr>
 <tr class="separator:afcbb785de925a7e09e0b29a55503b0b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2176c268a6335e8921a3d08310ef6b1f"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="group__execution.html#classcl_1_1sycl_1_1detail_1_1kernel">cl::sycl::detail::kernel</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#a2176c268a6335e8921a3d08310ef6b1f">kernel</a></td></tr>
-<tr class="separator:a2176c268a6335e8921a3d08310ef6b1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a060ea2aad696e1de6692ec43d7fbb8f9"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="group__execution.html#classcl_1_1sycl_1_1detail_1_1kernel">detail::kernel</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#a060ea2aad696e1de6692ec43d7fbb8f9">kernel</a></td></tr>
+<tr class="memdesc:a060ea2aad696e1de6692ec43d7fbb8f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The OpenCL-compatible kernel run by this task, if any.  <a href="#a060ea2aad696e1de6692ec43d7fbb8f9">More...</a><br /></td></tr>
+<tr class="separator:a060ea2aad696e1de6692ec43d7fbb8f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6dd6d9ed9eb53763fd37941a304f6c5a"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::weak_ptr&lt; <a class="el" href="group__data.html#classcl_1_1sycl_1_1detail_1_1accessor__base">detail::accessor_base</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#a6dd6d9ed9eb53763fd37941a304f6c5a">accessors</a></td></tr>
+<tr class="memdesc:a6dd6d9ed9eb53763fd37941a304f6c5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The accessors indexed by their creation order.  <a href="#a6dd6d9ed9eb53763fd37941a304f6c5a">More...</a><br /></td></tr>
+<tr class="separator:a6dd6d9ed9eb53763fd37941a304f6c5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The abstraction to represent SYCL tasks executing inside command_group. </p>
 <p>"enable_shared_from_this" allows to access the shared_ptr behind the scene. </p>
 
-<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00034">34</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00037">37</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a39f8f97048ad9a0ff178f23a2bc7383a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a39f8f97048ad9a0ff178f23a2bc7383a">&#9670;&nbsp;</a></span>task()</h2>
@@ -199,8 +216,8 @@ Public Attributes</h2></td></tr>
 
 <p>Create a task from a submitting queue. </p>
 
-<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00070">70</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    : <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#afcbb785de925a7e09e0b29a55503b0b4">owner_queue</a> { q } {}</div><div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_afcbb785de925a7e09e0b29a55503b0b4"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#afcbb785de925a7e09e0b29a55503b0b4">cl::sycl::detail::task::owner_queue</a></div><div class="ttdeci">std::shared_ptr&lt; detail::queue &gt; owner_queue</div><div class="ttdoc">Keep track of the queue used to submission to notify kernel completion or to run OpenCL kernels on...</div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00064">task.hpp:64</a></div></div>
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00080">80</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    : <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#afcbb785de925a7e09e0b29a55503b0b4">owner_queue</a> { q } {}</div><div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_afcbb785de925a7e09e0b29a55503b0b4"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#afcbb785de925a7e09e0b29a55503b0b4">cl::sycl::detail::task::owner_queue</a></div><div class="ttdeci">std::shared_ptr&lt; detail::queue &gt; owner_queue</div><div class="ttdoc">Keep track of the queue used to submission to notify kernel completion or to run OpenCL kernels on...</div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00067">task.hpp:67</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -242,12 +259,12 @@ Public Attributes</h2></td></tr>
 <p>Register a buffer to this task. </p>
 <p>This is how the dependency graph is incrementally built. </p>
 
-<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00170">170</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00180">180</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
 
 <p class="reference">References <a class="el" href="debug_8hpp_source.html#l00046">TRISYCL_DUMP_T</a>.</p>
-<div class="fragment"><div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;                                      {</div><div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    <a class="code" href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a>(<span class="stringliteral">&quot;Add buffer &quot;</span> &lt;&lt; buf &lt;&lt; <span class="stringliteral">&quot; in task &quot;</span> &lt;&lt; <span class="keyword">this</span>);</div><div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    <span class="comment">/* Keep track of the use of the buffer to notify its release at</span></div><div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;<span class="comment">       the end of the execution */</span></div><div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#af0cda0e975507abd9c7c8c7659072ed8">buffers_in_use</a>.push_back(buf);</div><div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <span class="comment">// To be sure the buffer does not disappear before the kernel can run</span></div><div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    buf-&gt;use();</div><div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;</div><div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    std::shared_ptr&lt;detail::task&gt; latest_producer;</div><div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    <span class="keywordflow">if</span> (is_write_mode) {</div><div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;      <span class="comment">/* Set this task as the latest producer of the buffer so that</span></div><div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;<span class="comment">         another kernel may wait on this task */</span></div><div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;      latest_producer = buf-&gt;set_latest_producer(shared_from_this());</div><div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    }</div><div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    <span class="keywordflow">else</span></div><div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;      latest_producer = buf-&gt;get_latest_producer();</div><div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;</div><div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    <span class="comment">/* If the buffer is to be produced by a task, add the task in the</span></div><div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;<span class="comment">       producer list to wait on it before running the task core</span></div><div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;<span class="comment"></span></div><div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;<span class="comment">       If a buffer is accessed first in write mode and then in read mode,</span></div><div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;<span class="comment">       the task will add itself as a producer and will wait for itself</span></div><div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;<span class="comment">       when calling \c wait_for_producers, we avoid this by checking that</span></div><div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;<span class="comment">       \c latest_producer is not \c this</span></div><div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;<span class="comment">    */</span></div><div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    <span class="keywordflow">if</span> (latest_producer &amp;&amp; latest_producer != shared_from_this())</div><div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;      <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#ac022fb4cbc8c6ae4ed388aa70dde2d3f">producer_tasks</a>.push_back(latest_producer);</div><div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;  }</div><div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_ac022fb4cbc8c6ae4ed388aa70dde2d3f"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#ac022fb4cbc8c6ae4ed388aa70dde2d3f">cl::sycl::detail::task::producer_tasks</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; detail::task &gt; &gt; producer_tasks</div><div class="ttdoc">The tasks producing the buffers used by this task. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00045">task.hpp:45</a></div></div>
+<div class="fragment"><div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;                                      {</div><div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    <a class="code" href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a>(<span class="stringliteral">&quot;Add buffer &quot;</span> &lt;&lt; buf &lt;&lt; <span class="stringliteral">&quot; in task &quot;</span> &lt;&lt; <span class="keyword">this</span>);</div><div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    <span class="comment">/* Keep track of the use of the buffer to notify its release at</span></div><div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;<span class="comment">       the end of the execution */</span></div><div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#af0cda0e975507abd9c7c8c7659072ed8">buffers_in_use</a>.push_back(buf);</div><div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    <span class="comment">// To be sure the buffer does not disappear before the kernel can run</span></div><div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    buf-&gt;use();</div><div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;</div><div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    std::shared_ptr&lt;detail::task&gt; latest_producer;</div><div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    <span class="keywordflow">if</span> (is_write_mode) {</div><div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;      <span class="comment">/* Set this task as the latest producer of the buffer so that</span></div><div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;<span class="comment">         another kernel may wait on this task */</span></div><div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;      latest_producer = buf-&gt;set_latest_producer(shared_from_this());</div><div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    }</div><div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    <span class="keywordflow">else</span></div><div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;      latest_producer = buf-&gt;get_latest_producer();</div><div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;</div><div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    <span class="comment">/* If the buffer is to be produced by a task, add the task in the</span></div><div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;<span class="comment">       producer list to wait on it before running the task core</span></div><div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;<span class="comment"></span></div><div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;<span class="comment">       If a buffer is accessed first in write mode and then in read mode,</span></div><div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;<span class="comment">       the task will add itself as a producer and will wait for itself</span></div><div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;<span class="comment">       when calling \c wait_for_producers, we avoid this by checking that</span></div><div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;<span class="comment">       \c latest_producer is not \c this</span></div><div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;<span class="comment">    */</span></div><div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    <span class="keywordflow">if</span> (latest_producer &amp;&amp; latest_producer != shared_from_this())</div><div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;      <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#ac022fb4cbc8c6ae4ed388aa70dde2d3f">producer_tasks</a>.push_back(latest_producer);</div><div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;  }</div><div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_ac022fb4cbc8c6ae4ed388aa70dde2d3f"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#ac022fb4cbc8c6ae4ed388aa70dde2d3f">cl::sycl::detail::task::producer_tasks</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; detail::task &gt; &gt; producer_tasks</div><div class="ttdoc">The tasks producing the buffers used by this task. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00048">task.hpp:48</a></div></div>
 <div class="ttc" id="debug_8hpp_html_a7d15187cc29c2a3ec4ad62acccaa242e"><div class="ttname"><a href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a></div><div class="ttdeci">#define TRISYCL_DUMP_T(expression)</div><div class="ttdoc">Same as TRISYCL_DUMP() but with thread id first. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8hpp_source.html#l00046">debug.hpp:46</a></div></div>
-<div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_af0cda0e975507abd9c7c8c7659072ed8"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#af0cda0e975507abd9c7c8c7659072ed8">cl::sycl::detail::task::buffers_in_use</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; detail::buffer_base &gt; &gt; buffers_in_use</div><div class="ttdoc">List of the buffers used by this task. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00042">task.hpp:42</a></div></div>
+<div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_af0cda0e975507abd9c7c8c7659072ed8"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#af0cda0e975507abd9c7c8c7659072ed8">cl::sycl::detail::task::buffers_in_use</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; detail::buffer_base &gt; &gt; buffers_in_use</div><div class="ttdoc">List of the buffers used by this task. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00045">task.hpp:45</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -277,9 +294,19 @@ Public Attributes</h2></td></tr>
 
 <p>Add a function to the postlude to run after kernel execution. </p>
 
-<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00228">228</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;                                                      {</div><div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a9e457b8331522939dc10cd56f1f000fa">epilogues</a>.push_back(f);</div><div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;  }</div><div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_a9e457b8331522939dc10cd56f1f000fa"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#a9e457b8331522939dc10cd56f1f000fa">cl::sycl::detail::task::epilogues</a></div><div class="ttdeci">std::vector&lt; std::function&lt; void(void)&gt; &gt; epilogues</div><div class="ttdoc">Keep track of any epilogue to be executed after the kernel. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00051">task.hpp:51</a></div></div>
-</div><!-- fragment -->
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00242">242</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="buffer_2detail_2accessor_8hpp_source.html#l00174">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;::register_accessor()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;                                                      {</div><div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;    <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a9e457b8331522939dc10cd56f1f000fa">epilogues</a>.push_back(f);</div><div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;  }</div><div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_a9e457b8331522939dc10cd56f1f000fa"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#a9e457b8331522939dc10cd56f1f000fa">cl::sycl::detail::task::epilogues</a></div><div class="ttdeci">std::vector&lt; std::function&lt; void(void)&gt; &gt; epilogues</div><div class="ttdoc">Keep track of any epilogue to be executed after the kernel. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00054">task.hpp:54</a></div></div>
+</div><!-- fragment --><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="structcl_1_1sycl_1_1detail_1_1task_ae1fe00a1c490e604ed93731db04877fd_icgraph.png" border="0" usemap="#structcl_1_1sycl_1_1detail_1_1task_ae1fe00a1c490e604ed93731db04877fd_icgraph" alt=""/></div>
+<map name="structcl_1_1sycl_1_1detail_1_1task_ae1fe00a1c490e604ed93731db04877fd_icgraph" id="structcl_1_1sycl_1_1detail_1_1task_ae1fe00a1c490e604ed93731db04877fd_icgraph">
+<area shape="rect" id="node2" href="group__data.html#aee8be41e25edf35f723ab927a0ea57f5" title="Register the accessor once a std::shared_ptr is created on it. " alt="" coords="189,5,353,47"/>
+</map>
+</div>
+
 </div>
 </div>
 <a id="ae5b113d2baf19891b5cd9f4766fbf882"></a>
@@ -308,9 +335,63 @@ Public Attributes</h2></td></tr>
 
 <p>Add a function to the prelude to run before kernel execution. </p>
 
-<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00222">222</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;                                                     {</div><div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#ab03b590ef7c93fccb74456c52a60d4e6">prologues</a>.push_back(f);</div><div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;  }</div><div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_ab03b590ef7c93fccb74456c52a60d4e6"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#ab03b590ef7c93fccb74456c52a60d4e6">cl::sycl::detail::task::prologues</a></div><div class="ttdeci">std::vector&lt; std::function&lt; void(void)&gt; &gt; prologues</div><div class="ttdoc">Keep track of any prologue to be executed before the kernel. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00048">task.hpp:48</a></div></div>
-</div><!-- fragment -->
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00234">234</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+
+<p class="reference">References <a class="el" href="debug_8hpp_source.html#l00046">TRISYCL_DUMP_T</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="buffer_2detail_2accessor_8hpp_source.html#l00174">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;::register_accessor()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;                                                     {</div><div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    <a class="code" href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a>(<span class="stringliteral">&quot;task::add_prelude&quot;</span>);</div><div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;</div><div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;    <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#ab03b590ef7c93fccb74456c52a60d4e6">prologues</a>.push_back(f);</div><div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;  }</div><div class="ttc" id="debug_8hpp_html_a7d15187cc29c2a3ec4ad62acccaa242e"><div class="ttname"><a href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a></div><div class="ttdeci">#define TRISYCL_DUMP_T(expression)</div><div class="ttdoc">Same as TRISYCL_DUMP() but with thread id first. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8hpp_source.html#l00046">debug.hpp:46</a></div></div>
+<div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_ab03b590ef7c93fccb74456c52a60d4e6"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#ab03b590ef7c93fccb74456c52a60d4e6">cl::sycl::detail::task::prologues</a></div><div class="ttdeci">std::vector&lt; std::function&lt; void(void)&gt; &gt; prologues</div><div class="ttdoc">Keep track of any prologue to be executed before the kernel. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00051">task.hpp:51</a></div></div>
+</div><!-- fragment --><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="structcl_1_1sycl_1_1detail_1_1task_ae5b113d2baf19891b5cd9f4766fbf882_icgraph.png" border="0" usemap="#structcl_1_1sycl_1_1detail_1_1task_ae5b113d2baf19891b5cd9f4766fbf882_icgraph" alt=""/></div>
+<map name="structcl_1_1sycl_1_1detail_1_1task_ae5b113d2baf19891b5cd9f4766fbf882_icgraph" id="structcl_1_1sycl_1_1detail_1_1task_ae5b113d2baf19891b5cd9f4766fbf882_icgraph">
+<area shape="rect" id="node2" href="group__data.html#aee8be41e25edf35f723ab927a0ea57f5" title="Register the accessor once a std::shared_ptr is created on it. " alt="" coords="189,5,353,47"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a5903381a3034cf853ef0179c0c95ba40"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5903381a3034cf853ef0179c0c95ba40">&#9670;&nbsp;</a></span>get_compute_buffer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto cl::sycl::detail::task::get_compute_buffer </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>order</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the Boost.Compute buffer for an accessor of the task. </p>
+
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00297">297</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="device__runtime_8hpp_source.html#l00140">cl::sycl::drt::serialize_accessor_arg()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;                                           {</div><div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a6dd6d9ed9eb53763fd37941a304f6c5a">accessors</a>[order].lock()-&gt;get_cl_buffer();</div><div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;  }</div><div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_a6dd6d9ed9eb53763fd37941a304f6c5a"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#a6dd6d9ed9eb53763fd37941a304f6c5a">cl::sycl::detail::task::accessors</a></div><div class="ttdeci">std::vector&lt; std::weak_ptr&lt; detail::accessor_base &gt; &gt; accessors</div><div class="ttdoc">The accessors indexed by their creation order. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00076">task.hpp:76</a></div></div>
+</div><!-- fragment --><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="structcl_1_1sycl_1_1detail_1_1task_a5903381a3034cf853ef0179c0c95ba40_icgraph.png" border="0" usemap="#structcl_1_1sycl_1_1detail_1_1task_a5903381a3034cf853ef0179c0c95ba40_icgraph" alt=""/></div>
+<map name="structcl_1_1sycl_1_1detail_1_1task_a5903381a3034cf853ef0179c0c95ba40_icgraph" id="structcl_1_1sycl_1_1detail_1_1task_a5903381a3034cf853ef0179c0c95ba40_icgraph">
+<area shape="rect" id="node2" href="group__device__runtime.html#gac37be9f8c26013d7334b5736c2124d54" title="Set an accessor argument of the kernel. " alt="" coords="199,5,341,47"/>
+</map>
+</div>
+
 </div>
 </div>
 <a id="ae7dc8fc39b9dfe9de9b1d5bd6be174c7"></a>
@@ -339,11 +420,23 @@ Public Attributes</h2></td></tr>
 <p>Get the kernel running if any. </p>
 <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000124">Todo:</a></b></dt><dd>Specify this error in the spec </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00249">249</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00263">263</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="task_8hpp_source.html#l00066">kernel</a>.</p>
-<div class="fragment"><div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;                                   {</div><div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;    <span class="keywordflow">if</span> (!<a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a2176c268a6335e8921a3d08310ef6b1f">kernel</a>)</div><div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;      <span class="keywordflow">throw</span> non_cl_error(<span class="stringliteral">&quot;Cannot use an OpenCL kernel in this context&quot;</span>);</div><div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;    <span class="keywordflow">return</span> *<a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a2176c268a6335e8921a3d08310ef6b1f">kernel</a>;</div><div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;  }</div><div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_a2176c268a6335e8921a3d08310ef6b1f"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#a2176c268a6335e8921a3d08310ef6b1f">cl::sycl::detail::task::kernel</a></div><div class="ttdeci">std::shared_ptr&lt; cl::sycl::detail::kernel &gt; kernel</div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00066">task.hpp:66</a></div></div>
-</div><!-- fragment -->
+<p class="reference">References <a class="el" href="task_8hpp_source.html#l00070">kernel</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="task_8hpp_source.html#l00271">set_arg()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;                                   {</div><div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    <span class="keywordflow">if</span> (!<a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a060ea2aad696e1de6692ec43d7fbb8f9">kernel</a>)</div><div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;      <span class="keywordflow">throw</span> non_cl_error(<span class="stringliteral">&quot;Cannot use an OpenCL kernel in this context&quot;</span>);</div><div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;    <span class="keywordflow">return</span> *<a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a060ea2aad696e1de6692ec43d7fbb8f9">kernel</a>;</div><div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;  }</div><div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_a060ea2aad696e1de6692ec43d7fbb8f9"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#a060ea2aad696e1de6692ec43d7fbb8f9">cl::sycl::detail::task::kernel</a></div><div class="ttdeci">std::shared_ptr&lt; detail::kernel &gt; kernel</div><div class="ttdoc">The OpenCL-compatible kernel run by this task, if any. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00070">task.hpp:70</a></div></div>
+</div><!-- fragment --><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="structcl_1_1sycl_1_1detail_1_1task_ae7dc8fc39b9dfe9de9b1d5bd6be174c7_icgraph.png" border="0" usemap="#structcl_1_1sycl_1_1detail_1_1task_ae7dc8fc39b9dfe9de9b1d5bd6be174c7_icgraph" alt=""/></div>
+<map name="structcl_1_1sycl_1_1detail_1_1task_ae7dc8fc39b9dfe9de9b1d5bd6be174c7_icgraph" id="structcl_1_1sycl_1_1detail_1_1task_ae7dc8fc39b9dfe9de9b1d5bd6be174c7_icgraph">
+<area shape="rect" id="node2" href="structcl_1_1sycl_1_1detail_1_1task.html#a1141090d4da31755a9761a6dca2be534" title="Set a kernel argument by address. " alt="" coords="189,27,325,69"/>
+<area shape="rect" id="node3" href="group__device__runtime.html#gae93a9a9de55ffe125a24247829659b92" title="Set an argument value of the kernel. " alt="" coords="373,5,541,32"/>
+<area shape="rect" id="node4" href="group__device__runtime.html#gac37be9f8c26013d7334b5736c2124d54" title="Set an accessor argument of the kernel. " alt="" coords="386,57,529,98"/>
+</map>
+</div>
+
 </div>
 </div>
 <a id="a11f2b6d13ebe35956f57985a7808218f"></a>
@@ -371,11 +464,24 @@ Public Attributes</h2></td></tr>
 
 <p>Get the queue behind the task to run a kernel on. </p>
 
-<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00234">234</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00248">248</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="task_8hpp_source.html#l00064">owner_queue</a>.</p>
-<div class="fragment"><div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;                   {</div><div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#afcbb785de925a7e09e0b29a55503b0b4">owner_queue</a>;</div><div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;  }</div><div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_afcbb785de925a7e09e0b29a55503b0b4"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#afcbb785de925a7e09e0b29a55503b0b4">cl::sycl::detail::task::owner_queue</a></div><div class="ttdeci">std::shared_ptr&lt; detail::queue &gt; owner_queue</div><div class="ttdoc">Keep track of the queue used to submission to notify kernel completion or to run OpenCL kernels on...</div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00064">task.hpp:64</a></div></div>
-</div><!-- fragment -->
+<p class="reference">References <a class="el" href="task_8hpp_source.html#l00067">owner_queue</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="buffer_2detail_2accessor_8hpp_source.html#l00467">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;::copy_in_cl_buffer()</a>, <a class="el" href="buffer_2detail_2accessor_8hpp_source.html#l00457">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;::get_cl_buffer()</a>, <a class="el" href="buffer_2detail_2accessor_8hpp_source.html#l00174">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;::register_accessor()</a>, and <a class="el" href="device__runtime_8hpp_source.html#l00201">cl::sycl::drt::set_kernel()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;                   {</div><div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#afcbb785de925a7e09e0b29a55503b0b4">owner_queue</a>;</div><div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;  }</div><div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_afcbb785de925a7e09e0b29a55503b0b4"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#afcbb785de925a7e09e0b29a55503b0b4">cl::sycl::detail::task::owner_queue</a></div><div class="ttdeci">std::shared_ptr&lt; detail::queue &gt; owner_queue</div><div class="ttdoc">Keep track of the queue used to submission to notify kernel completion or to run OpenCL kernels on...</div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00067">task.hpp:67</a></div></div>
+</div><!-- fragment --><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="structcl_1_1sycl_1_1detail_1_1task_a11f2b6d13ebe35956f57985a7808218f_icgraph.png" border="0" usemap="#structcl_1_1sycl_1_1detail_1_1task_a11f2b6d13ebe35956f57985a7808218f_icgraph" alt=""/></div>
+<map name="structcl_1_1sycl_1_1detail_1_1task_a11f2b6d13ebe35956f57985a7808218f_icgraph" id="structcl_1_1sycl_1_1detail_1_1task_a11f2b6d13ebe35956f57985a7808218f_icgraph">
+<area shape="rect" id="node2" href="group__data.html#a1764f8fc5824b392b8ff42d3bacc6ea3" title="Lazily associate a CL buffer to the SYCL buffer and copy data in it if required, updates the state of..." alt="" coords="189,5,353,47"/>
+<area shape="rect" id="node3" href="group__data.html#a7525c4c3ce22ab400c239d5bb7fdf74c" title="Get the boost::compute::buffer or throw if unset. " alt="" coords="189,71,353,112"/>
+<area shape="rect" id="node4" href="group__data.html#aee8be41e25edf35f723ab927a0ea57f5" title="Register the accessor once a std::shared_ptr is created on it. " alt="" coords="189,136,353,177"/>
+<area shape="rect" id="node5" href="group__device__runtime.html#ga71fe05b230d29fc87e42441daa3e6585" title="Set the kernel for a later invocation. " alt="" coords="215,201,328,243"/>
+</map>
+</div>
+
 </div>
 </div>
 <a id="ad4606b29bd336c40586e583e1fcc4348"></a>
@@ -403,15 +509,15 @@ Public Attributes</h2></td></tr>
 
 <p>Notify the waiting tasks that we are done. </p>
 
-<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00143">143</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00153">153</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
 
 <p class="reference">References <a class="el" href="debug_8hpp_source.html#l00046">TRISYCL_DUMP_T</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="task_8hpp_source.html#l00075">schedule()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;                          {</div><div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    <a class="code" href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a>(<span class="stringliteral">&quot;Notify all the task waiting for this task &quot;</span> &lt;&lt; <span class="keyword">this</span>);</div><div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;   {</div><div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;     std::unique_lock&lt;std::mutex&gt; ul { <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a0d4d577feecdf9b62f5a4aa6b8f1b74f">ready_mutex</a> };</div><div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;     <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#af24bc44bd88469b222627dee47548e23">execution_ended</a> = <span class="keyword">true</span>;</div><div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;   }</div><div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    <span class="comment">/* \todo Verify that the memory model with the notify does not</span></div><div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="comment">       require some fence or atomic */</span></div><div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#acc33cb55075a320aba7e9cf0e4d41961">ready</a>.notify_all();</div><div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;  }</div><div class="ttc" id="debug_8hpp_html_a7d15187cc29c2a3ec4ad62acccaa242e"><div class="ttname"><a href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a></div><div class="ttdeci">#define TRISYCL_DUMP_T(expression)</div><div class="ttdoc">Same as TRISYCL_DUMP() but with thread id first. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8hpp_source.html#l00046">debug.hpp:46</a></div></div>
-<div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_acc33cb55075a320aba7e9cf0e4d41961"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#acc33cb55075a320aba7e9cf0e4d41961">cl::sycl::detail::task::ready</a></div><div class="ttdeci">std::condition_variable ready</div><div class="ttdoc">To signal when this task is ready. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00057">task.hpp:57</a></div></div>
-<div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_a0d4d577feecdf9b62f5a4aa6b8f1b74f"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#a0d4d577feecdf9b62f5a4aa6b8f1b74f">cl::sycl::detail::task::ready_mutex</a></div><div class="ttdeci">std::mutex ready_mutex</div><div class="ttdoc">To protect the access to the condition variable. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00060">task.hpp:60</a></div></div>
-<div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_af24bc44bd88469b222627dee47548e23"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#af24bc44bd88469b222627dee47548e23">cl::sycl::detail::task::execution_ended</a></div><div class="ttdeci">bool execution_ended</div><div class="ttdoc">Store if the execution ended, to be notified by task_ready. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00054">task.hpp:54</a></div></div>
+<p class="reference">Referenced by <a class="el" href="task_8hpp_source.html#l00085">schedule()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;                          {</div><div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    <a class="code" href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a>(<span class="stringliteral">&quot;Notify all the task waiting for this task &quot;</span> &lt;&lt; <span class="keyword">this</span>);</div><div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;   {</div><div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;     std::unique_lock&lt;std::mutex&gt; ul { <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a0d4d577feecdf9b62f5a4aa6b8f1b74f">ready_mutex</a> };</div><div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;     <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#af24bc44bd88469b222627dee47548e23">execution_ended</a> = <span class="keyword">true</span>;</div><div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;   }</div><div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="comment">/* \todo Verify that the memory model with the notify does not</span></div><div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;<span class="comment">       require some fence or atomic */</span></div><div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#acc33cb55075a320aba7e9cf0e4d41961">ready</a>.notify_all();</div><div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;  }</div><div class="ttc" id="debug_8hpp_html_a7d15187cc29c2a3ec4ad62acccaa242e"><div class="ttname"><a href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a></div><div class="ttdeci">#define TRISYCL_DUMP_T(expression)</div><div class="ttdoc">Same as TRISYCL_DUMP() but with thread id first. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8hpp_source.html#l00046">debug.hpp:46</a></div></div>
+<div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_acc33cb55075a320aba7e9cf0e4d41961"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#acc33cb55075a320aba7e9cf0e4d41961">cl::sycl::detail::task::ready</a></div><div class="ttdeci">std::condition_variable ready</div><div class="ttdoc">To signal when this task is ready. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00060">task.hpp:60</a></div></div>
+<div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_a0d4d577feecdf9b62f5a4aa6b8f1b74f"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#a0d4d577feecdf9b62f5a4aa6b8f1b74f">cl::sycl::detail::task::ready_mutex</a></div><div class="ttdeci">std::mutex ready_mutex</div><div class="ttdoc">To protect the access to the condition variable. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00063">task.hpp:63</a></div></div>
+<div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_af24bc44bd88469b222627dee47548e23"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#af24bc44bd88469b222627dee47548e23">cl::sycl::detail::task::execution_ended</a></div><div class="ttdeci">bool execution_ended</div><div class="ttdoc">Store if the execution ended, to be notified by task_ready. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00057">task.hpp:57</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -448,10 +554,13 @@ Here is the caller graph for this function:</div>
 
 <p>Execute the epilogues. </p>
 
-<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00212">212</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00224">224</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="task_8hpp_source.html#l00075">schedule()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;                  {</div><div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a9e457b8331522939dc10cd56f1f000fa">epilogues</a>)</div><div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;      p();</div><div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    <span class="comment">/* Free the functors that may own an accessor owning a buffer</span></div><div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;<span class="comment">       preventing the command group to complete */</span></div><div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    epilogues.clear();</div><div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;  }</div><div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_a9e457b8331522939dc10cd56f1f000fa"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#a9e457b8331522939dc10cd56f1f000fa">cl::sycl::detail::task::epilogues</a></div><div class="ttdeci">std::vector&lt; std::function&lt; void(void)&gt; &gt; epilogues</div><div class="ttdoc">Keep track of any epilogue to be executed after the kernel. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00051">task.hpp:51</a></div></div>
+<p class="reference">References <a class="el" href="opencl__spir_8h_source.html#l04827">p</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="task_8hpp_source.html#l00085">schedule()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;                  {</div><div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;<a class="code" href="opencl__spir_8h.html#a1baa6eb49c37d5aba9ba4a6837438355">p</a> : <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a9e457b8331522939dc10cd56f1f000fa">epilogues</a>)</div><div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;      <a class="code" href="opencl__spir_8h.html#a1baa6eb49c37d5aba9ba4a6837438355">p</a>();</div><div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;    <span class="comment">/* Free the functors that may own an accessor owning a buffer</span></div><div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;<span class="comment">       preventing the command group to complete */</span></div><div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    epilogues.clear();</div><div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;  }</div><div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_a9e457b8331522939dc10cd56f1f000fa"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#a9e457b8331522939dc10cd56f1f000fa">cl::sycl::detail::task::epilogues</a></div><div class="ttdeci">std::vector&lt; std::function&lt; void(void)&gt; &gt; epilogues</div><div class="ttdoc">Keep track of any epilogue to be executed after the kernel. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00054">task.hpp:54</a></div></div>
+<div class="ttc" id="opencl__spir_8h_html_a1baa6eb49c37d5aba9ba4a6837438355"><div class="ttname"><a href="opencl__spir_8h.html#a1baa6eb49c37d5aba9ba4a6837438355">p</a></div><div class="ttdeci">char2 const __global char * p</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l04827">opencl_spir.h:4827</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -488,16 +597,63 @@ Here is the caller graph for this function:</div>
 
 <p>Execute the prologues. </p>
 
-<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00202">202</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00212">212</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="task_8hpp_source.html#l00075">schedule()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;                 {</div><div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#ab03b590ef7c93fccb74456c52a60d4e6">prologues</a>)</div><div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;      p();</div><div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    <span class="comment">/* Free the functors that may own an accessor owning a buffer</span></div><div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;<span class="comment">       preventing the command group to complete */</span></div><div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    prologues.clear();</div><div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;  }</div><div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_ab03b590ef7c93fccb74456c52a60d4e6"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#ab03b590ef7c93fccb74456c52a60d4e6">cl::sycl::detail::task::prologues</a></div><div class="ttdeci">std::vector&lt; std::function&lt; void(void)&gt; &gt; prologues</div><div class="ttdoc">Keep track of any prologue to be executed before the kernel. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00048">task.hpp:48</a></div></div>
+<p class="reference">References <a class="el" href="opencl__spir_8h_source.html#l04827">p</a>, and <a class="el" href="debug_8hpp_source.html#l00046">TRISYCL_DUMP_T</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="task_8hpp_source.html#l00085">schedule()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;                 {</div><div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    <a class="code" href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a>(<span class="stringliteral">&quot;task::prelude&quot;</span>);</div><div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;</div><div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;<a class="code" href="opencl__spir_8h.html#a1baa6eb49c37d5aba9ba4a6837438355">p</a> : <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#ab03b590ef7c93fccb74456c52a60d4e6">prologues</a>)</div><div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;      <a class="code" href="opencl__spir_8h.html#a1baa6eb49c37d5aba9ba4a6837438355">p</a>();</div><div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    <span class="comment">/* Free the functors that may own an accessor owning a buffer</span></div><div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;<span class="comment">       preventing the command group to complete */</span></div><div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    prologues.clear();</div><div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;  }</div><div class="ttc" id="debug_8hpp_html_a7d15187cc29c2a3ec4ad62acccaa242e"><div class="ttname"><a href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a></div><div class="ttdeci">#define TRISYCL_DUMP_T(expression)</div><div class="ttdoc">Same as TRISYCL_DUMP() but with thread id first. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8hpp_source.html#l00046">debug.hpp:46</a></div></div>
+<div class="ttc" id="opencl__spir_8h_html_a1baa6eb49c37d5aba9ba4a6837438355"><div class="ttname"><a href="opencl__spir_8h.html#a1baa6eb49c37d5aba9ba4a6837438355">p</a></div><div class="ttdeci">char2 const __global char * p</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l04827">opencl_spir.h:4827</a></div></div>
+<div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_ab03b590ef7c93fccb74456c52a60d4e6"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#ab03b590ef7c93fccb74456c52a60d4e6">cl::sycl::detail::task::prologues</a></div><div class="ttdeci">std::vector&lt; std::function&lt; void(void)&gt; &gt; prologues</div><div class="ttdoc">Keep track of any prologue to be executed before the kernel. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00051">task.hpp:51</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="structcl_1_1sycl_1_1detail_1_1task_af10a532006cd46573a4bb1664f9e87a8_icgraph.png" border="0" usemap="#structcl_1_1sycl_1_1detail_1_1task_af10a532006cd46573a4bb1664f9e87a8_icgraph" alt=""/></div>
 <map name="structcl_1_1sycl_1_1detail_1_1task_af10a532006cd46573a4bb1664f9e87a8_icgraph" id="structcl_1_1sycl_1_1detail_1_1task_af10a532006cd46573a4bb1664f9e87a8_icgraph">
 <area shape="rect" id="node2" href="structcl_1_1sycl_1_1detail_1_1task.html#ad7e98d4fd9c6186c48680cc5c7d0e446" title="Add a new task to the task graph and schedule for execution. " alt="" coords="189,5,325,47"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="ac106f3add8256f0bd00c74c7d66a6b75"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac106f3add8256f0bd00c74c7d66a6b75">&#9670;&nbsp;</a></span>register_accessor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t cl::sycl::detail::task::register_accessor </td>
+          <td>(</td>
+          <td class="paramtype">std::weak_ptr&lt; <a class="el" href="group__data.html#classcl_1_1sycl_1_1detail_1_1accessor__base">detail::accessor_base</a> &gt;&#160;</td>
+          <td class="paramname"><em>a</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Register an accessor and return its registration order. </p>
+<p>I would prefer to name this method <code>register</code> but this is a C++ keyword... </p>
+
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00308">308</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="buffer_2detail_2accessor_8hpp_source.html#l00174">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;::register_accessor()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;                                                                {</div><div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;  <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a6dd6d9ed9eb53763fd37941a304f6c5a">accessors</a>.push_back(<a class="code" href="opencl__spir_8h.html#afce50bc7a23ec77afc73ea78f6f569e9">a</a>);</div><div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;  <span class="keywordflow">return</span> <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a6dd6d9ed9eb53763fd37941a304f6c5a">accessors</a>.size() - 1;</div><div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;}</div><div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_a6dd6d9ed9eb53763fd37941a304f6c5a"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#a6dd6d9ed9eb53763fd37941a304f6c5a">cl::sycl::detail::task::accessors</a></div><div class="ttdeci">std::vector&lt; std::weak_ptr&lt; detail::accessor_base &gt; &gt; accessors</div><div class="ttdoc">The accessors indexed by their creation order. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00076">task.hpp:76</a></div></div>
+<div class="ttc" id="opencl__spir_8h_html_afce50bc7a23ec77afc73ea78f6f569e9"><div class="ttname"><a href="opencl__spir_8h.html#afce50bc7a23ec77afc73ea78f6f569e9">a</a></div><div class="ttdeci">float const_func float float a</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l03613">opencl_spir.h:3613</a></div></div>
+</div><!-- fragment --><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="structcl_1_1sycl_1_1detail_1_1task_ac106f3add8256f0bd00c74c7d66a6b75_icgraph.png" border="0" usemap="#structcl_1_1sycl_1_1detail_1_1task_ac106f3add8256f0bd00c74c7d66a6b75_icgraph" alt=""/></div>
+<map name="structcl_1_1sycl_1_1detail_1_1task_ac106f3add8256f0bd00c74c7d66a6b75_icgraph" id="structcl_1_1sycl_1_1detail_1_1task_ac106f3add8256f0bd00c74c7d66a6b75_icgraph">
+<area shape="rect" id="node2" href="group__data.html#aee8be41e25edf35f723ab927a0ea57f5" title="Register the accessor once a std::shared_ptr is created on it. " alt="" coords="189,5,353,47"/>
 </map>
 </div>
 
@@ -528,13 +684,14 @@ Here is the caller graph for this function:</div>
 
 <p>Release the buffers that have been used by this task. </p>
 
-<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00134">134</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00144">144</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="debug_8hpp_source.html#l00046">TRISYCL_DUMP_T</a>.</p>
+<p class="reference">References <a class="el" href="opencl__spir_8h_source.html#l00915">b</a>, and <a class="el" href="debug_8hpp_source.html#l00046">TRISYCL_DUMP_T</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="task_8hpp_source.html#l00075">schedule()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;                         {</div><div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <a class="code" href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a>(<span class="stringliteral">&quot;Task &quot;</span> &lt;&lt; <span class="keyword">this</span> &lt;&lt; <span class="stringliteral">&quot; releases the written buffers&quot;</span>);</div><div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> b: <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#af0cda0e975507abd9c7c8c7659072ed8">buffers_in_use</a>)</div><div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;      b-&gt;release();</div><div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    buffers_in_use.clear();</div><div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;  }</div><div class="ttc" id="debug_8hpp_html_a7d15187cc29c2a3ec4ad62acccaa242e"><div class="ttname"><a href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a></div><div class="ttdeci">#define TRISYCL_DUMP_T(expression)</div><div class="ttdoc">Same as TRISYCL_DUMP() but with thread id first. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8hpp_source.html#l00046">debug.hpp:46</a></div></div>
-<div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_af0cda0e975507abd9c7c8c7659072ed8"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#af0cda0e975507abd9c7c8c7659072ed8">cl::sycl::detail::task::buffers_in_use</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; detail::buffer_base &gt; &gt; buffers_in_use</div><div class="ttdoc">List of the buffers used by this task. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00042">task.hpp:42</a></div></div>
+<p class="reference">Referenced by <a class="el" href="task_8hpp_source.html#l00085">schedule()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;                         {</div><div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    <a class="code" href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a>(<span class="stringliteral">&quot;Task &quot;</span> &lt;&lt; <span class="keyword">this</span> &lt;&lt; <span class="stringliteral">&quot; releases the written buffers&quot;</span>);</div><div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <a class="code" href="opencl__spir_8h.html#a3fd8c63fddfb0d3ba796ef725a8cc5ce">b</a>: <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#af0cda0e975507abd9c7c8c7659072ed8">buffers_in_use</a>)</div><div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;      <a class="code" href="opencl__spir_8h.html#a3fd8c63fddfb0d3ba796ef725a8cc5ce">b</a>-&gt;release();</div><div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    buffers_in_use.clear();</div><div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;  }</div><div class="ttc" id="debug_8hpp_html_a7d15187cc29c2a3ec4ad62acccaa242e"><div class="ttname"><a href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a></div><div class="ttdeci">#define TRISYCL_DUMP_T(expression)</div><div class="ttdoc">Same as TRISYCL_DUMP() but with thread id first. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8hpp_source.html#l00046">debug.hpp:46</a></div></div>
+<div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_af0cda0e975507abd9c7c8c7659072ed8"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#af0cda0e975507abd9c7c8c7659072ed8">cl::sycl::detail::task::buffers_in_use</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; detail::buffer_base &gt; &gt; buffers_in_use</div><div class="ttdoc">List of the buffers used by this task. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00045">task.hpp:45</a></div></div>
+<div class="ttc" id="opencl__spir_8h_html_a3fd8c63fddfb0d3ba796ef725a8cc5ce"><div class="ttname"><a href="opencl__spir_8h.html#a3fd8c63fddfb0d3ba796ef725a8cc5ce">b</a></div><div class="ttdeci">float const_func float b</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l00915">opencl_spir.h:915</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -574,12 +731,12 @@ Here is the caller graph for this function:</div>
 <p>Detach the thread since it will synchronize by its own means</p>
 <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000123">Todo:</a></b></dt><dd>This is an issue if there is an exception in the kernel </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00075">75</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00085">85</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="task_8hpp_source.html#l00143">notify_consumers()</a>, <a class="el" href="task_8hpp_source.html#l00212">postlude()</a>, <a class="el" href="task_8hpp_source.html#l00202">prelude()</a>, <a class="el" href="task_8hpp_source.html#l00134">release_buffers()</a>, <a class="el" href="debug_8hpp_source.html#l00046">TRISYCL_DUMP_T</a>, and <a class="el" href="task_8hpp_source.html#l00124">wait_for_producers()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                                           {</div><div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="comment">/* To keep a copy of the task shared_ptr after the end of the</span></div><div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment">       command group, capture it by copy in the following lambda. This</span></div><div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment">       should be easier in C++17 with move semantics on capture</span></div><div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment">    */</span></div><div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keyword">auto</span> <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a39f8f97048ad9a0ff178f23a2bc7383a">task</a> = shared_from_this();</div><div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keyword">auto</span> execution = [=] {</div><div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;      <span class="comment">// Wait for the required tasks to be ready</span></div><div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;      <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a39f8f97048ad9a0ff178f23a2bc7383a">task</a>-&gt;wait_for_producers();</div><div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;      <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a39f8f97048ad9a0ff178f23a2bc7383a">task</a>-&gt;prelude();</div><div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;      <a class="code" href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a>(<span class="stringliteral">&quot;Execute the kernel&quot;</span>);</div><div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;      <span class="comment">// Execute the kernel</span></div><div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;      f();</div><div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;      <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a39f8f97048ad9a0ff178f23a2bc7383a">task</a>-&gt;postlude();</div><div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;      <span class="comment">// Release the buffers that have been written by this task</span></div><div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;      <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a39f8f97048ad9a0ff178f23a2bc7383a">task</a>-&gt;release_buffers();</div><div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;      <span class="comment">// Notify the waiting tasks that we are done</span></div><div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;      <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a39f8f97048ad9a0ff178f23a2bc7383a">task</a>-&gt;notify_consumers();</div><div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;      <span class="comment">// Notify the queue we are done</span></div><div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;      <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#afcbb785de925a7e09e0b29a55503b0b4">owner_queue</a>-&gt;kernel_end();</div><div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;      <a class="code" href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a>(<span class="stringliteral">&quot;Task thread exit&quot;</span>);</div><div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    };</div><div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="comment">/* Notify the queue that there is a kernel submitted to the</span></div><div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment">       queue. Do not do it in the task contructor so that we can deal</span></div><div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment">       with command group without kernel and if we put it inside the</span></div><div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="comment">       thread, the queue may have finished before the thread is</span></div><div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="comment">       scheduled */</span></div><div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#afcbb785de925a7e09e0b29a55503b0b4">owner_queue</a>-&gt;kernel_start();</div><div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="comment">/* \todo it may be implementable with packaged_task that would</span></div><div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment">       deal with exceptions in kernels</span></div><div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="comment">    */</span></div><div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="preprocessor">#ifndef TRISYCL_NO_ASYNC</span></div><div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="comment">/* If in asynchronous execution mode, execute the functor in a new</span></div><div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment">       thread */</span></div><div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    std::thread thread(execution);</div><div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <a class="code" href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a>(<span class="stringliteral">&quot;Task thread started&quot;</span>);<span class="comment"></span></div><div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment">    /** Detach the thread since it will synchronize by its own means</span></div><div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment"></span></div><div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="comment">        \todo This is an issue if there is an exception in the kernel</span></div><div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="comment">    */</span></div><div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    thread.detach();</div><div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="preprocessor">#else</span></div><div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="comment">// Just a synchronous execution otherwise</span></div><div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    execution();</div><div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="preprocessor">#endif</span></div><div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;  }</div><div class="ttc" id="debug_8hpp_html_a7d15187cc29c2a3ec4ad62acccaa242e"><div class="ttname"><a href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a></div><div class="ttdeci">#define TRISYCL_DUMP_T(expression)</div><div class="ttdoc">Same as TRISYCL_DUMP() but with thread id first. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8hpp_source.html#l00046">debug.hpp:46</a></div></div>
-<div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_afcbb785de925a7e09e0b29a55503b0b4"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#afcbb785de925a7e09e0b29a55503b0b4">cl::sycl::detail::task::owner_queue</a></div><div class="ttdeci">std::shared_ptr&lt; detail::queue &gt; owner_queue</div><div class="ttdoc">Keep track of the queue used to submission to notify kernel completion or to run OpenCL kernels on...</div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00064">task.hpp:64</a></div></div>
-<div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_a39f8f97048ad9a0ff178f23a2bc7383a"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#a39f8f97048ad9a0ff178f23a2bc7383a">cl::sycl::detail::task::task</a></div><div class="ttdeci">task(const std::shared_ptr&lt; detail::queue &gt; &amp;q)</div><div class="ttdoc">Create a task from a submitting queue. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00070">task.hpp:70</a></div></div>
+<p class="reference">References <a class="el" href="task_8hpp_source.html#l00153">notify_consumers()</a>, <a class="el" href="task_8hpp_source.html#l00224">postlude()</a>, <a class="el" href="task_8hpp_source.html#l00212">prelude()</a>, <a class="el" href="task_8hpp_source.html#l00144">release_buffers()</a>, <a class="el" href="debug_8hpp_source.html#l00046">TRISYCL_DUMP_T</a>, and <a class="el" href="task_8hpp_source.html#l00134">wait_for_producers()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;                                           {</div><div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="comment">/* To keep a copy of the task shared_ptr after the end of the</span></div><div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment">       command group, capture it by copy in the following lambda. This</span></div><div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="comment">       should be easier in C++17 with move semantics on capture</span></div><div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">    */</span></div><div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keyword">auto</span> <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a39f8f97048ad9a0ff178f23a2bc7383a">task</a> = shared_from_this();</div><div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keyword">auto</span> execution = [=] {</div><div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;      <span class="comment">// Wait for the required tasks to be ready</span></div><div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;      <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a39f8f97048ad9a0ff178f23a2bc7383a">task</a>-&gt;wait_for_producers();</div><div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;      <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a39f8f97048ad9a0ff178f23a2bc7383a">task</a>-&gt;prelude();</div><div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;      <a class="code" href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a>(<span class="stringliteral">&quot;Execute the kernel&quot;</span>);</div><div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;      <span class="comment">// Execute the kernel</span></div><div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;      f();</div><div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;      <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a39f8f97048ad9a0ff178f23a2bc7383a">task</a>-&gt;postlude();</div><div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;      <span class="comment">// Release the buffers that have been written by this task</span></div><div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;      <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a39f8f97048ad9a0ff178f23a2bc7383a">task</a>-&gt;release_buffers();</div><div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;      <span class="comment">// Notify the waiting tasks that we are done</span></div><div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;      <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a39f8f97048ad9a0ff178f23a2bc7383a">task</a>-&gt;notify_consumers();</div><div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;      <span class="comment">// Notify the queue we are done</span></div><div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;      <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#afcbb785de925a7e09e0b29a55503b0b4">owner_queue</a>-&gt;kernel_end();</div><div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;      <a class="code" href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a>(<span class="stringliteral">&quot;Task thread exit&quot;</span>);</div><div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    };</div><div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="comment">/* Notify the queue that there is a kernel submitted to the</span></div><div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment">       queue. Do not do it in the task contructor so that we can deal</span></div><div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="comment">       with command group without kernel and if we put it inside the</span></div><div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment">       thread, the queue may have finished before the thread is</span></div><div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment">       scheduled */</span></div><div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#afcbb785de925a7e09e0b29a55503b0b4">owner_queue</a>-&gt;kernel_start();</div><div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="comment">/* \todo it may be implementable with packaged_task that would</span></div><div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="comment">       deal with exceptions in kernels</span></div><div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="comment">    */</span></div><div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="preprocessor">#ifndef TRISYCL_NO_ASYNC</span></div><div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="comment">/* If in asynchronous execution mode, execute the functor in a new</span></div><div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="comment">       thread */</span></div><div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    std::thread thread(execution);</div><div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <a class="code" href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a>(<span class="stringliteral">&quot;Task thread started&quot;</span>);<span class="comment"></span></div><div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="comment">    /** Detach the thread since it will synchronize by its own means</span></div><div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="comment"></span></div><div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="comment">        \todo This is an issue if there is an exception in the kernel</span></div><div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="comment">    */</span></div><div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    thread.detach();</div><div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor">#else</span></div><div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="comment">// Just a synchronous execution otherwise</span></div><div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    execution();</div><div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="preprocessor">#endif</span></div><div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;  }</div><div class="ttc" id="debug_8hpp_html_a7d15187cc29c2a3ec4ad62acccaa242e"><div class="ttname"><a href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a></div><div class="ttdeci">#define TRISYCL_DUMP_T(expression)</div><div class="ttdoc">Same as TRISYCL_DUMP() but with thread id first. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8hpp_source.html#l00046">debug.hpp:46</a></div></div>
+<div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_afcbb785de925a7e09e0b29a55503b0b4"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#afcbb785de925a7e09e0b29a55503b0b4">cl::sycl::detail::task::owner_queue</a></div><div class="ttdeci">std::shared_ptr&lt; detail::queue &gt; owner_queue</div><div class="ttdoc">Keep track of the queue used to submission to notify kernel completion or to run OpenCL kernels on...</div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00067">task.hpp:67</a></div></div>
+<div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_a39f8f97048ad9a0ff178f23a2bc7383a"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#a39f8f97048ad9a0ff178f23a2bc7383a">cl::sycl::detail::task::task</a></div><div class="ttdeci">task(const std::shared_ptr&lt; detail::queue &gt; &amp;q)</div><div class="ttdoc">Create a task from a submitting queue. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00080">task.hpp:80</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -590,6 +747,131 @@ Here is the call graph for this function:</div>
 <area shape="rect" id="node4" href="structcl_1_1sycl_1_1detail_1_1task.html#af10a532006cd46573a4bb1664f9e87a8" title="Execute the prologues. " alt="" coords="191,136,327,177"/>
 <area shape="rect" id="node5" href="structcl_1_1sycl_1_1detail_1_1task.html#a791b4ba6341f103e6d71437156d6fafc" title="Release the buffers that have been used by this task. " alt="" coords="191,201,327,243"/>
 <area shape="rect" id="node6" href="structcl_1_1sycl_1_1detail_1_1task.html#a3b176556e36e4ff5c1491a1ddf19579b" title="Wait for the required producer tasks to be ready. " alt="" coords="189,267,329,308"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a1141090d4da31755a9761a6dca2be534"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1141090d4da31755a9761a6dca2be534">&#9670;&nbsp;</a></span>set_arg() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cl::sycl::detail::task::set_arg </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>arg_index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>arg_size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>scalar_value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set a kernel argument by address. </p>
+
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00271">271</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+
+<p class="reference">References <a class="el" href="group__execution.html#afa7c424818bfefb86e9b39657a6a0432">cl::sycl::detail::kernel::get_boost_compute()</a>, and <a class="el" href="task_8hpp_source.html#l00263">get_kernel()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="device__runtime_8hpp_source.html#l00140">cl::sycl::drt::serialize_accessor_arg()</a>, and <a class="el" href="device__runtime_8hpp_source.html#l00119">cl::sycl::drt::serialize_arg()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;                                                                            {</div><div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;<span class="preprocessor">#ifdef TRISYCL_OPENCL</span></div><div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;    <span class="comment">// Forward to the OpenCL kernel</span></div><div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;    <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#ae7dc8fc39b9dfe9de9b1d5bd6be174c7">get_kernel</a>().<a class="code" href="group__execution.html#afa7c424818bfefb86e9b39657a6a0432">get_boost_compute</a>().set_arg(arg_index,</div><div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;                                             arg_size,</div><div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;                                             scalar_value);</div><div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;<span class="preprocessor">#else</span></div><div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;    <span class="keywordflow">throw</span> non_cl_error(<span class="stringliteral">&quot;Not compiled with OpenCL support&quot;</span>);</div><div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;<span class="preprocessor">#endif</span></div><div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;  }</div><div class="ttc" id="group__execution_html_afa7c424818bfefb86e9b39657a6a0432"><div class="ttname"><a href="group__execution.html#afa7c424818bfefb86e9b39657a6a0432">cl::sycl::detail::kernel::get_boost_compute</a></div><div class="ttdeci">virtual boost::compute::kernel &amp; get_boost_compute()=0</div><div class="ttdoc">Return the Boost.Compute OpenCL kernel object for this kernel. </div></div>
+<div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_ae7dc8fc39b9dfe9de9b1d5bd6be174c7"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#ae7dc8fc39b9dfe9de9b1d5bd6be174c7">cl::sycl::detail::task::get_kernel</a></div><div class="ttdeci">cl::sycl::detail::kernel &amp; get_kernel()</div><div class="ttdoc">Get the kernel running if any. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00263">task.hpp:263</a></div></div>
+</div><!-- fragment --><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="structcl_1_1sycl_1_1detail_1_1task_a1141090d4da31755a9761a6dca2be534_cgraph.png" border="0" usemap="#structcl_1_1sycl_1_1detail_1_1task_a1141090d4da31755a9761a6dca2be534_cgraph" alt=""/></div>
+<map name="structcl_1_1sycl_1_1detail_1_1task_a1141090d4da31755a9761a6dca2be534_cgraph" id="structcl_1_1sycl_1_1detail_1_1task_a1141090d4da31755a9761a6dca2be534_cgraph">
+<area shape="rect" id="node2" href="group__execution.html#afa7c424818bfefb86e9b39657a6a0432" title="Return the Boost.Compute OpenCL kernel object for this kernel. " alt="" coords="189,5,336,47"/>
+<area shape="rect" id="node3" href="structcl_1_1sycl_1_1detail_1_1task.html#ae7dc8fc39b9dfe9de9b1d5bd6be174c7" title="Get the kernel running if any. " alt="" coords="195,71,331,112"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="structcl_1_1sycl_1_1detail_1_1task_a1141090d4da31755a9761a6dca2be534_icgraph.png" border="0" usemap="#structcl_1_1sycl_1_1detail_1_1task_a1141090d4da31755a9761a6dca2be534_icgraph" alt=""/></div>
+<map name="structcl_1_1sycl_1_1detail_1_1task_a1141090d4da31755a9761a6dca2be534_icgraph" id="structcl_1_1sycl_1_1detail_1_1task_a1141090d4da31755a9761a6dca2be534_icgraph">
+<area shape="rect" id="node2" href="group__device__runtime.html#gac37be9f8c26013d7334b5736c2124d54" title="Set an accessor argument of the kernel. " alt="" coords="202,5,345,47"/>
+<area shape="rect" id="node3" href="group__device__runtime.html#gae93a9a9de55ffe125a24247829659b92" title="Set an argument value of the kernel. " alt="" coords="189,71,357,98"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a7a8d9a6cf9b41ed7a28a0d64454f7e85"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a8d9a6cf9b41ed7a28a0d64454f7e85">&#9670;&nbsp;</a></span>set_arg() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cl::sycl::detail::task::set_arg </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>arg_index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>scalar_value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set a kernel argument by value. </p>
+
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00285">285</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+
+<p class="reference">References <a class="el" href="group__execution.html#afa7c424818bfefb86e9b39657a6a0432">cl::sycl::detail::kernel::get_boost_compute()</a>, and <a class="el" href="task_8hpp_source.html#l00263">get_kernel()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;                                                     {</div><div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;<span class="preprocessor">#ifdef TRISYCL_OPENCL</span></div><div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;    <span class="comment">// Forward to the OpenCL kernel</span></div><div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;    <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#ae7dc8fc39b9dfe9de9b1d5bd6be174c7">get_kernel</a>().<a class="code" href="group__execution.html#afa7c424818bfefb86e9b39657a6a0432">get_boost_compute</a>().set_arg(arg_index, scalar_value);</div><div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;<span class="preprocessor">#else</span></div><div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;    <span class="keywordflow">throw</span> non_cl_error(<span class="stringliteral">&quot;Not compiled with OpenCL support&quot;</span>);</div><div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;<span class="preprocessor">#endif</span></div><div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;  }</div><div class="ttc" id="group__execution_html_afa7c424818bfefb86e9b39657a6a0432"><div class="ttname"><a href="group__execution.html#afa7c424818bfefb86e9b39657a6a0432">cl::sycl::detail::kernel::get_boost_compute</a></div><div class="ttdeci">virtual boost::compute::kernel &amp; get_boost_compute()=0</div><div class="ttdoc">Return the Boost.Compute OpenCL kernel object for this kernel. </div></div>
+<div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_ae7dc8fc39b9dfe9de9b1d5bd6be174c7"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#ae7dc8fc39b9dfe9de9b1d5bd6be174c7">cl::sycl::detail::task::get_kernel</a></div><div class="ttdeci">cl::sycl::detail::kernel &amp; get_kernel()</div><div class="ttdoc">Get the kernel running if any. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00263">task.hpp:263</a></div></div>
+</div><!-- fragment --><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="structcl_1_1sycl_1_1detail_1_1task_a7a8d9a6cf9b41ed7a28a0d64454f7e85_cgraph.png" border="0" usemap="#structcl_1_1sycl_1_1detail_1_1task_a7a8d9a6cf9b41ed7a28a0d64454f7e85_cgraph" alt=""/></div>
+<map name="structcl_1_1sycl_1_1detail_1_1task_a7a8d9a6cf9b41ed7a28a0d64454f7e85_cgraph" id="structcl_1_1sycl_1_1detail_1_1task_a7a8d9a6cf9b41ed7a28a0d64454f7e85_cgraph">
+<area shape="rect" id="node2" href="group__execution.html#afa7c424818bfefb86e9b39657a6a0432" title="Return the Boost.Compute OpenCL kernel object for this kernel. " alt="" coords="189,5,336,47"/>
+<area shape="rect" id="node3" href="structcl_1_1sycl_1_1detail_1_1task.html#ae7dc8fc39b9dfe9de9b1d5bd6be174c7" title="Get the kernel running if any. " alt="" coords="195,71,331,112"/>
 </map>
 </div>
 
@@ -619,11 +901,21 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Set the kernel running this task if any. </p>
+<p>Set the OpenCL-compatible kernel running this task if any. </p>
 
-<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00240">240</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;                                                              {</div><div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;    <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a2176c268a6335e8921a3d08310ef6b1f">kernel</a> = k;</div><div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;  }</div><div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_a2176c268a6335e8921a3d08310ef6b1f"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#a2176c268a6335e8921a3d08310ef6b1f">cl::sycl::detail::task::kernel</a></div><div class="ttdeci">std::shared_ptr&lt; cl::sycl::detail::kernel &gt; kernel</div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00066">task.hpp:66</a></div></div>
-</div><!-- fragment -->
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00254">254</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="device__runtime_8hpp_source.html#l00201">cl::sycl::drt::set_kernel()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;                                                              {</div><div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a060ea2aad696e1de6692ec43d7fbb8f9">kernel</a> = k;</div><div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;  }</div><div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_a060ea2aad696e1de6692ec43d7fbb8f9"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#a060ea2aad696e1de6692ec43d7fbb8f9">cl::sycl::detail::task::kernel</a></div><div class="ttdeci">std::shared_ptr&lt; detail::kernel &gt; kernel</div><div class="ttdoc">The OpenCL-compatible kernel run by this task, if any. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00070">task.hpp:70</a></div></div>
+</div><!-- fragment --><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="structcl_1_1sycl_1_1detail_1_1task_a845d535dec2d784c9fa6299ea9c07f1c_icgraph.png" border="0" usemap="#structcl_1_1sycl_1_1detail_1_1task_a845d535dec2d784c9fa6299ea9c07f1c_icgraph" alt=""/></div>
+<map name="structcl_1_1sycl_1_1detail_1_1task_a845d535dec2d784c9fa6299ea9c07f1c_icgraph" id="structcl_1_1sycl_1_1detail_1_1task_a845d535dec2d784c9fa6299ea9c07f1c_icgraph">
+<area shape="rect" id="node2" href="group__device__runtime.html#ga71fe05b230d29fc87e42441daa3e6585" title="Set the kernel for a later invocation. " alt="" coords="189,5,303,47"/>
+</map>
+</div>
+
 </div>
 </div>
 <a id="a91d400fd40ede4ae00662dd124dd1b8a"></a>
@@ -652,13 +944,13 @@ Here is the call graph for this function:</div>
 <p>Wait for this task to be ready. </p>
 <p>This is to be called from another thread </p>
 
-<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00159">159</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00169">169</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="task_8hpp_source.html#l00054">execution_ended</a>, and <a class="el" href="debug_8hpp_source.html#l00046">TRISYCL_DUMP_T</a>.</p>
-<div class="fragment"><div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;              {</div><div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <a class="code" href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a>(<span class="stringliteral">&quot;The task wait for task &quot;</span> &lt;&lt; <span class="keyword">this</span> &lt;&lt; <span class="stringliteral">&quot; to end&quot;</span>);</div><div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    std::unique_lock&lt;std::mutex&gt; ul { <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a0d4d577feecdf9b62f5a4aa6b8f1b74f">ready_mutex</a> };</div><div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#acc33cb55075a320aba7e9cf0e4d41961">ready</a>.wait(ul, [&amp;] { <span class="keywordflow">return</span> <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#af24bc44bd88469b222627dee47548e23">execution_ended</a>; });</div><div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;  }</div><div class="ttc" id="debug_8hpp_html_a7d15187cc29c2a3ec4ad62acccaa242e"><div class="ttname"><a href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a></div><div class="ttdeci">#define TRISYCL_DUMP_T(expression)</div><div class="ttdoc">Same as TRISYCL_DUMP() but with thread id first. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8hpp_source.html#l00046">debug.hpp:46</a></div></div>
-<div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_acc33cb55075a320aba7e9cf0e4d41961"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#acc33cb55075a320aba7e9cf0e4d41961">cl::sycl::detail::task::ready</a></div><div class="ttdeci">std::condition_variable ready</div><div class="ttdoc">To signal when this task is ready. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00057">task.hpp:57</a></div></div>
-<div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_a0d4d577feecdf9b62f5a4aa6b8f1b74f"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#a0d4d577feecdf9b62f5a4aa6b8f1b74f">cl::sycl::detail::task::ready_mutex</a></div><div class="ttdeci">std::mutex ready_mutex</div><div class="ttdoc">To protect the access to the condition variable. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00060">task.hpp:60</a></div></div>
-<div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_af24bc44bd88469b222627dee47548e23"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#af24bc44bd88469b222627dee47548e23">cl::sycl::detail::task::execution_ended</a></div><div class="ttdeci">bool execution_ended</div><div class="ttdoc">Store if the execution ended, to be notified by task_ready. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00054">task.hpp:54</a></div></div>
+<p class="reference">References <a class="el" href="task_8hpp_source.html#l00057">execution_ended</a>, and <a class="el" href="debug_8hpp_source.html#l00046">TRISYCL_DUMP_T</a>.</p>
+<div class="fragment"><div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;              {</div><div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    <a class="code" href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a>(<span class="stringliteral">&quot;The task wait for task &quot;</span> &lt;&lt; <span class="keyword">this</span> &lt;&lt; <span class="stringliteral">&quot; to end&quot;</span>);</div><div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    std::unique_lock&lt;std::mutex&gt; ul { <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#a0d4d577feecdf9b62f5a4aa6b8f1b74f">ready_mutex</a> };</div><div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#acc33cb55075a320aba7e9cf0e4d41961">ready</a>.wait(ul, [&amp;] { <span class="keywordflow">return</span> <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#af24bc44bd88469b222627dee47548e23">execution_ended</a>; });</div><div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;  }</div><div class="ttc" id="debug_8hpp_html_a7d15187cc29c2a3ec4ad62acccaa242e"><div class="ttname"><a href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a></div><div class="ttdeci">#define TRISYCL_DUMP_T(expression)</div><div class="ttdoc">Same as TRISYCL_DUMP() but with thread id first. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8hpp_source.html#l00046">debug.hpp:46</a></div></div>
+<div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_acc33cb55075a320aba7e9cf0e4d41961"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#acc33cb55075a320aba7e9cf0e4d41961">cl::sycl::detail::task::ready</a></div><div class="ttdeci">std::condition_variable ready</div><div class="ttdoc">To signal when this task is ready. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00060">task.hpp:60</a></div></div>
+<div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_a0d4d577feecdf9b62f5a4aa6b8f1b74f"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#a0d4d577feecdf9b62f5a4aa6b8f1b74f">cl::sycl::detail::task::ready_mutex</a></div><div class="ttdeci">std::mutex ready_mutex</div><div class="ttdoc">To protect the access to the condition variable. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00063">task.hpp:63</a></div></div>
+<div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_af24bc44bd88469b222627dee47548e23"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#af24bc44bd88469b222627dee47548e23">cl::sycl::detail::task::execution_ended</a></div><div class="ttdeci">bool execution_ended</div><div class="ttdoc">Store if the execution ended, to be notified by task_ready. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00057">task.hpp:57</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -687,12 +979,12 @@ Here is the call graph for this function:</div>
 
 <p>Wait for the required producer tasks to be ready. </p>
 
-<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00124">124</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00134">134</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
 
 <p class="reference">References <a class="el" href="debug_8hpp_source.html#l00046">TRISYCL_DUMP_T</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="task_8hpp_source.html#l00075">schedule()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;                            {</div><div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <a class="code" href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a>(<span class="stringliteral">&quot;Task &quot;</span> &lt;&lt; <span class="keyword">this</span> &lt;&lt; <span class="stringliteral">&quot; waits for the producer tasks&quot;</span>);</div><div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;t : <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#ac022fb4cbc8c6ae4ed388aa70dde2d3f">producer_tasks</a>)</div><div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;      t-&gt;wait();</div><div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="comment">// We can let the producers rest in peace</span></div><div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    producer_tasks.clear();</div><div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;  }</div><div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_ac022fb4cbc8c6ae4ed388aa70dde2d3f"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#ac022fb4cbc8c6ae4ed388aa70dde2d3f">cl::sycl::detail::task::producer_tasks</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; detail::task &gt; &gt; producer_tasks</div><div class="ttdoc">The tasks producing the buffers used by this task. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00045">task.hpp:45</a></div></div>
+<p class="reference">Referenced by <a class="el" href="task_8hpp_source.html#l00085">schedule()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;                            {</div><div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <a class="code" href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a>(<span class="stringliteral">&quot;Task &quot;</span> &lt;&lt; <span class="keyword">this</span> &lt;&lt; <span class="stringliteral">&quot; waits for the producer tasks&quot;</span>);</div><div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;t : <a class="code" href="structcl_1_1sycl_1_1detail_1_1task.html#ac022fb4cbc8c6ae4ed388aa70dde2d3f">producer_tasks</a>)</div><div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;      t-&gt;wait();</div><div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    <span class="comment">// We can let the producers rest in peace</span></div><div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    producer_tasks.clear();</div><div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;  }</div><div class="ttc" id="structcl_1_1sycl_1_1detail_1_1task_html_ac022fb4cbc8c6ae4ed388aa70dde2d3f"><div class="ttname"><a href="structcl_1_1sycl_1_1detail_1_1task.html#ac022fb4cbc8c6ae4ed388aa70dde2d3f">cl::sycl::detail::task::producer_tasks</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; detail::task &gt; &gt; producer_tasks</div><div class="ttdoc">The tasks producing the buffers used by this task. </div><div class="ttdef"><b>Definition:</b> <a href="task_8hpp_source.html#l00048">task.hpp:48</a></div></div>
 <div class="ttc" id="debug_8hpp_html_a7d15187cc29c2a3ec4ad62acccaa242e"><div class="ttname"><a href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a></div><div class="ttdeci">#define TRISYCL_DUMP_T(expression)</div><div class="ttdoc">Same as TRISYCL_DUMP() but with thread id first. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8hpp_source.html#l00046">debug.hpp:46</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -706,6 +998,25 @@ Here is the caller graph for this function:</div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="a6dd6d9ed9eb53763fd37941a304f6c5a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6dd6d9ed9eb53763fd37941a304f6c5a">&#9670;&nbsp;</a></span>accessors</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::weak_ptr&lt;<a class="el" href="group__data.html#classcl_1_1sycl_1_1detail_1_1accessor__base">detail::accessor_base</a>&gt; &gt; cl::sycl::detail::task::accessors</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The accessors indexed by their creation order. </p>
+<p>This is used to relate a kernel parameter of a kernel generated by the device compiler to its accessor. </p>
+
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00076">76</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+
+</div>
+</div>
 <a id="af0cda0e975507abd9c7c8c7659072ed8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af0cda0e975507abd9c7c8c7659072ed8">&#9670;&nbsp;</a></span>buffers_in_use</h2>
 
@@ -721,7 +1032,7 @@ Here is the caller graph for this function:</div>
 <p>List of the buffers used by this task. </p>
 <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000122">Todo:</a></b></dt><dd>Use a set to check that some buffers are not used many times at least on writing </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00042">42</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00045">45</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
 
 </div>
 </div>
@@ -739,7 +1050,7 @@ Here is the caller graph for this function:</div>
 
 <p>Keep track of any epilogue to be executed after the kernel. </p>
 
-<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00051">51</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00054">54</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
 
 </div>
 </div>
@@ -757,27 +1068,29 @@ Here is the caller graph for this function:</div>
 
 <p>Store if the execution ended, to be notified by task_ready. </p>
 
-<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00054">54</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00057">57</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="task_8hpp_source.html#l00159">wait()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="task_8hpp_source.html#l00169">wait()</a>.</p>
 
 </div>
 </div>
-<a id="a2176c268a6335e8921a3d08310ef6b1f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2176c268a6335e8921a3d08310ef6b1f">&#9670;&nbsp;</a></span>kernel</h2>
+<a id="a060ea2aad696e1de6692ec43d7fbb8f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a060ea2aad696e1de6692ec43d7fbb8f9">&#9670;&nbsp;</a></span>kernel</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::shared_ptr&lt;<a class="el" href="group__execution.html#classcl_1_1sycl_1_1detail_1_1kernel">cl::sycl::detail::kernel</a>&gt; cl::sycl::detail::task::kernel</td>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="group__execution.html#classcl_1_1sycl_1_1detail_1_1kernel">detail::kernel</a>&gt; cl::sycl::detail::task::kernel</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00066">66</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+<p>The OpenCL-compatible kernel run by this task, if any. </p>
 
-<p class="reference">Referenced by <a class="el" href="task_8hpp_source.html#l00249">get_kernel()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00070">70</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="task_8hpp_source.html#l00263">get_kernel()</a>.</p>
 
 </div>
 </div>
@@ -795,9 +1108,9 @@ Here is the caller graph for this function:</div>
 
 <p>Keep track of the queue used to submission to notify kernel completion or to run OpenCL kernels on. </p>
 
-<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00064">64</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00067">67</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="task_8hpp_source.html#l00234">get_queue()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="task_8hpp_source.html#l00248">get_queue()</a>.</p>
 
 </div>
 </div>
@@ -815,7 +1128,7 @@ Here is the caller graph for this function:</div>
 
 <p>The tasks producing the buffers used by this task. </p>
 
-<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00045">45</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00048">48</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
 
 </div>
 </div>
@@ -833,7 +1146,7 @@ Here is the caller graph for this function:</div>
 
 <p>Keep track of any prologue to be executed before the kernel. </p>
 
-<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00048">48</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00051">51</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
 
 </div>
 </div>
@@ -851,7 +1164,7 @@ Here is the caller graph for this function:</div>
 
 <p>To signal when this task is ready. </p>
 
-<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00057">57</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00060">60</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
 
 </div>
 </div>
@@ -869,7 +1182,7 @@ Here is the caller graph for this function:</div>
 
 <p>To protect the access to the condition variable. </p>
 
-<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00060">60</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="task_8hpp_source.html#l00063">63</a> of file <a class="el" href="task_8hpp_source.html">task.hpp</a>.</p>
 
 </div>
 </div>
@@ -879,7 +1192,7 @@ Here is the caller graph for this function:</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Dec 22 2017 02:39:44 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Apr 20 2018 19:26:24 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

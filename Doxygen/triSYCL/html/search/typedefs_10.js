@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['reference',['reference',['../group__data.html#a609f946bb7ff327f0ac44bc6627e73df',1,'cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;::reference()'],['../group__data.html#aada3fa2ad2e97c273ec819b159938caf',1,'cl::sycl::detail::accessor::reference()'],['../group__data.html#a8326722c12afd6532d7cbf9f3e31ebc3',1,'cl::sycl::buffer::reference()'],['../group__helpers.html#aa6403452e6faf0c6e05f77b4a8502234',1,'cl::sycl::detail::container_element_aspect::reference()'],['../group__data.html#af6de3d4de5d5a09c58c6ebc439d0f707',1,'cl::sycl::detail::pipe_accessor::reference()'],['../group__data.html#a0fcf9c908f54480b092d60ef3bf18928',1,'cl::sycl::detail::pipe_reservation::reference()'],['../group__data.html#a55644c9befb1e34de84b9511e9b66f0d',1,'cl::sycl::pipe_reservation::reference()']]],
-  ['reference_5ft',['reference_t',['../group__address__spaces.html#a7b6e64220fd6fcdb20ab3456fbb7d16b',1,'cl::sycl::detail::address_space_ptr']]],
-  ['reverse_5fiterator',['reverse_iterator',['../group__data.html#a78f4468f7963e2ac651f0e6368a730ed',1,'cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;::reverse_iterator()'],['../group__data.html#a0c90b32d38cfe7f85b1578c76d59cecc',1,'cl::sycl::detail::accessor::reverse_iterator()'],['../group__data.html#acec44de1f2ce79df21baedefd183adfc',1,'cl::sycl::pipe_reservation::reverse_iterator()']]],
-  ['rid_5fiterator',['rid_iterator',['../group__data.html#a8515b3fa664d1f1444ed1c9bf1aa463f',1,'cl::sycl::detail::pipe']]]
+  ['queue_5fprofiling',['queue_profiling',['../namespacecl_1_1sycl_1_1info.html#a03183ee18ed502bf29089e54fb2eb9bb',1,'cl::sycl::info']]]
 ];

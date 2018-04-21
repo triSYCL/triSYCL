@@ -1,7 +1,6 @@
 var searchData=
 [
   ['generic_5faddress_5fspace',['generic_address_space',['../group__address__spaces.html#gga03ea3501c0e52ba48d2cdf36ff00f0a7a6552359007d72e6bc8c7b4371205be85',1,'cl::sycl']]],
-  ['gl_5finterop',['gl_interop',['../group__execution.html#gga1a5898274a448ac592ebbcee928939c1a9d19ae6573a7d4f99ebc6818a92687f5',1,'cl::sycl::info']]],
   ['global',['global',['../group__execution.html#ggad3cf44d11f60b23508e91d1ed61ad001a9c70933aff6b2a6d08c687a6cbb6b765',1,'cl::sycl::info']]],
   ['global_5faddress_5fspace',['global_address_space',['../group__address__spaces.html#gga03ea3501c0e52ba48d2cdf36ff00f0a7a3cfdd7e85b6c75ca1e4d39409e1fee0d',1,'cl::sycl']]],
   ['global_5fand_5flocal',['global_and_local',['../namespacecl_1_1sycl_1_1access.html#a1e26dc60d7c93fcc056d6be0c41d1d42a78877b2c21d50a8878a02d10f4a79a3b',1,'cl::sycl::access']]],

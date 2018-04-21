@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['map_5fallocator',['map_allocator',['../group__data.html#gaa5ab7472bc98afc7f70032036e6cc501',1,'cl::sycl']]],
-  ['multi_5fptr',['multi_ptr',['../group__address__spaces.html#ga9dafd4b1b4d7ad7fb7d93eab429942f9',1,'cl::sycl']]],
-  ['mutex_5fclass',['mutex_class',['../namespacecl_1_1sycl.html#a0e818f1ac2ba5084b08dd41ca813ef28',1,'cl::sycl']]]
+  ['local',['local',['../group__address__spaces.html#ga84b28327ccb8c32ea971d6c1d5f3bca2',1,'cl::sycl']]],
+  ['local_5fptr',['local_ptr',['../group__address__spaces.html#ga5c0e2468bb7dc8ac85e64f7ce1586ef2',1,'cl::sycl']]]
 ];

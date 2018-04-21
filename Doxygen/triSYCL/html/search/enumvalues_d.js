@@ -10,7 +10,7 @@ var searchData=
   ['partition_5fproperties',['partition_properties',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a6202f9f9122c2bd39e9cbd08683354d7',1,'cl::sycl::info']]],
   ['partition_5ftype',['partition_type',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ab90f95b341b6645eaf67613349c12293',1,'cl::sycl::info']]],
   ['pipe',['pipe',['../namespacecl_1_1sycl_1_1access.html#a54d2e6e700c92ce57c6fe2ba91432598a20826a3cb51d6c7d9c219c7f4bf4e5c9',1,'cl::sycl::access']]],
-  ['platform',['platform',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a34a6e5d64ade17ef4e51612c50dd72f5',1,'cl::sycl::info']]],
+  ['platform',['platform',['../group__execution.html#gga1a5898274a448ac592ebbcee928939c1a34a6e5d64ade17ef4e51612c50dd72f5',1,'cl::sycl::info::platform()'],['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a34a6e5d64ade17ef4e51612c50dd72f5',1,'cl::sycl::info::platform()']]],
   ['preferred_5finterop_5fuser_5fsync',['preferred_interop_user_sync',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a3e61f47504a8d1de81642c7c72f25dba',1,'cl::sycl::info']]],
   ['preferred_5fvector_5fwidth_5fchar',['preferred_vector_width_char',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a0172422d8c3c4ed5a4116131baed67f8',1,'cl::sycl::info']]],
   ['preferred_5fvector_5fwidth_5fdouble',['preferred_vector_width_double',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a4d034db6176d6fe61a8c61993e4a8755',1,'cl::sycl::info']]],

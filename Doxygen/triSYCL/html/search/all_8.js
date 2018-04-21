@@ -27,5 +27,7 @@ var searchData=
   ['host_5fqueue',['host_queue',['../classcl_1_1sycl_1_1detail_1_1host__queue.html',1,'cl::sycl::detail']]],
   ['host_5fqueue_2ehpp',['host_queue.hpp',['../host__queue_8hpp.html',1,'']]],
   ['host_5fselector',['host_selector',['../group__execution.html#gae4bda49129ccbcd73e4dbf372d37ea10',1,'cl::sycl']]],
-  ['host_5funified_5fmemory',['host_unified_memory',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a0fbdc8bcd6c762ac073157f9e77b2437',1,'cl::sycl::info']]]
+  ['host_5funified_5fmemory',['host_unified_memory',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a0fbdc8bcd6c762ac073157f9e77b2437',1,'cl::sycl::info']]],
+  ['huge_5fval',['HUGE_VAL',['../opencl__spir_8h.html#af2164b2db92d8a0ed3838ad5c28db971',1,'opencl_spir.h']]],
+  ['huge_5fvalf',['HUGE_VALF',['../opencl__spir_8h.html#acd69981d54c27fe0ff514645dbfc6359',1,'opencl_spir.h']]]
 ];

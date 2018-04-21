@@ -1,0 +1,8 @@
+<map id="include/CL/sycl/detail/instantiate_kernel.hpp" name="include/CL/sycl/detail/instantiate_kernel.hpp">
+<area shape="rect" id="node2" href="$handler_8hpp.html" title="include/CL/sycl/handler.hpp" alt="" coords="149,95,331,121"/>
+<area shape="rect" id="node3" href="$buffer_8hpp.html" title="include/CL/sycl/buffer.hpp" alt="" coords="31,259,206,285"/>
+<area shape="rect" id="node4" href="$sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="175,333,313,360"/>
+<area shape="rect" id="node5" href="$pipe_8hpp.html" title="include/CL/sycl/pipe.hpp" alt="" coords="281,259,447,285"/>
+<area shape="rect" id="node6" href="$queue_8hpp.html" title="include/CL/sycl/queue.hpp" alt="" coords="152,177,328,203"/>
+<area shape="rect" id="node7" href="$static__pipe_8hpp.html" title="include/CL/sycl/static\l_pipe.hpp" alt="" coords="407,169,555,211"/>
+</map>

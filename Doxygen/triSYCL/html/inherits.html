@@ -72,13 +72,14 @@ $(function() {
 </td></tr>
 <tr><td><img src="inherit_graph_1.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1accessor_3_01T_00_01Dimensions_00_01Mode_00_01Target_01_4"/>
 <map name="cl_1_1sycl_1_1detail_1_1accessor_3_01T_00_01Dimensions_00_01Mode_00_01Target_01_4" id="cl_1_1sycl_1_1detail_1_1accessor_3_01T_00_01Dimensions_00_01Mode_00_01Target_01_4">
-<area shape="rect" id="node1" href="group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; accessor\&lt; T, Dimensions,\l Mode, Target \&gt; \&gt;" alt="" coords="5,5,193,61"/>
-<area shape="rect" id="node2" href="group__data.html#classcl_1_1sycl_1_1detail_1_1accessor" title="The buffer accessor abstracts the way buffer data are accessed inside a kernel in a multidimensional ..." alt="" coords="241,17,457,58"/>
-<area shape="rect" id="node3" href="group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; buffer\&lt; T, Dimensions \&gt; \&gt;" alt="" coords="255,187,443,229"/>
-<area shape="rect" id="node4" href="group__data.html#classcl_1_1sycl_1_1detail_1_1buffer" title="A SYCL buffer is a multidimensional variable length array (à la C99 VLA or even Fortran before) that ..." alt="" coords="505,133,649,174"/>
-<area shape="rect" id="node5" href="group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; task \&gt;" alt="" coords="26,137,173,178"/>
-<area shape="rect" id="node6" href="structcl_1_1sycl_1_1detail_1_1task.html" title="The abstraction to represent SYCL tasks executing inside command_group. " alt="" coords="281,136,417,163"/>
-<area shape="rect" id="node8" href="group__data.html#structcl_1_1sycl_1_1detail_1_1buffer__base" title="Factorize some template independent buffer aspects in a base class. " alt="" coords="260,85,439,112"/>
+<area shape="rect" id="node1" href="group__data.html#classcl_1_1sycl_1_1detail_1_1accessor__base" title="The buffer accessor base is here mainly to be accessed from the task without dependency on the buffer..." alt="" coords="5,5,204,32"/>
+<area shape="rect" id="node2" href="group__data.html#classcl_1_1sycl_1_1detail_1_1accessor" title="The buffer accessor abstracts the way buffer data are accessed inside a kernel in a multidimensional ..." alt="" coords="252,63,468,105"/>
+<area shape="rect" id="node3" href="group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; accessor\&lt; T, Dimensions,\l Mode, Target \&gt; \&gt;" alt="" coords="11,56,199,112"/>
+<area shape="rect" id="node4" href="group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; buffer\&lt; T, Dimensions \&gt; \&gt;" alt="" coords="266,238,454,279"/>
+<area shape="rect" id="node5" href="group__data.html#classcl_1_1sycl_1_1detail_1_1buffer" title="A SYCL buffer is a multidimensional variable length array (à la C99 VLA or even Fortran before) that ..." alt="" coords="516,183,660,225"/>
+<area shape="rect" id="node6" href="group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; task \&gt;" alt="" coords="31,187,178,229"/>
+<area shape="rect" id="node7" href="structcl_1_1sycl_1_1detail_1_1task.html" title="The abstraction to represent SYCL tasks executing inside command_group. " alt="" coords="292,187,428,213"/>
+<area shape="rect" id="node9" href="group__data.html#structcl_1_1sycl_1_1detail_1_1buffer__base" title="Factorize some template independent buffer aspects in a base class. " alt="" coords="271,136,449,163"/>
 </map>
 </td></tr>
 <tr><td><img src="inherit_graph_2.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1address__space__object_3_01T_00_01AS_01_4"/>
@@ -121,18 +122,24 @@ $(function() {
 <area shape="rect" id="node1" href="classcl_1_1sycl_1_1detail_1_1cache.html" title="A simple thread safe cache mechanism to cache std::shared_ptr of values indexed by keys..." alt="" coords="5,5,152,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_9.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1container__element__aspect_3_01T_01_4"/>
+<tr><td><img src="inherit_graph_9.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1container__element__aspect_3_01Accessor_1_1value__type_01_4"/>
+<map name="cl_1_1sycl_1_1detail_1_1container__element__aspect_3_01Accessor_1_1value__type_01_4" id="cl_1_1sycl_1_1detail_1_1container__element__aspect_3_01Accessor_1_1value__type_01_4">
+<area shape="rect" id="node1" href="group__helpers.html" title="cl::sycl::detail::container\l_element_aspect\&lt; Accessor\l::value_type \&gt;" alt="" coords="5,5,193,61"/>
+<area shape="rect" id="node2" href="group__device__runtime.html#classcl_1_1sycl_1_1drt_1_1accessor" title="SYCL accessor seen from a device perspective. " alt="" coords="241,13,389,54"/>
+</map>
+</td></tr>
+<tr><td><img src="inherit_graph_10.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1container__element__aspect_3_01T_01_4"/>
 <map name="cl_1_1sycl_1_1detail_1_1container__element__aspect_3_01T_01_4" id="cl_1_1sycl_1_1detail_1_1container__element__aspect_3_01T_01_4">
 <area shape="rect" id="node1" href="group__helpers.html#structcl_1_1sycl_1_1detail_1_1container__element__aspect" title="A mix&#45;in to add some container element aspects. " alt="" coords="5,5,169,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_10.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1debug_3_01accessor_3_01T_00_01Dimensions_00_01Mode_00_01access_1_1target_1_1local_01_4_01_4"/>
+<tr><td><img src="inherit_graph_11.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1debug_3_01accessor_3_01T_00_01Dimensions_00_01Mode_00_01access_1_1target_1_1local_01_4_01_4"/>
 <map name="cl_1_1sycl_1_1detail_1_1debug_3_01accessor_3_01T_00_01Dimensions_00_01Mode_00_01access_1_1target_1_1local_01_4_01_4" id="cl_1_1sycl_1_1detail_1_1debug_3_01accessor_3_01T_00_01Dimensions_00_01Mode_00_01access_1_1target_1_1local_01_4_01_4">
 <area shape="rect" id="node1" href="group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; accessor\&lt; T, Dimensions,\l Mode, access::target::local \&gt; \&gt;" alt="" coords="5,5,213,61"/>
 <area shape="rect" id="node2" href="group__data.html#classcl_1_1sycl_1_1detail_1_1accessor_3_01T_00_01Dimensions_00_01Mode_00_01access_1_1target_1_1local_01_4" title="The local accessor specialization abstracts the way local memory is allocated to a kernel to be share..." alt="" coords="261,5,471,61"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_11.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1debug_3_01detail_1_1pipe__accessor_3_01DataType_00_01AccessMode_00_01Target_01_4_01_4"/>
+<tr><td><img src="inherit_graph_12.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1debug_3_01detail_1_1pipe__accessor_3_01DataType_00_01AccessMode_00_01Target_01_4_01_4"/>
 <map name="cl_1_1sycl_1_1detail_1_1debug_3_01detail_1_1pipe__accessor_3_01DataType_00_01AccessMode_00_01Target_01_4_01_4" id="cl_1_1sycl_1_1detail_1_1debug_3_01detail_1_1pipe__accessor_3_01DataType_00_01AccessMode_00_01Target_01_4_01_4">
 <area shape="rect" id="node1" href="group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; detail::pipe_accessor\l\&lt; DataType, AccessMode,\l Target \&gt; \&gt;" alt="" coords="5,38,184,109"/>
 <area shape="rect" id="node2" href="group__data.html" title="cl::sycl::detail::pipe\l_accessor\&lt; DataType, AccessMode,\l access::target::blocking_pipe \&gt;" alt="" coords="232,5,471,61"/>
@@ -141,25 +148,25 @@ $(function() {
 <area shape="rect" id="node5" href="group__data.html#classcl_1_1sycl_1_1accessor_3_01DataType_00_011_00_01AccessMode_00_01access_1_1target_1_1pipe_01_4" title="The pipe accessor abstracts the way pipe data are accessed inside a kernel. " alt="" coords="525,85,720,141"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_12.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1debug_3_01detail_1_1pipe__accessor_3_01T_00_01AccessMode_00_01Target_01_4_01_4"/>
+<tr><td><img src="inherit_graph_13.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1debug_3_01detail_1_1pipe__accessor_3_01T_00_01AccessMode_00_01Target_01_4_01_4"/>
 <map name="cl_1_1sycl_1_1detail_1_1debug_3_01detail_1_1pipe__accessor_3_01T_00_01AccessMode_00_01Target_01_4_01_4" id="cl_1_1sycl_1_1detail_1_1debug_3_01detail_1_1pipe__accessor_3_01T_00_01AccessMode_00_01Target_01_4_01_4">
 <area shape="rect" id="node1" href="group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; detail::pipe_accessor\l\&lt; T, AccessMode, Target \&gt; \&gt;" alt="" coords="5,5,200,61"/>
 <area shape="rect" id="node2" href="group__data.html#classcl_1_1sycl_1_1detail_1_1pipe__accessor" title="The accessor abstracts the way pipe data are accessed inside a kernel. " alt="" coords="248,5,439,61"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_13.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1debug_3_01detail_1_1pipe__reservation_3_01PipeAccessor_01_4_01_4"/>
+<tr><td><img src="inherit_graph_14.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1debug_3_01detail_1_1pipe__reservation_3_01PipeAccessor_01_4_01_4"/>
 <map name="cl_1_1sycl_1_1detail_1_1debug_3_01detail_1_1pipe__reservation_3_01PipeAccessor_01_4_01_4" id="cl_1_1sycl_1_1detail_1_1debug_3_01detail_1_1pipe__reservation_3_01PipeAccessor_01_4_01_4">
 <area shape="rect" id="node1" href="group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; detail::pipe_reservation\l\&lt; PipeAccessor \&gt; \&gt;" alt="" coords="5,5,173,61"/>
 <area shape="rect" id="node2" href="group__data.html#classcl_1_1sycl_1_1detail_1_1pipe__reservation" title="The implementation of the pipe reservation station. " alt="" coords="221,13,420,54"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_14.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1debug_3_01handler_01_4"/>
+<tr><td><img src="inherit_graph_15.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1debug_3_01handler_01_4"/>
 <map name="cl_1_1sycl_1_1detail_1_1debug_3_01handler_01_4" id="cl_1_1sycl_1_1detail_1_1debug_3_01handler_01_4">
 <area shape="rect" id="node1" href="group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; handler \&gt;" alt="" coords="5,5,152,47"/>
 <area shape="rect" id="node2" href="group__execution.html#classcl_1_1sycl_1_1handler" title="Command group handler class. " alt="" coords="200,13,315,39"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_15.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1debug_3_01opencl__kernel_01_4"/>
+<tr><td><img src="inherit_graph_16.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1debug_3_01opencl__kernel_01_4"/>
 <map name="cl_1_1sycl_1_1detail_1_1debug_3_01opencl__kernel_01_4" id="cl_1_1sycl_1_1detail_1_1debug_3_01opencl__kernel_01_4">
 <area shape="rect" id="node1" href="group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; detail::kernel \&gt;" alt="" coords="5,5,152,47"/>
 <area shape="rect" id="node2" href="group__execution.html#classcl_1_1sycl_1_1detail_1_1kernel" title="Abstract SYCL kernel. " alt="" coords="200,13,347,39"/>
@@ -167,7 +174,7 @@ $(function() {
 <area shape="rect" id="node4" href="group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; opencl_kernel \&gt;" alt="" coords="200,64,347,105"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_16.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1debug_3_01opencl__queue_01_4"/>
+<tr><td><img src="inherit_graph_17.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1debug_3_01opencl__queue_01_4"/>
 <map name="cl_1_1sycl_1_1detail_1_1debug_3_01opencl__queue_01_4" id="cl_1_1sycl_1_1detail_1_1debug_3_01opencl__queue_01_4">
 <area shape="rect" id="node1" href="group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; detail::queue \&gt;" alt="" coords="5,64,152,105"/>
 <area shape="rect" id="node2" href="structcl_1_1sycl_1_1detail_1_1queue.html" title="Some implementation details about the SYCL queue. " alt="" coords="200,71,347,98"/>
@@ -177,45 +184,40 @@ $(function() {
 <area shape="rect" id="node6" href="group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; opencl_queue \&gt;" alt="" coords="200,123,347,164"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_17.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1debug_3_01pipe_3_01value__type_01_4_01_4"/>
+<tr><td><img src="inherit_graph_18.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1debug_3_01pipe_3_01value__type_01_4_01_4"/>
 <map name="cl_1_1sycl_1_1detail_1_1debug_3_01pipe_3_01value__type_01_4_01_4" id="cl_1_1sycl_1_1detail_1_1debug_3_01pipe_3_01value__type_01_4_01_4">
 <area shape="rect" id="node1" href="group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; pipe\&lt; value_type \&gt; \&gt;" alt="" coords="5,5,163,47"/>
 <area shape="rect" id="node2" href="group__data.html" title="cl::sycl::detail::pipe\l\&lt; value_type \&gt;" alt="" coords="211,5,345,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_18.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1debug_3_01T_01_4"/>
+<tr><td><img src="inherit_graph_19.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1debug_3_01T_01_4"/>
 <map name="cl_1_1sycl_1_1detail_1_1debug_3_01T_01_4" id="cl_1_1sycl_1_1detail_1_1debug_3_01T_01_4">
 <area shape="rect" id="node1" href="group__debug__trace.html#structcl_1_1sycl_1_1detail_1_1debug" title="Class used to trace the construction, copy&#45;construction, move&#45;construction and destruction of classes..." alt="" coords="5,5,184,32"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_19.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1display__vector_3_01T_01_4"/>
+<tr><td><img src="inherit_graph_20.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1display__vector_3_01T_01_4"/>
 <map name="cl_1_1sycl_1_1detail_1_1display__vector_3_01T_01_4" id="cl_1_1sycl_1_1detail_1_1display__vector_3_01T_01_4">
 <area shape="rect" id="node1" href="group__debug__trace.html#structcl_1_1sycl_1_1detail_1_1display__vector" title="Class used to display a vector&#45;like type of classes that inherit from it. " alt="" coords="5,5,157,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_20.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1expand__to__vector_3_01V_00_01Tuple_00_01expansion_01_4"/>
+<tr><td><img src="inherit_graph_21.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1expand__to__vector_3_01V_00_01Tuple_00_01expansion_01_4"/>
 <map name="cl_1_1sycl_1_1detail_1_1expand__to__vector_3_01V_00_01Tuple_00_01expansion_01_4" id="cl_1_1sycl_1_1detail_1_1expand__to__vector_3_01V_00_01Tuple_00_01expansion_01_4">
 <area shape="rect" id="node1" href="group__array__tuple__helpers.html#structcl_1_1sycl_1_1detail_1_1expand__to__vector" title="Allows optional expansion of a 1&#45;element tuple to a V::dimension tuple to replicate scalar values in ..." alt="" coords="5,5,228,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_21.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1expand__to__vector_3_01V_00_01Tuple_00_01true_01_4"/>
+<tr><td><img src="inherit_graph_22.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1expand__to__vector_3_01V_00_01Tuple_00_01true_01_4"/>
 <map name="cl_1_1sycl_1_1detail_1_1expand__to__vector_3_01V_00_01Tuple_00_01true_01_4" id="cl_1_1sycl_1_1detail_1_1expand__to__vector_3_01V_00_01Tuple_00_01true_01_4">
 <area shape="rect" id="node1" href="group__array__tuple__helpers.html#structcl_1_1sycl_1_1detail_1_1expand__to__vector_3_01V_00_01Tuple_00_01true_01_4" title="Specialization in the case we ask for expansion. " alt="" coords="5,5,192,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_22.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01AS_01_4"/>
+<tr><td><img src="inherit_graph_23.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01AS_01_4"/>
 <map name="cl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01AS_01_4" id="cl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01AS_01_4">
 <area shape="rect" id="node1" href="group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1ocl__type" title="Generate a type with some real OpenCL 2 attribute if we are on an OpenCL device. " alt="" coords="5,5,133,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_23.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01constant__address__space_01_4"/>
+<tr><td><img src="inherit_graph_24.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01constant__address__space_01_4"/>
 <map name="cl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01constant__address__space_01_4" id="cl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01constant__address__space_01_4">
 <area shape="rect" id="node1" href="group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01constant__address__space_01_4" title="Add an attribute for __constant address space. " alt="" coords="5,5,191,61"/>
-</map>
-</td></tr>
-<tr><td><img src="inherit_graph_24.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01generic__address__space_01_4"/>
-<map name="cl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01generic__address__space_01_4" id="cl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01generic__address__space_01_4">
-<area shape="rect" id="node1" href="group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01generic__address__space_01_4" title="Add an attribute for __generic address space. " alt="" coords="5,5,183,61"/>
 </map>
 </td></tr>
 <tr><td><img src="inherit_graph_25.png" border="0" alt="" usemap="#cl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01global__address__space_01_4"/>
@@ -348,18 +350,23 @@ $(function() {
 <area shape="rect" id="node3" href="group__execution.html#classcl_1_1sycl_1_1device__typename__selector" title="Select a device by template device_type parameter. " alt="" coords="407,5,581,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_39.png" border="0" alt="" usemap="#cl_1_1sycl_1_1error__handler"/>
+<tr><td><img src="inherit_graph_39.png" border="0" alt="" usemap="#cl_1_1sycl_1_1drt_1_1code_1_1program"/>
+<map name="cl_1_1sycl_1_1drt_1_1code_1_1program" id="cl_1_1sycl_1_1drt_1_1code_1_1program">
+<area shape="rect" id="node1" href="structcl_1_1sycl_1_1drt_1_1code_1_1program.html" title="A binary program containing some kernels. " alt="" coords="5,5,128,47"/>
+</map>
+</td></tr>
+<tr><td><img src="inherit_graph_40.png" border="0" alt="" usemap="#cl_1_1sycl_1_1error__handler"/>
 <map name="cl_1_1sycl_1_1error__handler" id="cl_1_1sycl_1_1error__handler">
 <area shape="rect" id="node1" href="group__error__handling.html#structcl_1_1sycl_1_1error__handler" title="User supplied error handler to call a user&#45;provided function when an error happens from a SYCL object..." alt="" coords="5,13,152,39"/>
 <area shape="rect" id="node2" href="structcl_1_1sycl_1_1trisycl_1_1default__error__handler.html" title="cl::sycl::trisycl::\ldefault_error_handler" alt="" coords="200,5,343,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_40.png" border="0" alt="" usemap="#cl_1_1sycl_1_1event"/>
+<tr><td><img src="inherit_graph_41.png" border="0" alt="" usemap="#cl_1_1sycl_1_1event"/>
 <map name="cl_1_1sycl_1_1event" id="cl_1_1sycl_1_1event">
 <area shape="rect" id="node1" href="classcl_1_1sycl_1_1event.html" title="cl::sycl::event" alt="" coords="5,5,109,32"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_41.png" border="0" alt="" usemap="#cl_1_1sycl_1_1exception"/>
+<tr><td><img src="inherit_graph_42.png" border="0" alt="" usemap="#cl_1_1sycl_1_1exception"/>
 <map name="cl_1_1sycl_1_1exception" id="cl_1_1sycl_1_1exception">
 <area shape="rect" id="node1" href="group__error__handling.html#classcl_1_1sycl_1_1exception" title="Encapsulate a SYCL error information. " alt="" coords="5,217,133,243"/>
 <area shape="rect" id="node2" href="group__error__handling.html#structcl_1_1sycl_1_1async__exception" title="An error stored in an exception_list for asynchronous errors. " alt="" coords="181,141,352,167"/>
@@ -382,142 +389,167 @@ $(function() {
 <area shape="rect" id="node19" href="group__error__handling.html#classcl_1_1sycl_1_1pipe__error" title="A failing pipe error will trigger this exception on error. " alt="" coords="426,814,555,841"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_42.png" border="0" alt="" usemap="#cl_1_1sycl_1_1exception__list"/>
+<tr><td><img src="inherit_graph_43.png" border="0" alt="" usemap="#cl_1_1sycl_1_1exception__list"/>
 <map name="cl_1_1sycl_1_1exception__list" id="cl_1_1sycl_1_1exception__list">
 <area shape="rect" id="node1" href="group__error__handling.html#structcl_1_1sycl_1_1exception__list" title="Exception list to store several exceptions. " alt="" coords="5,29,157,56"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_43.png" border="0" alt="" usemap="#cl_1_1sycl_1_1group_3_01Dimensions_01_4"/>
+<tr><td><img src="inherit_graph_44.png" border="0" alt="" usemap="#cl_1_1sycl_1_1group_3_01Dimensions_01_4"/>
 <map name="cl_1_1sycl_1_1group_3_01Dimensions_01_4" id="cl_1_1sycl_1_1group_3_01Dimensions_01_4">
 <area shape="rect" id="node1" href="group__parallelism.html#structcl_1_1sycl_1_1group" title="A group index used in a parallel_for_workitem to specify a work_group. " alt="" coords="5,5,203,32"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_44.png" border="0" alt="" usemap="#cl_1_1sycl_1_1image_3_01Dimensions_01_4"/>
+<tr><td><img src="inherit_graph_45.png" border="0" alt="" usemap="#cl_1_1sycl_1_1image_3_01Dimensions_01_4"/>
 <map name="cl_1_1sycl_1_1image_3_01Dimensions_01_4" id="cl_1_1sycl_1_1image_3_01Dimensions_01_4">
 <area shape="rect" id="node1" href="group__data.html#structcl_1_1sycl_1_1image" title="cl::sycl::image\&lt; Dimensions \&gt;" alt="" coords="5,5,205,32"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_45.png" border="0" alt="" usemap="#cl_1_1sycl_1_1info_1_1param__traits_3_01T_00_01Param_01_4"/>
+<tr><td><img src="inherit_graph_46.png" border="0" alt="" usemap="#cl_1_1sycl_1_1info_1_1param__traits_3_01T_00_01Param_01_4"/>
 <map name="cl_1_1sycl_1_1info_1_1param__traits_3_01T_00_01Param_01_4" id="cl_1_1sycl_1_1info_1_1param__traits_3_01T_00_01Param_01_4">
 <area shape="rect" id="node1" href="structcl_1_1sycl_1_1info_1_1param__traits.html" title="Implement a meta&#45;function from (T, value) to T&#39; to express the return type value of an OpenCL functio..." alt="" coords="5,5,143,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_46.png" border="0" alt="" usemap="#cl_1_1sycl_1_1is__wrapper_3_01T_01_4"/>
+<tr><td><img src="inherit_graph_47.png" border="0" alt="" usemap="#cl_1_1sycl_1_1is__wrapper_3_01T_01_4"/>
 <map name="cl_1_1sycl_1_1is__wrapper_3_01T_01_4" id="cl_1_1sycl_1_1is__wrapper_3_01T_01_4">
 <area shape="rect" id="node2" href="structcl_1_1sycl_1_1is__wrapper.html" title="cl::sycl::is_wrapper\&lt; T \&gt;" alt="" coords="136,5,303,32"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_47.png" border="0" alt="" usemap="#cl_1_1sycl_1_1item_3_01Dimensions_01_4"/>
+<tr><td><img src="inherit_graph_48.png" border="0" alt="" usemap="#cl_1_1sycl_1_1item_3_01Dimensions_01_4"/>
 <map name="cl_1_1sycl_1_1item_3_01Dimensions_01_4" id="cl_1_1sycl_1_1item_3_01Dimensions_01_4">
 <area shape="rect" id="node1" href="group__parallelism.html#classcl_1_1sycl_1_1item" title="A SYCL item stores information on a work&#45;item with some more context such as the definition range and..." alt="" coords="5,5,196,32"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_48.png" border="0" alt="" usemap="#cl_1_1sycl_1_1nd__item_3_01Dimensions_01_4"/>
+<tr><td><img src="inherit_graph_49.png" border="0" alt="" usemap="#cl_1_1sycl_1_1nd__item_3_01Dimensions_01_4"/>
 <map name="cl_1_1sycl_1_1nd__item_3_01Dimensions_01_4" id="cl_1_1sycl_1_1nd__item_3_01Dimensions_01_4">
 <area shape="rect" id="node1" href="group__parallelism.html#structcl_1_1sycl_1_1nd__item" title="A SYCL nd_item stores information on a work&#45;item within a work&#45;group, with some more context such as ..." alt="" coords="5,5,132,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_49.png" border="0" alt="" usemap="#cl_1_1sycl_1_1nd__range_3_01Dimensions_01_4"/>
+<tr><td><img src="inherit_graph_50.png" border="0" alt="" usemap="#cl_1_1sycl_1_1nd__range_3_01Dimensions_01_4"/>
 <map name="cl_1_1sycl_1_1nd__range_3_01Dimensions_01_4" id="cl_1_1sycl_1_1nd__range_3_01Dimensions_01_4">
 <area shape="rect" id="node1" href="group__parallelism.html#structcl_1_1sycl_1_1nd__range" title="A ND&#45;range, made by a global and local range, to specify work&#45;group and work&#45;item organization..." alt="" coords="5,5,131,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_50.png" border="0" alt="" usemap="#cl_1_1sycl_1_1pipe__reservation_3_01PipeAccessor_01_4"/>
+<tr><td><img src="inherit_graph_51.png" border="0" alt="" usemap="#cl_1_1sycl_1_1pipe__reservation_3_01PipeAccessor_01_4"/>
 <map name="cl_1_1sycl_1_1pipe__reservation_3_01PipeAccessor_01_4" id="cl_1_1sycl_1_1pipe__reservation_3_01PipeAccessor_01_4">
 <area shape="rect" id="node1" href="group__data.html#structcl_1_1sycl_1_1pipe__reservation" title="The pipe reservation station allows to reserve an array&#45;like view inside the pipe for ordered race&#45;fr..." alt="" coords="5,5,172,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_51.png" border="0" alt="" usemap="#handler__event"/>
+<tr><td><img src="inherit_graph_52.png" border="0" alt="" usemap="#cl_1_1sycl_1_1xilinx_1_1partition_1_1block_3_01ElmInEachPhyMem_00_01PDim_01_4"/>
+<map name="cl_1_1sycl_1_1xilinx_1_1partition_1_1block_3_01ElmInEachPhyMem_00_01PDim_01_4" id="cl_1_1sycl_1_1xilinx_1_1partition_1_1block_3_01ElmInEachPhyMem_00_01PDim_01_4">
+<area shape="rect" id="node1" href="structcl_1_1sycl_1_1xilinx_1_1partition_1_1block.html" title="Represent a block partition. " alt="" coords="5,5,199,61"/>
+</map>
+</td></tr>
+<tr><td><img src="inherit_graph_53.png" border="0" alt="" usemap="#cl_1_1sycl_1_1xilinx_1_1partition_1_1complete_3_01PDim_01_4"/>
+<map name="cl_1_1sycl_1_1xilinx_1_1partition_1_1complete_3_01PDim_01_4" id="cl_1_1sycl_1_1xilinx_1_1partition_1_1complete_3_01PDim_01_4">
+<area shape="rect" id="node1" href="structcl_1_1sycl_1_1xilinx_1_1partition_1_1complete.html" title="Represent a complete partition. " alt="" coords="5,5,161,47"/>
+</map>
+</td></tr>
+<tr><td><img src="inherit_graph_54.png" border="0" alt="" usemap="#cl_1_1sycl_1_1xilinx_1_1partition_1_1cyclic_3_01PhyMemNum_00_01PDim_01_4"/>
+<map name="cl_1_1sycl_1_1xilinx_1_1partition_1_1cyclic_3_01PhyMemNum_00_01PDim_01_4" id="cl_1_1sycl_1_1xilinx_1_1partition_1_1cyclic_3_01PhyMemNum_00_01PDim_01_4">
+<area shape="rect" id="node1" href="structcl_1_1sycl_1_1xilinx_1_1partition_1_1cyclic.html" title="Represent a cyclic partition. " alt="" coords="5,5,215,47"/>
+</map>
+</td></tr>
+<tr><td><img src="inherit_graph_55.png" border="0" alt="" usemap="#cl_1_1sycl_1_1xilinx_1_1partition_1_1none"/>
+<map name="cl_1_1sycl_1_1xilinx_1_1partition_1_1none" id="cl_1_1sycl_1_1xilinx_1_1partition_1_1none">
+<area shape="rect" id="node1" href="structcl_1_1sycl_1_1xilinx_1_1partition_1_1none.html" title="Represent a none partition. " alt="" coords="5,5,161,47"/>
+</map>
+</td></tr>
+<tr><td><img src="inherit_graph_56.png" border="0" alt="" usemap="#cl_1_1sycl_1_1xilinx_1_1partition__array_3_01ValueType_00_01Size_00_01PartitionType_01_4"/>
+<map name="cl_1_1sycl_1_1xilinx_1_1partition__array_3_01ValueType_00_01Size_00_01PartitionType_01_4" id="cl_1_1sycl_1_1xilinx_1_1partition__array_3_01ValueType_00_01Size_00_01PartitionType_01_4">
+<area shape="rect" id="node1" href="group__Xilinx.html#structcl_1_1sycl_1_1xilinx_1_1partition__array" title="Define an array class with partition feature. " alt="" coords="5,5,176,61"/>
+</map>
+</td></tr>
+<tr><td><img src="inherit_graph_57.png" border="0" alt="" usemap="#handler__event"/>
 <map name="handler__event" id="handler__event">
 <area shape="rect" id="node1" href="classhandler__event.html" title="Handler event. " alt="" coords="5,5,108,32"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_52.png" border="0" alt="" usemap="#shared__ptr_3_01cl_1_1sycl_1_1detail_1_1pipe_3_01DataType_01_4_01_4"/>
+<tr><td><img src="inherit_graph_58.png" border="0" alt="" usemap="#shared__ptr_3_01cl_1_1sycl_1_1detail_1_1pipe_3_01DataType_01_4_01_4"/>
 <map name="shared__ptr_3_01cl_1_1sycl_1_1detail_1_1pipe_3_01DataType_01_4_01_4" id="shared__ptr_3_01cl_1_1sycl_1_1detail_1_1pipe_3_01DataType_01_4_01_4">
 <area shape="rect" id="node1" href="classstd_1_1shared__ptr_3_01cl_1_1sycl_1_1detail_1_1pipe_3_01DataType_01_4_01_4.html" title="shared_ptr\&lt; cl::sycl\l::detail::pipe\&lt; DataType \&gt; \&gt;" alt="" coords="5,5,192,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_53.png" border="0" alt="" usemap="#shared__ptr_3_01detail_1_1accessor_3_01DataType_00_01Dimensions_00_01AccessMode_00_01Target_01_4_01_4"/>
+<tr><td><img src="inherit_graph_59.png" border="0" alt="" usemap="#shared__ptr_3_01detail_1_1accessor_3_01DataType_00_01Dimensions_00_01AccessMode_00_01Target_01_4_01_4"/>
 <map name="shared__ptr_3_01detail_1_1accessor_3_01DataType_00_01Dimensions_00_01AccessMode_00_01Target_01_4_01_4" id="shared__ptr_3_01detail_1_1accessor_3_01DataType_00_01Dimensions_00_01AccessMode_00_01Target_01_4_01_4">
 <area shape="rect" id="node1" href="classstd_1_1shared__ptr_3_01detail_1_1accessor_3_01DataType_00_01Dimensions_00_01AccessMode_00_01Target_01_4_01_4.html" title="shared_ptr\&lt; detail\l::accessor\&lt; DataType,\l Dimensions, AccessMode,\l Target \&gt; \&gt;" alt="" coords="5,5,188,76"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_54.png" border="0" alt="" usemap="#shared__ptr_3_01detail_1_1buffer_3_01T_00_01Dimensions_01_4_01_4"/>
+<tr><td><img src="inherit_graph_60.png" border="0" alt="" usemap="#shared__ptr_3_01detail_1_1buffer_3_01T_00_01Dimensions_01_4_01_4"/>
 <map name="shared__ptr_3_01detail_1_1buffer_3_01T_00_01Dimensions_01_4_01_4" id="shared__ptr_3_01detail_1_1buffer_3_01T_00_01Dimensions_01_4_01_4">
 <area shape="rect" id="node1" href="classstd_1_1shared__ptr_3_01detail_1_1buffer_3_01T_00_01Dimensions_01_4_01_4.html" title="shared_ptr\&lt; detail\l::buffer\&lt; T, Dimensions \&gt; \&gt;" alt="" coords="5,5,189,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_55.png" border="0" alt="" usemap="#shared__ptr_3_01detail_1_1buffer__waiter_3_01T_00_01Dimensions_00_01Allocator_01_4_01_4"/>
+<tr><td><img src="inherit_graph_61.png" border="0" alt="" usemap="#shared__ptr_3_01detail_1_1buffer__waiter_3_01T_00_01Dimensions_00_01Allocator_01_4_01_4"/>
 <map name="shared__ptr_3_01detail_1_1buffer__waiter_3_01T_00_01Dimensions_00_01Allocator_01_4_01_4" id="shared__ptr_3_01detail_1_1buffer__waiter_3_01T_00_01Dimensions_00_01Allocator_01_4_01_4">
 <area shape="rect" id="node1" href="classstd_1_1shared__ptr_3_01detail_1_1buffer__waiter_3_01T_00_01Dimensions_00_01Allocator_01_4_01_4.html" title="shared_ptr\&lt; detail\l::buffer_waiter\&lt; T,\l Dimensions, Allocator \&gt; \&gt;" alt="" coords="5,5,184,61"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_56.png" border="0" alt="" usemap="#shared__ptr_3_01detail_1_1context_01_4"/>
+<tr><td><img src="inherit_graph_62.png" border="0" alt="" usemap="#shared__ptr_3_01detail_1_1context_01_4"/>
 <map name="shared__ptr_3_01detail_1_1context_01_4" id="shared__ptr_3_01detail_1_1context_01_4">
 <area shape="rect" id="node1" href="classstd_1_1shared__ptr_3_01detail_1_1context_01_4.html" title="shared_ptr\&lt; detail\l::context \&gt;" alt="" coords="5,5,132,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_57.png" border="0" alt="" usemap="#shared__ptr_3_01detail_1_1device_01_4"/>
+<tr><td><img src="inherit_graph_63.png" border="0" alt="" usemap="#shared__ptr_3_01detail_1_1device_01_4"/>
 <map name="shared__ptr_3_01detail_1_1device_01_4" id="shared__ptr_3_01detail_1_1device_01_4">
 <area shape="rect" id="node1" href="classstd_1_1shared__ptr_3_01detail_1_1device_01_4.html" title="shared_ptr\&lt; detail\l::device \&gt;" alt="" coords="5,5,132,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_58.png" border="0" alt="" usemap="#shared__ptr_3_01detail_1_1kernel_01_4"/>
+<tr><td><img src="inherit_graph_64.png" border="0" alt="" usemap="#shared__ptr_3_01detail_1_1kernel_01_4"/>
 <map name="shared__ptr_3_01detail_1_1kernel_01_4" id="shared__ptr_3_01detail_1_1kernel_01_4">
 <area shape="rect" id="node1" href="classstd_1_1shared__ptr_3_01detail_1_1kernel_01_4.html" title="shared_ptr\&lt; detail\l::kernel \&gt;" alt="" coords="5,5,132,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_59.png" border="0" alt="" usemap="#shared__ptr_3_01detail_1_1pipe_3_01T_01_4_01_4"/>
+<tr><td><img src="inherit_graph_65.png" border="0" alt="" usemap="#shared__ptr_3_01detail_1_1pipe_3_01T_01_4_01_4"/>
 <map name="shared__ptr_3_01detail_1_1pipe_3_01T_01_4_01_4" id="shared__ptr_3_01detail_1_1pipe_3_01T_01_4_01_4">
 <area shape="rect" id="node1" href="classstd_1_1shared__ptr_3_01detail_1_1pipe_3_01T_01_4_01_4.html" title="shared_ptr\&lt; detail\l::pipe\&lt; T \&gt; \&gt;" alt="" coords="5,5,132,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_60.png" border="0" alt="" usemap="#shared__ptr_3_01detail_1_1platform_01_4"/>
+<tr><td><img src="inherit_graph_66.png" border="0" alt="" usemap="#shared__ptr_3_01detail_1_1platform_01_4"/>
 <map name="shared__ptr_3_01detail_1_1platform_01_4" id="shared__ptr_3_01detail_1_1platform_01_4">
 <area shape="rect" id="node1" href="classstd_1_1shared__ptr_3_01detail_1_1platform_01_4.html" title="shared_ptr\&lt; detail\l::platform \&gt;" alt="" coords="5,5,132,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_61.png" border="0" alt="" usemap="#shared__ptr_3_01detail_1_1queue_01_4"/>
+<tr><td><img src="inherit_graph_67.png" border="0" alt="" usemap="#shared__ptr_3_01detail_1_1queue_01_4"/>
 <map name="shared__ptr_3_01detail_1_1queue_01_4" id="shared__ptr_3_01detail_1_1queue_01_4">
 <area shape="rect" id="node1" href="classstd_1_1shared__ptr_3_01detail_1_1queue_01_4.html" title="shared_ptr\&lt; detail\l::queue \&gt;" alt="" coords="5,5,132,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_62.png" border="0" alt="" usemap="#static_01const_01size__t"/>
+<tr><td><img src="inherit_graph_68.png" border="0" alt="" usemap="#static_01const_01size__t"/>
 <map name="static_01const_01size__t" id="static_01const_01size__t">
 <area shape="rect" id="node1" href="classstatic_01const_01size__t.html" title="static const size_t" alt="" coords="5,5,135,32"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_63.png" border="0" alt="" usemap="#static_01constexpr_01bool"/>
+<tr><td><img src="inherit_graph_69.png" border="0" alt="" usemap="#static_01constexpr_01bool"/>
 <map name="static_01constexpr_01bool" id="static_01constexpr_01bool">
 <area shape="rect" id="node1" href="classstatic_01constexpr_01bool.html" title="static constexpr bool" alt="" coords="5,5,148,32"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_64.png" border="0" alt="" usemap="#std_1_1hash_3_01cl_1_1sycl_1_1buffer_3_01T_00_01Dimensions_00_01Allocator_01_4_01_4"/>
+<tr><td><img src="inherit_graph_70.png" border="0" alt="" usemap="#std_1_1hash_3_01cl_1_1sycl_1_1buffer_3_01T_00_01Dimensions_00_01Allocator_01_4_01_4"/>
 <map name="std_1_1hash_3_01cl_1_1sycl_1_1buffer_3_01T_00_01Dimensions_00_01Allocator_01_4_01_4" id="std_1_1hash_3_01cl_1_1sycl_1_1buffer_3_01T_00_01Dimensions_00_01Allocator_01_4_01_4">
 <area shape="rect" id="node1" href="structstd_1_1hash_3_01cl_1_1sycl_1_1buffer_3_01T_00_01Dimensions_00_01Allocator_01_4_01_4.html" title="std::hash\&lt; cl::sycl\l::buffer\&lt; T, Dimensions,\l Allocator \&gt; \&gt;" alt="" coords="5,5,169,61"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_65.png" border="0" alt="" usemap="#std_1_1hash_3_01cl_1_1sycl_1_1context_01_4"/>
+<tr><td><img src="inherit_graph_71.png" border="0" alt="" usemap="#std_1_1hash_3_01cl_1_1sycl_1_1context_01_4"/>
 <map name="std_1_1hash_3_01cl_1_1sycl_1_1context_01_4" id="std_1_1hash_3_01cl_1_1sycl_1_1context_01_4">
 <area shape="rect" id="node1" href="structstd_1_1hash_3_01cl_1_1sycl_1_1context_01_4.html" title="std::hash\&lt; cl::sycl\l::context \&gt;" alt="" coords="5,5,136,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_66.png" border="0" alt="" usemap="#std_1_1hash_3_01cl_1_1sycl_1_1device_01_4"/>
+<tr><td><img src="inherit_graph_72.png" border="0" alt="" usemap="#std_1_1hash_3_01cl_1_1sycl_1_1device_01_4"/>
 <map name="std_1_1hash_3_01cl_1_1sycl_1_1device_01_4" id="std_1_1hash_3_01cl_1_1sycl_1_1device_01_4">
 <area shape="rect" id="node1" href="structstd_1_1hash_3_01cl_1_1sycl_1_1device_01_4.html" title="std::hash\&lt; cl::sycl\l::device \&gt;" alt="" coords="5,5,136,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_67.png" border="0" alt="" usemap="#std_1_1hash_3_01cl_1_1sycl_1_1kernel_01_4"/>
+<tr><td><img src="inherit_graph_73.png" border="0" alt="" usemap="#std_1_1hash_3_01cl_1_1sycl_1_1kernel_01_4"/>
 <map name="std_1_1hash_3_01cl_1_1sycl_1_1kernel_01_4" id="std_1_1hash_3_01cl_1_1sycl_1_1kernel_01_4">
 <area shape="rect" id="node1" href="structstd_1_1hash_3_01cl_1_1sycl_1_1kernel_01_4.html" title="std::hash\&lt; cl::sycl\l::kernel \&gt;" alt="" coords="5,5,136,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_68.png" border="0" alt="" usemap="#std_1_1hash_3_01cl_1_1sycl_1_1platform_01_4"/>
+<tr><td><img src="inherit_graph_74.png" border="0" alt="" usemap="#std_1_1hash_3_01cl_1_1sycl_1_1platform_01_4"/>
 <map name="std_1_1hash_3_01cl_1_1sycl_1_1platform_01_4" id="std_1_1hash_3_01cl_1_1sycl_1_1platform_01_4">
 <area shape="rect" id="node1" href="structstd_1_1hash_3_01cl_1_1sycl_1_1platform_01_4.html" title="std::hash\&lt; cl::sycl\l::platform \&gt;" alt="" coords="5,5,136,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_69.png" border="0" alt="" usemap="#std_1_1hash_3_01cl_1_1sycl_1_1queue_01_4"/>
+<tr><td><img src="inherit_graph_75.png" border="0" alt="" usemap="#std_1_1hash_3_01cl_1_1sycl_1_1queue_01_4"/>
 <map name="std_1_1hash_3_01cl_1_1sycl_1_1queue_01_4" id="std_1_1hash_3_01cl_1_1sycl_1_1queue_01_4">
 <area shape="rect" id="node1" href="structstd_1_1hash_3_01cl_1_1sycl_1_1queue_01_4.html" title="std::hash\&lt; cl::sycl\l::queue \&gt;" alt="" coords="5,5,136,47"/>
 </map>
@@ -526,7 +558,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Dec 22 2017 02:39:44 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Apr 20 2018 19:26:25 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

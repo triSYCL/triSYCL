@@ -110,14 +110,12 @@ $(function() {
 <p>Add constructors from arrays so that in C++17 the range and type can be infered from the constructor</p>
 <p class="enddd">Add constructors from array_ref  </p>
 </dd>
-<dt><a class="anchor" id="_todo000108"></a>Member <a class="el" href="group__data.html#a48561f28439b7aecccd5926be126e2e3">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;::buffer</a>  (buffer&lt; T, Dimensions, Allocator &gt; &amp;b, const id&lt; Dimensions &gt; &amp;base_index, const range&lt; Dimensions &gt; &amp;sub_range, Allocator allocator={})</dt>
-<dd><p class="startdd">To be implemented</p>
-<p class="enddd">Update the specification to replace index by id  </p>
-</dd>
-<dt><a class="anchor" id="_todo000110"></a>Member <a class="el" href="group__data.html#a198b3dc4305b1d112ee5bd2cb4b9a26d">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;::buffer</a>  (cl_mem mem_object, queue from_queue, event available_event={}, Allocator allocator={})</dt>
-<dd><p class="startdd">To be implemented</p>
-<p class="enddd">Improve the specification to allow CLHPP objects too  </p>
-</dd>
+<dt><a class="anchor" id="_todo000099"></a>Member <a class="el" href="group__data.html#a230120b26bb111a734f5aef1126c46cd">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;::buffer</a>  (const T *host_data, const range&lt; Dimensions &gt; &amp;r, Allocator allocator={})</dt>
+<dd>Actually this is redundant.  </dd>
+<dt><a class="anchor" id="_todo000100"></a>Member <a class="el" href="group__data.html#a3205caa44c59fe4f0553861fdc81a80f">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;::buffer</a>  (shared_ptr_class&lt; T &gt; &amp;host_data, const range&lt; Dimensions &gt; &amp;buffer_range, <a class="el" href="namespacecl_1_1sycl.html#a0e818f1ac2ba5084b08dd41ca813ef28">cl::sycl::mutex_class</a> &amp;m, Allocator allocator={})</dt>
+<dd>update the specification to replace the pointer by a reference and provide the constructor with and without a mutex  </dd>
+<dt><a class="anchor" id="_todo000101"></a>Member <a class="el" href="group__data.html#ac181c98d6676240ee42b0d3c22f12fc3">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;::buffer</a>  (shared_ptr_class&lt; T &gt; host_data, const range&lt; Dimensions &gt; &amp;buffer_range, Allocator allocator={})</dt>
+<dd>add this mutex-less constructor to the specification  </dd>
 <dt><a class="anchor" id="_todo000102"></a>Member <a class="el" href="group__data.html#a52288588ec69fafceabfacad98fa1f40">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;::buffer</a>  (InputIterator start_iterator, InputIterator end_iterator, Allocator allocator={})</dt>
 <dd><p class="startdd">Implement the copy back at buffer destruction</p>
 <p>Generalize this for n-D and provide column-major and row-major initialization</p>
@@ -126,12 +124,14 @@ $(function() {
 <p>update the specification to deal with forward iterators instead and rewrite back only when it is non const and output iterator at least</p>
 <p class="enddd">Allow initialization from ranges and collections à la STL  </p>
 </dd>
-<dt><a class="anchor" id="_todo000099"></a>Member <a class="el" href="group__data.html#a230120b26bb111a734f5aef1126c46cd">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;::buffer</a>  (const T *host_data, const range&lt; Dimensions &gt; &amp;r, Allocator allocator={})</dt>
-<dd>Actually this is redundant.  </dd>
-<dt><a class="anchor" id="_todo000100"></a>Member <a class="el" href="group__data.html#a3205caa44c59fe4f0553861fdc81a80f">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;::buffer</a>  (shared_ptr_class&lt; T &gt; &amp;host_data, const range&lt; Dimensions &gt; &amp;buffer_range, <a class="el" href="namespacecl_1_1sycl.html#a0e818f1ac2ba5084b08dd41ca813ef28">cl::sycl::mutex_class</a> &amp;m, Allocator allocator={})</dt>
-<dd>update the specification to replace the pointer by a reference and provide the constructor with and without a mutex  </dd>
-<dt><a class="anchor" id="_todo000101"></a>Member <a class="el" href="group__data.html#ac181c98d6676240ee42b0d3c22f12fc3">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;::buffer</a>  (shared_ptr_class&lt; T &gt; host_data, const range&lt; Dimensions &gt; &amp;buffer_range, Allocator allocator={})</dt>
-<dd>add this mutex-less constructor to the specification  </dd>
+<dt><a class="anchor" id="_todo000108"></a>Member <a class="el" href="group__data.html#a48561f28439b7aecccd5926be126e2e3">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;::buffer</a>  (buffer&lt; T, Dimensions, Allocator &gt; &amp;b, const id&lt; Dimensions &gt; &amp;base_index, const range&lt; Dimensions &gt; &amp;sub_range, Allocator allocator={})</dt>
+<dd><p class="startdd">To be implemented</p>
+<p class="enddd">Update the specification to replace index by id  </p>
+</dd>
+<dt><a class="anchor" id="_todo000110"></a>Member <a class="el" href="group__data.html#a198b3dc4305b1d112ee5bd2cb4b9a26d">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;::buffer</a>  (cl_mem mem_object, queue from_queue, event available_event={}, Allocator allocator={})</dt>
+<dd><p class="startdd">To be implemented</p>
+<p class="enddd">Improve the specification to allow CLHPP objects too  </p>
+</dd>
 <dt><a class="anchor" id="_todo000112"></a>Member <a class="el" href="group__data.html#a1e5d63a2931ac9dc650320487ac21a31">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;::get_access</a>  (handler &amp;command_group_handler)</dt>
 <dd><p class="startdd">Do we need for an accessor to increase the reference count of a buffer object? It does make more sense for a host-side accessor.</p>
 <p class="enddd">Implement the modes and targets  </p>
@@ -224,7 +224,7 @@ $(function() {
 </dd>
 <dt><a class="anchor" id="_todo000066"></a>Member <a class="el" href="group__data.html#a415392a1e1fac8fa8b43d929f36058b1">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;::get_count</a>  () const</dt>
 <dd>Move on <a href="https://cvs.khronos.org/bugzilla/show_bug.cgi?id=15564">https://cvs.khronos.org/bugzilla/show_bug.cgi?id=15564</a> and <a href="https://cvs.khronos.org/bugzilla/show_bug.cgi?id=14404">https://cvs.khronos.org/bugzilla/show_bug.cgi?id=14404</a>  </dd>
-<dt><a class="anchor" id="_todo000077"></a>Member <a class="el" href="group__data.html#a5d3efacdbbc1ee221ca9487152c907e3">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;::get_pointer</a>  ()</dt>
+<dt><a class="anchor" id="_todo000077"></a>Member <a class="el" href="group__data.html#a167c35616ed32d44a3ab18f2a8161918">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;::get_pointer</a>  () const</dt>
 <dd>Implement the various pointer address spaces  </dd>
 <dt><a class="anchor" id="_todo000065"></a>Member <a class="el" href="group__data.html#a945cd4b9ed8650ff103bec6a468fbd24">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;::get_range</a>  () const</dt>
 <dd>Move on <a href="https://cvs.khronos.org/bugzilla/show_bug.cgi?id=15564">https://cvs.khronos.org/bugzilla/show_bug.cgi?id=15564</a> and <a href="https://cvs.khronos.org/bugzilla/show_bug.cgi?id=14404">https://cvs.khronos.org/bugzilla/show_bug.cgi?id=14404</a>  </dd>
@@ -292,50 +292,50 @@ $(function() {
 <dd>Use lazy allocation for the context tracking set  </dd>
 <dt><a class="anchor" id="_todo000125"></a>Member <a class="el" href="group__execution.html#a8653a23c21952b62eab7106038281570">cl::sycl::detail::context::get_devices</a>  () const =0</dt>
 <dd>virtual cannot be templated template &lt;<a class="el" href="group__execution.html#ga1a5898274a448ac592ebbcee928939c1" title="Context information descriptors. ">info::context</a> Param&gt; typename info::param_traits&lt;info::context, Param&gt;::type get_info() const = 0;  </dd>
-<dt><a class="anchor" id="_todo000138"></a>Member <a class="el" href="group__execution.html#a8ecad85a1b0a79988dcc6356ed64f793">cl::sycl::detail::device::has_extension</a>  (const string_class &amp;extension) const =0</dt>
+<dt><a class="anchor" id="_todo000139"></a>Member <a class="el" href="group__execution.html#a8ecad85a1b0a79988dcc6356ed64f793">cl::sycl::detail::device::has_extension</a>  (const string_class &amp;extension) const =0</dt>
 <dd>virtual cannot be templated template &lt;typename t&gt;=""&gt; virtual T get_info(info::device param) const = 0;  </dd>
 <dt><a class="anchor" id="_todo000127"></a>Member <a class="el" href="group__execution.html#a4e43a5c31be339db09242809e0a9a1e6">cl::sycl::detail::host_context::get_devices</a>  () const override</dt>
 <dd>To be implemented  </dd>
-<dt><a class="anchor" id="_todo000139"></a>Class <a class="el" href="classcl_1_1sycl_1_1detail_1_1host__device.html">cl::sycl::detail::host_device</a>  </dt>
+<dt><a class="anchor" id="_todo000140"></a>Class <a class="el" href="classcl_1_1sycl_1_1detail_1_1host__device.html">cl::sycl::detail::host_device</a>  </dt>
 <dd>The implementation is quite minimal for now. :-)  </dd>
-<dt><a class="anchor" id="_todo000140"></a>Member <a class="el" href="classcl_1_1sycl_1_1detail_1_1host__device.html#a9f76f664d4afc961fc8bbf6313d2dcbe">cl::sycl::detail::host_device::get_platform</a>  () const override</dt>
+<dt><a class="anchor" id="_todo000141"></a>Member <a class="el" href="classcl_1_1sycl_1_1detail_1_1host__device.html#a9f76f664d4afc961fc8bbf6313d2dcbe">cl::sycl::detail::host_device::get_platform</a>  () const override</dt>
 <dd>To be implemented  </dd>
-<dt><a class="anchor" id="_todo000141"></a>Member <a class="el" href="classcl_1_1sycl_1_1detail_1_1host__device.html#a8f56be4d8e4c64f40497fa69f0046293">cl::sycl::detail::host_device::has_extension</a>  (const string_class &amp;extension) const override</dt>
+<dt><a class="anchor" id="_todo000142"></a>Member <a class="el" href="classcl_1_1sycl_1_1detail_1_1host__device.html#a8f56be4d8e4c64f40497fa69f0046293">cl::sycl::detail::host_device::has_extension</a>  (const string_class &amp;extension) const override</dt>
 <dd>To be implemented  </dd>
-<dt><a class="anchor" id="_todo000223"></a>Member <a class="el" href="group__execution.html#aa1be92994f4909e112d7f4717a435988">cl::sycl::detail::host_platform::has_extension</a>  (const string_class &amp;extension) const override</dt>
+<dt><a class="anchor" id="_todo000227"></a>Member <a class="el" href="group__execution.html#aa1be92994f4909e112d7f4717a435988">cl::sycl::detail::host_platform::has_extension</a>  (const string_class &amp;extension) const override</dt>
 <dd>To be implemented  </dd>
 <dt><a class="anchor" id="_todo000129"></a>Member <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a28c14d7804ef0fea3e48bd18dcf1a44c">cl::sycl::detail::opencl_context::get_devices</a>  () const override</dt>
 <dd>To be implemented  </dd>
 <dt><a class="anchor" id="_todo000128"></a>Member <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a42ef6a1bcc9e203b36282ecc0b39ac02">cl::sycl::detail::opencl_context::get_platform</a>  () const override</dt>
 <dd>To be implemented  </dd>
-<dt><a class="anchor" id="_todo000142"></a>Member <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__device.html#a6305b17c858194bc7ecde6254a001ccb">cl::sycl::detail::opencl_device::has_extension</a>  (const string_class &amp;extension) const override</dt>
+<dt><a class="anchor" id="_todo000143"></a>Member <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__device.html#a6305b17c858194bc7ecde6254a001ccb">cl::sycl::detail::opencl_device::has_extension</a>  (const string_class &amp;extension) const override</dt>
 <dd>To be implemented  </dd>
-<dt><a class="anchor" id="_todo000196"></a>Member <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#a2fbedc785d1e4765fe78339f81acfb9c">cl::sycl::detail::opencl_kernel::get</a>  () const override</dt>
+<dt><a class="anchor" id="_todo000200"></a>Member <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#a2fbedc785d1e4765fe78339f81acfb9c">cl::sycl::detail::opencl_kernel::get</a>  () const override</dt>
 <dd><p class="startdd">Improve the spec to deprecate C OpenCL host API and move to C++ instead to avoid this ugly ownership management </p>
 <p class="enddd">Test error and throw. Externalize this feature in Boost.Compute?  </p>
 </dd>
-<dt><a class="anchor" id="_todo000198"></a>Member <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#afb6893577ed0a73f4f4468cf929edb2b">cl::sycl::detail::opencl_kernel::single_task</a>  (std::shared_ptr&lt; detail::task &gt; task, std::shared_ptr&lt; detail::queue &gt; q) override</dt>
+<dt><a class="anchor" id="_todo000202"></a>Member <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#afb6893577ed0a73f4f4468cf929edb2b">cl::sycl::detail::opencl_kernel::single_task</a>  (std::shared_ptr&lt; detail::task &gt; task, std::shared_ptr&lt; detail::queue &gt; q) override</dt>
 <dd>Remove either task or q  </dd>
-<dt><a class="anchor" id="_todo000227"></a>Member <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__queue.html#ac511d322863e8f6f9e8e9adbe1c45172">cl::sycl::detail::opencl_queue::instance</a>  (const <a class="el" href="group__execution.html#classcl_1_1sycl_1_1device" title="SYCL device. ">cl::sycl::device</a> &amp;d)</dt>
+<dt><a class="anchor" id="_todo000231"></a>Member <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__queue.html#ac511d322863e8f6f9e8e9adbe1c45172">cl::sycl::detail::opencl_queue::instance</a>  (const <a class="el" href="group__execution.html#classcl_1_1sycl_1_1device" title="SYCL device. ">cl::sycl::device</a> &amp;d)</dt>
 <dd>Check with SYCL committee what is the expected behaviour here about the context. Is this a new context everytime, or always the same for a given device?  </dd>
-<dt><a class="anchor" id="_todo000211"></a>Member <a class="el" href="group__parallelism.html#ga3156c9a9179d62eb40321f2b86448cea">cl::sycl::detail::parallel_for</a>  (nd_range&lt; Dimensions &gt; r, ParallelForFunctor f)</dt>
+<dt><a class="anchor" id="_todo000215"></a>Member <a class="el" href="group__parallelism.html#ga3156c9a9179d62eb40321f2b86448cea">cl::sycl::detail::parallel_for</a>  (nd_range&lt; Dimensions &gt; r, ParallelForFunctor f)</dt>
 <dd><p class="startdd">Add an OpenMP implementation</p>
 <p>Deal with incomplete work-groups</p>
 <p class="enddd">Implement with <a class="el" href="group__parallelism.html#gaaa0f5e798ca65419dce78013af732580" title="Implement the loop on the work-groups. ">parallel_for_workgroup()</a>/parallel_for_workitem()  </p>
 </dd>
-<dt><a class="anchor" id="_todo000214"></a>Member <a class="el" href="group__parallelism.html#ga3004da03b4f3be8dc72c49b58076107b">cl::sycl::detail::parallel_for_workitem</a>  (const group&lt; Dimensions &gt; &amp;g, ParallelForFunctor f)</dt>
+<dt><a class="anchor" id="_todo000218"></a>Member <a class="el" href="group__parallelism.html#ga3004da03b4f3be8dc72c49b58076107b">cl::sycl::detail::parallel_for_workitem</a>  (const group&lt; Dimensions &gt; &amp;g, ParallelForFunctor f)</dt>
 <dd>Better type the functor  </dd>
-<dt><a class="anchor" id="_todo000217"></a>Member <a class="el" href="group__data.html#ab2336f619ca77560c413b8ae33bdbf43">cl::sycl::detail::pipe&lt; T &gt;::write</a>  (const T &amp;value, bool blocking=false)</dt>
+<dt><a class="anchor" id="_todo000221"></a>Member <a class="el" href="group__data.html#ab2336f619ca77560c413b8ae33bdbf43">cl::sycl::detail::pipe&lt; T &gt;::write</a>  (const T &amp;value, bool blocking=false)</dt>
 <dd>provide a &amp;&amp; version  </dd>
-<dt><a class="anchor" id="_todo000218"></a>Member <a class="el" href="group__data.html#ab76a7bde312b11111fb473c7a8846ade">cl::sycl::detail::pipe_accessor&lt; T, AccessMode, Target &gt;::pipe_accessor</a>  (const std::shared_ptr&lt; detail::pipe&lt; T &gt;&gt; &amp;p, handler &amp;command_group_handler)</dt>
+<dt><a class="anchor" id="_todo000222"></a>Member <a class="el" href="group__data.html#ab76a7bde312b11111fb473c7a8846ade">cl::sycl::detail::pipe_accessor&lt; T, AccessMode, Target &gt;::pipe_accessor</a>  (const std::shared_ptr&lt; detail::pipe&lt; T &gt;&gt; &amp;p, handler &amp;command_group_handler)</dt>
 <dd>Use pipe_exception instead  </dd>
-<dt><a class="anchor" id="_todo000219"></a>Member <a class="el" href="group__data.html#ac0298d907bca3642019eae14f299123e">cl::sycl::detail::pipe_accessor&lt; T, AccessMode, Target &gt;::write</a>  (const value_type &amp;value) const</dt>
+<dt><a class="anchor" id="_todo000223"></a>Member <a class="el" href="group__data.html#ac0298d907bca3642019eae14f299123e">cl::sycl::detail::pipe_accessor&lt; T, AccessMode, Target &gt;::write</a>  (const value_type &amp;value) const</dt>
 <dd>provide a &amp;&amp; version </dd>
-<dt><a class="anchor" id="_todo000220"></a>Member <a class="el" href="group__data.html#a46e5611c52eda124d4b8b9b556e162d8">cl::sycl::detail::pipe_reservation&lt; PipeAccessor &gt;::assume_validity</a>  ()</dt>
+<dt><a class="anchor" id="_todo000224"></a>Member <a class="el" href="group__data.html#a46e5611c52eda124d4b8b9b556e162d8">cl::sycl::detail::pipe_reservation&lt; PipeAccessor &gt;::assume_validity</a>  ()</dt>
 <dd>Throw exception instead  </dd>
-<dt><a class="anchor" id="_todo000221"></a>Member <a class="el" href="group__data.html#a79268d724bea6d0733adea9da85453a4">cl::sycl::detail::pipe_reservation&lt; PipeAccessor &gt;::commit</a>  ()</dt>
+<dt><a class="anchor" id="_todo000225"></a>Member <a class="el" href="group__data.html#a79268d724bea6d0733adea9da85453a4">cl::sycl::detail::pipe_reservation&lt; PipeAccessor &gt;::commit</a>  ()</dt>
 <dd>Add to the specification that for simplicity a reservation can be commited several times but only the first one is taken into account  </dd>
-<dt><a class="anchor" id="_todo000228"></a>Member <a class="el" href="structcl_1_1sycl_1_1detail_1_1queue.html#a43bee70b08ce8c58858debc83ae62177">cl::sycl::detail::queue::~queue</a>  ()</dt>
+<dt><a class="anchor" id="_todo000232"></a>Member <a class="el" href="structcl_1_1sycl_1_1detail_1_1queue.html#a43bee70b08ce8c58858debc83ae62177">cl::sycl::detail::queue::~queue</a>  ()</dt>
 <dd>Update according spec since queue destruction is non blocking  </dd>
 <dt><a class="anchor" id="_todo000134"></a>Member <a class="el" href="structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html#adb22b368f82cbd75f65dc8fe1267e441">cl::sycl::detail::shared_ptr_implementation&lt; Parent, Implementation &gt;::operator&lt;</a>  (const Parent &amp;other) const</dt>
 <dd>Add this to the spec  </dd>
@@ -351,86 +351,90 @@ $(function() {
 <dd>Specify this error in the spec  </dd>
 <dt><a class="anchor" id="_todo000123"></a>Member <a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#ad7e98d4fd9c6186c48680cc5c7d0e446">cl::sycl::detail::task::schedule</a>  (std::function&lt; void(void)&gt; f)</dt>
 <dd>This is an issue if there is an exception in the kernel  </dd>
-<dt><a class="anchor" id="_todo000143"></a>Member <a class="el" href="group__execution.html#a0031b748d05443b57bfeffb08e530427">cl::sycl::device::device</a>  (const <a class="el" href="group__execution.html#classcl_1_1sycl_1_1device__selector" title="The SYCL heuristics to select a device. ">device_selector</a> &amp;ds)</dt>
+<dt><a class="anchor" id="_todo000144"></a>Member <a class="el" href="group__execution.html#a0031b748d05443b57bfeffb08e530427">cl::sycl::device::device</a>  (const <a class="el" href="group__execution.html#classcl_1_1sycl_1_1device__selector" title="The SYCL heuristics to select a device. ">device_selector</a> &amp;ds)</dt>
 <dd>Make it non-explicit in the specification?  </dd>
-<dt><a class="anchor" id="_todo000145"></a>Member <a class="el" href="group__execution.html#a4432ec9fea6f999b8ca5705ab77437fe">cl::sycl::device::get_info</a>  (<a class="el" href="group__execution.html#ga51f4189fcf4ca86d768d0fcce34d8bc5" title="Device information descriptors. ">info::device</a> param) const</dt>
+<dt><a class="anchor" id="_todo000147"></a>Member <a class="el" href="group__execution.html#a98fe0822eb7a163b5e74af4f8c9949a8">cl::sycl::device::get_info</a>  () const</dt>
 <dd></dd>
-<dt><a class="anchor" id="_todo000146"></a>Member <a class="el" href="group__execution.html#a98fe0822eb7a163b5e74af4f8c9949a8">cl::sycl::device::get_info</a>  () const</dt>
+<dt><a class="anchor" id="_todo000146"></a>Member <a class="el" href="group__execution.html#a4432ec9fea6f999b8ca5705ab77437fe">cl::sycl::device::get_info</a>  (<a class="el" href="group__execution.html#ga51f4189fcf4ca86d768d0fcce34d8bc5" title="Device information descriptors. ">info::device</a> param) const</dt>
 <dd></dd>
-<dt><a class="anchor" id="_todo000144"></a>Member <a class="el" href="group__execution.html#accdadd6fafa11f1ef766d17659f00c20">cl::sycl::device::type</a>  () const</dt>
+<dt><a class="anchor" id="_todo000145"></a>Member <a class="el" href="group__execution.html#accdadd6fafa11f1ef766d17659f00c20">cl::sycl::device::type</a>  () const</dt>
 <dd>Present in Boost.Compute, to be added to the specification  </dd>
-<dt><a class="anchor" id="_todo000150"></a>Member <a class="el" href="group__execution.html#ac861b2318dec8b464487810a0ba26e9e">cl::sycl::device_selector::select_device</a>  () const</dt>
+<dt><a class="anchor" id="_todo000154"></a>Member <a class="el" href="group__execution.html#ac861b2318dec8b464487810a0ba26e9e">cl::sycl::device_selector::select_device</a>  () const</dt>
 <dd>Remove this from specification  </dd>
-<dt><a class="anchor" id="_todo000148"></a>Class <a class="el" href="group__execution.html">cl::sycl::device_type_selector</a>  </dt>
+<dt><a class="anchor" id="_todo000152"></a>Class <a class="el" href="group__execution.html">cl::sycl::device_type_selector</a>  </dt>
 <dd>To be added to the specification  </dd>
-<dt><a class="anchor" id="_todo000149"></a>Class <a class="el" href="group__execution.html">cl::sycl::device_typename_selector&lt; DeviceType &gt;</a>  </dt>
+<dt><a class="anchor" id="_todo000153"></a>Class <a class="el" href="group__execution.html">cl::sycl::device_typename_selector&lt; DeviceType &gt;</a>  </dt>
 <dd>To be added to the specification  </dd>
-<dt><a class="anchor" id="_todo000153"></a>Member <a class="el" href="group__error__handling.html#a537d8088b4e63792cc5741a9196d9293">cl::sycl::error_handler::default_handler</a>  </dt>
+<dt><a class="anchor" id="_todo000150"></a>Member <a class="el" href="structcl_1_1sycl_1_1drt_1_1code_1_1program.html#a3acb7ac6ccd71164b32e0f7571d98dfa">cl::sycl::drt::code::program::p</a>  </dt>
+<dd>Deal with several programs  </dd>
+<dt><a class="anchor" id="_todo000149"></a>Member <a class="el" href="group__device__runtime.html#gacccb9322b1bced0ec6d875ba154c26f2">cl::sycl::drt::kernel_IR</a>  </dt>
+<dd>use std::byte when moving to C++17  </dd>
+<dt><a class="anchor" id="_todo000157"></a>Member <a class="el" href="group__error__handling.html#a537d8088b4e63792cc5741a9196d9293">cl::sycl::error_handler::default_handler</a>  </dt>
 <dd>add this concept to the specification?  </dd>
-<dt><a class="anchor" id="_todo000152"></a>Member <a class="el" href="group__error__handling.html#a29e90836447e36545115ff568729cb96">cl::sycl::error_handler::report_error</a>  (exception &amp;error)=0</dt>
+<dt><a class="anchor" id="_todo000156"></a>Member <a class="el" href="group__error__handling.html#a29e90836447e36545115ff568729cb96">cl::sycl::error_handler::report_error</a>  (exception &amp;error)=0</dt>
 <dd>Add "virtual void" to the specification  </dd>
-<dt><a class="anchor" id="_todo000156"></a>Class <a class="el" href="group__error__handling.html">cl::sycl::exception_list</a>  </dt>
+<dt><a class="anchor" id="_todo000160"></a>Class <a class="el" href="group__error__handling.html">cl::sycl::exception_list</a>  </dt>
 <dd>Do we need to define it in SYCL or can we rely on plain C++17 one?  </dd>
-<dt><a class="anchor" id="_todo000155"></a>Member <a class="el" href="group__error__handling.html#ga6a4702500d2bdd07839eade575d0b4e4">cl::sycl::exception_ptr</a>  </dt>
+<dt><a class="anchor" id="_todo000159"></a>Member <a class="el" href="group__error__handling.html#ga6a4702500d2bdd07839eade575d0b4e4">cl::sycl::exception_ptr</a>  </dt>
 <dd>Do we need this instead of reusing directly the one from C++11?  </dd>
-<dt><a class="anchor" id="_todo000161"></a>Member <a class="el" href="group__parallelism.html#afb7b6568a084904520da8bc9aaa9286e">cl::sycl::group&lt; Dimensions &gt;::dimensionality</a>  </dt>
+<dt><a class="anchor" id="_todo000165"></a>Member <a class="el" href="group__parallelism.html#afb7b6568a084904520da8bc9aaa9286e">cl::sycl::group&lt; Dimensions &gt;::dimensionality</a>  </dt>
 <dd>add this Boost::multi_array or STL concept to the specification?  </dd>
-<dt><a class="anchor" id="_todo000166"></a>Member <a class="el" href="group__parallelism.html#a462e58c1bb6bcf482f0ad66c1fada8d6">cl::sycl::group&lt; Dimensions &gt;::get_group_range</a>  () const</dt>
+<dt><a class="anchor" id="_todo000170"></a>Member <a class="el" href="group__parallelism.html#a462e58c1bb6bcf482f0ad66c1fada8d6">cl::sycl::group&lt; Dimensions &gt;::get_group_range</a>  () const</dt>
 <dd>Fix this comment and the specification  </dd>
-<dt><a class="anchor" id="_todo000167"></a>Member <a class="el" href="group__parallelism.html#afb9f150ecdf3d003253dff225085c9f6">cl::sycl::group&lt; Dimensions &gt;::get_local_range</a>  () const</dt>
+<dt><a class="anchor" id="_todo000171"></a>Member <a class="el" href="group__parallelism.html#afb9f150ecdf3d003253dff225085c9f6">cl::sycl::group&lt; Dimensions &gt;::get_local_range</a>  () const</dt>
 <dd>Add to the specification  </dd>
-<dt><a class="anchor" id="_todo000168"></a>Member <a class="el" href="group__parallelism.html#aeca60ead7338e3b4399474829edfa6b4">cl::sycl::group&lt; Dimensions &gt;::get_local_range</a>  (int dimension) const</dt>
+<dt><a class="anchor" id="_todo000172"></a>Member <a class="el" href="group__parallelism.html#aeca60ead7338e3b4399474829edfa6b4">cl::sycl::group&lt; Dimensions &gt;::get_local_range</a>  (int dimension) const</dt>
 <dd>Add to the specification  </dd>
-<dt><a class="anchor" id="_todo000171"></a>Member <a class="el" href="group__parallelism.html#a9dab0a48e38fb5c3f6a1fef3c6628544">cl::sycl::group&lt; Dimensions &gt;::get_nd_range</a>  () const</dt>
+<dt><a class="anchor" id="_todo000175"></a>Member <a class="el" href="group__parallelism.html#a9dab0a48e38fb5c3f6a1fef3c6628544">cl::sycl::group&lt; Dimensions &gt;::get_nd_range</a>  () const</dt>
 <dd>Also provide this access to the current <a class="el" href="group__parallelism.html#structcl_1_1sycl_1_1nd__range" title="A ND-range, made by a global and local range, to specify work-group and work-item organization...">nd_range</a>  </dd>
-<dt><a class="anchor" id="_todo000170"></a>Member <a class="el" href="group__parallelism.html#acc3fb67ea9fdb435da5f4f3fea552b46">cl::sycl::group&lt; Dimensions &gt;::get_offset</a>  (int dimension) const</dt>
+<dt><a class="anchor" id="_todo000174"></a>Member <a class="el" href="group__parallelism.html#acc3fb67ea9fdb435da5f4f3fea552b46">cl::sycl::group&lt; Dimensions &gt;::get_offset</a>  (int dimension) const</dt>
 <dd>Add to the specification  </dd>
-<dt><a class="anchor" id="_todo000169"></a>Member <a class="el" href="group__parallelism.html#a36c7182277e7d39c5c8614595069c713">cl::sycl::group&lt; Dimensions &gt;::get_offset</a>  () const</dt>
+<dt><a class="anchor" id="_todo000173"></a>Member <a class="el" href="group__parallelism.html#a36c7182277e7d39c5c8614595069c713">cl::sycl::group&lt; Dimensions &gt;::get_offset</a>  () const</dt>
 <dd>Add to the specification  </dd>
-<dt><a class="anchor" id="_todo000163"></a>Member <a class="el" href="group__parallelism.html#a710777ffbfbdb63702cd4252a3557c92">cl::sycl::group&lt; Dimensions &gt;::group</a>  (const id&lt; Dimensions &gt; &amp;i, const nd_range&lt; Dimensions &gt; &amp;ndr)</dt>
+<dt><a class="anchor" id="_todo000167"></a>Member <a class="el" href="group__parallelism.html#a710777ffbfbdb63702cd4252a3557c92">cl::sycl::group&lt; Dimensions &gt;::group</a>  (const id&lt; Dimensions &gt; &amp;i, const nd_range&lt; Dimensions &gt; &amp;ndr)</dt>
 <dd>This should be private somehow, but it is used by the validation infrastructure  </dd>
-<dt><a class="anchor" id="_todo000162"></a>Member <a class="el" href="group__parallelism.html#a42e3934b07bd01f5b19c4a6a9d78dd75">cl::sycl::group&lt; Dimensions &gt;::group</a>  (const nd_range&lt; Dimensions &gt; &amp;ndr)</dt>
-<dd>This should be private since it is only used by the triSYCL implementation  </dd>
-<dt><a class="anchor" id="_todo000164"></a>Member <a class="el" href="group__parallelism.html#a08660948acdc1ef73318da5e3066a032">cl::sycl::group&lt; Dimensions &gt;::group</a>  ()=default</dt>
+<dt><a class="anchor" id="_todo000168"></a>Member <a class="el" href="group__parallelism.html#a08660948acdc1ef73318da5e3066a032">cl::sycl::group&lt; Dimensions &gt;::group</a>  ()=default</dt>
 <dd>Make most of them protected, reserved to implementation  </dd>
-<dt><a class="anchor" id="_todo000165"></a>Member <a class="el" href="group__parallelism.html#a362809afa2eaaa0bcdbc6c728657b6f1">cl::sycl::group&lt; Dimensions &gt;::operator[]</a>  (int dimension)</dt>
+<dt><a class="anchor" id="_todo000166"></a>Member <a class="el" href="group__parallelism.html#a42e3934b07bd01f5b19c4a6a9d78dd75">cl::sycl::group&lt; Dimensions &gt;::group</a>  (const nd_range&lt; Dimensions &gt; &amp;ndr)</dt>
+<dd>This should be private since it is only used by the triSYCL implementation  </dd>
+<dt><a class="anchor" id="_todo000169"></a>Member <a class="el" href="group__parallelism.html#a362809afa2eaaa0bcdbc6c728657b6f1">cl::sycl::group&lt; Dimensions &gt;::operator[]</a>  (int dimension)</dt>
 <dd>In this implementation it is not const because the group&lt;&gt; is written in the parallel_for iterators. To fix according to the specification  </dd>
-<dt><a class="anchor" id="_todo000172"></a>Member <a class="el" href="group__parallelism.html#a81a75a6cd3a7e747a29e527c06f03d9d">cl::sycl::group&lt; Dimensions &gt;::parallel_for_work_item</a>  (std::function&lt; void(nd_item&lt; dimensionality &gt;)&gt; f) const</dt>
+<dt><a class="anchor" id="_todo000176"></a>Member <a class="el" href="group__parallelism.html#a81a75a6cd3a7e747a29e527c06f03d9d">cl::sycl::group&lt; Dimensions &gt;::parallel_for_work_item</a>  (std::function&lt; void(nd_item&lt; dimensionality &gt;)&gt; f) const</dt>
 <dd>Add this method in the specification  </dd>
-<dt><a class="anchor" id="_todo000173"></a>Member <a class="el" href="group__parallelism.html#a4641bef52004dc249be3ee983c200062">cl::sycl::group&lt; Dimensions &gt;::parallel_for_work_item</a>  (std::function&lt; void(item&lt; dimensionality &gt;)&gt; f) const</dt>
+<dt><a class="anchor" id="_todo000177"></a>Member <a class="el" href="group__parallelism.html#a4641bef52004dc249be3ee983c200062">cl::sycl::group&lt; Dimensions &gt;::parallel_for_work_item</a>  (std::function&lt; void(item&lt; dimensionality &gt;)&gt; f) const</dt>
 <dd>Add this method in the specification  </dd>
-<dt><a class="anchor" id="_todo000174"></a>Member <a class="el" href="group__execution.html#a793bbb61e9ca0eac78be9e7a0b186cd0">cl::sycl::handler::set_arg</a>  (int arg_index, accessor&lt; DataType, Dimensions, Mode, Target &gt; &amp;&amp;acc_obj)</dt>
+<dt><a class="anchor" id="_todo000178"></a>Member <a class="el" href="group__execution.html#a793bbb61e9ca0eac78be9e7a0b186cd0">cl::sycl::handler::set_arg</a>  (int arg_index, accessor&lt; DataType, Dimensions, Mode, Target &gt; &amp;&amp;acc_obj)</dt>
 <dd><p class="startdd">Update the specification to use a ref &amp;&amp; to the accessor instead?</p>
 <p>It is not that clean to have <a class="el" href="group__execution.html#a793bbb61e9ca0eac78be9e7a0b186cd0" title="Set accessor kernel arg for an OpenCL kernel which is used through the SYCL/OpenCL interop interface...">set_arg()</a> associated to a command handler. Rethink the specification?</p>
 <p class="enddd">It seems more logical to have these methods on kernel instead  </p>
 </dd>
-<dt><a class="anchor" id="_todo000177"></a>Member <a class="el" href="group__execution.html#a529b800f175828a7edc07b0d1a19a176">cl::sycl::handler::set_args</a>  (Ts &amp;&amp;... args)</dt>
+<dt><a class="anchor" id="_todo000181"></a>Member <a class="el" href="group__execution.html#a529b800f175828a7edc07b0d1a19a176">cl::sycl::handler::set_args</a>  (Ts &amp;&amp;... args)</dt>
 <dd>Update the specification to add this function according to <a href="https://cvs.khronos.org/bugzilla/show_bug.cgi?id=15978">https://cvs.khronos.org/bugzilla/show_bug.cgi?id=15978</a> proposal  </dd>
-<dt><a class="anchor" id="_todo000178"></a>Member <a class="el" href="group__execution.html#aae7d151962b5d2f56bbe7cd7710bf135">cl::sycl::handler::single_task</a>  (kernel sycl_kernel)</dt>
+<dt><a class="anchor" id="_todo000182"></a>Member <a class="el" href="group__execution.html#aae7d151962b5d2f56bbe7cd7710bf135">cl::sycl::handler::single_task</a>  (kernel sycl_kernel)</dt>
 <dd>Add in the spec a version taking a kernel and a functor, to have host fall-back  </dd>
-<dt><a class="anchor" id="_todo000184"></a>Class <a class="el" href="group__data.html">cl::sycl::image&lt; Dimensions &gt;</a>  </dt>
+<dt><a class="anchor" id="_todo000188"></a>Class <a class="el" href="group__data.html">cl::sycl::image&lt; Dimensions &gt;</a>  </dt>
 <dd>implement image  </dd>
-<dt><a class="anchor" id="_todo000185"></a>Member <a class="el" href="group__execution.html#ga1a5898274a448ac592ebbcee928939c1">cl::sycl::info::context</a>  </dt>
+<dt><a class="anchor" id="_todo000189"></a>Member <a class="el" href="group__execution.html#ga1a5898274a448ac592ebbcee928939c1">cl::sycl::info::context</a>  </dt>
 <dd>Should be unsigned int to be consistent with others?  </dd>
-<dt><a class="anchor" id="_todo000190"></a>Member <a class="el" href="group__execution.html#ga51f4189fcf4ca86d768d0fcce34d8bc5">cl::sycl::info::device</a>  </dt>
+<dt><a class="anchor" id="_todo000194"></a>Member <a class="el" href="group__execution.html#ga51f4189fcf4ca86d768d0fcce34d8bc5">cl::sycl::info::device</a>  </dt>
 <dd>Should be unsigned int?  </dd>
-<dt><a class="anchor" id="_todo000187"></a>Member <a class="el" href="group__execution.html#ga839771ab6b37e25ae67d5c8a2d4d97f8">cl::sycl::info::device_type</a>  </dt>
+<dt><a class="anchor" id="_todo000191"></a>Member <a class="el" href="group__execution.html#ga839771ab6b37e25ae67d5c8a2d4d97f8">cl::sycl::info::device_type</a>  </dt>
 <dd><p class="startdd">To be moved in the specification from platform to device</p>
 <p>Add opencl to the specification</p>
 <p class="enddd">there is no accelerator_selector and custom_accelerator  </p>
 </dd>
-<dt><a class="anchor" id="_todo000231"></a>Member <a class="el" href="namespacecl_1_1sycl_1_1info.html#a86e91e6deadca35d20f77932c0550426">cl::sycl::info::queue</a>  </dt>
+<dt><a class="anchor" id="_todo000235"></a>Member <a class="el" href="namespacecl_1_1sycl_1_1info.html#a86e91e6deadca35d20f77932c0550426">cl::sycl::info::queue</a>  </dt>
 <dd><p class="startdd">unsigned int?</p>
 <p>To be implemented </p>
 <p class="enddd">To be implemented  </p>
 </dd>
-<dt><a class="anchor" id="_todo000192"></a>Member <a class="el" href="group__parallelism.html#abc5d4783e43d820cc7f4bf2a9ebe3133">cl::sycl::item&lt; Dimensions &gt;::dimensionality</a>  </dt>
+<dt><a class="anchor" id="_todo000196"></a>Member <a class="el" href="group__parallelism.html#abc5d4783e43d820cc7f4bf2a9ebe3133">cl::sycl::item&lt; Dimensions &gt;::dimensionality</a>  </dt>
 <dd>add this Boost::multi_array or STL concept to the specification?  </dd>
-<dt><a class="anchor" id="_todo000193"></a>Member <a class="el" href="group__parallelism.html#a0f0d23c1547055e770f7b4e654a0c4bc">cl::sycl::item&lt; Dimensions &gt;::item</a>  ()=default</dt>
+<dt><a class="anchor" id="_todo000197"></a>Member <a class="el" href="group__parallelism.html#a0f0d23c1547055e770f7b4e654a0c4bc">cl::sycl::item&lt; Dimensions &gt;::item</a>  ()=default</dt>
 <dd>Make most of them protected, reserved to implementation  </dd>
-<dt><a class="anchor" id="_todo000194"></a>Member <a class="el" href="group__parallelism.html#a6c6c92012d85630ba45da9b9c1b84c1e">cl::sycl::item&lt; Dimensions &gt;::set</a>  (id&lt; Dimensions &gt; Index)</dt>
+<dt><a class="anchor" id="_todo000198"></a>Member <a class="el" href="group__parallelism.html#a6c6c92012d85630ba45da9b9c1b84c1e">cl::sycl::item&lt; Dimensions &gt;::set</a>  (id&lt; Dimensions &gt; Index)</dt>
 <dd>Move to private and add friends  </dd>
-<dt><a class="anchor" id="_todo000201"></a>Class <a class="el" href="group__execution.html">cl::sycl::kernel</a>  </dt>
+<dt><a class="anchor" id="_todo000205"></a>Class <a class="el" href="group__execution.html">cl::sycl::kernel</a>  </dt>
 <dd><p class="startdd">To be implemented</p>
 <p class="enddd">Check specification  </p>
 </dd>
@@ -438,63 +442,61 @@ $(function() {
 <dd>Implement the case with a plain pointer  </dd>
 <dt><a class="anchor" id="_todo000056"></a>Member <a class="el" href="group__data.html#gaa5ab7472bc98afc7f70032036e6cc501">cl::sycl::map_allocator</a>  </dt>
 <dd>: implement and clarify the specification. It looks like it is not really an allocator according the current spec  </dd>
-<dt><a class="anchor" id="_todo000203"></a>Member <a class="el" href="group__parallelism.html#a0e0b6ffae70ba27083647fe9ac26d20e">cl::sycl::nd_item&lt; Dimensions &gt;::dimensionality</a>  </dt>
+<dt><a class="anchor" id="_todo000207"></a>Member <a class="el" href="group__parallelism.html#a0e0b6ffae70ba27083647fe9ac26d20e">cl::sycl::nd_item&lt; Dimensions &gt;::dimensionality</a>  </dt>
 <dd>add this Boost::multi_array or STL concept to the specification?  </dd>
-<dt><a class="anchor" id="_todo000207"></a>Member <a class="el" href="group__parallelism.html#a967a6c3a222d79deec2b76eea39c0cc5">cl::sycl::nd_item&lt; Dimensions &gt;::get_item</a>  () const</dt>
+<dt><a class="anchor" id="_todo000211"></a>Member <a class="el" href="group__parallelism.html#a967a6c3a222d79deec2b76eea39c0cc5">cl::sycl::nd_item&lt; Dimensions &gt;::get_item</a>  () const</dt>
 <dd>Add to the specification  </dd>
-<dt><a class="anchor" id="_todo000205"></a>Member <a class="el" href="group__parallelism.html#ac4473964b9e90e64a3d6b0fc1d776333">cl::sycl::nd_item&lt; Dimensions &gt;::nd_item</a>  (id&lt; Dimensions &gt; global_index, nd_range&lt; Dimensions &gt; ndr)</dt>
+<dt><a class="anchor" id="_todo000209"></a>Member <a class="el" href="group__parallelism.html#ac4473964b9e90e64a3d6b0fc1d776333">cl::sycl::nd_item&lt; Dimensions &gt;::nd_item</a>  (id&lt; Dimensions &gt; global_index, nd_range&lt; Dimensions &gt; ndr)</dt>
 <dd>This is for validation purpose. Hide this to the programmer somehow  </dd>
-<dt><a class="anchor" id="_todo000204"></a>Member <a class="el" href="group__parallelism.html#af99a842ff778b87ef164afe10ecebb2e">cl::sycl::nd_item&lt; Dimensions &gt;::nd_item</a>  (nd_range&lt; Dimensions &gt; ndr)</dt>
-<dd>This is for the triSYCL implementation which is expected to call <a class="el" href="group__parallelism.html#a0d1290dd86df1acfa62adc4f918a1eb6">set_global()</a> and <a class="el" href="group__parallelism.html#ac752f7aa76a6dd7beb126ca950f2a8c4">set_local()</a> later. This should be hidden to the user.  </dd>
-<dt><a class="anchor" id="_todo000206"></a>Member <a class="el" href="group__parallelism.html#af04d512b73d2104e01bbb8b0b75e605c">cl::sycl::nd_item&lt; Dimensions &gt;::nd_item</a>  ()=default</dt>
+<dt><a class="anchor" id="_todo000210"></a>Member <a class="el" href="group__parallelism.html#af04d512b73d2104e01bbb8b0b75e605c">cl::sycl::nd_item&lt; Dimensions &gt;::nd_item</a>  ()=default</dt>
 <dd>Make most of them protected, reserved to implementation  </dd>
-<dt><a class="anchor" id="_todo000208"></a>Class <a class="el" href="group__parallelism.html">cl::sycl::nd_range&lt; Dimensions &gt;</a>  </dt>
+<dt><a class="anchor" id="_todo000208"></a>Member <a class="el" href="group__parallelism.html#af99a842ff778b87ef164afe10ecebb2e">cl::sycl::nd_item&lt; Dimensions &gt;::nd_item</a>  (nd_range&lt; Dimensions &gt; ndr)</dt>
+<dd>This is for the triSYCL implementation which is expected to call <a class="el" href="group__parallelism.html#a0d1290dd86df1acfa62adc4f918a1eb6">set_global()</a> and <a class="el" href="group__parallelism.html#ac752f7aa76a6dd7beb126ca950f2a8c4">set_local()</a> later. This should be hidden to the user.  </dd>
+<dt><a class="anchor" id="_todo000212"></a>Class <a class="el" href="group__parallelism.html">cl::sycl::nd_range&lt; Dimensions &gt;</a>  </dt>
 <dd>add copy constructors in the specification  </dd>
-<dt><a class="anchor" id="_todo000209"></a>Member <a class="el" href="group__parallelism.html#a8c59727927661e408cacdd32e2613029">cl::sycl::nd_range&lt; Dimensions &gt;::dimensionality</a>  </dt>
+<dt><a class="anchor" id="_todo000213"></a>Member <a class="el" href="group__parallelism.html#a8c59727927661e408cacdd32e2613029">cl::sycl::nd_range&lt; Dimensions &gt;::dimensionality</a>  </dt>
 <dd>add this Boost::multi_array or STL concept to the specification?  </dd>
-<dt><a class="anchor" id="_todo000210"></a>Member <a class="el" href="group__parallelism.html#ac27fdf48b3ce7a62aa067b7129b141f2">cl::sycl::nd_range&lt; Dimensions &gt;::get_offset</a>  () const</dt>
+<dt><a class="anchor" id="_todo000214"></a>Member <a class="el" href="group__parallelism.html#ac27fdf48b3ce7a62aa067b7129b141f2">cl::sycl::nd_range&lt; Dimensions &gt;::get_offset</a>  () const</dt>
 <dd><a class="el" href="group__parallelism.html#ac27fdf48b3ce7a62aa067b7129b141f2">get_offset()</a> is lacking in the specification  </dd>
-<dt><a class="anchor" id="_todo000157"></a>Class <a class="el" href="group__error__handling.html">cl::sycl::non_cl_error</a>  </dt>
+<dt><a class="anchor" id="_todo000161"></a>Class <a class="el" href="group__error__handling.html">cl::sycl::non_cl_error</a>  </dt>
 <dd><p class="startdd">Add to the specification</p>
 <p>Clean implementation</p>
 <p class="enddd">Exceptions are named error in C++  </p>
 </dd>
-<dt><a class="anchor" id="_todo000215"></a>Member <a class="el" href="group__parallelism.html#ga929002a0e83ac349605e51f8dc35059c">cl::sycl::parallel_for_work_item</a>  (const group&lt; Dimensions &gt; &amp;g, ParallelForFunctor f)</dt>
+<dt><a class="anchor" id="_todo000219"></a>Member <a class="el" href="group__parallelism.html#ga929002a0e83ac349605e51f8dc35059c">cl::sycl::parallel_for_work_item</a>  (const group&lt; Dimensions &gt; &amp;g, ParallelForFunctor f)</dt>
 <dd><p class="startdd">To be implemented </p>
 <p class="enddd">Deprecate this function in the specification to use instead the group method  </p>
 </dd>
-<dt><a class="anchor" id="_todo000222"></a>Member <a class="el" href="group__data.html#a9b77456880b666016cd9f89ce50592c8">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;::pipe_reservation</a>  (detail::pipe_reservation&lt; accessor_detail &gt; &amp;&amp;pr)</dt>
+<dt><a class="anchor" id="_todo000226"></a>Member <a class="el" href="group__data.html#a9b77456880b666016cd9f89ce50592c8">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;::pipe_reservation</a>  (detail::pipe_reservation&lt; accessor_detail &gt; &amp;&amp;pr)</dt>
 <dd>Make it private and add required friends  </dd>
-<dt><a class="anchor" id="_todo000224"></a>Class <a class="el" href="group__execution.html">cl::sycl::platform</a>  </dt>
+<dt><a class="anchor" id="_todo000228"></a>Class <a class="el" href="group__execution.html">cl::sycl::platform</a>  </dt>
 <dd>triSYCL Implementation  </dd>
-<dt><a class="anchor" id="_todo000225"></a>Member <a class="el" href="group__execution.html#a8c40e8cfc090f6421900a07f90a2b3c4">cl::sycl::platform::get</a>  () const</dt>
+<dt><a class="anchor" id="_todo000229"></a>Member <a class="el" href="group__execution.html#a8c40e8cfc090f6421900a07f90a2b3c4">cl::sycl::platform::get</a>  () const</dt>
 <dd>Define a SYCL exception for this  </dd>
-<dt><a class="anchor" id="_todo000226"></a>Member <a class="el" href="group__execution.html#a6699c65c1f81cbcebfd5c9a1a93dd00d">cl::sycl::platform::get_info</a>  (<a class="el" href="group__execution.html#ga3ea7e38ccbc7de5270c4f69bbae20463" title="Platform information descriptors. ">info::platform</a> param) const</dt>
+<dt><a class="anchor" id="_todo000230"></a>Member <a class="el" href="group__execution.html#a6699c65c1f81cbcebfd5c9a1a93dd00d">cl::sycl::platform::get_info</a>  (<a class="el" href="group__execution.html#ga3ea7e38ccbc7de5270c4f69bbae20463" title="Platform information descriptors. ">info::platform</a> param) const</dt>
 <dd>Add to the specification  </dd>
-<dt><a class="anchor" id="_todo000229"></a>Class <a class="el" href="group__execution.html">cl::sycl::queue</a>  </dt>
+<dt><a class="anchor" id="_todo000233"></a>Class <a class="el" href="group__execution.html">cl::sycl::queue</a>  </dt>
 <dd><p class="startdd">The implementation is quite minimal for now. :-)</p>
 <p class="enddd">All the queue methods should return a queue&amp; instead of void to it is possible to chain opoerations  </p>
 </dd>
-<dt><a class="anchor" id="_todo000235"></a>Member <a class="el" href="group__execution.html#a906178d52d172cb327205632be70f732">cl::sycl::queue::queue</a>  (const boost::compute::command_queue &amp;q, async_handler ah=nullptr)</dt>
+<dt><a class="anchor" id="_todo000239"></a>Member <a class="el" href="group__execution.html#a906178d52d172cb327205632be70f732">cl::sycl::queue::queue</a>  (const boost::compute::command_queue &amp;q, async_handler ah=nullptr)</dt>
 <dd>Deal with handler  </dd>
-<dt><a class="anchor" id="_todo000234"></a>Member <a class="el" href="group__execution.html#a2b1186b45229fbc5827f0034543abb18">cl::sycl::queue::queue</a>  ()</dt>
+<dt><a class="anchor" id="_todo000238"></a>Member <a class="el" href="group__execution.html#a2b1186b45229fbc5827f0034543abb18">cl::sycl::queue::queue</a>  ()</dt>
 <dd>Check with the specification if it is the host queue or the one related to the default device selector.  </dd>
-<dt><a class="anchor" id="_todo000236"></a>Member <a class="el" href="group__execution.html#ae72430b2baba91bf99e45350437a497e">cl::sycl::queue::submit</a>  (std::function&lt; void(handler &amp;)&gt; cgf)</dt>
-<dd><p class="startdd">Add in the spec an implicit conversion of <a class="el" href="classhandler__event.html" title="Handler event. ">handler_event</a> to queue&amp; so it is possible to chain operations on the queue</p>
-<p class="enddd">Update the spec to replace std::function by a templated type to avoid memory allocation  </p>
-</dd>
-<dt><a class="anchor" id="_todo000238"></a>Class <a class="el" href="group__parallelism.html">cl::sycl::range&lt; Dimensions &gt;</a>  </dt>
+<dt><a class="anchor" id="_todo000240"></a>Member <a class="el" href="group__execution.html#ac6acf51e0dfacdd42382644b99996ed9">cl::sycl::queue::submit</a>  (Handler_Functor cgf)</dt>
+<dd>Add in the spec an implicit conversion of <a class="el" href="classhandler__event.html" title="Handler event. ">handler_event</a> to queue&amp; so it is possible to chain operations on the queue  </dd>
+<dt><a class="anchor" id="_todo000241"></a>Class <a class="el" href="group__parallelism.html">cl::sycl::range&lt; Dimensions &gt;</a>  </dt>
 <dd><p class="startdd">use std::size_t Dimensions instead of int Dimensions in the specification?</p>
 <p>add to the specification this default parameter value?</p>
 <p class="enddd">add to the specification some way to specify an offset?  </p>
 </dd>
-<dt><a class="anchor" id="_todo000241"></a>Member <a class="el" href="group__parallelism.html#ab066b2903dc968d82c6f512e2ddc2d23">cl::sycl::range&lt; Dimensions &gt;::get_count</a>  () const</dt>
+<dt><a class="anchor" id="_todo000244"></a>Member <a class="el" href="group__parallelism.html#ab066b2903dc968d82c6f512e2ddc2d23">cl::sycl::range&lt; Dimensions &gt;::get_count</a>  () const</dt>
 <dd><p class="startdd">Give back size() its real meaning in the specification</p>
 <p class="enddd">add this method to the specification  </p>
 </dd>
-<dt><a class="anchor" id="_todo000151"></a>Namespace <a class="el" href="namespacecl_1_1sycl_1_1trisycl.html">cl::sycl::trisycl</a>  </dt>
+<dt><a class="anchor" id="_todo000155"></a>Namespace <a class="el" href="namespacecl_1_1sycl_1_1trisycl.html">cl::sycl::trisycl</a>  </dt>
 <dd>Refactor when updating to latest specification  </dd>
-<dt><a class="anchor" id="_todo000243"></a>Class <a class="el" href="group__vector.html">cl::sycl::vec&lt; DataType, NumElements &gt;</a>  </dt>
+<dt><a class="anchor" id="_todo000246"></a>Class <a class="el" href="group__vector.html">cl::sycl::vec&lt; DataType, NumElements &gt;</a>  </dt>
 <dd><p class="startdd">add [] operator</p>
 <p>add iterators on elements, with begin() and end()</p>
 <p>having vec&lt;&gt; sub-classing array&lt;&gt; instead would solve the previous issues</p>
@@ -502,13 +504,27 @@ $(function() {
 <p>simplify the helpers by removing some template types since there are now inside the vec&lt;&gt; class.</p>
 <p class="enddd">rename in the specification element_type to value_type  </p>
 </dd>
+<dt><a class="anchor" id="_todo000257"></a>Class <a class="el" href="structcl_1_1sycl_1_1xilinx_1_1partition_1_1block.html">cl::sycl::xilinx::partition::block&lt; ElmInEachPhyMem, PDim &gt;</a>  </dt>
+<dd>Deal with multi-dimension array. Now, since we can only deal with 1-dim, PDim is set to 1 by default.  </dd>
+<dt><a class="anchor" id="_todo000258"></a>Class <a class="el" href="structcl_1_1sycl_1_1xilinx_1_1partition_1_1complete.html">cl::sycl::xilinx::partition::complete&lt; PDim &gt;</a>  </dt>
+<dd>Deal with multi-dimension array. Now, since we can only deal with 1-dim, PDim is set to 1 by default.  </dd>
+<dt><a class="anchor" id="_todo000256"></a>Class <a class="el" href="structcl_1_1sycl_1_1xilinx_1_1partition_1_1cyclic.html">cl::sycl::xilinx::partition::cyclic&lt; PhyMemNum, PDim &gt;</a>  </dt>
+<dd>Deal with multi-dimension array. Now, since we can only deal with 1-dim, PDim is set to 1 by default.  </dd>
+<dt><a class="anchor" id="_todo000255"></a>Class <a class="el" href="group__Xilinx.html">cl::sycl::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;</a>  </dt>
+<dd>Deal with multi-dimension array.  </dd>
+<dt><a class="anchor" id="_todo000259"></a>Member <a class="el" href="group__Xilinx.html#ab9948704e2c26cf442500ede159b4566">cl::sycl::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;::partition_array</a>  (const SomeContainer &amp;src)</dt>
+<dd>Find a way to specialize this with a safer implementation when the size of src is at least constexpr  </dd>
+<dt><a class="anchor" id="_todo000260"></a>Member <a class="el" href="group__Xilinx.html#a2e130c6fd8052967ae13fc93f80770d9">cl::sycl::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;::partition_array</a>  (std::initializer_list&lt; SourceBasicType &gt; l)</dt>
+<dd>Find a way to specialize this with a safer implementation when the size of src is at least constexpr This does not work... static_assert(l.size() == Size);  </dd>
+<dt><a class="anchor" id="_todo000138"></a>Member <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a>  </dt>
+<dd>avoid this hack  </dd>
 <dt><a class="anchor" id="_todo000126"></a>Module <a class="el" href="group__execution.html">execution</a>  </dt>
 <dd>The implementation is quite minimal for now. :-)  </dd>
-<dt><a class="anchor" id="_todo000182"></a>Class <a class="el" href="classhandler__event.html">handler_event</a>  </dt>
+<dt><a class="anchor" id="_todo000186"></a>Class <a class="el" href="classhandler__event.html">handler_event</a>  </dt>
 <dd><p class="startdd">To be implemented </p>
 <p class="enddd">To be implemented  </p>
 </dd>
-<dt><a class="anchor" id="_todo000179"></a>Member <a class="el" href="handler_8hpp.html#a4f7139c7f8f7a4ff82e6678f7c6d44ec">TRISYCL_ParallelForKernel_RANGE</a>  (N)</dt>
+<dt><a class="anchor" id="_todo000183"></a>Member <a class="el" href="handler_8hpp.html#a4f7139c7f8f7a4ff82e6678f7c6d44ec">TRISYCL_ParallelForKernel_RANGE</a>  (N)</dt>
 <dd><p class="startdd">Add in the spec a version taking a kernel and a functor, to have host fall-back </p>
 <p>Think to a cleaner solution </p>
 <p>Think to a cleaner solution</p>
@@ -518,7 +534,7 @@ $(function() {
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Dec 22 2017 02:39:43 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Apr 20 2018 19:26:23 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

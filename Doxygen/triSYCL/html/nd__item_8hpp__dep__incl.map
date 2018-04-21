@@ -1,15 +1,16 @@
 <map id="include/CL/sycl/nd_item.hpp" name="include/CL/sycl/nd_item.hpp">
-<area shape="rect" id="node2" href="$local__accessor_8hpp.html" title="include/CL/sycl/accessor\l/detail/local_accessor.hpp" alt="" coords="133,95,307,136"/>
-<area shape="rect" id="node3" href="$accessor_8hpp.html" title="include/CL/sycl/accessor.hpp" alt="" coords="247,191,441,218"/>
-<area shape="rect" id="node5" href="$sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="358,527,495,553"/>
-<area shape="rect" id="node10" href="$buffer_2detail_2accessor_8hpp.html" title="include/CL/sycl/buffer\l/detail/accessor.hpp" alt="" coords="381,95,531,136"/>
-<area shape="rect" id="node13" href="$parallelism_2detail_2parallelism_8hpp.html" title="Implement the detail of the parallel constructions to launch kernels. " alt="" coords="479,184,657,225"/>
-<area shape="rect" id="node4" href="$buffer_8hpp.html" title="include/CL/sycl/buffer.hpp" alt="" coords="597,452,771,479"/>
-<area shape="rect" id="node6" href="$handler_8hpp.html" title="include/CL/sycl/handler.hpp" alt="" coords="382,281,565,307"/>
-<area shape="rect" id="node7" href="$pipe_8hpp.html" title="include/CL/sycl/pipe.hpp" alt="" coords="267,370,432,397"/>
-<area shape="rect" id="node9" href="$static__pipe_8hpp.html" title="include/CL/sycl/static\l_pipe.hpp" alt="" coords="94,363,242,404"/>
-<area shape="rect" id="node8" href="$queue_8hpp.html" title="include/CL/sycl/queue.hpp" alt="" coords="557,370,733,397"/>
-<area shape="rect" id="node11" href="$buffer_2detail_2buffer_8hpp.html" title="include/CL/sycl/buffer\l/detail/buffer.hpp" alt="" coords="916,273,1065,315"/>
-<area shape="rect" id="node12" href="$buffer__waiter_8hpp.html" title="include/CL/sycl/buffer\l/detail/buffer_waiter.hpp" alt="" coords="910,363,1071,404"/>
-<area shape="rect" id="node14" href="$parallelism_8hpp.html" title="Implement parallel constructions to launch kernels. " alt="" coords="689,281,892,307"/>
+<area shape="rect" id="node2" href="$local__accessor_8hpp.html" title="include/CL/sycl/accessor\l/detail/local_accessor.hpp" alt="" coords="305,95,479,136"/>
+<area shape="rect" id="node3" href="$accessor_8hpp.html" title="include/CL/sycl/accessor.hpp" alt="" coords="252,191,447,218"/>
+<area shape="rect" id="node5" href="$sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="339,541,477,568"/>
+<area shape="rect" id="node11" href="$buffer_2detail_2accessor_8hpp.html" title="include/CL/sycl/buffer\l/detail/accessor.hpp" alt="" coords="553,95,703,136"/>
+<area shape="rect" id="node14" href="$parallelism_2detail_2parallelism_8hpp.html" title="Implement the detail of the parallel constructions to launch kernels. " alt="" coords="471,184,649,225"/>
+<area shape="rect" id="node4" href="$buffer_8hpp.html" title="include/CL/sycl/buffer.hpp" alt="" coords="659,459,834,486"/>
+<area shape="rect" id="node6" href="$device__runtime_8hpp.html" title="include/CL/sycl/device\l_runtime.hpp" alt="" coords="112,452,267,493"/>
+<area shape="rect" id="node7" href="$handler_8hpp.html" title="include/CL/sycl/handler.hpp" alt="" coords="429,281,611,307"/>
+<area shape="rect" id="node8" href="$pipe_8hpp.html" title="include/CL/sycl/pipe.hpp" alt="" coords="144,370,309,397"/>
+<area shape="rect" id="node10" href="$static__pipe_8hpp.html" title="include/CL/sycl/static\l_pipe.hpp" alt="" coords="334,363,482,404"/>
+<area shape="rect" id="node9" href="$queue_8hpp.html" title="include/CL/sycl/queue.hpp" alt="" coords="557,370,733,397"/>
+<area shape="rect" id="node12" href="$buffer_2detail_2buffer_8hpp.html" title="include/CL/sycl/buffer\l/detail/buffer.hpp" alt="" coords="956,273,1105,315"/>
+<area shape="rect" id="node13" href="$buffer__waiter_8hpp.html" title="include/CL/sycl/buffer\l/detail/buffer_waiter.hpp" alt="" coords="910,363,1071,404"/>
+<area shape="rect" id="node15" href="$parallelism_8hpp.html" title="Implement parallel constructions to launch kernels. " alt="" coords="729,281,932,307"/>
 </map>

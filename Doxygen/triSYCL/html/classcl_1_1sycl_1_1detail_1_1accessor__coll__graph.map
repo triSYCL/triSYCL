@@ -1,3 +1,4 @@
 <map id="cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;" name="cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;">
-<area shape="rect" id="node3" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; accessor\&lt; T, Dimensions,\l Mode, Target \&gt; \&gt;" alt="" coords="5,101,193,157"/>
+<area shape="rect" id="node2" href="$group__data.html#classcl_1_1sycl_1_1detail_1_1accessor__base" title="The buffer accessor base is here mainly to be accessed from the task without dependency on the buffer..." alt="" coords="224,42,423,69"/>
+<area shape="rect" id="node6" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; accessor\&lt; T, Dimensions,\l Mode, Target \&gt; \&gt;" alt="" coords="229,189,417,245"/>
 </map>

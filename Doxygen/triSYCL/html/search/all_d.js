@@ -1,6 +1,8 @@
 var searchData=
 [
+  ['n',['n',['../opencl__spir_8h.html#a9224774a9f20082765170987d74bfc3e',1,'opencl_spir.h']]],
   ['name',['name',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ab068931cc450442b63f5b3d276ea4297',1,'cl::sycl::info']]],
+  ['nan',['NAN',['../opencl__spir_8h.html#a8abfcc76130f3f991d124dd22d7e69bc',1,'opencl_spir.h']]],
   ['native_5fvector_5fwitdth_5fchar',['native_vector_witdth_char',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a518eca5f4d506715cf398ea7ba23dc9f',1,'cl::sycl::info']]],
   ['native_5fvector_5fwitdth_5fdouble',['native_vector_witdth_double',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ae9ad26b30e893b6e8b92137c215a5ef3',1,'cl::sycl::info']]],
   ['native_5fvector_5fwitdth_5ffloat',['native_vector_witdth_float',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a6ab028332a59b2695a48e9ed882ff285',1,'cl::sycl::info']]],
@@ -18,10 +20,10 @@ var searchData=
   ['no_5fpartition',['no_partition',['../group__execution.html#gga88aea8ff69afd9cf81594eb915690b25a7f4266f4f9a51dde86e2c69df7ff52d3',1,'cl::sycl::info']]],
   ['non_5fcl_5ferror',['non_cl_error',['../group__error__handling.html#classcl_1_1sycl_1_1non__cl__error',1,'cl::sycl']]],
   ['non_5fconst_5fvalue_5ftype',['non_const_value_type',['../group__data.html#a64a54d662dc842748b1d57b0b0c438b1',1,'cl::sycl::detail::buffer']]],
-  ['none',['none',['../group__execution.html#ggad3cf44d11f60b23508e91d1ed61ad001a334c4a4c42fdb79d7ebc3e73b517e6f8',1,'cl::sycl::info::none()'],['../group__execution.html#gga8986fcccc4479065bdbf37d9b9d8def5a334c4a4c42fdb79d7ebc3e73b517e6f8',1,'cl::sycl::info::none()']]],
+  ['none',['none',['../structcl_1_1sycl_1_1xilinx_1_1partition_1_1none.html',1,'cl::sycl::xilinx::partition::none'],['../group__execution.html#ggad3cf44d11f60b23508e91d1ed61ad001a334c4a4c42fdb79d7ebc3e73b517e6f8',1,'cl::sycl::info::none()'],['../group__execution.html#gga8986fcccc4479065bdbf37d9b9d8def5a334c4a4c42fdb79d7ebc3e73b517e6f8',1,'cl::sycl::info::none()'],['../namespacecl_1_1sycl_1_1xilinx_1_1partition.html#aee770014a91e9141225e91c02351b832a334c4a4c42fdb79d7ebc3e73b517e6f8',1,'cl::sycl::xilinx::partition::none()']]],
   ['notify_5fbuffer_5fdestructor',['notify_buffer_destructor',['../group__data.html#a65b6d27502f4153143a8162a894780cf',1,'cl::sycl::detail::buffer_base']]],
   ['notify_5fconsumers',['notify_consumers',['../structcl_1_1sycl_1_1detail_1_1task.html#ad4606b29bd336c40586e583e1fcc4348',1,'cl::sycl::detail::task']]],
-  ['num_5fdevices',['num_devices',['../group__execution.html#gga1a5898274a448ac592ebbcee928939c1abf324a81d4e115643691b7aa4cc12828',1,'cl::sycl::info']]],
+  ['num_5felements',['num_elements',['../opencl__spir_8h.html#a235f150c5378642da833b0bcb2ecbe11',1,'opencl_spir.h']]],
   ['numa',['numa',['../group__execution.html#gga51116d5add442d9bae6028c45e09eca4a0dfb2d09aeef6a0220a25c2e2d0fddbd',1,'cl::sycl::info::numa()'],['../group__execution.html#gga88aea8ff69afd9cf81594eb915690b25a0dfb2d09aeef6a0220a25c2e2d0fddbd',1,'cl::sycl::info::numa()']]],
   ['number_5fof_5fusers',['number_of_users',['../group__data.html#a772d5f61997bd86e5629726ed75819d3',1,'cl::sycl::detail::buffer_base']]]
 ];

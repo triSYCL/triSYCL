@@ -1,5 +1,9 @@
 var searchData=
 [
-  ['value_5ftype',['value_type',['../group__data.html#ab9e18000b6c49195c556a93b50decc48',1,'cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;::value_type()'],['../group__data.html#a5d1e50e51c8fe240063d25f8da69efb9',1,'cl::sycl::detail::accessor::value_type()'],['../group__data.html#a8821577189448eeefeb70b133eb7be02',1,'cl::sycl::detail::buffer::value_type()'],['../group__data.html#abf509183b12f7183dd8b065c05d651bd',1,'cl::sycl::buffer::value_type()'],['../classcl_1_1sycl_1_1detail_1_1cache.html#ac00d07214346281587a26f5f23ae8627',1,'cl::sycl::detail::cache::value_type()'],['../group__helpers.html#a70dca993571b23ac0c9b27ffcb005189',1,'cl::sycl::detail::container_element_aspect::value_type()'],['../group__data.html#a23de6c2090d9d4bbc72abea6e4306b30',1,'cl::sycl::detail::pipe::value_type()'],['../group__data.html#ad09a908a72903abfcee731d2baacb280',1,'cl::sycl::detail::pipe_accessor::value_type()'],['../group__data.html#a292c56cb7641c650b5f552226f385b77',1,'cl::sycl::pipe::value_type()'],['../group__data.html#a8f2e9eb3908980726be3e7eb3df5d02b',1,'cl::sycl::detail::pipe_reservation::value_type()'],['../group__data.html#a62e2bbdbff3d786962b498498645bf6a',1,'cl::sycl::pipe_reservation::value_type()'],['../group__data.html#aa676a55a38d164359233c9e3925c38fa',1,'cl::sycl::static_pipe::value_type()']]],
-  ['vector_5fclass',['vector_class',['../namespacecl_1_1sycl.html#a0a3b58674c77d248758b6bee05800ac5',1,'cl::sycl']]]
+  ['uchar',['uchar',['../opencl__spir_8h.html#a65f85814a8290f9797005d3b28e7e5fc',1,'opencl_spir.h']]],
+  ['uint',['uint',['../opencl__spir_8h.html#a91ad9478d81a7aaf2593e8d9c3d06a14',1,'opencl_spir.h']]],
+  ['uintptr_5ft',['uintptr_t',['../opencl__spir_8h.html#a46d30f10b56cc57713eb284f0c9712f8',1,'opencl_spir.h']]],
+  ['ulong',['ulong',['../opencl__spir_8h.html#a718b4eb2652c286f4d42dc18a8e71a1a',1,'opencl_spir.h']]],
+  ['unique_5fptr_5fclass',['unique_ptr_class',['../namespacecl_1_1sycl.html#a7297c7f7107f609a00c08c1808f4b765',1,'cl::sycl']]],
+  ['ushort',['ushort',['../opencl__spir_8h.html#ab95f123a6c9bcfee6a343170ef8c5f69',1,'opencl_spir.h']]]
 ];

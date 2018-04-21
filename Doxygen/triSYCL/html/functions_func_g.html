@@ -99,10 +99,10 @@ $(function() {
 , <a class="el" href="classcl_1_1sycl_1_1detail_1_1host__device.html#a68ff82f0ea6dcdfd021f411af0892f35">cl::sycl::detail::host_device</a>
 , <a class="el" href="group__execution.html#a1640761c26ea52096c944c3e4f2088a5">cl::sycl::detail::host_platform</a>
 , <a class="el" href="classcl_1_1sycl_1_1detail_1_1host__queue.html#a7952e98dce36988eb740797efc778761">cl::sycl::detail::host_queue</a>
-, <a class="el" href="group__execution.html#a616095c5ebe7fddfcf9d865c6d97f674">cl::sycl::detail::kernel</a>
+, <a class="el" href="group__execution.html#afa7c424818bfefb86e9b39657a6a0432">cl::sycl::detail::kernel</a>
 , <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a354b99cfdd70a0bc9199454191f1e4b1">cl::sycl::detail::opencl_context</a>
 , <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__device.html#af580781162e3442434c804d6a60b7077">cl::sycl::detail::opencl_device</a>
-, <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#a6ca5e07fbf0cb6997133b7b29859669d">cl::sycl::detail::opencl_kernel</a>
+, <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#a01cf3b409707399a16854b33632bdc79">cl::sycl::detail::opencl_kernel</a>
 , <a class="el" href="group__execution.html#a7f5ca2aa742552385caca81ea1651e12">cl::sycl::detail::opencl_platform</a>
 , <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__queue.html#a94d13f95dd7fb87013b71f37fe681507">cl::sycl::detail::opencl_queue</a>
 , <a class="el" href="group__execution.html#a367c3f0b87ead8954c7a25fc6213aec3">cl::sycl::detail::platform</a>
@@ -121,11 +121,15 @@ $(function() {
 : <a class="el" href="group__data.html#ae700e3690d444b26a5e0bf9f67db32b5">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
 </li>
 <li>get_cl_buffer()
-: <a class="el" href="group__data.html#aaef8552f313f825c554c3cffecf0b3be">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+: <a class="el" href="group__data.html#a7525c4c3ce22ab400c239d5bb7fdf74c">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+, <a class="el" href="group__data.html#ad6bec905565a22d4ea511688f217277e">cl::sycl::detail::accessor_base</a>
 , <a class="el" href="group__data.html#a2b6e416b08c7d4187e2014fa483e7d50">cl::sycl::detail::buffer_base</a>
 </li>
 <li>get_cl_code()
 : <a class="el" href="group__error__handling.html#a33d9f94d87bde0274e1163b757157389">cl::sycl::cl_exception</a>
+</li>
+<li>get_compute_buffer()
+: <a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#a5903381a3034cf853ef0179c0c95ba40">cl::sycl::detail::task</a>
 </li>
 <li>get_context()
 : <a class="el" href="classcl_1_1sycl_1_1detail_1_1host__queue.html#aa534796e51b37de846da99e4445f1c10">cl::sycl::detail::host_queue</a>
@@ -184,7 +188,7 @@ $(function() {
 </li>
 <li>get_id()
 : <a class="el" href="group__parallelism.html#ac970208726df578870d9ad1921817724">cl::sycl::group&lt; Dimensions &gt;</a>
-, <a class="el" href="group__parallelism.html#a13c6d7092e9c1bc073064598493ba6bf">cl::sycl::item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#ac5734bcae3294471e6cac2f1baba8def">cl::sycl::item&lt; Dimensions &gt;</a>
 </li>
 <li>get_info()
 : <a class="el" href="group__execution.html#a135e824e11658f487a602234f1216ac0">cl::sycl::context</a>
@@ -220,7 +224,7 @@ $(function() {
 : <a class="el" href="group__parallelism.html#aacd5c740a37eb0f20d8490c37caa0cc2">cl::sycl::nd_item&lt; Dimensions &gt;</a>
 </li>
 <li>get_local_range()
-: <a class="el" href="group__parallelism.html#afb9f150ecdf3d003253dff225085c9f6">cl::sycl::group&lt; Dimensions &gt;</a>
+: <a class="el" href="group__parallelism.html#aeca60ead7338e3b4399474829edfa6b4">cl::sycl::group&lt; Dimensions &gt;</a>
 , <a class="el" href="group__parallelism.html#a6bc7aca87177a08d13f1a9b1023d87e0">cl::sycl::nd_item&lt; Dimensions &gt;</a>
 </li>
 <li>get_nd_range()
@@ -238,6 +242,12 @@ $(function() {
 </li>
 <li>get_or_register()
 : <a class="el" href="classcl_1_1sycl_1_1detail_1_1cache.html#a9a918c2a5233b5538b248a195c3446c3">cl::sycl::detail::cache&lt; Key, Value &gt;</a>
+</li>
+<li>get_order()
+: <a class="el" href="group__data.html#a70a06e63cfe5ca25dd677b97542d8150">cl::sycl::detail::accessor_base</a>
+</li>
+<li>get_partition_type()
+: <a class="el" href="group__Xilinx.html#ab9da0cecac0e8578d4effc6db61bac7d">cl::sycl::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;</a>
 </li>
 <li>get_pipe_detail()
 : <a class="el" href="group__data.html#a156e19d4481a98ae94d763ce4623a4ba">cl::sycl::accessor&lt; DataType, 1, AccessMode, access::target::blocking_pipe &gt;</a>
@@ -259,7 +269,7 @@ $(function() {
 </li>
 <li>get_pointer()
 : <a class="el" href="group__data.html#aa2f3d2935088263e03fab48d9a769e55">cl::sycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;</a>
-, <a class="el" href="group__data.html#a5d3efacdbbc1ee221ca9487152c907e3">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+, <a class="el" href="group__data.html#a167c35616ed32d44a3ab18f2a8161918">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
 </li>
 <li>get_queue()
 : <a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#a11f2b6d13ebe35956f57985a7808218f">cl::sycl::detail::task</a>
@@ -280,13 +290,13 @@ $(function() {
 , <a class="el" href="group__data.html#a35cf0a28ab7d6bafed482fc397d4c5b2">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
 </li>
 <li>group()
-: <a class="el" href="group__parallelism.html#a08660948acdc1ef73318da5e3066a032">cl::sycl::group&lt; Dimensions &gt;</a>
+: <a class="el" href="group__parallelism.html#a710777ffbfbdb63702cd4252a3557c92">cl::sycl::group&lt; Dimensions &gt;</a>
 </li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Dec 22 2017 02:39:44 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Apr 20 2018 19:26:25 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['local',['local',['../group__address__spaces.html#ga84b28327ccb8c32ea971d6c1d5f3bca2',1,'cl::sycl']]],
-  ['local_5fptr',['local_ptr',['../group__address__spaces.html#ga5c0e2468bb7dc8ac85e64f7ce1586ef2',1,'cl::sycl']]]
+  ['key_5ftype',['key_type',['../classcl_1_1sycl_1_1detail_1_1cache.html#a526777c797db85b83731d04ef70dc2ba',1,'cl::sycl::detail::cache']]]
 ];

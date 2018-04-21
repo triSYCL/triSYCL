@@ -70,7 +70,7 @@ $(function() {
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
-<div class="title">cl::sycl Namespace Reference<div class="ingroups"><a class="el" href="group__address__spaces.html">Dealing with OpenCL address spaces</a> &#124; <a class="el" href="group__parallelism.html">Expressing parallelism through kernels</a></div></div>  </div>
+<div class="title">cl::sycl Namespace Reference<div class="ingroups"><a class="el" href="group__address__spaces.html">Dealing with OpenCL address spaces</a> &#124; <a class="el" href="group__parallelism.html">Expressing parallelism through kernels</a> &#124; <a class="el" href="group__Xilinx.html">Xilinx vendor extensions</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
@@ -81,9 +81,14 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacecl_1_1sycl_1_1detail"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl_1_1detail.html">detail</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespacecl_1_1sycl_1_1drt"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl_1_1drt.html">drt</a></td></tr>
+<tr class="memdesc:namespacecl_1_1sycl_1_1drt"><td class="mdescLeft">&#160;</td><td class="mdescRight">The device-side runtime. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacecl_1_1sycl_1_1info"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl_1_1info.html">info</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacecl_1_1sycl_1_1trisycl"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl_1_1trisycl.html">trisycl</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespacecl_1_1sycl_1_1xilinx"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl_1_1xilinx.html">xilinx</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
@@ -302,9 +307,11 @@ Typedefs</h2></td></tr>
 <tr class="memitem:af2725900e89b5f8e9dbca1b104d9faa8"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:af2725900e89b5f8e9dbca1b104d9faa8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html#af2725900e89b5f8e9dbca1b104d9faa8">hash_class</a> = std::hash&lt; T &gt;</td></tr>
 <tr class="separator:af2725900e89b5f8e9dbca1b104d9faa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3ceefd96aa7cbfec9e0e8ef525bc8940"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#ga3ceefd96aa7cbfec9e0e8ef525bc8940">default_selector</a> = <a class="el" href="group__execution.html#classcl_1_1sycl_1_1device__typename__selector">device_typename_selector</a>&lt; <a class="el" href="group__execution.html#gga839771ab6b37e25ae67d5c8a2d4d97f8aa4a918a45181164207929d52aec36aec">info::device_type::defaults</a> &gt;</td></tr>
-<tr class="memdesc:ga3ceefd96aa7cbfec9e0e8ef525bc8940"><td class="mdescLeft">&#160;</td><td class="mdescRight">Devices selected by heuristics of the system.  <a href="group__execution.html#ga3ceefd96aa7cbfec9e0e8ef525bc8940">More...</a><br /></td></tr>
-<tr class="separator:ga3ceefd96aa7cbfec9e0e8ef525bc8940"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2142f5990bff9e140a51aac753244d37"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html#a2142f5990bff9e140a51aac753244d37">exception_ptr_class</a> = std::exception_ptr</td></tr>
+<tr class="separator:a2142f5990bff9e140a51aac753244d37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae931bd992a57ff1688115d595fbe071b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#gae931bd992a57ff1688115d595fbe071b">default_selector</a> = <a class="el" href="group__execution.html#classcl_1_1sycl_1_1device__typename__selector">device_typename_selector</a>&lt; <a class="el" href="group__execution.html#gga839771ab6b37e25ae67d5c8a2d4d97f8a2bd9c0ed00116be1258e0cc66617d7c8">info::device_type::automatic</a> &gt;</td></tr>
+<tr class="memdesc:gae931bd992a57ff1688115d595fbe071b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Devices selected by heuristics of the system.  <a href="group__execution.html#gae931bd992a57ff1688115d595fbe071b">More...</a><br /></td></tr>
+<tr class="separator:gae931bd992a57ff1688115d595fbe071b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga37a9d134849497919cc559819930ae9c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#ga37a9d134849497919cc559819930ae9c">gpu_selector</a> = <a class="el" href="group__execution.html#classcl_1_1sycl_1_1device__typename__selector">device_typename_selector</a>&lt; <a class="el" href="group__execution.html#gga839771ab6b37e25ae67d5c8a2d4d97f8a0aa0be2a866411d9ff03515227454947">info::device_type::gpu</a> &gt;</td></tr>
 <tr class="memdesc:ga37a9d134849497919cc559819930ae9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Select devices according to device type info::device::device_type::gpu from all the available OpenCL devices.  <a href="group__execution.html#ga37a9d134849497919cc559819930ae9c">More...</a><br /></td></tr>
 <tr class="separator:ga37a9d134849497919cc559819930ae9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -337,7 +344,7 @@ Enumerations</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:gaa512aefcf7a0af133b0cd252e9628fa1"><td class="memTemplParams" colspan="2">template&lt;typename Accessor &gt; </td></tr>
-<tr class="memitem:gaa512aefcf7a0af133b0cd252e9628fa1"><td class="memTemplItemLeft" align="right" valign="top">static auto &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__data.html#gaa512aefcf7a0af133b0cd252e9628fa1">get_pipe_detail</a> (Accessor &amp;a)</td></tr>
+<tr class="memitem:gaa512aefcf7a0af133b0cd252e9628fa1"><td class="memTemplItemLeft" align="right" valign="top">static auto &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__data.html#gaa512aefcf7a0af133b0cd252e9628fa1">get_pipe_detail</a> (Accessor &amp;<a class="el" href="opencl__spir_8h.html#afce50bc7a23ec77afc73ea78f6f569e9">a</a>)</td></tr>
 <tr class="memdesc:gaa512aefcf7a0af133b0cd252e9628fa1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Top-level function to break circular dependencies on the the types to get the pipe implementation.  <a href="group__data.html#gaa512aefcf7a0af133b0cd252e9628fa1">More...</a><br /></td></tr>
 <tr class="separator:gaa512aefcf7a0af133b0cd252e9628fa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad49feb5469dfdcee64f7d5a6da0bb56b"><td class="memTemplParams" colspan="2">template&lt;typename T , address_space AS&gt; </td></tr>
@@ -368,21 +375,21 @@ Functions</h2></td></tr>
 <tr class="memitem:ga7b069a553dadff6589cb7bfe63bac305"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
 <tr class="memitem:ga7b069a553dadff6589cb7bfe63bac305"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__execution.html#ga7b069a553dadff6589cb7bfe63bac305">device::get_info&lt; info::device::profile &gt;</a> () const</td></tr>
 <tr class="separator:ga7b069a553dadff6589cb7bfe63bac305"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafbc9d7c4a1a2ae2844c1f7ee95c3ee42"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__parallelism.html#gafbc9d7c4a1a2ae2844c1f7ee95c3ee42">make_id</a> (<a class="el" href="group__parallelism.html#classcl_1_1sycl_1_1id">id</a>&lt; 1 &gt; i)</td></tr>
+<tr class="memitem:gafbc9d7c4a1a2ae2844c1f7ee95c3ee42"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__parallelism.html#gafbc9d7c4a1a2ae2844c1f7ee95c3ee42">make_id</a> (<a class="el" href="group__parallelism.html#classcl_1_1sycl_1_1id">id</a>&lt; 1 &gt; <a class="el" href="opencl__spir_8h.html#a58cbf454cb6069623756197ea924f9fa">i</a>)</td></tr>
 <tr class="memdesc:gafbc9d7c4a1a2ae2844c1f7ee95c3ee42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implement a make_id to construct an id&lt;&gt; of the right dimension with implicit conversion from an initializer list for example.  <a href="group__parallelism.html#gafbc9d7c4a1a2ae2844c1f7ee95c3ee42">More...</a><br /></td></tr>
 <tr class="separator:gafbc9d7c4a1a2ae2844c1f7ee95c3ee42"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8d076ca1b7b0d78d6a1e9772c03ae132"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__parallelism.html#ga8d076ca1b7b0d78d6a1e9772c03ae132">make_id</a> (<a class="el" href="group__parallelism.html#classcl_1_1sycl_1_1id">id</a>&lt; 2 &gt; i)</td></tr>
+<tr class="memitem:ga8d076ca1b7b0d78d6a1e9772c03ae132"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__parallelism.html#ga8d076ca1b7b0d78d6a1e9772c03ae132">make_id</a> (<a class="el" href="group__parallelism.html#classcl_1_1sycl_1_1id">id</a>&lt; 2 &gt; <a class="el" href="opencl__spir_8h.html#a58cbf454cb6069623756197ea924f9fa">i</a>)</td></tr>
 <tr class="separator:ga8d076ca1b7b0d78d6a1e9772c03ae132"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5725382a17850a08d7380e13466008e5"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__parallelism.html#ga5725382a17850a08d7380e13466008e5">make_id</a> (<a class="el" href="group__parallelism.html#classcl_1_1sycl_1_1id">id</a>&lt; 3 &gt; i)</td></tr>
+<tr class="memitem:ga5725382a17850a08d7380e13466008e5"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__parallelism.html#ga5725382a17850a08d7380e13466008e5">make_id</a> (<a class="el" href="group__parallelism.html#classcl_1_1sycl_1_1id">id</a>&lt; 3 &gt; <a class="el" href="opencl__spir_8h.html#a58cbf454cb6069623756197ea924f9fa">i</a>)</td></tr>
 <tr class="separator:ga5725382a17850a08d7380e13466008e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaaff812d9f4074aca3459bb4c8b3e6e04"><td class="memTemplParams" colspan="2">template&lt;typename... BasicType&gt; </td></tr>
 <tr class="memitem:gaaff812d9f4074aca3459bb4c8b3e6e04"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__parallelism.html#gaaff812d9f4074aca3459bb4c8b3e6e04">make_id</a> (BasicType... Args)</td></tr>
 <tr class="memdesc:gaaff812d9f4074aca3459bb4c8b3e6e04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct an id&lt;&gt; from a function call with arguments, like make_id(1, 2, 3)  <a href="group__parallelism.html#gaaff812d9f4074aca3459bb4c8b3e6e04">More...</a><br /></td></tr>
 <tr class="separator:gaaff812d9f4074aca3459bb4c8b3e6e04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a2785865ab87030daa5e09933655620"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html#a0a2785865ab87030daa5e09933655620">TRISYCL_MATH_WRAP</a> (abs) TRISYCL_MATH_WRAP(atan) <a class="el" href="namespacecl_1_1sycl.html#a34a4d8f8f5c4655941d396a6d440ebb6">TRISYCL_MATH_WRAP2s</a>(fmax) <a class="el" href="namespacecl_1_1sycl.html#a34a4d8f8f5c4655941d396a6d440ebb6">TRISYCL_MATH_WRAP2s</a>(fmin) <a class="el" href="namespacecl_1_1sycl.html#a34a4d8f8f5c4655941d396a6d440ebb6">TRISYCL_MATH_WRAP2s</a>(frexp) template&lt; typename T &gt; T max(T x</td></tr>
+<tr class="memitem:a0a2785865ab87030daa5e09933655620"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html#a0a2785865ab87030daa5e09933655620">TRISYCL_MATH_WRAP</a> (abs) TRISYCL_MATH_WRAP(atan) <a class="el" href="namespacecl_1_1sycl.html#a34a4d8f8f5c4655941d396a6d440ebb6">TRISYCL_MATH_WRAP2s</a>(fmax) <a class="el" href="namespacecl_1_1sycl.html#a34a4d8f8f5c4655941d396a6d440ebb6">TRISYCL_MATH_WRAP2s</a>(fmin) <a class="el" href="namespacecl_1_1sycl.html#a34a4d8f8f5c4655941d396a6d440ebb6">TRISYCL_MATH_WRAP2s</a>(frexp) template&lt; typename T &gt; T max(T <a class="el" href="opencl__spir_8h.html#a520ae4ccf48d2f8fa7d054d2e1762db1">x</a></td></tr>
 <tr class="separator:a0a2785865ab87030daa5e09933655620"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa013761cdd3d25b487bce79096b605d5"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:aa013761cdd3d25b487bce79096b605d5"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html#aa013761cdd3d25b487bce79096b605d5">min</a> (T x, T <a class="el" href="namespacecl_1_1sycl.html#ae88a2c531d62f0f155400689cb1ad180">y</a>, T <a class="el" href="namespacecl_1_1sycl.html#ab3ec95c29bc2d5f5180f0774ab7b775d">z</a>)</td></tr>
+<tr class="memitem:aa013761cdd3d25b487bce79096b605d5"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html#aa013761cdd3d25b487bce79096b605d5">min</a> (T <a class="el" href="opencl__spir_8h.html#a520ae4ccf48d2f8fa7d054d2e1762db1">x</a>, T <a class="el" href="namespacecl_1_1sycl.html#ae88a2c531d62f0f155400689cb1ad180">y</a>, T <a class="el" href="namespacecl_1_1sycl.html#ab3ec95c29bc2d5f5180f0774ab7b775d">z</a>)</td></tr>
 <tr class="separator:aa013761cdd3d25b487bce79096b605d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a34a4d8f8f5c4655941d396a6d440ebb6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html#a34a4d8f8f5c4655941d396a6d440ebb6">TRISYCL_MATH_WRAP2s</a> (modf) <a class="el" href="math_8hpp.html#aa0c1666ab96a1dcd4017c83ed582c5de">TRISYCL_MATH_WRAP3s</a>(remquo) <a class="el" href="math_8hpp.html#a0799aca751eb81418817b67402662b54">TRISYCL_MATH_WRAP2</a>(rotate) namespace native</td></tr>
 <tr class="separator:a34a4d8f8f5c4655941d396a6d440ebb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -410,6 +417,22 @@ Variables</h2></td></tr>
 <tr class="separator:ab3ec95c29bc2d5f5180f0774ab7b775d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
+<a id="a2142f5990bff9e140a51aac753244d37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2142f5990bff9e140a51aac753244d37">&#9670;&nbsp;</a></span>exception_ptr_class</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacecl_1_1sycl.html#a2142f5990bff9e140a51aac753244d37">cl::sycl::exception_ptr_class</a> = typedef std::exception_ptr</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="default__classes_8hpp_source.html#l00143">143</a> of file <a class="el" href="default__classes_8hpp_source.html">default_classes.hpp</a>.</p>
+
+</div>
+</div>
 <a id="a427c818ec6c3428c273fbc8a17d0b185"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a427c818ec6c3428c273fbc8a17d0b185">&#9670;&nbsp;</a></span>function_class</h2>
 
@@ -585,10 +608,11 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="math_8hpp_source.html#l00120">120</a> of file <a class="el" href="math_8hpp_source.html">math.hpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;                     {</div><div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;  <span class="keywordflow">return</span> <a class="code" href="namespacecl_1_1sycl.html#aa013761cdd3d25b487bce79096b605d5">std::min</a>(x, <a class="code" href="namespacecl_1_1sycl.html#aa013761cdd3d25b487bce79096b605d5">std::min</a>(<a class="code" href="namespacecl_1_1sycl.html#ae88a2c531d62f0f155400689cb1ad180">y</a>, <a class="code" href="namespacecl_1_1sycl.html#ab3ec95c29bc2d5f5180f0774ab7b775d">z</a>));</div><div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;}</div><div class="ttc" id="namespacecl_1_1sycl_html_ae88a2c531d62f0f155400689cb1ad180"><div class="ttname"><a href="namespacecl_1_1sycl.html#ae88a2c531d62f0f155400689cb1ad180">cl::sycl::y</a></div><div class="ttdeci">T y</div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00109">math.hpp:109</a></div></div>
-<div class="ttc" id="namespacecl_1_1sycl_html_aa013761cdd3d25b487bce79096b605d5"><div class="ttname"><a href="namespacecl_1_1sycl.html#aa013761cdd3d25b487bce79096b605d5">cl::sycl::min</a></div><div class="ttdeci">T min(T x, T y, T z)</div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00120">math.hpp:120</a></div></div>
-<div class="ttc" id="namespacecl_1_1sycl_html_ab3ec95c29bc2d5f5180f0774ab7b775d"><div class="ttname"><a href="namespacecl_1_1sycl.html#ab3ec95c29bc2d5f5180f0774ab7b775d">cl::sycl::z</a></div><div class="ttdeci">T T z</div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00109">math.hpp:109</a></div></div>
+<p class="definition">Definition at line <a class="el" href="math_8hpp_source.html#l00123">123</a> of file <a class="el" href="math_8hpp_source.html">math.hpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;                     {</div><div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;  <span class="keywordflow">return</span> <a class="code" href="namespacecl_1_1sycl.html#aa013761cdd3d25b487bce79096b605d5">std::min</a>(<a class="code" href="opencl__spir_8h.html#a520ae4ccf48d2f8fa7d054d2e1762db1">x</a>, <a class="code" href="namespacecl_1_1sycl.html#aa013761cdd3d25b487bce79096b605d5">std::min</a>(<a class="code" href="opencl__spir_8h.html#aabbe89c8fd42d52b959b6f16d73a3147">y</a>, <a class="code" href="opencl__spir_8h.html#acb7707a3c851dd18980f1b98eec20785">z</a>));</div><div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;}</div><div class="ttc" id="opencl__spir_8h_html_a520ae4ccf48d2f8fa7d054d2e1762db1"><div class="ttname"><a href="opencl__spir_8h.html#a520ae4ccf48d2f8fa7d054d2e1762db1">x</a></div><div class="ttdeci">float const_func float x</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l00489">opencl_spir.h:489</a></div></div>
+<div class="ttc" id="namespacecl_1_1sycl_html_aa013761cdd3d25b487bce79096b605d5"><div class="ttname"><a href="namespacecl_1_1sycl.html#aa013761cdd3d25b487bce79096b605d5">cl::sycl::min</a></div><div class="ttdeci">T min(T x, T y, T z)</div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00123">math.hpp:123</a></div></div>
+<div class="ttc" id="opencl__spir_8h_html_aabbe89c8fd42d52b959b6f16d73a3147"><div class="ttname"><a href="opencl__spir_8h.html#aabbe89c8fd42d52b959b6f16d73a3147">y</a></div><div class="ttdeci">float const_func float y</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l00623">opencl_spir.h:623</a></div></div>
+<div class="ttc" id="opencl__spir_8h_html_acb7707a3c851dd18980f1b98eec20785"><div class="ttname"><a href="opencl__spir_8h.html#acb7707a3c851dd18980f1b98eec20785">z</a></div><div class="ttdeci">int const_func int int z</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l03431">opencl_spir.h:3431</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -608,7 +632,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="math_8hpp_source.html#l00128">TRISYCL_MATH_WRAP2s()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="math_8hpp_source.html#l00133">TRISYCL_MATH_WRAP2s()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -636,10 +660,11 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="math_8hpp_source.html#l00128">128</a> of file <a class="el" href="math_8hpp_source.html">math.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="math_8hpp_source.html#l00133">133</a> of file <a class="el" href="math_8hpp_source.html">math.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="namespacecl_1_1sycl.html#a0a2785865ab87030daa5e09933655620">TRISYCL_MATH_WRAP()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;                 {</div><div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(cos)</div><div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;<span class="comment">//*TRISYCL_MATH_WRAP2(divide)</span></div><div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(exp)</div><div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(exp2)</div><div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;<span class="comment">//*TRISYCL_MATH_WRAP(exp10)</span></div><div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(log)</div><div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(log2)</div><div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(log10)</div><div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;<span class="comment">//*TRISYCL_MATH_WRAP(powr)</span></div><div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;<span class="comment">//*TRISYCL_MATH_WRAP(recip)</span></div><div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;<span class="comment">//*TRISYCL_MATH_WRAP(rsqrt)</span></div><div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(sin)</div><div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(sqrt)</div><div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(tan)</div><div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;}</div><div class="ttc" id="math_8hpp_html_a0e4bf35ec5f57ce2c341ecd8884d54a9"><div class="ttname"><a href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a></div><div class="ttdeci">#define TRISYCL_MATH_WRAP(FUN)</div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00025">math.hpp:25</a></div></div>
+<p class="reference">References <a class="el" href="opencl__spir_8h_source.html#l01102">exp</a>, and <a class="el" href="namespacecl_1_1sycl.html#a0a2785865ab87030daa5e09933655620">TRISYCL_MATH_WRAP()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;                 {</div><div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(cos)</div><div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;<span class="comment">//*TRISYCL_MATH_WRAP2(divide)</span></div><div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(<a class="code" href="opencl__spir_8h.html#ac9dbeca74b5c810d2c2eeaa473e688fc">exp</a>)</div><div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(exp2)</div><div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;<span class="comment">//*TRISYCL_MATH_WRAP(exp10)</span></div><div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(log)</div><div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(log2)</div><div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(log10)</div><div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;<span class="comment">//*TRISYCL_MATH_WRAP(powr)</span></div><div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;<span class="comment">//*TRISYCL_MATH_WRAP(recip)</span></div><div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;<span class="comment">//*TRISYCL_MATH_WRAP(rsqrt)</span></div><div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(sin)</div><div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(sqrt)</div><div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;<a class="code" href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a>(tan)</div><div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;}</div><div class="ttc" id="math_8hpp_html_a0e4bf35ec5f57ce2c341ecd8884d54a9"><div class="ttname"><a href="math_8hpp.html#a0e4bf35ec5f57ce2c341ecd8884d54a9">TRISYCL_MATH_WRAP</a></div><div class="ttdeci">#define TRISYCL_MATH_WRAP(FUN)</div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00026">math.hpp:26</a></div></div>
+<div class="ttc" id="opencl__spir_8h_html_ac9dbeca74b5c810d2c2eeaa473e688fc"><div class="ttname"><a href="opencl__spir_8h.html#ac9dbeca74b5c810d2c2eeaa473e688fc">exp</a></div><div class="ttdeci">float __global int * exp</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l01102">opencl_spir.h:1102</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -664,7 +689,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="math_8hpp_source.html#l00109">109</a> of file <a class="el" href="math_8hpp_source.html">math.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="math_8hpp_source.html#l00110">110</a> of file <a class="el" href="math_8hpp_source.html">math.hpp</a>.</p>
 
 </div>
 </div>
@@ -679,17 +704,18 @@ Here is the call graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div><div class="line">  <span class="keywordflow">return</span> std::max(x, std::max(<a class="code" href="namespacecl_1_1sycl.html#ae88a2c531d62f0f155400689cb1ad180">y</a>, <a class="code" href="namespacecl_1_1sycl.html#ab3ec95c29bc2d5f5180f0774ab7b775d">z</a>))</div><div class="ttc" id="namespacecl_1_1sycl_html_ae88a2c531d62f0f155400689cb1ad180"><div class="ttname"><a href="namespacecl_1_1sycl.html#ae88a2c531d62f0f155400689cb1ad180">cl::sycl::y</a></div><div class="ttdeci">T y</div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00109">math.hpp:109</a></div></div>
-<div class="ttc" id="namespacecl_1_1sycl_html_ab3ec95c29bc2d5f5180f0774ab7b775d"><div class="ttname"><a href="namespacecl_1_1sycl.html#ab3ec95c29bc2d5f5180f0774ab7b775d">cl::sycl::z</a></div><div class="ttdeci">T T z</div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00109">math.hpp:109</a></div></div>
+<b>Initial value:</b><div class="fragment"><div class="line">{</div><div class="line">  <span class="keywordflow">return</span> std::max(<a class="code" href="opencl__spir_8h.html#a520ae4ccf48d2f8fa7d054d2e1762db1">x</a>, std::max(<a class="code" href="opencl__spir_8h.html#aabbe89c8fd42d52b959b6f16d73a3147">y</a>, <a class="code" href="opencl__spir_8h.html#acb7707a3c851dd18980f1b98eec20785">z</a>))</div><div class="ttc" id="opencl__spir_8h_html_a520ae4ccf48d2f8fa7d054d2e1762db1"><div class="ttname"><a href="opencl__spir_8h.html#a520ae4ccf48d2f8fa7d054d2e1762db1">x</a></div><div class="ttdeci">float const_func float x</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l00489">opencl_spir.h:489</a></div></div>
+<div class="ttc" id="opencl__spir_8h_html_aabbe89c8fd42d52b959b6f16d73a3147"><div class="ttname"><a href="opencl__spir_8h.html#aabbe89c8fd42d52b959b6f16d73a3147">y</a></div><div class="ttdeci">float const_func float y</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l00623">opencl_spir.h:623</a></div></div>
+<div class="ttc" id="opencl__spir_8h_html_acb7707a3c851dd18980f1b98eec20785"><div class="ttname"><a href="opencl__spir_8h.html#acb7707a3c851dd18980f1b98eec20785">z</a></div><div class="ttdeci">int const_func int int z</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l03431">opencl_spir.h:3431</a></div></div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="math_8hpp_source.html#l00109">109</a> of file <a class="el" href="math_8hpp_source.html">math.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="math_8hpp_source.html#l00110">110</a> of file <a class="el" href="math_8hpp_source.html">math.hpp</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Dec 22 2017 02:39:44 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Apr 20 2018 19:26:24 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

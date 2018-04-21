@@ -1,5 +1,12 @@
 var searchData=
 [
+  ['uchar',['uchar',['../opencl__spir_8h.html#a65f85814a8290f9797005d3b28e7e5fc',1,'opencl_spir.h']]],
+  ['uchar_5fmax',['UCHAR_MAX',['../opencl__spir_8h.html#a4066e640ee269d5d8f83ff6643b7af5f',1,'opencl_spir.h']]],
+  ['uint',['uint',['../opencl__spir_8h.html#a91ad9478d81a7aaf2593e8d9c3d06a14',1,'opencl_spir.h']]],
+  ['uint_5fmax',['UINT_MAX',['../opencl__spir_8h.html#ac998ea02fbd821fc123d60445ce76f38',1,'opencl_spir.h']]],
+  ['uintptr_5ft',['uintptr_t',['../opencl__spir_8h.html#a46d30f10b56cc57713eb284f0c9712f8',1,'opencl_spir.h']]],
+  ['ulong',['ulong',['../opencl__spir_8h.html#a718b4eb2652c286f4d42dc18a8e71a1a',1,'opencl_spir.h']]],
+  ['ulong_5fmax',['ULONG_MAX',['../opencl__spir_8h.html#a41c51926a1997aab3503f9083935e06c',1,'opencl_spir.h']]],
   ['unimplemented',['unimplemented',['../group__helpers.html#gabc18198696a1e2ec4ea6c231a8c90391',1,'cl::sycl::detail']]],
   ['unimplemented_2ehpp',['unimplemented.hpp',['../unimplemented_8hpp.html',1,'']]],
   ['unique_5fptr_5fclass',['unique_ptr_class',['../namespacecl_1_1sycl.html#a7297c7f7107f609a00c08c1808f4b765',1,'cl::sycl']]],
@@ -8,5 +15,7 @@ var searchData=
   ['use',['use',['../group__data.html#a25b9b8b3a3ee2ecdf33f5b10afe60a66',1,'cl::sycl::detail::buffer_base']]],
   ['use_5fcount',['use_count',['../group__data.html#a798b7336a30856e100009d8e39580a87',1,'cl::sycl::buffer']]],
   ['used_5ffor_5freading',['used_for_reading',['../group__data.html#a1bfd345a504f028b34108fba8a765835',1,'cl::sycl::detail::pipe']]],
-  ['used_5ffor_5fwriting',['used_for_writing',['../group__data.html#a3a9c0543074863d7f12c5b27dd2651f9',1,'cl::sycl::detail::pipe']]]
+  ['used_5ffor_5fwriting',['used_for_writing',['../group__data.html#a3a9c0543074863d7f12c5b27dd2651f9',1,'cl::sycl::detail::pipe']]],
+  ['ushort',['ushort',['../opencl__spir_8h.html#ab95f123a6c9bcfee6a343170ef8c5f69',1,'opencl_spir.h']]],
+  ['ushrt_5fmax',['USHRT_MAX',['../opencl__spir_8h.html#a689b119da994dece91d44b5aeac643ed',1,'opencl_spir.h']]]
 ];

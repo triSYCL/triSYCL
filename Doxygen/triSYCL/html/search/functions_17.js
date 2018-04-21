@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['y',['y',['../group__helpers.html#a0e5edce948800131ed61f95174969cc9',1,'cl::sycl::detail::small_array']]]
+  ['x',['x',['../group__helpers.html#abbcefb16591cb0160d01ae3f28546e51',1,'cl::sycl::detail::small_array']]]
 ];

@@ -74,7 +74,8 @@ $(function() {
 
 <p>Implement a wrapper around OpenCL math operations Joan.Thibault AT ens-rennes POINT fr This file is distributed under the University of Illinois Open Source License.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;cmath&gt;</code><br />
+<div class="textblock"><code>#include &lt;algorithm&gt;</code><br />
+<code>#include &lt;cmath&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for math.hpp:</div>
 <div class="dyncontent">
@@ -118,10 +119,10 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a0a2785865ab87030daa5e09933655620"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html#a0a2785865ab87030daa5e09933655620">cl::sycl::TRISYCL_MATH_WRAP</a> (abs) TRISYCL_MATH_WRAP(atan) <a class="el" href="math_8hpp.html#ad7993d98b68e43ce1611a030fbcb8c38">TRISYCL_MATH_WRAP2s</a>(fmax) <a class="el" href="math_8hpp.html#ad7993d98b68e43ce1611a030fbcb8c38">TRISYCL_MATH_WRAP2s</a>(fmin) <a class="el" href="math_8hpp.html#ad7993d98b68e43ce1611a030fbcb8c38">TRISYCL_MATH_WRAP2s</a>(frexp) template&lt; typename T &gt; T max(T x</td></tr>
+<tr class="memitem:a0a2785865ab87030daa5e09933655620"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html#a0a2785865ab87030daa5e09933655620">cl::sycl::TRISYCL_MATH_WRAP</a> (abs) TRISYCL_MATH_WRAP(atan) <a class="el" href="math_8hpp.html#ad7993d98b68e43ce1611a030fbcb8c38">TRISYCL_MATH_WRAP2s</a>(fmax) <a class="el" href="math_8hpp.html#ad7993d98b68e43ce1611a030fbcb8c38">TRISYCL_MATH_WRAP2s</a>(fmin) <a class="el" href="math_8hpp.html#ad7993d98b68e43ce1611a030fbcb8c38">TRISYCL_MATH_WRAP2s</a>(frexp) template&lt; typename T &gt; T max(T <a class="el" href="opencl__spir_8h.html#a520ae4ccf48d2f8fa7d054d2e1762db1">x</a></td></tr>
 <tr class="separator:a0a2785865ab87030daa5e09933655620"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa013761cdd3d25b487bce79096b605d5"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:aa013761cdd3d25b487bce79096b605d5"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html#aa013761cdd3d25b487bce79096b605d5">cl::sycl::min</a> (T x, T y, T z)</td></tr>
+<tr class="memitem:aa013761cdd3d25b487bce79096b605d5"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html#aa013761cdd3d25b487bce79096b605d5">cl::sycl::min</a> (T <a class="el" href="opencl__spir_8h.html#a520ae4ccf48d2f8fa7d054d2e1762db1">x</a>, T <a class="el" href="opencl__spir_8h.html#aabbe89c8fd42d52b959b6f16d73a3147">y</a>, T <a class="el" href="opencl__spir_8h.html#acb7707a3c851dd18980f1b98eec20785">z</a>)</td></tr>
 <tr class="separator:aa013761cdd3d25b487bce79096b605d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a34a4d8f8f5c4655941d396a6d440ebb6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html#a34a4d8f8f5c4655941d396a6d440ebb6">cl::sycl::TRISYCL_MATH_WRAP2s</a> (modf) <a class="el" href="math_8hpp.html#aa0c1666ab96a1dcd4017c83ed582c5de">TRISYCL_MATH_WRAP3s</a>(remquo) <a class="el" href="math_8hpp.html#a0799aca751eb81418817b67402662b54">TRISYCL_MATH_WRAP2</a>(rotate) namespace native</td></tr>
 <tr class="separator:a34a4d8f8f5c4655941d396a6d440ebb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -154,8 +155,9 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;                            \</div><div class="line">  T FUN(T x) {                                                                 \</div><div class="line">    return std::FUN(x);                                                        \</div><div class="line">  }</div></div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="math_8hpp_source.html#l00025">25</a> of file <a class="el" href="math_8hpp_source.html">math.hpp</a>.</p>
+<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;                            \</div><div class="line">  T FUN(T <a class="code" href="opencl__spir_8h.html#a520ae4ccf48d2f8fa7d054d2e1762db1">x</a>) {                                                                 \</div><div class="line">    return std::FUN(x);                                                        \</div><div class="line">  }</div><div class="ttc" id="opencl__spir_8h_html_a520ae4ccf48d2f8fa7d054d2e1762db1"><div class="ttname"><a href="opencl__spir_8h.html#a520ae4ccf48d2f8fa7d054d2e1762db1">x</a></div><div class="ttdeci">float const_func float x</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l00489">opencl_spir.h:489</a></div></div>
+</div><!-- fragment -->
+<p class="definition">Definition at line <a class="el" href="math_8hpp_source.html#l00026">26</a> of file <a class="el" href="math_8hpp_source.html">math.hpp</a>.</p>
 
 </div>
 </div>
@@ -174,9 +176,10 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;                           \</div><div class="line">  T FUN(T x, T <a class="code" href="namespacecl_1_1sycl.html#ae88a2c531d62f0f155400689cb1ad180">y</a>) {                                                            \</div><div class="line">    return std::FUN(x, y);                                                     \</div><div class="line">  }</div><div class="ttc" id="namespacecl_1_1sycl_html_ae88a2c531d62f0f155400689cb1ad180"><div class="ttname"><a href="namespacecl_1_1sycl.html#ae88a2c531d62f0f155400689cb1ad180">cl::sycl::y</a></div><div class="ttdeci">T y</div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00109">math.hpp:109</a></div></div>
+<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;                           \</div><div class="line">  T FUN(T <a class="code" href="opencl__spir_8h.html#a520ae4ccf48d2f8fa7d054d2e1762db1">x</a>, T <a class="code" href="opencl__spir_8h.html#aabbe89c8fd42d52b959b6f16d73a3147">y</a>) {                                                            \</div><div class="line">    return std::FUN(x, y);                                                     \</div><div class="line">  }</div><div class="ttc" id="opencl__spir_8h_html_a520ae4ccf48d2f8fa7d054d2e1762db1"><div class="ttname"><a href="opencl__spir_8h.html#a520ae4ccf48d2f8fa7d054d2e1762db1">x</a></div><div class="ttdeci">float const_func float x</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l00489">opencl_spir.h:489</a></div></div>
+<div class="ttc" id="opencl__spir_8h_html_aabbe89c8fd42d52b959b6f16d73a3147"><div class="ttname"><a href="opencl__spir_8h.html#aabbe89c8fd42d52b959b6f16d73a3147">y</a></div><div class="ttdeci">float const_func float y</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l00623">opencl_spir.h:623</a></div></div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="math_8hpp_source.html#l00029">29</a> of file <a class="el" href="math_8hpp_source.html">math.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="math_8hpp_source.html#l00030">30</a> of file <a class="el" href="math_8hpp_source.html">math.hpp</a>.</p>
 
 </div>
 </div>
@@ -195,9 +198,10 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U&gt;              \</div><div class="line">  T FUN(T x, U <a class="code" href="namespacecl_1_1sycl.html#ae88a2c531d62f0f155400689cb1ad180">y</a>) {                                                            \</div><div class="line">    return std::FUN(x, y);                                                     \</div><div class="line">  }</div><div class="ttc" id="namespacecl_1_1sycl_html_ae88a2c531d62f0f155400689cb1ad180"><div class="ttname"><a href="namespacecl_1_1sycl.html#ae88a2c531d62f0f155400689cb1ad180">cl::sycl::y</a></div><div class="ttdeci">T y</div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00109">math.hpp:109</a></div></div>
+<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U&gt;              \</div><div class="line">  T FUN(T <a class="code" href="opencl__spir_8h.html#a520ae4ccf48d2f8fa7d054d2e1762db1">x</a>, U <a class="code" href="opencl__spir_8h.html#aabbe89c8fd42d52b959b6f16d73a3147">y</a>) {                                                            \</div><div class="line">    return std::FUN(x, y);                                                     \</div><div class="line">  }</div><div class="ttc" id="opencl__spir_8h_html_a520ae4ccf48d2f8fa7d054d2e1762db1"><div class="ttname"><a href="opencl__spir_8h.html#a520ae4ccf48d2f8fa7d054d2e1762db1">x</a></div><div class="ttdeci">float const_func float x</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l00489">opencl_spir.h:489</a></div></div>
+<div class="ttc" id="opencl__spir_8h_html_aabbe89c8fd42d52b959b6f16d73a3147"><div class="ttname"><a href="opencl__spir_8h.html#aabbe89c8fd42d52b959b6f16d73a3147">y</a></div><div class="ttdeci">float const_func float y</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l00623">opencl_spir.h:623</a></div></div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="math_8hpp_source.html#l00033">33</a> of file <a class="el" href="math_8hpp_source.html">math.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="math_8hpp_source.html#l00034">34</a> of file <a class="el" href="math_8hpp_source.html">math.hpp</a>.</p>
 
 </div>
 </div>
@@ -216,10 +220,11 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;                           \</div><div class="line">  T FUN(T x, T <a class="code" href="namespacecl_1_1sycl.html#ae88a2c531d62f0f155400689cb1ad180">y</a>, T <a class="code" href="namespacecl_1_1sycl.html#ab3ec95c29bc2d5f5180f0774ab7b775d">z</a>) {                                                       \</div><div class="line">    return std::FUN(x, y, z);                                                  \</div><div class="line">  }</div><div class="ttc" id="namespacecl_1_1sycl_html_ae88a2c531d62f0f155400689cb1ad180"><div class="ttname"><a href="namespacecl_1_1sycl.html#ae88a2c531d62f0f155400689cb1ad180">cl::sycl::y</a></div><div class="ttdeci">T y</div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00109">math.hpp:109</a></div></div>
-<div class="ttc" id="namespacecl_1_1sycl_html_ab3ec95c29bc2d5f5180f0774ab7b775d"><div class="ttname"><a href="namespacecl_1_1sycl.html#ab3ec95c29bc2d5f5180f0774ab7b775d">cl::sycl::z</a></div><div class="ttdeci">T T z</div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00109">math.hpp:109</a></div></div>
+<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;                           \</div><div class="line">  T FUN(T <a class="code" href="opencl__spir_8h.html#a520ae4ccf48d2f8fa7d054d2e1762db1">x</a>, T <a class="code" href="opencl__spir_8h.html#aabbe89c8fd42d52b959b6f16d73a3147">y</a>, T <a class="code" href="opencl__spir_8h.html#acb7707a3c851dd18980f1b98eec20785">z</a>) {                                                       \</div><div class="line">    return std::FUN(x, y, z);                                                  \</div><div class="line">  }</div><div class="ttc" id="opencl__spir_8h_html_a520ae4ccf48d2f8fa7d054d2e1762db1"><div class="ttname"><a href="opencl__spir_8h.html#a520ae4ccf48d2f8fa7d054d2e1762db1">x</a></div><div class="ttdeci">float const_func float x</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l00489">opencl_spir.h:489</a></div></div>
+<div class="ttc" id="opencl__spir_8h_html_aabbe89c8fd42d52b959b6f16d73a3147"><div class="ttname"><a href="opencl__spir_8h.html#aabbe89c8fd42d52b959b6f16d73a3147">y</a></div><div class="ttdeci">float const_func float y</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l00623">opencl_spir.h:623</a></div></div>
+<div class="ttc" id="opencl__spir_8h_html_acb7707a3c851dd18980f1b98eec20785"><div class="ttname"><a href="opencl__spir_8h.html#acb7707a3c851dd18980f1b98eec20785">z</a></div><div class="ttdeci">int const_func int int z</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l03431">opencl_spir.h:3431</a></div></div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="math_8hpp_source.html#l00037">37</a> of file <a class="el" href="math_8hpp_source.html">math.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="math_8hpp_source.html#l00038">38</a> of file <a class="el" href="math_8hpp_source.html">math.hpp</a>.</p>
 
 </div>
 </div>
@@ -238,10 +243,11 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U&gt;              \</div><div class="line">  T FUN(T x, T <a class="code" href="namespacecl_1_1sycl.html#ae88a2c531d62f0f155400689cb1ad180">y</a>, U <a class="code" href="namespacecl_1_1sycl.html#ab3ec95c29bc2d5f5180f0774ab7b775d">z</a>) {                                                       \</div><div class="line">    return std::FUN(x, y, z);                                                  \</div><div class="line">  }</div><div class="ttc" id="namespacecl_1_1sycl_html_ae88a2c531d62f0f155400689cb1ad180"><div class="ttname"><a href="namespacecl_1_1sycl.html#ae88a2c531d62f0f155400689cb1ad180">cl::sycl::y</a></div><div class="ttdeci">T y</div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00109">math.hpp:109</a></div></div>
-<div class="ttc" id="namespacecl_1_1sycl_html_ab3ec95c29bc2d5f5180f0774ab7b775d"><div class="ttname"><a href="namespacecl_1_1sycl.html#ab3ec95c29bc2d5f5180f0774ab7b775d">cl::sycl::z</a></div><div class="ttdeci">T T z</div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00109">math.hpp:109</a></div></div>
+<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U&gt;              \</div><div class="line">  T FUN(T <a class="code" href="opencl__spir_8h.html#a520ae4ccf48d2f8fa7d054d2e1762db1">x</a>, T <a class="code" href="opencl__spir_8h.html#aabbe89c8fd42d52b959b6f16d73a3147">y</a>, U <a class="code" href="opencl__spir_8h.html#acb7707a3c851dd18980f1b98eec20785">z</a>) {                                                       \</div><div class="line">    return std::FUN(x, y, z);                                                  \</div><div class="line">  }</div><div class="ttc" id="opencl__spir_8h_html_a520ae4ccf48d2f8fa7d054d2e1762db1"><div class="ttname"><a href="opencl__spir_8h.html#a520ae4ccf48d2f8fa7d054d2e1762db1">x</a></div><div class="ttdeci">float const_func float x</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l00489">opencl_spir.h:489</a></div></div>
+<div class="ttc" id="opencl__spir_8h_html_aabbe89c8fd42d52b959b6f16d73a3147"><div class="ttname"><a href="opencl__spir_8h.html#aabbe89c8fd42d52b959b6f16d73a3147">y</a></div><div class="ttdeci">float const_func float y</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l00623">opencl_spir.h:623</a></div></div>
+<div class="ttc" id="opencl__spir_8h_html_acb7707a3c851dd18980f1b98eec20785"><div class="ttname"><a href="opencl__spir_8h.html#acb7707a3c851dd18980f1b98eec20785">z</a></div><div class="ttdeci">int const_func int int z</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l03431">opencl_spir.h:3431</a></div></div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="math_8hpp_source.html#l00041">41</a> of file <a class="el" href="math_8hpp_source.html">math.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="math_8hpp_source.html#l00042">42</a> of file <a class="el" href="math_8hpp_source.html">math.hpp</a>.</p>
 
 </div>
 </div>
@@ -260,17 +266,18 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U&gt;             \</div><div class="line">  T FUN(T x, U <a class="code" href="namespacecl_1_1sycl.html#ae88a2c531d62f0f155400689cb1ad180">y</a>, U <a class="code" href="namespacecl_1_1sycl.html#ab3ec95c29bc2d5f5180f0774ab7b775d">z</a>) {                                                       \</div><div class="line">    return std::FUN(x, y, z);                                                  \</div><div class="line">  }</div><div class="ttc" id="namespacecl_1_1sycl_html_ae88a2c531d62f0f155400689cb1ad180"><div class="ttname"><a href="namespacecl_1_1sycl.html#ae88a2c531d62f0f155400689cb1ad180">cl::sycl::y</a></div><div class="ttdeci">T y</div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00109">math.hpp:109</a></div></div>
-<div class="ttc" id="namespacecl_1_1sycl_html_ab3ec95c29bc2d5f5180f0774ab7b775d"><div class="ttname"><a href="namespacecl_1_1sycl.html#ab3ec95c29bc2d5f5180f0774ab7b775d">cl::sycl::z</a></div><div class="ttdeci">T T z</div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00109">math.hpp:109</a></div></div>
+<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U&gt;             \</div><div class="line">  T FUN(T <a class="code" href="opencl__spir_8h.html#a520ae4ccf48d2f8fa7d054d2e1762db1">x</a>, U <a class="code" href="opencl__spir_8h.html#aabbe89c8fd42d52b959b6f16d73a3147">y</a>, U <a class="code" href="opencl__spir_8h.html#acb7707a3c851dd18980f1b98eec20785">z</a>) {                                                       \</div><div class="line">    return std::FUN(x, y, z);                                                  \</div><div class="line">  }</div><div class="ttc" id="opencl__spir_8h_html_a520ae4ccf48d2f8fa7d054d2e1762db1"><div class="ttname"><a href="opencl__spir_8h.html#a520ae4ccf48d2f8fa7d054d2e1762db1">x</a></div><div class="ttdeci">float const_func float x</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l00489">opencl_spir.h:489</a></div></div>
+<div class="ttc" id="opencl__spir_8h_html_aabbe89c8fd42d52b959b6f16d73a3147"><div class="ttname"><a href="opencl__spir_8h.html#aabbe89c8fd42d52b959b6f16d73a3147">y</a></div><div class="ttdeci">float const_func float y</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l00623">opencl_spir.h:623</a></div></div>
+<div class="ttc" id="opencl__spir_8h_html_acb7707a3c851dd18980f1b98eec20785"><div class="ttname"><a href="opencl__spir_8h.html#acb7707a3c851dd18980f1b98eec20785">z</a></div><div class="ttdeci">int const_func int int z</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l03431">opencl_spir.h:3431</a></div></div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="math_8hpp_source.html#l00045">45</a> of file <a class="el" href="math_8hpp_source.html">math.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="math_8hpp_source.html#l00046">46</a> of file <a class="el" href="math_8hpp_source.html">math.hpp</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Dec 22 2017 02:39:43 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Apr 20 2018 19:26:23 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

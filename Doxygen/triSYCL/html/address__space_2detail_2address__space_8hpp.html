@@ -65,6 +65,7 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
+<a href="#define-members">Macros</a> &#124;
 <a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle">
 <div class="title">address_space.hpp File Reference</div>  </div>
@@ -93,9 +94,6 @@ Classes</h2></td></tr>
 <tr class="memitem:structcl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01constant__address__space_01_4"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01constant__address__space_01_4">cl::sycl::detail::ocl_type&lt; T, constant_address_space &gt;</a></td></tr>
 <tr class="memdesc:structcl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01constant__address__space_01_4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add an attribute for __constant address space.  <a href="group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01constant__address__space_01_4">More...</a><br /></td></tr>
 <tr class="separator:structcl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01constant__address__space_01_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:structcl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01generic__address__space_01_4"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01generic__address__space_01_4">cl::sycl::detail::ocl_type&lt; T, generic_address_space &gt;</a></td></tr>
-<tr class="memdesc:structcl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01generic__address__space_01_4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add an attribute for __generic address space.  <a href="group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01generic__address__space_01_4">More...</a><br /></td></tr>
-<tr class="separator:structcl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01generic__address__space_01_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structcl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01global__address__space_01_4"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01global__address__space_01_4">cl::sycl::detail::ocl_type&lt; T, global_address_space &gt;</a></td></tr>
 <tr class="memdesc:structcl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01global__address__space_01_4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add an attribute for __global address space.  <a href="group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01global__address__space_01_4">More...</a><br /></td></tr>
 <tr class="separator:structcl_1_1sycl_1_1detail_1_1ocl__type_3_01T_00_01global__address__space_01_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -146,6 +144,24 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespacecl_1_1sycl_1_1detail"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl_1_1detail.html">cl::sycl::detail</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a53466ae6b0711079244c515f226abb6b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="address__space_2detail_2address__space_8hpp.html#a53466ae6b0711079244c515f226abb6b">TRISYCL_GLOBAL_AS</a>&#160;&#160;&#160;<a class="el" href="group__defaults.html#gad976839282d74cb5efc72fd31812952a">TRISYCL_DEVICE_ONLY</a>(<a class="el" href="opencl__spir_8h.html#af40876aa5931ad90d82185f96cc459d8">__attribute__</a>((address_space(1))))</td></tr>
+<tr class="memdesc:a53466ae6b0711079244c515f226abb6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Address space for OpenCL __global.  <a href="#a53466ae6b0711079244c515f226abb6b">More...</a><br /></td></tr>
+<tr class="separator:a53466ae6b0711079244c515f226abb6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae41945dedb97d2aa474ea7c4ec4e6d1e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="address__space_2detail_2address__space_8hpp.html#ae41945dedb97d2aa474ea7c4ec4e6d1e">TRISYCL_LOCAL_AS</a>&#160;&#160;&#160;<a class="el" href="group__defaults.html#gad976839282d74cb5efc72fd31812952a">TRISYCL_DEVICE_ONLY</a>(<a class="el" href="opencl__spir_8h.html#af40876aa5931ad90d82185f96cc459d8">__attribute__</a>((address_space(3))))</td></tr>
+<tr class="memdesc:ae41945dedb97d2aa474ea7c4ec4e6d1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Address space for OpenCL __local.  <a href="#ae41945dedb97d2aa474ea7c4ec4e6d1e">More...</a><br /></td></tr>
+<tr class="separator:ae41945dedb97d2aa474ea7c4ec4e6d1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff4056ffbdeddae8cc34736e7628c142"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="address__space_2detail_2address__space_8hpp.html#aff4056ffbdeddae8cc34736e7628c142">TRISYCL_CONSTANT_AS</a>&#160;&#160;&#160;<a class="el" href="group__defaults.html#gad976839282d74cb5efc72fd31812952a">TRISYCL_DEVICE_ONLY</a>(<a class="el" href="opencl__spir_8h.html#af40876aa5931ad90d82185f96cc459d8">__attribute__</a>((address_space(2))))</td></tr>
+<tr class="memdesc:aff4056ffbdeddae8cc34736e7628c142"><td class="mdescLeft">&#160;</td><td class="mdescRight">Address space for OpenCL __constant.  <a href="#aff4056ffbdeddae8cc34736e7628c142">More...</a><br /></td></tr>
+<tr class="separator:aff4056ffbdeddae8cc34736e7628c142"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad890d28a90f8ac9e4b33dda593897d15"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="address__space_2detail_2address__space_8hpp.html#ad890d28a90f8ac9e4b33dda593897d15">TRISYCL_GENERIC_AS</a>&#160;&#160;&#160;<a class="el" href="group__defaults.html#gad976839282d74cb5efc72fd31812952a">TRISYCL_DEVICE_ONLY</a>(<a class="el" href="opencl__spir_8h.html#af40876aa5931ad90d82185f96cc459d8">__attribute__</a>((address_space(4))))</td></tr>
+<tr class="memdesc:ad890d28a90f8ac9e4b33dda593897d15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Address space for OpenCL __generic.  <a href="#ad890d28a90f8ac9e4b33dda593897d15">More...</a><br /></td></tr>
+<tr class="separator:ad890d28a90f8ac9e4b33dda593897d15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a634297f7d5d77e4c459c24cf718f4f10"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="address__space_2detail_2address__space_8hpp.html#a634297f7d5d77e4c459c24cf718f4f10">TRISYCL_PRIVATE_AS</a></td></tr>
+<tr class="memdesc:a634297f7d5d77e4c459c24cf718f4f10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Address space for OpenCL __private.  <a href="#a634297f7d5d77e4c459c24cf718f4f10">More...</a><br /></td></tr>
+<tr class="separator:a634297f7d5d77e4c459c24cf718f4f10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:ga90cdf1e6090ab9bb11a53b55ee19452d"><td class="memTemplParams" colspan="2">template&lt;typename T , address_space AS&gt; </td></tr>
@@ -159,10 +175,103 @@ Typedefs</h2></td></tr>
 <p>This file is distributed under the University of Illinois Open Source License. See LICENSE.TXT for details. </p>
 
 <p class="definition">Definition in file <a class="el" href="address__space_2detail_2address__space_8hpp_source.html">address_space.hpp</a>.</p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="aff4056ffbdeddae8cc34736e7628c142"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff4056ffbdeddae8cc34736e7628c142">&#9670;&nbsp;</a></span>TRISYCL_CONSTANT_AS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TRISYCL_CONSTANT_AS&#160;&#160;&#160;<a class="el" href="group__defaults.html#gad976839282d74cb5efc72fd31812952a">TRISYCL_DEVICE_ONLY</a>(<a class="el" href="opencl__spir_8h.html#af40876aa5931ad90d82185f96cc459d8">__attribute__</a>((address_space(2))))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Address space for OpenCL __constant. </p>
+
+<p class="definition">Definition at line <a class="el" href="address__space_2detail_2address__space_8hpp_source.html#l00041">41</a> of file <a class="el" href="address__space_2detail_2address__space_8hpp_source.html">address_space.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ad890d28a90f8ac9e4b33dda593897d15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad890d28a90f8ac9e4b33dda593897d15">&#9670;&nbsp;</a></span>TRISYCL_GENERIC_AS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TRISYCL_GENERIC_AS&#160;&#160;&#160;<a class="el" href="group__defaults.html#gad976839282d74cb5efc72fd31812952a">TRISYCL_DEVICE_ONLY</a>(<a class="el" href="opencl__spir_8h.html#af40876aa5931ad90d82185f96cc459d8">__attribute__</a>((address_space(4))))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Address space for OpenCL __generic. </p>
+
+<p class="definition">Definition at line <a class="el" href="address__space_2detail_2address__space_8hpp_source.html#l00045">45</a> of file <a class="el" href="address__space_2detail_2address__space_8hpp_source.html">address_space.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a53466ae6b0711079244c515f226abb6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a53466ae6b0711079244c515f226abb6b">&#9670;&nbsp;</a></span>TRISYCL_GLOBAL_AS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TRISYCL_GLOBAL_AS&#160;&#160;&#160;<a class="el" href="group__defaults.html#gad976839282d74cb5efc72fd31812952a">TRISYCL_DEVICE_ONLY</a>(<a class="el" href="opencl__spir_8h.html#af40876aa5931ad90d82185f96cc459d8">__attribute__</a>((address_space(1))))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Address space for OpenCL __global. </p>
+
+<p class="definition">Definition at line <a class="el" href="address__space_2detail_2address__space_8hpp_source.html#l00035">35</a> of file <a class="el" href="address__space_2detail_2address__space_8hpp_source.html">address_space.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="device__runtime_8hpp_source.html#l00077">cl::sycl::drt::accessor&lt; Accessor &gt;::accessor()</a>.</p>
+
+</div>
+</div>
+<a id="ae41945dedb97d2aa474ea7c4ec4e6d1e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae41945dedb97d2aa474ea7c4ec4e6d1e">&#9670;&nbsp;</a></span>TRISYCL_LOCAL_AS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TRISYCL_LOCAL_AS&#160;&#160;&#160;<a class="el" href="group__defaults.html#gad976839282d74cb5efc72fd31812952a">TRISYCL_DEVICE_ONLY</a>(<a class="el" href="opencl__spir_8h.html#af40876aa5931ad90d82185f96cc459d8">__attribute__</a>((address_space(3))))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Address space for OpenCL __local. </p>
+
+<p class="definition">Definition at line <a class="el" href="address__space_2detail_2address__space_8hpp_source.html#l00038">38</a> of file <a class="el" href="address__space_2detail_2address__space_8hpp_source.html">address_space.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a634297f7d5d77e4c459c24cf718f4f10"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a634297f7d5d77e4c459c24cf718f4f10">&#9670;&nbsp;</a></span>TRISYCL_PRIVATE_AS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TRISYCL_PRIVATE_AS</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Address space for OpenCL __private. </p>
+
+<p class="definition">Definition at line <a class="el" href="address__space_2detail_2address__space_8hpp_source.html#l00049">49</a> of file <a class="el" href="address__space_2detail_2address__space_8hpp_source.html">address_space.hpp</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Dec 22 2017 02:39:43 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Apr 20 2018 19:26:22 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>
