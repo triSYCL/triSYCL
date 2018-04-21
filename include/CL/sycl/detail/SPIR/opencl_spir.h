@@ -256,7 +256,7 @@ uint const_func __attribute__((overloadable)) get_work_dim(void);
  * dimension identified by dimindx. This value is given by
  * the global_work_size argument to
  * clEnqueueNDRangeKernel. Valid values of dimindx
- * are 0 to get_work_dim() – 1. For other values of
+ * are 0 to get_work_dim() â€“ 1. For other values of
  * dimindx, get_global_size() returns 1.
  * For clEnqueueTask, this always returns 1.
  */
@@ -267,7 +267,7 @@ size_t const_func __attribute__((overloadable)) get_global_size(uint dimindx);
  * dimension identified by dimindx. The global work-item
  * ID specifies the work-item ID based on the number of
  * global work-items specified to execute the kernel. Valid
- * values of dimindx are 0 to get_work_dim() – 1. For
+ * values of dimindx are 0 to get_work_dim() â€“ 1. For
  * other values of dimindx, get_global_id() returns 0.
  * For clEnqueueTask, this returns 0.
  */
@@ -281,7 +281,7 @@ size_t const_func __attribute__((overloadable)) get_global_id(uint dimindx);
  * NULL; otherwise the OpenCL implementation chooses
  * an appropriate local_work_size value which is returned
  * by this function. Valid values of dimindx are 0 to
- * get_work_dim() – 1. For other values of dimindx,
+ * get_work_dim() â€“ 1. For other values of dimindx,
  * get_local_size() returns 1.
  * For clEnqueueTask, this always returns 1.
  */
@@ -291,7 +291,7 @@ size_t const_func __attribute__((overloadable)) get_local_size(uint dimindx);
  * Returns the unique local work-item ID i.e. a work-item
  * within a specific work-group for dimension identified by
  * dimindx. Valid values of dimindx are 0 to
- * get_work_dim() – 1. For other values of dimindx,
+ * get_work_dim() â€“ 1. For other values of dimindx,
  * get_local_id() returns 0.
  * For clEnqueueTask, this returns 0.
  */
@@ -300,7 +300,7 @@ size_t const_func __attribute__((overloadable)) get_local_id(uint dimindx);
 /**
  * Returns the number of work-groups that will execute a
  * kernel for dimension identified by dimindx.
- * Valid values of dimindx are 0 to get_work_dim() – 1.
+ * Valid values of dimindx are 0 to get_work_dim() â€“ 1.
  * For other values of dimindx, get_num_groups () returns
  * 1.
  * For clEnqueueTask, this always returns 1.
@@ -309,8 +309,8 @@ size_t const_func __attribute__((overloadable)) get_num_groups(uint dimindx);
 
 /**
  * get_group_id returns the work-group ID which is a
- * number from 0 .. get_num_groups(dimindx) – 1.
- * Valid values of dimindx are 0 to get_work_dim() – 1.
+ * number from 0 .. get_num_groups(dimindx) â€“ 1.
+ * Valid values of dimindx are 0 to get_work_dim() â€“ 1.
  * For other values, get_group_id() returns 0.
  * For clEnqueueTask, this returns 0.
  */
@@ -320,7 +320,7 @@ size_t const_func __attribute__((overloadable)) get_group_id(uint dimindx);
  * get_global_offset returns the offset values specified in
  * global_work_offset argument to
  * clEnqueueNDRangeKernel.
- * Valid values of dimindx are 0 to get_work_dim() – 1.
+ * Valid values of dimindx are 0 to get_work_dim() â€“ 1.
  * For other values, get_global_offset() returns 0.
  * For clEnqueueTask, this returns 0.
  */
@@ -883,7 +883,7 @@ double16 const_func __attribute__((overloadable)) fdim(double16 x, double16 y);
 //half16 const_func __attribute__((overloadable)) fdim(half16 x, half16 y);
 
 /**
- * Round to integral value using the round to –ve
+ * Round to integral value using the round to â€“ve
  * infinity rounding mode.
  */
 float const_func __attribute__((overloadable)) floor(float);
@@ -1012,7 +1012,7 @@ double16 const_func __attribute__((overloadable)) fmin(double16 x, double y);
 //half16 const_func __attribute__((overloadable)) fmin(half16 x, half y);
 
 /**
- * Modulus. Returns x – y * trunc (x/y).
+ * Modulus. Returns x â€“ y * trunc (x/y).
  */
 float const_func __attribute__((overloadable)) fmod(float x, float y);
 float2 const_func __attribute__((overloadable)) fmod(float2 x, float2 y);
@@ -1034,7 +1034,7 @@ double16 const_func __attribute__((overloadable)) fmod(double16 x, double16 y);
 //half16 const_func __attribute__((overloadable)) fmod(half16 x, half16 y);
 
 /**
- * Returns fmin( x – floor (x), 0x1.fffffep-1f ).
+ * Returns fmin( x â€“ floor (x), 0x1.fffffep-1f ).
  * floor(x) is returned in iptr.
  */
 float __attribute__((overloadable)) fract(float x, __global float *iptr);
@@ -2232,7 +2232,7 @@ float8 const_func __attribute__((overloadable)) half_rsqrt(float8 x);
 float16 const_func __attribute__((overloadable)) half_rsqrt(float16 x);
 
 /**
- * Compute sine. x must be in the range -2^16 … +2^16.
+ * Compute sine. x must be in the range -2^16 â€¦ +2^16.
  */
 float const_func __attribute__((overloadable)) half_sin(float x);
 float2 const_func __attribute__((overloadable)) half_sin(float2 x);
@@ -2252,7 +2252,7 @@ float8 const_func __attribute__((overloadable)) half_sqrt(float8 x);
 float16 const_func __attribute__((overloadable)) half_sqrt(float16 x);
 
 /**
- * Compute tangent. x must be in the range -216 … +216.
+ * Compute tangent. x must be in the range -216 â€¦ +216.
  */
 float const_func __attribute__((overloadable)) half_tan(float x);
 float2 const_func __attribute__((overloadable)) half_tan(float2 x);
@@ -2491,7 +2491,7 @@ ulong16 const_func __attribute__((overloadable)) abs(long16 x);
 ulong16 const_func __attribute__((overloadable)) abs(ulong16 x);
 
 /**
- * Returns | x – y | without modulo overflow.
+ * Returns | x â€“ y | without modulo overflow.
  */
 uchar const_func __attribute__((overloadable)) abs_diff(char x, char y);
 uchar const_func __attribute__((overloadable)) abs_diff(uchar x, uchar y);
@@ -3605,9 +3605,9 @@ double16 const_func __attribute__((overloadable)) min(double16 x, double y);
 
 /**
  * Returns the linear blend of x & y implemented as:
- * x + (y – x) * a
- * a must be a value in the range 0.0 … 1.0. If a is not
- * in the range 0.0 … 1.0, the return values are
+ * x + (y â€“ x) * a
+ * a must be a value in the range 0.0 â€¦ 1.0. If a is not
+ * in the range 0.0 â€¦ 1.0, the return values are
  * undefined.
  */
 float const_func __attribute__((overloadable)) mix(float x, float y, float a);
@@ -3714,8 +3714,8 @@ double16 const_func __attribute__((overloadable)) step(double edge, double16 x);
  * with a smooth transition.
  * This is equivalent to:
  * gentype t;
- * t = clamp ((x – edge0) / (edge1 – edge0), 0, 1);
- * return t * t * (3 – 2 * t);
+ * t = clamp ((x â€“ edge0) / (edge1 â€“ edge0), 0, 1);
+ * return t * t * (3 â€“ 2 * t);
  * Results are undefined if edge0 >= edge1 or if x,
  * edge0 or edge1 is a NaN.
  */
@@ -3757,7 +3757,7 @@ double16 const_func __attribute__((overloadable)) smoothstep(double16 edge0, dou
 
 /**
  * Returns 1.0 if x > 0, -0.0 if x = -0.0, +0.0 if x =
- * +0.0, or –1.0 if x < 0. Returns 0.0 if x is a NaN.
+ * +0.0, or â€“1.0 if x < 0. Returns 0.0 if x is a NaN.
  */
 float const_func __attribute__((overloadable)) sign(float x);
 float2 const_func __attribute__((overloadable)) sign(float2 x);
@@ -3809,7 +3809,7 @@ double const_func __attribute__((overloadable)) dot(double4 p0, double4 p1);
 
 /**
  * Returns the distance between p0 and p1. This is
- * calculated as length(p0 – p1).
+ * calculated as length(p0 â€“ p1).
  */
 float const_func __attribute__((overloadable)) distance(float p0, float p1);
 float const_func __attribute__((overloadable)) distance(float2 p0, float2 p1);
@@ -3859,7 +3859,7 @@ double4 const_func __attribute__((overloadable)) normalize(double4 p);
 //half4 const_func __attribute__((overloadable)) normalize(half4 p);
 
 /**
- * Returns fast_length(p0 – p1).
+ * Returns fast_length(p0 â€“ p1).
  */
 float const_func __attribute__((overloadable)) fast_distance(float p0, float p1);
 float const_func __attribute__((overloadable)) fast_distance(float2 p0, float2 p1);
@@ -3878,7 +3878,7 @@ float const_func __attribute__((overloadable)) fast_length(float4 p);
 /**
  * Returns a vector in the same direction as p but with a
  * length of 1. fast_normalize is computed as:
- * p * half_rsqrt (p.x^2 + p.y^2 + … )
+ * p * half_rsqrt (p.x^2 + p.y^2 + â€¦ )
  * The result shall be within 8192 ulps error from the
  * infinitely precise result of
  * if (all(p == 0.0f))
@@ -3891,7 +3891,7 @@ float const_func __attribute__((overloadable)) fast_length(float4 p);
  * result vector are undefined.
  * 2) If the sum of squares is less than FLT_MIN then
  * the implementation may return back p.
- * 3) If the device is in “denorms are flushed to zero”
+ * 3) If the device is in â€œdenorms are flushed to zeroâ€
  * mode, individual operand elements with magnitude
  * less than sqrt(FLT_MIN) may be flushed to zero
  * before proceeding with the calculation.
@@ -4082,7 +4082,7 @@ long16 const_func __attribute__((overloadable)) isfinite(double16);
 //short16 const_func __attribute__((overloadable)) isfinite(half16);
 
 /**
- * Test for infinity value (+ve or –ve) .
+ * Test for infinity value (+ve or â€“ve) .
  */
 int const_func __attribute__((overloadable)) isinf(float);
 int2 const_func __attribute__((overloadable)) isinf(float2);
@@ -5764,7 +5764,7 @@ void __attribute__((overloadable)) vstorea_half16_rtn(double16 data,size_t offse
  * will either flush any variables stored in local memory
  * or queue a memory fence to ensure correct ordering of
  * memory operations to local memory.
- * CLK_GLOBAL_MEM_FENCE – The barrier function
+ * CLK_GLOBAL_MEM_FENCE â€“ The barrier function
  * will queue a memory fence to ensure correct ordering
  * of memory operations to global memory. This can be
  * useful when work-items, for example, write to buffer or
@@ -6979,12 +6979,12 @@ double16 const_func __attribute__((overloadable)) shuffle2(double16 x, double16 
  * Use the coordinate (x, y) to do an element lookup in
  * the 2D image object specified by image.
  * read_imagef returns floating-point values in the
- * range [0.0 … 1.0] for image objects created with
+ * range [0.0 â€¦ 1.0] for image objects created with
  * image_channel_data_type set to one of the predefined
  * packed formats or CL_UNORM_INT8, or
  * CL_UNORM_INT16.
  * read_imagef returns floating-point values in the
- * range [-1.0 … 1.0] for image objects created with
+ * range [-1.0 â€¦ 1.0] for image objects created with
  * image_channel_data_type set to CL_SNORM_INT8,
  * or CL_SNORM_INT16.
  * read_imagef returns floating-point values for image
