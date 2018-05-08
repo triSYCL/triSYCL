@@ -119,57 +119,51 @@ bool constexpr is_red(int x, int y) {
 };
 
 struct red {
-  float v;
+  double d = 5.2;
 };
 
 struct black {
-  int i;
+  int i = 7;
 };
 
-template <typename ME_Array>
-struct memory {
-  // Local memory(x,y) shared by 4 neighbours
-  template <int x, int y>
-  struct local_mem
-    : ME_Array::template local_mem<ME_Array, x, y, local_mem<x, y>>
-    , std::conditional_t<is_red(x, y), red, black> {
+template <int X, int Y>
+struct memory
+  : std::conditional_t<is_red(X, Y), red, black> {
     int use_count = 0;
-  };
 };
 
+template <typename ME_Array, int X, int Y>
+struct tile
+  : acap::tile<X, Y>
+  , memory<X, Y> {
+  using t = acap::tile<X, Y>;
+  int v = 42;
 
-  template <typename ME_Array, int x, int y>
-  struct tile
-    : acap::tile<x, y> {
-    using base = acap::tile<x, y>;
-    int v = 42;
-
-    void run(ME_Array &a) {
-      std::cout << "Hello, I am the ME tile (" << x << ',' << y
-                << ") using " << sizeof(*this) << " bytes of memory "
-                << std::endl;
-      if constexpr (base::is_shim_tile()) {
-        std::cout << "  and I am a shim tile ";
-        if constexpr (base::is_noc_tile())
-          std::cout << "(a NoC controller)" << std::endl;
-        if constexpr (base::is_pl_tile())
-          std::cout << "(a PL interface)" << std::endl;
-      }
-      std::cout << "Local v = " << v << std::endl;
-      // auto neighbour_v = get_tile<get_id<0>() ^ 1, get_id<1>()>().v;
-      std::cout << "Neighbour v = " << a.t1.v << std::endl;
+  void run(ME_Array &a) {
+    std::cout << "Hello, I am the ME tile (" << X << ',' << Y
+              << ") using " << sizeof(*this) << " bytes of memory "
+              << std::endl;
+    if constexpr (t::is_shim_tile()) {
+      std::cout << "  and I am a shim tile ";
+      if constexpr (t::is_noc_tile())
+        std::cout << "(a NoC controller)" << std::endl;
+      if constexpr (t::is_pl_tile())
+        std::cout << "(a PL interface)" << std::endl;
     }
-  };
+    std::cout << "Local v = " << v << std::endl;
+    if constexpr (is_red(X, Y))
+      std::cout << " d = " << red::d << std::endl;
+    else
+      std::cout << " i = " << black::i << std::endl;
 
-struct my_me
-  : acap::me_array<tile> {
-
-
+    // auto neighbour_v = get_tile<get_id<0>() ^ 1, get_id<1>()>().v;
+    std::cout << "Neighbour v = " << a.t1.v << std::endl;
+  }
 };
+
 
 int main() {
-
-  my_me me;
+  acap::me_array<tile> me;
 
   me.run();
 
