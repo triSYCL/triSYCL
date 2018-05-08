@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <type_traits>
+#include <boost/hana.hpp>
 
 namespace cl::sycl::vendor::xilinx::acap {
 
@@ -29,13 +30,8 @@ struct me_layout {
 };
 
 
-/** The MathEngine array structure
- */
-template <typename ME_Array, typename ME_Memory, typename ME_Program>
-struct me_array
+struct geometry
   : me_layout {
-  ME_Program p;
-
   static bool constexpr is_x_valid(int x) {
     return x_min <= x && x <= x_max;
   }
@@ -48,43 +44,51 @@ struct me_array
     // It could be more optimized, but like that it is clearer
     return is_noc_tile(x, y) || is_pl_tile(x, y);
   }
-
-
-  /** The local data memory to a ME tile
-
-     \todo It looks like there is no data memory on a shim tile
-   */
-  template <int x, int y, typename Local_Mem>
-  struct local_mem {
-  };
-
-
-  /** The MathEngine tile infrastructure
-   */
-  template <int x, int y, typename Tile>
-  struct tile {
-    static bool constexpr is_noc_tile() {
-      return me_array::is_noc_tile(x, y);
-    }
-
-    static bool constexpr is_pl_tile() {
-      return me_array::is_pl_tile(x, y);
-    }
-
-    static bool constexpr is_shim_tile() {
-      return me_array::is_shim_tile(x, y);
-    }
-  };
-
 };
 
-template <typename Program>
-struct program {
-  typename Program::template tile<0,0> p;
+/** The MathEngine array structure
+ */
+template <template <typename ME_Array, int x, int y> typename Tile>
+struct me_array {
+  Tile<me_array, 0, 0> t0;
+  Tile<me_array, 1, 0> t1;
+
+  me_array() {
+    t0.run(*this);
+    t0.run(*this);
+  }
+
+  auto& get_t0() {
+    return t0;
+  }
+
+  auto& get_t1() {
+    return t1;
+  }
+};
+
+
+
+/** The MathEngine tile infrastructure
+ */
+template <int x, int y>
+struct tile
+  : geometry {
+
+  static bool constexpr is_noc_tile() {
+    return geometry::is_noc_tile(x, y);
+  }
+
+  static bool constexpr is_pl_tile() {
+    return geometry::is_pl_tile(x, y);
+  }
+
+  static bool constexpr is_shim_tile() {
+    return geometry::is_shim_tile(x, y);
+  }
 };
 
 }
-
 
 using namespace cl::sycl::vendor::xilinx;
 
@@ -112,37 +116,37 @@ struct memory {
   };
 };
 
-template <typename ME_Array>
-struct program
-  : acap::program<program<ME_Array>> {
-  // Local program of PE(x,y)
-  template <int x, int y>
-  struct tile {
-#if 0
-  struct tile : ME_Array::template tile<x, y, tile<x, y>> {
-    using base = typename ME_Array::template tile<x, y, tile<x, y>>;
 
-    void hello() {
-      std::cout << "Hello, I am the PE " << x << ',' << y << std::endl;
-      if constexpr (base::is_shim_tile()) {
+  template <typename ME_Array, int x, int y>
+  struct tile
+    : acap::tile<x, y> {
+    using acap::tile<x, y>::is_shim_tile;
+    int v = 42;
+
+    void run(ME_Array &a) {
+      std::cout << "Hello, I am the PE " << x << ',' << y
+                << " using " << sizeof(*this) << " bytes of memory "
+                << std::endl;
+      if constexpr (is_shim_tile()) {
         std::cout << "  and I am a shim PE ";
-        if constexpr (base::is_noc_tile()) {
+        if constexpr (acap::tile<x, y>::is_noc_tile()) {
             std::cout << "(a NoC controller)" << std::endl;
         }
-        if constexpr (base::is_pl_tile()) {
+        if constexpr (acap::tile<x, y>::is_pl_tile()) {
             std::cout << "(a PL interface)" << std::endl;
         }
       }
+      std::cout << "Local v = " << v << std::endl;
+      // auto neighbour_v = get_tile<get_id<0>() ^ 1, get_id<1>()>().v;
+      std::cout << "Neighbour v = " << a.t1.v << std::endl;
     }
-#endif
   };
-};
 
-struct my_me : acap::me_array<my_me,
-                              memory<my_me>,
-                              program<my_me>> {
-};
+struct my_me
+  : acap::me_array<tile> {
 
+
+};
 
 int main() {
 
