@@ -53,7 +53,7 @@ struct me_array {
   Tile<me_array, 0, 0> t0;
   Tile<me_array, 1, 0> t1;
 
-  me_array() {
+  void run() {
     t0.run(*this);
     t0.run(*this);
   }
@@ -152,7 +152,7 @@ int main() {
 
   my_me me;
 
-//  me.run();
+  me.run();
 
 #if 0
 
