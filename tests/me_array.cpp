@@ -86,15 +86,15 @@ struct tile
   static auto constexpr x = X;
   static auto constexpr y = Y;
 
-  static bool constexpr is_noc_tile() {
+  static bool constexpr is_noc() {
     return geography::is_noc_tile(x, y);
   }
 
-  static bool constexpr is_pl_tile() {
+  static bool constexpr is_pl() {
     return geography::is_pl_tile(x, y);
   }
 
-  static bool constexpr is_shim_tile() {
+  static bool constexpr is_shim() {
     return geography::is_shim_tile(x, y);
   }
 
@@ -143,11 +143,11 @@ struct tile
     std::cout << "Hello, I am the ME tile (" << X << ',' << Y
               << ") using " << sizeof(*this) << " bytes of memory "
               << std::endl;
-    if constexpr (t::is_shim_tile()) {
+    if constexpr (t::is_shim()) {
       std::cout << "  and I am a shim tile ";
-      if constexpr (t::is_noc_tile())
+      if constexpr (t::is_noc())
         std::cout << "(a NoC controller)" << std::endl;
-      if constexpr (t::is_pl_tile())
+      if constexpr (t::is_pl())
         std::cout << "(a PL interface)" << std::endl;
     }
     std::cout << "Local v = " << v << std::endl;
