@@ -31,9 +31,11 @@ struct me_layout {
 
 /** The MathEngine array structure
  */
-template <typename ME_Array>
+template <typename ME_Array, typename ME_Memory, typename ME_Program>
 struct me_array
   : me_layout {
+  ME_Program p;
+
   static bool constexpr is_x_valid(int x) {
     return x_min <= x && x <= x_max;
   }
@@ -73,39 +75,52 @@ struct me_array
       return me_array::is_shim_tile(x, y);
     }
   };
+
+};
+
+template <typename Program>
+struct program {
+  typename Program::template tile<0,0> p;
 };
 
 }
+
+
+using namespace cl::sycl::vendor::xilinx;
 
 
 bool constexpr is_red(int x, int y) {
   return (x + y);
 };
 
-using namespace cl::sycl::vendor::xilinx::acap;
+struct red {
+  float v;
+};
 
+struct black {
+  int i;
+};
 
-struct my_me : me_array<my_me> {
-  struct red {
-    float v;
-  };
-
-  struct black {
-    int i;
-  };
-
+template <typename ME_Array>
+struct memory {
   // Local memory(x,y) shared by 4 neighbours
   template <int x, int y>
   struct local_mem
-    : me_array::local_mem<x, y, local_mem<x, y>>
+    : ME_Array::template local_mem<ME_Array, x, y, local_mem<x, y>>
     , std::conditional_t<is_red(x, y), red, black> {
     int use_count = 0;
   };
+};
 
+template <typename ME_Array>
+struct program
+  : acap::program<program<ME_Array>> {
   // Local program of PE(x,y)
   template <int x, int y>
-  struct tile : me_array::tile<x, y, tile<x, y>> {
-    using base = me_array::tile<x, y, tile<x, y>>;
+  struct tile {
+#if 0
+  struct tile : ME_Array::template tile<x, y, tile<x, y>> {
+    using base = typename ME_Array::template tile<x, y, tile<x, y>>;
 
     void hello() {
       std::cout << "Hello, I am the PE " << x << ',' << y << std::endl;
@@ -119,12 +134,21 @@ struct my_me : me_array<my_me> {
         }
       }
     }
+#endif
   };
+};
 
+struct my_me : acap::me_array<my_me,
+                              memory<my_me>,
+                              program<my_me>> {
 };
 
 
 int main() {
+
+  my_me me;
+
+//  me.run();
 
 #if 0
 
