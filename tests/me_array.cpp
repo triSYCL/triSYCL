@@ -16,9 +16,11 @@ namespace cl::sycl::vendor::xilinx::acap {
 struct me_layout {
   /// Some constrains from Figure 2-8 "ME Array Address Map Example", p. 44
   static auto constexpr x_min = 0;
-  static auto constexpr x_max = 5;
+//  static auto constexpr x_max = 5;
+  static auto constexpr x_max = 2;
   static auto constexpr y_min = 0;
-  static auto constexpr y_max = 4;
+  //static auto constexpr y_max = 4;
+  static auto constexpr y_max = 1;
 
   static bool constexpr is_noc_tile(int x, int y) {
     return y == 0 && 2 <= x && x <= 3;
@@ -53,6 +55,26 @@ struct geography
  */
 template <template <typename ME_Array, int X, int Y> typename Tile>
 struct me_array {
+
+  static auto constexpr tile_coordinates = boost::hana::cartesian_product(
+    boost::hana::make_tuple(
+        boost::hana::range_c<int, me_layout::x_min, me_layout::x_max + 1>
+      , boost::hana::range_c<int, me_layout::y_min, me_layout::y_max + 1>
+                            )
+                                                                          );
+
+  static auto constexpr generate_tiles = [&] {
+    return boost::hana::transform(
+        tile_coordinates
+      , [](auto coord) {
+          return Tile<me_array,
+                      boost::hana::at_c<0>(coord),
+                      boost::hana::at_c<1>(coord)> {};
+        }
+                                  );
+  };
+
+  decltype(generate_tiles()) tiles = generate_tiles();
   Tile<me_array, 0, 0> t0;
   Tile<me_array, 2, 0> t1;
   Tile<me_array, 5, 4> t2;
@@ -61,6 +83,9 @@ struct me_array {
     t0.run(*this);
     t1.run(*this);
     t2.run(*this);
+
+    std::cout << "Total size of the tiles: " << sizeof(tiles)
+              << " bytes." << std::endl;
   }
 
   auto& get_t0() {
