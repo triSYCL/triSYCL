@@ -72,9 +72,12 @@ struct me_array {
 
 /** The MathEngine tile infrastructure
  */
-template <int x, int y>
+template <int X, int Y>
 struct tile
   : geography {
+  // The tile coordinates in the grid
+  static auto constexpr x = X;
+  static auto constexpr y = Y;
 
   static bool constexpr is_noc_tile() {
     return geography::is_noc_tile(x, y);
@@ -86,6 +89,16 @@ struct tile
 
   static bool constexpr is_shim_tile() {
     return geography::is_shim_tile(x, y);
+  }
+
+  template <int Dim>
+  static auto constexpr get_id() {
+    static_assert(0 <= Dim && Dim <= 1,
+                  "The dimension has to be between 0 and 1");
+    if constexpr (Dim == 0)
+      return x;
+    else
+      return y;
   }
 };
 
