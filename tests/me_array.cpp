@@ -30,7 +30,9 @@ struct me_layout {
 };
 
 
-struct geometry
+/** Some geographic information about the array
+ */
+struct geography
   : me_layout {
   static bool constexpr is_x_valid(int x) {
     return x_min <= x && x <= x_max;
@@ -68,23 +70,22 @@ struct me_array {
 };
 
 
-
 /** The MathEngine tile infrastructure
  */
 template <int x, int y>
 struct tile
-  : geometry {
+  : geography {
 
   static bool constexpr is_noc_tile() {
-    return geometry::is_noc_tile(x, y);
+    return geography::is_noc_tile(x, y);
   }
 
   static bool constexpr is_pl_tile() {
-    return geometry::is_pl_tile(x, y);
+    return geography::is_pl_tile(x, y);
   }
 
   static bool constexpr is_shim_tile() {
-    return geometry::is_shim_tile(x, y);
+    return geography::is_shim_tile(x, y);
   }
 };
 
