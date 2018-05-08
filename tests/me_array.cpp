@@ -25,7 +25,7 @@ struct me_layout {
   }
 
   static bool constexpr is_pl_tile(int x, int y) {
-    return y == 0 && 2 <= x && x <= 3;
+    return y == 0 && ((0 <= x && x <= 1) || (4 <= x && x <= 5));
   }
 };
 
@@ -48,16 +48,19 @@ struct geography
   }
 };
 
+
 /** The MathEngine array structure
  */
-template <template <typename ME_Array, int x, int y> typename Tile>
+template <template <typename ME_Array, int X, int Y> typename Tile>
 struct me_array {
   Tile<me_array, 0, 0> t0;
-  Tile<me_array, 1, 0> t1;
+  Tile<me_array, 2, 0> t1;
+  Tile<me_array, 5, 4> t2;
 
   void run() {
     t0.run(*this);
-    t0.run(*this);
+    t1.run(*this);
+    t2.run(*this);
   }
 
   auto& get_t0() {
@@ -66,6 +69,10 @@ struct me_array {
 
   auto& get_t1() {
     return t1;
+  }
+
+  auto& get_t2() {
+    return t2;
   }
 };
 
@@ -134,21 +141,19 @@ struct memory {
   template <typename ME_Array, int x, int y>
   struct tile
     : acap::tile<x, y> {
-    using acap::tile<x, y>::is_shim_tile;
+    using base = acap::tile<x, y>;
     int v = 42;
 
     void run(ME_Array &a) {
-      std::cout << "Hello, I am the PE " << x << ',' << y
-                << " using " << sizeof(*this) << " bytes of memory "
+      std::cout << "Hello, I am the ME tile (" << x << ',' << y
+                << ") using " << sizeof(*this) << " bytes of memory "
                 << std::endl;
-      if constexpr (is_shim_tile()) {
-        std::cout << "  and I am a shim PE ";
-        if constexpr (acap::tile<x, y>::is_noc_tile()) {
-            std::cout << "(a NoC controller)" << std::endl;
-        }
-        if constexpr (acap::tile<x, y>::is_pl_tile()) {
-            std::cout << "(a PL interface)" << std::endl;
-        }
+      if constexpr (base::is_shim_tile()) {
+        std::cout << "  and I am a shim tile ";
+        if constexpr (base::is_noc_tile())
+          std::cout << "(a NoC controller)" << std::endl;
+        if constexpr (base::is_pl_tile())
+          std::cout << "(a PL interface)" << std::endl;
       }
       std::cout << "Local v = " << v << std::endl;
       // auto neighbour_v = get_tile<get_id<0>() ^ 1, get_id<1>()>().v;
