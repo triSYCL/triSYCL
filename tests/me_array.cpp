@@ -139,8 +139,10 @@ struct tile
 using namespace cl::sycl::vendor::xilinx;
 
 
+/// A small MathEngine program
+
 bool constexpr is_red(int x, int y) {
-  return (x + y);
+  return (x + y) & 1;
 };
 
 struct red {
