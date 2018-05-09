@@ -16,11 +16,9 @@ namespace cl::sycl::vendor::xilinx::acap {
 struct me_layout {
   /// Some constrains from Figure 2-8 "ME Array Address Map Example", p. 44
   static auto constexpr x_min = 0;
-//  static auto constexpr x_max = 5;
-  static auto constexpr x_max = 2;
+  static auto constexpr x_max = 5;
   static auto constexpr y_min = 0;
-  //static auto constexpr y_max = 4;
-  static auto constexpr y_max = 1;
+  static auto constexpr y_max = 4;
 
   static bool constexpr is_noc_tile(int x, int y) {
     return y == 0 && 2 <= x && x <= 3;
@@ -56,6 +54,7 @@ struct geography
 template <template <typename ME_Array, int X, int Y> typename Tile>
 struct me_array {
 
+  /// A tuple with the coordinate tuples of all the tiles
   static auto constexpr tile_coordinates = boost::hana::cartesian_product(
     boost::hana::make_tuple(
         boost::hana::range_c<int, me_layout::x_min, me_layout::x_max + 1>
@@ -63,6 +62,7 @@ struct me_array {
                             )
                                                                           );
 
+  /// Generate a tuple of all the tiles
   static auto constexpr generate_tiles = [&] {
     return boost::hana::transform(
         tile_coordinates
@@ -74,30 +74,15 @@ struct me_array {
                                   );
   };
 
+  /// All the tiles of the ME array.
+  /// Unfortunately it is not possible to use auto here...
   decltype(generate_tiles()) tiles = generate_tiles();
-  Tile<me_array, 0, 0> t0;
-  Tile<me_array, 2, 0> t1;
-  Tile<me_array, 5, 4> t2;
 
   void run() {
-    t0.run(*this);
-    t1.run(*this);
-    t2.run(*this);
+    boost::hana::for_each(tiles, [&] (auto& t) { t.run(*this); });
 
     std::cout << "Total size of the tiles: " << sizeof(tiles)
               << " bytes." << std::endl;
-  }
-
-  auto& get_t0() {
-    return t0;
-  }
-
-  auto& get_t1() {
-    return t1;
-  }
-
-  auto& get_t2() {
-    return t2;
   }
 };
 
@@ -184,7 +169,7 @@ struct tile
       std::cout << " i = " << black::i << std::endl;
 
     // auto neighbour_v = get_tile<get_id<0>() ^ 1, get_id<1>()>().v;
-    std::cout << "Neighbour v = " << a.t1.v << std::endl;
+    //std::cout << "Neighbour v = " << a.t1.v << std::endl;
   }
 };
 
