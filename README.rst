@@ -113,13 +113,17 @@ See `Possible futures <doc/possible-futures.rst>`_
 News
 ----
 
-- 2018/02/01 there is now some documentation about the architecture of
+- 2018/03/12: the long-going device compiler branch has been merged in
+  to provide experimental support for SPIR-df friendly devices, such
+  as PoCL or Xilinx FPGA. This is only for the brave for now.
+
+- 2018/02/01: there is now some documentation about the architecture of
   triSYCL on GPU and accelerators with its device compiler based on
   Clang/LLVM in `<doc/architecture.rst>`_. While this is wildly
   experimental, there is a growing interested around it and it is
   always useful to get started as a contributor.
 
-- 2018/01/05 there are some internship openings at Xilinx to work on
+- 2018/01/05: there are some internship openings at Xilinx to work on
   triSYCL for FPGA
   https://xilinx.referrals.selectminds.com/jobs/compiler-engineer-intern-on-sycl-for-fpga-4685
   and more generally Xilinx is hiring in compilation, runtime, C++,
