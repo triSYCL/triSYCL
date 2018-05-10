@@ -235,7 +235,7 @@ package on Debian/Ubuntu.
 Using OpenCL PoCL on CPU
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-The device compiler generates the kernels as SPIR-df (*de-facto*),
+The device compiler generates the kernels as SPIR-df (*de facto*),
 which is SPIR 2.0 encoded with LLVM IR of a more recent version than
 LLVM 3.4 expected by the SPIR specification. So a very modern SPIR
 consumer is required, such as a recent PoCL. It is not the version
@@ -328,7 +328,7 @@ The Clang/LLVM-based device compiler (bottom of `Figure 1`_) compiles
 the C++ SYCL code as for CPU only, but just keep the kernel part of
 the code and produce a simple portable intermediate representation
 (SPIR) of the kernels.  For now, since SPIR-V is not yet widely used,
-triSYCL uses SPIR-df *de-facto*, a non-conforming SPIR 2.0 encoded in
+triSYCL uses SPIR-df (*de facto*), a non-conforming SPIR 2.0 encoded in
 something newer than LLVM 3.4 IR.
 
 Then this SPIR-df output is optionally compiled by some vendor
@@ -556,10 +556,11 @@ of LLVM passes with:
   is the SYCL-specific pass generating the SPIR 2.0-style LLVM IR
   output. Since it generates LLVM IR with the version of the recent
   LLVM used, it is quite more modern that the official SPIR 2.0 based
-  on LLVM 3.4 IR. So it is a SPIR "de-facto", which is nevertheless
-  accepted by some tools. But by using a down-caster, it could
+  on LLVM 3.4 IR. So it is a SPIR-df (*de facto*)", which is nevertheless
+  accepted by some tools. But by using a bitcode down-caster, it could
   probably make some decent official SPIR 2.0 encoded in LLVM 3.4
-  IR). Or using a SPIR-V back-end could generate some SPIR-V code.
+  IR. Otherwise a SPIR-V back-end could generate some SPIR-V code from
+  this.
 
 
 Testing infrastructure

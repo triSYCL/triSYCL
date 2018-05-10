@@ -5,6 +5,8 @@ triSYCL
   Not supported by GitHub :-(
   include:: doc/common-includes.rst
 
+.. section-numbering::
+
 .. highlight:: C++
 
 .. image:: https://travis-ci.org/triSYCL/triSYCL.svg?branch=master
@@ -81,15 +83,16 @@ For the SYCL_ ecosystem, look at http://sycl.tech
 
 
 Documentation
+-------------
 
 Some reasons to use SYCL
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-- Please see `about SYCL <doc/about-sycl.rst>`_
+Please see `about SYCL <doc/about-sycl.rst>`_
 
 
 Installation & testing
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~
 
 SYCL is a template library, so no real installation is required.
 
@@ -98,18 +101,41 @@ There are some examples you can build however.
 See `Testing <doc/testing.rst>`_
 
 
+Architecture of triSYCL runtime and compiler
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+`Architecture of triSYCL runtime and compiler <doc/architecture.rst>`_
+describes the code base with some high-level diagrams but also how to
+compile and use the device compiler on some Xilinx_ FPGA for example.
+
+
+CMake infrastructure
+~~~~~~~~~~~~~~~~~~~~
+
+Some details about CMake configuration and organization can be found
+in `CMake <doc/cmake.rst>`_
+
+
+Pre-processor macros used in triSYCL
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Yes, there are some macros used in triSYCL! Look at `Pre-processor
+macros used in triSYCL <doc/macros.rst>`_ to discover some of them.
+
+
+Possible futures
+~~~~~~~~~~~~~~~~
+
+See `Possible futures <doc/possible-futures.rst>`_
+
+
 OpenCL triSYCL code documentation
----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The documentation of the triSYCL_ implementation itself can be found in
 http://xilinx.github.io/triSYCL/Doxygen/triSYCL/html and
 http://xilinx.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
 
-
-Possible futures
-----------------
-
-See `Possible futures <doc/possible-futures.rst>`_
 
 
 News
