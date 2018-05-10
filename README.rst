@@ -16,14 +16,14 @@ Introduction
 triSYCL_ is an open source implementation to experiment with
 the specification of the OpenCL_ SYCL_ 1.2.1 and 2.2 `C++`_ layer and
 to give feedback to the Khronos_ OpenCL_ SYCL_ and OpenCL_ C++ 2.2
-kernel language committees.
+kernel language committees and also ISO `C++`_ committee.
 
-This SYCL_ implementation is mainly based on C++17 and OpenMP_
-with execution on the CPU right now, but some parts of the non
-single-source OpenCL_ interoperability layer are implemented and the
-device compiler development is on-going for SPIR_ and SPIR-V_. Since in
-SYCL_ there is a host fall-back, this CPU implementation can be
-seen as an implementation of this fall-back too...
+This SYCL_ implementation is mainly based on C++17 and OpenMP_ for
+execution on the CPU, with `Boost.Compute`_ for the non single-source
+OpenCL_ interoperability layer and with LLVM_/Clang_ for the device
+compiler providing single-source experience on SPIR_ device. Since in
+SYCL_ there is a host fall-back, this CPU implementation can be seen
+as an implementation of this fall-back too...
 
 The parallel kernels can be executed in parallel on the CPU with OpenMP_ in
 the first range dimension, if compiled with OpenMP_ support or on an
@@ -79,6 +79,8 @@ http://www.khronos.org/sycl
 
 For the SYCL_ ecosystem, look at http://sycl.tech
 
+
+Documentation
 
 Some reasons to use SYCL
 ~~~~~~~~~~~~~~~~~~~~~~~~
