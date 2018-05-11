@@ -18,6 +18,25 @@ struct me_geography
   : Layout {
   using layout = Layout;
 
+  /// A tuple with the coordinate tuples of all the tiles
+  static auto constexpr tile_coordinates = boost::hana::cartesian_product(
+    boost::hana::make_tuple(
+        boost::hana::range_c<int, layout::x_min, layout::x_max + 1>
+      , boost::hana::range_c<int, layout::y_min, layout::y_max + 1>
+                            )
+                                                                          );
+  /// Generate a tuple of tileable objects
+  template <template <int X, int Y> typename Tileable>
+  static auto generate_tiles() {
+    return boost::hana::transform(
+        tile_coordinates
+      , [] (auto coord) {
+          return Tileable<boost::hana::at_c<0>(coord),
+                          boost::hana::at_c<1>(coord)> {};
+        }
+                                  );
+  }
+
   static bool constexpr is_x_valid(int x) {
     return layout::x_min <= x && x <= layout::x_max;
   }
@@ -44,31 +63,13 @@ struct me_array {
 
   using geography = me_geography<Layout>;
 
-  /// A tuple with the coordinate tuples of all the tiles
-  static auto constexpr tile_coordinates = boost::hana::cartesian_product(
-    boost::hana::make_tuple(
-        boost::hana::range_c<int, Layout::x_min, Layout::x_max + 1>
-      , boost::hana::range_c<int, Layout::y_min, Layout::y_max + 1>
-                            )
-                                                                          );
-
-  /// Generate a tuple of all the tiles
-  static auto constexpr generate_tiles = [] (auto &tile_coordinates) {
-    return boost::hana::transform(
-        tile_coordinates
-      , [] (auto coord) {
-          return Tile<geography,
-                      me_array,
-                      boost::hana::at_c<0>(coord),
-                      boost::hana::at_c<1>(coord)> {};
-        }
-                                  );
-  };
-
+  template <int X, int Y>
+  using tileable_tile = Tile<geography, me_array, X, Y>;
   /// All the tiles of the ME array.
   /// Unfortunately it is not possible to use auto here...
-  decltype(generate_tiles(tile_coordinates)) tiles =
-    generate_tiles(tile_coordinates);
+  decltype(geography::template generate_tiles<tileable_tile>()) tiles =
+    geography::template generate_tiles<tileable_tile>();
+
 #if 0
   template <int X, int Y>
   auto get_tile() {
@@ -205,12 +206,14 @@ struct me_layout_1pe : me_layout {
 };
 
 int main() {
+  std::cout << std::endl << "Instantiate big MathEngine:"
+            << std::endl << std::endl;
   acap::me_array<me_layout, tile> me;
-  std::cout << std::endl << "Run big MathEngine:" << std::endl << std::endl;
   me.run();
 
+  std::cout << std::endl << "Instantiate tiny MathEngine:"
+            << std::endl << std::endl;
   acap::me_array<me_layout_1pe, tile> solitaire_me;
-  std::cout << std::endl << "Run tiny MathEngine:" << std::endl << std::endl;
   solitaire_me.run();
 
 
@@ -242,4 +245,3 @@ int main() {
   }
 #endif
 }
-
