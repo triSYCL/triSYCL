@@ -11,63 +11,54 @@
 
 namespace cl::sycl::vendor::xilinx::acap {
 
-/** Describe the layout of the MathEngine array
- */
-struct me_layout {
-  /// Some constrains from Figure 2-8 "ME Array Address Map Example", p. 44
-  static auto constexpr x_min = 0;
-  static auto constexpr x_max = 5;
-  static auto constexpr y_min = 0;
-  static auto constexpr y_max = 4;
-
-  static bool constexpr is_noc_tile(int x, int y) {
-    return y == 0 && 2 <= x && x <= 3;
-  }
-
-  static bool constexpr is_pl_tile(int x, int y) {
-    return y == 0 && ((0 <= x && x <= 1) || (4 <= x && x <= 5));
-  }
-};
-
-
 /** Some geographic information about the array
  */
-struct geography
-  : me_layout {
+template <typename Layout>
+struct me_geography
+  : Layout {
+  using layout = Layout;
+
   static bool constexpr is_x_valid(int x) {
-    return x_min <= x && x <= x_max;
+    return layout::x_min <= x && x <= layout::x_max;
   }
 
   static bool constexpr is_y_valid(int y) {
-    return y_min <= y && y <= y_max;
+    return layout::y_min <= y && y <= layout::y_max;
   }
 
   static bool constexpr is_shim_tile(int x, int y) {
     // It could be more optimized, but like that it is clearer
-    return is_noc_tile(x, y) || is_pl_tile(x, y);
+    return layout::is_noc_tile(x, y) || layout::is_pl_tile(x, y);
   }
 };
 
 
 /** The MathEngine array structure
  */
-template <template <typename ME_Array, int X, int Y> typename Tile>
+template <typename Layout,
+          template <typename Geography,
+                    typename ME_Array,
+                    int X,
+                    int Y> typename Tile>
 struct me_array {
+
+  using geography = me_geography<Layout>;
 
   /// A tuple with the coordinate tuples of all the tiles
   static auto constexpr tile_coordinates = boost::hana::cartesian_product(
     boost::hana::make_tuple(
-        boost::hana::range_c<int, me_layout::x_min, me_layout::x_max + 1>
-      , boost::hana::range_c<int, me_layout::y_min, me_layout::y_max + 1>
+        boost::hana::range_c<int, Layout::x_min, Layout::x_max + 1>
+      , boost::hana::range_c<int, Layout::y_min, Layout::y_max + 1>
                             )
                                                                           );
 
   /// Generate a tuple of all the tiles
-  static auto constexpr generate_tiles = [&] {
+  static auto constexpr generate_tiles = [] (auto &tile_coordinates) {
     return boost::hana::transform(
         tile_coordinates
-      , [](auto coord) {
-          return Tile<me_array,
+      , [] (auto coord) {
+          return Tile<geography,
+                      me_array,
                       boost::hana::at_c<0>(coord),
                       boost::hana::at_c<1>(coord)> {};
         }
@@ -76,8 +67,19 @@ struct me_array {
 
   /// All the tiles of the ME array.
   /// Unfortunately it is not possible to use auto here...
-  decltype(generate_tiles()) tiles = generate_tiles();
-
+  decltype(generate_tiles(tile_coordinates)) tiles =
+    generate_tiles(tile_coordinates);
+#if 0
+  template <int X, int Y>
+  auto get_tile() {
+    return boost::hana::find_if(
+        tiles
+      , [] (auto& tile) {
+          return true;// tile.x == x && tile.y == y;
+        }
+                                );
+  }
+#endif
   void run() {
     boost::hana::for_each(tiles, [&] (auto& t) { t.run(*this); });
 
@@ -89,12 +91,13 @@ struct me_array {
 
 /** The MathEngine tile infrastructure
  */
-template <int X, int Y>
-struct tile
-  : geography {
+template <typename Geography, typename ME_Array, int X, int Y>
+struct tile {
   // The tile coordinates in the grid
   static auto constexpr x = X;
   static auto constexpr y = Y;
+
+  using geography = Geography;
 
   static bool constexpr is_noc() {
     return geography::is_noc_tile(x, y);
@@ -144,11 +147,11 @@ struct memory
     int use_count = 0;
 };
 
-template <typename ME_Array, int X, int Y>
+template <typename Geography, typename ME_Array, int X, int Y>
 struct tile
-  : acap::tile<X, Y>
+  : acap::tile<Geography, ME_Array, X, Y>
   , memory<X, Y> {
-  using t = acap::tile<X, Y>;
+  using t = acap::tile<Geography, ME_Array, X, Y>;
   int v = 42;
 
   void run(ME_Array &a) {
@@ -170,16 +173,57 @@ struct tile
 
     // auto neighbour_v = get_tile<get_id<0>() ^ 1, get_id<1>()>().v;
     //std::cout << "Neighbour v = " << a.t1.v << std::endl;
+   // auto neighbour_v = a.template get_tile<2,3>();
   }
 };
 
 
-int main() {
-  acap::me_array<tile> me;
+/** Describe the layout of the MathEngine array
+ */
+struct me_layout {
+  /// Some constrains from Figure 2-8 "ME Array Address Map Example", p. 44
+  static auto constexpr x_min = 0;
+  static auto constexpr x_max = 5;
+  static auto constexpr y_min = 0;
+  static auto constexpr y_max = 4;
 
+  static bool constexpr is_noc_tile(int x, int y) {
+    return y == 0 && 2 <= x && x <= 3;
+  }
+
+  static bool constexpr is_pl_tile(int x, int y) {
+    return y == 0 && ((0 <= x && x <= 1) || (4 <= x && x <= 5));
+  }
+};
+
+
+/** Describe the layout of a tiny MathEngine array with only 1 PE
+ */
+struct me_layout_1pe : me_layout {
+  static auto constexpr x_max = 0;
+  static auto constexpr y_max = 0;
+};
+
+int main() {
+  acap::me_array<me_layout, tile> me;
+  std::cout << std::endl << "Run big MathEngine:" << std::endl << std::endl;
   me.run();
 
+  acap::me_array<me_layout_1pe, tile> solitaire_me;
+  std::cout << std::endl << "Run tiny MathEngine:" << std::endl << std::endl;
+  solitaire_me.run();
+
+
+
 #if 0
+  auto static t = boost::hana::make_tuple(1,2,3);
+  auto static a=  boost::hana::find_if(
+        t
+      , [] (auto tile) {
+          return true;// tile.x == x && tile.y == y;
+        }
+                                );
+
 
     void compute() {
       if constexpr (!(is_shim() || is_noc())) {
@@ -198,3 +242,4 @@ int main() {
   }
 #endif
 }
+
