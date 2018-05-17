@@ -10,15 +10,6 @@
 
 #include <boost/test/minimal.hpp>
 
-#ifdef TRISYCL_DEVICE
-extern "C" {
-  /// SSDM Intrinsics: dataflow operation
-  void _ssdm_op_SpecDataflowPipeline(...) __attribute__ ((nothrow, noinline, weak));
-}
-#else
-#define _ssdm_op_SpecDataflowPipeline(...)
-#endif
-
 using namespace cl::sycl;
 
 //Parameters Description:
