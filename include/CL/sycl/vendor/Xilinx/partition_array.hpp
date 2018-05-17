@@ -21,9 +21,7 @@
     @{
 */
 
-namespace cl {
-namespace sycl {
-namespace xilinx {
+namespace cl::sycl::vendor::xilinx {
 
 /** Kind of array partition
 
@@ -244,8 +242,6 @@ struct partition_array {
 
 /// @} End the Xilinx Doxygen group
 
-}
-}
 }
 
 /*

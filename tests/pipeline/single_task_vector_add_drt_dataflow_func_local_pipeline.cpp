@@ -28,7 +28,7 @@ template<typename T, typename U>
 void readInput(T (&buffer_in)[BLOCK_SIZE], const U &d_b) {
   for(int i = 0; i < NUM_ROWS; ++i) {
     for (int j = 0; j < WORD_PER_ROW; ++j) {
-      vendor::pipeline([&] {
+      vendor::xilinx::pipeline([&] {
         buffer_in[WORD_PER_ROW*i+j] = d_b[WORD_PER_ROW*i+j];
       });
     }
@@ -39,7 +39,7 @@ template<typename T, typename U>
 void compute(T (&buffer_in)[BLOCK_SIZE], U (&buffer_out)[BLOCK_SIZE]) {
   for(int i = 0; i < NUM_ROWS; ++i) {
     for (int j = 0; j < WORD_PER_ROW; ++j) {
-      vendor::pipeline([&] {
+      vendor::xilinx::pipeline([&] {
         int inTmp = buffer_in[WORD_PER_ROW*i+j];
         int outTmp = inTmp * ALPHA;
         buffer_out[WORD_PER_ROW*i+j] = outTmp;
@@ -52,7 +52,7 @@ template<typename T, typename U>
 void writeOutput(T (&buffer_out)[BLOCK_SIZE], const U &d_a) {
   for(int i = 0; i < NUM_ROWS; ++i) {
     for (int j = 0; j < WORD_PER_ROW; ++j) {
-      vendor::pipeline([&] {
+      vendor::xilinx::pipeline([&] {
         d_a[WORD_PER_ROW*i+j] = buffer_out[WORD_PER_ROW*i+j];
       });
     }
@@ -118,7 +118,7 @@ int test_main(int argc, char *argv[]) {
                                   ] {
                                    int buffer_in[BLOCK_SIZE];
                                    int buffer_out[BLOCK_SIZE];
-                                   vendor::dataflow([&] {
+                                   vendor::xilinx::dataflow([&] {
                                        readInput(buffer_in, d_b);
                                        compute(buffer_in, buffer_out);
                                        writeOutput(buffer_out, d_a);

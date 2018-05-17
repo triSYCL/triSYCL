@@ -12,9 +12,7 @@
     @{
 */
 
-namespace cl {
-namespace sycl {
-namespace xilinx {
+namespace cl::sycl::vendor::xilinx {
 
 /** Apply dataflow execution on functions or loops
 
@@ -57,8 +55,6 @@ void pipeline(Functor f) noexcept {
 }
 
 
-}
-}
 }
 
 /// @} End the Xilinx Doxygen group
