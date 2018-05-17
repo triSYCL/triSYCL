@@ -31,7 +31,7 @@ RUN if [ "${openmp}" = 'ON' ]; then apt-get install -y --allow-downgrades      \
 # OpenCL with POCL
 RUN if [ "${opencl}" = 'ON' ]; then apt-get install -y --allow-downgrades      \
     --allow-remove-essential --allow-change-held-packages opencl-headers       \
-    ocl-icd-opencl-dev libpocl-dev libpocl1 libpoclu1 pocl-opencl-icd; fi
+    ocl-icd-opencl-dev libpocl-dev ; fi
 
 RUN git clone https://github.com/${git_slug}.git -b ${git_branch} /trisycl
 
