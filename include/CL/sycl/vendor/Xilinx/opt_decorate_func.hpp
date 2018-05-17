@@ -28,13 +28,12 @@ namespace cl::sycl::vendor::xilinx {
     \param[in] f is a function that functions or loops in f will be executed
     in a dataflow manner.
 */
-template <typename Functor>
-void dataflow(Functor f) noexcept {
+auto dataflow = [] (auto functor) noexcept {
   /* SSDM instruction is inserted before the argument functor to guide xocc to
      do dataflow. */
   _ssdm_op_SpecDataflowPipeline(-1, "");
-  f();
-}
+  functor();
+};
 
 
 /** Execute loops in a pipelined manner
@@ -46,13 +45,12 @@ void dataflow(Functor f) noexcept {
     \param[in] f is a function with an innermost loop to be executed in a
     pipeline way.
 */
-template <typename Functor>
-void pipeline(Functor f) noexcept {
+auto pipeline = [] (auto functor) noexcept {
   /* SSDM instruction is inserted before the argument functor to guide xocc to
      do pipeline. */
   _ssdm_op_SpecPipeline(1, 1, 0, 0, "");
-  f();
-}
+  functor();
+};
 
 
 }
