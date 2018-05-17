@@ -96,9 +96,9 @@ int test_main(int argc, char *argv[]) {
 
       // A typical FPGA-style pipelined kernel
       cgh.single_task<class add>([=] {
-          xilinx::partition_array<Type, BLOCK_SIZE> A;
-          xilinx::partition_array<Type, BLOCK_SIZE> B;
-          xilinx::partition_array<Type, BLOCK_SIZE> C;
+          vendor::xilinx::partition_array<Type, BLOCK_SIZE> A;
+          vendor::xilinx::partition_array<Type, BLOCK_SIZE> B;
+          vendor::xilinx::partition_array<Type, BLOCK_SIZE> C;
 
             for (int i = 0 ; i < DIM * DIM; i++) {
                 A[i]  = a_in1[i];

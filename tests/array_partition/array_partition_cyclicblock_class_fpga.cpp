@@ -12,6 +12,7 @@
 
 
 using namespace cl::sycl;
+using namespace cl::sycl::vendor;
 
 //Parameters Description:
 //         NUM_ROWS:            matrix height
