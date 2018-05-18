@@ -17,8 +17,10 @@ env:
       OPENMP=ON
       OPENCL=OFF
 
-    - CC_BUILD=gcc-8
-      CXX_BUILD=g++-8
+      # There is a bug with shipped version of Boost.Compute incompatible
+      # with g++-8
+    - CC_BUILD=gcc-7
+      CXX_BUILD=g++-7
       OPENMP=ON
       OPENCL=ON
 
