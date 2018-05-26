@@ -67,6 +67,7 @@ struct me_array {
   using tileable_tile = Tile<geography, me_array, X, Y>;
   /// All the tiles of the ME array.
   /// Unfortunately it is not possible to use auto here...
+  // Otherwise static inline auto
   decltype(geography::template generate_tiles<tileable_tile>()) tiles =
     geography::template generate_tiles<tileable_tile>();
 
