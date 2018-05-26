@@ -23,10 +23,21 @@ using namespace std::literals;
     @{
 */
 
+auto find_platform = [] (auto&& tuple, auto const& info_pair) {
+  // For each platform
+  return bh::find_if(tuple, [&info_pair](const auto &p) {
+      // For each information of the platform
+      return bh::bool_c<bh::contains(bh::second(p), info_pair)>;
+      //return bh::true_c;//bh::contains(bh::second(p), info_pair);
+    });
+};
+
+
 /** Abstract the constexpr SYCL platform with compile time introspection
  */
 class platform {
 
+  /// Assume the platform name is unique and so use it as a key
   const char * name;
 
   /// The architecture of the available platforms at compile time
@@ -74,6 +85,17 @@ class platform {
 
 public:
 
+  static auto constexpr find() {
+    return find_platform(architecture,
+                         bh::make_pair(info::platform::name,
+                                       "Portable Computing Language"));
+    /*
+    return bh::contains(architecture, bh::make_pair(info::platform::name,
+                                                    "Portable Computing Language"));
+    */
+  }
+
+
   constexpr platform()
   : platform { "host" }
   {}
@@ -98,6 +120,7 @@ public:
   static constexpr auto get_best_match = [](auto dev_selector) {
     return 23;
   };
+
 
   /** Returns the runtime platform
    */
