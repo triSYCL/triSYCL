@@ -72,6 +72,7 @@
 #endif
 
 // Some include files for Xilinx-specific features.
+#include "CL/sycl/vendor/Xilinx/acap.hpp"
 // SSDM functions needs to be declared before their implementation
 #include "CL/sycl/vendor/Xilinx/ssdm_inst.hpp"
 #include "CL/sycl/vendor/Xilinx/opt_decorate_func.hpp"
