@@ -10,9 +10,8 @@
     March 2018
 */
 
-#include "acap/me_array.hpp"
-#include "acap/me_geography.hpp"
-#include "acap/tile.hpp"
+// For now only MathEngine stuff
+#include "acap/me.hpp"
 
 /*
     # Some Emacs stuff:

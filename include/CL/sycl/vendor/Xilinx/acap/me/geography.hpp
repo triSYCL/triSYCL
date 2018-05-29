@@ -11,12 +11,12 @@
 
 #include <boost/hana.hpp>
 
-namespace cl::sycl::vendor::xilinx::acap {
+namespace cl::sycl::vendor::xilinx::acap::me {
 
 /** Some geographic information about the MathEngine array
  */
 template <typename Layout>
-struct me_geography
+struct geography
   : Layout {
   using layout = Layout;
 

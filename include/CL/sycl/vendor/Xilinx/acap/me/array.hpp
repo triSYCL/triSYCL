@@ -11,9 +11,9 @@
     License. See LICENSE.TXT for details.
 */
 
-#include "me_geography.hpp"
+#include "geography.hpp"
 
-namespace cl::sycl::vendor::xilinx::acap {
+namespace cl::sycl::vendor::xilinx::acap::me {
 
 /** The MathEngine array structure
  */
@@ -22,17 +22,17 @@ template <typename Layout,
                     typename ME_Array,
                     int X,
                     int Y> typename Tile>
-struct me_array {
+struct array {
 
-  using geography = me_geography<Layout>;
+  using geo = geography<Layout>;
 
   template <int X, int Y>
-  using tileable_tile = Tile<geography, me_array, X, Y>;
+  using tileable_tile = Tile<geo, array, X, Y>;
   /// All the tiles of the ME array.
   /// Unfortunately it is not possible to use auto here...
   // Otherwise static inline auto
-  decltype(geography::template generate_tiles<tileable_tile>()) tiles =
-    geography::template generate_tiles<tileable_tile>();
+  decltype(geo::template generate_tiles<tileable_tile>()) tiles =
+    geo::template generate_tiles<tileable_tile>();
 
 #if 0
   template <int X, int Y>

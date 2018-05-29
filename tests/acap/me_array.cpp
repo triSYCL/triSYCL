@@ -35,9 +35,9 @@ struct memory
 
 template <typename Geography, typename ME_Array, int X, int Y>
 struct tile
-  : acap::tile<Geography, ME_Array, X, Y>
+  : acap::me::tile<Geography, ME_Array, X, Y>
   , memory<X, Y> {
-  using t = acap::tile<Geography, ME_Array, X, Y>;
+  using t = acap::me::tile<Geography, ME_Array, X, Y>;
   int v = 42;
 
   void run(ME_Array &a) {
@@ -93,12 +93,12 @@ struct me_layout_1pe : me_layout {
 int main() {
   std::cout << std::endl << "Instantiate big MathEngine:"
             << std::endl << std::endl;
-  acap::me_array<me_layout, tile> me;
+  acap::me::array<me_layout, tile> me;
   me.run();
 
   std::cout << std::endl << "Instantiate tiny MathEngine:"
             << std::endl << std::endl;
-  acap::me_array<me_layout_1pe, tile> solitaire_me;
+  acap::me::array<me_layout_1pe, tile> solitaire_me;
   solitaire_me.run();
 
 

@@ -1,5 +1,5 @@
-#ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_TILE_HPP
-#define TRISYCL_SYCL_VENDOR_XILINX_ACAP_TILE_HPP
+#ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_ME_TILE_HPP
+#define TRISYCL_SYCL_VENDOR_XILINX_ACAP_ME_TILE_HPP
 
 /** \file The basic MathEngine tile
 
@@ -9,7 +9,7 @@
     License. See LICENSE.TXT for details.
  */
 
-namespace cl::sycl::vendor::xilinx::acap {
+namespace cl::sycl::vendor::xilinx::acap::me {
 
 /** The MathEngine tile infrastructure
  */
@@ -19,18 +19,18 @@ struct tile {
   static auto constexpr x = X;
   static auto constexpr y = Y;
 
-  using geography = Geography;
+  using geo = Geography;
 
   static bool constexpr is_noc() {
-    return geography::is_noc_tile(x, y);
+    return geo::is_noc_tile(x, y);
   }
 
   static bool constexpr is_pl() {
-    return geography::is_pl_tile(x, y);
+    return geo::is_pl_tile(x, y);
   }
 
   static bool constexpr is_shim() {
-    return geography::is_shim_tile(x, y);
+    return geo::is_shim_tile(x, y);
   }
 
   template <int Dim>
@@ -54,4 +54,4 @@ struct tile {
     ### End:
 */
 
-#endif // TRISYCL_SYCL_VENDOR_XILINX_ACAP_TILE_HPP
+#endif // TRISYCL_SYCL_VENDOR_XILINX_ACAP_ME_TILE_HPP
