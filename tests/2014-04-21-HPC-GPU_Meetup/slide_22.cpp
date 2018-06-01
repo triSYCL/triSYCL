@@ -27,7 +27,7 @@ my_queue.submit([&](handler &cgh)
   cgh.parallel_for_work_group<class hierarchical>(nd_range<>(range<>(size),
                                                              range<>(groupsize)),
                                                   [=](group<> group) {
-                                                    parallel_for_work_item(group, [=](nd_item<1> tile) {
+                                                    group.parallel_for_work_item([=](nd_item<1> tile) {
                                                         out_access[tile] = in_access[tile] * 2;
                                                       });
                                                   });

@@ -49,7 +49,7 @@ my_queue.submit([&](handler &cgh)
   {
     std::cout << "Group id = " << group.get_id(0) << std::endl;
 
-    parallel_for_work_item(group, [=](nd_item<1> tile)
+    group.parallel_for_work_item([=](nd_item<1> tile)
     {
       std::cout << "Local id = " << tile.get_local(0)
                 << " (global id = " << tile.get_global(0) << ")" << std::endl;

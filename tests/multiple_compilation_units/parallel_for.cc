@@ -29,7 +29,7 @@ int test_main(int argc, char *argv[]) {
       cgh.parallel_for_work_group<class hierarchical>(
         nd_range<> { range<> { size }, range<> { groupsize } },
         [=](group<> group) {
-          parallel_for_work_item(group, [=](nd_item<1> tile) {
+          group.parallel_for_work_item([=](nd_item<1> tile) {
               out_access[tile] = 1000*group.get_id(0) + tile.get_local(0);
             });
         });

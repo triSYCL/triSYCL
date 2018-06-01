@@ -135,7 +135,6 @@ public:
 
   operation_var2D() {
     cl::sycl::range<2> rg1 = aB->get_range();
-    cl::sycl::range<2> rg2 = B->get_range();
     assert(rg1 == rg2); //seems a bad idea, indeed ! we will not do that ...
     range = rg1-d;
     int r0 = range.get(0);
@@ -234,7 +233,7 @@ public:
         cl::sycl::accessor<T, 1, cl::sycl::access::mode::read> _bB {*bB, cgh};
         cgh.parallel_for_work_group<class KernelCompute>(nd_range, [=](cl::sycl::group<2> group){
             T * local = new T[local_dim0 * local_dim1];
-            cl::sycl::parallel_for_work_item(group, [=](cl::sycl::nd_item<2> it){
+            group.parallel_for_work_item([=](cl::sycl::nd_item<2> it){
                 //local copy
                 /* group shoudn't be needed, neither global max*/
                 /* static function needed for st use a priori, but static not compatible
@@ -242,7 +241,7 @@ public:
                 store_local(local, _aB, it, group, global_max0+d0, global_max1+d1); 
               });
             //synchro
-            cl::sycl::parallel_for_work_item(group, [=](cl::sycl::nd_item<2> it){
+            group.parallel_for_work_item([=](cl::sycl::nd_item<2> it){
                 //computing
                 /*operation_var2D<T, B, f, st, aB, bB, a_f, b_f>::*/
                 eval_local(it, _B, local, _bB, global_max0, global_max1);
