@@ -3,12 +3,12 @@
 # See doc/macros.rst for a description of triSYCL-specific macros.
 
 # Set default compiler instead of default CXX=g++ value
-# Assume Clang 3.9 and libc++ or Clang 4.0 with libstdc++ at least
-CXX = clang++-5.0
+# Assume some recent compiler
+CXX = clang++-6.0
 # To use libc++ instead of libstdc++, from libc++-dev & libc++abi-dev packages
 #CXXFLAGS += -stdlib=libc++
 
-# But everything works fine with GCC 5.4 at least
+# But everything works fine with GCC 7 at least
 #CXX = g++
 
 # The device compiler to use.
