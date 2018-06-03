@@ -29,8 +29,9 @@ int test_main(int argc, char *argv[]) {
       cgh.parallel_for_work_group<class hierarchical>(
         nd_range<> { range<> { size }, range<> { groupsize } },
         [=](group<> group) {
-          group.parallel_for_work_item([=](nd_item<1> tile) {
-              out_access[tile] = 1000*group.get_id(0) + tile.get_local(0);
+          group.parallel_for_work_item([=](h_item<1> tile) {
+              out_access[tile.get_global()] =
+                1000*group.get_id(0) + tile.get_local(0);
             });
         });
     });

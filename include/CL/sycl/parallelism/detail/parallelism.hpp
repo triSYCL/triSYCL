@@ -315,7 +315,7 @@ void parallel_for_workitem(const group<Dimensions> &g,
 
   range<Dimensions> l_r = g.get_nd_range().get_local();
   auto tot = l_r.get(0);
-  for (int i = 1; i < (int) Dimensions; ++i){
+  for (int i = 1; i < (int) Dimensions; ++i) {
     tot *= l_r.get(i);
   }
 #pragma omp parallel num_threads(tot)
@@ -341,7 +341,7 @@ void parallel_for_workitem(const group<Dimensions> &g,
   }
 #else
   // In a sequential execution there is only one index processed at a time
-  nd_item<Dimensions> index { g.get_nd_range() };
+  h_item<Dimensions> index { g.get_nd_range() };
   // To iterate on the local work-item
   id<Dimensions> local;
 

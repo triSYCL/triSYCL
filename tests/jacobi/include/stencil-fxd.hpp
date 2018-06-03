@@ -181,7 +181,7 @@ public:
     f(i, j, out) = stencil.template eval<a_f>(in, i, j);
   }
 
-  inline void eval_local(cl::sycl::nd_item<2> it, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write> out, T *local_tab, int glob_max0, int glob_max1) {
+  inline void eval_local(cl::sycl::h_item<2> it, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write> out, T *local_tab, int glob_max0, int glob_max1) {
     int i = it.get_global().get(0);
     int j = it.get_global().get(1);
     if (i >= glob_max0 || j >= glob_max1)
@@ -193,7 +193,7 @@ public:
     f(i, j, out) = stencil.template eval_local<local_dim1>(local_tab, i_local, j_local);
   }
 
-  inline void store_local(T * local_tab, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> in, cl::sycl::nd_item<2> it, cl::sycl::group<2> gr, int glob_max0, int glob_max1) {
+  inline void store_local(T * local_tab, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> in, cl::sycl::h_item<2> it, cl::sycl::group<2> gr, int glob_max0, int glob_max1) {
     cl::sycl::range<2> l_range = it.get_local_range();
     cl::sycl::id<2> g_ind = gr.get_id(); //it.get_group_id(); error because ambiguous / operator redefinition 
     cl::sycl::id<2> l_ind = it.get_local();
@@ -251,7 +251,7 @@ public:
         cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> _aB {*aB, cgh};
         cgh.parallel_for_work_group<class KernelCompute>(nd_range, [=](cl::sycl::group<2> group){
             T * local = new T[local_dim0 * local_dim1];
-            group.parallel_for_work_item([=](cl::sycl::nd_item<2> it){
+            group.parallel_for_work_item([=](cl::sycl::h_item<2> it){
                 //local copy
                 /* group shoudn't be needed, neither global max*/
                 /* static function needed for st use a priori, but static not compatible
@@ -259,7 +259,7 @@ public:
                 store_local(local, _aB, it, group, global_max0+d0, global_max1+d1); 
               });
             //synchro
-            group.parallel_for_work_item([=](cl::sycl::nd_item<2> it){
+            group.parallel_for_work_item([=](cl::sycl::h_item<2> it){
                 //computing
                 /*operation_fxd2D<T, B, f, st, aB, bB, a_f, b_f>::*/
                 eval_local(it, _B, local, global_max0, global_max1);
