@@ -28,7 +28,7 @@ my_queue.submit([&](handler &cgh)
                                                              range<>(groupsize)),
                                                   [=](group<> group) {
                                                     group.parallel_for_work_item([=](h_item<1> tile) {
-                                                        out_access[tile.get_global()] = in_access[tile.get_global()] * 2;
+                                                        out_access[tile.get_global_id()] = in_access[tile.get_global_id()] * 2;
                                                       });
                                                   });
  });

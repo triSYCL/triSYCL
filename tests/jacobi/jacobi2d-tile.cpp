@@ -59,8 +59,8 @@ int main(int argc, char **argv) {
               // tab_local has to be passed by reference
              group.parallel_for_work_item([=,&local](sycl::h_item<2> it){
                   sycl::range<2> l_range = it.get_local_range();
-                  sycl::id<2> g_ind = it.get_global();
-                  sycl::id<2> l_ind = it.get_local();
+                  sycl::id<2> g_ind = it.get_global_id();
+                  sycl::id<2> l_ind = it.get_local_id();
                   sycl::id<2> offset = it.get_offset();
                   sycl::id<2> id1(sycl::range<2> {0,1});
                   sycl::id<2> id2(sycl::range<2> {1,0});
@@ -83,8 +83,8 @@ int main(int argc, char **argv) {
               begin_op = counters::clock_type::now();
 
               group.parallel_for_work_item([=,&local](sycl::h_item<2> it){
-                  sycl::id<2> g_ind = it.get_global();
-                  sycl::id<2> l_ind = it.get_local();
+                  sycl::id<2> g_ind = it.get_global_id();
+                  sycl::id<2> l_ind = it.get_local_id();
                   sycl::id<2> offset = it.get_offset();
                   sycl::id<2> id1(sycl::range<2> {0,1});
                   sycl::id<2> id2(sycl::range<2> {1,0});

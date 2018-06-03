@@ -52,7 +52,7 @@ int test_main(int argc, char *argv[]) {
           for (int start = 0; start != N; start += WI) {
             auto r = apa.reserve(WI);
             group.parallel_for_work_item([=] (cl::sycl::h_item<> i) {
-                r[i.get_global(0)] = aa[start + i.get_global(0)];
+                r[i.get_global_id(0)] = aa[start + i.get_global_id(0)];
               });
             // Here the reservation object goes out of scope: commit
           }
@@ -76,7 +76,7 @@ int test_main(int argc, char *argv[]) {
           for (int start = 0; start != N; start += WI) {
             auto r = apa.reserve(WI);
             group.parallel_for_work_item([=] (cl::sycl::h_item<> i) {
-                ac[start + i.get_global(0)] = r[i.get_global(0)];
+                ac[start + i.get_global_id(0)] = r[i.get_global_id(0)];
               });
             // Here the reservation object goes out of scope: commit
           }

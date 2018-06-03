@@ -61,7 +61,7 @@ int test_main(int argc, char *argv[]) {
                    launch the work-items in this work-group to do the
                    writing in parallel */
                 group.parallel_for_work_item([=] (cl::sycl::h_item<> i) {
-                    r[i.get_global(0)] = aa[start + i.get_global(0)];
+                    r[i.get_global_id(0)] = aa[start + i.get_global_id(0)];
                   });
               }
               // Here the reservation object goes out of scope: commit

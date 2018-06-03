@@ -182,21 +182,21 @@ public:
   }
 
   inline void eval_local(cl::sycl::h_item<2> it, cl::sycl::accessor<T, 2, cl::sycl::access::mode::write> out, T *local_tab, int glob_max0, int glob_max1) {
-    int i = it.get_global().get(0);
-    int j = it.get_global().get(1);
+    int i = it.get_global_id(0);
+    int j = it.get_global_id(1);
     if (i >= glob_max0 || j >= glob_max1)
       return;
     i += of0;
     j += of1;
-    int i_local = it.get_local().get(0) - st::min_ind0;
-    int j_local = it.get_local().get(1) - st::min_ind1;
+    int i_local = it.get_local_id(0) - st::min_ind0;
+    int j_local = it.get_local_id(1) - st::min_ind1;
     f(i, j, out) = stencil.template eval_local<local_dim1>(local_tab, i_local, j_local);
   }
 
   inline void store_local(T * local_tab, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> in, cl::sycl::h_item<2> it, cl::sycl::group<2> gr, int glob_max0, int glob_max1) {
     cl::sycl::range<2> l_range = it.get_local_range();
     cl::sycl::id<2> g_ind = gr.get_id(); //it.get_group_id(); error because ambiguous / operator redefinition 
-    cl::sycl::id<2> l_ind = it.get_local();
+    cl::sycl::id<2> l_ind = it.get_local_id();
 
     int l_range0 = l_range.get(0);
     int l_range1 = l_range.get(1);

@@ -58,14 +58,14 @@ my_queue.submit([&](handler &cgh) {
     std::cout << "Group id = " << group.get_id(0) << std::endl;
 
     group.parallel_for_work_item([=](h_item<1> tile) {
-      std::cout << "Local id = " << tile.get_local(0)
-                << " (global id = " << tile.get_global(0) << ")" << std::endl;
-      out_access[tile.get_global()] = in_access[tile.get_global()] * 2;
+      std::cout << "Local id = " << tile.get_local_id(0)
+                << " (global id = " << tile.get_global_id(0) << ")" << std::endl;
+      out_access[tile.get_global_id()] = in_access[tile.get_global_id()] * 2;
     });
 
     group.parallel_for_work_item([=](h_item<1> tile) {
-      std::cout << "Global id = " << tile.get_global(0) << std::endl;
-      out_access[tile.get_global()] = in_access[tile.get_global()] * 2;
+      std::cout << "Global id = " << tile.get_global_id(0) << std::endl;
+      out_access[tile.get_global_id()] = in_access[tile.get_global_id()] * 2;
     });
   });
 });

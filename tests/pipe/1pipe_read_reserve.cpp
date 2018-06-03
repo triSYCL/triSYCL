@@ -76,7 +76,7 @@ int test_main(int argc, char *argv[]) {
                    launch the work-items in this work-group to do the
                    reading in parallel */
                 group.parallel_for_work_item([=] (cl::sycl::h_item<> i) {
-                    ac[start + i.get_global(0)] = r[i.get_global(0)];
+                    ac[start + i.get_global_id(0)] = r[i.get_global_id(0)];
                   });
               }
               // Here the reservation object goes out of scope: commit

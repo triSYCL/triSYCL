@@ -65,17 +65,17 @@ int test_main(int argc, char *argv[]) {
         [=](group<1> g) {
           g.parallel_for_work_item([&](h_item<1> i) {
               // Cache the convolution kernel in local memory
-              if (i.get_local(0) < a_conv_kernel.get_count())
-                a_conv_cache[i.get_local(0)] =
-                  a_conv_kernel[i.get_global()];
+              if (i.get_local_id(0) < a_conv_kernel.get_count())
+                a_conv_cache[i.get_local_id(0)] =
+                  a_conv_kernel[i.get_global_id()];
             });
           // An implicit barrier happens here
           g.parallel_for_work_item([&](h_item<1> i) {
-              a_result[i.get_global()] = 0;
+              a_result[i.get_global_id()] = 0;
               // The convolution
               for (unsigned int j = 0; j < conv_kernel.get_count(); ++j)
-                a_result[i.get_global()] +=
-                  a_a[i.get_local(0) + j]*a_conv_cache[j];
+                a_result[i.get_global_id()] +=
+                  a_a[i.get_local_id(0) + j]*a_conv_cache[j];
             });
         });
     });

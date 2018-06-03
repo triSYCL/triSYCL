@@ -89,42 +89,44 @@ public:
   /** Return the constituent global id representing the work-item's
       position in the global iteration space
   */
-  id<Dimensions> get_global() const { return global_index; }
+  id<Dimensions> get_global_id() const { return global_index; }
 
 
   /** Return the constituent element of the global id representing the
       work-item's position in the global iteration space in the given
       dimension
   */
-  size_t get_global(int dimension) const { return get_global()[dimension]; }
+  size_t get_global_id(int dimension) const {
+    return get_global_id()[dimension];
+  }
 
 
   /** Return the flattened id of the current work-item after subtracting
       the offset
   */
   size_t get_global_linear_id() const {
-    return detail::linear_id(get_global_range(), get_global(), get_offset());
+    return detail::linear_id(get_global_range(), get_global_id(), get_offset());
   }
 
 
   /** Return the constituent local id representing the work-item's
       position within the current work-group
   */
-  id<Dimensions> get_local() const { return local_index; }
+  id<Dimensions> get_local_id() const { return local_index; }
 
 
   /** Return the constituent element of the local id representing the
       work-item's position within the current work-group in the given
       dimension
   */
-  size_t get_local(int dimension) const { return get_local()[dimension]; }
+  size_t get_local_id(int dimension) const { return get_local_id()[dimension]; }
 
 
   /** Return the flattened id of the current work-item within the current
       work-group
    */
   size_t get_local_linear_id() const {
-    return detail::linear_id(get_local_range(), get_local());
+    return detail::linear_id(get_local_range(), get_local_id());
   }
 
 
@@ -134,7 +136,7 @@ public:
   id<Dimensions> get_group() const {
     /* Convert get_local_range() to an id<> to remove ambiguity into using
        implicit conversion either from range<> to id<> or the opposite */
-    return get_global()/id<Dimensions> { get_local_range() };
+    return get_global_id()/id<Dimensions> { get_local_range() };
   }
 
 
@@ -192,7 +194,7 @@ public:
       \todo Add to the specification
   */
   item<Dimensions> get_item() const {
-    return { get_global_range(), get_global(), get_offset() };
+    return { get_global_range(), get_global_id(), get_offset() };
   }
 
 
