@@ -5,6 +5,8 @@
 
     Implement the detail of the parallel constructions to launch kernels
 
+    \todo Refactor this file
+
     Ronan at keryell dot FR
 
     This file is distributed under the University of Illinois Open Source
@@ -15,6 +17,7 @@
 #include <boost/multi_array.hpp>
 
 #include "CL/sycl/group.hpp"
+#include "CL/sycl/h_item.hpp"
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/item.hpp"
 #include "CL/sycl/nd_item.hpp"
@@ -228,6 +231,7 @@ void parallel_for(nd_range<Dimensions> r,
     // Then iterate on the local work-groups
     cl::sycl::group<Dimensions> wg {g, r};
     parallel_for_workitem<Dimensions,
+                          nd_item<Dimensions>,
                           decltype(f)>(wg, f);
   };
 
@@ -240,10 +244,10 @@ void parallel_for(nd_range<Dimensions> r,
   id<Dimensions> local;
   range<Dimensions> local_range = r.get_local();
 
-  // Reconstruct the nd_item from its group and local id
+  // Reconstruct the item from its group and local id
   auto reconstruct_item = [&] (id<Dimensions> l) {
     //local.display();
-    // Reconstruct the global nd_item
+    // Reconstruct the global item
     index.set_local(local);
     // Upgrade local_range to an id<> so that we can * with the group (an id<>)
     index.set_global(local + id<Dimensions>(local_range)*group);
@@ -299,7 +303,7 @@ void parallel_for_workgroup(nd_range<Dimensions> r,
 
     \todo Better type the functor
 */
-template <int Dimensions, typename ParallelForFunctor>
+template <int Dimensions, typename T_Item, typename ParallelForFunctor>
 void parallel_for_workitem(const group<Dimensions> &g,
                            ParallelForFunctor f) {
 #if defined(_OPENMP) && (!defined(TRISYCL_NO_BARRIER) && !defined(_MSC_VER))
@@ -320,7 +324,7 @@ void parallel_for_workitem(const group<Dimensions> &g,
   }
 #pragma omp parallel num_threads(tot)
   {
-    nd_item<Dimensions> index { g.get_nd_range() };
+    T_Item index { g.get_nd_range() };
     id<Dimensions> local; // to initialize correctly
 #pragma omp for nowait
     for (std::size_t th_id = 0; th_id < tot; ++th_id) {
@@ -341,15 +345,15 @@ void parallel_for_workitem(const group<Dimensions> &g,
   }
 #else
   // In a sequential execution there is only one index processed at a time
-  h_item<Dimensions> index { g.get_nd_range() };
+  T_Item index { g.get_nd_range() };
   // To iterate on the local work-item
   id<Dimensions> local;
 
-  // Reconstruct the nd_item from its group and local id
+  // Reconstruct the item from its group and local id
   auto reconstruct_item = [&] (id<Dimensions> l) {
     //local.display();
     //l.display();
-    // Reconstruct the global nd_item
+    // Reconstruct the global item
     index.set_local(local);
     // \todo Some strength reduction here
     index.set_global(local + id<Dimensions>(g.get_local_range())*g.get_id());
@@ -367,6 +371,19 @@ void parallel_for_workitem(const group<Dimensions> &g,
     local };
 #endif
 }
+
+
+/** Implement the loop on the work-items inside a work-group
+*/
+template <int Dimensions, typename ParallelForFunctor>
+void parallel_for_workitem_in_group(const group<Dimensions> &g,
+                                    ParallelForFunctor f) {
+  parallel_for_workitem<Dimensions,
+                        h_item<Dimensions>,
+                        ParallelForFunctor>(g, f);
+}
+
+
 /// @} End the parallelism Doxygen group
 
 } // namespace detail

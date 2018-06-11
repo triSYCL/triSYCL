@@ -27,8 +27,8 @@ struct group;
 namespace detail {
 
 template <int Dimensions = 1, typename ParallelForFunctor>
-void parallel_for_workitem(const group<Dimensions> &g,
-                           ParallelForFunctor f);
+void parallel_for_workitem_in_group(const group<Dimensions> &g,
+                                    ParallelForFunctor f);
 
 }
 
@@ -179,7 +179,7 @@ public:
    */
   void parallel_for_work_item(std::function<void(h_item<dimensionality>)> f)
     const {
-    detail::parallel_for_workitem(*this, f);
+    detail::parallel_for_workitem_in_group(*this, f);
   }
 
 };
