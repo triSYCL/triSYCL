@@ -20,11 +20,16 @@ struct geography
   : Layout {
   using layout = Layout;
 
+  static auto constexpr x_min = 0;
+  static auto constexpr y_min = 0;
+  static auto constexpr x_size = layout::x_max + 1;
+  static auto constexpr y_size = layout::y_max + 1;
+
   /// A tuple with the coordinate tuples of all the tiles
   static auto constexpr tile_coordinates = boost::hana::cartesian_product(
     boost::hana::make_tuple(
-        boost::hana::range_c<int, layout::x_min, layout::x_max + 1>
-      , boost::hana::range_c<int, layout::y_min, layout::y_max + 1>
+        boost::hana::range_c<int, x_min, x_size>
+      , boost::hana::range_c<int, y_min, y_size>
                             )
                                                                           );
   /// Generate a tuple of tileable objects
@@ -40,11 +45,11 @@ struct geography
   }
 
   static bool constexpr is_x_valid(int x) {
-    return layout::x_min <= x && x <= layout::x_max;
+    return x_min <= x && x <= layout::x_max;
   }
 
   static bool constexpr is_y_valid(int y) {
-    return layout::y_min <= y && y <= layout::y_max;
+    return y_min <= y && y <= layout::y_max;
   }
 
   static bool constexpr is_shim_tile(int x, int y) {
