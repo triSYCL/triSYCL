@@ -437,11 +437,14 @@ clone-%:
 
 # Test with cmake/ctest
 ctest:
+	# Think to delete this directory first if full recompilation is required...
 	mkdir -p ../build
-	cd ../build; cmake .. -DTRISYCL_OPENCL=ON; make -j7; ctest -j7
+	cd ../build; cmake .. -DCMAKE_CXX_COMPILER=$(CXX) \
+	   -DTRISYCL_OPENCL=ON; make -j7; ctest -j7
 
 # Only display the test list
 ctest-list:
+	# Think to delete this directory first if full recompilation is required...
 	mkdir -p ../build
 	cd ../build; cmake .. -DTRISYCL_OPENCL=ON; \
 	  ctest --show-only | sed -e '1d' -e '/^$$/,$$d' -e 's/.*: //' | sort
