@@ -135,7 +135,6 @@ public:
 
   operation_var2D() {
     cl::sycl::range<2> rg1 = aB->get_range();
-    assert(rg1 == rg2); //seems a bad idea, indeed ! we will not do that ...
     range = rg1-d;
     int r0 = range.get(0);
     int r1 = range.get(1);
