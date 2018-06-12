@@ -207,80 +207,6 @@ void parallel_for_global_offset(range<Dimensions> global_size,
 }
 
 
-/** Implement a variation of parallel_for to take into account a
-    nd_range<>
-
-    \todo Add an OpenMP implementation
-
-    \todo Deal with incomplete work-groups
-
-    \todo Implement with parallel_for_workgroup()/parallel_for_workitem()
-*/
-template <int Dimensions = 1, typename ParallelForFunctor>
-void parallel_for(nd_range<Dimensions> r,
-                  ParallelForFunctor f) {
-  // To iterate on the work-group
-  id<Dimensions> group;
-  range<Dimensions> group_range = r.get_group();
-
-#ifdef _OPENMP
-
-  auto iterate_in_work_group = [&] (id<Dimensions> g) {
-    //group.display();
-
-    // Then iterate on the local work-groups
-    cl::sycl::group<Dimensions> wg {g, r};
-    parallel_for_workitem<Dimensions,
-                          nd_item<Dimensions>,
-                          decltype(f)>(wg, f);
-  };
-
-#else
-
-  // In a sequential execution there is only one index processed at a time
-  nd_item<Dimensions> index { r };
-
-  // To iterate on the local work-item
-  id<Dimensions> local;
-  range<Dimensions> local_range = r.get_local();
-
-  // Reconstruct the item from its group and local id
-  auto reconstruct_item = [&] (id<Dimensions> l) {
-    //local.display();
-    // Reconstruct the global item
-    index.set_local(local);
-    // Upgrade local_range to an id<> so that we can * with the group (an id<>)
-    index.set_global(local + id<Dimensions>(local_range)*group);
-    // Call the user kernel at last
-    f(index);
-  };
-
-  /* To recycle the parallel_for on range<>, wrap the ParallelForFunctor f
-     into another functor that iterates inside the work-group and then
-     calls f */
-  auto iterate_in_work_group = [&] (id<Dimensions> g) {
-    //group.display();
-    // Then iterate on the local work-groups
-    parallel_for_iterate<Dimensions,
-                         range<Dimensions>,
-                         decltype(reconstruct_item),
-                         id<Dimensions>> { local_range,
-                                           reconstruct_item,
-                                           local };
-  };
-
-#endif
-
-  // First iterate on all the work-groups
-  parallel_for_iterate<Dimensions,
-                       range<Dimensions>,
-                       decltype(iterate_in_work_group),
-                       id<Dimensions>> { group_range,
-                                         iterate_in_work_group,
-                                         group };
-}
-
-
 /// Implement the loop on the work-groups
 template <int Dimensions = 1, typename ParallelForFunctor>
 void parallel_for_workgroup(nd_range<Dimensions> r,
@@ -370,6 +296,80 @@ void parallel_for_workitem(const group<Dimensions> &g,
     reconstruct_item,
     local };
 #endif
+}
+
+
+/** Implement a variation of parallel_for to take into account a
+    nd_range<>
+
+    \todo Add an OpenMP implementation
+
+    \todo Deal with incomplete work-groups
+
+    \todo Implement with parallel_for_workgroup()/parallel_for_workitem()
+*/
+template <int Dimensions = 1, typename ParallelForFunctor>
+void parallel_for(nd_range<Dimensions> r,
+                  ParallelForFunctor f) {
+  // To iterate on the work-group
+  id<Dimensions> group;
+  range<Dimensions> group_range = r.get_group();
+
+#ifdef _OPENMP
+
+  auto iterate_in_work_group = [&] (id<Dimensions> g) {
+    //group.display();
+
+    // Then iterate on the local work-groups
+    cl::sycl::group<Dimensions> wg {g, r};
+    parallel_for_workitem<Dimensions,
+                          nd_item<Dimensions>,
+                          decltype(f)>(wg, f);
+  };
+
+#else
+
+  // In a sequential execution there is only one index processed at a time
+  nd_item<Dimensions> index { r };
+
+  // To iterate on the local work-item
+  id<Dimensions> local;
+  range<Dimensions> local_range = r.get_local();
+
+  // Reconstruct the item from its group and local id
+  auto reconstruct_item = [&] (id<Dimensions> l) {
+    //local.display();
+    // Reconstruct the global item
+    index.set_local(local);
+    // Upgrade local_range to an id<> so that we can * with the group (an id<>)
+    index.set_global(local + id<Dimensions>(local_range)*group);
+    // Call the user kernel at last
+    f(index);
+  };
+
+  /* To recycle the parallel_for on range<>, wrap the ParallelForFunctor f
+     into another functor that iterates inside the work-group and then
+     calls f */
+  auto iterate_in_work_group = [&] (id<Dimensions> g) {
+    //group.display();
+    // Then iterate on the local work-groups
+    parallel_for_iterate<Dimensions,
+                         range<Dimensions>,
+                         decltype(reconstruct_item),
+                         id<Dimensions>> { local_range,
+                                           reconstruct_item,
+                                           local };
+  };
+
+#endif
+
+  // First iterate on all the work-groups
+  parallel_for_iterate<Dimensions,
+                       range<Dimensions>,
+                       decltype(iterate_in_work_group),
+                       id<Dimensions>> { group_range,
+                                         iterate_in_work_group,
+                                         group };
 }
 
 
