@@ -230,9 +230,9 @@ check:  $(TARGETS_CC)
 	# Launch testing with lit tool from LLVM in current directory
 	echo Using $(CXX) compiler:
 	# lit can be found for example on Debian/Ubuntu in package
-	# llvm-3.9-tools in /usr/lib/llvm-3.9/build/utils/lit/lit.py
+	# llvm-6.0-tools in /usr/lib/llvm-6.0/build/utils/lit/lit.py
 	# so try before running the check:
-	# export TRISYCL_LIT=/usr/lib/llvm-3.9/build/utils/lit/lit.py
+	# export TRISYCL_LIT=/usr/lib/llvm-6.0/build/utils/lit/lit.py
 	# The config file for triSYCL needs at least Python 3.3
 	test "unset$$TRISYCL_LIT == unset" \
 	  && echo 'Initialize TRISYCL_LIT variable to the path of "lit" command' ; \
@@ -247,8 +247,8 @@ check-list:
 
 check-compilers:
 	# Launch the check with various compilers
-	-FORCE_CXX=g++-5 $(MAKE) clean check
-	-FORCE_CXX=clang++-4.0 $(MAKE) clean check
+	-FORCE_CXX=g++-7 $(MAKE) clean check
+	-FORCE_CXX=clang++-6.0 $(MAKE) clean check
 	-FORCE_CXX=g++ $(MAKE) clean check
 
 # A special target to be called as from the test as "make execute
