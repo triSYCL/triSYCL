@@ -9,6 +9,8 @@
     License. See LICENSE.TXT for details.
 */
 
+#include "CL/sycl/id.hpp"
+#include "CL/sycl/opencl_types.hpp"
 #include "CL/sycl/info/param_traits.hpp"
 
 namespace cl {
@@ -189,6 +191,15 @@ using device_queue_properties = unsigned int;
     \todo To be implemented, return always void.
 */
 TRISYCL_INFO_PARAM_TRAITS_ANY_T(info::device, void)
+TRISYCL_INFO_PARAM_TRAITS(info::device::device_type, info::device_type)
+TRISYCL_INFO_PARAM_TRAITS(info::device::local_mem_size, cl::sycl::cl_ulong)
+TRISYCL_INFO_PARAM_TRAITS(info::device::max_compute_units, cl::sycl::cl_uint)
+TRISYCL_INFO_PARAM_TRAITS(info::device::max_mem_alloc_size, cl::sycl::cl_ulong)
+TRISYCL_INFO_PARAM_TRAITS(info::device::max_work_group_size, std::size_t)
+TRISYCL_INFO_PARAM_TRAITS(info::device::max_work_item_sizes, cl::sycl::id<3>)
+TRISYCL_INFO_PARAM_TRAITS(info::device::name, string_class)
+TRISYCL_INFO_PARAM_TRAITS(info::device::profile, string_class)
+TRISYCL_INFO_PARAM_TRAITS(info::device::vendor, string_class)
 
 }
 }
