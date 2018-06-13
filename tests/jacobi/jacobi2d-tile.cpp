@@ -57,10 +57,10 @@ int main(int argc, char **argv) {
               auto begin_op = counters::clock_type::now();
 
               // tab_local has to be passed by reference
-              sycl::parallel_for_work_item(group, [=,&local](sycl::nd_item<2> it){
+             group.parallel_for_work_item([=,&local](sycl::h_item<2> it){
                   sycl::range<2> l_range = it.get_local_range();
-                  sycl::id<2> g_ind = it.get_global();
-                  sycl::id<2> l_ind = it.get_local();
+                  sycl::id<2> g_ind = it.get_global_id();
+                  sycl::id<2> l_ind = it.get_local_id();
                   sycl::id<2> offset = it.get_offset();
                   sycl::id<2> id1(sycl::range<2> {0,1});
                   sycl::id<2> id2(sycl::range<2> {1,0});
@@ -82,9 +82,9 @@ int main(int argc, char **argv) {
               timer.load_time = std::chrono::duration_cast<counters::duration_type>(end_op - begin_op);
               begin_op = counters::clock_type::now();
 
-              sycl::parallel_for_work_item(group, [=,&local](sycl::nd_item<2> it){
-                  sycl::id<2> g_ind = it.get_global();
-                  sycl::id<2> l_ind = it.get_local();
+              group.parallel_for_work_item([=,&local](sycl::h_item<2> it){
+                  sycl::id<2> g_ind = it.get_global_id();
+                  sycl::id<2> l_ind = it.get_local_id();
                   sycl::id<2> offset = it.get_offset();
                   sycl::id<2> id1(sycl::range<2> {0,1});
                   sycl::id<2> id2(sycl::range<2> {1,0});

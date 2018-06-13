@@ -42,7 +42,7 @@ struct error_handler {
   */
   static trisycl::default_error_handler default_handler;
 
-
+  // Virtual to call the real destructor
   virtual ~error_handler() = 0;
 };
 

@@ -23,8 +23,10 @@
 #ifdef TRISYCL_OPENCL
 #include "CL/sycl/device/detail/opencl_device.hpp"
 #endif
+#include "CL/sycl/id.hpp"
 #include "CL/sycl/info/device.hpp"
 #include "CL/sycl/device_selector.hpp"
+#include "CL/sycl/opencl_types.hpp"
 #include "CL/sycl/platform.hpp"
 
 namespace cl {
@@ -259,6 +261,11 @@ public:
 template <>
 inline auto device::get_info<info::device::max_work_group_size>() const {
   return size_t { 8 };
+}
+
+template <>
+inline auto device::get_info<info::device::max_work_item_sizes>() const {
+  return cl::sycl::id<3> { 128, 128, 128 };
 }
 
 template <>

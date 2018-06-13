@@ -1,7 +1,7 @@
 #ifndef TRISYCL_SYCL_GROUP_HPP
 #define TRISYCL_SYCL_GROUP_HPP
 
-/** \file The OpenCL SYCL nd_item<>
+/** \file The OpenCL SYCL group<>
 
     Ronan at Keryell point FR
 
@@ -13,6 +13,7 @@
 #include <functional>
 
 #include "CL/sycl/detail/linear_id.hpp"
+#include "CL/sycl/h_item.hpp"
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/nd_range.hpp"
 #include "CL/sycl/range.hpp"
@@ -26,8 +27,8 @@ struct group;
 namespace detail {
 
 template <int Dimensions = 1, typename ParallelForFunctor>
-void parallel_for_workitem(const group<Dimensions> &g,
-                           ParallelForFunctor f);
+void parallel_for_workitem_in_group(const group<Dimensions> &g,
+                                    ParallelForFunctor f);
 
 }
 
@@ -175,26 +176,10 @@ public:
 
 
   /** Loop on the work-items inside a work-group
-
-      \todo Add this method in the specification
-  */
-  void parallel_for_work_item(std::function<void(nd_item<dimensionality>)> f)
+   */
+  void parallel_for_work_item(std::function<void(h_item<dimensionality>)> f)
     const {
-    detail::parallel_for_workitem(*this, f);
-  }
-
-
-  /** Loop on the work-items inside a work-group
-
-      \todo Add this method in the specification
-  */
-  void parallel_for_work_item(std::function<void(item<dimensionality>)> f)
-    const {
-    auto item_adapter = [=] (nd_item<dimensionality> ndi) {
-      item<dimensionality> i = ndi.get_item();
-      f(i);
-    };
-    detail::parallel_for_workitem(*this, item_adapter);
+    detail::parallel_for_workitem_in_group(*this, f);
   }
 
 };

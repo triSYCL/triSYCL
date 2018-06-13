@@ -5,6 +5,8 @@
 
     Implement the detail of the parallel constructions to launch kernels
 
+    \todo Refactor this file
+
     Ronan at keryell dot FR
 
     This file is distributed under the University of Illinois Open Source
@@ -15,6 +17,7 @@
 #include <boost/multi_array.hpp>
 
 #include "CL/sycl/group.hpp"
+#include "CL/sycl/h_item.hpp"
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/item.hpp"
 #include "CL/sycl/nd_item.hpp"
@@ -204,6 +207,98 @@ void parallel_for_global_offset(range<Dimensions> global_size,
 }
 
 
+/// Implement the loop on the work-groups
+template <int Dimensions = 1, typename ParallelForFunctor>
+void parallel_for_workgroup(nd_range<Dimensions> r,
+                            ParallelForFunctor f) {
+  // In a sequential execution there is only one index processed at a time
+  group<Dimensions> g { r };
+
+  // First iterate on all the work-groups
+  parallel_for_iterate<Dimensions,
+                       range<Dimensions>,
+                       ParallelForFunctor,
+                       group<Dimensions>> {
+    r.get_group(),
+    f,
+    g };
+}
+
+
+/** Implement the loop on the work-items inside a work-group
+
+    \todo Better type the functor
+*/
+template <int Dimensions, typename T_Item, typename ParallelForFunctor>
+void parallel_for_workitem(const group<Dimensions> &g,
+                           ParallelForFunctor f) {
+#if defined(_OPENMP) && (!defined(TRISYCL_NO_BARRIER) && !defined(_MSC_VER))
+  /* To implement barriers With OpenMP, one thread is created for each
+     work-item in the group and thus an OpenMP barrier has the same effect
+     of an OpenCL barrier executed by the work-items in a workgroup
+
+     The issue is that the parallel_for_workitem() execution is slow even
+     when nd_item::barrier() is not used
+
+     \todo Simplify by just using omp parallel for collapse
+  */
+
+  range<Dimensions> l_r = g.get_nd_range().get_local();
+  auto tot = l_r.get(0);
+  for (int i = 1; i < (int) Dimensions; ++i) {
+    tot *= l_r.get(i);
+  }
+#pragma omp parallel num_threads(tot)
+  {
+    T_Item index { g.get_nd_range() };
+    id<Dimensions> local; // to initialize correctly
+#pragma omp for nowait
+    for (std::size_t th_id = 0; th_id < tot; ++th_id) {
+      if (Dimensions == 1) {
+        local[0] = th_id;
+      } else if (Dimensions == 2) {
+        local[0] = th_id / l_r.get(1);
+        local[1] = th_id % l_r.get(1);
+      } else if (Dimensions == 3) {
+        local[0] = th_id / (l_r.get(1)*l_r.get(2));
+        local[1] = (th_id / l_r.get(2)) % l_r.get(1);
+        local[2] = th_id % l_r.get(2);
+      }
+      index.set_local(local);
+      index.set_global(local + id<Dimensions>(l_r)*g.get_id());
+      f(index);
+    }
+  }
+#else
+  // In a sequential execution there is only one index processed at a time
+  T_Item index { g.get_nd_range() };
+  // To iterate on the local work-item
+  id<Dimensions> local;
+
+  // Reconstruct the item from its group and local id
+  auto reconstruct_item = [&] (id<Dimensions> l) {
+    //local.display();
+    //l.display();
+    // Reconstruct the global item
+    index.set_local(local);
+    // \todo Some strength reduction here
+    index.set_global(local + id<Dimensions>(g.get_local_range())*g.get_id());
+    // Call the user kernel at last
+    f(index);
+  };
+
+  // Then iterate on all the work-items of the work-group
+  parallel_for_iterate<Dimensions,
+                       range<Dimensions>,
+                       decltype(reconstruct_item),
+                       id<Dimensions>> {
+    g.get_local_range(),
+    reconstruct_item,
+    local };
+#endif
+}
+
+
 /** Implement a variation of parallel_for to take into account a
     nd_range<>
 
@@ -228,6 +323,7 @@ void parallel_for(nd_range<Dimensions> r,
     // Then iterate on the local work-groups
     cl::sycl::group<Dimensions> wg {g, r};
     parallel_for_workitem<Dimensions,
+                          nd_item<Dimensions>,
                           decltype(f)>(wg, f);
   };
 
@@ -240,10 +336,10 @@ void parallel_for(nd_range<Dimensions> r,
   id<Dimensions> local;
   range<Dimensions> local_range = r.get_local();
 
-  // Reconstruct the nd_item from its group and local id
+  // Reconstruct the item from its group and local id
   auto reconstruct_item = [&] (id<Dimensions> l) {
     //local.display();
-    // Reconstruct the global nd_item
+    // Reconstruct the global item
     index.set_local(local);
     // Upgrade local_range to an id<> so that we can * with the group (an id<>)
     index.set_global(local + id<Dimensions>(local_range)*group);
@@ -277,96 +373,17 @@ void parallel_for(nd_range<Dimensions> r,
 }
 
 
-/// Implement the loop on the work-groups
-template <int Dimensions = 1, typename ParallelForFunctor>
-void parallel_for_workgroup(nd_range<Dimensions> r,
-                            ParallelForFunctor f) {
-  // In a sequential execution there is only one index processed at a time
-  group<Dimensions> g { r };
-
-  // First iterate on all the work-groups
-  parallel_for_iterate<Dimensions,
-                       range<Dimensions>,
-                       ParallelForFunctor,
-                       group<Dimensions>> {
-    r.get_group(),
-    f,
-    g };
-}
-
-
 /** Implement the loop on the work-items inside a work-group
-
-    \todo Better type the functor
 */
 template <int Dimensions, typename ParallelForFunctor>
-void parallel_for_workitem(const group<Dimensions> &g,
-                           ParallelForFunctor f) {
-#if defined(_OPENMP) && (!defined(TRISYCL_NO_BARRIER) && !defined(_MSC_VER))
-  /* To implement barriers With OpenMP, one thread is created for each
-     work-item in the group and thus an OpenMP barrier has the same effect
-     of an OpenCL barrier executed by the work-items in a workgroup
-
-     The issue is that the parallel_for_workitem() execution is slow even
-     when nd_item::barrier() is not used
-
-     \todo Simplify by just using omp parallel for collapse
-  */
-
-  range<Dimensions> l_r = g.get_nd_range().get_local();
-  auto tot = l_r.get(0);
-  for (int i = 1; i < (int) Dimensions; ++i){
-    tot *= l_r.get(i);
-  }
-#pragma omp parallel num_threads(tot)
-  {
-    nd_item<Dimensions> index { g.get_nd_range() };
-    id<Dimensions> local; // to initialize correctly
-#pragma omp for nowait
-    for (std::size_t th_id = 0; th_id < tot; ++th_id) {
-      if (Dimensions == 1) {
-        local[0] = th_id;
-      } else if (Dimensions == 2) {
-        local[0] = th_id / l_r.get(1);
-        local[1] = th_id % l_r.get(1);
-      } else if (Dimensions == 3) {
-        local[0] = th_id / (l_r.get(1)*l_r.get(2));
-        local[1] = (th_id / l_r.get(2)) % l_r.get(1);
-        local[2] = th_id % l_r.get(2);
-      }
-      index.set_local(local);
-      index.set_global(local + id<Dimensions>(l_r)*g.get_id());
-      f(index);
-    }
-  }
-#else
-  // In a sequential execution there is only one index processed at a time
-  nd_item<Dimensions> index { g.get_nd_range() };
-  // To iterate on the local work-item
-  id<Dimensions> local;
-
-  // Reconstruct the nd_item from its group and local id
-  auto reconstruct_item = [&] (id<Dimensions> l) {
-    //local.display();
-    //l.display();
-    // Reconstruct the global nd_item
-    index.set_local(local);
-    // \todo Some strength reduction here
-    index.set_global(local + id<Dimensions>(g.get_local_range())*g.get_id());
-    // Call the user kernel at last
-    f(index);
-  };
-
-  // Then iterate on all the work-items of the work-group
-  parallel_for_iterate<Dimensions,
-                       range<Dimensions>,
-                       decltype(reconstruct_item),
-                       id<Dimensions>> {
-    g.get_local_range(),
-    reconstruct_item,
-    local };
-#endif
+void parallel_for_workitem_in_group(const group<Dimensions> &g,
+                                    ParallelForFunctor f) {
+  parallel_for_workitem<Dimensions,
+                        h_item<Dimensions>,
+                        ParallelForFunctor>(g, f);
 }
+
+
 /// @} End the parallelism Doxygen group
 
 } // namespace detail

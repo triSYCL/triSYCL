@@ -47,6 +47,7 @@
 #include "CL/sycl/exception.hpp"
 #include "CL/sycl/group.hpp"
 #include "CL/sycl/handler.hpp"
+#include "CL/sycl/h_item.hpp"
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/image.hpp"
 #include "CL/sycl/item.hpp"

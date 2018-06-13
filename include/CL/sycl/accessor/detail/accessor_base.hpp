@@ -63,6 +63,9 @@ public:
 #ifdef TRISYCL_OPENCL
   /// Get the boost::compute::buffer or throw if unset
   virtual boost::compute::buffer get_cl_buffer() const = 0;
+
+  // Virtual to call the real destructor
+  virtual ~accessor_base() {}
 #endif
 
 };
