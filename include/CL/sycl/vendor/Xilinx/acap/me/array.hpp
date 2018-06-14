@@ -11,6 +11,9 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <iostream>
+#include <thread>
+
 #include "geography.hpp"
 
 namespace cl::sycl::vendor::xilinx::acap::me {
@@ -46,7 +49,22 @@ struct array {
   }
 #endif
   void run() {
-    boost::hana::for_each(tiles, [&] (auto& t) { t.run(*this); });
+    boost::hana::for_each(tiles, [&] (auto& t) { t.set_array(this); });
+
+    boost::hana::for_each(tiles, [&] (auto& t) {
+        t.thread = std::thread {[&] {
+            TRISYCL_DUMP_T("Starting ME tile (" << t.x << ',' << t.y << ')');
+            t.run(*this);
+            TRISYCL_DUMP_T("Stopping ME tile (" << t.x << ',' << t.y << ')');
+          }
+        };
+      });
+
+    boost::hana::for_each(tiles, [&] (auto& t) {
+        TRISYCL_DUMP_T("Joining ME tile (" << t.x << ',' << t.y << ')');
+        t.thread.join();
+        TRISYCL_DUMP_T("Joined ME tile (" << t.x << ',' << t.y << ')');
+      });
 
     std::cout << "Total size of the tiles: " << sizeof(tiles)
               << " bytes." << std::endl;

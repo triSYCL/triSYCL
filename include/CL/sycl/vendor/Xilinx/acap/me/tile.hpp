@@ -9,17 +9,25 @@
     License. See LICENSE.TXT for details.
  */
 
+#include <thread>
+
 namespace cl::sycl::vendor::xilinx::acap::me {
 
 /** The MathEngine tile infrastructure
  */
 template <typename Geography, typename ME_Array, int X, int Y>
 struct tile {
-  // The tile coordinates in the grid
+  /// The tile coordinates in the grid
   static auto constexpr x = X;
   static auto constexpr y = Y;
 
   using geo = Geography;
+
+  /// Keep a reference to the array owning this tile
+  ME_Array *me_array;
+
+  /// The thread used to run this tile
+  std::thread thread;
 
   static bool constexpr is_noc() {
     return geo::is_noc_tile(x, y);
@@ -41,6 +49,11 @@ struct tile {
       return x;
     else
       return y;
+  }
+
+
+  void set_array(ME_Array *array) {
+    me_array = array;
   }
 };
 
