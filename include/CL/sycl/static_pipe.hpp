@@ -95,6 +95,25 @@ public:
   }
 
 
+  /** Get an accessor to the pipe with the required mode, outside of a
+      normal kernel, for example in host code
+
+      \param Mode is the requested access mode
+
+      \param Target is the type of pipe access required
+  */
+  template <access::mode Mode,
+            access::target Target = access::target::pipe>
+  accessor<value_type, 1, Mode, Target>
+  get_access() {
+    static_assert(Target == access::target::pipe
+                  || Target == access::target::blocking_pipe,
+                  "get_access(handler) with pipes can only deal with "
+                  "access::pipe or access::blocking_pipe");
+    return { implementation };
+  }
+
+
   /** Return the maximum number of elements that can fit in the pipe
 
       This is a constexpr since the capacity is in the type.
