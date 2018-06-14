@@ -11,6 +11,7 @@
 */
 
 #include "me/array.hpp"
+#include "me/cascade_stream.hpp"
 #include "me/geography.hpp"
 #include "me/tile.hpp"
 

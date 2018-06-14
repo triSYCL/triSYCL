@@ -51,9 +51,29 @@ struct tile {
       return y;
   }
 
+  /** \todo Need something more modern than Boost.Operator to
+      implement cl::sycl::id
+
+      Look for example at https://github.com/taocpp/operators/issues/9
+  static auto constexpr get_id() {
+    return cl::sycl::id<2> { x, y };
+  }
+  */
+
 
   void set_array(ME_Array *array) {
     me_array = array;
+  }
+
+
+  template <typename T>
+  auto& get_cascade_stream_in() {
+    return me_array->get_cascade_stream_in(x, y);
+  }
+
+  template <typename T>
+  auto get_cascade_stream_out() {
+    return me_array->get_cascade_stream_out(x, y);
   }
 };
 
