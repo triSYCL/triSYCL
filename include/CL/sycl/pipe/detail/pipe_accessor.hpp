@@ -80,9 +80,8 @@ public:
 
   /** Construct a pipe accessor from an existing pipe
    */
-  pipe_accessor(const std::shared_ptr<detail::pipe<T>> &p,
-                handler &command_group_handler) :
-    implementation { p } {
+  pipe_accessor(const std::shared_ptr<detail::pipe<T>> &p)
+    : implementation { p } {
     //    TRISYCL_DUMP_T("Create a kernel pipe accessor write = "
     //                 << is_write_access());
     // Verify that the pipe is not already used in the requested mode
@@ -98,6 +97,15 @@ public:
       else
         implementation->used_for_reading = true;
   }
+
+
+  /** Construct a pipe accessor from an existing pipe
+
+      For now the handler is not used.
+  */
+  pipe_accessor(const std::shared_ptr<detail::pipe<T>> &p,
+                handler &command_group_handler)
+    : pipe_accessor(p) {}
 
 
   pipe_accessor() = default;

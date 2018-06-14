@@ -152,7 +152,8 @@ it to some target device and at the same time to compile on the host side
 some glue code around the extraction boundary to transfer data to and
 from the device and call the kernel itself.
 
-The device compiler is based on Clang/LLVM 3.9 for now.
+The device compiler is based on Clang/LLVM 3.9 for now but there are
+some experiments with Clang/LLVM 7 too.
 
 Since it is quite more experimental than the CPU path, it is not yet
 merged into the main branches:
@@ -165,6 +166,9 @@ merged into the main branches:
 
 - LLVM supporting triSYCL:
   https://github.com/triSYCL/llvm/tree/sycl/release_39/master
+
+For CLang/LLVM 7, you might look at the branches
+`sycl/release_70/lin-ya` or `sycl/release_70/master`.
 
 
 Installation & compilation

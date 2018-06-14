@@ -42,9 +42,9 @@ auto get_##METHOD = [] (auto &a_queue, cl::sycl::pipe<char> &a_pipe) {  \
       /* Get write access to the pipe */                                \
       auto p = a_pipe.get_access<cl::sycl::access::mode::write>(cgh);   \
       /* Get write access to write back the value returned by the observer */ \
-      auto v = value.get_access<cl::sycl::access::mode::write>(cgh);    \
+      const auto v = value.get_access<cl::sycl::access::mode::write>(cgh);    \
                                                                         \
-      cgh.single_task([=] {                                             \
+      cgh.single_task([=] () mutable {                                  \
           *v = p.METHOD();                                              \
         });                                                             \
       });                                                               \

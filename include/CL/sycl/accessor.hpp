@@ -461,6 +461,13 @@ public:
     : accessor_detail { p.implementation, command_group_handler } { }
 
 
+  /** Construct a pipe accessor from a pipe outside of a normal
+      kernel, for example in host code
+  */
+  accessor(pipe<DataType> &p)
+    : accessor_detail { p.implementation } { }
+
+
   /// Make a reservation inside the pipe
   pipe_reservation<accessor> reserve(std::size_t size) const {
     return accessor_detail::reserve(size);
