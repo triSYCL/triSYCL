@@ -64,41 +64,15 @@ struct tile
 };
 
 
-/** Describe the layout of the MathEngine array
- */
-struct me_layout {
-  /// Some constrains from Figure 2-8 "ME Array Address Map Example", p. 44
-  static auto constexpr x_min = 0;
-  static auto constexpr x_max = 5;
-  static auto constexpr y_min = 0;
-  static auto constexpr y_max = 4;
-
-  static bool constexpr is_noc_tile(int x, int y) {
-    return y == 0 && 2 <= x && x <= 3;
-  }
-
-  static bool constexpr is_pl_tile(int x, int y) {
-    return y == 0 && ((0 <= x && x <= 1) || (4 <= x && x <= 5));
-  }
-};
-
-
-/** Describe the layout of a tiny MathEngine array with only 1 PE
- */
-struct me_layout_1pe : me_layout {
-  static auto constexpr x_max = 0;
-  static auto constexpr y_max = 0;
-};
-
 int main() {
   std::cout << std::endl << "Instantiate big MathEngine:"
             << std::endl << std::endl;
-  acap::me::array<me_layout, tile> me;
+  acap::me::array<acap::me::layout::full, tile> me;
   me.run();
 
   std::cout << std::endl << "Instantiate tiny MathEngine:"
             << std::endl << std::endl;
-  acap::me::array<me_layout_1pe, tile> solitaire_me;
+  acap::me::array<acap::me::layout::one_pe, tile> solitaire_me;
   solitaire_me.run();
 
 
