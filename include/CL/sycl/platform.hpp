@@ -177,10 +177,7 @@ public:
       \return the device list
   */
   vector_class<device>
-  get_devices(info::device_type device_type = info::device_type::all) const {
-    return implementation->get_devices(device_type);
-  }
-
+  get_devices(info::device_type device_type = info::device_type::all) const;
 };
 
 /// @} to end the execution Doxygen group
