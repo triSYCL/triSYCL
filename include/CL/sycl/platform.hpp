@@ -68,7 +68,7 @@ public:
 
       Retain a reference to the OpenCL platform.
   */
-  platform(cl_platform_id platform_id)
+  explicit platform(cl_platform_id platform_id)
     : platform { boost::compute::platform { platform_id } } {}
 
 
