@@ -46,6 +46,7 @@
 #include "CL/sycl/event.hpp"
 #include "CL/sycl/exception.hpp"
 #include "CL/sycl/group.hpp"
+#include "CL/sycl/half.hpp"
 #include "CL/sycl/handler.hpp"
 #include "CL/sycl/h_item.hpp"
 #include "CL/sycl/id.hpp"
