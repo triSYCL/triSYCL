@@ -88,10 +88,7 @@ public:
 
        Returns errors via the SYCL exception class.
   */
-  explicit platform(const device_selector &dev_selector) {
-    detail::unimplemented();
-  }
-
+  explicit platform(const device_selector &dev_selector);
 
 #ifdef TRISYCL_OPENCL
   /** Returns the cl_platform_id of the underlying OpenCL platform
