@@ -54,6 +54,9 @@ public:
   /// Returns the set of devices that are part of this context.
   virtual vector_class<cl::sycl::device> get_devices() const = 0;
 
+  /// Returns the reference count of underlying CL context, or 0 on host.
+  virtual cl::sycl::cl_uint get_reference_count() const = 0;
+
   /// Virtual to call the real destructor
   virtual ~context() {}
 

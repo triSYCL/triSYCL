@@ -108,6 +108,11 @@ public:
     // Return just the host device
     return { {} };
   }
+
+  /// Return 0 since the context is a SYCL host context
+  cl::sycl::cl_uint get_reference_count() const override {
+    return 0;
+  }
 };
 
 /// @} to end the execution Doxygen group

@@ -18,7 +18,6 @@
 
 #include "CL/sycl/detail/default_classes.hpp"
 #include "CL/sycl/detail/shared_ptr_implementation.hpp"
-#include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/device.hpp"
 #include "CL/sycl/device_selector.hpp"
 #include "CL/sycl/exception.hpp"
@@ -188,7 +187,9 @@ public:
 
       \todo To be implemented
   */
-  platform get_platform();
+  platform get_platform() const {
+    return implementation->get_platform();
+  };
 
 
   /** Returns the set of devices that are part of this context
@@ -196,8 +197,7 @@ public:
       \todo To be implemented
   */
   vector_class<device> get_devices() const {
-    detail::unimplemented();
-    return {};
+    return implementation->get_devices();
   }
 
 
@@ -205,13 +205,26 @@ public:
 
       \todo To be implemented
   */
-  template <info::context Param>
-  typename info::param_traits<info::context, Param>::type get_info() const {
-    detail::unimplemented();
-    return {};
-  }
+  template <info::context param>
+  inline auto get_info() const;
 
 };
+
+template<>
+inline auto context::get_info<info::context::reference_count>() const {
+  return implementation->get_reference_count();
+}
+
+template<>
+inline auto context::get_info<info::context::platform>() const {
+  return get_platform();
+}
+
+template<>
+inline auto context::get_info<info::context::devices>() const {
+  return get_devices();
+}
+
 
 /// @} to end the execution Doxygen group
 
