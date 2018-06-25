@@ -15,8 +15,8 @@ namespace cl::sycl::vendor::xilinx::acap::me {
 
 /** The MathEngine tile infrastructure
  */
-template <typename Geography, typename ME_Array, int X, int Y>
-struct tile {
+template <typename Geography, typename ME_Array, typename Tile, int X, int Y>
+struct tile : Tile {
   /// The tile coordinates in the grid
   static auto constexpr x = X;
   static auto constexpr y = Y;
