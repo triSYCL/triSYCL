@@ -121,35 +121,26 @@ enum class device : int {
   parent_device,
   partition_max_sub_devices,
   partition_properties,
-  partition_affinity_domain,
-  partition_type,
+  partition_affinity_domains,
+  partition_type_property,
+  partition_type_affinity_domain,
   reference_count
 };
 
-enum class device_partition_property : int {
-  unsupported,
+enum class partition_property : int {
+  no_partition,
   partition_equally,
   partition_by_counts,
   partition_by_affinity_domain,
-  partition_affinity_domain_next_partitionable
 };
 
-enum class device_affinity_domain : int {
+enum class partition_affinity_domain : int {
   unsupported,
   numa,
   L4_cache,
   L3_cache,
   L2_cache,
   next_partitionable
-};
-
-enum class device_partition_type : int {
-  no_partition,
-  numa,
-  L4_cache,
-  L3_cache,
-  L2_cache,
-  L1_cache
 };
 
 enum class local_mem_type : int {
@@ -200,7 +191,8 @@ TRISYCL_INFO_PARAM_TRAITS(info::device::max_work_item_sizes, cl::sycl::id<3>)
 TRISYCL_INFO_PARAM_TRAITS(info::device::name, string_class)
 TRISYCL_INFO_PARAM_TRAITS(info::device::profile, string_class)
 TRISYCL_INFO_PARAM_TRAITS(info::device::vendor, string_class)
-
+TRISYCL_INFO_PARAM_TRAITS(info::device::partition_properties, vector_class<partition_property>)
+TRISYCL_INFO_PARAM_TRAITS(info::device::partition_affinity_domains, vector_class<partition_affinity_domain>)
 }
 }
 }

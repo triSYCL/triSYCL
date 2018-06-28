@@ -236,24 +236,26 @@ public:
     return implementation->has_extension(extension);
   }
 
-
-#ifdef XYZTRISYCL_OPENCL
-  /** Partition the device into sub devices based upon the properties
-      provided
-
-      Return synchronous errors via SYCL exception classes.
-
-      \todo
-  */
-  vector_class<device>
-  create_sub_devices(info::device_partition_type partition_type,
-                     info::device_partition_property partition_property,
-                     info::device_affinity_domain affinity_domain) const {
-    return implementation->create_sub_devices(partition_type,
-                                              partition_property,
-                                              affinity_domain);
+  // Available only when prop == info::partition_property::partition_equally
+  template <info::partition_property prop>
+  vector_class<device> create_sub_devices(size_t nbSubDev) const
+  {
+    throw cl::sycl::feature_not_supported("unsupported feature\n");
   }
-#endif
+
+  // Available only when prop == info::partition_property::partition_by_counts
+  template <info::partition_property prop>
+  vector_class<device> create_sub_devices(const vector_class<size_t> &counts) const
+  {
+    throw cl::sycl::feature_not_supported("unsupported feature\n");
+  }
+
+  // Available only when prop == info::partition_property::partition_by_affinity_domain
+  template <info::partition_property prop>
+  vector_class<device> create_sub_devices(info::partition_affinity_domain affinityDomain) const
+  {
+    throw cl::sycl::feature_not_supported("unsupported feature\n");
+  }
 
 };
 
@@ -301,6 +303,16 @@ inline auto device::get_info<info::device::name>() const {
 template <>
 inline auto device::get_info<info::device::profile>() const {
   return string_class { "FULL_PROFILE" };
+}
+
+template<>
+inline auto device::get_info<info::device::partition_properties>() const {
+  return vector_class<info::partition_property>{};
+}
+
+template<>
+inline auto device::get_info<info::device::partition_affinity_domains>() const {
+  return vector_class<info::partition_affinity_domain>{};
 }
 
 /// @} to end the Doxygen group
