@@ -29,9 +29,8 @@ namespace detail {
     \return the device list
 */
 vector_class<cl::sycl::device>
-inline opencl_platform::get_devices(info::device_type device_type) const {
+inline opencl_platform::get_devices(const device_selector &device_selector) const {
   vector_class<cl::sycl::device> devices;
-    device_type_selector ds { device_type };
   // Add the desired OpenCL devices
   for (const auto &d : get_boost_compute().devices()) {
     // Get the SYCL device from the Boost Compute device
@@ -40,7 +39,7 @@ inline opencl_platform::get_devices(info::device_type device_type) const {
        By calling devices on the \c boost::compute::platform we know that
        we iterate only over the device belonging to the current platform,
     */
-    if (ds(sycl_dev) > 0)
+    if (device_selector(sycl_dev) > 0)
       devices.push_back(sycl_dev);
   }
 

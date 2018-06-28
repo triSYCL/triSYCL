@@ -68,7 +68,7 @@ public:
 
       Retain a reference to the OpenCL platform.
   */
-  platform(cl_platform_id platform_id)
+  explicit platform(cl_platform_id platform_id)
     : platform { boost::compute::platform { platform_id } } {}
 
 
@@ -88,10 +88,7 @@ public:
 
        Returns errors via the SYCL exception class.
   */
-  explicit platform(const device_selector &dev_selector) {
-    detail::unimplemented();
-  }
-
+  explicit platform(const device_selector &dev_selector);
 
 #ifdef TRISYCL_OPENCL
   /** Returns the cl_platform_id of the underlying OpenCL platform
@@ -177,10 +174,7 @@ public:
       \return the device list
   */
   vector_class<device>
-  get_devices(info::device_type device_type = info::device_type::all) const {
-    return implementation->get_devices(device_type);
-  }
-
+  get_devices(info::device_type device_type = info::device_type::all) const;
 };
 
 /// @} to end the execution Doxygen group

@@ -46,6 +46,7 @@
 #include "CL/sycl/event.hpp"
 #include "CL/sycl/exception.hpp"
 #include "CL/sycl/group.hpp"
+#include "CL/sycl/half.hpp"
 #include "CL/sycl/handler.hpp"
 #include "CL/sycl/h_item.hpp"
 #include "CL/sycl/id.hpp"
@@ -59,6 +60,7 @@
 #include "CL/sycl/pipe.hpp"
 #include "CL/sycl/pipe_reservation.hpp"
 #include "CL/sycl/platform.hpp"
+#include "CL/sycl/program.hpp"
 #include "CL/sycl/queue.hpp"
 #include "CL/sycl/range.hpp"
 #include "CL/sycl/static_pipe.hpp"
@@ -67,6 +69,7 @@
 // Some includes at the end to break some dependencies
 #include "CL/sycl/device_selector/detail/device_selector_tail.hpp"
 #include "CL/sycl/device/detail/device_tail.hpp"
+#include "CL/sycl/platform/detail/platform_tail.hpp"
 #include "CL/sycl/platform/detail/host_platform_tail.hpp"
 #ifdef TRISYCL_OPENCL
 #include "CL/sycl/platform/detail/opencl_platform_tail.hpp"
