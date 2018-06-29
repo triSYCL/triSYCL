@@ -24,6 +24,8 @@
 #define TRISYCL_CL_LANGUAGE_VERSION 121
 #endif
 
+#define BOOST_COMPUTE_CL_VERSION_1_2
+
 /// This source is compiled by a single source compiler
 #define __SYCL_SINGLE_SOURCE__
 
