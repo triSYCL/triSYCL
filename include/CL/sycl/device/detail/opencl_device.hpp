@@ -104,12 +104,9 @@ public:
 #endif
 
   /** Specify whether a specific extension is supported on the device.
-
-      \todo To be implemented
   */
   bool has_extension(const string_class &extension) const override {
-    detail::unimplemented();
-    return {};
+    return d.supports_extension(extension);
   }
 
 
