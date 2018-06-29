@@ -16,6 +16,9 @@
 namespace cl {
 namespace sycl {
 
+class device;
+class platform;
+
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
 */
@@ -61,14 +64,14 @@ enum class device : int {
   preferred_vector_width_char,
   preferred_vector_width_short,
   preferred_vector_width_int,
-  preferred_vector_width_long_long,
+  preferred_vector_width_long,
   preferred_vector_width_float,
   preferred_vector_width_double,
   preferred_vector_width_half,
   native_vector_width_char,
   native_vector_width_short,
   native_vector_width_int,
-  native_vector_width_long_long,
+  native_vector_width_long,
   native_vector_width_float,
   native_vector_width_double,
   native_vector_width_half,
@@ -78,16 +81,17 @@ enum class device : int {
   image_support,
   max_read_image_args,
   max_write_image_args,
-  image2d_max_height,
   image2d_max_width,
+  image2d_max_height,
+  image3d_max_width,
   image3d_max_height,
-  image3d_max_widht,
-  image3d_mas_depth,
+  image3d_max_depth,
   image_max_buffer_size,
   image_max_array_size,
   max_samplers,
   max_parameter_size,
   mem_base_addr_align,
+  half_fp_config,
   single_fp_config,
   double_fp_config,
   global_mem_cache_type,
@@ -101,20 +105,20 @@ enum class device : int {
   error_correction_support,
   host_unified_memory,
   profiling_timer_resolution,
-  endian_little,
+  is_endian_little,
   is_available,
   is_compiler_available,
   is_linker_available,
   execution_capabilities,
-  queue_properties,
+  queue_profiling,
   built_in_kernels,
   platform,
   name,
   vendor,
   driver_version,
   profile,
-  device_version,
-  opencl_version,
+  version,
+  opencl_c_version,
   extensions,
   printf_buffer_size,
   preferred_interop_user_sync,
@@ -135,11 +139,12 @@ enum class partition_property : int {
 };
 
 enum class partition_affinity_domain : int {
-  unsupported,
+  not_applicable,
   numa,
   L4_cache,
   L3_cache,
   L2_cache,
+  L1_cache,
   next_partitionable
 };
 
@@ -166,7 +171,7 @@ enum class global_mem_cache_type : int {
   write_only
 };
 
-enum class device_execution_capabilities : unsigned int {
+enum class execution_capability : unsigned int {
   exec_kernel,
   exec_native_kernel
 };
@@ -183,16 +188,83 @@ using device_queue_properties = unsigned int;
 */
 TRISYCL_INFO_PARAM_TRAITS_ANY_T(info::device, void)
 TRISYCL_INFO_PARAM_TRAITS(info::device::device_type, info::device_type)
-TRISYCL_INFO_PARAM_TRAITS(info::device::local_mem_size, cl::sycl::cl_ulong)
+TRISYCL_INFO_PARAM_TRAITS(info::device::vendor_id, cl::sycl::cl_uint)
 TRISYCL_INFO_PARAM_TRAITS(info::device::max_compute_units, cl::sycl::cl_uint)
-TRISYCL_INFO_PARAM_TRAITS(info::device::max_mem_alloc_size, cl::sycl::cl_ulong)
-TRISYCL_INFO_PARAM_TRAITS(info::device::max_work_group_size, std::size_t)
+TRISYCL_INFO_PARAM_TRAITS(info::device::max_work_item_dimensions, cl::sycl::cl_uint)
 TRISYCL_INFO_PARAM_TRAITS(info::device::max_work_item_sizes, cl::sycl::id<3>)
+TRISYCL_INFO_PARAM_TRAITS(info::device::max_work_group_size, std::size_t)
+
+TRISYCL_INFO_PARAM_TRAITS(info::device::preferred_vector_width_char, cl::sycl::cl_uint)
+TRISYCL_INFO_PARAM_TRAITS(info::device::preferred_vector_width_short, cl::sycl::cl_uint)
+TRISYCL_INFO_PARAM_TRAITS(info::device::preferred_vector_width_int, cl::sycl::cl_uint)
+TRISYCL_INFO_PARAM_TRAITS(info::device::preferred_vector_width_long, cl::sycl::cl_uint)
+TRISYCL_INFO_PARAM_TRAITS(info::device::preferred_vector_width_float, cl::sycl::cl_uint)
+TRISYCL_INFO_PARAM_TRAITS(info::device::preferred_vector_width_double, cl::sycl::cl_uint)
+TRISYCL_INFO_PARAM_TRAITS(info::device::preferred_vector_width_half, cl::sycl::cl_uint)
+
+TRISYCL_INFO_PARAM_TRAITS(info::device::native_vector_width_char, cl::sycl::cl_uint)
+TRISYCL_INFO_PARAM_TRAITS(info::device::native_vector_width_short, cl::sycl::cl_uint)
+TRISYCL_INFO_PARAM_TRAITS(info::device::native_vector_width_int, cl::sycl::cl_uint)
+TRISYCL_INFO_PARAM_TRAITS(info::device::native_vector_width_long, cl::sycl::cl_uint)
+TRISYCL_INFO_PARAM_TRAITS(info::device::native_vector_width_float, cl::sycl::cl_uint)
+TRISYCL_INFO_PARAM_TRAITS(info::device::native_vector_width_double, cl::sycl::cl_uint)
+TRISYCL_INFO_PARAM_TRAITS(info::device::native_vector_width_half, cl::sycl::cl_uint)
+
+TRISYCL_INFO_PARAM_TRAITS(info::device::max_clock_frequency, cl::sycl::cl_uint)
+TRISYCL_INFO_PARAM_TRAITS(info::device::address_bits, cl::sycl::cl_uint)
+TRISYCL_INFO_PARAM_TRAITS(info::device::max_mem_alloc_size, cl::sycl::cl_ulong)
+TRISYCL_INFO_PARAM_TRAITS(info::device::image_support, bool)
+
+TRISYCL_INFO_PARAM_TRAITS(info::device::max_read_image_args, cl::sycl::cl_uint)
+TRISYCL_INFO_PARAM_TRAITS(info::device::max_write_image_args, cl::sycl::cl_uint)
+TRISYCL_INFO_PARAM_TRAITS(info::device::image2d_max_width, size_t);
+TRISYCL_INFO_PARAM_TRAITS(info::device::image2d_max_height, size_t);
+TRISYCL_INFO_PARAM_TRAITS(info::device::image3d_max_width, size_t);
+TRISYCL_INFO_PARAM_TRAITS(info::device::image3d_max_height, size_t);
+TRISYCL_INFO_PARAM_TRAITS(info::device::image3d_max_depth, size_t);
+TRISYCL_INFO_PARAM_TRAITS(info::device::image_max_buffer_size, size_t);
+TRISYCL_INFO_PARAM_TRAITS(info::device::image_max_array_size, size_t);
+TRISYCL_INFO_PARAM_TRAITS(info::device::max_samplers, cl::sycl::cl_uint)
+TRISYCL_INFO_PARAM_TRAITS(info::device::max_parameter_size, size_t)
+TRISYCL_INFO_PARAM_TRAITS(info::device::mem_base_addr_align, cl::sycl::cl_uint)
+TRISYCL_INFO_PARAM_TRAITS(info::device::half_fp_config, vector_class<fp_config>)
+TRISYCL_INFO_PARAM_TRAITS(info::device::single_fp_config, vector_class<fp_config>)
+TRISYCL_INFO_PARAM_TRAITS(info::device::double_fp_config, vector_class<fp_config>)
+TRISYCL_INFO_PARAM_TRAITS(info::device::global_mem_cache_type, global_mem_cache_type)
+TRISYCL_INFO_PARAM_TRAITS(info::device::global_mem_cache_line_size, cl::sycl::cl_uint)
+TRISYCL_INFO_PARAM_TRAITS(info::device::global_mem_cache_size, cl::sycl::cl_ulong)
+TRISYCL_INFO_PARAM_TRAITS(info::device::global_mem_size, cl::sycl::cl_ulong)
+TRISYCL_INFO_PARAM_TRAITS(info::device::max_constant_buffer_size, cl::sycl::cl_ulong)
+TRISYCL_INFO_PARAM_TRAITS(info::device::max_constant_args, cl::sycl::cl_uint)
+TRISYCL_INFO_PARAM_TRAITS(info::device::local_mem_type, local_mem_type)
+TRISYCL_INFO_PARAM_TRAITS(info::device::local_mem_size, cl::sycl::cl_ulong)
+TRISYCL_INFO_PARAM_TRAITS(info::device::error_correction_support, bool)
+TRISYCL_INFO_PARAM_TRAITS(info::device::host_unified_memory, bool)
+TRISYCL_INFO_PARAM_TRAITS(info::device::profiling_timer_resolution, size_t)
+TRISYCL_INFO_PARAM_TRAITS(info::device::is_endian_little, bool)
+TRISYCL_INFO_PARAM_TRAITS(info::device::is_available, bool)
+TRISYCL_INFO_PARAM_TRAITS(info::device::is_compiler_available, bool)
+TRISYCL_INFO_PARAM_TRAITS(info::device::is_linker_available, bool)
+TRISYCL_INFO_PARAM_TRAITS(info::device::execution_capabilities, vector_class<execution_capability>)
+TRISYCL_INFO_PARAM_TRAITS(info::device::queue_profiling, bool)
+TRISYCL_INFO_PARAM_TRAITS(info::device::built_in_kernels, vector_class<string_class>)
+TRISYCL_INFO_PARAM_TRAITS(info::device::platform, cl::sycl::platform)
 TRISYCL_INFO_PARAM_TRAITS(info::device::name, string_class)
-TRISYCL_INFO_PARAM_TRAITS(info::device::profile, string_class)
 TRISYCL_INFO_PARAM_TRAITS(info::device::vendor, string_class)
+TRISYCL_INFO_PARAM_TRAITS(info::device::driver_version, string_class)
+TRISYCL_INFO_PARAM_TRAITS(info::device::profile, string_class)
+TRISYCL_INFO_PARAM_TRAITS(info::device::version, string_class)
+TRISYCL_INFO_PARAM_TRAITS(info::device::opencl_c_version, string_class)
+TRISYCL_INFO_PARAM_TRAITS(info::device::extensions, vector_class<string_class>)
+TRISYCL_INFO_PARAM_TRAITS(info::device::printf_buffer_size, size_t)
+TRISYCL_INFO_PARAM_TRAITS(info::device::preferred_interop_user_sync, bool)
+TRISYCL_INFO_PARAM_TRAITS(info::device::parent_device, cl::sycl::device)
+TRISYCL_INFO_PARAM_TRAITS(info::device::partition_max_sub_devices, cl::sycl::cl_uint)
 TRISYCL_INFO_PARAM_TRAITS(info::device::partition_properties, vector_class<partition_property>)
 TRISYCL_INFO_PARAM_TRAITS(info::device::partition_affinity_domains, vector_class<partition_affinity_domain>)
+TRISYCL_INFO_PARAM_TRAITS(info::device::partition_type_property, partition_property)
+TRISYCL_INFO_PARAM_TRAITS(info::device::partition_type_affinity_domain, partition_affinity_domain)
+TRISYCL_INFO_PARAM_TRAITS(info::device::reference_count, cl::sycl::cl_uint)
 }
 }
 }

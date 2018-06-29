@@ -11,6 +11,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <any>
 
 #ifdef TRISYCL_OPENCL
 #include <boost/compute.hpp>
@@ -209,27 +210,19 @@ public:
 
       \todo
   */
-  template <typename T>
-  T get_info(info::device param) const {
-    //return implementation->get_info<Param>(param);
-  }
-
-
   /** Query the device for OpenCL info::device info
 
       Return synchronous errors via the SYCL exception class.
 
       \todo
   */
-  template <info::device Param>
-  inline auto get_info() const;
-  /*{
-    // Forward to the version where the info parameter is not a template
-    //return get_info<typename info::param_traits_t<info::device, Param>>(Param);
-    detail::unimplemented();
-    return 0;
-  }*/
-
+  template <info::device param>
+  typename info::param_traits<info::device, param>::return_type
+  get_info() const {
+    return std::any_cast<
+      typename info::param_traits<info::device, param>::return_type
+      >(implementation->get_info(param));
+  }
 
   /// Test if a specific extension is supported on the device
   bool has_extension(const string_class &extension) const {
@@ -258,62 +251,6 @@ public:
   }
 
 };
-
-
-template <>
-inline auto device::get_info<info::device::max_work_group_size>() const {
-  return size_t { 8 };
-}
-
-template <>
-inline auto device::get_info<info::device::max_work_item_sizes>() const {
-  return cl::sycl::id<3> { 128, 128, 128 };
-}
-
-template <>
-inline auto device::get_info<info::device::max_compute_units>() const {
-  return size_t { 8 };
-}
-
-template <>
-inline auto device::get_info<info::device::device_type>() const {
-  return info::device_type::cpu;
-}
-
-template <>
-inline auto device::get_info<info::device::local_mem_size>() const {
-  return size_t { 32000 };
-}
-
-template <>
-inline auto device::get_info<info::device::max_mem_alloc_size>() const {
-  return size_t { 32000 };
-}
-
-template <>
-inline auto device::get_info<info::device::vendor>() const {
-  return string_class {};
-}
-
-template <>
-inline auto device::get_info<info::device::name>() const {
-  return string_class {};
-}
-
-template <>
-inline auto device::get_info<info::device::profile>() const {
-  return string_class { "FULL_PROFILE" };
-}
-
-template<>
-inline auto device::get_info<info::device::partition_properties>() const {
-  return vector_class<info::partition_property>{};
-}
-
-template<>
-inline auto device::get_info<info::device::partition_affinity_domains>() const {
-  return vector_class<info::partition_affinity_domain>{};
-}
 
 /// @} to end the Doxygen group
 

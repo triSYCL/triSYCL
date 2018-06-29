@@ -88,20 +88,11 @@ public:
     return d.platform();
   }
 
-#if 0
   /** Query the device for OpenCL info::device info
 
       Return synchronous errors via the SYCL exception class.
-
-      \todo To be implemented
   */
-  template <info::device Param>
-  typename info::param_traits<info::device, Param>::type
-  get_info() const override {
-    detail::unimplemented();
-    return {};
-  }
-#endif
+  inline std::any get_info(info::device param) const override;
 
   /** Specify whether a specific extension is supported on the device.
   */
@@ -119,6 +110,8 @@ public:
 
 private:
 
+  template <info::device param>
+  inline std::any get_info() const;
   /// Only the instance factory can build it
   opencl_device(const boost::compute::device &d) : d { d } {}
 
