@@ -18,7 +18,6 @@
 
 #include "CL/sycl/detail/default_classes.hpp"
 #include "CL/sycl/detail/shared_ptr_implementation.hpp"
-#include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/device.hpp"
 #include "CL/sycl/device_selector.hpp"
 #include "CL/sycl/exception.hpp"
@@ -55,6 +54,20 @@ class context
   using implementation_t =
     detail::shared_ptr_implementation<context, detail::context>;
 
+  context(vector_class<device> devList, async_handler asyncHandler,
+	  const device_selector &deviceSelector) {
+    if (devList.empty())
+      devList = {deviceSelector.select_device()};
+    if (devList[0].is_host())
+      implementation = detail::host_context::instance();
+#ifdef TRISYCL_OPENCL
+    else
+      implementation = detail::opencl_context::instance(
+        boost::compute::context { devList[0].get_boost_compute () }
+      );
+#endif
+  }
+
 public:
 
     // Make the implementation member directly accessible in this class
@@ -66,10 +79,8 @@ public:
       Note that the default case asyncHandler = nullptr is handled by the
       default constructor.
   */
-  explicit context(async_handler asyncHandler) {
-    detail::unimplemented();
-  }
-
+  explicit context(async_handler asyncHandler)
+   : context { device{}, asyncHandler } {}
 
 #ifdef TRISYCL_OPENCL
   /** Make a SYCL context from an OpenCL context
@@ -98,33 +109,24 @@ public:
       Return synchronous errors via the SYCL exception class and
       asynchronous errors are handled via the async_handler, if provided.
   */
-  context(const device_selector &deviceSelector,
-          async_handler asyncHandler = nullptr) {
-    detail::unimplemented();
-  }
-
+  context(const device_selector &deviceSelector, async_handler asyncHandler = nullptr)
+    : context (vector_class<device>{}, asyncHandler, deviceSelector) {}
 
   /** Constructs a context object using a device object
 
       Return synchronous errors via the SYCL exception class and
       asynchronous errors are handled via the async_handler, if provided.
   */
-  context(const device &dev,
-          async_handler asyncHandler = nullptr) {
-    detail::unimplemented();
-  }
-
+  context(const device &dev, async_handler asyncHandler = nullptr)
+    : context { vector_class<device>{dev}, asyncHandler } {}
 
   /** Constructs a context object using a platform object
 
       Return synchronous errors via the SYCL exception class and
       asynchronous errors are handled via the async_handler, if provided.
   */
-  context(const platform &plt,
-          async_handler asyncHandler = nullptr) {
-    detail::unimplemented();
-  }
-
+  context(const platform &plt, async_handler asyncHandler = nullptr)
+    : context { plt.get_devices(), asyncHandler } {}
 
   /* Constructs a context object using a vector_class of device objects
 
@@ -135,9 +137,7 @@ public:
      concept.
   */
   context(const vector_class<device> &deviceList,
-          async_handler asyncHandler = nullptr) {
-    detail::unimplemented();
-  }
+          async_handler asyncHandler = nullptr);
 
   /** Default constructor that chooses the context according the
       heuristics of the default selector
@@ -146,8 +146,7 @@ public:
 
       Get the default constructors back.
   */
-  context() : implementation_t { detail::host_context::instance() } {}
-
+  context() : context { async_handler {} } {}
 
 #ifdef TRISYCL_OPENCL
   /** Return the underlying \c cl_context object, after retaining
@@ -188,7 +187,9 @@ public:
 
       \todo To be implemented
   */
-  platform get_platform();
+  platform get_platform() const {
+    return implementation->get_platform();
+  };
 
 
   /** Returns the set of devices that are part of this context
@@ -196,8 +197,7 @@ public:
       \todo To be implemented
   */
   vector_class<device> get_devices() const {
-    detail::unimplemented();
-    return {};
+    return implementation->get_devices();
   }
 
 
@@ -205,13 +205,26 @@ public:
 
       \todo To be implemented
   */
-  template <info::context Param>
-  typename info::param_traits<info::context, Param>::type get_info() const {
-    detail::unimplemented();
-    return {};
-  }
+  template <info::context param>
+  inline auto get_info() const;
 
 };
+
+template<>
+inline auto context::get_info<info::context::reference_count>() const {
+  return implementation->get_reference_count();
+}
+
+template<>
+inline auto context::get_info<info::context::platform>() const {
+  return get_platform();
+}
+
+template<>
+inline auto context::get_info<info::context::devices>() const {
+  return get_devices();
+}
+
 
 /// @} to end the execution Doxygen group
 
