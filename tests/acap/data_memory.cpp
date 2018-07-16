@@ -10,6 +10,7 @@
 #include <CL/sycl.hpp>
 
 #include <iostream>
+#include <type_traits>
 
 using namespace cl::sycl::vendor::xilinx;
 
@@ -42,15 +43,13 @@ struct memory
 
 template <typename Geography,
           typename ME_Array,
-          typename SuperTile,
           int X,
           int Y>
 struct tile : acap::me::tile<Geography,
                              ME_Array,
-                             SuperTile,
                              X,
                              Y> {
-  using t = acap::me::tile<Geography, ME_Array, SuperTile, X, Y>;
+  using t = acap::me::tile<Geography, ME_Array, X, Y>;
 
   void run(ME_Array &a) {
    auto &own = t::mem();
@@ -59,7 +58,7 @@ struct tile : acap::me::tile<Geography,
               << ") using " << sizeof(*this) << " bytes of memory "
               << std::endl;
     std::cout << "Local v = " << own.v << std::endl;
-    if constexpr (t::memory_t::is_white())
+    if constexpr (std::remove_reference_t<decltype(own)>::is_white())
       std::cout << " d = " << own.d << std::endl;
     else
       std::cout << " i = " << own.i << std::endl;
@@ -100,7 +99,7 @@ struct t {
 
 
 int main() {
-  std::cout << std::endl << "Instantiate big MathEngine:"
+  std::cout << std::endl << "Instantiate small MathEngine:"
             << std::endl << std::endl;
   acap::me::array<acap::me::layout::small,
                   tile,

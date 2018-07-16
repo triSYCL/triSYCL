@@ -15,31 +15,39 @@ namespace cl::sycl::vendor::xilinx::acap::me {
 
 /** The MathEngine tile infrastructure
  */
-template <typename Geography, typename ME_Array, typename Tile, int X, int Y>
-struct tile : Tile {
+template <typename Geography, typename ME_Array, int X, int Y>
+struct tile {
   /// The tile coordinates in the grid
   static auto constexpr x = X;
   static auto constexpr y = Y;
 
   using geo = Geography;
 
+  /// The thread used to run this tile
+  std::thread thread;
+
   /// Keep a reference to the array owning this tile
   ME_Array *me_array;
 
-  /// The thread used to run this tile
-  std::thread thread;
+  auto &mem() {
+    return boost::hana::at_c<get_linear_id()>(me_array->memories);
+  }
+
 
   static bool constexpr is_noc() {
     return geo::is_noc_tile(x, y);
   }
 
+
   static bool constexpr is_pl() {
     return geo::is_pl_tile(x, y);
   }
 
+
   static bool constexpr is_shim() {
     return geo::is_shim_tile(x, y);
   }
+
 
   template <int Dim>
   static auto constexpr get_id() {
@@ -50,6 +58,7 @@ struct tile : Tile {
     else
       return y;
   }
+
 
   static auto constexpr get_linear_id() {
     return geo::linear_id(x, y);
@@ -74,6 +83,7 @@ struct tile : Tile {
   auto& get_cascade_stream_in() {
     return me_array->get_cascade_stream_in(x, y);
   }
+
 
   template <typename T>
   auto get_cascade_stream_out() {

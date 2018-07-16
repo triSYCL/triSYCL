@@ -23,7 +23,6 @@ namespace cl::sycl::vendor::xilinx::acap::me {
 template <typename Layout,
           template <typename Geography,
                     typename ME_Array,
-                    typename SuperTile,
                     int X,
                     int Y> typename Tile,
           template <typename Geography,
@@ -33,21 +32,6 @@ template <typename Layout,
 struct array {
 
   using geo = geography<Layout>;
-
-  template <typename TileMemory>
-  struct tile {
-    using memory_t = TileMemory;
-     memory_t *memory;
-
-    void set_memory(memory_t &m) {
-      memory = &m;
-    }
-
-    auto &mem() {
-      return *memory;
-    }
-  };
-
 
   /** The pipes for the cascade streams, with 1 spare pipe on each
       side of PE strings
@@ -61,14 +45,16 @@ struct array {
 
   template <int X, int Y>
   using tileable_memory = Memory<geo, array, X, Y>;
+
   /// All the memory module of the ME array.
+  using memory_t = decltype(geo::template generate_tiles<tileable_memory>());
+
   /// Unfortunately it is not possible to use auto here...
   // Otherwise static inline auto
-  decltype(geo::template generate_tiles<tileable_memory>()) memories =
-    geo::template generate_tiles<tileable_memory>();
+  memory_t memories = geo::template generate_tiles<tileable_memory>();
 
   template <int X, int Y>
-  using tileable_tile = Tile<geo, array, tile<tileable_memory<X, Y>>, X, Y>;
+  using tileable_tile = Tile<geo, array, X, Y>;
   /// All the tiles of the ME array.
   /// Unfortunately it is not possible to use auto here...
   // Otherwise static inline auto
@@ -116,8 +102,6 @@ struct array {
   void run() {
     boost::hana::for_each(tiles, [&] (auto& t) {
         t.set_array(this);
-        t.set_memory(boost::hana::at_c<t.template get_linear_id()>
-                     (memories));
       });
 
     boost::hana::for_each(tiles, [&] (auto& t) {
