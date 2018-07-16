@@ -21,15 +21,14 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
               << ") using " << sizeof(*this) << " bytes of memory "
               << std::endl;
     // Do not read at the start of the cascade
-    if constexpr (!(t::x == t::geo::x_min && t::y == t::geo::y_min)) {
+    if constexpr (!t::is_cascade_start()) {
         auto cs_in = this->template get_cascade_stream_in<int>()
           .template get_access<access::mode::read,
                                access::target::blocking_pipe>();
        std::cout << "Reading " << cs_in.read() << std::endl;
     }
     // Do not write at the end of the cascade
-    if constexpr (!(t::x == ((t::y & 1) ? t::geo::x_min : t::geo::x_max)
-                    && t::y == t::geo::y_max)) {
+    if constexpr (!t::is_cascade_end()) {
         auto cs_out = t::template get_cascade_stream_out<int>()
           .template get_access<access::mode::write,
                                access::target::blocking_pipe>();

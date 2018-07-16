@@ -16,8 +16,7 @@ namespace cl::sycl::vendor::xilinx::acap::me {
 /** Some geographic information about the MathEngine array
  */
 template <typename Layout>
-struct geography
-  : Layout {
+struct geography : Layout {
   using layout = Layout;
 
   static auto constexpr x_min = 0;
@@ -60,6 +59,20 @@ struct geography
     // It could be more optimized, but like that it is clearer
     return layout::is_noc_tile(x, y) || layout::is_pl_tile(x, y);
   }
+
+
+  /// Test if a tile owns the start of the cascade_stream
+  static bool constexpr is_cascade_start(int x, int y) {
+    return x == x_min && y == y_min;
+  }
+
+
+  /// Test if a tile owns the end of the cascade_stream
+  static bool constexpr is_cascade_end(int x, int y) {
+    // The x position depends on the parity of the last line
+    return x == ((y & 1) ? x_min : layout::x_max) && y == layout::y_max;
+  }
+
 };
 
 }

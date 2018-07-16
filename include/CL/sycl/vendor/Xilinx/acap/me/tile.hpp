@@ -79,6 +79,19 @@ struct tile {
   }
 
 
+
+  /// Test if this tile owns the start of the cascade_stream
+  static bool constexpr is_cascade_start() {
+    return geo::is_cascade_start(x, y);
+  }
+
+
+  /// Test if this tile owns the end of the cascade_stream
+  static bool constexpr is_cascade_end() {
+    return geo::is_cascade_end(x, y);
+  }
+
+
   template <typename T>
   auto& get_cascade_stream_in() {
     return me_array->get_cascade_stream_in(x, y);
