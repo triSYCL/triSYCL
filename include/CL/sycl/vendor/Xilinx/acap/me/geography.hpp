@@ -25,11 +25,15 @@ struct geography
   static auto constexpr x_size = layout::x_max + 1;
   static auto constexpr y_size = layout::y_max + 1;
 
+  static auto constexpr linear_id(int x, int y) {
+    return x + x_size*y;
+  }
+
   /// A tuple with the coordinate tuples of all the tiles
   static auto constexpr tile_coordinates = boost::hana::cartesian_product(
     boost::hana::make_tuple(
-        boost::hana::range_c<int, x_min, x_size>
-      , boost::hana::range_c<int, y_min, y_size>
+        boost::hana::range_c<int, y_min, y_size>
+      , boost::hana::range_c<int, x_min, x_size>
                             )
                                                                           );
   /// Generate a tuple of tileable objects
@@ -38,8 +42,8 @@ struct geography
     return boost::hana::transform(
         tile_coordinates
       , [] (auto coord) {
-          return Tileable<boost::hana::at_c<0>(coord),
-                          boost::hana::at_c<1>(coord)> {};
+          return Tileable<boost::hana::at_c<1>(coord),
+                          boost::hana::at_c<0>(coord)> {};
         }
                                   );
   }

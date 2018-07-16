@@ -51,6 +51,10 @@ struct tile : Tile {
       return y;
   }
 
+  static auto constexpr get_linear_id() {
+    return geo::linear_id(x, y);
+  }
+
   /** \todo Need something more modern than Boost.Operator to
       implement cl::sycl::id
 

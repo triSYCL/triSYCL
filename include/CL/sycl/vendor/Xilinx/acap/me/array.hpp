@@ -125,7 +125,8 @@ struct array {
     boost::hana::at_c<0>(tiles).set_memory(boost::hana::at_c<0>(memories));
     boost::hana::for_each(tiles, [&] (auto& t) {
         t.thread = std::thread {[&] {
-            TRISYCL_DUMP_T("Starting ME tile (" << t.x << ',' << t.y << ')');
+            TRISYCL_DUMP_T("Starting ME tile (" << t.x << ',' << t.y
+                           << ") linear id = " << t.get_linear_id());
             t.run(*this);
             TRISYCL_DUMP_T("Stopping ME tile (" << t.x << ',' << t.y << ')');
           }
