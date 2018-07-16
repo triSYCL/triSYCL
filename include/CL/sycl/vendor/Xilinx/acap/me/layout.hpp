@@ -13,6 +13,7 @@
 
 #include "layout/one_pe.hpp"
 #include "layout/full.hpp"
+#include "layout/small.hpp"
 
 /*
     # Some Emacs stuff:
