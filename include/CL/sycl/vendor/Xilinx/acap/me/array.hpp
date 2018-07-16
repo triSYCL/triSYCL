@@ -114,15 +114,12 @@ struct array {
 
 
   void run() {
-/*
-    boost::hana::for_each(boost::hana::zip(tiles, memories),
-                          [&] (auto& x) {
-                            boost::hana::at_c<0>(x).set_array(this);
-                            boost::hana::at_c<0>(x).set_memory(boost::hana::at_c<1>(x));
-                          });
-*/
-    boost::hana::at_c<0>(tiles).set_array(this);
-    boost::hana::at_c<0>(tiles).set_memory(boost::hana::at_c<0>(memories));
+    boost::hana::for_each(tiles, [&] (auto& t) {
+        t.set_array(this);
+        t.set_memory(boost::hana::at_c<t.template get_linear_id()>
+                     (memories));
+      });
+
     boost::hana::for_each(tiles, [&] (auto& t) {
         t.thread = std::thread {[&] {
             TRISYCL_DUMP_T("Starting ME tile (" << t.x << ',' << t.y

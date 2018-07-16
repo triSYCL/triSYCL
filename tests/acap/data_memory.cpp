@@ -100,14 +100,13 @@ struct t {
 
 
 int main() {
-/*
   std::cout << std::endl << "Instantiate big MathEngine:"
             << std::endl << std::endl;
-  acap::me::array<acap::me::layout::full,
+  acap::me::array<acap::me::layout::small,
                   tile,
                   memory> me;
   me.run();
-*/
+
   std::cout << std::endl << "Instantiate tiny MathEngine:"
             << std::endl << std::endl;
   acap::me::array<acap::me::layout::one_pe, tile, memory> solitaire_me;
