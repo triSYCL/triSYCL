@@ -21,8 +21,7 @@ namespace cl::sycl::vendor::xilinx::acap::me {
 /** The MathEngine array structure
  */
 template <typename Layout,
-          template <typename Geography,
-                    typename ME_Array,
+          template <typename ME_Array,
                     int X,
                     int Y> typename Tile,
           template <typename ME_Array,
@@ -53,7 +52,7 @@ struct array {
   memory_t memories = geo::template generate_tiles<tileable_memory>();
 
   template <int X, int Y>
-  using tileable_tile = Tile<geo, array, X, Y>;
+  using tileable_tile = Tile<array, X, Y>;
   /// All the tiles of the ME array.
   /// Unfortunately it is not possible to use auto here...
   // Otherwise static inline auto

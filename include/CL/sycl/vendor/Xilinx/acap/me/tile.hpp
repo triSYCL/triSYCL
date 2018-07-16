@@ -15,13 +15,13 @@ namespace cl::sycl::vendor::xilinx::acap::me {
 
 /** The MathEngine tile infrastructure
  */
-template <typename Geography, typename ME_Array, int X, int Y>
+template <typename ME_Array, int X, int Y>
 struct tile {
   /// The tile coordinates in the grid
   static auto constexpr x = X;
   static auto constexpr y = Y;
 
-  using geo = Geography;
+  using geo = typename ME_Array::geo;
 
   /// The thread used to run this tile
   std::thread thread;

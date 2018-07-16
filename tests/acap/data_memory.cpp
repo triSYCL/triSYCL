@@ -41,15 +41,13 @@ struct memory
   };
 };
 
-template <typename Geography,
-          typename ME_Array,
+template <typename ME_Array,
           int X,
           int Y>
-struct tile : acap::me::tile<Geography,
-                             ME_Array,
+struct tile : acap::me::tile<ME_Array,
                              X,
                              Y> {
-  using t = acap::me::tile<Geography, ME_Array, X, Y>;
+  using t = acap::me::tile<ME_Array, X, Y>;
 
   void run(ME_Array &a) {
    auto &own = t::mem();
