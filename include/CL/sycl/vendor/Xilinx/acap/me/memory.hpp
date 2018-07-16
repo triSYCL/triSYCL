@@ -27,15 +27,6 @@ struct memory {
   static auto constexpr y = Y;
 
   using geo = Geography;
-
-  /// \todo Is this required
-  /// Keep a reference to the array owning this tile
-  ME_Array *me_array;
-
-  void set_array(ME_Array *array) {
-    me_array = array;
-  }
-
 };
 
 }
