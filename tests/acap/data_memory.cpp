@@ -29,9 +29,9 @@ struct black {
   int i = 7;
 };
 
-template <typename Geography, typename ME_Array, int X, int Y>
+template <typename ME_Array, int X, int Y>
 struct memory
-  : acap::me::memory<Geography, ME_Array, X, Y>
+  : acap::me::memory<ME_Array, X, Y>
   , std::conditional_t<is_white(X, Y), white, black> {
   int use_count = 0;
   int v = 42;

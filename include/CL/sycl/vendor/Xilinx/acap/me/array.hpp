@@ -25,8 +25,7 @@ template <typename Layout,
                     typename ME_Array,
                     int X,
                     int Y> typename Tile,
-          template <typename Geography,
-                    typename ME_Array,
+          template <typename ME_Array,
                     int X,
                     int Y> typename Memory>
 struct array {
@@ -44,7 +43,7 @@ struct array {
   cascade_stream_pipes[geo::x_size*geo::y_size + 1];
 
   template <int X, int Y>
-  using tileable_memory = Memory<geo, array, X, Y>;
+  using tileable_memory = Memory<array, X, Y>;
 
   /// All the memory module of the ME array.
   using memory_t = decltype(geo::template generate_tiles<tileable_memory>());

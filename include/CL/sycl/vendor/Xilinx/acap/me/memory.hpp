@@ -20,13 +20,11 @@ namespace cl::sycl::vendor::xilinx::acap::me {
 
 /** The MathEngine MathEngine Memory Module infrastructure
  */
-template <typename Geography, typename ME_Array, int X, int Y>
+template <typename ME_Array, int X, int Y>
 struct memory {
   /// The tile coordinates in the grid
   static auto constexpr x = X;
   static auto constexpr y = Y;
-
-  using geo = Geography;
 };
 
 }
