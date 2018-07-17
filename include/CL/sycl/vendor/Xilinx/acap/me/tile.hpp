@@ -79,6 +79,35 @@ struct tile {
   }
 
 
+  /// Test if a memory module exists and is connected to this tile
+  static bool constexpr is_memory_module(int dx, int dy) {
+    return geo::is_memory_module(x, y, dx, dy);
+  }
+
+
+  /// Test if a memory module exists on the left of this tile
+  static bool constexpr is_memory_module_left() {
+    return is_memory_module(-1, 0);
+  }
+
+
+  /// Test if a memory module exists on the right of this tile
+  static bool constexpr is_memory_module_right() {
+    return is_memory_module(1, 0);
+  }
+
+
+  /// Test if a memory module exists below this tile
+  static bool constexpr is_memory_module_down() {
+    return is_memory_module(0, -1);
+  }
+
+
+  /// Test if a memory module exists above this tile
+  static bool constexpr is_memory_module_up() {
+    return is_memory_module(0, 1);
+  }
+
 
   /// Test if this tile owns the start of the cascade_stream
   static bool constexpr is_cascade_start() {

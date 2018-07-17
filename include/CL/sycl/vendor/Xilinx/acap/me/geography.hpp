@@ -73,6 +73,38 @@ struct geography : Layout {
     return x == ((y & 1) ? x_min : layout::x_max) && y == layout::y_max;
   }
 
+
+  /** Test if a memory module coordinate offset is plausible
+
+      1 of the coordinate is 0 and the other one is -1 or 1
+  */
+  static bool constexpr is_valid_memory_module_offset(int dx, int dy) {
+    if (dx == 0)
+      return std::abs(dy) == 1;
+    else if (dy == 0)
+      return std::abs(dx) == 1;
+    else return false;
+  }
+
+
+  /// Test if a memory module exists and is connected to a tile
+  static bool constexpr is_memory_module(int x, int y, int dx, int dy) {
+    if (!is_valid_memory_module_offset(dx, dy))
+      return false;
+    if (y == y_min && dy == -1)
+      // No memory module below the first line
+      return false;
+    else if (y == layout::y_max && dy == 1)
+      // No memory module above the last line
+      return false;
+    else if (x == x_min && !(y & 1) && (dx == -1))
+      // No memory module on the left of the first column on even lines
+      return false;
+    else if (x == layout::x_max && (y & 1) && (dx == 1))
+      // No memory module on the right of the last column on odd lines
+      return false;
+    else return true;
+  }
 };
 
 }
