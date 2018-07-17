@@ -49,7 +49,7 @@ struct array {
 
   /// Unfortunately it is not possible to use auto here...
   // Otherwise static inline auto
-  memory_t memories = geo::template generate_tiles<tileable_memory>();
+  memory_t memory_modules = geo::template generate_tiles<tileable_memory>();
 
   template <int X, int Y>
   using tileable_tile = Tile<array, X, Y>;
@@ -59,17 +59,12 @@ struct array {
   decltype(geo::template generate_tiles<tileable_tile>()) tiles =
     geo::template generate_tiles<tileable_tile>();
 
-#if 0
-  template <int X, int Y>
-  auto get_tile() {
-    return boost::hana::find_if(
-        tiles
-      , [] (auto& tile) {
-          return true;// tile.x == x && tile.y == y;
-        }
-                                );
+
+  /// Get a memory module by its linear id
+  template <int LinearId>
+  auto &get_memory_module() {
+    return boost::hana::at_c<LinearId>(memory_modules);
   }
-#endif
 
 
   /** Cascade stream layout

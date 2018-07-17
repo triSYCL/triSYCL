@@ -106,6 +106,19 @@ struct geography : Layout {
       return false;
     else return true;
   }
+
+
+  /// Compute memory module x coordinate delta from its tile
+  static auto constexpr memory_module_dx_coordinate(int y, int dx) {
+    // Mimic Figure 2-20 on p. 65
+    return (dx - 1)/2 + (y & 1);
+  }
+
+
+  /// Compute the linear id of a memory module attached to a tile
+  static auto constexpr memory_module_linear_id(int x, int y, int dx, int dy) {
+    return linear_id(x + memory_module_dx_coordinate(y, dx), y + dy);
+  }
 };
 
 }

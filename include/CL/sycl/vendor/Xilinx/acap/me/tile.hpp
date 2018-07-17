@@ -9,7 +9,7 @@
     License. See LICENSE.TXT for details.
  */
 
-#include <thread>
+#include <type_traits>
 
 namespace cl::sycl::vendor::xilinx::acap::me {
 
@@ -28,11 +28,6 @@ struct tile {
 
   /// Keep a reference to the array owning this tile
   ME_Array *me_array;
-
-  auto &mem() {
-    return boost::hana::at_c<get_linear_id()>(me_array->memories);
-  }
-
 
   static bool constexpr is_noc() {
     return geo::is_noc_tile(x, y);
@@ -106,6 +101,57 @@ struct tile {
   /// Test if a memory module exists above this tile
   static bool constexpr is_memory_module_up() {
     return is_memory_module(0, 1);
+  }
+
+
+  /// Compute the linear id of a memory module attached to this tile
+  static auto constexpr memory_module_linear_id(int dx, int dy) {
+    return geo:: memory_module_linear_id(x, y, dx, dy);
+  }
+
+
+  /// Get the memory module on the left if it does exist
+  template <typename Dependent = tile,
+            typename = std::enable_if_t<Dependent::is_memory_module_left()>>
+  auto &mem_left() {
+    return me_array->template
+      get_memory_module<memory_module_linear_id(-1, 0)>();
+  }
+
+
+  /// Get the memory module on the right if it does exist
+  template <typename Dependent = tile,
+            typename = std::enable_if_t<Dependent::is_memory_module_right()>>
+  auto &mem_right() {
+    return me_array->template
+      get_memory_module<memory_module_linear_id(1, 0)>();
+  }
+
+
+  /// Get the memory module below if it does exist
+  template <typename Dependent = tile,
+            typename = std::enable_if_t<Dependent::is_memory_module_down()>>
+  auto &mem_down() {
+    return me_array->template
+      get_memory_module<memory_module_linear_id(0, -1)>();
+  }
+
+
+  /// Get the memory module above if it does exist
+  template <typename Dependent = tile,
+            typename = std::enable_if_t<Dependent::is_memory_module_up()>>
+  auto &mem_up() {
+    return me_array->template
+      get_memory_module<memory_module_linear_id(0, 1)>();
+  }
+
+
+  /// The memory module native to the tile
+  auto &mem() {
+    if constexpr (y & 1)
+      return mem_left();
+    else
+      return mem_right();
   }
 
 
