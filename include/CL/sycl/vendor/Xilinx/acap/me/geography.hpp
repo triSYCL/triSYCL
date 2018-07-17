@@ -80,9 +80,10 @@ struct geography : Layout {
   */
   static bool constexpr is_valid_memory_module_offset(int dx, int dy) {
     if (dx == 0)
-      return std::abs(dy) == 1;
+     // Cannot use std::abs()
+      return dy == -1 || dy == 1;
     else if (dy == 0)
-      return std::abs(dx) == 1;
+      return dx == -1 || dx == 1;
     else return false;
   }
 
