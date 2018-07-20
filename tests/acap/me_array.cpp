@@ -33,11 +33,11 @@ struct memory
     int use_count = 0;
 };
 
-template <typename Geography, typename ME_Array, int X, int Y>
+template <typename ME_Array, int X, int Y>
 struct tile
-  : acap::me::tile<Geography, ME_Array, X, Y>
+  : acap::me::tile<ME_Array, X, Y>
   , memory<X, Y> {
-  using t = acap::me::tile<Geography, ME_Array, X, Y>;
+  using t = acap::me::tile<ME_Array, X, Y>;
   int v = 42;
 
   void run() {
@@ -67,12 +67,13 @@ struct tile
 int main() {
   std::cout << std::endl << "Instantiate big MathEngine:"
             << std::endl << std::endl;
-  acap::me::array<acap::me::layout::full, tile> me;
+  acap::me::array<acap::me::layout::full, tile, acap::me::memory> me;
   me.run();
 
   std::cout << std::endl << "Instantiate tiny MathEngine:"
             << std::endl << std::endl;
-  acap::me::array<acap::me::layout::one_pe, tile> solitaire_me;
+  acap::me::array<acap::me::layout::one_pe, tile, acap::me::memory>
+    solitaire_me;
   solitaire_me.run();
 
 
