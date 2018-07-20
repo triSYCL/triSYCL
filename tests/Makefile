@@ -30,11 +30,19 @@ CL_CXX = $(LLVM_BUILD_DIR)/bin/clang++
 ## To disable asynchronous kernels, which is the default in SYCL
 #CXXFLAGS += -DTRISYCL_NO_ASYNC
 
+# To enable graphics output support
+
+# Need to install packages gtkmm-documentation libgtkmm-3.0-dev
+# libgtkmm-3.0-doc
+CXXFLAGS += -DTRISYCL_GRAPHICS `pkg-config gtkmm-3.0 --cflags`
+LDLIBS += `pkg-config gtkmm-3.0 --libs`
+
+
 # For asynchronous kernels when OpenMP is not enabled
 LDLIBS += -lpthread
 
 # To use OpenCL, set the TRISYCL_OPENCL flag
-CXXFLAGS += -DTRISYCL_OPENCL
+#CXXFLAGS += -DTRISYCL_OPENCL
 # To use generic OpenCL:
 LDLIBS += -lOpenCL
 #To use Xilinx OpenCL library without ICD
