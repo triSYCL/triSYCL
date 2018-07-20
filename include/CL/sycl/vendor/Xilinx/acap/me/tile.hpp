@@ -155,6 +155,17 @@ struct tile {
   }
 
 
+  /* Provide a run member function that does nothing so it is possible
+     to write a minimum MathEngin program that does nothing.
+
+     Note that this function is not virtual but the common case is
+     that a programmer can implement it to specify the program done by
+     a tile
+   */
+  void run(ME_Array &a) {
+  }
+
+
   /// Test if this tile owns the start of the cascade_stream
   static bool constexpr is_cascade_start() {
     return geo::is_cascade_start(x, y);
