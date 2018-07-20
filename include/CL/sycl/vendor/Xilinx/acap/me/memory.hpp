@@ -16,6 +16,8 @@
 
 #include <thread>
 
+#include "lock.hpp"
+
 namespace cl::sycl::vendor::xilinx::acap::me {
 
 /** The MathEngine MathEngine Memory Module infrastructure
@@ -25,6 +27,9 @@ struct memory {
   /// The tile coordinates in the grid
   static auto constexpr x = X;
   static auto constexpr y = Y;
+
+  /// The lock unit of the memory tile
+  lock_unit lu;
 };
 
 }
