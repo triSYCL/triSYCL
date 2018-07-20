@@ -59,18 +59,18 @@ struct tile<ME_Array, 1, 0> : acap::me::tile<ME_Array, 1, 0> {
 };
 
 int main(int argc, char *argv[]) {
-  std::thread t { [&] {
-      auto app =
-        Gtk::Application::create(argc, argv, "com.xilinx.trisycl.graphics");
-      graphics::image_grid w { 2, 3 };
-      app->run(w);
-    } };
   std::cout << std::endl << "Instantiate small MathEngine:"
             << std::endl << std::endl;
   acap::me::array<acap::me::layout::small,
                   tile,
                   memory> me;
+
+  graphics::app a { argc, argv, decltype(me)::geo::x_size,
+      decltype(me)::geo::y_size, 100, 50 };
+
+  // Launch the MathEngin program
   me.run();
-  //graphics::window w { argc, argv };
-  t.join();
+
+  // Wait for the graphics to stop
+  a.join();
 }

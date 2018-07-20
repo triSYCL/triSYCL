@@ -81,22 +81,44 @@ struct frame_grid : Gtk::Window {
 struct image_grid : frame_grid {
   std::vector<Gtk::Image> images;
 
-  image_grid(int nx, int ny) : frame_grid { nx , ny } {
+  image_grid(int nx, int ny, int image_x, int image_y)
+    : frame_grid { nx , ny } {
     for (int x = 0; x < nx; ++x)
       for (int y = 0; y < ny; ++y) {
         auto &f = get_frame(x, y);
         auto pb = Gdk::Pixbuf::create(Gdk::Colorspace::COLORSPACE_RGB
                                     , false //< has_alpha
                                     , 8 //< bits_per_sample
-                                    , 100 //< width
-                                    , 200//< height
+                                    , image_x //< width
+                                    , image_y //< height
                                       );
         images.emplace_back(pb);
-        //images.emplace_back("/home/rkeryell/Xilinx/Projects/OpenCL/SYCL/Presentations/Images/Khronos/Logos/SYCL/SYCL_500px_June16.png");
+        // Write a pixel to test
+        pb->get_pixels()[1000] = 255;
         // Display the frame with the lower y down
         f.add(images.back());
       }
     show_all_children();
+  }
+};
+
+
+struct app {
+  std::thread t;
+
+  app(int &argc, char **&argv, int nx, int ny, int image_x, int image_y) {
+    // Put all the graphics in its own thread
+    t = std::thread { [=]() mutable {
+          auto a =
+            Gtk::Application::create(argc, argv, "com.xilinx.trisycl.graphics");
+          graphics::image_grid w { nx, ny, image_x, image_y };
+          a->run(w);
+        } };
+  }
+
+
+  void join() {
+    t.join();
   }
 };
 
