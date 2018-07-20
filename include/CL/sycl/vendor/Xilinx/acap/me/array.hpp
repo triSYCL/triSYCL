@@ -101,7 +101,7 @@ struct array {
         t.thread = std::thread {[&] {
             TRISYCL_DUMP_T("Starting ME tile (" << t.x << ',' << t.y
                            << ") linear id = " << t.get_linear_id());
-            t.run(*this);
+            t.run();
             TRISYCL_DUMP_T("Stopping ME tile (" << t.x << ',' << t.y << ')');
           }
         };

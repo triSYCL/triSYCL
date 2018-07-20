@@ -40,7 +40,7 @@ struct tile
   using t = acap::me::tile<Geography, ME_Array, X, Y>;
   int v = 42;
 
-  void run(ME_Array &a) {
+  void run() {
     std::cout << "Hello, I am the ME tile (" << X << ',' << Y
               << ") using " << sizeof(*this) << " bytes of memory "
               << std::endl;

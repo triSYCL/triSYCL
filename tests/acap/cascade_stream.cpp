@@ -16,7 +16,7 @@ template <typename ME_Array, int X, int Y>
 struct tile : acap::me::tile<ME_Array, X, Y> {
   using t = acap::me::tile<ME_Array, X, Y>;
 
-  void run(ME_Array &a) {
+  void run() {
     std::cout << "Hello, I am the ME tile (" << X << ',' << Y
               << ") using " << sizeof(*this) << " bytes of memory "
               << std::endl;

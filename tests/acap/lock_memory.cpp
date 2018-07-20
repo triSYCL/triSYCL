@@ -29,7 +29,7 @@ template <typename ME_Array>
 struct tile<ME_Array, 0, 0> : acap::me::tile<ME_Array, 0, 0> {
   using t = acap::me::tile<ME_Array, 0, 0>;
 
-  void run(ME_Array &a) {
+  void run() {
     auto &m = t::mem_right();
     m.v = 42;
     for (int i = 0; i < 100; ++i) {
@@ -47,7 +47,7 @@ template <typename ME_Array>
 struct tile<ME_Array, 1, 0> : acap::me::tile<ME_Array, 1, 0> {
   using t = acap::me::tile<ME_Array, 1, 0>;
 
-  void run(ME_Array &a) {
+  void run() {
     auto &m = t::mem_left();
     for (int i = 0; i < 100; ++i) {
       m.lu.locks[0].wait_value(true);

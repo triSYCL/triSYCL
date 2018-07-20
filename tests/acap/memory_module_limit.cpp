@@ -40,7 +40,7 @@ struct test_memory {
                                Y> {
     using t = acap::me::tile<ME_Array, X, Y>;
 
-    void run(ME_Array &a) {
+    void run() {
       auto &s = mma[Y][X];
       s.left = t::is_memory_module_left();
       s.right = t::is_memory_module_right();

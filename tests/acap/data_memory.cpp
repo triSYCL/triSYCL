@@ -49,7 +49,7 @@ struct tile : acap::me::tile<ME_Array,
                              Y> {
   using t = acap::me::tile<ME_Array, X, Y>;
 
-  void run(ME_Array &a) {
+  void run() {
    auto &own = t::mem();
 
    std::cout << "Hello, I am the ME tile (" << X << ',' << Y

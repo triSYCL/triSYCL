@@ -162,7 +162,7 @@ struct tile {
      that a programmer can implement it to specify the program done by
      a tile
    */
-  void run(ME_Array &a) {
+  void run() {
   }
 
 
