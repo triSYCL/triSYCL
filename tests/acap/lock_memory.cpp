@@ -75,7 +75,7 @@ sleep(1);
   std::uint32_t pixel = 0x778899aa;
   a.update_tile_data_image(1, 2, (unsigned char *)&pixel);
   pixel = ~0x778899aa;
-  a.update_tile_data_image(0, 2, (unsigned char *)&pixel);
+  a.update_tile_data_image(0, 1, (unsigned char *)&pixel);
   // Wait for the graphics to stop
   a.join();
 }

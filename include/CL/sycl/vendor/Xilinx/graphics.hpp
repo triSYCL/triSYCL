@@ -39,8 +39,8 @@ struct frame_grid : Gtk::Window {
 
     add(sw);
     sw.add(grid);
-    for (int x = 0; x < nx; ++x)
-      for (int y = 0; y < ny; ++y) {
+    for (int y = 0; y < ny; ++y)
+      for (int x = 0; x < nx; ++x) {
         std::ostringstream s;
         s << "Tile(" << x << ',' << y << ')';
         frames.emplace_back(s.str());
@@ -95,8 +95,8 @@ struct image_grid : frame_grid {
     , image_y { image_y }
     , zoom { zoom }
   {
-    for (int x = 0; x < nx; ++x)
-      for (int y = 0; y < ny; ++y) {
+    for (int y = 0; y < ny; ++y)
+      for (int x = 0; x < nx; ++x) {
         auto &f = get_frame(x, y);
         auto pb = Gdk::Pixbuf::create(Gdk::Colorspace::COLORSPACE_RGB
                                     , false //< has_alpha
