@@ -13,6 +13,7 @@
 
 #ifdef TRISYCL_GRAPHICS
 
+#include <cstddef>
 #include <iostream>
 #include <sstream>
 
@@ -80,17 +81,28 @@ struct frame_grid : Gtk::Window {
 
 struct image_grid : frame_grid {
   std::vector<Gtk::Image> images;
+  int nx;
+  int ny;
+  int image_x;
+  int image_y;
+  int zoom;
 
-  image_grid(int nx, int ny, int image_x, int image_y)
-    : frame_grid { nx , ny } {
+  image_grid(int nx, int ny, int image_x, int image_y, int zoom)
+    : frame_grid { nx , ny }
+    , nx { nx }
+    , ny { ny }
+    , image_x { image_x }
+    , image_y { image_y }
+    , zoom { zoom }
+  {
     for (int x = 0; x < nx; ++x)
       for (int y = 0; y < ny; ++y) {
         auto &f = get_frame(x, y);
         auto pb = Gdk::Pixbuf::create(Gdk::Colorspace::COLORSPACE_RGB
                                     , false //< has_alpha
                                     , 8 //< bits_per_sample
-                                    , image_x //< width
-                                    , image_y //< height
+                                    , image_x*zoom //< width
+                                    , image_y*zoom //< height
                                       );
         images.emplace_back(pb);
         // Write a pixel to test
@@ -100,25 +112,48 @@ struct image_grid : frame_grid {
       }
     show_all_children();
   }
+
+
+  void update_tile_data_image(int x, int y, const unsigned char *data) {
+    // First buffer, allowing later zooming
+    auto pb = Gdk::Pixbuf::create_from_data(data
+                                          , Gdk::Colorspace::COLORSPACE_RGB
+                                          , false //< has_alpha
+                                          , 8 //< bits_per_sample
+                                          , image_x //< width
+                                          , image_y //< height
+                                          , image_x //< rowstride
+                                            );
+    images.at(x + nx*y).set(pb->scale_simple(image_x*zoom,
+                                             image_y*zoom,
+                                             Gdk::INTERP_NEAREST));
+    show_all_children();
+  }
 };
 
 
 struct app {
   std::thread t;
+  graphics::image_grid *w;
 
-  app(int &argc, char **&argv, int nx, int ny, int image_x, int image_y) {
+  app(int &argc, char **&argv,
+      int nx, int ny, int image_x, int image_y, int zoom) {
     // Put all the graphics in its own thread
     t = std::thread { [=]() mutable {
           auto a =
             Gtk::Application::create(argc, argv, "com.xilinx.trisycl.graphics");
-          graphics::image_grid w { nx, ny, image_x, image_y };
-          a->run(w);
+          this->w = new graphics::image_grid { nx, ny, image_x, image_y, zoom };
+          a->run(*this->w);
         } };
   }
 
 
   void join() {
     t.join();
+  }
+
+  void update_tile_data_image(int x, int y, const unsigned char *data) {
+    w->update_tile_data_image(x, y, data);
   }
 };
 

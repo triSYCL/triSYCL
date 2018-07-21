@@ -66,11 +66,16 @@ int main(int argc, char *argv[]) {
                   memory> me;
 
   graphics::app a { argc, argv, decltype(me)::geo::x_size,
-      decltype(me)::geo::y_size, 100, 50 };
+      decltype(me)::geo::y_size, 1, 1, 100 };
 
   // Launch the MathEngin program
   me.run();
 
+sleep(1);
+  std::uint32_t pixel = 0x778899aa;
+  a.update_tile_data_image(1, 2, (unsigned char *)&pixel);
+  pixel = ~0x778899aa;
+  a.update_tile_data_image(0, 2, (unsigned char *)&pixel);
   // Wait for the graphics to stop
   a.join();
 }
