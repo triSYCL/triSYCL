@@ -71,7 +71,6 @@ int main(int argc, char *argv[]) {
   // Launch the MathEngin program
   me.run();
 
-sleep(1);
   std::uint32_t pixel = 0x778899aa;
   a.update_tile_data_image(1, 2, (unsigned char *)&pixel);
   pixel = ~0x778899aa;

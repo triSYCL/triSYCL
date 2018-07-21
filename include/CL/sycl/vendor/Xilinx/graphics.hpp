@@ -138,13 +138,11 @@ struct app {
 
   app(int &argc, char **&argv,
       int nx, int ny, int image_x, int image_y, int zoom) {
+    auto a =
+      Gtk::Application::create(argc, argv, "com.xilinx.trisycl.graphics");
+    w = new graphics::image_grid { nx, ny, image_x, image_y, zoom };
     // Put all the graphics in its own thread
-    t = std::thread { [=]() mutable {
-          auto a =
-            Gtk::Application::create(argc, argv, "com.xilinx.trisycl.graphics");
-          this->w = new graphics::image_grid { nx, ny, image_x, image_y, zoom };
-          a->run(*this->w);
-        } };
+    t = std::thread { [=] { a->run(*w); } };
   }
 
 
