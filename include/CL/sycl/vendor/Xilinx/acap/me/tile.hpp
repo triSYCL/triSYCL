@@ -180,12 +180,16 @@ struct tile {
 
   template <typename T>
   auto& get_cascade_stream_in() {
+    static_assert(!is_cascade_start(), "You cannot access to the cascade stream"
+                  " input on the tile that starts the stream");
     return me_array->get_cascade_stream_in(x, y);
   }
 
 
   template <typename T>
   auto get_cascade_stream_out() {
+    static_assert(!is_cascade_end(), "You cannot access to the cascade stream"
+                  " output on the tile that starts the stream");
     return me_array->get_cascade_stream_out(x, y);
   }
 };
