@@ -9,6 +9,7 @@
 
 #include <chrono>
 #include <iostream>
+#include <memory>
 #include <thread>
 #include <type_traits>
 
@@ -17,7 +18,7 @@
 using namespace std::chrono_literals;
 using namespace cl::sycl::vendor::xilinx;
 
-graphics::app *a;
+std::unique_ptr<graphics::app> a;
 
 // All the memory modules are the same
 template <typename ME_Array, int X, int Y>
@@ -74,8 +75,8 @@ int main(int argc, char *argv[]) {
                   tile,
                   memory> me;
 
-  a = new graphics::app { argc, argv, decltype(me)::geo::x_size,
-                          decltype(me)::geo::y_size, 1, 1, 100 };
+  a.reset(new graphics::app { argc, argv, decltype(me)::geo::x_size,
+                              decltype(me)::geo::y_size, 1, 1, 100 });
 
   // Launch the MathEngine program
   me.run();

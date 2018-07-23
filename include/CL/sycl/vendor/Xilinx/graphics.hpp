@@ -15,6 +15,7 @@
 
 #include <cstddef>
 #include <iostream>
+#include <memory>
 #include <sstream>
 
 #include <gtkmm.h>
