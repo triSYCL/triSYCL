@@ -31,7 +31,7 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         auto cs_out = t::template get_cascade_stream_out<int>()
           .template get_access<access::mode::write,
                                access::target::blocking_pipe>();
-        cs_out << t::x*0x1000 + t::y;
+        cs_out << t::x*1000 + t::y;
     }
   }
 };
