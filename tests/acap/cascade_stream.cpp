@@ -17,15 +17,14 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
   using t = acap::me::tile<ME_Array, X, Y>;
 
   void run() {
-    std::cout << "Hello, I am the ME tile (" << X << ',' << Y
-              << ") using " << sizeof(*this) << " bytes of memory "
-              << std::endl;
     // Do not read at the start of the cascade
     if constexpr (!t::is_cascade_start()) {
         auto cs_in = this->template get_cascade_stream_in<int>()
           .template get_access<access::mode::read,
                                access::target::blocking_pipe>();
-       std::cout << "Reading " << cs_in.read() << std::endl;
+        auto v = cs_in.read();
+        std::cout << "Tile(" << X << ',' << Y << ") is reading "
+                  << v << std::endl;
     }
     // Do not write at the end of the cascade
     if constexpr (!t::is_cascade_end()) {
@@ -42,7 +41,6 @@ int main() {
   std::cout << std::endl << "Instantiate big MathEngine:"
             << std::endl << std::endl;
 
-  // Use directly acap::me::memory as an empty memory module
-  acap::me::array<acap::me::layout::full, tile, acap::me::memory> me;
-  me.run();
+  // Use an empty memory module
+  acap::me::array<acap::me::layout::full, tile>{}.run();
 }
