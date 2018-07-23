@@ -15,18 +15,29 @@
 #include <thread>
 
 #include "geography.hpp"
+#include "memory.hpp"
+#include "tile.hpp"
 
 namespace cl::sycl::vendor::xilinx::acap::me {
 
 /** The MathEngine array structure
- */
+
+    \param Layout is the layout description of the machine to
+    instantiate with the physical size
+
+    \param Tile is the description of the program tiles to
+    instantiate. By default each tile will run an empty program.
+
+    \param Memory is the description of the machine memory modules. By
+    default the machine has empty memory modules.
+*/
 template <typename Layout,
           template <typename ME_Array,
                     int X,
-                    int Y> typename Tile,
+                    int Y> typename Tile = acap::me::tile,
           template <typename ME_Array,
                     int X,
-                    int Y> typename Memory>
+                    int Y> typename Memory = acap::me::memory>
 struct array {
 
   using geo = geography<Layout>;
