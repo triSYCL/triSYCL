@@ -114,11 +114,22 @@ struct image_grid : frame_grid {
   }
 
 
-  void update_tile_data_image(int x, int y, const unsigned char *data) {
+  template <typename DataType>
+  void update_tile_data_image(int x, int y,
+                              const DataType *data,
+                              DataType min_value,
+                              DataType max_value) {
+    auto d = std::make_unique<std::uint32_t[]>(image_x*image_y);
+    for (int i = 0; i < image_x*image_y; ++i) {
+      std::uint8_t v = (static_cast<double>(data[i]) - min_value)*255
+        /(max_value - min_value);
+      std::cout << (int)v << std::endl;
+      d[i] = 0x10101*v;
+    }
     // First buffer, allowing later zooming
-    auto pb = Gdk::Pixbuf::create_from_data(data
+    auto pb = Gdk::Pixbuf::create_from_data(reinterpret_cast<std::uint8_t *>(d.get())
                                           , Gdk::Colorspace::COLORSPACE_RGB
-                                          , false //< has_alpha
+                                          , false//< has_alpha
                                           , 8 //< bits_per_sample
                                           , image_x //< width
                                           , image_y //< height
@@ -146,12 +157,17 @@ struct app {
   }
 
 
-  void join() {
+  /// Wait for the graphics window to end
+  void wait() {
     t.join();
   }
 
-  void update_tile_data_image(int x, int y, const unsigned char *data) {
-    w->update_tile_data_image(x, y, data);
+  template <typename DataType>
+  void update_tile_data_image(int x, int y,
+                              const DataType *data,
+                              DataType min_value,
+                              DataType max_value) {
+    w->update_tile_data_image(x, y, data, min_value, max_value);
   }
 };
 
