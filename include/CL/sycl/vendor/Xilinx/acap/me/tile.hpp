@@ -111,36 +111,38 @@ struct tile {
 
 
   /// Get the memory module on the left if it does exist
-  template <typename Dependent = tile,
-            typename = std::enable_if_t<Dependent::is_memory_module_left()>>
-  auto &mem_left() {
-    return me_array->template
+   auto &mem_left() {
+     static_assert(is_memory_module_left(), "There is no memory module"
+                   " on the left of this tile in the left column and"
+                   " on an even row");
+     return me_array->template
       get_memory_module<memory_module_linear_id(-1, 0)>();
   }
 
 
   /// Get the memory module on the right if it does exist
-  template <typename Dependent = tile,
-            typename = std::enable_if_t<Dependent::is_memory_module_right()>>
   auto &mem_right() {
+    static_assert(is_memory_module_right(), "There is no memory module"
+                  " on the right of this tile in the right column and"
+                   " on an odd row");
     return me_array->template
       get_memory_module<memory_module_linear_id(1, 0)>();
   }
 
 
   /// Get the memory module below if it does exist
-  template <typename Dependent = tile,
-            typename = std::enable_if_t<Dependent::is_memory_module_down()>>
   auto &mem_down() {
+    static_assert(is_memory_module_down(), "There is no memory module"
+                  " below the lower tile row");
     return me_array->template
       get_memory_module<memory_module_linear_id(0, -1)>();
   }
 
 
   /// Get the memory module above if it does exist
-  template <typename Dependent = tile,
-            typename = std::enable_if_t<Dependent::is_memory_module_up()>>
   auto &mem_up() {
+    static_assert(is_memory_module_up(), "There is no memory module"
+                  " above the upper tile row");
     return me_array->template
       get_memory_module<memory_module_linear_id(0, 1)>();
   }
