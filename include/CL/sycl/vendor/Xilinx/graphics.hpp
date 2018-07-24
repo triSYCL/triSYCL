@@ -48,7 +48,7 @@ struct frame_grid : Gtk::Window {
         s << "Tile(" << x << ',' << y << ')';
         frames.emplace_back(s.str());
         frames.back().set_shadow_type(Gtk::SHADOW_ETCHED_OUT);
-        frames.back().set_border_width(10);
+        frames.back().set_border_width(1);
         // Display the frame with the lower y down in a mathematical sense
         grid.attach(frames.back(), x, ny - y - 1, 1, 1);
       }
