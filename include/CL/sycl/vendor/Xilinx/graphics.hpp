@@ -14,6 +14,7 @@
 #ifdef TRISYCL_GRAPHICS
 
 #include <cstddef>
+#include <functional>
 #include <iostream>
 #include <memory>
 #include <mutex>
@@ -89,8 +90,13 @@ struct image_grid : frame_grid {
   int image_y;
   int zoom;
 
+  /// Dispatcher to invoke something in the graphics thread in a safe way
+  Glib::Dispatcher dispatcher;
+  /// What to dispatch
+  std::function<void(void)> work_to_dispatch;
   /// Protection against concurrent update
   std::mutex protection;
+
 
   image_grid(int nx, int ny, int image_x, int image_y, int zoom)
     : frame_grid { nx , ny }
@@ -116,7 +122,21 @@ struct image_grid : frame_grid {
         f.add(images.back());
       }
     show_all_children();
+    // Hook a generic dispatcher
+    dispatcher.connect([&] {
+        work_to_dispatch();
+        protection.unlock();
+      });
   }
+
+
+  // Submit some work to the graphics thread
+  void submit(std::function<void(void)> f) {
+    protection.lock();
+    work_to_dispatch = f;
+    // Ask the graphics thread for some work
+    dispatcher.emit();
+  };
 
 
   template <typename DataType, typename RangeValue>
@@ -125,7 +145,11 @@ struct image_grid : frame_grid {
                               RangeValue min_value,
                               RangeValue max_value) {
     // RGB 8 bit images, so 8 bytes per pixel
-    auto d = std::make_unique<std::uint8_t[]>(3*image_x*image_y);
+    /* Painful: first I cannot use a std::unique_ptr because the
+       std::function below needs to be copy-constructible, then the
+       std::make_shared taking an array size comes only in C++20 while
+       it is available for std::make_unique in C++17... */
+    std::shared_ptr<std::uint8_t[]> d { new std::uint8_t[3*image_x*image_y] };
     auto output = d.get();
     for (int j = 0; j < image_y; ++j)
       for (int i = 0; i < image_x; ++i) {
@@ -134,24 +158,26 @@ struct image_grid : frame_grid {
         auto linear = i + image_x*(image_y - 1 - j);
         std::uint8_t v = (static_cast<double>(data[linear]) - min_value)
           *255/(max_value - min_value);
+        // Write the same value for RGB to have a grey level
         *output++ = v;
         *output++ = v;
         *output++ = v;
       }
-    // First buffer, allowing later zooming
-    auto pb = Gdk::Pixbuf::create_from_data(d.get()
-                                          , Gdk::Colorspace::COLORSPACE_RGB
-                                          , false//< has_alpha
-                                          , 8 //< bits_per_sample
-                                          , image_x //< width
-                                          , image_y //< height
-                                          , image_x*3 //< rowstride
+    submit([=] {
+        // Create a first buffer, allowing later zooming
+        auto pb = Gdk::Pixbuf::create_from_data(d.get()
+                                              , Gdk::Colorspace::COLORSPACE_RGB
+                                              , false//< has_alpha
+                                              , 8 //< bits_per_sample
+                                              , image_x //< width
+                                              , image_y //< height
+                                              , image_x*3 //< rowstride
                                             );
-    std::unique_lock l { protection };
-    images.at(x + nx*y).set(pb->scale_simple(image_x*zoom,
-                                             image_y*zoom,
-                                             Gdk::INTERP_NEAREST));
-    show_all_children();
+        // Update the pixel buffer of the image with some zooming
+        images.at(x + nx*y).set(pb->scale_simple(image_x*zoom,
+                                                 image_y*zoom,
+                                                 Gdk::INTERP_NEAREST));
+      });
   }
 };
 

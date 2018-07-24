@@ -141,7 +141,7 @@ CLEANING_TARGETS += $(KERNELS_BC) $(KERNELS_BIN) $(KERNELS_INTERNALIZED_CXX) \
 # The implementation uses C++14.
 # Use -Wno-ignored-attributes to avoid a lot of warning with
 # Boost.Compute and g++ version >= 6
-CXXFLAGS += -Wall -Wno-ignored-attributes -std=c++1z -I$(triSYCL_DIR)/include \
+CXXFLAGS += -Wall -Wno-ignored-attributes -std=c++2a -I$(triSYCL_DIR)/include \
 	-I$(triSYCL_DIR)/tests/common
 
 # Vivado HLS path
