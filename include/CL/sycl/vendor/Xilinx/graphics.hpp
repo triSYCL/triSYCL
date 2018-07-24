@@ -16,6 +16,7 @@
 #include <cstddef>
 #include <iostream>
 #include <memory>
+#include <mutex>
 #include <sstream>
 
 #include <gtkmm.h>
@@ -29,10 +30,10 @@ struct frame_grid : Gtk::Window {
   Gtk::Button close_button { "Close" };
   std::vector<Gtk::Frame> frames;
 
-  // Number of frame columns
+  /// Number of frame columns
   int nx;
 
-  // Number of frame lines
+  /// Number of frame lines
   int ny;
 
   frame_grid(int nx, int ny) : nx { nx }, ny { ny } {
@@ -154,14 +155,25 @@ struct image_grid : frame_grid {
 struct app {
   std::thread t;
   graphics::image_grid *w;
+  std::mutex graphics_protection;
 
   app(int &argc, char **&argv,
       int nx, int ny, int image_x, int image_y, int zoom) {
-    auto a =
-      Gtk::Application::create(argc, argv, "com.xilinx.trisycl.graphics");
-    w = new graphics::image_grid { nx, ny, image_x, image_y, zoom };
+    // To be sure not passing over the asynchronous graphics start
+    graphics_protection.lock();;
     // Put all the graphics in its own thread
-    t = std::thread { [=] { a->run(*w); } };
+    t = std::thread { [=]() mutable {
+        auto a =
+          Gtk::Application::create(argc, argv, "com.xilinx.trisycl.graphics");
+        /* Create the graphics object in this thread so the dispatcher
+           is bound to this thread too */
+        w = new graphics::image_grid { nx, ny, image_x, image_y, zoom };
+        // OK, the graphics system is in a usable state
+        graphics_protection.unlock();
+        a->run(*w);
+      } };
+    // Wait for the graphics to start
+    graphics_protection.lock();
   }
 
 
