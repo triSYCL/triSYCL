@@ -115,26 +115,28 @@ struct image_grid : frame_grid {
   }
 
 
-  template <typename DataType>
+  template <typename DataType, typename RangeValue>
   void update_tile_data_image(int x, int y,
                               const DataType *data,
-                              DataType min_value,
-                              DataType max_value) {
-    auto d = std::make_unique<std::uint32_t[]>(image_x*image_y);
+                              RangeValue min_value,
+                              RangeValue max_value) {
+    // RGB 8 bit images, so 8 bytes per pixel
+    auto d = std::make_unique<std::uint8_t[]>(3*image_x*image_y);
     for (int i = 0; i < image_x*image_y; ++i) {
       std::uint8_t v = (static_cast<double>(data[i]) - min_value)*255
         /(max_value - min_value);
-      std::cout << (int)v << std::endl;
-      d[i] = 0x10101*v;
+      d[3*i] = v;
+      d[3*i +  1] = v;
+      d[3*i + 2] = v;
     }
     // First buffer, allowing later zooming
-    auto pb = Gdk::Pixbuf::create_from_data(reinterpret_cast<std::uint8_t *>(d.get())
+    auto pb = Gdk::Pixbuf::create_from_data(d.get()
                                           , Gdk::Colorspace::COLORSPACE_RGB
                                           , false//< has_alpha
                                           , 8 //< bits_per_sample
                                           , image_x //< width
                                           , image_y //< height
-                                          , image_x //< rowstride
+                                          , image_x*3 //< rowstride
                                             );
     images.at(x + nx*y).set(pb->scale_simple(image_x*zoom,
                                              image_y*zoom,
@@ -163,13 +165,15 @@ struct app {
     t.join();
   }
 
-  template <typename DataType>
+
+  template <typename DataType, typename RangeValue>
   void update_tile_data_image(int x, int y,
                               const DataType *data,
-                              DataType min_value,
-                              DataType max_value) {
+                              RangeValue min_value,
+                              RangeValue max_value) {
     w->update_tile_data_image(x, y, data, min_value, max_value);
-  }
+  };
+
 };
 
 }
