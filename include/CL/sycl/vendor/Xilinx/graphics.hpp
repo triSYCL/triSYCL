@@ -89,6 +89,9 @@ struct image_grid : frame_grid {
   int image_y;
   int zoom;
 
+  /// Protection against concurrent update
+  std::mutex protection;
+
   image_grid(int nx, int ny, int image_x, int image_y, int zoom)
     : frame_grid { nx , ny }
     , nx { nx }
@@ -144,6 +147,7 @@ struct image_grid : frame_grid {
                                           , image_y //< height
                                           , image_x*3 //< rowstride
                                             );
+    std::unique_lock l { protection };
     images.at(x + nx*y).set(pb->scale_simple(image_x*zoom,
                                              image_y*zoom,
                                              Gdk::INTERP_NEAREST));
