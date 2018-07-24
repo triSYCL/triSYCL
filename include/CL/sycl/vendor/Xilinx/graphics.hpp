@@ -47,7 +47,7 @@ struct frame_grid : Gtk::Window {
         frames.emplace_back(s.str());
         frames.back().set_shadow_type(Gtk::SHADOW_ETCHED_OUT);
         frames.back().set_border_width(10);
-        // Display the frame with the lower y down
+        // Display the frame with the lower y down in a mathematical sense
         grid.attach(frames.back(), x, ny - y - 1, 1, 1);
       }
 
@@ -122,13 +122,18 @@ struct image_grid : frame_grid {
                               RangeValue max_value) {
     // RGB 8 bit images, so 8 bytes per pixel
     auto d = std::make_unique<std::uint8_t[]>(3*image_x*image_y);
-    for (int i = 0; i < image_x*image_y; ++i) {
-      std::uint8_t v = (static_cast<double>(data[i]) - min_value)*255
-        /(max_value - min_value);
-      d[3*i] = v;
-      d[3*i +  1] = v;
-      d[3*i + 2] = v;
-    }
+    auto output = d.get();
+    for (int j = 0; j < image_y; ++j)
+      for (int i = 0; i < image_x; ++i) {
+        // Mirror the image vertically to display the pixels in a
+        // mathematical sense
+        auto linear = i + image_x*(image_y - 1 - j);
+        std::uint8_t v = (static_cast<double>(data[linear]) - min_value)
+          *255/(max_value - min_value);
+        *output++ = v;
+        *output++ = v;
+        *output++ = v;
+      }
     // First buffer, allowing later zooming
     auto pb = Gdk::Pixbuf::create_from_data(d.get()
                                           , Gdk::Colorspace::COLORSPACE_RGB
