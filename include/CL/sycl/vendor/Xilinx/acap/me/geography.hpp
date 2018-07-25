@@ -80,7 +80,7 @@ struct geography : Layout {
   */
   static bool constexpr is_valid_memory_module_offset(int dx, int dy) {
     if (dx == 0)
-     // Cannot use std::abs()
+     // Cannot use std::abs() because it is not constexpr in C++17
       return dy == -1 || dy == 1;
     else if (dy == 0)
       return dx == -1 || dx == 1;
@@ -117,7 +117,11 @@ struct geography : Layout {
 
   /// Compute the linear id of a memory module attached to a tile
   static auto constexpr memory_module_linear_id(int x, int y, int dx, int dy) {
-    return linear_id(x + memory_module_dx_coordinate(y, dx), y + dy);
+    if (dx == 0)
+      return linear_id(x, y + dy);
+    else
+      // Take into account the horizontal chessboard-like skewing
+      return linear_id(x + memory_module_dx_coordinate(y, dx), y);
   }
 };
 
