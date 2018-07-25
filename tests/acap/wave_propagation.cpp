@@ -56,6 +56,22 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         m.u[j][i] += up*alpha;
         m.v[j][i] += vp*alpha;
       }
+    // Transfer first line of u to next memory module on the left
+    if constexpr ((Y & 1) && t::is_memory_module_right()) {
+      auto& right = t::mem_right();
+      for (int j = 0; j < image_size; ++j)
+        m.u[j][image_size - 1] = right.u[j][0];
+    }
+    if constexpr (!(Y & 1) && t::is_memory_module_left()) {
+      auto& left = t::mem_left();
+      for (int j = 0; j < image_size; ++j)
+        left.u[j][image_size - 1] = m.u[j][0];
+    }
+    if constexpr (t::is_memory_module_down()) {
+      auto& below = t::mem_down();
+      for (int i = 0; i < image_size; ++i)
+        below.v[image_size - 1][i] = m.v[0][i];
+    }
     for (int j = 1; j < image_size; ++j)
       for (int i = 1; i < image_size; ++i) {
         // div speed
@@ -71,6 +87,7 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
       for (int i = 0; i < image_size; ++i)
         above.w[0][i] = m.w[image_size - 1][i];
     }
+    // Transfer last line of w to next memory module on the right
     if constexpr ((Y & 1) && t::is_memory_module_right()) {
       auto& right = t::mem_right();
       for (int j = 0; j < image_size; ++j)
