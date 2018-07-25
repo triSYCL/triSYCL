@@ -42,7 +42,7 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         m.side[j][i] = K;
         m.depth[j][i] = 2600.0;
       }
-    if (X == 0 && Y == 1) m.w[image_size/3][image_size/2] = 100;
+    if (X == 0 && Y == 0) m.w[image_size/3][image_size/2+image_size/4] = 100;
   }
 
   void compute() {
@@ -71,10 +71,15 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
       for (int i = 0; i < image_size; ++i)
         above.w[0][i] = m.w[image_size - 1][i];
     }
-    if constexpr (t::is_memory_module_right()) {
+    if constexpr ((Y & 1) && t::is_memory_module_right()) {
       auto& right = t::mem_right();
       for (int j = 0; j < image_size; ++j)
         right.w[j][0] = m.w[j][image_size - 1];
+    }
+    if constexpr (!(Y & 1) && t::is_memory_module_left()) {
+      auto& left = t::mem_left();
+      for (int j = 0; j < image_size; ++j)
+        m.w[j][0] = left.w[j][image_size - 1];
     }
   }
 
