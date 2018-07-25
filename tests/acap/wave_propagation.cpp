@@ -42,30 +42,41 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         m.side[j][i] = K;
         m.depth[j][i] = 2600.0;
       }
-    m.w[image_size/3][image_size/2] = 100;
+    if (X == 0 && Y == 1) m.w[image_size/3][image_size/2] = 100;
   }
 
   void compute() {
     auto& m = t::mem();
     for (int j = 0; j < image_size - 1; ++j)
       for (int i = 0; i < image_size - 1; ++i) {
-      // grad w
-      auto up = m.w[i + 1][j] - m.w[i][j];
-      auto vp = m.w[i][j + 1] - m.w[i][j];
-      // Integrate speed
-      m.u[i][j]  += up*alpha;
-      m.v[i][j]  += vp*alpha;
-     }
+        // grad w
+        auto up = m.w[j][i + 1] - m.w[j][i];
+        auto vp = m.w[j + 1][i] - m.w[j][i];
+        // Integrate speed
+        m.u[j][i] += up*alpha;
+        m.v[j][i] += vp*alpha;
+      }
     for (int j = 1; j < image_size; ++j)
       for (int i = 1; i < image_size; ++i) {
-      // div speed
-      auto wp = (m.u[i][j] - m.u[i - 1][j]) + (m.v[i][j] - m.v[i][j - 1]);
-      wp *= m.side[i][j]*(m.depth[i][j] + m.w[i][j]);
-      // Integrate depth
-      m.w[i][j] += wp;
-      // Add some dissipation for the damping
-      m.w[i][j] *= 0.995;
-    }  }
+        // div speed
+        auto wp = (m.u[j][i] - m.u[j][i - 1]) + (m.v[j][i] - m.v[j - 1][i]);
+        wp *= m.side[j][i]*(m.depth[j][i] + m.w[j][i]);
+        // Integrate depth
+        m.w[j][i] += wp;
+        // Add some dissipation for the damping
+        m.w[j][i] *= 0.995;
+      }
+    if constexpr (t::is_memory_module_up()) {
+      auto& above = t::mem_up();
+      for (int i = 0; i < image_size; ++i)
+        above.w[0][i] = m.w[image_size - 1][i];
+    }
+    if constexpr (t::is_memory_module_right()) {
+      auto& right = t::mem_right();
+      for (int j = 0; j < image_size; ++j)
+        right.w[j][0] = m.w[j][image_size - 1];
+    }
+  }
 
   void run() {
     initialize_space();
