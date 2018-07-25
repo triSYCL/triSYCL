@@ -70,7 +70,7 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
   void run() {
     initialize_space();
     auto& m = t::mem();
-    for (;;) {
+    while (!a->is_done()) {
       compute();
       a->update_tile_data_image(t::x, t::y, &m.w[0][0], -1.0, 1.0);
     }

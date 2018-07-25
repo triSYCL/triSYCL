@@ -13,6 +13,7 @@
 
 #ifdef TRISYCL_GRAPHICS
 
+#include <atomic>
 #include <cstddef>
 #include <functional>
 #include <iostream>
@@ -36,6 +37,9 @@ struct frame_grid : Gtk::Window {
 
   /// Number of frame lines
   int ny;
+
+  // An action to do when the window is closed
+  std::function<void(void)> close_action;
 
   frame_grid(int nx, int ny) : nx { nx }, ny { ny } {
     set_default_size(900, 600);
@@ -67,11 +71,21 @@ struct frame_grid : Gtk::Window {
 
     // Connect the clicked signal of the close button to
     close_button.signal_clicked().connect([this] {
+        // Unmap the window from the screen
         hide();
+        // Call the handler if it does exist
+        if (close_action)
+          close_action();
       });
 
     // Show all children of the window
     show_all_children();
+  }
+
+
+  // Set a function to be called on close
+  void set_close_action(std::function<void(void)> f) {
+    close_action = f;
   }
 
 
@@ -186,6 +200,8 @@ struct app {
   std::thread t;
   graphics::image_grid *w;
   std::mutex graphics_protection;
+  /// Set to true by the closing handler
+  std::atomic<bool> done;
 
   app(int &argc, char **&argv,
       int nx, int ny, int image_x, int image_y, int zoom) {
@@ -200,6 +216,7 @@ struct app {
         w = new graphics::image_grid { nx, ny, image_x, image_y, zoom };
         // OK, the graphics system is in a usable state
         graphics_protection.unlock();
+        w->set_close_action([&] { done = true; });
         a->run(*w);
       } };
     // Wait for the graphics to start
@@ -210,6 +227,12 @@ struct app {
   /// Wait for the graphics window to end
   void wait() {
     t.join();
+  }
+
+
+  // Test if the window has been closed
+  bool is_done() {
+    return done;
   }
 
 
