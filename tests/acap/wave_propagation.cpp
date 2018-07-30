@@ -98,10 +98,36 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
       m.lu.locks[0].release_value(false);
     }
     // Transfer last line of w to next memory module on the right
-    if constexpr ((Y & 1) && t::is_memory_module_right()) {
-      auto& right = t::mem_right();
-      for (int j = 0; j < image_size; ++j)
-        right.w[j][0] = m.w[j][image_size - 1];
+    if constexpr (Y & 1) {
+      if constexpr (t::is_memory_module_right()) {
+        auto& right = t::mem_right();
+        std::cout << "right lock(" << X << ',' << Y
+                  << ")[1].wait_value(false) "
+                  << (void*) &right.lu.locks[1] << std::endl;
+        right.lu.locks[1].wait_value(false);
+        std::cout << "right lock(" << X << ',' << Y
+                  << ")[1].wait_value(false) "
+                  << (void*) &right.lu.locks[1] << " passed" << std::endl;
+        for (int j = 0; j < image_size; ++j)
+          right.w[j][0] = m.w[j][image_size - 1];
+        std::cout << "right lock(" << X << ',' << Y
+                  << ")[1].release_value(true) "
+                  << (void*) &right.lu.locks[1] << std::endl;
+        right.lu.locks[1].release_value(true);
+        std::cout << "right lock(" << X << ',' << Y
+                  << ")[1].release_value(true) "
+                  << (void*) &right.lu.locks[1] << " passed" << std::endl;
+      }
+      if constexpr (!t::is_left_column()) {
+        std::cout << "right lock(" << X << ',' << Y
+                  << ")[1].wait_value(true) "
+                  << (void*) &m.lu.locks[1] << std::endl;
+        m.lu.locks[1].wait_value(true);
+        m.lu.locks[1].release_value(false);
+        std::cout << "lock(" << X << ',' << Y
+                  << ")[1].wait_value(true) "
+                  << (void*) &m.lu.locks[1] << " passed" << std::endl;
+      }
     }
     if constexpr (!(Y & 1) && t::is_memory_module_left()) {
       auto& left = t::mem_left();
@@ -115,6 +141,8 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
     auto& m = t::mem();
     while (!a->is_done()) {
       compute();
+      std::cout << "compute(" << X << ',' << Y
+                << ") done" << std::endl;
       a->update_tile_data_image(t::x, t::y, &m.w[0][0], -1.0, 1.0);
     }
   }
