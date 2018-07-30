@@ -56,6 +56,7 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         m.u[j][i] += up*alpha;
         m.v[j][i] += vp*alpha;
       }
+#if 0
     // Transfer first line of u to next memory module on the left
     if constexpr ((Y & 1) && t::is_memory_module_right()) {
       auto& right = t::mem_right();
@@ -69,9 +70,12 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
     }
     if constexpr (t::is_memory_module_down()) {
       auto& below = t::mem_down();
+            m.lu.locks[0].wait_value(true);
+
       for (int i = 0; i < image_size; ++i)
         below.v[image_size - 1][i] = m.v[0][i];
     }
+#endif
     for (int j = 1; j < image_size; ++j)
       for (int i = 1; i < image_size; ++i) {
         // div speed
@@ -84,8 +88,14 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
       }
     if constexpr (t::is_memory_module_up()) {
       auto& above = t::mem_up();
+      above.lu.locks[0].wait_value(false);
       for (int i = 0; i < image_size; ++i)
         above.w[0][i] = m.w[image_size - 1][i];
+      above.lu.locks[0].release_value(true);
+    }
+    if constexpr (t::is_memory_module_down()) {
+      m.lu.locks[0].wait_value(true);
+      m.lu.locks[0].release_value(false);
     }
     // Transfer last line of w to next memory module on the right
     if constexpr ((Y & 1) && t::is_memory_module_right()) {
