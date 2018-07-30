@@ -74,6 +74,29 @@ struct tile {
   }
 
 
+  /// Test if the tile is in the left column
+  static bool constexpr is_left_column() {
+    return geo::is_left_column(x);
+  }
+
+
+  /// Test if the tile is in the right column
+  static bool constexpr is_right_column() {
+    return geo::is_right_column(x);
+  }
+
+
+  /// Test if the tile is in the bottom row
+  static bool constexpr is_bottom_row() {
+    return geo::is_bottom_row(y);
+  }
+
+
+  /// Test if the tile is in the top row
+  static bool constexpr is_top_row() {
+    return geo::is_top_row(y);
+  }
+
   /// Test if a memory module exists and is connected to this tile
   static bool constexpr is_memory_module(int dx, int dy) {
     return geo::is_memory_module(x, y, dx, dy);

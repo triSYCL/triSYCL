@@ -55,6 +55,30 @@ struct geography : Layout {
     return y_min <= y && y <= layout::y_max;
   }
 
+
+  /// Test if a tile is in the left column
+  static bool constexpr is_left_column(int x) {
+    return x == x_min;
+  }
+
+
+  /// Test if a tile is in the right column
+  static bool constexpr is_right_column(int x) {
+    return x == layout::x_max;
+  }
+
+
+  /// Test if a tile is in the bottom row
+  static bool constexpr is_bottom_row(int y) {
+    return y == y_min;
+  }
+
+
+  /// Test if a tile is in the top row
+  static bool constexpr is_top_row(int y) {
+    return y == layout::y_max;
+  }
+
   static bool constexpr is_shim_tile(int x, int y) {
     // It could be more optimized, but like that it is clearer
     return layout::is_noc_tile(x, y) || layout::is_pl_tile(x, y);
