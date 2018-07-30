@@ -103,7 +103,7 @@ public:
       \todo To be implemented
   */
   vector_class<cl::sycl::device> get_devices() const override {
-    vector_class<cl::sycl::device>devices;
+    vector_class<cl::sycl::device> devices;
 
     for (const auto &d : c.get_devices())
       devices.push_back(d);
