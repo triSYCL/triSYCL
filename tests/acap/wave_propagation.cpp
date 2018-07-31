@@ -68,14 +68,18 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
       for (int j = 0; j < image_size; ++j)
         left.u[j][image_size - 1] = m.u[j][0];
     }
+#endif
     if constexpr (t::is_memory_module_down()) {
       auto& below = t::mem_down();
-            m.lu.locks[0].wait_value(true);
-
+      below.lu.locks[3].wait_value(false);
       for (int i = 0; i < image_size; ++i)
         below.v[image_size - 1][i] = m.v[0][i];
+      below.lu.locks[3].release_value(true);
     }
-#endif
+    if constexpr (!t::is_top_row()) {
+      m.lu.locks[3].wait_value(true);
+      m.lu.locks[3].release_value(false);
+    }
     for (int j = 1; j < image_size; ++j)
       for (int i = 1; i < image_size; ++i) {
         // div speed
@@ -84,7 +88,7 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         // Integrate depth
         m.w[j][i] += wp;
         // Add some dissipation for the damping
-        m.w[j][i] *= 0.995;
+        m.w[j][i] *= 0.999;
       }
     if constexpr (t::is_memory_module_up()) {
       auto& above = t::mem_up();
