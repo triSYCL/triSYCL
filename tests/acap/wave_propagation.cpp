@@ -5,6 +5,7 @@
    RUN: %{execute}%s
 */
 
+#include <algorithm>
 #include <cstdint>
 #include <iostream>
 
@@ -28,6 +29,12 @@ struct memory : acap::me::memory<ME_Array, X, Y> {
   double side[image_size][image_size];
   double depth[image_size][image_size]; // Average depth
 };
+
+
+static auto minmax_element(const double value[image_size][image_size]) {
+  return std::minmax_element(&value[0][0],
+                             &value[image_size][image_size]);
+}
 
 // All the tiles run the same program
 template <typename ME_Array, int X, int Y>
@@ -142,6 +149,10 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         m.lu.locks[1].release_value(false);
       }
     }
+    auto [min_element, max_element] = minmax_element(m.w);
+    std::cout << "compute(" << X << ',' << Y
+              << ") done" << *min_element << ',' << *max_element
+              << std::endl;
   }
 
   void run() {
