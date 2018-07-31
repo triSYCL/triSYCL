@@ -17,9 +17,14 @@ int main() {
         sycl::buffer<int> inputABuffer(inputA.data(), inputA.size());
         sycl::buffer<int> inputBBuffer(inputB.data(), inputB.size());
         sycl::buffer<int> outputBuffer(output.data(), output.size());
-
-        sycl::context myContext { sycl::gpu_selector { }};
-        sycl::queue myQueue(myContext, sycl::gpu_selector { });
+        sycl::queue myQueue;
+        try {
+            sycl::context myContext { sycl::gpu_selector { }};
+            myQueue = sycl::queue { myContext, sycl::gpu_selector { } };
+        }
+        catch (cl::sycl::runtime_error &) {
+	    // Do nothing, host queue already in myQueue.
+        }
 
         myQueue.submit([&](sycl::handler &cgh) {
             sycl::accessor<int, 1, sycl::access::mode::read>   a(inputABuffer, cgh);
