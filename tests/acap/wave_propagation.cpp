@@ -119,32 +119,14 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
     if constexpr (Y & 1) {
       if constexpr (t::is_memory_module_right()) {
         auto& right = t::mem_right();
-        std::cout << "right lock(" << X << ',' << Y
-                  << ")[1].wait_value(false) "
-                  << (void*) &right.lu.locks[1] << std::endl;
         right.lu.locks[1].wait_value(false);
-        std::cout << "right lock(" << X << ',' << Y
-                  << ")[1].wait_value(false) "
-                  << (void*) &right.lu.locks[1] << " passed" << std::endl;
         for (int j = 0; j < image_size; ++j)
           right.w[j][0] = m.w[j][image_size - 1];
-        std::cout << "right lock(" << X << ',' << Y
-                  << ")[1].release_value(true) "
-                  << (void*) &right.lu.locks[1] << std::endl;
         right.lu.locks[1].release_value(true);
-        std::cout << "right lock(" << X << ',' << Y
-                  << ")[1].release_value(true) "
-                  << (void*) &right.lu.locks[1] << " passed" << std::endl;
       }
       if constexpr (!t::is_left_column()) {
-        std::cout << "right lock(" << X << ',' << Y
-                  << ")[1].wait_value(true) "
-                  << (void*) &m.lu.locks[1] << std::endl;
         m.lu.locks[1].wait_value(true);
         m.lu.locks[1].release_value(false);
-        std::cout << "lock(" << X << ',' << Y
-                  << ")[1].wait_value(true) "
-                  << (void*) &m.lu.locks[1] << " passed" << std::endl;
       }
     }
     if constexpr (!(Y & 1)) {
