@@ -56,19 +56,33 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         m.u[j][i] += up*alpha;
         m.v[j][i] += vp*alpha;
       }
-#if 0
     // Transfer first line of u to next memory module on the left
-    if constexpr ((Y & 1) && t::is_memory_module_right()) {
-      auto& right = t::mem_right();
-      for (int j = 0; j < image_size; ++j)
-        m.u[j][image_size - 1] = right.u[j][0];
+    if constexpr (Y & 1) {
+      if constexpr (t::is_memory_module_right()) {
+        auto& right = t::mem_right();
+        right.lu.locks[2].wait_value(false);
+        for (int j = 0; j < image_size; ++j)
+          m.u[j][image_size - 1] = right.u[j][0];
+        right.lu.locks[2].release_value(true);
+      }
+      if constexpr (!t::is_left_column()) {
+        m.lu.locks[2].wait_value(true);
+        m.lu.locks[2].release_value(false);
+      }
     }
-    if constexpr (!(Y & 1) && t::is_memory_module_left()) {
-      auto& left = t::mem_left();
-      for (int j = 0; j < image_size; ++j)
-        left.u[j][image_size - 1] = m.u[j][0];
+    if constexpr (!(Y & 1)) {
+      if constexpr (t::is_memory_module_left()) {
+        auto& left = t::mem_left();
+        left.lu.locks[2].wait_value(false);
+        for (int j = 0; j < image_size; ++j)
+          left.u[j][image_size - 1] = m.u[j][0];
+        left.lu.locks[2].release_value(true);
+      }
+      if constexpr (!t::is_right_column()) {
+        m.lu.locks[2].wait_value(true);
+        m.lu.locks[2].release_value(false);
+      }
     }
-#endif
     if constexpr (t::is_memory_module_down()) {
       auto& below = t::mem_down();
       below.lu.locks[3].wait_value(false);
