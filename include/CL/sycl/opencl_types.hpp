@@ -68,7 +68,10 @@ namespace sycl {
 */
 #define TRISYCL_DEFINE_TYPES(scalar, i)                                        \
   using TRISYCL_SIZED_NAME(TRISYCL_TYPE_CL_NAME(scalar), i) =                  \
-    BOOST_PP_CAT(TRISYCL_TYPE_NAME(scalar), i);
+    BOOST_PP_IF(                                                               \
+      BOOST_PP_EQUAL(i, 1),                                                    \
+      TRISYCL_TYPE_ACTUAL_NAME(scalar),                                        \
+      BOOST_PP_CAT(TRISYCL_TYPE_NAME(scalar), i));
 
 #else
 
