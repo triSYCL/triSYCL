@@ -219,7 +219,7 @@ void parallel_for_workgroup(nd_range<Dimensions> r,
                        range<Dimensions>,
                        ParallelForFunctor,
                        group<Dimensions>> {
-    r.get_group(),
+    r.get_group_range(),
     f,
     g };
 }
@@ -313,7 +313,7 @@ void parallel_for(nd_range<Dimensions> r,
                   ParallelForFunctor f) {
   // To iterate on the work-group
   id<Dimensions> group;
-  range<Dimensions> group_range = r.get_group();
+  range<Dimensions> group_range = r.get_group_range();
 
 #ifdef _OPENMP
 
@@ -334,7 +334,7 @@ void parallel_for(nd_range<Dimensions> r,
 
   // To iterate on the local work-item
   id<Dimensions> local;
-  range<Dimensions> local_range = r.get_local();
+  range<Dimensions> local_range = r.get_local_range();
 
   // Reconstruct the item from its group and local id
   auto reconstruct_item = [&] (id<Dimensions> l) {

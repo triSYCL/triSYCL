@@ -77,8 +77,8 @@ auto display_test = [](auto ndi) {
   ndi.get_group().display();
   DISPLAY_ELEMENTS(get_group);
   std::cout << ndi.get_group_linear_id() << std::endl;
-  ndi.get_num_groups().display();
-  DISPLAY_ELEMENTS(get_num_groups);
+  ndi.get_group_range().display();
+  DISPLAY_ELEMENTS(get_group_range);
 };
 
 int main() {

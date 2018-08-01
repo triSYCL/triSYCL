@@ -55,15 +55,15 @@ public:
 
 
   /// Get the global iteration space range
-  range<Dimensions> get_global() const { return global_range; }
+  range<Dimensions> get_global_range() const { return global_range; }
 
 
   /// Get the local part of the iteration space range
-  range<Dimensions> get_local() const { return local_range; }
+  range<Dimensions> get_local_range() const { return local_range; }
 
 
   /// Get the range of work-groups needed to run this ND-range
-  auto get_group() const {
+  auto get_group_range() const {
     /* This is basically global_range/local_range, round up to the
        next integer, in case the global range is not a multiple of the
        local range. Note this is a motivating example to build a range

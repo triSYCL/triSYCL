@@ -109,7 +109,7 @@ public:
       \todo Fix this comment and the specification
   */
   range<Dimensions> get_group_range() const {
-    return get_nd_range().get_group();
+    return get_nd_range().get_group_range();
   }
 
 
@@ -121,7 +121,7 @@ public:
 
   /// Get the local range for this work_group
   range<Dimensions> get_global_range() const {
-    return get_nd_range().get_global();
+    return get_nd_range().get_global_range();
   }
 
 
@@ -136,7 +136,7 @@ public:
       \todo Add to the specification
   */
   range<Dimensions> get_local_range() const {
-    return get_nd_range().get_local();
+    return get_nd_range().get_local_range();
   }
 
 
