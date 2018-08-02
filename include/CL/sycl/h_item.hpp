@@ -141,7 +141,7 @@ public:
 
 
   /** Return the constituent element of the group id representing the
-      work-group;s position within the overall nd_range in the given
+      work-group's position within the overall nd_range in the given
       dimension.
   */
   size_t get_group(int dimension) const {
@@ -151,30 +151,30 @@ public:
 
   /// Return the flattened id of the current work-group
   size_t get_group_linear_id() const {
-    return detail::linear_id(get_num_groups(), get_group());
+    return detail::linear_id(get_group_range(), get_group());
   }
 
 
   /// Return the number of groups in the nd_range
-  id<Dimensions> get_num_groups() const {
-    return get_nd_range().get_group();
+  id<Dimensions> get_group_range() const {
+    return get_nd_range().get_group_range();
   }
 
   /// Return the number of groups for dimension in the nd_range
-  size_t get_num_groups(int dimension) const {
-     return get_num_groups()[dimension];
+  size_t get_group_range(int dimension) const {
+     return get_group_range()[dimension];
   }
 
 
   /// Return a range<> representing the dimensions of the nd_range<>
   range<Dimensions> get_global_range() const {
-    return get_nd_range().get_global();
+    return get_nd_range().get_global_range();
   }
 
 
   /// Return a range<> representing the dimensions of the current work-group
   range<Dimensions> get_local_range() const {
-    return get_nd_range().get_local();
+    return get_nd_range().get_local_range();
   }
 
 
