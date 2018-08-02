@@ -243,7 +243,7 @@ void parallel_for_workitem(const group<Dimensions> &g,
      \todo Simplify by just using omp parallel for collapse
   */
 
-  range<Dimensions> l_r = g.get_nd_range().get_local();
+  range<Dimensions> l_r = g.get_nd_range().get_local_range();
   auto tot = l_r.get(0);
   for (int i = 1; i < (int) Dimensions; ++i) {
     tot *= l_r.get(i);
