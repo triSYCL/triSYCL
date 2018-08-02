@@ -47,6 +47,7 @@ public:
   /// Query the platform for OpenCL string info::platform info
   virtual string_class get_info_string(info::platform param) const = 0;
 
+  virtual vector_class<string_class> get_extension_strings() const = 0;
 
   /// Specify whether a specific extension is supported on the platform.
   virtual bool has_extension(const string_class &extension) const = 0;

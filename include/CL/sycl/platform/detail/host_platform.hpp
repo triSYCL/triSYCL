@@ -32,7 +32,7 @@ class host_platform : public detail::platform,
                       public detail::singleton<host_platform> {
 
 // \todo Have this compatible with has_extension
-auto static constexpr platform_extensions = "Xilinx_blocking_pipes";
+vector_class<string_class> platform_extensions { "Xilinx_blocking_pipes" };
 
 public:
 
@@ -85,14 +85,15 @@ public:
     case info::platform::vendor:
       return "triSYCL Open Source project";
 
-    case info::platform::extensions:
-      return platform_extensions;
-
     default:
       // \todo Define some SYCL exception type for this type of errors
       throw std::invalid_argument {
         "Unknown parameter value for SYCL platform information" };
     }
+  }
+
+  vector_class<string_class> get_extension_strings(void) const override {
+    return platform_extensions;
   }
 
 
@@ -101,8 +102,8 @@ public:
       \todo To be implemented
   */
   bool has_extension(const string_class &extension) const override {
-    detail::unimplemented();
-    return {};
+    return std::find(platform_extensions.begin(), platform_extensions.end(), extension) !=
+           platform_extensions.end();
   }
 
   /** Get all the available devices for the host platform

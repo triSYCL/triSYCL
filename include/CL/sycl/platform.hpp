@@ -17,7 +17,6 @@
 #include "CL/sycl/detail/global_config.hpp"
 
 #include "CL/sycl/detail/shared_ptr_implementation.hpp"
-#include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/info/device.hpp"
 #include "CL/sycl/platform/detail/host_platform.hpp"
 #ifdef TRISYCL_OPENCL
@@ -133,25 +132,8 @@ public:
 
       \todo Add to the specification
   */
-  template <typename ReturnT>
-  ReturnT get_info(info::platform param) const {
-    // Only strings are needed here
-    return implementation->get_info_string(param);
-  }
-
-
-  /// Get the OpenCL information about the requested template parameter
-  template <info::platform Param>
-  typename info::param_traits<info::platform, Param>::return_type
-  get_info() const {
-    /* Forward to the implementation without using template parameter
-       but with a parameter instead, since it is incompatible with
-       virtual function and because fortunately only strings are
-       needed here */
-    return get_info<typename info::param_traits<info::platform,
-                                                Param>::return_type>(Param);
-  }
-
+  template <info::platform param>
+  inline auto get_info() const;
 
   /// Test if an extension is available on the platform
   bool has_extension(const string_class &extension) const {
@@ -176,6 +158,22 @@ public:
   vector_class<device>
   get_devices(info::device_type device_type = info::device_type::all) const;
 };
+
+template<>
+inline auto platform::get_info<info::platform::extensions>() const {
+  return implementation->get_extension_strings();
+}
+
+#define PLATFORM_GET_INFO_STRING(X)				\
+template<>							\
+inline auto platform::get_info<info::platform::X>() const {	\
+  return implementation->get_info_string(info::platform::X);	\
+}
+
+PLATFORM_GET_INFO_STRING(profile)
+PLATFORM_GET_INFO_STRING(version)
+PLATFORM_GET_INFO_STRING(name)
+PLATFORM_GET_INFO_STRING(vendor)
 
 /// @} to end the execution Doxygen group
 

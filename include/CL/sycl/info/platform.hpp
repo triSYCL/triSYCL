@@ -75,7 +75,7 @@ enum class platform : unsigned int {
     when asked about platform info.
 */
 TRISYCL_INFO_PARAM_TRAITS_ANY_T(info::platform, string_class)
-
+TRISYCL_INFO_PARAM_TRAITS(info::platform::extensions, vector_class<string_class>)
 #if CL_SYCL_LANGUAGE_VERSION >= 220 && defined(CL_VERSION_2_1)
 ///  get_info<host_timer_resolution>() return a cl_ulong
 #ifdef TRISYCL_OPENCL
