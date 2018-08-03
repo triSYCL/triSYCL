@@ -22,8 +22,10 @@ namespace cl::sycl::vendor::xilinx::acap::me {
 
 /** The lock infrastructure used by MathEngine memory modules and shim tiles
 
-    Based on Math Engine (ME) Architecture Specification, Revision v1.4
-    March 2018
+    Based on Math Engine (ME) Architecture Specification, Revision v1.5
+    June 2018
+
+    4.4.6 Lock Interface, p. 115
 
     4.7 Lock Unit, p. 129
 */
@@ -46,34 +48,36 @@ struct lock_unit {
     bool value = false;
 
     /// Lock the mutex
-    void lock() {
+    void acquire() {
       m->lock();
     }
 
 
     /// Unlock the mutex
-    void unlock() {
+    void release() {
       m->unlock();
     }
 
 
-    /// Wait until the value is the expectation
-    void wait_value(bool expectation) {
+    /// Wait until the internal value has the expectation
+    void acquire_with_value(bool expectation) {
       std::unique_lock lk { *m };
       cv->wait(lk, [=]{ return expectation == value; });
     }
 
 
-    /// Release the value with the expectation
-    void release_value(bool expectation) {
+    /// Release with a new internal value
+    void release_with_value(bool new_value) {
       {
         std::unique_lock lk { *m };
-        value = expectation;
+        value = new_value;
       }
+      // By construction there should be only one client waiting for it
       cv->notify_one();
     }
   };
 
+  /// The 16 locking units of the locking device
   locking_device locks[16];
 };
 

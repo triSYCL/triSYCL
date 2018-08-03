@@ -39,12 +39,12 @@ struct tile<ME_Array, 0, 0> : acap::me::tile<ME_Array, 0, 0> {
     auto &m = t::mem_right();
     m.v = 42;
     for (int i = 0; i < 100; ++i) {
-      m.lu.locks[0].wait_value(false);
+      m.lu.locks[0].acquire_with_value(false);
       ++m.v;
       a->update_tile_data_image(t::x, t::y, &m.v, 42, 143);
       std::cout << std::endl << "Tile (0,0) sends to right neighbour: "
                 << m.v << std::endl;
-      m.lu.locks[0].release_value(true);
+      m.lu.locks[0].release_with_value(true);
       std::this_thread::sleep_for(20ms);
     }
   }
@@ -58,11 +58,11 @@ struct tile<ME_Array, 1, 0> : acap::me::tile<ME_Array, 1, 0> {
   void run() {
     auto &m = t::mem_left();
     for (int i = 0; i < 100; ++i) {
-      m.lu.locks[0].wait_value(true);
+      m.lu.locks[0].acquire_with_value(true);
       a->update_tile_data_image(t::x, t::y, &m.v, 42, 142);
       std::cout << "Tile (1,0) receives from left neighbour: "
                 << m.v << std::endl;
-      m.lu.locks[0].release_value(false);
+      m.lu.locks[0].release_with_value(false);
       std::this_thread::sleep_for(20ms);
     }
   }
