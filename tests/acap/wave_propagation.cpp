@@ -168,7 +168,7 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
 };
 
 int main(int argc, char *argv[]) {
-  acap::me::array<acap::me::layout::small, tile, memory> me;
+  acap::me::array<acap::me::layout::size<2,1>, tile, memory> me;
 
   a.reset(new graphics::app { argc, argv, decltype(me)::geo::x_size,
                               decltype(me)::geo::y_size,
