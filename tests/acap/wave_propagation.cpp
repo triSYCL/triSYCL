@@ -149,9 +149,11 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         m.lu.locks[1].release_value(false);
       }
     }
+    static int iteration = 0;
     auto [min_element, max_element] = minmax_element(m.w);
     std::cout << "compute(" << X << ',' << Y
-              << ") done" << *min_element << ',' << *max_element
+              << ") iteration " << ++iteration << " done"
+              << *min_element << ',' << *max_element
               << std::endl;
   }
 
@@ -160,8 +162,6 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
     auto& m = t::mem();
     while (!a->is_done()) {
       compute();
-      std::cout << "compute(" << X << ',' << Y
-                << ") done" << std::endl;
       a->update_tile_data_image(t::x, t::y, &m.w[0][0], -1.0, 1.0);
     }
   }
