@@ -77,7 +77,10 @@ auto equal = [] (auto const &v, auto const &verif) {
   {                                                                            \
     std::initializer_list<TYPE> vil1 (VAL1);                                   \
     std::initializer_list<TYPE> vil2 (VAL2);                                   \
-    using v = SIZED_NAME(CL_TYPE, SIZE);                                       \
+    using v = BOOST_PP_IF(BOOST_PP_EQUAL(SIZE, 1),                             \
+                          BOOST_PP_CAT(cl::sycl::CL_TYPE, SIZE),               \
+                          BOOST_PP_CAT(                                        \
+                            BOOST_PP_CAT(cl::sycl::cl_, CL_TYPE), SIZE));      \
     using va_in = std::valarray<TYPE>;                                         \
     using va_out = std::valarray<OUT>;                                         \
     v v1 (VAL1);                                                               \
@@ -151,16 +154,16 @@ auto equal = [] (auto const &v, auto const &verif) {
   BOOST_PP_SEQ_FOR_EACH(GENERATE_TEST_SIZE, type, SIZES)
 
 #define ALL_TESTS                                                              \
-  GENERATE_TEST_TYPE((char,              cl_char,   0));                       \
-  GENERATE_TEST_TYPE((unsigned char,     cl_uchar,  0));                       \
-  GENERATE_TEST_TYPE((short,             cl_short,  0));                       \
-  GENERATE_TEST_TYPE((short int,         cl_ushort, 0));                       \
-  GENERATE_TEST_TYPE((int,               cl_int,    0));                       \
-  GENERATE_TEST_TYPE((unsigned int,      cl_uint,   0));                       \
-  GENERATE_TEST_TYPE((long,              cl_long,   0));                       \
-  GENERATE_TEST_TYPE((unsigned long int, cl_ulong,  0));                       \
-  GENERATE_TEST_TYPE((float,             cl_float,  1));                       \
-  GENERATE_TEST_TYPE((double,            cl_double, 1));
+  GENERATE_TEST_TYPE((char,              char,   0));                       \
+  GENERATE_TEST_TYPE((unsigned char,     uchar,  0));                       \
+  GENERATE_TEST_TYPE((short,             short,  0));                       \
+  GENERATE_TEST_TYPE((short int,         ushort, 0));                       \
+  GENERATE_TEST_TYPE((int,               int,    0));                       \
+  GENERATE_TEST_TYPE((unsigned int,      uint,   0));                       \
+  GENERATE_TEST_TYPE((long,              long,   0));                       \
+  GENERATE_TEST_TYPE((unsigned long int, ulong,  0));                       \
+  GENERATE_TEST_TYPE((float,             float,  1));                       \
+  GENERATE_TEST_TYPE((double,            double, 1));
 
 int test_main(int argc, char *argv[]) {
   constexpr size_t N = 16;
