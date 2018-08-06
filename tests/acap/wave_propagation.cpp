@@ -12,6 +12,9 @@
 #include <cstdint>
 #include <iostream>
 
+//#include <array_ref>
+#include <mdspan>
+
 #include <chrono>
 #include <thread>
 using namespace std::chrono_literals;
@@ -26,6 +29,67 @@ static auto constexpr g = 9.81;
 static auto constexpr alpha = K*g;
 static auto constexpr image_size = 229;
 std::unique_ptr<graphics::app> a;
+
+
+/// A sequential reference implementation of wave propagation
+struct reference_wave_propagation {
+  using space =
+    std::experimental::mdspan<double, std::experimental::extents<image_size,
+                                                                 image_size>>;
+  static auto constexpr linear_size = image_size*image_size;
+  //double u_m[space::size()];
+  double u_m[linear_size];
+  space u { u_m }; // Horizontal speed
+  double v_m[linear_size];
+  space v { v_m }; // Vertical speed
+  double w_m[linear_size];
+  space w { w_m }; // Local delta depth
+  double side_m[linear_size];
+  space side { side_m }; // Hard wall limit
+  double depth_m[linear_size];
+  space depth { depth_m }; // Average depth
+
+  reference_wave_propagation() {
+    for (int j = 0; j < image_size; ++j)
+      for (int i = 0; i < image_size; ++i) {
+        u(j,i) = v(j,i) = w(j,i) = 0;
+        side(j,i) = K;
+        depth(j,i) = 2600.0;
+      }
+    w(image_size/3,image_size/2+image_size/4) = 100;
+  }
+
+
+  void compute() {
+    for (int j = 0; j < image_size - 1; ++j)
+      for (int i = 0; i < image_size - 1; ++i) {
+        // grad w
+        auto up = w(j,i + 1) - w(j,i);
+        auto vp = w(j + 1,i)- w(j,i);
+        // Integrate speed
+        u(j,i) += up*alpha;
+        v(j,i) += vp*alpha;
+      }
+    for (int j = 1; j < image_size; ++j)
+      for (int i = 1; i < image_size; ++i) {
+        // div speed
+        auto wp = (u(j,i) - u(j,i - 1)) + (v(j,i) - v(j - 1,i));
+        wp *= side(j,i)*(depth(j,i) + w(j,i));
+        // Integrate depth
+        w(j,i) += wp;
+        // Add some dissipation for the damping
+        w(j,i) *= 0.999;
+      }
+  }
+
+  void run() {
+    while (!a->is_done()) {
+      compute();
+      a->update_tile_data_image(0, 0, w_m, -1.0, 1.0);
+    }
+  }
+};
+
 
 // All the memory modules are the same
 template <typename ME_Array, int X, int Y>
@@ -195,6 +259,9 @@ int main(int argc, char *argv[]) {
   a.reset(new graphics::app { argc, argv, decltype(me)::geo::x_size,
                               decltype(me)::geo::y_size,
                               image_size, image_size, 1 });
+
+  // Run a sequential referenc implementation
+  reference_wave_propagation{}.run();
 
   // Launch the MathEngine program
   me.run();

@@ -157,6 +157,13 @@ ifdef OpenCL_INCPATH
   CXXFLAGS += -I$(OpenCL_INCPATH)
 endif
 
+# To test C++2a <mdspan>, specify with this variable where the
+# implementation is, typically the local directory containing
+# https://github.com/kokkos/array_ref/tree/master/reference/include
+ifdef TRISYCL_MDSPAN_INCPATH
+  CXXFLAGS += -I$(TRISYCL_MDSPAN_INCPATH)
+endif
+
 # Specify where Boost.Compute is with BOOST_COMPUTE_INCPATH
 ifdef BOOST_COMPUTE_INCPATH
   CXXFLAGS += -I$(BOOST_COMPUTE_INCPATH)
