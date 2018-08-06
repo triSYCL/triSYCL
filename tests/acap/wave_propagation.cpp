@@ -2,12 +2,20 @@
 
    Recycle my MINES ParisTech ISIA hands-on
 
+   https://en.wikipedia.org/wiki/Boussinesq_approximation_(water_waves)
+   Joseph Valentin Boussinesq, 1872
+
    RUN: %{execute}%s
 */
 
 #include <algorithm>
 #include <cstdint>
 #include <iostream>
+
+#include <chrono>
+#include <thread>
+using namespace std::chrono_literals;
+
 
 #include <CL/sycl.hpp>
 
@@ -53,7 +61,11 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
   }
 
   void compute() {
+std::this_thread::sleep_for(50ms);
     auto& m = t::mem();
+    if constexpr (!t::is_right_column()) {
+        m.lu.locks[10].acquire_with_value(false);
+      }
     for (int j = 0; j < image_size - 1; ++j)
       for (int i = 0; i < image_size - 1; ++i) {
         // grad w
@@ -63,6 +75,9 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         m.u[j][i] += up*alpha;
         m.v[j][i] += vp*alpha;
       }
+std::this_thread::sleep_for(50ms);
+
+//sleep(1);
     // Transfer first line of u to next memory module on the left
     if constexpr (Y & 1) {
       if constexpr (t::is_memory_module_right()) {
@@ -80,14 +95,19 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
     if constexpr (!(Y & 1)) {
       if constexpr (t::is_memory_module_left()) {
         auto& left = t::mem_left();
+        left.lu.locks[10].acquire_with_value(true);
         left.lu.locks[2].acquire_with_value(false);
         for (int j = 0; j < image_size; ++j)
           left.u[j][image_size - 1] = m.u[j][0];
         left.lu.locks[2].release_with_value(true);
+        left.lu.locks[10].release_with_value(false);
       }
       if constexpr (!t::is_right_column()) {
+        m.lu.locks[10].release_with_value(true);
         m.lu.locks[2].acquire_with_value(true);
         m.lu.locks[2].release_with_value(false);
+        m.lu.locks[10].acquire_with_value(false);
+        m.lu.locks[10].release_with_value(false);
       }
     }
     if constexpr (t::is_memory_module_down()) {
@@ -101,6 +121,7 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
       m.lu.locks[3].acquire_with_value(true);
       m.lu.locks[3].release_with_value(false);
     }
+std::this_thread::sleep_for(50ms);
     for (int j = 1; j < image_size; ++j)
       for (int i = 1; i < image_size; ++i) {
         // div speed
@@ -111,6 +132,7 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         // Add some dissipation for the damping
         m.w[j][i] *= 0.999;
       }
+std::this_thread::sleep_for(50ms);
     if constexpr (t::is_memory_module_up()) {
       auto& above = t::mem_up();
       above.lu.locks[0].acquire_with_value(false);
