@@ -32,11 +32,12 @@ std::unique_ptr<graphics::app> a;
 
 
 /// A sequential reference implementation of wave propagation
+template <auto size_x, auto size_y>
 struct reference_wave_propagation {
   using space =
-    std::experimental::mdspan<double, std::experimental::extents<image_size,
-                                                                 image_size>>;
-  static auto constexpr linear_size = image_size*image_size;
+    std::experimental::mdspan<double, std::experimental::extents<size_y,
+                                                                 size_x>>;
+  static auto constexpr linear_size = size_x*size_y;
   //double u_m[space::size()];
   double u_m[linear_size];
   space u { u_m }; // Horizontal speed
@@ -50,19 +51,19 @@ struct reference_wave_propagation {
   space depth { depth_m }; // Average depth
 
   reference_wave_propagation() {
-    for (int j = 0; j < image_size; ++j)
-      for (int i = 0; i < image_size; ++i) {
+    for (int j = 0; j < size_y; ++j)
+      for (int i = 0; i < size_x; ++i) {
         u(j,i) = v(j,i) = w(j,i) = 0;
         side(j,i) = K;
         depth(j,i) = 2600.0;
       }
-    w(image_size/3,image_size/2+image_size/4) = 100;
+    w(size_y/3,size_x/2+size_x/4) = 100;
   }
 
 
   void compute() {
-    for (int j = 0; j < image_size - 1; ++j)
-      for (int i = 0; i < image_size - 1; ++i) {
+    for (int j = 0; j < size_y - 1; ++j)
+      for (int i = 0; i < size_x - 1; ++i) {
         // grad w
         auto up = w(j,i + 1) - w(j,i);
         auto vp = w(j + 1,i)- w(j,i);
@@ -70,8 +71,8 @@ struct reference_wave_propagation {
         u(j,i) += up*alpha;
         v(j,i) += vp*alpha;
       }
-    for (int j = 1; j < image_size; ++j)
-      for (int i = 1; i < image_size; ++i) {
+    for (int j = 1; j < size_y; ++j)
+      for (int i = 1; i < size_x; ++i) {
         // div speed
         auto wp = (u(j,i) - u(j,i - 1)) + (v(j,i) - v(j - 1,i));
         wp *= side(j,i)*(depth(j,i) + w(j,i));
@@ -261,7 +262,7 @@ int main(int argc, char *argv[]) {
                               image_size, image_size, 1 });
 
   // Run a sequential referenc implementation
-  reference_wave_propagation{}.run();
+  reference_wave_propagation<image_size,image_size>{}.run();
 
   // Launch the MathEngine program
   me.run();
