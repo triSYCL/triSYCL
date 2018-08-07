@@ -61,17 +61,17 @@ enum class device : int {
   preferred_vector_width_char,
   preferred_vector_width_short,
   preferred_vector_width_int,
-  preferred_vector_width_long_long,
+  preferred_vector_width_long,
   preferred_vector_width_float,
   preferred_vector_width_double,
   preferred_vector_width_half,
-  native_vector_witdth_char,
-  native_vector_witdth_short,
-  native_vector_witdth_int,
-  native_vector_witdth_long_long,
-  native_vector_witdth_float,
-  native_vector_witdth_double,
-  native_vector_witdth_half,
+  native_vector_width_char,
+  native_vector_width_short,
+  native_vector_width_int,
+  native_vector_width_long,
+  native_vector_width_float,
+  native_vector_width_double,
+  native_vector_width_half,
   max_clock_frequency,
   address_bits,
   max_mem_alloc_size,
@@ -81,13 +81,14 @@ enum class device : int {
   image2d_max_height,
   image2d_max_width,
   image3d_max_height,
-  image3d_max_widht,
-  image3d_mas_depth,
+  image3d_max_width,
+  image3d_max_depth,
   image_max_buffer_size,
   image_max_array_size,
   max_samplers,
   max_parameter_size,
   mem_base_addr_align,
+  half_fp_config,
   single_fp_config,
   double_fp_config,
   global_mem_cache_type,
@@ -101,45 +102,47 @@ enum class device : int {
   error_correction_support,
   host_unified_memory,
   profiling_timer_resolution,
-  endian_little,
+  is_endian_little,
   is_available,
   is_compiler_available,
   is_linker_available,
   execution_capabilities,
-  queue_properties,
+  queue_profiling,
   built_in_kernels,
   platform,
   name,
   vendor,
   driver_version,
   profile,
+  version,
   device_version,
-  opencl_version,
+  opencl_c_version,
   extensions,
   printf_buffer_size,
   preferred_interop_user_sync,
   parent_device,
   partition_max_sub_devices,
   partition_properties,
-  partition_affinity_domain,
-  partition_type,
+  partition_affinity_domains,
+  partition_type_property,
+  partition_type_affinity_domain,
   reference_count
 };
 
-enum class device_partition_property : int {
-  unsupported,
+enum class partition_property : int {
+  no_partition,
   partition_equally,
   partition_by_counts,
-  partition_by_affinity_domain,
-  partition_affinity_domain_next_partitionable
+  partition_by_affinity_domain
 };
 
-enum class device_affinity_domain : int {
-  unsupported,
+enum class partition_affinity_domain : int {
+  not_applicable,
   numa,
   L4_cache,
   L3_cache,
   L2_cache,
+  L1_cache,
   next_partitionable
 };
 
@@ -175,7 +178,7 @@ enum class global_mem_cache_type : int {
   write_only
 };
 
-enum class device_execution_capabilities : unsigned int {
+enum class execution_capability : unsigned int {
   exec_kernel,
   exec_native_kernel
 };
