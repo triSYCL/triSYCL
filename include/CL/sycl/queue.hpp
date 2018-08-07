@@ -23,7 +23,6 @@
 #include "CL/sycl/device_selector.hpp"
 #include "CL/sycl/exception.hpp"
 #include "CL/sycl/handler.hpp"
-#include "CL/sycl/handler_event.hpp"
 #include "CL/sycl/info/param_traits.hpp"
 #include "CL/sycl/parallelism.hpp"
 #include "CL/sycl/queue/detail/host_queue.hpp"
@@ -344,11 +343,11 @@ public:
       Use an explicit functor parameter taking a handler& so we can use
       "auto" in submit() lambda parameter.
 
-      \todo Add in the spec an implicit conversion of handler_event to
+      \todo Add in the spec an implicit conversion of event to
       queue& so it is possible to chain operations on the queue
   */
   template <typename Handler_Functor>
-  handler_event submit(Handler_Functor cgf) {
+  event submit(Handler_Functor cgf) {
     handler command_group_handler { implementation };
     cgf(command_group_handler);
     return {};
@@ -364,7 +363,8 @@ public:
       Return a command group functor event, which is corresponds to the
       queue the command group functor is being enqueued on.
   */
-  handler_event submit(std::function<void(handler &)> cgf, queue &secondaryQueue) {
+  template <typename Handler_Functor>
+  event submit(Handler_Functor cgf, queue &secondaryQueue) {
     TRISYCL_UNIMPL;
     // Since it is not implemented, always submit on the main queue
     return submit(cgf);
