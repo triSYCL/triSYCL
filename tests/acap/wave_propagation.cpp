@@ -10,6 +10,7 @@
 
 #include <algorithm>
 #include <cstdint>
+#include <initializer_list>
 #include <iostream>
 
 //#include <array_ref>
@@ -32,13 +33,15 @@ std::unique_ptr<graphics::app> a;
 
 
 /// A sequential reference implementation of wave propagation
-template <auto size_x, auto size_y>
+template <auto size_x, auto size_y, auto display_tile_size>
 struct reference_wave_propagation {
   using space =
     std::experimental::mdspan<double, std::experimental::extents<size_y,
                                                                  size_x>>;
-  static auto constexpr linear_size = size_x*size_y;
+  // It would be nice to have a constexpr static member to express this,
+  // but right now size() is a member function
   //double u_m[space::size()];
+  static auto constexpr linear_size = size_x*size_y;
   double u_m[linear_size];
   space u { u_m }; // Horizontal speed
   double v_m[linear_size];
@@ -53,6 +56,7 @@ struct reference_wave_propagation {
   reference_wave_propagation() {
     for (int j = 0; j < size_y; ++j)
       for (int i = 0; i < size_x; ++i) {
+        // No u[j][i] syntax too like in Boost.Multi_Array ?
         u(j,i) = v(j,i) = w(j,i) = 0;
         side(j,i) = K;
         depth(j,i) = 2600.0;
@@ -86,7 +90,18 @@ struct reference_wave_propagation {
   void run() {
     while (!a->is_done()) {
       compute();
-      a->update_tile_data_image(0, 0, w_m, -1.0, 1.0);
+    for (int j = 0; j < size_y/display_tile_size; ++j)
+      for (int i = 0; i <  size_x/display_tile_size; ++i) {
+        // Should we have w.data() or std::begin(w) instead of &w(0,0) ?
+        a->update_tile_data_image(i, j,
+                                  std::experimental::subspan
+                                  (w,
+                                   std::make_pair(j*display_tile_size,
+                                                  display_tile_size),
+                                   std::make_pair(i*display_tile_size,
+                                                  display_tile_size)),
+                                  -1.0, 1.0);
+      }
     }
   }
 };
@@ -129,8 +144,8 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
 std::this_thread::sleep_for(50ms);
     auto& m = t::mem();
     if constexpr (!t::is_right_column()) {
-        m.lu.locks[10].acquire_with_value(false);
-      }
+      m.lu.locks[10].acquire_with_value(false);
+    }
     for (int j = 0; j < image_size - 1; ++j)
       for (int i = 0; i < image_size - 1; ++i) {
         // grad w
@@ -261,8 +276,10 @@ int main(int argc, char *argv[]) {
                               decltype(me)::geo::y_size,
                               image_size, image_size, 1 });
 
-  // Run a sequential referenc implementation
-  reference_wave_propagation<image_size,image_size>{}.run();
+  // Run a sequential reference implementation
+  reference_wave_propagation<image_size*decltype(me)::geo::x_size,
+                             image_size*decltype(me)::geo::y_size,
+                             image_size>{}.run();
 
   // Launch the MathEngine program
   me.run();
