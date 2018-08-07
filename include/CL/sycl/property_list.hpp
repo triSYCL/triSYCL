@@ -2,6 +2,7 @@
 #define TRISYCL_SYCL_PROPERTY_LIST_HPP
 
 #include "CL/sycl/detail/all_true.hpp"
+#include "CL/sycl/property/queue.hpp"
 
 namespace cl::sycl {
 
@@ -16,6 +17,7 @@ class property_list {
    * and the addproperty methods init the correct one for each known
    * property, this method is recursive to deal with the pack parameter.
    */
+  TRISYCL_PROPERTY_CREATE(queue, enable_profiling);
 
 protected:
   template <typename propertyT>
@@ -57,6 +59,8 @@ public:
   property_list::get_property<property::type::prop_name>() const {      \
     return prop_name.value();                                           \
   }
+
+TRISYCL_PROPERTY_HAS_GET(queue, enable_profiling)
 
 #undef TRISYCL_PROPERTY_CREATE
 #undef TRISYCL_PROPERTY_HAS_GET

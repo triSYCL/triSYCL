@@ -19,12 +19,15 @@
 #include "CL/sycl/detail/debug.hpp"
 #include "CL/sycl/detail/default_classes.hpp"
 #include "CL/sycl/detail/unimplemented.hpp"
+#include "CL/sycl/detail/property.hpp"
 #include "CL/sycl/device.hpp"
 #include "CL/sycl/device_selector.hpp"
 #include "CL/sycl/exception.hpp"
 #include "CL/sycl/handler.hpp"
 #include "CL/sycl/info/param_traits.hpp"
+#include "CL/sycl/info/queue.hpp"
 #include "CL/sycl/parallelism.hpp"
+#include "CL/sycl/property_list.hpp"
 #include "CL/sycl/queue/detail/host_queue.hpp"
 #ifdef TRISYCL_OPENCL
 #include "CL/sycl/queue/detail/opencl_queue.hpp"
@@ -40,35 +43,6 @@ class device_selector;
     @{
 */
 
-namespace info {
-
-using queue_profiling = bool;
-
-/** Queue information descriptors
-
-    From specification C.4
-
-    \todo unsigned int?
-
-    \todo To be implemented
-*/
-enum class queue : int {
-  context,
-  device,
-  reference_count,
-  properties
-};
-
-/** Dummy example for get_info() on queue::context that would return a
-    context
-
-    \todo Describe all the types
-*/
-TRISYCL_INFO_PARAM_TRAITS(queue::context, context)
-
-}
-
-
 /** SYCL queue, similar to the OpenCL queue concept.
 
     \todo The implementation is quite minimal for now. :-)
@@ -80,7 +54,9 @@ class queue
     /* Use the underlying queue implementation that can be shared in
        the SYCL model */
   : public detail::shared_ptr_implementation<queue, detail::queue>,
-    detail::debug<queue> {
+    public property_list,
+    detail::debug<queue>
+{
 
   // The type encapsulating the implementation
   using implementation_t = typename queue::shared_ptr_implementation;
@@ -96,15 +72,11 @@ public:
   // Make the implementation member directly accessible in this class
   using implementation_t::implementation;
 
-  /** Default constructor for platform which is the host platform
+  /** Default constructor for queue from the default queue selector
 
       Returns errors via the SYCL exception class.
-
-      \todo Check with the specification if it is the host queue or
-      the one related to the default device selector.
   */
-  queue() : implementation_t { new detail::host_queue } {}
-
+  explicit queue(const property_list &propList = {});
 
   /** This constructor creates a SYCL queue from an OpenCL queue
 
@@ -122,10 +94,7 @@ public:
       default constructor.
 
   */
-  explicit queue(async_handler asyncHandler) : queue { } {
-    TRISYCL_UNIMPL;
-  }
-
+  queue(const async_handler &asyncHandler, const property_list &propList = {});
 
   /** Creates a queue for the device provided by the device selector
 
@@ -136,10 +105,21 @@ public:
       function if and only if there is an \c async_handler provided.
   */
   queue(const device_selector &deviceSelector,
-        async_handler asyncHandler = nullptr)
+        const property_list &propList = {})
     // Just create the queue from the selected device
-    : queue { device { deviceSelector }, asyncHandler} { }
+    : queue { device { deviceSelector }, nullptr, propList } { }
 
+  /** Creates a queue for the device provided by the device selector.
+
+      Return synchronous errors regarding the creation of the queue and
+      report asynchronous errors via the \c async_handler callback
+      function if and only if there is an \c async_handler provided.
+   */
+  queue(const device_selector &deviceSelector,
+        const async_handler &asyncHandler,
+        const property_list &propList = {})
+    // Just create the queue from the selected device
+    : queue { device { deviceSelector }, asyncHandler, propList } { }
 
   /** A queue is created for a SYCL device
 
@@ -147,7 +127,8 @@ public:
       function.
   */
   queue(const device &d,
-        async_handler asyncHandler = nullptr) : implementation_t {
+        const async_handler &asyncHandler,
+        const property_list &propList = {}) : implementation_t {
 #ifdef TRISYCL_OPENCL
     d.is_host()
       ? std::shared_ptr<detail::queue>{ new detail::host_queue }
@@ -155,9 +136,14 @@ public:
 #else
     new detail::host_queue
 #endif
+  }, property_list { propList } { }
 
-  } { }
+  /** A queue is created for a SYCL device
 
+  */
+  queue(const device &d,
+        const property_list &propList = {})
+    : queue { d, {}, propList } {}
 
   /** This constructor chooses a device based on the provided
       device_selector, which needs to be in the given context.
@@ -172,45 +158,33 @@ public:
   */
   queue(const context &syclContext,
         const device_selector &deviceSelector,
-        async_handler asyncHandler = nullptr) : queue { } {
-    TRISYCL_UNIMPL;
+        const async_handler &asyncHandler,
+        const property_list &propList = {})
+    : property_list { propList } {
+    device d = deviceSelector.select_device();
+    vector_class<device> ctx_devs = syclContext.get_devices();
+    if (std::find(ctx_devs.begin(), ctx_devs.end(), d) == ctx_devs.end())
+      throw cl::sycl::invalid_object_error("Device doesn't belong to context\n");
+    implementation =
+#ifdef TRISYCL_OPENCL
+      d.is_host() ? std::shared_ptr<detail::queue>{ new detail::host_queue }
+    : detail::opencl_queue::instance(d);
+#else
+    std::shared_ptr<detail::queue>{ new detail::host_queue };
+#endif
   }
 
+  /** This constructor chooses a device based on the provided
+      device_selector, which needs to be in the given context.
 
-  /** Creates a command queue using clCreateCommandQueue from a context
-      and a device
+      If no device is selected, an error is reported.
 
       Return synchronous errors regarding the creation of the queue.
-
-      If and only if there is an asyncHandler provided, it reports
-      asynchronous errors via the async_handler callback function in
-      conjunction with the synchronization and throw methods.
   */
   queue(const context &syclContext,
-        const device &syclDevice,
-        async_handler asyncHandler = nullptr) : queue { } {
-    TRISYCL_UNIMPL;
-  }
-
-
-  /** Creates a command queue using clCreateCommandQueue from a context
-      and a device
-
-      It enables profiling on the queue if the profilingFlag is set to
-      true.
-
-      Return synchronous errors regarding the creation of the queue. If
-      and only if there is an asyncHandler provided, it reports
-      asynchronous errors via the async_handler callback function in
-      conjunction with the synchronization and throw methods.
-  */
-  queue(const context &syclContext,
-        const device &syclDevice,
-        info::queue_profiling profilingFlag,
-        async_handler asyncHandler = nullptr) : queue { } {
-    TRISYCL_UNIMPL;
-  }
-
+        const device_selector &deviceSelector,
+        const property_list &propList = {})
+    : queue { syclContext, deviceSelector, {}, propList } {}
 
 #ifdef TRISYCL_OPENCL
   /** This constructor creates a SYCL queue from an OpenCL queue
@@ -222,7 +196,8 @@ public:
       asynchronous errors via the async_handler callback function in
       conjunction with the synchronization and throw methods.
   */
-  queue(const cl_command_queue &q, async_handler ah = nullptr)
+  queue(const cl_command_queue &q, const context &syclContext,
+        const async_handler &ah = {})
     : queue { boost::compute::command_queue { q }, ah } {}
 
 
@@ -235,7 +210,7 @@ public:
       \todo Deal with handler
   */
   queue(const boost::compute::command_queue &q, async_handler ah = nullptr)
-    : implementation_t { detail::opencl_queue::instance(q) } {}
+    : implementation_t { detail::opencl_queue::instance(q) }, property_list {} {}
 #endif
 
 
@@ -331,11 +306,7 @@ public:
 
   /// Queries the platform for cl_command_queue info
   template <info::queue param>
-  typename info::param_traits<info::queue, param>::type get_info() const  {
-    TRISYCL_UNIMPL;
-    return {};
-  }
-
+  inline auto get_info() const;
 
   /** Submit a command group functor to the queue, in order to be
       scheduled for execution on the device
@@ -370,8 +341,37 @@ public:
     return submit(cgf);
   }
 
+  /** Check if the queue was constructed with the specified
+      property.
+  */
+  template <typename propertyT>
+  bool has_property() const {
+    return property_list::has_property<propertyT>();
+  }
+
+  /** Return a copy of the property that the queue was
+      constructed with.
+  */
+  template <typename propertyT>
+  propertyT get_property() const {
+    return property_list::get_property<propertyT>();
+  }
 };
 
+template<>
+inline auto queue::get_info<info::queue::device>() const {
+  return implementation->get_device();
+}
+
+template<>
+inline auto queue::get_info<info::queue::context>() const {
+  return implementation->get_context();
+}
+
+template<>
+inline auto queue::get_info<info::queue::reference_count>() const {
+  return cl::sycl::cl_uint {0};
+}
 /// @} to end the execution Doxygen group
 
 }
