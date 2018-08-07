@@ -17,6 +17,7 @@
 #include <cstddef>
 #include <functional>
 #include <iostream>
+#include <mdspan>
 #include <memory>
 #include <mutex>
 #include <sstream>
@@ -153,9 +154,24 @@ struct image_grid : frame_grid {
   };
 
 
+/** Update the image of a tile of size image_y by image_x
+
+    \param[in] x is the tile horizontal id
+
+    \param[in] y is the tile vertical id
+
+    \param[in] data a something convertible to a 2D MDspan of size
+    image_y by image_x
+
+    \param[in] min_value is the value represented with minimum of
+    graphics palette color
+
+    \param[in] max_value is the value represented with maximum of
+    graphics palette color
+*/
   template <typename DataType, typename RangeValue>
   void update_tile_data_image(int x, int y,
-                              const DataType *data,
+                              const DataType data,
                               RangeValue min_value,
                               RangeValue max_value) {
     // RGB 8 bit images, so 8 bytes per pixel
@@ -165,13 +181,20 @@ struct image_grid : frame_grid {
        it is available for std::make_unique in C++17... */
     std::shared_ptr<std::uint8_t[]> d { new std::uint8_t[3*image_x*image_y] };
     auto output = d.get();
+    // Create a 2D array view on top of data, with dynamic size of
+    // image_y by image_x
+    std::experimental::mdspan
+      <double,
+       std::experimental::extents<std::experimental::dynamic_extent,
+                                  std::experimental::dynamic_extent>> md
+      { data, image_y, image_x };
     for (int j = 0; j < image_y; ++j)
       for (int i = 0; i < image_x; ++i) {
         // Mirror the image vertically to display the pixels in a
         // mathematical sense
-        auto linear = i + image_x*(image_y - 1 - j);
-        std::uint8_t v = (static_cast<double>(data[linear]) - min_value)
-          *255/(max_value - min_value);
+        std::uint8_t v =
+          (static_cast<double>(md(image_y - 1 - j,i) - min_value))*255
+           /(max_value - min_value);
         // Write the same value for RGB to have a grey level
         *output++ = v;
         *output++ = v;
@@ -238,7 +261,7 @@ struct app {
 
   template <typename DataType, typename RangeValue>
   void update_tile_data_image(int x, int y,
-                              const DataType *data,
+                              DataType data,
                               RangeValue min_value,
                               RangeValue max_value) {
     w->update_tile_data_image(x, y, data, min_value, max_value);
