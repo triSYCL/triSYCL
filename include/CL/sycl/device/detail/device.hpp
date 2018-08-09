@@ -56,10 +56,7 @@ public:
 
 
   /// Query the device for OpenCL info::device info
-  /** \todo virtual cannot be templated
-  template <typename T>
-  virtual T get_info(info::device param) const = 0;
-  */
+  virtual std::any get_info(info::device param) const = 0;
 
 
   /// Specify whether a specific extension is supported on the device.

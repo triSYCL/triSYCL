@@ -11,6 +11,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <any>
 
 #ifdef TRISYCL_OPENCL
 #include <boost/compute.hpp>
@@ -209,99 +210,47 @@ public:
 
       \todo
   */
-  template <typename T>
-  T get_info(info::device param) const {
-    //return implementation->get_info<Param>(param);
-  }
-
-
   /** Query the device for OpenCL info::device info
 
       Return synchronous errors via the SYCL exception class.
 
       \todo
   */
-  template <info::device Param>
-  inline auto get_info() const;
-  /*{
-    // Forward to the version where the info parameter is not a template
-    //return get_info<typename info::param_traits_t<info::device, Param>>(Param);
-    detail::unimplemented();
-    return 0;
-  }*/
-
+  template <info::device param>
+  typename info::param_traits<info::device, param>::return_type
+  get_info() const {
+    return std::any_cast<
+      typename info::param_traits<info::device, param>::return_type
+      >(implementation->get_info(param));
+  }
 
   /// Test if a specific extension is supported on the device
   bool has_extension(const string_class &extension) const {
     return implementation->has_extension(extension);
   }
 
-
-#ifdef XYZTRISYCL_OPENCL
-  /** Partition the device into sub devices based upon the properties
-      provided
-
-      Return synchronous errors via SYCL exception classes.
-
-      \todo
-  */
-  vector_class<device>
-  create_sub_devices(info::device_partition_type partition_type,
-                     info::device_partition_property partition_property,
-                     info::device_affinity_domain affinity_domain) const {
-    return implementation->create_sub_devices(partition_type,
-                                              partition_property,
-                                              affinity_domain);
+  // Available only when prop == info::partition_property::partition_equally
+  template <info::partition_property prop>
+  vector_class<device> create_sub_devices(size_t nbSubDev) const
+  {
+    throw cl::sycl::feature_not_supported("unsupported feature\n");
   }
-#endif
+
+  // Available only when prop == info::partition_property::partition_by_counts
+  template <info::partition_property prop>
+  vector_class<device> create_sub_devices(const vector_class<size_t> &counts) const
+  {
+    throw cl::sycl::feature_not_supported("unsupported feature\n");
+  }
+
+  // Available only when prop == info::partition_property::partition_by_affinity_domain
+  template <info::partition_property prop>
+  vector_class<device> create_sub_devices(info::partition_affinity_domain affinityDomain) const
+  {
+    throw cl::sycl::feature_not_supported("unsupported feature\n");
+  }
 
 };
-
-
-template <>
-inline auto device::get_info<info::device::max_work_group_size>() const {
-  return size_t { 8 };
-}
-
-template <>
-inline auto device::get_info<info::device::max_work_item_sizes>() const {
-  return cl::sycl::id<3> { 128, 128, 128 };
-}
-
-template <>
-inline auto device::get_info<info::device::max_compute_units>() const {
-  return size_t { 8 };
-}
-
-template <>
-inline auto device::get_info<info::device::device_type>() const {
-  return info::device_type::cpu;
-}
-
-template <>
-inline auto device::get_info<info::device::local_mem_size>() const {
-  return size_t { 32000 };
-}
-
-template <>
-inline auto device::get_info<info::device::max_mem_alloc_size>() const {
-  return size_t { 32000 };
-}
-
-template <>
-inline auto device::get_info<info::device::vendor>() const {
-  return string_class {};
-}
-
-template <>
-inline auto device::get_info<info::device::name>() const {
-  return string_class {};
-}
-
-template <>
-inline auto device::get_info<info::device::profile>() const {
-  return string_class { "FULL_PROFILE" };
-}
 
 /// @} to end the Doxygen group
 

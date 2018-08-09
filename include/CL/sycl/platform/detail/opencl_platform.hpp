@@ -15,7 +15,6 @@
 #include "CL/sycl/detail/default_classes.hpp"
 
 #include "CL/sycl/detail/cache.hpp"
-#include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/device.hpp"
 #include "CL/sycl/exception.hpp"
 #include "CL/sycl/info/param_traits.hpp"
@@ -71,6 +70,10 @@ public:
        OpenCL ones used in Boost.Compute to just cast the enum class
        to the int value */
     return p.get_info<std::string>(static_cast<cl_platform_info>(param));
+  }
+
+  vector_class<string_class> get_extension_strings() const override {
+    return p.extensions();
   }
 
 

@@ -70,6 +70,9 @@
 #include "CL/sycl/device_selector/detail/device_selector_tail.hpp"
 #include "CL/sycl/context/detail/context_tail.hpp"
 #include "CL/sycl/device/detail/device_tail.hpp"
+#ifdef TRISYCL_OPENCL
+#include "CL/sycl/device/detail/opencl_device_tail.hpp"
+#endif
 #include "CL/sycl/platform/detail/platform_tail.hpp"
 #include "CL/sycl/platform/detail/host_platform_tail.hpp"
 #ifdef TRISYCL_OPENCL
