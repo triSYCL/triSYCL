@@ -66,6 +66,11 @@ namespace access {
     global_and_local
   };
 
+  enum class placeholder : bool {
+    false_t,
+    true_t,
+  };
+
 }
 
 /// @} End the data Doxygen group

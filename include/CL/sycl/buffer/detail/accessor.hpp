@@ -55,17 +55,20 @@ template <typename T, int Dimensions> class buffer;
 template <typename T,
           int Dimensions,
           access::mode Mode,
-          access::target Target /* = access::global_buffer */>
+          access::target Target /* = access::global_buffer */,
+          access::placeholder PlaceHolder>
 class accessor :
     public detail::accessor_base,
     public std::enable_shared_from_this<accessor<T,
                                                  Dimensions,
                                                  Mode,
-                                                 Target>>,
+                                                 Target,
+                                                 PlaceHolder>>,
     public detail::debug<accessor<T,
                                   Dimensions,
                                   Mode,
-                                  Target>> {
+                                  Target,
+                                  PlaceHolder>> {
   /** Keep a reference to the accessed buffer
 
       Beware that it owns the buffer, which means that the accessor
@@ -125,7 +128,7 @@ public:
     buf { target_buffer }, array { target_buffer->access } {
     target_buffer->template track_access_mode<Mode>();
     TRISYCL_DUMP_T("Create a host accessor write = " << is_write_access());
-    static_assert(Target == access::target::host_buffer,
+    static_assert(Target == access::target::host_buffer || PlaceHolder == access::placeholder::true_t,
                   "without a handler, access target should be host_buffer");
     /* The host needs to wait for all the producers of the buffer to
        have finished */

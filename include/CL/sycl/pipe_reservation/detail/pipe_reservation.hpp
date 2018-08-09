@@ -21,7 +21,8 @@ namespace detail {
 template <typename T,
           int Dimensions,
           access::mode Mode,
-          access::target Target>
+          access::target Target,
+          access::placeholder PlaceHolder>
 class accessor;
 
 /** \addtogroup data Data access and storage in SYCL
