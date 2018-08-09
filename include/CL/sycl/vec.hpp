@@ -78,7 +78,7 @@ struct elem {
 
     \todo rename in the specification element_type to value_type
 */
-template <typename DataType, size_t NumElements>
+template <typename DataType, int NumElements>
 class vec : public detail::small_array<DataType,
                                        vec<DataType, NumElements>,
                                        NumElements> {
@@ -114,7 +114,7 @@ private:
       has also a tuple interface :-) (23.3.2.9 Tuple interface to class
       template array [array.tuple])
   */
-  template <typename V, typename Element, size_t s>
+  template <typename V, typename Element, int s>
   static auto flatten(const vec<Element, s> i) {
     static_assert(s <= V::dimension,
                   "The element i will not fit in the vector");
