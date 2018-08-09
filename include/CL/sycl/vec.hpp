@@ -16,6 +16,46 @@
 namespace cl {
 namespace sycl {
 
+/** Rounding mode for vector conversions.
+ */
+enum class rounding_mode {
+  automatic, /// Default rounding mode, rtz for integers, rte for floating-point
+  rte,       /// Round to nearest even
+  rtz,       /// Round towards zero
+  rtp,       /// Round towards positive infinity
+  rtn        /// Round towards negative infinity
+};
+
+/** Series of values to specify named swizzle indexes
+ *  Used when calling the swizzle member function template.
+ */
+struct elem {
+  static constexpr int x = 0;
+  static constexpr int y = 1;
+  static constexpr int z = 2;
+  static constexpr int w = 3;
+  static constexpr int r = 0;
+  static constexpr int g = 1;
+  static constexpr int b = 2;
+  static constexpr int a = 3;
+  static constexpr int s0 = 0;
+  static constexpr int s1 = 1;
+  static constexpr int s2 = 2;
+  static constexpr int s3 = 3;
+  static constexpr int s4 = 4;
+  static constexpr int s5 = 5;
+  static constexpr int s6 = 6;
+  static constexpr int s7 = 7;
+  static constexpr int s8 = 8;
+  static constexpr int s9 = 9;
+  static constexpr int sA = 10;
+  static constexpr int sB = 11;
+  static constexpr int sC = 12;
+  static constexpr int sD = 13;
+  static constexpr int sE = 14;
+  static constexpr int sF = 15;
+};
+
 /** \addtogroup vector Vector types in SYCL
 
     @{
