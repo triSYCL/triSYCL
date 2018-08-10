@@ -24,6 +24,7 @@ using namespace std::chrono_literals;
 #include <CL/sycl.hpp>
 
 using namespace cl::sycl::vendor::xilinx;
+namespace fundamentals_v3 = std::experimental::fundamentals_v3;
 
 static auto constexpr K = 1/300.0;
 static auto constexpr g = 9.81;
@@ -35,9 +36,7 @@ std::unique_ptr<graphics::app> a;
 /// A sequential reference implementation of wave propagation
 template <auto size_x, auto size_y, auto display_tile_size>
 struct reference_wave_propagation {
-  using space =
-    std::experimental::mdspan<double, std::experimental::extents<size_y,
-                                                                 size_x>>;
+  using space = fundamentals_v3::mdspan<double, size_y, size_x>;
   // It would be nice to have a constexpr static member to express this,
   // but right now size() is a member function
   //double u_m[space::size()];
@@ -93,7 +92,8 @@ struct reference_wave_propagation {
     for (int j = 0; j < size_y/display_tile_size; ++j)
       for (int i = 0; i <  size_x/display_tile_size; ++i) {
         // Should we have w.data() or std::begin(w) instead of &w(0,0) ?
-        a->update_tile_data_image(i, j,
+/*
+  a->update_tile_data_image(i, j,
                                   std::experimental::subspan
                                   (w,
                                    std::make_pair(j*display_tile_size,
@@ -101,6 +101,7 @@ struct reference_wave_propagation {
                                    std::make_pair(i*display_tile_size,
                                                   display_tile_size)),
                                   -1.0, 1.0);
+*/
       }
     }
   }
@@ -275,12 +276,12 @@ int main(int argc, char *argv[]) {
   a.reset(new graphics::app { argc, argv, decltype(me)::geo::x_size,
                               decltype(me)::geo::y_size,
                               image_size, image_size, 1 });
-
+/*
   // Run a sequential reference implementation
   reference_wave_propagation<image_size*decltype(me)::geo::x_size,
                              image_size*decltype(me)::geo::y_size,
                              image_size>{}.run();
-
+*/
   // Launch the MathEngine program
   me.run();
   // Wait for the graphics to stop

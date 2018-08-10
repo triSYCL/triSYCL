@@ -26,6 +26,8 @@
 
 namespace cl::sycl::vendor::xilinx::graphics {
 
+namespace fundamentals_v3 = std::experimental::fundamentals_v3;
+
 struct frame_grid : Gtk::Window {
   Gtk::ScrolledWindow sw;
   Gtk::Grid grid;
@@ -183,10 +185,9 @@ struct image_grid : frame_grid {
     auto output = d.get();
     // Create a 2D array view on top of data, with dynamic size of
     // image_y by image_x
-    std::experimental::mdspan
-      <double,
-       std::experimental::extents<std::experimental::dynamic_extent,
-                                  std::experimental::dynamic_extent>> md
+    fundamentals_v3::mdspan<double,
+                            fundamentals_v3::dynamic_extent,
+                            fundamentals_v3::dynamic_extent> md
       { data, image_y, image_x };
     for (int j = 0; j < image_y; ++j)
       for (int i = 0; i < image_x; ++i) {

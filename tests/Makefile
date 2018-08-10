@@ -159,7 +159,7 @@ endif
 
 # To test C++2a <mdspan>, specify with this variable where the
 # implementation is, typically the local directory containing
-# https://github.com/kokkos/array_ref/tree/master/reference/include
+# https://github.com/hcedwar/ornl-cpp-proposals-pub/tree/master/P0009/prototype/include
 ifdef TRISYCL_MDSPAN_INCPATH
   CXXFLAGS += -I$(TRISYCL_MDSPAN_INCPATH)
 endif
