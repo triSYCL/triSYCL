@@ -102,6 +102,7 @@ public:
   get_info(info::device param) const override {
     switch (param) {
     TRISYCL_DEFINE_DEVICE_HOST_INFO_TEMPLATE(max_work_group_size, static_cast<std::size_t>(8))
+    TRISYCL_DEFINE_DEVICE_HOST_INFO_TEMPLATE(max_work_item_sizes, (cl::sycl::id<3>{ 128, 128, 128 }))
     TRISYCL_DEFINE_DEVICE_HOST_INFO_TEMPLATE(max_compute_units, static_cast<cl::sycl::cl_uint>(8))
     TRISYCL_DEFINE_DEVICE_HOST_INFO_TEMPLATE(device_type, info::device_type::host)
     TRISYCL_DEFINE_DEVICE_HOST_INFO_TEMPLATE(local_mem_type, info::local_mem_type::global)
