@@ -129,6 +129,47 @@ struct small_array : std::array<BasicType, Dims>,
     return (*this)[2];
   }
 
+  /** An accessor to the third variable of a small array
+  */
+  BasicType& w(){
+    static_assert(Dims >= 4, "can't access to small_array[3] if Dims < 4");
+    return (*this)[3];
+  }
+
+  /** Accessors to access hex indexed members of a small array.
+   * There are two macros, one for 0-9, one for A-F.
+   */
+#define TRISYCL_DECLARE_S(x)							\
+  BasicType& s##x() {							\
+    static_assert(Dims >= (x + 1), "can't access to small_array["#x"] if Dims < "#x"+1"); \
+    return (*this)[(x)];						\
+  }
+
+#define TRISYCL_DECLARE_Sx(x)							\
+  BasicType& s##x() {							\
+    static_assert(Dims >= (0x##x + 1), "can't access to small_array[0x"#x"] if Dims < 0x"#x"+1"); \
+    return (*this)[(0x##x)];						\
+  }
+
+  TRISYCL_DECLARE_S(0);
+  TRISYCL_DECLARE_S(1);
+  TRISYCL_DECLARE_S(2);
+  TRISYCL_DECLARE_S(3);
+  TRISYCL_DECLARE_S(4);
+  TRISYCL_DECLARE_S(5);
+  TRISYCL_DECLARE_S(6);
+  TRISYCL_DECLARE_S(7);
+  TRISYCL_DECLARE_S(8);
+  TRISYCL_DECLARE_S(9);
+  TRISYCL_DECLARE_Sx(A);
+  TRISYCL_DECLARE_Sx(B);
+  TRISYCL_DECLARE_Sx(C);
+  TRISYCL_DECLARE_Sx(D);
+  TRISYCL_DECLARE_Sx(E);
+  TRISYCL_DECLARE_Sx(F);
+
+#undef TRISYCL_DECLARE_S
+#undef TRISYCL_DECLARE_Sx
 
   /// A constructor from another small_array of the same size
   template <typename SourceBasicType,
