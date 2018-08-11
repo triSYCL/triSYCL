@@ -35,6 +35,7 @@ include(CMakePackageConfigHelpers)
 set(TARGETS_EXPORT_NAME "${PROJECT_NAME}Targets")
 set(namespace "${PROJECT_NAME}::")
 set(CMAKEPACKAGE_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/cmake")
+set(PACKAGE_TRISYCL_INCLUDE_DIR "${CMAKE_INSTALL_PREFIX}/include" )
 
 target_include_directories(${PROJECT_NAME} INTERFACE
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>

@@ -5,3 +5,7 @@
 include("${CMAKE_CURRENT_LIST_DIR}/@TARGETS_EXPORT_NAME@.cmake")
 
 check_required_components("@PROJECT_NAME@")
+
+# Set this for the EIGEN library
+set (TRISYCL_INCLUDE_DIR "@PACKAGE_TRISYCL_INCLUDE_DIR@")
+set (TRISYCL_FOUND 1)
