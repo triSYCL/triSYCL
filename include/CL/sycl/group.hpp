@@ -170,7 +170,7 @@ public:
   /** Get a linearized version of the group ID
 
    */
-  size_t get_linear() const {
+  size_t get_linear_id() const {
     return detail::linear_id(get_group_range(), get_id());
   }
 
