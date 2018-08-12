@@ -97,7 +97,7 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${TRISYCL_VERSION_MAJOR} )
 set(CPACK_PACKAGE_VERSION_MINOR ${TRISYCL_VERSION_MINOR} )
 set(CPACK_PACKAGE_VERSION_PATCH ${TRISYCL_VERSION_PATCH} )
 
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "opencl-c-headers (>=1.2), libboost-dev")
-set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "build-essential, cmake")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-dev")
+set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "opencl-c-headers (>=1.2), build-essential, cmake")
 
 include(CPack)
