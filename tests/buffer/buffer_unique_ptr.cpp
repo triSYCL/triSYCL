@@ -51,7 +51,7 @@ int test_main(int argc, char *argv[]) {
                                      });
     });
 
-  auto result = b.get_access<access::mode::read, access::target::host_buffer>();
+  auto result = b.get_access<access::mode::read>();
   for (int i = 0; i != N; ++i) {
     //std::cerr << result[i] << ':' << i << std::endl;
     BOOST_CHECK(result[i] == 2*(314 + i));

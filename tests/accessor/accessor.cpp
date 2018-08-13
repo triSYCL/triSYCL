@@ -25,12 +25,9 @@ int main() {
     cl::sycl::buffer<int, 3> c({ N, M, P });
 
     // Test from the host
-    auto A = a.get_access<cl::sycl::access::mode::read_write,
-                          cl::sycl::access::target::host_buffer>();
-    auto B = b.get_access<cl::sycl::access::mode::read_write,
-                          cl::sycl::access::target::host_buffer>();
-    auto C = c.get_access<cl::sycl::access::mode::read_write,
-                          cl::sycl::access::target::host_buffer>();
+    auto A = a.get_access<cl::sycl::access::mode::read_write>();
+    auto B = b.get_access<cl::sycl::access::mode::read_write>();
+    auto C = c.get_access<cl::sycl::access::mode::read_write>();
 
     // Test the STL-like accessor member types
     TEST_TYPE(A, value_type, int);

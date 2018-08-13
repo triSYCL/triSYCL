@@ -371,14 +371,10 @@ public:
 
       \todo More elegant solution
   */
-  template <access::mode Mode,
-            access::target Target = access::target::host_buffer>
-  accessor<T, Dimensions, Mode, Target>
+  template <access::mode Mode>
+  accessor<T, Dimensions, Mode, access::target::host_buffer>
   get_access() {
-    static_assert(Target == access::target::host_buffer,
-                  "get_access() without a command group handler is only"
-                  " for host_buffer accessor");
-    implementation->implementation->template track_access_mode<Mode, Target>();
+    implementation->implementation->template track_access_mode<Mode, access::target::host_buffer>();
     return { *this };
   }
 

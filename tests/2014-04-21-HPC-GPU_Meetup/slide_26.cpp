@@ -14,8 +14,7 @@ int my_array [20];
     // my_array is now taken over by the SYCL system and its contents undefined
 
     {
-        auto my_access = my_buffer.get_access<cl::sycl::access::mode::read_write,
-                                              cl::sycl::access::target::host_buffer> ();
+        auto my_access = my_buffer.get_access<cl::sycl::access::mode::read_write>();
         /* The host now has access to the buffer via my_access.
            This is a synchronizing operation - it blocks until access is ready.
            Access is released when my_access is destroyed

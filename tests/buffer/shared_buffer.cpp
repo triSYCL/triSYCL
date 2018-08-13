@@ -30,13 +30,13 @@ cl::sycl::buffer<int, 1> f(void) {
     DISPLAY_BUFFER_USE_COUNT(a);
     DISPLAY_BUFFER_USE_COUNT(b);
     DISPLAY_BUFFER_USE_COUNT(c);
-    auto B = b.get_access<access::mode::write, access::target::host_buffer>();
+    auto B = b.get_access<access::mode::write>();
 
     for (std::size_t i = 0; i != N; ++i)
       B[i] = i*56 - 100;
 
     // Check b & c storage is really shared
-    auto C = c.get_access<access::mode::read, access::target::host_buffer>();
+    auto C = c.get_access<access::mode::read>();
     DISPLAY_BUFFER_USE_COUNT(a);
     DISPLAY_BUFFER_USE_COUNT(b);
     DISPLAY_BUFFER_USE_COUNT(c);
