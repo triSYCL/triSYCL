@@ -67,7 +67,7 @@ auto display_test = [](auto ndi) {
   DISPLAY_ELEMENTS(get_offset);
   ndi.get_id().display();
   DISPLAY_ELEMENTS(get_id);
-  std::cout << ndi.get_linear() << std::endl;
+  std::cout << ndi.get_linear_id() << std::endl;
 };
 
 int main() {
