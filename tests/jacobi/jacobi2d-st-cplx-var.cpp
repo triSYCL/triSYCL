@@ -56,8 +56,8 @@ int main(int argc, char **argv) {
       float tmp = (float) (i*(j+2) + 10) / N;
       Complex value(tmp, tmp);
       cl::sycl::id<2> id = {i, j};
-      ioBuffer.get_access<cl::sycl::access::mode::write, cl::sycl::access::target::host_buffer>()[id] = value;
-      ioABuffer.get_access<cl::sycl::access::mode::write, cl::sycl::access::target::host_buffer>()[id] = value;
+      ioBuffer.get_access<cl::sycl::access::mode::write>()[id] = value;
+      ioABuffer.get_access<cl::sycl::access::mode::write>()[id] = value;
     }
   }
 

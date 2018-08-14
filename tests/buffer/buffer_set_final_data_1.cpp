@@ -77,8 +77,7 @@ int test_main(int argc, char *argv[]) {
 
     {
       buffer<int> buff { v.begin(), v.end() };
-      auto read = buff.get_access<access::mode::read,
-           access::target::host_buffer>();
+      auto read = buff.get_access<access::mode::read>();
       buff.set_final_data(w.begin());
     }
 
@@ -94,8 +93,7 @@ int test_main(int argc, char *argv[]) {
     {
       buffer<int> buff { v.begin(), v.end() };
       buff.set_final_data(v.begin());
-      auto write = buff.get_access<access::mode::write,
-           access::target::host_buffer>();
+      auto write = buff.get_access<access::mode::write>();
       for (int i = 0; i < N; ++i)
         write[i] = i;
     }
@@ -111,8 +109,7 @@ int test_main(int argc, char *argv[]) {
 
     {
       buffer<int> buff { v.cbegin(), v.cend() };
-      auto write = buff.get_access<access::mode::write,
-           access::target::host_buffer>();
+      auto write = buff.get_access<access::mode::write>();
       for (int i = 0; i < N; ++i)
         write[i] = i;
     }
