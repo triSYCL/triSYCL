@@ -138,13 +138,21 @@ using multi_ptr = detail::address_space_ptr<Pointer, AS>;
 
     \param pointer is the address with its address space to point to
 
-    \todo Implement the case with a plain pointer
 */
 template <typename T, access::address_space AS>
-multi_ptr<T, AS> make_multi(multi_ptr<T, AS> pointer) {
+multi_ptr<T, AS> make_ptr(multi_ptr<T, AS> pointer) {
   return pointer;
 }
 
+/** Construct a cl::sycl::multi_ptr<> with the right type
+
+    \todo Implement the case with a plain pointer
+*/
+template <typename T, access::address_space AS>
+multi_ptr<T, AS> make_ptr(T *pointer) {
+  detail::unimplemented();
+  return pointer;
+}
 }
 }
 /// @} End the parallelism Doxygen group

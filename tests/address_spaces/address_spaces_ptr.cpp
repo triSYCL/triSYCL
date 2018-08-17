@@ -81,9 +81,9 @@ int main() {
           multi_ptr<char *, access::address_space::constant_space> c_mp = c_p;
           c_mp--;
           multi_ptr<double*, access::address_space::private_space> p_mp = pd;
-          auto ppd = make_multi(p_mp);
+          auto ppd = make_ptr(p_mp);
           *ppd = 5.5;
-          auto p_c_p = make_multi(c_p);
+          auto p_c_p = make_ptr(c_p);
           *ppd += *p_c_p;
 
         }
