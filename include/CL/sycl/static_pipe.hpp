@@ -86,7 +86,7 @@ public:
   template <access::mode Mode,
             access::target Target = access::target::pipe>
   accessor<value_type, 1, Mode, Target>
-  get_access(handler &command_group_handler) {
+  get_access(handler &command_group_handler) const {
     static_assert(Target == access::target::pipe
                   || Target == access::target::blocking_pipe,
                   "get_access(handler) with pipes can only deal with "
@@ -105,7 +105,7 @@ public:
   template <access::mode Mode,
             access::target Target = access::target::pipe>
   accessor<value_type, 1, Mode, Target>
-  get_access() {
+  get_access() const {
     static_assert(Target == access::target::pipe
                   || Target == access::target::blocking_pipe,
                   "get_access(handler) with pipes can only deal with "

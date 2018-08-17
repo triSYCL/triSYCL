@@ -11,6 +11,8 @@
 
 #include <type_traits>
 
+#include "CL/sycl/access.hpp"
+
 namespace cl::sycl::vendor::xilinx::acap::me {
 
 /** The MathEngine tile infrastructure
@@ -203,19 +205,19 @@ struct tile {
   }
 
 
-  template <typename T>
-  auto& get_cascade_stream_in() {
+  template <typename T, access::target Target = access::target::blocking_pipe>
+  auto get_cascade_stream_in() {
     static_assert(!is_cascade_start(), "You cannot access to the cascade stream"
                   " input on the tile that starts the stream");
-    return me_array->cs.get_cascade_stream_in(x, y);
+    return me_array->cs.template get_cascade_stream_in<T, Target>(x, y);
   }
 
 
-  template <typename T>
+  template <typename T, access::target Target = access::target::blocking_pipe>
   auto get_cascade_stream_out() {
     static_assert(!is_cascade_end(), "You cannot access to the cascade stream"
                   " output on the tile that starts the stream");
-    return me_array->cs.get_cascade_stream_out(x, y);
+    return me_array->cs.template get_cascade_stream_out<T, Target>(x, y);
   }
 };
 

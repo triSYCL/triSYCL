@@ -9,6 +9,7 @@
     License. See LICENSE.TXT for details.
  */
 
+#include "CL/sycl/access.hpp"
 #include "geography.hpp"
 
 namespace cl::sycl::vendor::xilinx::acap::me {
@@ -50,18 +51,21 @@ struct cascade_stream {
       cascade_stream_pipes[y][x] as output
   */
 
-
-  auto& get_cascade_stream_in(int x, int y) {
+  template <typename T, access::target Target>
+  auto get_cascade_stream_in(int x, int y) const {
     // On odd rows, the cascade streams goes in the other direction
     return cascade_stream_pipes[geo::x_size*y
-                                + ((y & 1) ? geo::x_max - x : x)];
+                                + ((y & 1) ? geo::x_max - x : x)]
+      .template get_access<access::mode::read, Target>();
   }
 
 
-  auto get_cascade_stream_out(int x, int y) {
+  template <typename T, access::target Target>
+  auto get_cascade_stream_out(int x, int y) const {
     // On odd rows, the cascade streams goes in the other direction
     return cascade_stream_pipes[geo::x_size*y + 1
-                                + ((y & 1) ? geo::x_max - x : x)];
+                                + ((y & 1) ? geo::x_max - x : x)]
+      .template get_access<access::mode::write, Target>();
   }
 
 

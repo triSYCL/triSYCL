@@ -19,19 +19,18 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
   void run() {
     // Do not read at the start of the cascade
     if constexpr (!t::is_cascade_start()) {
-        auto cs_in = this->template get_cascade_stream_in<int>()
-          .template get_access<access::mode::read,
-                               access::target::blocking_pipe>();
+        auto cs_in = this->template get_cascade_stream_in<int>();
         auto v = cs_in.read();
-        std::cout << "Tile(" << X << ',' << Y << ") is reading "
+        std::cout << "< Tile(" << X << ',' << Y << ") is reading "
                   << v << std::endl;
     }
     // Do not write at the end of the cascade
     if constexpr (!t::is_cascade_end()) {
-        auto cs_out = t::template get_cascade_stream_out<int>()
-          .template get_access<access::mode::write,
-                               access::target::blocking_pipe>();
-        cs_out << t::x*1000 + t::y;
+        auto cs_out = t::template get_cascade_stream_out<int>();
+        auto v = t::x*1000 + t::y;
+        std::cout << "> Tile(" << X << ',' << Y << ") is writing "
+                  << v << std::endl;
+        cs_out << v;
     }
   }
 };
