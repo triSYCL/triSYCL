@@ -9,6 +9,8 @@
     License. See LICENSE.TXT for details.
  */
 
+#include "geography.hpp"
+
 namespace cl::sycl::vendor::xilinx::acap::me {
 
 /** The cascade stream infrastructure between MathEngine tiles
@@ -26,7 +28,43 @@ namespace cl::sycl::vendor::xilinx::acap::me {
     out (384-bits)
 
 */
+template <typename Geography>
 struct cascade_stream {
+  using geo = Geography;
+  /** The pipes for the cascade streams, with 1 spare pipe on each
+      side of PE strings
+
+      \todo Use a data type with 384 bits
+
+      There are 4 registers along the data path according to 1.4
+      specification. */
+  cl::sycl::static_pipe<int, 4>
+  cascade_stream_pipes[geo::x_size*geo::y_size + 1];
+  /** Cascade stream layout
+
+      On even rows, a tile use cascade_stream_pipes[y][x] as input and
+      cascade_stream_pipes[y][x + 1] as output
+
+      On odd rows the flow goes into the other direction, so a tile
+      use cascade_stream_pipes[y][x + 1] as input and
+      cascade_stream_pipes[y][x] as output
+  */
+
+
+  auto& get_cascade_stream_in(int x, int y) {
+    // On odd rows, the cascade streams goes in the other direction
+    return cascade_stream_pipes[geo::x_size*y
+                                + ((y & 1) ? geo::x_max - x : x)];
+  }
+
+
+  auto get_cascade_stream_out(int x, int y) {
+    // On odd rows, the cascade streams goes in the other direction
+    return cascade_stream_pipes[geo::x_size*y + 1
+                                + ((y & 1) ? geo::x_max - x : x)];
+  }
+
+
 };
 
 }
