@@ -24,12 +24,6 @@
    CHECK-NEXT: 1
    CHECK-NEXT: 0
    CHECK-NEXT: 1
-   CHECK-NEXT: 0
-   CHECK-NEXT: 0
-   CHECK-NEXT: 1
-   CHECK-NEXT: 1
-   CHECK-NEXT: 1
-   CHECK-NEXT: 1
 */
 #include <CL/sycl.hpp>
 #include <iostream>
@@ -110,11 +104,5 @@ int main() {
   std::cout << (r1 == r1) << std::endl;
   std::cout << (r1 == r2) << std::endl;
   std::cout << (r1 != r2) << std::endl;
-  std::cout << (r1 < r2) << std::endl;
-  std::cout << (r1 <= r2) << std::endl;
-  std::cout << (r1 > r2) << std::endl;
-  std::cout << (r1 >= r2) << std::endl;
-  std::cout << (r2 >= r2) << std::endl;
-  std::cout << (r1 <= r1) << std::endl;
   return 0;
 }

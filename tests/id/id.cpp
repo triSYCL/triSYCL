@@ -4,7 +4,6 @@
    CHECK-NEXT: 5 7
    CHECK-NEXT: 3
    CHECK-NEXT: jj has changed
-   CHECK-NEXT: jj is lexicographically lesser than before
    CHECK-NEXT: jj via e = 5
    CHECK-NEXT: jj via e = 3
    CHECK-NEXT: cjj via e = 5
@@ -42,11 +41,6 @@ int main() {
   // Test that id<> implement comparable
   if (jj != make_id({ 5, 7 }))
     std::cout << "jj has changed" << std::endl;
-  if (jj > make_id({ 5, 7 }))
-    std::cout << "jj is lexicographically greater than before" << std::endl;
-  if (jj < make_id(5, 7))
-    std::cout << "jj is lexicographically lesser than before" << std::endl;
-
 
   // Try some STL interoperability:
 

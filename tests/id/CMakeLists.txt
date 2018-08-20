@@ -7,7 +7,6 @@ declare_trisycl_test(TARGET id TEST_REGEX
 5 7
 3
 jj has changed
-jj is lexicographically lesser than before
 jj via e = 5
 jj via e = 3
 cjj via e = 5

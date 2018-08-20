@@ -29,20 +29,37 @@ namespace detail {
 
 
 /** Helper macro to declare a vector operation with the given side-effect
-    operator */
+    operator.
+    This handles both a[i] op b[i] and a[i] op b, where b is a BasicType.
+*/
 #define TRISYCL_BOOST_OPERATOR_VECTOR_OP(op)            \
   FinalType operator op(const FinalType &rhs) {         \
     for (std::size_t i = 0; i != Dims; ++i)             \
       (*this)[i] op rhs[i];                             \
     return *this;                                       \
-  }
+  }                                                     \
+  FinalType operator op(const BasicType &rhs) {         \
+    for (std::size_t i = 0; i != Dims; ++i)             \
+      (*this)[i] op rhs;                                \
+    return *this;                                       \
+  }                                                     \
 
+/** Helper macro to declare a vector operation returning a new
+    type containing the result of the operator.
 
+    This handles both a[] op b[] and a[] op b, where b is a BasicType.
+*/
 #define TRISYCL_LOGICAL_OPERATOR_VECTOR_OP(op)          \
   FinalType operator op(const FinalType &rhs) {         \
     FinalType res;                                      \
     for (std::size_t i = 0; i != Dims; ++i)             \
       res[i] = (*this)[i] op rhs[i];                    \
+    return res;                                         \
+  }                                                     \
+  FinalType operator op(const BasicType &rhs) {         \
+    FinalType res;                                      \
+    for (std::size_t i = 0; i != Dims; ++i)             \
+      res[i] = (*this)[i] op rhs;                       \
     return res;                                         \
   }
 
@@ -66,6 +83,9 @@ namespace detail {
 
     std::array<> provides the collection concept, with .size(), == and !=
     too.
+
+    Can't use boost::shiftable, as it doesn't define the U, T overload
+    outside the class, but when that is added, it gets ambiguity problems.
 */
 template <typename BasicType,
           typename FinalType,
@@ -74,10 +94,10 @@ template <typename BasicType,
 struct small_array : std::array<BasicType, Dims>,
   // To have all the usual arithmetic operations on this type
   boost::euclidean_ring_operators<FinalType>,
+  boost::euclidean_ring_operators<FinalType, BasicType>,
   // Bitwise operations
   boost::bitwise<FinalType>,
-  // Shift operations
-  boost::shiftable<FinalType>,
+  boost::bitwise<FinalType, BasicType>,
   // Already provided by array<> lexicographically:
   // boost::equality_comparable<FinalType>,
   // boost::less_than_comparable<FinalType>,
@@ -259,10 +279,21 @@ struct small_array : std::array<BasicType, Dims>,
   /// Add | like operations on the id<> and others
   TRISYCL_BOOST_OPERATOR_VECTOR_OP(|=)
 
+  /// Add && operations on the id<> and others
   TRISYCL_LOGICAL_OPERATOR_VECTOR_OP(&&)
 
+  /// Add || operations on the id<> and others
   TRISYCL_LOGICAL_OPERATOR_VECTOR_OP(||)
 
+  /// Add comparison operations on the id<> and others
+  TRISYCL_LOGICAL_OPERATOR_VECTOR_OP(<)
+  TRISYCL_LOGICAL_OPERATOR_VECTOR_OP(>)
+  TRISYCL_LOGICAL_OPERATOR_VECTOR_OP(<=)
+  TRISYCL_LOGICAL_OPERATOR_VECTOR_OP(>=)
+
+  /// Add shiftable operators on the vector op
+  TRISYCL_LOGICAL_OPERATOR_VECTOR_OP(<<)
+  TRISYCL_LOGICAL_OPERATOR_VECTOR_OP(>>)
 
   /** Since the boost::operator work on the small_array, add an implicit
       conversion to produce the expected type */
@@ -272,6 +303,33 @@ struct small_array : std::array<BasicType, Dims>,
 
 };
 
+/** Helper macro to declare out-of-class operators for b vs a[]
+    operations.
+*/
+#define TRISYCL_OPERATOR_BASIC_TYPE_OP(op)                            \
+template <typename BasicType, typename FinalType, std::size_t Dims>   \
+struct small_array<BasicType, FinalType, Dims> operator op(           \
+  const BasicType &lhs,                                               \
+  const struct small_array<BasicType, FinalType, Dims> &rhs)          \
+{                                                                     \
+  FinalType res;                                                      \
+  for (std::size_t i = 0; i != Dims; ++i)                             \
+    res[i] = lhs op rhs[i];                                           \
+  return res;                                                         \
+}
+
+/* Comparison operators without Boost as Boost only specs bool return types,
+   and the SYCL spec wants an arrayed of values returned. */
+TRISYCL_OPERATOR_BASIC_TYPE_OP(>)
+TRISYCL_OPERATOR_BASIC_TYPE_OP(<)
+TRISYCL_OPERATOR_BASIC_TYPE_OP(<=)
+TRISYCL_OPERATOR_BASIC_TYPE_OP(>=)
+/* Shiftable operators without Boost as Boost doesn't specify
+   the out-of-class U, T constructors */
+TRISYCL_OPERATOR_BASIC_TYPE_OP(<<)
+TRISYCL_OPERATOR_BASIC_TYPE_OP(>>)
+
+#undef TRISYCL_OPERATOR_BASIC_TYPE_OP
 
 /** A small array of 1, 2 or 3 elements with the implicit constructors */
 template <typename BasicType, typename FinalType, std::size_t Dims>
