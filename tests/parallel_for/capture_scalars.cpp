@@ -18,9 +18,9 @@ int main() {
   float off_float { 1.5F };
   q.submit([&] (handler &cgh) {
       auto acc = a.get_access<access::mode::write>(cgh);
-      // Show that we can use a simple parallel_for with int, for example
-      cgh.parallel_for<class nothing>(N, [=] (int index) {
-          acc[index] = index + off*off_float;
+      // Show that we can use a simple parallel_for with id<1>, for example
+      cgh.parallel_for<class nothing>(N, [=] (id<1> index) {
+          acc[index] = index[0] + off*off_float;
         });
     });
   // Verify the computation

@@ -43,8 +43,8 @@ int test_main(int argc, char *argv[]) {
                          access::mode::read_write,
                          access::target::local> lds { size, cgh };
       cgh.parallel_for<class init>(size,
-                                   [=] (int i) {
-                                     lds[i] = i;
+                                   [=] (id<1> i) {
+                                     lds[i] = i[0];
                                      out_access[i] = lds[i];
                                    });
     });

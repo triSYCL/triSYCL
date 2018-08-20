@@ -58,7 +58,7 @@ int test_main(int argc, char *argv[]) {
 
           cgh.parallel_for<class generate>(range<1> { size_t(N) }, // MSVC: error C2398: Element '1': conversion from 'const int' to 'size_t' requires a narrowing conversion
                                            [=] (id<1> index) {
-                                             write[index] = index;
+                                             write[index] = index[0];
                                            });
       });
       buff.set_final_data(w.begin());

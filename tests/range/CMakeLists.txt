@@ -5,7 +5,6 @@ declare_trisycl_test(TARGET range TEST_REGEX
 "Result:
 1 
 a = 3
-a as an int = 3
 b = 4
 b = 2
 c = 5,6

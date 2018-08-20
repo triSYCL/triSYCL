@@ -22,8 +22,8 @@ int main() {
   q.submit([&] (handler &cgh) {
       auto ka = A.get_access<access::mode::write>(cgh);
       auto stub = A.get_access<access::mode::read>(cgh);
-      cgh.parallel_for<>(N, [=] (int index) {
-          ka[index] = index;
+      cgh.parallel_for<>(N, [=] (id<1> index) {
+          ka[index] = index[0];
         });
     });
   q.wait();
