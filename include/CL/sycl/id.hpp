@@ -57,9 +57,9 @@ public:
       { rhs.get_id() }
   {}
 
-  /// Keep other constructors
-  id() = default;
-
+  /// Default constructor must 0 all elements
+  id() : detail::small_array_123<std::size_t, id<Dimensions>, Dimensions> { 0 }
+  {}
 };
 
 

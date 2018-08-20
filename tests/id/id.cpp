@@ -15,6 +15,7 @@
    CHECK-NEXT: 6 2
    CHECK-NEXT: 1 2 3
    CHECK-NEXT: 5 6
+   CHECK_NEXT: zeroid = 0, 0, 0
 */
 #include <CL/sycl.hpp>
 #include <iostream>
@@ -70,5 +71,7 @@ int main() {
   id<2> iditem { it };
   iditem.display();
 
+  id<3> zeroid;
+  std::cout << "zeroid = " << zeroid[0] << ", " << zeroid[1] << ", " << zeroid[2] << std::endl;
   return 0;
 }
