@@ -14,7 +14,7 @@ using namespace cl::sycl;
 
 #define CHECK_RANGE_ACCESSOR(r, a)                                \
   BOOST_CHECK(r  == a.get_range());                               \
-  BOOST_CHECK(r.get_count() == a.get_count());                    \
+  BOOST_CHECK(r.size() == a.get_count());                         \
   BOOST_CHECK(a.get_size()                                        \
               == a.get_count()*sizeof(decltype(a)::value_type));
 

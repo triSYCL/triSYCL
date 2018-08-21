@@ -45,12 +45,8 @@ public:
 
 
   /** Return the number of elements in the range
-
-      \todo Give back size() its real meaning in the specification
-
-      \todo add this method to the specification
-  */
-  size_t get_count() const {
+   */
+  size_t size() const {
     // Return the product of the sizes in each dimension
     return std::accumulate(this->cbegin(),
                            this->cend(),
