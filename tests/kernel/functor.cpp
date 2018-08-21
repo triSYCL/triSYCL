@@ -28,11 +28,11 @@ public:
 
   /* The kernel itself is the () operator
 
-     Since it is to be used in a 1D parallel_for, it takes a item<1>
-     or even an integer as a parameter
+     Since it is to be used in a 1D parallel_for, it takes a id<1>
+     as a parameter
   */
-  void operator()(int index) {
-    a[index] = index;
+  void operator()(id<1> index) {
+    a[index] = index[0];
   }
 
 };

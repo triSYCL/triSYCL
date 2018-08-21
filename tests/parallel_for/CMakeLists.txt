@@ -45,6 +45,5 @@ Group id = 4
 Local id = 0 \\(global id = 8\\)
 Local id = 1 \\(global id = 9\\)")
 declare_trisycl_test(TARGET initializer_list)
-declare_trisycl_test(TARGET integer)
 declare_trisycl_test(TARGET item_no_offset)
 declare_trisycl_test(TARGET item)

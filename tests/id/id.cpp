@@ -5,7 +5,6 @@
    CHECK-NEXT: 3
    CHECK-NEXT: jj has changed
    CHECK-NEXT: jj is lexicographically lesser than before
-   CHECK-NEXT: as_an_int = 42
    CHECK-NEXT: jj via e = 5
    CHECK-NEXT: jj via e = 3
    CHECK-NEXT: cjj via e = 5
@@ -47,11 +46,6 @@ int main() {
     std::cout << "jj is lexicographically greater than before" << std::endl;
   if (jj < make_id(5, 7))
     std::cout << "jj is lexicographically lesser than before" << std::endl;
-
-
-  id <> as_an_int;
-  as_an_int = 42;
-  std::cout << "as_an_int = " << as_an_int << std::endl;
 
 
   // Try some STL interoperability:

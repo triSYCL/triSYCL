@@ -300,12 +300,6 @@ struct small_array_123<BasicType, FinalType, 1>
   small_array_123() = default;
 
   using small_array<BasicType, FinalType, 1>::small_array;
-
-  /** Conversion so that an for example an id<1> can basically be used
-      like an integer */
-  operator BasicType() const {
-    return (*this)[0];
-  }
 };
 
 

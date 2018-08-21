@@ -28,7 +28,7 @@ int test_main(int argc, char *argv[]) {
 
       cgh.parallel_for<class generate>(range<1> { N },
                                        [=] (id<1> index) {
-                                         a[index] = index;
+                                         a[index] = index[0];
                                        });
     });
   /* Be careful with global buffers with copy back behaviour, since

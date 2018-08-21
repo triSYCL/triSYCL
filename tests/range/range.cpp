@@ -2,7 +2,6 @@
    CHECK: Result:
    CHECK-NEXT: 1
    CHECK-NEXT: a = 3
-   CHECK-NEXT: a as an int = 3
    CHECK-NEXT: b = 4
    CHECK-NEXT: b = 2
    CHECK-NEXT: c = 5,6
@@ -62,7 +61,6 @@ int main() {
 
   range<> a = 3;
   std::cout << "a = " << a[0] << std::endl;
-  std::cout << "a as an int = " << a << std::endl;
   range<1> b = { 4 };
   std::cout << "b = " << b[0] << std::endl;
   b /= make_range(2);
