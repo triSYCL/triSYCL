@@ -78,12 +78,12 @@ int main() {
           global_ptr<unsigned long int> g_p;
           // Can only point to a local<> object
           local_ptr<char> l_p;
-          multi_ptr<char *, constant_address_space> c_mp = c_p;
+          multi_ptr<char *, access::address_space::constant_space> c_mp = c_p;
           c_mp--;
-          multi_ptr<double*, private_address_space> p_mp = pd;
-          auto ppd = make_multi(p_mp);
+          multi_ptr<double*, access::address_space::private_space> p_mp = pd;
+          auto ppd = make_ptr(p_mp);
           *ppd = 5.5;
-          auto p_c_p = make_multi(c_p);
+          auto p_c_p = make_ptr(c_p);
           *ppd += *p_c_p;
 
         }
