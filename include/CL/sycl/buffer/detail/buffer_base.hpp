@@ -116,6 +116,7 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
 
   /// A task has released the buffer
   void release() {
+    std::lock_guard<std::mutex> lock(ready_mutex);
     if (--number_of_users == 0)
       // Notify the host consumers or the buffer destructor that it is ready
       ready.notify_all();
