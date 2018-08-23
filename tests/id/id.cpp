@@ -4,6 +4,10 @@
    CHECK-NEXT: 5 7
    CHECK-NEXT: 3
    CHECK-NEXT: jj has changed
+   CHECK-NEXT: 0 1
+   CHECK-NEXT: 1 0
+   CHECK-NEXT: 0 1
+   CHECK-NEXT: 1 1
    CHECK-NEXT: jj via e = 5
    CHECK-NEXT: jj via e = 3
    CHECK-NEXT: cjj via e = 5
@@ -42,6 +46,19 @@ int main() {
   // Test that id<> implement comparable
   if (jj != make_id({ 5, 7 }))
     std::cout << "jj has changed" << std::endl;
+
+  // jj is 5, 3 at this point
+  ii = jj < make_id({ 4, 7 });
+  ii.display();
+
+  ii = jj > make_id({ 4, 7 });
+  ii.display();
+
+  ii = jj <= make_id({ 4, 3 });
+  ii.display();
+
+  ii = jj >= make_id({ 4, 3 });
+  ii.display();
 
   // Try some STL interoperability:
 
