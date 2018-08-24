@@ -16,6 +16,10 @@
    CHECK-NEXT: 1
    CHECK-NEXT: 6 4
    CHECK-NEXT: 6 5 7
+   CHECK-NEXT: 1
+   CHECK-NEXT: 0
+   CHECK-NEXT: 0
+   CHECK-NEXT: 1
 */
 #include <CL/sycl.hpp>
 #include <iostream>
@@ -63,5 +67,12 @@ int main() {
   nd_range<3> ndri3 { { 11, 25, 48 }, { 2, 5, 7 } };
   ndri3.get_group_range().display();
 
+  nd_range<> ndric { 1, 2, 3 };
+  std::cout << (ndri1 == ndric) << std::endl;
+  std::cout << (ndri1 != ndric) << std::endl;
+
+  nd_range<> ndrinc { 1, 2, 5 };
+  std::cout << (ndri1 == ndrinc) << std::endl;
+  std::cout << (ndri1 != ndrinc) << std::endl;
   return 0;
 }
