@@ -50,6 +50,12 @@
    CHECK: 29
    CHECK: 5 3 2
    CHECK: 5 3 2
+   CHECK: 1
+   CHECK: 0
+   CHECK: 0
+   CHECK: 1
+   CHECK: 1
+   CHECK: 0
 */
 #include <CL/sycl.hpp>
 #include <iostream>
@@ -91,5 +97,16 @@ int main() {
   nd_item<3> i3 { {9, 8, 11 }, { { 10, 9, 12 }, { 2, 3, 6 }, { 1, 2, 3 } } };
   display_test(i3);
 
+  nd_item<> ic { 7, { 10, 5 } };
+  std::cout << (i == ic) << std::endl;
+  std::cout << (i != ic) << std::endl;
+
+  nd_item<> inc1 { 8, { 10, 5 } };
+  std::cout << (i == inc1) << std::endl;
+  std::cout << (i != inc1) << std::endl;
+
+  nd_item<> inc2 { 7, { 10, 8 } };
+  std::cout << (i == inc2) << std::endl;
+  std::cout << (i != inc2) << std::endl;
   return 0;
 }
