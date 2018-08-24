@@ -41,6 +41,12 @@
    CHECK: 4 2 1
    CHECK: 4 2 1
    CHECK: 29
+   CHECK: 1
+   CHECK: 0
+   CHECK: 0
+   CHECK: 1
+   CHECK: 0
+   CHECK: 1
 */
 
 #include <CL/sycl.hpp>
@@ -80,5 +86,16 @@ int main() {
   group<3> i3 { {4, 2, 1 }, { { 10, 9, 12 }, { 2, 3, 6 }, { 1, 2, 3 } } };
   display_test(i3);
 
+  group<> g2 { 3, { 10, 2 }};
+  std::cout << (g == g2) << std::endl;
+  std::cout << (g != g2) << std::endl;
+
+  group<> g3 { 3, { 11, 2 }};
+  std::cout << (g == g3) << std::endl;
+  std::cout << (g != g3) << std::endl;
+
+  group<> g4 { 4, { 10, 2 }};
+  std::cout << (g == g4) << std::endl;
+  std::cout << (g != g4) << std::endl;
   return 0;
 }
