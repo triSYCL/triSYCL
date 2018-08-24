@@ -40,7 +40,7 @@ namespace sycl {
     are passed by the runtime to each instance of the function object.
 */
 template <int Dimensions = 1>
-struct h_item {
+struct h_item : boost::equality_comparable<h_item<Dimensions>> {
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
   static constexpr auto dimensionality = Dimensions;
@@ -228,6 +228,11 @@ public:
   // For the triSYCL implementation, need to set the global index
   void set_global(id<Dimensions> Index) { global_index = Index; }
 
+  /// comparison operators
+  bool operator==(const h_item<Dimensions> &itemB) const {
+    return (ND_range == itemB.ND_range &&
+            global_index == itemB.global_index);
+  }
 };
 
 /// @} End the parallelism Doxygen group
