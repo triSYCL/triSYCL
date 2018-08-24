@@ -4,7 +4,10 @@
    CHECK-NEXT: 5 7
    CHECK-NEXT: 3
    CHECK-NEXT: jj has changed
-   CHECK-NEXT: jj is lexicographically lesser than before
+   CHECK-NEXT: 0 1
+   CHECK-NEXT: 1 0
+   CHECK-NEXT: 0 1
+   CHECK-NEXT: 1 1
    CHECK-NEXT: jj via e = 5
    CHECK-NEXT: jj via e = 3
    CHECK-NEXT: cjj via e = 5
@@ -16,6 +19,7 @@
    CHECK-NEXT: 6 2
    CHECK-NEXT: 1 2 3
    CHECK-NEXT: 5 6
+   CHECK_NEXT: zeroid = 0, 0, 0
 */
 #include <CL/sycl.hpp>
 #include <iostream>
@@ -42,11 +46,19 @@ int main() {
   // Test that id<> implement comparable
   if (jj != make_id({ 5, 7 }))
     std::cout << "jj has changed" << std::endl;
-  if (jj > make_id({ 5, 7 }))
-    std::cout << "jj is lexicographically greater than before" << std::endl;
-  if (jj < make_id(5, 7))
-    std::cout << "jj is lexicographically lesser than before" << std::endl;
 
+  // jj is 5, 3 at this point
+  ii = jj < make_id({ 4, 7 });
+  ii.display();
+
+  ii = jj > make_id({ 4, 7 });
+  ii.display();
+
+  ii = jj <= make_id({ 4, 3 });
+  ii.display();
+
+  ii = jj >= make_id({ 4, 3 });
+  ii.display();
 
   // Try some STL interoperability:
 
@@ -76,5 +88,7 @@ int main() {
   id<2> iditem { it };
   iditem.display();
 
+  id<3> zeroid;
+  std::cout << "zeroid = " << zeroid[0] << ", " << zeroid[1] << ", " << zeroid[2] << std::endl;
   return 0;
 }

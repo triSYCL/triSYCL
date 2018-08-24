@@ -27,10 +27,8 @@ Range of dims 3
 1
 0
 1
-0
-0
-1
-1
-1
-1")
+ 0 0 1
+ 0 1 1
+ 1 0 0
+ 1 1 0")
 declare_trisycl_test(TARGET range_size)
