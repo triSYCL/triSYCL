@@ -79,7 +79,7 @@ class opencl_kernel : public detail::kernel,
   template <info::kernel param>
   typename info::param_traits<info::kernel, param>::type
   get_info() const {
-    detail::unimplemented();
+    TRISYCL_UNIMPL;
   }
 #endif
 

@@ -86,7 +86,7 @@ public:
       \todo To be implemented
   */
   cl::sycl::platform get_platform() const override {
-    detail::unimplemented();
+    TRISYCL_UNIMPL;
     return {};
   }
 
@@ -117,7 +117,7 @@ public:
       \todo To be implemented
   */
   bool has_extension(const string_class &extension) const override {
-    detail::unimplemented();
+    TRISYCL_UNIMPL;
     return {};
   }
 

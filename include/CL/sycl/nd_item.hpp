@@ -209,7 +209,7 @@ public:
 #pragma omp barrier
 #else
     // \todo To be implemented efficiently otherwise
-    detail::unimplemented();
+    TRISYCL_UNIMPL;
 #endif
   }
 

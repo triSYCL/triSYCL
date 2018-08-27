@@ -82,7 +82,7 @@ public:
   template <info::context Param>
   typename info::param_traits<info::context, Param>::type
   get_info() const override{
-    detail::unimplemented();
+    TRISYCL_UNIMPL;
     return {};
   }
 #endif
