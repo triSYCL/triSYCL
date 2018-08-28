@@ -162,7 +162,8 @@ struct image_grid : frame_grid {
 
     \param[in] y is the tile vertical id
 
-    \param[in] data is a 2D MDspan of size image_y by image_x
+    \param[in] data is a 2D MDspan of extent at most image_y by
+    image_x. Only the pixels of the extents are drawn
 
     \param[in] min_value is the value represented with minimum of
     graphics palette color
@@ -175,24 +176,32 @@ struct image_grid : frame_grid {
                               const MDspan &data,
                               RangeValue min_value,
                               RangeValue max_value) {
-    // RGB 8 bit images, so 8 bytes per pixel
+    // RGB 8 bit images, so 3 bytes per pixel
+    using rgb = std::uint8_t[3];
     /* Painful: first I cannot use a std::unique_ptr because the
        std::function below needs to be copy-constructible, then the
        std::make_shared taking an array size comes only in C++20 while
        it is available for std::make_unique in C++17... */
     std::shared_ptr<std::uint8_t[]> d { new std::uint8_t[3*image_x*image_y] };
-    auto output = d.get();
-    for (int j = 0; j < image_y; ++j)
-      for (int i = 0; i < image_x; ++i) {
+    fundamentals_v3::mdspan<rgb,
+                            fundamentals_v3::dynamic_extent,
+                            fundamentals_v3::dynamic_extent> output {
+      reinterpret_cast<rgb *>(d.get()),
+      image_y,
+      image_x
+    };
+    // For each pixel of the md_span
+    for (int j = 0; j < data.extent(0); ++j)
+      for (int i = 0; i < data.extent(1); ++i) {
         // Mirror the image vertically to display the pixels in a
         // mathematical sense
         std::uint8_t v =
-          (static_cast<double>(data(image_y - 1 - j,i) - min_value))*255
+          (static_cast<double>(data(j,i) - min_value))*255
            /(max_value - min_value);
         // Write the same value for RGB to have a grey level
-        *output++ = v;
-        *output++ = v;
-        *output++ = v;
+        output(image_y - 1 - j,i)[0] = v;
+        output(image_y - 1 - j,i)[1] = v;
+        output(image_y - 1 - j,i)[2] = v;
       }
     submit([=] {
         // Create a first buffer, allowing later zooming
