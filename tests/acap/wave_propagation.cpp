@@ -100,9 +100,8 @@ struct reference_wave_propagation {
           auto sp =
             fundamentals_v3::subspan(w,
                                      std::make_pair(j*display_tile_size,
-                                                    (j + 1)*display_tile_size
--display_tile_size/2),
-                                     std::make_pair(i*display_tile_size+display_tile_size/8,
+                                                    (j + 1)*display_tile_size),
+                                     std::make_pair(i*display_tile_size,
                                                     (i + 1)*display_tile_size));
           a->update_tile_data_image(i, j, sp, -1.0, 1.0);
         }

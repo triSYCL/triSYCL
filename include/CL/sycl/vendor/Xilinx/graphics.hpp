@@ -13,6 +13,7 @@
 
 #ifdef TRISYCL_GRAPHICS
 
+#include <algorithm>
 #include <atomic>
 #include <cstddef>
 #include <functional>
@@ -190,9 +191,13 @@ struct image_grid : frame_grid {
       image_y,
       image_x
     };
-    // For each pixel of the md_span
-    for (int j = 0; j < data.extent(0); ++j)
-      for (int i = 0; i < data.extent(1); ++i) {
+    // For each pixel of the md_span or of the image, which one is smaller
+    for (int j = 0;
+         j < std::min(static_cast<int>(data.extent(0)), image_y);
+         ++j)
+      for (int i = 0;
+           i < std::min(static_cast<int>(data.extent(1)), image_x);
+           ++i) {
         // Mirror the image vertically to display the pixels in a
         // mathematical sense
         std::uint8_t v =
