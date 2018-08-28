@@ -91,20 +91,19 @@ struct reference_wave_propagation {
 
   /// Run the wave propagation
   void run() {
-    /// Loop on simulatio time
+    /// Loop on simulated time
     while (!a->is_done()) {
       compute();
       for (int j = 0; j < size_y/display_tile_size; ++j)
         for (int i = 0; i <  size_x/display_tile_size; ++i) {
-          // Should we have w.data() or std::begin(w) instead of &w(0,0) ?
-          a->update_tile_data_image(i, j,
-                                    fundamentals_v3::subspan
-                                    (w,
+          // The subspan to split the data in sub-windows
+          auto sp =
+            fundamentals_v3::subspan(w,
                                      std::make_pair(j*display_tile_size,
-                                                    display_tile_size),
+                                                    (j + 1)*display_tile_size),
                                      std::make_pair(i*display_tile_size,
-                                                    display_tile_size)),
-                                    -1.0, 1.0);
+                                                    (i + 1)*display_tile_size));
+          a->update_tile_data_image(i, j, sp, -1.0, 1.0);
         }
     }
   }
@@ -267,7 +266,7 @@ std::this_thread::sleep_for(50ms);
     initialize_space();
     auto& m = t::mem();
     fundamentals_v3::mdspan<double, image_size, image_size> md { &m.w[0][0] };
-
+    /// Loop on simulated time
     while (!a->is_done()) {
       compute();
       a->update_tile_data_image(t::x, t::y, md, -1.0, 1.0);
@@ -276,13 +275,13 @@ std::this_thread::sleep_for(50ms);
 };
 
 int main(int argc, char *argv[]) {
-  acap::me::array<acap::me::layout::size<2,1>, tile, memory> me;
-  //acap::me::array<acap::me::layout::size<8,4>, tile, memory> me;
+  //acap::me::array<acap::me::layout::size<2,1>, tile, memory> me;
+  acap::me::array<acap::me::layout::size<8,4>, tile, memory> me;
 
   a.reset(new graphics::app { argc, argv, decltype(me)::geo::x_size,
                               decltype(me)::geo::y_size,
                               image_size, image_size, 1 });
-#if 0
+#if 1
   // Run a sequential reference implementation
   reference_wave_propagation<image_size*decltype(me)::geo::x_size,
                              image_size*decltype(me)::geo::y_size,
