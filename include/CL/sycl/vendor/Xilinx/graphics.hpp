@@ -162,8 +162,7 @@ struct image_grid : frame_grid {
 
     \param[in] y is the tile vertical id
 
-    \param[in] data a something convertible to a 2D MDspan of size
-    image_y by image_x
+    \param[in] data is a 2D MDspan of size image_y by image_x
 
     \param[in] min_value is the value represented with minimum of
     graphics palette color
@@ -171,9 +170,9 @@ struct image_grid : frame_grid {
     \param[in] max_value is the value represented with maximum of
     graphics palette color
 */
-  template <typename DataType, typename RangeValue>
+  template <typename MDspan, typename RangeValue>
   void update_tile_data_image(int x, int y,
-                              const DataType data,
+                              const MDspan &data,
                               RangeValue min_value,
                               RangeValue max_value) {
     // RGB 8 bit images, so 8 bytes per pixel
@@ -183,14 +182,6 @@ struct image_grid : frame_grid {
        it is available for std::make_unique in C++17... */
     std::shared_ptr<std::uint8_t[]> d { new std::uint8_t[3*image_x*image_y] };
     auto output = d.get();
-/*
-    // Create a 2D array view on top of data, with dynamic size of
-    // image_y by image_x
-    fundamentals_v3::mdspan<double,
-                            fundamentals_v3::dynamic_extent,
-                            fundamentals_v3::dynamic_extent> md
-      { data, image_y, image_x };
-*/
     for (int j = 0; j < image_y; ++j)
       for (int i = 0; i < image_x; ++i) {
         // Mirror the image vertically to display the pixels in a
@@ -220,7 +211,6 @@ struct image_grid : frame_grid {
       });
   }
 };
-
 
 struct app {
   std::thread t;
