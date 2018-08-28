@@ -92,16 +92,14 @@ struct reference_wave_propagation {
     for (int j = 0; j < size_y/display_tile_size; ++j)
       for (int i = 0; i <  size_x/display_tile_size; ++i) {
         // Should we have w.data() or std::begin(w) instead of &w(0,0) ?
-/*
-  a->update_tile_data_image(i, j,
-                                  std::experimental::subspan
+        a->update_tile_data_image(i, j,
+                                  fundamentals_v3::subspan
                                   (w,
                                    std::make_pair(j*display_tile_size,
                                                   display_tile_size),
                                    std::make_pair(i*display_tile_size,
                                                   display_tile_size)),
                                   -1.0, 1.0);
-*/
       }
     }
   }
@@ -265,7 +263,7 @@ std::this_thread::sleep_for(50ms);
     auto& m = t::mem();
     while (!a->is_done()) {
       compute();
-      a->update_tile_data_image(t::x, t::y, &m.w[0][0], -1.0, 1.0);
+      //a->update_tile_data_image(t::x, t::y, &m.w[0][0], -1.0, 1.0);
     }
   }
 };
@@ -276,12 +274,10 @@ int main(int argc, char *argv[]) {
   a.reset(new graphics::app { argc, argv, decltype(me)::geo::x_size,
                               decltype(me)::geo::y_size,
                               image_size, image_size, 1 });
-/*
   // Run a sequential reference implementation
   reference_wave_propagation<image_size*decltype(me)::geo::x_size,
                              image_size*decltype(me)::geo::y_size,
                              image_size>{}.run();
-*/
   // Launch the MathEngine program
   me.run();
   // Wait for the graphics to stop

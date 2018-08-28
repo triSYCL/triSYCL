@@ -183,18 +183,20 @@ struct image_grid : frame_grid {
        it is available for std::make_unique in C++17... */
     std::shared_ptr<std::uint8_t[]> d { new std::uint8_t[3*image_x*image_y] };
     auto output = d.get();
+/*
     // Create a 2D array view on top of data, with dynamic size of
     // image_y by image_x
     fundamentals_v3::mdspan<double,
                             fundamentals_v3::dynamic_extent,
                             fundamentals_v3::dynamic_extent> md
       { data, image_y, image_x };
+*/
     for (int j = 0; j < image_y; ++j)
       for (int i = 0; i < image_x; ++i) {
         // Mirror the image vertically to display the pixels in a
         // mathematical sense
         std::uint8_t v =
-          (static_cast<double>(md(image_y - 1 - j,i) - min_value))*255
+          (static_cast<double>(data(image_y - 1 - j,i) - min_value))*255
            /(max_value - min_value);
         // Write the same value for RGB to have a grey level
         *output++ = v;
