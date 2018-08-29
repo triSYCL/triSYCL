@@ -80,7 +80,9 @@ struct reference_wave_propagation {
         side(j,i) = K;
         depth(j,i) = 2600.0;
       }
-    w(size_y/3,size_x/2+size_x/4) = 100;
+//    w(size_y/3,size_x/2+size_x/4) = 100;
+    w(image_size/3,image_size/2+image_size/4) = 100;
+//    if (X == 0 && Y == 0) m.w[image_size/3][image_size/2+image_size/4] = 100;
   }
 
 
@@ -105,6 +107,7 @@ struct reference_wave_propagation {
         // Add some dissipation for the damping
         w(j,i) *= 0.999;
       }
+      std::cerr << "Sequential step done!" << std::endl;
   }
 
 
@@ -136,7 +139,8 @@ struct reference_wave_propagation {
 
     {
       std::lock_guard lg { protect_time };
-      std::cout << time << ',' << global_time << std::endl;
+      std::cout << "Time local: " << time << ", global: "
+                << global_time << std::endl;
       if (global_time != time) {
         /* Advance the sequential computation by one step so that we
            can do the comparison */
@@ -320,7 +324,7 @@ std::this_thread::sleep_for(50ms);
     auto& m = t::mem();
     fundamentals_v3::mdspan<double, image_size, image_size> md { &m.w[0][0] };
     /// Loop on simulated time
-    for (int time = 0; !a->is_done(); ++time) {
+    for (int time = 1; !a->is_done(); ++time) {
       compute();
       a->update_tile_data_image(t::x, t::y, md, -1.0, 1.0);
       seq.compare_with_sequential_reference
