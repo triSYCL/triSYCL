@@ -150,7 +150,7 @@ multi_ptr<T, AS> make_ptr(multi_ptr<T, AS> pointer) {
 */
 template <typename T, access::address_space AS>
 multi_ptr<T, AS> make_ptr(T *pointer) {
-  detail::unimplemented();
+  TRISYCL_UNIMPL;
   return pointer;
 }
 }

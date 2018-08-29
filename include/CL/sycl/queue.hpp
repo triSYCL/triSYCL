@@ -124,7 +124,7 @@ public:
 
   */
   explicit queue(async_handler asyncHandler) : queue { } {
-    detail::unimplemented();
+    TRISYCL_UNIMPL;
   }
 
 
@@ -174,7 +174,7 @@ public:
   queue(const context &syclContext,
         const device_selector &deviceSelector,
         async_handler asyncHandler = nullptr) : queue { } {
-    detail::unimplemented();
+    TRISYCL_UNIMPL;
   }
 
 
@@ -190,7 +190,7 @@ public:
   queue(const context &syclContext,
         const device &syclDevice,
         async_handler asyncHandler = nullptr) : queue { } {
-    detail::unimplemented();
+    TRISYCL_UNIMPL;
   }
 
 
@@ -209,7 +209,7 @@ public:
         const device &syclDevice,
         info::queue_profiling profilingFlag,
         async_handler asyncHandler = nullptr) : queue { } {
-    detail::unimplemented();
+    TRISYCL_UNIMPL;
   }
 
 
@@ -314,7 +314,7 @@ public:
   void wait_and_throw() {
     // \todo Implement the throw part of wait_and_throw
     wait();
-    detail::unimplemented();
+    TRISYCL_UNIMPL;
   }
 
 
@@ -326,14 +326,14 @@ public:
       be lost.
   */
   void throw_asynchronous() {
-    detail::unimplemented();
+    TRISYCL_UNIMPL;
   }
 
 
   /// Queries the platform for cl_command_queue info
   template <info::queue param>
   typename info::param_traits<info::queue, param>::type get_info() const  {
-    detail::unimplemented();
+    TRISYCL_UNIMPL;
     return {};
   }
 
@@ -365,7 +365,7 @@ public:
       queue the command group functor is being enqueued on.
   */
   handler_event submit(std::function<void(handler &)> cgf, queue &secondaryQueue) {
-    detail::unimplemented();
+    TRISYCL_UNIMPL;
     // Since it is not implemented, always submit on the main queue
     return submit(cgf);
   }

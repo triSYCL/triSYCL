@@ -147,7 +147,7 @@ class accessor :
            handler &command_group_handler,
            const range<Dimensions> &offset,
            const range<Dimensions> &range) {
-    detail::unimplemented();
+    TRISYCL_UNIMPL;
   }
 
 

@@ -200,7 +200,7 @@ public:
          const range<Dimensions> &buffer_range,
          cl::sycl::mutex_class &m,
          Allocator allocator = {}) {
-    detail::unimplemented();
+    TRISYCL_UNIMPL;
   }
 
 
@@ -294,7 +294,7 @@ public:
   buffer(buffer<T, Dimensions, Allocator> &b,
          const id<Dimensions> &base_index,
          const range<Dimensions> &sub_range,
-         Allocator allocator = {}) { detail::unimplemented(); }
+         Allocator allocator = {}) { TRISYCL_UNIMPL; }
 
 
 #ifdef TRISYCL_OPENCL
@@ -321,7 +321,7 @@ public:
   buffer(cl_mem mem_object,
          queue from_queue,
          event available_event = {},
-         Allocator allocator = {}) { detail::unimplemented();  }
+         Allocator allocator = {}) { TRISYCL_UNIMPL;  }
 #endif
 
 
