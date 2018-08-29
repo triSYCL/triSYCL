@@ -25,12 +25,11 @@ namespace sycl {
 /** \addtogroup parallelism Expressing parallelism through kernels
     @{
 */
-
 /** A SYCL nd_item stores information on a work-item within a work-group,
     with some more context such as the definition ranges.
 */
 template <int Dimensions = 1>
-struct nd_item {
+struct nd_item : boost::equality_comparable<nd_item<Dimensions>> {
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
   static constexpr auto dimensionality = Dimensions;
@@ -222,6 +221,11 @@ public:
   // For the triSYCL implementation, need to set the global index
   void set_global(id<Dimensions> Index) { global_index = Index; }
 
+  // Comparison operators
+  bool operator==(const nd_item<Dimensions> &nd_itemB) const {
+    return (ND_range == nd_itemB.ND_range &&
+	    global_index == nd_itemB.global_index);
+  }
 };
 
 /// @} End the parallelism Doxygen group

@@ -30,7 +30,7 @@ namespace sycl {
     \todo add copy constructors in the specification
 */
 template <int Dimensions = 1>
-struct nd_range {
+struct nd_range : boost::equality_comparable<nd_range<Dimensions>> {
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
   static constexpr auto dimensionality = Dimensions;
@@ -83,6 +83,11 @@ public:
     offset.display();
   }
 
+  /// Comparison operators for nd_range.
+  bool operator==(const nd_range &nd_rangeB) const {
+    return (global_range == nd_rangeB.global_range &&
+	    offset == nd_rangeB.offset);
+  }
 };
 
 /// @} End the parallelism Doxygen group

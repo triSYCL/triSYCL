@@ -13,4 +13,8 @@ declare_trisycl_test(TARGET item TEST_REGEX
  100 10
  2 3
  0 0
-302")
+302
+1
+0
+0
+1")

@@ -39,7 +39,7 @@ void parallel_for_workitem_in_group(const group<Dimensions> &g,
 /** A group index used in a parallel_for_workitem to specify a work_group
  */
 template <int Dimensions>
-struct group {
+struct group : boost::equality_comparable<group<Dimensions>> {
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
   static constexpr auto dimensionality = Dimensions;
@@ -182,6 +182,12 @@ public:
     detail::parallel_for_workitem_in_group(*this, f);
   }
 
+  /* Comparison operators for group object.
+   */
+  bool operator==(const group &groupB) const {
+    return (group_id == groupB.group_id &&
+	    ndr == groupB.ndr);
+  }
 };
 
 /// @} End the parallelism Doxygen group
