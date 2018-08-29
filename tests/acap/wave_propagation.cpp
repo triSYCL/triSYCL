@@ -9,6 +9,7 @@
 */
 
 #include <algorithm>
+#include <cmath>
 #include <cstdint>
 #include <initializer_list>
 #include <iostream>
@@ -19,6 +20,7 @@
 #include <thread>
 using namespace std::chrono_literals;
 
+#include <boost/thread.hpp>
 
 #include <CL/sycl.hpp>
 
@@ -27,25 +29,36 @@ namespace fundamentals_v3 = std::experimental::fundamentals_v3;
 
 // The size of the machine to use
 using layout = acap::me::layout::size<2,1>;
+using geography = acap::me::geography<layout>;
+boost::barrier b1 { geography::size };
+boost::barrier b2 { geography::size };
+boost::barrier b3 { geography::size };
+boost::barrier b4 { geography::size };
+
+
 
 static auto constexpr K = 1/300.0;
 static auto constexpr g = 9.81;
 static auto constexpr alpha = K*g;
-static auto constexpr image_size = 229;
+static auto constexpr image_size = 100;
+static auto constexpr x_drop = 98;
+static auto constexpr y_drop = 2;
+static auto constexpr drop_value = 100;
+
 std::unique_ptr<graphics::app> a;
 
+auto epsilon = 0.01;
 
 /** Compare the values of 2 2D mdspan of the same geometry
 
     Display any discrepancy
 */
-auto compare_2D_mdspan = [](auto a, auto b) {
+auto compare_2D_mdspan = [](const auto &a, const auto &b) {
   assert(a.extent(0) == b.extent(0));
   assert(a.extent(1) == b.extent(1));
-  std::cerr << "Compare" << a.extent(0) << ',' << a.extent(1) << std::endl;
   for (int j = 0; j < a.extent(0); ++j)
     for (int i = 0; i < a.extent(1); ++i)
-      if (a(j,i) != b(j,i)) {
+      if (std::abs(a(j,i) - b(j,i)) > epsilon) {
         std::cerr << "a(" << j << ',' << i << ") = " << a(j,i) << std::endl
                   << "\tb(" << j << ',' << i << ") = " << b(j,i) << std::endl;
       }
@@ -81,7 +94,7 @@ struct reference_wave_propagation {
         depth(j,i) = 2600.0;
       }
 //    w(size_y/3,size_x/2+size_x/4) = 100;
-    w(image_size/3,image_size/2+image_size/4) = 100;
+    w(y_drop,x_drop) = drop_value;
 //    if (X == 0 && Y == 0) m.w[image_size/3][image_size/2+image_size/4] = 100;
   }
 
@@ -92,7 +105,7 @@ struct reference_wave_propagation {
       for (int i = 0; i < size_x - 1; ++i) {
         // grad w
         auto up = w(j,i + 1) - w(j,i);
-        auto vp = w(j + 1,i)- w(j,i);
+        auto vp = w(j + 1,i) - w(j,i);
         // Integrate speed
         u(j,i) += up*alpha;
         v(j,i) += vp*alpha;
@@ -197,11 +210,13 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         m.side[j][i] = K;
         m.depth[j][i] = 2600.0;
       }
-    if (X == 0 && Y == 0) m.w[image_size/3][image_size/2+image_size/4] = 100;
+    if (X == 0 && Y == 0)
+      m.w[y_drop][x_drop] = drop_value;
   }
 
   void compute() {
-std::this_thread::sleep_for(50ms);
+    b1.wait();
+
     auto& m = t::mem();
     if constexpr (!t::is_right_column()) {
       m.lu.locks[10].acquire_with_value(false);
@@ -215,9 +230,9 @@ std::this_thread::sleep_for(50ms);
         m.u[j][i] += up*alpha;
         m.v[j][i] += vp*alpha;
       }
-std::this_thread::sleep_for(50ms);
 
-//sleep(1);
+    b2.wait();
+
     // Transfer first line of u to next memory module on the left
     if constexpr (Y & 1) {
       if constexpr (t::is_memory_module_right()) {
@@ -250,6 +265,9 @@ std::this_thread::sleep_for(50ms);
         m.lu.locks[10].release_with_value(false);
       }
     }
+
+    b3.wait();
+
     if constexpr (t::is_memory_module_down()) {
       auto& below = t::mem_down();
       below.lu.locks[3].acquire_with_value(false);
@@ -261,7 +279,9 @@ std::this_thread::sleep_for(50ms);
       m.lu.locks[3].acquire_with_value(true);
       m.lu.locks[3].release_with_value(false);
     }
-std::this_thread::sleep_for(50ms);
+
+    b4.wait();
+
     for (int j = 1; j < image_size; ++j)
       for (int i = 1; i < image_size; ++i) {
         // div speed
@@ -272,7 +292,9 @@ std::this_thread::sleep_for(50ms);
         // Add some dissipation for the damping
         m.w[j][i] *= 0.999;
       }
-std::this_thread::sleep_for(50ms);
+
+    b1.wait();
+
     if constexpr (t::is_memory_module_up()) {
       auto& above = t::mem_up();
       above.lu.locks[0].acquire_with_value(false);
@@ -284,6 +306,9 @@ std::this_thread::sleep_for(50ms);
       m.lu.locks[0].acquire_with_value(true);
       m.lu.locks[0].release_with_value(false);
     }
+
+    b2.wait();
+
     // Transfer last line of w to next memory module on the right
     if constexpr (Y & 1) {
       if constexpr (t::is_memory_module_right()) {
@@ -314,8 +339,8 @@ std::this_thread::sleep_for(50ms);
     static int iteration = 0;
     auto [min_element, max_element] = minmax_element(m.w);
     std::cout << "compute(" << X << ',' << Y
-              << ") iteration " << ++iteration << " done"
-              << *min_element << ',' << *max_element
+              << ") iteration " << ++iteration << " done, min = "
+              << *min_element << ", max = " << *max_element
               << std::endl;
   }
 
@@ -324,14 +349,14 @@ std::this_thread::sleep_for(50ms);
     auto& m = t::mem();
     fundamentals_v3::mdspan<double, image_size, image_size> md { &m.w[0][0] };
     /// Loop on simulated time
-    for (int time = 1; !a->is_done(); ++time) {
-      compute();
-      a->update_tile_data_image(t::x, t::y, md, -1.0, 1.0);
+    for (int time = 0; !a->is_done(); ++time) {
       seq.compare_with_sequential_reference
         (time, t::x, t::y,
          fundamentals_v3::subspan(md,
                                   std::make_pair(0, image_size - 1),
                                   std::make_pair(0, image_size - 1)));
+      compute();
+      a->update_tile_data_image(t::x, t::y, md, -1.0, 1.0);
     }
   }
 };

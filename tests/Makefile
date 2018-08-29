@@ -52,11 +52,14 @@ LDLIBS += -lOpenCL
 #LDLIBS += $(shell pkg-config --libs-only-l pocl)
 #CXXFLAGS += $(shell pkg-config --cflags pocl)
 
+# To use Boost.Thread
+LDLIBS += -lboost_thread -lboost_system
+
 # To enable debug and tracing:
-CXXFLAGS += -g -DTRISYCL_ACAP_ME_LOCK_DEBUG
+#CXXFLAGS += -g -DTRISYCL_ACAP_ME_LOCK_DEBUG
 # With optimization and without assertions
 #CXXFLAGS += -O3 -DNDEBUG -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
-#CXXFLAGS += -O3 -DNDEBUG
+CXXFLAGS += -O3 -DNDEBUG
 #CXXFLAGS += -g -DTRISYCL_TRACE_KERNEL -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DTRISYCL_TRACE_KERNEL -DTRISYCL_DEBUG_STRUCTORS -DBOOST_LOG_DYN_LINK
