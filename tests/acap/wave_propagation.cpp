@@ -25,12 +25,31 @@ using namespace std::chrono_literals;
 using namespace cl::sycl::vendor::xilinx;
 namespace fundamentals_v3 = std::experimental::fundamentals_v3;
 
+// The size of the machine to use
+using layout = acap::me::layout::size<2,1>;
+
 static auto constexpr K = 1/300.0;
 static auto constexpr g = 9.81;
 static auto constexpr alpha = K*g;
 static auto constexpr image_size = 229;
 std::unique_ptr<graphics::app> a;
 
+
+/** Compare the values of 2 2D mdspan of the same geometry
+
+    Display any discrepancy
+*/
+auto compare_2D_mdspan = [](auto a, auto b) {
+  assert(a.extent(0) == b.extent(0));
+  assert(a.extent(1) == b.extent(1));
+  std::cerr << "Compare" << a.extent(0) << ',' << a.extent(1) << std::endl;
+  for (int j = 0; j < a.extent(0); ++j)
+    for (int i = 0; i < a.extent(1); ++i)
+      if (a(j,i) != b(j,i)) {
+        std::cerr << "a(" << j << ',' << i << ") = " << a(j,i) << std::endl
+                  << "\tb(" << j << ',' << i << ") = " << b(j,i) << std::endl;
+      }
+  };
 
 /// A sequential reference implementation of wave propagation
 template <auto size_x, auto size_y, auto display_tile_size>
@@ -107,7 +126,41 @@ struct reference_wave_propagation {
         }
     }
   }
+
+  template <typename MDspan>
+  void compare_with_sequential_reference(int time, int x, int y,
+                                         const MDspan &mds) {
+    // Track the global simulation time
+    static int global_time = 0;
+    static std::mutex protect_time;
+
+    {
+      std::lock_guard lg { protect_time };
+      std::cout << time << ',' << global_time << std::endl;
+      if (global_time != time) {
+        /* Advance the sequential computation by one step so that we
+           can do the comparison */
+        compute();
+        ++global_time;
+      }
+    }
+    int x_offset = mds.extent(1);
+    int y_offset = mds.extent(0);
+    auto sp = fundamentals_v3::subspan(w,
+                                       std::make_pair(y*y_offset,
+                                                      (y + 1)*y_offset),
+                                       std::make_pair(x*x_offset,
+                                                      (x + 1)*x_offset));
+    compare_2D_mdspan(sp, mds);
+
+  }
 };
+
+
+// A sequential reference implementation of the wave propagation
+reference_wave_propagation<(image_size - 1)*acap::me::geography<layout>::x_size,
+                           (image_size - 1)*acap::me::geography<layout>::y_size,
+                           image_size - 1> seq;
 
 
 // All the memory modules are the same
@@ -267,25 +320,29 @@ std::this_thread::sleep_for(50ms);
     auto& m = t::mem();
     fundamentals_v3::mdspan<double, image_size, image_size> md { &m.w[0][0] };
     /// Loop on simulated time
-    while (!a->is_done()) {
+    for (int time = 0; !a->is_done(); ++time) {
       compute();
       a->update_tile_data_image(t::x, t::y, md, -1.0, 1.0);
+      seq.compare_with_sequential_reference
+        (time, t::x, t::y,
+         fundamentals_v3::subspan(md,
+                                  std::make_pair(0, image_size - 1),
+                                  std::make_pair(0, image_size - 1)));
     }
   }
 };
 
+
 int main(int argc, char *argv[]) {
-  //acap::me::array<acap::me::layout::size<2,1>, tile, memory> me;
-  acap::me::array<acap::me::layout::size<8,4>, tile, memory> me;
+  // An ACAP version of the wave propagation
+  acap::me::array<layout, tile, memory> me;
 
   a.reset(new graphics::app { argc, argv, decltype(me)::geo::x_size,
                               decltype(me)::geo::y_size,
                               image_size, image_size, 1 });
-#if 1
-  // Run a sequential reference implementation
-  reference_wave_propagation<image_size*decltype(me)::geo::x_size,
-                             image_size*decltype(me)::geo::y_size,
-                             image_size>{}.run();
+#if 0
+  // Run the sequential reference implementation
+  seq.run();
 #endif
   // Launch the MathEngine program
   me.run();
