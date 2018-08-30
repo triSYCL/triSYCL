@@ -134,8 +134,6 @@ struct image_grid : frame_grid {
                                     , image_y*zoom //< height
                                       );
         images.emplace_back(pb);
-        // Write a pixel to test
-        pb->get_pixels()[1000] = 255;
         // Display the frame with the lower y down
         f.add(images.back());
       }
