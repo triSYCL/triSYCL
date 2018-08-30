@@ -41,8 +41,8 @@ static auto constexpr K = 1/300.0;
 static auto constexpr g = 9.81;
 static auto constexpr alpha = K*g;
 static auto constexpr image_size = 100;
-static auto constexpr x_drop = 98;
-static auto constexpr y_drop = 2;
+static auto constexpr x_drop = 90;
+static auto constexpr y_drop = 7;
 static auto constexpr drop_value = 100;
 
 std::unique_ptr<graphics::app> a;
@@ -59,8 +59,8 @@ auto compare_2D_mdspan = [](const auto &a, const auto &b) {
   for (int j = 0; j < a.extent(0); ++j)
     for (int i = 0; i < a.extent(1); ++i)
       if (std::abs(a(j,i) - b(j,i)) > epsilon) {
-        std::cerr << "a(" << j << ',' << i << ") = " << a(j,i) << std::endl
-                  << "\tb(" << j << ',' << i << ") = " << b(j,i) << std::endl;
+        TRISYCL_DUMP_T(std::dec << "\ta(" << j << ',' << i << ") = " << a(j,i)
+                       << "  b(" << j << ',' << i << ") = " << b(j,i));
       }
   };
 
@@ -120,7 +120,6 @@ struct reference_wave_propagation {
         // Add some dissipation for the damping
         w(j,i) *= 0.999;
       }
-      std::cerr << "Sequential step done!" << std::endl;
   }
 
 
@@ -156,8 +155,8 @@ struct reference_wave_propagation {
 
     {
       std::lock_guard lg { protect_time };
-      std::cout << "Time local: " << time << ", global: "
-                << global_time << std::endl;
+      TRISYCL_DUMP_T(std::dec << "Time local (" << x << ',' << y << "): "
+                     << time << ", global: " << global_time);
       if (global_time != time) {
         /* Advance the sequential computation by one step so that we
            can do the comparison */
@@ -165,13 +164,14 @@ struct reference_wave_propagation {
         ++global_time;
       }
     }
-    int x_offset = mds.extent(1);
-    int y_offset = mds.extent(0);
+    // Take into account 1 line/column of overlapping halo
+    int x_offset = mds.extent(1) - 1;
+    int y_offset = mds.extent(0) - 1;
     auto sp = fundamentals_v3::subspan(w,
                                        std::make_pair(y*y_offset,
-                                                      (y + 1)*y_offset),
+                                                      1 + (y + 1)*y_offset),
                                        std::make_pair(x*x_offset,
-                                                      (x + 1)*x_offset));
+                                                      1 + (x + 1)*x_offset));
     compare_2D_mdspan(sp, mds);
 
   }
@@ -343,10 +343,9 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
     }
     static int iteration = 0;
     auto [min_element, max_element] = minmax_element(m.w);
-    std::cout << "compute(" << X << ',' << Y
-              << ") iteration " << ++iteration << " done, min = "
-              << *min_element << ", max = " << *max_element
-              << std::endl;
+    TRISYCL_DUMP_T(std::dec << "compute(" << X << ',' << Y
+                   << ") iteration " << ++iteration << " done, min = "
+                   << *min_element << ", max = " << *max_element);
   }
 
   void run() {
@@ -374,7 +373,7 @@ int main(int argc, char *argv[]) {
   a.reset(new graphics::app { argc, argv, decltype(me)::geo::x_size,
                               decltype(me)::geo::y_size,
                               image_size, image_size, 4 });
-#if 1
+#if 0
   // Run the sequential reference implementation
   seq.run();
 #endif
