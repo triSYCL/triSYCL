@@ -131,13 +131,14 @@ struct reference_wave_propagation {
       compute();
       for (int j = 0; j < size_y/display_tile_size; ++j)
         for (int i = 0; i <  size_x/display_tile_size; ++i) {
-          // The subspan to split the data in sub-windows
+          // The subspan to split the data in sub-windows. Skip the
+          // first line and column where w is not computed
           auto sp =
             fundamentals_v3::subspan(w,
-                                     std::make_pair(j*display_tile_size,
-                                                    (j + 1)*display_tile_size),
-                                     std::make_pair(i*display_tile_size,
-                                                    (i + 1)*display_tile_size));
+                                     std::make_pair(1 + j*display_tile_size,
+                                                    1 + (j + 1)*display_tile_size),
+                                     std::make_pair(1 + i*display_tile_size,
+                                                    1 + (i + 1)*display_tile_size));
           a->update_tile_data_image(i, j, sp, -1.0, 1.0);
         }
     }
@@ -175,9 +176,10 @@ struct reference_wave_propagation {
 
 
 // A sequential reference implementation of the wave propagation
-reference_wave_propagation<(image_size - 1)*acap::me::geography<layout>::x_size,
-                           (image_size - 1)*acap::me::geography<layout>::y_size,
-                           image_size - 1> seq;
+reference_wave_propagation
+<(image_size - 1)*acap::me::geography<layout>::x_size + 1,
+ (image_size - 1)*acap::me::geography<layout>::y_size + 1,
+ image_size - 1> seq;
 
 
 // All the memory modules are the same
@@ -369,7 +371,7 @@ int main(int argc, char *argv[]) {
   a.reset(new graphics::app { argc, argv, decltype(me)::geo::x_size,
                               decltype(me)::geo::y_size,
                               image_size, image_size, 1 });
-#if 0
+#if 1
   // Run the sequential reference implementation
   seq.run();
 #endif
