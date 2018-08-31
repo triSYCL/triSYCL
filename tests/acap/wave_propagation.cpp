@@ -190,6 +190,8 @@ struct reference_wave_propagation {
         ++global_time;
       }
       compare_with_sequential_reference_e("w", x, y, m.w, w);
+      compare_with_sequential_reference_e("u", x, y, m.u, u);
+      compare_with_sequential_reference_e("v", x, y, m.v, v);
     }
   }
 };
