@@ -43,7 +43,7 @@ static auto constexpr alpha = K*g;
 static auto constexpr image_size = 100;
 static auto constexpr x_drop = 90;
 static auto constexpr y_drop = 7;
-static auto constexpr drop_value = 100;
+static auto constexpr drop_value = 10;
 
 std::unique_ptr<graphics::app> a;
 
@@ -51,18 +51,19 @@ auto epsilon = 0.01;
 
 /** Compare the values of 2 2D mdspan of the same geometry
 
-    Display any discrepancy
+    Display any discrepancy between an acap and reference mdspan
 */
-auto compare_2D_mdspan = [](const auto &a, const auto &b) {
-  assert(a.extent(0) == b.extent(0));
-  assert(a.extent(1) == b.extent(1));
-  for (int j = 0; j < a.extent(0); ++j)
-    for (int i = 0; i < a.extent(1); ++i)
-      if (std::abs(a(j,i) - b(j,i)) > epsilon) {
-        TRISYCL_DUMP_T(std::dec << "\ta(" << j << ',' << i << ") = " << a(j,i)
-                       << "  b(" << j << ',' << i << ") = " << b(j,i));
+auto compare_2D_mdspan = [](auto message, const auto &acap, const auto &ref) {
+  assert(acap.extent(0) == ref.extent(0));
+  assert(acap.extent(1) == ref.extent(1));
+  for (int j = 0; j < acap.extent(0); ++j)
+    for (int i = 0; i < acap.extent(1); ++i)
+      if (std::abs(acap(j,i) - ref(j,i)) > epsilon) {
+        TRISYCL_DUMP_T(std::dec << '\t' << message
+                       << " acap(" << j << ',' << i << ") = " << acap(j,i)
+                       << "  ref(" << j << ',' << i << ") = " << ref(j,i));
       }
-  };
+};
 
 /// A sequential reference implementation of wave propagation
 template <auto size_x, auto size_y, auto display_tile_size>
@@ -146,16 +147,41 @@ struct reference_wave_propagation {
     }
   }
 
-  template <typename MDspan>
-  void compare_with_sequential_reference(int time, int x, int y,
-                                         const MDspan &mds) {
+  template <typename Array, typename MDspan_ref>
+  void compare_with_sequential_reference_e(const char *message, int x, int y,
+                                           Array &arr,
+                                           const MDspan_ref &ref) {
+    const fundamentals_v3::mdspan<double, image_size, image_size> md
+    { &arr[0][0] };
+
+    // Take into account 1 line/column of overlapping halo
+    int x_offset = md.extent(1) - 1;
+    int y_offset = md.extent(0) - 1;
+    auto mdref = fundamentals_v3::subspan(ref,
+                                          std::make_pair(y*y_offset,
+                                                         1 + (y + 1)*y_offset),
+                                          std::make_pair(x*x_offset,
+                                                         1 + (x + 1)*x_offset));
+    compare_2D_mdspan(message, md, mdref);
+  }
+
+
+  /* The global time of the simulation
+
+     Do not put it inside compare_with_sequential_reference because,
+     since it is templated, there is then an instance per tile and the
+     chaos happens
+  */
+  static inline int global_time = 0;
+  static inline std::mutex protect_time;
+
+  template <typename Mem>
+  void compare_with_sequential_reference(int time, int x, int y, Mem &m) {
     // Track the global simulation time
-    static int global_time = 0;
-    static std::mutex protect_time;
 
     {
       std::lock_guard lg { protect_time };
-      TRISYCL_DUMP_T(std::dec << "Time local (" << x << ',' << y << "): "
+      TRISYCL_DUMP_T(std::dec << "TILE(" << x << ',' << y << ") Time local: "
                      << time << ", global: " << global_time);
       if (global_time != time) {
         /* Advance the sequential computation by one step so that we
@@ -163,17 +189,8 @@ struct reference_wave_propagation {
         compute();
         ++global_time;
       }
+      compare_with_sequential_reference_e("w", x, y, m.w, w);
     }
-    // Take into account 1 line/column of overlapping halo
-    int x_offset = mds.extent(1) - 1;
-    int y_offset = mds.extent(0) - 1;
-    auto sp = fundamentals_v3::subspan(w,
-                                       std::make_pair(y*y_offset,
-                                                      1 + (y + 1)*y_offset),
-                                       std::make_pair(x*x_offset,
-                                                      1 + (x + 1)*x_offset));
-    compare_2D_mdspan(sp, mds);
-
   }
 };
 
@@ -354,11 +371,7 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
     fundamentals_v3::mdspan<double, image_size, image_size> md { &m.w[0][0] };
     /// Loop on simulated time
     for (int time = 0; !a->is_done(); ++time) {
-      seq.compare_with_sequential_reference
-        (time, t::x, t::y,
-         fundamentals_v3::subspan(md,
-                                  std::make_pair(0, image_size - 1),
-                                  std::make_pair(0, image_size - 1)));
+      seq.compare_with_sequential_reference(time, t::x, t::y, m);
       compute();
       a->update_tile_data_image(t::x, t::y, md, -1.0, 1.0);
     }
