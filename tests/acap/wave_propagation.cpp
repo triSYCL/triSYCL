@@ -28,7 +28,7 @@ using namespace cl::sycl::vendor::xilinx;
 namespace fundamentals_v3 = std::experimental::fundamentals_v3;
 
 // The size of the machine to use
-using layout = acap::me::layout::size<2,1>;
+using layout = acap::me::layout::size<1,1>;
 using geography = acap::me::geography<layout>;
 boost::barrier b1 { geography::size };
 boost::barrier b2 { geography::size };

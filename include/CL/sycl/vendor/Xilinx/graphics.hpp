@@ -228,15 +228,20 @@ struct app {
   std::thread t;
   graphics::image_grid *w;
   std::mutex graphics_protection;
+  std::condition_variable leash;
+  bool initialized = false;
   /// Set to true by the closing handler
   std::atomic<bool> done = false;
 
   app(int &argc, char **&argv,
       int nx, int ny, int image_x, int image_y, int zoom) {
     // To be sure not passing over the asynchronous graphics start
-    graphics_protection.lock();;
-    // Put all the graphics in its own thread
-    t = std::thread { [=]() mutable {
+    std::unique_lock lock { graphics_protection };
+    /* Put all the graphics in its own thread. Since
+       Gtk::Application::create might modify argc and argv, capture by
+       reference. Since we have to wait for this thread, there should
+       not be a read from freed memory issue. */
+    t = std::thread { [&]() mutable {
         auto a =
           Gtk::Application::create(argc, argv, "com.xilinx.trisycl.graphics");
         /* Create the graphics object in this thread so the dispatcher
@@ -244,15 +249,27 @@ struct app {
         w = new graphics::image_grid { nx, ny, image_x, image_y, zoom };
         w->set_close_action([&] { done = true; });
         // OK, the graphics system is in a usable state, unleash the main thread
-        graphics_protection.unlock();
+        initialized = true;
+        lock.unlock();
+        leash.notify_one();
         a->run(*w);
       } };
     // Wait for the graphics to start
-    graphics_protection.lock();
+    {
+      std::unique_lock lock { graphics_protection };
+      leash.wait(lock, [&] { return initialized; } );
+    }
   }
 
 
-  /// Wait for the graphics window to end
+  /**  Wait for the graphics window to end
+
+       It has to be called before the end of the program, otherwise
+       the graphics thread will be unjoined.
+
+       \todo Use future C++ auto-join thread or test for this in the
+       destructor?
+  */
   void wait() {
     t.join();
   }
