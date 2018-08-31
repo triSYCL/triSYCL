@@ -83,7 +83,13 @@ struct reference_wave_propagation {
   space side { side_m }; // Hard wall limit
   double depth_m[linear_size];
   space depth { depth_m }; // Average depth
-
+  // For debug
+  double up_m[linear_size];
+  space up { up_m };
+  double vp_m[linear_size];
+  space vp { vp_m };
+  double wp_m[linear_size];
+  space wp { wp_m };
 
   /// Initialize the state variables
   reference_wave_propagation() {
@@ -105,19 +111,19 @@ struct reference_wave_propagation {
     for (int j = 0; j < size_y - 1; ++j)
       for (int i = 0; i < size_x - 1; ++i) {
         // grad w
-        auto up = w(j,i + 1) - w(j,i);
-        auto vp = w(j + 1,i) - w(j,i);
+        up(j,i) = w(j,i + 1) - w(j,i);
+        vp(j,i) = w(j + 1,i) - w(j,i);
         // Integrate speed
-        u(j,i) += up*alpha;
-        v(j,i) += vp*alpha;
+        u(j,i) += up(j,i)*alpha;
+        v(j,i) += vp(j,i)*alpha;
       }
     for (int j = 1; j < size_y; ++j)
       for (int i = 1; i < size_x; ++i) {
         // div speed
-        auto wp = (u(j,i) - u(j,i - 1)) + (v(j,i) - v(j - 1,i));
-        wp *= side(j,i)*(depth(j,i) + w(j,i));
+        wp(j,i) = (u(j,i) - u(j,i - 1)) + (v(j,i) - v(j - 1,i));
+        wp(j,i) *= side(j,i)*(depth(j,i) + w(j,i));
         // Integrate depth
-        w(j,i) += wp;
+        w(j,i) += wp(j,i);
         // Add some dissipation for the damping
         w(j,i) *= 0.999;
       }
@@ -177,8 +183,6 @@ struct reference_wave_propagation {
 
   template <typename Mem>
   void compare_with_sequential_reference(int time, int x, int y, Mem &m) {
-    // Track the global simulation time
-
     {
       std::lock_guard lg { protect_time };
       TRISYCL_DUMP_T(std::dec << "TILE(" << x << ',' << y << ") Time local: "
@@ -192,6 +196,9 @@ struct reference_wave_propagation {
       compare_with_sequential_reference_e("w", x, y, m.w, w);
       compare_with_sequential_reference_e("u", x, y, m.u, u);
       compare_with_sequential_reference_e("v", x, y, m.v, v);
+      compare_with_sequential_reference_e("wp", x, y, m.wp, wp);
+      compare_with_sequential_reference_e("up", x, y, m.up, up);
+      compare_with_sequential_reference_e("vp", x, y, m.vp, vp);
     }
   }
 };
@@ -213,6 +220,11 @@ struct memory : acap::me::memory<ME_Array, X, Y> {
   double w[image_size][image_size]; // Local delta depth
   double side[image_size][image_size];
   double depth[image_size][image_size]; // Average depth
+  // For debug
+  double up[image_size][image_size];
+  double vp[image_size][image_size];
+  double wp[image_size][image_size];
+
 };
 
 
@@ -248,11 +260,11 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
     for (int j = 0; j < image_size - 1; ++j)
       for (int i = 0; i < image_size - 1; ++i) {
         // grad w
-        auto up = m.w[j][i + 1] - m.w[j][i];
-        auto vp = m.w[j + 1][i] - m.w[j][i];
+        m.up[j][i] = m.w[j][i + 1] - m.w[j][i];
+        m.vp[j][i] = m.w[j + 1][i] - m.w[j][i];
         // Integrate speed
-        m.u[j][i] += up*alpha;
-        m.v[j][i] += vp*alpha;
+        m.u[j][i] += m.up[j][i]*alpha;
+        m.v[j][i] += m.vp[j][i]*alpha;
       }
 
     b2.wait();
@@ -309,10 +321,10 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
     for (int j = 1; j < image_size; ++j)
       for (int i = 1; i < image_size; ++i) {
         // div speed
-        auto wp = (m.u[j][i] - m.u[j][i - 1]) + (m.v[j][i] - m.v[j - 1][i]);
-        wp *= m.side[j][i]*(m.depth[j][i] + m.w[j][i]);
+        m.wp[j][i] = (m.u[j][i] - m.u[j][i - 1]) + (m.v[j][i] - m.v[j - 1][i]);
+        m.wp[j][i] *= m.side[j][i]*(m.depth[j][i] + m.w[j][i]);
         // Integrate depth
-        m.w[j][i] += wp;
+        m.w[j][i] += m.wp[j][i];
         // Add some dissipation for the damping
         m.w[j][i] *= 0.999;
       }
