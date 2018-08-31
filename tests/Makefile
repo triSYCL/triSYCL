@@ -52,10 +52,12 @@ LDLIBS += -lOpenCL
 #LDLIBS += $(shell pkg-config --libs-only-l pocl)
 #CXXFLAGS += $(shell pkg-config --cflags pocl)
 
+# To use Boost.Thread
+LDLIBS += -lboost_thread -lboost_system
+
 # To enable debug and tracing:
-CXXFLAGS += -g -DTRISYCL_ACAP_ME_LOCK_DEBUG
 # With optimization and without assertions
-#CXXFLAGS += -O3 -DNDEBUG -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
+CXXFLAGS += -O3 -DNDEBUG -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -O3 -DNDEBUG
 #CXXFLAGS += -g -DTRISYCL_TRACE_KERNEL -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
@@ -159,7 +161,7 @@ endif
 
 # To test C++2a <mdspan>, specify with this variable where the
 # implementation is, typically the local directory containing
-# https://github.com/kokkos/array_ref/tree/master/reference/include
+# https://github.com/hcedwar/ornl-cpp-proposals-pub/tree/master/P0009/prototype/include
 ifdef TRISYCL_MDSPAN_INCPATH
   CXXFLAGS += -I$(TRISYCL_MDSPAN_INCPATH)
 endif

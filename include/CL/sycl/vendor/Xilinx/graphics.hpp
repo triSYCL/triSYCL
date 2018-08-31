@@ -13,10 +13,12 @@
 
 #ifdef TRISYCL_GRAPHICS
 
+#include <algorithm>
 #include <atomic>
 #include <cstddef>
 #include <functional>
 #include <iostream>
+#include <mdspan>
 #include <memory>
 #include <mutex>
 #include <sstream>
@@ -24,6 +26,8 @@
 #include <gtkmm.h>
 
 namespace cl::sycl::vendor::xilinx::graphics {
+
+namespace fundamentals_v3 = std::experimental::fundamentals_v3;
 
 struct frame_grid : Gtk::Window {
   Gtk::ScrolledWindow sw;
@@ -106,10 +110,11 @@ struct image_grid : frame_grid {
 
   /// Dispatcher to invoke something in the graphics thread in a safe way
   Glib::Dispatcher dispatcher;
+  /// Protection against concurrent update
+  std::mutex dispatch_protection;
+  std::condition_variable cv;
   /// What to dispatch
   std::function<void(void)> work_to_dispatch;
-  /// Protection against concurrent update
-  std::mutex protection;
 
 
   image_grid(int nx, int ny, int image_x, int image_y, int zoom)
@@ -130,52 +135,85 @@ struct image_grid : frame_grid {
                                     , image_y*zoom //< height
                                       );
         images.emplace_back(pb);
-        // Write a pixel to test
-        pb->get_pixels()[1000] = 255;
         // Display the frame with the lower y down
         f.add(images.back());
       }
     show_all_children();
     // Hook a generic dispatcher
     dispatcher.connect([&] {
-        work_to_dispatch();
-        protection.unlock();
+        {
+          // Only 1 customer at a time
+          std::lock_guard lock { dispatch_protection };
+          work_to_dispatch();
+          work_to_dispatch = nullptr;
+        }
+        // We can serve the next customer
+        cv.notify_one();
       });
   }
 
 
   // Submit some work to the graphics thread
   void submit(std::function<void(void)> f) {
-    protection.lock();
+    std::unique_lock lock { dispatch_protection };
+    // Wait for no work being dispatched
+    cv.wait(lock, [&] { return !work_to_dispatch; } );
     work_to_dispatch = f;
     // Ask the graphics thread for some work
     dispatcher.emit();
   };
 
 
-  template <typename DataType, typename RangeValue>
+/** Update the image of a tile of size image_y by image_x
+
+    \param[in] x is the tile horizontal id
+
+    \param[in] y is the tile vertical id
+
+    \param[in] data is a 2D MDspan of extent at most image_y by
+    image_x. Only the pixels of the extents are drawn
+
+    \param[in] min_value is the value represented with minimum of
+    graphics palette color
+
+    \param[in] max_value is the value represented with maximum of
+    graphics palette color
+*/
+  template <typename MDspan, typename RangeValue>
   void update_tile_data_image(int x, int y,
-                              const DataType *data,
+                              const MDspan &data,
                               RangeValue min_value,
                               RangeValue max_value) {
-    // RGB 8 bit images, so 8 bytes per pixel
+    // RGB 8 bit images, so 3 bytes per pixel
+    using rgb = std::uint8_t[3];
     /* Painful: first I cannot use a std::unique_ptr because the
        std::function below needs to be copy-constructible, then the
        std::make_shared taking an array size comes only in C++20 while
        it is available for std::make_unique in C++17... */
     std::shared_ptr<std::uint8_t[]> d { new std::uint8_t[3*image_x*image_y] };
-    auto output = d.get();
-    for (int j = 0; j < image_y; ++j)
-      for (int i = 0; i < image_x; ++i) {
+    fundamentals_v3::mdspan<rgb,
+                            fundamentals_v3::dynamic_extent,
+                            fundamentals_v3::dynamic_extent> output {
+      reinterpret_cast<rgb *>(d.get()),
+      image_y,
+      image_x
+    };
+    // For each pixel of the md_span or of the image, which one is smaller
+    for (int j = 0;
+         j < std::min(static_cast<int>(data.extent(0)), image_y);
+         ++j)
+      for (int i = 0;
+           i < std::min(static_cast<int>(data.extent(1)), image_x);
+           ++i) {
         // Mirror the image vertically to display the pixels in a
         // mathematical sense
-        auto linear = i + image_x*(image_y - 1 - j);
-        std::uint8_t v = (static_cast<double>(data[linear]) - min_value)
-          *255/(max_value - min_value);
+        std::uint8_t v =
+          (static_cast<double>(data(j,i) - min_value))*255
+           /(max_value - min_value);
         // Write the same value for RGB to have a grey level
-        *output++ = v;
-        *output++ = v;
-        *output++ = v;
+        output(image_y - 1 - j,i)[0] = v;
+        output(image_y - 1 - j,i)[1] = v;
+        output(image_y - 1 - j,i)[2] = v;
       }
     submit([=] {
         // Create a first buffer, allowing later zooming
@@ -195,36 +233,52 @@ struct image_grid : frame_grid {
   }
 };
 
-
 struct app {
   std::thread t;
   graphics::image_grid *w;
   std::mutex graphics_protection;
+  std::condition_variable leash;
+  bool initialized = false;
   /// Set to true by the closing handler
-  std::atomic<bool> done;
+  std::atomic<bool> done = false;
 
   app(int &argc, char **&argv,
       int nx, int ny, int image_x, int image_y, int zoom) {
     // To be sure not passing over the asynchronous graphics start
-    graphics_protection.lock();;
-    // Put all the graphics in its own thread
-    t = std::thread { [=]() mutable {
+    std::unique_lock lock { graphics_protection };
+    /* Put all the graphics in its own thread. Since
+       Gtk::Application::create might modify argc and argv, capture by
+       reference. Since we have to wait for this thread, there should
+       not be a read from freed memory issue. */
+    t = std::thread { [&]() mutable {
         auto a =
           Gtk::Application::create(argc, argv, "com.xilinx.trisycl.graphics");
         /* Create the graphics object in this thread so the dispatcher
            is bound to this thread too */
         w = new graphics::image_grid { nx, ny, image_x, image_y, zoom };
-        // OK, the graphics system is in a usable state
-        graphics_protection.unlock();
         w->set_close_action([&] { done = true; });
+        // OK, the graphics system is in a usable state, unleash the main thread
+        initialized = true;
+        lock.unlock();
+        leash.notify_one();
         a->run(*w);
       } };
     // Wait for the graphics to start
-    graphics_protection.lock();
+    {
+      std::unique_lock lock { graphics_protection };
+      leash.wait(lock, [&] { return initialized; } );
+    }
   }
 
 
-  /// Wait for the graphics window to end
+  /**  Wait for the graphics window to end
+
+       It has to be called before the end of the program, otherwise
+       the graphics thread will be unjoined.
+
+       \todo Use future C++ auto-join thread or test for this in the
+       destructor?
+  */
   void wait() {
     t.join();
   }
@@ -238,7 +292,7 @@ struct app {
 
   template <typename DataType, typename RangeValue>
   void update_tile_data_image(int x, int y,
-                              const DataType *data,
+                              DataType data,
                               RangeValue min_value,
                               RangeValue max_value) {
     w->update_tile_data_image(x, y, data, min_value, max_value);

@@ -24,6 +24,9 @@ struct geography : Layout {
   static auto constexpr x_size = layout::x_max + 1;
   static auto constexpr y_size = layout::y_max + 1;
 
+  /// Total number of tiles
+  static auto constexpr size = x_size*y_size;
+
   static auto constexpr linear_id(int x, int y) {
     return x + x_size*y;
   }
