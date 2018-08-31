@@ -229,7 +229,7 @@ struct app {
   graphics::image_grid *w;
   std::mutex graphics_protection;
   /// Set to true by the closing handler
-  std::atomic<bool> done;
+  std::atomic<bool> done = false;
 
   app(int &argc, char **&argv,
       int nx, int ny, int image_x, int image_y, int zoom) {
@@ -242,9 +242,9 @@ struct app {
         /* Create the graphics object in this thread so the dispatcher
            is bound to this thread too */
         w = new graphics::image_grid { nx, ny, image_x, image_y, zoom };
-        // OK, the graphics system is in a usable state
-        graphics_protection.unlock();
         w->set_close_action([&] { done = true; });
+        // OK, the graphics system is in a usable state, unleash the main thread
+        graphics_protection.unlock();
         a->run(*w);
       } };
     // Wait for the graphics to start
