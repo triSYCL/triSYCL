@@ -110,10 +110,11 @@ struct image_grid : frame_grid {
 
   /// Dispatcher to invoke something in the graphics thread in a safe way
   Glib::Dispatcher dispatcher;
+  /// Protection against concurrent update
+  std::mutex dispatch_protection;
+  std::condition_variable cv;
   /// What to dispatch
   std::function<void(void)> work_to_dispatch;
-  /// Protection against concurrent update
-  std::mutex protection;
 
 
   image_grid(int nx, int ny, int image_x, int image_y, int zoom)
@@ -140,15 +141,23 @@ struct image_grid : frame_grid {
     show_all_children();
     // Hook a generic dispatcher
     dispatcher.connect([&] {
-        work_to_dispatch();
-        protection.unlock();
+        {
+          // Only 1 customer at a time
+          std::lock_guard lock { dispatch_protection };
+          work_to_dispatch();
+          work_to_dispatch = nullptr;
+        }
+        // We can serve the next customer
+        cv.notify_one();
       });
   }
 
 
   // Submit some work to the graphics thread
   void submit(std::function<void(void)> f) {
-    protection.lock();
+    std::unique_lock lock { dispatch_protection };
+    // Wait for no work being dispatched
+    cv.wait(lock, [&] { return !work_to_dispatch; } );
     work_to_dispatch = f;
     // Ask the graphics thread for some work
     dispatcher.emit();

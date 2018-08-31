@@ -28,7 +28,7 @@ using namespace cl::sycl::vendor::xilinx;
 namespace fundamentals_v3 = std::experimental::fundamentals_v3;
 
 // The size of the machine to use
-using layout = acap::me::layout::size<1,1>;
+using layout = acap::me::layout::size<5,4>;
 using geography = acap::me::geography<layout>;
 boost::barrier b1 { geography::size };
 boost::barrier b2 { geography::size };
@@ -385,7 +385,7 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
     fundamentals_v3::mdspan<double, image_size, image_size> md { &m.w[0][0] };
     /// Loop on simulated time
     for (int time = 0; !a->is_done(); ++time) {
-      seq.compare_with_sequential_reference(time, t::x, t::y, m);
+      //seq.compare_with_sequential_reference(time, t::x, t::y, m);
       compute();
       a->update_tile_data_image(t::x, t::y, md, -1.0, 1.0);
     }
@@ -399,7 +399,7 @@ int main(int argc, char *argv[]) {
 
   a.reset(new graphics::app { argc, argv, decltype(me)::geo::x_size,
                               decltype(me)::geo::y_size,
-                              image_size, image_size, 4 });
+                              image_size, image_size, 1 });
 #if 0
   // Run the sequential reference implementation
   seq.run();
