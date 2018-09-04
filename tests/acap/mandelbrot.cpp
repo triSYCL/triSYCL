@@ -53,7 +53,7 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
 
 int main(int argc, char *argv[]) {
   acap::me::array<acap::me::layout::small, tile, memory> me;
-
+  // Open a graphic view of a ME array
   a.reset(new graphics::app { argc, argv, decltype(me)::geo::x_size,
                               decltype(me)::geo::y_size,
                               image_size, image_size, 1 });

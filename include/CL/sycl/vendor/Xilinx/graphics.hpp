@@ -179,7 +179,11 @@ struct image_grid : frame_grid {
     \param[in] max_value is the value represented with maximum of
     graphics palette color
 */
-  template <typename MDspan, typename RangeValue>
+  template <typename MDspan, typename RangeValue,
+            /* Implement a cheap mdspan concept requirement, so that
+               this function is not called when it is a pointer*/
+            typename = typename MDspan::extents_type
+            >
   void update_tile_data_image(int x, int y,
                               const MDspan &data,
                               RangeValue min_value,
@@ -231,6 +235,39 @@ struct image_grid : frame_grid {
                                                  Gdk::INTERP_NEAREST));
       });
   }
+
+
+  /** Update the image of a tile of size image_y by image_x from a pointer
+
+    \param[in] x is the tile horizontal id
+
+    \param[in] y is the tile vertical id
+
+    \param[in] data is a pointer to the pixels to be drawns
+
+    \param[in] min_value is the value represented with minimum of
+    graphics palette color
+
+    \param[in] max_value is the value represented with maximum of
+    graphics palette color
+*/
+  template <typename DataType, typename RangeValue>
+  void update_tile_data_image(int x, int y,
+                              // Why const is not possible here?
+                              DataType *data,
+                              RangeValue min_value,
+                              RangeValue max_value) {
+    // Wrap the pointed area into an MDspan
+    const fundamentals_v3::mdspan<DataType,
+                                  fundamentals_v3::dynamic_extent,
+                                  fundamentals_v3::dynamic_extent> md {
+      data,
+      image_y,
+      image_x
+    };
+    update_tile_data_image(x, y, md, min_value, max_value);
+  }
+
 };
 
 struct app {
