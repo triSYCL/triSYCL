@@ -10,14 +10,17 @@
 */
 
 #include <condition_variable>
+#include <functional>
 #include <memory>
 #include <mutex>
 #include <thread>
+#include <utility>
 #include <vector>
 
 #ifdef TRISYCL_OPENCL
 #include <boost/compute.hpp>
 #endif
+#include <boost/thread/lock_algorithms.hpp>
 
 #include "CL/sycl/accessor/detail/accessor_base.hpp"
 #include "CL/sycl/buffer/detail/buffer_base.hpp"
@@ -25,9 +28,7 @@
 #include "CL/sycl/kernel.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /** The abstraction to represent SYCL tasks executing inside command_group
 
@@ -43,6 +44,10 @@ struct task : public std::enable_shared_from_this<task>,
       times at least on writing
   */
   std::vector<std::shared_ptr<detail::buffer_base>> buffers_in_use;
+
+  /// List of the buffers to be used by this task, with the write-mode
+  std::vector<std::pair<std::shared_ptr<detail::buffer_base>,
+                        bool>> buffers_to_register;
 
   /// The tasks producing the buffers used by this task
   std::vector<std::shared_ptr<detail::task>> producer_tasks;
@@ -93,7 +98,7 @@ struct task : public std::enable_shared_from_this<task>,
 
   /// Finalize the task by inserting it in the task graph
   void finalize() {
-    //insert_task_in_task_graph();
+    register_buffers_in_task_graph();
     /* To keep a copy of the task shared_ptr after the end of the
        command group, capture it by copy in the following lambda. This
        should be easier in C++17 with move semantics on capture
@@ -195,6 +200,43 @@ struct task : public std::enable_shared_from_this<task>,
   void add_buffer(std::shared_ptr<detail::buffer_base> &buf,
                   bool is_write_mode) {
     TRISYCL_DUMP_T("Add buffer " << buf << " in task " << this);
+    buffers_to_register.emplace_back(buf, is_write_mode);
+  }
+
+
+  /// Register all the buffers in an atomic way
+  void register_buffers_in_task_graph() {
+    /* Construct a list of unique locks for dependency graph
+       associated to buffers */
+    std::vector<std::unique_lock<std::mutex>> locks;
+    for (auto &b : buffers_to_register)
+      locks.emplace_back(b.first->get_dependency_graph_construction_mutex(),
+                         std::defer_lock);
+    /* Lock all the required buffers for the dependency graph
+       construction to avoid deadlock if there is another thread doing
+       the same thing.
+
+       Look at tests/queue/deadlock.cpp use-case
+    */
+    for (;;) {
+      if (boost::try_lock(locks.begin(), locks.end()) == locks.end()) {
+        for (auto &b : buffers_to_register)
+          register_buffer(b.first, b.second);
+        break;
+      }
+    }
+    locks.clear();
+    buffers_to_register.clear();
+  }
+
+
+  /** Register a buffer to this task
+
+      This is how the dependency graph is incrementally built.
+  */
+  void register_buffer(std::shared_ptr<detail::buffer_base> &buf,
+                       bool is_write_mode) {
+    TRISYCL_DUMP_T("register_buffer " << buf << " in task " << this);
     /* Keep track of the use of the buffer to notify its release at
        the end of the execution */
     buffers_in_use.push_back(buf);
@@ -327,8 +369,6 @@ std::size_t register_accessor(std::weak_ptr<detail::accessor_base> a) {
 
 };
 
-}
-}
 }
 
 /*

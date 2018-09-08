@@ -62,6 +62,9 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
   /// To protect the access to the condition variable
   std::mutex ready_mutex;
 
+  /// To protect dependency graph construction
+  std::mutex dependency_graph_construction;
+
   /** If the SYCL user buffer destructor is blocking, use this to
       block until this buffer implementation is destroyed.
 
@@ -155,6 +158,13 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
     return add_buffer_to_task(command_group_handler,
                               shared_from_this(),
                               is_write_mode);
+  }
+
+
+  /** Get a reference to the mutex used to protect the dependency
+      graph construction */
+  auto &get_dependency_graph_construction_mutex() {
+    return dependency_graph_construction;
   }
 
 
