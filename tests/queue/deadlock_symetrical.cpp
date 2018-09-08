@@ -1,10 +1,9 @@
 /* RUN: %{execute}%s
 
    Test that there is no deadlock in with massive parallel launch of
-   kernels using accessors in a symmetrical creation, A B || A B.
+   kernels using accessors in an asymmetrical creation, A B || B A.
 
-   This bug producer was provided by Anton Schreiner from
-   Intel Poland.
+   This is a variation in accessor order of deadlock.cpp
 */
 
 #include <CL/sycl.hpp>
@@ -54,9 +53,10 @@ int main(int argc, char **argv)
             {
                 deviceQueue.submit([&](cl::sycl::handler &cgh)
                 {
-                    auto k_data_1 = d_data_1.template get_access<sycl_read_write>(cgh);
+                  // The opposite order of the previous command group
                     auto k_data_2 = d_data_2.template get_access<sycl_read_write>(cgh);
-                    cgh.parallel_for<class dummy2>(dataSize,
+                    auto k_data_1 = d_data_1.template get_access<sycl_read_write>(cgh);
+                   cgh.parallel_for<class dummy2>(dataSize,
                     [=](cl::sycl::item<2> itemID)
                     {
                         k_data_2[itemID] = k_data_1[itemID];
