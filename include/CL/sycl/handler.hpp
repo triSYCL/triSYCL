@@ -31,6 +31,8 @@
 namespace cl {
 namespace sycl {
 
+class queue;
+
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
 */
@@ -44,6 +46,7 @@ namespace sycl {
     invocation functions are methods of this class.
 */
 class handler : public detail::debug<handler> {
+   friend cl::sycl::queue;
 
 public:
 
@@ -184,6 +187,13 @@ private:
           }
         }));
   }
+
+
+/// The command group is complete, ship it
+void finalize() {
+  task->finalize();
+}
+
 
 public:
 

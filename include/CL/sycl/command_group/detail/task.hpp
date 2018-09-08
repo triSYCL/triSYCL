@@ -66,6 +66,9 @@ struct task : public std::enable_shared_from_this<task>,
       or to run OpenCL kernels on */
   std::shared_ptr<detail::queue> owner_queue;
 
+  /// The functor defining the task content to be executed
+  std::function<void(void)> content;
+
   /// The OpenCL-compatible kernel run by this task, if any
   std::shared_ptr<detail::kernel> kernel;
 
@@ -81,8 +84,16 @@ struct task : public std::enable_shared_from_this<task>,
     : owner_queue { q } {}
 
 
-  /// Add a new task to the task graph and schedule for execution
+  /// Add a content to be executed by the task
   void schedule(std::function<void(void)> f) {
+    // \todo test and throw if there is already something to execute
+    content = f;
+  }
+
+
+  /// Finalize the task by inserting it in the task graph
+  void finalize() {
+    //insert_task_in_task_graph();
     /* To keep a copy of the task shared_ptr after the end of the
        command group, capture it by copy in the following lambda. This
        should be easier in C++17 with move semantics on capture
@@ -94,7 +105,7 @@ struct task : public std::enable_shared_from_this<task>,
       task->prelude();
       TRISYCL_DUMP_T("Execute the kernel");
       // Execute the kernel
-      f();
+      content();
       task->postlude();
       // Release the buffers that have been written by this task
       task->release_buffers();
@@ -102,6 +113,10 @@ struct task : public std::enable_shared_from_this<task>,
       task->notify_consumers();
       // Notify the queue we are done
       owner_queue->kernel_end();
+      /* Remove the functor that might otherwise keep references to
+         buffers indirectly and have a circular dependency preventing
+         the final release */
+      task->content = nullptr;
       TRISYCL_DUMP_T("Task thread exit");
     };
     /* Notify the queue that there is a kernel submitted to the
@@ -140,7 +155,7 @@ struct task : public std::enable_shared_from_this<task>,
   }
 
 
-  /// Release the buffers that have  been used by this task
+  /// Release the buffers that have been used by this task
   void release_buffers() {
     TRISYCL_DUMP_T("Task " << this << " releases the written buffers");
     for (auto b: buffers_in_use)

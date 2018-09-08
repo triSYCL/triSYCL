@@ -341,9 +341,6 @@ public:
   /** Submit a command group functor to the queue, in order to be
       scheduled for execution on the device
 
-      Use an explicit functor parameter taking a handler& so we can use
-      "auto" in submit() lambda parameter.
-
       \todo Add in the spec an implicit conversion of handler_event to
       queue& so it is possible to chain operations on the queue
   */
@@ -351,6 +348,8 @@ public:
   handler_event submit(Handler_Functor cgf) {
     handler command_group_handler { implementation };
     cgf(command_group_handler);
+    // Process what we lazily learned by executing the functor previously
+    command_group_handler.finalize();
     return {};
   }
 
@@ -364,7 +363,8 @@ public:
       Return a command group functor event, which is corresponds to the
       queue the command group functor is being enqueued on.
   */
-  handler_event submit(std::function<void(handler &)> cgf, queue &secondaryQueue) {
+  handler_event submit(std::function<void(handler &)> cgf,
+                       queue &secondaryQueue) {
     TRISYCL_UNIMPL;
     // Since it is not implemented, always submit on the main queue
     return submit(cgf);
