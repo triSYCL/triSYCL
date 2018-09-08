@@ -143,6 +143,72 @@ private:
     return std::tuple_cat(flatten<V>(i)...);
   }
 
+public:
+  /** An accessor to the first element of a vector
+   */
+  DataType& x(){
+    static_assert(NumElements >= 1, "can't access to vec[0] if NumElements < 1");
+    return (*this)[0];
+  }
+
+
+  /** An accessor to the second element of a vector
+   */
+  DataType& y(){
+    static_assert(NumElements >= 2, "can't access to vec[1] if NumElements < 2");
+    return (*this)[1];
+  }
+
+
+  /** An accessor to the third element of a vector
+   */
+  DataType& z(){
+    static_assert(NumElements >= 3, "can't access to vec[2] if NumElements < 3");
+    return (*this)[2];
+  }
+
+  /** An accessor to the fourth element of a vector
+   */
+  DataType& w(){
+    static_assert(NumElements >= 4, "can't access to vec[3] if NumElements < 4");
+    return (*this)[3];
+  }
+
+  /** Accessors to access hex indexed elements of a vector
+   * There are two macros, one for 0-9, one for A-F.
+   */
+#define TRISYCL_DECLARE_S(x)                                                        \
+  DataType& s##x() {                                                    \
+    static_assert(NumElements >= (x + 1), "can't access to vec["#x"] if NumElements < "#x"+1"); \
+    return (*this)[(x)];                                                \
+  }
+
+#define TRISYCL_DECLARE_Sx(x)                                           \
+  DataType& s##x() {                                                    \
+    static_assert(NumElements >= (0x##x + 1), "can't access to vec[0x"#x"] if NumElements < 0x"#x"+1"); \
+    return (*this)[(0x##x)];                                            \
+  }
+
+  TRISYCL_DECLARE_S(0);
+  TRISYCL_DECLARE_S(1);
+  TRISYCL_DECLARE_S(2);
+  TRISYCL_DECLARE_S(3);
+  TRISYCL_DECLARE_S(4);
+  TRISYCL_DECLARE_S(5);
+  TRISYCL_DECLARE_S(6);
+  TRISYCL_DECLARE_S(7);
+  TRISYCL_DECLARE_S(8);
+  TRISYCL_DECLARE_S(9);
+  TRISYCL_DECLARE_Sx(A);
+  TRISYCL_DECLARE_Sx(B);
+  TRISYCL_DECLARE_Sx(C);
+  TRISYCL_DECLARE_Sx(D);
+  TRISYCL_DECLARE_Sx(E);
+  TRISYCL_DECLARE_Sx(F);
+
+#undef TRISYCL_DECLARE_S
+#undef TRISYCL_DECLARE_Sx
+
 
   /// \todo To implement
 #if 0
