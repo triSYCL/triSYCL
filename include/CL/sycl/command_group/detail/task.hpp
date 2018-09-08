@@ -11,6 +11,7 @@
 
 #include <condition_variable>
 #include <functional>
+#include <map>
 #include <memory>
 #include <mutex>
 #include <thread>
@@ -38,16 +39,8 @@ namespace cl::sycl::detail {
 struct task : public std::enable_shared_from_this<task>,
               public detail::debug<task> {
 
-  /** List of the buffers used by this task
-
-      \todo Use a set to check that some buffers are not used many
-      times at least on writing
-  */
-  std::vector<std::shared_ptr<detail::buffer_base>> buffers_in_use;
-
-  /// List of the buffers to be used by this task, with the write-mode
-  std::vector<std::pair<std::shared_ptr<detail::buffer_base>,
-                        bool>> buffers_to_register;
+  /// List of the buffers used by this task and their write status
+  std::map<std::shared_ptr<detail::buffer_base>, bool> buffers_in_use;
 
   /// The tasks producing the buffers used by this task
   std::vector<std::shared_ptr<detail::task>> producer_tasks;
@@ -163,8 +156,8 @@ struct task : public std::enable_shared_from_this<task>,
   /// Release the buffers that have been used by this task
   void release_buffers() {
     TRISYCL_DUMP_T("Task " << this << " releases the written buffers");
-    for (auto b: buffers_in_use)
-      b->release();
+    for (auto &b: buffers_in_use)
+      b.first->release();
     buffers_in_use.clear();
   }
 
@@ -200,7 +193,12 @@ struct task : public std::enable_shared_from_this<task>,
   void add_buffer(std::shared_ptr<detail::buffer_base> &buf,
                   bool is_write_mode) {
     TRISYCL_DUMP_T("Add buffer " << buf << " in task " << this);
-    buffers_to_register.emplace_back(buf, is_write_mode);
+    if (is_write_mode)
+      // Always record the write status
+      buffers_in_use.emplace(buf, is_write_mode);
+    else
+      // For the read case, update if nothing yet, to let the write case win
+      buffers_in_use.try_emplace(buf, is_write_mode);
   }
 
 
@@ -209,7 +207,8 @@ struct task : public std::enable_shared_from_this<task>,
     /* Construct a list of unique locks for dependency graph
        associated to buffers */
     std::vector<std::unique_lock<std::mutex>> locks;
-    for (auto &b : buffers_to_register)
+    for (auto &b : buffers_in_use)
+      // Create a lock for the mutex, but doe not lock it yet
       locks.emplace_back(b.first->get_dependency_graph_construction_mutex(),
                          std::defer_lock);
     /* Lock all the required buffers for the dependency graph
@@ -220,13 +219,12 @@ struct task : public std::enable_shared_from_this<task>,
     */
     for (;;) {
       if (boost::try_lock(locks.begin(), locks.end()) == locks.end()) {
-        for (auto &b : buffers_to_register)
+        for (auto &b : buffers_in_use)
           register_buffer(b.first, b.second);
         break;
       }
     }
     locks.clear();
-    buffers_to_register.clear();
   }
 
 
@@ -234,12 +232,9 @@ struct task : public std::enable_shared_from_this<task>,
 
       This is how the dependency graph is incrementally built.
   */
-  void register_buffer(std::shared_ptr<detail::buffer_base> &buf,
+  void register_buffer(const std::shared_ptr<detail::buffer_base> &buf,
                        bool is_write_mode) {
     TRISYCL_DUMP_T("register_buffer " << buf << " in task " << this);
-    /* Keep track of the use of the buffer to notify its release at
-       the end of the execution */
-    buffers_in_use.push_back(buf);
     // To be sure the buffer does not disappear before the kernel can run
     buf->use();
 
@@ -253,15 +248,11 @@ struct task : public std::enable_shared_from_this<task>,
       latest_producer = buf->get_latest_producer();
 
     /* If the buffer is to be produced by a task, add the task in the
-       producer list to wait on it before running the task core
-
-       If a buffer is accessed first in write mode and then in read mode,
-       the task will add itself as a producer and will wait for itself
-       when calling \c wait_for_producers, we avoid this by checking that
-       \c latest_producer is not \c this
-    */
-    if (latest_producer && latest_producer != shared_from_this())
+       producer list to wait on it before running the task core */
+    if (latest_producer) {
+      assert(latest_producer != shared_from_this());
       producer_tasks.push_back(latest_producer);
+    }
   }
 
 
