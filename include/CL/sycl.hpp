@@ -86,7 +86,7 @@
 #include "CL/sycl/vendor/Xilinx/partition_array.hpp"
 
 // An extension about constexpr host introspection API
-#include "CL/sycl/extension/ce/platform.hpp"
+//#include "CL/sycl/extension/ce/platform.hpp"
 
 /*
     # Some Emacs stuff:
