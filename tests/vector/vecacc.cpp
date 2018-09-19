@@ -13,6 +13,8 @@ int test_main(int argc, char *argv[]) {
 	BOOST_CHECK(v.x() == 1);
 	BOOST_CHECK(v.y() == 2);
 	BOOST_CHECK(v.z() == 3);
+	BOOST_CHECK(v.get_count() == 3);
+	BOOST_CHECK(v.get_size() == 3 * sizeof(int));
 	v.x() = 4;
 	v.y() = 5;
 	v.z() = 6;

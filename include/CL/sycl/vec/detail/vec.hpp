@@ -91,6 +91,17 @@ private:
   }
 
 public:
+
+  /// Return the number of elements in the vector
+  auto get_count() const {
+    return NumElements;
+  }
+
+  /// Return the number of bytes
+  auto get_size() const {
+    return NumElements * sizeof(DataType);
+  }
+
   /// \todo To implement swizzles
 };
 
