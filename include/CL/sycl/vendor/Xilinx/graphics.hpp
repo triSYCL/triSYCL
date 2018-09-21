@@ -28,7 +28,7 @@ namespace cl::sycl::vendor::xilinx::graphics {
 
 namespace fundamentals_v3 = std::experimental::fundamentals_v3;
 
-struct frame_grid : Gtk::Window {
+struct frame_grid : Gtk::ApplicationWindow {
   Gtk::ScrolledWindow sw;
   Gtk::Grid grid;
   Gtk::Button close_button { "Close" };
@@ -280,8 +280,10 @@ struct app {
        reference. Since we have to wait for this thread, there should
        not be a read from freed memory issue. */
     t = std::thread { [&]() mutable {
+        // An application allowing several instance running at the same time
         auto a =
-          Gtk::Application::create(argc, argv, "com.xilinx.trisycl.graphics");
+          Gtk::Application::create(argc, argv, "com.xilinx.trisycl.graphics",
+                                   Gio::APPLICATION_NON_UNIQUE);
         /* Create the graphics object in this thread so the dispatcher
            is bound to this thread too */
         w = new graphics::image_grid { nx, ny, image_x, image_y, zoom };
