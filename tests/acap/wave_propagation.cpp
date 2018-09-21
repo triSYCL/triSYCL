@@ -43,7 +43,7 @@ static auto constexpr alpha = K*g;
 static auto constexpr image_size = 100;
 static auto constexpr x_drop = 90;
 static auto constexpr y_drop = 7;
-static auto constexpr drop_value = 10;
+static auto constexpr drop_value = 100;
 
 std::unique_ptr<graphics::app> a;
 
@@ -385,7 +385,8 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
     fundamentals_v3::mdspan<double, image_size, image_size> md { &m.w[0][0] };
     /// Loop on simulated time
     for (int time = 0; !a->is_done(); ++time) {
-      //seq.compare_with_sequential_reference(time, t::x, t::y, m);
+      // Uncomment this to have sequential cosimulation and comparison
+      seq.compare_with_sequential_reference(time, t::x, t::y, m);
       compute();
       a->update_tile_data_image(t::x, t::y, md, -1.0, 1.0);
     }
