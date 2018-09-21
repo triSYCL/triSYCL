@@ -15,7 +15,6 @@
 #include "CL/sycl/detail/default_classes.hpp"
 
 #include "CL/sycl/detail/cache.hpp"
-#include "CL/sycl/detail/unimplemented.hpp"
 #include "CL/sycl/device.hpp"
 #include "CL/sycl/exception.hpp"
 #include "CL/sycl/info/param_traits.hpp"
@@ -73,6 +72,10 @@ public:
     return p.get_info<std::string>(static_cast<cl_platform_info>(param));
   }
 
+  vector_class<string_class> get_extension_strings() const override {
+    return p.extensions();
+  }
+
 
   /// Specify whether a specific extension is supported on the platform
   bool has_extension(const string_class &extension) const override {
@@ -97,7 +100,7 @@ public:
       \return the device list
   */
   vector_class<cl::sycl::device>
-  get_devices(info::device_type device_type) const override;
+  get_devices(const device_selector &device_selector) const override;
 
 private:
 

@@ -40,8 +40,8 @@ int main(int argc, char **argv) {
     for (size_t j = 0; j < N; ++j){
       float value = ((float) i*(j+2) + 10) / N;
       cl::sycl::id<2> id = {i, j};
-      ioBuffer.get_access<cl::sycl::access::mode::write, cl::sycl::access::target::host_buffer>()[id] = value;
-      ioABuffer.get_access<cl::sycl::access::mode::write, cl::sycl::access::target::host_buffer>()[id] = value;
+      ioBuffer.get_access<cl::sycl::access::mode::write>()[id] = value;
+      ioABuffer.get_access<cl::sycl::access::mode::write>()[id] = value;
 #if DEBUG_STENCIL
       a_test[i*N+j] = value;
       b_test[i*N+j] = value;
@@ -87,7 +87,7 @@ int main(int argc, char **argv) {
 
 #if DEBUG_STENCIL
   // get the gpu result
-  auto C = (ioABuffer).get_access<cl::sycl::access::mode::read, cl::sycl::access::target::host_buffer>();
+  auto C = (ioABuffer).get_access<cl::sycl::access::mode::read>();
   ute_and_are(a_test,b_test,C);
 #endif
 

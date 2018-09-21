@@ -101,6 +101,8 @@ private:
   // Track if data have been modified
   bool modified = false;
 
+  cl::sycl::context host_context { cl::sycl::device {} };
+
 public:
 
   /// Create a new read-write buffer of size \param r
@@ -196,9 +198,8 @@ public:
        \c copy_back_cl_buffer any more.
        \todo Optimize for the case the buffer is not based on host memory
     */
-    cl::sycl::context ctx;
     auto size = access.num_elements() * sizeof(value_type);
-    call_update_buffer_state(ctx, access::mode::read, size, access.data());
+    call_update_buffer_state(host_context, access::mode::read, size, access.data());
 
 #endif
     if (modified && final_write_back)
@@ -341,7 +342,7 @@ private:
 
   /// Allocate uninitialized buffer memory
   auto allocate_buffer(const range<Dimensions> &r) {
-    auto count = r.get_count();
+    auto count = r.size();
     // Allocate uninitialized memory
     allocation = alloc.allocate(count);
     return boost::multi_array_ref<value_type, Dimensions> { allocation, r };

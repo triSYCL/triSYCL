@@ -17,6 +17,7 @@ namespace cl {
 namespace sycl {
 
 class device;
+class device_selector;
 
 namespace detail {
 
@@ -46,20 +47,19 @@ public:
   /// Query the platform for OpenCL string info::platform info
   virtual string_class get_info_string(info::platform param) const = 0;
 
+  virtual vector_class<string_class> get_extension_strings() const = 0;
 
   /// Specify whether a specific extension is supported on the platform.
   virtual bool has_extension(const string_class &extension) const = 0;
 
   /** Get all the available devices for this platform
 
-      \param[in] device_type is the device type to filter the selection
-      or \c info::device_type::all by default to return all the
-      devices
+      \param[in] device_selector is used to filter the selection.
 
       \return the device list
   */
   virtual vector_class<device>
-  get_devices(info::device_type device_type) const = 0;
+  get_devices(const device_selector &device_selector) const = 0;
 
   // Virtual to call the real destructor
   virtual ~platform() {}

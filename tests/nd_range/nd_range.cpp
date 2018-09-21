@@ -16,6 +16,10 @@
    CHECK-NEXT: 1
    CHECK-NEXT: 6 4
    CHECK-NEXT: 6 5 7
+   CHECK-NEXT: 1
+   CHECK-NEXT: 0
+   CHECK-NEXT: 0
+   CHECK-NEXT: 1
 */
 #include <CL/sycl.hpp>
 #include <iostream>
@@ -41,11 +45,11 @@ int main() {
   nd_range<3> ndr3 { range<3>{ 6, 4, 8 }, range<3>{ 3, 2, 4} };
   ndr3.display();
 
-  ndr3.get_global().display();
-  ndr3.get_local().display();
+  ndr3.get_global_range().display();
+  ndr3.get_local_range().display();
   ndr3.get_offset().display();
-  ndr3.get_group().display();
-  range<3> ndr4 = ndr3.get_group();
+  ndr3.get_group_range().display();
+  range<3> ndr4 = ndr3.get_group_range();
   ndr4.display();
 
   nd_range<> ndr1 { 4, 2, 3 };
@@ -55,13 +59,20 @@ int main() {
 
   // Test now for incomplete work-groups
   nd_range<> ndri1 { 1, 2, 3 };
-  ndri1.get_group().display();
+  ndri1.get_group_range().display();
 
   nd_range<2> ndri2 { { 11, 25 }, { 2, 7 } };
-  ndri2.get_group().display();
+  ndri2.get_group_range().display();
 
   nd_range<3> ndri3 { { 11, 25, 48 }, { 2, 5, 7 } };
-  ndri3.get_group().display();
+  ndri3.get_group_range().display();
 
+  nd_range<> ndric { 1, 2, 3 };
+  std::cout << (ndri1 == ndric) << std::endl;
+  std::cout << (ndri1 != ndric) << std::endl;
+
+  nd_range<> ndrinc { 1, 2, 5 };
+  std::cout << (ndri1 == ndrinc) << std::endl;
+  std::cout << (ndri1 != ndrinc) << std::endl;
   return 0;
 }

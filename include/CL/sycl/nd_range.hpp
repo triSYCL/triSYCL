@@ -30,7 +30,7 @@ namespace sycl {
     \todo add copy constructors in the specification
 */
 template <int Dimensions = 1>
-struct nd_range {
+struct nd_range : boost::equality_comparable<nd_range<Dimensions>> {
   /// \todo add this Boost::multi_array or STL concept to the
   /// specification?
   static constexpr auto dimensionality = Dimensions;
@@ -55,15 +55,15 @@ public:
 
 
   /// Get the global iteration space range
-  range<Dimensions> get_global() const { return global_range; }
+  range<Dimensions> get_global_range() const { return global_range; }
 
 
   /// Get the local part of the iteration space range
-  range<Dimensions> get_local() const { return local_range; }
+  range<Dimensions> get_local_range() const { return local_range; }
 
 
   /// Get the range of work-groups needed to run this ND-range
-  auto get_group() const {
+  auto get_group_range() const {
     /* This is basically global_range/local_range, round up to the
        next integer, in case the global range is not a multiple of the
        local range. Note this is a motivating example to build a range
@@ -83,6 +83,11 @@ public:
     offset.display();
   }
 
+  /// Comparison operators for nd_range.
+  bool operator==(const nd_range &nd_rangeB) const {
+    return (global_range == nd_rangeB.global_range &&
+	    offset == nd_rangeB.offset);
+  }
 };
 
 /// @} End the parallelism Doxygen group

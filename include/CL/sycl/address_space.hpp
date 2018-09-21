@@ -23,15 +23,17 @@ namespace sycl {
     @{
 */
 
+namespace access {
 /** Enumerate the different OpenCL 2 address spaces */
-enum address_space {
-  constant_address_space,
-  generic_address_space,
-  global_address_space,
-  local_address_space,
-  private_address_space,
+enum class address_space {
+  global_space,
+  local_space,
+  constant_space,
+  private_space,
+  generic_space,
 };
 
+}
 }
 }
 /// @} End the address_spaces Doxygen group
@@ -52,7 +54,7 @@ namespace sycl {
     \param T is the type of the object
 */
 template <typename T>
-using constant = detail::addr_space<T, constant_address_space>;
+using constant = detail::addr_space<T, access::address_space::constant_space>;
 
 
 /** Declare a variable to be in the OpenCL constant address space
@@ -68,7 +70,7 @@ using constant_ptr = constant<T*>;
     \param T is the type of the object
 */
 template <typename T>
-using generic = detail::addr_space<T, generic_address_space>;
+using generic = detail::addr_space<T, access::address_space::generic_space>;
 
 
 /** Declare a variable to be in the OpenCL global address space
@@ -76,7 +78,7 @@ using generic = detail::addr_space<T, generic_address_space>;
     \param T is the type of the object
 */
 template <typename T>
-using global = detail::addr_space<T, global_address_space>;
+using global = detail::addr_space<T, access::address_space::global_space>;
 
 
 /** Declare a variable to be in the OpenCL global address space
@@ -93,7 +95,7 @@ using global_ptr = global<T*>;
     \param T is the type of the object
 */
 template <typename T>
-using local = detail::addr_space<T, local_address_space>;
+using local = detail::addr_space<T, access::address_space::local_space>;
 
 
 /** Declare a variable to be in the OpenCL local address space
@@ -109,7 +111,7 @@ using local_ptr = local<T*>;
     \param T is the type of the object
 */
 template <typename T>
-using priv = detail::addr_space<T, private_address_space>;
+using priv = detail::addr_space<T, access::address_space::private_space>;
 
 
 /** Declare a variable to be in the OpenCL private address space
@@ -128,7 +130,7 @@ using private_ptr = priv<T*>;
 
     Note that if \a Pointer is not a pointer type, it is an error.
 */
-template <typename Pointer, address_space AS>
+template <typename Pointer, access::address_space AS>
 using multi_ptr = detail::address_space_ptr<Pointer, AS>;
 
 
@@ -136,13 +138,21 @@ using multi_ptr = detail::address_space_ptr<Pointer, AS>;
 
     \param pointer is the address with its address space to point to
 
-    \todo Implement the case with a plain pointer
 */
-template <typename T, address_space AS>
-multi_ptr<T, AS> make_multi(multi_ptr<T, AS> pointer) {
+template <typename T, access::address_space AS>
+multi_ptr<T, AS> make_ptr(multi_ptr<T, AS> pointer) {
   return pointer;
 }
 
+/** Construct a cl::sycl::multi_ptr<> with the right type
+
+    \todo Implement the case with a plain pointer
+*/
+template <typename T, access::address_space AS>
+multi_ptr<T, AS> make_ptr(T *pointer) {
+  TRISYCL_UNIMPL;
+  return pointer;
+}
 }
 }
 /// @} End the parallelism Doxygen group

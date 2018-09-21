@@ -11,6 +11,10 @@
    CHECK: 2 3
    CHECK: 0 0
    CHECK: 302
+   CHECK: 1
+   CHECK: 0
+   CHECK: 0
+   CHECK: 1
 */
 #include <CL/sycl.hpp>
 #include <iostream>
@@ -36,5 +40,12 @@ int main() {
   i2.get_offset().display();
   std::cout << i2.get_linear_id() << std::endl;
 
+  item<> ic { 7, 3, 2 };
+  std::cout << (i == ic) << std::endl;
+  std::cout << (i != ic) << std::endl;
+
+  item<> inc { 8, 3, 2 };
+  std::cout << (i == inc) << std::endl;
+  std::cout << (i != inc) << std::endl;
   return 0;
 }

@@ -453,7 +453,7 @@ public:
   */
   template <int Dimensions = 1>
   void parallel_for(nd_range<Dimensions>, kernel syclKernel) {
-    detail::unimplemented();
+    TRISYCL_UNIMPL;
   }
 
 };

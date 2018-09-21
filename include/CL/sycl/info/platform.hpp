@@ -34,32 +34,32 @@ enum class platform : unsigned int {
 
       Can be either FULL PROFILE or EMBEDDED PROFILE.
   */
-  profile TRISYCL_SKIP_OPENCL(= CL_PLATFORM_PROFILE),
+  profile TRISYCL_OPENCL_ONLY(= CL_PLATFORM_PROFILE),
 
   /** Returns the OpenCL software driver version string in the form major
       number.minor number (as a string_class)
   */
-  version TRISYCL_SKIP_OPENCL(= CL_PLATFORM_VERSION),
+  version TRISYCL_OPENCL_ONLY(= CL_PLATFORM_VERSION),
 
   /** Returns the name of the platform (as a string_class)
   */
-  name TRISYCL_SKIP_OPENCL(= CL_PLATFORM_NAME),
+  name TRISYCL_OPENCL_ONLY(= CL_PLATFORM_NAME),
 
   /** Returns the string provided by the platform vendor (as a string_class)
   */
-  vendor TRISYCL_SKIP_OPENCL(= CL_PLATFORM_VENDOR),
+  vendor TRISYCL_OPENCL_ONLY(= CL_PLATFORM_VENDOR),
 
   /** Returns a space-separated list of extension names supported by the
       platform (as a string_class)
   */
-  extensions TRISYCL_SKIP_OPENCL(= CL_PLATFORM_EXTENSIONS),
+  extensions TRISYCL_OPENCL_ONLY(= CL_PLATFORM_EXTENSIONS),
 
 #if CL_SYCL_LANGUAGE_VERSION >= 220 && defined(CL_VERSION_2_1)
   /** Returns the resolution of the host timer in nanoseconds as used by
       clGetDeviceAndHostTimer
   */
   host_timer_resolution
-    TRISYCL_SKIP_OPENCL(= CL_PLATFORM_HOST_TIMER_RESOLUTION)
+    TRISYCL_OPENCL_ONLY(= CL_PLATFORM_HOST_TIMER_RESOLUTION)
 #endif
 };
 
@@ -75,7 +75,7 @@ enum class platform : unsigned int {
     when asked about platform info.
 */
 TRISYCL_INFO_PARAM_TRAITS_ANY_T(info::platform, string_class)
-
+TRISYCL_INFO_PARAM_TRAITS(info::platform::extensions, vector_class<string_class>)
 #if CL_SYCL_LANGUAGE_VERSION >= 220 && defined(CL_VERSION_2_1)
 ///  get_info<host_timer_resolution>() return a cl_ulong
 #ifdef TRISYCL_OPENCL

@@ -65,7 +65,11 @@ struct queue : detail::debug<detail::queue> {
   /// Signal that a new kernel finished on this queue
   void kernel_end() {
     TRISYCL_DUMP_T("A kernel of the queue ended");
+    std::unique_lock<std::mutex> ul { finished_mutex };
     if (--running_kernels == 0) {
+      // Micro-optimization: unlock before the notification
+      // https://en.cppreference.com/w/cpp/thread/condition_variable/notify_all
+      ul.unlock();
       /* It was the last kernel running, so signal the queue just in
          case it was working for it for completion
 

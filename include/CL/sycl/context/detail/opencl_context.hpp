@@ -82,7 +82,7 @@ public:
   template <info::context Param>
   typename info::param_traits<info::context, Param>::type
   get_info() const override{
-    detail::unimplemented();
+    TRISYCL_UNIMPL;
     return {};
   }
 #endif
@@ -94,8 +94,7 @@ public:
       \todo To be implemented
   */
   cl::sycl::platform get_platform() const override {
-    detail::unimplemented();
-    return {};
+    return cl::sycl::platform(c.get_devices()[0].platform());
   }
 
 
@@ -104,8 +103,15 @@ public:
       \todo To be implemented
   */
   vector_class<cl::sycl::device> get_devices() const override {
-    detail::unimplemented();
-    return {};
+    vector_class<cl::sycl::device> devices;
+
+    for (const auto &d : c.get_devices())
+      devices.push_back(d);
+    return devices;
+  }
+
+  cl::sycl::cl_uint get_reference_count() const override {
+    return c.get_info<CL_CONTEXT_REFERENCE_COUNT>();
   }
 
   /// Get a singleton instance of the \c opencl_context

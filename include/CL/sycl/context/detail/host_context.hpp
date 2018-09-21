@@ -92,7 +92,7 @@ public:
   template <info::context Param>
   typename info::param_traits<info::context, Param>::type
   get_info() const override {
-    detail::unimplemented();
+    TRISYCL_UNIMPL;
     return {};
   }
 #endif
@@ -107,6 +107,11 @@ public:
   get_devices() const override {
     // Return just the host device
     return { {} };
+  }
+
+  /// Return 0 since the context is a SYCL host context
+  cl::sycl::cl_uint get_reference_count() const override {
+    return 0;
   }
 };
 

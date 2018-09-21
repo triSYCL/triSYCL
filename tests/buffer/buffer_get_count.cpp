@@ -25,8 +25,8 @@ int test_main(int argc, char *argv[]) {
   cl::sycl::range<1> result { v.size() };
   if (buf.get_range() != result)
   {
-    std::cout << "range { v.size } = " << result << std::endl;
-    std::cout << "buf.get_range() = " << buf.get_range() << std::endl;
+    std::cout << "range { v.size } = " << result.get(0) << std::endl;
+    std::cout << "buf.get_range() = " << buf.get_range().get(0) << std::endl;
     assert(false);
   }
   return 0;

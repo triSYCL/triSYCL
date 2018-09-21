@@ -24,6 +24,8 @@
 #define TRISYCL_CL_LANGUAGE_VERSION 121
 #endif
 
+#define BOOST_COMPUTE_CL_VERSION_1_2
+
 /// This source is compiled by a single source compiler
 #define __SYCL_SINGLE_SOURCE__
 
@@ -52,21 +54,33 @@
 // But the triSYCL OpenCL implementation is actually based on Boost.Compute
 #include <boost/compute.hpp>
 /// A macro to keep some stuff in OpenCL mode
-#define TRISYCL_SKIP_OPENCL(x) x
+// Use variadic macros so we can have straw commas in the argument
+#define TRISYCL_OPENCL_ONLY(...) __VA_ARGS__
 #else
 /// A macro to skip stuff when not supporting OpenCL
-#define TRISYCL_SKIP_OPENCL(x)
+#define TRISYCL_OPENCL_ONLY(...)
 #endif
 
 #ifdef TRISYCL_DEVICE
 /// Define the SYCL marker according to specification
 #define __SYCL_DEVICE_ONLY__
 // To keep something when in device mode
-#define TRISYCL_DEVICE_ONLY(X) X
+// Use variadic macros so we can have straw commas in the argument
+#define TRISYCL_DEVICE_ONLY(...) __VA_ARGS__
 #else
 // Do not keep when not in device mode
-#define TRISYCL_DEVICE_ONLY(X)
+#define TRISYCL_DEVICE_ONLY(...)
 #endif
+
+#ifdef TRISYCL_DEBUG
+// To keep something when in debug mode only
+// Use variadic macros so we can have straw commas in the argument
+#define TRISYCL_DEBUG_ONLY(...) __VA_ARGS__
+#else
+// Do not keep when not in debug mode
+#define TRISYCL_DEBUG_ONLY(...)
+#endif
+
 
 /// @} End the defaults Doxygen group
 

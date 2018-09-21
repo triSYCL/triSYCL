@@ -200,7 +200,7 @@ public:
          const range<Dimensions> &buffer_range,
          cl::sycl::mutex_class &m,
          Allocator allocator = {}) {
-    detail::unimplemented();
+    TRISYCL_UNIMPL;
   }
 
 
@@ -294,7 +294,7 @@ public:
   buffer(buffer<T, Dimensions, Allocator> &b,
          const id<Dimensions> &base_index,
          const range<Dimensions> &sub_range,
-         Allocator allocator = {}) { detail::unimplemented(); }
+         Allocator allocator = {}) { TRISYCL_UNIMPL; }
 
 
 #ifdef TRISYCL_OPENCL
@@ -321,7 +321,7 @@ public:
   buffer(cl_mem mem_object,
          queue from_queue,
          event available_event = {},
-         Allocator allocator = {}) { detail::unimplemented();  }
+         Allocator allocator = {}) { TRISYCL_UNIMPL;  }
 #endif
 
 
@@ -371,14 +371,10 @@ public:
 
       \todo More elegant solution
   */
-  template <access::mode Mode,
-            access::target Target = access::target::host_buffer>
-  accessor<T, Dimensions, Mode, Target>
+  template <access::mode Mode>
+  accessor<T, Dimensions, Mode, access::target::host_buffer>
   get_access() {
-    static_assert(Target == access::target::host_buffer,
-                  "get_access() without a command group handler is only"
-                  " for host_buffer accessor");
-    implementation->implementation->template track_access_mode<Mode, Target>();
+    implementation->implementation->template track_access_mode<Mode, access::target::host_buffer>();
     return { *this };
   }
 

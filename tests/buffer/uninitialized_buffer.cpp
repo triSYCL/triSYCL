@@ -39,8 +39,8 @@ int test_main(int argc, char *argv[]) {
       auto out_access = output.get_access<access::mode::discard_write>(cgh);
 
       cgh.parallel_for<class init>(size,
-                                   [=](int i) {
-                                     out_access[i] = i;
+                                   [=](id<1> i) {
+                                     out_access[i] = i[0];
                                    });
     });
 

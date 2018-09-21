@@ -239,6 +239,9 @@ public:
                    << " cb.end() = " << (void *)&*cb.end()
                    << " reserved_for_reading() = " << reserved_for_reading()
                    << " reserved_for_writing() = " << reserved_for_writing());
+    // Micro-optimization: unlock before the notification
+    // https://en.cppreference.com/w/cpp/thread/condition_variable/notify_all
+    ul.unlock();
     // Notify the clients waiting to read something from the pipe
     write_done.notify_all();
     return true;
@@ -282,6 +285,9 @@ public:
     }
 
     TRISYCL_DUMP_T("Read pipe value = " << value);
+    // Micro-optimization: unlock before the notification
+    // https://en.cppreference.com/w/cpp/thread/condition_variable/notify_all
+    ul.unlock();
     // Notify the clients waiting for some room to write in the pipe
     read_done.notify_all();
     return true;
@@ -424,7 +430,7 @@ public:
   */
   void move_read_reservation_forward() {
     // Lock the pipe to avoid nuisance
-    std::lock_guard<std::mutex> lg { cb_mutex };
+    std::unique_lock<std::mutex> lock { cb_mutex };
 
     for (;;) {
       if (r_rid_q.empty())

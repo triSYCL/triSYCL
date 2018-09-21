@@ -52,4 +52,10 @@ declare_trisycl_test(TARGET nd_item TEST_REGEX
 4 2 1 
 29
  5 3 2
-5 3 2 ")
+5 3 2 
+1
+0
+0
+1
+1
+0")

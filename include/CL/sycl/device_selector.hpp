@@ -9,9 +9,6 @@
     License. See LICENSE.TXT for details.
 */
 
-#include "CL/sycl/detail/unimplemented.hpp"
-#include "CL/sycl/device.hpp"
-
 namespace cl {
 namespace sycl {
 
@@ -25,6 +22,7 @@ namespace sycl {
 */
 class device_selector {
 
+  device select_device(vector_class<platform> platforms) const;
 public:
 
   /** Returns a selected device using the functor operator defined in
@@ -32,10 +30,7 @@ public:
 
       \todo Remove this from specification
   */
-  void /* device */ select_device() const {
-    //    return {};
-  }
-
+  device select_device() const;
 
   /**  This pure virtual operator allows the customization of device
        selection.

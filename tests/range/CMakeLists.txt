@@ -5,7 +5,6 @@ declare_trisycl_test(TARGET range TEST_REGEX
 "Result:
 1 
 a = 3
-a as an int = 3
 b = 4
 b = 2
 c = 5,6
@@ -28,10 +27,8 @@ Range of dims 3
 1
 0
 1
-0
-0
-1
-1
-1
-1")
+ 0 0 1
+ 0 1 1
+ 1 0 0
+ 1 1 0")
 declare_trisycl_test(TARGET range_size)

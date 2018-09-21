@@ -7,8 +7,10 @@ declare_trisycl_test(TARGET id TEST_REGEX
 5 7
 3
 jj has changed
-jj is lexicographically lesser than before
-as_an_int = 42
+ 0 1
+ 1 0
+ 0 1
+ 1 1
 jj via e = 5
 jj via e = 3
 cjj via e = 5
@@ -19,4 +21,5 @@ cjj via e = 3
  12 15
  6 2
  1 2 3
- 5 6")
+ 5 6
+zeroid = 0, 0, 0")

@@ -43,4 +43,10 @@ declare_trisycl_test(TARGET group TEST_REGEX
 1 2 3 
  4 2 1
 4 2 1 
-29")
+29
+1
+0
+0
+1
+0
+1")

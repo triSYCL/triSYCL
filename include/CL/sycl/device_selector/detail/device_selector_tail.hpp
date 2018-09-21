@@ -23,7 +23,32 @@ namespace sycl {
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
 */
+inline device device_selector::select_device(vector_class<platform> platforms) const {
+  int best_id = -1;
+  int best_score = -1;
+  int i = 0;
+  device best_device;
 
+  for (auto &platform : platforms) {
+    for (auto &dev : platform.get_devices()) {
+      int score = operator()(dev);
+      if (score > best_score) {
+        best_id = 1;
+        best_device = dev;
+        best_score = score;
+      }
+      ++i;
+    }
+  }
+  if (best_id == -1)
+    throw cl::sycl::runtime_error("Could not find device");
+
+  return best_device;
+}
+
+inline device device_selector::select_device() const  {
+  return select_device(platform::get_platforms());
+}
 
 /** A device selector by device_type
 

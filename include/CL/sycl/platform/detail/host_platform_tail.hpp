@@ -28,11 +28,11 @@ namespace detail {
     \return the device list
 */
 vector_class<cl::sycl::device>
-inline host_platform::get_devices(info::device_type device_type) const {
+inline host_platform::get_devices(const device_selector &device_selector) const {
   /** If \c get_devices is called with the host platform
       and the right device type, returns the host_device.
   */
-  if (device_type_selector { device_type }(cl::sycl::device {}) > 0)
+  if (device_selector(cl::sycl::device {}) > 0)
     // Return 1 default device, i.e. the host device
     return { {} };
   else

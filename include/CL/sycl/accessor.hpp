@@ -147,7 +147,7 @@ class accessor :
            handler &command_group_handler,
            const range<Dimensions> &offset,
            const range<Dimensions> &range) {
-    detail::unimplemented();
+    TRISYCL_UNIMPL;
   }
 
 
@@ -273,7 +273,7 @@ class accessor :
       \todo Add in the specification because used by HPC-GPU slide 22
   */
   auto &operator[](nd_item<dimensionality> index) {
-    return (*this)[index.get_global()];
+    return (*this)[index.get_global_id()];
   }
 
   /** To use an accessor with an [nd_item<>]
@@ -281,7 +281,7 @@ class accessor :
       \todo Add in the specification because used by HPC-GPU slide 22
   */
   auto &operator[](nd_item<dimensionality> index) const {
-    return (*this)[index.get_global()];
+    return (*this)[index.get_global_id()];
   }
 
 
