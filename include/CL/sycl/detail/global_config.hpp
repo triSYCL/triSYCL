@@ -72,6 +72,16 @@
 
 /// @} End the defaults Doxygen group
 
+#ifdef TRISYCL_DEBUG
+// To keep something when in debug mode only
+// Use variadic macros so we can have straw commas in the argument
+#define TRISYCL_DEBUG_ONLY(...) __VA_ARGS__
+#else
+// Do not keep when not in debug mode
+#define TRISYCL_DEBUG_ONLY(...)
+#endif
+
+
 // Compiler specific weak linking (until changing to C++17 inline variables/functions)
 #ifndef TRISYCL_WEAK_ATTRIB_PREFIX
 #ifdef _MSC_VER
