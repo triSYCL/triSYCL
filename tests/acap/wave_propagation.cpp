@@ -45,7 +45,7 @@ static auto constexpr x_drop = 90;
 static auto constexpr y_drop = 7;
 static auto constexpr drop_value = 100;
 
-std::unique_ptr<graphics::app> a;
+graphics::app a;
 
 auto epsilon = 0.01;
 
@@ -133,7 +133,7 @@ struct reference_wave_propagation {
   /// Run the wave propagation
   void run() {
     /// Loop on simulated time
-    while (!a->is_done()) {
+    while (!a.is_done()) {
       compute();
       for (int j = 0; j < size_y/display_tile_size; ++j)
         for (int i = 0; i <  size_x/display_tile_size; ++i) {
@@ -148,7 +148,7 @@ struct reference_wave_propagation {
                             1 + (j + 1)*display_tile_size),
              std::make_pair(i*display_tile_size,
                             1 + (i + 1)*display_tile_size));
-          a->update_tile_data_image(i, j, sp, -1.0, 1.0);
+          a.update_tile_data_image(i, j, sp, -1.0, 1.0);
         }
     }
   }
@@ -384,11 +384,11 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
     auto& m = t::mem();
     fundamentals_v3::mdspan<double, image_size, image_size> md { &m.w[0][0] };
     /// Loop on simulated time
-    for (int time = 0; !a->is_done(); ++time) {
+    for (int time = 0; !a.is_done(); ++time) {
       // Uncomment this to have sequential cosimulation and comparison
       seq.compare_with_sequential_reference(time, t::x, t::y, m);
       compute();
-      a->update_tile_data_image(t::x, t::y, md, -1.0, 1.0);
+      a.update_tile_data_image(t::x, t::y, md, -1.0, 1.0);
     }
   }
 };
@@ -398,9 +398,9 @@ int main(int argc, char *argv[]) {
   // An ACAP version of the wave propagation
   acap::me::array<layout, tile, memory> me;
 
-  a.reset(new graphics::app { argc, argv, decltype(me)::geo::x_size,
-                              decltype(me)::geo::y_size,
-                              image_size, image_size, 1 });
+  a.start(argc, argv, decltype(me)::geo::x_size,
+          decltype(me)::geo::y_size,
+          image_size, image_size, 2);
 #if 0
   // Run the sequential reference implementation
   seq.run();
@@ -408,5 +408,5 @@ int main(int argc, char *argv[]) {
   // Launch the MathEngine program
   me.run();
   // Wait for the graphics to stop
-  a->wait();
+  a.wait();
 }

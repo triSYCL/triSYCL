@@ -271,8 +271,8 @@ struct app {
   /// Set to true by the closing handler
   std::atomic<bool> done = false;
 
-  app(int &argc, char **&argv,
-      int nx, int ny, int image_x, int image_y, int zoom) {
+  void start(int &argc, char **&argv,
+             int nx, int ny, int image_x, int image_y, int zoom) {
     // To be sure not passing over the asynchronous graphics start
     std::unique_lock lock { graphics_protection };
     /* Put all the graphics in its own thread. Since
