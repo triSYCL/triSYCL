@@ -228,10 +228,12 @@ struct memory : acap::me::memory<ME_Array, X, Y> {
 };
 
 
+TRISYCL_DEBUG_ONLY(
 static auto minmax_element(const double value[image_size][image_size]) {
   return std::minmax_element(&value[0][0],
                              &value[image_size][image_size]);
 }
+)
 
 // All the tiles run the same program
 template <typename ME_Array, int X, int Y>
@@ -372,8 +374,8 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         m.lu.locks[1].release_with_value(false);
       }
     }
-    static int iteration = 0;
-    auto [min_element, max_element] = minmax_element(m.w);
+    TRISYCL_DEBUG_ONLY(static int iteration = 0;
+                       auto [min_element, max_element] = minmax_element(m.w);)
     TRISYCL_DUMP_T(std::dec << "compute(" << X << ',' << Y
                    << ") iteration " << ++iteration << " done, min = "
                    << *min_element << ", max = " << *max_element);
