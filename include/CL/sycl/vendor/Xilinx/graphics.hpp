@@ -17,7 +17,6 @@
 #include <atomic>
 #include <cstddef>
 #include <functional>
-#include <iostream>
 #include <mdspan>
 #include <memory>
 #include <mutex>
@@ -32,7 +31,6 @@ namespace fundamentals_v3 = std::experimental::fundamentals_v3;
 struct frame_grid : Gtk::Window {
   Gtk::ScrolledWindow sw;
   Gtk::Grid grid;
-  Gtk::Button hello_button { "Hello" };
   Gtk::Button close_button { "Close" };
   std::vector<Gtk::Frame> frames;
 
@@ -61,17 +59,11 @@ struct frame_grid : Gtk::Window {
         grid.attach(frames.back(), x, ny - y - 1, 1, 1);
       }
 
-    grid.add(hello_button);
     grid.add(close_button);
 
     // Make the button the default widget
     close_button.set_can_default();
     close_button.grab_default();
-
-    // When the button receives the "clicked" signal
-    hello_button.signal_clicked().connect([] {
-        std::cout << "Hello from triSYCL" << std::endl;
-      });
 
     // Connect the clicked signal of the close button to
     close_button.signal_clicked().connect([this] {
