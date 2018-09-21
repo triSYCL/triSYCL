@@ -55,13 +55,23 @@ LDLIBS += -lOpenCL
 # To use Boost.Thread
 LDLIBS += -lboost_thread -lboost_system
 
+# For Clang UBSan https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html
+#CXXFLAGS += -fsanitize=undefined
+# For Clang AddressSanitizer https://clang.llvm.org/docs/AddressSanitizer.html
+#CXXFLAGS += -fsanitize=address -fno-omit-frame-pointer \
+#	-fno-optimize-sibling-calls
+# For Clang ThreadSanitizer https://clang.llvm.org/docs/ThreadSanitizer.html
+#CXXFLAGS += -fsanitize=thread
+# For Clang MemorySanitizer https://clang.llvm.org/docs/MemorySanitizer.html
+#CXXFLAGS += -fsanitize=memory
 # To enable debug and tracing:
-# With optimization and without assertions
-CXXFLAGS += -O3 -DNDEBUG -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
-#CXXFLAGS += -O3 -DNDEBUG
+#CXXFLAGS += -g -fno-inline
 #CXXFLAGS += -g -DTRISYCL_TRACE_KERNEL -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DTRISYCL_TRACE_KERNEL -DTRISYCL_DEBUG_STRUCTORS -DBOOST_LOG_DYN_LINK
+# With optimization and without assertions
+#CXXFLAGS += -O3 -DNDEBUG -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
+CXXFLAGS += -O3 -DNDEBUG
 # To have DEBUG mode working
 LDLIBS += -lboost_log -lpthread
 # To use Clang sanitizer modes
