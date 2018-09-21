@@ -34,7 +34,7 @@ CL_CXX = $(LLVM_BUILD_DIR)/bin/clang++
 LDLIBS += -lpthread
 
 # To use OpenCL, set the TRISYCL_OPENCL flag
-CXXFLAGS += -DTRISYCL_OPENCL
+#CXXFLAGS += -DTRISYCL_OPENCL
 # To use generic OpenCL:
 LDLIBS += -lOpenCL
 #To use Xilinx OpenCL library without ICD
