@@ -43,6 +43,9 @@ struct frame_grid : Gtk::ApplicationWindow {
   // An action to do when the window is closed
   std::function<void(void)> close_action;
 
+  /// Set to true by the closing handler
+  std::atomic<bool> done = false;
+
   frame_grid(int nx, int ny) : nx { nx }, ny { ny } {
     set_default_size(900, 600);
 
@@ -136,7 +139,9 @@ struct image_grid : frame_grid {
         {
           // Only 1 customer at a time
           std::lock_guard lock { dispatch_protection };
-          work_to_dispatch();
+          // Skip the work when done to avoid dead lock
+          if (!done)
+            work_to_dispatch();
           work_to_dispatch = nullptr;
         }
         // We can serve the next customer
@@ -268,8 +273,6 @@ struct app {
   std::mutex graphics_protection;
   std::condition_variable leash;
   bool initialized = false;
-  /// Set to true by the closing handler
-  std::atomic<bool> done = false;
 
   void start(int &argc, char **&argv,
              int nx, int ny, int image_x, int image_y, int zoom) {
@@ -287,12 +290,16 @@ struct app {
         /* Create the graphics object in this thread so the dispatcher
            is bound to this thread too */
         w = new graphics::image_grid { nx, ny, image_x, image_y, zoom };
-        w->set_close_action([&] { done = true; });
+        w->set_close_action([&] {
+            w->done = true;
+          });
         // OK, the graphics system is in a usable state, unleash the main thread
         initialized = true;
         lock.unlock();
         leash.notify_one();
         a->run(*w);
+        // Advertise that the graphics is shutting down
+        w->done = true;
       } };
     // Wait for the graphics to start
     {
@@ -317,7 +324,7 @@ struct app {
 
   // Test if the window has been closed
   bool is_done() {
-    return done;
+    return w->done;
   }
 
 
