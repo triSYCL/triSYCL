@@ -153,11 +153,14 @@ struct image_grid : frame_grid {
   // Submit some work to the graphics thread
   void submit(std::function<void(void)> f) {
     std::unique_lock lock { dispatch_protection };
-    // Wait for no work being dispatched
-    cv.wait(lock, [&] { return !work_to_dispatch; } );
-    work_to_dispatch = f;
-    // Ask the graphics thread for some work
-    dispatcher.emit();
+    // Wait for no work being dispatched or the end
+    cv.wait(lock, [&] { return !work_to_dispatch || done; } );
+    // Do not submit anything if we are in the shutdown process already
+    if (!done) {
+      work_to_dispatch = f;
+      // Ask the graphics thread for some work
+      dispatcher.emit();
+    }
   };
 
 
