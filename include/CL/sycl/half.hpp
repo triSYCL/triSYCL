@@ -1,6 +1,7 @@
 #ifndef TRISYCL_SYCL_HALF_HPP
 #define TRISYCL_SYCL_HALF_HPP
 
+#include <cstring>
 /** \file SYCL Half support - dummy
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
@@ -10,13 +11,14 @@
 namespace cl {
 namespace sycl {
 
-class half {
-public:
-  half(int) {};
+namespace detail {
+#include "CL/sycl/detail/half.hpp"
+}
 
-  bool operator>(const half &h1) { return false; };
-};
-
+using half = detail::half_float::half;
+#ifdef TRISYCL_OPENCL
+using cl_half = detail::half_float::half;
+#endif
 }
 
 }
