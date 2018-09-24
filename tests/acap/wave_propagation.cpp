@@ -45,7 +45,7 @@ static auto constexpr x_drop = 90;
 static auto constexpr y_drop = 7;
 static auto constexpr drop_value = 100;
 
-graphics::app a;
+graphics::application a;
 
 auto epsilon = 0.01;
 

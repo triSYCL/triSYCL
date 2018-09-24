@@ -273,7 +273,7 @@ struct image_grid : frame_grid {
 
 };
 
-struct app {
+struct application {
   std::thread t;
   graphics::image_grid *w;
   bool initialized = false;
