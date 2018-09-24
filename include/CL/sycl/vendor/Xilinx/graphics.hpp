@@ -15,12 +15,15 @@
 
 #include <algorithm>
 #include <atomic>
+#include <condition_variable>
 #include <cstddef>
 #include <functional>
+#include <future>
 #include <mdspan>
 #include <memory>
 #include <mutex>
 #include <sstream>
+#include <thread>
 
 #include <gtkmm.h>
 
@@ -273,14 +276,13 @@ struct image_grid : frame_grid {
 struct app {
   std::thread t;
   graphics::image_grid *w;
-  std::mutex graphics_protection;
-  std::condition_variable leash;
   bool initialized = false;
 
   void start(int &argc, char **&argv,
              int nx, int ny, int image_x, int image_y, int zoom) {
     // To be sure not passing over the asynchronous graphics start
-    std::unique_lock lock { graphics_protection };
+    std::promise<void> graphics_initialization;
+
     /* Put all the graphics in its own thread. Since
        Gtk::Application::create might modify argc and argv, capture by
        reference. Since we have to wait for this thread, there should
@@ -297,18 +299,13 @@ struct app {
             w->done = true;
           });
         // OK, the graphics system is in a usable state, unleash the main thread
-        initialized = true;
-        lock.unlock();
-        leash.notify_one();
+        graphics_initialization.set_value();
         a->run(*w);
         // Advertise that the graphics is shutting down
         w->done = true;
       } };
     // Wait for the graphics to start
-    {
-      std::unique_lock lock { graphics_protection };
-      leash.wait(lock, [&] { return initialized; } );
-    }
+    graphics_initialization.get_future().get();
   }
 
 
