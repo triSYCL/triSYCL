@@ -275,7 +275,7 @@ struct image_grid : frame_grid {
 
 struct application {
   std::thread t;
-  graphics::image_grid *w;
+  std::unique_ptr<graphics::image_grid> w;
   bool initialized = false;
 
   void start(int &argc, char **&argv,
@@ -294,7 +294,7 @@ struct application {
                                    Gio::APPLICATION_NON_UNIQUE);
         /* Create the graphics object in this thread so the dispatcher
            is bound to this thread too */
-        w = new graphics::image_grid { nx, ny, image_x, image_y, zoom };
+        w.reset(new graphics::image_grid { nx, ny, image_x, image_y, zoom });
         w->set_close_action([&] {
             w->done = true;
           });
