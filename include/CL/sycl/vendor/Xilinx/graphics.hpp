@@ -336,6 +336,13 @@ struct application {
     w->update_tile_data_image(x, y, data, min_value, max_value);
   };
 
+
+  ~application() {
+    // If the graphics thread is still running, wait for it to exit
+    if (t.joinable())
+      wait();
+  }
+
 };
 
 }

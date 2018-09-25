@@ -79,12 +79,4 @@ int main(int argc, char *argv[]) {
 
   // Launch the MathEngine program
   me.run();
-/*
-  std::int32_t pixel = 2;
-  a.update_tile_data_image(1, 2, &pixel, 0, 8);
-  pixel = 7;
-  a.update_tile_data_image(1, 2, &pixel, 0, 8);
-*/
- // Wait for the graphics to stop
-  a.wait();
 }
