@@ -1,6 +1,7 @@
 #ifndef TRISYCL_SYCL_VEC_DETAIL_VEC_HPP
 #define TRISYCL_SYCL_VEC_DETAIL_VEC_HPP
 
+#include <cstring>
 /** \file
 
     Implement the detail base OpenCL vector class
@@ -101,6 +102,13 @@ public:
   auto get_size() const {
     return NumElements * sizeof(DataType);
   }
+
+  template<typename asT> asT as() const {
+    asT result;
+    assert(result.get_size() == this->get_size());
+    std::memcpy(result.data(), this->data(), this->get_size());
+    return result;
+  };
 
   /// \todo To implement swizzles
 };
