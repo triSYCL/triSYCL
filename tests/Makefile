@@ -261,9 +261,11 @@ execute: $(basename $(TARGET))
 	$<
 
 # Feed the test into Clang-based RTags indexer to be used inside Emacs IDE
-# with make some_cpp_file.rtags
+# with make some_cpp_file.rtags.
+# Use intermediate "echo $(shell ...)" before sending to rtags to
+# evaluate any ` `, such as the one with pkgconfig for gtkmm
 %.rtags: %.cpp
-	$(MAKE) --just-print --assume-new=$< $* | rc -c -
+	echo $(shell $(MAKE) --just-print --assume-new=$< $*) | rc -c -
 
 # To debug the Clang/LLVM triSYCL compiler
 # Assume that CXX contains some Clang compiler version
