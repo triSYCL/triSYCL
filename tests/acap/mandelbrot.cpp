@@ -12,7 +12,7 @@
 using namespace cl::sycl::vendor::xilinx;
 
 static auto constexpr image_size = 229;
-std::unique_ptr<graphics::app> a;
+graphics::application a;
 
 // All the memory modules are the same
 template <typename ME_Array, int X, int Y>
@@ -47,19 +47,19 @@ struct mandelbrot : acap::me::tile<ME_Array, X, Y> {
         }
         m.plane[j][i] = k;
       }
-    a->update_tile_data_image(t::x, t::y, &m.plane[0][0], 0, 255);
+    a.update_tile_data_image(t::x, t::y, &m.plane[0][0], 0, 255);
   }
 };
 
 int main(int argc, char *argv[]) {
   acap::me::array<acap::me::layout::size<2,3>, mandelbrot, memory> me;
   // Open a graphic view of a ME array
-  a.reset(new graphics::app { argc, argv, decltype(me)::geo::x_size,
-                              decltype(me)::geo::y_size,
-                              image_size, image_size, 1 });
+  a.start(argc, argv, decltype(me)::geo::x_size,
+          decltype(me)::geo::y_size,
+          image_size, image_size, 1);
 
   // Launch the MathEngine program
   me.run();
   // Wait for the graphics to stop
-  a->wait();
+  a.wait();
 }
