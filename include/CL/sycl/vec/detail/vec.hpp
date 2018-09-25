@@ -103,6 +103,17 @@ public:
     return NumElements * sizeof(DataType);
   }
 
+  template<typename convertT, rounding_mode roundingMode>
+  vec<convertT, NumElements> convert() const {
+    vec<convertT, NumElements> result;
+
+    assert(result.get_count() == this->get_count());
+    for (int n = 0; n < NumElements; n++) {
+      result[n] = (*this)[n];
+    }
+    return result;
+  };
+
   template<typename asT> asT as() const {
     asT result;
     assert(result.get_size() == this->get_size());
