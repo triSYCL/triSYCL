@@ -86,7 +86,7 @@ namespace cl::sycl {
   }
 
 template<typename DataType>
-class vec<DataType, 1> : public detail::vec<DataType, 1> {
+class alignas(sizeof(DataType)) vec<DataType, 1> : public detail::vec<DataType, 1> {
   using base_vec = detail::vec<DataType, 1>;
 
 public:
@@ -108,7 +108,7 @@ public:
 };
 
 template<typename DataType>
-class vec<DataType, 2> : public detail::vec<DataType, 2> {
+class alignas(sizeof(DataType) * 2) vec<DataType, 2> : public detail::vec<DataType, 2> {
   using base_vec = detail::vec<DataType, 2>;
 
 public:
@@ -133,7 +133,7 @@ public:
 };
 
 template<typename DataType>
-class vec<DataType, 3> : public detail::vec<DataType, 3> {
+class alignas(sizeof(DataType) * 4) vec<DataType, 3> : public detail::vec<DataType, 3> {
   using base_vec = detail::vec<DataType, 3>;
 
 public:
@@ -165,7 +165,7 @@ public:
 };
 
 template<typename DataType>
-class vec<DataType, 4> : public detail::vec<DataType, 4> {
+class alignas(sizeof(DataType) * 4) vec<DataType, 4> : public detail::vec<DataType, 4> {
   using base_vec = detail::vec<DataType, 4>;
 
 public:
@@ -228,7 +228,7 @@ public:
 };
 
 template<typename DataType>
-class vec<DataType, 8> : public detail::vec<DataType, 8> {
+class  alignas(sizeof(DataType) * 8) vec<DataType, 8> : public detail::vec<DataType, 8> {
   using base_vec = detail::vec<DataType, 8>;
 
 public:
@@ -249,7 +249,7 @@ public:
 
 
 template<typename DataType>
-class vec<DataType, 16> : public detail::vec<DataType, 16> {
+class alignas(sizeof(DataType) * 16) vec<DataType, 16> : public detail::vec<DataType, 16> {
   using base_vec = detail::vec<DataType, 16>;
 
 public:
