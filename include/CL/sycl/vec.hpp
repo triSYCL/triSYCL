@@ -101,6 +101,10 @@ public:
   }
 
   TRISYCL_DECLARE_S(0);
+
+  operator DataType() const {
+    return (*this)[0];
+  }
 };
 
 template<typename DataType>
