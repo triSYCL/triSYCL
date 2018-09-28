@@ -31,6 +31,8 @@ class vec : public detail::small_array<DataType,
   using basic_type = typename detail::small_array<DataType,
                                                   cl::sycl::vec<DataType, NumElements>,
                                                   NumElements>;
+
+  using out_type = typename cl::sycl::vec<DataType, NumElements>;
 public:
 
   /** Construct a vec from anything from a scalar (to initialize all the
@@ -142,8 +144,79 @@ public:
     return static_cast<__swizzled_vec__<DataType, sizeof...(swizzleIndexs)>>(swizzle(swizzleIndexs...));
   }
 
+  out_type &operator++() {
+    for (int n = 0; n < NumElements; n++)
+      ++(*this)[n];
+    return *(out_type *)this;
+  }
+
+  out_type &operator--() {
+    for (int n = 0; n < NumElements; n++)
+      --(*this)[n];
+    return *(out_type *)this;
+  }
+
+  out_type operator++(int) {
+    out_type prev(*this);
+    ++(*this);
+    return prev;
+  }
+
+  out_type operator--(int) {
+    out_type prev(*this);
+    --(*this);
+    return prev;
+  }
+
+  out_type operator~() {
+    out_type result;
+    for (int n = 0; n < NumElements; n++)
+      result[n] = ~((*this)[n]);
+    return result;
+  }
+
+  out_type operator!() {
+    out_type result;
+    for (int n = 0; n < NumElements; n++)
+      result[n] = !((*this)[n]);
+    return result;
+  }
+
+  out_type operator==(const DataType rhs) const {
+    out_type result;
+    for (int n = 0; n < NumElements; n++)
+      result[n] = ((*this)[n]) == rhs;
+    return result;
+  }
+
+  out_type operator!=(const DataType rhs) const {
+    out_type result;
+    for (int n = 0; n < NumElements; n++)
+      result[n] = ((*this)[n]) != rhs;
+    return result;
+  }
+
 };
 
+#define TRISYCL_OPERATOR_BASIC_TYPE_OP(op)                              \
+  template <typename DataType, int NumElements>                         \
+  cl::sycl::vec<DataType, NumElements> operator op(	                \
+    const DataType &lhs,                                                \
+    const vec<DataType, NumElements> &rhs)                              \
+  {                                                                     \
+    cl::sycl::vec<DataType, NumElements> res;				\
+    for (std::size_t i = 0; i != NumElements; ++i)                      \
+      res[i] = lhs op rhs[i];                                           \
+    return res;                                                         \
+  }
+
+
+TRISYCL_OPERATOR_BASIC_TYPE_OP(&&);
+TRISYCL_OPERATOR_BASIC_TYPE_OP(||);
+
+TRISYCL_OPERATOR_BASIC_TYPE_OP(==);
+TRISYCL_OPERATOR_BASIC_TYPE_OP(!=);
+#undef TRISYCL_OPERATOR_BASIC_TYPE_OP
 
 };
 
