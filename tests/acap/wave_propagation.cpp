@@ -28,7 +28,8 @@ using namespace cl::sycl::vendor::xilinx;
 namespace fundamentals_v3 = std::experimental::fundamentals_v3;
 
 // The size of the machine to use
-using layout = acap::me::layout::size<5,4>;
+//using layout = acap::me::layout::size<5,4>;
+using layout = acap::me::layout::size<2,1>;
 using geography = acap::me::geography<layout>;
 boost::barrier b1 { geography::size };
 boost::barrier b2 { geography::size };
@@ -40,6 +41,8 @@ boost::barrier b4 { geography::size };
 static auto constexpr K = 1/300.0;
 static auto constexpr g = 9.81;
 static auto constexpr alpha = K*g;
+static auto constexpr damping = 0.999;
+
 static auto constexpr image_size = 100;
 static auto constexpr x_drop = 90;
 static auto constexpr y_drop = 7;
@@ -125,7 +128,7 @@ struct reference_wave_propagation {
         // Integrate depth
         w(j,i) += wp(j,i);
         // Add some dissipation for the damping
-        w(j,i) *= 0.999;
+        w(j,i) *= damping;
       }
   }
 
@@ -256,9 +259,39 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
     b1.wait();
 
     auto& m = t::mem();
-    if constexpr (!t::is_right_column()) {
-      m.lu.locks[10].acquire_with_value(false);
+
+// Transfer first column of w to next memory module on the left
+    if constexpr (Y & 1) {
+      if constexpr (t::is_memory_module_right()) {
+        auto& right = t::mem_right();
+        right.lu.locks[1].acquire_with_value(false);
+        for (int j = 0; j < image_size; ++j)
+          m.w[j][image_size - 1] = right.w[j][0];
+        right.lu.locks[1].release_with_value(true);
+      }
+      if constexpr (!t::is_left_column()) {
+        m.lu.locks[1].acquire_with_value(true);
+        m.lu.locks[1].release_with_value(false);
+      }
     }
+    if constexpr (!(Y & 1)) {
+      if constexpr (t::is_memory_module_left()) {
+        auto& left = t::mem_left();
+        left.lu.locks[1].acquire_with_value(false);
+        for (int j = 0; j < image_size; ++j)
+          left.w[j][image_size - 1] = m.w[j][0];
+        left.lu.locks[1].release_with_value(true);
+      }
+      if constexpr (!t::is_right_column()) {
+        m.lu.locks[1].acquire_with_value(true);
+        m.lu.locks[1].release_with_value(false);
+      }
+    }
+
+
+//    if constexpr (!t::is_right_column()) {
+//      m.lu.locks[10].acquire_with_value(false);
+//    }
     for (int j = 0; j < image_size - 1; ++j)
       for (int i = 0; i < image_size - 1; ++i) {
         // grad w
@@ -271,13 +304,46 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
 
     b2.wait();
 
-    // Transfer first line of u to next memory module on the left
+// Transfer last column of u to next memory module on the right
     if constexpr (Y & 1) {
       if constexpr (t::is_memory_module_right()) {
         auto& right = t::mem_right();
         right.lu.locks[2].acquire_with_value(false);
         for (int j = 0; j < image_size; ++j)
+// Do we need to reduce array size ?
+          right.u[j][0] = m.u[j][image_size - 1];
+        right.lu.locks[2].release_with_value(true);
+      }
+      if constexpr (!t::is_left_column()) {
+        m.lu.locks[2].acquire_with_value(true);
+        m.lu.locks[2].release_with_value(false);
+      }
+    }
+    if constexpr (!(Y & 1)) {
+      if constexpr (t::is_memory_module_left()) {
+        auto& left = t::mem_left();
+        left.lu.locks[2].acquire_with_value(false);
+        for (int j = 0; j < image_size; ++j)
+          m.u[j][0] = left.u[j][image_size - 1];
+        left.lu.locks[2].release_with_value(true);
+      }
+      if constexpr (!t::is_right_column()) {
+        m.lu.locks[2].acquire_with_value(true);
+        m.lu.locks[2].release_with_value(false);
+      }
+    }
+#if 0
+    // Transfer first column of u to next memory module on the left
+    if constexpr (Y & 1) {
+      if constexpr (t::is_memory_module_right()) {
+        auto& right = t::mem_right();
+        right.lu.locks[2].acquire_with_value(false);
+        for (int j = 0; j < image_size; ++j) {
+if (right.u[j][0] != 0)
+std::cerr << "t::is_memory_module_right() right.u[" << j << "][0] = "
+          << right.u[j][0] << std::endl;
           m.u[j][image_size - 1] = right.u[j][0];
+}
         right.lu.locks[2].release_with_value(true);
       }
       if constexpr (!t::is_left_column()) {
@@ -303,7 +369,7 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         m.lu.locks[10].release_with_value(false);
       }
     }
-
+#endif
     b3.wait();
 
     if constexpr (t::is_memory_module_down()) {
@@ -328,7 +394,7 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         // Integrate depth
         m.w[j][i] += m.wp[j][i];
         // Add some dissipation for the damping
-        m.w[j][i] *= 0.999;
+        m.w[j][i] *= damping;
       }
 
     b1.wait();
@@ -346,7 +412,7 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
     }
 
     b2.wait();
-
+#if 0
     // Transfer last line of w to next memory module on the right
     if constexpr (Y & 1) {
       if constexpr (t::is_memory_module_right()) {
@@ -374,6 +440,7 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         m.lu.locks[1].release_with_value(false);
       }
     }
+#endif
     TRISYCL_DEBUG_ONLY(static int iteration = 0;
                        auto [min_element, max_element] = minmax_element(m.w);)
     TRISYCL_DUMP_T(std::dec << "compute(" << X << ',' << Y
