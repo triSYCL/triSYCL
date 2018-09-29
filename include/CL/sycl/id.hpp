@@ -18,7 +18,7 @@
 namespace cl {
 namespace sycl {
 
-template <int Dimensions> class item;
+template <int Dimensions, bool with_offset> class item;
 
 /** \addtogroup parallelism Expressing parallelism through kernels
     @{
@@ -52,7 +52,7 @@ public:
 
 
   /// Construct an id from an item global_id
-  id(const item<Dimensions> &rhs)
+  id(const item<Dimensions, true> &rhs)
     : detail::small_array_123<std::size_t, id<Dimensions>, Dimensions>
       { rhs.get_id() }
   {}
