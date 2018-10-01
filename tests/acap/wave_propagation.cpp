@@ -43,10 +43,17 @@ static auto constexpr g = 9.81;
 static auto constexpr alpha = K*g;
 static auto constexpr damping = 0.999;
 
+#if 0
 static auto constexpr image_size = 100;
 static auto constexpr x_drop = 90;
 static auto constexpr y_drop = 7;
 static auto constexpr drop_value = 100;
+#else
+static auto constexpr image_size = 3;
+static auto constexpr x_drop = 1;
+static auto constexpr y_drop = 1;
+static auto constexpr drop_value = 10;
+#endif
 
 graphics::application a;
 
@@ -104,20 +111,25 @@ struct reference_wave_propagation {
         depth(j,i) = 2600.0;
       }
 //    w(size_y/3,size_x/2+size_x/4) = 100;
-    w(y_drop,x_drop) = drop_value;
+    w(y_drop,x_drop+(image_size-1)) = drop_value;
 //    if (X == 0 && Y == 0) m.w[image_size/3][image_size/2+image_size/4] = 100;
   }
 
 
   /// Compute a time-step of wave propagation
   void compute() {
-    for (int j = 0; j < size_y - 1; ++j)
+    for (int j = 0; j < size_y; ++j)
       for (int i = 0; i < size_x - 1; ++i) {
-        // grad w
+        // dw/dx
         up(j,i) = w(j,i + 1) - w(j,i);
-        vp(j,i) = w(j + 1,i) - w(j,i);
-        // Integrate speed
+        // Integrate horizontal speed
         u(j,i) += up(j,i)*alpha;
+      }
+    for (int j = 0; j < size_y - 1; ++j)
+      for (int i = 0; i < size_x; ++i) {
+        // dw/dy
+        vp(j,i) = w(j + 1,i) - w(j,i);
+        // Integrate vertical speed
         v(j,i) += vp(j,i)*alpha;
       }
     for (int j = 1; j < size_y; ++j)
@@ -129,6 +141,10 @@ struct reference_wave_propagation {
         w(j,i) += wp(j,i);
         // Add some dissipation for the damping
         w(j,i) *= damping;
+        if (i == 2 & j == 1) {
+          std::cerr << "w(" << j << "," << i << ") = "
+                    << w(j,i) << std::endl;
+        }
       }
   }
 
@@ -251,7 +267,7 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         m.side[j][i] = K;
         m.depth[j][i] = 2600.0;
       }
-    if (X == 0 && Y == 0)
+    if (X == 1 && Y == 0)
       m.w[y_drop][x_drop] = drop_value;
   }
 
@@ -260,90 +276,32 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
 
     auto& m = t::mem();
 
-// Transfer first column of w to next memory module on the left
-    if constexpr (Y & 1) {
-      if constexpr (t::is_memory_module_right()) {
-        auto& right = t::mem_right();
-        right.lu.locks[1].acquire_with_value(false);
-        for (int j = 0; j < image_size; ++j)
-          m.w[j][image_size - 1] = right.w[j][0];
-        right.lu.locks[1].release_with_value(true);
-      }
-      if constexpr (!t::is_left_column()) {
-        m.lu.locks[1].acquire_with_value(true);
-        m.lu.locks[1].release_with_value(false);
-      }
-    }
-    if constexpr (!(Y & 1)) {
-      if constexpr (t::is_memory_module_left()) {
-        auto& left = t::mem_left();
-        left.lu.locks[1].acquire_with_value(false);
-        for (int j = 0; j < image_size; ++j)
-          left.w[j][image_size - 1] = m.w[j][0];
-        left.lu.locks[1].release_with_value(true);
-      }
-      if constexpr (!t::is_right_column()) {
-        m.lu.locks[1].acquire_with_value(true);
-        m.lu.locks[1].release_with_value(false);
-      }
-    }
-
-
-//    if constexpr (!t::is_right_column()) {
-//      m.lu.locks[10].acquire_with_value(false);
-//    }
-    for (int j = 0; j < image_size - 1; ++j)
+    for (int j = 0; j < image_size; ++j)
       for (int i = 0; i < image_size - 1; ++i) {
-        // grad w
+        // dw/dx
+        m.up[j][i] = m.w[j][i + 1] - m.w[j][i];
+        // Integrate horizontal speed
+        m.u[j][i] += m.up[j][i]*alpha;
+      }
+
+    for (int j = 0; j < image_size - 1; ++j)
+      for (int i = 0; i < image_size; ++i) {
+        // dw/dy
         m.up[j][i] = m.w[j][i + 1] - m.w[j][i];
         m.vp[j][i] = m.w[j + 1][i] - m.w[j][i];
-        // Integrate speed
-        m.u[j][i] += m.up[j][i]*alpha;
+        // Integrate vertical speed
         m.v[j][i] += m.vp[j][i]*alpha;
       }
 
     b2.wait();
 
-// Transfer last column of u to next memory module on the right
-    if constexpr (Y & 1) {
-      if constexpr (t::is_memory_module_right()) {
-        auto& right = t::mem_right();
-        right.lu.locks[2].acquire_with_value(false);
-        for (int j = 0; j < image_size; ++j)
-// Do we need to reduce array size ?
-          right.u[j][0] = m.u[j][image_size - 1];
-        right.lu.locks[2].release_with_value(true);
-      }
-      if constexpr (!t::is_left_column()) {
-        m.lu.locks[2].acquire_with_value(true);
-        m.lu.locks[2].release_with_value(false);
-      }
-    }
-    if constexpr (!(Y & 1)) {
-      if constexpr (t::is_memory_module_left()) {
-        auto& left = t::mem_left();
-        left.lu.locks[2].acquire_with_value(false);
-        for (int j = 0; j < image_size; ++j)
-          m.u[j][0] = left.u[j][image_size - 1];
-        left.lu.locks[2].release_with_value(true);
-      }
-      if constexpr (!t::is_right_column()) {
-        m.lu.locks[2].acquire_with_value(true);
-        m.lu.locks[2].release_with_value(false);
-      }
-    }
-#if 0
     // Transfer first column of u to next memory module on the left
     if constexpr (Y & 1) {
       if constexpr (t::is_memory_module_right()) {
         auto& right = t::mem_right();
         right.lu.locks[2].acquire_with_value(false);
-        for (int j = 0; j < image_size; ++j) {
-if (right.u[j][0] != 0)
-std::cerr << "t::is_memory_module_right() right.u[" << j << "][0] = "
-          << right.u[j][0] << std::endl;
+        for (int j = 0; j < image_size; ++j)
           m.u[j][image_size - 1] = right.u[j][0];
-}
         right.lu.locks[2].release_with_value(true);
       }
       if constexpr (!t::is_left_column()) {
@@ -354,22 +312,17 @@ std::cerr << "t::is_memory_module_right() right.u[" << j << "][0] = "
     if constexpr (!(Y & 1)) {
       if constexpr (t::is_memory_module_left()) {
         auto& left = t::mem_left();
-        left.lu.locks[10].acquire_with_value(true);
         left.lu.locks[2].acquire_with_value(false);
         for (int j = 0; j < image_size; ++j)
           left.u[j][image_size - 1] = m.u[j][0];
         left.lu.locks[2].release_with_value(true);
-        left.lu.locks[10].release_with_value(false);
       }
       if constexpr (!t::is_right_column()) {
-        m.lu.locks[10].release_with_value(true);
         m.lu.locks[2].acquire_with_value(true);
         m.lu.locks[2].release_with_value(false);
-        m.lu.locks[10].acquire_with_value(false);
-        m.lu.locks[10].release_with_value(false);
       }
     }
-#endif
+
     b3.wait();
 
     if constexpr (t::is_memory_module_down()) {
@@ -395,6 +348,12 @@ std::cerr << "t::is_memory_module_right() right.u[" << j << "][0] = "
         m.w[j][i] += m.wp[j][i];
         // Add some dissipation for the damping
         m.w[j][i] *= damping;
+        if (X == 0 && i == 2 & j == 1) {
+          std::cerr << "m.w[" << j << "][" << i << "] = "
+                    << m.w[j][i] << std::endl;
+          //std::cerr << "t::is_memory_module_right() right.u[" << j << "][0] = "
+          //<< right.u[j][0] << std::endl;
+        }
       }
 
     b1.wait();
@@ -412,7 +371,7 @@ std::cerr << "t::is_memory_module_right() right.u[" << j << "][0] = "
     }
 
     b2.wait();
-#if 0
+
     // Transfer last line of w to next memory module on the right
     if constexpr (Y & 1) {
       if constexpr (t::is_memory_module_right()) {
@@ -440,7 +399,9 @@ std::cerr << "t::is_memory_module_right() right.u[" << j << "][0] = "
         m.lu.locks[1].release_with_value(false);
       }
     }
-#endif
+
+    b3.wait();
+
     TRISYCL_DEBUG_ONLY(static int iteration = 0;
                        auto [min_element, max_element] = minmax_element(m.w);)
     TRISYCL_DUMP_T(std::dec << "compute(" << X << ',' << Y
@@ -469,7 +430,7 @@ int main(int argc, char *argv[]) {
 
   a.start(argc, argv, decltype(me)::geo::x_size,
           decltype(me)::geo::y_size,
-          image_size, image_size, 2);
+          image_size, image_size, 20);
 #if 0
   // Run the sequential reference implementation
   seq.run();
