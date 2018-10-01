@@ -249,8 +249,6 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
   }
 
   void compute() {
-    b1.wait();
-
     auto& m = t::mem();
 
     for (int j = 0; j < image_size; ++j)
@@ -268,8 +266,6 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         // Integrate vertical speed
         m.v[j][i] += vp*alpha;
       }
-
-    b2.wait();
 
     // Transfer first column of u to next memory module on the left
     if constexpr (Y & 1) {
@@ -299,8 +295,6 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
       }
     }
 
-    b3.wait();
-
     if constexpr (t::is_memory_module_down()) {
       auto& below = t::mem_down();
       below.lu.locks[3].acquire_with_value(false);
@@ -313,8 +307,6 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
       m.lu.locks[3].release_with_value(false);
     }
 
-    b4.wait();
-
     for (int j = 1; j < image_size; ++j)
       for (int i = 1; i < image_size; ++i) {
         // div speed
@@ -325,8 +317,6 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         // Add some dissipation for the damping
         m.w[j][i] *= damping;
       }
-
-    b1.wait();
 
     if constexpr (t::is_memory_module_up()) {
       auto& above = t::mem_up();
@@ -339,8 +329,6 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
       m.lu.locks[0].acquire_with_value(true);
       m.lu.locks[0].release_with_value(false);
     }
-
-    b2.wait();
 
     // Transfer last line of w to next memory module on the right
     if constexpr (Y & 1) {
@@ -369,8 +357,6 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         m.lu.locks[1].release_with_value(false);
       }
     }
-
-    b3.wait();
 
     TRISYCL_DEBUG_ONLY(static int iteration = 0;
                        auto [min_element, max_element] = minmax_element(m.w);)
