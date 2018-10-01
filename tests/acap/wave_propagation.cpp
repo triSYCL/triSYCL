@@ -28,15 +28,16 @@ using namespace cl::sycl::vendor::xilinx;
 namespace fundamentals_v3 = std::experimental::fundamentals_v3;
 
 // The size of the machine to use
-//using layout = acap::me::layout::size<5,4>;
-using layout = acap::me::layout::size<2,1>;
+using layout = acap::me::layout::size<5,4>;
+//using layout = acap::me::layout::size<2,1>;
 using geography = acap::me::geography<layout>;
 boost::barrier b1 { geography::size };
 boost::barrier b2 { geography::size };
 boost::barrier b3 { geography::size };
 boost::barrier b4 { geography::size };
 
-
+/// Predicate for time-step comparison with sequential cosimulation
+#define COMPARE_WITH_SEQUENTIAL_EXECUTION 0
 
 static auto constexpr K = 1/300.0;
 static auto constexpr g = 9.81;
@@ -184,6 +185,7 @@ struct reference_wave_propagation {
 
   template <typename Mem>
   void compare_with_sequential_reference(int time, int x, int y, Mem &m) {
+#if COMPARE_WITH_SEQUENTIAL_EXECUTION
     {
       std::lock_guard lg { protect_time };
       TRISYCL_DUMP_T(std::dec << "TILE(" << x << ',' << y << ") Time local: "
@@ -198,6 +200,7 @@ struct reference_wave_propagation {
       compare_with_sequential_reference_e("u", x, y, m.u, u);
       compare_with_sequential_reference_e("v", x, y, m.v, v);
     }
+#endif
   }
 };
 
@@ -382,7 +385,6 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
     fundamentals_v3::mdspan<double, image_size, image_size> md { &m.w[0][0] };
     /// Loop on simulated time
     for (int time = 0; !a.is_done(); ++time) {
-      // Uncomment this to have sequential cosimulation and comparison
       seq.compare_with_sequential_reference(time, t::x, t::y, m);
       compute();
       a.update_tile_data_image(t::x, t::y, md, -1.0, 1.0);
