@@ -215,7 +215,8 @@ function(add_sycl_to_target targetName)
     $<$<BOOL:${TRISYCL_OPENCL}>:${OpenCL_LIBRARIES}>
     Threads::Threads
     $<$<BOOL:${LOG_NEEDED}>:Boost::log>
-    Boost::chrono)
+    Boost::chrono
+    Boost::filesystem)
 
   # Compile definitions
   target_compile_definitions(${targetName} PUBLIC
