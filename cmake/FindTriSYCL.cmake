@@ -216,7 +216,7 @@ function(add_sycl_to_target targetName)
     Threads::Threads
     $<$<BOOL:${LOG_NEEDED}>:Boost::log>
     Boost::chrono
-    Boost::filesystem)
+    $<$<BOOL:${TRISYCL_OPENCL}>:Boost::filesystem>) #Required by BOOST_COMPUTE_USE_OFFLINE_CACHE.
 
   # Compile definitions
   target_compile_definitions(${targetName} PUBLIC
