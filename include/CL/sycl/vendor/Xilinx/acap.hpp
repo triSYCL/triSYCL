@@ -10,7 +10,7 @@
     March 2018
 */
 
-// For now only MathEngine stuff
+#include "acap/debug.hpp"
 #include "acap/me.hpp"
 
 /*

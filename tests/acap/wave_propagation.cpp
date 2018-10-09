@@ -182,26 +182,11 @@ struct reference_wave_propagation {
   */
   static inline int global_time = 0;
   static inline std::mutex protect_time;
-  static inline std::array<std::atomic<int>, geography::size>
-  vector_clock_alloc;
-  fundamentals_v3::mdspan<std::atomic<int>,
-                          geography::x_size,
-                          geography::y_size>
-  vector_clock { &vector_clock_alloc[0] };
+  static inline acap::debug::bsp_checker<geography> bsp_checker;
 
   template <typename Mem>
   void compare_with_sequential_reference(int time, int x, int y, Mem &m) {
-    ++vector_clock(x, y);
-    auto [min_element, max_element] =
-      std::minmax_element(vector_clock_alloc.cbegin(),
-                          vector_clock_alloc.cend());
-
-    if (*max_element - *min_element > 1) {
-      TRISYCL_DUMP_T(std::dec << "compute(" << x << ',' << y
-                  << ") vector clock min"
-                  << *min_element << ", max = " << *max_element);
-      std::terminate();
-    }
+    bsp_checker.check(x, y);
 
 #if COMPARE_WITH_SEQUENTIAL_EXECUTION
     {
