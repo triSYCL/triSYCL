@@ -28,8 +28,8 @@ using namespace cl::sycl::vendor::xilinx;
 namespace fundamentals_v3 = std::experimental::fundamentals_v3;
 
 // The size of the machine to use
-using layout = acap::me::layout::size<5,4>;
-//using layout = acap::me::layout::size<2,1>;
+//using layout = acap::me::layout::size<5,4>;
+using layout = acap::me::layout::size<2,1>;
 using geography = acap::me::geography<layout>;
 boost::barrier b1 { geography::size };
 boost::barrier b2 { geography::size };
@@ -47,7 +47,7 @@ static auto constexpr damping = 0.999;
 static auto constexpr image_size = 100;
 static auto constexpr x_drop = 90;
 static auto constexpr y_drop = 7;
-static auto constexpr drop_value = 10;
+static auto constexpr drop_value = 20;
 
 graphics::application a;
 
@@ -182,9 +182,27 @@ struct reference_wave_propagation {
   */
   static inline int global_time = 0;
   static inline std::mutex protect_time;
+  static inline std::array<std::atomic<int>, geography::size>
+  vector_clock_alloc;
+  fundamentals_v3::mdspan<std::atomic<int>,
+                          geography::x_size,
+                          geography::y_size>
+  vector_clock { &vector_clock_alloc[0] };
 
   template <typename Mem>
   void compare_with_sequential_reference(int time, int x, int y, Mem &m) {
+    ++vector_clock(x, y);
+    auto [min_element, max_element] =
+      std::minmax_element(vector_clock_alloc.cbegin(),
+                          vector_clock_alloc.cend());
+
+    if (*max_element - *min_element > 1) {
+      TRISYCL_DUMP_T(std::dec << "compute(" << x << ',' << y
+                  << ") vector clock min"
+                  << *min_element << ", max = " << *max_element);
+      std::terminate();
+    }
+
 #if COMPARE_WITH_SEQUENTIAL_EXECUTION
     {
       std::lock_guard lg { protect_time };
@@ -373,6 +391,7 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
     for (int time = 0; !a.is_done(); ++time) {
       seq.compare_with_sequential_reference(time, t::x, t::y, m);
       compute();
+      //b1.wait();
       a.update_tile_data_image(t::x, t::y, md, -1.0, 1.0);
     }
   }
@@ -385,7 +404,7 @@ int main(int argc, char *argv[]) {
 
   a.start(argc, argv, decltype(me)::geo::x_size,
           decltype(me)::geo::y_size,
-          image_size, image_size, 2);
+          image_size, image_size, 1);
 #if 0
   // Run the sequential reference implementation
   seq.run();
