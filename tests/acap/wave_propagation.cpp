@@ -29,7 +29,7 @@ namespace fundamentals_v3 = std::experimental::fundamentals_v3;
 
 // The size of the machine to use
 //using layout = acap::me::layout::size<5,4>;
-using layout = acap::me::layout::size<2,1>;
+using layout = acap::me::layout::size<10,1>;
 using geography = acap::me::geography<layout>;
 boost::barrier b1 { geography::size };
 boost::barrier b2 { geography::size };
@@ -37,7 +37,7 @@ boost::barrier b3 { geography::size };
 boost::barrier b4 { geography::size };
 
 /// Predicate for time-step comparison with sequential cosimulation
-#define COMPARE_WITH_SEQUENTIAL_EXECUTION 0
+#define COMPARE_WITH_SEQUENTIAL_EXECUTION 1
 
 static auto constexpr K = 1/300.0;
 static auto constexpr g = 9.81;
@@ -291,10 +291,14 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         for (int j = 0; j < image_size; ++j)
           left.u[j][image_size - 1] = m.u[j][0];
         left.lu.locks[2].release_with_value(true);
+        left.lu.locks[6].acquire_with_value(true);
+        left.lu.locks[6].release_with_value(false);
       }
       if constexpr (!t::is_right_column()) {
+        m.lu.locks[6].acquire_with_value(false);
         m.lu.locks[2].acquire_with_value(true);
         m.lu.locks[2].release_with_value(false);
+        m.lu.locks[6].release_with_value(true);
       }
     }
 
@@ -320,6 +324,8 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         // Add some dissipation for the damping
         m.w[j][i] *= damping;
       }
+
+b4.wait();
 
     if constexpr (t::is_memory_module_up()) {
       auto& above = t::mem_up();
@@ -354,10 +360,14 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         for (int j = 0; j < image_size; ++j)
           m.w[j][0] = left.w[j][image_size - 1];
         left.lu.locks[1].release_with_value(true);
+        left.lu.locks[5].acquire_with_value(true);
+        left.lu.locks[5].release_with_value(false);
       }
       if constexpr (!t::is_right_column()) {
+        m.lu.locks[5].acquire_with_value(false);
         m.lu.locks[1].acquire_with_value(true);
         m.lu.locks[1].release_with_value(false);
+        m.lu.locks[5].release_with_value(true);
       }
     }
 
