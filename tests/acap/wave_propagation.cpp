@@ -325,8 +325,6 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         m.w[j][i] *= damping;
       }
 
-b4.wait();
-
     if constexpr (t::is_memory_module_up()) {
       auto& above = t::mem_up();
       above.lu.locks[0].acquire_with_value(false);
@@ -338,6 +336,9 @@ b4.wait();
       m.lu.locks[0].acquire_with_value(true);
       m.lu.locks[0].release_with_value(false);
     }
+
+    //    b4.wait();
+    t::horizontal_barrier();
 
     // Transfer last line of w to next memory module on the right
     if constexpr (Y & 1) {

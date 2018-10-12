@@ -219,6 +219,32 @@ struct tile {
                   " output on the tile that starts the stream");
     return me_array->cs.template get_cascade_stream_out<T, Target>(x, y);
   }
+
+
+  /** An horizontal barrier using a lock
+
+      \param[in] lock is the ME lock to use. lock 14 is used by default
+  */
+  void horizontal_barrier(int lock = 14) {
+    if constexpr (!(y & 1)) {
+      if constexpr (!is_right_column()) {
+        // Wait for the right neighbour to be ready
+        mem().lu.locks[lock].acquire_with_value(true);
+      }
+      if constexpr (is_memory_module_left()) {
+        mem_left().lu.locks[lock].acquire_with_value(false);
+        // Unleash the left neighbour
+        mem_left().lu.locks[lock].release_with_value(true);
+        // Wait for the left neighbour to acknowledge
+        mem_left().lu.locks[lock].acquire_with_value(false);
+       }
+      if constexpr (!is_right_column()) {
+        // Acknowledge to the right neighbour
+        mem().lu.locks[lock].release_with_value(false);
+      }
+    }
+  }
+
 };
 
 }
