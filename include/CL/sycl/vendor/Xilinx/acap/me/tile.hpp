@@ -223,10 +223,31 @@ struct tile {
 
   /** An horizontal barrier using a lock
 
-      \param[in] lock is the ME lock to use. lock 14 is used by default
+      Implement a barrier across the tiles a line.
+
+      \param[in] lock is the ME lock to use. The lock 14 is used by
+      default
   */
   void horizontal_barrier(int lock = 14) {
-    if constexpr (!(y & 1)) {
+    if constexpr (y & 1) {
+      // Propagate a token from left to right and back
+      if constexpr (!is_left_column()) {
+        // Wait for the left neighbour to be ready
+        mem().lu.locks[lock].acquire_with_value(true);
+      }
+      if constexpr (is_memory_module_right()) {
+        mem_right().lu.locks[lock].acquire_with_value(false);
+        // Unleash the right neighbour
+        mem_right().lu.locks[lock].release_with_value(true);
+        // Wait for the right neighbour to acknowledge
+        mem_right().lu.locks[lock].acquire_with_value(false);
+       }
+      if constexpr (!is_left_column()) {
+        // Acknowledge to the left neighbour
+        mem().lu.locks[lock].release_with_value(false);
+      }
+    } else {
+      // Propagate a token from right to left and back
       if constexpr (!is_right_column()) {
         // Wait for the right neighbour to be ready
         mem().lu.locks[lock].acquire_with_value(true);
@@ -243,6 +264,44 @@ struct tile {
         mem().lu.locks[lock].release_with_value(false);
       }
     }
+  }
+
+
+  /** A vertical barrier using a lock
+
+      Implement a barrier across the tiles a line.
+
+      \param[in] lock is the ME lock to use. The lock 15 is used by
+      default
+  */
+  void vertical_barrier(int lock = 15) {
+    // Propagate a token from bottom to top and back
+    if constexpr (!is_bottom_row()) {
+      // Wait for the neighbour below to be ready
+      mem().lu.locks[lock].acquire_with_value(true);
+    }
+    if constexpr (is_memory_module_up()) {
+      mem_up().lu.locks[lock].acquire_with_value(false);
+      // Unleash the neighbour above
+      mem_up().lu.locks[lock].release_with_value(true);
+      // Wait for the neighbour above to acknowledge
+      mem_up().lu.locks[lock].acquire_with_value(false);
+    }
+    if constexpr (!is_bottom_row()) {
+      // Acknowledge to the neighbour below
+      mem().lu.locks[lock].release_with_value(false);
+    }
+  }
+
+
+  /** A full barrier using a lock
+
+      Implement a barrier across the full tile array by using \c
+      horizontal_barrier() and \c vertical_barrier().
+  */
+  void barrier() {
+    horizontal_barrier();
+    vertical_barrier();
   }
 
 };
