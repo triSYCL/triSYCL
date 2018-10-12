@@ -28,8 +28,8 @@ using namespace cl::sycl::vendor::xilinx;
 namespace fundamentals_v3 = std::experimental::fundamentals_v3;
 
 // The size of the machine to use
-//using layout = acap::me::layout::size<5,4>;
-using layout = acap::me::layout::size<8,1>;
+using layout = acap::me::layout::size<5,4>;
+//using layout = acap::me::layout::size<8,1>;
 using geography = acap::me::geography<layout>;
 boost::barrier b1 { geography::size };
 boost::barrier b2 { geography::size };
@@ -270,49 +270,31 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         m.v[j][i] += vp*alpha;
       }
 
+    t::barrier();
+
     // Transfer first column of u to next memory module on the left
     if constexpr (Y & 1) {
       if constexpr (t::is_memory_module_right()) {
         auto& right = t::mem_right();
-        right.lu.locks[2].acquire_with_value(false);
         for (int j = 0; j < image_size; ++j)
           m.u[j][image_size - 1] = right.u[j][0];
-        right.lu.locks[2].release_with_value(true);
-      }
-      if constexpr (!t::is_left_column()) {
-        m.lu.locks[2].acquire_with_value(true);
-        m.lu.locks[2].release_with_value(false);
       }
     }
     if constexpr (!(Y & 1)) {
       if constexpr (t::is_memory_module_left()) {
         auto& left = t::mem_left();
-        left.lu.locks[2].acquire_with_value(false);
         for (int j = 0; j < image_size; ++j)
           left.u[j][image_size - 1] = m.u[j][0];
-        left.lu.locks[2].release_with_value(true);
-        left.lu.locks[6].acquire_with_value(true);
-        left.lu.locks[6].release_with_value(false);
-      }
-      if constexpr (!t::is_right_column()) {
-        m.lu.locks[6].acquire_with_value(false);
-        m.lu.locks[2].acquire_with_value(true);
-        m.lu.locks[2].release_with_value(false);
-        m.lu.locks[6].release_with_value(true);
       }
     }
 
     if constexpr (t::is_memory_module_down()) {
       auto& below = t::mem_down();
-      below.lu.locks[3].acquire_with_value(false);
       for (int i = 0; i < image_size; ++i)
         below.v[image_size - 1][i] = m.v[0][i];
-      below.lu.locks[3].release_with_value(true);
     }
-    if constexpr (!t::is_top_row()) {
-      m.lu.locks[3].acquire_with_value(true);
-      m.lu.locks[3].release_with_value(false);
-    }
+
+    t::barrier();
 
     for (int j = 1; j < image_size; ++j)
       for (int i = 1; i < image_size; ++i) {
@@ -325,52 +307,34 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
         m.w[j][i] *= damping;
       }
 
+    t::barrier();
+
     if constexpr (t::is_memory_module_up()) {
       auto& above = t::mem_up();
-      above.lu.locks[0].acquire_with_value(false);
       for (int i = 0; i < image_size; ++i)
         above.w[0][i] = m.w[image_size - 1][i];
-      above.lu.locks[0].release_with_value(true);
-    }
-    if constexpr (t::is_memory_module_down()) {
-      m.lu.locks[0].acquire_with_value(true);
-      m.lu.locks[0].release_with_value(false);
     }
 
-    //    b4.wait();
-    t::horizontal_barrier();
+    //b4.wait();
+    t::barrier();
 
     // Transfer last line of w to next memory module on the right
     if constexpr (Y & 1) {
       if constexpr (t::is_memory_module_right()) {
         auto& right = t::mem_right();
-        right.lu.locks[1].acquire_with_value(false);
         for (int j = 0; j < image_size; ++j)
           right.w[j][0] = m.w[j][image_size - 1];
-        right.lu.locks[1].release_with_value(true);
-      }
-      if constexpr (!t::is_left_column()) {
-        m.lu.locks[1].acquire_with_value(true);
-        m.lu.locks[1].release_with_value(false);
       }
     }
     if constexpr (!(Y & 1)) {
       if constexpr (t::is_memory_module_left()) {
         auto& left = t::mem_left();
-        left.lu.locks[1].acquire_with_value(false);
         for (int j = 0; j < image_size; ++j)
           m.w[j][0] = left.w[j][image_size - 1];
-        left.lu.locks[1].release_with_value(true);
-        left.lu.locks[5].acquire_with_value(true);
-        left.lu.locks[5].release_with_value(false);
-      }
-      if constexpr (!t::is_right_column()) {
-        m.lu.locks[5].acquire_with_value(false);
-        m.lu.locks[1].acquire_with_value(true);
-        m.lu.locks[1].release_with_value(false);
-        m.lu.locks[5].release_with_value(true);
       }
     }
+
+    t::barrier();
 
     TRISYCL_DEBUG_ONLY(static int iteration = 0;
                        auto [min_element, max_element] = minmax_element(m.w);)
