@@ -29,7 +29,7 @@ namespace fundamentals_v3 = std::experimental::fundamentals_v3;
 
 // The size of the machine to use
 //using layout = acap::me::layout::size<5,4>;
-using layout = acap::me::layout::size<10,1>;
+using layout = acap::me::layout::size<8,1>;
 using geography = acap::me::geography<layout>;
 boost::barrier b1 { geography::size };
 boost::barrier b2 { geography::size };
