@@ -8,6 +8,9 @@
    RUN: %{execute}%s
 */
 
+/// Predicate for time-step comparison with sequential cosimulation
+#define COMPARE_WITH_SEQUENTIAL_EXECUTION 1
+
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
@@ -35,9 +38,6 @@ boost::barrier b1 { geography::size };
 boost::barrier b2 { geography::size };
 boost::barrier b3 { geography::size };
 boost::barrier b4 { geography::size };
-
-/// Predicate for time-step comparison with sequential cosimulation
-#define COMPARE_WITH_SEQUENTIAL_EXECUTION 1
 
 static auto constexpr K = 1/300.0;
 static auto constexpr g = 9.81;
