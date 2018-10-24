@@ -9,13 +9,13 @@ They are typically passed to the compiler by the build system.
 ``CL_SYCL_LANGUAGE_VERSION``:
 
   When defined, set the expected SYCL version to be followed. The
-  default value in triSYCL is ``220``.
+  default value in triSYCL is ``121``.
 
 
 ``TRISYCL_CL_LANGUAGE_VERSION``:
 
     When defined, set the expected triSYCL version to be followed. The
-    default value is ``220``.
+    default value is ``121``.
 
     This is not used yet.
 
