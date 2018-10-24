@@ -123,6 +123,12 @@ Yes, there are some macros used in triSYCL! Look at `Pre-processor
 macros used in triSYCL <doc/macros.rst>`_ to discover some of them.
 
 
+Environment variables used in triSYCL
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+See `Environment variables with triSYCL <doc/environment.rst>`_.
+
+
 Possible futures
 ~~~~~~~~~~~~~~~~
 
