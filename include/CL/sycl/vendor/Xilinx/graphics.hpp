@@ -5,6 +5,15 @@
 
     Based on GTK+3 with GTKMM 3 en C++ wrapper.
 
+    There are several graphical back-ends available with GTK.
+
+    An interesting one is the Broadway X11 back-end, allowing to
+    display in a Web browser :-)
+
+      broadwayd :5 &
+      xdg-open http://127.0.0.1:8085
+      GDK_BACKEND=broadway BROADWAY_DISPLAY=:5 acap/wave_propagation
+
     Ronan at Keryell point FR
 
     This file is distributed under the University of Illinois Open Source
