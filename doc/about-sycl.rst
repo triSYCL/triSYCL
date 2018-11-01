@@ -22,7 +22,7 @@ other approaches:
   Eigen_ or TensorFlow_ in a seamless way;
 
 - SYCL_ abstracts and leverages the concepts behind OpenCL_ and provides
-  higher-level concepts such as tasks (or command group in OpenCL_ SYCL_
+  higher-level concepts such as tasks (or command group in OpenCL_ or SYCL_
   jargon) that allow the runtime to take advantage of a more task
   graph-oriented view of the computations. This allows lazy data
   transfers between accelerators and host or to use platform
@@ -36,7 +36,8 @@ other approaches:
   extension or ``#pragma``, by opposition to `C++AMP`_ or OpenMP_ for
   example. Retargeting the SYCL_ classes and functions to use other
   frameworks such as OpenMP_ 4 or `C++AMP`_ is feasible without
-  rewriting a new compiler for example;
+  rewriting a new compiler for example. This is actually what is done in
+  `hipSYCL`_ implementation;
 
 - easier debugging
 
@@ -60,8 +61,8 @@ other approaches:
   be linked with other parts written in other languages
   (Fortran_...). Thus SYCL_ is already Exascale-ready!
 
-- even if SYCL_ hides the OpenCL_ world by default, it inherits from all
-  the OpenCL_ world:
+- even if SYCL_ hides the OpenCL_ world by default, an OpenCL_-based
+  implementation inherit from all the OpenCL_ world:
 
   - same interoperability as the OpenCL_ underlying platform: Vulkan_,
     OpenGL_, DirectX_...
@@ -116,11 +117,16 @@ Some other implementations
 
 Some other known implementations:
 
-- Codeplay_ has a ComputeCpp_ product implementing SYCL_ based on
-  OpenCL_ SPIR_ with Clang_/LLVM_
+- Codeplay_ provides ComputeCpp_, the most achieved implementation of
+  a fully compliant SYCL_ , based on OpenCL_ & SPIR_ with
+  Clang_/LLVM_. It is not open-source but there is a free community version
   https://www.codeplay.com/products/computesuite/computecpp
 
-- SYCL-GTX https://github.com/ProGTX/sycl-gtx
+- hipSYCL_, an implementation of SYCL_ over nVidia CUDA_ or AMD HIP_
+  https://github.com/illuhad/hipSYCL
+
+- SYCL-GTX, an implementation using some macros to avoid relying on a
+  device compiler https://github.com/ProGTX/sycl-gtx
 
 
 Some presentations and publications related to SYCL
@@ -320,6 +326,8 @@ Related projects
 
 - HCC_
 
+- HIP_
+
 - GOOPAX_ is a product providing a C++11 framework for single-source
   OpenCL;
 
@@ -328,6 +336,8 @@ Related projects
 - Intel SPMD Program Compiler https://ispc.github.io/
 
 - Intel Lab's iHRC https://github.com/IntelLabs/iHRC
+
+- PoCL_ Portable Computing Language, open-source OpenCL_ implementation;
 
 - Metal_
 
@@ -378,6 +388,10 @@ Related projects
 
 .. _HCC: https://github.com/RadeonOpenCompute/hcc
 
+.. _HIP: https://github.com/ROCm-Developer-Tools/HIP
+
+.. _hipSYCL: https://github.com/illuhad/hipSYCL
+
 .. _HSA: http://www.hsafoundation.com/
 
 .. _Khronos: https://www.khronos.org/
@@ -399,6 +413,8 @@ Related projects
 .. _OpenMP: http://openmp.org/
 
 .. _PACXX: http://pacxx.github.io/page/
+
+.. _PoCL: http://portablecl.org/
 
 .. _SYCL Parallel STL: https://github.com/KhronosGroup/SyclParallelSTL
 

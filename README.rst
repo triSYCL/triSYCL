@@ -16,9 +16,9 @@ Introduction
 ------------
 
 triSYCL_ is an open source implementation to experiment with
-the specification of the OpenCL_ SYCL_ 1.2.1 `C++`_ layer and
-to give feedback to the Khronos_ OpenCL_ SYCL_ and OpenCL_ C++ 2.2
-kernel language committees and also ISO `C++`_ committee.
+the specification of the SYCL_ 1.2.1 `C++`_ layer and
+to give feedback to the Khronos_ Group SYCL_ and OpenCL_ C++ 2.2
+kernel language committees and also to the ISO `C++`_ committee.
 
 This SYCL_ implementation is mainly based on C++17 and OpenMP_ for
 execution on the CPU, with `Boost.Compute`_ for the non single-source
@@ -131,8 +131,8 @@ Possible futures
 See `Possible futures <doc/possible-futures.rst>`_
 
 
-OpenCL triSYCL code documentation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+triSYCL code documentation
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The documentation of the triSYCL_ implementation itself can be found in
 http://xilinx.github.io/triSYCL/Doxygen/triSYCL/html and
@@ -157,7 +157,7 @@ News
   triSYCL for FPGA
   https://xilinx.referrals.selectminds.com/jobs/compiler-engineer-intern-on-sycl-for-fpga-4685
   and more generally Xilinx is hiring in compilation, runtime, C++,
-  SYCL, OpenCL, machine-learning...
+  SYCL_, OpenCL_, machine-learning...
 
 - 2017/12/06: the brand-new SYCL 1.2.1 specification is out and
   triSYCL starts moving to it
@@ -168,7 +168,7 @@ News
 
 - 2017/09/19: there is a prototype of device compiler based on
   Clang_/LLVM_ generating SPIR 2.0 "de facto" (SPIR-df) and working at least
-  with PoCL and Xilinx SDx `xocc` for FPGA.
+  with PoCL_ and Xilinx SDx `xocc` for FPGA.
 
 - 2017/03/03: triSYCL can use CMake & ``ctest`` and works on Windows 10 with
   Visual Studio 2017. It works also with Ubuntu WSL on Windows. :-)
@@ -181,7 +181,7 @@ News
   https://teespring.com/khronos-hpc (lady's sizes available, so no
   excuse! :-) )
 
-- 2016/08/12: OpenCL_ kernels can be run with OpenCL kernel
+- 2016/08/12: OpenCL_ kernels can be run with OpenCL_ kernel
   interoperability mode now.
 
 - 2016/04/18: SYCL_ 2.2 provisional specification is out. This version
@@ -256,6 +256,8 @@ News
 .. _OpenMP: http://openmp.org/
 
 .. _PACXX: http://pacxx.github.io/page/
+
+.. _PoCL: http://portablecl.org/
 
 .. _SYCL Parallel STL: https://github.com/KhronosGroup/SyclParallelSTL
 
