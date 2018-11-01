@@ -232,11 +232,10 @@ function(add_sycl_to_target targetName)
     ${TRISYCL_COMPILE_OPTIONS}
     $<$<BOOL:${TRISYCL_OPENMP}>:${OpenMP_CXX_FLAGS}>)
 
-  if(${TRISYCL_OPENMP} AND (NOT WIN32))
-    # Does not support generator expressions
+  if(${TRISYCL_OPENMP})
     set_target_properties(${targetName}
       PROPERTIES
       LINK_FLAGS ${OpenMP_CXX_FLAGS})
-  endif(${TRISYCL_OPENMP} AND (NOT WIN32))
+  endif(${TRISYCL_OPENMP})
 
 endfunction(add_sycl_to_target)
