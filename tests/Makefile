@@ -4,7 +4,7 @@
 
 # Set default compiler instead of default CXX=g++ value
 # Assume some recent compiler
-CXX = clang++-6.0
+CXX = clang++-7
 # To use libc++ instead of libstdc++, from libc++-dev & libc++abi-dev packages
 #CXXFLAGS += -stdlib=libc++
 
@@ -334,7 +334,7 @@ execute: $(basename $(TARGET))
 	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so \
 	  -globalopt -deadargelim -SYCL-args-flattening -deadargelim \
 	  -SYCL-kernel-filter -globaldce -RELGCD -reqd-workgroup-size-1 -inSPIRation \
-	  -o $@ $<
+	  -globaldce -o $@ $<
 
 ifdef XILINX_SDX
 #  If the target is a Xilinx FPGA kernel, use the Xilinx compiler with
