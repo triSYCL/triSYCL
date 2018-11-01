@@ -167,7 +167,11 @@ if(TRISYCL_OPENMP)
 endif()
 
 # Find Boost
-find_package(Boost 1.58 REQUIRED COMPONENTS chrono log)
+set(BOOST_REQUIRED_COMPONENTS chrono log)
+if(TRISYCL_OPENCL)
+  list(APPEND BOOST_REQUIRED_COMPONENTS filesystem)
+endif()
+find_package(Boost 1.58 REQUIRED COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
 
 # If debug or trace we need boost log
 if(TRISYCL_DEBUG OR TRISYCL_DEBUG_STRUCTORS OR TRISYCL_TRACE_KERNEL)
@@ -215,7 +219,8 @@ function(add_sycl_to_target targetName)
     $<$<BOOL:${TRISYCL_OPENCL}>:${OpenCL_LIBRARIES}>
     Threads::Threads
     $<$<BOOL:${LOG_NEEDED}>:Boost::log>
-    Boost::chrono)
+    Boost::chrono
+    $<$<BOOL:${TRISYCL_OPENCL}>:Boost::filesystem>) #Required by BOOST_COMPUTE_USE_OFFLINE_CACHE.
 
   # Compile definitions
   target_compile_definitions(${targetName} PUBLIC
