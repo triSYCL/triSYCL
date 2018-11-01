@@ -16,24 +16,21 @@ Introduction
 ------------
 
 triSYCL_ is an open source implementation to experiment with
-the specification of the OpenCL_ SYCL_ 1.2.1 and 2.2 `C++`_ layer and
+the specification of the OpenCL_ SYCL_ 1.2.1 `C++`_ layer and
 to give feedback to the Khronos_ OpenCL_ SYCL_ and OpenCL_ C++ 2.2
 kernel language committees and also ISO `C++`_ committee.
 
 This SYCL_ implementation is mainly based on C++17 and OpenMP_ for
 execution on the CPU, with `Boost.Compute`_ for the non single-source
 OpenCL_ interoperability layer and with LLVM_/Clang_ for the device
-compiler providing single-source experience on SPIR_ device. Since in
-SYCL_ there is a host fall-back, this CPU implementation can be seen
-as an implementation of this fall-back too...
-
-The parallel kernels can be executed in parallel on the CPU with OpenMP_ in
-the first range dimension, if compiled with OpenMP_ support or on an
-OpenCL_ device with the interoperability mode (which is not single source)
+compiler providing full single-source SYCL_ experience, typically
+targettng on SPIR_ device. Since in SYCL_ there is a host fall-back,
+this CPU implementation can be seen as an implementation of this
+fall-back too...
 
 For legal reasons, the specification used for this open source project is
 the published current provisional specification and not the last one
-currently discussed in the Khronos_ OpenCL_ SYCL_ committee. If you are a
+currently discussed in the Khronos_ SYCL_ committee. If you are a
 Khronos_ member, you can access to https://gitlab.khronos.org/sycl/triSYCL
 where you might find more futuristic branches.
 
@@ -48,10 +45,10 @@ some skills related to this project. Contact the technical lead about
 this. Xilinx in also hiring in this area... :-)
 
 
-OpenCL SYCL
------------
+SYCL
+----
 
-OpenCL_ SYCL_ is a single-source C++14/C++17-based DSEL_ (Domain Specific
+SYCL_ is a single-source C++14/C++17-based DSEL_ (Domain Specific
 Embedded Language) aimed at facilitating the programming of heterogeneous
 accelerators by leveraging the OpenCL_ language and concepts.
 
@@ -75,9 +72,8 @@ task graph model for heterogeneous computing with *no* relation with
 OpenCL_ itself, except when using the OpenCL_ API interoperability
 mode.
 
-OpenCL_ SYCL_ is developed inside the Khronos_ OpenCL_ SYCL_ committee
-and thus, for more information on SYCL_, look at
-http://www.khronos.org/sycl
+SYCL_ is developed inside the Khronos_ SYCL_ committee and thus, for
+more information on SYCL_, look at http://www.khronos.org/sycl
 
 For the SYCL_ ecosystem, look at http://sycl.tech
 
@@ -149,7 +145,7 @@ News
 
 - 2018/03/12: the long-going device compiler branch has been merged in
   to provide experimental support for SPIR-df friendly devices, such
-  as PoCL or Xilinx FPGA. This is only for the brave for now.
+  as PoCL_ or Xilinx_ FPGA. This is only for the brave for now.
 
 - 2018/02/01: there is now some documentation about the architecture of
   triSYCL on GPU and accelerators with its device compiler based on
@@ -171,11 +167,10 @@ News
   online https://www.khronos.org/news/events/supercomputing-2017
 
 - 2017/09/19: there is a prototype of device compiler based on
-  Clang_/LLVM_ generating SPIR 2.0 "de facto" and working at least
-  with PoCL and Xilinx SDx `xocc` for FPGA. Look at the `device`
-  branch in https://github.com/triSYCL/triSYCL/tree/device
+  Clang_/LLVM_ generating SPIR 2.0 "de facto" (SPIR-df) and working at least
+  with PoCL and Xilinx SDx `xocc` for FPGA.
 
-- 2017/03/03: triSYCL can use CMake & ctest and works on Windows 10 with
+- 2017/03/03: triSYCL can use CMake & ``ctest`` and works on Windows 10 with
   Visual Studio 2017. It works also with Ubuntu WSL on Windows. :-)
   `More info <doc/cmake.rst>`_
 
