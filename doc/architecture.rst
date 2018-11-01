@@ -9,15 +9,15 @@
 .. highlight:: Bash
 
 
-triSYCL is a pure C++17 header runtime library to provide SYCL support
+triSYCL is a pure C++17 header runtime library to provide SYCL_ support
 on CPU and accelerators.
 
-To target devices, a device compiler based on Clang/LLVM is required
-to extract the kernel from the SYCL program, compile it to the kernel
+To target devices, a device compiler based on Clang_/LLVM_ is required
+to extract the kernel from the SYCL_ program, compile it to the kernel
 and generate on the host side some glue to call the kernel.
 
 The main library is defined in `<../include/CL/sycl.hpp>`_ as defined by the
-SYCL standard.
+SYCL_ standard.
 
 
 Coding rules
@@ -27,7 +27,7 @@ All the headers are mainly called in alphabetic order in
 `<../include/CL/sycl.hpp>`_.
 
 More generally all the header files are included in alphabetic order,
-but with the standard headers first, then `Boost` libraries and at
+but with the standard headers first, then ``Boost`` libraries and at
 last the triSYCL headers.
 
 The coding style is similar to the ``STL`` or ``Boost`` libraries,
@@ -41,7 +41,7 @@ used massively.
 Basic organization
 ------------------
 
-Each SYCL concept (for example a ``cl::sycl::queue``) is defined in its
+Each SYCL_ concept (for example a ``cl::sycl::queue``) is defined in its
 own header file (for example `<../include/CL/sycl/queue.hpp>`_) so it is
 easy to find the definition of a concept.
 
@@ -58,10 +58,10 @@ inside `<../include/CL/sycl/queue/detail>`_ the files
   the ``detail::queue`` above to implement the host device on CPU;
 
 - `<../include/CL/sycl/queue/detail/opencl_queue.hpp>`_ inherits from
-  the ``detail::queue`` above to implement an OpenCL device.
+  the ``detail::queue`` above to implement an OpenCL_ device.
 
 In `<../include/CL/sycl/detail>`_ there are also some code used by the
-implementation but not directly related to some SYCL classes.
+implementation but not directly related to some SYCL_ classes.
 
 
 Source-code documentation
@@ -91,8 +91,8 @@ To publish the documentation on GitHub:
 and finish as explained by the ``make`` output.
 
 
-Implementation details
-~~~~~~~~~~~~~~~~~~~~~~
+Implementation details of documentation workflow
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The documentation workflow is basically implemented with
 `<../Makefile>`_ and `<../dev/publish_Doxygen>`_.
@@ -114,11 +114,11 @@ triSYCL architecture for CPU
 ============================
 
 The implementation for CPU is a pure C++17 templated header library
-and does not require a specific C++ or SYCL compiler.
+and does not require a specific `C++`_ or SYCL_ compiler.
 
-The dataflow SYCL infrastructure between kernels related by
+The dataflow SYCL_ infrastructure between kernels related by
 buffer/accessors dependencies is implemented in
-`<../include/CL/sycl/command_group/detail/task.hpp>`_ with plain C++
+`<../include/CL/sycl/command_group/detail/task.hpp>`_ with plain `C++`_
 ``std::thread`` and ``std::condition_variable``. It should be updated
 to a more efficient library in the future, such as TBB;
 
@@ -127,48 +127,45 @@ according to some macros parameters. Only the first dimension of
 ``range`` is parallelized with OpenMP in
 `<../include/CL/sycl/parallelism/detail/parallelism.hpp>`_
 
-Since in SYCL barriers are available and the CPU triSYCL
+Since in SYCL_ barriers are available and the CPU triSYCL
 implementation does not use a compiler to restructure the kernel code,
-it is implemented in SYCL with CPU threads provided by OpenMP. This is
-massively inefficient.
+it is implemented in SYCL_ with CPU threads provided by OpenMP. This is
+massively inefficient. If you know that there will be no barrier you
+might define the ``TRISYCL_NO_BARRIER`` macro.
 
-Anyway, low-level OpenCL-style barriers should not be used in modern
-SYCL code. Hierarchical parallelism, which is performance portable
+Anyway, low-level OpenCL_-style barriers should not be used in modern
+SYCL_ code. Hierarchical parallelism, which is performance portable
 between device and CPU, is preferable.
 
-Otherwise, using an OpenCL target on CPU can be used to rely on the
-CPU OpenCL stack to do CPU-friendly SIMD-ization of the
+Otherwise, using an OpenCL_ target on CPU can be used to rely on the
+CPU OpenCL_ stack to do CPU-friendly SIMD-ization of the
 barrier-spaghetti code. But this relies on the triSYCL device
 compiler...
-
 
 
 triSYCL architecture for accelerator
 ====================================
 
-When targeting an accelerator, even if SYCL is a pure C++ DSEL, a
+When targeting an accelerator, even if SYCL_ is a pure `C++`_ DSEL_, a
 specific compiler is required to extract the kernel code and compile
 it to some target device and at the same time to compile on the host side
 some glue code around the extraction boundary to transfer data to and
 from the device and call the kernel itself.
 
-The device compiler is based on Clang/LLVM 3.9 for now but there are
-some experiments with Clang/LLVM 7 too.
+The device compiler is very experimentatal and exists in 2 versions,
+based on Clang_/LLVM_ 3.9 & Clang_/LLVM_ 7.
 
-Since it is quite more experimental than the CPU path, it is not yet
-merged into the main branches:
+- with Clang_/LLVM_ 3.9 supporting triSYCL:
 
-- device branch of triSYCL:
-  https://github.com/triSYCL/triSYCL/tree/device
-
-- Clang supporting triSYCL:
   https://github.com/triSYCL/clang/tree/sycl/release_39/master
 
-- LLVM supporting triSYCL:
   https://github.com/triSYCL/llvm/tree/sycl/release_39/master
 
-For CLang/LLVM 7, you might look at the branches
-`sycl/release_70/lin-ya` or `sycl/release_70/master`.
+- with Clang_/LLVM_ 7 supporting triSYCL:
+
+  https://github.com/triSYCL/clang/tree/sycl/release_70/master
+
+  https://github.com/triSYCL/llvm/tree/sycl/release_70/master
 
 
 Installation & compilation
@@ -222,16 +219,16 @@ It is expected to be used as for example with examples from
 ``.kernel_caller`` extension such as
 ``tests/device_compiler/single_task_vector_add_drt.kernel_caller``.
 
-triSYCL assumes some recent Clang/LLVM installed, independently from
+triSYCL assumes some recent Clang_/LLVM_ installed, independently from
 the one used by device compiler which might not be new enough.
 
 A recent version of Boost is required. It is available with package
 ``libboost-all-dev`` on Debian/Ubuntu or with some more modern
-specific versions such as ``libboost1.63-all-dev``.
+specific versions such as ``libboost1.67-all-dev``.
 
 The following assumes that you have an `OpenCL ICD
 <https://www.khronos.org/news/permalink/opencl-installable-client-driver-icd-loader>`_
-installed on the machine, to allow several OpenCL platforms usable at
+installed on the machine, to allow several OpenCL_ platforms usable at
 the same time on the machine. For example the ``ocl-icd-libopencl1``
 package on Debian/Ubuntu.
 
@@ -240,11 +237,13 @@ Using OpenCL PoCL on CPU
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 The device compiler generates the kernels as SPIR-df (*de facto*),
-which is SPIR 2.0 encoded with LLVM IR of a more recent version than
-LLVM 3.4 expected by the SPIR specification. So a very modern SPIR
-consumer is required, such as a recent PoCL. It is not the version
+which is SPIR 2.0 encoded with LLVM_ IR of a more recent version than
+LLVM_ 3.4 expected by the SPIR specification. So a very modern SPIR
+consumer is required, such as a recent PoCL_. It is not the version
 available in Ubuntu 17.10 for example, so you might compile and
-install PoCL on your own...
+install PoCL_ on your own... The rule is that PoCL_ has to use a
+Clang_/LLVM_ at least as modern as the one used by the device compiler
+to be able to consume the IR.
 
 Set up the environment::
 
@@ -270,9 +269,9 @@ Compile and execute a small example::
 Using Xilinx SDx xocc for FPGA
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Let's assume you have installed Xilinx SDx somewhere, and probably a
+Let's assume you have installed Xilinx_ SDx somewhere, and probably a
 ``/etc/OpenCL/vendors/xilinx.icd`` file containing the string
-``libxilinxopencl.so`` to have the OpenCL ICD indirection
+``libxilinxopencl.so`` to have the OpenCL_ ICD indirection
 working.
 
 Initialize the environment with something like::
@@ -300,8 +299,8 @@ Compile and execute a small example::
     **** no errors detected
 
 Note that since the final code contains the FPGA bit-stream
-configuration file and not the SPIR representation, it takes quite a
-lot of time to be generated through SDx...
+configuration file and not the SPIR representation, it takes *quite a
+lot of time* to be generated through SDx...
 
 
 High-level workflow
@@ -314,33 +313,34 @@ High-level workflow
 
    Figure 1: High-level view of the compilation workflow in triSYCL.
 
-When compiling on CPU, since triSYCL relies on the fact that SYCL is a
-pure C++ executable DSEL, the C++ SYCL code is just compiled with any
-host compiler (top of `Figure 1`_) which includes the SYCL runtime
-(bottom left of `Figure 1`_) which is a plain C++ header file. A CPU
-executable is generated, using OpenMP for multithreading.
+When compiling on CPU, since triSYCL relies on the fact that SYCL_ is a
+pure `C++`_ executable DSEL_, the `C++`_ SYCL_ code is just compiled with any
+host compiler (top of `Figure 1`_) which includes the SYCL_ runtime
+(bottom left of `Figure 1`_) which is a plain `C++`_ header file. A CPU
+executable is generated, using OpenMP_ for multithreading.
 
-If some OpenCL features are used through the interoperability mode
-(non-single-source SYCL), then an OpenCL library is required to
-interact with some OpenCL devices.
+If some OpenCL_ features are used through the interoperability mode
+(non-single-source SYCL_), then an OpenCL_ library is required to
+interact with some OpenCL_ devices.
 
-When using SYCL in single-source mode on device, the compilation flow
+When using SYCL_ in single-source mode on device, the compilation flow
 is quite more complex because it requires a device compiler to split
 and compile the code for the final target.
 
-The Clang/LLVM-based device compiler (bottom of `Figure 1`_) compiles
-the C++ SYCL code as for CPU only, but just keep the kernel part of
-the code and produce a simple portable intermediate representation
-(SPIR) of the kernels.  For now, since SPIR-V is not yet widely used,
-triSYCL uses SPIR-df (*de facto*), a non-conforming SPIR 2.0 encoded in
-something newer than LLVM 3.4 IR.
+The Clang_/LLVM_-based device compiler (bottom of `Figure 1`_)
+compiles the `C++`_ SYCL_ code as for CPU only, but just keep the
+kernel part of the code and produce a simple portable intermediate
+representation (SPIR) of the kernels.  For now, triSYCL uses SPIR-df
+(*de facto*), a non-conforming SPIR 2.0 encoded in something newer
+than LLVM_ 3.4 IR. But you could graft an official SPIR down-caster if
+you have one or a SPIR-V generator using this SPIR-df.
 
 Then this SPIR-df output is optionally compiled by some vendor
 compiler to speed-up the launch time by doing some compilation
-ahead. With PoCL it is not done (dashed arrow line) but for FPGA it is
-done ahead-of-time since compilation is very slow.
+ahead. With PoCL_ it is not done (dashed arrow line) but for FPGA it is
+done ahead-of-time since compilation is *very* slow.
 
-In single-source mode on device, the source code has also to go
+In single-source mode on the host side, the source code has also to go
 through the device compiler, but to do the dual operation: to remove the
 kernel code and just to keep the host code. This is also where some glue to
 call the kernels and to do the argument serialization is done.
@@ -348,7 +348,9 @@ call the kernels and to do the argument serialization is done.
 The kernel binary generated by the other compiler flow is also
 included in the host code so that the main host executable is
 self-contained and can start the kernel on the device without having
-to load the binary from an external file.
+to load the binary from an external file. It is a manual way to get a
+*fat binary* and we could probably use the official off-loading
+Clang_/LLVM_-way in the future.
 
 
 Low-level view of the device compiler workflow
@@ -369,13 +371,13 @@ on `Figure 2`_,
 Each intermediate file is characterized by a specific extension:
 
 ``.cpp``
-  for the single-source SYCL C++ input file;
+  for the single-source SYCL_ `C++`_ input file;
 
 ``.bc``
-  some LLVM IR bitcode;
+  some LLVM_ IR bitcode;
 
 ``.ll``
-  some LLVM IR in textual assembly syntax;
+  some LLVM_ IR in textual assembly syntax;
 
 ``.kernel_caller``
   for the final host executable, with the kernel binary internalized
@@ -386,7 +388,7 @@ Note that the file without any extension is actually the normal
 CPU-only executable, which does not appear in this picture because it
 is about compiling for device instead.
 
-All the SYCL LLVM passes are in the ``lib/SYCL`` directory of LLVM.
+All the SYCL_-specific LLVM_ passes are in the ``lib/SYCL`` directory of LLVM_.
 
 
 Host-side compilation flow
@@ -395,12 +397,12 @@ Host-side compilation flow
 The file extensions used on the host side are:
 
 ``.pre_kernel_caller.ll``
-  the SYCL C++ code compiled by Clang for the host side, including
+  the SYCL_ `C++`_ code compiled by Clang_ for the host side, including
   the call of the kernels;
 
 ``.kernel_caller.ll``
-  the LLVM IR of the host code after the LLVM triSYCL pass
-  transformations;
+  the LLVM_ IR of the host code after the LLVM_ triSYCL
+  transformation passes;
 
 To generate the ``.pre_kernel_caller.ll`` file, the source code is
 compiled with::
@@ -413,29 +415,29 @@ intrinsic functions that prevents some argument flattening to work
 later.
 
 The ``-O3`` is important to generate optimized minimal code that can
-be massaged later, with a lot of in-lining to have the C++ constructs
+be massaged later, with a lot of in-lining to have the `C++`_ constructs
 to disappear. Otherwise less optimized code breaks a lot of
-assumptions in the triSYCL-specific LLVM passes later.
+assumptions in the triSYCL-specific LLVM_ passes later.
 
 The compilation flow to generate the final ``.kernel_caller.ll`` file
-is based on LLVM ``opt`` to apply a sequence of LLVM passes:
+is based on LLVM_ ``opt`` to apply a sequence of LLVM_ passes:
 
 ``-globalopt -deadargelim``
-  to clean-up the code before SYCL massaging;
+  to clean-up the code before SYCL_ massaging;
 
 ``-SYCL-args-flattening``
-  is a fundamental SYCL-specific pass that takes the lambda capture
-  (basically a C++ structure passed by address) of a SYCL kernel
+  is a fundamental SYCL_-specific pass that takes the lambda capture
+  (basically a `C++`_ structure passed by address) of a SYCL_ kernel
   lambda expression and flattens it as its content. So basically if the
   capture has several scalar and accessor parameters, the structure
   address used in the function call is replaced by a function call
   with all the parameters explicitly passed as arguments. This makes
-  the classical OpenCL-style kernel parameter to show up;
+  the classical OpenCL_-style kernel parameter to show up;
 
 ``-loop-idiom``
   then the loop-idiom detection pass which was not applied before to
   avoid choking the ``SYCL-args-flattening`` pass can now be applied
-  to optimize some loops and generate the LLVM intrinsics representing
+  to optimize some loops and generate the LLVM_ intrinsics representing
   memory copies and initialization for example;
 
 ``-deadargelim``
@@ -472,7 +474,7 @@ is based on LLVM ``opt`` to apply a sequence of LLVM passes:
   functions used by the transformed code are in
   `<../include/CL/sycl/device_runtime.hpp>`_. The functions from
   ``cl::sycl::drt::`` are the link to the underlying runtime, such as
-  OpenCL.
+  OpenCL_.
 
 ``-deadargelim``
   again to removes some dead code that might be left by previous pass.
@@ -484,20 +486,20 @@ Device-side compilation flow
 The file extensions used on the kernel side are:
 
 ``.pre_kernel.ll``
-  the SYCL C++ code compiled by Clang for the host side, including
+  the SYCL_ `C++`_ code compiled by Clang_ for the host side, including
   the call of the kernels;
 
 ``.kernel.bc``
-  the LLVM IR of the host code after the LLVM triSYCL pass
+  the LLVM_ IR of the host code after the LLVM_ triSYCL pass
   transformations;
 
 ``.kernel.bin``
   is for the kernel binary to be shipped into the final host
-  executable. This is typically a SPIR LLVM IR bitcode or an FPGA
+  executable. This is typically a SPIR LLVM_ IR bitcode or an FPGA
   bitstream configuration;
 
 ``.kernel.internalized.cxx``
-  is the kernel binary represented as C++ code so it can just be
+  is the kernel binary represented as `C++`_ code so it can just be
   compiled by a C++ compiler to have it internalized into the final
   host binary and used by the runtime.
 
@@ -513,11 +515,11 @@ This is similar to the compilation for the host side and the ``-O3``
 is important for the same reasons. ``-DTRISYCL_DEVICE`` is used so
 the triSYCL headers behave slightly differently on the device code,
 mainly enabling some address-space related code used to represent
-OpenCL ``global`` or ``local`` memory for example.
+OpenCL_ ``global`` or ``local`` memory for example.
 
 Like for the host side path, the compilation flow to generate the
-final ``.kernel.bc`` file is based on LLVM ``opt`` to apply a sequence
-of LLVM passes with:
+final ``.kernel.bc`` file is based on LLVM_ ``opt`` to apply a sequence
+of LLVM_ passes with:
 
 ``-globalopt -deadargelim -SYCL-args-flattening -deadargelim``
   are applied as for the host side. It is important to have globally
@@ -527,7 +529,7 @@ of LLVM passes with:
   end;
 
 ``-SYCL-kernel-filter``
-  this is one of the most important SYCL-specific pass on the device
+  this is one of the most important SYCL_-specific pass on the device
   side, to extract the kernels from the single-source code. Actually
   it works in 2 passes, in a mark-and-sweep approach. Here is the
   first pass that marks all the kernel with external linkage (tricking
@@ -544,27 +546,32 @@ of LLVM passes with:
 ``-RELGCD``
   compiling C++ comes with an ABI storing the lists of global static
   constructors and destructors. Unfortunately even if at the end these
-  lists are empty because of SYCL specification, they are not removed
+  lists are empty because of SYCL_ specification, they are not removed
   by ``-globaldce`` and it is not supported by SPIR yet. So this
-  SYCL-specific pass removes the empty list of global constructors or
-  destructors (RELGCD);
+  SYCL_-specific pass Removes the Empty List of Global Constructors or
+  Destructors (RELGCD);
 
 ``-reqd-workgroup-size-1``
   in the case the kernel are compiled with only 1 SPIR work-group with
-  1 work-item (common use case on FPGA), this SYCL-specific pass add a
-  SPIR metadata on the kernels to specify it will be called with only
+  1 work-item (common use case on FPGA), this SYCL_-specific pass add a
+  SPIR metadata on the kernels to specify it will be called with *only*
   1 work-item. This way the target compiler can spare some resources
   on the device;
 
 ``-inSPIRation``
-  is the SYCL-specific pass generating the SPIR 2.0-style LLVM IR
-  output. Since it generates LLVM IR with the version of the recent
-  LLVM used, it is quite more modern that the official SPIR 2.0 based
-  on LLVM 3.4 IR. So it is a SPIR-df (*de facto*)", which is nevertheless
+  is the SYCL_-specific pass generating the SPIR 2.0-style LLVM_ IR
+  output. Since it generates LLVM_ IR with the version of the recent
+  LLVM_ used, it is quite more modern that the official SPIR 2.0 based
+  on LLVM_ 3.4 IR. So it is a SPIR-df (*de facto*)", which is nevertheless
   accepted by some tools. But by using a bitcode down-caster, it could
-  probably make some decent official SPIR 2.0 encoded in LLVM 3.4
+  probably make some decent official SPIR 2.0 encoded in LLVM_ 3.4
   IR. Otherwise a SPIR-V back-end could generate some SPIR-V code from
   this.
+
+``-globaldce`` is the last cleaning to remove unused functions, for
+  example ``__gxx_personality_v0`` that was used to specify the
+  exception handling flavour for the kernel functions before SPIR
+  transformation.
 
 
 Testing infrastructure
@@ -577,10 +584,121 @@ Continuous integration
 ======================
 
 Travis CI is used to validate triSYCL with its test suite from `tests/
-<../tests>`_ on CPU and OpenCL with interoperability mode, using CMake
+<../tests>`_ on CPU and OpenCL_ with interoperability mode, using CMake
 ``ctest``.
 
-The device compiler is not tested yet through Travis CI.
+The device compiler is not tested yet through Travis CI. :-(
 
 Look at `<../.travis.yml>`_ and `<../Dockerfile>`_ for the
 configuration.
+
+
+..
+  Actually include:: doc/common-includes.rst does not work in GitHub
+  :-( https://github.com/github/markup/issues/172
+
+  So manual inline of the following everywhere... :-(
+
+.. Some useful link definitions:
+
+.. _AMD: http://www.amd.com
+
+.. _Bolt: https://github.com/HSA-Libraries/Bolt
+
+.. _Boost.Compute: https://github.com/boostorg/compute
+
+.. _Boost.MultiArray: http://www.boost.org/doc/libs/1_55_0/libs/multi_array/doc/index.html
+
+.. _C++: http://www.open-std.org/jtc1/sc22/wg21/
+
+.. _committee: https://isocpp.org/std/the-committee
+
+.. _C++AMP: http://msdn.microsoft.com/en-us/library/hh265137.aspx
+
+.. _Clang: http://clang.llvm.org/
+
+.. _CLHPP: https://github.com/KhronosGroup/OpenCL-CLHPP
+
+.. _Codeplay: http://www.codeplay.com
+
+.. _ComputeCpp: https://www.codeplay.com/products/computesuite/computecpp
+
+.. _CUDA: https://developer.nvidia.com/cuda-zone
+
+.. _DirectX: http://en.wikipedia.org/wiki/DirectX
+
+.. _DSEL: http://en.wikipedia.org/wiki/Domain-specific_language
+
+.. _Eigen: http://eigen.tuxfamily.org
+
+.. _Fortran: http://en.wikipedia.org/wiki/Fortran
+
+.. _GCC: http://gcc.gnu.org/
+
+.. _GOOPAX: http://www.goopax.com/
+
+.. _HCC: https://github.com/RadeonOpenCompute/hcc
+
+.. _HIP: https://github.com/ROCm-Developer-Tools/HIP
+
+.. _hipSYCL: https://github.com/illuhad/hipSYCL
+
+.. _HSA: http://www.hsafoundation.com/
+
+.. _Khronos: https://www.khronos.org/
+
+.. _LLVM: http://llvm.org/
+
+.. _Metal: https://developer.apple.com/library/ios/documentation/Metal/Reference/MetalShadingLanguageGuide
+
+.. _MPI: http://en.wikipedia.org/wiki/Message_Passing_Interface
+
+.. _OpenACC: http://www.openacc-standard.org/
+
+.. _OpenCL: http://www.khronos.org/opencl/
+
+.. _OpenGL: https://www.khronos.org/opengl/
+
+.. _OpenHMPP: http://en.wikipedia.org/wiki/OpenHMPP
+
+.. _OpenMP: http://openmp.org/
+
+.. _PACXX: http://pacxx.github.io/page/
+
+.. _PoCL: http://portablecl.org/
+
+.. _SYCL Parallel STL: https://github.com/KhronosGroup/SyclParallelSTL
+
+.. _RenderScript: http://en.wikipedia.org/wiki/Renderscript
+
+.. _SC16: http://sc16.supercomputing.org
+
+.. _SG14: https://groups.google.com/a/isocpp.org/forum/?fromgroups=#!forum/sg14
+
+.. _SPIR: http://www.khronos.org/spir
+
+.. _SPIR-V: http://www.khronos.org/spir
+
+.. _SYCL: https://www.khronos.org/sycl
+
+.. _TensorFlow: https://www.tensorflow.org
+
+.. _Thrust: http://thrust.github.io/
+
+.. _triSYCL: https://github.com/triSYCL/triSYCL
+
+.. _VexCL: http://ddemidov.github.io/vexcl/
+
+.. _ViennaCL: http://viennacl.sourceforge.net/
+
+.. _Vulkan: https://www.khronos.org/vulkan/
+
+.. _Xilinx: http://www.xilinx.com
+
+..
+    # Some Emacs stuff:
+    ### Local Variables:
+    ### mode: rst
+    ### minor-mode: flyspell
+    ### ispell-local-dictionary: "american"
+    ### End:

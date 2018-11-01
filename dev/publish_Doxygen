@@ -13,7 +13,7 @@
 
 
 # Recycle some ideas used in the publication of the Par4All web-site on
-# GitHub
+# GitHub https://github.com/Par4All/par4all
 
 # Exit if an error occurs rather than unspecified dangerous behaviour...
 set -e
