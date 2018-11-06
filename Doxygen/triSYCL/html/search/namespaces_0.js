@@ -6,8 +6,9 @@ var searchData=
   ['detail',['detail',['../namespacecl_1_1sycl_1_1detail.html',1,'cl::sycl']]],
   ['drt',['drt',['../namespacecl_1_1sycl_1_1drt.html',1,'cl::sycl']]],
   ['info',['info',['../namespacecl_1_1sycl_1_1info.html',1,'cl::sycl']]],
-  ['partition',['partition',['../namespacecl_1_1sycl_1_1xilinx_1_1partition.html',1,'cl::sycl::xilinx']]],
+  ['partition',['partition',['../namespacecl_1_1sycl_1_1vendor_1_1xilinx_1_1partition.html',1,'cl::sycl::vendor::xilinx']]],
   ['sycl',['sycl',['../namespacecl_1_1sycl.html',1,'cl']]],
   ['trisycl',['trisycl',['../namespacecl_1_1sycl_1_1trisycl.html',1,'cl::sycl']]],
-  ['xilinx',['xilinx',['../namespacecl_1_1sycl_1_1xilinx.html',1,'cl::sycl']]]
+  ['vendor',['vendor',['../namespacecl_1_1sycl_1_1vendor.html',1,'cl::sycl']]],
+  ['xilinx',['xilinx',['../namespacecl_1_1sycl_1_1vendor_1_1xilinx.html',1,'cl::sycl::vendor']]]
 ];

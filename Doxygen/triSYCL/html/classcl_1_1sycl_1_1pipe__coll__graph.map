@@ -1,5 +1,5 @@
 <map id="cl::sycl::pipe&lt; T &gt;" name="cl::sycl::pipe&lt; T &gt;">
-<area shape="rect" id="node2" href="$structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html" title="cl::sycl::detail::shared\l_ptr_implementation\&lt; pipe\l\&lt; T \&gt;, detail::pipe\&lt; T \&gt; \&gt;" alt="" coords="293,31,468,87"/>
+<area shape="rect" id="node2" href="$structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html" title="cl::sycl::detail::shared\l_ptr_implementation\&lt; pipe\l\&lt; T \&gt;, detail::pipe\&lt; T \&gt; \&gt;" alt="" coords="293,30,468,86"/>
 <area shape="rect" id="node4" href="$classstd_1_1shared__ptr_3_01detail_1_1pipe_3_01T_01_4_01_4.html" title="shared_ptr\&lt; detail\l::pipe\&lt; T \&gt; \&gt;" alt="" coords="15,71,142,112"/>
-<area shape="rect" id="node5" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; pipe\&lt; T \&gt; \&gt;" alt="" coords="307,112,454,153"/>
+<area shape="rect" id="node5" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; pipe\&lt; T \&gt; \&gt;" alt="" coords="307,111,454,152"/>
 </map>

@@ -1,0 +1,8 @@
+<map id="cl::sycl::h_item::get_group_linear_id" name="cl::sycl::h_item::get_group_linear_id">
+<area shape="rect" id="node2" href="$group__parallelism.html#a927aa2388473af13200e7ab301882d5f" title="Return the constituent group group representing the work&#45;group&#39;s position within the overall nd_range..." alt="" coords="201,71,339,112"/>
+<area shape="rect" id="node6" href="$group__parallelism.html#a8347241997365ff141a674a7ff0e8ac7" title="Return the number of groups in the nd_range. " alt="" coords="397,136,535,177"/>
+<area shape="rect" id="node7" href="$group__helpers.html#ga8ccbed3e03e1b92e0a4f01b691c093cf" title="Compute a linearized array access used in the OpenCL 2 world. " alt="" coords="191,191,349,218"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#a4f6d866d53d10e4d012cea5e2e704950" title="Return the constituent global id representing the work&#45;item&#39;s position in the global iteration space..." alt="" coords="397,5,535,47"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#a44da1b19bb589928af9ce2206d995402" title="Return a range&lt;&gt; representing the dimensions of the current work&#45;group. " alt="" coords="397,71,535,112"/>
+<area shape="rect" id="node5" href="$group__parallelism.html#a990176943330609277e2471a17ef31f2" title="Return the nd_range&lt;&gt; of the current execution. " alt="" coords="583,104,720,145"/>
+</map>

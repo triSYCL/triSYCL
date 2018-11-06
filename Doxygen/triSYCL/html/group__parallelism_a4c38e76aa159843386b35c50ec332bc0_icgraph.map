@@ -1,0 +1,6 @@
+<map id="cl::sycl::item::get_id" name="cl::sycl::item::get_id">
+<area shape="rect" id="node2" href="$group__parallelism.html#a7ad38d9af0ca6d7ff5d573c9bbd1d2fc" title="Return the linearized ID in the item&#39;s range. " alt="" coords="221,5,343,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#a777b39deded6748f39279b21c09cf34e" title="Construct an id from the dimensions of a range. " alt="" coords="193,71,371,112"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#a54d032fc4f73960ab98cab5920e87a65" title="Returns an item with same dimensions but offset set to 0. " alt="" coords="195,136,369,177"/>
+<area shape="rect" id="node5" href="$group__data.html#a4b7a26763437479ee5cc92d9ce08936a" title="To use an accessor with [item&lt;&gt;]. " alt="" coords="219,201,345,243"/>
+</map>

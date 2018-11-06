@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['elem',['elem',['../group__vector.html#structcl_1_1sycl_1_1elem',1,'cl::sycl']]],
   ['error_5fhandler',['error_handler',['../group__error__handling.html#structcl_1_1sycl_1_1error__handler',1,'cl::sycl']]],
   ['event',['event',['../classcl_1_1sycl_1_1event.html',1,'cl::sycl']]],
   ['event_5ferror',['event_error',['../group__error__handling.html#classcl_1_1sycl_1_1event__error',1,'cl::sycl']]],

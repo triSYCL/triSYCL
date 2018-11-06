@@ -1,0 +1,4 @@
+<map id="cl::sycl::get_info&lt; info::context::devices &gt;" name="cl::sycl::get_info&lt; info::context::devices &gt;">
+<area shape="rect" id="node2" href="$group__execution.html#a61d96003363497ad3766bef24bcc892c" title="Returns the set of devices that are part of this context. " alt="" coords="224,5,347,47"/>
+<area shape="rect" id="node3" href="$group__execution.html#a33095d93b04a1a28b669ef82e4b578db" title="Queries OpenCL information for the under&#45;lying cl context. " alt="" coords="395,5,517,47"/>
+</map>

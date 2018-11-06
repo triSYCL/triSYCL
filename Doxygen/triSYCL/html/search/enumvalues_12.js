@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['unsupported',['unsupported',['../group__execution.html#ggaa0e3e915db3c3a6049efb595141acfcda723c25877a86786664edc4b643c08a6f',1,'cl::sycl::info::unsupported()'],['../group__execution.html#gga51116d5add442d9bae6028c45e09eca4a723c25877a86786664edc4b643c08a6f',1,'cl::sycl::info::unsupported()']]]
+  ['vendor',['vendor',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a7c3613dba5171cb6027c67835dd3b9d4',1,'cl::sycl::info']]],
+  ['vendor_5fid',['vendor_id',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a96b1f972094b863cafcacb8fc48b9bea',1,'cl::sycl::info']]],
+  ['version',['version',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a2af72f100c356273d46284f6fd1dfc08',1,'cl::sycl::info']]]
 ];

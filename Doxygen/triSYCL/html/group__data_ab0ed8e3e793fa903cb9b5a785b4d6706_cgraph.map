@@ -1,3 +1,3 @@
 <map id="cl::sycl::accessor::operator[]" name="cl::sycl::accessor::operator[]">
-<area shape="rect" id="node2" href="$group__parallelism.html#a76f60881c4d17eba5d87f48b4e42197f" title="Return the constituent global id representing the work&#45;item&#39;s position in the global iteration space..." alt="" coords="179,5,305,47"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#a6818bf479caa443ed98625b1715da141" title="Return the constituent global id representing the work&#45;item&#39;s position in the global iteration space..." alt="" coords="179,5,305,47"/>
 </map>

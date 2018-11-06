@@ -1,13 +1,13 @@
 <map id="cl::sycl::nd_item::get_nd_range" name="cl::sycl::nd_item::get_nd_range">
 <area shape="rect" id="node2" href="$group__parallelism.html#a38089b11659fd98faf4ceb90ee7f7c01" title="Return a range&lt;&gt; representing the dimensions of the nd_range&lt;&gt; " alt="" coords="180,5,307,47"/>
-<area shape="rect" id="node5" href="$group__parallelism.html#a6bc7aca87177a08d13f1a9b1023d87e0" title="Return a range&lt;&gt; representing the dimensions of the current work&#45;group. " alt="" coords="180,136,307,177"/>
-<area shape="rect" id="node10" href="$group__parallelism.html#ab0f6ad9c1fb09f841c2fdbba706b0746" title="Return the number of groups in the nd_range. " alt="" coords="180,260,307,301"/>
+<area shape="rect" id="node5" href="$group__parallelism.html#a54cba4b3f6bdd045142535de9f74b7b8" title="Return the number of groups in the nd_range. " alt="" coords="180,136,307,177"/>
+<area shape="rect" id="node8" href="$group__parallelism.html#a6bc7aca87177a08d13f1a9b1023d87e0" title="Return a range&lt;&gt; representing the dimensions of the current work&#45;group. " alt="" coords="180,253,307,295"/>
 <area shape="rect" id="node12" href="$group__parallelism.html#ae236a5a8ca6260e5d587d90824fff703" title="Return an id&lt;&gt; representing the n&#45;dimensional offset provided to the constructor of the nd_range&lt;&gt; an..." alt="" coords="180,71,307,112"/>
 <area shape="rect" id="node3" href="$group__parallelism.html#af71c043b404fb2c2a4d40294ca27bf88" title="Return the flattened id of the current work&#45;item after subtracting the offset. " alt="" coords="355,5,491,47"/>
 <area shape="rect" id="node4" href="$group__parallelism.html#a967a6c3a222d79deec2b76eea39c0cc5" title="Allows projection down to an item. " alt="" coords="359,71,486,112"/>
-<area shape="rect" id="node6" href="$group__parallelism.html#a84e9f3b9284bbbadd0ee8d08ad0ab417" title="Return the constituent group group representing the work&#45;group&#39;s position within the overall nd_range..." alt="" coords="359,136,486,177"/>
-<area shape="rect" id="node9" href="$group__parallelism.html#aacd5c740a37eb0f20d8490c37caa0cc2" title="Return the flattened id of the current work&#45;item within the current work&#45;group. " alt="" coords="358,201,487,243"/>
-<area shape="rect" id="node7" href="$group__parallelism.html#a346eac224de454a24558407c6548d0a3" title="Return the constituent element of the group id representing the work&#45;group;s position within the over..." alt="" coords="543,136,669,177"/>
-<area shape="rect" id="node8" href="$group__parallelism.html#afa1bd2ba568fd80c4a18bd442a26f4b0" title="Return the flattened id of the current work&#45;group. " alt="" coords="539,231,673,272"/>
-<area shape="rect" id="node11" href="$group__parallelism.html#accffd37fef7c65344a3787bea8e4cfb5" title="Return the number of groups for dimension in the nd_range. " alt="" coords="359,319,486,360"/>
+<area shape="rect" id="node6" href="$group__parallelism.html#afa1bd2ba568fd80c4a18bd442a26f4b0" title="Return the flattened id of the current work&#45;group. " alt="" coords="539,159,673,200"/>
+<area shape="rect" id="node7" href="$group__parallelism.html#af1337e426170d302b1f1e15f73dbc47f" title="Return the number of groups for dimension in the nd_range. " alt="" coords="359,188,486,229"/>
+<area shape="rect" id="node9" href="$group__parallelism.html#a84e9f3b9284bbbadd0ee8d08ad0ab417" title="Return the constituent group representing the work&#45;group&#39;s position within the overall nd_range..." alt="" coords="359,253,486,295"/>
+<area shape="rect" id="node11" href="$group__parallelism.html#aacd5c740a37eb0f20d8490c37caa0cc2" title="Return the flattened id of the current work&#45;item within the current work&#45;group. " alt="" coords="358,319,487,360"/>
+<area shape="rect" id="node10" href="$group__parallelism.html#a346eac224de454a24558407c6548d0a3" title="Return the constituent element of the group id representing the work&#45;group;s position within the over..." alt="" coords="543,253,669,295"/>
 </map>

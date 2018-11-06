@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structcl_1_1sycl_1_1info_1_1param__traits.html" title="Implement a meta&#45;function from (T, value) to T&#39; to express the return type value of an OpenCL functio..." alt="" coords="5,5,143,47"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#structcl_1_1sycl_1_1group" title="A group index used in a parallel_for_workitem to specify a work_group. " alt="" coords="198,5,395,32"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#structcl_1_1sycl_1_1h__item" title="h_item&lt;int dimensions&gt; identifies an instance of a group::parallel_for_work_item function object exec..." alt="" coords="195,56,399,83"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#classcl_1_1sycl_1_1item" title="A SYCL item stores information on a work&#45;item with some more context such as the definition range and..." alt="" coords="205,107,388,149"/>
+<area shape="rect" id="node5" href="$group__parallelism.html#structcl_1_1sycl_1_1nd__item" title="A SYCL nd_item stores information on a work&#45;item within a work&#45;group, with some more context such as ..." alt="" coords="233,173,360,214"/>
+<area shape="rect" id="node6" href="$group__parallelism.html#structcl_1_1sycl_1_1nd__range" title="A ND&#45;range, made by a global and local range, to specify work&#45;group and work&#45;item organization..." alt="" coords="234,238,359,279"/>
 </map>

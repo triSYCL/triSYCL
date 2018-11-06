@@ -1,5 +1,7 @@
 var searchData=
 [
+  ['h_5fitem',['h_item',['../group__parallelism.html#structcl_1_1sycl_1_1h__item',1,'cl::sycl']]],
+  ['half',['half',['../classcl_1_1sycl_1_1half.html',1,'cl::sycl']]],
   ['handler',['handler',['../group__execution.html#classcl_1_1sycl_1_1handler',1,'cl::sycl']]],
   ['handler_5fevent',['handler_event',['../classhandler__event.html',1,'']]],
   ['hash_3c_20cl_3a_3asycl_3a_3abuffer_3c_20t_2c_20dimensions_2c_20allocator_20_3e_20_3e',['hash&lt; cl::sycl::buffer&lt; T, Dimensions, Allocator &gt; &gt;',['../structstd_1_1hash_3_01cl_1_1sycl_1_1buffer_3_01T_00_01Dimensions_00_01Allocator_01_4_01_4.html',1,'std']]],

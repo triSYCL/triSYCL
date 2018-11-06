@@ -1,0 +1,4 @@
+<map id="cl::sycl::nd_item::get_local_id" name="cl::sycl::nd_item::get_local_id">
+<area shape="rect" id="node2" href="$group__parallelism.html#a0d8fdf6319567cfb1374f384b87d241a" title="Return the constituent element of the local id representing the work&#45;item&#39;s position within the curre..." alt="" coords="181,5,308,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#aacd5c740a37eb0f20d8490c37caa0cc2" title="Return the flattened id of the current work&#45;item within the current work&#45;group. " alt="" coords="180,71,309,112"/>
+</map>

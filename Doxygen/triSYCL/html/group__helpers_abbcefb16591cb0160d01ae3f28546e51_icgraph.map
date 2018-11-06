@@ -1,5 +1,0 @@
-<map id="cl::sycl::detail::small_array::x" name="cl::sycl::detail::small_array::x">
-<area shape="rect" id="node2" href="$group__helpers.html#acb178825b70641a24f8590d13662328b" title="A 1&#45;D constructor to have implicit conversion from from 1 integer and automatic inference of the dime..." alt="" coords="196,5,360,76"/>
-<area shape="rect" id="node3" href="$group__helpers.html#abf83c44bc386a675a95090a4ee2388bd" title="A 2&#45;D constructor to have implicit conversion from from 2 integers and automatic inference of the dim..." alt="" coords="196,100,360,171"/>
-<area shape="rect" id="node4" href="$group__helpers.html#a624c04be5fcf8fcd6e34b347223e2c88" title="A 3&#45;D constructor to have implicit conversion from from 3 integers and automatic inference of the dim..." alt="" coords="196,195,360,265"/>
-</map>

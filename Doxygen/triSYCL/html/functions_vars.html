@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>triSYCL implementation of OpenCL SYCL: Class Members - Variables</title>
+<title>triSYCL implementation of SYCL: Class Members - Variables</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">triSYCL implementation of OpenCL SYCL
+   <div id="projectname">triSYCL implementation of SYCL
    </div>
   </td>
  </tr>
@@ -61,6 +61,9 @@ $(function() {
 &#160;
 
 <h3><a id="index_a"></a>- a -</h3><ul>
+<li>a
+: <a class="el" href="group__vector.html#gaeace5e4b3952b15bfa6c81bce1450168">cl::sycl::elem</a>
+</li>
 <li>access
 : <a class="el" href="group__data.html#afaef5dac2d23161a54412d133e0b8a98">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
 </li>
@@ -82,12 +85,15 @@ $(function() {
 , <a class="el" href="group__data.html#ac7bc8b3b0b67d7311c831160dfe369eb">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 </li>
 <li>array_size
-: <a class="el" href="group__Xilinx.html#af5b68cb108a899d0fa51c62c6c99e4ad">cl::sycl::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;</a>
+: <a class="el" href="group__Xilinx.html#a358ea5dda4090d80c0667d3d781be34c">cl::sycl::vendor::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;</a>
 </li>
 </ul>
 
 
 <h3><a id="index_b"></a>- b -</h3><ul>
+<li>b
+: <a class="el" href="group__vector.html#gaf725ee9ffa643d5b8637582f51440a0b">cl::sycl::elem</a>
+</li>
 <li>binary
 : <a class="el" href="structcl_1_1sycl_1_1drt_1_1code_1_1program.html#ac07d879de52a9995c669e8b4f5a787db">cl::sycl::drt::code::program</a>
 </li>
@@ -169,7 +175,8 @@ $(function() {
 , <a class="el" href="group__data.html#a5da039f767f4cae6b6b266310905e5fc">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 , <a class="el" href="group__helpers.html#a246b78fe11f1764328bccb7692b15a38">cl::sycl::detail::small_array&lt; BasicType, FinalType, Dims, EnableArgsConstructor &gt;</a>
 , <a class="el" href="group__parallelism.html#afb7b6568a084904520da8bc9aaa9286e">cl::sycl::group&lt; Dimensions &gt;</a>
-, <a class="el" href="group__parallelism.html#abc5d4783e43d820cc7f4bf2a9ebe3133">cl::sycl::item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#ac586ed20e82fd8d6d27d5c2852e99437">cl::sycl::h_item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#aab99e8be897cf2b0e58a0f094bb38815">cl::sycl::item&lt; Dimensions, with_offset &gt;</a>
 , <a class="el" href="group__parallelism.html#a0e0b6ffae70ba27083647fe9ac26d20e">cl::sycl::nd_item&lt; Dimensions &gt;</a>
 , <a class="el" href="group__parallelism.html#a8c59727927661e408cacdd32e2613029">cl::sycl::nd_range&lt; Dimensions &gt;</a>
 </li>
@@ -181,10 +188,10 @@ $(function() {
 
 <h3><a id="index_e"></a>- e -</h3><ul>
 <li>ele_in_each_physical_mem
-: <a class="el" href="structcl_1_1sycl_1_1xilinx_1_1partition_1_1block.html#a0c099693e29aa91f33c6974b35221b89">cl::sycl::xilinx::partition::block&lt; ElmInEachPhyMem, PDim &gt;</a>
+: <a class="el" href="structcl_1_1sycl_1_1vendor_1_1xilinx_1_1partition_1_1block.html#ab17471b7b6ceb73ec62926950396c008">cl::sycl::vendor::xilinx::partition::block&lt; ElmInEachPhyMem, PDim &gt;</a>
 </li>
 <li>elems
-: <a class="el" href="group__Xilinx.html#a76486054220ddba292a810b368d0cbb6">cl::sycl::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;</a>
+: <a class="el" href="group__Xilinx.html#aa46f20d8c10b1061238306d186496a55">cl::sycl::vendor::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;</a>
 </li>
 <li>epilogues
 : <a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#a9e457b8331522939dc10cd56f1f000fa">cl::sycl::detail::task</a>
@@ -212,12 +219,16 @@ $(function() {
 
 
 <h3><a id="index_g"></a>- g -</h3><ul>
+<li>g
+: <a class="el" href="group__vector.html#ga43b1fcb5620d37c29c0bb888c860ad40">cl::sycl::elem</a>
+</li>
 <li>global_index
-: <a class="el" href="group__parallelism.html#a9a5696ed1929336a7a982598b67bdb66">cl::sycl::item&lt; Dimensions &gt;</a>
+: <a class="el" href="group__parallelism.html#a151242d92082eeb0ec5c23d6d07ff773">cl::sycl::h_item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#ae61df78225e53c55ab15908aab0ff2d6">cl::sycl::item&lt; Dimensions, with_offset &gt;</a>
 , <a class="el" href="group__parallelism.html#a20bc042572c9f11b2c1fac3de92835eb">cl::sycl::nd_item&lt; Dimensions &gt;</a>
 </li>
 <li>global_range
-: <a class="el" href="group__parallelism.html#af7da3134cdf58f770f42ad2c77f818f3">cl::sycl::item&lt; Dimensions &gt;</a>
+: <a class="el" href="group__parallelism.html#a5e25c6399a5a04ffca509b376233b8c0">cl::sycl::item&lt; Dimensions, with_offset &gt;</a>
 , <a class="el" href="group__parallelism.html#af19ba6425b3a425f2962a76027582d57">cl::sycl::nd_range&lt; Dimensions &gt;</a>
 </li>
 <li>group_id
@@ -230,6 +241,9 @@ $(function() {
 <li>handler
 : <a class="el" href="group__data.html#aa489d14286e6712c3fda6be1543975d9">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
 , <a class="el" href="group__data.html#a5c040ac8604fcbccd12a03ac15a9683d">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
+</li>
+<li>host_context
+: <a class="el" href="group__data.html#aeec05099f96fb1cb8cc7cfcc766ab3a7">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
 </li>
 </ul>
 
@@ -246,6 +260,7 @@ $(function() {
 , <a class="el" href="group__data.html#ae2309f9b3ad14e2d81309cdf9a838b04">cl::sycl::detail::buffer_waiter&lt; T, Dimensions, Allocator &gt;</a>
 , <a class="el" href="group__execution.html#abcb77998f4d28377e7e0bc498ff3fcc4">cl::sycl::kernel</a>
 , <a class="el" href="group__data.html#acc0aba2b4b0b9bc09caa9718612fb415">cl::sycl::pipe&lt; T &gt;</a>
+, <a class="el" href="classcl_1_1sycl_1_1program.html#a4665cb7e6d4668e3b76911a246d4d193">cl::sycl::program</a>
 , <a class="el" href="group__execution.html#a6378f74398e8baaf216bd3f4e565e3d8">cl::sycl::queue</a>
 , <a class="el" href="group__data.html#af66608b756bd07c9b844b71121412001">cl::sycl::static_pipe&lt; T, Capacity &gt;</a>
 </li>
@@ -273,7 +288,8 @@ $(function() {
 : <a class="el" href="group__data.html#ab79460339b0aa9c8900e566409f81f8b">cl::sycl::detail::buffer_base</a>
 </li>
 <li>local_index
-: <a class="el" href="group__parallelism.html#a7c9482d0adcd85c0ce7ad7eacb2ccfbf">cl::sycl::nd_item&lt; Dimensions &gt;</a>
+: <a class="el" href="group__parallelism.html#a513f3d4297021517022728f96dd7b2e1">cl::sycl::h_item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#a7c9482d0adcd85c0ce7ad7eacb2ccfbf">cl::sycl::nd_item&lt; Dimensions &gt;</a>
 </li>
 <li>local_range
 : <a class="el" href="group__parallelism.html#aebb1366b561f4b2e89a4226647a085a9">cl::sycl::nd_range&lt; Dimensions &gt;</a>
@@ -300,7 +316,8 @@ $(function() {
 
 <h3><a id="index_n"></a>- n -</h3><ul>
 <li>ND_range
-: <a class="el" href="group__parallelism.html#a4e1ca412e9216920a4a9cafa8789026d">cl::sycl::nd_item&lt; Dimensions &gt;</a>
+: <a class="el" href="group__parallelism.html#ad17103f710d993ae883dd267118ef0a8">cl::sycl::h_item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#a4e1ca412e9216920a4a9cafa8789026d">cl::sycl::nd_item&lt; Dimensions &gt;</a>
 </li>
 <li>ndr
 : <a class="el" href="group__parallelism.html#aa760464d4425d1cc65fffbd0a92cd7f3">cl::sycl::group&lt; Dimensions &gt;</a>
@@ -316,7 +333,7 @@ $(function() {
 
 <h3><a id="index_o"></a>- o -</h3><ul>
 <li>offset
-: <a class="el" href="group__parallelism.html#a3105c3ba931ffd046d0965b87ead65ce">cl::sycl::item&lt; Dimensions &gt;</a>
+: <a class="el" href="group__parallelism.html#a7f59dc067b806710691a6bccec59ca2c">cl::sycl::item&lt; Dimensions, with_offset &gt;</a>
 , <a class="el" href="group__parallelism.html#a55b9eca352ad480983ede376f77c6747">cl::sycl::nd_range&lt; Dimensions &gt;</a>
 </li>
 <li>ok
@@ -339,22 +356,22 @@ $(function() {
 , <a class="el" href="structcl_1_1sycl_1_1drt_1_1code_1_1program.html#a3acb7ac6ccd71164b32e0f7571d98dfa">cl::sycl::drt::code::program</a>
 </li>
 <li>partition_dim
-: <a class="el" href="structcl_1_1sycl_1_1xilinx_1_1partition_1_1block.html#a41bafd98f8bd77b1b985833812790dd1">cl::sycl::xilinx::partition::block&lt; ElmInEachPhyMem, PDim &gt;</a>
-, <a class="el" href="structcl_1_1sycl_1_1xilinx_1_1partition_1_1complete.html#a56e983c0a9d0fda3815c1801be6875e0">cl::sycl::xilinx::partition::complete&lt; PDim &gt;</a>
-, <a class="el" href="structcl_1_1sycl_1_1xilinx_1_1partition_1_1cyclic.html#a1ec13f54656118be1b95d6beb891ccc3">cl::sycl::xilinx::partition::cyclic&lt; PhyMemNum, PDim &gt;</a>
+: <a class="el" href="structcl_1_1sycl_1_1vendor_1_1xilinx_1_1partition_1_1block.html#a3bd2accb9c01324ba839e7a2f4f802ed">cl::sycl::vendor::xilinx::partition::block&lt; ElmInEachPhyMem, PDim &gt;</a>
+, <a class="el" href="structcl_1_1sycl_1_1vendor_1_1xilinx_1_1partition_1_1complete.html#ab09f938fc1359ea2ddd9573f84f32bbb">cl::sycl::vendor::xilinx::partition::complete&lt; PDim &gt;</a>
+, <a class="el" href="structcl_1_1sycl_1_1vendor_1_1xilinx_1_1partition_1_1cyclic.html#a4328a3cbdf1c13c5e9dcb724444d9ce2">cl::sycl::vendor::xilinx::partition::cyclic&lt; PhyMemNum, PDim &gt;</a>
 </li>
 <li>partition_type
-: <a class="el" href="structcl_1_1sycl_1_1xilinx_1_1partition_1_1block.html#a87393c3b499144d5ccbe65adae3cc1b1">cl::sycl::xilinx::partition::block&lt; ElmInEachPhyMem, PDim &gt;</a>
-, <a class="el" href="structcl_1_1sycl_1_1xilinx_1_1partition_1_1complete.html#ac305ff2f73292a165c3409971f81ead1">cl::sycl::xilinx::partition::complete&lt; PDim &gt;</a>
-, <a class="el" href="structcl_1_1sycl_1_1xilinx_1_1partition_1_1cyclic.html#af9708623b4e9ae1b86c4ce2b4a657bb5">cl::sycl::xilinx::partition::cyclic&lt; PhyMemNum, PDim &gt;</a>
-, <a class="el" href="structcl_1_1sycl_1_1xilinx_1_1partition_1_1none.html#a7a6ec9a18d6861139d0849137df2169d">cl::sycl::xilinx::partition::none</a>
-, <a class="el" href="group__Xilinx.html#a42d70c4bd94a74524fc00c10f42bd50e">cl::sycl::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;</a>
+: <a class="el" href="structcl_1_1sycl_1_1vendor_1_1xilinx_1_1partition_1_1block.html#a884f7150766b82530cc12e194ebf078b">cl::sycl::vendor::xilinx::partition::block&lt; ElmInEachPhyMem, PDim &gt;</a>
+, <a class="el" href="structcl_1_1sycl_1_1vendor_1_1xilinx_1_1partition_1_1complete.html#a3413763d7ac594150c924c1ae235fd60">cl::sycl::vendor::xilinx::partition::complete&lt; PDim &gt;</a>
+, <a class="el" href="structcl_1_1sycl_1_1vendor_1_1xilinx_1_1partition_1_1cyclic.html#ab9a82d6c9deffcea62a5ce2c4f8fa302">cl::sycl::vendor::xilinx::partition::cyclic&lt; PhyMemNum, PDim &gt;</a>
+, <a class="el" href="structcl_1_1sycl_1_1vendor_1_1xilinx_1_1partition_1_1none.html#a0e0aea214ebef55052972452aefffa38">cl::sycl::vendor::xilinx::partition::none</a>
+, <a class="el" href="group__Xilinx.html#a915ee6b90112394b537b63fbcd9b923b">cl::sycl::vendor::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;</a>
 </li>
 <li>physical_mem_num
-: <a class="el" href="structcl_1_1sycl_1_1xilinx_1_1partition_1_1cyclic.html#a09b8328c20a7b1994a6374df1601adce">cl::sycl::xilinx::partition::cyclic&lt; PhyMemNum, PDim &gt;</a>
+: <a class="el" href="structcl_1_1sycl_1_1vendor_1_1xilinx_1_1partition_1_1cyclic.html#a05a538f08c1f468884bff2a10bbb2e8e">cl::sycl::vendor::xilinx::partition::cyclic&lt; PhyMemNum, PDim &gt;</a>
 </li>
 <li>platform_extensions
-: <a class="el" href="group__execution.html#a24c04deb1b5461b557cd2660992c30a0">cl::sycl::detail::host_platform</a>
+: <a class="el" href="group__execution.html#a4f9ca53c15ba69199b0993c9d957dba8">cl::sycl::detail::host_platform</a>
 </li>
 <li>producer_tasks
 : <a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#ac022fb4cbc8c6ae4ed388aa70dde2d3f">cl::sycl::detail::task</a>
@@ -374,6 +391,9 @@ $(function() {
 
 
 <h3><a id="index_r"></a>- r -</h3><ul>
+<li>r
+: <a class="el" href="group__vector.html#gaba79f56a8bd59d72ea49137d61c0581e">cl::sycl::elem</a>
+</li>
 <li>r_rid_q
 : <a class="el" href="group__data.html#a9045112c80d34a32199faf91fb4ea08e">cl::sycl::detail::pipe&lt; T &gt;</a>
 </li>
@@ -405,6 +425,54 @@ $(function() {
 
 
 <h3><a id="index_s"></a>- s -</h3><ul>
+<li>s0
+: <a class="el" href="group__vector.html#gaeeb1357cd93c2d007b2af483e196462d">cl::sycl::elem</a>
+</li>
+<li>s1
+: <a class="el" href="group__vector.html#ga4e98019ca25c4f2462c546b633cd823a">cl::sycl::elem</a>
+</li>
+<li>s2
+: <a class="el" href="group__vector.html#ga874b33d50f026e48ddf4cf34b0f6f50d">cl::sycl::elem</a>
+</li>
+<li>s3
+: <a class="el" href="group__vector.html#ga149bca29851378f4857839a7fc6bb056">cl::sycl::elem</a>
+</li>
+<li>s4
+: <a class="el" href="group__vector.html#ga22f4efb887304823c67299f38019ded0">cl::sycl::elem</a>
+</li>
+<li>s5
+: <a class="el" href="group__vector.html#ga29e4f10ddb4b9a9540e4ca1922f139f2">cl::sycl::elem</a>
+</li>
+<li>s6
+: <a class="el" href="group__vector.html#gab09d74dfb508ddffe8996447278a61aa">cl::sycl::elem</a>
+</li>
+<li>s7
+: <a class="el" href="group__vector.html#ga4755b4c74d6118fa83fc7d72feb71d25">cl::sycl::elem</a>
+</li>
+<li>s8
+: <a class="el" href="group__vector.html#ga7586edc8b26b330e8d8fdbb9aaaf00cd">cl::sycl::elem</a>
+</li>
+<li>s9
+: <a class="el" href="group__vector.html#ga7dcb39934cd7de3ba2273f31e0398cf2">cl::sycl::elem</a>
+</li>
+<li>sA
+: <a class="el" href="group__vector.html#gaf900fbbf12553b8206da4d996599b44f">cl::sycl::elem</a>
+</li>
+<li>sB
+: <a class="el" href="group__vector.html#ga1a726788627eccc26e0400ddd510f812">cl::sycl::elem</a>
+</li>
+<li>sC
+: <a class="el" href="group__vector.html#gae44f56226361a4a1c9fb2d6b0549a083">cl::sycl::elem</a>
+</li>
+<li>sD
+: <a class="el" href="group__vector.html#ga1d398ff506697ae71bccb29f3b00db27">cl::sycl::elem</a>
+</li>
+<li>sE
+: <a class="el" href="group__vector.html#ga313a91c8a485d983ecae892e87f9b6d7">cl::sycl::elem</a>
+</li>
+<li>sF
+: <a class="el" href="group__vector.html#gaee2e9af1c3b1ec7ee265d43589460e8a">cl::sycl::elem</a>
+</li>
 <li>shared_ptr_implementation
 : <a class="el" href="group__execution.html#a94aa6a9bd1be6c9bd3e00b446f0c4fd5">cl::sycl::platform</a>
 </li>
@@ -448,6 +516,9 @@ $(function() {
 
 
 <h3><a id="index_w"></a>- w -</h3><ul>
+<li>w
+: <a class="el" href="group__vector.html#ga391e19e48ff05630f1f1fdd0b49e08b3">cl::sycl::elem</a>
+</li>
 <li>w_rid_q
 : <a class="el" href="group__data.html#a15de0ef2c1600a5013a14d129a604590">cl::sycl::detail::pipe&lt; T &gt;</a>
 </li>
@@ -455,10 +526,31 @@ $(function() {
 : <a class="el" href="group__data.html#a7a7df3d5199a3a00c8ab655234fe7189">cl::sycl::detail::pipe&lt; T &gt;</a>
 </li>
 </ul>
+
+
+<h3><a id="index_x"></a>- x -</h3><ul>
+<li>x
+: <a class="el" href="group__vector.html#ga089abc6a7d823616e5091e5ff293f088">cl::sycl::elem</a>
+</li>
+</ul>
+
+
+<h3><a id="index_y"></a>- y -</h3><ul>
+<li>y
+: <a class="el" href="group__vector.html#ga5cfcdcdca9ada16b8ec61188feeeb428">cl::sycl::elem</a>
+</li>
+</ul>
+
+
+<h3><a id="index_z"></a>- z -</h3><ul>
+<li>z
+: <a class="el" href="group__vector.html#ga08274fc4fcc20507640de4dae80ef179">cl::sycl::elem</a>
+</li>
+</ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 20 2018 19:26:25 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

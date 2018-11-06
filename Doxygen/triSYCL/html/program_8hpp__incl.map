@@ -1,0 +1,31 @@
+<map id="include/CL/sycl/program.hpp" name="include/CL/sycl/program.hpp">
+<area shape="rect" id="node3" href="$debug_8hpp.html" title="CL/sycl/detail/debug.hpp" alt="" coords="175,1257,342,1284"/>
+<area shape="rect" id="node10" href="$shared__ptr__implementation_8hpp.html" title="CL/sycl/detail/shared\l_ptr_implementation.hpp" alt="" coords="641,915,805,956"/>
+<area shape="rect" id="node14" href="$unimplemented_8hpp.html" title="CL/sycl/detail/unimplemented.hpp" alt="" coords="533,840,752,867"/>
+<area shape="rect" id="node15" href="$kernel_8hpp.html" title="CL/sycl/kernel.hpp" alt="" coords="373,80,504,107"/>
+<area shape="rect" id="node50" href="$program_2detail_2program_8hpp.html" title="CL/sycl/program/detail\l/program.hpp" alt="" coords="297,751,450,792"/>
+<area shape="rect" id="node16" href="$kernel_2detail_2kernel_8hpp.html" title="CL/sycl/kernel/detail\l/kernel.hpp" alt="" coords="649,244,791,285"/>
+<area shape="rect" id="node49" href="$opencl__kernel_8hpp.html" title="CL/sycl/kernel/detail\l/opencl_kernel.hpp" alt="" coords="649,155,791,196"/>
+<area shape="rect" id="node17" href="$queue_2detail_2queue_8hpp.html" title="CL/sycl/queue/detail\l/queue.hpp" alt="" coords="1965,333,2107,375"/>
+<area shape="rect" id="node40" href="$range_8hpp.html" title="CL/sycl/range.hpp" alt="" coords="1777,1093,1905,1120"/>
+<area shape="rect" id="node21" href="$context_8hpp.html" title="CL/sycl/context.hpp" alt="" coords="2091,423,2229,449"/>
+<area shape="rect" id="node30" href="$device_8hpp.html" title="CL/sycl/device.hpp" alt="" coords="2159,676,2294,703"/>
+<area shape="rect" id="node23" href="$host__context_8hpp.html" title="CL/sycl/context/detail\l/host_context.hpp" alt="" coords="1132,497,1281,539"/>
+<area shape="rect" id="node24" href="$default__classes_8hpp.html" title="CL/sycl/detail/default\l_classes.hpp" alt="" coords="2507,915,2653,956"/>
+<area shape="rect" id="node26" href="$exception_8hpp.html" title="CL/sycl/exception.hpp" alt="" coords="1083,840,1235,867"/>
+<area shape="rect" id="node34" href="$platform_8hpp.html" title="CL/sycl/platform.hpp" alt="" coords="2019,840,2162,867"/>
+<area shape="rect" id="node46" href="$device__selector_8hpp.html" title="CL/sycl/device_selector.hpp" alt="" coords="1605,758,1792,785"/>
+<area shape="rect" id="node47" href="$opencl__context_8hpp.html" title="CL/sycl/context/detail\l/opencl_context.hpp" alt="" coords="1973,497,2123,539"/>
+<area shape="rect" id="node48" href="$info_2context_8hpp.html" title="CL/sycl/info/context.hpp" alt="" coords="2611,594,2775,621"/>
+<area shape="rect" id="node25" href="$singleton_8hpp.html" title="CL/sycl/detail/singleton.hpp" alt="" coords="881,922,1063,949"/>
+<area shape="rect" id="node27" href="$param__traits_8hpp.html" title="CL/sycl/info/param\l_traits.hpp" alt="" coords="1541,1004,1673,1045"/>
+<area shape="rect" id="node28" href="$info_2platform_8hpp.html" title="CL/sycl/info/platform.hpp" alt="" coords="981,676,1149,703"/>
+<area shape="rect" id="node29" href="$context_2detail_2context_8hpp.html" title="CL/sycl/context/detail\l/context.hpp" alt="" coords="2085,587,2235,628"/>
+<area shape="rect" id="node33" href="$host__device_8hpp.html" title="CL/sycl/device/detail\l/host_device.hpp" alt="" coords="1387,751,1531,792"/>
+<area shape="rect" id="node35" href="$info_2device_8hpp.html" title="CL/sycl/info/device.hpp" alt="" coords="2041,922,2199,949"/>
+<area shape="rect" id="node36" href="$id_8hpp.html" title="CL/sycl/id.hpp" alt="" coords="2067,1011,2173,1038"/>
+<area shape="rect" id="node42" href="$opencl__types_8hpp.html" title="triSYCL wrapper for OpenCL types " alt="" coords="2267,1011,2440,1038"/>
+<area shape="rect" id="node43" href="$opencl__device_8hpp.html" title="CL/sycl/device/detail\l/opencl_device.hpp" alt="" coords="1867,751,2011,792"/>
+<area shape="rect" id="node37" href="$small__array_8hpp.html" title="CL/sycl/detail/small\l_array.hpp" alt="" coords="1905,1168,2042,1209"/>
+<area shape="rect" id="node44" href="$cache_8hpp.html" title="CL/sycl/detail/cache.hpp" alt="" coords="1675,840,1842,867"/>
+</map>

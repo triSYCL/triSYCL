@@ -1,6 +1,0 @@
-<map id="cl::sycl::context::get_platform" name="cl::sycl::context::get_platform">
-<area shape="rect" id="node2" href="$group__execution.html#a86e0d2c756c13114e0464cc42956dd66" title="Specifies whether the context is in SYCL Host Execution Mode. " alt="" coords="176,5,299,47"/>
-<area shape="rect" id="node3" href="$group__data.html#a43ad593cdde6aaaf0b1c3d641b61d5f6" title="When a transfer is requested this function is called, it will update the state of the buffer accordin..." alt="" coords="347,5,527,47"/>
-<area shape="rect" id="node4" href="$group__data.html#a18c84f42244a43a6d0949740aea54039" title="Function pair to work around the fact that T might be a const type. " alt="" coords="575,5,747,47"/>
-<area shape="rect" id="node5" href="$group__data.html#aff094e6da92d7103b9d5f382c0c1bc7d" title="Create a new sub&#45;buffer without allocation to have separate accessors later. " alt="" coords="795,5,939,47"/>
-</map>

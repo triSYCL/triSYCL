@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['r',['r',['../group__vector.html#gaba79f56a8bd59d72ea49137d61c0581e',1,'cl::sycl::elem']]],
   ['r_5frid_5fq',['r_rid_q',['../group__data.html#a9045112c80d34a32199faf91fb4ea08e',1,'cl::sycl::detail::pipe']]],
   ['rank',['rank',['../group__data.html#aa23c5111570426b2df60259c0c2f21bf',1,'cl::sycl::detail::pipe_accessor']]],
   ['read_5fdone',['read_done',['../group__data.html#a80a041f6acf9e2424b481bccdf6bdf7a',1,'cl::sycl::detail::pipe']]],

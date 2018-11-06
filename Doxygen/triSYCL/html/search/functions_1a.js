@@ -1,6 +1,7 @@
 var searchData=
 [
   ['_7eaccessor',['~accessor',['../group__data.html#a2fd25bf06f9cacf57cb88201d4587fdc',1,'cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;']]],
+  ['_7eaccessor_5fbase',['~accessor_base',['../group__data.html#adc7106f1d2cfd1a613b3ff2aa81def21',1,'cl::sycl::detail::accessor_base']]],
   ['_7ebuffer',['~buffer',['../group__data.html#aff094e6da92d7103b9d5f382c0c1bc7d',1,'cl::sycl::detail::buffer']]],
   ['_7ebuffer_5fbase',['~buffer_base',['../group__data.html#af76bad825e7f4bab1965782975b99912',1,'cl::sycl::detail::buffer_base']]],
   ['_7ebuffer_5fwaiter',['~buffer_waiter',['../group__data.html#a97cf8dbb9a2d33332f39c8595a5ff57f',1,'cl::sycl::detail::buffer_waiter']]],
@@ -15,5 +16,6 @@ var searchData=
   ['_7epipe_5faccessor',['~pipe_accessor',['../group__data.html#af657c6160ef3e2a8c52d80d602be5af4',1,'cl::sycl::detail::pipe_accessor']]],
   ['_7epipe_5freservation',['~pipe_reservation',['../group__data.html#a313c3a16cfb3ffe357949a4ec5a15082',1,'cl::sycl::detail::pipe_reservation']]],
   ['_7eplatform',['~platform',['../group__execution.html#af860565916dcaf9c76d2ce9be3de4ddb',1,'cl::sycl::detail::platform']]],
+  ['_7eprogram',['~program',['../classcl_1_1sycl_1_1detail_1_1program.html#aa3617f8e837ff1efbaf912b672023e52',1,'cl::sycl::detail::program']]],
   ['_7equeue',['~queue',['../structcl_1_1sycl_1_1detail_1_1queue.html#a43bee70b08ce8c58858debc83ae62177',1,'cl::sycl::detail::queue']]]
 ];

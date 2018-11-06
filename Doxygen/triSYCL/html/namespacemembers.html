@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>triSYCL implementation of OpenCL SYCL: Namespace Members</title>
+<title>triSYCL implementation of SYCL: Namespace Members</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">triSYCL implementation of OpenCL SYCL
+   <div id="projectname">triSYCL implementation of SYCL
    </div>
   </td>
  </tr>
@@ -64,6 +64,12 @@ $(function() {
 <li>__attribute__()
 : <a class="el" href="namespacecl_1_1sycl_1_1detail.html#a5b294899dc0a9e68a743a8624cf541b3">cl::sycl::detail</a>
 </li>
+<li>__swizzled_base_vec__
+: <a class="el" href="namespacecl_1_1sycl_1_1detail.html#acbb13b7fd12656f3d0d968542cfdf6d9">cl::sycl::detail</a>
+</li>
+<li>__swizzled_vec__
+: <a class="el" href="group__vector.html#ga88c7f6b5fe2c434fae3bbdab23940ce6">cl::sycl</a>
+</li>
 </ul>
 
 
@@ -75,7 +81,7 @@ $(function() {
 : <a class="el" href="group__address__spaces.html#ga90cdf1e6090ab9bb11a53b55ee19452d">cl::sycl::detail</a>
 </li>
 <li>address_space
-: <a class="el" href="group__address__spaces.html#ga03ea3501c0e52ba48d2cdf36ff00f0a7">cl::sycl</a>
+: <a class="el" href="group__address__spaces.html#ga5e27fb52200a87529fd9cdb404334a27">cl::sycl::access</a>
 </li>
 <li>async_handler
 : <a class="el" href="group__error__handling.html#ga87a1e41a35a123f582923b6a557af892">cl::sycl</a>
@@ -95,16 +101,22 @@ $(function() {
 
 <h3><a id="index_c"></a>- c -</h3><ul>
 <li>constant
-: <a class="el" href="group__address__spaces.html#ga8d4ad590125ccc3fb732809cac191d4f">cl::sycl</a>
-</li>
-<li>constant_address_space
-: <a class="el" href="group__address__spaces.html#gga03ea3501c0e52ba48d2cdf36ff00f0a7a541bdaa4314885d18557e8c622222659">cl::sycl</a>
+: <a class="el" href="group__address__spaces.html#gac9953334bcf785abd34954d74ec9824e">cl::sycl</a>
 </li>
 <li>constant_ptr
 : <a class="el" href="group__address__spaces.html#ga171a0e0131c2cb6703a218f5504e2310">cl::sycl</a>
 </li>
 <li>context
 : <a class="el" href="group__execution.html#ga1a5898274a448ac592ebbcee928939c1">cl::sycl::info</a>
+</li>
+<li>context::get_info&lt; info::context::devices &gt;()
+: <a class="el" href="group__execution.html#ga410622a27b17237c69abcd3895751cd4">cl::sycl</a>
+</li>
+<li>context::get_info&lt; info::context::platform &gt;()
+: <a class="el" href="group__execution.html#gad2495127ccdd96c1d8f18b7fb7c1ad11">cl::sycl</a>
+</li>
+<li>context::get_info&lt; info::context::reference_count &gt;()
+: <a class="el" href="group__execution.html#ga10fe3350f378b8466b7831e966ea43d4">cl::sycl</a>
 </li>
 <li>cpu_selector
 : <a class="el" href="group__execution.html#ga8a3f68939e9439d0045ee44bb900265d">cl::sycl</a>
@@ -113,8 +125,8 @@ $(function() {
 
 
 <h3><a id="index_d"></a>- d -</h3><ul>
-<li>dataflow()
-: <a class="el" href="namespacecl_1_1sycl_1_1xilinx.html#a378d037f57bf1c61fe6e762c73fd6182">cl::sycl::xilinx</a>
+<li>dataflow
+: <a class="el" href="namespacecl_1_1sycl_1_1vendor_1_1xilinx.html#a77a49708579ef702ae633e6e99115e22">cl::sycl::vendor::xilinx</a>
 </li>
 <li>default_selector
 : <a class="el" href="group__execution.html#gae931bd992a57ff1688115d595fbe071b">cl::sycl</a>
@@ -122,47 +134,11 @@ $(function() {
 <li>device
 : <a class="el" href="group__execution.html#ga51f4189fcf4ca86d768d0fcce34d8bc5">cl::sycl::info</a>
 </li>
-<li>device::get_info&lt; info::device::device_type &gt;()
-: <a class="el" href="group__execution.html#ga51449d84198f5d5c854d1ec30c2a42a6">cl::sycl</a>
-</li>
-<li>device::get_info&lt; info::device::local_mem_size &gt;()
-: <a class="el" href="group__execution.html#gaa36a4074133ab7726b7ee177c82cd0d2">cl::sycl</a>
-</li>
-<li>device::get_info&lt; info::device::max_compute_units &gt;()
-: <a class="el" href="group__execution.html#ga39a659c7dd7d60523ab0630faed88fdb">cl::sycl</a>
-</li>
-<li>device::get_info&lt; info::device::max_mem_alloc_size &gt;()
-: <a class="el" href="group__execution.html#ga4b779e63f73e6e22c2c1835c552032c5">cl::sycl</a>
-</li>
-<li>device::get_info&lt; info::device::max_work_group_size &gt;()
-: <a class="el" href="group__execution.html#gaf7d830fcf2f4bf6e6f3af43441c6262e">cl::sycl</a>
-</li>
-<li>device::get_info&lt; info::device::name &gt;()
-: <a class="el" href="group__execution.html#ga816f0aeb8a572342f2e63731ea91856e">cl::sycl</a>
-</li>
-<li>device::get_info&lt; info::device::profile &gt;()
-: <a class="el" href="group__execution.html#ga7b069a553dadff6589cb7bfe63bac305">cl::sycl</a>
-</li>
-<li>device::get_info&lt; info::device::vendor &gt;()
-: <a class="el" href="group__execution.html#gadd1061d65f4a7498690386f67a1ee340">cl::sycl</a>
-</li>
-<li>device_affinity_domain
-: <a class="el" href="group__execution.html#ga51116d5add442d9bae6028c45e09eca4">cl::sycl::info</a>
-</li>
 <li>device_exec_capabilities
 : <a class="el" href="group__execution.html#gac5ac9066c5ce7d0a10dcffaddfa0769a">cl::sycl::info</a>
 </li>
-<li>device_execution_capabilities
-: <a class="el" href="group__execution.html#ga9a5e05b02059b134514d134a1e350320">cl::sycl::info</a>
-</li>
 <li>device_fp_config
 : <a class="el" href="group__execution.html#gae9c4c661cca884e4d9e2f39ebcf49116">cl::sycl::info</a>
-</li>
-<li>device_partition_property
-: <a class="el" href="group__execution.html#gaa0e3e915db3c3a6049efb595141acfcd">cl::sycl::info</a>
-</li>
-<li>device_partition_type
-: <a class="el" href="group__execution.html#ga88aea8ff69afd9cf81594eb915690b25">cl::sycl::info</a>
 </li>
 <li>device_queue_properties
 : <a class="el" href="group__execution.html#gad4ea7703299d04277a837ac58ba36834">cl::sycl::info</a>
@@ -179,6 +155,9 @@ $(function() {
 </li>
 <li>exception_ptr_class
 : <a class="el" href="namespacecl_1_1sycl.html#a2142f5990bff9e140a51aac753244d37">cl::sycl</a>
+</li>
+<li>execution_capability
+: <a class="el" href="group__execution.html#ga325a35c99165b9ee10d88acd0ea73c00">cl::sycl::info</a>
 </li>
 <li>expand()
 : <a class="el" href="group__array__tuple__helpers.html#ga317658776c2a111ecc29571868fcc2af">cl::sycl::detail</a>
@@ -201,19 +180,13 @@ $(function() {
 
 <h3><a id="index_g"></a>- g -</h3><ul>
 <li>generic
-: <a class="el" href="group__address__spaces.html#ga06b918e29b91e69ff65607992f6e395b">cl::sycl</a>
-</li>
-<li>generic_address_space
-: <a class="el" href="group__address__spaces.html#gga03ea3501c0e52ba48d2cdf36ff00f0a7a6552359007d72e6bc8c7b4371205be85">cl::sycl</a>
+: <a class="el" href="group__address__spaces.html#ga6187daeb8856d3a32e1163e084a590bc">cl::sycl</a>
 </li>
 <li>get_pipe_detail()
 : <a class="el" href="group__data.html#gaa512aefcf7a0af133b0cd252e9628fa1">cl::sycl</a>
 </li>
 <li>global
-: <a class="el" href="group__address__spaces.html#ga3882a38ef2f8afbca5e6e0e48637d1f6">cl::sycl</a>
-</li>
-<li>global_address_space
-: <a class="el" href="group__address__spaces.html#gga03ea3501c0e52ba48d2cdf36ff00f0a7a3cfdd7e85b6c75ca1e4d39409e1fee0d">cl::sycl</a>
+: <a class="el" href="group__address__spaces.html#ga45327d8a36fee424889c79d2288e380c">cl::sycl</a>
 </li>
 <li>global_mem_cache_type
 : <a class="el" href="group__execution.html#ga8986fcccc4479065bdbf37d9b9d8def5">cl::sycl::info</a>
@@ -256,10 +229,7 @@ $(function() {
 : <a class="el" href="group__helpers.html#ga8ccbed3e03e1b92e0a4f01b691c093cf">cl::sycl::detail</a>
 </li>
 <li>local
-: <a class="el" href="group__address__spaces.html#ga84b28327ccb8c32ea971d6c1d5f3bca2">cl::sycl</a>
-</li>
-<li>local_address_space
-: <a class="el" href="group__address__spaces.html#gga03ea3501c0e52ba48d2cdf36ff00f0a7aefbe66b6f240d78e68c0b7297f3d98c6">cl::sycl</a>
+: <a class="el" href="group__address__spaces.html#ga883b9282bda545bcf2d9a05a42916b8c">cl::sycl</a>
 </li>
 <li>local_mem_type
 : <a class="el" href="group__execution.html#gad3cf44d11f60b23508e91d1ed61ad001">cl::sycl::info</a>
@@ -274,11 +244,11 @@ $(function() {
 <li>make_id()
 : <a class="el" href="group__parallelism.html#gafbc9d7c4a1a2ae2844c1f7ee95c3ee42">cl::sycl</a>
 </li>
-<li>make_multi()
-: <a class="el" href="group__address__spaces.html#gad49feb5469dfdcee64f7d5a6da0bb56b">cl::sycl</a>
+<li>make_ptr()
+: <a class="el" href="group__address__spaces.html#gab52ff48248bf64397b6ae0b0bbad900c">cl::sycl</a>
 </li>
 <li>make_range()
-: <a class="el" href="group__parallelism.html#ga2b1fd490570164577de845ab0d26ebbb">cl::sycl</a>
+: <a class="el" href="group__parallelism.html#gab38404a0fc1e2a27f731e572e0ece88b">cl::sycl</a>
 </li>
 <li>map_allocator
 : <a class="el" href="group__data.html#gaa5ab7472bc98afc7f70032036e6cc501">cl::sycl</a>
@@ -305,32 +275,41 @@ $(function() {
 <li>parallel_for_global_offset()
 : <a class="el" href="group__parallelism.html#gadd585203df163dadc5975119f59f8bd8">cl::sycl::detail</a>
 </li>
-<li>parallel_for_work_item()
-: <a class="el" href="group__parallelism.html#ga929002a0e83ac349605e51f8dc35059c">cl::sycl</a>
-</li>
 <li>parallel_for_workgroup()
 : <a class="el" href="group__parallelism.html#gaaa0f5e798ca65419dce78013af732580">cl::sycl::detail</a>
 </li>
 <li>parallel_for_workitem()
-: <a class="el" href="group__parallelism.html#ga3004da03b4f3be8dc72c49b58076107b">cl::sycl::detail</a>
+: <a class="el" href="group__parallelism.html#gac5cf59ffdd426280bad76e8079abd20c">cl::sycl::detail</a>
 </li>
-<li>pipeline()
-: <a class="el" href="namespacecl_1_1sycl_1_1xilinx.html#a5569d3d6b9d566645a689af938bd6b8c">cl::sycl::xilinx</a>
+<li>parallel_for_workitem_in_group()
+: <a class="el" href="group__parallelism.html#ga029353158fa91ee719ef7d50cba7e98f">cl::sycl::detail</a>
+</li>
+<li>partition_affinity_domain
+: <a class="el" href="group__execution.html#gaea3b7860826830db91022d3cc985119f">cl::sycl::info</a>
+</li>
+<li>partition_property
+: <a class="el" href="group__execution.html#ga66692c125641cb0e2716a89739b20260">cl::sycl::info</a>
+</li>
+<li>pipeline
+: <a class="el" href="namespacecl_1_1sycl_1_1vendor_1_1xilinx.html#abfe062c487f7cc48c9d02d243bde1547">cl::sycl::vendor::xilinx</a>
 </li>
 <li>platform
 : <a class="el" href="group__execution.html#ga3ea7e38ccbc7de5270c4f69bbae20463">cl::sycl::info</a>
+</li>
+<li>platform::get_info&lt; info::platform::extensions &gt;()
+: <a class="el" href="group__execution.html#ga5055148b20c07016f3c3af0fbd366fe6">cl::sycl</a>
 </li>
 <li>prevent_arguments_from_optimization
 : <a class="el" href="namespacecl_1_1sycl_1_1detail.html#a58e005985f0ab78944ae2574d0daa2cd">cl::sycl::detail</a>
 </li>
 <li>priv
-: <a class="el" href="group__address__spaces.html#ga02e3e5911ac85f86a3efd2353b6f13bd">cl::sycl</a>
-</li>
-<li>private_address_space
-: <a class="el" href="group__address__spaces.html#gga03ea3501c0e52ba48d2cdf36ff00f0a7a609235bf7830cbb437a74c2b682bbaf4">cl::sycl</a>
+: <a class="el" href="group__address__spaces.html#ga6535d11d97fb2aefeaf0dcf589c27fab">cl::sycl</a>
 </li>
 <li>private_ptr
 : <a class="el" href="group__address__spaces.html#gaae6ba26f7808ba467ed324b7296e7ad4">cl::sycl</a>
+</li>
+<li>program_state
+: <a class="el" href="namespacecl_1_1sycl.html#a104e4e04504c3752e3ba5a3d4013e0eb">cl::sycl</a>
 </li>
 </ul>
 
@@ -341,6 +320,13 @@ $(function() {
 </li>
 <li>queue_profiling
 : <a class="el" href="namespacecl_1_1sycl_1_1info.html#a03183ee18ed502bf29089e54fb2eb9bb">cl::sycl::info</a>
+</li>
+</ul>
+
+
+<h3><a id="index_r"></a>- r -</h3><ul>
+<li>rounding_mode
+: <a class="el" href="group__vector.html#ga16ab217f4d07c904f763adf0a270d1c0">cl::sycl</a>
 </li>
 </ul>
 
@@ -374,6 +360,9 @@ $(function() {
 <li>trace_kernel()
 : <a class="el" href="group__debug__trace.html#gaec63ccaca96a16c0819efb08055d6153">cl::sycl::detail</a>
 </li>
+<li>TRISYCL_INFO_PARAM_TRAITS()
+: <a class="el" href="group__execution.html#gae87799df4cd4c8f5fa9b7192f7c47227">cl::sycl::info</a>
+</li>
 <li>TRISYCL_MATH_WRAP()
 : <a class="el" href="namespacecl_1_1sycl.html#a0a2785865ab87030daa5e09933655620">cl::sycl</a>
 </li>
@@ -390,14 +379,14 @@ $(function() {
 : <a class="el" href="group__array__tuple__helpers.html#ga20f11bd336de7aae1776a9eb66866563">cl::sycl::detail</a>
 </li>
 <li>type
-: <a class="el" href="namespacecl_1_1sycl_1_1xilinx_1_1partition.html#aee770014a91e9141225e91c02351b832">cl::sycl::xilinx::partition</a>
+: <a class="el" href="namespacecl_1_1sycl_1_1vendor_1_1xilinx_1_1partition.html#ac56b86420c6894b82837b755e55fe065">cl::sycl::vendor::xilinx::partition</a>
 </li>
 </ul>
 
 
 <h3><a id="index_u"></a>- u -</h3><ul>
 <li>unimplemented()
-: <a class="el" href="group__helpers.html#gabc18198696a1e2ec4ea6c231a8c90391">cl::sycl::detail</a>
+: <a class="el" href="group__helpers.html#ga049782b4b19913105e7c2ce0d0c6cd93">cl::sycl::detail</a>
 </li>
 <li>unique_ptr_class
 : <a class="el" href="namespacecl_1_1sycl.html#a7297c7f7107f609a00c08c1808f4b765">cl::sycl</a>
@@ -437,7 +426,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 20 2018 19:26:25 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

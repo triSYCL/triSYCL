@@ -1,3 +1,4 @@
 <map id="cl::sycl::platform::platform" name="cl::sycl::platform::platform">
 <area shape="rect" id="node2" href="$classcl_1_1sycl_1_1detail_1_1opencl__device.html#a28ac3d33e032f28ef8ac247126902a01" title="Return the platform of device. " alt="" coords="172,5,321,47"/>
+<area shape="rect" id="node3" href="$group__execution.html#a8b15b178d6f19233667a73df004cc08e" title="Construct a platform class instance using a boost::compute::platform. " alt="" coords="187,71,306,112"/>
 </map>

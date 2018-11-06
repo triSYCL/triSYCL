@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>triSYCL implementation of OpenCL SYCL: cl::sycl::detail::host_device Class Reference</title>
+<title>triSYCL implementation of SYCL: cl::sycl::detail::host_device Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">triSYCL implementation of OpenCL SYCL
+   <div id="projectname">triSYCL implementation of SYCL
    </div>
   </td>
  </tr>
@@ -116,6 +116,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9f76f664d4afc961fc8bbf6313d2dcbe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__execution.html#classcl_1_1sycl_1_1platform">cl::sycl::platform</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcl_1_1sycl_1_1detail_1_1host__device.html#a9f76f664d4afc961fc8bbf6313d2dcbe">get_platform</a> () const override</td></tr>
 <tr class="memdesc:a9f76f664d4afc961fc8bbf6313d2dcbe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the platform of device.  <a href="#a9f76f664d4afc961fc8bbf6313d2dcbe">More...</a><br /></td></tr>
 <tr class="separator:a9f76f664d4afc961fc8bbf6313d2dcbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace45ceb1f3b437d7134062f755969841"><td class="memItemLeft" align="right" valign="top">std::any&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcl_1_1sycl_1_1detail_1_1host__device.html#ace45ceb1f3b437d7134062f755969841">get_info</a> (<a class="el" href="group__execution.html#ga51f4189fcf4ca86d768d0fcce34d8bc5">info::device</a> param) const override</td></tr>
+<tr class="memdesc:ace45ceb1f3b437d7134062f755969841"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query the device for OpenCL <a class="el" href="group__execution.html#ga51f4189fcf4ca86d768d0fcce34d8bc5" title="Device information descriptors. ">info::device</a> info.  <a href="#ace45ceb1f3b437d7134062f755969841">More...</a><br /></td></tr>
+<tr class="separator:ace45ceb1f3b437d7134062f755969841"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f56be4d8e4c64f40497fa69f0046293"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbool.html">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcl_1_1sycl_1_1detail_1_1host__device.html#a8f56be4d8e4c64f40497fa69f0046293">has_extension</a> (const <a class="el" href="namespacecl_1_1sycl.html#a20186da90261e9302b957e4823179f1b">string_class</a> &amp;extension) const override</td></tr>
 <tr class="memdesc:a8f56be4d8e4c64f40497fa69f0046293"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specify whether a specific extension is supported on the device.  <a href="#a8f56be4d8e4c64f40497fa69f0046293">More...</a><br /></td></tr>
 <tr class="separator:a8f56be4d8e4c64f40497fa69f0046293"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -132,7 +135,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>SYCL host device. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000140">Todo:</a></b></dt><dd>The implementation is quite minimal for now. :-) </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000139">Todo:</a></b></dt><dd>The implementation is quite minimal for now. :-) </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="host__device_8hpp_source.html#l00031">31</a> of file <a class="el" href="host__device_8hpp_source.html">host_device.hpp</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
@@ -200,6 +203,42 @@ Additional Inherited Members</h2></td></tr>
 <div class="fragment"><div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                                                   {</div><div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordflow">throw</span> non_cl_error(<span class="stringliteral">&quot;The host device has no underlying OpenCL device&quot;</span>);</div><div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  }</div></div><!-- fragment -->
 </div>
 </div>
+<a id="ace45ceb1f3b437d7134062f755969841"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace45ceb1f3b437d7134062f755969841">&#9670;&nbsp;</a></span>get_info()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::any cl::sycl::detail::host_device::get_info </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__execution.html#ga51f4189fcf4ca86d768d0fcce34d8bc5">info::device</a>&#160;</td>
+          <td class="paramname"><em>param</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Query the device for OpenCL <a class="el" href="group__execution.html#ga51f4189fcf4ca86d768d0fcce34d8bc5" title="Device information descriptors. ">info::device</a> info. </p>
+
+<p>Implements <a class="el" href="group__execution.html#a67be7605202deedc844da8fe5e2682c9">cl::sycl::detail::device</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="host__device_8hpp_source.html#l00102">102</a> of file <a class="el" href="host__device_8hpp_source.html">host_device.hpp</a>.</p>
+
+<p class="reference">References <a class="el" href="group__execution.html#ggad3cf44d11f60b23508e91d1ed61ad001a9c70933aff6b2a6d08c687a6cbb6b765">cl::sycl::info::global</a>, <a class="el" href="group__execution.html#gga839771ab6b37e25ae67d5c8a2d4d97f8a67b3dba8bc6778101892eb77249db32e">cl::sycl::info::host</a>, and <a class="el" href="host__device_8hpp_source.html#l00099">TRISYCL_DEFINE_DEVICE_HOST_INFO_TEMPLATE</a>.</p>
+<div class="fragment"><div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;                                            {</div><div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordflow">switch</span> (param) {</div><div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <a class="code" href="host__device_8hpp.html#a721eb95a5b8366d67e713c2a1269af6c">TRISYCL_DEFINE_DEVICE_HOST_INFO_TEMPLATE</a>(max_work_group_size, static_cast&lt;std::size_t&gt;(8))</div><div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <a class="code" href="host__device_8hpp.html#a721eb95a5b8366d67e713c2a1269af6c">TRISYCL_DEFINE_DEVICE_HOST_INFO_TEMPLATE</a>(max_work_item_sizes, (<a class="code" href="namespacecl.html">cl</a>::sycl::<span class="keywordtype">id</span>&lt;3&gt;{ 128, 128, 128 }))</div><div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <a class="code" href="host__device_8hpp.html#a721eb95a5b8366d67e713c2a1269af6c">TRISYCL_DEFINE_DEVICE_HOST_INFO_TEMPLATE</a>(max_compute_units, static_cast&lt;<a class="code" href="namespacecl.html">cl</a>::sycl::cl_uint&gt;(8))</div><div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <a class="code" href="host__device_8hpp.html#a721eb95a5b8366d67e713c2a1269af6c">TRISYCL_DEFINE_DEVICE_HOST_INFO_TEMPLATE</a>(device_type, info::device_type::host)</div><div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <a class="code" href="host__device_8hpp.html#a721eb95a5b8366d67e713c2a1269af6c">TRISYCL_DEFINE_DEVICE_HOST_INFO_TEMPLATE</a>(local_mem_type, info::local_mem_type::global)</div><div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <a class="code" href="host__device_8hpp.html#a721eb95a5b8366d67e713c2a1269af6c">TRISYCL_DEFINE_DEVICE_HOST_INFO_TEMPLATE</a>(local_mem_size, static_cast&lt;<a class="code" href="namespacecl.html">cl</a>::sycl::cl_ulong&gt;(32768))</div><div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    default:</div><div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;      return 0;</div><div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    }</div><div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  }</div><div class="ttc" id="namespacecl_html"><div class="ttname"><a href="namespacecl.html">cl</a></div><div class="ttdoc">The vector type to be used as SYCL vector. </div><div class="ttdef"><b>Definition:</b> <a href="access_8hpp_source.html#l00013">access.hpp:13</a></div></div>
+<div class="ttc" id="host__device_8hpp_html_a721eb95a5b8366d67e713c2a1269af6c"><div class="ttname"><a href="host__device_8hpp.html#a721eb95a5b8366d67e713c2a1269af6c">TRISYCL_DEFINE_DEVICE_HOST_INFO_TEMPLATE</a></div><div class="ttdeci">#define TRISYCL_DEFINE_DEVICE_HOST_INFO_TEMPLATE(name, result)</div><div class="ttdoc">Query the device for OpenCL info::device info. </div><div class="ttdef"><b>Definition:</b> <a href="host__device_8hpp_source.html#l00099">host_device.hpp:99</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="a9f76f664d4afc961fc8bbf6313d2dcbe"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9f76f664d4afc961fc8bbf6313d2dcbe">&#9670;&nbsp;</a></span>get_platform()</h2>
 
@@ -225,23 +264,15 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Return the platform of device. </p>
 <p>Return synchronous errors via the SYCL exception class.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000141">Todo:</a></b></dt><dd>To be implemented </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000140">Todo:</a></b></dt><dd>To be implemented </dd></dl>
 
 <p>Implements <a class="el" href="group__execution.html#a628c451fb47177455d3b262745734f39">cl::sycl::detail::device</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="host__device_8hpp_source.html#l00088">88</a> of file <a class="el" href="host__device_8hpp_source.html">host_device.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="unimplemented_8hpp_source.html#l00025">cl::sycl::detail::unimplemented()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;                                               {</div><div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <a class="code" href="group__helpers.html#gabc18198696a1e2ec4ea6c231a8c90391">detail::unimplemented</a>();</div><div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordflow">return</span> {};</div><div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  }</div><div class="ttc" id="group__helpers_html_gabc18198696a1e2ec4ea6c231a8c90391"><div class="ttname"><a href="group__helpers.html#gabc18198696a1e2ec4ea6c231a8c90391">cl::sycl::detail::unimplemented</a></div><div class="ttdeci">void unimplemented()</div><div class="ttdoc">Display an &quot;unimplemented&quot; message. </div><div class="ttdef"><b>Definition:</b> <a href="unimplemented_8hpp_source.html#l00025">unimplemented.hpp:25</a></div></div>
-</div><!-- fragment --><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classcl_1_1sycl_1_1detail_1_1host__device_a9f76f664d4afc961fc8bbf6313d2dcbe_cgraph.png" border="0" usemap="#classcl_1_1sycl_1_1detail_1_1host__device_a9f76f664d4afc961fc8bbf6313d2dcbe_cgraph" alt=""/></div>
-<map name="classcl_1_1sycl_1_1detail_1_1host__device_a9f76f664d4afc961fc8bbf6313d2dcbe_cgraph" id="classcl_1_1sycl_1_1detail_1_1host__device_a9f76f664d4afc961fc8bbf6313d2dcbe_cgraph">
-<area shape="rect" id="node2" href="group__helpers.html#gabc18198696a1e2ec4ea6c231a8c90391" title="Display an &quot;unimplemented&quot; message. " alt="" coords="200,13,399,39"/>
-</map>
-</div>
-
+<p class="reference">References <a class="el" href="unimplemented_8hpp_source.html#l00034">TRISYCL_UNIMPL</a>.</p>
+<div class="fragment"><div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;                                               {</div><div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <a class="code" href="group__helpers.html#gabc864dbff357567e07f18baf409db80e">TRISYCL_UNIMPL</a>;</div><div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordflow">return</span> {};</div><div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  }</div><div class="ttc" id="group__helpers_html_gabc864dbff357567e07f18baf409db80e"><div class="ttname"><a href="group__helpers.html#gabc864dbff357567e07f18baf409db80e">TRISYCL_UNIMPL</a></div><div class="ttdeci">#define TRISYCL_UNIMPL</div><div class="ttdef"><b>Definition:</b> <a href="unimplemented_8hpp_source.html#l00034">unimplemented.hpp:34</a></div></div>
+</div><!-- fragment -->
 </div>
 </div>
 <a id="a8f56be4d8e4c64f40497fa69f0046293"></a>
@@ -273,19 +304,11 @@ Here is the call graph for this function:</div>
 
 <p>Implements <a class="el" href="group__execution.html#a8ecad85a1b0a79988dcc6356ed64f793">cl::sycl::detail::device</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="host__device_8hpp_source.html#l00112">112</a> of file <a class="el" href="host__device_8hpp_source.html">host_device.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="host__device_8hpp_source.html#l00119">119</a> of file <a class="el" href="host__device_8hpp_source.html">host_device.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="unimplemented_8hpp_source.html#l00025">cl::sycl::detail::unimplemented()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;                                                                   {</div><div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <a class="code" href="group__helpers.html#gabc18198696a1e2ec4ea6c231a8c90391">detail::unimplemented</a>();</div><div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keywordflow">return</span> {};</div><div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;  }</div><div class="ttc" id="group__helpers_html_gabc18198696a1e2ec4ea6c231a8c90391"><div class="ttname"><a href="group__helpers.html#gabc18198696a1e2ec4ea6c231a8c90391">cl::sycl::detail::unimplemented</a></div><div class="ttdeci">void unimplemented()</div><div class="ttdoc">Display an &quot;unimplemented&quot; message. </div><div class="ttdef"><b>Definition:</b> <a href="unimplemented_8hpp_source.html#l00025">unimplemented.hpp:25</a></div></div>
-</div><!-- fragment --><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classcl_1_1sycl_1_1detail_1_1host__device_a8f56be4d8e4c64f40497fa69f0046293_cgraph.png" border="0" usemap="#classcl_1_1sycl_1_1detail_1_1host__device_a8f56be4d8e4c64f40497fa69f0046293_cgraph" alt=""/></div>
-<map name="classcl_1_1sycl_1_1detail_1_1host__device_a8f56be4d8e4c64f40497fa69f0046293_cgraph" id="classcl_1_1sycl_1_1detail_1_1host__device_a8f56be4d8e4c64f40497fa69f0046293_cgraph">
-<area shape="rect" id="node2" href="group__helpers.html#gabc18198696a1e2ec4ea6c231a8c90391" title="Display an &quot;unimplemented&quot; message. " alt="" coords="212,13,411,39"/>
-</map>
-</div>
-
+<p class="reference">References <a class="el" href="unimplemented_8hpp_source.html#l00034">TRISYCL_UNIMPL</a>.</p>
+<div class="fragment"><div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;                                                                   {</div><div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <a class="code" href="group__helpers.html#gabc864dbff357567e07f18baf409db80e">TRISYCL_UNIMPL</a>;</div><div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keywordflow">return</span> {};</div><div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;  }</div><div class="ttc" id="group__helpers_html_gabc864dbff357567e07f18baf409db80e"><div class="ttname"><a href="group__helpers.html#gabc864dbff357567e07f18baf409db80e">TRISYCL_UNIMPL</a></div><div class="ttdeci">#define TRISYCL_UNIMPL</div><div class="ttdef"><b>Definition:</b> <a href="unimplemented_8hpp_source.html#l00034">unimplemented.hpp:34</a></div></div>
+</div><!-- fragment -->
 </div>
 </div>
 <a id="a81b0e0d2545c53375b7e786bdd709bad"></a>
@@ -418,7 +441,7 @@ Here is the call graph for this function:</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 20 2018 19:26:24 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

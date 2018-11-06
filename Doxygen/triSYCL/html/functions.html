@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>triSYCL implementation of OpenCL SYCL: Class Members</title>
+<title>triSYCL implementation of SYCL: Class Members</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">triSYCL implementation of OpenCL SYCL
+   <div id="projectname">triSYCL implementation of SYCL
    </div>
   </td>
  </tr>
@@ -61,11 +61,15 @@ $(function() {
 <div class="textblock">Here is a list of all class members with links to the classes they belong to:</div>
 
 <h3><a id="index_a"></a>- a -</h3><ul>
+<li>a
+: <a class="el" href="group__vector.html#gaeace5e4b3952b15bfa6c81bce1450168">cl::sycl::elem</a>
+, <a class="el" href="group__vector.html#a4ddd569bd7b332c2fa36a7080eead979">cl::sycl::vec&lt; DataType, 4 &gt;</a>
+</li>
 <li>access
 : <a class="el" href="group__data.html#afaef5dac2d23161a54412d133e0b8a98">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
 </li>
 <li>accessor()
-: <a class="el" href="group__data.html#a19465e9a2481440a61c313718f99d45e">cl::sycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;</a>
+: <a class="el" href="group__data.html#a3d5f137fa399f9401ce61aef8b2d9798">cl::sycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;</a>
 , <a class="el" href="group__data.html#a6f501f33c73d9d0dce039acb5a7881f9">cl::sycl::accessor&lt; DataType, 1, AccessMode, access::target::blocking_pipe &gt;</a>
 , <a class="el" href="group__data.html#acb01cef35915110e872d705947732302">cl::sycl::accessor&lt; DataType, 1, AccessMode, access::target::pipe &gt;</a>
 , <a class="el" href="group__data.html#a36ccb33843403b0ac59fd673bc776712">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
@@ -104,7 +108,7 @@ $(function() {
 : <a class="el" href="group__address__spaces.html#a71118a65a5b9951ebf74854fb97667df">cl::sycl::detail::address_space_array&lt; T, AS &gt;</a>
 </li>
 <li>address_space_fundamental()
-: <a class="el" href="group__address__spaces.html#a9c54d40734d14ce01ccbd1b9266c6057">cl::sycl::detail::address_space_fundamental&lt; T, AS &gt;</a>
+: <a class="el" href="group__address__spaces.html#a05baa4801c2b1e1ba1a8439aec5400bf">cl::sycl::detail::address_space_fundamental&lt; T, AS &gt;</a>
 </li>
 <li>address_space_object()
 : <a class="el" href="group__address__spaces.html#aa68a76f29f098ade216c9ac534339daa">cl::sycl::detail::address_space_object&lt; T, AS &gt;</a>
@@ -113,7 +117,7 @@ $(function() {
 : <a class="el" href="group__address__spaces.html#afeb73b206c3b613bde89eea8f3053625">cl::sycl::detail::address_space_ptr&lt; T, AS &gt;</a>
 </li>
 <li>address_space_variable()
-: <a class="el" href="group__address__spaces.html#aef81221f58fcc6847fd2985700b50975">cl::sycl::detail::address_space_variable&lt; T, AS &gt;</a>
+: <a class="el" href="group__address__spaces.html#a8e8e4cdfd42cf3721e3ebbf9724396e4">cl::sycl::detail::address_space_variable&lt; T, AS &gt;</a>
 </li>
 <li>alloc
 : <a class="el" href="group__data.html#aec7f4cafcddc86e6fb5359f436e133c8">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
@@ -136,13 +140,16 @@ $(function() {
 , <a class="el" href="group__data.html#ac7bc8b3b0b67d7311c831160dfe369eb">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 </li>
 <li>array_size
-: <a class="el" href="group__Xilinx.html#af5b68cb108a899d0fa51c62c6c99e4ad">cl::sycl::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;</a>
+: <a class="el" href="group__Xilinx.html#a358ea5dda4090d80c0667d3d781be34c">cl::sycl::vendor::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;</a>
 </li>
 <li>array_type
 : <a class="el" href="group__data.html#adabd5ed47e053a172a9e853c7eea084f">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 </li>
 <li>array_view_type
 : <a class="el" href="group__data.html#a66282fabc215ea1f290cd5fa28f1ee6a">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+</li>
+<li>as()
+: <a class="el" href="classcl_1_1sycl_1_1detail_1_1vec.html#ad3e11458d6be7036022f1e20e2492468">cl::sycl::detail::vec&lt; DataType, NumElements &gt;</a>
 </li>
 <li>assume_validity()
 : <a class="el" href="group__data.html#a46e5611c52eda124d4b8b9b556e162d8">cl::sycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
@@ -151,7 +158,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 20 2018 19:26:25 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

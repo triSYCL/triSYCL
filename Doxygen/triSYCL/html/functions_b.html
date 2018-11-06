@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>triSYCL implementation of OpenCL SYCL: Class Members</title>
+<title>triSYCL implementation of SYCL: Class Members</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">triSYCL implementation of OpenCL SYCL
+   <div id="projectname">triSYCL implementation of SYCL
    </div>
   </td>
  </tr>
@@ -61,11 +61,24 @@ $(function() {
 <div class="textblock">Here is a list of all class members with links to the classes they belong to:</div>
 
 <h3><a id="index_b"></a>- b -</h3><ul>
+<li>b
+: <a class="el" href="group__vector.html#gaf725ee9ffa643d5b8637582f51440a0b">cl::sycl::elem</a>
+, <a class="el" href="group__vector.html#a8ffa51690c114b0d0b352c30c4c00b3a">cl::sycl::vec&lt; DataType, 4 &gt;</a>
+</li>
 <li>barrier()
-: <a class="el" href="group__parallelism.html#af80e55f23f770e788959bbaf2d22c4f3">cl::sycl::nd_item&lt; Dimensions &gt;</a>
+: <a class="el" href="group__parallelism.html#a6267e547ca0b5e07055fe4df6317fab4">cl::sycl::h_item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#af80e55f23f770e788959bbaf2d22c4f3">cl::sycl::nd_item&lt; Dimensions &gt;</a>
+</li>
+<li>base_vec
+: <a class="el" href="group__vector.html#a5babeee9e82477a01bc466ecb88df762">cl::sycl::vec&lt; DataType, 1 &gt;</a>
+, <a class="el" href="group__vector.html#a4168b3086fec60d538a0664e95e15ffb">cl::sycl::vec&lt; DataType, 16 &gt;</a>
+, <a class="el" href="group__vector.html#abe05d9783b9fd7b08a04a757f38a5231">cl::sycl::vec&lt; DataType, 2 &gt;</a>
+, <a class="el" href="group__vector.html#aff3a6c3aeeb8e9d662ef9d8c12539a48">cl::sycl::vec&lt; DataType, 3 &gt;</a>
+, <a class="el" href="group__vector.html#aef234ba4a6b1054dc1f57a5e5b2852b9">cl::sycl::vec&lt; DataType, 4 &gt;</a>
+, <a class="el" href="group__vector.html#a25d693ad03886256dc3f633e2158921e">cl::sycl::vec&lt; DataType, 8 &gt;</a>
 </li>
 <li>basic_type
-: <a class="el" href="group__vector.html#aac8ab494e97a008a3c636c9c00191719">cl::sycl::vec&lt; DataType, NumElements &gt;</a>
+: <a class="el" href="classcl_1_1sycl_1_1detail_1_1vec.html#a909c5a781b2e5d871f727636a02541de">cl::sycl::detail::vec&lt; DataType, NumElements &gt;</a>
 </li>
 <li>begin()
 : <a class="el" href="group__data.html#ad97554a2c9da5c39723b7f06f09fa4c9">cl::sycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;</a>
@@ -73,7 +86,7 @@ $(function() {
 , <a class="el" href="group__data.html#a3606cb4af947071c7cac54cb952e9bc7">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 , <a class="el" href="group__data.html#a1a018cd9582e8e6093c4cb95266fa2b0">cl::sycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
 , <a class="el" href="group__data.html#a77e9ab47d0d668eb16fc5c30e59cfd3a">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
-, <a class="el" href="group__Xilinx.html#ad2f21e4d95fc964637164ff11cf81fa0">cl::sycl::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;</a>
+, <a class="el" href="group__Xilinx.html#a5c5dc14d5774c8a6a50068598bfd6480">cl::sycl::vendor::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;</a>
 </li>
 <li>binary
 : <a class="el" href="structcl_1_1sycl_1_1drt_1_1code_1_1program.html#ac07d879de52a9995c669e8b4f5a787db">cl::sycl::drt::code::program</a>
@@ -90,8 +103,8 @@ $(function() {
 : <a class="el" href="group__data.html#ab20c65563ec346b9da0a8dce087ea6a7">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
 </li>
 <li>buffer()
-: <a class="el" href="group__data.html#ae9786890f239a982b072d634ee3eeeb6">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
-, <a class="el" href="group__data.html#a8c11303ba84dd0d0a6718bc8bf791a73">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
+: <a class="el" href="group__data.html#a3205caa44c59fe4f0553861fdc81a80f">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
+, <a class="el" href="group__data.html#a1f4c6fb1a97ecfe3570807517cd8fb70">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
 , <a class="el" href="group__device__runtime.html#a3e7bb90c2bf6f75b8288be07ced928e6">cl::sycl::drt::accessor&lt; Accessor &gt;</a>
 </li>
 <li>buffer_base()
@@ -106,11 +119,14 @@ $(function() {
 <li>buffers_in_use
 : <a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#af0cda0e975507abd9c7c8c7659072ed8">cl::sycl::detail::task</a>
 </li>
+<li>build_with_kernel_type()
+: <a class="el" href="classcl_1_1sycl_1_1program.html#a067d18447886e13a392d27fd2e26edb8">cl::sycl::program</a>
+</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 20 2018 19:26:25 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

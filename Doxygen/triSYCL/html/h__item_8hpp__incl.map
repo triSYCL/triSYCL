@@ -1,0 +1,11 @@
+<map id="include/CL/sycl/h_item.hpp" name="include/CL/sycl/h_item.hpp">
+<area shape="rect" id="node3" href="$access_8hpp.html" title="CL/sycl/access.hpp" alt="" coords="690,80,829,107"/>
+<area shape="rect" id="node4" href="$linear__id_8hpp.html" title="CL/sycl/detail/linear\l_id.hpp" alt="" coords="5,155,143,196"/>
+<area shape="rect" id="node5" href="$unimplemented_8hpp.html" title="CL/sycl/detail/unimplemented.hpp" alt="" coords="725,244,943,271"/>
+<area shape="rect" id="node7" href="$id_8hpp.html" title="CL/sycl/id.hpp" alt="" coords="330,162,437,189"/>
+<area shape="rect" id="node19" href="$range_8hpp.html" title="CL/sycl/range.hpp" alt="" coords="471,244,599,271"/>
+<area shape="rect" id="node22" href="$item_8hpp.html" title="CL/sycl/item.hpp" alt="" coords="219,80,340,107"/>
+<area shape="rect" id="node23" href="$nd__range_8hpp.html" title="CL/sycl/nd_range.hpp" alt="" coords="415,80,565,107"/>
+<area shape="rect" id="node9" href="$small__array_8hpp.html" title="CL/sycl/detail/small\l_array.hpp" alt="" coords="421,319,559,360"/>
+<area shape="rect" id="node13" href="$debug_8hpp.html" title="CL/sycl/detail/debug.hpp" alt="" coords="463,408,629,435"/>
+</map>

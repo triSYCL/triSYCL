@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$group__debug__trace.html#structcl_1_1sycl_1_1detail_1_1debug" title="Class used to trace the construction, copy&#45;construction, move&#45;construction and destruction of classes..." alt="" coords="5,5,184,32"/>
+<area shape="rect" id="node1" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; pipe\&lt; value_type \&gt; \&gt;" alt="" coords="5,5,163,47"/>
+<area shape="rect" id="node2" href="$group__data.html" title="cl::sycl::detail::pipe\l\&lt; value_type \&gt;" alt="" coords="211,5,345,47"/>
 </map>

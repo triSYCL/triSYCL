@@ -1,5 +1,5 @@
 <map id="cl::sycl::device::is_host" name="cl::sycl::device::is_host">
-<area shape="rect" id="node2" href="$group__execution.html#a4f3044b21621558fe7df7bb896107597" title="This pure virtual operator allows the customization of device selection. " alt="" coords="412,15,555,57"/>
-<area shape="rect" id="node3" href="$group__execution.html#a2d5922c1141c216552601b9de64b06f6" title="A queue is created for a SYCL device. " alt="" coords="213,23,364,49"/>
+<area shape="rect" id="node2" href="$group__execution.html#a4f3044b21621558fe7df7bb896107597" title="This pure virtual operator allows the customization of device selection. " alt="" coords="412,15,555,56"/>
+<area shape="rect" id="node3" href="$group__execution.html#a2d5922c1141c216552601b9de64b06f6" title="A queue is created for a SYCL device. " alt="" coords="213,22,364,49"/>
 <area shape="rect" id="node4" href="$group__execution.html#accdadd6fafa11f1ef766d17659f00c20" title="Return the device_type of a device. " alt="" coords="217,73,360,100"/>
 </map>

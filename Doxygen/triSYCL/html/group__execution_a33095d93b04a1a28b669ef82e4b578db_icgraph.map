@@ -1,0 +1,4 @@
+<map id="cl::sycl::context::get_info" name="cl::sycl::context::get_info">
+<area shape="rect" id="node2" href="$group__execution.html#a61d96003363497ad3766bef24bcc892c" title="Returns the set of devices that are part of this context. " alt="" coords="176,5,299,47"/>
+<area shape="rect" id="node3" href="$group__execution.html#ga410622a27b17237c69abcd3895751cd4" title="cl::sycl::get_info\l\&lt; info::context::devices \&gt;" alt="" coords="347,5,517,47"/>
+</map>

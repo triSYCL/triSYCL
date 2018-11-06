@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>triSYCL implementation of OpenCL SYCL: Device-side runtime implementation</title>
+<title>triSYCL implementation of SYCL: Device-side runtime implementation</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">triSYCL implementation of OpenCL SYCL
+   <div id="projectname">triSYCL implementation of SYCL
    </div>
   </td>
  </tr>
@@ -237,7 +237,7 @@ template&lt;typename Accessor &gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="device__runtime_8hpp_source.html#l00101">101</a> of file <a class="el" href="device__runtime_8hpp_source.html">device_runtime.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="global__config_8hpp_source.html#l00079">TRISYCL_WEAK_ATTRIB_PREFIX</a>, and <a class="el" href="global__config_8hpp_source.html#l00080">TRISYCL_WEAK_ATTRIB_SUFFIX</a>.</p>
+<p class="reference">References <a class="el" href="global__config_8hpp_source.html#l00093">TRISYCL_WEAK_ATTRIB_PREFIX</a>, and <a class="el" href="global__config_8hpp_source.html#l00094">TRISYCL_WEAK_ATTRIB_SUFFIX</a>.</p>
 <div class="fragment"><div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;                                                   {</div><div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="group__device__runtime.html#a3e7bb90c2bf6f75b8288be07ced928e6">buffer</a>[index];</div><div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;  }</div><div class="ttc" id="group__device__runtime_html_a3e7bb90c2bf6f75b8288be07ced928e6"><div class="ttname"><a href="group__device__runtime.html#a3e7bb90c2bf6f75b8288be07ced928e6">cl::sycl::drt::accessor::buffer</a></div><div class="ttdeci">TRISYCL_GLOBAL_AS Accessor::value_type * buffer</div><div class="ttdoc">The pointer to the data. </div><div class="ttdef"><b>Definition:</b> <a href="device__runtime_8hpp_source.html#l00067">device_runtime.hpp:67</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -266,7 +266,7 @@ template&lt;typename Accessor &gt; </div>
 </div><div class="memdoc">
 
 <p>The pointer to the data. </p>
-<p>For now none of the following works yet for various reasons: </p><div class="fragment"><div class="line"> <a class="code" href="group__address__spaces.html#ga7f2b1f5f8d938b1abc395e55554ba16a">cl::sycl::global_ptr&lt;typename Accessor::value_type&gt;</a> <a class="code" href="group__device__runtime.html#a3e7bb90c2bf6f75b8288be07ced928e6">buffer</a>;</div><div class="line"> <a class="code" href="group__address__spaces.html#ga3882a38ef2f8afbca5e6e0e48637d1f6">cl::sycl::global&lt;typename Accessor::value_type *&gt;</a> <a class="code" href="group__device__runtime.html#a3e7bb90c2bf6f75b8288be07ced928e6">buffer</a>;</div><div class="line">__global <span class="keyword">typename</span> Accessor::pointer <a class="code" href="group__device__runtime.html#a3e7bb90c2bf6f75b8288be07ced928e6">buffer</a>;</div></div><!-- fragment --><p>So use a more trivial approach </p>
+<p>For now none of the following works yet for various reasons: </p><div class="fragment"><div class="line"> <a class="code" href="group__address__spaces.html#ga7f2b1f5f8d938b1abc395e55554ba16a">cl::sycl::global_ptr&lt;typename Accessor::value_type&gt;</a> <a class="code" href="group__device__runtime.html#a3e7bb90c2bf6f75b8288be07ced928e6">buffer</a>;</div><div class="line"> <a class="code" href="group__address__spaces.html#ga45327d8a36fee424889c79d2288e380c">cl::sycl::global&lt;typename Accessor::value_type *&gt;</a> <a class="code" href="group__device__runtime.html#a3e7bb90c2bf6f75b8288be07ced928e6">buffer</a>;</div><div class="line">__global <span class="keyword">typename</span> Accessor::pointer <a class="code" href="group__device__runtime.html#a3e7bb90c2bf6f75b8288be07ced928e6">buffer</a>;</div></div><!-- fragment --><p>So use a more trivial approach </p>
 
 <p class="definition">Definition at line <a class="el" href="device__runtime_8hpp_source.html#l00067">67</a> of file <a class="el" href="device__runtime_8hpp_source.html">device_runtime.hpp</a>.</p>
 
@@ -427,7 +427,7 @@ Here is the call graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="device__runtime_8hpp_source.html#l00119">119</a> of file <a class="el" href="device__runtime_8hpp_source.html">device_runtime.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="task_8hpp_source.html#l00271">cl::sycl::detail::task::set_arg()</a>, <a class="el" href="debug_8hpp_source.html#l00046">TRISYCL_DUMP_T</a>, <a class="el" href="global__config_8hpp_source.html#l00079">TRISYCL_WEAK_ATTRIB_PREFIX</a>, and <a class="el" href="global__config_8hpp_source.html#l00080">TRISYCL_WEAK_ATTRIB_SUFFIX</a>.</p>
+<p class="reference">References <a class="el" href="task_8hpp_source.html#l00271">cl::sycl::detail::task::set_arg()</a>, <a class="el" href="debug_8hpp_source.html#l00046">TRISYCL_DUMP_T</a>, <a class="el" href="global__config_8hpp_source.html#l00093">TRISYCL_WEAK_ATTRIB_PREFIX</a>, and <a class="el" href="global__config_8hpp_source.html#l00094">TRISYCL_WEAK_ATTRIB_SUFFIX</a>.</p>
 <div class="fragment"><div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;                                  {</div><div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;  <a class="code" href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a>(<span class="stringliteral">&quot;serialize_arg index = &quot;</span> &lt;&lt; index</div><div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;                 &lt;&lt; <span class="stringliteral">&quot;, size = &quot;</span> &lt;&lt; arg_size &lt;&lt; <span class="stringliteral">&quot;, arg = &quot;</span> &lt;&lt; arg);</div><div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;  task.set_arg(index, arg_size, arg);</div><div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;}</div><div class="ttc" id="debug_8hpp_html_a7d15187cc29c2a3ec4ad62acccaa242e"><div class="ttname"><a href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">TRISYCL_DUMP_T</a></div><div class="ttdeci">#define TRISYCL_DUMP_T(expression)</div><div class="ttdoc">Same as TRISYCL_DUMP() but with thread id first. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8hpp_source.html#l00046">debug.hpp:46</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -520,7 +520,7 @@ Here is the call graph for this function:</div>
 <p><code>#include &lt;<a class="el" href="device__runtime_8hpp.html">include/CL/sycl/device_runtime.hpp</a>&gt;</code></p>
 
 <p>The code of the kernels arranged by name. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000149">Todo:</a></b></dt><dd>use std::byte when moving to C++17 </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000148">Todo:</a></b></dt><dd>use std::byte when moving to C++17 </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="device__runtime_8hpp_source.html#l00190">190</a> of file <a class="el" href="device__runtime_8hpp_source.html">device_runtime.hpp</a>.</p>
 
@@ -529,7 +529,7 @@ Here is the call graph for this function:</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 20 2018 19:26:24 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

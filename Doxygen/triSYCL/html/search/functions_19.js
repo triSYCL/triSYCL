@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['z',['z',['../group__helpers.html#a05fbad577e46deccf3ac902ed817902c',1,'cl::sycl::detail::small_array']]]
+  ['z',['z',['../group__vector.html#a333a68425b91518b4190745947b99d7e',1,'cl::sycl::vec&lt; DataType, 3 &gt;::z()'],['../group__vector.html#a259fc48e15bbfc39a340718dc86202da',1,'cl::sycl::vec&lt; DataType, 4 &gt;::z()']]]
 ];

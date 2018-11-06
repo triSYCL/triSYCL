@@ -1,0 +1,4 @@
+<map id="cl::sycl::item::operator item&lt; Dimensions, true &gt;" name="cl::sycl::item::operator item&lt; Dimensions, true &gt;">
+<area shape="rect" id="node2" href="$group__parallelism.html#a4c38e76aa159843386b35c50ec332bc0" title="Return the constituent local or global id&lt;&gt; representing the work&#45;item&#39;s position in the iteration sp..." alt="" coords="228,5,368,32"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#aa25cbb3098e4305ee87e77efad6806c1" title="Returns a range&lt;&gt; representing the dimensions of the range of possible values of the item..." alt="" coords="237,57,359,98"/>
+</map>

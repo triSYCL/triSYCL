@@ -1,5 +1,6 @@
 <map id="cl::sycl::context::is_host" name="cl::sycl::context::is_host">
-<area shape="rect" id="node2" href="$group__data.html#a43ad593cdde6aaaf0b1c3d641b61d5f6" title="When a transfer is requested this function is called, it will update the state of the buffer accordin..." alt="" coords="176,5,356,47"/>
-<area shape="rect" id="node3" href="$group__data.html#a18c84f42244a43a6d0949740aea54039" title="Function pair to work around the fact that T might be a const type. " alt="" coords="404,5,576,47"/>
-<area shape="rect" id="node4" href="$group__data.html#aff094e6da92d7103b9d5f382c0c1bc7d" title="Create a new sub&#45;buffer without allocation to have separate accessors later. " alt="" coords="624,5,768,47"/>
+<area shape="rect" id="node2" href="$group__execution.html#a51d176a9f8f20e278977939b7ae196ff" title="cl::sycl::context::\lcontext" alt="" coords="205,5,327,47"/>
+<area shape="rect" id="node3" href="$group__data.html#a43ad593cdde6aaaf0b1c3d641b61d5f6" title="When a transfer is requested this function is called, it will update the state of the buffer accordin..." alt="" coords="176,71,356,112"/>
+<area shape="rect" id="node4" href="$group__data.html#a18c84f42244a43a6d0949740aea54039" title="Function pair to work around the fact that T might be a const type. " alt="" coords="404,71,576,112"/>
+<area shape="rect" id="node5" href="$group__data.html#aff094e6da92d7103b9d5f382c0c1bc7d" title="Create a new sub&#45;buffer without allocation to have separate accessors later. " alt="" coords="624,71,768,112"/>
 </map>

@@ -1,0 +1,6 @@
+<map id="cl::sycl::range::size" name="cl::sycl::range::size">
+<area shape="rect" id="node2" href="$group__data.html#a9cf4f71ec10586334908ff2b6d1d7ed4" title="Allocate uninitialized buffer memory. " alt="" coords="189,5,399,76"/>
+<area shape="rect" id="node3" href="$group__data.html#a8943f21cc4899c224952811286689deb" title="Allocate uninitialized buffer memory. " alt="" coords="222,100,366,141"/>
+<area shape="rect" id="node4" href="$group__data.html#ae5a617cb28362bbccebb68515590075d" title="Create a new read&#45;write buffer of size. " alt="" coords="448,67,592,108"/>
+<area shape="rect" id="node5" href="$group__data.html#ad15b2a8c2fee6759f08296404babc06c" title="This method is to be called whenever an accessor is created. " alt="" coords="447,132,593,173"/>
+</map>

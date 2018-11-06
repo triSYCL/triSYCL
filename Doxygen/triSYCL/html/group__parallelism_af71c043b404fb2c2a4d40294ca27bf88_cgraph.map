@@ -1,5 +1,5 @@
 <map id="cl::sycl::nd_item::get_global_linear_id" name="cl::sycl::nd_item::get_global_linear_id">
-<area shape="rect" id="node2" href="$group__parallelism.html#a76f60881c4d17eba5d87f48b4e42197f" title="Return the constituent global id representing the work&#45;item&#39;s position in the global iteration space..." alt="" coords="205,5,332,47"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#a6818bf479caa443ed98625b1715da141" title="Return the constituent global id representing the work&#45;item&#39;s position in the global iteration space..." alt="" coords="205,5,332,47"/>
 <area shape="rect" id="node3" href="$group__parallelism.html#a38089b11659fd98faf4ceb90ee7f7c01" title="Return a range&lt;&gt; representing the dimensions of the nd_range&lt;&gt; " alt="" coords="205,71,332,112"/>
 <area shape="rect" id="node5" href="$group__parallelism.html#ae236a5a8ca6260e5d587d90824fff703" title="Return an id&lt;&gt; representing the n&#45;dimensional offset provided to the constructor of the nd_range&lt;&gt; an..." alt="" coords="205,136,332,177"/>
 <area shape="rect" id="node6" href="$group__helpers.html#ga8ccbed3e03e1b92e0a4f01b691c093cf" title="Compute a linearized array access used in the OpenCL 2 world. " alt="" coords="189,202,348,229"/>

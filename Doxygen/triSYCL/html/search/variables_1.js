@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['b',['b',['../opencl__spir_8h.html#a3fd8c63fddfb0d3ba796ef725a8cc5ce',1,'opencl_spir.h']]],
+  ['b',['b',['../group__vector.html#gaf725ee9ffa643d5b8637582f51440a0b',1,'cl::sycl::elem::b()'],['../opencl__spir_8h.html#a3fd8c63fddfb0d3ba796ef725a8cc5ce',1,'b():&#160;opencl_spir.h']]],
   ['binary',['binary',['../structcl_1_1sycl_1_1drt_1_1code_1_1program.html#ac07d879de52a9995c669e8b4f5a787db',1,'cl::sycl::drt::code::program']]],
   ['binary_5fsize',['binary_size',['../structcl_1_1sycl_1_1drt_1_1code_1_1program.html#a80c4a590c61caae3e6260862c4ce9d86',1,'cl::sycl::drt::code::program']]],
   ['blocking',['blocking',['../group__data.html#aa121b5b7e0769252735159f45b9e33fc',1,'cl::sycl::detail::pipe_accessor::blocking()'],['../group__data.html#af2746f57b149017757ce7f10f76d3484',1,'cl::sycl::detail::pipe_reservation::blocking()'],['../group__data.html#a4b1c5622dd395dbbfd364e12d4f83f3b',1,'cl::sycl::pipe_reservation::blocking()']]],

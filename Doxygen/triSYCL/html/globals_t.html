@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>triSYCL implementation of OpenCL SYCL: File Members</title>
+<title>triSYCL implementation of SYCL: File Members</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">triSYCL implementation of OpenCL SYCL
+   <div id="projectname">triSYCL implementation of SYCL
    </div>
   </td>
  </tr>
@@ -73,8 +73,23 @@ $(function() {
 <li>TRISYCL_CONSTANT_AS
 : <a class="el" href="address__space_2detail_2address__space_8hpp.html#aff4056ffbdeddae8cc34736e7628c142">address_space.hpp</a>
 </li>
+<li>TRISYCL_DEBUG_ONLY
+: <a class="el" href="group__defaults.html#gaaa83de5dab23f6e4cf264a5932df28b9">global_config.hpp</a>
+</li>
 <li>TRISYCL_DECLARE_CL_TYPES
 : <a class="el" href="opencl__types_8hpp.html#a7f240a1f20b584f49d5e5e9c1b386f49">opencl_types.hpp</a>
+</li>
+<li>TRISYCL_DECLARE_S
+: <a class="el" href="group__vector.html#gaa6e4c792ebb2006b972633ef48422d27">vec.hpp</a>
+</li>
+<li>TRISYCL_DEFINE_DEVICE_HOST_INFO_TEMPLATE
+: <a class="el" href="host__device_8hpp.html#a721eb95a5b8366d67e713c2a1269af6c">host_device.hpp</a>
+</li>
+<li>TRISYCL_DEFINE_DEVICE_INFO_CL_TEMPLATE
+: <a class="el" href="opencl__device__tail_8hpp.html#ad093d2b9feeaa9b44f21b0af7506bce4">opencl_device_tail.hpp</a>
+</li>
+<li>TRISYCL_DEFINE_DEVICE_INFO_TEMPLATE
+: <a class="el" href="opencl__device__tail_8hpp.html#acc58de1762cce870f9f4c3ea6dcba66b">opencl_device_tail.hpp</a>
 </li>
 <li>TRISYCL_DEFINE_TYPES
 : <a class="el" href="opencl__types_8hpp.html#ade57dc4f3ace675d873deace1afbf4e6">opencl_types.hpp</a>
@@ -86,13 +101,22 @@ $(function() {
 : <a class="el" href="group__vector.html#ga310c41ff3eb00ee3c82b929c76069cd4">vec.hpp</a>
 </li>
 <li>TRISYCL_DEVICE_ONLY
-: <a class="el" href="group__defaults.html#gad976839282d74cb5efc72fd31812952a">global_config.hpp</a>
+: <a class="el" href="group__defaults.html#ga001f43e1709fc382f20ba63b20d5f5d1">global_config.hpp</a>
 </li>
 <li>TRISYCL_DUMP
 : <a class="el" href="debug_8hpp.html#a887cb595f38a84a803b40ba1d8b6fb22">debug.hpp</a>
 </li>
 <li>TRISYCL_DUMP_T
 : <a class="el" href="debug_8hpp.html#a7d15187cc29c2a3ec4ad62acccaa242e">debug.hpp</a>
+</li>
+<li>TRISYCL_GEN_SWIZ2
+: <a class="el" href="group__vector.html#gaa4e279e5dba2939a1309e51cd7fcd2d6">vec.hpp</a>
+</li>
+<li>TRISYCL_GEN_SWIZ3
+: <a class="el" href="group__vector.html#gaa35089380c31e2c10432ac5f2fb6ff9e">vec.hpp</a>
+</li>
+<li>TRISYCL_GEN_SWIZ4
+: <a class="el" href="group__vector.html#gaa2201e543bb78644680d0368f82b8f6b">vec.hpp</a>
 </li>
 <li>TRISYCL_GENERIC_AS
 : <a class="el" href="address__space_2detail_2address__space_8hpp.html#ad890d28a90f8ac9e4b33dda593897d15">address_space.hpp</a>
@@ -142,6 +166,12 @@ $(function() {
 <li>TRISYCL_MATH_WRAP3ss
 : <a class="el" href="math_8hpp.html#a302da21353f5bf7f5048ef65fd84889b">math.hpp</a>
 </li>
+<li>TRISYCL_OPENCL_ONLY
+: <a class="el" href="group__defaults.html#gaf358c4a94080e7af23ffae898cf39e04">global_config.hpp</a>
+</li>
+<li>TRISYCL_OPERATOR_BASIC_TYPE_OP
+: <a class="el" href="group__helpers.html#ga6b558926d3161c0d1cfd79bdf5138d99">small_array.hpp</a>
+</li>
 <li>TRISYCL_parallel_for_functor_GLOBAL
 : <a class="el" href="handler_8hpp.html#ad26870978d25ea83d36d36d3ea9fca35">handler.hpp</a>
 </li>
@@ -162,9 +192,6 @@ $(function() {
 <li>TRISYCL_SIZED_NAME
 : <a class="el" href="opencl__types_8hpp.html#a37bdd876dca7fb0872e9fc6eb8e975da">opencl_types.hpp</a>
 </li>
-<li>TRISYCL_SKIP_OPENCL
-: <a class="el" href="group__defaults.html#ga65f974b597aedcee523638a95c0afeb7">global_config.hpp</a>
-</li>
 <li>TRISYCL_TYPE_ACTUAL_NAME
 : <a class="el" href="opencl__types_8hpp.html#aa489c71b2b892eb21c3454d7eba92094">opencl_types.hpp</a>
 </li>
@@ -176,6 +203,9 @@ $(function() {
 </li>
 <li>TRISYCL_TYPEDEF_TYPE
 : <a class="el" href="opencl__types_8hpp.html#a7303432f01486123235e0cf2f7323fd4">opencl_types.hpp</a>
+</li>
+<li>TRISYCL_UNIMPL
+: <a class="el" href="group__helpers.html#gabc864dbff357567e07f18baf409db80e">unimplemented.hpp</a>
 </li>
 <li>TRISYCL_WEAK_ATTRIB_PREFIX
 : <a class="el" href="global__config_8hpp.html#a2618b1336076abbe7158ea65cdb274c7">global_config.hpp</a>
@@ -196,7 +226,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 20 2018 19:26:25 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

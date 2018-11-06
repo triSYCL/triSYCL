@@ -1,3 +1,8 @@
 <map id="include/CL/sycl/vec.hpp" name="include/CL/sycl/vec.hpp">
-<area shape="rect" id="node2" href="$array__tuple__helpers_8hpp.html" title="Some helpers to do array&#45;tuple conversions. " alt="" coords="19,80,154,121"/>
+<area shape="rect" id="node2" href="$vec_2detail_2vec_8hpp.html" title="Implement the detail base OpenCL vector class. " alt="" coords="34,80,161,121"/>
+<area shape="rect" id="node7" href="$swiz2_8hpp.html" title="CL/sycl/vec/detail\l/swiz2.hpp" alt="" coords="185,80,311,121"/>
+<area shape="rect" id="node8" href="$swiz3_8hpp.html" title="CL/sycl/vec/detail\l/swiz3.hpp" alt="" coords="335,80,462,121"/>
+<area shape="rect" id="node9" href="$swiz4_8hpp.html" title="CL/sycl/vec/detail\l/swiz4.hpp" alt="" coords="486,80,613,121"/>
+<area shape="rect" id="node10" href="$swiz__rgba_8hpp.html" title="CL/sycl/vec/detail\l/swiz_rgba.hpp" alt="" coords="637,80,763,121"/>
+<area shape="rect" id="node4" href="$array__tuple__helpers_8hpp.html" title="Some helpers to do array&#45;tuple conversions. " alt="" coords="91,169,226,211"/>
 </map>

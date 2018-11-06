@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>triSYCL implementation of OpenCL SYCL: include/CL/sycl/parallelism/detail/parallelism.hpp File Reference</title>
+<title>triSYCL implementation of SYCL: include/CL/sycl/parallelism/detail/parallelism.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">triSYCL implementation of OpenCL SYCL
+   <div id="projectname">triSYCL implementation of SYCL
    </div>
   </td>
  </tr>
@@ -76,6 +76,7 @@ $(function() {
 <div class="textblock"><code>#include &lt;cstddef&gt;</code><br />
 <code>#include &lt;boost/multi_array.hpp&gt;</code><br />
 <code>#include &quot;<a class="el" href="group_8hpp_source.html">CL/sycl/group.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="h__item_8hpp_source.html">CL/sycl/h_item.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="id_8hpp_source.html">CL/sycl/id.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="item_8hpp_source.html">CL/sycl/item.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="nd__item_8hpp_source.html">CL/sycl/nd_item.hpp</a>&quot;</code><br />
@@ -86,17 +87,18 @@ Include dependency graph for parallelism.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="parallelism_2detail_2parallelism_8hpp__incl.png" border="0" usemap="#include_2CL_2sycl_2parallelism_2detail_2parallelism_8hpp" alt=""/></div>
 <map name="include_2CL_2sycl_2parallelism_2detail_2parallelism_8hpp" id="include_2CL_2sycl_2parallelism_2detail_2parallelism_8hpp">
-<area shape="rect" id="node4" href="group_8hpp.html" title="CL/sycl/group.hpp" alt="" coords="144,95,272,121"/>
-<area shape="rect" id="node7" href="id_8hpp.html" title="CL/sycl/id.hpp" alt="" coords="768,251,875,278"/>
-<area shape="rect" id="node20" href="range_8hpp.html" title="CL/sycl/range.hpp" alt="" coords="419,333,547,360"/>
-<area shape="rect" id="node22" href="nd__range_8hpp.html" title="CL/sycl/nd_range.hpp" alt="" coords="245,169,395,196"/>
-<area shape="rect" id="node23" href="item_8hpp.html" title="CL/sycl/item.hpp" alt="" coords="521,169,642,196"/>
-<area shape="rect" id="node24" href="nd__item_8hpp.html" title="CL/sycl/nd_item.hpp" alt="" coords="659,95,802,121"/>
-<area shape="rect" id="node6" href="linear__id_8hpp.html" title="CL/sycl/detail/linear\l_id.hpp" alt="" coords="307,244,445,285"/>
-<area shape="rect" id="node9" href="small__array_8hpp.html" title="CL/sycl/detail/small\l_array.hpp" alt="" coords="753,408,890,449"/>
-<area shape="rect" id="node13" href="debug_8hpp.html" title="CL/sycl/detail/debug.hpp" alt="" coords="777,497,943,524"/>
-<area shape="rect" id="node25" href="access_8hpp.html" title="CL/sycl/access.hpp" alt="" coords="768,169,907,196"/>
-<area shape="rect" id="node26" href="unimplemented_8hpp.html" title="CL/sycl/detail/unimplemented.hpp" alt="" coords="969,333,1188,360"/>
+<area shape="rect" id="node4" href="group_8hpp.html" title="CL/sycl/group.hpp" alt="" coords="405,95,533,121"/>
+<area shape="rect" id="node7" href="h__item_8hpp.html" title="CL/sycl/h_item.hpp" alt="" coords="504,169,639,196"/>
+<area shape="rect" id="node11" href="id_8hpp.html" title="CL/sycl/id.hpp" alt="" coords="1071,326,1178,353"/>
+<area shape="rect" id="node23" href="range_8hpp.html" title="CL/sycl/range.hpp" alt="" coords="453,408,581,435"/>
+<area shape="rect" id="node25" href="item_8hpp.html" title="CL/sycl/item.hpp" alt="" coords="869,244,991,271"/>
+<area shape="rect" id="node26" href="nd__range_8hpp.html" title="CL/sycl/nd_range.hpp" alt="" coords="279,244,429,271"/>
+<area shape="rect" id="node27" href="nd__item_8hpp.html" title="CL/sycl/nd_item.hpp" alt="" coords="760,169,903,196"/>
+<area shape="rect" id="node6" href="linear__id_8hpp.html" title="CL/sycl/detail/linear\l_id.hpp" alt="" coords="752,319,889,360"/>
+<area shape="rect" id="node8" href="access_8hpp.html" title="CL/sycl/access.hpp" alt="" coords="605,244,743,271"/>
+<area shape="rect" id="node9" href="unimplemented_8hpp.html" title="CL/sycl/detail/unimplemented.hpp" alt="" coords="1167,244,1386,271"/>
+<area shape="rect" id="node13" href="small__array_8hpp.html" title="CL/sycl/detail/small\l_array.hpp" alt="" coords="1168,483,1305,524"/>
+<area shape="rect" id="node17" href="debug_8hpp.html" title="CL/sycl/detail/debug.hpp" alt="" coords="1253,572,1420,599"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -134,6 +136,7 @@ Namespaces</h2></td></tr>
 <tr class="memdesc:namespacecl"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector type to be used as SYCL vector. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacecl_1_1sycl"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html">cl::sycl</a></td></tr>
+<tr class="memdesc:namespacecl_1_1sycl"><td class="mdescLeft">&#160;</td><td class="mdescRight">Small OpenCL vector class. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacecl_1_1sycl_1_1detail"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl_1_1detail.html">cl::sycl::detail</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -156,21 +159,26 @@ Functions</h2></td></tr>
 <tr class="memitem:gadd585203df163dadc5975119f59f8bd8"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__parallelism.html#gadd585203df163dadc5975119f59f8bd8">cl::sycl::detail::parallel_for_global_offset</a> (range&lt; Dimensions &gt; global_size, id&lt; Dimensions &gt; <a class="el" href="opencl__spir_8h.html#a30c1789509ffb2ea07b060fc6e1344c1">offset</a>, ParallelForFunctor f)</td></tr>
 <tr class="memdesc:gadd585203df163dadc5975119f59f8bd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of parallel_for with a range&lt;&gt; and an offset.  <a href="group__parallelism.html#gadd585203df163dadc5975119f59f8bd8">More...</a><br /></td></tr>
 <tr class="separator:gadd585203df163dadc5975119f59f8bd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3156c9a9179d62eb40321f2b86448cea"><td class="memTemplParams" colspan="2">template&lt;int Dimensions = 1, typename ParallelForFunctor &gt; </td></tr>
-<tr class="memitem:ga3156c9a9179d62eb40321f2b86448cea"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__parallelism.html#ga3156c9a9179d62eb40321f2b86448cea">cl::sycl::detail::parallel_for</a> (nd_range&lt; Dimensions &gt; r, ParallelForFunctor f)</td></tr>
-<tr class="memdesc:ga3156c9a9179d62eb40321f2b86448cea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implement a variation of parallel_for to take into account a nd_range&lt;&gt;  <a href="group__parallelism.html#ga3156c9a9179d62eb40321f2b86448cea">More...</a><br /></td></tr>
-<tr class="separator:ga3156c9a9179d62eb40321f2b86448cea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaaa0f5e798ca65419dce78013af732580"><td class="memTemplParams" colspan="2">template&lt;int Dimensions = 1, typename ParallelForFunctor &gt; </td></tr>
 <tr class="memitem:gaaa0f5e798ca65419dce78013af732580"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__parallelism.html#gaaa0f5e798ca65419dce78013af732580">cl::sycl::detail::parallel_for_workgroup</a> (nd_range&lt; Dimensions &gt; r, ParallelForFunctor f)</td></tr>
 <tr class="memdesc:gaaa0f5e798ca65419dce78013af732580"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implement the loop on the work-groups.  <a href="group__parallelism.html#gaaa0f5e798ca65419dce78013af732580">More...</a><br /></td></tr>
 <tr class="separator:gaaa0f5e798ca65419dce78013af732580"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3004da03b4f3be8dc72c49b58076107b"><td class="memTemplParams" colspan="2">template&lt;int Dimensions = 1, typename ParallelForFunctor &gt; </td></tr>
-<tr class="memitem:ga3004da03b4f3be8dc72c49b58076107b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__parallelism.html#ga3004da03b4f3be8dc72c49b58076107b">cl::sycl::detail::parallel_for_workitem</a> (const group&lt; Dimensions &gt; &amp;g, ParallelForFunctor f)</td></tr>
-<tr class="memdesc:ga3004da03b4f3be8dc72c49b58076107b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implement the loop on the work-items inside a work-group.  <a href="group__parallelism.html#ga3004da03b4f3be8dc72c49b58076107b">More...</a><br /></td></tr>
-<tr class="separator:ga3004da03b4f3be8dc72c49b58076107b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac5cf59ffdd426280bad76e8079abd20c"><td class="memTemplParams" colspan="2">template&lt;int Dimensions, typename T_Item , typename ParallelForFunctor &gt; </td></tr>
+<tr class="memitem:gac5cf59ffdd426280bad76e8079abd20c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__parallelism.html#gac5cf59ffdd426280bad76e8079abd20c">cl::sycl::detail::parallel_for_workitem</a> (const group&lt; Dimensions &gt; &amp;g, ParallelForFunctor f)</td></tr>
+<tr class="memdesc:gac5cf59ffdd426280bad76e8079abd20c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implement the loop on the work-items inside a work-group.  <a href="group__parallelism.html#gac5cf59ffdd426280bad76e8079abd20c">More...</a><br /></td></tr>
+<tr class="separator:gac5cf59ffdd426280bad76e8079abd20c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3156c9a9179d62eb40321f2b86448cea"><td class="memTemplParams" colspan="2">template&lt;int Dimensions = 1, typename ParallelForFunctor &gt; </td></tr>
+<tr class="memitem:ga3156c9a9179d62eb40321f2b86448cea"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__parallelism.html#ga3156c9a9179d62eb40321f2b86448cea">cl::sycl::detail::parallel_for</a> (nd_range&lt; Dimensions &gt; r, ParallelForFunctor f)</td></tr>
+<tr class="memdesc:ga3156c9a9179d62eb40321f2b86448cea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implement a variation of parallel_for to take into account a nd_range&lt;&gt;  <a href="group__parallelism.html#ga3156c9a9179d62eb40321f2b86448cea">More...</a><br /></td></tr>
+<tr class="separator:ga3156c9a9179d62eb40321f2b86448cea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga029353158fa91ee719ef7d50cba7e98f"><td class="memTemplParams" colspan="2">template&lt;int Dimensions = 1, typename ParallelForFunctor &gt; </td></tr>
+<tr class="memitem:ga029353158fa91ee719ef7d50cba7e98f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__parallelism.html#ga029353158fa91ee719ef7d50cba7e98f">cl::sycl::detail::parallel_for_workitem_in_group</a> (const group&lt; Dimensions &gt; &amp;g, ParallelForFunctor f)</td></tr>
+<tr class="memdesc:ga029353158fa91ee719ef7d50cba7e98f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implement the loop on the work-items inside a work-group.  <a href="group__parallelism.html#ga029353158fa91ee719ef7d50cba7e98f">More...</a><br /></td></tr>
+<tr class="separator:ga029353158fa91ee719ef7d50cba7e98f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implement the detail of the parallel constructions to launch kernels. </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000217">Todo:</a></b></dt><dd>Refactor this file</dd></dl>
 <p>Ronan at keryell dot FR</p>
 <p>This file is distributed under the University of Illinois Open Source License. See LICENSE.TXT for details. </p>
 
@@ -178,7 +186,7 @@ Functions</h2></td></tr>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 20 2018 19:26:23 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

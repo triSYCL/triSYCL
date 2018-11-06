@@ -1,7 +1,7 @@
 <map id="include/CL/sycl/static_pipe.hpp" name="include/CL/sycl/static_pipe.hpp">
 <area shape="rect" id="node4" href="$access_8hpp.html" title="CL/sycl/access.hpp" alt="" coords="995,534,1133,561"/>
 <area shape="rect" id="node5" href="$accessor_8hpp.html" title="CL/sycl/accessor.hpp" alt="" coords="1043,177,1192,203"/>
-<area shape="rect" id="node40" href="$pipe_2detail_2pipe_8hpp.html" title="CL/sycl/pipe/detail\l/pipe.hpp" alt="" coords="324,616,455,657"/>
+<area shape="rect" id="node40" href="$pipe_2detail_2pipe_8hpp.html" title="CL/sycl/pipe/detail\l/pipe.hpp" alt="" coords="321,616,452,657"/>
 <area shape="rect" id="node44" href="$handler_8hpp.html" title="CL/sycl/handler.hpp" alt="" coords="2696,95,2835,121"/>
 <area shape="rect" id="node6" href="$local__accessor_8hpp.html" title="CL/sycl/accessor/detail\l/local_accessor.hpp" alt="" coords="1510,259,1669,300"/>
 <area shape="rect" id="node20" href="$shared__ptr__implementation_8hpp.html" title="CL/sycl/detail/shared\l_ptr_implementation.hpp" alt="" coords="2115,527,2279,568"/>

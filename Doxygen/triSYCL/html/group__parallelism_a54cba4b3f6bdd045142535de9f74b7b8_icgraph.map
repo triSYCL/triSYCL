@@ -1,0 +1,4 @@
+<map id="cl::sycl::nd_item::get_group_range" name="cl::sycl::nd_item::get_group_range">
+<area shape="rect" id="node2" href="$group__parallelism.html#afa1bd2ba568fd80c4a18bd442a26f4b0" title="Return the flattened id of the current work&#45;group. " alt="" coords="180,5,315,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#af1337e426170d302b1f1e15f73dbc47f" title="Return the number of groups for dimension in the nd_range. " alt="" coords="184,71,311,112"/>
+</map>

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>triSYCL implementation of OpenCL SYCL: include/CL/sycl/info/device.hpp File Reference</title>
+<title>triSYCL implementation of SYCL: include/CL/sycl/info/device.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">triSYCL implementation of OpenCL SYCL
+   <div id="projectname">triSYCL implementation of SYCL
    </div>
   </td>
  </tr>
@@ -65,18 +65,26 @@ $(function() {
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#enum-members">Enumerations</a>  </div>
+<a href="#enum-members">Enumerations</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">device.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="param__traits_8hpp_source.html">CL/sycl/info/param_traits.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="id_8hpp_source.html">CL/sycl/id.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="opencl__types_8hpp_source.html">CL/sycl/opencl_types.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="param__traits_8hpp_source.html">CL/sycl/info/param_traits.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for device.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="info_2device_8hpp__incl.png" border="0" usemap="#include_2CL_2sycl_2info_2device_8hpp" alt=""/></div>
 <map name="include_2CL_2sycl_2info_2device_8hpp" id="include_2CL_2sycl_2info_2device_8hpp">
-<area shape="rect" id="node2" href="param__traits_8hpp.html" title="CL/sycl/info/param\l_traits.hpp" alt="" coords="8,95,140,136"/>
+<area shape="rect" id="node2" href="id_8hpp.html" title="CL/sycl/id.hpp" alt="" coords="353,102,459,129"/>
+<area shape="rect" id="node19" href="opencl__types_8hpp.html" title="triSYCL wrapper for OpenCL types " alt="" coords="1265,102,1438,129"/>
+<area shape="rect" id="node31" href="param__traits_8hpp.html" title="CL/sycl/info/param\l_traits.hpp" alt="" coords="1463,95,1595,136"/>
+<area shape="rect" id="node5" href="small__array_8hpp.html" title="CL/sycl/detail/small\l_array.hpp" alt="" coords="337,273,475,315"/>
+<area shape="rect" id="node16" href="range_8hpp.html" title="CL/sycl/range.hpp" alt="" coords="225,191,353,218"/>
+<area shape="rect" id="node9" href="debug_8hpp.html" title="CL/sycl/detail/debug.hpp" alt="" coords="256,363,423,389"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -84,41 +92,41 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="info_2device_8hpp__dep__incl.png" border="0" usemap="#include_2CL_2sycl_2info_2device_8hppdep" alt=""/></div>
 <map name="include_2CL_2sycl_2info_2device_8hppdep" id="include_2CL_2sycl_2info_2device_8hppdep">
-<area shape="rect" id="node2" href="device_8hpp.html" title="include/CL/sycl/device.hpp" alt="" coords="588,95,767,121"/>
-<area shape="rect" id="node15" href="device__runtime_8hpp.html" title="include/CL/sycl/device\l_runtime.hpp" alt="" coords="1387,1301,1541,1343"/>
-<area shape="rect" id="node31" href="platform_8hpp.html" title="include/CL/sycl/platform.hpp" alt="" coords="855,259,1043,285"/>
-<area shape="rect" id="node3" href="context_2detail_2context_8hpp.html" title="include/CL/sycl/context\l/detail/context.hpp" alt="" coords="490,333,649,375"/>
-<area shape="rect" id="node5" href="context_8hpp.html" title="include/CL/sycl/context.hpp" alt="" coords="461,512,645,539"/>
-<area shape="rect" id="node10" href="sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="817,1555,954,1581"/>
-<area shape="rect" id="node18" href="queue_8hpp.html" title="include/CL/sycl/queue.hpp" alt="" coords="333,1398,509,1425"/>
-<area shape="rect" id="node22" href="host__queue_8hpp.html" title="include/CL/sycl/queue\l/detail/host_queue.hpp" alt="" coords="477,676,630,717"/>
-<area shape="rect" id="node23" href="opencl__queue_8hpp.html" title="include/CL/sycl/queue\l/detail/opencl_queue.hpp" alt="" coords="286,676,453,717"/>
-<area shape="rect" id="node24" href="queue_2detail_2queue_8hpp.html" title="include/CL/sycl/queue\l/detail/queue.hpp" alt="" coords="807,587,958,628"/>
-<area shape="rect" id="node29" href="device__selector_8hpp.html" title="include/CL/sycl/device\l_selector.hpp" alt="" coords="5,423,160,464"/>
-<area shape="rect" id="node30" href="opencl__platform_8hpp.html" title="include/CL/sycl/platform\l/detail/opencl_platform.hpp" alt="" coords="665,169,844,211"/>
-<area shape="rect" id="node4" href="host__context_8hpp.html" title="include/CL/sycl/context\l/detail/host_context.hpp" alt="" coords="387,423,549,464"/>
-<area shape="rect" id="node28" href="opencl__context_8hpp.html" title="include/CL/sycl/context\l/detail/opencl_context.hpp" alt="" coords="573,423,747,464"/>
-<area shape="rect" id="node6" href="buffer__base_8hpp.html" title="include/CL/sycl/buffer\l/detail/buffer_base.hpp" alt="" coords="685,855,840,896"/>
-<area shape="rect" id="node7" href="buffer_2detail_2buffer_8hpp.html" title="include/CL/sycl/buffer\l/detail/buffer.hpp" alt="" coords="587,1212,736,1253"/>
-<area shape="rect" id="node11" href="task_8hpp.html" title="include/CL/sycl/command\l_group/detail/task.hpp" alt="" coords="791,944,964,985"/>
-<area shape="rect" id="node8" href="buffer__waiter_8hpp.html" title="include/CL/sycl/buffer\l/detail/buffer_waiter.hpp" alt="" coords="585,1301,746,1343"/>
-<area shape="rect" id="node9" href="buffer_8hpp.html" title="include/CL/sycl/buffer.hpp" alt="" coords="673,1480,847,1507"/>
-<area shape="rect" id="node12" href="accessor__base_8hpp.html" title="include/CL/sycl/accessor\l/detail/accessor_base.hpp" alt="" coords="787,1033,962,1075"/>
-<area shape="rect" id="node13" href="buffer_2detail_2accessor_8hpp.html" title="include/CL/sycl/buffer\l/detail/accessor.hpp" alt="" coords="864,1123,1013,1164"/>
-<area shape="rect" id="node16" href="handler_8hpp.html" title="include/CL/sycl/handler.hpp" alt="" coords="822,1309,1005,1335"/>
-<area shape="rect" id="node20" href="local__accessor_8hpp.html" title="include/CL/sycl/accessor\l/detail/local_accessor.hpp" alt="" coords="1139,1033,1312,1075"/>
-<area shape="rect" id="node21" href="instantiate__kernel_8hpp.html" title="include/CL/sycl/detail\l/instantiate_kernel.hpp" alt="" coords="686,1123,839,1164"/>
-<area shape="rect" id="node14" href="accessor_8hpp.html" title="include/CL/sycl/accessor.hpp" alt="" coords="1117,1219,1312,1246"/>
-<area shape="rect" id="node17" href="pipe_8hpp.html" title="include/CL/sycl/pipe.hpp" alt="" coords="1147,1398,1312,1425"/>
-<area shape="rect" id="node19" href="static__pipe_8hpp.html" title="include/CL/sycl/static\l_pipe.hpp" alt="" coords="974,1391,1122,1432"/>
-<area shape="rect" id="node25" href="kernel_2detail_2kernel_8hpp.html" title="include/CL/sycl/kernel\l/detail/kernel.hpp" alt="" coords="915,676,1066,717"/>
-<area shape="rect" id="node26" href="opencl__kernel_8hpp.html" title="include/CL/sycl/kernel\l/detail/opencl_kernel.hpp" alt="" coords="1021,765,1187,807"/>
-<area shape="rect" id="node27" href="kernel_8hpp.html" title="include/CL/sycl/kernel.hpp" alt="" coords="964,862,1140,889"/>
-<area shape="rect" id="node32" href="device_2detail_2device_8hpp.html" title="include/CL/sycl/device\l/detail/device.hpp" alt="" coords="1237,333,1392,375"/>
-<area shape="rect" id="node33" href="host__device_8hpp.html" title="include/CL/sycl/device\l/detail/host_device.hpp" alt="" coords="1165,423,1321,464"/>
-<area shape="rect" id="node34" href="opencl__device_8hpp.html" title="include/CL/sycl/device\l/detail/opencl_device.hpp" alt="" coords="1345,423,1514,464"/>
-<area shape="rect" id="node35" href="platform_2detail_2platform_8hpp.html" title="include/CL/sycl/platform\l/detail/platform.hpp" alt="" coords="673,333,836,375"/>
-<area shape="rect" id="node36" href="host__platform_8hpp.html" title="include/CL/sycl/platform\l/detail/host_platform.hpp" alt="" coords="772,423,937,464"/>
+<area shape="rect" id="node2" href="device_8hpp.html" title="include/CL/sycl/device.hpp" alt="" coords="655,95,833,121"/>
+<area shape="rect" id="node15" href="device__runtime_8hpp.html" title="include/CL/sycl/device\l_runtime.hpp" alt="" coords="1319,1301,1473,1343"/>
+<area shape="rect" id="node31" href="platform_8hpp.html" title="include/CL/sycl/platform.hpp" alt="" coords="1118,259,1306,285"/>
+<area shape="rect" id="node3" href="context_2detail_2context_8hpp.html" title="include/CL/sycl/context\l/detail/context.hpp" alt="" coords="753,333,911,375"/>
+<area shape="rect" id="node5" href="context_8hpp.html" title="include/CL/sycl/context.hpp" alt="" coords="464,512,648,539"/>
+<area shape="rect" id="node10" href="sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="805,1555,942,1581"/>
+<area shape="rect" id="node18" href="queue_8hpp.html" title="include/CL/sycl/queue.hpp" alt="" coords="135,1398,311,1425"/>
+<area shape="rect" id="node22" href="host__queue_8hpp.html" title="include/CL/sycl/queue\l/detail/host_queue.hpp" alt="" coords="335,676,489,717"/>
+<area shape="rect" id="node23" href="opencl__queue_8hpp.html" title="include/CL/sycl/queue\l/detail/opencl_queue.hpp" alt="" coords="145,676,311,717"/>
+<area shape="rect" id="node24" href="queue_2detail_2queue_8hpp.html" title="include/CL/sycl/queue\l/detail/queue.hpp" alt="" coords="666,587,817,628"/>
+<area shape="rect" id="node30" href="opencl__platform_8hpp.html" title="include/CL/sycl/platform\l/detail/opencl_platform.hpp" alt="" coords="928,169,1107,211"/>
+<area shape="rect" id="node4" href="host__context_8hpp.html" title="include/CL/sycl/context\l/detail/host_context.hpp" alt="" coords="515,423,677,464"/>
+<area shape="rect" id="node29" href="opencl__context_8hpp.html" title="include/CL/sycl/context\l/detail/opencl_context.hpp" alt="" coords="753,423,927,464"/>
+<area shape="rect" id="node6" href="buffer__base_8hpp.html" title="include/CL/sycl/buffer\l/detail/buffer_base.hpp" alt="" coords="551,855,705,896"/>
+<area shape="rect" id="node7" href="buffer_2detail_2buffer_8hpp.html" title="include/CL/sycl/buffer\l/detail/buffer.hpp" alt="" coords="377,1212,527,1253"/>
+<area shape="rect" id="node11" href="task_8hpp.html" title="include/CL/sycl/command\l_group/detail/task.hpp" alt="" coords="656,944,829,985"/>
+<area shape="rect" id="node8" href="buffer__waiter_8hpp.html" title="include/CL/sycl/buffer\l/detail/buffer_waiter.hpp" alt="" coords="378,1301,539,1343"/>
+<area shape="rect" id="node9" href="buffer_8hpp.html" title="include/CL/sycl/buffer.hpp" alt="" coords="490,1480,665,1507"/>
+<area shape="rect" id="node12" href="accessor__base_8hpp.html" title="include/CL/sycl/accessor\l/detail/accessor_base.hpp" alt="" coords="655,1033,830,1075"/>
+<area shape="rect" id="node13" href="buffer_2detail_2accessor_8hpp.html" title="include/CL/sycl/buffer\l/detail/accessor.hpp" alt="" coords="793,1123,943,1164"/>
+<area shape="rect" id="node16" href="handler_8hpp.html" title="include/CL/sycl/handler.hpp" alt="" coords="615,1309,798,1335"/>
+<area shape="rect" id="node20" href="local__accessor_8hpp.html" title="include/CL/sycl/accessor\l/detail/local_accessor.hpp" alt="" coords="905,1033,1079,1075"/>
+<area shape="rect" id="node21" href="instantiate__kernel_8hpp.html" title="include/CL/sycl/detail\l/instantiate_kernel.hpp" alt="" coords="615,1123,769,1164"/>
+<area shape="rect" id="node14" href="accessor_8hpp.html" title="include/CL/sycl/accessor.hpp" alt="" coords="957,1219,1152,1246"/>
+<area shape="rect" id="node17" href="pipe_8hpp.html" title="include/CL/sycl/pipe.hpp" alt="" coords="791,1398,956,1425"/>
+<area shape="rect" id="node19" href="static__pipe_8hpp.html" title="include/CL/sycl/static\l_pipe.hpp" alt="" coords="981,1391,1129,1432"/>
+<area shape="rect" id="node25" href="kernel_2detail_2kernel_8hpp.html" title="include/CL/sycl/kernel\l/detail/kernel.hpp" alt="" coords="781,676,931,717"/>
+<area shape="rect" id="node26" href="opencl__kernel_8hpp.html" title="include/CL/sycl/kernel\l/detail/opencl_kernel.hpp" alt="" coords="893,765,1059,807"/>
+<area shape="rect" id="node27" href="kernel_8hpp.html" title="include/CL/sycl/kernel.hpp" alt="" coords="888,862,1064,889"/>
+<area shape="rect" id="node28" href="program_8hpp.html" title="include/CL/sycl/program.hpp" alt="" coords="1119,1130,1307,1157"/>
+<area shape="rect" id="node32" href="device_2detail_2device_8hpp.html" title="include/CL/sycl/device\l/detail/device.hpp" alt="" coords="1427,333,1581,375"/>
+<area shape="rect" id="node33" href="host__device_8hpp.html" title="include/CL/sycl/device\l/detail/host_device.hpp" alt="" coords="1377,423,1533,464"/>
+<area shape="rect" id="node34" href="opencl__device_8hpp.html" title="include/CL/sycl/device\l/detail/opencl_device.hpp" alt="" coords="1557,423,1726,464"/>
+<area shape="rect" id="node35" href="platform_2detail_2platform_8hpp.html" title="include/CL/sycl/platform\l/detail/platform.hpp" alt="" coords="936,333,1099,375"/>
+<area shape="rect" id="node36" href="host__platform_8hpp.html" title="include/CL/sycl/platform\l/detail/host_platform.hpp" alt="" coords="993,423,1159,464"/>
 </map>
 </div>
 </div>
@@ -130,6 +138,7 @@ Namespaces</h2></td></tr>
 <tr class="memdesc:namespacecl"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector type to be used as SYCL vector. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacecl_1_1sycl"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html">cl::sycl</a></td></tr>
+<tr class="memdesc:namespacecl_1_1sycl"><td class="mdescLeft">&#160;</td><td class="mdescRight">Small OpenCL vector class. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacecl_1_1sycl_1_1info"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl_1_1info.html">cl::sycl::info</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -171,19 +180,19 @@ Enumerations</h2></td></tr>
 <a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a05cb235087712878ec261706dab65603">cl::sycl::info::device::preferred_vector_width_short</a>, 
 <br />
 &#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a148905ebf38930dab36309e04801eac7">cl::sycl::info::device::preferred_vector_width_int</a>, 
-<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a4a58df452bc3a80f0f078dfaaa1ae870">cl::sycl::info::device::preferred_vector_width_long_long</a>, 
+<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a9b5554059e54d65bbbbe80892ade14a9">cl::sycl::info::device::preferred_vector_width_long</a>, 
 <a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5af1ceee4eb024070ede074e770117b09c">cl::sycl::info::device::preferred_vector_width_float</a>, 
 <a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a4d034db6176d6fe61a8c61993e4a8755">cl::sycl::info::device::preferred_vector_width_double</a>, 
 <br />
 &#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5afaf7badb225f9861e3d4fa808d023f77">cl::sycl::info::device::preferred_vector_width_half</a>, 
-<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a518eca5f4d506715cf398ea7ba23dc9f">cl::sycl::info::device::native_vector_witdth_char</a>, 
-<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a4e5edd883f8cb2d030c75216a2651164">cl::sycl::info::device::native_vector_witdth_short</a>, 
-<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5af655dbdbe67b460a09e5354e7f0238be">cl::sycl::info::device::native_vector_witdth_int</a>, 
+<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a217d87c50234009ab4d8dd08a2fa97d5">cl::sycl::info::device::native_vector_width_char</a>, 
+<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a5b6670900d487d5c1d487b2adb7324c2">cl::sycl::info::device::native_vector_width_short</a>, 
+<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a712d08ca029e31374cb1cfecff52933a">cl::sycl::info::device::native_vector_width_int</a>, 
 <br />
-&#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5acd47111ba0bb3d8401ebce36a048f215">cl::sycl::info::device::native_vector_witdth_long_long</a>, 
-<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a6ab028332a59b2695a48e9ed882ff285">cl::sycl::info::device::native_vector_witdth_float</a>, 
-<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ae9ad26b30e893b6e8b92137c215a5ef3">cl::sycl::info::device::native_vector_witdth_double</a>, 
-<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ab465e1581fae13ce968402776e3090dd">cl::sycl::info::device::native_vector_witdth_half</a>, 
+&#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a4b44f9472d27f1a338e03013f5b8a80a">cl::sycl::info::device::native_vector_width_long</a>, 
+<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5aaa45085f0e282cdfc60b3336159be71f">cl::sycl::info::device::native_vector_width_float</a>, 
+<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a522877ef93f453eeef4f917203ecbcc3">cl::sycl::info::device::native_vector_width_double</a>, 
+<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ae1c05063a13fb9bdcd2fb9c3fa46689d">cl::sycl::info::device::native_vector_width_half</a>, 
 <br />
 &#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5adf82af158ea87328fc4baf6980e25b73">cl::sycl::info::device::max_clock_frequency</a>, 
 <a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5aa7c2ecb69c55eb87bc76205d634a9c9f">cl::sycl::info::device::address_bits</a>, 
@@ -192,12 +201,12 @@ Enumerations</h2></td></tr>
 <br />
 &#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a9508de1620158db81895c5bc47c954bf">cl::sycl::info::device::max_read_image_args</a>, 
 <a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ab8fea510498176a7f4d1ef646c2454aa">cl::sycl::info::device::max_write_image_args</a>, 
-<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a32d3cc82e659c366219c0c4199aecfb4">cl::sycl::info::device::image2d_max_height</a>, 
 <a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ad51e9d78d8bbceba716fc595dcf62060">cl::sycl::info::device::image2d_max_width</a>, 
+<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a32d3cc82e659c366219c0c4199aecfb4">cl::sycl::info::device::image2d_max_height</a>, 
 <br />
-&#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a803763900aa6655c989e3c39e4702e39">cl::sycl::info::device::image3d_max_height</a>, 
-<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a33f8f1f5bbf2cc09ae3c35918da6dabf">cl::sycl::info::device::image3d_max_widht</a>, 
-<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a24085cce1c20a7f2d931572ece1d7a46">cl::sycl::info::device::image3d_mas_depth</a>, 
+&#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a26fbc768da96d93116e5d79b23e4ae8b">cl::sycl::info::device::image3d_max_width</a>, 
+<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a803763900aa6655c989e3c39e4702e39">cl::sycl::info::device::image3d_max_height</a>, 
+<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a163aaee413467d48a5da83ae13c592ba">cl::sycl::info::device::image3d_max_depth</a>, 
 <a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a6d89b3affe73b8dbe95ae9d61cdac33a">cl::sycl::info::device::image_max_buffer_size</a>, 
 <br />
 &#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5aa454d1c5114e7b085e5e21e7be5e18de">cl::sycl::info::device::image_max_array_size</a>, 
@@ -205,86 +214,75 @@ Enumerations</h2></td></tr>
 <a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a8be1955b7a93031d5873b22f51282bb5">cl::sycl::info::device::max_parameter_size</a>, 
 <a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5afe373d69771aca74db47fccb0126c6f7">cl::sycl::info::device::mem_base_addr_align</a>, 
 <br />
-&#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a8375eb8d178aef6b942b9ac6ae589f89">cl::sycl::info::device::single_fp_config</a>, 
+&#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ae274f2a84e5820be22ee7cc505698105">cl::sycl::info::device::half_fp_config</a>, 
+<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a8375eb8d178aef6b942b9ac6ae589f89">cl::sycl::info::device::single_fp_config</a>, 
 <a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a758a728dea63697dd78fdda02d46cdd4">cl::sycl::info::device::double_fp_config</a>, 
 <a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a0eeabe1249684d58c7bad29611dded8a">cl::sycl::info::device::global_mem_cache_type</a>, 
-<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ac3f3f8fdd3d57670e960bbac3d333132">cl::sycl::info::device::global_mem_cache_line_size</a>, 
 <br />
-&#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a6e48f763f3d908a6200bf8f8f90bbad0">cl::sycl::info::device::global_mem_cache_size</a>, 
+&#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ac3f3f8fdd3d57670e960bbac3d333132">cl::sycl::info::device::global_mem_cache_line_size</a>, 
+<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a6e48f763f3d908a6200bf8f8f90bbad0">cl::sycl::info::device::global_mem_cache_size</a>, 
 <a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ab4de23283932dd3379e1cf289219128c">cl::sycl::info::device::global_mem_size</a>, 
 <a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a146c255959a4d93b5a009f5daeabb6d3">cl::sycl::info::device::max_constant_buffer_size</a>, 
-<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5aea0b83d165847f1e40c384e6b3b2ccc6">cl::sycl::info::device::max_constant_args</a>, 
 <br />
-&#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a65f9a150cd584ee5dd60ce5450b93ebd">cl::sycl::info::device::local_mem_type</a>, 
+&#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5aea0b83d165847f1e40c384e6b3b2ccc6">cl::sycl::info::device::max_constant_args</a>, 
+<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a65f9a150cd584ee5dd60ce5450b93ebd">cl::sycl::info::device::local_mem_type</a>, 
 <a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a735f7e0da765dcc1dfc4d3454a9aba14">cl::sycl::info::device::local_mem_size</a>, 
 <a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a419c736fc210de1c55decd67e8ac9f61">cl::sycl::info::device::error_correction_support</a>, 
-<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a0fbdc8bcd6c762ac073157f9e77b2437">cl::sycl::info::device::host_unified_memory</a>, 
 <br />
-&#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ab128a9128069a203a38f56f7e9b55cc5">cl::sycl::info::device::profiling_timer_resolution</a>, 
-<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a1ee2cf1adadda40ea92349e1d8f11ed6">cl::sycl::info::device::endian_little</a>, 
+&#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a0fbdc8bcd6c762ac073157f9e77b2437">cl::sycl::info::device::host_unified_memory</a>, 
+<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ab128a9128069a203a38f56f7e9b55cc5">cl::sycl::info::device::profiling_timer_resolution</a>, 
+<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a3ca47443dadc1af662dd9389c57a7dcf">cl::sycl::info::device::is_endian_little</a>, 
 <a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ad331bbef72d5903997a0e6fb68d984e0">cl::sycl::info::device::is_available</a>, 
-<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ac59501c63a2e4c12f3ef0e624694a96e">cl::sycl::info::device::is_compiler_available</a>, 
 <br />
-&#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a7e6049679642fdf8aa7123a16d01c068">cl::sycl::info::device::is_linker_available</a>, 
+&#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ac59501c63a2e4c12f3ef0e624694a96e">cl::sycl::info::device::is_compiler_available</a>, 
+<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a7e6049679642fdf8aa7123a16d01c068">cl::sycl::info::device::is_linker_available</a>, 
 <a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5afc1fc31ceecfb5079c46662e292a9d3e">cl::sycl::info::device::execution_capabilities</a>, 
-<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a74215e194ff546e7d6c3e6e7236711ce">cl::sycl::info::device::queue_properties</a>, 
-<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5accba6884a1618c6371e7aecc2bc3092d">cl::sycl::info::device::built_in_kernels</a>, 
+<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5acff13e821b304bffc11e5a8b52b78359">cl::sycl::info::device::queue_profiling</a>, 
 <br />
-&#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a34a6e5d64ade17ef4e51612c50dd72f5">cl::sycl::info::device::platform</a>, 
+&#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5accba6884a1618c6371e7aecc2bc3092d">cl::sycl::info::device::built_in_kernels</a>, 
+<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a34a6e5d64ade17ef4e51612c50dd72f5">cl::sycl::info::device::platform</a>, 
 <a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ab068931cc450442b63f5b3d276ea4297">cl::sycl::info::device::name</a>, 
 <a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a7c3613dba5171cb6027c67835dd3b9d4">cl::sycl::info::device::vendor</a>, 
-<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ad5612938744d9340b9b447854c8a18fb">cl::sycl::info::device::driver_version</a>, 
 <br />
-&#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a7d97481b1fe66f4b51db90da7e794d9f">cl::sycl::info::device::profile</a>, 
-<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a73570565970a331ca666199bc12dfbd7">cl::sycl::info::device::device_version</a>, 
-<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5aa84e6efb1e06a17f15111b3ed350a39e">cl::sycl::info::device::opencl_version</a>, 
-<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a2ac737d240fc746cef37129b7569f08e">cl::sycl::info::device::extensions</a>, 
+&#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ad5612938744d9340b9b447854c8a18fb">cl::sycl::info::device::driver_version</a>, 
+<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a7d97481b1fe66f4b51db90da7e794d9f">cl::sycl::info::device::profile</a>, 
+<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a2af72f100c356273d46284f6fd1dfc08">cl::sycl::info::device::version</a>, 
+<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a82aeb1c67f59db3c5704c12572c32832">cl::sycl::info::device::opencl_c_version</a>, 
 <br />
-&#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a83d4ed8a78a5710a11e3c00178959f5e">cl::sycl::info::device::printf_buffer_size</a>, 
+&#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a2ac737d240fc746cef37129b7569f08e">cl::sycl::info::device::extensions</a>, 
+<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a83d4ed8a78a5710a11e3c00178959f5e">cl::sycl::info::device::printf_buffer_size</a>, 
 <a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a3e61f47504a8d1de81642c7c72f25dba">cl::sycl::info::device::preferred_interop_user_sync</a>, 
 <a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a173b3ec8ac32dd6c997450c1f11ba4a1">cl::sycl::info::device::parent_device</a>, 
-<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ac29ed48d84bd9469ce34e82722837567">cl::sycl::info::device::partition_max_sub_devices</a>, 
 <br />
-&#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a6202f9f9122c2bd39e9cbd08683354d7">cl::sycl::info::device::partition_properties</a>, 
-<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a4104bc7cbf76836c6ea9c8b67db90d83">cl::sycl::info::device::partition_affinity_domain</a>, 
-<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ab90f95b341b6645eaf67613349c12293">cl::sycl::info::device::partition_type</a>, 
+&#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5ac29ed48d84bd9469ce34e82722837567">cl::sycl::info::device::partition_max_sub_devices</a>, 
+<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a6202f9f9122c2bd39e9cbd08683354d7">cl::sycl::info::device::partition_properties</a>, 
+<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5aa79465f17d0f639f44a4e801ee0404bc">cl::sycl::info::device::partition_affinity_domains</a>, 
+<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a34cbcbdad12232c823c87ecddb504923">cl::sycl::info::device::partition_type_property</a>, 
+<br />
+&#160;&#160;<a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a26f99fa5abef65ae7e4884eef066baf7">cl::sycl::info::device::partition_type_affinity_domain</a>, 
 <a class="el" href="group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a40d852658166dc8a786c23023cb20f92">cl::sycl::info::device::reference_count</a>
 <br />
  }<tr class="memdesc:ga51f4189fcf4ca86d768d0fcce34d8bc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Device information descriptors.  <a href="group__execution.html#ga51f4189fcf4ca86d768d0fcce34d8bc5">More...</a><br /></td></tr>
 </td></tr>
 <tr class="separator:ga51f4189fcf4ca86d768d0fcce34d8bc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa0e3e915db3c3a6049efb595141acfcd"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#gaa0e3e915db3c3a6049efb595141acfcd">cl::sycl::info::device_partition_property</a> : int { <br />
-&#160;&#160;<a class="el" href="group__execution.html#ggaa0e3e915db3c3a6049efb595141acfcda723c25877a86786664edc4b643c08a6f">cl::sycl::info::device_partition_property::unsupported</a>, 
-<a class="el" href="group__execution.html#ggaa0e3e915db3c3a6049efb595141acfcdaab767eff72d001b59d3d14ed38783c2b">cl::sycl::info::device_partition_property::partition_equally</a>, 
-<a class="el" href="group__execution.html#ggaa0e3e915db3c3a6049efb595141acfcda4c4301ae11412ff3c4e4606babd69941">cl::sycl::info::device_partition_property::partition_by_counts</a>, 
-<a class="el" href="group__execution.html#ggaa0e3e915db3c3a6049efb595141acfcda328f56c3ee3a3f018f31116e39293733">cl::sycl::info::device_partition_property::partition_by_affinity_domain</a>, 
+<tr class="memitem:ga66692c125641cb0e2716a89739b20260"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#ga66692c125641cb0e2716a89739b20260">cl::sycl::info::partition_property</a> : int { <a class="el" href="group__execution.html#gga66692c125641cb0e2716a89739b20260a7f4266f4f9a51dde86e2c69df7ff52d3">cl::sycl::info::partition_property::no_partition</a>, 
+<a class="el" href="group__execution.html#gga66692c125641cb0e2716a89739b20260aab767eff72d001b59d3d14ed38783c2b">cl::sycl::info::partition_property::partition_equally</a>, 
+<a class="el" href="group__execution.html#gga66692c125641cb0e2716a89739b20260a4c4301ae11412ff3c4e4606babd69941">cl::sycl::info::partition_property::partition_by_counts</a>, 
+<a class="el" href="group__execution.html#gga66692c125641cb0e2716a89739b20260a328f56c3ee3a3f018f31116e39293733">cl::sycl::info::partition_property::partition_by_affinity_domain</a>
+ }</td></tr>
+<tr class="separator:ga66692c125641cb0e2716a89739b20260"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaea3b7860826830db91022d3cc985119f"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#gaea3b7860826830db91022d3cc985119f">cl::sycl::info::partition_affinity_domain</a> : int { <br />
+&#160;&#160;<a class="el" href="group__execution.html#ggaea3b7860826830db91022d3cc985119fa4d5dc746cb3817f420a9dc05425e660f">cl::sycl::info::partition_affinity_domain::not_applicable</a>, 
+<a class="el" href="group__execution.html#ggaea3b7860826830db91022d3cc985119fa0dfb2d09aeef6a0220a25c2e2d0fddbd">cl::sycl::info::partition_affinity_domain::numa</a>, 
+<a class="el" href="group__execution.html#ggaea3b7860826830db91022d3cc985119fa7f52cd07191bbdfc8bf925acf7076ffd">cl::sycl::info::partition_affinity_domain::L4_cache</a>, 
+<a class="el" href="group__execution.html#ggaea3b7860826830db91022d3cc985119fa4caa8fade30967a8377af50b650cdba4">cl::sycl::info::partition_affinity_domain::L3_cache</a>, 
 <br />
-&#160;&#160;<a class="el" href="group__execution.html#ggaa0e3e915db3c3a6049efb595141acfcdaad8d7657e784af4ac67e74c083e44f98">cl::sycl::info::device_partition_property::partition_affinity_domain_next_partitionable</a>
+&#160;&#160;<a class="el" href="group__execution.html#ggaea3b7860826830db91022d3cc985119fac58e8051e3e9607bb653b0d5bcb918e7">cl::sycl::info::partition_affinity_domain::L2_cache</a>, 
+<a class="el" href="group__execution.html#ggaea3b7860826830db91022d3cc985119fa84426bc33cb131aa00c40cd629ae5727">cl::sycl::info::partition_affinity_domain::L1_cache</a>, 
+<a class="el" href="group__execution.html#ggaea3b7860826830db91022d3cc985119fa9e50da16b6f86043b800814c259a6f5f">cl::sycl::info::partition_affinity_domain::next_partitionable</a>
 <br />
  }</td></tr>
-<tr class="separator:gaa0e3e915db3c3a6049efb595141acfcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga51116d5add442d9bae6028c45e09eca4"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#ga51116d5add442d9bae6028c45e09eca4">cl::sycl::info::device_affinity_domain</a> : int { <br />
-&#160;&#160;<a class="el" href="group__execution.html#gga51116d5add442d9bae6028c45e09eca4a723c25877a86786664edc4b643c08a6f">cl::sycl::info::device_affinity_domain::unsupported</a>, 
-<a class="el" href="group__execution.html#gga51116d5add442d9bae6028c45e09eca4a0dfb2d09aeef6a0220a25c2e2d0fddbd">cl::sycl::info::device_affinity_domain::numa</a>, 
-<a class="el" href="group__execution.html#gga51116d5add442d9bae6028c45e09eca4a7f52cd07191bbdfc8bf925acf7076ffd">cl::sycl::info::device_affinity_domain::L4_cache</a>, 
-<a class="el" href="group__execution.html#gga51116d5add442d9bae6028c45e09eca4a4caa8fade30967a8377af50b650cdba4">cl::sycl::info::device_affinity_domain::L3_cache</a>, 
-<br />
-&#160;&#160;<a class="el" href="group__execution.html#gga51116d5add442d9bae6028c45e09eca4ac58e8051e3e9607bb653b0d5bcb918e7">cl::sycl::info::device_affinity_domain::L2_cache</a>, 
-<a class="el" href="group__execution.html#gga51116d5add442d9bae6028c45e09eca4a9e50da16b6f86043b800814c259a6f5f">cl::sycl::info::device_affinity_domain::next_partitionable</a>
-<br />
- }</td></tr>
-<tr class="separator:ga51116d5add442d9bae6028c45e09eca4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga88aea8ff69afd9cf81594eb915690b25"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#ga88aea8ff69afd9cf81594eb915690b25">cl::sycl::info::device_partition_type</a> : int { <br />
-&#160;&#160;<a class="el" href="group__execution.html#gga88aea8ff69afd9cf81594eb915690b25a7f4266f4f9a51dde86e2c69df7ff52d3">cl::sycl::info::device_partition_type::no_partition</a>, 
-<a class="el" href="group__execution.html#gga88aea8ff69afd9cf81594eb915690b25a0dfb2d09aeef6a0220a25c2e2d0fddbd">cl::sycl::info::device_partition_type::numa</a>, 
-<a class="el" href="group__execution.html#gga88aea8ff69afd9cf81594eb915690b25a7f52cd07191bbdfc8bf925acf7076ffd">cl::sycl::info::device_partition_type::L4_cache</a>, 
-<a class="el" href="group__execution.html#gga88aea8ff69afd9cf81594eb915690b25a4caa8fade30967a8377af50b650cdba4">cl::sycl::info::device_partition_type::L3_cache</a>, 
-<br />
-&#160;&#160;<a class="el" href="group__execution.html#gga88aea8ff69afd9cf81594eb915690b25ac58e8051e3e9607bb653b0d5bcb918e7">cl::sycl::info::device_partition_type::L2_cache</a>, 
-<a class="el" href="group__execution.html#gga88aea8ff69afd9cf81594eb915690b25a84426bc33cb131aa00c40cd629ae5727">cl::sycl::info::device_partition_type::L1_cache</a>
-<br />
- }</td></tr>
-<tr class="separator:ga88aea8ff69afd9cf81594eb915690b25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:gaea3b7860826830db91022d3cc985119f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad3cf44d11f60b23508e91d1ed61ad001"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#gad3cf44d11f60b23508e91d1ed61ad001">cl::sycl::info::local_mem_type</a> : int { <a class="el" href="group__execution.html#ggad3cf44d11f60b23508e91d1ed61ad001a334c4a4c42fdb79d7ebc3e73b517e6f8">cl::sycl::info::local_mem_type::none</a>, 
 <a class="el" href="group__execution.html#ggad3cf44d11f60b23508e91d1ed61ad001af5ddaf0ca7929578b408c909429f68f2">cl::sycl::info::local_mem_type::local</a>, 
 <a class="el" href="group__execution.html#ggad3cf44d11f60b23508e91d1ed61ad001a9c70933aff6b2a6d08c687a6cbb6b765">cl::sycl::info::local_mem_type::global</a>
@@ -308,15 +306,33 @@ Enumerations</h2></td></tr>
 <a class="el" href="group__execution.html#gga8986fcccc4479065bdbf37d9b9d8def5a2629564984b808cf7e6cfc61a0286d69">cl::sycl::info::global_mem_cache_type::write_only</a>
  }</td></tr>
 <tr class="separator:ga8986fcccc4479065bdbf37d9b9d8def5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9a5e05b02059b134514d134a1e350320"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#ga9a5e05b02059b134514d134a1e350320">cl::sycl::info::device_execution_capabilities</a> : unsigned int { <a class="el" href="group__execution.html#gga9a5e05b02059b134514d134a1e350320a8ef8a5e4446de303bfda8dee49b81b86">cl::sycl::info::device_execution_capabilities::exec_kernel</a>, 
-<a class="el" href="group__execution.html#gga9a5e05b02059b134514d134a1e350320af9aac75a42a777bddf2841ef348171d7">cl::sycl::info::device_execution_capabilities::exec_native_kernel</a>
+<tr class="memitem:ga325a35c99165b9ee10d88acd0ea73c00"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#ga325a35c99165b9ee10d88acd0ea73c00">cl::sycl::info::execution_capability</a> : unsigned int { <a class="el" href="group__execution.html#gga325a35c99165b9ee10d88acd0ea73c00a8ef8a5e4446de303bfda8dee49b81b86">cl::sycl::info::execution_capability::exec_kernel</a>, 
+<a class="el" href="group__execution.html#gga325a35c99165b9ee10d88acd0ea73c00af9aac75a42a777bddf2841ef348171d7">cl::sycl::info::execution_capability::exec_native_kernel</a>
  }</td></tr>
-<tr class="separator:ga9a5e05b02059b134514d134a1e350320"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:ga325a35c99165b9ee10d88acd0ea73c00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga0ce845f159c3c519b91facb871eead7e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#ga0ce845f159c3c519b91facb871eead7e">cl::sycl::info::TRISYCL_INFO_PARAM_TRAITS</a> (info::device::image2d_max_width, size_t)</td></tr>
+<tr class="memdesc:ga0ce845f159c3c519b91facb871eead7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query the return type for get_info() on context stuff.  <a href="group__execution.html#ga0ce845f159c3c519b91facb871eead7e">More...</a><br /></td></tr>
+<tr class="separator:ga0ce845f159c3c519b91facb871eead7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gace9d5aa3116b049d18f38ebea5d66a73"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#gace9d5aa3116b049d18f38ebea5d66a73">cl::sycl::info::TRISYCL_INFO_PARAM_TRAITS</a> (info::device::image2d_max_height, size_t)</td></tr>
+<tr class="separator:gace9d5aa3116b049d18f38ebea5d66a73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga493c0aeb89f412d8cef4df147d6c248e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#ga493c0aeb89f412d8cef4df147d6c248e">cl::sycl::info::TRISYCL_INFO_PARAM_TRAITS</a> (info::device::image3d_max_width, size_t)</td></tr>
+<tr class="separator:ga493c0aeb89f412d8cef4df147d6c248e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2f5301ed6fe9a5f36c4a377b6548021b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#ga2f5301ed6fe9a5f36c4a377b6548021b">cl::sycl::info::TRISYCL_INFO_PARAM_TRAITS</a> (info::device::image3d_max_height, size_t)</td></tr>
+<tr class="separator:ga2f5301ed6fe9a5f36c4a377b6548021b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9ff92f5f401d242acdcbb07dd07f5ca9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#ga9ff92f5f401d242acdcbb07dd07f5ca9">cl::sycl::info::TRISYCL_INFO_PARAM_TRAITS</a> (info::device::image3d_max_depth, size_t)</td></tr>
+<tr class="separator:ga9ff92f5f401d242acdcbb07dd07f5ca9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae87799df4cd4c8f5fa9b7192f7c47227"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#gae87799df4cd4c8f5fa9b7192f7c47227">cl::sycl::info::TRISYCL_INFO_PARAM_TRAITS</a> (info::device::image_max_buffer_size, size_t)</td></tr>
+<tr class="separator:gae87799df4cd4c8f5fa9b7192f7c47227"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga44cfc43be020f36568ab89afd3573066"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#ga44cfc43be020f36568ab89afd3573066">cl::sycl::info::TRISYCL_INFO_PARAM_TRAITS</a> (info::device::image_max_array_size, size_t)</td></tr>
+<tr class="separator:ga44cfc43be020f36568ab89afd3573066"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 20 2018 19:26:22 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

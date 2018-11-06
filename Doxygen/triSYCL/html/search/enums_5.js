@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['local_5fmem_5ftype',['local_mem_type',['../group__execution.html#gad3cf44d11f60b23508e91d1ed61ad001',1,'cl::sycl::info']]]
+  ['global_5fmem_5fcache_5ftype',['global_mem_cache_type',['../group__execution.html#ga8986fcccc4479065bdbf37d9b9d8def5',1,'cl::sycl::info']]]
 ];

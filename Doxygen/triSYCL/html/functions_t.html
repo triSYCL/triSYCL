@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>triSYCL implementation of OpenCL SYCL: Class Members</title>
+<title>triSYCL implementation of SYCL: Class Members</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">triSYCL implementation of OpenCL SYCL
+   <div id="projectname">triSYCL implementation of SYCL
    </div>
   </td>
  </tr>
@@ -76,6 +76,14 @@ $(function() {
 <li>track_access_mode()
 : <a class="el" href="group__data.html#ad15b2a8c2fee6759f08296404babc06c">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
 </li>
+<li>TRISYCL_DECLARE_S()
+: <a class="el" href="group__vector.html#af0a96cc4288cf7bc2fc2f85f2bd703a6">cl::sycl::vec&lt; DataType, 1 &gt;</a>
+, <a class="el" href="group__vector.html#adbdb7400714efad65d4cf54a2967a1e6">cl::sycl::vec&lt; DataType, 16 &gt;</a>
+, <a class="el" href="group__vector.html#a4f3d2f748c627dc1a2ca61412fbfb600">cl::sycl::vec&lt; DataType, 2 &gt;</a>
+, <a class="el" href="group__vector.html#a9c14a7360d22d654e86a68d6427d8dd9">cl::sycl::vec&lt; DataType, 3 &gt;</a>
+, <a class="el" href="group__vector.html#a580741ac3e73e34c556c3feae54f644d">cl::sycl::vec&lt; DataType, 4 &gt;</a>
+, <a class="el" href="group__vector.html#a25064890907c0cd19acc012c42ec3c4b">cl::sycl::vec&lt; DataType, 8 &gt;</a>
+</li>
 <li>TRISYCL_parallel_for_functor_GLOBAL()
 : <a class="el" href="group__execution.html#a138e65791a3c30e5a036d0ad9c3366de">cl::sycl::handler</a>
 </li>
@@ -86,17 +94,17 @@ $(function() {
 <li>type
 : <a class="el" href="group__address__spaces.html#ad7c5bd48239875e82fd2bb43c98b134d">cl::sycl::detail::address_space_base&lt; T, AS &gt;</a>
 , <a class="el" href="group__address__spaces.html#a27d1bcf84032cb1f4eed1a51a0ea492e">cl::sycl::detail::ocl_type&lt; T, AS &gt;</a>
-, <a class="el" href="group__address__spaces.html#a953ca6738c696070fafd7e6e6ea53dc5">cl::sycl::detail::ocl_type&lt; T, constant_address_space &gt;</a>
-, <a class="el" href="group__address__spaces.html#a1276d074845057d3890de1de5f3270f0">cl::sycl::detail::ocl_type&lt; T, global_address_space &gt;</a>
-, <a class="el" href="group__address__spaces.html#a22eab928c79ff9fb6f7280694a5aea8a">cl::sycl::detail::ocl_type&lt; T, local_address_space &gt;</a>
-, <a class="el" href="group__address__spaces.html#adf68926833af8a064ecc2ed566ecc2f2">cl::sycl::detail::ocl_type&lt; T, private_address_space &gt;</a>
+, <a class="el" href="group__address__spaces.html#ab6e7fc7d29b2c653d0e0c5b67eb1d5d2">cl::sycl::detail::ocl_type&lt; T, access::address_space::constant_space &gt;</a>
+, <a class="el" href="group__address__spaces.html#add9de8b2d3ae0705d799d685084dbc0f">cl::sycl::detail::ocl_type&lt; T, access::address_space::global_space &gt;</a>
+, <a class="el" href="group__address__spaces.html#aa5874fae5843755f8493a41f1d2920d7">cl::sycl::detail::ocl_type&lt; T, access::address_space::local_space &gt;</a>
+, <a class="el" href="group__address__spaces.html#a197419df5ec341f0736e9a645fb2e0b1">cl::sycl::detail::ocl_type&lt; T, access::address_space::private_space &gt;</a>
 , <a class="el" href="group__execution.html#accdadd6fafa11f1ef766d17659f00c20">cl::sycl::device</a>
 </li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 20 2018 19:26:25 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['vendor',['vendor',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a7c3613dba5171cb6027c67835dd3b9d4',1,'cl::sycl::info']]],
-  ['vendor_5fid',['vendor_id',['../group__execution.html#gga51f4189fcf4ca86d768d0fcce34d8bc5a96b1f972094b863cafcacb8fc48b9bea',1,'cl::sycl::info']]]
+  ['write',['write',['../namespacecl_1_1sycl_1_1access.html#a9ae8c23f772316322be407bbb6498b17aefb2a684e4afb7d55e6147fbe5a332ee',1,'cl::sycl::access']]],
+  ['write_5fonly',['write_only',['../group__execution.html#gga8986fcccc4479065bdbf37d9b9d8def5a2629564984b808cf7e6cfc61a0286d69',1,'cl::sycl::info']]]
 ];

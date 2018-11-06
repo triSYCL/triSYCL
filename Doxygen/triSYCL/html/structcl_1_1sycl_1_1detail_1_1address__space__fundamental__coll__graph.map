@@ -1,4 +1,4 @@
 <map id="cl::sycl::detail::address_space_fundamental&lt; T, AS &gt;" name="cl::sycl::detail::address_space_fundamental&lt; T, AS &gt;">
-<area shape="rect" id="node2" href="$group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1address__space__variable" title="Implementation of a variable with an OpenCL address space. " alt="" coords="91,199,266,240"/>
+<area shape="rect" id="node2" href="$group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1address__space__variable" title="Implementation of a variable with an OpenCL address space. " alt="" coords="59,199,234,240"/>
 <area shape="rect" id="node3" href="$group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1address__space__base" title="Implementation of the base infrastructure to wrap something in an OpenCL address space. " alt="" coords="5,95,163,136"/>
 </map>

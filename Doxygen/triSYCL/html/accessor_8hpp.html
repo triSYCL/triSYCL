@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>triSYCL implementation of OpenCL SYCL: include/CL/sycl/accessor.hpp File Reference</title>
+<title>triSYCL implementation of SYCL: include/CL/sycl/accessor.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">triSYCL implementation of OpenCL SYCL
+   <div id="projectname">triSYCL implementation of SYCL
    </div>
   </td>
  </tr>
@@ -87,7 +87,7 @@ Include dependency graph for accessor.hpp:</div>
 <div class="center"><img src="accessor_8hpp__incl.png" border="0" usemap="#include_2CL_2sycl_2accessor_8hpp" alt=""/></div>
 <map name="include_2CL_2sycl_2accessor_8hpp" id="include_2CL_2sycl_2accessor_8hpp">
 <area shape="rect" id="node3" href="access_8hpp.html" title="CL/sycl/access.hpp" alt="" coords="1003,266,1141,293"/>
-<area shape="rect" id="node4" href="local__accessor_8hpp.html" title="CL/sycl/accessor/detail\l/local_accessor.hpp" alt="" coords="1105,80,1263,121"/>
+<area shape="rect" id="node4" href="local__accessor_8hpp.html" title="CL/sycl/accessor/detail\l/local_accessor.hpp" alt="" coords="1103,80,1262,121"/>
 <area shape="rect" id="node26" href="shared__ptr__implementation_8hpp.html" title="CL/sycl/detail/shared\l_ptr_implementation.hpp" alt="" coords="379,437,543,479"/>
 <area shape="rect" id="node31" href="id_8hpp.html" title="CL/sycl/id.hpp" alt="" coords="283,355,389,382"/>
 <area shape="rect" id="node38" href="item_8hpp.html" title="CL/sycl/item.hpp" alt="" coords="806,266,927,293"/>
@@ -97,7 +97,7 @@ Include dependency graph for accessor.hpp:</div>
 <area shape="rect" id="node44" href="pipe__reservation_8hpp.html" title="CL/sycl/pipe_reservation.hpp" alt="" coords="3105,177,3295,203"/>
 <area shape="rect" id="node50" href="pipe__accessor_8hpp.html" title="CL/sycl/pipe/detail\l/pipe_accessor.hpp" alt="" coords="2713,169,2847,211"/>
 <area shape="rect" id="node8" href="task_8hpp.html" title="CL/sycl/command_group\l/detail/task.hpp" alt="" coords="1671,259,1838,300"/>
-<area shape="rect" id="node14" href="debug_8hpp.html" title="CL/sycl/detail/debug.hpp" alt="" coords="979,616,1146,643"/>
+<area shape="rect" id="node14" href="debug_8hpp.html" title="CL/sycl/detail/debug.hpp" alt="" coords="978,616,1145,643"/>
 <area shape="rect" id="node13" href="accessor__base_8hpp.html" title="CL/sycl/accessor/detail\l/accessor_base.hpp" alt="" coords="2307,348,2466,389"/>
 <area shape="rect" id="node20" href="buffer__base_8hpp.html" title="CL/sycl/buffer/detail\l/buffer_base.hpp" alt="" coords="1541,348,1680,389"/>
 <area shape="rect" id="node25" href="kernel_8hpp.html" title="CL/sycl/kernel.hpp" alt="" coords="909,355,1040,382"/>
@@ -116,13 +116,13 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="accessor_8hpp__dep__incl.png" border="0" usemap="#include_2CL_2sycl_2accessor_8hppdep" alt=""/></div>
 <map name="include_2CL_2sycl_2accessor_8hppdep" id="include_2CL_2sycl_2accessor_8hppdep">
-<area shape="rect" id="node2" href="buffer_8hpp.html" title="include/CL/sycl/buffer.hpp" alt="" coords="216,251,391,278"/>
-<area shape="rect" id="node3" href="sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="360,333,498,360"/>
+<area shape="rect" id="node2" href="buffer_8hpp.html" title="include/CL/sycl/buffer.hpp" alt="" coords="217,251,391,278"/>
+<area shape="rect" id="node3" href="sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="361,333,498,360"/>
 <area shape="rect" id="node4" href="device__runtime_8hpp.html" title="include/CL/sycl/device\l_runtime.hpp" alt="" coords="37,244,192,285"/>
-<area shape="rect" id="node5" href="handler_8hpp.html" title="include/CL/sycl/handler.hpp" alt="" coords="292,80,475,107"/>
-<area shape="rect" id="node6" href="pipe_8hpp.html" title="include/CL/sycl/pipe.hpp" alt="" coords="517,162,682,189"/>
+<area shape="rect" id="node5" href="handler_8hpp.html" title="include/CL/sycl/handler.hpp" alt="" coords="293,80,475,107"/>
+<area shape="rect" id="node6" href="pipe_8hpp.html" title="include/CL/sycl/pipe.hpp" alt="" coords="517,162,683,189"/>
 <area shape="rect" id="node8" href="static__pipe_8hpp.html" title="include/CL/sycl/static\l_pipe.hpp" alt="" coords="707,155,855,196"/>
-<area shape="rect" id="node7" href="queue_8hpp.html" title="include/CL/sycl/queue.hpp" alt="" coords="266,162,442,189"/>
+<area shape="rect" id="node7" href="queue_8hpp.html" title="include/CL/sycl/queue.hpp" alt="" coords="267,162,443,189"/>
 </map>
 </div>
 </div>
@@ -152,6 +152,7 @@ Namespaces</h2></td></tr>
 <tr class="memdesc:namespacecl"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector type to be used as SYCL vector. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacecl_1_1sycl"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html">cl::sycl</a></td></tr>
+<tr class="memdesc:namespacecl_1_1sycl"><td class="mdescLeft">&#160;</td><td class="mdescRight">Small OpenCL vector class. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
@@ -164,7 +165,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 20 2018 19:26:22 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

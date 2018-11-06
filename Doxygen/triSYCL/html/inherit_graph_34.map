@@ -1,6 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$group__execution.html#classcl_1_1sycl_1_1detail_1_1device" title="An abstract class representing various models of SYCL devices. " alt="" coords="12,75,161,102"/>
-<area shape="rect" id="node2" href="$classcl_1_1sycl_1_1detail_1_1host__device.html" title="SYCL host device. " alt="" coords="223,5,359,47"/>
-<area shape="rect" id="node3" href="$classcl_1_1sycl_1_1detail_1_1opencl__device.html" title="SYCL OpenCL device. " alt="" coords="216,71,365,112"/>
-<area shape="rect" id="node4" href="$structcl_1_1sycl_1_1detail_1_1singleton.html" title="cl::sycl::detail::singleton\l\&lt; host_device \&gt;" alt="" coords="5,5,168,47"/>
+<area shape="rect" id="node1" href="$group__execution.html#classcl_1_1sycl_1_1detail_1_1context" title="cl::sycl::detail::context" alt="" coords="9,74,164,101"/>
+<area shape="rect" id="node2" href="$group__execution.html#classcl_1_1sycl_1_1detail_1_1host__context" title="cl::sycl::detail::host\l_context" alt="" coords="223,5,359,47"/>
+<area shape="rect" id="node3" href="$classcl_1_1sycl_1_1detail_1_1opencl__context.html" title="SYCL OpenCL context. " alt="" coords="216,71,365,112"/>
+<area shape="rect" id="node4" href="$structcl_1_1sycl_1_1detail_1_1singleton.html" title="cl::sycl::detail::singleton\l\&lt; host_context \&gt;" alt="" coords="5,5,168,47"/>
 </map>

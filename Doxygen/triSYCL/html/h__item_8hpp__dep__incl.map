@@ -1,0 +1,11 @@
+<map id="include/CL/sycl/h_item.hpp" name="include/CL/sycl/h_item.hpp">
+<area shape="rect" id="node2" href="$group_8hpp.html" title="include/CL/sycl/group.hpp" alt="" coords="573,80,746,107"/>
+<area shape="rect" id="node3" href="$parallelism_2detail_2parallelism_8hpp.html" title="Implement the detail of the parallel constructions to launch kernels. " alt="" coords="446,155,625,196"/>
+<area shape="rect" id="node6" href="$sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="500,483,637,509"/>
+<area shape="rect" id="node4" href="$handler_8hpp.html" title="include/CL/sycl/handler.hpp" alt="" coords="224,244,407,271"/>
+<area shape="rect" id="node10" href="$parallelism_8hpp.html" title="Implement parallel constructions to launch kernels. " alt="" coords="434,244,637,271"/>
+<area shape="rect" id="node5" href="$buffer_8hpp.html" title="include/CL/sycl/buffer.hpp" alt="" coords="419,408,593,435"/>
+<area shape="rect" id="node7" href="$pipe_8hpp.html" title="include/CL/sycl/pipe.hpp" alt="" coords="229,408,394,435"/>
+<area shape="rect" id="node8" href="$queue_8hpp.html" title="include/CL/sycl/queue.hpp" alt="" coords="437,326,613,353"/>
+<area shape="rect" id="node9" href="$static__pipe_8hpp.html" title="include/CL/sycl/static\l_pipe.hpp" alt="" coords="5,319,153,360"/>
+</map>

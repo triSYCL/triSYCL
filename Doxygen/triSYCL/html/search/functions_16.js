@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['w',['w',['../group__vector.html#aac9e5ea86d8d4409db22a00dbb207598',1,'cl::sycl::vec&lt; DataType, 4 &gt;']]],
   ['wait',['wait',['../group__data.html#a93b4c2b305fd93a55f81689a6260ad21',1,'cl::sycl::detail::buffer_base::wait()'],['../structcl_1_1sycl_1_1detail_1_1task.html#a91d400fd40ede4ae00662dd124dd1b8a',1,'cl::sycl::detail::task::wait()'],['../group__execution.html#ac46bc8ee7cff0a3f77c7afb7d60184b4',1,'cl::sycl::queue::wait()']]],
   ['wait_5fand_5fthrow',['wait_and_throw',['../group__execution.html#abfa510446db9f4edd0c16270b199a232',1,'cl::sycl::queue']]],
   ['wait_5ffor_5fkernel_5fexecution',['wait_for_kernel_execution',['../structcl_1_1sycl_1_1detail_1_1queue.html#a7f89462189bb20d409acb73392a5f679',1,'cl::sycl::detail::queue']]],

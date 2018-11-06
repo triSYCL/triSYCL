@@ -1,7 +1,7 @@
 <map id="cl::sycl::detail::parallel_for" name="cl::sycl::detail::parallel_for">
-<area shape="rect" id="node2" href="$group__parallelism.html#a56f94b3bd4f63e36ee4c15c5552c6c7f" title="Get the range of work&#45;groups needed to run this ND&#45;range. " alt="" coords="241,5,367,47"/>
-<area shape="rect" id="node3" href="$group__parallelism.html#aa1cd2cc6bc6f62899f8e7db64b54f9cb" title="Get the local part of the iteration space range. " alt="" coords="241,71,367,112"/>
-<area shape="rect" id="node4" href="$group__parallelism.html#ga3004da03b4f3be8dc72c49b58076107b" title="Implement the loop on the work&#45;items inside a work&#45;group. " alt="" coords="228,136,380,177"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#a3d2bd16a62e606016734780866c79bfe" title="Get the range of work&#45;groups needed to run this ND&#45;range. " alt="" coords="241,5,367,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#a69494bf55e188354b52568637679583c" title="Get the local part of the iteration space range. " alt="" coords="241,71,367,112"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#gac5cf59ffdd426280bad76e8079abd20c" title="Implement the loop on the work&#45;items inside a work&#45;group. " alt="" coords="228,136,380,177"/>
 <area shape="rect" id="node5" href="$group__parallelism.html#a9dab0a48e38fb5c3f6a1fef3c6628544" title="cl::sycl::group::get\l_nd_range" alt="" coords="459,29,589,71"/>
 <area shape="rect" id="node6" href="$group__helpers.html#a3093de191f159ea181497e2b5eeb2f02" title="Return the element of the array. " alt="" coords="428,95,620,151"/>
 <area shape="rect" id="node7" href="$group__parallelism.html#ac970208726df578870d9ad1921817724" title="Return an id representing the index of the group within the nd_range for every dimension. " alt="" coords="451,175,597,202"/>

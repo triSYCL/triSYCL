@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['platform',['platform',['../group__execution.html#ga3ea7e38ccbc7de5270c4f69bbae20463',1,'cl::sycl::info']]]
+  ['mode',['mode',['../namespacecl_1_1sycl_1_1access.html#a9ae8c23f772316322be407bbb6498b17',1,'cl::sycl::access']]]
 ];

@@ -1,5 +1,5 @@
 <map id="cl::sycl::detail::opencl_platform::instance" name="cl::sycl::detail::opencl_platform::instance">
-<area shape="rect" id="node2" href="$group__execution.html#ga3f839bb7f1f1046f044de7235e140471" title="Get all the available devices for this OpenCL platform. " alt="" coords="203,5,357,47"/>
+<area shape="rect" id="node2" href="$group__execution.html#ga8334815bd4fabdce1e3a8dc431414b82" title="Get all the available devices for this OpenCL platform. " alt="" coords="203,5,357,47"/>
 <area shape="rect" id="node4" href="$classcl_1_1sycl_1_1detail_1_1cache.html#a9a918c2a5233b5538b248a195c3446c3" title="Get a value stored in the cache if present or insert by calling a generator function. " alt="" coords="207,71,353,112"/>
 <area shape="rect" id="node3" href="$group__execution.html#a7f5ca2aa742552385caca81ea1651e12" title="Return the underlying Boost.Compute platform. " alt="" coords="405,5,604,47"/>
 </map>

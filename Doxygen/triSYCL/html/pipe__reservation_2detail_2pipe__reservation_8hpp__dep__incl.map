@@ -3,7 +3,7 @@
 <area shape="rect" id="node11" href="$pipe__reservation_8hpp.html" title="include/CL/sycl/pipe\l_reservation.hpp" alt="" coords="736,109,876,151"/>
 <area shape="rect" id="node3" href="$accessor_8hpp.html" title="include/CL/sycl/accessor.hpp" alt="" coords="529,199,723,225"/>
 <area shape="rect" id="node4" href="$buffer_8hpp.html" title="include/CL/sycl/buffer.hpp" alt="" coords="5,445,180,471"/>
-<area shape="rect" id="node5" href="$sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="449,527,587,553"/>
+<area shape="rect" id="node5" href="$sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="488,527,625,553"/>
 <area shape="rect" id="node6" href="$device__runtime_8hpp.html" title="include/CL/sycl/device\l_runtime.hpp" alt="" coords="711,437,866,479"/>
 <area shape="rect" id="node7" href="$handler_8hpp.html" title="include/CL/sycl/handler.hpp" alt="" coords="293,273,476,300"/>
 <area shape="rect" id="node8" href="$pipe_8hpp.html" title="include/CL/sycl/pipe.hpp" alt="" coords="362,355,527,382"/>

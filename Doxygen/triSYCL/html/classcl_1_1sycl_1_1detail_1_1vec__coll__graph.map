@@ -1,0 +1,5 @@
+<map id="cl::sycl::detail::vec&lt; DataType, NumElements &gt;" name="cl::sycl::detail::vec&lt; DataType, NumElements &gt;">
+<area shape="rect" id="node2" href="$group__helpers.html" title="cl::sycl::detail::small\l_array\&lt; DataType, cl::\lsycl::vec\&lt; DataType, NumElements\l \&gt;, NumElements \&gt;" alt="" coords="376,280,611,351"/>
+<area shape="rect" id="node8" href="$group__debug__trace.html" title="cl::sycl::detail::display\l_vector\&lt; cl::sycl::vec\l\&lt; DataType, NumElements \&gt; \&gt;" alt="" coords="19,407,226,463"/>
+<area shape="rect" id="node10" href="$classstatic_01const_01size__t.html" title="static const size_t" alt="" coords="58,538,187,565"/>
+</map>

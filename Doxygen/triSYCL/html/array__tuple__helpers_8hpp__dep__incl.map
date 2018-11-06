@@ -1,4 +1,5 @@
 <map id="include/CL/sycl/detail/array_tuple_helpers.hpp" name="include/CL/sycl/detail/array_tuple_helpers.hpp">
-<area shape="rect" id="node2" href="$vec_8hpp.html" title="Implement the small OpenCL vector class. " alt="" coords="6,95,169,121"/>
-<area shape="rect" id="node3" href="$sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="19,169,156,196"/>
+<area shape="rect" id="node2" href="$vec_2detail_2vec_8hpp.html" title="Implement the detail base OpenCL vector class. " alt="" coords="19,95,156,136"/>
+<area shape="rect" id="node3" href="$vec_8hpp.html" title="Implement the small OpenCL vector class. " alt="" coords="6,184,169,211"/>
+<area shape="rect" id="node4" href="$sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="19,259,156,285"/>
 </map>

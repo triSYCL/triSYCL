@@ -10,6 +10,7 @@ var searchData=
   ['debug_3c_20detail_3a_3apipe_5faccessor_3c_20datatype_2c_20accessmode_2c_20target_20_3e_20_3e',['debug&lt; detail::pipe_accessor&lt; DataType, AccessMode, Target &gt; &gt;',['../group__debug__trace.html',1,'cl::sycl::detail']]],
   ['debug_3c_20detail_3a_3apipe_5faccessor_3c_20t_2c_20accessmode_2c_20target_20_3e_20_3e',['debug&lt; detail::pipe_accessor&lt; T, AccessMode, Target &gt; &gt;',['../group__debug__trace.html',1,'cl::sycl::detail']]],
   ['debug_3c_20detail_3a_3apipe_5freservation_3c_20pipeaccessor_20_3e_20_3e',['debug&lt; detail::pipe_reservation&lt; PipeAccessor &gt; &gt;',['../group__debug__trace.html',1,'cl::sycl::detail']]],
+  ['debug_3c_20detail_3a_3aprogram_20_3e',['debug&lt; detail::program &gt;',['../group__debug__trace.html',1,'cl::sycl::detail']]],
   ['debug_3c_20detail_3a_3aqueue_20_3e',['debug&lt; detail::queue &gt;',['../group__debug__trace.html',1,'cl::sycl::detail']]],
   ['debug_3c_20handler_20_3e',['debug&lt; handler &gt;',['../group__debug__trace.html',1,'cl::sycl::detail']]],
   ['debug_3c_20host_5fqueue_20_3e',['debug&lt; host_queue &gt;',['../group__debug__trace.html',1,'cl::sycl::detail']]],
@@ -27,8 +28,8 @@ var searchData=
   ['device_5ftype_5fselector',['device_type_selector',['../group__execution.html#classcl_1_1sycl_1_1device__type__selector',1,'cl::sycl']]],
   ['device_5ftypename_5fselector',['device_typename_selector',['../group__execution.html#classcl_1_1sycl_1_1device__typename__selector',1,'cl::sycl']]],
   ['display_5fvector',['display_vector',['../group__debug__trace.html#structcl_1_1sycl_1_1detail_1_1display__vector',1,'cl::sycl::detail']]],
+  ['display_5fvector_3c_20cl_3a_3asycl_3a_3avec_3c_20datatype_2c_20numelements_20_3e_20_3e',['display_vector&lt; cl::sycl::vec&lt; DataType, NumElements &gt; &gt;',['../group__debug__trace.html',1,'cl::sycl::detail']]],
   ['display_5fvector_3c_20finaltype_20_3e',['display_vector&lt; FinalType &gt;',['../group__debug__trace.html',1,'cl::sycl::detail']]],
   ['display_5fvector_3c_20id_3c_20dimensions_20_3e_20_3e',['display_vector&lt; id&lt; Dimensions &gt; &gt;',['../group__debug__trace.html',1,'cl::sycl::detail']]],
-  ['display_5fvector_3c_20range_3c_20dimensions_20_3e_20_3e',['display_vector&lt; range&lt; Dimensions &gt; &gt;',['../group__debug__trace.html',1,'cl::sycl::detail']]],
-  ['display_5fvector_3c_20vec_3c_20datatype_2c_20numelements_20_3e_20_3e',['display_vector&lt; vec&lt; DataType, NumElements &gt; &gt;',['../group__debug__trace.html',1,'cl::sycl::detail']]]
+  ['display_5fvector_3c_20range_3c_20dimensions_20_3e_20_3e',['display_vector&lt; range&lt; Dimensions &gt; &gt;',['../group__debug__trace.html',1,'cl::sycl::detail']]]
 ];

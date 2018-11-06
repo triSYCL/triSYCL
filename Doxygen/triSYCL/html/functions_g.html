@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>triSYCL implementation of OpenCL SYCL: Class Members</title>
+<title>triSYCL implementation of SYCL: Class Members</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">triSYCL implementation of OpenCL SYCL
+   <div id="projectname">triSYCL implementation of SYCL
    </div>
   </td>
  </tr>
@@ -61,6 +61,10 @@ $(function() {
 <div class="textblock">Here is a list of all class members with links to the classes they belong to:</div>
 
 <h3><a id="index_g"></a>- g -</h3><ul>
+<li>g
+: <a class="el" href="group__vector.html#ga43b1fcb5620d37c29c0bb888c860ad40">cl::sycl::elem</a>
+, <a class="el" href="group__vector.html#a733981804a5df0ac3fd8fcd05107dc72">cl::sycl::vec&lt; DataType, 4 &gt;</a>
+</li>
 <li>get()
 : <a class="el" href="group__execution.html#a33f0a7e828fd867d7e31ae1bc122aca1">cl::sycl::context</a>
 , <a class="el" href="group__execution.html#a6afccaf097ccdf7f58f47f5f5ea2c4fe">cl::sycl::detail::context</a>
@@ -76,11 +80,13 @@ $(function() {
 , <a class="el" href="group__execution.html#a72e2d157f12ac9543db275c7814f1a61">cl::sycl::detail::opencl_platform</a>
 , <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__queue.html#abf61f1555ff9492c60b18520fca1c921">cl::sycl::detail::opencl_queue</a>
 , <a class="el" href="group__execution.html#aac77e0278d7c0a7efad1c2badc885250">cl::sycl::detail::platform</a>
+, <a class="el" href="classcl_1_1sycl_1_1detail_1_1program.html#afa460edf81a5b0e8a85dde0a74f72a93">cl::sycl::detail::program</a>
 , <a class="el" href="structcl_1_1sycl_1_1detail_1_1queue.html#a1c15208824313c5abeda787d73060950">cl::sycl::detail::queue</a>
 , <a class="el" href="group__helpers.html#a3093de191f159ea181497e2b5eeb2f02">cl::sycl::detail::small_array&lt; BasicType, FinalType, Dims, EnableArgsConstructor &gt;</a>
 , <a class="el" href="group__execution.html#a98597359400b806fb646064d16ca97e0">cl::sycl::device</a>
 , <a class="el" href="group__execution.html#a75a071360a293e0d0eea6e98dd545658">cl::sycl::kernel</a>
 , <a class="el" href="group__execution.html#a8c40e8cfc090f6421900a07f90a2b3c4">cl::sycl::platform</a>
+, <a class="el" href="classcl_1_1sycl_1_1program.html#ae86b3cfa4dbff2156dd1485c1a88d42f">cl::sycl::program</a>
 , <a class="el" href="group__execution.html#a8edb4ea02ee6c99c98287f336bd32874">cl::sycl::queue</a>
 </li>
 <li>get_access()
@@ -143,7 +149,7 @@ $(function() {
 , <a class="el" href="group__data.html#a415392a1e1fac8fa8b43d929f36058b1">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
 , <a class="el" href="group__data.html#aa4f7031bc2b0b3370d36c2ca1479fd34">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 , <a class="el" href="group__data.html#a3b1a374f209f220fd42c6dfedbc8992e">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
-, <a class="el" href="group__parallelism.html#ab066b2903dc968d82c6f512e2ddc2d23">cl::sycl::range&lt; Dimensions &gt;</a>
+, <a class="el" href="classcl_1_1sycl_1_1detail_1_1vec.html#a365116bf418353d861be023d0f7b3a38">cl::sycl::detail::vec&lt; DataType, NumElements &gt;</a>
 </li>
 <li>get_destructor_future()
 : <a class="el" href="group__data.html#ac80f1a31159e10f1eb6da13bad6d61ab">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
@@ -158,42 +164,57 @@ $(function() {
 : <a class="el" href="group__execution.html#a61d96003363497ad3766bef24bcc892c">cl::sycl::context</a>
 , <a class="el" href="group__execution.html#a8653a23c21952b62eab7106038281570">cl::sycl::detail::context</a>
 , <a class="el" href="group__execution.html#a4e43a5c31be339db09242809e0a9a1e6">cl::sycl::detail::host_context</a>
-, <a class="el" href="group__execution.html#ga8cb419927a98accd1fca43e12fe805f9">cl::sycl::detail::host_platform</a>
+, <a class="el" href="group__execution.html#ga9bba2d631a2fdf2b766a1ce052a61a17">cl::sycl::detail::host_platform</a>
 , <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a28c14d7804ef0fea3e48bd18dcf1a44c">cl::sycl::detail::opencl_context</a>
-, <a class="el" href="group__execution.html#ga3f839bb7f1f1046f044de7235e140471">cl::sycl::detail::opencl_platform</a>
-, <a class="el" href="group__execution.html#a13cc464f3dfc99813ce4db7702d98461">cl::sycl::detail::platform</a>
+, <a class="el" href="group__execution.html#ga8334815bd4fabdce1e3a8dc431414b82">cl::sycl::detail::opencl_platform</a>
+, <a class="el" href="group__execution.html#a43e0a8c2b5292717ff954245b4b7b404">cl::sycl::detail::platform</a>
 , <a class="el" href="group__execution.html#ga3185cf532d106386180f469b4b6832bc">cl::sycl::device</a>
-, <a class="el" href="group__execution.html#ad419117d2590b11ce4ed860ea1083235">cl::sycl::platform</a>
+, <a class="el" href="group__execution.html#aa4b0de49ca31efb4779ba4f29bf1a380">cl::sycl::platform</a>
 </li>
-<li>get_global()
-: <a class="el" href="group__parallelism.html#a76f60881c4d17eba5d87f48b4e42197f">cl::sycl::nd_item&lt; Dimensions &gt;</a>
-, <a class="el" href="group__parallelism.html#a7f06837d56fea542f3781b93563d8ea8">cl::sycl::nd_range&lt; Dimensions &gt;</a>
+<li>get_extension_strings()
+: <a class="el" href="group__execution.html#ae3f20926f84ad0b22b27de4b80f4102d">cl::sycl::detail::host_platform</a>
+, <a class="el" href="group__execution.html#a5ca7664a44099b0401394a76e6ba71c6">cl::sycl::detail::opencl_platform</a>
+, <a class="el" href="group__execution.html#aac18f9ffc0d4fe59dad874a55081843e">cl::sycl::detail::platform</a>
+</li>
+<li>get_global_id()
+: <a class="el" href="group__parallelism.html#a4f6d866d53d10e4d012cea5e2e704950">cl::sycl::h_item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#a6818bf479caa443ed98625b1715da141">cl::sycl::nd_item&lt; Dimensions &gt;</a>
 </li>
 <li>get_global_linear_id()
-: <a class="el" href="group__parallelism.html#af71c043b404fb2c2a4d40294ca27bf88">cl::sycl::nd_item&lt; Dimensions &gt;</a>
+: <a class="el" href="group__parallelism.html#af55f78a7bdd34ab595f7e9ac1aa314a9">cl::sycl::h_item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#af71c043b404fb2c2a4d40294ca27bf88">cl::sycl::nd_item&lt; Dimensions &gt;</a>
 </li>
 <li>get_global_range()
 : <a class="el" href="group__parallelism.html#a3bd4275d8275037398d8ffe274145e27">cl::sycl::group&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#ae6687e7ce5e24feaddcc4b48c5b33cf3">cl::sycl::h_item&lt; Dimensions &gt;</a>
 , <a class="el" href="group__parallelism.html#a38089b11659fd98faf4ceb90ee7f7c01">cl::sycl::nd_item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#ab3777b2f1cd2fa2caaa4382d81ee74a2">cl::sycl::nd_range&lt; Dimensions &gt;</a>
 </li>
 <li>get_group()
-: <a class="el" href="group__parallelism.html#a84e9f3b9284bbbadd0ee8d08ad0ab417">cl::sycl::nd_item&lt; Dimensions &gt;</a>
-, <a class="el" href="group__parallelism.html#a56f94b3bd4f63e36ee4c15c5552c6c7f">cl::sycl::nd_range&lt; Dimensions &gt;</a>
+: <a class="el" href="group__parallelism.html#a927aa2388473af13200e7ab301882d5f">cl::sycl::h_item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#a84e9f3b9284bbbadd0ee8d08ad0ab417">cl::sycl::nd_item&lt; Dimensions &gt;</a>
 </li>
 <li>get_group_linear_id()
-: <a class="el" href="group__parallelism.html#afa1bd2ba568fd80c4a18bd442a26f4b0">cl::sycl::nd_item&lt; Dimensions &gt;</a>
+: <a class="el" href="group__parallelism.html#a6fbd0a8916d50bb028caec0093663c25">cl::sycl::h_item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#afa1bd2ba568fd80c4a18bd442a26f4b0">cl::sycl::nd_item&lt; Dimensions &gt;</a>
 </li>
 <li>get_group_range()
 : <a class="el" href="group__parallelism.html#a462e58c1bb6bcf482f0ad66c1fada8d6">cl::sycl::group&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#a8347241997365ff141a674a7ff0e8ac7">cl::sycl::h_item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#a54cba4b3f6bdd045142535de9f74b7b8">cl::sycl::nd_item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#a3d2bd16a62e606016734780866c79bfe">cl::sycl::nd_range&lt; Dimensions &gt;</a>
 </li>
 <li>get_id()
-: <a class="el" href="group__parallelism.html#ac970208726df578870d9ad1921817724">cl::sycl::group&lt; Dimensions &gt;</a>
-, <a class="el" href="group__parallelism.html#ac5734bcae3294471e6cac2f1baba8def">cl::sycl::item&lt; Dimensions &gt;</a>
+: <a class="el" href="group__parallelism.html#ad82698884c3a5a64d52fa5d6692a431b">cl::sycl::group&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#a4c38e76aa159843386b35c50ec332bc0">cl::sycl::item&lt; Dimensions, with_offset &gt;</a>
 </li>
 <li>get_info()
-: <a class="el" href="group__execution.html#a135e824e11658f487a602234f1216ac0">cl::sycl::context</a>
-, <a class="el" href="group__execution.html#a4432ec9fea6f999b8ca5705ab77437fe">cl::sycl::device</a>
-, <a class="el" href="group__execution.html#a6699c65c1f81cbcebfd5c9a1a93dd00d">cl::sycl::platform</a>
+: <a class="el" href="group__execution.html#a33095d93b04a1a28b669ef82e4b578db">cl::sycl::context</a>
+, <a class="el" href="group__execution.html#a67be7605202deedc844da8fe5e2682c9">cl::sycl::detail::device</a>
+, <a class="el" href="classcl_1_1sycl_1_1detail_1_1host__device.html#ace45ceb1f3b437d7134062f755969841">cl::sycl::detail::host_device</a>
+, <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__device.html#aa61ea1b4e8df094a7883e0403e323386">cl::sycl::detail::opencl_device</a>
+, <a class="el" href="group__execution.html#a1e6e8db2e460bcd7b60df67a1a9f5f4b">cl::sycl::device</a>
+, <a class="el" href="group__execution.html#a3d9f84ebb5dce0bc7e209eede43ef0db">cl::sycl::platform</a>
 , <a class="el" href="group__execution.html#a136cf506242eca4e03ad1795bd3753a6">cl::sycl::queue</a>
 </li>
 <li>get_info_string()
@@ -202,41 +223,43 @@ $(function() {
 , <a class="el" href="group__execution.html#a7845237e428fa7a482afe2c817ac1189">cl::sycl::detail::platform</a>
 </li>
 <li>get_item()
-: <a class="el" href="group__parallelism.html#a967a6c3a222d79deec2b76eea39c0cc5">cl::sycl::nd_item&lt; Dimensions &gt;</a>
+: <a class="el" href="group__parallelism.html#a79a0dc7fc55dd4f3136d0378682ff10e">cl::sycl::h_item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#a967a6c3a222d79deec2b76eea39c0cc5">cl::sycl::nd_item&lt; Dimensions &gt;</a>
 </li>
 <li>get_kernel()
 : <a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#ae7dc8fc39b9dfe9de9b1d5bd6be174c7">cl::sycl::detail::task</a>
+, <a class="el" href="classcl_1_1sycl_1_1program.html#ab707f19c3ebc4a39533692d9e491ce2c">cl::sycl::program</a>
 </li>
 <li>get_latest_producer()
 : <a class="el" href="group__data.html#af132544728b33b96a5ead218bd60d19c">cl::sycl::detail::buffer_base</a>
 </li>
-<li>get_linear()
-: <a class="el" href="group__parallelism.html#a75c57c2f211bfe2358fb4c8d468ad35a">cl::sycl::group&lt; Dimensions &gt;</a>
-</li>
 <li>get_linear_id()
-: <a class="el" href="group__parallelism.html#ac10ea8dfb777dd363f7ae17e0865dd46">cl::sycl::item&lt; Dimensions &gt;</a>
+: <a class="el" href="group__parallelism.html#acc281202685fc708f5d09f51065b42ca">cl::sycl::group&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#a7ad38d9af0ca6d7ff5d573c9bbd1d2fc">cl::sycl::item&lt; Dimensions, with_offset &gt;</a>
 </li>
-<li>get_local()
-: <a class="el" href="group__parallelism.html#abee3c846d076442205900e99de75f751">cl::sycl::nd_item&lt; Dimensions &gt;</a>
-, <a class="el" href="group__parallelism.html#aa1cd2cc6bc6f62899f8e7db64b54f9cb">cl::sycl::nd_range&lt; Dimensions &gt;</a>
+<li>get_local_id()
+: <a class="el" href="group__parallelism.html#a2a0d2b6e7bce681387f14ca7a77ce299">cl::sycl::h_item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#a0d8fdf6319567cfb1374f384b87d241a">cl::sycl::nd_item&lt; Dimensions &gt;</a>
 </li>
 <li>get_local_linear_id()
-: <a class="el" href="group__parallelism.html#aacd5c740a37eb0f20d8490c37caa0cc2">cl::sycl::nd_item&lt; Dimensions &gt;</a>
+: <a class="el" href="group__parallelism.html#ada0e19d9d3a48626149f486c23905fc2">cl::sycl::h_item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#aacd5c740a37eb0f20d8490c37caa0cc2">cl::sycl::nd_item&lt; Dimensions &gt;</a>
 </li>
 <li>get_local_range()
 : <a class="el" href="group__parallelism.html#aeca60ead7338e3b4399474829edfa6b4">cl::sycl::group&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#a44da1b19bb589928af9ce2206d995402">cl::sycl::h_item&lt; Dimensions &gt;</a>
 , <a class="el" href="group__parallelism.html#a6bc7aca87177a08d13f1a9b1023d87e0">cl::sycl::nd_item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#a69494bf55e188354b52568637679583c">cl::sycl::nd_range&lt; Dimensions &gt;</a>
 </li>
 <li>get_nd_range()
 : <a class="el" href="group__parallelism.html#a9dab0a48e38fb5c3f6a1fef3c6628544">cl::sycl::group&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#a990176943330609277e2471a17ef31f2">cl::sycl::h_item&lt; Dimensions &gt;</a>
 , <a class="el" href="group__parallelism.html#a7d95d596dd580eee98a811bcad002f59">cl::sycl::nd_item&lt; Dimensions &gt;</a>
-</li>
-<li>get_num_groups()
-: <a class="el" href="group__parallelism.html#accffd37fef7c65344a3787bea8e4cfb5">cl::sycl::nd_item&lt; Dimensions &gt;</a>
 </li>
 <li>get_offset()
 : <a class="el" href="group__parallelism.html#acc3fb67ea9fdb435da5f4f3fea552b46">cl::sycl::group&lt; Dimensions &gt;</a>
-, <a class="el" href="group__parallelism.html#a781ed9061975441210cf625a4f3a801b">cl::sycl::item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#ab3287a1270a40434eac168daaf398057">cl::sycl::h_item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#ab3f4294ed0145490ff3cf44f40d0de2f">cl::sycl::item&lt; Dimensions, with_offset &gt;</a>
 , <a class="el" href="group__parallelism.html#ae236a5a8ca6260e5d587d90824fff703">cl::sycl::nd_item&lt; Dimensions &gt;</a>
 , <a class="el" href="group__parallelism.html#ac27fdf48b3ce7a62aa067b7129b141f2">cl::sycl::nd_range&lt; Dimensions &gt;</a>
 </li>
@@ -247,7 +270,7 @@ $(function() {
 : <a class="el" href="group__data.html#a70a06e63cfe5ca25dd677b97542d8150">cl::sycl::detail::accessor_base</a>
 </li>
 <li>get_partition_type()
-: <a class="el" href="group__Xilinx.html#ab9da0cecac0e8578d4effc6db61bac7d">cl::sycl::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;</a>
+: <a class="el" href="group__Xilinx.html#ac647eb53203caa20a0d5b29c90a5c198">cl::sycl::vendor::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;</a>
 </li>
 <li>get_pipe_detail()
 : <a class="el" href="group__data.html#a156e19d4481a98ae94d763ce4623a4ba">cl::sycl::accessor&lt; DataType, 1, AccessMode, access::target::blocking_pipe &gt;</a>
@@ -255,7 +278,7 @@ $(function() {
 , <a class="el" href="group__data.html#a114a9df78702ccc47e2201875f7f6932">cl::sycl::detail::pipe_accessor&lt; T, AccessMode, Target &gt;</a>
 </li>
 <li>get_platform()
-: <a class="el" href="group__execution.html#af7581e4c1857ab79e8a7636d2c0dd063">cl::sycl::context</a>
+: <a class="el" href="group__execution.html#af27561da9f307daeedbeeedc9ee6dee1">cl::sycl::context</a>
 , <a class="el" href="group__execution.html#afb1c8298db9ba3028772f78e4663a481">cl::sycl::detail::context</a>
 , <a class="el" href="group__execution.html#a628c451fb47177455d3b262745734f39">cl::sycl::detail::device</a>
 , <a class="el" href="group__execution.html#a420835966ed0add8bc6ab5cceff841e2">cl::sycl::detail::host_context</a>
@@ -280,7 +303,12 @@ $(function() {
 , <a class="el" href="group__data.html#a945cd4b9ed8650ff103bec6a468fbd24">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
 , <a class="el" href="group__data.html#ac4e7ba86a285f5801a89784aa86ff114">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 , <a class="el" href="group__data.html#ae8e2f94b9a72bfaa6ac2e10632c602ab">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
-, <a class="el" href="group__parallelism.html#aa4cdab215502c38251043adfc76cb627">cl::sycl::item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#aa25cbb3098e4305ee87e77efad6806c1">cl::sycl::item&lt; Dimensions, with_offset &gt;</a>
+</li>
+<li>get_reference_count()
+: <a class="el" href="group__execution.html#a8f4b43df6cc4d18c24b53537e5e23abc">cl::sycl::detail::context</a>
+, <a class="el" href="group__execution.html#a0bdde3b1444033ea77644cac5b356331">cl::sycl::detail::host_context</a>
+, <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a1b88104ad4ef27a4840c17865d357c5c">cl::sycl::detail::opencl_context</a>
 </li>
 <li>get_size()
 : <a class="el" href="group__data.html#a1ee3ca6d8c6b159cffe1a2d6c52b2f80">cl::sycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;</a>
@@ -288,17 +316,19 @@ $(function() {
 , <a class="el" href="group__data.html#a3e7c6b885a1c98bcbd904f921bbcc4d5">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
 , <a class="el" href="group__data.html#a2b066e5300693ed04d47929d5c52adc1">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 , <a class="el" href="group__data.html#a35cf0a28ab7d6bafed482fc397d4c5b2">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
+, <a class="el" href="classcl_1_1sycl_1_1detail_1_1vec.html#a5312e9f42a5ca4a1a5eb13dcd2a87612">cl::sycl::detail::vec&lt; DataType, NumElements &gt;</a>
 </li>
 <li>global_index
-: <a class="el" href="group__parallelism.html#a9a5696ed1929336a7a982598b67bdb66">cl::sycl::item&lt; Dimensions &gt;</a>
+: <a class="el" href="group__parallelism.html#a151242d92082eeb0ec5c23d6d07ff773">cl::sycl::h_item&lt; Dimensions &gt;</a>
+, <a class="el" href="group__parallelism.html#ae61df78225e53c55ab15908aab0ff2d6">cl::sycl::item&lt; Dimensions, with_offset &gt;</a>
 , <a class="el" href="group__parallelism.html#a20bc042572c9f11b2c1fac3de92835eb">cl::sycl::nd_item&lt; Dimensions &gt;</a>
 </li>
 <li>global_range
-: <a class="el" href="group__parallelism.html#af7da3134cdf58f770f42ad2c77f818f3">cl::sycl::item&lt; Dimensions &gt;</a>
+: <a class="el" href="group__parallelism.html#a5e25c6399a5a04ffca509b376233b8c0">cl::sycl::item&lt; Dimensions, with_offset &gt;</a>
 , <a class="el" href="group__parallelism.html#af19ba6425b3a425f2962a76027582d57">cl::sycl::nd_range&lt; Dimensions &gt;</a>
 </li>
 <li>group()
-: <a class="el" href="group__parallelism.html#a08660948acdc1ef73318da5e3066a032">cl::sycl::group&lt; Dimensions &gt;</a>
+: <a class="el" href="group__parallelism.html#a710777ffbfbdb63702cd4252a3557c92">cl::sycl::group&lt; Dimensions &gt;</a>
 </li>
 <li>group_id
 : <a class="el" href="group__parallelism.html#a5973132989bccf1b6109d7e221b89ac3">cl::sycl::group&lt; Dimensions &gt;</a>
@@ -307,7 +337,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 20 2018 19:26:25 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

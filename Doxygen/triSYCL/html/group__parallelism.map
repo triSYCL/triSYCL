@@ -1,6 +1,6 @@
 <map id="Expressing parallelism through kernels" name="Expressing parallelism through kernels">
-<area shape="rect" id="node1" href="$group__Xilinx.html" title="Xilinx vendor extensions" alt="" coords="301,5,465,32"/>
-<area shape="rect" id="node2" href="$group__defaults.html" title="Manage default configuration\l and types" alt="" coords="288,57,477,98"/>
-<area shape="rect" id="node3" href="$group__address__spaces.html" title="Dealing with OpenCL\l address spaces" alt="" coords="309,122,456,163"/>
-<area shape="rect" id="node4" href="$group__execution.html" title="SYCL host context. " alt="" coords="311,187,454,229"/>
+<area shape="rect" id="node1" href="$group__defaults.html" title="Manage default configuration\l and types" alt="" coords="288,5,477,47"/>
+<area shape="rect" id="node2" href="$group__vector.html" title="Vector types in SYCL" alt="" coords="308,71,457,98"/>
+<area shape="rect" id="node3" href="$group__address__spaces.html" title="Dealing with OpenCL\l address spaces" alt="" coords="309,123,456,164"/>
+<area shape="rect" id="node4" href="$group__execution.html" title="SYCL host context. " alt="" coords="311,188,454,229"/>
 </map>

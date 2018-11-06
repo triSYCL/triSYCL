@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['r',['r',['../group__vector.html#a8711b47308429b6765939a76de2f014a',1,'cl::sycl::vec&lt; DataType, 4 &gt;']]],
   ['rbegin',['rbegin',['../group__data.html#ad885c0a8f8756cf6f668025c8b3cc434',1,'cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;::rbegin()'],['../group__data.html#aa43d7df3fab8ed9565736e255118fee7',1,'cl::sycl::accessor::rbegin()'],['../group__data.html#a95f486e134a58288ed6f6d77dd67cb39',1,'cl::sycl::detail::accessor::rbegin()'],['../group__data.html#af8166c865ffa6dd0b165f7f8aaf1dfe0',1,'cl::sycl::pipe_reservation::rbegin()']]],
   ['read',['read',['../group__data.html#afc783325efaf6941ca9f799f76aef55b',1,'cl::sycl::detail::pipe::read()'],['../group__data.html#a40eaae1eb2f9c98cf44d197ef7186031',1,'cl::sycl::detail::pipe_accessor::read(value_type &amp;value) const'],['../group__data.html#a970cf31b9b89dd7e0dcb2313eea77cef',1,'cl::sycl::detail::pipe_accessor::read() const']]],
   ['register_5faccessor',['register_accessor',['../group__data.html#aee8be41e25edf35f723ab927a0ea57f5',1,'cl::sycl::detail::accessor::register_accessor()'],['../structcl_1_1sycl_1_1detail_1_1task.html#ac106f3add8256f0bd00c74c7d66a6b75',1,'cl::sycl::detail::task::register_accessor()']]],

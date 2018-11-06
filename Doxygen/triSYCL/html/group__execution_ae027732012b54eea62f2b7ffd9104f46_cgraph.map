@@ -1,5 +1,5 @@
 <map id="cl::sycl::handler::parallel_for_work_group" name="cl::sycl::handler::parallel_for_work_group">
 <area shape="rect" id="node2" href="$group__execution.html#a5ae74565e39d4763c7efdba3581d087b" title="Hierarchical kernel invocation method of a kernel defined as a lambda encoding the body of each work&#45;..." alt="" coords="212,5,371,47"/>
 <area shape="rect" id="node3" href="$group__parallelism.html#gaaa0f5e798ca65419dce78013af732580" title="Implement the loop on the work&#45;groups. " alt="" coords="419,5,571,47"/>
-<area shape="rect" id="node4" href="$group__parallelism.html#a56f94b3bd4f63e36ee4c15c5552c6c7f" title="Get the range of work&#45;groups needed to run this ND&#45;range. " alt="" coords="619,5,744,47"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#a3d2bd16a62e606016734780866c79bfe" title="Get the range of work&#45;groups needed to run this ND&#45;range. " alt="" coords="619,5,745,47"/>
 </map>

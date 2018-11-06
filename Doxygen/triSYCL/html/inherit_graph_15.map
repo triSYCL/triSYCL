@@ -1,4 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; handler \&gt;" alt="" coords="5,5,152,47"/>
-<area shape="rect" id="node2" href="$group__execution.html#classcl_1_1sycl_1_1handler" title="Command group handler class. " alt="" coords="200,13,315,39"/>
+<area shape="rect" id="node1" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; detail::program \&gt;" alt="" coords="5,5,152,47"/>
+<area shape="rect" id="node2" href="$classcl_1_1sycl_1_1detail_1_1program.html" title="cl::sycl::detail::program" alt="" coords="200,13,359,39"/>
 </map>

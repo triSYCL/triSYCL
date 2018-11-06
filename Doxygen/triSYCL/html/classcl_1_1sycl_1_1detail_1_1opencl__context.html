@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>triSYCL implementation of OpenCL SYCL: cl::sycl::detail::opencl_context Class Reference</title>
+<title>triSYCL implementation of SYCL: cl::sycl::detail::opencl_context Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">triSYCL implementation of OpenCL SYCL
+   <div id="projectname">triSYCL implementation of SYCL
    </div>
   </td>
  </tr>
@@ -116,6 +116,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a28c14d7804ef0fea3e48bd18dcf1a44c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecl_1_1sycl.html#a0a3b58674c77d248758b6bee05800ac5">vector_class</a>&lt; <a class="el" href="group__execution.html#classcl_1_1sycl_1_1device">cl::sycl::device</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a28c14d7804ef0fea3e48bd18dcf1a44c">get_devices</a> () const override</td></tr>
 <tr class="memdesc:a28c14d7804ef0fea3e48bd18dcf1a44c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the set of devices that are part of this context.  <a href="#a28c14d7804ef0fea3e48bd18dcf1a44c">More...</a><br /></td></tr>
 <tr class="separator:a28c14d7804ef0fea3e48bd18dcf1a44c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b88104ad4ef27a4840c17865d357c5c"><td class="memItemLeft" align="right" valign="top">cl::sycl::cl_uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a1b88104ad4ef27a4840c17865d357c5c">get_reference_count</a> () const override</td></tr>
+<tr class="memdesc:a1b88104ad4ef27a4840c17865d357c5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the reference count of underlying CL context, or 0 on host.  <a href="#a1b88104ad4ef27a4840c17865d357c5c">More...</a><br /></td></tr>
+<tr class="separator:a1b88104ad4ef27a4840c17865d357c5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae149a9bf5435c823170ba87c998b4977"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#ae149a9bf5435c823170ba87c998b4977">~opencl_context</a> () override</td></tr>
 <tr class="memdesc:ae149a9bf5435c823170ba87c998b4977"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unregister from the cache on destruction.  <a href="#ae149a9bf5435c823170ba87c998b4977">More...</a><br /></td></tr>
 <tr class="separator:ae149a9bf5435c823170ba87c998b4977"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -182,10 +185,10 @@ Static Private Attributes</h2></td></tr>
 
 <p>Only the instance factory can build it. </p>
 
-<p class="definition">Definition at line <a class="el" href="opencl__context_8hpp_source.html#l00122">122</a> of file <a class="el" href="opencl__context_8hpp_source.html">opencl_context.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="opencl__context_8hpp_source.html#l00128">128</a> of file <a class="el" href="opencl__context_8hpp_source.html">opencl_context.hpp</a>.</p>
 
 <p class="reference">References <a class="el" href="opencl__context_8hpp_source.html#l00033">c</a>.</p>
-<div class="fragment"><div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;                                               :</div><div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a0db2f654352c8b6be15760d02ea013e5">c</a> { <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a0db2f654352c8b6be15760d02ea013e5">c</a> },</div><div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#ab38da2570951c0fa37f6357d6061bdff">q</a> { boost::compute::command_queue { <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a0db2f654352c8b6be15760d02ea013e5">c</a>, <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a0db2f654352c8b6be15760d02ea013e5">c</a>.get_device() } } {}</div><div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__context_html_a0db2f654352c8b6be15760d02ea013e5"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a0db2f654352c8b6be15760d02ea013e5">cl::sycl::detail::opencl_context::c</a></div><div class="ttdeci">boost::compute::context c</div><div class="ttdoc">User the Boost Compute abstraction of the OpenCL context. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__context_8hpp_source.html#l00033">opencl_context.hpp:33</a></div></div>
+<div class="fragment"><div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;                                               :</div><div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a0db2f654352c8b6be15760d02ea013e5">c</a> { <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a0db2f654352c8b6be15760d02ea013e5">c</a> },</div><div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#ab38da2570951c0fa37f6357d6061bdff">q</a> { boost::compute::command_queue { <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a0db2f654352c8b6be15760d02ea013e5">c</a>, <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a0db2f654352c8b6be15760d02ea013e5">c</a>.get_device() } } {}</div><div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__context_html_a0db2f654352c8b6be15760d02ea013e5"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a0db2f654352c8b6be15760d02ea013e5">cl::sycl::detail::opencl_context::c</a></div><div class="ttdeci">boost::compute::context c</div><div class="ttdoc">User the Boost Compute abstraction of the OpenCL context. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__context_8hpp_source.html#l00033">opencl_context.hpp:33</a></div></div>
 <div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__context_html_ab38da2570951c0fa37f6357d6061bdff"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#ab38da2570951c0fa37f6357d6061bdff">cl::sycl::detail::opencl_context::q</a></div><div class="ttdeci">boost::compute::command_queue q</div><div class="ttdoc">A boost command_queue associated to an OpenCL context for when we need to transfer data but no queue ...</div><div class="ttdef"><b>Definition:</b> <a href="opencl__context_8hpp_source.html#l00039">opencl_context.hpp:39</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -215,10 +218,10 @@ Static Private Attributes</h2></td></tr>
 
 <p>Unregister from the cache on destruction. </p>
 
-<p class="definition">Definition at line <a class="el" href="opencl__context_8hpp_source.html#l00129">129</a> of file <a class="el" href="opencl__context_8hpp_source.html">opencl_context.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="opencl__context_8hpp_source.html#l00135">135</a> of file <a class="el" href="opencl__context_8hpp_source.html">opencl_context.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="opencl__context_8hpp_source.html#l00046">cache</a>, <a class="el" href="cache_8hpp_source.html#l00084">cl::sycl::detail::cache&lt; Key, Value &gt;::remove()</a>, and <a class="el" href="global__config_8hpp_source.html#l00079">TRISYCL_WEAK_ATTRIB_PREFIX</a>.</p>
-<div class="fragment"><div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;                             {</div><div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#ac03c7d97fa0ab418a3e3785f4f214f59">cache</a>.remove(<a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a0db2f654352c8b6be15760d02ea013e5">c</a>.get());</div><div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;  }</div><div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__context_html_ac03c7d97fa0ab418a3e3785f4f214f59"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#ac03c7d97fa0ab418a3e3785f4f214f59">cl::sycl::detail::opencl_context::cache</a></div><div class="ttdeci">static detail::cache&lt; cl_context, detail::opencl_context &gt; cache</div><div class="ttdoc">A cache to always return the same alive context for a given OpenCL context. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__context_8hpp_source.html#l00046">opencl_context.hpp:46</a></div></div>
+<p class="reference">References <a class="el" href="opencl__context_8hpp_source.html#l00046">cache</a>, <a class="el" href="cache_8hpp_source.html#l00084">cl::sycl::detail::cache&lt; Key, Value &gt;::remove()</a>, and <a class="el" href="global__config_8hpp_source.html#l00093">TRISYCL_WEAK_ATTRIB_PREFIX</a>.</p>
+<div class="fragment"><div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;                             {</div><div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#ac03c7d97fa0ab418a3e3785f4f214f59">cache</a>.remove(<a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a0db2f654352c8b6be15760d02ea013e5">c</a>.get());</div><div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;  }</div><div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__context_html_ac03c7d97fa0ab418a3e3785f4f214f59"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#ac03c7d97fa0ab418a3e3785f4f214f59">cl::sycl::detail::opencl_context::cache</a></div><div class="ttdeci">static detail::cache&lt; cl_context, detail::opencl_context &gt; cache</div><div class="ttdoc">A cache to always return the same alive context for a given OpenCL context. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__context_8hpp_source.html#l00046">opencl_context.hpp:46</a></div></div>
 <div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__context_html_a0db2f654352c8b6be15760d02ea013e5"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a0db2f654352c8b6be15760d02ea013e5">cl::sycl::detail::opencl_context::c</a></div><div class="ttdeci">boost::compute::context c</div><div class="ttdoc">User the Boost Compute abstraction of the OpenCL context. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__context_8hpp_source.html#l00033">opencl_context.hpp:33</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -360,19 +363,10 @@ Here is the call graph for this function:</div>
 
 <p>Implements <a class="el" href="group__execution.html#a8653a23c21952b62eab7106038281570">cl::sycl::detail::context</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="opencl__context_8hpp_source.html#l00106">106</a> of file <a class="el" href="opencl__context_8hpp_source.html">opencl_context.hpp</a>.</p>
-
-<p class="reference">References <a class="el" href="unimplemented_8hpp_source.html#l00025">cl::sycl::detail::unimplemented()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                                                          {</div><div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <a class="code" href="group__helpers.html#gabc18198696a1e2ec4ea6c231a8c90391">detail::unimplemented</a>();</div><div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordflow">return</span> {};</div><div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;  }</div><div class="ttc" id="group__helpers_html_gabc18198696a1e2ec4ea6c231a8c90391"><div class="ttname"><a href="group__helpers.html#gabc18198696a1e2ec4ea6c231a8c90391">cl::sycl::detail::unimplemented</a></div><div class="ttdeci">void unimplemented()</div><div class="ttdoc">Display an &quot;unimplemented&quot; message. </div><div class="ttdef"><b>Definition:</b> <a href="unimplemented_8hpp_source.html#l00025">unimplemented.hpp:25</a></div></div>
-</div><!-- fragment --><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classcl_1_1sycl_1_1detail_1_1opencl__context_a28c14d7804ef0fea3e48bd18dcf1a44c_cgraph.png" border="0" usemap="#classcl_1_1sycl_1_1detail_1_1opencl__context_a28c14d7804ef0fea3e48bd18dcf1a44c_cgraph" alt=""/></div>
-<map name="classcl_1_1sycl_1_1detail_1_1opencl__context_a28c14d7804ef0fea3e48bd18dcf1a44c_cgraph" id="classcl_1_1sycl_1_1detail_1_1opencl__context_a28c14d7804ef0fea3e48bd18dcf1a44c_cgraph">
-<area shape="rect" id="node2" href="group__helpers.html#gabc18198696a1e2ec4ea6c231a8c90391" title="Display an &quot;unimplemented&quot; message. " alt="" coords="204,13,403,39"/>
-</map>
-</div>
-
+<p class="definition">Definition at line <a class="el" href="opencl__context_8hpp_source.html#l00105">105</a> of file <a class="el" href="opencl__context_8hpp_source.html">opencl_context.hpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                                                          {</div><div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    vector_class&lt;cl::sycl::device&gt; <a class="code" href="group__execution.html#gga1a5898274a448ac592ebbcee928939c1ae0212e54ec3a2a120ca0d321b3a60c78">devices</a>;</div><div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div><div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;d : <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a0db2f654352c8b6be15760d02ea013e5">c</a>.get_devices())</div><div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;      devices.push_back(d);</div><div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordflow">return</span> devices;</div><div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  }</div><div class="ttc" id="group__execution_html_gga1a5898274a448ac592ebbcee928939c1ae0212e54ec3a2a120ca0d321b3a60c78"><div class="ttname"><a href="group__execution.html#gga1a5898274a448ac592ebbcee928939c1ae0212e54ec3a2a120ca0d321b3a60c78">cl::sycl::info::context::devices</a></div></div>
+<div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__context_html_a0db2f654352c8b6be15760d02ea013e5"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a0db2f654352c8b6be15760d02ea013e5">cl::sycl::detail::opencl_context::c</a></div><div class="ttdeci">boost::compute::context c</div><div class="ttdoc">User the Boost Compute abstraction of the OpenCL context. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__context_8hpp_source.html#l00033">opencl_context.hpp:33</a></div></div>
+</div><!-- fragment -->
 </div>
 </div>
 <a id="a42ef6a1bcc9e203b36282ecc0b39ac02"></a>
@@ -405,18 +399,41 @@ Here is the call graph for this function:</div>
 <p>Implements <a class="el" href="group__execution.html#afb1c8298db9ba3028772f78e4663a481">cl::sycl::detail::context</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="opencl__context_8hpp_source.html#l00096">96</a> of file <a class="el" href="opencl__context_8hpp_source.html">opencl_context.hpp</a>.</p>
-
-<p class="reference">References <a class="el" href="unimplemented_8hpp_source.html#l00025">cl::sycl::detail::unimplemented()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;                                               {</div><div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <a class="code" href="group__helpers.html#gabc18198696a1e2ec4ea6c231a8c90391">detail::unimplemented</a>();</div><div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordflow">return</span> {};</div><div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;  }</div><div class="ttc" id="group__helpers_html_gabc18198696a1e2ec4ea6c231a8c90391"><div class="ttname"><a href="group__helpers.html#gabc18198696a1e2ec4ea6c231a8c90391">cl::sycl::detail::unimplemented</a></div><div class="ttdeci">void unimplemented()</div><div class="ttdoc">Display an &quot;unimplemented&quot; message. </div><div class="ttdef"><b>Definition:</b> <a href="unimplemented_8hpp_source.html#l00025">unimplemented.hpp:25</a></div></div>
-</div><!-- fragment --><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classcl_1_1sycl_1_1detail_1_1opencl__context_a42ef6a1bcc9e203b36282ecc0b39ac02_cgraph.png" border="0" usemap="#classcl_1_1sycl_1_1detail_1_1opencl__context_a42ef6a1bcc9e203b36282ecc0b39ac02_cgraph" alt=""/></div>
-<map name="classcl_1_1sycl_1_1detail_1_1opencl__context_a42ef6a1bcc9e203b36282ecc0b39ac02_cgraph" id="classcl_1_1sycl_1_1detail_1_1opencl__context_a42ef6a1bcc9e203b36282ecc0b39ac02_cgraph">
-<area shape="rect" id="node2" href="group__helpers.html#gabc18198696a1e2ec4ea6c231a8c90391" title="Display an &quot;unimplemented&quot; message. " alt="" coords="205,13,404,39"/>
-</map>
+<div class="fragment"><div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;                                               {</div><div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="group__execution.html#classcl_1_1sycl_1_1platform">cl::sycl::platform</a>(<a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a0db2f654352c8b6be15760d02ea013e5">c</a>.get_devices()[0].platform());</div><div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;  }</div><div class="ttc" id="group__execution_html_classcl_1_1sycl_1_1platform"><div class="ttname"><a href="group__execution.html#classcl_1_1sycl_1_1platform">cl::sycl::platform</a></div><div class="ttdoc">Abstract the OpenCL platform. </div><div class="ttdef"><b>Definition:</b> <a href="platform_8hpp_source.html#l00041">platform.hpp:41</a></div></div>
+<div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__context_html_a0db2f654352c8b6be15760d02ea013e5"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a0db2f654352c8b6be15760d02ea013e5">cl::sycl::detail::opencl_context::c</a></div><div class="ttdeci">boost::compute::context c</div><div class="ttdoc">User the Boost Compute abstraction of the OpenCL context. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__context_8hpp_source.html#l00033">opencl_context.hpp:33</a></div></div>
+</div><!-- fragment -->
 </div>
+</div>
+<a id="a1b88104ad4ef27a4840c17865d357c5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b88104ad4ef27a4840c17865d357c5c">&#9670;&nbsp;</a></span>get_reference_count()</h2>
 
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cl::sycl::cl_uint cl::sycl::detail::opencl_context::get_reference_count </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the reference count of underlying CL context, or 0 on host. </p>
+
+<p>Implements <a class="el" href="group__execution.html#a8f4b43df6cc4d18c24b53537e5e23abc">cl::sycl::detail::context</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="opencl__context_8hpp_source.html#l00113">113</a> of file <a class="el" href="opencl__context_8hpp_source.html">opencl_context.hpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                                                     {</div><div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a0db2f654352c8b6be15760d02ea013e5">c</a>.get_info&lt;CL_CONTEXT_REFERENCE_COUNT&gt;();</div><div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;  }</div><div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__context_html_a0db2f654352c8b6be15760d02ea013e5"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a0db2f654352c8b6be15760d02ea013e5">cl::sycl::detail::opencl_context::c</a></div><div class="ttdeci">boost::compute::context c</div><div class="ttdoc">User the Boost Compute abstraction of the OpenCL context. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__context_8hpp_source.html#l00033">opencl_context.hpp:33</a></div></div>
+</div><!-- fragment -->
 </div>
 </div>
 <a id="a470a3c9c0c3db21d2fa0fc18ef4f1bc5"></a>
@@ -445,13 +462,13 @@ Here is the call graph for this function:</div>
 
 <p>Get a singleton instance of the <code><a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html" title="SYCL OpenCL context. ">opencl_context</a></code>. </p>
 
-<p class="definition">Definition at line <a class="el" href="opencl__context_8hpp_source.html#l00113">113</a> of file <a class="el" href="opencl__context_8hpp_source.html">opencl_context.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="opencl__context_8hpp_source.html#l00119">119</a> of file <a class="el" href="opencl__context_8hpp_source.html">opencl_context.hpp</a>.</p>
 
 <p class="reference">References <a class="el" href="cache_8hpp_source.html#l00062">cl::sycl::detail::cache&lt; Key, Value &gt;::get_or_register()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="context_8hpp_source.html#l00088">cl::sycl::context::context()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                                         {</div><div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#ac03c7d97fa0ab418a3e3785f4f214f59">cache</a>.get_or_register(<a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a0db2f654352c8b6be15760d02ea013e5">c</a>.get(),</div><div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;                                 [&amp;] { <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#ae6fb9638ca7949f354bcbabe2499205b">opencl_context</a> { <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a0db2f654352c8b6be15760d02ea013e5">c</a> }; });</div><div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;  }</div><div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__context_html_ac03c7d97fa0ab418a3e3785f4f214f59"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#ac03c7d97fa0ab418a3e3785f4f214f59">cl::sycl::detail::opencl_context::cache</a></div><div class="ttdeci">static detail::cache&lt; cl_context, detail::opencl_context &gt; cache</div><div class="ttdoc">A cache to always return the same alive context for a given OpenCL context. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__context_8hpp_source.html#l00046">opencl_context.hpp:46</a></div></div>
-<div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__context_html_ae6fb9638ca7949f354bcbabe2499205b"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#ae6fb9638ca7949f354bcbabe2499205b">cl::sycl::detail::opencl_context::opencl_context</a></div><div class="ttdeci">opencl_context(const boost::compute::context &amp;c)</div><div class="ttdoc">Only the instance factory can build it. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__context_8hpp_source.html#l00122">opencl_context.hpp:122</a></div></div>
+<p class="reference">Referenced by <a class="el" href="context_8hpp_source.html#l00057">cl::sycl::context::context()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;                                         {</div><div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#ac03c7d97fa0ab418a3e3785f4f214f59">cache</a>.get_or_register(<a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a0db2f654352c8b6be15760d02ea013e5">c</a>.get(),</div><div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;                                 [&amp;] { <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#ae6fb9638ca7949f354bcbabe2499205b">opencl_context</a> { <a class="code" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a0db2f654352c8b6be15760d02ea013e5">c</a> }; });</div><div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;  }</div><div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__context_html_ac03c7d97fa0ab418a3e3785f4f214f59"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#ac03c7d97fa0ab418a3e3785f4f214f59">cl::sycl::detail::opencl_context::cache</a></div><div class="ttdeci">static detail::cache&lt; cl_context, detail::opencl_context &gt; cache</div><div class="ttdoc">A cache to always return the same alive context for a given OpenCL context. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__context_8hpp_source.html#l00046">opencl_context.hpp:46</a></div></div>
+<div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__context_html_ae6fb9638ca7949f354bcbabe2499205b"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#ae6fb9638ca7949f354bcbabe2499205b">cl::sycl::detail::opencl_context::opencl_context</a></div><div class="ttdeci">opencl_context(const boost::compute::context &amp;c)</div><div class="ttdoc">Only the instance factory can build it. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__context_8hpp_source.html#l00128">opencl_context.hpp:128</a></div></div>
 <div class="ttc" id="classcl_1_1sycl_1_1detail_1_1opencl__context_html_a0db2f654352c8b6be15760d02ea013e5"><div class="ttname"><a href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a0db2f654352c8b6be15760d02ea013e5">cl::sycl::detail::opencl_context::c</a></div><div class="ttdeci">boost::compute::context c</div><div class="ttdoc">User the Boost Compute abstraction of the OpenCL context. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__context_8hpp_source.html#l00033">opencl_context.hpp:33</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -466,7 +483,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classcl_1_1sycl_1_1detail_1_1opencl__context_a470a3c9c0c3db21d2fa0fc18ef4f1bc5_icgraph.png" border="0" usemap="#classcl_1_1sycl_1_1detail_1_1opencl__context_a470a3c9c0c3db21d2fa0fc18ef4f1bc5_icgraph" alt=""/></div>
 <map name="classcl_1_1sycl_1_1detail_1_1opencl__context_a470a3c9c0c3db21d2fa0fc18ef4f1bc5_icgraph" id="classcl_1_1sycl_1_1detail_1_1opencl__context_a470a3c9c0c3db21d2fa0fc18ef4f1bc5_icgraph">
-<area shape="rect" id="node2" href="group__execution.html#a0bbe1cd5a7ee2856594effd58e3d566d" title="Build a SYCL context from a Boost.Compute context. " alt="" coords="203,5,325,47"/>
+<area shape="rect" id="node2" href="group__execution.html#a51d176a9f8f20e278977939b7ae196ff" title="cl::sycl::context::\lcontext" alt="" coords="203,5,325,47"/>
 </map>
 </div>
 
@@ -501,16 +518,8 @@ Here is the caller graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="opencl__context_8hpp_source.html#l00071">71</a> of file <a class="el" href="opencl__context_8hpp_source.html">opencl_context.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="unimplemented_8hpp_source.html#l00025">cl::sycl::detail::unimplemented()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                                {</div><div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div><div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  }</div></div><!-- fragment --><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classcl_1_1sycl_1_1detail_1_1opencl__context_a91535a9409081018e7058c33bcc3504e_cgraph.png" border="0" usemap="#classcl_1_1sycl_1_1detail_1_1opencl__context_a91535a9409081018e7058c33bcc3504e_cgraph" alt=""/></div>
-<map name="classcl_1_1sycl_1_1detail_1_1opencl__context_a91535a9409081018e7058c33bcc3504e_cgraph" id="classcl_1_1sycl_1_1detail_1_1opencl__context_a91535a9409081018e7058c33bcc3504e_cgraph">
-<area shape="rect" id="node2" href="group__helpers.html#gabc18198696a1e2ec4ea6c231a8c90391" title="Display an &quot;unimplemented&quot; message. " alt="" coords="203,13,401,39"/>
-</map>
-</div>
-
+<p class="reference">References <a class="el" href="unimplemented_8hpp_source.html#l00034">TRISYCL_UNIMPL</a>.</p>
+<div class="fragment"><div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                                {</div><div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div><div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  }</div></div><!-- fragment -->
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
@@ -538,7 +547,7 @@ Here is the call graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="opencl__context_8hpp_source.html#l00033">33</a> of file <a class="el" href="opencl__context_8hpp_source.html">opencl_context.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="opencl__context_8hpp_source.html#l00059">get_boost_compute()</a>, and <a class="el" href="opencl__context_8hpp_source.html#l00122">opencl_context()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="opencl__context_8hpp_source.html#l00059">get_boost_compute()</a>, and <a class="el" href="opencl__context_8hpp_source.html#l00128">opencl_context()</a>.</p>
 
 </div>
 </div>
@@ -567,7 +576,7 @@ Here is the call graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="opencl__context_8hpp_source.html#l00046">46</a> of file <a class="el" href="opencl__context_8hpp_source.html">opencl_context.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="opencl__context_8hpp_source.html#l00129">~opencl_context()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="opencl__context_8hpp_source.html#l00135">~opencl_context()</a>.</p>
 
 </div>
 </div>
@@ -606,7 +615,7 @@ Here is the call graph for this function:</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 20 2018 19:26:24 for triSYCL implementation of OpenCL SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

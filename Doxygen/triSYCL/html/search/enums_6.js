@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['mode',['mode',['../namespacecl_1_1sycl_1_1access.html#a9ae8c23f772316322be407bbb6498b17',1,'cl::sycl::access']]]
+  ['local_5fmem_5ftype',['local_mem_type',['../group__execution.html#gad3cf44d11f60b23508e91d1ed61ad001',1,'cl::sycl::info']]]
 ];

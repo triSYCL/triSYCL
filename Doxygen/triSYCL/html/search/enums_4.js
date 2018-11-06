@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['global_5fmem_5fcache_5ftype',['global_mem_cache_type',['../group__execution.html#ga8986fcccc4479065bdbf37d9b9d8def5',1,'cl::sycl::info']]]
+  ['fence_5fspace',['fence_space',['../namespacecl_1_1sycl_1_1access.html#a1e26dc60d7c93fcc056d6be0c41d1d42',1,'cl::sycl::access']]],
+  ['fp_5fconfig',['fp_config',['../group__execution.html#ga1f763ed06ac5c82a02a7425bd7739745',1,'cl::sycl::info']]]
 ];
