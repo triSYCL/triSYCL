@@ -61,7 +61,7 @@ make doc
 git checkout gh-pages
 
 # Move the generated documentation at the right place
-update_doc Doxygen/SYCL SYCL-API-refman.pdf
+#update_doc Doxygen/SYCL SYCL-API-refman.pdf
 update_doc Doxygen/triSYCL triSYCL-implementation-refman.pdf
 
 # Take also into account what has been deleted

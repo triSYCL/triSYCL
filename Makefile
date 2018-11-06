@@ -4,14 +4,16 @@ API_DOXYGEN_DIR=tmp/Doxygen/SYCL
 IMPLEMENTATION_DOXYGEN_DIR=tmp/Doxygen/triSYCL
 
 # The target to generate the documentation
-doc: doc-API doc-implementation
+#doc: doc-API doc-implementation
+doc: doc-implementation
 
+# Obsolete
 # Generate the documentation of the SYCL API
-doc-API:
-	mkdir -p $(API_DOXYGEN_DIR)
-	doxygen doc/SYCL-API.doxygen
-	# Compile the PDF version
-	cd $(API_DOXYGEN_DIR)/latex; make
+#doc-API:
+#	mkdir -p $(API_DOXYGEN_DIR)
+#	doxygen doc/SYCL-API.doxygen
+#	# Compile the PDF version
+#	cd $(API_DOXYGEN_DIR)/latex; make
 
 doc-implementation:
 	mkdir -p $(IMPLEMENTATION_DOXYGEN_DIR)
