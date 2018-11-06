@@ -109,4 +109,6 @@ git merge --ff-only $commit_object
 git push
 
 echo To do the publication, just push the gh-pages branch on GitHub
+echo https://github.com/triSYCL/triSYCL/tree/gh-pages
+echo
 echo To revert this generation: git branch -f gh-pages gh-pages^
