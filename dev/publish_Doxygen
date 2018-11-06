@@ -60,6 +60,10 @@ make doc
 # (Assume a previous initialization with git checkout --orphan gh-pages)
 git checkout gh-pages
 
+# Clean up any previously generated Doxygen from the current history
+rm -rf Doxygen
+mkdir Doxygen
+
 # Move the generated documentation at the right place
 #update_doc Doxygen/SYCL SYCL-API-refman.pdf
 update_doc Doxygen/triSYCL triSYCL-implementation-refman.pdf
