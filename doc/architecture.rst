@@ -34,6 +34,10 @@ The coding style is similar to the ``STL`` or ``Boost`` libraries,
 with lines with less than 80 characters, to fit on a standard punch
 card. :-)
 
+Tab characters are not used. Be sure you configure your editor to help
+you and to prevent parasitic spacing, such as trailing white spaces
+and so on.
+
 To avoid ODR conflicts with a pure header library, C++17 ``inline`` is
 used massively.
 
@@ -107,7 +111,12 @@ https://github.com/Xilinx/triSYCL/settings in the "GitHub Pages" section.
 
 `<../dev/publish_Doxygen>`_ is a little bit convoluted because it
 connects the history of the documentation to the history of the
-project itself, for traceability.
+project itself, for traceability. So if you look at the main branches
+of the project there is no compiled files for the documentation while
+at the same time in the ``gh-pages`` branch you have only the compiled
+documentation and not the source directories. But the history is still
+connected to the main branch, to track exactly where the documentation
+comes from.
 
 
 triSYCL architecture for CPU
