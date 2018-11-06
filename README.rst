@@ -135,8 +135,8 @@ triSYCL code documentation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The documentation of the triSYCL_ implementation itself can be found in
-http://xilinx.github.io/triSYCL/Doxygen/triSYCL/html and
-http://xilinx.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
+http://trisycl.github.io/triSYCL/Doxygen/triSYCL/html and
+http://trisycl.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
 
 
 

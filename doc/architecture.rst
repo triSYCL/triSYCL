@@ -102,12 +102,12 @@ The documentation workflow is basically implemented with
 `<../Makefile>`_ and `<../dev/publish_Doxygen>`_.
 
 This script builds the content of
-https://github.com/xilinx/triSYCL/tree/gh-pages branch which is used
-by GitHub to be published as https://xilinx.github.io/triSYCL
+https://github.com/triSYCL/triSYCL/tree/gh-pages branch which is used
+by GitHub to be published as https://triSYCL.github.io/triSYCL
 
 The connection between this ``gh-pages`` branch and
-https://xilinx.github.io/triSYCL is done with
-https://github.com/Xilinx/triSYCL/settings in the "GitHub Pages" section.
+https://triSYCL.github.io/triSYCL is done with
+https://github.com/triSYCL/triSYCL/settings in the "GitHub Pages" section.
 
 `<../dev/publish_Doxygen>`_ is a little bit convoluted because it
 connects the history of the documentation to the history of the
