@@ -41,10 +41,6 @@
 */
 #ifdef TRISYCL_OPENCL
 
-/* There is a bug in Xilinx OpenCL runtime where the cl_kernel does
-   not keep alive its own cl_program */
-#define SDX_KERNEL_PROGRAM_OWNING_BUG
-
 // SYCL interoperation API with OpenCL requires some OpenCL C types:
 #if defined(__APPLE__)
 #include <OpenCL/cl.h>
