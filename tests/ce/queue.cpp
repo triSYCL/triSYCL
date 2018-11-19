@@ -5,6 +5,7 @@
 */
 #include <CL/sycl.hpp>
 #include <iostream>
+#include <variant>
 
 #include <boost/hana.hpp>
 #include <boost/test/minimal.hpp>
@@ -26,14 +27,14 @@ struct scope {
 
 */
 template <cl::sycl::info::device_type DeviceType
-          , typename DeviceScope
-          // , typename ProgramScope = void
+          , typename DeviceScope = std::monostate
+          , typename PlatformScope = std::monostate
           >
 class device {
 
   cl::sycl::device d;
   DeviceScope ds;
-  // ProgramScope ps;
+  PlatformScope pls;
 
 public:
 
@@ -104,6 +105,7 @@ class queue {
     }
 
 
+    /// Sequential kernel invocation
     template <typename KernelName, typename Kernel>
     void single_task(Kernel k) {
       /// \todo remove the = & manage this
@@ -111,6 +113,19 @@ class queue {
           k(*this);
         });
     }
+
+
+    /// Parallel kernel invocation method on a range iteration space
+    template <typename KernelName, int Rank, typename Kernel>
+    void parallel_for(cl::sycl::range<Rank> num_work_items,
+                      Kernel k) {
+      /// \todo remove the = & manage this
+      cgh.parallel_for<KernelName>(num_work_items,
+                                   [=](cl::sycl::id<Rank> i) {
+                                     k(i, *this);
+                                   });
+    }
+
   };
 
 public:
@@ -123,12 +138,20 @@ public:
 
   constexpr queue() = default;
 
+  /// Submit a command-group lambda function
   template <typename CG>
   void submit(CG cgh) {
     q.submit([&](handler &cgh_generic) {
         command_group<CG> cg { cgh_generic };
         cgh(cg);
       });
+  }
+
+
+  /** Performs a blocking wait for the completion all enqueued tasks in
+      the queue */
+  void wait() {
+    q.wait();
   }
 
 };
@@ -159,10 +182,10 @@ int test_main(int argc, char *argv[]) {
     extension::ce::device<cl::sycl::info::device_type::host,
     device_scope> {} };
   auto pocl_q = extension::ce::queue {
-    extension::ce::device<cl::sycl::info::device_type::cpu,
+    extension::ce::device<cl::sycl::info::device_type::host,
     device_scope> {} };
   auto fpga_q = extension::ce::queue {
-    extension::ce::device<cl::sycl::info::device_type::cpu,
+    extension::ce::device<cl::sycl::info::device_type::host,
     device_scope> {} };
 #if 0
   auto host_q = extension::ce::queue { [](auto d) { return d.is_host(); } };
@@ -179,15 +202,18 @@ int test_main(int argc, char *argv[]) {
         });
     });
 
-/*
-  pocl_q.submit([&](handler &cgh) {
-      auto ab = b.get_access<access::mode::write>(cgh);
-      cgh.parallel_for<class producer>(range<1> { 100 },
-                                       [=] (id<1> index) {
-                                         ab[index[0]] = index[0];
-                                       });
-    });
 
+  pocl_q.submit([&](auto &cgh) {
+      auto ab = b.get_access<access::mode::read>(cgh);
+      cgh.template parallel_for<class inc>(range<1> { 100 },
+                                           [=] (id<1> index, auto &kh) {
+                                             //platform_array[index[0]] = ab[index[0]] + 1;
+                                           });
+    });
+  // Wait for the previous kernel befor starting the next one
+  pocl_q.wait();
+
+/*
   fpga_q.submit([&](handler &cgh) {
       auto ab = b.get_access<access::mode::read_write>(cgh);
       auto output =
