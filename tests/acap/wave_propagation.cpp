@@ -48,6 +48,9 @@ static auto constexpr image_size = 100;
 static auto constexpr x_drop = 90;
 static auto constexpr y_drop = 7;
 static auto constexpr drop_value = 100;
+/** Time-step interval between each display.
+    Use 1 to display all the frames, 2 for half the frame and so on. */
+static auto constexpr display_time_step = 10 ;
 
 graphics::application a;
 
@@ -351,8 +354,9 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
     for (int time = 0; !a.is_done(); ++time) {
       seq.compare_with_sequential_reference(time, t::x, t::y, m);
       compute();
-      //b1.wait();
-      a.update_tile_data_image(t::x, t::y, md, -1.0, 1.0);
+      // Display every display_time_step
+      if (time % display_time_step == 0)
+        a.update_tile_data_image(t::x, t::y, md, -1.0, 1.0);
     }
   }
 };
