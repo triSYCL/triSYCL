@@ -5,7 +5,6 @@
 */
 #include <CL/sycl.hpp>
 #include <iostream>
-#include <variant>
 
 #include <boost/hana.hpp>
 #include <boost/test/minimal.hpp>
@@ -23,12 +22,22 @@ struct scope {
 };
 
 
+/// An empty device scope to make compilation errors clearer
+struct empty_device_scope {
+};
+
+
+/// An empty platform scope to make compilation errors clearer
+struct empty_platform_scope {
+};
+
+
 /** A device known at compile-time
 
 */
 template <cl::sycl::info::device_type DeviceType
-          , typename DeviceScope = std::monostate
-          , typename PlatformScope = std::monostate
+          , typename DeviceScope = empty_device_scope
+          , typename PlatformScope = empty_platform_scope
           >
 class device {
 
