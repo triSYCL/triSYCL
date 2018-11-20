@@ -32,11 +32,13 @@ template <cl::sycl::info::device_type DeviceType
           >
 class device {
 
-  cl::sycl::device d;
-  DeviceScope ds;
-  PlatformScope pls;
-
 public:
+
+  cl::sycl::device d;
+  /// Instantiate the device scope
+  DeviceScope ds;
+  /// \todo should be provided through a real platform instead of being here
+  PlatformScope pls;
 
   static constexpr auto device_type = DeviceType;
 
@@ -94,8 +96,10 @@ class queue {
 
     /// The plain SYCL command-group handler
     cl::sycl::handler &cgh;
+    Device &d;
 
-    command_group(cl::sycl::handler &cgh) : cgh { cgh } {}
+    command_group(cl::sycl::handler &cgh, Device &d)
+      : cgh { cgh }, d { d } {}
 
 
     /** Add a conversion to \c cl::sycl::handler& so the usual methods
@@ -126,6 +130,21 @@ class queue {
                                    });
     }
 
+
+    /// Implement the scope
+    auto scope() {
+      struct scopes {
+
+        Device &d;
+
+        scopes(Device &d) : d { d } {}
+
+        auto device() { return d.ds; }
+
+        auto platform() { return d.pls; }
+      } s { d };
+      return s;
+    }
   };
 
 public:
@@ -142,7 +161,7 @@ public:
   template <typename CG>
   void submit(CG cgh) {
     q.submit([&](handler &cgh_generic) {
-        command_group<CG> cg { cgh_generic };
+        command_group<CG> cg { cgh_generic, d };
         cgh(cg);
       });
   }
@@ -159,14 +178,21 @@ public:
 }
 
 
+constexpr int size = 100;
+
 struct device_scope : cl::sycl::extension::ce::scope {
   int global = 3;
 };
 
 
+struct platform_scope : cl::sycl::extension::ce::scope {
+  int array[size];
+};
+
+
 int test_main(int argc, char *argv[]) {
 
-  buffer<int> b { 100 };
+  buffer<int> b { size };
 
   struct some_platform_wide_content : extension::ce::scope {
     std::atomic<bool> stop;
@@ -183,10 +209,10 @@ int test_main(int argc, char *argv[]) {
     device_scope> {} };
   auto pocl_q = extension::ce::queue {
     extension::ce::device<cl::sycl::info::device_type::host,
-    device_scope> {} };
+    device_scope, platform_scope> {} };
   auto fpga_q = extension::ce::queue {
     extension::ce::device<cl::sycl::info::device_type::host,
-    device_scope> {} };
+    device_scope, platform_scope> {} };
 #if 0
   auto host_q = extension::ce::queue { [](auto d) { return d.is_host(); } };
 
@@ -197,20 +223,21 @@ int test_main(int argc, char *argv[]) {
   host_q.submit([&](auto &cgh) {
       auto ab = b.get_access<access::mode::discard_write>(cgh);
       cgh.template single_task<class producer>([=] (auto &kh) {
-          for (int i = 0; i < 100; ++i)
+          for (int i = 0; i < size; ++i)
             ab[i] = i;
+          // kh.scope().device().global++;
         });
     });
 
 
   pocl_q.submit([&](auto &cgh) {
       auto ab = b.get_access<access::mode::read>(cgh);
-      cgh.template parallel_for<class inc>(range<1> { 100 },
+      cgh.template parallel_for<class inc>(range<1> { size },
                                            [=] (id<1> index, auto &kh) {
-                                             //platform_array[index[0]] = ab[index[0]] + 1;
+           kh.scope().platform().array[index[0]] = ab[index[0]] + 1;
                                            });
     });
-  // Wait for the previous kernel befor starting the next one
+  // Wait for the previous kernel before starting the next one
   pocl_q.wait();
 
 /*
@@ -219,7 +246,7 @@ int test_main(int argc, char *argv[]) {
       auto output =
         cgh.scope.platform.out.get_access<access::mode::write,
                                           access::target::blocking_pipe>(cgh);
-      cgh.parallel_for<class consumer>(range<1> { 100 },
+      cgh.parallel_for<class consumer>(range<1> { size },
                                        [=] (id<1> index) {
                                          output << ab[index[0]];
                                        });
