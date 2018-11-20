@@ -139,9 +139,9 @@ class queue {
 
         scopes(Device &d) : d { d } {}
 
-        auto device() { return d.ds; }
+        auto& device() { return d.ds; }
 
-        auto platform() { return d.pls; }
+        auto& platform() { return d.pls; }
       } s { d };
       return s;
     }
@@ -225,7 +225,7 @@ int test_main(int argc, char *argv[]) {
       cgh.template single_task<class producer>([=] (auto &kh) {
           for (int i = 0; i < size; ++i)
             ab[i] = i;
-          // kh.scope().device().global++;
+          kh.scope().device().global++;
         });
     });
 
