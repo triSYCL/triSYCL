@@ -62,6 +62,22 @@ OpenCL backend
 Refer to the OpenCL implementation you are using for the useful
 environment variables.
 
+Xilinx Hardware Emulation
+=========================
+
+triSYCL can be used in conjunction with Xilinx's Software and Hardware Emulation
+when compiling using SDx and ``xocc`` for FPGA's to simulate the results of running
+the kernels on Xilinx hardware. Two environment variables are used to support
+this:
+
+``XCL_EMULATION_MODE``
+  Defines the emulation mode you wish to compile to either ``sw_emu`` or ``hw_emu``. If
+  undefined it will default to ``hw`` and look for a real device.
+
+``TARGET_DEVICE``
+  Define the platform/device you wish to target. If undefined it will default to
+  ``xilinx_vcu1525_dynamic_5_1``.
+
 ..
     # Some Emacs stuff:
     ### Local Variables:
