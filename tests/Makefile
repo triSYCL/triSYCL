@@ -64,13 +64,27 @@ LDLIBS += -lboost_log -lpthread
 # or inlining that might duplicate the code too early
 CXXFLAGS_KERNEL = -fno-vectorize -fno-unroll-loops
 
+# Specify a target device, otherwise it defaults to xilinx_vcu1525_dynamic_5_1
+ifdef TARGET_DEVICE
+DEVICE_XOCC := $(TARGET_DEVICE)
+else
+DEVICE_XOCC := xilinx_vcu1525_dynamic_5_1
+endif
+
+# Defaults to look for existing installed hardware, otherwise it will check for
+# a defined emulation mode (XCL_EMULATION_MODE is also used by emconfigutil and
+# the SDAccel examples)
+ifdef XCL_EMULATION_MODE
+DEVICE_MODE := $(XCL_EMULATION_MODE)
+else
+DEVICE_MODE := hw
+endif
+
 # When XILINX_SDX environment variable is set, use the Xilinx SDx
 # OpenCL compiler with these flags:
 # Adapt to the real platform
-ifdef VERSION_2017_4
-XOCCFLAGS = --platform xilinx_adm-pcie-7v3_1ddr_3_0 --save-temps
-else
-XOCCFLAGS = --platform xilinx:adm-pcie-7v3:1ddr:3.0 --save-temps
+ifdef XILINX_SDX
+XOCCFLAGS = --platform $(DEVICE_XOCC) --save-temps
 endif
 # xocc parameter to specify C++ version
 XOCCCPPPARAM=--xp prop:kernel.vector_add.kernel_flags=-std=c++0x
@@ -125,10 +139,17 @@ KERNELS_CALLER_LL = $(KERNELS_LL:%.kernel.ll=%.kernel_caller.ll)
 KERNELS_CALLER_BC = $(KERNELS_LL:%.kernel.ll=%.kernel_caller.bc)
 # The final kernel caller executable
 KERNELS_CALLER = $(KERNELS_LL:%.kernel.ll=%.kernel_caller)
+# The xpirbc file used to generate the XO file
+KERNELS_XPIRBC= $(KERNELS_LL:%.kernel.ll=%.xpirbc)
+# The XO file used to generate the bin (xclbin) file
+KERNELS_XO= $(KERNELS_LL:%.kernel.ll=%.kernel.xo)
+# Info file that XOCC generates when compiling the xclbin file
+KERNELS_BIN_INFO = $(KERNELS_LL:%.kernel.ll=%.kernel.bin.info)
 
 CLEANING_TARGETS += $(KERNELS_BC) $(KERNELS_BIN) $(KERNELS_INTERNALIZED_CXX) \
 	$(PRE_KERNELS_LL) $(PRE_KERNELS_CALLER_LL) $(KERNELS_CALLER_LL) \
-	$(KERNELS_CALLER_BC) $(KERNELS_CALLER)
+	$(KERNELS_CALLER_BC) $(KERNELS_CALLER) $(KERNELS_XPIRBC) $(KERNELS_XO) \
+	$(KERNELS_BIN_INFO)
 
 # The implementation uses C++14.
 # Use -Wno-ignored-attributes to avoid a lot of warning with
@@ -217,11 +238,11 @@ CLEANING_TARGETS += $(wildcard */*.xclbin)
 
 # How to compile OpenCL kernel to Xilinx FPGA
 %.xclbin: %.cl
-	xocc $(XOCCFLAGS) --target hw -o $@ $<
+	xocc $(XOCCFLAGS) --target $(DEVICE_MODE) -o $@ $<
 
 # How to compile Vivado HLS C++ kernel to Xilinx FPGA
 %.xclbin: %.cxx
-	xocc --kernel vector_add --input_files $< $(XOCCCPPPARAM) $(XOCCFLAGS) --target hw -o $@
+	xocc --kernel vector_add --input_files $< $(XOCCCPPPARAM) $(XOCCFLAGS) --target $(DEVICE_MODE) -o $@
 endif
 
 # Force recompilation of $(TARGETS_CC) binaries through the Makefile since
@@ -276,7 +297,7 @@ execute: $(basename $(TARGET))
   %.pre_kernel.bc %.pre_kernel.ll \
   %.pre_kernel_caller.bc %.pre_kernel_caller.ll \
   %.pre_kernel.bc %.pre_kernel.ll %.pre_kernel_caller.ll \
-  %.kernel.bc %.kernel.bin %.kernel.ll
+  %.kernel.bc %.kernel.bin %.kernel.ll %.kernel.xo
 
 # The LLVM bitcode
 %.bc: %.cpp
@@ -336,14 +357,21 @@ execute: $(basename $(TARGET))
 	  -SYCL-kernel-filter -globaldce -RELGCD -reqd-workgroup-size-1 -inSPIRation \
 	  -globaldce -o $@ $<
 
-ifdef XILINX_SDX
 #  If the target is a Xilinx FPGA kernel, use the Xilinx compiler with
 #  the required extension for the SPIR input file
-%.kernel.bin: %.kernel.bc
+ifdef XILINX_SDX
+%.kernel.xo: %.kernel.bc
 	cp -p $< $*.xpirbc
-	# TODO: deal with several kernels
-	SDACCEL_DEBUG='yes' SDX_USE_CLANG_39='yes' xocc $(XOCCFLAGS) --target hw \
+	# TODO: deal with several kernels: -k TRISYCL_kernel_0 should be replaced
+	# with -k all, but doesn't appear to work at the moment
+	# Generate XO file from xpirbc
+	xocc $(XOCCFLAGS) --target $(DEVICE_MODE) -c \
 	  -k TRISYCL_kernel_0 -o $@ $*.xpirbc
+
+	# Generate bin (xclbin) file from XO file (-l linking)
+%.kernel.bin: %.kernel.xo
+	xocc $(XOCCFLAGS) --target $(DEVICE_MODE) -l \
+	  -k TRISYCL_kernel_0 -o $@ $*.kernel.xo
 else
 # If the target is SPIR, just use the bitcode as the kernel binary
 %.kernel.bin: %.kernel.bc
