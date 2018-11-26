@@ -10,6 +10,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <numeric>
 
 // Include order and configure insensitive treating of unwanted macros
 #ifdef _MSC_VER
@@ -166,6 +167,109 @@ TRISYCL_MATH_WRAP(trunc)
 //*TRISYCL_MATH_WRAP(popcount)//I
 //*TRISYCL_MATH_WRAP3(mad24)
 //*TRISYCL_MATH_WRAP3(mul24)
+
+// Note: A lot of these math functions could be forwarded onto the OpenCL
+// implementations when compiling for OpenCL
+
+// Returns the cross product of p0.xyz and p1.xyz. The w component of float4
+// result returned will be 0.0.
+template <typename T, int size>
+vec<T, size> cross(vec<T, size> p0,
+                   vec<T, size> p1) {
+  static_assert(!(size > 4 || size < 3), "vec type should be 3 or 4 dimensions");
+  if constexpr (size > 3) {
+    return vec<T, size> {
+            (p0[1] * p1[2]) - (p0[2] * p1[1]),
+            (p0[2] * p1[0]) - (p0[0] * p1[2]),
+            (p0[0] * p1[1]) - (p0[1] * p1[0]),
+            0.0};
+  } else {
+    return vec<T, size> {
+            (p0[1] * p1[2]) - (p0[2] * p1[1]),
+            (p0[2] * p1[0]) - (p0[0] * p1[2]),
+            (p0[0] * p1[1]) - (p0[1] * p1[0])};
+  }
+}
+
+// Return the length of vector p, i.e., sqrt(p.x^2 + p.y^2 + ...)
+template <typename T, int size>
+T length(vec<T, size> p) {
+  auto temp = p * p;
+  return std::sqrt(std::accumulate(temp.begin(), temp.end(), 0.0));
+}
+
+// Compute dot product.
+template <typename T, int size>
+T dot(vec<T, size> p0, vec<T, size> p1) {
+  return std::inner_product(p0.begin(), p0.end(), p1.begin(), T{0});
+}
+
+// Returns fmin(fmax(x, minval), maxval). Results are undefined if
+// minval > maxval.
+// \todo Currently this clamp requires all values to be derived from the same
+// base type, a better implementation would be to make the vector clamp a
+// specialization of the 1d clamp and perhaps use a Using clamp = clamp_impl
+// type interface. Alternatively restriction from the more generic template
+// could be done using a type_trait and a typename T2 could be added
+template <typename T>
+T clamp(T x, T minval, T maxval) {
+  return std::fmin(std::fmax(x, minval), maxval);
+}
+
+template <typename T, int size>
+vec<T, size> clamp(vec<T, size> x, T minval, T maxval) {
+  vec<T, size> temp {0};
+  std::transform(x.begin(), x.end(), temp.begin(),[minval, maxval](auto a) {
+                                return clamp(a, minval, maxval);
+                             });
+  return temp;
+}
+
+// Returns a vector in the same direction as p but with a length of 1.
+template <typename T, int size>
+vec<T, size> normalize(vec<T, size> p) {
+  return p / length(p);
+}
+
+// Round to integral value using the round to
+// negative infinity rounding mode.
+template <typename T, int size>
+vec<T, size> floor(vec<T, size> x) {
+  vec<T, size> temp;
+  std::transform(x.begin(), x.end(), temp.begin(), [](auto a) { return std::floor(a); });
+  return temp;
+}
+
+// Returns y if y < x, otherwise it returns x.
+// genfloat fmin ( genfloat x, sgenfloat y )
+// If one argument is a NaN, fmin() returns
+// the other argument. If both arguments are
+// NaNs, fmin() returns a NaN.
+//
+// \todo Perhaps worth adding an isNaN check as I'm not sure if the < operator
+//       conforms to what the function requires
+// \todo Only defined for vec's should be defined for floats/doubles
+template <typename T, int size>
+vec<T, size> fmin(vec<T, size> x,
+                  vec<T, size> y) {
+ vec<T, size> temp;
+ for(int i = 0; i < size; ++i)
+ temp[i] = std::fmin(y[i],x[i]);
+ return temp;
+}
+
+// Returns y if x < y, otherwise it returns x.
+// If one argument is a NaN, fmax() returns
+// the other argument. If both arguments are
+// NaNs, fmax() returns a NaN
+template <typename T, int size>
+vec<T, size> fmax(vec<T, size> x,
+                  vec<T, size> y) {
+   vec<T, size> temp;
+   for(int i = 0; i < size; ++i)
+   temp[i] = std::fmax(x[i],y[i]);
+   return temp;
+}
 
 //
 namespace native {
