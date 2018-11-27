@@ -1,20 +1,17 @@
-#ifndef TRISYCL_SYCL_PARALLELISM_DETAIL_PARALLELISM_HPP
-#define TRISYCL_SYCL_PARALLELISM_DETAIL_PARALLELISM_HPP
+#ifndef TRISYCL_SYCL_PARALLELISM_DETAIL_PARALLELISM_TBB_HPP
+#define TRISYCL_SYCL_PARALLELISM_DETAIL_PARALLELISM_TBB_HPP
 
 /** \file
 
-    Implement the detail of the parallel constructions to launch kernels
+    Implement the detail of the parallel constructions to launch kernels using
+    Intel Threading Building Blocks (TBB). This file gets conditionally included
+    in "CL/sycl/parallelism.hpp" if TRISYCL_TBB is defined by the preprocessor.
 
-    \todo Refactor this file
-
-    Ronan at keryell dot FR
+    jeffamstutz at gmail dot com
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
 */
-
-#include <boost/multi_array.hpp>
-#include <cstddef>
 
 #include "CL/sycl/group.hpp"
 #include "CL/sycl/h_item.hpp"
@@ -113,7 +110,7 @@ void parallel_for(range<Dimensions> r, ParallelForFunctor f)
   parallel_for(r, f, arg_t{});
 }
 
-/** Implementation of parallel_for with a range<> and an offset */
+/// Implementation of parallel_for with a range<> and an offset
 template <int Dimensions = 1, typename ParallelForFunctor>
 void parallel_for_global_offset(range<Dimensions> global_size,
                                 id<Dimensions> offset,
@@ -152,13 +149,10 @@ void parallel_for_workitem(const group<Dimensions> &g,
     f(index);
   };
 
-  // Then iterate on all the work-items of the work-group
   parallel_for_iterate(g.get_local_range(), reconstruct_item);
 }
 
-/** Implement a variation of parallel_for to take into account a
-          nd_range<>
-      */
+/// Implement a variation of parallel_for to take into account a nd_range<>
 template <int Dimensions = 1, typename ParallelForFunctor>
 void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f)
 {
@@ -171,8 +165,7 @@ void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f)
   parallel_for_iterate(r.get_group_range(), iterate_in_work_group);
 }
 
-/** Implement the loop on the work-items inside a work-group
-       */
+/// Implement the loop on the work-items inside a work-group
 template <int Dimensions, typename ParallelForFunctor>
 void parallel_for_workitem_in_group(const group<Dimensions> &g,
                                     ParallelForFunctor f)
@@ -194,4 +187,4 @@ void parallel_for_workitem_in_group(const group<Dimensions> &g,
     ### End:
 */
 
-#endif // TRISYCL_SYCL_PARALLELISM_DETAIL_PARALLELISM_HPP
+#endif // TRISYCL_SYCL_PARALLELISM_DETAIL_PARALLELISM_TBB_HPP
