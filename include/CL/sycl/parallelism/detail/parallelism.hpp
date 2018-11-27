@@ -67,7 +67,7 @@ struct parallel_for_iterate {
   }
 };
 
-
+#ifdef _OPENMP
 /** A top-level recursive multi-dimensional iterator variant using OpenMP
 
     Only the top-level loop uses OpenMP and goes on with the normal
@@ -107,6 +107,7 @@ struct parallel_OpenMP_for_iterate {
     }
   }
 };
+#endif
 
 
 /** Stop the recursion when level reaches 0 by simply calling the
