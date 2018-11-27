@@ -25,7 +25,7 @@
 #include "CL/sycl/exception.hpp"
 #include "CL/sycl/kernel.hpp"
 #include "CL/sycl/opencl_types.hpp"
-#include "CL/sycl/parallelism/detail/parallelism.hpp"
+#include "CL/sycl/parallelism.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"
 
 namespace cl {

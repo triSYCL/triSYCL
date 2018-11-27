@@ -80,9 +80,16 @@ namespace cl {
       }
 
       /** Implementation of a data parallel computation with parallelism
-          specified at launch time by a range<>. Kernel index is item.
+          specified at launch time by a range<>. Kernel index is id or int.
+      */
+      template <int Dimensions = 1, typename ParallelForFunctor, typename Id>
+      void parallel_for(range<Dimensions> r, ParallelForFunctor f, Id)
+      {
+        parallel_for_iterate(r, f);
+      }
 
-          This implementation use OpenMP 3 if compiled with the right flag.
+      /** Implementation of a data parallel computation with parallelism
+          specified at launch time by a range<>. Kernel index is item.
       */
       template <int Dimensions = 1, typename ParallelForFunctor>
       void parallel_for(range<Dimensions> r,
@@ -126,7 +133,12 @@ namespace cl {
       template <int Dimensions = 1, typename ParallelForFunctor>
       void parallel_for_workgroup(nd_range<Dimensions> r, ParallelForFunctor f)
       {
-        parallel_for_iterate(r.get_group_range(), f);
+        auto reconstruct_group = [&](id<Dimensions> l) {
+          group<Dimensions> group{l, r};
+          f(group);
+        };
+
+        parallel_for_iterate(r.get_group_range(), reconstruct_group);
       }
 
       /// Implement the loop on the work-items inside a work-group
