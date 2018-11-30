@@ -12,6 +12,18 @@
 using namespace cl::sycl;
 namespace bh = boost::hana;
 
+/// This is an extension providing a conceptual API for devices, platforms...
+#define SYCL_VENDOR_TRISYCL_EXTENSION_CONCEPTUAL_API 1
+
+/// This is an extension providing scope to devices & platforms
+#define SYCL_VENDOR_TRISYCL_EXTENSION_SCOPE 1
+
+/// This is an extension providing platform pipes
+#define SYCL_VENDOR_TRISYCL_EXTENSION_PLATFORM_PIPE 1
+
+/// This is an extension allowing the host to access platform pipes
+#define SYCL_VENDOR_TRISYCL_EXTENSION_PLATFORM_PIPE_HOST_ACCESS 1
+
 namespace cl::sycl::extension::ce {
 
 /** Declare the concept of SYCL scope
