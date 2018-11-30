@@ -39,9 +39,7 @@ template <cl::sycl::info::device_type DeviceType
           , typename DeviceScope = empty_device_scope
           , typename PlatformScope = empty_platform_scope
           >
-class device {
-
-public:
+struct device {
 
   cl::sycl::device d;
   /// Instantiate the device scope
@@ -92,7 +90,7 @@ static inline auto all_devices = bh::make_tuple
     device which can already have some scope storage.
 */
 template <typename Device>
-class queue {
+struct queue {
   static constexpr auto device_type = Device::device_type;
 
   Device d;
@@ -121,8 +119,7 @@ class queue {
     /// Sequential kernel invocation
     template <typename KernelName, typename Kernel>
     void single_task(Kernel k) {
-      /// \todo remove the = & manage this
-      cgh.single_task<KernelName>([=] {
+      cgh.single_task<KernelName>([=, *this] () mutable {
           k(*this);
         });
     }
@@ -132,9 +129,8 @@ class queue {
     template <typename KernelName, int Rank, typename Kernel>
     void parallel_for(cl::sycl::range<Rank> num_work_items,
                       Kernel k) {
-      /// \todo remove the = & manage this
       cgh.parallel_for<KernelName>(num_work_items,
-                                   [=](cl::sycl::id<Rank> i) {
+                                   [=, *this] (cl::sycl::id<Rank> i) mutable {
                                      k(i, *this);
                                    });
     }
@@ -156,7 +152,6 @@ class queue {
     }
   };
 
-public:
 
   /// Select a queue from a device.
   constexpr queue(Device d)
@@ -169,7 +164,7 @@ public:
   /// Submit a command-group lambda function
   template <typename CG>
   void submit(CG cgh) {
-    q.submit([&](handler &cgh_generic) {
+    q.submit([&] (handler &cgh_generic) {
         command_group<CG> cg { cgh_generic, d };
         cgh(cg);
       });
@@ -189,47 +184,44 @@ public:
 
 constexpr int size = 100;
 
-struct device_scope : cl::sycl::extension::ce::scope {
-  int global = 3;
-};
-
-
-struct platform_scope : cl::sycl::extension::ce::scope {
-  int array[size];
-};
-
-
 int test_main(int argc, char *argv[]) {
 
   buffer<int> b { size };
 
-  struct some_platform_wide_content : extension::ce::scope {
-    std::atomic<bool> stop;
+  // Some storage inside the device
+  struct device_storage : cl::sycl::extension::ce::scope {
+    int global = 3;
+  };
+
+
+  // Some storage to be defined at the platform level
+  struct some_platform_wide_content : cl::sycl::extension::ce::scope {
+    int array[size];
+    bool stop;
     // Send data from a kernel to host
     cl::sycl::static_pipe<int, 4> out;
   };
-/*
-  auto p = extension::ce::device<cl::sycl::info::device_type::host,
-                                 some_platform_wide_content> {};
-*/
 
+  // Create some queues from devices with some device- and
+  // platform-scope storage
   auto host_q = extension::ce::queue {
     extension::ce::device<cl::sycl::info::device_type::host,
-    device_scope> {} };
+                          device_storage> {} };
   auto pocl_q = extension::ce::queue {
     extension::ce::device<cl::sycl::info::device_type::host,
-    device_scope, platform_scope> {} };
+                          device_storage,
+                          some_platform_wide_content> {} };
   auto fpga_q = extension::ce::queue {
     extension::ce::device<cl::sycl::info::device_type::host,
-    device_scope, platform_scope> {} };
+                          device_storage,
+                          some_platform_wide_content> {} };
 #if 0
   auto host_q = extension::ce::queue { [](auto d) { return d.is_host(); } };
 
   auto pocl_q = extension::ce::queue { [](auto d) { return d.is_gpu(); } };
 #endif
 
-
-  host_q.submit([&](auto &cgh) {
+  host_q.submit([&] (auto &cgh) {
       auto ab = b.get_access<access::mode::discard_write>(cgh);
       cgh.template single_task<class producer>([=] (auto &kh) {
           for (int i = 0; i < size; ++i)
@@ -239,7 +231,7 @@ int test_main(int argc, char *argv[]) {
     });
 
 
-  pocl_q.submit([&](auto &cgh) {
+  pocl_q.submit([&] (auto &cgh) {
       auto ab = b.get_access<access::mode::read>(cgh);
       cgh.template parallel_for<class inc>(range<1> { size },
                                            [=] (id<1> index, auto &kh) {
@@ -249,19 +241,25 @@ int test_main(int argc, char *argv[]) {
   // Wait for the previous kernel before starting the next one
   pocl_q.wait();
 
-/*
-  fpga_q.submit([&](handler &cgh) {
+
+  fpga_q.submit([&] (auto &cgh) {
       auto ab = b.get_access<access::mode::read_write>(cgh);
-      auto output =
-        cgh.scope.platform.out.get_access<access::mode::write,
-                                          access::target::blocking_pipe>(cgh);
-      cgh.parallel_for<class consumer>(range<1> { size },
-                                       [=] (id<1> index) {
-                                         output << ab[index[0]];
-                                       });
+      cgh.template parallel_for<class consumer>(range<1> { size },
+        [=] (id<1> index, auto &kh) {
+          auto output = kh.scope().platform().out
+            .template get_access<access::mode::write,
+                                 access::target::blocking_pipe>();
+          output << kh.scope().platform().array[index[0]];
+          std::cerr << kh.scope().platform().array[index[0]] << std::endl;
+        });
     });
 
-  std::cout << b.get_access<access::mode::read>()[99] << std::endl;
-*/
+  /// \todo clean
+  BOOST_CHECK(host_q.d.ds.global == 4);
+  auto output = fpga_q.d.pls.out.get_access<access::mode::read,
+                                            access::target::blocking_pipe>();
+  for (int i = 0; i < b.get_count(); ++i)
+    BOOST_CHECK(i == output.read() + 1);
+
   return 0;
 }
