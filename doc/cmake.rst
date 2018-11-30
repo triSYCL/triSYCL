@@ -15,6 +15,7 @@ has the following options:
 .. code:: CMake
 
     option(TRISYCL_OPENMP "triSYCL multi-threading with OpenMP" ON)
+    option(TRISYCL_TBB "triSYCL multi-threading with TBB" OFF)
     option(TRISYCL_OPENCL "triSYCL OpenCL interoperability mode" OFF)
     option(TRISYCL_NO_ASYNC "triSYCL use synchronous kernel execution" OFF)
     option(TRISYCL_DEBUG "triSYCL use debug mode" OFF)
@@ -36,6 +37,17 @@ To compile the tests with OpenCL, use for example on Unix::
   cd build
   cmake .. -DTRISYCL_OPENCL=ON
   make -j
+
+Notes
+`````
+
+Enabling TBB (Intel Threading Building Blocks) will supersede OpenMP if both
+options are enabled. Furthermore, when installed triSYCL will not specify any
+particular backend. Thus if client applications want TBB to be enabled, then
+they must specify ```-DTRISYCL_TBB``` and have TBB includes and linked libraries
+properly set. A CMake module to find TBB can be found at
+```cmake/FindTBB.cmake```, which is used when building the tests with TBB.
+
 
 Testing
 -------

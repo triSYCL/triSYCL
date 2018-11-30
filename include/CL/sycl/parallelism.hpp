@@ -11,7 +11,11 @@
     License. See LICENSE.TXT for details.
 */
 
+#ifdef TRISYCL_TBB
+#include "CL/sycl/parallelism/detail/parallelism_tbb.hpp"
+#else
 #include "CL/sycl/parallelism/detail/parallelism.hpp"
+#endif
 
 /*
     # Some Emacs stuff:

@@ -17,7 +17,7 @@
 # Requite CMake version 3.5 or higher
 
 cmake_minimum_required (VERSION 3.5)
-project(triSYCL C CXX) # The name of the project (forward declare language)
+project(triSYCL CXX) # The name of the project (forward declare language)
 
 # Check that a supported host compiler can be found
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -117,6 +117,7 @@ endif()
 
 #triSYCL options
 option(TRISYCL_OPENMP "triSYCL multi-threading with OpenMP" ON)
+option(TRISYCL_TBB "triSYCL multi-threading with TBB" OFF)
 option(TRISYCL_OPENCL "triSYCL OpenCL interoperability mode" OFF)
 option(TRISYCL_NO_ASYNC "triSYCL use synchronous kernel execution" OFF)
 option(TRISYCL_DEBUG "triSYCL use debug mode" OFF)
@@ -125,6 +126,7 @@ option(TRISYCL_TRACE_KERNEL "triSYCL trace of kernel execution" OFF)
 option(TRISYCL_INCLUDE_DIR  "triSYCL include directory" OFF)
 
 mark_as_advanced(TRISYCL_OPENMP)
+mark_as_advanced(TRISYCL_TBB)
 mark_as_advanced(TRISYCL_OPENCL)
 mark_as_advanced(TRISYCL_NO_ASYNC)
 mark_as_advanced(TRISYCL_DEBUG)
@@ -166,6 +168,11 @@ if(TRISYCL_OPENMP)
   find_package(OpenMP REQUIRED)
 endif()
 
+# Find TBB package
+if(TRISYCL_TBB)
+  find_package(TBB REQUIRED)
+endif()
+
 # Find Boost
 set(BOOST_REQUIRED_COMPONENTS chrono log)
 if(TRISYCL_OPENCL)
@@ -180,15 +187,9 @@ else()
   set(LOG_NEEDED OFF)
 endif()
 
-option(TRISYCL_OPENMP "triSYCL multi-threading with OpenMP" ON)
-option(TRISYCL_OPENCL "triSYCL OpenCL interoperability mode" OFF)
-option(TRISYCL_NO_ASYNC "triSYCL use synchronous kernel execution" OFF)
-option(TRISYCL_DEBUG "triSYCL use debug mode" OFF)
-option(TRISYCL_DEBUG_STRUCTORS "triSYCL trace of object lifetimes" OFF)
-option(TRISYCL_TRACE_KERNEL "triSYCL trace of kernel execution" OFF)
-option(TRISYCL_INCLUDE_DIR  "Use triSYCL include directory" OFF)
 
 message(STATUS "triSYCL OpenMP:                   ${TRISYCL_OPENMP}")
+message(STATUS "triSYCL TBB:                      ${TRISYCL_TBB}")
 message(STATUS "triSYCL OpenCL:                   ${TRISYCL_OPENCL}")
 message(STATUS "triSYCL synchronous execution:    ${TRISYCL_NO_ASYNC}")
 message(STATUS "triSYCL debug mode:               ${TRISYCL_DEBUG}")
@@ -242,5 +243,13 @@ function(add_sycl_to_target targetName)
       PROPERTIES
       LINK_FLAGS ${OpenMP_CXX_FLAGS})
   endif(${TRISYCL_OPENMP})
+
+  # C++ and TBB requirements
+  if(${TRISYCL_TBB})
+    target_compile_definitions(${targetName} PUBLIC -DTRISYCL_TBB)
+
+    target_include_directories(${targetName} PUBLIC ${TBB_INCLUDE_DIR})
+    target_link_libraries(${targetName} PUBLIC ${TBB_LIBRARIES})
+  endif(${TRISYCL_TBB})
 
 endfunction(add_sycl_to_target)
