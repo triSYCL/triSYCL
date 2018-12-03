@@ -240,35 +240,73 @@ void parallel_for_workitem(const group<Dimensions> &g,
 
      The issue is that the parallel_for_workitem() execution is slow even
      when nd_item::barrier() is not used
-
-     \todo Simplify by just using omp parallel for collapse
   */
-
   range<Dimensions> l_r = g.get_nd_range().get_local_range();
-  auto tot = l_r.get(0);
-  for (int i = 1; i < (int) Dimensions; ++i) {
-    tot *= l_r.get(i);
-  }
-#pragma omp parallel num_threads(tot)
-  {
-    T_Item index { g.get_nd_range() };
-    id<Dimensions> local; // to initialize correctly
-#pragma omp for nowait
-    for (std::size_t th_id = 0; th_id < tot; ++th_id) {
-      if (Dimensions == 1) {
-        local[0] = th_id;
-      } else if (Dimensions == 2) {
-        local[0] = th_id / l_r.get(1);
-        local[1] = th_id % l_r.get(1);
-      } else if (Dimensions == 3) {
-        local[0] = th_id / (l_r.get(1)*l_r.get(2));
-        local[1] = (th_id / l_r.get(2)) % l_r.get(1);
-        local[2] = th_id % l_r.get(2);
-      }
-      index.set_local(local);
-      index.set_global(local + id<Dimensions>(l_r)*g.get_id());
+  id<Dimensions> id_l_r { l_r };
+
+  auto tot = l_r.size();
+
+  if constexpr (Dimensions == 1) {
+  #pragma omp parallel for collapse(1) schedule(static) num_threads(tot)
+    for (size_t i = 0; i < l_r.get(0); ++i) {
+      T_Item index{g.get_nd_range()};
+      index.set_local(i);
+      index.set_global(index.get_local_id() + id_l_r * g.get_id());
       f(index);
     }
+  } else if constexpr (Dimensions == 2) {
+  #pragma omp parallel for collapse(2) schedule(static) num_threads(tot)
+    for (size_t i = 0; i < l_r.get(0); ++i) {
+      for (size_t j = 0; j < l_r.get(1); ++j) {
+        T_Item index{g.get_nd_range()};
+        index.set_local({i,j});
+        index.set_global(index.get_local_id() + id_l_r * g.get_id());
+        f(index);
+      }
+    }
+  } else if constexpr (Dimensions == 3) {
+  #pragma omp parallel for collapse(3) schedule(static) num_threads(tot)
+    for (size_t i = 0; i < l_r.get(0); ++i)
+      for (size_t j = 0; j < l_r.get(1); ++j)
+        for (size_t k = 0; k < l_r.get(2); ++k) {
+          T_Item index{g.get_nd_range()};
+          index.set_local({i,j,k});
+          index.set_global(index.get_local_id() + id_l_r * g.get_id());
+          f(index);
+        }
+  }
+#elif defined(_OPENMP) && (defined(TRISYCL_NO_BARRIER) && !defined(_MSC_VER))
+  range<Dimensions> l_r = g.get_nd_range().get_local_range();
+  id<Dimensions> id_l_r { l_r };
+
+  if constexpr (Dimensions == 1) {
+  #pragma omp parallel for simd collapse(1)
+    for (size_t i = 0; i < l_r.get(0); ++i) {
+      T_Item index{g.get_nd_range()};
+      index.set_local(i);
+      index.set_global(index.get_local_id() + id_l_r * g.get_id());
+      f(index);
+    }
+  } else if constexpr (Dimensions == 2) {
+  #pragma omp parallel for simd collapse(2)
+    for (size_t i = 0; i < l_r.get(0); ++i) {
+      for (size_t j = 0; j < l_r.get(1); ++j) {
+        T_Item index{g.get_nd_range()};
+        index.set_local({i,j});
+        index.set_global(index.get_local_id() + id_l_r * g.get_id());
+        f(index);
+      }
+    }
+  } else if constexpr (Dimensions == 3) {
+    #pragma omp parallel for simd collapse(3)
+    for (size_t i = 0; i < l_r.get(0); ++i)
+      for (size_t j = 0; j < l_r.get(1); ++j)
+        for (size_t k = 0; k < l_r.get(2); ++k) {
+          T_Item index{g.get_nd_range()};
+          index.set_local({i,j,k});
+          index.set_global(index.get_local_id() + id_l_r * g.get_id());
+          f(index);
+        }
   }
 #else
   // In a sequential execution there is only one index processed at a time
