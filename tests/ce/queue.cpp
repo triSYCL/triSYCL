@@ -4,6 +4,8 @@
    ~/Xilinx/Projects/OpenCL/SYCL/Presentations (master)$ a 2017-01-23--27-Khronos_F2F_Vancouver-Xilinx/{code,2017-01-23--27-Khronos-Vancouver-Xilinx-SYCL-expose.pdf}
 */
 #include <CL/sycl.hpp>
+#include <CL/sycl/vendor/trisycl/extension/scope/platform.hpp>
+
 #include <iostream>
 
 #include <boost/hana.hpp>
@@ -39,17 +41,13 @@ struct empty_device_scope {
 };
 
 
-/// An empty platform scope to make compilation errors clearer
-struct empty_platform_scope {
-};
-
-
 /** A device known at compile-time
 
 */
 template <cl::sycl::info::device_type DeviceType
-          , typename DeviceScope = empty_device_scope
-          , typename PlatformScope = empty_platform_scope
+          , typename DeviceScope
+          , typename ScopedPlatform =
+          cl::sycl::vendor::trisycl::extension::scope::empty_platform_scope
           >
 struct device {
 
@@ -57,17 +55,23 @@ struct device {
   /// Instantiate the device scope
   DeviceScope ds;
   /// \todo should be provided through a real platform instead of being here
-  PlatformScope pls;
+  ScopedPlatform platform_with_scope;
 
   static constexpr auto device_type = DeviceType;
 
-  device() {
+  template <typename PS>
+  device(PS p)
+    : platform_with_scope { p } {
     auto devices = cl::sycl::device::get_devices(device_type);
     if (devices.empty())
       throw cl::sycl::runtime_error("No device found of the requessted type");
     // Pick the first one
     d = devices[0];
   }
+
+
+  device() = default;
+
 
   constexpr bool is_host() {
     return device_type == cl::sycl::info::device_type::host;
@@ -86,6 +90,7 @@ struct device {
   }
 
 };
+
 
 /*
 static inline auto all_devices = bh::make_tuple
@@ -107,6 +112,15 @@ struct queue {
 
   Device d;
   cl::sycl::queue q;
+
+  /// Provide access to the device scope from the host
+  auto& device_scope() { return d.ds; }
+
+  /// Provide access to the platform scope from the host, if any
+  template<typename PS = decltype(d.platform_with_scope),
+           typename E = std::enable_if_t<PS::has_some_storage_p>>
+  auto& platform_scope() { return d.platform_with_scope.get_storage(); }
+
 
   /** The command group redefining some member functions to be able to
       pass the scope and so on to the kernel */
@@ -148,20 +162,14 @@ struct queue {
     }
 
 
-    /// Implement the scope
-    auto scope() {
-      struct scopes {
+    /// Provide access to the device scope from inside the kernel
+    auto& device_scope() { return d.ds; }
 
-        Device &d;
-
-        scopes(Device &d) : d { d } {}
-
-        auto& device() { return d.ds; }
-
-        auto& platform() { return d.pls; }
-      } s { d };
-      return s;
-    }
+    /** Provide access to the platform scope from inside the kernel,
+        if any */
+    template<typename PS = decltype(d.platform_with_scope),
+             typename E = std::enable_if_t<PS::has_some_storage_p>>
+    auto& platform_scope() { return d.platform_with_scope.get_storage(); }
   };
 
 
@@ -214,19 +222,22 @@ int test_main(int argc, char *argv[]) {
     cl::sycl::static_pipe<int, 4> out;
   };
 
+  cl::sycl::vendor::trisycl::extension::scope::platform
+    <some_platform_wide_content> acap_platform;
+
   // Create some queues from devices with some device- and
   // platform-scope storage
   auto host_q = extension::ce::queue {
     extension::ce::device<cl::sycl::info::device_type::host,
                           device_storage> {} };
-  auto pocl_q = extension::ce::queue {
+  auto ai_q = extension::ce::queue {
     extension::ce::device<cl::sycl::info::device_type::host,
                           device_storage,
-                          some_platform_wide_content> {} };
+                          decltype(acap_platform)> { acap_platform } };
   auto fpga_q = extension::ce::queue {
     extension::ce::device<cl::sycl::info::device_type::host,
                           device_storage,
-                          some_platform_wide_content> {} };
+                          decltype(acap_platform)> { acap_platform } };
 #if 0
   auto host_q = extension::ce::queue { [](auto d) { return d.is_host(); } };
 
@@ -238,40 +249,40 @@ int test_main(int argc, char *argv[]) {
       cgh.template single_task<class producer>([=] (auto &kh) {
           for (int i = 0; i < size; ++i)
             ab[i] = i;
-          kh.scope().device().global++;
+          kh.device_scope().global++;
         });
     });
 
 
-  pocl_q.submit([&] (auto &cgh) {
+  ai_q.submit([&] (auto &cgh) {
       auto ab = b.get_access<access::mode::read>(cgh);
       cgh.template parallel_for<class inc>(range<1> { size },
                                            [=] (id<1> index, auto &kh) {
-           kh.scope().platform().array[index[0]] = ab[index[0]] + 1;
+           kh.platform_scope().array[index[0]] = ab[index[0]] + 1;
                                            });
     });
   // Wait for the previous kernel before starting the next one
-  pocl_q.wait();
+  ai_q.wait();
 
 
   fpga_q.submit([&] (auto &cgh) {
       auto ab = b.get_access<access::mode::read_write>(cgh);
       cgh.template parallel_for<class consumer>(range<1> { size },
         [=] (id<1> index, auto &kh) {
-          auto output = kh.scope().platform().out
-            .template get_access<access::mode::write,
-                                 access::target::blocking_pipe>();
-          output << kh.scope().platform().array[index[0]];
-          std::cerr << kh.scope().platform().array[index[0]] << std::endl;
+          auto output = kh.platform_scope()
+            .out.template get_access<access::mode::write,
+                                     access::target::blocking_pipe>();
+          output << kh.platform_scope().array[index[0]];
         });
     });
 
-  /// \todo clean
-  BOOST_CHECK(host_q.d.ds.global == 4);
-  auto output = fpga_q.d.pls.out.get_access<access::mode::read,
-                                            access::target::blocking_pipe>();
-  for (int i = 0; i < b.get_count(); ++i)
-    BOOST_CHECK(i == output.read() + 1);
+
+  BOOST_CHECK(host_q.device_scope().global == 4);
+  auto output = fpga_q.platform_scope().
+    out.get_access<access::mode::read,
+                   access::target::blocking_pipe>();
+  for (int i = 0; i < (int) b.get_count(); ++i)
+    BOOST_CHECK(i + 1 == output.read());
 
   return 0;
 }
