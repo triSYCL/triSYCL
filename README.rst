@@ -84,7 +84,8 @@ Documentation
 Some reasons to use SYCL
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Please see `about SYCL <doc/about-sycl.rst>`_
+Please see `about SYCL <doc/about-sycl.rst>`_ to have some context, a
+list of presentations, some related projects.
 
 
 Installation & testing
@@ -94,7 +95,7 @@ SYCL is a template library, so no real installation is required.
 
 There are some examples you can build however.
 
-See `Testing <doc/testing.rst>`_
+See `Testing <doc/testing.rst>`_.
 
 
 Architecture of triSYCL runtime and compiler
@@ -109,7 +110,7 @@ CMake infrastructure
 ~~~~~~~~~~~~~~~~~~~~
 
 Some details about CMake configuration and organization can be found
-in `CMake <doc/cmake.rst>`_
+in `CMake <doc/cmake.rst>`_.
 
 
 Pre-processor macros used in triSYCL
@@ -128,7 +129,7 @@ See `Environment variables with triSYCL <doc/environment.rst>`_.
 Possible futures
 ~~~~~~~~~~~~~~~~
 
-See `Possible futures <doc/possible-futures.rst>`_
+See `Possible futures <doc/possible-futures.rst>`_.
 
 
 triSYCL code documentation
@@ -137,7 +138,6 @@ triSYCL code documentation
 The documentation of the triSYCL_ implementation itself can be found in
 http://trisycl.github.io/triSYCL/Doxygen/triSYCL/html and
 http://trisycl.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
-
 
 
 News
