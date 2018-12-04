@@ -1,5 +1,5 @@
-#ifndef TRISYCL_SYCL_VENDOR_TRISYCL_EXTENSION_SCOPE_DEVICE_HPP
-#define TRISYCL_SYCL_VENDOR_TRISYCL_EXTENSION_SCOPE_DEVICE_HPP
+#ifndef TRISYCL_SYCL_VENDOR_TRISYCL_SCOPE_DEVICE_HPP
+#define TRISYCL_SYCL_VENDOR_TRISYCL_SCOPE_DEVICE_HPP
 
 /** \file The SYCL conceptual device with a device scope storage
 
@@ -21,15 +21,15 @@
 
 #include "CL/sycl/detail/shared_ptr_implementation.hpp"
 #include "CL/sycl/device.hpp"
-#include "CL/sycl/vendor/trisycl/extension/scope/device/detail/device.hpp"
-#include "CL/sycl/vendor/trisycl/extension/scope/platform.hpp"
+#include "CL/sycl/vendor/trisycl/scope/device/detail/device.hpp"
+#include "CL/sycl/vendor/trisycl/scope/platform.hpp"
 
 /// This is an extension providing scope storage for devices
-#define SYCL_VENDOR_TRISYCL_EXTENSION_DEVICE_SCOPE 1
+#define SYCL_VENDOR_TRISYCL_DEVICE_SCOPE 1
 
-namespace cl::sycl::vendor::trisycl::extension::scope {
+namespace cl::sycl::vendor::trisycl::scope {
 
-/** \addtogroup vendor_trisycl_extension_scope triSYCL extension for
+/** \addtogroup vendor_trisycl_scope triSYCL extension for
     storage scopes
     @{
 */
@@ -44,7 +44,7 @@ struct empty_device_scope {
 */
 template <typename DeviceStorage
           , typename ScopedPlatform =
-          cl::sycl::vendor::trisycl::extension::scope::empty_platform_scope
+          cl::sycl::vendor::trisycl::scope::empty_platform_scope
           >
 class device
   /* Use the underlying device implementation that can be shared in the
@@ -122,7 +122,7 @@ public:
 
 };
 
-/// @} to end the vendor_trisycl_extension_scope Doxygen group
+/// @} to end the vendor_trisycl_scope Doxygen group
 
 }
 
@@ -135,4 +135,4 @@ public:
     ### End:
 */
 
-#endif // TRISYCL_SYCL_VENDOR_TRISYCL_EXTENSION_SCOPE_DEVICE_HPP
+#endif // TRISYCL_SYCL_VENDOR_TRISYCL_SCOPE_DEVICE_HPP

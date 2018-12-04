@@ -1,5 +1,5 @@
-#ifndef TRISYCL_SYCL_VENDOR_TRISYCL_EXTENSION_SCOPE_PLATFORM_DETAIL_PLATFORM_HPP
-#define TRISYCL_SYCL_VENDOR_TRISYCL_EXTENSION_SCOPE_PLATFORM_DETAIL_PLATFORM_HPP
+#ifndef TRISYCL_SYCL_VENDOR_TRISYCL_SCOPE_PLATFORM_DETAIL_PLATFORM_HPP
+#define TRISYCL_SYCL_VENDOR_TRISYCL_SCOPE_PLATFORM_DETAIL_PLATFORM_HPP
 
 /** \file Implementation details of the SYCL conceptual platform with a
     platform scope storage
@@ -15,9 +15,9 @@
 
 #include "CL/sycl/platform.hpp"
 
-namespace cl::sycl::vendor::trisycl::extension::scope::detail {
+namespace cl::sycl::vendor::trisycl::scope::detail {
 
-/** \addtogroup vendor_trisycl_extension_scope triSYCL extension for
+/** \addtogroup vendor_trisycl_scope triSYCL extension for
     storage scopes
     @{
 */
@@ -58,7 +58,7 @@ public:
 
 };
 
-/// @} to end the vendor_trisycl_extension_scope Doxygen group
+/// @} to end the vendor_trisycl_scope Doxygen group
 
 }
 
@@ -71,4 +71,4 @@ public:
     ### End:
 */
 
-#endif // TRISYCL_SYCL_VENDOR_TRISYCL_EXTENSION_SCOPE_PLATFORM_DETAIL_PLATFORM_HPP
+#endif // TRISYCL_SYCL_VENDOR_TRISYCL_SCOPE_PLATFORM_DETAIL_PLATFORM_HPP

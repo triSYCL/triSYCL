@@ -4,8 +4,8 @@
    ~/Xilinx/Projects/OpenCL/SYCL/Presentations (master)$ a 2017-01-23--27-Khronos_F2F_Vancouver-Xilinx/{code,2017-01-23--27-Khronos-Vancouver-Xilinx-SYCL-expose.pdf}
 */
 #include <CL/sycl.hpp>
-#include <CL/sycl/vendor/trisycl/extension/scope/device.hpp>
-#include <CL/sycl/vendor/trisycl/extension/scope/platform.hpp>
+#include <CL/sycl/vendor/trisycl/scope/device.hpp>
+#include <CL/sycl/vendor/trisycl/scope/platform.hpp>
 
 #include <iostream>
 #include <type_traits>
@@ -17,16 +17,16 @@ using namespace cl::sycl;
 namespace bh = boost::hana;
 
 /// This is an extension providing a conceptual API for devices, platforms...
-#define SYCL_VENDOR_TRISYCL_EXTENSION_CONCEPTUAL_API 1
+#define SYCL_VENDOR_TRISYCL_CONCEPTUAL_API 1
 
 /// This is an extension providing scope to devices & platforms
-#define SYCL_VENDOR_TRISYCL_EXTENSION_SCOPE 1
+#define SYCL_VENDOR_TRISYCL_SCOPE 1
 
 /// This is an extension providing platform pipes
-#define SYCL_VENDOR_TRISYCL_EXTENSION_PLATFORM_PIPE 1
+#define SYCL_VENDOR_TRISYCL_PLATFORM_PIPE 1
 
 /// This is an extension allowing the host to access platform pipes
-#define SYCL_VENDOR_TRISYCL_EXTENSION_PLATFORM_PIPE_HOST_ACCESS 1
+#define SYCL_VENDOR_TRISYCL_PLATFORM_PIPE_HOST_ACCESS 1
 
 namespace cl::sycl::extension::ce {
 
@@ -169,23 +169,23 @@ int test_main(int argc, char *argv[]) {
     cl::sycl::static_pipe<int, 4> out;
   };
 
-  cl::sycl::vendor::trisycl::extension::scope::platform
+  cl::sycl::vendor::trisycl::scope::platform
     <some_platform_wide_content> acap_platform;
 
   // Create some queues from devices with some device- and
   // platform-scope storage
   auto host_q = extension::ce::queue {
-    cl::sycl::vendor::trisycl::extension::scope::device<device_storage> {} };
+    cl::sycl::vendor::trisycl::scope::device<device_storage> {} };
 
   // \todo clean-up the interface and provide real FPGA device
   auto ai_q = extension::ce::queue {
-    cl::sycl::vendor::trisycl::extension::scope::device
+    cl::sycl::vendor::trisycl::scope::device
       <device_storage,
        decltype(acap_platform)> { {} , acap_platform } };
 
   // \todo clean-up the interface and provide real FPGA device
   auto fpga_q = extension::ce::queue {
-    cl::sycl::vendor::trisycl::extension::scope::device
+    cl::sycl::vendor::trisycl::scope::device
       <device_storage,
        decltype(acap_platform)> { {} , acap_platform } };
 #if 0
