@@ -4,6 +4,9 @@
 /** \file Implementation details of the SYCL conceptual platform with a
     platform scope storage
 
+    \todo The device and platform are very similar. Use a common
+    mix-in to implement both of them?
+
     Ronan at Keryell point FR
 
     This file is distributed under the University of Illinois Open Source
@@ -27,8 +30,8 @@ class platform {
 
   /** The platform-scoped storage default-initialized
 
-      \todo For now it is allcoated on the host in this CPU emulation
-      but a devilce compilerand run time can create this on a real
+      \todo For now it is allocated on the host in this CPU emulation
+      but a device compiler and run time can create this on a real
       device
   */
   PlatformStorage scope_storage;

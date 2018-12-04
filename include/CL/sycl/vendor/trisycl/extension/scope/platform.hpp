@@ -8,6 +8,9 @@
     the platform ? Or is this a feature to have different scopes on
     the same platform?
 
+    \todo The device and platform are very similar. Use a common
+    mix-in to implement both of them?
+
     Ronan at Keryell point FR
 
     This file is distributed under the University of Illinois Open Source
@@ -89,14 +92,14 @@ public:
 
 
   /// Access to the platform-scoped storage
-  auto& get_storage() {
+  auto& get_storage() const {
     return implementation->get_storage();
   }
 
 
   /** Add a conversion to \c cl::sycl::platform& so it can be used as
       a normal platform */
-    operator cl::sycl::platform&() {
+    operator cl::sycl::platform&() const {
       return implementation->get_underlying_platform();
     }
 

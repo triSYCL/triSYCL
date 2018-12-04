@@ -4,9 +4,11 @@
    ~/Xilinx/Projects/OpenCL/SYCL/Presentations (master)$ a 2017-01-23--27-Khronos_F2F_Vancouver-Xilinx/{code,2017-01-23--27-Khronos-Vancouver-Xilinx-SYCL-expose.pdf}
 */
 #include <CL/sycl.hpp>
+#include <CL/sycl/vendor/trisycl/extension/scope/device.hpp>
 #include <CL/sycl/vendor/trisycl/extension/scope/platform.hpp>
 
 #include <iostream>
+#include <type_traits>
 
 #include <boost/hana.hpp>
 #include <boost/test/minimal.hpp>
@@ -41,57 +43,6 @@ struct empty_device_scope {
 };
 
 
-/** A device known at compile-time
-
-*/
-template <cl::sycl::info::device_type DeviceType
-          , typename DeviceScope
-          , typename ScopedPlatform =
-          cl::sycl::vendor::trisycl::extension::scope::empty_platform_scope
-          >
-struct device {
-
-  cl::sycl::device d;
-  /// Instantiate the device scope
-  DeviceScope ds;
-  /// \todo should be provided through a real platform instead of being here
-  ScopedPlatform platform_with_scope;
-
-  static constexpr auto device_type = DeviceType;
-
-  template <typename PS>
-  device(PS p)
-    : platform_with_scope { p } {
-    auto devices = cl::sycl::device::get_devices(device_type);
-    if (devices.empty())
-      throw cl::sycl::runtime_error("No device found of the requessted type");
-    // Pick the first one
-    d = devices[0];
-  }
-
-
-  device() = default;
-
-
-  constexpr bool is_host() {
-    return device_type == cl::sycl::info::device_type::host;
-  }
-
-  constexpr bool is_cpu() {
-    return device_type == cl::sycl::info::device_type::cpu;
-  }
-
-  constexpr bool is_gpu() {
-    return device_type == cl::sycl::info::device_type::gpu;
-  }
-
-  auto get_device() {
-    return d;
-  }
-
-};
-
-
 /*
 static inline auto all_devices = bh::make_tuple
   (
@@ -108,18 +59,16 @@ static inline auto all_devices = bh::make_tuple
 */
 template <typename Device>
 struct queue {
-  static constexpr auto device_type = Device::device_type;
-
   Device d;
   cl::sycl::queue q;
 
   /// Provide access to the device scope from the host
-  auto& device_scope() { return d.ds; }
+  auto& device_scope() { return d.get_storage(); }
 
   /// Provide access to the platform scope from the host, if any
-  template<typename PS = decltype(d.platform_with_scope),
+  template<typename PS = std::remove_reference_t<decltype(d.get_platform())>,
            typename E = std::enable_if_t<PS::has_some_storage_p>>
-  auto& platform_scope() { return d.platform_with_scope.get_storage(); }
+  auto& platform_scope() { return d.get_platform().get_storage(); }
 
 
   /** The command group redefining some member functions to be able to
@@ -163,21 +112,19 @@ struct queue {
 
 
     /// Provide access to the device scope from inside the kernel
-    auto& device_scope() { return d.ds; }
+    auto& device_scope() { return d.get_storage(); }
 
     /** Provide access to the platform scope from inside the kernel,
         if any */
-    template<typename PS = decltype(d.platform_with_scope),
+    template<typename PS = std::remove_reference_t<decltype(d.get_platform())>,
              typename E = std::enable_if_t<PS::has_some_storage_p>>
-    auto& platform_scope() { return d.platform_with_scope.get_storage(); }
+    auto& platform_scope() { return d.get_platform().get_storage(); }
   };
 
 
   /// Select a queue from a device.
-  constexpr queue(Device d)
-    : d { d }
-    , q { d.get_device() } {
-  }
+  constexpr queue(Device dev) : d { dev }, q { dev } {}
+
 
   constexpr queue() = default;
 
@@ -228,16 +175,19 @@ int test_main(int argc, char *argv[]) {
   // Create some queues from devices with some device- and
   // platform-scope storage
   auto host_q = extension::ce::queue {
-    extension::ce::device<cl::sycl::info::device_type::host,
-                          device_storage> {} };
+    cl::sycl::vendor::trisycl::extension::scope::device<device_storage> {} };
+
+  // \todo clean-up the interface and provide real FPGA device
   auto ai_q = extension::ce::queue {
-    extension::ce::device<cl::sycl::info::device_type::host,
-                          device_storage,
-                          decltype(acap_platform)> { acap_platform } };
+    cl::sycl::vendor::trisycl::extension::scope::device
+      <device_storage,
+       decltype(acap_platform)> { {} , acap_platform } };
+
+  // \todo clean-up the interface and provide real FPGA device
   auto fpga_q = extension::ce::queue {
-    extension::ce::device<cl::sycl::info::device_type::host,
-                          device_storage,
-                          decltype(acap_platform)> { acap_platform } };
+    cl::sycl::vendor::trisycl::extension::scope::device
+      <device_storage,
+       decltype(acap_platform)> { {} , acap_platform } };
 #if 0
   auto host_q = extension::ce::queue { [](auto d) { return d.is_host(); } };
 
