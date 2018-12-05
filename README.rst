@@ -20,7 +20,7 @@ the specification of the SYCL_ 1.2.1 `C++`_ layer and
 to give feedback to the Khronos_ Group SYCL_ and OpenCL_ C++ 2.2
 kernel language committees and also to the ISO `C++`_ committee.
 
-This SYCL_ implementation is mainly based on C++17 and OpenMP_ for
+This SYCL_ implementation is mainly based on C++17 and OpenMP_ or TBB_ for
 execution on the CPU, with `Boost.Compute`_ for the non single-source
 OpenCL_ interoperability layer and with LLVM_/Clang_ for the device
 compiler providing full single-source SYCL_ experience, typically
@@ -274,6 +274,8 @@ News
 .. _SYCL: https://www.khronos.org/sycl
 
 .. _TensorFlow: https://www.tensorflow.org
+
+.. _TBB: https://www.threadingbuildingblocks.org/
 
 .. _Thrust: http://thrust.github.io/
 

@@ -452,6 +452,8 @@ Related projects
 
 .. _TensorFlow: https://www.tensorflow.org
 
+.. _TBB: https://www.threadingbuildingblocks.org/
+
 .. _Thrust: http://thrust.github.io/
 
 .. _triSYCL: https://github.com/triSYCL/triSYCL
