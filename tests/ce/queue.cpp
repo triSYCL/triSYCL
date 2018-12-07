@@ -4,8 +4,7 @@
    ~/Xilinx/Projects/OpenCL/SYCL/Presentations (master)$ a 2017-01-23--27-Khronos_F2F_Vancouver-Xilinx/{code,2017-01-23--27-Khronos-Vancouver-Xilinx-SYCL-expose.pdf}
 */
 #include <CL/sycl.hpp>
-#include <CL/sycl/vendor/trisycl/scope/device.hpp>
-#include <CL/sycl/vendor/trisycl/scope/platform.hpp>
+#include <CL/sycl/vendor/trisycl/scope.hpp>
 
 #include <iostream>
 #include <type_traits>

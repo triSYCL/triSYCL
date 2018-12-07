@@ -21,6 +21,7 @@
 
 #include "CL/sycl/detail/shared_ptr_implementation.hpp"
 #include "CL/sycl/device.hpp"
+#include "CL/sycl/vendor/trisycl/scope/detail/util.hpp"
 #include "CL/sycl/vendor/trisycl/scope/device/detail/device.hpp"
 #include "CL/sycl/vendor/trisycl/scope/platform.hpp"
 
@@ -72,6 +73,15 @@ public:
 
   /// The type of the scoped storage in the device
   using storage_type = DeviceStorage;
+
+  /// The device scope storage type
+  using device_scope_type = storage_type;
+
+  /// The platform type targeted by this queue
+  using platform_type = ScopedPlatform;
+
+  /// The platform scope storage type
+  using platform_scope_type = detail::storage_type_trait_t<platform_type>;
 
   /// True if there is some storage in the device
   static constexpr bool has_some_storage_p =

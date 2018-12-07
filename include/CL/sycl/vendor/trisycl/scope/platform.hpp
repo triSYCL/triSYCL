@@ -64,6 +64,9 @@ public:
   /// The type of the scoped storage in the platform
   using storage_type = PlatformStorage;
 
+  /// The platform scope storage type
+  using platform_scope_type = PlatformStorage;
+
   /// True if there is some storage in the platform
   static constexpr bool has_some_storage_p =
     not std::is_same_v<PlatformStorage, empty_platform_scope>;
