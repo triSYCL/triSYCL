@@ -41,7 +41,6 @@ int test_main(int argc, char *argv[]) {
     int global = 3;
   };
 
-
   // Some storage to be defined at the platform level
   struct some_platform_wide_content {
     int array[size];
@@ -71,29 +70,34 @@ int test_main(int argc, char *argv[]) {
        decltype(acap_platform)> { {} , acap_platform } };
 
 
+  // Launch a kernel on host
   host_q.submit([&] (auto &cgh) {
       auto ab = b.get_access<access::mode::discard_write>(cgh);
       cgh.template single_task<class producer>([=] (auto &kh) {
           for (int i = 0; i < size; ++i)
             ab[i] = i;
+          // Use the global variable from the device scope
           kh.device_scope().global++;
         });
     });
 
 
+  // Launch a kernel on AI engine
   ai_q.submit([&] (auto &cgh) {
       auto ab = b.get_access<access::mode::read>(cgh);
       cgh.template parallel_for<class inc>(range<1> { size },
                                            [=] (id<1> index, auto &kh) {
-           kh.platform_scope().array[index[0]] = ab[index[0]] + 1;
+          // Use the global array from the program scope
+          kh.platform_scope().array[index[0]] = ab[index[0]] + 1;
                                            });
     });
-  // Wait for the previous kernel before starting the next one
+  /* Wait for the previous kernel before starting the next one because
+     there is no accessor used for the synchronization here */
   ai_q.wait();
 
 
+  // Launch a kernel on FPGA
   fpga_q.submit([&] (auto &cgh) {
-      auto ab = b.get_access<access::mode::read_write>(cgh);
       cgh.template parallel_for<class consumer>(range<1> { size },
         [=] (id<1> index, auto &kh) {
           auto output = kh.platform_scope()
@@ -104,7 +108,11 @@ int test_main(int argc, char *argv[]) {
     });
 
 
+  // Check the various results from the host side
+
+  // Use a SYCL extension to access some device scope from the host
   BOOST_CHECK(host_q.device_scope().global == 4);
+  // Use a SYCL extension to access some platform scope from the host
   auto output = fpga_q.platform_scope().
     out.get_access<access::mode::read,
                    access::target::blocking_pipe>();
