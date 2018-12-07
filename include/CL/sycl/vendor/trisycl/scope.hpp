@@ -13,6 +13,12 @@
 #include <CL/sycl/vendor/trisycl/scope/platform.hpp>
 #include <CL/sycl/vendor/trisycl/scope/queue.hpp>
 
+/// This is an extension providing a conceptual API for devices, platforms...
+#define SYCL_VENDOR_TRISYCL_CONCEPTUAL_API 1
+
+/// This is an extension providing scope to devices & platforms
+#define SYCL_VENDOR_TRISYCL_SCOPE 1
+
 /*
     # Some Emacs stuff:
     ### Local Variables:

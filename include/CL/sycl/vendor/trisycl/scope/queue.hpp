@@ -81,10 +81,10 @@ public:
   using queue_scope_type = storage_type;
 
   /// The device scope storage type
-  using device_scope_type = typename device_type::device_scope_type;
+  using device_scope_type = detail::storage_type_trait_t<device_type>;
 
   /// The platform scope storage type
-  using platform_scope_type = typename platform_type::platform_storage_type;
+  using platform_scope_type = detail::storage_type_trait_t<platform_type>;
 
   /** Construct the queue with some queue-scoped storage on top
       of a SYCL queue
@@ -92,10 +92,8 @@ public:
       \param[in] q is the real queue to use
       \param[in] d is the a scoped device to use
   */
-  queue(const cl::sycl::queue &q, const Device &d) :
-    spi {
-      new detail::queue<QueueStorage, Device> { q, d }
-    } {}
+  queue(const cl::sycl::queue &q, const Device &d)
+    : spi { new detail::queue<Device, QueueStorage> { q, d } } {}
 
 
   /** Construct the queue with some queue-scoped storage on top
@@ -206,6 +204,13 @@ public:
           command_group<CG> cg { cgh_generic, get_device() };
           cgh(cg);
         });
+  }
+
+
+  /** Performs a blocking wait for the completion all enqueued tasks in
+      the queue */
+  void wait() {
+    implementation->get_underlying_queue().wait();
   }
 
 };

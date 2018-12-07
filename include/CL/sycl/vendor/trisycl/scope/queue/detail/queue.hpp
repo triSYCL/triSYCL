@@ -51,6 +51,17 @@ public:
   */
   queue(const cl::sycl::queue &q) : q { q } {}
 
+
+  /** Construct the queue with some queue-scoped storage on top
+      of a SYCL queue
+
+      \param[in] q is the real queue to use
+      \param[in] d is the a scoped device to use
+  */
+  queue(const cl::sycl::queue &q, const Device &d)
+    : q { q }, device_with_scope { d } {}
+
+
   /// Get the queue behind the curtain
   auto get_underlying_queue() {
     return q;
@@ -60,6 +71,12 @@ public:
   /// Access to the queue-scoped storage
   auto& get_storage() {
     return scope_storage;
+  }
+
+
+  /// Access to the underlying scoped device
+  auto& get_device() {
+    return device_with_scope;
   }
 
 };
