@@ -75,6 +75,11 @@ They are typically passed to the compiler by the build system.
   This typically requires to have ``BOOST_LOG_DYN_LINK`` defined and
   linked with ``boost_log`` and ``pthread`` libraries on Linux.
 
+``TRISYCL_USE_OPENCL_ND_RANGE``:
+
+  When defined it will make use of OpenCL's nd_range_kernel and builtins when
+  using parallel_for, currently a work in progress feature.
+
 ..
     # Some Emacs stuff:
     ### Local Variables:

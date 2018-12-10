@@ -24,6 +24,10 @@
 #include "CL/sycl/nd_range.hpp"
 #include "CL/sycl/range.hpp"
 
+#if defined(TRISYCL_USE_OPENCL_ND_RANGE)
+#include "CL/sycl/detail/SPIR/opencl_spir_helpers.hpp"
+#endif
+
 #ifdef _OPENMP
 #include <omp.h>
 #endif
@@ -182,12 +186,22 @@ void parallel_for(range<Dimensions> r,
     index type of the kernel function object f
 
 */
+#if !defined(TRISYCL_USE_OPENCL_ND_RANGE)
 template <int Dimensions = 1, typename ParallelForFunctor>
 void parallel_for(range<Dimensions> r, ParallelForFunctor f) {
   using mf_t  = decltype(std::mem_fn(&ParallelForFunctor::operator()));
   using arg_t = typename mf_t::second_argument_type;
   parallel_for(r,f,arg_t{});
 }
+#else
+template <int Dimensions = 1, typename ParallelForFunctor>
+void parallel_for(range<Dimensions> r, ParallelForFunctor f) {
+  using mf_t  = decltype(std::mem_fn(&ParallelForFunctor::operator()));
+  using arg_t = typename mf_t::second_argument_type;
+  auto index = sycl::detail::spir::create_parallel_for_arg<Dimensions>(arg_t{});
+  f(index);
+}
+#endif
 
 
 /** Implementation of parallel_for with a range<> and an offset */

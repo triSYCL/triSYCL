@@ -64,6 +64,10 @@ LDLIBS += -lboost_log -lpthread
 # or inlining that might duplicate the code too early
 CXXFLAGS_KERNEL = -fno-vectorize -fno-unroll-loops
 
+ifdef TRISYCL_USE_OPENCL_ND_RANGE
+OPTIONAL_ND_RANGE = -DTRISYCL_USE_OPENCL_ND_RANGE
+endif
+
 # Specify a target device, otherwise it defaults to xilinx_vcu1525_dynamic_5_1
 ifdef TARGET_DEVICE
 DEVICE_XOCC := $(TARGET_DEVICE)
@@ -317,25 +321,25 @@ execute: $(basename $(TARGET))
 
 # The LLVM assembly code for the code expected to call the kernels
 %.pre_kernel_caller.ll: %.cpp
-	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl \
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl $(OPTIONAL_ND_RANGE) \
 	  -emit-llvm -S -o $@ $<
 %.pre_kernel_caller.ll: %.C
-	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl \
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl $(OPTIONAL_ND_RANGE) \
 	  -emit-llvm -S -o $@ $<
 %.pre_kernel_caller.ll: %.cc
-	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl \
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl $(OPTIONAL_ND_RANGE) \
 	  -emit-llvm -S -o $@ $<
 
 # The LLVM assembly code for the code before kernels
 %.pre_kernel.ll: %.cpp
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_DEVICE -sycl -sycl-is-device \
-	  $(CXXFLAGS_KERNEL) -emit-llvm -S -o $@ $<
+	  $(OPTIONAL_ND_RANGE) $(CXXFLAGS_KERNEL) -emit-llvm -S -o $@ $<
 %.pre_kernel.ll: %.C
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_DEVICE -sycl -sycl-is-device \
-	  $(CXXFLAGS_KERNEL) -emit-llvm -S -o $@ $<
+	  $(OPTIONAL_ND_RANGE) $(CXXFLAGS_KERNEL) -emit-llvm -S -o $@ $<
 %.pre_kernel.ll: %.cc
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_DEVICE -sycl -sycl-is-device \
-	  $(CXXFLAGS_KERNEL) -emit-llvm -S -o $@ $<
+	  $(OPTIONAL_ND_RANGE) $(CXXFLAGS_KERNEL) -emit-llvm -S -o $@ $<
 
 # The Clang AST of the pre-kernel code
 %.pre_kernel.ast: %.cpp
@@ -349,17 +353,17 @@ execute: $(basename $(TARGET))
 	$(CL_CXX) -cc1 -emit-llvm-bc -triple spir64-unknown-unknown \
 	  -include $(triSYCL_DIR)/include/CL/sycl/detail/SPIR/opencl_spir.h -o $@ $<
 
+#  If the target is a Xilinx FPGA kernel, use the Xilinx compiler with
+#  the required extension for the SPIR input file
+ifdef XILINX_SDX
 # Process bitcode with SYCL passes to generate kernels
 %.kernel.bc: %.pre_kernel.ll
 	# To debug, think about using options like -debug -stats -print-after-all...
 	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so \
 	  -globalopt -deadargelim -SYCL-args-flattening -deadargelim \
-	  -SYCL-kernel-filter -globaldce -RELGCD -reqd-workgroup-size-1 -inSPIRation \
-	  -globaldce -o $@ $<
+		-SYCL-kernel-filter -globaldce -RELGCD -reqd-workgroup-size-1 -inSPIRation \
+		-globaldce -o $@ $<
 
-#  If the target is a Xilinx FPGA kernel, use the Xilinx compiler with
-#  the required extension for the SPIR input file
-ifdef XILINX_SDX
 %.kernel.xo: %.kernel.bc
 	cp -p $< $*.xpirbc
 	# TODO: deal with several kernels: -k TRISYCL_kernel_0 should be replaced
@@ -373,6 +377,17 @@ ifdef XILINX_SDX
 	xocc $(XOCCFLAGS) --target $(DEVICE_MODE) -l \
 	  -k TRISYCL_kernel_0 -o $@ $*.kernel.xo
 else
+# Process bitcode with SYCL passes to generate kernels
+# using -reqd-work_group_size with a nullary work-item
+# size will cause a cl runtime error, probably best to
+# leave it out for non-FPGA uses for the moment.
+%.kernel.bc: %.pre_kernel.ll
+	# To debug, think about using options like -debug -stats -print-after-all...
+	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so \
+	  -globalopt -deadargelim -SYCL-args-flattening -deadargelim \
+		-SYCL-kernel-filter -globaldce -RELGCD -inSPIRation \
+		-globaldce -o $@ $<
+
 # If the target is SPIR, just use the bitcode as the kernel binary
 %.kernel.bin: %.kernel.bc
 	cp -p $< $@

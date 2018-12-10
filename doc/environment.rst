@@ -2,12 +2,22 @@
  Environment variables with triSYCL
 ====================================
 
-triSYCL is not directly using environment variables but uses some
-libraries that do.
+triSYCL currently has one optional environment variable to turn on a work in
+progress feature. triSYCL also makes use of some libraries that have their own
+environment variables that can effect the build process. 
 
 Of course the generic environment variables of the operating system
 have impacts on the execution, for example by selecting the right
 dynamic libraries and so on.
+
+triSYCL Variables
+=================
+
+``TRISYCL_USE_OPENCL_ND_RANGE``
+  When set to ``"1"`` the triSYCL Makefile will add the definition
+  ``"TRISYCL_USE_OPENCL_ND_RANGE`` to the appropriate compile steps to allow
+  execution of nd_range_kernel's in OpenCL. This should be used in conjunction
+  with the other triSYCL OpenCL environment variables.
 
 Boost.Compute
 =============
