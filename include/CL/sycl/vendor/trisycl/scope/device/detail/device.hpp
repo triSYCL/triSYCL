@@ -34,7 +34,7 @@ class device {
   /** The device-scoped storage default-initialized
 
       \todo For now it is allocated on the host in this CPU emulation
-      but a devils compiler and run time can create this on a real
+      but a device compiler and runtime can create this on a real
       device
   */
   DeviceStorage scope_storage;
