@@ -207,7 +207,7 @@ T dot(vec<T, size> p0, vec<T, size> p1) {
 // Returns fmin(fmax(x, minval), maxval). Results are undefined if
 // minval > maxval.
 // \todo Currently this clamp requires all values to be derived from the same
-// base type, a better implementation would be to make the vector clamp a
+// type T. A better implementation would be to make the vector clamp a
 // specialization of the 1d clamp and perhaps use a Using clamp = clamp_impl
 // type interface. Alternatively restriction from the more generic template
 // could be done using a type_trait and a typename T2 could be added
