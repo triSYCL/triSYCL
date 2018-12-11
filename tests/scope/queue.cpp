@@ -98,12 +98,12 @@ int test_main(int argc, char *argv[]) {
 
   // Launch a kernel on FPGA
   fpga_q.submit([&] (auto &cgh) {
-      cgh.template parallel_for<class consumer>(range<1> { size },
-        [=] (id<1> index, auto &kh) {
+      cgh.template single_task<class consumer>([=] (auto &kh) {
           auto output = kh.platform_scope()
             .out.template get_access<access::mode::write,
                                      access::target::blocking_pipe>();
-          output << kh.platform_scope().array[index[0]];
+          for (int i = 0; i < size; ++i)
+            output << kh.platform_scope().array[i];
         });
     });
 
