@@ -265,9 +265,9 @@ public:
             typename ParallelForFunctor>                                \
   void parallel_for(range<N> global_size,                               \
                     ParallelForFunctor f) {                             \
-  schedule_parallel_for_kernel<KernelName>([=] {                        \
+    schedule_parallel_for_kernel<KernelName>([=] {                      \
         detail::parallel_for(global_size, f);                           \
-      }, global_size);                                                  \
+     }, global_size);                                                   \
   }
 #else
   #define TRISYCL_parallel_for_functor_GLOBAL(N)                        \
@@ -275,9 +275,9 @@ public:
             typename ParallelForFunctor>                                \
   void parallel_for(range<N> global_size,                               \
                     ParallelForFunctor f) {                             \
-      schedule_kernel<KernelName>([=] {                                 \
+    schedule_kernel<KernelName>([=] {                                   \
         detail::parallel_for(global_size, f);                           \
-      });                                                               \
+     });                                                                \
   }
 #endif
 
