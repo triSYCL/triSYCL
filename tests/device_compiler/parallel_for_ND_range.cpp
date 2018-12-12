@@ -12,10 +12,6 @@
 */
 using namespace cl::sycl;
 
-// size_t const __attribute__((overloadable)) get_global_id(unsigned int dimindx) {
-//     return dimindx + 10;
-// }
-
 template <int Dimensions, class kernel_name>
 void gen_nd_range(range<Dimensions> k_range) {
   queue my_queue{default_selector{}};
