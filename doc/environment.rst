@@ -16,8 +16,8 @@ triSYCL Variables
 ``TRISYCL_USE_OPENCL_ND_RANGE``
   When set to ``"1"`` the triSYCL Makefile will add the definition
   ``"TRISYCL_USE_OPENCL_ND_RANGE`` to the appropriate compile steps to allow
-  execution of nd_range_kernel's in OpenCL. This should be used in conjunction
-  with the other triSYCL OpenCL environment variables.
+  the execution of ``parallel_for`` kernels using OpenCL's ND-range. This should
+  be used in conjunction with the other triSYCL OpenCL environment variables.
 
 Boost.Compute
 =============

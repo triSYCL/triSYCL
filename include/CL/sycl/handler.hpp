@@ -185,9 +185,9 @@ private:
         }));
   }
 
-  /** Schedule a parralel for kernel
+  /** Schedule a parallel for kernel
 
-      \todo Host side schedule_parallel_for_kernel
+      \todo Add host fall-back execution for parallel_for_kernel
 
       Add a traced version of the kernel in host mode or add the
       kernel in an instantiating function for later extraction by the

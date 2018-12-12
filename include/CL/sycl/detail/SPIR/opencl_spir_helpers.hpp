@@ -8,7 +8,7 @@
     \todo implement group and nd_item and to add nd_item to
       create_parallel_for_arg
 
-    Ronan at keryell dot FR
+    andrew point gozillon at yahoo point com
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
@@ -30,71 +30,22 @@
 
 namespace cl::sycl::detail::spir {
 
-enum class spir_gen_type {
-  LOCAL=0,
-  GLOBAL=1,
-  OFFSET=2
-};
+template <typename T,  typename F>
+auto fill_id_or_range(F fill_func) {
+  T id_or_range {};
 
-template <int Dimensions, spir_gen_type gen_type>
-id<Dimensions> gen_spir_id() {
-  id<Dimensions> id;
+  for (size_t i = 0; i < id_or_range.dimensionality; ++i)
+    id_or_range[i] = fill_func(i);
 
-  for (size_t i = 0; i < Dimensions; ++i)
-    if constexpr (gen_type == spir_gen_type::LOCAL)
-      id[i] = get_local_id(i);
-    else if constexpr (gen_type == spir_gen_type::GLOBAL)
-      id[i] = get_global_id(i);
-    else if constexpr (gen_type == spir_gen_type::OFFSET)
-      id[i] = get_global_offset(i);
-
-  return id;
-}
-
-template <int Dimensions, spir_gen_type gen_type>
-range<Dimensions> gen_spir_range() {
-  static_assert(gen_type != spir_gen_type::OFFSET, "spir_gen_type offset "
-    "specified for gen_spir_range, no valid spir intrinsic");
-
-  range<Dimensions> range;
-
-  for (size_t i = 0; i < Dimensions; ++i)
-    if constexpr (gen_type == spir_gen_type::LOCAL)
-      range[i] = get_local_size(i);
-    else if constexpr (gen_type == spir_gen_type::GLOBAL)
-      range[i] = get_global_size(i);
-
-  return range;
-}
-
-// The Local Implementation is not required at the moment, parallel_for only
-// allows items to query at a global level
-template <int Dimensions, spir_gen_type gen_type>
-item<Dimensions> gen_spir_item() {
-  static_assert(gen_type != spir_gen_type::OFFSET, "spir_gen_type offset "
-    "specified for gen_spir_item, no valid intrinsic combination");
-
-  if constexpr (gen_type == spir_gen_type::LOCAL) {
-    return item<Dimensions>{
-            gen_spir_range<Dimensions, spir_gen_type::LOCAL>(),
-            gen_spir_id<Dimensions,    spir_gen_type::LOCAL>(),
-            gen_spir_id<Dimensions,    spir_gen_type::OFFSET>()
-          };
-  } else if constexpr (gen_type == spir_gen_type::GLOBAL) {
-    return item<Dimensions>{
-            gen_spir_range<Dimensions, spir_gen_type::GLOBAL>(),
-            gen_spir_id<Dimensions,    spir_gen_type::GLOBAL>(),
-            gen_spir_id<Dimensions,    spir_gen_type::OFFSET>()
-          };
-  }
+  return id_or_range;
 }
 
 template <int Dimensions>
 nd_range<Dimensions> gen_spir_nd_range() {
-  return nd_range<Dimensions>{
-    gen_spir_range<Dimensions, spir_gen_type::GLOBAL>(),
-    gen_spir_range<Dimensions, spir_gen_type::LOCAL>(),
-    gen_spir_id<Dimensions, spir_gen_type::OFFSET>()
+  return nd_range<Dimensions> {
+    fill_id_or_range<range<Dimensions>>(get_global_size),
+    fill_id_or_range<range<Dimensions>>(get_local_size),
+    fill_id_or_range<id<Dimensions>>(get_global_offset)
   };
 }
 
@@ -103,8 +54,8 @@ nd_range<Dimensions> gen_spir_nd_range() {
 
 template <int Dimensions>
 h_item<Dimensions> gen_spir_h_item() {
-  return h_item<Dimensions>{
-    gen_spir_id<Dimensions, spir_gen_type::GLOBAL>(),
+  return h_item<Dimensions> {
+    fill_id_or_range<id<Dimensions>>(get_global_offset),
     gen_spir_nd_range<Dimensions>()
   };
 }
@@ -113,21 +64,22 @@ h_item<Dimensions> gen_spir_h_item() {
 // template <int Dimensions>
 // group<Dimensions> gen_spir_group() {}
 
-// Forwards an index type onto a generator function on the device.
+// Uses a passed in index or range to identify the required index or range type
+// to generate
 template <int Dimensions, typename Index_T>
-auto create_parallel_for_arg(Index_T index) {
+auto create_parallel_for_arg(Index_T index_or_range) {
   if constexpr (std::is_same_v<Index_T, id<Dimensions>>) {
-    index = gen_spir_id<Dimensions, spir_gen_type::GLOBAL>();
+    index_or_range = fill_id_or_range<Index_T>(get_global_id);
+  } else if constexpr (std::is_same_v<Index_T, item<Dimensions>>) {
+    // Item's do not contain local information in parallel_for
+    index_or_range = Index_T {
+      fill_id_or_range<range<Dimensions>>(get_global_size),
+      fill_id_or_range<id<Dimensions>>(get_global_id),
+      fill_id_or_range<id<Dimensions>>(get_global_offset)
+    };
   }
 
-  if constexpr (std::is_same_v<Index_T, item<Dimensions>>) {
-    index = gen_spir_item<Dimensions, spir_gen_type::GLOBAL>();
-  }
-
-  // To be implemented apon gen_spir_nd_item implementation
-  // if constexpr (std::is_same_v<Index_T, nd_item<dimensions>>) {}
-
-  return index;
+  return index_or_range;
 }
 
 /// @} End the parallelism Doxygen group

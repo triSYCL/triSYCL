@@ -1,3 +1,6 @@
+#ifndef TRISYCL_SYCL_DETAIL_SPIR_OPENCL_SPIR_REQ_H
+#define TRISYCL_SYCL_DETAIL_SPIR_OPENCL_SPIR_REQ_H
+
 /** \file This file is a temporary work around for integrating OpenCL builtins
     and intrinsics into triSYCL, it adds only what is needed from opencl_spir.h
     for the .cpp to .ll pre-kernel device compilation step.
@@ -9,7 +12,7 @@
     the Clang/LLVM device compiler to include the OpenCL specific types and
     related processing when -sycl is used (or -sycl-is-device?)
 
-    Ronan at Keryell point FR
+    andrew point gozillon at yahoo point com
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
@@ -38,34 +41,9 @@
 // The compiler doesn't know about size_t outside of the std namespace
 // is it better to define size_t as the std implementation or as our
 // own using size_t = closest_to_opencl_type?
-
-// The unsigned integer type of the result of the sizeof operator.
-// This is a 32-bit unsigned integer if CL_DEVICE_ADDRESS_BITS defined
-// in clGetDeviceInfo is 32-bits and is a 64-bit unsigned integer if
-// CL_DEVICE_ADDRESS_BITS is 64-bits.
 #include <cstddef>
 using namespace std;
-// typedef unsigned long size_t;
 
-/**
- * An unsigned 8-bit integer.
- */
-typedef unsigned char uchar;
-
-/**
- * An unsigned 16-bit integer.
- */
-typedef unsigned short ushort;
-
-/**
- * An unsigned 32-bit integer.
- */
-typedef unsigned int uint;
-
-/**
- * An unsigned 64-bit integer.
- */
-typedef unsigned long ulong;
 
 /**
  * Returns the unique local work-item ID i.e. a work-item
@@ -75,7 +53,8 @@ typedef unsigned long ulong;
  * get_local_id() returns 0.
  * For clEnqueueTask, this returns 0.
  */
-size_t const_func __attribute__((overloadable)) get_local_id(uint dimindx);
+size_t const_func __attribute__((overloadable))
+  get_local_id(unsigned int dimindx);
 
 /**
  * Returns the unique global work-item ID value for
@@ -86,7 +65,8 @@ size_t const_func __attribute__((overloadable)) get_local_id(uint dimindx);
  * other values of dimindx, get_global_id() returns 0.
  * For clEnqueueTask, this returns 0.
  */
-size_t const_func __attribute__((overloadable)) get_global_id(uint dimindx);
+size_t const_func __attribute__((overloadable))
+  get_global_id(unsigned int dimindx);
 
 /**
  * Returns the number of global work-items specified for
@@ -97,7 +77,8 @@ size_t const_func __attribute__((overloadable)) get_global_id(uint dimindx);
  * dimindx, get_global_size() returns 1.
  * For clEnqueueTask, this always returns 1.
  */
-size_t const_func __attribute__((overloadable)) get_global_size(uint dimindx);
+size_t const_func __attribute__((overloadable))
+  get_global_size(unsigned int dimindx);
 
 /**
  * Returns the number of local work-items specified in
@@ -111,7 +92,8 @@ size_t const_func __attribute__((overloadable)) get_global_size(uint dimindx);
  * get_local_size() returns 1.
  * For clEnqueueTask, this always returns 1.
  */
-size_t const_func __attribute__((overloadable)) get_local_size(uint dimindx);
+size_t const_func __attribute__((overloadable))
+  get_local_size(unsigned int dimindx);
 
 /**
  * Returns the number of work-groups that will execute a
@@ -121,7 +103,8 @@ size_t const_func __attribute__((overloadable)) get_local_size(uint dimindx);
  * 1.
  * For clEnqueueTask, this always returns 1.
  */
-size_t const_func __attribute__((overloadable)) get_num_groups(uint dimindx);
+size_t const_func __attribute__((overloadable))
+  get_num_groups(unsigned int dimindx);
 
 /**
  * get_group_id returns the work-group ID which is a
@@ -130,7 +113,8 @@ size_t const_func __attribute__((overloadable)) get_num_groups(uint dimindx);
  * For other values, get_group_id() returns 0.
  * For clEnqueueTask, this returns 0.
  */
-size_t const_func __attribute__((overloadable)) get_group_id(uint dimindx);
+size_t const_func __attribute__((overloadable))
+  get_group_id(unsigned int dimindx);
 
 /**
  * get_global_offset returns the offset values specified in
@@ -140,7 +124,10 @@ size_t const_func __attribute__((overloadable)) get_group_id(uint dimindx);
  * For other values, get_global_offset() returns 0.
  * For clEnqueueTask, this returns 0.
  */
-size_t const_func __attribute__((overloadable)) get_global_offset(uint dimindx);
+size_t const_func __attribute__((overloadable))
+  get_global_offset(unsigned int dimindx);
 
 // Doesn't appear to work on device at the moment
 int printf(__constant const char* st, ...);
+
+#endif // TRISYCL_SYCL_DETAIL_SPIR_OPENCL_SPIR_REQ_H

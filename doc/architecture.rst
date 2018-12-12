@@ -263,8 +263,9 @@ Set up the environment::
   export BOOST_COMPUTE_DEFAULT_PLATFORM='Portable Computing Language'
   # Do not use another OpenCL stack if the one requested is not available
   export BOOST_COMPUTE_DEFAULT_ENFORCE=1
-  # OPTIONAL: used by the tests Makefile and tells triSYCL to queue kernels
-  # using OpenCL nd_range_kernel when parallel_for is used
+  # OPTIONAL: Used by the tests Makefile and tells triSYCL to queue kernels
+  # using OpenCL nd_range_kernel when parallel_for is used. Rather than queuing
+  # a single work-item task and looping over the range inside of the work-item.
   export TRISYCL_USE_OPENCL_ND_RANGE=1
 
 Compile and execute a small example::

@@ -65,30 +65,32 @@ LDLIBS += -lboost_log -lpthread
 CXXFLAGS_KERNEL = -fno-vectorize -fno-unroll-loops
 
 ifdef TRISYCL_USE_OPENCL_ND_RANGE
-OPTIONAL_ND_RANGE = -DTRISYCL_USE_OPENCL_ND_RANGE
+  OPTIONAL_ND_RANGE = -DTRISYCL_USE_OPENCL_ND_RANGE
 endif
 
 # Specify a target device, otherwise it defaults to xilinx_vcu1525_dynamic_5_1
 ifdef TARGET_DEVICE
-DEVICE_XOCC := $(TARGET_DEVICE)
+  DEVICE_XOCC := $(TARGET_DEVICE)
 else
-DEVICE_XOCC := xilinx_vcu1525_dynamic_5_1
+  DEVICE_XOCC := xilinx_vcu1525_dynamic_5_1
 endif
 
 # Defaults to look for existing installed hardware, otherwise it will check for
 # a defined emulation mode (XCL_EMULATION_MODE is also used by emconfigutil and
 # the SDAccel examples)
 ifdef XCL_EMULATION_MODE
-DEVICE_MODE := $(XCL_EMULATION_MODE)
+  DEVICE_MODE := $(XCL_EMULATION_MODE)
 else
-DEVICE_MODE := hw
+  DEVICE_MODE := hw
 endif
 
-# When XILINX_SDX environment variable is set, use the Xilinx SDx
-# OpenCL compiler with these flags:
-# Adapt to the real platform
+# When XILINX_SDX environment variable is set, use the Xilinx SDx OpenCL
+# compiler with these XOCC specific flags. As well as add xilinx FPGA specific
+# optimization passes.
 ifdef XILINX_SDX
-XOCCFLAGS = --platform $(DEVICE_XOCC) --save-temps
+  XOCCFLAGS = --platform $(DEVICE_XOCC) --save-temps
+
+  XILINX_SPECIFIC_PASS = -reqd-workgroup-size-1
 endif
 # xocc parameter to specify C++ version
 XOCCCPPPARAM=--xp prop:kernel.vector_add.kernel_flags=-std=c++0x
@@ -165,8 +167,6 @@ CXXFLAGS += -Wall -Wno-ignored-attributes -std=c++1z -I$(triSYCL_DIR)/include \
 ifdef XILINX_SDX
   CXXFLAGS += -I$(XILINX_SDX)/Vivado_HLS/include \
 		-I$(XILINX_PATH)/Vivado_HLS/common/technology/autopilot
-#  XOCCFLAGS += -I$(XILINX_PATH)/Vivado_HLS/common/technology/autopilot \
-#		-I$(XILINX_PATH)/Vivado_HLS/include
 endif
 
 # Specify where OpenCL includes files are with OpenCL_INCPATH
@@ -353,17 +353,17 @@ execute: $(basename $(TARGET))
 	$(CL_CXX) -cc1 -emit-llvm-bc -triple spir64-unknown-unknown \
 	  -include $(triSYCL_DIR)/include/CL/sycl/detail/SPIR/opencl_spir.h -o $@ $<
 
-#  If the target is a Xilinx FPGA kernel, use the Xilinx compiler with
-#  the required extension for the SPIR input file
-ifdef XILINX_SDX
 # Process bitcode with SYCL passes to generate kernels
 %.kernel.bc: %.pre_kernel.ll
 	# To debug, think about using options like -debug -stats -print-after-all...
 	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so \
 	  -globalopt -deadargelim -SYCL-args-flattening -deadargelim \
-		-SYCL-kernel-filter -globaldce -RELGCD -reqd-workgroup-size-1 -inSPIRation \
-		-globaldce -o $@ $<
+		-SYCL-kernel-filter -globaldce -RELGCD $(XILINX_SPECIFIC_PASS) \
+		-inSPIRation -globaldce -o $@ $<
 
+#  If the target is a Xilinx FPGA kernel, use the Xilinx compiler with
+#  the required extension for the SPIR input file
+ifdef XILINX_SDX
 %.kernel.xo: %.kernel.bc
 	cp -p $< $*.xpirbc
 	# TODO: deal with several kernels: -k TRISYCL_kernel_0 should be replaced
@@ -377,17 +377,6 @@ ifdef XILINX_SDX
 	xocc $(XOCCFLAGS) --target $(DEVICE_MODE) -l \
 	  -k TRISYCL_kernel_0 -o $@ $*.kernel.xo
 else
-# Process bitcode with SYCL passes to generate kernels
-# using -reqd-work_group_size with a nullary work-item
-# size will cause a cl runtime error, probably best to
-# leave it out for non-FPGA uses for the moment.
-%.kernel.bc: %.pre_kernel.ll
-	# To debug, think about using options like -debug -stats -print-after-all...
-	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so \
-	  -globalopt -deadargelim -SYCL-args-flattening -deadargelim \
-		-SYCL-kernel-filter -globaldce -RELGCD -inSPIRation \
-		-globaldce -o $@ $<
-
 # If the target is SPIR, just use the bitcode as the kernel binary
 %.kernel.bin: %.kernel.bc
 	cp -p $< $@
@@ -403,7 +392,7 @@ endif
 	# To debug, think about using options like -debug -stats -print-after-all...
 	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so \
 	  -globalopt -deadargelim -SYCL-args-flattening -loop-idiom -deadargelim \
-	  -SYCL-serialize-arguments -deadargelim -o $@ $<
+		-SYCL-serialize-arguments -deadargelim -o $@ $<
 
 # Construct the object file of the kernel caller from the target assembly
 # Rely on the default Make built-in rules for now
