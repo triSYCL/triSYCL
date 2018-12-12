@@ -88,7 +88,7 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
                   fresh_ctx { cl::sycl::context {} } {}
 
 
-  /// The destructor wait for not being used anymore
+  /// The destructor waits for not being used anymore
   ~buffer_base() {
     wait();
     // If there is the last SYCL user buffer waiting, notify it
