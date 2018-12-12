@@ -30,53 +30,60 @@
 
 namespace cl::sycl::detail::spir {
 
+// Fills the small_array_123 of the type passed to it up to the dimensionality
+// of the type T (T generally intended to be a sycl id or range, but can be
+// anything with a dimensionality variable defined and a subscript operator)
 template <typename T,  typename F>
-auto fill_id_or_range(F fill_func) {
+auto make_array_with_func(F binary_func) {
   T id_or_range {};
 
   for (size_t i = 0; i < id_or_range.dimensionality; ++i)
-    id_or_range[i] = fill_func(i);
+    id_or_range[i] = binary_func(i);
 
   return id_or_range;
 }
 
 template <int Dimensions>
-nd_range<Dimensions> gen_spir_nd_range() {
+nd_range<Dimensions> make_spir_nd_range() {
   return nd_range<Dimensions> {
-    fill_id_or_range<range<Dimensions>>(get_global_size),
-    fill_id_or_range<range<Dimensions>>(get_local_size),
-    fill_id_or_range<id<Dimensions>>(get_global_offset)
+    make_array_with_func<range<Dimensions>>(get_global_size),
+    make_array_with_func<range<Dimensions>>(get_local_size),
+    make_array_with_func<id<Dimensions>>(get_global_offset)
   };
 }
 
 // template <int Dimensions>
-// nd_item<Dimensions> gen_spir_nd_item() {}
+// nd_item<Dimensions> make_spir_nd_item() {}
 
 template <int Dimensions>
-h_item<Dimensions> gen_spir_h_item() {
+h_item<Dimensions> make_spir_h_item() {
   return h_item<Dimensions> {
-    fill_id_or_range<id<Dimensions>>(get_global_offset),
-    gen_spir_nd_range<Dimensions>()
+    make_array_with_func<id<Dimensions>>(get_global_offset),
+    make_spir_nd_range<Dimensions>()
   };
 }
 
 // group
 // template <int Dimensions>
-// group<Dimensions> gen_spir_group() {}
+// group<Dimensions> make_spir_group() {}
 
 // Uses a passed in index or range to identify the required index or range type
 // to generate
 template <int Dimensions, typename Index_T>
 auto create_parallel_for_arg(Index_T index_or_range) {
   if constexpr (std::is_same_v<Index_T, id<Dimensions>>) {
-    index_or_range = fill_id_or_range<Index_T>(get_global_id);
+    index_or_range = make_array_with_func<Index_T>(get_global_id);
   } else if constexpr (std::is_same_v<Index_T, item<Dimensions>>) {
     // Item's do not contain local information in parallel_for
     index_or_range = Index_T {
-      fill_id_or_range<range<Dimensions>>(get_global_size),
-      fill_id_or_range<id<Dimensions>>(get_global_id),
-      fill_id_or_range<id<Dimensions>>(get_global_offset)
+      make_array_with_func<range<Dimensions>>(get_global_size),
+      make_array_with_func<id<Dimensions>>(get_global_id),
+      make_array_with_func<id<Dimensions>>(get_global_offset)
     };
+  } else {
+    static_assert(std::is_same_v<Index_T, item<Dimensions>> ||
+                  std::is_same_v<Index_T, item<Dimensions>>,
+                  "undefined Index_T passed to create_parallel_for_arg");
   }
 
   return index_or_range;

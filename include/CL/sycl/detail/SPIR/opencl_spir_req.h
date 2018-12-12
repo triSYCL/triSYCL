@@ -8,15 +8,26 @@
     This avoids the need to modify the compiler to include types not normally
     supported without the OpenCL flags active (half, clk_event_t etc.).
 
+    The intrinsics and components from this file are based on the opencl_spir.h
+    file of the Khronos Group SPIR-Tools repository with some minor
+    modifications: https://github.com/KhronosGroup/SPIR-Tools
+
     \todo Rather than have this file to work around OpenCL specific types modify
     the Clang/LLVM device compiler to include the OpenCL specific types and
     related processing when -sycl is used (or -sycl-is-device?)
+    \todo OR rather than the above use the sycl specfic CL types in here instead
+    e.g. cl::sycl::cl_uint in place of unsigned int.
 
     andrew point gozillon at yahoo point com
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
 */
+
+// The compiler doesn't know about size_t outside of the std namespace
+// is it better to define size_t as the std implementation or as our
+// own using size_t = closest_to_opencl_type?
+#include <cstddef>
 
 /// Added according to pocl/examples/example1-spir64/generate_spir.sh
 /// \todo avoid this hack
@@ -36,15 +47,6 @@
 #define const_func __attribute__((const))
 #define readonly __attribute__((pure))
 
-// built-in scalar data types:
-
-// The compiler doesn't know about size_t outside of the std namespace
-// is it better to define size_t as the std implementation or as our
-// own using size_t = closest_to_opencl_type?
-#include <cstddef>
-using namespace std;
-
-
 /**
  * Returns the unique local work-item ID i.e. a work-item
  * within a specific work-group for dimension identified by
@@ -53,7 +55,7 @@ using namespace std;
  * get_local_id() returns 0.
  * For clEnqueueTask, this returns 0.
  */
-size_t const_func __attribute__((overloadable))
+std::size_t const_func __attribute__((overloadable))
   get_local_id(unsigned int dimindx);
 
 /**
@@ -65,7 +67,7 @@ size_t const_func __attribute__((overloadable))
  * other values of dimindx, get_global_id() returns 0.
  * For clEnqueueTask, this returns 0.
  */
-size_t const_func __attribute__((overloadable))
+std::size_t const_func __attribute__((overloadable))
   get_global_id(unsigned int dimindx);
 
 /**
@@ -77,7 +79,7 @@ size_t const_func __attribute__((overloadable))
  * dimindx, get_global_size() returns 1.
  * For clEnqueueTask, this always returns 1.
  */
-size_t const_func __attribute__((overloadable))
+std::size_t const_func __attribute__((overloadable))
   get_global_size(unsigned int dimindx);
 
 /**
@@ -92,7 +94,7 @@ size_t const_func __attribute__((overloadable))
  * get_local_size() returns 1.
  * For clEnqueueTask, this always returns 1.
  */
-size_t const_func __attribute__((overloadable))
+std::size_t const_func __attribute__((overloadable))
   get_local_size(unsigned int dimindx);
 
 /**
@@ -103,7 +105,7 @@ size_t const_func __attribute__((overloadable))
  * 1.
  * For clEnqueueTask, this always returns 1.
  */
-size_t const_func __attribute__((overloadable))
+std::size_t const_func __attribute__((overloadable))
   get_num_groups(unsigned int dimindx);
 
 /**
@@ -113,7 +115,7 @@ size_t const_func __attribute__((overloadable))
  * For other values, get_group_id() returns 0.
  * For clEnqueueTask, this returns 0.
  */
-size_t const_func __attribute__((overloadable))
+std::size_t const_func __attribute__((overloadable))
   get_group_id(unsigned int dimindx);
 
 /**
@@ -124,7 +126,7 @@ size_t const_func __attribute__((overloadable))
  * For other values, get_global_offset() returns 0.
  * For clEnqueueTask, this returns 0.
  */
-size_t const_func __attribute__((overloadable))
+std::size_t const_func __attribute__((overloadable))
   get_global_offset(unsigned int dimindx);
 
 // Doesn't appear to work on device at the moment
