@@ -17,6 +17,7 @@
 #include "cascade_stream.hpp"
 #include "geography.hpp"
 #include "memory.hpp"
+#include "shim_tile.hpp"
 #include "tile.hpp"
 
 namespace cl::sycl::vendor::xilinx::acap::me {
@@ -64,6 +65,9 @@ struct array {
   decltype(geo::template generate_tiles<tileable_tile>()) tiles =
     geo::template generate_tiles<tileable_tile>();
 
+  /// The shim adapter on the South of the AI array
+  /// \todo use an homogeneous array for now
+  shim_tile shim[geo::x_size];
 
   /// Get a memory module by its linear id
   template <int LinearId>
