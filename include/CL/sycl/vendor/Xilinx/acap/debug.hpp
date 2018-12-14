@@ -10,7 +10,8 @@
 #include <algorithm>
 #include <array>
 #include <atomic>
-#include <mdspan>
+
+#include <experimental/mdspan>
 
 namespace cl::sycl::vendor::xilinx::acap::debug {
 

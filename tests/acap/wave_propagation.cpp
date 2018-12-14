@@ -17,22 +17,24 @@
 #include <initializer_list>
 #include <iostream>
 
-#include <mdspan>
+#include <experimental/mdspan>
 
+#include <CL/sycl.hpp>
+
+// Some headers used when debugging
 #include <chrono>
 #include <thread>
 using namespace std::chrono_literals;
 
 #include <boost/thread.hpp>
 
-#include <CL/sycl.hpp>
 
 using namespace cl::sycl::vendor::xilinx;
 namespace fundamentals_v3 = std::experimental::fundamentals_v3;
 
 // The size of the machine to use
 using layout = acap::me::layout::size<5,4>;
-//using layout = acap::me::layout::size<8,1>;
+//using layout = acap::me::layout::size<33,12>;
 using geography = acap::me::geography<layout>;
 boost::barrier b1 { geography::size };
 boost::barrier b2 { geography::size };

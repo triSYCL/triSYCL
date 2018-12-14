@@ -28,11 +28,12 @@
 #include <cstddef>
 #include <functional>
 #include <future>
-#include <mdspan>
 #include <memory>
 #include <mutex>
 #include <sstream>
 #include <thread>
+
+#include <experimental/mdspan>
 
 #include <gtkmm.h>
 
