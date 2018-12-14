@@ -358,8 +358,8 @@ execute: $(basename $(TARGET))
 	# To debug, think about using options like -debug -stats -print-after-all...
 	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so \
 	  -globalopt -deadargelim -SYCL-args-flattening -deadargelim \
-		-SYCL-kernel-filter -globaldce -RELGCD $(XILINX_SPECIFIC_PASS) \
-		-inSPIRation -globaldce -o $@ $<
+	  -SYCL-kernel-filter -globaldce -RELGCD $(XILINX_SPECIFIC_PASS) \
+	  -inSPIRation -globaldce -o $@ $<
 
 #  If the target is a Xilinx FPGA kernel, use the Xilinx compiler with
 #  the required extension for the SPIR input file
@@ -392,7 +392,7 @@ endif
 	# To debug, think about using options like -debug -stats -print-after-all...
 	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so \
 	  -globalopt -deadargelim -SYCL-args-flattening -loop-idiom -deadargelim \
-		-SYCL-serialize-arguments -deadargelim -o $@ $<
+	  -SYCL-serialize-arguments -deadargelim -o $@ $<
 
 # Construct the object file of the kernel caller from the target assembly
 # Rely on the default Make built-in rules for now

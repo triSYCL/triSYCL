@@ -34,11 +34,11 @@ namespace cl::sycl::detail::spir {
 // of the type T (T generally intended to be a sycl id or range, but can be
 // anything with a dimensionality variable defined and a subscript operator)
 template <typename T,  typename F>
-auto make_array_with_func(F binary_func) {
+auto make_array_with_func(F unary_func) {
   T id_or_range {};
 
   for (size_t i = 0; i < id_or_range.dimensionality; ++i)
-    id_or_range[i] = binary_func(i);
+    id_or_range[i] = unary_func(i);
 
   return id_or_range;
 }
@@ -82,7 +82,7 @@ auto create_parallel_for_arg(Index_T index_or_range) {
     };
   } else {
     static_assert(std::is_same_v<Index_T, item<Dimensions>> ||
-                  std::is_same_v<Index_T, item<Dimensions>>,
+                  std::is_same_v<Index_T, id<Dimensions>>,
                   "undefined Index_T passed to create_parallel_for_arg");
   }
 
