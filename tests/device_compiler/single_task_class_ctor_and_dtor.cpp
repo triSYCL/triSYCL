@@ -35,7 +35,7 @@ public:
   Index_Member_Data() : g(0) {}
   ~Index_Member_Data() {}
 
-  auto get_g() { return g; }
+  auto get_g() const { return g; }
   void set_g(std::size_t g_) { g = g_; }
 };
 
@@ -60,7 +60,7 @@ int test_main(int argc, char *argv[]) {
       idm_inner.set_g(10);
 
       cgh.single_task<class ctor_dtor>(
-        [&, d_a = drt::accessor<decltype(acc)>{acc}] {
+        [=, d_a = drt::accessor<decltype(acc)>{acc}] {
             for (unsigned int i = 0 ; i < N; ++i) {
               Index_Data id;
               id.g = i + idm_inner.get_g() + idm_outer.get_g();

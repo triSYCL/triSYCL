@@ -27,7 +27,6 @@ public:
 
   std::size_t g;
   std::size_t r;
-
 };
 
 class Index_Member_Data {
@@ -35,12 +34,11 @@ class Index_Member_Data {
   std::size_t r;
 
 public:
-
   Index_Member_Data() : g(0), r(0) {};
   ~Index_Member_Data() {};
 
-  auto get_g() { return g; }
-  auto get_r() { return r; }
+  auto get_g() const { return g; }
+  auto get_r() const { return r; }
   void set_g(std::size_t g_) { g = g_; }
   void set_r(std::size_t r_) { r = r_; }
 };
@@ -67,7 +65,7 @@ int test_main(int argc, char *argv[]) {
     idm_inner.set_r(10);
 
     cgh.parallel_for<class ctor_dtor>(
-        range<1>{N}, [&, d_a = drt::accessor<decltype(acc)>{acc}](item<1> index) {
+        range<1>{N}, [=, d_a = drt::accessor<decltype(acc)>{acc}](item<1> index) {
            Index_Data id;
            id.g = index.get_id(0) + idm_inner.get_g() + idm_outer.get_g();
            id.r = index.get_range()[0]  + idm_inner.get_r() + idm_outer.get_r();
