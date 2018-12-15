@@ -28,11 +28,11 @@ int test_main(int argc, char *argv[]) {
   acap::me::array<acap::me::layout::full, tile_program> a;
   a.run();
 
-  auto input = a.shim[0].axi_ss.south_input[0]
-    .get_access<access::mode::write, access::target::blocking_pipe>();
+  auto input = a.shim[0].axi_ss
+    .input(acap::me::axi_stream_switch::shim_axi_ss_slave_port::south_0);
   // Just a shortcut for now
-  auto output = a.shim[0].axi_ss.south_input[0]
-    .get_access<access::mode::read, access::target::blocking_pipe>();
+  auto output = a.shim[0].axi_ss
+    .output(acap::me::axi_stream_switch::shim_axi_ss_master_port::south_0);
   for (std::uint32_t i = 0; i < 100; ++i) {
     input << i;
     BOOST_CHECK(i == output.read());

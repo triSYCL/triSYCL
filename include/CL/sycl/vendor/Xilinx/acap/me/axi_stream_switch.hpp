@@ -21,6 +21,64 @@ class axi_stream_switch {
 
 public:
 
+  enum class shim_axi_ss_master_port : std::int8_t {
+    tile_ctrl,
+    fifo_0,
+    fifo_1,
+    south_0,
+    south_1,
+    south_2,
+    south_3,
+    south_4,
+    south_5,
+    west_0,
+    west_1,
+    west_2,
+    west_3,
+    north_0,
+    north_1,
+    north_2,
+    north_3,
+    north_4,
+    north_5,
+    east_0,
+    east_1,
+    east_2,
+    east_3,
+    // To measure the enum
+    size
+  };
+
+  enum class shim_axi_ss_slave_port : std::int8_t {
+    tile_ctrl,
+    fifo_0,
+    fifo_1,
+    south_0,
+    south_1,
+    south_2,
+    south_3,
+    south_4,
+    south_5,
+    south_6,
+    south_7,
+    west_0,
+    west_1,
+    west_2,
+    west_3,
+    north_0,
+    north_1,
+    north_2,
+    north_3,
+    east_0,
+    east_1,
+    east_2,
+    east_3,
+    shim_trace,
+    // To measure the enum
+    size
+  };
+
+
   using data_type = std::uint32_t;
   static constexpr auto stream_latency = 4;
   using stream = cl::sycl::static_pipe<data_type, stream_latency>;
@@ -31,8 +89,8 @@ public:
   static constexpr auto east_output_number = 4;
   static constexpr auto north_input_number = 4;
   static constexpr auto north_output_number = 6;
-  static constexpr auto south_input_number = 6;
-  static constexpr auto south_output_number = 4;
+  static constexpr auto south_input_number = 8;
+  static constexpr auto south_output_number = 6;
 
   using west_input_type = std::array<stream, west_input_number>;
   using west_output_type = std::array<stream, west_output_number>;
@@ -43,28 +101,35 @@ public:
   using south_input_type = std::array<stream, south_input_number>;
   using south_output_type = std::array<stream, south_output_number>;
 
-  west_input_type west_input;
-  west_output_type west_output;
-  east_input_type east_input;
-  east_output_type east_output;
-  north_input_type north_input;
-  north_output_type north_output;
-  south_input_type south_input;
-  south_output_type south_output;
+
+  std::array<stream, static_cast<int>(shim_axi_ss_slave_port::size)> input_ports;
+  std::array<stream, static_cast<int>(shim_axi_ss_slave_port::size)> output_ports;
 
   axi_stream_switch(west_input_type wi, west_output_type wo,
                     east_input_type ei, east_output_type eo,
                     north_input_type ni, north_output_type no,
                     south_input_type si, south_output_type so)
-    : west_input { wi }, west_output { wo }
-    , east_input { ei }, east_output { eo }
-    , north_input { ni }, north_output { no }
-    , south_input { si }, south_output { so }
   {}
 
 
   ///
   axi_stream_switch() = default;
+
+
+  auto input(shim_axi_ss_slave_port p) {
+    return input_ports[static_cast<int>(p)]
+      .get_access<access::mode::write, access::target::blocking_pipe>();
+  }
+
+
+  auto output(shim_axi_ss_master_port p) {
+    // Lie to implement some "routing" for now
+//    return output_ports[static_cast<int>(p)]
+//      .get_access<access::mode::read, access::target::blocking_pipe>();
+    return input_ports[static_cast<int>(p)]
+      .get_access<access::mode::read, access::target::blocking_pipe>();
+  }
+
 };
 
 }
