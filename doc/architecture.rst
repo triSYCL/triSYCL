@@ -161,14 +161,18 @@ it to some target device and at the same time to compile on the host side
 some glue code around the extraction boundary to transfer data to and
 from the device and call the kernel itself.
 
-The device compiler is very experimentatal and exists in 2 versions,
-based on Clang_/LLVM_ 3.9 & Clang_/LLVM_ 7.
+The device compiler is very experimental and exists in several versions,
+mainly dependent on different Clang_/LLVM_ versions.
 
-- with Clang_/LLVM_ 3.9 supporting triSYCL:
+The specific versions are in branches with name starting with
+``sycl/``.  For example:
 
-  https://github.com/triSYCL/clang/tree/sycl/release_39/master
+- our latest version with the latest Clang_/LLVM_ supporting triSYCL
+  will be in:
 
-  https://github.com/triSYCL/llvm/tree/sycl/release_39/master
+  https://github.com/triSYCL/clang/tree/sycl/master
+
+  https://github.com/triSYCL/llvm/tree/sycl/master
 
 - with Clang_/LLVM_ 7 supporting triSYCL:
 
@@ -183,9 +187,9 @@ Installation & compilation
 First download or clone the device compiler repositories, for example
 with::
 
-  git clone --branch sycl/release_39/master git@github.com:triSYCL/llvm.git
+  git clone --branch sycl/master git@github.com:triSYCL/llvm.git
   cd llvm/tools
-  git clone --branch sycl/release_39/master git@github.com:triSYCL/clang.git
+  git clone --branch sycl/master git@github.com:triSYCL/clang.git
   cd ../..
 
 Then compile for example with::
@@ -217,9 +221,9 @@ Compilation and installation of the triSYCL runtime::
 Usage
 -----
 
-Unfortunately there is no driver yet to generate directly the host and
+Unfortunately there is no Clang_ driver yet to generate directly the host and
 device part and it is up to the end-user for now, since it is still
-experimental and in development. So using the compiler
+experimental and in development. So, using the compiler
 is... painful. :-(
 
 It is expected to be used as for example with examples from
@@ -242,17 +246,20 @@ the same time on the machine. For example the ``ocl-icd-libopencl1``
 package on Debian/Ubuntu.
 
 
-Using OpenCL PoCL on CPU
-~~~~~~~~~~~~~~~~~~~~~~~~
+Using OpenCL PoCL on CPU and other targets
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The device compiler generates the kernels as SPIR-df (*de facto*),
-which is SPIR 2.0 encoded with LLVM_ IR of a more recent version than
-LLVM_ 3.4 expected by the SPIR specification. So a very modern SPIR
+which is SPIR_ 2.0 encoded with LLVM_ IR of a more recent version than
+LLVM_ 3.4 expected by the SPIR_ specification. So a very modern SPIR+
 consumer is required, such as a recent PoCL_. It is not the version
 available in Ubuntu 17.10 for example, so you might compile and
 install PoCL_ on your own... The rule is that PoCL_ has to use a
 Clang_/LLVM_ at least as modern as the one used by the device compiler
 to be able to consume the IR.
+
+Note that you can also use PoCL_ to target CUDA_, as a way to use
+SYCL_ on nVidia GPU.
 
 Set up the environment::
 
@@ -263,6 +270,11 @@ Set up the environment::
   export BOOST_COMPUTE_DEFAULT_PLATFORM='Portable Computing Language'
   # Do not use another OpenCL stack if the one requested is not available
   export BOOST_COMPUTE_DEFAULT_ENFORCE=1
+  # OPTIONAL: used by the tests Makefile and tells triSYCL to queue kernels
+  # using OpenCL nd_range_kernel when parallel_for is used. This
+  # variable is used by the Makefile and requires recompilation if you
+  # change its value
+  export TRISYCL_USE_OPENCL_ND_RANGE=1
 
 Compile and execute a small example::
 
@@ -285,7 +297,7 @@ working.
 
 Initialize the environment with something like::
 
-  export XILINX_SDX=/opt/Xilinx/SDx/2017.2
+  export XILINX_SDX=/opt/Xilinx/SDx/2018.3
   PATH=$PATH:$XILINX_SDX/bin
   export LD_LIBRARY_PATH=$XILINX_SDX/runtime/lib/x86_64:$XILINX_SDX/lib/lnx64.o
 
@@ -308,7 +320,7 @@ Compile and execute a small example::
     **** no errors detected
 
 Note that since the final code contains the FPGA bit-stream
-configuration file and not the SPIR representation, it takes *quite a
+configuration file and not the SPIR_ representation, it takes *quite a
 lot of time* to be generated through SDx...
 
 
@@ -339,10 +351,10 @@ and compile the code for the final target.
 The Clang_/LLVM_-based device compiler (bottom of `Figure 1`_)
 compiles the `C++`_ SYCL_ code as for CPU only, but just keep the
 kernel part of the code and produce a simple portable intermediate
-representation (SPIR) of the kernels.  For now, triSYCL uses SPIR-df
+representation (SPIR_) of the kernels.  For now, triSYCL uses SPIR-df
 (*de facto*), a non-conforming SPIR 2.0 encoded in something newer
-than LLVM_ 3.4 IR. But you could graft an official SPIR down-caster if
-you have one or a SPIR-V generator using this SPIR-df.
+than LLVM_ 3.4 IR. But you could graft an official SPIR_ down-caster if
+you have one or a `SPIR-V`_ generator using this SPIR-df.
 
 Then this SPIR-df output is optionally compiled by some vendor
 compiler to speed-up the launch time by doing some compilation
@@ -504,7 +516,7 @@ The file extensions used on the kernel side are:
 
 ``.kernel.bin``
   is for the kernel binary to be shipped into the final host
-  executable. This is typically a SPIR LLVM_ IR bitcode or an FPGA
+  executable. This is typically a SPIR_ LLVM_ IR bitcode or an FPGA
   bitstream configuration;
 
 ``.kernel.internalized.cxx``
@@ -556,30 +568,30 @@ of LLVM_ passes with:
   compiling C++ comes with an ABI storing the lists of global static
   constructors and destructors. Unfortunately even if at the end these
   lists are empty because of SYCL_ specification, they are not removed
-  by ``-globaldce`` and it is not supported by SPIR yet. So this
+  by ``-globaldce`` and it is not supported by SPIR_ yet. So this
   SYCL_-specific pass Removes the Empty List of Global Constructors or
   Destructors (RELGCD);
 
 ``-reqd-workgroup-size-1``
-  in the case the kernel are compiled with only 1 SPIR work-group with
+  in the case the kernel are compiled with only 1 SPIR_ work-group with
   1 work-item (common use case on FPGA), this SYCL_-specific pass add a
-  SPIR metadata on the kernels to specify it will be called with *only*
+  SPIR_ metadata on the kernels to specify it will be called with *only*
   1 work-item. This way the target compiler can spare some resources
   on the device;
 
 ``-inSPIRation``
-  is the SYCL_-specific pass generating the SPIR 2.0-style LLVM_ IR
+  is the SYCL_-specific pass generating the SPIR_ 2.0-style LLVM_ IR
   output. Since it generates LLVM_ IR with the version of the recent
-  LLVM_ used, it is quite more modern that the official SPIR 2.0 based
+  LLVM_ used, it is quite more modern that the official SPIR_ 2.0 based
   on LLVM_ 3.4 IR. So it is a SPIR-df (*de facto*)", which is nevertheless
   accepted by some tools. But by using a bitcode down-caster, it could
   probably make some decent official SPIR 2.0 encoded in LLVM_ 3.4
-  IR. Otherwise a SPIR-V back-end could generate some SPIR-V code from
+  IR. Otherwise a `SPIR-V`_ back-end could generate some `SPIR-V`_ code from
   this.
 
 ``-globaldce`` is the last cleaning to remove unused functions, for
   example ``__gxx_personality_v0`` that was used to specify the
-  exception handling flavour for the kernel functions before SPIR
+  exception handling flavour for the kernel functions before SPIR_
   transformation.
 
 
