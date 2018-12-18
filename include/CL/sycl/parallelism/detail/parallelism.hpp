@@ -24,6 +24,10 @@
 #include "CL/sycl/nd_range.hpp"
 #include "CL/sycl/range.hpp"
 
+#if defined(TRISYCL_USE_OPENCL_ND_RANGE)
+#include "CL/sycl/detail/SPIR/opencl_spir_helpers.hpp"
+#endif
+
 #ifdef _OPENMP
 #include <omp.h>
 #endif
@@ -178,16 +182,53 @@ void parallel_for(range<Dimensions> r,
 }
 
 
+/* These helpers work specifically for the parallel_for overload:
+    parallel_for(range<Dimensions> r, ParallelForFunctor f)
+
+    They generate a value from the type of the passed in kernels(lambda)
+    argument (item or id) and pass it onwards to parallel_for.
+
+    From the C++ spec I believe lambda's should only require const or no
+    qualification for the forseeable future (at least by default). Const in the
+    case where the mutable keyword has not been used and no const when mutable
+    has been used.
+
+    \todo A future change may be to modify htat to capture_arg_t and alter the
+      parallel_for call stack to take a type rather than value.
+    \todo In c++20 these may be redefineable as inline lambda's of the form:
+      [captures] <tparams> (params) {body}
+*/
+template<typename F, typename R, typename A>
+auto capture_arg_v(R(F::*)(A)) { return A{}; }
+
+template<typename F, typename R, typename A>
+auto capture_arg_v(R(F::*)(A) const) { return A{}; }
+
 /** Calls the appropriate ternary parallel_for overload based on the
     index type of the kernel function object f
 
+    capture_arg_v generates a value from the type of the passed in kernels
+    (lambdas) argument (item or id in this case) and passes it onwards to
+     parallel_for so that it's aware which index class it's supposed to generate
+     data for.
+
+     We erase the type then retrieve it again so that we can avoid redefining
+     the parallel_for interface in handler.hpp for item and id as the
+     parallel_for in the SYCL 1.2.1 spec that accepts a range can be overloaded
+     for both.
 */
+#if !defined(TRISYCL_USE_OPENCL_ND_RANGE)
 template <int Dimensions = 1, typename ParallelForFunctor>
 void parallel_for(range<Dimensions> r, ParallelForFunctor f) {
-  using mf_t  = decltype(std::mem_fn(&ParallelForFunctor::operator()));
-  using arg_t = typename mf_t::second_argument_type;
-  parallel_for(r,f,arg_t{});
+  parallel_for(r,f, capture_arg_v(&ParallelForFunctor::operator()));
 }
+#else
+template <int Dimensions = 1, typename ParallelForFunctor>
+void parallel_for(range<Dimensions> r, ParallelForFunctor f) {
+  f(sycl::detail::spir::create_parallel_for_arg<Dimensions>(capture_arg_v(
+    &ParallelForFunctor::operator())));
+}
+#endif
 
 
 /** Implementation of parallel_for with a range<> and an offset */

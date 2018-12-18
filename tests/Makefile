@@ -64,27 +64,33 @@ LDLIBS += -lboost_log -lpthread
 # or inlining that might duplicate the code too early
 CXXFLAGS_KERNEL = -fno-vectorize -fno-unroll-loops
 
+ifdef TRISYCL_USE_OPENCL_ND_RANGE
+  OPTIONAL_ND_RANGE = -DTRISYCL_USE_OPENCL_ND_RANGE
+endif
+
 # Specify a target device, otherwise it defaults to xilinx_vcu1525_dynamic_5_1
 ifdef TARGET_DEVICE
-DEVICE_XOCC := $(TARGET_DEVICE)
+  DEVICE_XOCC := $(TARGET_DEVICE)
 else
-DEVICE_XOCC := xilinx_vcu1525_dynamic_5_1
+  DEVICE_XOCC := xilinx_vcu1525_dynamic_5_1
 endif
 
 # Defaults to look for existing installed hardware, otherwise it will check for
 # a defined emulation mode (XCL_EMULATION_MODE is also used by emconfigutil and
 # the SDAccel examples)
 ifdef XCL_EMULATION_MODE
-DEVICE_MODE := $(XCL_EMULATION_MODE)
+  DEVICE_MODE := $(XCL_EMULATION_MODE)
 else
-DEVICE_MODE := hw
+  DEVICE_MODE := hw
 endif
 
-# When XILINX_SDX environment variable is set, use the Xilinx SDx
-# OpenCL compiler with these flags:
-# Adapt to the real platform
+# When XILINX_SDX environment variable is set, use the Xilinx SDx OpenCL
+# compiler with these XOCC specific flags. As well as add xilinx FPGA specific
+# optimization passes.
 ifdef XILINX_SDX
-XOCCFLAGS = --platform $(DEVICE_XOCC) --save-temps
+  XOCCFLAGS = --platform $(DEVICE_XOCC) --save-temps
+
+  XILINX_SPECIFIC_PASS = -reqd-workgroup-size-1
 endif
 # xocc parameter to specify C++ version
 XOCCCPPPARAM=--xp prop:kernel.vector_add.kernel_flags=-std=c++0x
@@ -161,8 +167,6 @@ CXXFLAGS += -Wall -Wno-ignored-attributes -std=c++1z -I$(triSYCL_DIR)/include \
 ifdef XILINX_SDX
   CXXFLAGS += -I$(XILINX_SDX)/Vivado_HLS/include \
 		-I$(XILINX_PATH)/Vivado_HLS/common/technology/autopilot
-#  XOCCFLAGS += -I$(XILINX_PATH)/Vivado_HLS/common/technology/autopilot \
-#		-I$(XILINX_PATH)/Vivado_HLS/include
 endif
 
 # Specify where OpenCL includes files are with OpenCL_INCPATH
@@ -317,25 +321,25 @@ execute: $(basename $(TARGET))
 
 # The LLVM assembly code for the code expected to call the kernels
 %.pre_kernel_caller.ll: %.cpp
-	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl \
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl $(OPTIONAL_ND_RANGE) \
 	  -emit-llvm -S -o $@ $<
 %.pre_kernel_caller.ll: %.C
-	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl \
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl $(OPTIONAL_ND_RANGE) \
 	  -emit-llvm -S -o $@ $<
 %.pre_kernel_caller.ll: %.cc
-	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl \
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl $(OPTIONAL_ND_RANGE) \
 	  -emit-llvm -S -o $@ $<
 
 # The LLVM assembly code for the code before kernels
 %.pre_kernel.ll: %.cpp
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_DEVICE -sycl -sycl-is-device \
-	  $(CXXFLAGS_KERNEL) -emit-llvm -S -o $@ $<
+	  $(OPTIONAL_ND_RANGE) $(CXXFLAGS_KERNEL) -emit-llvm -S -o $@ $<
 %.pre_kernel.ll: %.C
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_DEVICE -sycl -sycl-is-device \
-	  $(CXXFLAGS_KERNEL) -emit-llvm -S -o $@ $<
+	  $(OPTIONAL_ND_RANGE) $(CXXFLAGS_KERNEL) -emit-llvm -S -o $@ $<
 %.pre_kernel.ll: %.cc
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_DEVICE -sycl -sycl-is-device \
-	  $(CXXFLAGS_KERNEL) -emit-llvm -S -o $@ $<
+	  $(OPTIONAL_ND_RANGE) $(CXXFLAGS_KERNEL) -emit-llvm -S -o $@ $<
 
 # The Clang AST of the pre-kernel code
 %.pre_kernel.ast: %.cpp
@@ -354,8 +358,8 @@ execute: $(basename $(TARGET))
 	# To debug, think about using options like -debug -stats -print-after-all...
 	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so \
 	  -globalopt -deadargelim -SYCL-args-flattening -deadargelim \
-	  -SYCL-kernel-filter -globaldce -RELGCD -reqd-workgroup-size-1 -inSPIRation \
-	  -globaldce -o $@ $<
+	  -SYCL-kernel-filter -globaldce -RELGCD $(XILINX_SPECIFIC_PASS) \
+	  -inSPIRation -globaldce -o $@ $<
 
 #  If the target is a Xilinx FPGA kernel, use the Xilinx compiler with
 #  the required extension for the SPIR input file
