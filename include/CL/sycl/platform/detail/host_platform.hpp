@@ -19,8 +19,12 @@
 #include "CL/sycl/info/platform.hpp"
 #include "CL/sycl/platform/detail/platform.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
+
+namespace extension::ce {
+  class platform;
+}
+
 namespace detail {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
@@ -30,6 +34,8 @@ namespace detail {
 /// SYCL host platform
 class host_platform : public detail::platform,
                       public detail::singleton<host_platform> {
+
+friend extension::ce::platform;
 
 // \todo Have this compatible with has_extension
 vector_class<string_class> platform_extensions { "Xilinx_blocking_pipes" };
@@ -121,7 +127,6 @@ public:
 
 /// @} to end the execution Doxygen group
 
-}
 }
 }
 
