@@ -93,5 +93,5 @@ int test_main(int argc, char *argv[]) {
   TestVecType<float>();
   TestVecType<double>();
 
-	return 0;
+  return 0;
 }
