@@ -92,12 +92,15 @@ template <typename BasicType,
           std::size_t Dims,
           bool EnableArgsConstructor = false>
 struct small_array : std::array<BasicType, Dims>,
-  // To have all the usual arithmetic operations on this type
-  boost::euclidean_ring_operators<FinalType>,
-  boost::euclidean_ring_operators<FinalType, BasicType>,
-  // Bitwise operations
-  boost::bitwise<FinalType>,
-  boost::bitwise<FinalType, BasicType>,
+  // To have all the usual arithmetic operations on this type and bitwise
+  // operations. Note these opeation classes are chained via:
+  // https://www.boost.org/doc/libs/1_69_0/libs/utility/operators.htm#chaining
+  // without the chaining the empty base class optimization will break and the
+  // class will bloat other types like vec.hpp
+  boost::euclidean_ring_operators<FinalType,
+  boost::euclidean_ring_operators<FinalType, BasicType,
+  boost::bitwise<FinalType,
+  boost::bitwise<FinalType, BasicType>>>>,
   // Already provided by array<> lexicographically:
   // boost::equality_comparable<FinalType>,
   // boost::less_than_comparable<FinalType>,

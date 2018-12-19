@@ -115,7 +115,11 @@ public:
 
   /// Return the number of bytes
   auto get_size() const {
-    return NumElements * sizeof(DataType);
+    // Special case, align 3 to 4 as specified in SYCL 1.2.1 Section 4.10.2.6
+    if constexpr (NumElements == 3)
+      return 4 * sizeof(DataType);
+    else
+      return NumElements * sizeof(DataType);
   }
 
   template<typename convertT, rounding_mode roundingMode>
