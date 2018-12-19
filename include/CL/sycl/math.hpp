@@ -12,6 +12,8 @@
 #include <cmath>
 #include <numeric>
 
+#include "vec.hpp"
+
 // Include order and configure insensitive treating of unwanted macros
 #ifdef _MSC_VER
   #ifdef min
