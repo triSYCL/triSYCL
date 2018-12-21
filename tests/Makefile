@@ -4,7 +4,7 @@
 
 # Set default compiler instead of default CXX=g++ value
 # Assume some recent compiler
-CXX = clang++-6.0
+CXX = clang++-7
 # To use libc++ instead of libstdc++, from libc++-dev & libc++abi-dev packages
 #CXXFLAGS += -stdlib=libc++
 
@@ -48,9 +48,9 @@ LDLIBS += -lOpenCL
 LDLIBS += -lboost_thread -lboost_system
 
 # To enable debug and tracing:
-#CXXFLAGS += -g
+CXXFLAGS += -g
 # With optimization and without assertions
-CXXFLAGS += -O3 -DNDEBUG -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
+#CXXFLAGS += -O3 -DNDEBUG -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -DNDEBUG
 #CXXFLAGS += -g -DTRISYCL_TRACE_KERNEL -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
@@ -67,13 +67,33 @@ LDLIBS += -lboost_log -lpthread
 # or inlining that might duplicate the code too early
 CXXFLAGS_KERNEL = -fno-vectorize -fno-unroll-loops
 
-# When XILINX_SDX environment variable is set, use the Xilinx SDx
-# OpenCL compiler with these flags:
-# Adapt to the real platform
-ifdef VERSION_2017_4
-XOCCFLAGS = --platform xilinx_adm-pcie-7v3_1ddr_3_0 --save-temps
+ifdef TRISYCL_USE_OPENCL_ND_RANGE
+  OPTIONAL_ND_RANGE = -DTRISYCL_USE_OPENCL_ND_RANGE
+endif
+
+# Specify a target device, otherwise it defaults to xilinx_vcu1525_dynamic_5_1
+ifdef TARGET_DEVICE
+  DEVICE_XOCC := $(TARGET_DEVICE)
 else
-XOCCFLAGS = --platform xilinx:adm-pcie-7v3:1ddr:3.0 --save-temps
+  DEVICE_XOCC := xilinx_vcu1525_dynamic_5_1
+endif
+
+# Defaults to look for existing installed hardware, otherwise it will check for
+# a defined emulation mode (XCL_EMULATION_MODE is also used by emconfigutil and
+# the SDAccel examples)
+ifdef XCL_EMULATION_MODE
+  DEVICE_MODE := $(XCL_EMULATION_MODE)
+else
+  DEVICE_MODE := hw
+endif
+
+# When XILINX_SDX environment variable is set, use the Xilinx SDx OpenCL
+# compiler with these XOCC specific flags. As well as add xilinx FPGA specific
+# optimization passes.
+ifdef XILINX_SDX
+  XOCCFLAGS = --platform $(DEVICE_XOCC) --save-temps
+
+  XILINX_SPECIFIC_PASS = -reqd-workgroup-size-1
 endif
 # xocc parameter to specify C++ version
 XOCCCPPPARAM=--xp prop:kernel.vector_add.kernel_flags=-std=c++0x
@@ -128,10 +148,17 @@ KERNELS_CALLER_LL = $(KERNELS_LL:%.kernel.ll=%.kernel_caller.ll)
 KERNELS_CALLER_BC = $(KERNELS_LL:%.kernel.ll=%.kernel_caller.bc)
 # The final kernel caller executable
 KERNELS_CALLER = $(KERNELS_LL:%.kernel.ll=%.kernel_caller)
+# The xpirbc file used to generate the XO file
+KERNELS_XPIRBC= $(KERNELS_LL:%.kernel.ll=%.xpirbc)
+# The XO file used to generate the bin (xclbin) file
+KERNELS_XO= $(KERNELS_LL:%.kernel.ll=%.kernel.xo)
+# Info file that XOCC generates when compiling the xclbin file
+KERNELS_BIN_INFO = $(KERNELS_LL:%.kernel.ll=%.kernel.bin.info)
 
 CLEANING_TARGETS += $(KERNELS_BC) $(KERNELS_BIN) $(KERNELS_INTERNALIZED_CXX) \
 	$(PRE_KERNELS_LL) $(PRE_KERNELS_CALLER_LL) $(KERNELS_CALLER_LL) \
-	$(KERNELS_CALLER_BC) $(KERNELS_CALLER)
+	$(KERNELS_CALLER_BC) $(KERNELS_CALLER) $(KERNELS_XPIRBC) $(KERNELS_XO) \
+	$(KERNELS_BIN_INFO)
 
 # The implementation uses C++14.
 # Use -Wno-ignored-attributes to avoid a lot of warning with
@@ -143,8 +170,6 @@ CXXFLAGS += -Wall -Wno-ignored-attributes -std=c++1z -I$(triSYCL_DIR)/include \
 ifdef XILINX_SDX
   CXXFLAGS += -I$(XILINX_SDX)/Vivado_HLS/include \
 		-I$(XILINX_PATH)/Vivado_HLS/common/technology/autopilot
-#  XOCCFLAGS += -I$(XILINX_PATH)/Vivado_HLS/common/technology/autopilot \
-#		-I$(XILINX_PATH)/Vivado_HLS/include
 endif
 
 # Specify where OpenCL includes files are with OpenCL_INCPATH
@@ -220,11 +245,11 @@ CLEANING_TARGETS += $(wildcard */*.xclbin)
 
 # How to compile OpenCL kernel to Xilinx FPGA
 %.xclbin: %.cl
-	xocc $(XOCCFLAGS) --target hw -o $@ $<
+	xocc $(XOCCFLAGS) --target $(DEVICE_MODE) -o $@ $<
 
 # How to compile Vivado HLS C++ kernel to Xilinx FPGA
 %.xclbin: %.cxx
-	xocc --kernel vector_add --input_files $< $(XOCCCPPPARAM) $(XOCCFLAGS) --target hw -o $@
+	xocc --kernel vector_add --input_files $< $(XOCCCPPPARAM) $(XOCCFLAGS) --target $(DEVICE_MODE) -o $@
 endif
 
 # Force recompilation of $(TARGETS_CC) binaries through the Makefile since
@@ -264,9 +289,11 @@ execute: $(basename $(TARGET))
 	$<
 
 # Feed the test into Clang-based RTags indexer to be used inside Emacs IDE
-# with make some_cpp_file.rtags
+# with make some_cpp_file.rtags.
+# Use intermediate "echo $(shell ...)" before sending to rtags to
+# evaluate any ` `, such as the one with pkgconfig for gtkmm
 %.rtags: %.cpp
-	$(MAKE) --just-print --assume-new=$< $* | rc -c -
+	echo $(shell $(MAKE) --just-print --assume-new=$< $*) | rc -c -
 
 # To debug the Clang/LLVM triSYCL compiler
 # Assume that CXX contains some Clang compiler version
@@ -277,7 +304,7 @@ execute: $(basename $(TARGET))
   %.pre_kernel.bc %.pre_kernel.ll \
   %.pre_kernel_caller.bc %.pre_kernel_caller.ll \
   %.pre_kernel.bc %.pre_kernel.ll %.pre_kernel_caller.ll \
-  %.kernel.bc %.kernel.bin %.kernel.ll
+  %.kernel.bc %.kernel.bin %.kernel.ll %.kernel.xo
 
 # The LLVM bitcode
 %.bc: %.cpp
@@ -297,25 +324,25 @@ execute: $(basename $(TARGET))
 
 # The LLVM assembly code for the code expected to call the kernels
 %.pre_kernel_caller.ll: %.cpp
-	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl \
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl $(OPTIONAL_ND_RANGE) \
 	  -emit-llvm -S -o $@ $<
 %.pre_kernel_caller.ll: %.C
-	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl \
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl $(OPTIONAL_ND_RANGE) \
 	  -emit-llvm -S -o $@ $<
 %.pre_kernel_caller.ll: %.cc
-	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl \
+	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -sycl $(OPTIONAL_ND_RANGE) \
 	  -emit-llvm -S -o $@ $<
 
 # The LLVM assembly code for the code before kernels
 %.pre_kernel.ll: %.cpp
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_DEVICE -sycl -sycl-is-device \
-	  $(CXXFLAGS_KERNEL) -emit-llvm -S -o $@ $<
+	  $(OPTIONAL_ND_RANGE) $(CXXFLAGS_KERNEL) -emit-llvm -S -o $@ $<
 %.pre_kernel.ll: %.C
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_DEVICE -sycl -sycl-is-device \
-	  $(CXXFLAGS_KERNEL) -emit-llvm -S -o $@ $<
+	  $(OPTIONAL_ND_RANGE) $(CXXFLAGS_KERNEL) -emit-llvm -S -o $@ $<
 %.pre_kernel.ll: %.cc
 	$(CL_CXX) $(CPPFLAGS) $(CXXFLAGS) -DTRISYCL_DEVICE -sycl -sycl-is-device \
-	  $(CXXFLAGS_KERNEL) -emit-llvm -S -o $@ $<
+	  $(OPTIONAL_ND_RANGE) $(CXXFLAGS_KERNEL) -emit-llvm -S -o $@ $<
 
 # The Clang AST of the pre-kernel code
 %.pre_kernel.ast: %.cpp
@@ -334,17 +361,24 @@ execute: $(basename $(TARGET))
 	# To debug, think about using options like -debug -stats -print-after-all...
 	$(LLVM_BUILD_DIR)/bin/opt -load $(LLVM_BUILD_DIR)/lib/SYCL.so \
 	  -globalopt -deadargelim -SYCL-args-flattening -deadargelim \
-	  -SYCL-kernel-filter -globaldce -RELGCD -reqd-workgroup-size-1 -inSPIRation \
-	  -o $@ $<
+	  -SYCL-kernel-filter -globaldce -RELGCD $(XILINX_SPECIFIC_PASS) \
+	  -inSPIRation -globaldce -o $@ $<
 
-ifdef XILINX_SDX
 #  If the target is a Xilinx FPGA kernel, use the Xilinx compiler with
 #  the required extension for the SPIR input file
-%.kernel.bin: %.kernel.bc
+ifdef XILINX_SDX
+%.kernel.xo: %.kernel.bc
 	cp -p $< $*.xpirbc
-	# TODO: deal with several kernels
-	SDACCEL_DEBUG='yes' SDX_USE_CLANG_39='yes' xocc $(XOCCFLAGS) --target hw \
+	# TODO: deal with several kernels: -k TRISYCL_kernel_0 should be replaced
+	# with -k all, but doesn't appear to work at the moment
+	# Generate XO file from xpirbc
+	xocc $(XOCCFLAGS) --target $(DEVICE_MODE) -c \
 	  -k TRISYCL_kernel_0 -o $@ $*.xpirbc
+
+	# Generate bin (xclbin) file from XO file (-l linking)
+%.kernel.bin: %.kernel.xo
+	xocc $(XOCCFLAGS) --target $(DEVICE_MODE) -l \
+	  -k TRISYCL_kernel_0 -o $@ $*.kernel.xo
 else
 # If the target is SPIR, just use the bitcode as the kernel binary
 %.kernel.bin: %.kernel.bc

@@ -15,6 +15,7 @@
    CHECK: 0
    CHECK: 0
    CHECK: 1
+   CHECK: 0
 */
 #include <CL/sycl.hpp>
 #include <iostream>
@@ -47,5 +48,8 @@ int main() {
   item<> inc { 8, 3, 2 };
   std::cout << (i == inc) << std::endl;
   std::cout << (i != inc) << std::endl;
+
+  item<1, false> ino { 7, 3 };
+  item<1, true>(ino).get_offset().display();
   return 0;
 }

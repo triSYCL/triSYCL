@@ -18,7 +18,7 @@
 namespace cl {
 namespace sycl {
 
-template <int Dimensions> class item;
+template <int Dimensions, bool with_offset> class item;
 
 /** \addtogroup parallelism Expressing parallelism through kernels
     @{
@@ -34,6 +34,9 @@ class id : public detail::small_array_123<
              Dimensions > {
 
 public:
+  /// \todo add this Boost::multi_array or STL concept to the
+  /// specification?
+  static constexpr auto dimensionality = Dimensions;
 
   // Inherit from all the constructors
   using detail::small_array_123<std::size_t,
@@ -52,7 +55,7 @@ public:
 
 
   /// Construct an id from an item global_id
-  id(const item<Dimensions> &rhs)
+  id(const item<Dimensions, true> &rhs)
     : detail::small_array_123<std::size_t, id<Dimensions>, Dimensions>
       { rhs.get_id() }
   {}

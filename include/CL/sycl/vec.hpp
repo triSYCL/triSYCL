@@ -11,10 +11,7 @@
     License. See LICENSE.TXT for details.
 */
 
-#include "CL/sycl/detail/array_tuple_helpers.hpp"
-
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 /** Rounding mode for vector conversions.
  */
@@ -56,6 +53,17 @@ struct elem {
   static constexpr int sF = 15;
 };
 
+/** forward decl to use in the detail class
+ */
+template<typename, int>
+class vec;
+
+template <typename DataType, int numElements>
+using __swizzled_vec__ = vec<DataType, numElements>;
+
+}
+
+
 /** \addtogroup vector Vector types in SYCL
 
     @{
@@ -63,131 +71,269 @@ struct elem {
 
 
 /** Small OpenCL vector class
-
-    \todo add [] operator
-
-    \todo add iterators on elements, with begin() and end()
-
-    \todo having vec<> sub-classing array<> instead would solve the
-    previous issues
-
-    \todo move the implementation elsewhere
-
-    \todo simplify the helpers by removing some template types since there
-    are now inside the vec<> class.
-
-    \todo rename in the specification element_type to value_type
 */
-template <typename DataType, int NumElements>
-class vec : public detail::small_array<DataType,
-                                       vec<DataType, NumElements>,
-                                       NumElements> {
-  using basic_type = typename detail::small_array<DataType,
-                                                  vec<DataType, NumElements>,
-                                                  NumElements>;
-
-public:
-
-  /** Construct a vec from anything from a scalar (to initialize all the
-      elements with this value) up to an aggregate of scalar and vector
-      types (in this case the total number of elements must match the size
-      of the vector)
-  */
-  template <typename... Types>
-  vec(const Types... args)
-    : basic_type { detail::expand<vec>(flatten_to_tuple<vec>(args...)) } { }
 
 
-/// Use classical constructors too
-  vec() = default;
+#include "CL/sycl/vec/detail/vec.hpp"
 
-
-  // Inherit of all the constructors
-  using basic_type::basic_type;
-
-private:
-
-  /** Flattening helper that does not change scalar values but flatten a
-      vec<T, n> v into a tuple<T, T,..., T>{ v[0], v[1],..., v[n-1] }
-
-      If we have a vector, just forward its array content since an array
-      has also a tuple interface :-) (23.3.2.9 Tuple interface to class
-      template array [array.tuple])
-  */
-  template <typename V, typename Element, int s>
-  static auto flatten(const vec<Element, s> i) {
-    static_assert(s <= V::dimension,
-                  "The element i will not fit in the vector");
-    return static_cast<std::array<Element, s>>(i);
-  }
-
-
-  /** If we do not have a vector, just forward it as a tuple up to the
-      final initialization.
-
-      \return typically tuple<double>{ 2.4 } from 2.4 input for example
-  */
-  template <typename V, typename Type>
-  static auto flatten(const Type i) {
-    return std::make_tuple(i);
-  }
-
-
- /** Take some initializer values and apply flattening on each value
-
-      \return a tuple of scalar initializer values
+namespace cl::sycl {
+  /** Accessors to access hex indexed elements of a vector
    */
-  template <typename V, typename... Types>
-  static auto flatten_to_tuple(const Types... i) {
-    // Concatenate the tuples returned by each flattening
-    return std::tuple_cat(flatten<V>(i)...);
+#define TRISYCL_DECLARE_S(x)                                           \
+  DataType& s##x() {                                                    \
+    return (*this)[(0x##x)];                                            \
   }
 
+#define TRISYCL_GEN_SWIZ2(str,idx0,idx1) __swizzled_vec__<DataType, 2> str() const { return base_vec::swizzle(idx0, idx1); }
+#define TRISYCL_GEN_SWIZ3(str,idx0,idx1,idx2) __swizzled_vec__<DataType, 3> str() const { return base_vec::swizzle(idx0, idx1, idx2); }
+#define TRISYCL_GEN_SWIZ4(str,idx0,idx1,idx2,idx3) __swizzled_vec__<DataType, 4> str() const { return base_vec::swizzle(idx0, idx1, idx2, idx3); }
+
+
+template<typename DataType>
+class alignas(sizeof(DataType)) vec<DataType, 1> : public detail::vec<DataType, 1> {
+  using base_vec = detail::vec<DataType, 1>;
+
 public:
+
+  /* use base class constructors */
+  using base_vec::base_vec;
+
   /** An accessor to the first element of a vector
    */
   DataType& x(){
-    static_assert(NumElements >= 1, "can't access to vec[0] if NumElements < 1");
     return (*this)[0];
   }
 
+  TRISYCL_DECLARE_S(0);
+
+  operator DataType() const {
+    return (*this)[0];
+  }
+};
+
+template<typename DataType>
+class alignas(sizeof(DataType) * 2) vec<DataType, 2> : public detail::vec<DataType, 2> {
+  using base_vec = detail::vec<DataType, 2>;
+
+public:
+
+  /* use base class constructors */
+  using base_vec::base_vec;
+
+  /** An accessor to the first element of a vector
+   */
+  DataType& x(){
+    return (*this)[0];
+  }
+
+    /** An accessor to the second element of a vector
+   */
+  DataType& y(){
+    return (*this)[1];
+  }
+
+  TRISYCL_DECLARE_S(0);
+  TRISYCL_DECLARE_S(1);
+
+  __swizzled_vec__<DataType, 1> lo() const {
+    return base_vec::swizzle(elem::s0);
+  }
+
+  __swizzled_vec__<DataType, 1> hi() const {
+    return base_vec::swizzle(elem::s1);
+  }
+
+  __swizzled_vec__<DataType, 1> odd() const {
+    return base_vec::swizzle(elem::s1);
+  }
+
+  __swizzled_vec__<DataType, 1> even() const {
+    return base_vec::swizzle(elem::s0);
+  }
+#include "CL/sycl/vec/detail/swiz2.hpp"
+};
+
+template<typename DataType>
+class alignas(sizeof(DataType) * 4) vec<DataType, 3> : public detail::vec<DataType, 3> {
+  using base_vec = detail::vec<DataType, 3>;
+
+public:
+
+  /* use base class constructors */
+  using base_vec::base_vec;
+
+  /** An accessor to the first element of a vector
+   */
+  DataType& x(){
+    return (*this)[0];
+  }
 
   /** An accessor to the second element of a vector
    */
   DataType& y(){
-    static_assert(NumElements >= 2, "can't access to vec[1] if NumElements < 2");
     return (*this)[1];
   }
 
+  /** An accessor to the second element of a vector
+   */
+  DataType& z(){
+    return (*this)[2];
+  }
+
+  TRISYCL_DECLARE_S(0);
+  TRISYCL_DECLARE_S(1);
+  TRISYCL_DECLARE_S(2);
+
+  __swizzled_vec__<DataType, 2> lo() const {
+    return base_vec::swizzle(elem::s0, elem::s1);
+  }
+
+  __swizzled_vec__<DataType, 2> hi() const {
+    return base_vec::swizzle(elem::s2, elem::s2);
+  }
+
+  __swizzled_vec__<DataType, 2> odd() const {
+    return base_vec::swizzle(elem::s1, elem::s1);
+  }
+
+  __swizzled_vec__<DataType, 2> even() const {
+    return base_vec::swizzle(elem::s0, elem::s2);
+  }
+#include "CL/sycl/vec/detail/swiz3.hpp"
+};
+
+template<typename DataType>
+class alignas(sizeof(DataType) * 4) vec<DataType, 4> : public detail::vec<DataType, 4> {
+  using base_vec = detail::vec<DataType, 4>;
+
+public:
+
+  /* use base class constructors */
+  using base_vec::base_vec;
+
+  /** An accessor to the first element of a vector
+   */
+  DataType& x(){
+    return (*this)[0];
+  }
+
+  /** An accessor to the second element of a vector
+   */
+  DataType& y(){
+    return (*this)[1];
+  }
+
+  /** An accessor to the second element of a vector
+   */
+  DataType& z(){
+    return (*this)[2];
+  }
+
+  /** An accessor to the second element of a vector
+   */
+  DataType& w(){
+    return (*this)[3];
+  }
+
+  /** An accessor to the first element of a vector
+   */
+  DataType& r(){
+    return (*this)[0];
+  }
+
+  /** An accessor to the second element of a vector
+   */
+  DataType& g(){
+    return (*this)[1];
+  }
 
   /** An accessor to the third element of a vector
    */
-  DataType& z(){
-    static_assert(NumElements >= 3, "can't access to vec[2] if NumElements < 3");
+  DataType& b(){
     return (*this)[2];
   }
 
   /** An accessor to the fourth element of a vector
    */
-  DataType& w(){
-    static_assert(NumElements >= 4, "can't access to vec[3] if NumElements < 4");
+  DataType& a(){
     return (*this)[3];
   }
 
-  /** Accessors to access hex indexed elements of a vector
-   * There are two macros, one for 0-9, one for A-F.
-   */
-#define TRISYCL_DECLARE_S(x)                                                        \
-  DataType& s##x() {                                                    \
-    static_assert(NumElements >= (x + 1), "can't access to vec["#x"] if NumElements < "#x"+1"); \
-    return (*this)[(x)];                                                \
+  TRISYCL_DECLARE_S(0);
+  TRISYCL_DECLARE_S(1);
+  TRISYCL_DECLARE_S(2);
+  TRISYCL_DECLARE_S(3);
+
+  __swizzled_vec__<DataType, 2> lo() const {
+    return base_vec::swizzle(elem::s0, elem::s1);
   }
 
-#define TRISYCL_DECLARE_Sx(x)                                           \
-  DataType& s##x() {                                                    \
-    static_assert(NumElements >= (0x##x + 1), "can't access to vec[0x"#x"] if NumElements < 0x"#x"+1"); \
-    return (*this)[(0x##x)];                                            \
+  __swizzled_vec__<DataType, 2> hi() const {
+    return base_vec::swizzle(elem::s2, elem::s3);
   }
+
+  __swizzled_vec__<DataType, 2> odd() const {
+    return base_vec::swizzle(elem::s1, elem::s3);
+  }
+
+  __swizzled_vec__<DataType, 2> even() const {
+    return base_vec::swizzle(elem::s0, elem::s2);
+  }
+
+#include "CL/sycl/vec/detail/swiz4.hpp"
+#include "CL/sycl/vec/detail/swiz_rgba.hpp"
+};
+
+#undef TRISYCL_GEN_SWIZ2
+#undef TRISYCL_GEN_SWIZ3
+#undef TRISYCL_GEN_SWIZ4
+
+template<typename DataType>
+class  alignas(sizeof(DataType) * 8) vec<DataType, 8> : public detail::vec<DataType, 8> {
+  using base_vec = detail::vec<DataType, 8>;
+
+public:
+
+  /* use base class constructors */
+  using base_vec::base_vec;
+
+  TRISYCL_DECLARE_S(0);
+  TRISYCL_DECLARE_S(1);
+  TRISYCL_DECLARE_S(2);
+  TRISYCL_DECLARE_S(3);
+  TRISYCL_DECLARE_S(4);
+  TRISYCL_DECLARE_S(5);
+  TRISYCL_DECLARE_S(6);
+  TRISYCL_DECLARE_S(7);
+  TRISYCL_DECLARE_S(8);
+
+  __swizzled_vec__<DataType, 4> lo() const {
+    return base_vec::swizzle(elem::s0, elem::s1, elem::s2, elem::s3);
+  }
+
+  __swizzled_vec__<DataType, 4> hi() const {
+    return base_vec::swizzle(elem::s4, elem::s5, elem::s6, elem::s7);
+  }
+
+  __swizzled_vec__<DataType, 4> odd() const {
+    return base_vec::swizzle(elem::s1, elem::s3, elem::s5, elem::s7);
+  }
+
+  __swizzled_vec__<DataType, 4> even() const {
+    return base_vec::swizzle(elem::s0, elem::s2, elem::s4, elem::s6);
+  }
+
+};
+
+
+template<typename DataType>
+class alignas(sizeof(DataType) * 16) vec<DataType, 16> : public detail::vec<DataType, 16> {
+  using base_vec = detail::vec<DataType, 16>;
+
+public:
+
+  /* use base class constructors */
+  using base_vec::base_vec;
 
   TRISYCL_DECLARE_S(0);
   TRISYCL_DECLARE_S(1);
@@ -199,65 +345,32 @@ public:
   TRISYCL_DECLARE_S(7);
   TRISYCL_DECLARE_S(8);
   TRISYCL_DECLARE_S(9);
-  TRISYCL_DECLARE_Sx(A);
-  TRISYCL_DECLARE_Sx(B);
-  TRISYCL_DECLARE_Sx(C);
-  TRISYCL_DECLARE_Sx(D);
-  TRISYCL_DECLARE_Sx(E);
-  TRISYCL_DECLARE_Sx(F);
+  TRISYCL_DECLARE_S(A);
+  TRISYCL_DECLARE_S(B);
+  TRISYCL_DECLARE_S(C);
+  TRISYCL_DECLARE_S(D);
+  TRISYCL_DECLARE_S(E);
+  TRISYCL_DECLARE_S(F);
 
-#undef TRISYCL_DECLARE_S
-#undef TRISYCL_DECLARE_Sx
+  __swizzled_vec__<DataType, 8> lo() const {
+    return base_vec::swizzle(elem::s0, elem::s1, elem::s2, elem::s3, elem::s4, elem::s5, elem::s6, elem::s7);
+  }
 
+  __swizzled_vec__<DataType, 8> hi() const {
+    return base_vec::swizzle(elem::s8, elem::s9, elem::sA, elem::sB, elem::sC, elem::sD, elem::sE, elem::sF);
+  }
 
-  /// \todo To implement
-#if 0
-  vec<dataT,
-      numElements>
-  operator+(const vec<dataT, numElements> &rhs) const;
-  vec<dataT, numElements>
-  operator-(const vec<dataT, numElements> &rhs) const;
-  vec<dataT, numElements>
-  operator*(const vec<dataT, numElements> &rhs) const;
-  vec<dataT, numElements>
-  operator/(const vec<dataT, numElements> &rhs) const;
-  vec<dataT, numElements>
-  operator+=(const vec<dataT, numElements> &rhs);
-  vec<dataT, numElements>
-  operator-=(const vec<dataT, numElements> &rhs);
-  vec<dataT, numElements>
-  operator*=(const vec<dataT, numElements> &rhs);
-  vec<dataT, numElements>
-  operator/=(const vec<dataT, numElements> &rhs);
-  vec<dataT, numElements>
-  operator+(const dataT &rhs) const;
-  vec<dataT, numElements>
-  operator-(const dataT &rhs) const;
-  vec<dataT, numElements>
-  operator*(const dataT &rhs) const;
-  vec<dataT, numElements>
-  operator/(const dataT &rhs) const;
-  vec<dataT, numElements>
-  operator+=(const dataT &rhs);
-  vec<dataT, numElements>
-  operator-=(const dataT &rhs);
-  vec<dataT, numElements>
-  operator*=(const dataT &rhs);
-  vec<dataT, numElements>
-  operator/=(const dataT &rhs);
-  vec<dataT, numElements> &operator=(const vec<dataT, numElements> &rhs);
-  vec<dataT, numElements> &operator=(const dataT &rhs);
-  bool operator==(const vec<dataT, numElements> &rhs) const;
-  bool operator!=(const vec<dataT, numElements> &rhs) const;
-  // Swizzle methods (see notes)
-  swizzled_vec<T, out_dims> swizzle<int s1, ...>();
-#ifdef SYCL_SIMPLE_SWIZZLES
-  swizzled_vec<T, 4> xyzw();
-  ...
-#endif // #ifdef SYCL_SIMPLE_SWIZZLES
-#endif
+  __swizzled_vec__<DataType, 8> odd() const {
+    return base_vec::swizzle(elem::s1, elem::s3, elem::s5, elem::s7, elem::s9, elem::sB, elem::sD, elem::sF);
+  }
+
+  __swizzled_vec__<DataType, 8> even() const {
+    return base_vec::swizzle(elem::s0, elem::s2, elem::s4, elem::s6, elem::s8, elem::sA, elem::sC, elem::sE);
+  }
+
 };
 
+#undef TRISYCL_DECLARE_S
 
   /** A macro to define type alias, such as for type=uchar, size=4 and
       actual_type=unsigned char, uchar4 is equivalent to vec<unsigned char, 4>
@@ -288,8 +401,6 @@ public:
 
 /// @} End the vector Doxygen group
 
-
-}
 }
 
 /*

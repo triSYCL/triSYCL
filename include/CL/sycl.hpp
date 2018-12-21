@@ -2,18 +2,18 @@
 
     \mainpage
 
-    This is the main OpenCL SYCL C++ header file to experiment with
-    the OpenCL CL provisional specification.
+    This is the main triSYCL C++ header file to experiment with the
+    SYCL specification.
 
-    For more information about OpenCL SYCL:
+    For more information about SYCL:
     http://www.khronos.org/sycl/
 
     For more information on this project and to access to the source of
     this file, look at https://github.com/triSYCL/triSYCL
 
     The Doxygen version of the implementation itself is in
-    http://Xilinx.github.io/triSYCL/Doxygen/triSYCL/html and
-    http://Xilinx.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
+    http://trisycl.github.io/triSYCL/Doxygen/triSYCL/html and
+    http://trisycl.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
 
 
     Ronan at keryell dot FR
@@ -84,6 +84,9 @@
 #include "CL/sycl/vendor/Xilinx/ssdm_inst.hpp"
 #include "CL/sycl/vendor/Xilinx/opt_decorate_func.hpp"
 #include "CL/sycl/vendor/Xilinx/partition_array.hpp"
+
+// An extension about constexpr host introspection API
+//#include "CL/sycl/extension/ce/platform.hpp"
 
 /*
     # Some Emacs stuff:

@@ -29,7 +29,7 @@ Some ideas of future developments where *you* can contribute too: :-)
 
 - update the dataflow SYCL infrastructure from plain C++ ``std::thread``
   and ``std::condition_variable`` to some more efficient library, such
-  as TBB;
+  as TBB_;
 
 - implement the dataflow SYCL infrastructure directly on top of OpenCL
   event-framework instead of layering the CPU dataflow dependency
@@ -137,6 +137,8 @@ Some ideas of future developments where *you* can contribute too: :-)
 .. _SYCL: https://www.khronos.org/sycl
 
 .. _TensorFlow: https://www.tensorflow.org
+
+.. _TBB: https://www.threadingbuildingblocks.org/
 
 .. _Thrust: http://thrust.github.io/
 
