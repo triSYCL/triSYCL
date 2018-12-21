@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 3.0) # The minimum version of CMake necessary to build this project
 project (queue) # The name of our project
 
+declare_trisycl_test(TARGET deadlock)
+declare_trisycl_test(TARGET deadlock_symetrical)
 declare_trisycl_test(TARGET default_queue)
 declare_trisycl_test(TARGET double_wait)
 declare_trisycl_test(TARGET explicit_selector)
