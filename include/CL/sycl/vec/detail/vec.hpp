@@ -13,6 +13,7 @@
     License. See LICENSE.TXT for details.
 */
 
+#include "CL/sycl/detail/alignment_helper.hpp"
 #include "CL/sycl/detail/array_tuple_helpers.hpp"
 
 namespace cl::sycl::detail {
@@ -25,9 +26,10 @@ using __swizzled_base_vec__ = detail::vec<DataType, numElements>;
 /** Small OpenCL vector class
  */
 template <typename DataType, int NumElements>
-class vec : public detail::small_array<DataType,
-                                       cl::sycl::vec<DataType, NumElements>,
-                                       NumElements> {
+class alignas(alignment<cl::sycl::vec<DataType, NumElements>>::value)
+ vec : public detail::small_array<DataType,
+                                  cl::sycl::vec<DataType, NumElements>,
+                                  NumElements> {
   using basic_type = typename detail::small_array<DataType,
                                                   cl::sycl::vec<DataType, NumElements>,
                                                   NumElements>;
@@ -115,7 +117,9 @@ public:
 
   /// Return the number of bytes
   auto get_size() const {
-    // Special case, align 3 to 4 as specified in SYCL 1.2.1 Section 4.10.2.6
+    // Special case, aligning a size 3 vec to 4 as specified in
+    // SYCL 1.2.1 Section 4.10.2.6 should increase its size to
+    // the same as a vec4
     if constexpr (NumElements == 3)
       return 4 * sizeof(DataType);
     else
