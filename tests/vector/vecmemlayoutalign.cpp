@@ -1,7 +1,7 @@
 /* RUN: %{execute}%s
 
    Testing vector element alignment, size and layout to see that it meets:
-    SYCL 1.2.1 Section 4.10.2.6 Memory layout and alignment
+   SYCL 1.2.1 Section 4.10.2.6 Memory layout and alignment
 */
 
 #include <CL/sycl.hpp>
@@ -20,7 +20,7 @@ template <typename T>
 void TestVecType() {
   Matrix4x4<T> Mt;
 
-  // We don't actually care what these values are just that they are consistent
+  // We don't actually care what these values are, just that they are consistent
   // and checkable. Its A, B, C and D in the ASCII table, 65,66,67,68 in decimal
   for (int i = 0; i < 4; ++i) {
     Mt.data[i] = {0x41, 0x42, 0x43, 0x44};
@@ -48,19 +48,19 @@ void TestVecType() {
   BOOST_CHECK(sizeof(Mt.data[0]) == v4.get_size());
   BOOST_CHECK(sizeof(Mt) == v4.get_size() * 4);
 
-  // is sequential and contigious in memory
+  // is sequential and contiguous in memory
   for (int i = 0; i < 4; ++i)
     BOOST_CHECK((static_cast<void*>(&v4[i]) ==
                  static_cast<void*>(&v4[0] + i)));
 
-  // A magic trick! reinterpret_cast to a T* as the data should be contigious
-  // and sequential and thus useable as an array
+  // A magic trick! reinterpret_cast to a T* as the data should be contiguous
+  // and sequential and thus usable as an array
   const T* data = reinterpret_cast<const T*>(&Mt);
 
   v4 = {0x41, 0x42, 0x43, 0x44};
 
   // Perhaps there is a better test than this... it's just checking that each
-  // sycl::vec in the structure is contigious to the previous one and that the
+  // sycl::vec in the structure is contiguous to the previous one and that the
   // data is correct
   for (int i = 0, k = 0; i < 4; ++i)
     for (int j = 0; j < 4; ++j) {

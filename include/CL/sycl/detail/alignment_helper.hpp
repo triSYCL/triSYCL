@@ -4,7 +4,7 @@
 /** \file
 
     A simple trait to help generate the appropriate alignment data for a
-    sycl type when specified appropriately. Currently only used and specialized
+    SYCL type when specified appropriately. Currently only used and specialized
     for the vec classes which have SYCL spec required alignments.
 
     andrew point gozillon at yahoo point com
@@ -21,16 +21,19 @@ namespace cl::sycl::detail {
 
   template <typename DataType, int NumElements>
   class alignment<cl::sycl::vec<DataType, NumElements>> {
-    // Vec3's are sycl spec defined to be aligned as a Vec4.
+    // Vec3's are SYCL spec defined to be aligned as a Vec4.
     static constexpr int get_align() {
       if  constexpr (NumElements == 3)
-        return sizeof(DataType) * 4;
+        return 4 * sizeof(DataType);
       else
-        return sizeof(DataType) * NumElements;
+        return NumElements * sizeof(DataType);
     }
 
     public: static constexpr int value = get_align();
-  }; 
+  };
+
+  template <typename T>
+  constexpr auto alignment_v = alignment<T>::value;
 }
 
 #endif

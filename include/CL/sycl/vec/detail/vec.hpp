@@ -26,8 +26,8 @@ using __swizzled_base_vec__ = detail::vec<DataType, numElements>;
 /** Small OpenCL vector class
  */
 template <typename DataType, int NumElements>
-class alignas(alignment<cl::sycl::vec<DataType, NumElements>>::value)
- vec : public detail::small_array<DataType,
+class alignas(alignment_v<cl::sycl::vec<DataType, NumElements>>)
+  vec : public detail::small_array<DataType,
                                   cl::sycl::vec<DataType, NumElements>,
                                   NumElements> {
   using basic_type = typename detail::small_array<DataType,
@@ -117,13 +117,10 @@ public:
 
   /// Return the number of bytes
   auto get_size() const {
-    // Special case, aligning a size 3 vec to 4 as specified in
-    // SYCL 1.2.1 Section 4.10.2.6 should increase its size to
-    // the same as a vec4
-    if constexpr (NumElements == 3)
-      return 4 * sizeof(DataType);
-    else
-      return NumElements * sizeof(DataType);
+    // The alignment for the vec classes are equivalent to the vec's size e.g.
+    // a vec of 4 floats would be aligned to 16 bytes which is also the vec's
+    // size.
+    return alignment_v<cl::sycl::vec<DataType, NumElements>>;
   }
 
   template<typename convertT, rounding_mode roundingMode>
