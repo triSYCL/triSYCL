@@ -20,11 +20,11 @@ the specification of the SYCL_ 1.2.1 `C++`_ layer and
 to give feedback to the Khronos_ Group SYCL_ and OpenCL_ C++ 2.2
 kernel language committees and also to the ISO `C++`_ committee.
 
-This SYCL_ implementation is mainly based on C++17 and OpenMP_ for
+This SYCL_ implementation is mainly based on C++17 and OpenMP_ or TBB_ for
 execution on the CPU, with `Boost.Compute`_ for the non single-source
 OpenCL_ interoperability layer and with LLVM_/Clang_ for the device
 compiler providing full single-source SYCL_ experience, typically
-targettng on SPIR_ device. Since in SYCL_ there is a host fall-back,
+targeting a SPIR_ device. Since in SYCL_ there is a host fall-back,
 this CPU implementation can be seen as an implementation of this
 fall-back too...
 
@@ -42,7 +42,7 @@ at AMD_ and are now mainly funded by Xilinx_.
 
 It is possible to have a paid internship around triSYCL, if you have
 some skills related to this project. Contact the technical lead about
-this. Xilinx in also hiring in this area... :-)
+this. Xilinx_ is also hiring in this area... :-)
 
 
 SYCL
@@ -84,17 +84,18 @@ Documentation
 Some reasons to use SYCL
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Please see `about SYCL <doc/about-sycl.rst>`_
+Please see `about SYCL <doc/about-sycl.rst>`_ to have some context, a
+list of presentations, some related projects.
 
 
 Installation & testing
 ~~~~~~~~~~~~~~~~~~~~~~
 
-SYCL is a template library, so no real installation is required.
+SYCL_ is a template library, so no real installation is required.
 
 There are some examples you can build however.
 
-See `Testing <doc/testing.rst>`_
+See `Testing <doc/testing.rst>`_.
 
 
 Architecture of triSYCL runtime and compiler
@@ -109,7 +110,7 @@ CMake infrastructure
 ~~~~~~~~~~~~~~~~~~~~
 
 Some details about CMake configuration and organization can be found
-in `CMake <doc/cmake.rst>`_
+in `CMake <doc/cmake.rst>`_.
 
 
 Pre-processor macros used in triSYCL
@@ -128,7 +129,7 @@ See `Environment variables with triSYCL <doc/environment.rst>`_.
 Possible futures
 ~~~~~~~~~~~~~~~~
 
-See `Possible futures <doc/possible-futures.rst>`_
+See `Possible futures <doc/possible-futures.rst>`_.
 
 
 triSYCL code documentation
@@ -137,7 +138,6 @@ triSYCL code documentation
 The documentation of the triSYCL_ implementation itself can be found in
 http://trisycl.github.io/triSYCL/Doxygen/triSYCL/html and
 http://trisycl.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
-
 
 
 News
@@ -149,8 +149,8 @@ News
 
 - 2018/02/01: there is now some documentation about the architecture of
   triSYCL on GPU and accelerators with its device compiler based on
-  Clang/LLVM in `<doc/architecture.rst>`_. While this is wildly
-  experimental, there is a growing interested around it and it is
+  Clang_/LLVM_ in `<doc/architecture.rst>`_. While this is wildly
+  experimental, there is a growing interest around it and it is
   always useful to get started as a contributor.
 
 - 2018/01/05: there are some internship openings at Xilinx to work on
@@ -176,7 +176,7 @@ News
 
 - 2017/01/12: Add test case using the Xilinx_ compiler for FPGA
 
-- 2016/11/18: If you missed the free SYCL T-shirt on the Khronos booth
+- 2016/11/18: If you missed the free SYCL_ T-shirt on the Khronos booth
   during SC16_, you can always buy some on
   https://teespring.com/khronos-hpc (lady's sizes available, so no
   excuse! :-) )
@@ -274,6 +274,8 @@ News
 .. _SYCL: https://www.khronos.org/sycl
 
 .. _TensorFlow: https://www.tensorflow.org
+
+.. _TBB: https://www.threadingbuildingblocks.org/
 
 .. _Thrust: http://thrust.github.io/
 

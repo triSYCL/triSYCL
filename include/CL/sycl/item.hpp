@@ -86,6 +86,8 @@ public:
   */
   range<Dimensions> get_range() const { return global_range; }
 
+  /// Return the same value as get_range().get(dimension)
+  size_t get_range(int dimension) const { return get_range().get(dimension); }
 
   /** Returns an id<> representing the n-dimensional offset provided to
       the parallel_for and that is added by the runtime to the global-ID

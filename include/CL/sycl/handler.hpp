@@ -185,6 +185,32 @@ private:
         }));
   }
 
+  /** Schedule a parallel for kernel
+
+      \todo Add host fall-back execution for parallel_for_kernel
+
+      Add a traced version of the kernel in host mode or add the
+      kernel in an instantiating function for later extraction by the
+      compiler and then execute it using parallel_for
+  */
+  template <typename KernelName,
+            typename Kernel,
+            int N>
+  void schedule_parallel_for_kernel(Kernel k, const range<N> &num_work_items) {
+    task->schedule(detail::trace_kernel<KernelName>([=, t = task] () mutable {
+          // if (t->owner_queue->is_host())
+             // k();
+          // else {
+            TRISYCL_DUMP_T("schedule_parallel_for_kernel &k = " << (void *) &k);
+
+            // Structure the kernel code so it can be outlined and called
+            detail::launch_device_kernel<KernelName>(*t, k);
+
+            t->get_kernel().parallel_for(t, t->get_queue(), num_work_items);
+      // }
+    }));
+  }
+
 public:
 
   /** Kernel invocation method of a kernel defined as a lambda or
@@ -233,15 +259,27 @@ public:
       function can not be templated, so instantiate it for all the
       Dimensions
   */
-#define TRISYCL_parallel_for_functor_GLOBAL(N)                          \
+#if defined(TRISYCL_USE_OPENCL_ND_RANGE)
+  #define TRISYCL_parallel_for_functor_GLOBAL(N)                        \
+  template <typename KernelName = std::nullptr_t,                       \
+            typename ParallelForFunctor>                                \
+  void parallel_for(range<N> global_size,                               \
+                    ParallelForFunctor f) {                             \
+    schedule_parallel_for_kernel<KernelName>([=] {                      \
+        detail::parallel_for(global_size, f);                           \
+     }, global_size);                                                   \
+  }
+#else
+  #define TRISYCL_parallel_for_functor_GLOBAL(N)                        \
   template <typename KernelName = std::nullptr_t,                       \
             typename ParallelForFunctor>                                \
   void parallel_for(range<N> global_size,                               \
                     ParallelForFunctor f) {                             \
     schedule_kernel<KernelName>([=] {                                   \
         detail::parallel_for(global_size, f);                           \
-      });                                                               \
+     });                                                                \
   }
+#endif
 
   TRISYCL_parallel_for_functor_GLOBAL(1)
   TRISYCL_parallel_for_functor_GLOBAL(2)

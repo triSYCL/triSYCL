@@ -13,6 +13,7 @@
     License. See LICENSE.TXT for details.
 */
 
+#include "CL/sycl/detail/alignment_helper.hpp"
 #include "CL/sycl/detail/array_tuple_helpers.hpp"
 
 namespace cl::sycl::detail {
@@ -25,9 +26,10 @@ using __swizzled_base_vec__ = detail::vec<DataType, numElements>;
 /** Small OpenCL vector class
  */
 template <typename DataType, int NumElements>
-class vec : public detail::small_array<DataType,
-                                       cl::sycl::vec<DataType, NumElements>,
-                                       NumElements> {
+class alignas(alignment_v<cl::sycl::vec<DataType, NumElements>>)
+  vec : public detail::small_array<DataType,
+                                  cl::sycl::vec<DataType, NumElements>,
+                                  NumElements> {
   using basic_type = typename detail::small_array<DataType,
                                                   cl::sycl::vec<DataType, NumElements>,
                                                   NumElements>;
@@ -115,7 +117,10 @@ public:
 
   /// Return the number of bytes
   auto get_size() const {
-    return NumElements * sizeof(DataType);
+    // The alignment for the vec classes are equivalent to the vec's size e.g.
+    // a vec of 4 floats would be aligned to 16 bytes which is also the vec's
+    // size.
+    return alignment_v<cl::sycl::vec<DataType, NumElements>>;
   }
 
   template<typename convertT, rounding_mode roundingMode>

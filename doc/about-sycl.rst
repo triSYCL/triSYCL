@@ -37,7 +37,7 @@ other approaches:
   example. Retargeting the SYCL_ classes and functions to use other
   frameworks such as OpenMP_ 4 or `C++AMP`_ is feasible without
   rewriting a new compiler for example. This is actually what is done in
-  `hipSYCL`_ implementation;
+  the `hipSYCL`_ implementation;
 
 - easier debugging
 
@@ -118,7 +118,7 @@ Some other implementations
 Some other known implementations:
 
 - Codeplay_ provides ComputeCpp_, the most achieved implementation of
-  a fully compliant SYCL_ , based on OpenCL_ & SPIR_ with
+  a fully compliant SYCL_, based on OpenCL_ & SPIR_ with
   Clang_/LLVM_. It is not open-source but there is a free community version
   https://www.codeplay.com/products/computesuite/computecpp
 
@@ -133,6 +133,26 @@ Some presentations and publications related to SYCL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 By reverse chronological order:
+
+- `From post-modern generic C++ to generic heterogeneous
+  reconfigurable accelerators with the Khronos Group SYCL standard
+  <https://github.com/keryell/ronan/raw/gh-pages/Talks/2018/2018-07-05-Compas-RK-keynote/2018-07-05-COMPAS-keynote-RK-expose.pdf>`_,
+  Ronan Keryell. `Keynote presentation at COMPAS
+  <http://2018.compas-conference.fr/>`_ 2018, Toulouse, France. July
+  5, 2018.
+
+- `Experimenting with SYCL single-source post-modern C++ on Xilinx
+  FPGA
+  <https://github.com/keryell/ronan/raw/gh-pages/Talks/2018/2018-05-14-IWOCL-DHPCC-triSYCL/2018-05-14-IWOCL-DHPCC-triSYCL.pdf>`_,
+  Ronan Keryell & Lin-Ya Yu. `IWOCL
+  <https://www.iwocl.org/iwocl-2018/conference-program/>`_/`DHPCC
+  <https://www.iwocl.org/iwocl-2018/dhpcc/>`_ 2018, Oxford,
+  UK. May 14, 2018.
+
+- `SYCL C++ for heterogeneous computing --- from single-source modern C++
+  down to FPGA
+  <https://github.com/keryell/ronan/raw/gh-pages/Talks/2017/2017-10-11-LTP-LAMHA-Xilinx/2017-10-11-LTP-LAMHA-Xilinx_SYCL-expose.pdf>`_,
+  Ronan Keryell. LTP-LaMHA workshop, Paris, France. October 11, 2017.
 
 - Some talks at SuperComputing SC17 (November 2017) around SYCL with slides and
   videos: https://www.khronos.org/news/events/supercomputing-2017
@@ -431,6 +451,8 @@ Related projects
 .. _SYCL: https://www.khronos.org/sycl
 
 .. _TensorFlow: https://www.tensorflow.org
+
+.. _TBB: https://www.threadingbuildingblocks.org/
 
 .. _Thrust: http://thrust.github.io/
 
