@@ -256,7 +256,7 @@ vec<T, size> fmin(vec<T, size> x,
                   vec<T, size> y) {
  vec<T, size> temp;
  for(int i = 0; i < size; ++i)
- temp[i] = std::fmin(y[i],x[i]);
+  temp[i] = std::fmin(y[i],x[i]);
  return temp;
 }
 
@@ -269,7 +269,7 @@ vec<T, size> fmax(vec<T, size> x,
                   vec<T, size> y) {
    vec<T, size> temp;
    for(int i = 0; i < size; ++i)
-   temp[i] = std::fmax(x[i],y[i]);
+    temp[i] = std::fmax(x[i],y[i]);
    return temp;
 }
 
