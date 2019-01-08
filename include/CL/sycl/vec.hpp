@@ -80,14 +80,23 @@ namespace cl::sycl {
   /** Accessors to access hex indexed elements of a vector
    */
 #define TRISYCL_DECLARE_S(x)                                           \
-  DataType& s##x() {                                                    \
-    return (*this)[(0x##x)];                                            \
+  const DataType& s##x() const {                                       \
+    return (*this)[(0x##x)];                                           \
+  }                                                                    \
+                                                                       \
+  DataType& s##x() {                                                   \
+    return (*this)[(0x##x)];                                           \
   }
 
-#define TRISYCL_GEN_SWIZ2(str,idx0,idx1) __swizzled_vec__<DataType, 2> str() const { return base_vec::swizzle(idx0, idx1); }
-#define TRISYCL_GEN_SWIZ3(str,idx0,idx1,idx2) __swizzled_vec__<DataType, 3> str() const { return base_vec::swizzle(idx0, idx1, idx2); }
-#define TRISYCL_GEN_SWIZ4(str,idx0,idx1,idx2,idx3) __swizzled_vec__<DataType, 4> str() const { return base_vec::swizzle(idx0, idx1, idx2, idx3); }
-
+#define TRISYCL_GEN_SWIZ2(str,idx0,idx1)                                                    \
+  const __swizzled_vec__<DataType, 2> str() const { return base_vec::swizzle(idx0, idx1); } \
+  __swizzled_vec__<DataType, 2> str() { return base_vec::swizzle(idx0, idx1); }
+#define TRISYCL_GEN_SWIZ3(str,idx0,idx1,idx2)                                                     \
+  const __swizzled_vec__<DataType, 3> str() const { return base_vec::swizzle(idx0, idx1, idx2); } \
+  __swizzled_vec__<DataType, 3> str() { return base_vec::swizzle(idx0, idx1, idx2); }
+#define TRISYCL_GEN_SWIZ4(str,idx0,idx1,idx2,idx3) \
+  const __swizzled_vec__<DataType, 4> str() const { return base_vec::swizzle(idx0, idx1, idx2, idx3); } \
+  __swizzled_vec__<DataType, 4> str() { return base_vec::swizzle(idx0, idx1, idx2, idx3); }
 
 template<typename DataType>
 class alignas(detail::alignment_v<cl::sycl::vec<DataType, 1>>)
@@ -99,15 +108,23 @@ public:
   /* use base class constructors */
   using base_vec::base_vec;
 
-  /** An accessor to the first element of a vector
+  /** Accessors to the first element of a vector
    */
-  DataType& x(){
+  const DataType& x() const {
+    return (*this)[0];
+  }
+
+  DataType& x() {
     return (*this)[0];
   }
 
   TRISYCL_DECLARE_S(0);
 
   operator DataType() const {
+    return (*this)[0];
+  }
+
+  operator DataType() {
     return (*this)[0];
   }
 };
@@ -122,34 +139,58 @@ public:
   /* use base class constructors */
   using base_vec::base_vec;
 
-  /** An accessor to the first element of a vector
+  /** Accessors to the first element of a vector
    */
-  DataType& x(){
+  const DataType& x() const {
     return (*this)[0];
   }
 
-    /** An accessor to the second element of a vector
+  DataType& x() {
+    return (*this)[0];
+  }
+
+  /** Accessors to the second element of a vector
    */
-  DataType& y(){
+  const DataType& y() const {
+    return (*this)[1];
+  }
+
+  DataType& y() {
     return (*this)[1];
   }
 
   TRISYCL_DECLARE_S(0);
   TRISYCL_DECLARE_S(1);
 
-  __swizzled_vec__<DataType, 1> lo() const {
+  const __swizzled_vec__<DataType, 1> lo() const {
     return base_vec::swizzle(elem::s0);
   }
 
-  __swizzled_vec__<DataType, 1> hi() const {
+  __swizzled_vec__<DataType, 1> lo() {
+    return base_vec::swizzle(elem::s0);
+  }
+
+  const __swizzled_vec__<DataType, 1> hi() const {
     return base_vec::swizzle(elem::s1);
   }
 
-  __swizzled_vec__<DataType, 1> odd() const {
+  __swizzled_vec__<DataType, 1> hi() {
     return base_vec::swizzle(elem::s1);
   }
 
-  __swizzled_vec__<DataType, 1> even() const {
+  const __swizzled_vec__<DataType, 1> odd() const {
+    return base_vec::swizzle(elem::s1);
+  }
+
+  __swizzled_vec__<DataType, 1> odd() {
+    return base_vec::swizzle(elem::s1);
+  }
+
+  const __swizzled_vec__<DataType, 1> even() const {
+    return base_vec::swizzle(elem::s0);
+  }
+
+  __swizzled_vec__<DataType, 1> even() {
     return base_vec::swizzle(elem::s0);
   }
 #include "CL/sycl/vec/detail/swiz2.hpp"
@@ -165,21 +206,33 @@ public:
   /* use base class constructors */
   using base_vec::base_vec;
 
-  /** An accessor to the first element of a vector
+  /** Accessors to the first element of a vector
    */
-  DataType& x(){
+  const DataType& x() const {
     return (*this)[0];
   }
 
-  /** An accessor to the second element of a vector
+  DataType& x() {
+    return (*this)[0];
+  }
+
+  /** Accessors to the second element of a vector
    */
-  DataType& y(){
+  const DataType& y() const {
     return (*this)[1];
   }
 
-  /** An accessor to the second element of a vector
+  DataType& y() {
+    return (*this)[1];
+  }
+
+  /** Accessors to the third element of a vector
    */
-  DataType& z(){
+  const DataType& z() const {
+     return (*this)[2];
+  }
+
+  DataType& z() {
     return (*this)[2];
   }
 
@@ -187,19 +240,35 @@ public:
   TRISYCL_DECLARE_S(1);
   TRISYCL_DECLARE_S(2);
 
-  __swizzled_vec__<DataType, 2> lo() const {
+  const __swizzled_vec__<DataType, 2> lo() const {
     return base_vec::swizzle(elem::s0, elem::s1);
   }
 
-  __swizzled_vec__<DataType, 2> hi() const {
+  __swizzled_vec__<DataType, 2> lo()  {
+    return base_vec::swizzle(elem::s0, elem::s1);
+  }
+
+  const __swizzled_vec__<DataType, 2> hi() const {
     return base_vec::swizzle(elem::s2, elem::s2);
   }
 
-  __swizzled_vec__<DataType, 2> odd() const {
+  __swizzled_vec__<DataType, 2> hi() {
+    return base_vec::swizzle(elem::s2, elem::s2);
+  }
+
+  const __swizzled_vec__<DataType, 2> odd() const {
     return base_vec::swizzle(elem::s1, elem::s1);
   }
 
-  __swizzled_vec__<DataType, 2> even() const {
+  __swizzled_vec__<DataType, 2> odd() {
+    return base_vec::swizzle(elem::s1, elem::s1);
+  }
+
+  const __swizzled_vec__<DataType, 2> even() const {
+    return base_vec::swizzle(elem::s0, elem::s2);
+  }
+
+  __swizzled_vec__<DataType, 2> even() {
     return base_vec::swizzle(elem::s0, elem::s2);
   }
 #include "CL/sycl/vec/detail/swiz3.hpp"
@@ -215,51 +284,83 @@ public:
   /* use base class constructors */
   using base_vec::base_vec;
 
-  /** An accessor to the first element of a vector
+  /** Accessors to the first element of a vector
    */
-  DataType& x(){
+  const DataType& x() const {
     return (*this)[0];
   }
 
-  /** An accessor to the second element of a vector
+  DataType& x() {
+    return (*this)[0];
+  }
+
+  /** Accessors to the second element of a vector
    */
-  DataType& y(){
+  const DataType& y() const {
     return (*this)[1];
   }
 
-  /** An accessor to the second element of a vector
+  DataType& y() {
+    return (*this)[1];
+  }
+
+  /** Accessors to the third element of a vector
    */
-  DataType& z(){
+  const DataType& z() const {
+     return (*this)[2];
+  }
+
+  DataType& z() {
     return (*this)[2];
   }
 
-  /** An accessor to the second element of a vector
+  /** Accessors to the fourth element of a vector
    */
-  DataType& w(){
+  const DataType& w() const {
+     return (*this)[3];
+  }
+
+  DataType& w() {
     return (*this)[3];
   }
 
-  /** An accessor to the first element of a vector
+  /** Accessors to the first element of a vector
    */
-  DataType& r(){
+  const DataType& r() const {
+     return (*this)[0];
+  }
+
+  DataType& r() {
     return (*this)[0];
   }
 
-  /** An accessor to the second element of a vector
+  /** Accessors to the second element of a vector
    */
-  DataType& g(){
+  const DataType& g() const {
+      return (*this)[1];
+  }
+
+  DataType& g() {
     return (*this)[1];
   }
 
-  /** An accessor to the third element of a vector
+  /** Accessors to the third element of a vector
    */
-  DataType& b(){
+  const DataType& b() const {
+      return (*this)[2];
+  }
+
+  DataType& b() {
     return (*this)[2];
   }
 
-  /** An accessor to the fourth element of a vector
+  /** Accessors to the third element of a vector
    */
-  DataType& a(){
+  const DataType& a() const {
+      return (*this)[3];
+  }
+
+  DataType& a() {
     return (*this)[3];
   }
 
@@ -268,22 +369,37 @@ public:
   TRISYCL_DECLARE_S(2);
   TRISYCL_DECLARE_S(3);
 
-  __swizzled_vec__<DataType, 2> lo() const {
+  const __swizzled_vec__<DataType, 2> lo() const {
     return base_vec::swizzle(elem::s0, elem::s1);
   }
 
-  __swizzled_vec__<DataType, 2> hi() const {
-    return base_vec::swizzle(elem::s2, elem::s3);
+  __swizzled_vec__<DataType, 2> lo()  {
+    return base_vec::swizzle(elem::s0, elem::s1);
   }
 
-  __swizzled_vec__<DataType, 2> odd() const {
-    return base_vec::swizzle(elem::s1, elem::s3);
+  const __swizzled_vec__<DataType, 2> hi() const {
+    return base_vec::swizzle(elem::s2, elem::s2);
   }
 
-  __swizzled_vec__<DataType, 2> even() const {
+  __swizzled_vec__<DataType, 2> hi() {
+    return base_vec::swizzle(elem::s2, elem::s2);
+  }
+
+  const __swizzled_vec__<DataType, 2> odd() const {
+    return base_vec::swizzle(elem::s1, elem::s1);
+  }
+
+  __swizzled_vec__<DataType, 2> odd() {
+    return base_vec::swizzle(elem::s1, elem::s1);
+  }
+
+  const __swizzled_vec__<DataType, 2> even() const {
     return base_vec::swizzle(elem::s0, elem::s2);
   }
 
+  __swizzled_vec__<DataType, 2> even() {
+    return base_vec::swizzle(elem::s0, elem::s2);
+  }
 #include "CL/sycl/vec/detail/swiz4.hpp"
 #include "CL/sycl/vec/detail/swiz_rgba.hpp"
 };
@@ -312,22 +428,37 @@ public:
   TRISYCL_DECLARE_S(7);
   TRISYCL_DECLARE_S(8);
 
-  __swizzled_vec__<DataType, 4> lo() const {
+  const __swizzled_vec__<DataType, 4> lo() const {
     return base_vec::swizzle(elem::s0, elem::s1, elem::s2, elem::s3);
   }
 
-  __swizzled_vec__<DataType, 4> hi() const {
+  __swizzled_vec__<DataType, 4> lo() {
+    return base_vec::swizzle(elem::s0, elem::s1, elem::s2, elem::s3);
+  }
+
+  const __swizzled_vec__<DataType, 4> hi() const {
     return base_vec::swizzle(elem::s4, elem::s5, elem::s6, elem::s7);
   }
 
-  __swizzled_vec__<DataType, 4> odd() const {
+  __swizzled_vec__<DataType, 4> hi() {
+    return base_vec::swizzle(elem::s4, elem::s5, elem::s6, elem::s7);
+  }
+
+  const __swizzled_vec__<DataType, 4> odd() const {
     return base_vec::swizzle(elem::s1, elem::s3, elem::s5, elem::s7);
   }
 
-  __swizzled_vec__<DataType, 4> even() const {
+  __swizzled_vec__<DataType, 4> odd() {
+    return base_vec::swizzle(elem::s1, elem::s3, elem::s5, elem::s7);
+  }
+
+  const __swizzled_vec__<DataType, 4> even() const {
     return base_vec::swizzle(elem::s0, elem::s2, elem::s4, elem::s6);
   }
 
+  __swizzled_vec__<DataType, 4> even() {
+    return base_vec::swizzle(elem::s0, elem::s2, elem::s4, elem::s6);
+  }
 };
 
 
@@ -358,19 +489,35 @@ public:
   TRISYCL_DECLARE_S(E);
   TRISYCL_DECLARE_S(F);
 
-  __swizzled_vec__<DataType, 8> lo() const {
+  const __swizzled_vec__<DataType, 8> lo() const {
     return base_vec::swizzle(elem::s0, elem::s1, elem::s2, elem::s3, elem::s4, elem::s5, elem::s6, elem::s7);
   }
 
-  __swizzled_vec__<DataType, 8> hi() const {
+  __swizzled_vec__<DataType, 8> lo() {
+    return base_vec::swizzle(elem::s0, elem::s1, elem::s2, elem::s3, elem::s4, elem::s5, elem::s6, elem::s7);
+  }
+
+  const __swizzled_vec__<DataType, 8> hi() const {
     return base_vec::swizzle(elem::s8, elem::s9, elem::sA, elem::sB, elem::sC, elem::sD, elem::sE, elem::sF);
   }
 
-  __swizzled_vec__<DataType, 8> odd() const {
+  __swizzled_vec__<DataType, 8> hi() {
+    return base_vec::swizzle(elem::s8, elem::s9, elem::sA, elem::sB, elem::sC, elem::sD, elem::sE, elem::sF);
+  }
+
+  const __swizzled_vec__<DataType, 8> odd() const {
     return base_vec::swizzle(elem::s1, elem::s3, elem::s5, elem::s7, elem::s9, elem::sB, elem::sD, elem::sF);
   }
 
-  __swizzled_vec__<DataType, 8> even() const {
+  __swizzled_vec__<DataType, 8> odd() {
+    return base_vec::swizzle(elem::s1, elem::s3, elem::s5, elem::s7, elem::s9, elem::sB, elem::sD, elem::sF);
+  }
+
+  const __swizzled_vec__<DataType, 8> even() const {
+    return base_vec::swizzle(elem::s0, elem::s2, elem::s4, elem::s6, elem::s8, elem::sA, elem::sC, elem::sE);
+  }
+
+  __swizzled_vec__<DataType, 8> even() {
     return base_vec::swizzle(elem::s0, elem::s2, elem::s4, elem::s6, elem::s8, elem::sA, elem::sC, elem::sE);
   }
 
