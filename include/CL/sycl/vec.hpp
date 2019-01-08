@@ -378,19 +378,19 @@ public:
   }
 
   const __swizzled_vec__<DataType, 2> hi() const {
-    return base_vec::swizzle(elem::s2, elem::s2);
+    return base_vec::swizzle(elem::s2, elem::s3);
   }
 
   __swizzled_vec__<DataType, 2> hi() {
-    return base_vec::swizzle(elem::s2, elem::s2);
+    return base_vec::swizzle(elem::s2, elem::s3);
   }
 
   const __swizzled_vec__<DataType, 2> odd() const {
-    return base_vec::swizzle(elem::s1, elem::s1);
+    return base_vec::swizzle(elem::s1, elem::s3);
   }
 
   __swizzled_vec__<DataType, 2> odd() {
-    return base_vec::swizzle(elem::s1, elem::s1);
+    return base_vec::swizzle(elem::s1, elem::s3);
   }
 
   const __swizzled_vec__<DataType, 2> even() const {
