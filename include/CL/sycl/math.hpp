@@ -273,6 +273,26 @@ vec<T, size> fmax(vec<T, size> x,
    return temp;
 }
 
+// seems to essentially be the same as fmax but cover different types, even the
+// first type definition matches fmax's first? Is there a need for two
+// similar definitions of max? same goes for fmin...
+// genfloat max (genfloat x, genfloat y)
+// genfloatf max (genfloatf x, float y)
+// genfloatd max (genfloatd x, double y)
+// geninteger max (geninteger x, geninteger y)
+// geninteger max (geninteger x, sgeninteger y)
+template <typename T, int size>
+vec<T, size> max(vec<T, size> x,
+                  vec<T, size> y) {
+   return fmax(x,y);
+}
+
+template <typename T, int size>
+vec<T, size> min(vec<T, size> x,
+                 vec<T, size> y) {
+   return fmin(x,y);
+}
+
 //
 namespace native {
 TRISYCL_MATH_WRAP(cos)
