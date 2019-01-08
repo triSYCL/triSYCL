@@ -208,7 +208,7 @@ struct task : public std::enable_shared_from_this<task>,
        associated to buffers */
     std::vector<std::unique_lock<std::mutex>> locks;
     for (auto &b : buffers_in_use)
-      // Create a lock for the mutex, but doe not lock it yet
+      // Create a lock for the mutex, but do not lock it yet
       locks.emplace_back(b.first->get_dependency_graph_construction_mutex(),
                          std::defer_lock);
     /* Lock all the required buffers for the dependency graph
