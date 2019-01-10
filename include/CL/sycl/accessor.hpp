@@ -15,7 +15,7 @@
 #include "CL/sycl/access.hpp"
 #include "CL/sycl/accessor/detail/accessor_traits.hpp"
 #include "CL/sycl/accessor/detail/local_accessor.hpp"
-#include "CL/sycl/buffer/detail/accessor.hpp"
+#include "CL/sycl/buffer/detail/buffer_accessor_shepherd.hpp"
 #include "CL/sycl/detail/shared_ptr_implementation.hpp"
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/item.hpp"
@@ -57,10 +57,10 @@ class accessor :
                                                               , AccessMode
                                                               , Target>;
 
-  using shepherd = typename detail::accessor<DataType
-                                             , Dimensions
-                                             , AccessMode
-                                             , Target>;
+  using shepherd = typename detail::buffer_accessor_shepherd<DataType
+                                                             , Dimensions
+                                                             , AccessMode
+                                                             , Target>;
 
  public:
 

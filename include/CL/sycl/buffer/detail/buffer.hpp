@@ -18,7 +18,7 @@
 #include <boost/optional.hpp>
 
 #include "CL/sycl/access.hpp"
-#include "CL/sycl/buffer/detail/accessor.hpp"
+#include "CL/sycl/buffer/detail/buffer_accessor_shepherd.hpp"
 #include "CL/sycl/buffer/detail/buffer_base.hpp"
 #include "CL/sycl/buffer/detail/buffer_waiter.hpp"
 #include "CL/sycl/range.hpp"
@@ -58,7 +58,7 @@ private:
             int D,
             access::mode Mode,
             access::target Target /* = access::global_buffer */>
-    friend class detail::accessor;
+    friend class detail::buffer_accessor_shepherd;
 
   /** The allocator to be used when some memory is needed
 

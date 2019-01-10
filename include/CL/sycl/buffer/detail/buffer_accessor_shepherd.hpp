@@ -1,5 +1,5 @@
-#ifndef TRISYCL_SYCL_BUFFER_DETAIL_ACCESSOR_HPP
-#define TRISYCL_SYCL_BUFFER_DETAIL_ACCESSOR_HPP
+#ifndef TRISYCL_SYCL_BUFFER_DETAIL_BUFFER_ACCESSOR_SHEPHERD_HPP
+#define TRISYCL_SYCL_BUFFER_DETAIL_BUFFER_ACCESSOR_SHEPHERD_HPP
 
 /** \file The OpenCL SYCL buffer accessor<> detail behind the scene
 
@@ -52,14 +52,14 @@ template <typename T,
           int Dimensions,
           access::mode Mode,
           access::target Target /* = access::global_buffer */>
-class accessor :
+class buffer_accessor_shepherd :
     public detail::accessor_base,
     public detail::buffer_accessor_view<T, Dimensions, Mode, Target>,
-    public std::enable_shared_from_this<accessor<T,
+    public std::enable_shared_from_this<buffer_accessor_shepherd<T,
                                                  Dimensions,
                                                  Mode,
                                                  Target>>,
-    public detail::debug<accessor<T, Dimensions, Mode, Target>> {
+    public detail::debug<buffer_accessor_shepherd<T, Dimensions, Mode, Target>> {
   /** Keep a reference to the accessed buffer
 
       Beware that it owns the buffer, which means that the accessor
@@ -75,15 +75,15 @@ public:
       \todo fix the specification to rename target that shadows
       template parm
   */
-  accessor(std::shared_ptr<detail::buffer<T, Dimensions>> target_buffer) :
+  buffer_accessor_shepherd(std::shared_ptr<detail::buffer<T, Dimensions>> target_buffer) :
 //remove?
     detail::buffer_accessor_view<T, Dimensions, Mode, Target> {
       target_buffer->access },
     buf { target_buffer }
   {
     target_buffer->template track_access_mode<Mode>();
-    TRISYCL_DUMP_T("Create a host accessor write = "
-                   << accessor::is_write_access());
+    TRISYCL_DUMP_T("Create a host buffer_accessor_shepherd write = "
+                   << buffer_accessor_shepherd::is_write_access());
     static_assert(Target == access::target::host_buffer,
                   "without a handler, access target should be host_buffer");
     /* The host needs to wait for all the producers of the buffer to
@@ -97,8 +97,8 @@ public:
        host accessors are blocking
      */
     cl::sycl::context ctx;
-    buf->update_buffer_state(ctx, accessor::mode, accessor::get_size(),
-                             accessor::get_pointer());
+    buf->update_buffer_state(ctx, buffer_accessor_shepherd::mode, buffer_accessor_shepherd::get_size(),
+                             buffer_accessor_shepherd::get_pointer());
 #endif
   }
 
@@ -108,7 +108,7 @@ public:
       \todo fix the specification to rename target that shadows
       template parm
   */
-  accessor(std::shared_ptr<detail::buffer<T, Dimensions>> target_buffer,
+  buffer_accessor_shepherd(std::shared_ptr<detail::buffer<T, Dimensions>> target_buffer,
            handler &command_group_handler) :
 //remove?
     detail::buffer_accessor_view<T, Dimensions, Mode, Target> {
@@ -116,15 +116,15 @@ public:
     buf { target_buffer }
   {
     target_buffer->template track_access_mode<Mode>();
-    TRISYCL_DUMP_T("Create a kernel accessor write = "
-                   << accessor::is_write_access());
+    TRISYCL_DUMP_T("Create a kernel buffer_accessor_shepherd write = "
+                   << buffer_accessor_shepherd::is_write_access());
     static_assert(Target == access::target::global_buffer
                   || Target == access::target::constant_buffer,
                   "access target should be global_buffer or constant_buffer "
                   "when a handler is used");
     // Register the buffer to the task dependencies
     task = buffer_add_to_task(buf, &command_group_handler,
-                              accessor::is_write_access());
+                              buffer_accessor_shepherd::is_write_access());
   }
 
 
@@ -192,8 +192,8 @@ private:
        the buffer doesn't already exists or if the data is not up to date
     */
     auto ctx = task->get_queue()->get_context();
-    buf->update_buffer_state(ctx, accessor::mode, accessor::get_size(),
-                             accessor::get_pointer());
+    buf->update_buffer_state(ctx, buffer_accessor_shepherd::mode, buffer_accessor_shepherd::get_size(),
+                             buffer_accessor_shepherd::get_pointer());
   }
 
 
@@ -223,4 +223,4 @@ private:
     ### End:
 */
 
-#endif // TRISYCL_SYCL_BUFFER_DETAIL_ACCESSOR_HPP
+#endif // TRISYCL_SYCL_BUFFER_DETAIL_BUFFER_ACCESSOR_SHEPHERD_HPP
