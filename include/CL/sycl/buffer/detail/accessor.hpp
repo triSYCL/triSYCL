@@ -22,8 +22,7 @@
 #include "CL/sycl/command_group/detail/task.hpp"
 #include "CL/sycl/detail/debug.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 class handler;
 
@@ -77,6 +76,7 @@ public:
       template parm
   */
   accessor(std::shared_ptr<detail::buffer<T, Dimensions>> target_buffer) :
+//remove?
     detail::buffer_accessor_view<T, Dimensions, Mode, Target> {
       target_buffer->access },
     buf { target_buffer }
@@ -110,6 +110,7 @@ public:
   */
   accessor(std::shared_ptr<detail::buffer<T, Dimensions>> target_buffer,
            handler &command_group_handler) :
+//remove?
     detail::buffer_accessor_view<T, Dimensions, Mode, Target> {
       target_buffer->access },
     buf { target_buffer }
@@ -153,7 +154,10 @@ public:
       task->add_postlude([=] {
           /* Even if this function does nothing, it is required to
              have the capture of acc to keep the accessor alive across
-             the kernel execution up to the execution postlude */
+             the kernel execution up to the execution postlude.
+
+             Note that this is what will destroy the accessor shepherd
+             after the kernel execution */
           acc->copy_back_cl_buffer();
         });
 #endif
@@ -208,7 +212,6 @@ private:
 
 /// @} End the data Doxygen group
 
-}
 }
 }
 

@@ -23,10 +23,7 @@
 #include "CL/sycl/buffer/detail/buffer_waiter.hpp"
 #include "CL/sycl/range.hpp"
 
-namespace cl {
-namespace sycl {
-namespace detail {
-
+namespace cl::sycl::detail {
 
 /** \addtogroup data Data access and storage in SYCL
     @{
@@ -54,6 +51,7 @@ public:
 
 private:
 
+//Remove
   // \todo Replace U and D somehow by T and Dimensions
   // To allow allocation access
   template <typename U,
@@ -214,6 +212,12 @@ public:
    */
   void mark_as_written() {
     modified = true;
+  }
+
+
+  /// Return a low-level accessor on the buffer
+  auto& get_access() {
+    return access ;
   }
 
 
@@ -434,8 +438,6 @@ buffer_add_to_task(BufferDetail buf,
 
 /// @} End the data Doxygen group
 
-}
-}
 }
 
 /*
