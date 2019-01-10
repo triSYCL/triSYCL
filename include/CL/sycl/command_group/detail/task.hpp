@@ -10,14 +10,18 @@
 */
 
 #include <condition_variable>
+#include <functional>
+#include <map>
 #include <memory>
 #include <mutex>
 #include <thread>
+#include <utility>
 #include <vector>
 
 #ifdef TRISYCL_OPENCL
 #include <boost/compute.hpp>
 #endif
+#include <boost/thread/lock_algorithms.hpp>
 
 #include "CL/sycl/accessor/detail/accessor_base.hpp"
 #include "CL/sycl/buffer/detail/buffer_base.hpp"
@@ -25,9 +29,7 @@
 #include "CL/sycl/kernel.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /** The abstraction to represent SYCL tasks executing inside command_group
 
@@ -37,12 +39,8 @@ namespace detail {
 struct task : public std::enable_shared_from_this<task>,
               public detail::debug<task> {
 
-  /** List of the buffers used by this task
-
-      \todo Use a set to check that some buffers are not used many
-      times at least on writing
-  */
-  std::vector<std::shared_ptr<detail::buffer_base>> buffers_in_use;
+  /// List of the buffers used by this task and their write status
+  std::map<std::shared_ptr<detail::buffer_base>, bool> buffers_in_use;
 
   /// The tasks producing the buffers used by this task
   std::vector<std::shared_ptr<detail::task>> producer_tasks;
@@ -66,6 +64,9 @@ struct task : public std::enable_shared_from_this<task>,
       or to run OpenCL kernels on */
   std::shared_ptr<detail::queue> owner_queue;
 
+  /// The functor defining the task content to be executed
+  std::function<void(void)> content;
+
   /// The OpenCL-compatible kernel run by this task, if any
   std::shared_ptr<detail::kernel> kernel;
 
@@ -81,8 +82,16 @@ struct task : public std::enable_shared_from_this<task>,
     : owner_queue { q } {}
 
 
-  /// Add a new task to the task graph and schedule for execution
+  /// Add a content to be executed by the task
   void schedule(std::function<void(void)> f) {
+    // \todo test and throw if there is already something to execute
+    content = f;
+  }
+
+
+  /// Finalize the task by inserting it in the task graph
+  void finalize() {
+    register_buffers_in_task_graph();
     /* To keep a copy of the task shared_ptr after the end of the
        command group, capture it by copy in the following lambda. This
        should be easier in C++17 with move semantics on capture
@@ -94,7 +103,7 @@ struct task : public std::enable_shared_from_this<task>,
       task->prelude();
       TRISYCL_DUMP_T("Execute the kernel");
       // Execute the kernel
-      f();
+      content();
       task->postlude();
       // Release the buffers that have been written by this task
       task->release_buffers();
@@ -102,6 +111,10 @@ struct task : public std::enable_shared_from_this<task>,
       task->notify_consumers();
       // Notify the queue we are done
       owner_queue->kernel_end();
+      /* Remove the functor that might otherwise keep references to
+         buffers indirectly and have a circular dependency preventing
+         the final release */
+      task->content = nullptr;
       TRISYCL_DUMP_T("Task thread exit");
     };
     /* Notify the queue that there is a kernel submitted to the
@@ -140,11 +153,11 @@ struct task : public std::enable_shared_from_this<task>,
   }
 
 
-  /// Release the buffers that have  been used by this task
+  /// Release the buffers that have been used by this task
   void release_buffers() {
     TRISYCL_DUMP_T("Task " << this << " releases the written buffers");
-    for (auto b: buffers_in_use)
-      b->release();
+    for (auto &b: buffers_in_use)
+      b.first->release();
     buffers_in_use.clear();
   }
 
@@ -180,9 +193,48 @@ struct task : public std::enable_shared_from_this<task>,
   void add_buffer(std::shared_ptr<detail::buffer_base> &buf,
                   bool is_write_mode) {
     TRISYCL_DUMP_T("Add buffer " << buf << " in task " << this);
-    /* Keep track of the use of the buffer to notify its release at
-       the end of the execution */
-    buffers_in_use.push_back(buf);
+    if (is_write_mode)
+      // Always record the write status
+      buffers_in_use.emplace(buf, is_write_mode);
+    else
+      // For the read case, update if nothing yet, to let the write case win
+      buffers_in_use.try_emplace(buf, is_write_mode);
+  }
+
+
+  /// Register all the buffers in an atomic way
+  void register_buffers_in_task_graph() {
+    /* Construct a list of unique locks for dependency graph
+       associated to buffers */
+    std::vector<std::unique_lock<std::mutex>> locks;
+    for (auto &b : buffers_in_use)
+      // Create a lock for the mutex, but do not lock it yet
+      locks.emplace_back(b.first->get_dependency_graph_construction_mutex(),
+                         std::defer_lock);
+    /* Lock all the required buffers for the dependency graph
+       construction to avoid deadlock if there is another thread doing
+       the same thing.
+
+       Look at tests/queue/deadlock.cpp use-case
+    */
+    for (;;) {
+      if (boost::try_lock(locks.begin(), locks.end()) == locks.end()) {
+        for (auto &b : buffers_in_use)
+          register_buffer(b.first, b.second);
+        break;
+      }
+    }
+    locks.clear();
+  }
+
+
+  /** Register a buffer to this task
+
+      This is how the dependency graph is incrementally built.
+  */
+  void register_buffer(const std::shared_ptr<detail::buffer_base> &buf,
+                       bool is_write_mode) {
+    TRISYCL_DUMP_T("register_buffer " << buf << " in task " << this);
     // To be sure the buffer does not disappear before the kernel can run
     buf->use();
 
@@ -196,15 +248,11 @@ struct task : public std::enable_shared_from_this<task>,
       latest_producer = buf->get_latest_producer();
 
     /* If the buffer is to be produced by a task, add the task in the
-       producer list to wait on it before running the task core
-
-       If a buffer is accessed first in write mode and then in read mode,
-       the task will add itself as a producer and will wait for itself
-       when calling \c wait_for_producers, we avoid this by checking that
-       \c latest_producer is not \c this
-    */
-    if (latest_producer && latest_producer != shared_from_this())
+       producer list to wait on it before running the task core */
+    if (latest_producer) {
+      assert(latest_producer != shared_from_this());
       producer_tasks.push_back(latest_producer);
+    }
   }
 
 
@@ -312,8 +360,6 @@ std::size_t register_accessor(std::weak_ptr<detail::accessor_base> a) {
 
 };
 
-}
-}
 }
 
 /*

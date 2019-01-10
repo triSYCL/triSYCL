@@ -28,8 +28,9 @@
 #include "CL/sycl/parallelism.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
+
+class queue;
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
@@ -44,6 +45,7 @@ namespace sycl {
     invocation functions are methods of this class.
 */
 class handler : public detail::debug<handler> {
+   friend cl::sycl::queue;
 
 public:
 
@@ -185,6 +187,7 @@ private:
         }));
   }
 
+
   /** Schedule a parallel for kernel
 
       \todo Add host fall-back execution for parallel_for_kernel
@@ -210,6 +213,12 @@ private:
       // }
     }));
   }
+
+
+/// The command group is complete, ship it
+void finalize() {
+  task->finalize();
+}
 
 public:
 
@@ -514,7 +523,6 @@ add_buffer_to_task(handler *command_group_handler,
 
 /// @} End the execution Doxygen group
 
-}
 }
 
 /*
