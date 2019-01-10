@@ -66,8 +66,8 @@ TRISYCL_MATH_WRAP(atanh)
 //*TRISYCL_MATH_WRAP2(atan2pi)
 TRISYCL_MATH_WRAP(cbrt)
 TRISYCL_MATH_WRAP(ceil)
-//*TRISYCL_MATH_WRAP3ss(clamp)//I
 //geninteger clamp(geninteger, sgeninteger, sgeninteger)
+TRISYCL_MATH_WRAP3ss(clamp)//I
 //*TRISYCL_MATH_WRAP(clz)
 TRISYCL_MATH_WRAP2(copysign)
 TRISYCL_MATH_WRAP(cos)
@@ -207,23 +207,11 @@ T dot(vec<T, size> x, vec<T, size> y) {
   return std::inner_product(x.begin(), x.end(), y.begin(), T{0});
 }
 
-// Returns fmin(fmax(x, minval), maxval). Results are undefined if
-// minval > maxval.
-// \todo Currently this clamp requires all values to be derived from the same
-// type T. A better implementation would be to make the vector clamp a
-// specialization of the 1d clamp and perhaps use a Using clamp = clamp_impl
-// type interface. Alternatively restriction from the more generic template
-// could be done using a type_trait and a typename T2 could be added
-template <typename T>
-T clamp(T x, T minval, T maxval) {
-  return fmin(fmax(x, minval), maxval);
-}
-
 template <typename T, int size>
 vec<T, size> clamp(vec<T, size> x, T minval, T maxval) {
-  return vec<T, size>::apply_functor([=](auto index) {
-     return clamp(x[index], minval, maxval);
-  });
+  return x.map([=](auto e) {
+      return clamp(e, minval, maxval);
+   });
 }
 
 // Returns a vector in the same direction as x but with a length of 1.
@@ -236,8 +224,8 @@ vec<T, size> normalize(vec<T, size> x) {
 // negative infinity rounding mode.
 template <typename T, int size>
 auto floor(vec<T, size> x) {
-  return vec<T, size>::apply_functor([=](auto index) {
-     return floor(x[index]);
+  return x.map([=](auto e) {
+     return floor(e);
   });
 }
 
@@ -252,9 +240,7 @@ auto floor(vec<T, size> x) {
 template <typename T, int size>
 vec<T, size> fmin(vec<T, size> x,
                   vec<T, size> y) {
-  return vec<T, size>::apply_functor([=](auto index) {
-     return fmin(y[index], x[index]);
-  });
+  return x.zip(y, fmin<T,T>);
 }
 
 // Returns y if x < y, otherwise it returns x.
@@ -264,9 +250,7 @@ vec<T, size> fmin(vec<T, size> x,
 template <typename T, int size>
 vec<T, size> fmax(vec<T, size> x,
                   vec<T, size> y) {
-  return vec<T, size>::apply_functor([=](auto index) {
-     return fmax(x[index], y[index]);
-  });
+  return x.zip(y, fmax<T,T>);
 }
 
 // seems to essentially be the same as fmax but cover different types, even the

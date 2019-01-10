@@ -99,14 +99,40 @@ private:
     return std::tuple_cat(flatten<V>(i)...);
   }
 
-  // This is a little more generic than a zip or map as it relies on the
-  // captures of the lambda to do anything interesting rather than passing
-  // vectors to it. All the apply_functor/apply_functor_impl do is work out
-  // an index sequence for the vec and invoked it then generate a new
-  // cl::sycl::vec from the result.
-  template<typename F, std::size_t... Is>
-  static auto apply_functor_impl(F f, std::index_sequence<Is...>) {
-    return cl::sycl::vec<DataType, NumElements>{f(Is)...};
+  /* apply_unary_functor_impl & apply_unary_functor generate a sequence from
+    a passed in vector and then execute a function across the range of the
+    vector returning the result as a new vector.
+  */
+  template <typename T, typename F, std::size_t... Is>
+  static auto apply_unary_functor_impl(T tuple, F f,
+                                       std::index_sequence<Is...>) {
+    return cl::sycl::vec<DataType, NumElements>{f(std::get<Is>(tuple))...};
+  }
+
+  template<typename T, typename F>
+  static auto apply_unary_functor(const T x, F f) {
+    auto tuple = flatten_to_tuple<T>(x);
+    return apply_unary_functor_impl(tuple, f,
+        std::make_index_sequence<std::tuple_size<decltype(tuple)>::value>());
+  }
+
+  /* apply_binary_functor_impl & apply_binary_functor generate two sequences
+   from a passed in vector and then execute a function across the range of
+    vector x returning the result as a new vector.
+  */
+  template<typename T, typename T2, typename F, std::size_t... Is>
+  static auto apply_binary_functor_impl(T xTuple, T2 yTuple, F f,
+    std::index_sequence<Is...>) {
+    return cl::sycl::vec<DataType, NumElements>{f(std::get<Is>(xTuple),
+       std::get<Is>(yTuple))...};
+  }
+
+  template<typename T, typename T2, typename F>
+  static auto apply_binary_functor(const T x, const T2 y, F f) {
+    auto xTuple = flatten_to_tuple<T>(x);
+    auto yTuple = flatten_to_tuple<T>(y);
+    return apply_binary_functor_impl(xTuple, yTuple, f,
+        std::make_index_sequence<std::tuple_size<decltype(xTuple)>::value>());
   }
 
 protected:
@@ -153,29 +179,33 @@ public:
     return result;
   };
 
-// Swizzle methods (see notes)
-template <int... swizzleIndexs>
-__swizzled_vec__<DataType, sizeof...(swizzleIndexs)> swizzle() const {
-  return static_cast<__swizzled_vec__<DataType, sizeof...(swizzleIndexs)>>(
-      swizzle(swizzleIndexs...));
-}
+  // Swizzle methods (see notes)
+  template <int... swizzleIndexs>
+  __swizzled_vec__<DataType, sizeof...(swizzleIndexs)> swizzle() const {
+    return static_cast<__swizzled_vec__<DataType, sizeof...(swizzleIndexs)>>(
+        swizzle(swizzleIndexs...));
+  }
 
-  // Applies a "functor" across an index the size of the cl::sycl::vec type it's
-  // invoked by: e.g. cl::sycl::vec<float, 4>::apply_functor(lambda);
+  // Applies a function across each element of the vector to generate a new
+  // vector, it leaves the original vector unaltered.
+  template <typename F>
+  auto map(F f) const {
+    return apply_unary_functor(*this, f);
+  }
+
+  // Applies a binary function across each element of the calling vector and the
+  // passed in vector x to generate a new vector. It leaves both the original
+  // vectors unaltered.
   //
-  // It creates a new cl::sycl::vec of the type its invoked by and returns it,
-  // it does not alter the state of values captured by the lambda directly. It's
-  // most likely possible to alter the captured values if you capture by
-  // reference and manipulate them inside the passed in lambda however.
-  //
-  // \todo Perhaps possible to get rid of the pointless vec_t{0} creation if
-  // flatten_to_tuple is made more compile time friendly and has a variation
-  // that requires only template parameters.
-  template<typename F>
-  static auto apply_functor(F f) {
-    using vec_t = cl::sycl::vec<DataType, NumElements>;
-    return apply_functor_impl(f, std::make_index_sequence<
-        std::tuple_size<decltype(flatten_to_tuple<vec_t>(vec_t{0}))>::value>());
+  // Note: could in theory be made less restrictive and allow zipping with a
+  // scalar type for x and allow zipping across two differing sized vectors.
+  // It would require an extra apply_binary_functor overload and a test to find
+  // the smallest index_sequence between the calling vector and x.
+  template <typename T, int size, typename F>
+  auto zip(cl::sycl::vec<T, size> x, F f) const {
+     static_assert(size == NumElements,
+       "zip currently does not support vec's of differing element size");
+     return apply_binary_functor(*this, x, f);
   }
 
 };
