@@ -11,7 +11,7 @@
 using namespace cl::sycl;
 
 int test_main(int argc, char *argv[]) {
-  check_all<queue>({});
+  check_all<queue>(queue{});
   queue q;
 
   // Check that this is the host queue by default

@@ -54,8 +54,9 @@ class host_queue : public detail::queue,
 
   /// Return the SYCL host queue's host context
   cl::sycl::context get_context() const override {
-    // Return the default context which is the host context
-    return {};
+    // Return the default context for the default device
+    // which is the host context
+    return { get_device() };
   }
 
 
