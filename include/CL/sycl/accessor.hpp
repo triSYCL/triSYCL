@@ -94,8 +94,7 @@ class accessor :
       }
   {
     auto s =
-      std::make_shared<shepherd>(*this,
-                                 target_buffer.implementation->implementation,
+      std::make_shared<shepherd>(target_buffer.implementation->implementation,
                                  command_group_handler);
     static_assert(Target == access::target::global_buffer
                   || Target == access::target::constant_buffer,
@@ -121,8 +120,7 @@ class accessor :
     static_assert(Target == access::target::host_buffer,
                   "without a handler, access target should be host_buffer");
     auto s =
-      std::make_shared<shepherd>(*this,
-                                 target_buffer.implementation->implementation);
+      std::make_shared<shepherd>(target_buffer.implementation->implementation);
     // \todo Do we need to extend the life of shepherd further?
     // Probably to fix with https://github.com/triSYCL/triSYCL/issues/192
   }

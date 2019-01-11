@@ -11,9 +11,7 @@
 
 #include "CL/sycl/detail/container_element_aspect.hpp"
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /** \addtogroup data Data access and storage in SYCL
     @{
@@ -43,8 +41,6 @@ public:
 
 /// @} End the data Doxygen group
 
-}
-}
 }
 
 /*

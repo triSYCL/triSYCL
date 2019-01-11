@@ -198,7 +198,7 @@ public:
        \todo Optimize for the case the buffer is not based on host memory
     */
     auto size = access.num_elements() * sizeof(value_type);
-    call_update_buffer_state(host_context, access::mode::read, size, access.data());
+    call_update_buffer_state(host_context, access::mode::read, size);
 
 #endif
     if (modified && final_write_back)
@@ -360,21 +360,21 @@ private:
 
       \todo Use \c if \c constexpr when it is available with C++17
   */
-  template <typename BaseType = T, typename DataType>
+  template <typename BaseType = T>
   void call_update_buffer_state(cl::sycl::context ctx, access::mode mode,
-                                size_t size, DataType* data,
+                                size_t size,
                                 std::enable_if_t<!std::is_const<BaseType>
                                 ::value>* = 0) {
-    update_buffer_state(ctx, mode, size, data);
+    update_buffer_state(ctx, mode, size, access.data());
   }
 
 
   /** Version of \c call_update_buffer_state that does nothing. It is called if
       the type of the data in the buffer is \c const
    */
-  template <typename BaseType = T, typename DataType>
+  template <typename BaseType = T>
   void call_update_buffer_state(cl::sycl::context ctx, access::mode mode,
-                                size_t size, DataType* data,
+                                size_t size,
                                 std::enable_if_t<std::is_const<BaseType>
                                 ::value>* = 0) { }
 

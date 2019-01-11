@@ -227,7 +227,7 @@ public:
       \todo to move in the access::mode enum class and add to the
       specification ?
   */
-  constexpr bool is_read_access() const {
+  static constexpr bool is_read_access() {
     return Mode == access::mode::read
       || Mode == access::mode::read_write
       || Mode == access::mode::discard_read_write;
@@ -242,7 +242,7 @@ public:
       \todo to move in the access::mode enum class and add to the
       specification ?
   */
-  constexpr bool is_write_access() const {
+  static constexpr bool is_write_access() {
     return Mode == access::mode::write
       || Mode == access::mode::read_write
       || Mode == access::mode::discard_write

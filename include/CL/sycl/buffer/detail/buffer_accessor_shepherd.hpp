@@ -60,20 +60,13 @@ class buffer_accessor_shepherd :
       unblock a kernel at the end of its execution
   */
   std::shared_ptr<detail::buffer<T, Dimensions>> buf;
-  Accessor &acc;
 
 public:
 
-  /** Construct a host accessor shepherd from an existing buffer
-
-      \todo fix the specification to rename target that shadows
-      template parm
-  */
-  buffer_accessor_shepherd(Accessor &a,
-                           std::shared_ptr<detail::buffer<T, Dimensions>>
+  /// Construct a host accessor shepherd from an existing buffer
+  buffer_accessor_shepherd(std::shared_ptr<detail::buffer<T, Dimensions>>
                            target_buffer)
     : buf { target_buffer }
-      , acc { a }
   {
     target_buffer->template track_access_mode<Mode>();
     TRISYCL_DUMP_T("Create a host buffer_accessor_shepherd write = "
@@ -91,24 +84,16 @@ public:
        host accessors are blocking
      */
     cl::sycl::context ctx;
-    buf->update_buffer_state(ctx, Accessor::mode,
-                             acc.get_size(),
-                             acc.get_pointer());
+    buf->call_update_buffer_state(ctx, Mode,  buf->get_size());
 #endif
   }
 
 
-  /** Construct a device accessor from an existing buffer
-
-      \todo fix the specification to rename target that shadows
-      template parm
-  */
-  buffer_accessor_shepherd(Accessor &a,
-                           std::shared_ptr<detail::buffer<T, Dimensions>>
+  /// Construct a device accessor from an existing buffer
+  buffer_accessor_shepherd(std::shared_ptr<detail::buffer<T, Dimensions>>
                            target_buffer,
                            handler &command_group_handler)
     : buf { target_buffer }
-    , acc { a }
   {
     target_buffer->template track_access_mode<Mode>();
     TRISYCL_DUMP_T("Create a kernel buffer_accessor_shepherd write = "
@@ -119,7 +104,7 @@ public:
                   "when a handler is used");
     // Register the buffer to the task dependencies
     task = buffer_add_to_task(buf, &command_group_handler,
-                              acc.is_write_access());
+                              Accessor::is_write_access());
   }
 
 
@@ -135,16 +120,16 @@ public:
   */
   void register_accessor() {
     if (!task->get_queue()->is_host()) {
-      // To keep alive this accessor in the following lambdas
-      auto acc = this->shared_from_this();
+      // To keep alive this accessor shepherd in the following lambdas
+      auto shepherd = this->shared_from_this();
       // Attach the accessor to the task and get its order
-      set_order(task->register_accessor(acc));
+      set_order(task->register_accessor(shepherd));
 #ifdef TRISYCL_OPENCL
       /* Before running the kernel, make sure the cl_mem behind this
          accessor is up-to-date on the device if needed and pass it to
          the kernel */
       task->add_prelude([=] {
-          acc->copy_in_cl_buffer();
+          shepherd->copy_in_cl_buffer();
         });
       // After running the kernel, deal with some copy-back if needed
       task->add_postlude([=] {
@@ -154,7 +139,7 @@ public:
 
              Note that this is what will destroy the accessor shepherd
              after the kernel execution */
-          acc->copy_back_cl_buffer();
+          shepherd->copy_back_cl_buffer();
         });
 #endif
     }
@@ -188,10 +173,7 @@ private:
        the buffer doesn't already exists or if the data is not up to date
     */
     auto ctx = task->get_queue()->get_context();
-    buf->update_buffer_state(ctx,
-                             Accessor::mode,
-                             acc.get_size(),
-                             acc.get_pointer());
+    buf->call_update_buffer_state(ctx, Mode, buf->get_size());
   }
 
 
