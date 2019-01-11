@@ -57,6 +57,9 @@ class accessor :
                                                               , AccessMode
                                                               , Target>;
 
+  /* Still specify all the template parameters since otherwise it will
+     require a definition of the accessor which is still an incomplete
+     type at this point */
   using shepherd = typename detail::buffer_accessor_shepherd<accessor
                                                              , DataType
                                                              , Dimensions

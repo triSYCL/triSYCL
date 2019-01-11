@@ -44,22 +44,15 @@ template <typename T, int Dimensions> class buffer;
     shepherd disappears.
 */
 template <typename Accessor,
-          typename T,
-          int Dimensions,
-          access::mode Mode,
-          access::target Target /* = access::global_buffer */>
+          // All the other parameters can be inferred from the Accessor
+          typename T = typename Accessor::value_type,
+          int Dimensions = Accessor::dimensionality,
+          access::mode Mode = Accessor::mode,
+          access::target Target = Accessor::target>
 class buffer_accessor_shepherd :
     public detail::accessor_base,
-    public std::enable_shared_from_this<buffer_accessor_shepherd<Accessor
-                                                                 , T
-                                                                 , Dimensions
-                                                                 , Mode
-                                                                 , Target>>,
-    public detail::debug<buffer_accessor_shepherd<Accessor
-                                                  , T
-                                                  , Dimensions
-                                                  , Mode
-                                                  , Target>> {
+    public std::enable_shared_from_this<buffer_accessor_shepherd<Accessor>>,
+    public detail::debug<buffer_accessor_shepherd<Accessor>> {
   /** Keep a reference to the accessed buffer
 
       Beware that it owns the buffer, which means that this class
