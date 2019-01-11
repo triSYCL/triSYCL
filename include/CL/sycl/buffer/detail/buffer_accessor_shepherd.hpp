@@ -1,7 +1,8 @@
 #ifndef TRISYCL_SYCL_BUFFER_DETAIL_BUFFER_ACCESSOR_SHEPHERD_HPP
 #define TRISYCL_SYCL_BUFFER_DETAIL_BUFFER_ACCESSOR_SHEPHERD_HPP
 
-/** \file The OpenCL SYCL buffer accessor<> detail behind the scene
+/** \file The OpenCL SYCL buffer accessor shepherd detail behind the scene
+    tracking the buffer usage for the accessor.
 
     Ronan at Keryell point FR
 
@@ -28,25 +29,19 @@ class handler;
 
 namespace detail {
 
-// Forward declaration of detail::buffer for use in accessor
+// Forward declaration of detail::buffer for use in the following
 template <typename T, int Dimensions> class buffer;
 
 /** \addtogroup data Data access and storage in SYCL
     @{
 */
 
-/** The buffer accessor abstracts the way buffer data are accessed
-    inside a kernel in a multidimensional variable length array way.
+/** Keep track of a buffer while used through an accessor.
 
-    This implementation relies on boost::multi_array to provide this
-    nice syntax and behaviour.
-
-    Right now the aim of this class is just to access to the buffer in
-    a read-write mode, even if capturing the multi_array_ref from a
-    lambda make it const (since in examples we have lambda with [=]
-    without mutable lambda).
-
-    \todo Use the access::mode
+    Splitting the accessor in a light-weight accessor and a heavy
+    buffer accessor shepherd in the back-stage allows a simpler code
+    transformation in the device compiler since the buffer accessor
+    shepherd disappears.
 */
 template <typename T,
           int Dimensions,
@@ -56,13 +51,16 @@ class buffer_accessor_shepherd :
     public detail::accessor_base,
     public detail::buffer_accessor_view<T, Dimensions, Mode, Target>,
     public std::enable_shared_from_this<buffer_accessor_shepherd<T,
-                                                 Dimensions,
-                                                 Mode,
-                                                 Target>>,
-    public detail::debug<buffer_accessor_shepherd<T, Dimensions, Mode, Target>> {
+                                                                 Dimensions,
+                                                                 Mode,
+                                                                 Target>>,
+    public detail::debug<buffer_accessor_shepherd<T
+                                                  , Dimensions
+                                                  , Mode
+                                                  , Target>> {
   /** Keep a reference to the accessed buffer
 
-      Beware that it owns the buffer, which means that the accessor
+      Beware that it owns the buffer, which means that this class
       has to be destroyed to release the buffer and potentially
       unblock a kernel at the end of its execution
   */
@@ -70,12 +68,13 @@ class buffer_accessor_shepherd :
 
 public:
 
-  /** Construct a host accessor from an existing buffer
+  /** Construct a host accessor shepherd from an existing buffer
 
       \todo fix the specification to rename target that shadows
       template parm
   */
-  buffer_accessor_shepherd(std::shared_ptr<detail::buffer<T, Dimensions>> target_buffer) :
+  buffer_accessor_shepherd(std::shared_ptr<detail::buffer<T, Dimensions>>
+                           target_buffer) :
 //remove?
     detail::buffer_accessor_view<T, Dimensions, Mode, Target> {
       target_buffer->access },
@@ -97,7 +96,8 @@ public:
        host accessors are blocking
      */
     cl::sycl::context ctx;
-    buf->update_buffer_state(ctx, buffer_accessor_shepherd::mode, buffer_accessor_shepherd::get_size(),
+    buf->update_buffer_state(ctx, buffer_accessor_shepherd::mode,
+                             buffer_accessor_shepherd::get_size(),
                              buffer_accessor_shepherd::get_pointer());
 #endif
   }
@@ -108,8 +108,9 @@ public:
       \todo fix the specification to rename target that shadows
       template parm
   */
-  buffer_accessor_shepherd(std::shared_ptr<detail::buffer<T, Dimensions>> target_buffer,
-           handler &command_group_handler) :
+  buffer_accessor_shepherd(std::shared_ptr<detail::buffer<T, Dimensions>>
+                           target_buffer,
+                           handler &command_group_handler) :
 //remove?
     detail::buffer_accessor_view<T, Dimensions, Mode, Target> {
       target_buffer->access },
@@ -128,7 +129,8 @@ public:
   }
 
 
-  /** Register the accessor once a \c std::shared_ptr is created on it
+  /** Register the accessor shepherd once a \c std::shared_ptr is
+      created on it
 
       This is to be called from outside once the object is created. It
       has been tried directly inside the contructor, but calling \c
@@ -192,7 +194,9 @@ private:
        the buffer doesn't already exists or if the data is not up to date
     */
     auto ctx = task->get_queue()->get_context();
-    buf->update_buffer_state(ctx, buffer_accessor_shepherd::mode, buffer_accessor_shepherd::get_size(),
+    buf->update_buffer_state(ctx,
+                             buffer_accessor_shepherd::mode,
+                             buffer_accessor_shepherd::get_size(),
                              buffer_accessor_shepherd::get_pointer());
   }
 
