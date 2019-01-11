@@ -11,10 +11,8 @@
   buffers (e.g. buffers of objects) and that function members can be accessed
   and used to modify variables.
 
-  Current State:
-    Works with POCL (tested with top of tree (10/13/2018) triSYCL device
-    compiler)
-    Untested with XOCL
+  Currently does not compile with XOCL when targeting hw_emu, address space
+  related bug.
 */
 
 using namespace cl::sycl;

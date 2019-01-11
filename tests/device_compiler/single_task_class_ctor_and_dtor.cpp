@@ -9,11 +9,6 @@
   A contrived test with the aim of testing that C++ objects can be created and
   destroyed inside a kernel implicitly and to detect any problems with address
   spaces that may occur in the process.
-
-  Current State:
-    Works with POCL (tested with top of tree (10/13/2018) triSYCL device
-    compiler)
-    Untested with XOCL
 */
 
 using namespace cl::sycl;

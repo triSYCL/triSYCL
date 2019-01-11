@@ -9,10 +9,6 @@
   The aim of this test is to check that C Struct objects can be used with
   buffers (e.g. buffers of objects) and that the data members can be accessed
   and modified trivially.
-
-  Current State:
-    Works with POCL
-    Untested with XOCL
 */
 
 using namespace cl::sycl;
