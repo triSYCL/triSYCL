@@ -197,8 +197,7 @@ public:
        \c copy_back_cl_buffer any more.
        \todo Optimize for the case the buffer is not based on host memory
     */
-    auto size = access.num_elements() * sizeof(value_type);
-    call_update_buffer_state(host_context, access::mode::read, size);
+    call_update_buffer_state(host_context, access::mode::read);
 
 #endif
     if (modified && final_write_back)
@@ -362,10 +361,9 @@ private:
   */
   template <typename BaseType = T>
   void call_update_buffer_state(cl::sycl::context ctx, access::mode mode,
-                                size_t size,
                                 std::enable_if_t<!std::is_const<BaseType>
                                 ::value>* = 0) {
-    update_buffer_state(ctx, mode, size, access.data());
+    update_buffer_state(ctx, mode, get_size(), access.data());
   }
 
 
@@ -374,7 +372,6 @@ private:
    */
   template <typename BaseType = T>
   void call_update_buffer_state(cl::sycl::context ctx, access::mode mode,
-                                size_t size,
                                 std::enable_if_t<std::is_const<BaseType>
                                 ::value>* = 0) { }
 

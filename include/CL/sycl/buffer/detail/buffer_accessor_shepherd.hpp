@@ -84,7 +84,7 @@ public:
        host accessors are blocking
      */
     cl::sycl::context ctx;
-    buf->call_update_buffer_state(ctx, Mode,  buf->get_size());
+    buf->call_update_buffer_state(ctx, Mode);
 #endif
   }
 
@@ -173,7 +173,7 @@ private:
        the buffer doesn't already exists or if the data is not up to date
     */
     auto ctx = task->get_queue()->get_context();
-    buf->call_update_buffer_state(ctx, Mode, buf->get_size());
+    buf->call_update_buffer_state(ctx, Mode);
   }
 
 
