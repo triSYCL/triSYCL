@@ -54,7 +54,8 @@ private:
 //Remove
   // \todo Replace U and D somehow by T and Dimensions
   // To allow allocation access
-  template <typename U,
+  template <typename Accessor,
+            typename U,
             int D,
             access::mode Mode,
             access::target Target /* = access::global_buffer */>

@@ -1,7 +1,7 @@
 #ifndef TRISYCL_SYCL_BUFFER_DETAIL_BUFFER_ACCESSOR_VIEW_HPP
 #define TRISYCL_SYCL_BUFFER_DETAIL_BUFFER_ACCESSOR_VIEW_HPP
 
-/** \file The OpenCL SYCL buffer accessor<> view detail behind the scene
+/** \file The SYCL buffer accessor view façade behind the scene
 
     \todo It is based on Boost MultiArray for now but to move to
     Kokkos array_view and C++2a
@@ -23,9 +23,7 @@
 #include "CL/sycl/item.hpp"
 #include "CL/sycl/nd_item.hpp"
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 template <typename T,
           int Dimensions,
@@ -335,8 +333,6 @@ public:
 
 };
 
-}
-}
 }
 
 /*

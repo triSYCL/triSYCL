@@ -43,18 +43,20 @@ template <typename T, int Dimensions> class buffer;
     transformation in the device compiler since the buffer accessor
     shepherd disappears.
 */
-template <typename T,
+template <typename Accessor,
+          typename T,
           int Dimensions,
           access::mode Mode,
           access::target Target /* = access::global_buffer */>
 class buffer_accessor_shepherd :
     public detail::accessor_base,
-    public detail::buffer_accessor_view<T, Dimensions, Mode, Target>,
-    public std::enable_shared_from_this<buffer_accessor_shepherd<T,
-                                                                 Dimensions,
-                                                                 Mode,
-                                                                 Target>>,
-    public detail::debug<buffer_accessor_shepherd<T
+    public std::enable_shared_from_this<buffer_accessor_shepherd<Accessor
+                                                                 , T
+                                                                 , Dimensions
+                                                                 , Mode
+                                                                 , Target>>,
+    public detail::debug<buffer_accessor_shepherd<Accessor
+                                                  , T
                                                   , Dimensions
                                                   , Mode
                                                   , Target>> {
@@ -65,6 +67,7 @@ class buffer_accessor_shepherd :
       unblock a kernel at the end of its execution
   */
   std::shared_ptr<detail::buffer<T, Dimensions>> buf;
+  Accessor &acc;
 
 public:
 
@@ -73,16 +76,15 @@ public:
       \todo fix the specification to rename target that shadows
       template parm
   */
-  buffer_accessor_shepherd(std::shared_ptr<detail::buffer<T, Dimensions>>
-                           target_buffer) :
-//remove?
-    detail::buffer_accessor_view<T, Dimensions, Mode, Target> {
-      target_buffer->access },
-    buf { target_buffer }
+  buffer_accessor_shepherd(Accessor &a,
+                           std::shared_ptr<detail::buffer<T, Dimensions>>
+                           target_buffer)
+    : buf { target_buffer }
+      , acc { a }
   {
     target_buffer->template track_access_mode<Mode>();
     TRISYCL_DUMP_T("Create a host buffer_accessor_shepherd write = "
-                   << buffer_accessor_shepherd::is_write_access());
+                   << Accessor::is_write_access());
     static_assert(Target == access::target::host_buffer,
                   "without a handler, access target should be host_buffer");
     /* The host needs to wait for all the producers of the buffer to
@@ -96,9 +98,9 @@ public:
        host accessors are blocking
      */
     cl::sycl::context ctx;
-    buf->update_buffer_state(ctx, buffer_accessor_shepherd::mode,
-                             buffer_accessor_shepherd::get_size(),
-                             buffer_accessor_shepherd::get_pointer());
+    buf->update_buffer_state(ctx, Accessor::mode,
+                             acc.get_size(),
+                             acc.get_pointer());
 #endif
   }
 
@@ -108,24 +110,23 @@ public:
       \todo fix the specification to rename target that shadows
       template parm
   */
-  buffer_accessor_shepherd(std::shared_ptr<detail::buffer<T, Dimensions>>
+  buffer_accessor_shepherd(Accessor &a,
+                           std::shared_ptr<detail::buffer<T, Dimensions>>
                            target_buffer,
-                           handler &command_group_handler) :
-//remove?
-    detail::buffer_accessor_view<T, Dimensions, Mode, Target> {
-      target_buffer->access },
-    buf { target_buffer }
+                           handler &command_group_handler)
+    : buf { target_buffer }
+    , acc { a }
   {
     target_buffer->template track_access_mode<Mode>();
     TRISYCL_DUMP_T("Create a kernel buffer_accessor_shepherd write = "
-                   << buffer_accessor_shepherd::is_write_access());
+                   << Accessor::is_write_access());
     static_assert(Target == access::target::global_buffer
                   || Target == access::target::constant_buffer,
                   "access target should be global_buffer or constant_buffer "
                   "when a handler is used");
     // Register the buffer to the task dependencies
     task = buffer_add_to_task(buf, &command_group_handler,
-                              buffer_accessor_shepherd::is_write_access());
+                              acc.is_write_access());
   }
 
 
@@ -195,9 +196,9 @@ private:
     */
     auto ctx = task->get_queue()->get_context();
     buf->update_buffer_state(ctx,
-                             buffer_accessor_shepherd::mode,
-                             buffer_accessor_shepherd::get_size(),
-                             buffer_accessor_shepherd::get_pointer());
+                             Accessor::mode,
+                             acc.get_size(),
+                             acc.get_pointer());
   }
 
 
