@@ -13,10 +13,9 @@ constexpr size_t N = 20;
 constexpr size_t M = 30;
 constexpr size_t P = 40;
 
-#define TEST_TYPE(accessor_var, type_member, type)                      \
-  static_assert(std::is_same<type,                                      \
-                decltype(accessor_var)::type_member>::value,            \
-                #type_member " is an " #type)
+#define TEST_TYPE(accessor_var, type_member, type)                         \
+  static_assert(std::is_same_v<type, decltype(accessor_var)::type_member>, \
+                #type_member " is a '" #type "'")
 
 int main() {
     // Create read-write buffers for each rank

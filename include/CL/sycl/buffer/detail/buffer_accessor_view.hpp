@@ -40,6 +40,10 @@ public:
     detail::accessor_traits<T, Dimensions, Mode, Target>::pointer;
   using typename
     detail::accessor_traits<T, Dimensions, Mode, Target>::value_type;
+  using typename
+    detail::accessor_traits<T, Dimensions, Mode, Target>::reference;
+  using typename
+    detail::accessor_traits<T, Dimensions, Mode, Target>::const_reference;
 
   /// The implementation is a multi_array_ref wrapper
   using array_view_type = boost::multi_array_ref<T, Dimensions>;
@@ -47,11 +51,6 @@ public:
   // The same type but writable
   using writable_array_view_type =
     typename std::remove_const<array_view_type>::type;
-
-  // Override the accessor traits by the implementation details to
-  // have multidimensional arrays working
-  using reference = typename array_view_type::reference;
-  using const_reference = typename array_view_type::const_reference;
 
   /** Inherit the iterator types from the implementation
 
@@ -136,8 +135,8 @@ public:
 
       Use array_view_type::reference instead of auto& because it does not
       work in some dimensions.
-   */
-  reference operator[](std::size_t index) {
+  */
+  typename array_view_type::reference operator[](std::size_t index) {
     return array[index];
   }
 
@@ -147,7 +146,7 @@ public:
       Use array_view_type::reference instead of auto& because it does not
       work in some dimensions.
    */
-  reference operator[](std::size_t index) const {
+  typename array_view_type::reference operator[](std::size_t index) const {
     return array[index];
   }
 
