@@ -166,13 +166,13 @@ public:
 
   /// To use an accessor with [item<>]
   auto &operator[](item<dimensionality> index) {
-    return (*this)[index.get()];
+    return (*this)[index.get_id()];
   }
 
 
   /// To use an accessor with [item<>]
   auto &operator[](item<dimensionality> index) const {
-    return (*this)[index.get()];
+    return (*this)[index.get_id()];
   }
 
 
@@ -181,7 +181,7 @@ public:
       \todo Add in the specification because used by HPC-GPU slide 22
   */
   auto &operator[](nd_item<dimensionality> index) {
-    return (*this)[index.get_global()];
+    return (*this)[index.get_global_id()];
   }
 
   /** To use an accessor with an [nd_item<>]
@@ -189,7 +189,7 @@ public:
       \todo Add in the specification because used by HPC-GPU slide 22
   */
   auto &operator[](nd_item<dimensionality> index) const {
-    return (*this)[index.get_global()];
+    return (*this)[index.get_global_id()];
   }
 
 
@@ -279,8 +279,6 @@ public:
       addressing. So this only require a size_t more...
 
       \todo Factor out these in a template helper
-
-      \todo Do we need this in detail::accessor too or only in accessor?
   */
 
 
