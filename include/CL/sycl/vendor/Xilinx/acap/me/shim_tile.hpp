@@ -6,9 +6,7 @@
     Model of a shim tile between the AI array and the rest of the circuit
 
     Based on Math Engine (ME) Architecture Specification, Revision v1.5
-    June 2018
-
-    Section "6 ME Shim Architecture"
+    June 2018, section "6 ME Shim Architecture".
 
     Ronan at Keryell point FR
 

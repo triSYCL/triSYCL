@@ -5,6 +5,9 @@
 
     Model of an AXI stream switch
 
+    Based on Math Engine (ME) Architecture Specification, Revision v1.5
+    June 2018, section "4.2 AXI-Stream Tile Interconnect".
+
     Ronan at Keryell point FR
 
     This file is distributed under the University of Illinois Open Source
@@ -81,7 +84,6 @@ public:
 
   using data_type = std::uint32_t;
   static constexpr auto stream_latency = 4;
-  using stream = cl::sycl::static_pipe<data_type, stream_latency>;
 
   static constexpr auto west_input_number = 4;
   static constexpr auto west_output_number = 4;
@@ -91,7 +93,7 @@ public:
   static constexpr auto north_output_number = 6;
   static constexpr auto south_input_number = 8;
   static constexpr auto south_output_number = 6;
-
+/*
   using west_input_type = std::array<stream, west_input_number>;
   using west_output_type = std::array<stream, west_output_number>;
   using east_input_type = std::array<stream, east_input_number>;
@@ -100,33 +102,44 @@ public:
   using north_output_type = std::array<stream, north_output_number>;
   using south_input_type = std::array<stream, south_input_number>;
   using south_output_type = std::array<stream, south_output_number>;
+*/
+  struct input_port {
+    cl::sycl::static_pipe<data_type, stream_latency> stream;
+    bool enabled;
+  };
 
+  struct output_port {
+    cl::sycl::static_pipe<data_type, stream_latency> stream;
+  };
 
-  std::array<stream, static_cast<int>(shim_axi_ss_slave_port::size)> input_ports;
-  std::array<stream, static_cast<int>(shim_axi_ss_slave_port::size)> output_ports;
+  std::array<input_port,
+             static_cast<int>(shim_axi_ss_slave_port::size)> input_ports;
+  std::array<output_port,
+             static_cast<int>(shim_axi_ss_slave_port::size)> output_ports;
 
+/*
   axi_stream_switch(west_input_type wi, west_output_type wo,
                     east_input_type ei, east_output_type eo,
                     north_input_type ni, north_output_type no,
                     south_input_type si, south_output_type so)
   {}
-
+*/
 
   ///
   axi_stream_switch() = default;
 
 
   auto input(shim_axi_ss_slave_port p) {
-    return input_ports[static_cast<int>(p)]
+    return input_ports[static_cast<int>(p)].stream
       .get_access<access::mode::write, access::target::blocking_pipe>();
   }
 
 
   auto output(shim_axi_ss_master_port p) {
     // Lie to implement some "routing" for now
-//    return output_ports[static_cast<int>(p)]
+//    return output_ports[static_cast<int>(p)].stream
 //      .get_access<access::mode::read, access::target::blocking_pipe>();
-    return input_ports[static_cast<int>(p)]
+    return input_ports[static_cast<int>(p)].stream
       .get_access<access::mode::read, access::target::blocking_pipe>();
   }
 
