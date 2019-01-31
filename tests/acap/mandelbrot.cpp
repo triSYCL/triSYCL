@@ -1,4 +1,4 @@
-/* Mandelbrot set for MathEngine
+/* Mandelbrot set for AI Engine
 
    RUN: %{execute}%s
 */
@@ -15,16 +15,16 @@ static auto constexpr image_size = 229;
 graphics::application a;
 
 // All the memory modules are the same
-template <typename ME_Array, int X, int Y>
-struct memory : acap::me::memory<ME_Array, X, Y> {
+template <typename AIE, int X, int Y>
+struct memory : acap::aie::memory<AIE, X, Y> {
   // The local pixel plane
   std::uint8_t plane[image_size][image_size];
 };
 
 // All the tiles run the same Mandelbrot program
-template <typename ME_Array, int X, int Y>
-struct mandelbrot : acap::me::tile<ME_Array, X, Y> {
-  using t = acap::me::tile<ME_Array, X, Y>;
+template <typename AIE, int X, int Y>
+struct mandelbrot : acap::aie::tile<AIE, X, Y> {
+  using t = acap::aie::tile<AIE, X, Y>;
   // Computation rectangle in the complex plane
   static auto constexpr x0 = -2.0, y0 = -1.0, x1 = 1.0, y1 = 1.0;
   static auto constexpr M = 100;
@@ -52,14 +52,14 @@ struct mandelbrot : acap::me::tile<ME_Array, X, Y> {
 };
 
 int main(int argc, char *argv[]) {
-  acap::me::array<acap::me::layout::size<2,3>, mandelbrot, memory> me;
+  acap::aie::array<acap::aie::layout::size<2,3>, mandelbrot, memory> aie;
   // Open a graphic view of a ME array
-  a.start(argc, argv, decltype(me)::geo::x_size,
-          decltype(me)::geo::y_size,
+  a.start(argc, argv, decltype(aie)::geo::x_size,
+          decltype(aie)::geo::y_size,
           image_size, image_size, 1);
 
-  // Launch the MathEngine program
-  me.run();
+  // Launch the AI Engine program
+  aie.run();
   // Wait for the graphics to stop
   a.wait();
 }

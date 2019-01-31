@@ -3,11 +3,7 @@
 
 /** \file
 
-    Experimenting with processor arrays such as ACAP/MathEngine
-
-    2017-09-18--22-Khronos_F2F_Chicago-Xilinx/2017-09-19--20-Xilinx-SYCL-Next.pdf
-    Based on Math Engine (ME) Architecture Specification, Revision v1.4
-    March 2018
+    Experimenting with CGRA & processor arrays such as ACAP/AI Engine
 */
 
 #include "me/array.hpp"

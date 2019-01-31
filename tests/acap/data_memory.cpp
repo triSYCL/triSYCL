@@ -1,8 +1,7 @@
-/* Testing the MathEngine Memory Module
+/* Testing the AI Engine Memory Module
 
-   2017-09-18--22-Khronos_F2F_Chicago-Xilinx/2017-09-19--20-Xilinx-SYCL-Next.pdf
-   Based on Math Engine (ME) Architecture Specification, Revision v1.4
-   March 2018
+   Some ideas from
+   2017-09-18--22-Khronos_F2F_Chicago-Xilinx/2017-09-19--20-Xilinx-SYCL-Next.pd
 
    RUN: %{execute}%s
 */
@@ -29,9 +28,9 @@ struct black {
   int i = 7;
 };
 
-template <typename ME_Array, int X, int Y>
+template <typename AIE, int X, int Y>
 struct memory
-  : acap::me::memory<ME_Array, X, Y>
+  : acap::aie::memory<AIE, X, Y>
   , std::conditional_t<is_white(X, Y), white, black> {
   int use_count = 0;
   int v = 42;
@@ -41,18 +40,14 @@ struct memory
   };
 };
 
-template <typename ME_Array,
-          int X,
-          int Y>
-struct tile : acap::me::tile<ME_Array,
-                             X,
-                             Y> {
-  using t = acap::me::tile<ME_Array, X, Y>;
+template <typename AIE, int X, int Y>
+struct tile : acap::aie::tile<AIE, X, Y> {
+  using t = acap::aie::tile<AIE, X, Y>;
 
   void run() {
    auto &own = t::mem();
 
-   std::cout << "Hello, I am the ME tile (" << X << ',' << Y
+   std::cout << "Hello, I am the AI tile (" << X << ',' << Y
               << ") using " << sizeof(*this) << " bytes of memory "
               << std::endl;
     std::cout << "Local v = " << own.v << std::endl;
@@ -99,15 +94,13 @@ struct t {
 int main() {
   std::cout << std::endl << "Instantiate small MathEngine:"
             << std::endl << std::endl;
-  acap::me::array<acap::me::layout::small,
-                  tile,
-                  memory> me;
-  me.run();
+  acap::aie::array<acap::aie::layout::small, tile, memory> aie;
+  aie.run();
 
   std::cout << std::endl << "Instantiate tiny MathEngine:"
             << std::endl << std::endl;
-  acap::me::array<acap::me::layout::one_pe, tile, memory> solitaire_me;
-  solitaire_me.run();
+  acap::aie::array<acap::aie::layout::one_pe, tile, memory> solitaire_aie;
+  solitaire_aie.run();
 /*
   t tile;
   std::cout << "0: " << tile.get_mem<0>().data << std::endl;

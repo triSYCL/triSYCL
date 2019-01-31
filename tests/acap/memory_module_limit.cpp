@@ -1,8 +1,4 @@
-/* Testing the MathEngine Memory Module boundary geometry
-
-   2017-09-18--22-Khronos_F2F_Chicago-Xilinx/2017-09-19--20-Xilinx-SYCL-Next.pdf
-   Based on Math Engine (ME) Architecture Specification, Revision v1.4
-   March 2018
+/* Testing the AI Engine Memory Module boundary geometry
 
    RUN: %{execute}%s
 */
@@ -32,13 +28,9 @@ struct test_memory {
 
   static inline status mma[y_size][x_size];
 
-  template <typename ME_Array,
-            int X,
-            int Y>
-  struct tile : acap::me::tile<ME_Array,
-                               X,
-                               Y> {
-    using t = acap::me::tile<ME_Array, X, Y>;
+  template <typename AIE, int X, int Y>
+  struct tile : acap::aie::tile<AIE, X, Y> {
+    using t = acap::aie::tile<AIE, X, Y>;
 
     void run() {
       auto &s = mma[Y][X];
@@ -50,8 +42,8 @@ struct test_memory {
   };
 
   test_memory() {
-    acap::me::array<Layout, tile, acap::me::memory> me;
-    me.run();
+    acap::aie::array<Layout, tile, acap::aie::memory> aie;
+    aie.run();
     /* Check that the existence of the memory module fits the bondary
        geometry */
     for (int y = 0; y < y_size; ++y)
@@ -79,9 +71,9 @@ struct test_memory {
 
 int test_main(int argc, char *argv[]) {
   // Test for various machine sizes
-  test_memory<acap::me::layout::one_pe> tm_1;
-  test_memory<acap::me::layout::small> tm_small;
-  test_memory<acap::me::layout::full> tm_full;
+  test_memory<acap::aie::layout::one_pe> tm_1;
+  test_memory<acap::aie::layout::small> tm_small;
+  test_memory<acap::aie::layout::full> tm_full;
 
   return 0;
 }

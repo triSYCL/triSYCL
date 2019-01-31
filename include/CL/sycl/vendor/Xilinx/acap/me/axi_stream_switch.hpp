@@ -8,7 +8,7 @@
     Based on Math Engine (ME) Architecture Specification, Revision v1.5
     June 2018, section "4.2 AXI-Stream Tile Interconnect".
 
-    Ronan at Keryell point FR
+    Ronan dot Keryell at Xilinx dot com
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
@@ -18,7 +18,7 @@
 #include <cstdint>
 
 
-namespace cl::sycl::vendor::xilinx::acap::me {
+namespace cl::sycl::vendor::xilinx::acap::aie {
 
 class axi_stream_switch {
 

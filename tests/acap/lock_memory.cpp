@@ -1,7 +1,4 @@
-/* Testing the MathEngine Memory Module with locking mechanism
-
-   Based on Math Engine (ME) Architecture Specification, Revision v1.4
-   March 2018
+/* Testing the AI Engine Memory Module with locking mechanism
 
    RUN: %{execute}%s
 */
@@ -20,19 +17,19 @@ using namespace cl::sycl::vendor::xilinx;
 graphics::application a;
 
 // All the memory modules are the same
-template <typename ME_Array, int X, int Y>
-struct memory : acap::me::memory<ME_Array, X, Y> {
+template <typename AIE, int X, int Y>
+struct memory : acap::aie::memory<AIE, X, Y> {
   int v;
 };
 
 // By default all the tiles have an empty program
-template <typename ME_Array, int X, int Y>
-struct tile : acap::me::tile<ME_Array, X, Y> {};
+template <typename AIE, int X, int Y>
+struct tile : acap::aie::tile<AIE, X, Y> {};
 
 // The tile(0,0) write in memory module on the right
-template <typename ME_Array>
-struct tile<ME_Array, 0, 0> : acap::me::tile<ME_Array, 0, 0> {
-  using t = acap::me::tile<ME_Array, 0, 0>;
+template <typename AIE>
+struct tile<AIE, 0, 0> : acap::aie::tile<AIE, 0, 0> {
+  using t = acap::aie::tile<AIE, 0, 0>;
 
   void run() {
     auto &m = t::mem_right();
@@ -50,9 +47,9 @@ struct tile<ME_Array, 0, 0> : acap::me::tile<ME_Array, 0, 0> {
 };
 
 // The tile(1,0) read from memory module on the left
-template <typename ME_Array>
-struct tile<ME_Array, 1, 0> : acap::me::tile<ME_Array, 1, 0> {
-  using t = acap::me::tile<ME_Array, 1, 0>;
+template <typename AIE>
+struct tile<AIE, 1, 0> : acap::aie::tile<AIE, 1, 0> {
+  using t = acap::aie::tile<AIE, 1, 0>;
 
   void run() {
     auto &m = t::mem_left();
@@ -70,13 +67,11 @@ struct tile<ME_Array, 1, 0> : acap::me::tile<ME_Array, 1, 0> {
 int main(int argc, char *argv[]) {
   std::cout << std::endl << "Instantiate small MathEngine:"
             << std::endl << std::endl;
-  acap::me::array<acap::me::layout::small,
-                  tile,
-                  memory> me;
+  acap::aie::array<acap::aie::layout::small, tile, memory> aie;
 
-  a.start(argc, argv, decltype(me)::geo::x_size,
-          decltype(me)::geo::y_size, 1, 1, 100);
+  a.start(argc, argv, decltype(aie)::geo::x_size,
+          decltype(aie)::geo::y_size, 1, 1, 100);
 
-  // Launch the MathEngine program
-  me.run();
+  // Launch the AI Engine program
+  aie.run();
 }

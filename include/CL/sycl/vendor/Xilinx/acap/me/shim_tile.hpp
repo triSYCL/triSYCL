@@ -8,7 +8,7 @@
     Based on Math Engine (ME) Architecture Specification, Revision v1.5
     June 2018, section "6 ME Shim Architecture".
 
-    Ronan at Keryell point FR
+    Ronan dot Keryell at Xilinx dot com
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
@@ -16,7 +16,7 @@
 
 #include "axi_stream_switch.hpp"
 
-namespace cl::sycl::vendor::xilinx::acap::me {
+namespace cl::sycl::vendor::xilinx::acap::aie {
 
 class shim_tile {
 

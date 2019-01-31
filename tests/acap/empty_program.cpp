@@ -1,4 +1,4 @@
-/* Testing the minimal empty MathEngine Tile program and Memory Module
+/* Testing the minimal empty AI Engine Tile program and Memory Module
 
    RUN: %{execute}%s
 */
@@ -12,9 +12,9 @@ using namespace cl::sycl::vendor::xilinx;
 int test_main(int argc, char *argv[]) {
   /* Test the empty tile program & empty memory module for various
      machine sizes */
-  acap::me::array<acap::me::layout::one_pe>{}.run();
-  acap::me::array<acap::me::layout::small>{}.run();
-  acap::me::array<acap::me::layout::full>{}.run();
+  acap::aie::array<acap::aie::layout::one_pe>{}.run();
+  acap::aie::array<acap::aie::layout::small>{}.run();
+  acap::aie::array<acap::aie::layout::full>{}.run();
 
   return 0;
 }

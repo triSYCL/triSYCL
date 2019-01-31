@@ -1,9 +1,9 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_ME_CASCADE_STREAM_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_ME_CASCADE_STREAM_HPP
 
-/** \file The cascade stream infrastructure between MathEngine tiles
+/** \file The cascade stream infrastructure between AI Engine tiles
 
-    Ronan at Keryell point FR
+    Ronan dot Keryell at Xilinx dot com
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
@@ -12,9 +12,9 @@
 #include "CL/sycl/access.hpp"
 #include "geography.hpp"
 
-namespace cl::sycl::vendor::xilinx::acap::me {
+namespace cl::sycl::vendor::xilinx::acap::aie {
 
-/** The cascade stream infrastructure between MathEngine tiles
+/** The cascade stream infrastructure between AI Engine tiles
 
     Based on Math Engine (ME) Architecture Specification, Revision v1.4
     March 2018

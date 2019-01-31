@@ -1,4 +1,4 @@
-/* Demo of wave propagation for MathEngine
+/* Demo of wave propagation for AI Engine
 
    Recycle my MINES ParisTech ISIA hands-on
 
@@ -33,9 +33,9 @@ using namespace cl::sycl::vendor::xilinx;
 namespace fundamentals_v3 = std::experimental::fundamentals_v3;
 
 // The size of the machine to use
-using layout = acap::me::layout::size<5,4>;
-//using layout = acap::me::layout::size<33,12>;
-using geography = acap::me::geography<layout>;
+using layout = acap::aie::layout::size<5,4>;
+//using layout = acap::aie::layout::size<33,12>;
+using geography = acap::aie::geography<layout>;
 boost::barrier b1 { geography::size };
 boost::barrier b2 { geography::size };
 boost::barrier b3 { geography::size };
@@ -215,14 +215,14 @@ struct reference_wave_propagation {
 
 // A sequential reference implementation of the wave propagation
 reference_wave_propagation
-<(image_size - 1)*acap::me::geography<layout>::x_size + 1,
- (image_size - 1)*acap::me::geography<layout>::y_size + 1,
+<(image_size - 1)*acap::aie::geography<layout>::x_size + 1,
+ (image_size - 1)*acap::aie::geography<layout>::y_size + 1,
  image_size - 1> seq;
 
 
 // All the memory modules are the same
-template <typename ME_Array, int X, int Y>
-struct memory : acap::me::memory<ME_Array, X, Y> {
+template <typename AIE, int X, int Y>
+struct memory : acap::aie::memory<AIE, X, Y> {
   // The local pixel buffer
   double u[image_size][image_size];
   double v[image_size][image_size];
@@ -240,9 +240,9 @@ static auto minmax_element(const double value[image_size][image_size]) {
 )
 
 // All the tiles run the same program
-template <typename ME_Array, int X, int Y>
-struct tile : acap::me::tile<ME_Array, X, Y> {
-  using t = acap::me::tile<ME_Array, X, Y>;
+template <typename AIE, int X, int Y>
+struct tile : acap::aie::tile<AIE, X, Y> {
+  using t = acap::aie::tile<AIE, X, Y>;
 
   void initialize_space() {
     auto& m = t::mem();
@@ -366,17 +366,17 @@ struct tile : acap::me::tile<ME_Array, X, Y> {
 
 int main(int argc, char *argv[]) {
   // An ACAP version of the wave propagation
-  acap::me::array<layout, tile, memory> me;
+  acap::aie::array<layout, tile, memory> aie;
 
-  a.start(argc, argv, decltype(me)::geo::x_size,
-          decltype(me)::geo::y_size,
+  a.start(argc, argv, decltype(aie)::geo::x_size,
+          decltype(aie)::geo::y_size,
           image_size, image_size, 1);
 #if 0
   // Run the sequential reference implementation
   seq.run();
 #endif
-  // Launch the MathEngine program
-  me.run();
+  // Launch the AI Engine program
+  aie.run();
   // Wait for the graphics to stop
   a.wait();
 }

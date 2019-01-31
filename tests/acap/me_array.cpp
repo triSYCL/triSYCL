@@ -1,8 +1,6 @@
-/* Experimenting with processor arrays such as ACAP/MathEngine
+/* Experimenting with processor arrays such as ACAP/AI Engine
 
-   2017-09-18--22-Khronos_F2F_Chicago-Xilinx/2017-09-19--20-Xilinx-SYCL-Next.pdf
-   Based on Math Engine (ME) Architecture Specification,Revision v1.4
-   March 2018
+   Some ideas from 2017-09-18--22-Khronos_F2F_Chicago-Xilinx/2017-09-19--20-Xilinx-SYCL-Next.pdf
 
    RUN: %{execute}%s
 */
@@ -13,7 +11,7 @@
 
 using namespace cl::sycl::vendor::xilinx;
 
-/// A small MathEngine program
+/// A small AI Engine program
 
 bool constexpr is_red(int x, int y) {
   return (x + y) & 1;
@@ -33,11 +31,11 @@ struct memory
     int use_count = 0;
 };
 
-template <typename ME_Array, int X, int Y>
+template <typename AIE, int X, int Y>
 struct tile
-  : acap::me::tile<ME_Array, X, Y>
+  : acap::aie::tile<AIE, X, Y>
   , memory<X, Y> {
-  using t = acap::me::tile<ME_Array, X, Y>;
+  using t = acap::aie::tile<AIE, X, Y>;
   int v = 42;
 
   void run() {
@@ -65,16 +63,16 @@ struct tile
 
 
 int main() {
-  std::cout << std::endl << "Instantiate big MathEngine:"
+  std::cout << std::endl << "Instantiate big AI Engine:"
             << std::endl << std::endl;
-  acap::me::array<acap::me::layout::full, tile, acap::me::memory> me;
-  me.run();
+  acap::aie::array<acap::aie::layout::full, tile, acap::aie::memory> aie;
+  aie.run();
 
-  std::cout << std::endl << "Instantiate tiny MathEngine:"
+  std::cout << std::endl << "Instantiate tiny AI Engine:"
             << std::endl << std::endl;
-  acap::me::array<acap::me::layout::one_pe, tile, acap::me::memory>
-    solitaire_me;
-  solitaire_me.run();
+  acap::aie::array<acap::aie::layout::one_pe, tile, acap::aie::memory>
+    solitaire_aie;
+  solitaire_aie.run();
 
 
 

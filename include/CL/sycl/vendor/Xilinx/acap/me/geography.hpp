@@ -1,9 +1,9 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_ME_GEOGRAPHY_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_ME_GEOGRAPHY_HPP
 
-/** \file Some geographic information about the MathEngine array
+/** \file Some geographic information about the AI Engine array
 
-    Ronan at Keryell point FR
+    Ronan dot Keryell at Xilinx dot com
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
@@ -11,9 +11,9 @@
 
 #include <boost/hana.hpp>
 
-namespace cl::sycl::vendor::xilinx::acap::me {
+namespace cl::sycl::vendor::xilinx::acap::aie {
 
-/** Some geographic information about the MathEngine array
+/** Some geographic information about the AI Engine array
  */
 template <typename Layout>
 struct geography : Layout {

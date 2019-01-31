@@ -1,13 +1,13 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_ME_LOCK_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_ME_LOCK_HPP
 
-/** \file The lock mechanism used by some MathEngine tiles
+/** \file The lock mechanism used by some AI Engine tiles
 
-    Note that this MathEngine concept is not a pure lock, but more
+    Note that this AI Engine concept is not a pure lock, but more
     like a lock associated with a conditional variable, to follow the
     C++ jargon.
 
-    Ronan at Keryell point FR
+    Ronan dot Keryell at Xilinx dot com
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
@@ -18,9 +18,9 @@
 #include <mutex>
 
 
-namespace cl::sycl::vendor::xilinx::acap::me {
+namespace cl::sycl::vendor::xilinx::acap::aie {
 
-/** The lock infrastructure used by MathEngine memory modules and shim tiles
+/** The lock infrastructure used by AI Engine memory modules and shim tiles
 
     Based on Math Engine (ME) Architecture Specification, Revision v1.5
     June 2018

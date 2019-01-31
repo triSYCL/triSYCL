@@ -1,9 +1,9 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_ME_TILE_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_ME_TILE_HPP
 
-/** \file The basic MathEngine tile
+/** \file The basic AI Engine tile
 
-    Ronan at Keryell point FR
+    Ronan dot Keryell at Xilinx dot com
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
@@ -13,23 +13,23 @@
 
 #include "CL/sycl/access.hpp"
 
-namespace cl::sycl::vendor::xilinx::acap::me {
+namespace cl::sycl::vendor::xilinx::acap::aie {
 
-/** The MathEngine tile infrastructure
+/** The AI Engine tile infrastructure
  */
-template <typename ME_Array, int X, int Y>
+template <typename AIE, int X, int Y>
 struct tile {
   /// The tile coordinates in the grid
   static auto constexpr x = X;
   static auto constexpr y = Y;
 
-  using geo = typename ME_Array::geo;
+  using geo = typename AIE::geo;
 
   /// The thread used to run this tile
   std::thread thread;
 
   /// Keep a reference to the array owning this tile
-  ME_Array *me_array;
+  AIE *aie_array;
 
   static bool constexpr is_noc() {
     return geo::is_noc_tile(x, y);
@@ -71,8 +71,8 @@ struct tile {
   */
 
 
-  void set_array(ME_Array *array) {
-    me_array = array;
+  void set_array(AIE *array) {
+    aie_array = array;
   }
 
 
@@ -140,7 +140,7 @@ struct tile {
      static_assert(is_memory_module_left(), "There is no memory module"
                    " on the left of this tile in the left column and"
                    " on an even row");
-     return me_array->template
+     return aie_array->template
       get_memory_module<memory_module_linear_id(-1, 0)>();
   }
 
@@ -150,7 +150,7 @@ struct tile {
     static_assert(is_memory_module_right(), "There is no memory module"
                   " on the right of this tile in the right column and"
                    " on an odd row");
-    return me_array->template
+    return aie_array->template
       get_memory_module<memory_module_linear_id(1, 0)>();
   }
 
@@ -159,7 +159,7 @@ struct tile {
   auto &mem_down() {
     static_assert(is_memory_module_down(), "There is no memory module"
                   " below the lower tile row");
-    return me_array->template
+    return aie_array->template
       get_memory_module<memory_module_linear_id(0, -1)>();
   }
 
@@ -168,7 +168,7 @@ struct tile {
   auto &mem_up() {
     static_assert(is_memory_module_up(), "There is no memory module"
                   " above the upper tile row");
-    return me_array->template
+    return aie_array->template
       get_memory_module<memory_module_linear_id(0, 1)>();
   }
 
@@ -209,7 +209,7 @@ struct tile {
   auto get_cascade_stream_in() {
     static_assert(!is_cascade_start(), "You cannot access to the cascade stream"
                   " input on the tile that starts the stream");
-    return me_array->cs.template get_cascade_stream_in<T, Target>(x, y);
+    return aie_array->cs.template get_cascade_stream_in<T, Target>(x, y);
   }
 
 
@@ -217,7 +217,7 @@ struct tile {
   auto get_cascade_stream_out() {
     static_assert(!is_cascade_end(), "You cannot access to the cascade stream"
                   " output on the tile that starts the stream");
-    return me_array->cs.template get_cascade_stream_out<T, Target>(x, y);
+    return aie_array->cs.template get_cascade_stream_out<T, Target>(x, y);
   }
 
 

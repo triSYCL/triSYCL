@@ -1,9 +1,9 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_ME_LAYOUT_SMALL_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_ME_LAYOUT_SMALL_HPP
 
-/** \file Layout for a MathEngine array with a few PE only
+/** \file Layout for a AI Engine array with a few PE only
 
-    Ronan at Keryell point FR
+    Ronan dot Keryell at Xilinx dot com
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
@@ -11,9 +11,9 @@
 
 #include "full.hpp"
 
-namespace cl::sycl::vendor::xilinx::acap::me::layout {
+namespace cl::sycl::vendor::xilinx::acap::aie::layout {
 
-/** Describe the layout of a small MathEngine array with only a few PE
+/** Describe the layout of a small AI Engine array with only a few PE
  */
 struct small : full {
   static auto constexpr x_max = 1;

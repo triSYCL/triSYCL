@@ -3,9 +3,9 @@
 
 /** \file
 
-    Model of a MathEngine array
+    Model of an AI Engine array
 
-    Ronan at Keryell point FR
+    Ronan dot Keryell at Xilinx dot com
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
@@ -20,9 +20,9 @@
 #include "shim_tile.hpp"
 #include "tile.hpp"
 
-namespace cl::sycl::vendor::xilinx::acap::me {
+namespace cl::sycl::vendor::xilinx::acap::aie {
 
-/** The MathEngine array structure
+/** The AI Engine array structure
 
     \param Layout is the layout description of the machine to
     instantiate with the physical size
@@ -34,12 +34,12 @@ namespace cl::sycl::vendor::xilinx::acap::me {
     default the machine has empty memory modules.
 */
 template <typename Layout,
-          template <typename ME_Array,
+          template <typename AIE,
                     int X,
-                    int Y> typename Tile = acap::me::tile,
-          template <typename ME_Array,
+                    int Y> typename Tile = acap::aie::tile,
+          template <typename AIE,
                     int X,
-                    int Y> typename Memory = acap::me::memory>
+                    int Y> typename Memory = acap::aie::memory>
 struct array {
 
   using geo = geography<Layout>;

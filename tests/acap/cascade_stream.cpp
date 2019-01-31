@@ -1,4 +1,4 @@
-/* Testing the cascade stream
+/* Testing the cascade stream in AI Engine
 
    RUN: %{execute}%s
 */
@@ -12,9 +12,9 @@ using namespace cl::sycl::vendor::xilinx;
 
 
 /// A small MathEngine program
-template <typename ME_Array, int X, int Y>
-struct tile_program : acap::me::tile<ME_Array, X, Y> {
-  using t = acap::me::tile<ME_Array, X, Y>;
+template <typename AIE, int X, int Y>
+struct tile_program : acap::aie::tile<AIE, X, Y> {
+  using t = acap::aie::tile<AIE, X, Y>;
 
   void run() {
     // Do not read at the start of the cascade
@@ -38,5 +38,5 @@ struct tile_program : acap::me::tile<ME_Array, X, Y> {
 
 int main() {
   // Use an empty memory module
-  acap::me::array<acap::me::layout::full, tile_program>{}.run();
+  acap::aie::array<acap::aie::layout::full, tile_program>{}.run();
 }

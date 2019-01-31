@@ -1,11 +1,11 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_ME_LAYOUT_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_ME_LAYOUT_HPP
 
-/** \file Some examples of MathEngine array layouts
+/** \file Some examples of AI Engine array layouts
 
     Mainly used for unit test purposes.
 
-    Ronan at Keryell point FR
+    Ronan dot Keryell at Xilinx dot com
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
