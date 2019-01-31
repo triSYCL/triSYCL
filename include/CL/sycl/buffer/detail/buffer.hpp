@@ -306,16 +306,6 @@ public:
   }
 
 
-  /** Provide destination for write-back on buffer destruction as a
-      shared pointer.
-   */
-  void set_final_data(std::shared_ptr<T> && final_data) {
-    final_write_back = [=] {
-      std::copy_n(access.data(), access.num_elements(), final_data.get());
-    };
-  }
-
-
   /** Disable write-back on buffer destruction as an iterator.
   */
   void set_final_data(std::nullptr_t) {
@@ -326,7 +316,9 @@ public:
   /** Provide destination for write-back on buffer destruction as an
       iterator
   */
-  template <typename Iterator>
+  template <typename Iterator,
+            typename ValueType =
+            typename std::iterator_traits<Iterator>::value_type>
   void set_final_data(Iterator final_data) {
  /*   using type_ = typename iterator_value_type<Iterator>::value_type;
     static_assert(std::is_same<type_, T>::value, "buffer type mismatch");

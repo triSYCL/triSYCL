@@ -9,13 +9,13 @@ They are typically passed to the compiler by the build system.
 ``CL_SYCL_LANGUAGE_VERSION``:
 
   When defined, set the expected SYCL version to be followed. The
-  default value in triSYCL is ``220``.
+  default value in triSYCL is ``121``.
 
 
 ``TRISYCL_CL_LANGUAGE_VERSION``:
 
     When defined, set the expected triSYCL version to be followed. The
-    default value is ``220``.
+    default value is ``121``.
 
     This is not used yet.
 
@@ -74,6 +74,14 @@ They are typically passed to the compiler by the build system.
 
   This typically requires to have ``BOOST_LOG_DYN_LINK`` defined and
   linked with ``boost_log`` and ``pthread`` libraries on Linux.
+
+``TRISYCL_USE_OPENCL_ND_RANGE``:
+
+  When defined SYCL ``parallel_for`` kernels will be executed using an OpenCL
+  ND range rather than en-queuing a single work-item task and looping over the
+  range inside of it it. When defined OpenCL builtins (``get_global_id``,
+  ``get_local_id``, etc.) are also used to generate SYCL index and range class
+  data (``id``, ``range``, etc.) This is currently a work in progress feature.
 
 ..
     # Some Emacs stuff:

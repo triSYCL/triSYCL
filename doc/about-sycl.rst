@@ -22,7 +22,7 @@ other approaches:
   Eigen_ or TensorFlow_ in a seamless way;
 
 - SYCL_ abstracts and leverages the concepts behind OpenCL_ and provides
-  higher-level concepts such as tasks (or command group in OpenCL_ SYCL_
+  higher-level concepts such as tasks (or command group in OpenCL_ or SYCL_
   jargon) that allow the runtime to take advantage of a more task
   graph-oriented view of the computations. This allows lazy data
   transfers between accelerators and host or to use platform
@@ -36,7 +36,8 @@ other approaches:
   extension or ``#pragma``, by opposition to `C++AMP`_ or OpenMP_ for
   example. Retargeting the SYCL_ classes and functions to use other
   frameworks such as OpenMP_ 4 or `C++AMP`_ is feasible without
-  rewriting a new compiler for example;
+  rewriting a new compiler for example. This is actually what is done in
+  the `hipSYCL`_ implementation;
 
 - easier debugging
 
@@ -60,8 +61,8 @@ other approaches:
   be linked with other parts written in other languages
   (Fortran_...). Thus SYCL_ is already Exascale-ready!
 
-- even if SYCL_ hides the OpenCL_ world by default, it inherits from all
-  the OpenCL_ world:
+- even if SYCL_ hides the OpenCL_ world by default, an OpenCL_-based
+  implementation inherit from all the OpenCL_ world:
 
   - same interoperability as the OpenCL_ underlying platform: Vulkan_,
     OpenGL_, DirectX_...
@@ -116,17 +117,42 @@ Some other implementations
 
 Some other known implementations:
 
-- Codeplay_ has a ComputeCpp_ product implementing SYCL_ based on
-  OpenCL_ SPIR_ with Clang_/LLVM_
+- Codeplay_ provides ComputeCpp_, the most achieved implementation of
+  a fully compliant SYCL_, based on OpenCL_ & SPIR_ with
+  Clang_/LLVM_. It is not open-source but there is a free community version
   https://www.codeplay.com/products/computesuite/computecpp
 
-- SYCL-GTX https://github.com/ProGTX/sycl-gtx
+- hipSYCL_, an implementation of SYCL_ over nVidia CUDA_ or AMD HIP_
+  https://github.com/illuhad/hipSYCL
+
+- SYCL-GTX, an implementation using some macros to avoid relying on a
+  device compiler https://github.com/ProGTX/sycl-gtx
 
 
 Some presentations and publications related to SYCL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 By reverse chronological order:
+
+- `From post-modern generic C++ to generic heterogeneous
+  reconfigurable accelerators with the Khronos Group SYCL standard
+  <https://github.com/keryell/ronan/raw/gh-pages/Talks/2018/2018-07-05-Compas-RK-keynote/2018-07-05-COMPAS-keynote-RK-expose.pdf>`_,
+  Ronan Keryell. `Keynote presentation at COMPAS
+  <http://2018.compas-conference.fr/>`_ 2018, Toulouse, France. July
+  5, 2018.
+
+- `Experimenting with SYCL single-source post-modern C++ on Xilinx
+  FPGA
+  <https://github.com/keryell/ronan/raw/gh-pages/Talks/2018/2018-05-14-IWOCL-DHPCC-triSYCL/2018-05-14-IWOCL-DHPCC-triSYCL.pdf>`_,
+  Ronan Keryell & Lin-Ya Yu. `IWOCL
+  <https://www.iwocl.org/iwocl-2018/conference-program/>`_/`DHPCC
+  <https://www.iwocl.org/iwocl-2018/dhpcc/>`_ 2018, Oxford,
+  UK. May 14, 2018.
+
+- `SYCL C++ for heterogeneous computing --- from single-source modern C++
+  down to FPGA
+  <https://github.com/keryell/ronan/raw/gh-pages/Talks/2017/2017-10-11-LTP-LAMHA-Xilinx/2017-10-11-LTP-LAMHA-Xilinx_SYCL-expose.pdf>`_,
+  Ronan Keryell. LTP-LaMHA workshop, Paris, France. October 11, 2017.
 
 - Some talks at SuperComputing SC17 (November 2017) around SYCL with slides and
   videos: https://www.khronos.org/news/events/supercomputing-2017
@@ -320,6 +346,8 @@ Related projects
 
 - HCC_
 
+- HIP_
+
 - GOOPAX_ is a product providing a C++11 framework for single-source
   OpenCL;
 
@@ -328,6 +356,8 @@ Related projects
 - Intel SPMD Program Compiler https://ispc.github.io/
 
 - Intel Lab's iHRC https://github.com/IntelLabs/iHRC
+
+- PoCL_ Portable Computing Language, open-source OpenCL_ implementation;
 
 - Metal_
 
@@ -378,6 +408,10 @@ Related projects
 
 .. _HCC: https://github.com/RadeonOpenCompute/hcc
 
+.. _HIP: https://github.com/ROCm-Developer-Tools/HIP
+
+.. _hipSYCL: https://github.com/illuhad/hipSYCL
+
 .. _HSA: http://www.hsafoundation.com/
 
 .. _Khronos: https://www.khronos.org/
@@ -400,6 +434,8 @@ Related projects
 
 .. _PACXX: http://pacxx.github.io/page/
 
+.. _PoCL: http://portablecl.org/
+
 .. _SYCL Parallel STL: https://github.com/KhronosGroup/SyclParallelSTL
 
 .. _RenderScript: http://en.wikipedia.org/wiki/Renderscript
@@ -415,6 +451,8 @@ Related projects
 .. _SYCL: https://www.khronos.org/sycl
 
 .. _TensorFlow: https://www.tensorflow.org
+
+.. _TBB: https://www.threadingbuildingblocks.org/
 
 .. _Thrust: http://thrust.github.io/
 

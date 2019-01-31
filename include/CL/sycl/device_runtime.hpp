@@ -209,13 +209,7 @@ set_kernel(detail::task &task,
 #ifdef TRISYCL_OPENCL
   auto context = task.get_queue()->get_boost_compute().get_context();
   // Construct an OpenCL program from the precompiled kernel file
-  auto
-#ifdef SDX_KERNEL_PROGRAM_OWNING_BUG
-    /* There is a bug in Xilinx OpenCL runtime where the cl_kernel
-       does not keep alive its own cl_program */
-    static
-#endif
-    program = boost::compute::program::create_with_binary
+  auto program = boost::compute::program::create_with_binary
     (code::program::p->binary,
      code::program::p->binary_size,
      context);

@@ -13,7 +13,7 @@
 
 
 # Recycle some ideas used in the publication of the Par4All web-site on
-# GitHub
+# GitHub https://github.com/Par4All/par4all
 
 # Exit if an error occurs rather than unspecified dangerous behaviour...
 set -e
@@ -60,8 +60,12 @@ make doc
 # (Assume a previous initialization with git checkout --orphan gh-pages)
 git checkout gh-pages
 
+# Clean up any previously generated Doxygen from the current history
+rm -rf Doxygen
+mkdir Doxygen
+
 # Move the generated documentation at the right place
-update_doc Doxygen/SYCL SYCL-API-refman.pdf
+#update_doc Doxygen/SYCL SYCL-API-refman.pdf
 update_doc Doxygen/triSYCL triSYCL-implementation-refman.pdf
 
 # Take also into account what has been deleted
@@ -109,4 +113,6 @@ git merge --ff-only $commit_object
 git push
 
 echo To do the publication, just push the gh-pages branch on GitHub
+echo https://github.com/triSYCL/triSYCL/tree/gh-pages
+echo
 echo To revert this generation: git branch -f gh-pages gh-pages^

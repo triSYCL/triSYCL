@@ -24,6 +24,10 @@
 #include "CL/sycl/nd_range.hpp"
 #include "CL/sycl/range.hpp"
 
+#if defined(TRISYCL_USE_OPENCL_ND_RANGE)
+#include "CL/sycl/detail/SPIR/opencl_spir_helpers.hpp"
+#endif
+
 #ifdef _OPENMP
 #include <omp.h>
 #endif
@@ -67,7 +71,7 @@ struct parallel_for_iterate {
   }
 };
 
-
+#ifdef _OPENMP
 /** A top-level recursive multi-dimensional iterator variant using OpenMP
 
     Only the top-level loop uses OpenMP and goes on with the normal
@@ -107,6 +111,7 @@ struct parallel_OpenMP_for_iterate {
     }
   }
 };
+#endif
 
 
 /** Stop the recursion when level reaches 0 by simply calling the
@@ -177,16 +182,53 @@ void parallel_for(range<Dimensions> r,
 }
 
 
+/* These helpers work specifically for the parallel_for overload:
+    parallel_for(range<Dimensions> r, ParallelForFunctor f)
+
+    They generate a value from the type of the passed in kernels(lambda)
+    argument (item or id) and pass it onwards to parallel_for.
+
+    From the C++ spec I believe lambda's should only require const or no
+    qualification for the forseeable future (at least by default). Const in the
+    case where the mutable keyword has not been used and no const when mutable
+    has been used.
+
+    \todo A future change may be to modify htat to capture_arg_t and alter the
+      parallel_for call stack to take a type rather than value.
+    \todo In c++20 these may be redefineable as inline lambda's of the form:
+      [captures] <tparams> (params) {body}
+*/
+template<typename F, typename R, typename A>
+auto capture_arg_v(R(F::*)(A)) { return A{}; }
+
+template<typename F, typename R, typename A>
+auto capture_arg_v(R(F::*)(A) const) { return A{}; }
+
 /** Calls the appropriate ternary parallel_for overload based on the
     index type of the kernel function object f
 
+    capture_arg_v generates a value from the type of the passed in kernels
+    (lambdas) argument (item or id in this case) and passes it onwards to
+     parallel_for so that it's aware which index class it's supposed to generate
+     data for.
+
+     We erase the type then retrieve it again so that we can avoid redefining
+     the parallel_for interface in handler.hpp for item and id as the
+     parallel_for in the SYCL 1.2.1 spec that accepts a range can be overloaded
+     for both.
 */
+#if !defined(TRISYCL_USE_OPENCL_ND_RANGE)
 template <int Dimensions = 1, typename ParallelForFunctor>
 void parallel_for(range<Dimensions> r, ParallelForFunctor f) {
-  using mf_t  = decltype(std::mem_fn(&ParallelForFunctor::operator()));
-  using arg_t = typename mf_t::second_argument_type;
-  parallel_for(r,f,arg_t{});
+  parallel_for(r,f, capture_arg_v(&ParallelForFunctor::operator()));
 }
+#else
+template <int Dimensions = 1, typename ParallelForFunctor>
+void parallel_for(range<Dimensions> r, ParallelForFunctor f) {
+  f(sycl::detail::spir::create_parallel_for_arg<Dimensions>(capture_arg_v(
+    &ParallelForFunctor::operator())));
+}
+#endif
 
 
 /** Implementation of parallel_for with a range<> and an offset */
@@ -239,35 +281,73 @@ void parallel_for_workitem(const group<Dimensions> &g,
 
      The issue is that the parallel_for_workitem() execution is slow even
      when nd_item::barrier() is not used
-
-     \todo Simplify by just using omp parallel for collapse
   */
-
   range<Dimensions> l_r = g.get_nd_range().get_local_range();
-  auto tot = l_r.get(0);
-  for (int i = 1; i < (int) Dimensions; ++i) {
-    tot *= l_r.get(i);
-  }
-#pragma omp parallel num_threads(tot)
-  {
-    T_Item index { g.get_nd_range() };
-    id<Dimensions> local; // to initialize correctly
-#pragma omp for nowait
-    for (std::size_t th_id = 0; th_id < tot; ++th_id) {
-      if (Dimensions == 1) {
-        local[0] = th_id;
-      } else if (Dimensions == 2) {
-        local[0] = th_id / l_r.get(1);
-        local[1] = th_id % l_r.get(1);
-      } else if (Dimensions == 3) {
-        local[0] = th_id / (l_r.get(1)*l_r.get(2));
-        local[1] = (th_id / l_r.get(2)) % l_r.get(1);
-        local[2] = th_id % l_r.get(2);
-      }
-      index.set_local(local);
-      index.set_global(local + id<Dimensions>(l_r)*g.get_id());
+  id<Dimensions> id_l_r { l_r };
+
+  auto tot = l_r.size();
+
+  if constexpr (Dimensions == 1) {
+  #pragma omp parallel for collapse(1) schedule(static) num_threads(tot)
+    for (size_t i = 0; i < l_r.get(0); ++i) {
+      T_Item index{g.get_nd_range()};
+      index.set_local(i);
+      index.set_global(index.get_local_id() + id_l_r * g.get_id());
       f(index);
     }
+  } else if constexpr (Dimensions == 2) {
+  #pragma omp parallel for collapse(2) schedule(static) num_threads(tot)
+    for (size_t i = 0; i < l_r.get(0); ++i) {
+      for (size_t j = 0; j < l_r.get(1); ++j) {
+        T_Item index{g.get_nd_range()};
+        index.set_local({i,j});
+        index.set_global(index.get_local_id() + id_l_r * g.get_id());
+        f(index);
+      }
+    }
+  } else if constexpr (Dimensions == 3) {
+  #pragma omp parallel for collapse(3) schedule(static) num_threads(tot)
+    for (size_t i = 0; i < l_r.get(0); ++i)
+      for (size_t j = 0; j < l_r.get(1); ++j)
+        for (size_t k = 0; k < l_r.get(2); ++k) {
+          T_Item index{g.get_nd_range()};
+          index.set_local({i,j,k});
+          index.set_global(index.get_local_id() + id_l_r * g.get_id());
+          f(index);
+        }
+  }
+#elif defined(_OPENMP) && (defined(TRISYCL_NO_BARRIER) && !defined(_MSC_VER))
+  range<Dimensions> l_r = g.get_nd_range().get_local_range();
+  id<Dimensions> id_l_r { l_r };
+
+  if constexpr (Dimensions == 1) {
+  #pragma omp parallel for simd collapse(1)
+    for (size_t i = 0; i < l_r.get(0); ++i) {
+      T_Item index{g.get_nd_range()};
+      index.set_local(i);
+      index.set_global(index.get_local_id() + id_l_r * g.get_id());
+      f(index);
+    }
+  } else if constexpr (Dimensions == 2) {
+  #pragma omp parallel for simd collapse(2)
+    for (size_t i = 0; i < l_r.get(0); ++i) {
+      for (size_t j = 0; j < l_r.get(1); ++j) {
+        T_Item index{g.get_nd_range()};
+        index.set_local({i,j});
+        index.set_global(index.get_local_id() + id_l_r * g.get_id());
+        f(index);
+      }
+    }
+  } else if constexpr (Dimensions == 3) {
+    #pragma omp parallel for simd collapse(3)
+    for (size_t i = 0; i < l_r.get(0); ++i)
+      for (size_t j = 0; j < l_r.get(1); ++j)
+        for (size_t k = 0; k < l_r.get(2); ++k) {
+          T_Item index{g.get_nd_range()};
+          index.set_local({i,j,k});
+          index.set_global(index.get_local_id() + id_l_r * g.get_id());
+          f(index);
+        }
   }
 #else
   // In a sequential execution there is only one index processed at a time

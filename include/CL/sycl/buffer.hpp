@@ -462,23 +462,7 @@ public:
       It is defined as a weak_ptr referring to a shared_ptr that is not
       associated with the cl::sycl::buffer, and so the cl::sycl::buffer
       will have no ownership of finalData.
-
-      \todo Update the API to take finalData by value instead of by
-            reference.  This way we can have an implicit conversion
-            possible at the API call from a shared_ptr<>, avoiding an
-            explicit weak_ptr<> creation
-
-      \todo figure out how set_final_data() interact with the other
-      way to write back some data or with some data sharing with the
-      host that can not be undone
   */
-  void set_final_data(shared_ptr_class<T> finalData) {
-    implementation->implementation->set_final_data(std::move(finalData));
-  }
-
-
-  /** Set destination of buffer data on destruction.
-   */
   void set_final_data(weak_ptr_class<T> finalData) {
     implementation->implementation->set_final_data(std::move(finalData));
   }
@@ -512,7 +496,9 @@ public:
       iterator will be alive after buffer destruction, otherwise the behaviour
       is undefined.
    */
-  template<typename Iterator>
+  template <typename Iterator,
+            typename ValueType =
+            typename std::iterator_traits<Iterator>::value_type>
   void set_final_data(Iterator&& finalData) {
     implementation->implementation->
       set_final_data(std::forward<Iterator>(finalData));

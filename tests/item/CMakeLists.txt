@@ -17,4 +17,5 @@ declare_trisycl_test(TARGET item TEST_REGEX
 1
 0
 0
-1")
+1
+ 0")

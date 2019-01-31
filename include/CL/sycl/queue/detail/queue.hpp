@@ -38,10 +38,7 @@ struct queue : detail::debug<detail::queue> {
 
 
   /// Initialize the queue with 0 running kernel
-  queue() {
-    running_kernels = 0;
-  }
-
+  queue() : running_kernels { 0 } {}
 
   /// Wait for all kernel completion
   void wait_for_kernel_execution() {
