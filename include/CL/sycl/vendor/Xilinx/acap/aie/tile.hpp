@@ -50,21 +50,6 @@ struct tile {
   /// Keep a reference to the array owning this tile
   AIE *aie_array;
 
-  //\todo remove these functions from a past design
-  static bool constexpr is_noc() {
-    return geo::is_noc_tile(x, y);
-  }
-
-
-  static bool constexpr is_pl() {
-    return geo::is_pl_tile(x, y);
-  }
-
-
-  static bool constexpr is_shim() {
-    return geo::is_shim_tile(x, y);
-  }
-
 
   /** Return the coordinate of the tile in the given dimension
 
