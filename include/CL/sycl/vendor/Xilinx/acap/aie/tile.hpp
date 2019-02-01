@@ -1,7 +1,9 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_TILE_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_TILE_HPP
 
-/** \file The basic AI Engine tile
+/** \file
+
+    The basic AI Engine tile
 
     Ronan dot Keryell at Xilinx dot com
 
@@ -15,14 +17,31 @@
 
 namespace cl::sycl::vendor::xilinx::acap::aie {
 
-/** The AI Engine tile infrastructure
- */
+/// \ingroup aie
+/// @{
+
+/** The AI Engine tile infrastructure defining the program of a tile
+
+    This is the type you need to inherit from to define the program of
+    a CGRA tile.
+
+    \param AIE is the type representing the full CGRA with the
+    programs and memory contents
+
+    \param X is the horizontal coordinate of the memory module
+
+    \param Y is the vertical coordinate of the memory module
+*/
 template <typename AIE, int X, int Y>
 struct tile {
-  /// The tile coordinates in the grid
+  /** The horizontal tile coordinates in the CGRA grid (starting at 0
+      and increasing to the right) */
   static auto constexpr x = X;
+  /** The vertical tile coordinates in the CGRA grid (starting at
+      increasing to the top) */
   static auto constexpr y = Y;
 
+  /// The geography of the CGRA
   using geo = typename AIE::geo;
 
   /// The thread used to run this tile
@@ -31,6 +50,7 @@ struct tile {
   /// Keep a reference to the array owning this tile
   AIE *aie_array;
 
+  //\todo remove these functions from a past design
   static bool constexpr is_noc() {
     return geo::is_noc_tile(x, y);
   }
@@ -46,6 +66,11 @@ struct tile {
   }
 
 
+  /** Return the coordinate of the tile in the given dimension
+
+      \param Dim is 0 for the horizontal (x) dimension and 1 for the
+      vertical (y) dimension
+  */
   template <int Dim>
   static auto constexpr get_id() {
     static_assert(0 <= Dim && Dim <= 1,
@@ -57,6 +82,7 @@ struct tile {
   }
 
 
+  /// Return the linearized coordinate of the tile
   static auto constexpr get_linear_id() {
     return geo::linear_id(x, y);
   }
@@ -71,6 +97,7 @@ struct tile {
   */
 
 
+  // Store a way to access to the owner CGRA
   void set_array(AIE *array) {
     aie_array = array;
   }
@@ -99,7 +126,13 @@ struct tile {
     return geo::is_top_row(y);
   }
 
-  /// Test if a memory module exists and is connected to this tile
+
+  /** Test if a memory module exists and is connected to this tile
+
+      \param[in] dx is the horizontal displacement (-1,0,+1)
+
+      \param[in] dy is the vertical displacement (-1,0,+1)
+  */
   static bool constexpr is_memory_module(int dx, int dy) {
     return geo::is_memory_module(x, y, dx, dy);
   }
@@ -129,7 +162,12 @@ struct tile {
   }
 
 
-  /// Compute the linear id of a memory module attached to this tile
+  /** Compute the linear id of a memory module attached to this tile
+
+      \param[in] dx is the horizontal displacement (-1,0,+1)
+
+      \param[in] dy is the vertical displacement (-1,0,+1)
+  */
   static auto constexpr memory_module_linear_id(int dx, int dy) {
     return geo:: memory_module_linear_id(x, y, dx, dy);
   }
@@ -182,13 +220,13 @@ struct tile {
   }
 
 
-  /* Provide a run member function that does nothing so it is possible
-     to write a minimum MathEngin program that does nothing.
+  /** Provide a run member function that does nothing so it is
+      possible to write a minimum AI Engine program that does nothing.
 
-     Note that this function is not virtual but the common case is
-     that a programmer can implement it to specify the program done by
-     a tile
-   */
+      Note that even if this function is not virtual, in the common
+      case a programmer implements it to specify the program executed
+      by a tile
+  */
   void run() {
   }
 
@@ -205,6 +243,14 @@ struct tile {
   }
 
 
+  /** Get a read accessor to the cascade stream input
+
+      \param T is the data type used to read from the cascade
+      stream pipe
+
+      \param Target is the access mode to the pipe. It is blocking
+      by default
+  */
   template <typename T, access::target Target = access::target::blocking_pipe>
   auto get_cascade_stream_in() {
     static_assert(!is_cascade_start(), "You cannot access to the cascade stream"
@@ -213,6 +259,14 @@ struct tile {
   }
 
 
+  /** Get a write accessor to the cascade stream output
+
+      \param T is the data type used to write to the cascade
+      stream pipe
+
+      \param Target is the access mode to the pipe. It is blocking
+      by default
+  */
   template <typename T, access::target Target = access::target::blocking_pipe>
   auto get_cascade_stream_out() {
     static_assert(!is_cascade_end(), "You cannot access to the cascade stream"
@@ -294,7 +348,7 @@ struct tile {
   }
 
 
-  /** A full barrier using a lock
+  /** Full barrier using the 2 locks by default
 
       Implement a barrier across the full tile array by using \c
       horizontal_barrier() and \c vertical_barrier().
@@ -305,6 +359,8 @@ struct tile {
   }
 
 };
+
+/// @} End the aie Doxygen group
 
 }
 

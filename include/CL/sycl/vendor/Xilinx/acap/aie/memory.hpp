@@ -23,12 +23,12 @@
 namespace cl::sycl::vendor::xilinx::acap::aie {
 
 /// \ingroup aie
-///   @{
+/// @{
 
-/** The AI Engine Memory Module infrastructure
+/** The AI Engine Memory Module infrastructure of a tile
 
     This is the type you need to inherit from to define the content of
-    a CGRA memory tile.
+    a CGRA tile memory module.
 
     \param AIE is the type representing the full CGRA with the
     programs and memory contents
