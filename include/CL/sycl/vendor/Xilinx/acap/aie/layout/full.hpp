@@ -1,7 +1,9 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_LAYOUT_FULL_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_LAYOUT_FULL_HPP
 
-/** \file Layout for a AI Engine array with 5*6 PE
+/** \file
+
+    Layout for a AI Engine array with 5*6 PE
 
     Ronan dot Keryell at Xilinx dot com
 
@@ -13,7 +15,10 @@
 
 namespace cl::sycl::vendor::xilinx::acap::aie::layout {
 
-/** Describe the layout of the full AI Engine array
+/// \ingroup aie
+/// @{
+
+/** Describe the layout of a "big" AI Engine array
 
     Use some constrains from Figure 2-8 "ME Array Address Map
     Example", p. 44
@@ -33,7 +38,10 @@ struct full {
   }
 };
 
+/// @} End the aie Doxygen group
+
 }
+
 /*
     # Some Emacs stuff:
     ### Local Variables:

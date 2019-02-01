@@ -1,7 +1,9 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_LAYOUT_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_LAYOUT_HPP
 
-/** \file Some examples of AI Engine array layouts
+/** \file
+
+    Some examples of AI Engine array layouts
 
     Mainly used for unit test purposes.
 

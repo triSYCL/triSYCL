@@ -1,7 +1,9 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_LAYOUT_ONE_PE_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_LAYOUT_ONE_PE_HPP
 
-/** \file Layout for a AI Engine array with 1 PE only
+/** \file
+
+    Layout for a AI Engine array with 1 PE only
 
     Ronan dot Keryell at Xilinx dot com
 
@@ -13,14 +15,20 @@
 
 namespace cl::sycl::vendor::xilinx::acap::aie::layout {
 
-/** Describe the layout of a tiny AI Engine array with only 1 PE
+/// \ingroup aie
+/// @{
+
+/** Describe the layout of a tiny AI Engine with only 1 tile
  */
 struct one_pe : full {
   static auto constexpr x_max = 0;
   static auto constexpr y_max = 0;
 };
 
+/// @} End the aie Doxygen group
+
 }
+
 /*
     # Some Emacs stuff:
     ### Local Variables:

@@ -23,7 +23,7 @@
 namespace cl::sycl::vendor::xilinx::acap::aie {
 
 /// \ingroup aie
-///   @{
+/// @{
 
 /** The lock infrastructure used by AI Engine memory modules and shim tiles
 

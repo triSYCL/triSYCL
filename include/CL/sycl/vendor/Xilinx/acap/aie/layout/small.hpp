@@ -1,7 +1,9 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_LAYOUT_SMALL_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_LAYOUT_SMALL_HPP
 
-/** \file Layout for a AI Engine array with a few PE only
+/** \file
+
+    Layout for a AI Engine array with a few PE only
 
     Ronan dot Keryell at Xilinx dot com
 
@@ -13,6 +15,9 @@
 
 namespace cl::sycl::vendor::xilinx::acap::aie::layout {
 
+/// \ingroup aie
+/// @{
+
 /** Describe the layout of a small AI Engine array with only a few PE
  */
 struct small : full {
@@ -20,7 +25,10 @@ struct small : full {
   static auto constexpr y_max = 2;
 };
 
+/// @} End the aie Doxygen group
+
 }
+
 /*
     # Some Emacs stuff:
     ### Local Variables:

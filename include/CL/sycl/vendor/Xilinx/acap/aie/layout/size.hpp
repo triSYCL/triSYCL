@@ -1,7 +1,9 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_LAYOUT_SIZE_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_LAYOUT_SIZE_HPP
 
-/** \file Flexible layout for a AI Engine array with any 2D size
+/** \file
+
+    Flexible layout for a AI Engine array with any 2D size
 
     Ronan dot Keryell at Xilinx dot com
 
@@ -11,10 +13,19 @@
 
 #include "full.hpp"
 
+// Just to include the namespace once in Doxygen documentation
+/// \ingroup aie
 namespace cl::sycl::vendor::xilinx::acap::aie::layout {
 
-/** Describe the layout of a tiny AI Engine array with only 1 PE
- */
+/// \ingroup aie
+/// @{
+
+/** Fully specify the size of an AI Engine layout
+
+    \param X_size is the number of tile horizontally
+
+    \param Y_size is the number of tile vertically
+*/
 template <int X_size, int Y_size>
 struct size : full {
   static_assert(X_size >= 1 && Y_size >= 1, "Sorry, "
@@ -23,7 +34,10 @@ struct size : full {
   static auto constexpr y_max = Y_size - 1;
 };
 
+/// @} End the aie Doxygen group
+
 }
+
 /*
     # Some Emacs stuff:
     ### Local Variables:
