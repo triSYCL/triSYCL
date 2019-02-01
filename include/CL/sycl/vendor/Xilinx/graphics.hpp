@@ -20,8 +20,6 @@
     License. See LICENSE.TXT for details.
 */
 
-#ifdef TRISYCL_GRAPHICS
-
 #include <algorithm>
 #include <atomic>
 #include <condition_variable>
@@ -36,6 +34,13 @@
 #include <experimental/mdspan>
 
 #include <gtkmm.h>
+
+/** \defgroup graphics Graphics support for CGRA-like interaction
+
+    This can create a graphics application and typically update some
+    sub-images on a frame
+    @{
+*/
 
 namespace cl::sycl::vendor::xilinx::graphics {
 
@@ -432,7 +437,7 @@ struct application {
 
 }
 
-#endif // TRISYCL_GRAPHICS
+/// @} End the graphics Doxygen group
 
 /*
     # Some Emacs stuff:

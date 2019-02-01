@@ -34,7 +34,7 @@ CL_CXX = $(LLVM_BUILD_DIR)/bin/clang++
 
 # Need to install packages gtkmm-documentation libgtkmm-3.0-dev
 # libgtkmm-3.0-doc
-CXXFLAGS += -DTRISYCL_GRAPHICS `pkg-config gtkmm-3.0 --cflags`
+CXXFLAGS += `pkg-config gtkmm-3.0 --cflags`
 LDLIBS += `pkg-config gtkmm-3.0 --libs`
 
 
