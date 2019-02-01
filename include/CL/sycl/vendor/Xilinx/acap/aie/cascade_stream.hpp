@@ -1,20 +1,26 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_CASCADE_STREAM_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_CASCADE_STREAM_HPP
 
-/** \file The cascade stream infrastructure between AI Engine tiles
+/** \file
+
+    The cascade stream infrastructure between AI Engine tiles
 
     Ronan dot Keryell at Xilinx dot com
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
- */
+*/
 
 #include "CL/sycl/access.hpp"
 #include "geography.hpp"
 
 namespace cl::sycl::vendor::xilinx::acap::aie {
 
-/** The cascade stream infrastructure between AI Engine tiles
+/// \ingroup aie
+/// @{
+
+/** Implementation of the cascade stream infrastructure between AI
+    Engine tiles
 
     Based on Math Engine (ME) Architecture Specification, Revision v1.4
     March 2018
@@ -27,7 +33,6 @@ namespace cl::sycl::vendor::xilinx::acap::aie {
 
     Direct stream interface: One cascade stream in, one cascade stream
     out (384-bits)
-
 */
 template <typename Geography>
 struct cascade_stream {
@@ -41,7 +46,8 @@ struct cascade_stream {
       specification. */
   cl::sycl::static_pipe<int, 4>
   cascade_stream_pipes[geo::x_size*geo::y_size + 1];
-  /** Cascade stream layout
+
+  /* Cascade stream layout
 
       On even rows, a tile use cascade_stream_pipes[y][x] as input and
       cascade_stream_pipes[y][x + 1] as output
@@ -51,6 +57,18 @@ struct cascade_stream {
       cascade_stream_pipes[y][x] as output
   */
 
+  /** Get a read accessor to the cascade stream input
+
+      \param T is the data type used to read from the cascade
+      stream pipe
+
+      \param Target is the access mode to the pipe. It is blocking
+      by default
+
+      \param[in] x is the horizontal tile coordinate
+
+      \param[in] y is the vertical tile coordinate
+  */
   template <typename T, access::target Target>
   auto get_cascade_stream_in(int x, int y) const {
     // On odd rows, the cascade streams goes in the other direction
@@ -60,6 +78,18 @@ struct cascade_stream {
   }
 
 
+  /** Get a write accessor to the cascade stream output
+
+      \param T is the data type used to write to the cascade
+      stream pipe
+
+      \param Target is the access mode to the pipe. It is blocking
+      by default
+
+      \param[in] x is the horizontal tile coordinate
+
+      \param[in] y is the vertical tile coordinate
+  */
   template <typename T, access::target Target>
   auto get_cascade_stream_out(int x, int y) const {
     // On odd rows, the cascade streams goes in the other direction
@@ -68,8 +98,9 @@ struct cascade_stream {
       .template get_access<access::mode::write, Target>();
   }
 
-
 };
+
+/// @} End the aie Doxygen group
 
 }
 

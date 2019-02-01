@@ -20,6 +20,9 @@
 
 namespace cl::sycl::vendor::xilinx::acap::aie {
 
+/// \ingroup aie
+/// @{
+
 class axi_stream_switch {
 
 public:
@@ -144,6 +147,8 @@ public:
   }
 
 };
+
+/// @} End the aie Doxygen group
 
 }
 

@@ -18,6 +18,9 @@
 
 namespace cl::sycl::vendor::xilinx::acap::aie {
 
+/// \ingroup aie
+/// @{
+
 class shim_tile {
 
 public:
@@ -25,6 +28,8 @@ public:
   axi_stream_switch axi_ss;
 
 };
+
+/// @} End the aie Doxygen group
 
 }
 
