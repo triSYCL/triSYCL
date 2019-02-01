@@ -1,7 +1,9 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_LOCK_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_LOCK_HPP
 
-/** \file The lock mechanism used by some AI Engine tiles
+/** \file
+
+    The lock mechanism used by some AI Engine tiles
 
     Note that this AI Engine concept is not a pure lock, but more
     like a lock associated with a conditional variable, to follow the
@@ -20,6 +22,9 @@
 
 namespace cl::sycl::vendor::xilinx::acap::aie {
 
+/// \ingroup aie
+///   @{
+
 /** The lock infrastructure used by AI Engine memory modules and shim tiles
 
     Based on Math Engine (ME) Architecture Specification, Revision v1.5
@@ -32,18 +37,20 @@ namespace cl::sycl::vendor::xilinx::acap::aie {
 struct lock_unit {
   /// The individual locking system
   struct locking_device {
-    /* The problem here is that std::mutex and std::condition_variable
+    /* The problem here is that \c std::mutex and \c std::condition_variable
        are not moveable while the instantiation of a memory module uses
        move assignment with Boost.Hana...
 
-       So allocate them dynamically and keep them in a std::unique_ptr
+       So allocate them dynamically and keep them in a \c std::unique_ptr
        so globally the type is moveable */
 
     /// The mutex to provide the basic protection mechanism
     std::unique_ptr<std::mutex> m { new std::mutex { } };
+
     /// The condition variable to wait/notify for some value
     std::unique_ptr<std::condition_variable> cv {
       new std::condition_variable { } };
+
     /// The value to be waited for, initialized to false on reset
     bool value = false;
 
@@ -66,7 +73,7 @@ struct lock_unit {
     }
 
 
-    /// Release with a new internal value
+    /// Release and update with a new internal value
     void release_with_value(bool new_value) {
       {
         std::unique_lock lk { *m };
@@ -80,6 +87,8 @@ struct lock_unit {
   /// The 16 locking units of the locking device
   locking_device locks[16];
 };
+
+/// @} End the aie Doxygen group
 
 }
 

@@ -1,7 +1,9 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_MEMORY_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_MEMORY_HPP
 
-/** \file The basic AI Engine Memory Module
+/** \file
+
+    The basic AI Engine Memory Module
 
     Based on Math Engine (ME) Architecture Specification, Revision v1.4
     March 2018
@@ -20,17 +22,38 @@
 
 namespace cl::sycl::vendor::xilinx::acap::aie {
 
+/// \ingroup aie
+///   @{
+
 /** The AI Engine Memory Module infrastructure
- */
-template <typename AIE, int X, int Y>
+
+    This is the type you need to inherit from to define the content of
+    a CGRA memory tile.
+
+    \param AIE is the type representing the full CGRA with the
+    programs and memory contents
+
+    \param X is the horizontal coordinate of the memory module
+
+    \param Y is the vertical coordinate of the memory module
+*/
+template <typename AIE //< The type representing the full CGRA
+          , int X //< The horizontal coordinate of the memory module
+          , int Y //< The vertical coordinate of the memory module
+          >
 struct memory {
-  /// The tile coordinates in the grid
+  /** The horizontal tile coordinates in the CGRA grid (starting at 0
+      and increasing to the right) */
   static auto constexpr x = X;
+  /** The vertical tile coordinates in the CGRA grid (starting at
+      increasing to the top) */
   static auto constexpr y = Y;
 
   /// The lock unit of the memory tile
   lock_unit lu;
 };
+
+/// @} End the aie Doxygen group
 
 }
 
