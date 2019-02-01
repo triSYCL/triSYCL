@@ -8,12 +8,15 @@
     For more information about SYCL:
     http://www.khronos.org/sycl/
 
+    This is the version with Xilinx ACAP extension.
+
     For more information on this project and to access to the source of
     this file, look at https://github.com/triSYCL/triSYCL
 
     The Doxygen version of the implementation itself is in
-    http://trisycl.github.io/triSYCL/Doxygen/triSYCL/html and
-    http://trisycl.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
+    https://pages.gitenterprise.xilinx.com/rkeryell/triSYCL/Doxygen/triSYCL/html
+    and
+    https://pages.gitenterprise.xilinx.com/rkeryell/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
 
 
     Ronan at keryell dot FR

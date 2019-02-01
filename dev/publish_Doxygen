@@ -2,9 +2,12 @@
 
 # Publish the Doxygen API of SYCL on GitHub
 
+# Version for ACAP extensions
+SRC_BRANCH=acap
+
 # Ronan Keryell at Xilinx point COM
 
-# Publish on GitHub the API for the master branch of this git repository.
+# Publish on GitHub the API for the $SRC_BRANCH branch of this git repository.
 
 # This script is to be used in the top-level directory of the git
 # repository.
@@ -51,7 +54,7 @@ git clone . $tmp_git
 cd $tmp_git
 
 # Build the API web pages with Doxygen from this repository to be sure we
-# have the state of the master branch without uncommitted files
+# have the state of the $SRC_BRANCH branch without uncommitted files
 make doc-clean
 make doc
 
@@ -71,8 +74,8 @@ update_doc Doxygen/triSYCL triSYCL-implementation-refman.pdf
 # Take also into account what has been deleted
 git add --update
 
-# Add the home page which comes from the master branch
-git checkout master -- doc/WWW/index.html
+# Add the home page which comes from the $SRC_BRANCH branch
+git checkout $SRC_BRANCH -- doc/WWW/index.html
 cp doc/WWW/index.html .
 git add index.html
 # Remove this file added by the check-out above from the files to be
@@ -91,17 +94,17 @@ tree_object=`git write-tree`
     echo
     # gh-pages point to the current published version, which is the old
     # one.  gh-pages^2 is the second parent of the old one, and thus the
-    # master used for this old publication. master point to the last
+    # $SRC_BRANCH used for this old publication. $SRC_BRANCH point to the last
     # commit to be taken for publishing, so the following list all the
-    # commits between master and the previous master used for the old
+    # commits between $SRC_BRANCH and the previous $SRC_BRANCH used for the old
     # publication
-    git log gh-pages^2..master
+    git log gh-pages^2..$SRC_BRANCH
 ) > commit_list
 
 # Create a commit object that takes into account its natural history but
-# also the master branch as an ancestor so we can figure out easily which
+# also the $SRC_BRANCH branch as an ancestor so we can figure out easily which
 # source of the WWW site is currently published
-commit_object=`git commit-tree -p HEAD -p master \
+commit_object=`git commit-tree -p HEAD -p $SRC_BRANCH \
   -F commit_list $tree_object`
 
 # Update the gh-pages branch to this commit object. By construction this

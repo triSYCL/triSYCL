@@ -12,6 +12,15 @@ triSYCL
 .. image:: https://travis-ci.org/triSYCL/triSYCL.svg?branch=master
     :target: https://travis-ci.org/triSYCL/triSYCL
 
+Xilinx ACAP extensions
+----------------------
+
+See `<tests/acap>`_ for some code samples.
+
+The API is described in
+https://pages.gitenterprise.xilinx.com/rkeryell/triSYCL/Doxygen/triSYCL/html/group__acap.html
+
+
 Introduction
 ------------
 
