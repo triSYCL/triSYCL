@@ -4,7 +4,6 @@
 /** \file
 
     Some debugging utilities for ACAP
-
 */
 
 #include <algorithm>
@@ -28,6 +27,10 @@
 */
 
 namespace cl::sycl::vendor::xilinx::acap::debug {
+
+/// @}
+/// \ingroup acap_debug
+/// @{
 
 /** Verify that an SPMD program has a bulk-synchronous behaviour
     across all the tiles of the CGRA.
