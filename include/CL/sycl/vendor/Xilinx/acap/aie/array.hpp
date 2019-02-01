@@ -20,9 +20,18 @@
 #include "shim_tile.hpp"
 #include "tile.hpp"
 
+/// \ingroup acap
+///  @{
+
+/** \defgroup aie AI Engine CGRA
+
+    Extensions to support explicit AI Engine system-wide programming in C++
+    @{
+*/
+
 namespace cl::sycl::vendor::xilinx::acap::aie {
 
-/** The AI Engine array structure
+/** Define an AI Engine CGRA with its code and memory per core
 
     \param Layout is the layout description of the machine to
     instantiate with the physical size
@@ -42,30 +51,35 @@ template <typename Layout,
                     int Y> typename Memory = acap::aie::memory>
 struct array {
 
+  /// The geography of the CGRA
   using geo = geography<Layout>;
 
-  /// The cascade stream infrastructure
+  /// The cascade stream infrastructure of the CGRA
   cascade_stream<geo> cs;
 
+  /// Type describing all the memory modules of the CGRA
   template <int X, int Y>
   using tileable_memory = Memory<array, X, Y>;
 
-  /// All the memory module of the ME array.
-  using memory_t = decltype(geo::template generate_tiles<tileable_memory>());
+  /** The tiled memory modules of the CGRA
 
-  /// Unfortunately it is not possible to use auto here...
-  // Otherwise static inline auto
-  memory_t memory_modules = geo::template generate_tiles<tileable_memory>();
+      Unfortunately it is not possible to use \c auto here...
+      Otherwise it could be just: \code static inline auto \endcode */
+  decltype(geo::template generate_tiles<tileable_memory>())
+  memory_modules = geo::template generate_tiles<tileable_memory>();
 
+  /// Type describing the programs of all the cores in the CGRA
   template <int X, int Y>
   using tileable_tile = Tile<array, X, Y>;
-  /// All the tiles of the ME array.
-  /// Unfortunately it is not possible to use auto here...
-  // Otherwise static inline auto
+
+  /** The tiled programs of the CGRA
+
+      Unfortunately it is not possible to use \c auto here...
+      Otherwise it could be just: \code static inline auto \endcode */
   decltype(geo::template generate_tiles<tileable_tile>()) tiles =
     geo::template generate_tiles<tileable_tile>();
 
-  /// The shim adapter on the South of the AI array
+  /// The shim adapter at the South of the CGRA
   /// \todo use an homogeneous array for now
   shim_tile shim[geo::x_size];
 
@@ -75,11 +89,18 @@ struct array {
     return boost::hana::at_c<LinearId>(memory_modules);
   }
 
+  /** Launch the programs of all the tiles of the CGRA in their own
+      CPU thread and wait for their completion.
+
+      This is the main member function to use to launch the execution.
+  */
   void run() {
+    // First inform each tile about their CGRA owner
     boost::hana::for_each(tiles, [&] (auto& t) {
         t.set_array(this);
       });
 
+    // Start each tile program in its own CPU thread
     boost::hana::for_each(tiles, [&] (auto& t) {
         t.thread = std::thread {[&] {
             TRISYCL_DUMP_T("Starting ME tile (" << t.x << ',' << t.y
@@ -90,16 +111,20 @@ struct array {
         };
       });
 
+    // Wait for the end of the execution of each tile
     boost::hana::for_each(tiles, [&] (auto& t) {
         TRISYCL_DUMP_T("Joining ME tile (" << t.x << ',' << t.y << ')');
         t.thread.join();
         TRISYCL_DUMP_T("Joined ME tile (" << t.x << ',' << t.y << ')');
       });
 
-    std::cout << "Total size of the tiles: " << sizeof(tiles)
-              << " bytes." << std::endl;
+    std::cout << "Total size of the own memory of all the tiles: "
+              << sizeof(tiles) << " bytes." << std::endl;
   }
 };
+
+/// @} End the aie Doxygen group
+/// @} End the acap Doxygen group
 
 }
 
