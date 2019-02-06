@@ -141,11 +141,20 @@ struct frame_grid : Gtk::ApplicationWindow {
 /** Color palette to project a linear data space to an RGB color space
 */
 struct palette {
-  static constexpr rgb
-  palettize(double data, double min_value, double max_value) {
+  static constexpr int size = 256;
+  std::array<rgb, size> color_mapping;
+
+  palette() {
+    for (std::uint8_t i { 0 }; auto &e : color_mapping) {
+      e = { i, i, i };
+      ++i;
+    };
+  }
+
+  rgb palettize(double data, double min_value, double max_value) {
     std::uint8_t v = (data - min_value)*255/(max_value - min_value);
     // Write the same value for RGB to have a grey level
-    return { v, v, v };
+    return color_mapping[v];
   }
 };
 
@@ -175,6 +184,9 @@ struct image_grid : frame_grid {
 
   /// What to dispatch
   std::function<void(void)> work_to_dispatch;
+
+  /// The RGB palette used to render the image values
+  palette p;
 
 
   /** Create a grid of tiled images
@@ -285,9 +297,9 @@ struct image_grid : frame_grid {
            ++i) {
         /* Mirror the image vertically to display the pixels in a
            mathematical sense */
-        output(image_y - 1 - j,i) = palette::palettize(data(j,i),
-                                                       min_value,
-                                                       max_value);
+        output(image_y - 1 - j,i) = p.palettize(data(j,i),
+                                                min_value,
+                                                max_value);
       }
     // Send the graphics updating code
     submit([=] {
