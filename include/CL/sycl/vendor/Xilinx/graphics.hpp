@@ -139,18 +139,54 @@ struct frame_grid : Gtk::ApplicationWindow {
 
 
 /** Color palette to project a linear data space to an RGB color space
+
+    Reimplement the palette concept by Nicolas Paris in PompC & HyperC
+    back from the 90's... :-)
 */
 struct palette {
   static constexpr int size = 256;
   std::array<rgb, size> color_mapping;
 
-  palette() {
-    for (std::uint8_t i { 0 }; auto &e : color_mapping) {
-      e = { i, i, i };
+  enum kind { gray, rainbow };
+
+  /** Create a palette
+
+      \param[in] k is the kind of palette
+
+      \param[in] phase is optional and allows the palette to have a
+      phase shift instead of starting at 0
+
+      \param[in] clip is optional and specifies a value to be enhanced
+  */
+  palette(kind k = gray, int phase = 0, int clip = -1) {
+    update(k, phase, clip);
+  }
+
+
+  /** Update a palette
+
+      \param[in] k is the kind of palette
+
+      \param[in] phase allows the palette to have a phase shift
+      instead of starting at 0
+
+      \param[in] clip specifies a value to be enhanced
+  */
+  void update(kind k, int phase, int clip) {
+    for (int i = 0; auto &e : color_mapping) {
+      if (i == clip)
+        e = { 255, 0, 0 };
+      else {
+        auto v = static_cast<std::uint8_t>(i + phase);
+        e = { v,  v,  v };
+      }
       ++i;
     };
   }
 
+
+  /** Transform a value into an RGB color according to the palette
+  */
   rgb palettize(double data, double min_value, double max_value) {
     std::uint8_t v = (data - min_value)*255/(max_value - min_value);
     // Write the same value for RGB to have a grey level
@@ -351,6 +387,12 @@ struct image_grid : frame_grid {
     update_tile_data_image(x, y, md, min_value, max_value);
   }
 
+
+  /// Return the palette used to render the value
+  palette &get_palette() {
+    return p;
+  }
+
 };
 
 
@@ -360,7 +402,6 @@ struct application {
   std::thread t;
   std::unique_ptr<graphics::image_grid> w;
   bool initialized = false;
-
 
   /** Start the graphics application
 
@@ -445,6 +486,12 @@ struct application {
                               RangeValue max_value) {
     w->update_tile_data_image(x, y, data, min_value, max_value);
   };
+
+
+  /// Return the image_grid in this application
+  graphics::image_grid &get_image_grid() {
+    return *w;
+  }
 
 
   /// The destructor waiting for graphics to end

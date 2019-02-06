@@ -57,6 +57,7 @@ int main(int argc, char *argv[]) {
   a.start(argc, argv, decltype(aie)::geo::x_size,
           decltype(aie)::geo::y_size,
           image_size, image_size, 1);
+  a.get_image_grid().get_palette().update(graphics::palette::gray, 0, 8);
 
   // Launch the AI Engine program
   aie.run();
