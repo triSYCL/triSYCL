@@ -46,6 +46,9 @@ namespace cl::sycl::vendor::xilinx::graphics {
 
 namespace fundamentals_v3 = std::experimental::fundamentals_v3;
 
+// RGB 8 bit images, so 3 bytes per pixel
+using rgb = std::array<std::uint8_t, 3>;
+
 /** An application window displaying a grid of tiles
 
     Each tile is framed with the tile identifiers
@@ -132,6 +135,18 @@ struct frame_grid : Gtk::ApplicationWindow {
     return frames.at(x + nx*y);
   }
 
+};
+
+
+/** Color palette to project a linear data space to an RGB color space
+*/
+struct palette {
+  static constexpr rgb
+  palettize(double data, double min_value, double max_value) {
+    std::uint8_t v = (data - min_value)*255/(max_value - min_value);
+    // Write the same value for RGB to have a grey level
+    return { v, v, v };
+  }
 };
 
 
@@ -249,8 +264,6 @@ struct image_grid : frame_grid {
                               const MDspan &data,
                               RangeValue min_value,
                               RangeValue max_value) {
-    // RGB 8 bit images, so 3 bytes per pixel
-    using rgb = std::uint8_t[3];
     /* Painful: first I cannot use a std::unique_ptr because the
        std::function below needs to be copy-constructible, then the
        std::make_shared taking an array size comes only in C++20 while
@@ -272,13 +285,9 @@ struct image_grid : frame_grid {
            ++i) {
         /* Mirror the image vertically to display the pixels in a
            mathematical sense */
-        std::uint8_t v =
-          (static_cast<double>(data(j,i) - min_value))*255
-           /(max_value - min_value);
-        // Write the same value for RGB to have a grey level
-        output(image_y - 1 - j,i)[0] = v;
-        output(image_y - 1 - j,i)[1] = v;
-        output(image_y - 1 - j,i)[2] = v;
+        output(image_y - 1 - j,i) = palette::palettize(data(j,i),
+                                                       min_value,
+                                                       max_value);
       }
     // Send the graphics updating code
     submit([=] {
