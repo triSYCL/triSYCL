@@ -168,8 +168,19 @@ struct palette {
     }
 
 
-  /// Update the palette
+  /* Update the palette and enforce some value invariants for
+     defensive programming and GUI features */
   void update() {
+    // Implement modulo arithmetic on interval [-1, size - 1]
+    if (clip < -1)
+      clip = size - 1;
+    else if (clip >= size)
+        clip = -1;
+    // The frequency can only evolve in this interval
+    frequency_log2 = std::clamp(frequency_log2, -8, 7);
+    // The phase can only evolve in this interval
+    phase = std::clamp(phase, 0, size - 1);
+
     for (int i = 0; auto &e : color_mapping) {
       if (i == clip)
         // Put a full red color for the selected value
@@ -221,32 +232,24 @@ struct palette {
 
   void decrease_clip() {
     --clip;
-    if (clip < -1)
-      clip = size - 1;
     update();
   }
 
 
   void increase_clip() {
     ++clip;
-    if (clip >= size)
-      clip = -1;
     update();
   }
 
 
   void decrease_frequency() {
     --frequency_log2;
-    if (frequency_log2 < -8)
-      frequency_log2 = -8;
     update();
   }
 
 
   void increase_frequency() {
     ++frequency_log2;
-    if (frequency_log2 > 7)
-      frequency_log2 = 7;
     update();
   }
 
