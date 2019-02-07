@@ -148,9 +148,10 @@ struct palette {
   std::array<rgb, size> color_mapping;
 
   enum kind { gray, rainbow };
-  kind k = gray;
-  int phase = 0;
-  int clip = -1;
+  kind k;
+  int phase;
+  int clip;
+  int frequency_log2;
 
   /** Create a palette
 
@@ -161,7 +162,7 @@ struct palette {
 
       \param[in] clip is optional and specifies a value to be enhanced
   */
-  palette(kind k = gray, int phase = 0, int clip = -1)
+  palette(kind k = gray, int phase = 0, int frequency_log2 = 0, int clip = -1)
     : k { k }, phase { phase } , clip { clip } {
       update();
     }
@@ -171,9 +172,19 @@ struct palette {
   void update() {
     for (int i = 0; auto &e : color_mapping) {
       if (i == clip)
+        // Put a full red color for the selected value
         e = { 255, 0, 0 };
       else {
-        auto v = static_cast<std::uint8_t>(i + phase);
+        int j;
+        // There is no bidirectional shift operator in C++
+        if (frequency_log2 < 0)
+          // Divide the step by 2^{-fl}
+          j = i >> -frequency_log2;
+        else
+          // Multiply the step by 2^{fl}
+          j = i << frequency_log2;
+        auto v = static_cast<std::uint8_t>(j + phase);
+        // A non-saturated "gray" of luminosity v
         e = { v,  v,  v };
       }
       ++i;
@@ -190,10 +201,11 @@ struct palette {
 
       \param[in] new_clip specifies a value to be enhanced
   */
-  void set(kind new_k, int new_phase, int new_clip) {
+  void set(kind new_k, int new_phase, int new_frequency_log2, int new_clip) {
     k = new_k;
     phase = new_phase;
     clip = new_clip;
+    frequency_log2 = new_frequency_log2;
     update();
   }
 
@@ -214,6 +226,7 @@ struct palette {
     update();
   }
 
+
   void increase_clip() {
     ++clip;
     if (clip >= size)
@@ -221,10 +234,28 @@ struct palette {
     update();
   }
 
+
+  void decrease_frequency() {
+    --frequency_log2;
+    if (frequency_log2 < -8)
+      frequency_log2 = -8;
+    update();
+  }
+
+
+  void increase_frequency() {
+    ++frequency_log2;
+    if (frequency_log2 > 7)
+      frequency_log2 = 7;
+    update();
+  }
+
+
   void decrease_phase() {
     --phase;
     update();
   }
+
 
   void increase_phase() {
     ++phase;
@@ -241,6 +272,17 @@ struct palette {
           & gtk_accelerator_get_default_mod_mask()
           & ~GDK_SHIFT_MASK)) {
       switch (event.keyval) {
+      case GDK_KEY_minus:
+      case GDK_KEY_KP_Subtract:
+      case GDK_KEY_underscore:
+        decrease_frequency();
+        break;
+      case GDK_KEY_plus:
+      case GDK_KEY_KP_Add:
+      case GDK_KEY_equal:
+      case GDK_KEY_KP_Equal:
+        increase_frequency();
+        break;
       case GDK_KEY_h:
         increase_phase();
         break;
