@@ -240,28 +240,36 @@ struct palette {
     if (!(event.state
           & gtk_accelerator_get_default_mod_mask()
           & ~GDK_SHIFT_MASK)) {
-      if (event.keyval == GDK_KEY_h)
+      switch (event.keyval) {
+      case GDK_KEY_h:
         increase_phase();
-      else if (event.keyval == GDK_KEY_H) {
+        break;
+      case GDK_KEY_H:
         increase_phase();
         decrease_clip();
-      }
-      else if (event.keyval == GDK_KEY_j)
+        break;
+      case GDK_KEY_j:
         decrease_clip();
-      else if (event.keyval == GDK_KEY_k)
+        break;
+      case GDK_KEY_k:
         increase_clip();
-      else if (event.keyval == GDK_KEY_l)
+        break;
+      case GDK_KEY_l:
         decrease_phase();
-      else if (event.keyval == GDK_KEY_L) {
+        break;
+      case GDK_KEY_L:
         decrease_phase();
         increase_clip();
-      }
-      else
+        break;
+      default:
         // Not a key press for us: let the other listeners to handle
-      return false;
+        return false;
+      }
+      // We have handled the event: do not go on with any other listener
+      return true;
     }
-    // We have handled the event: do not go on with any other listener
-    return true;
+    // Not the right modifiers: let the other listeners to handle
+    return false;
   }
 
 };
