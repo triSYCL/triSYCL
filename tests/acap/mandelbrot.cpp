@@ -35,19 +35,21 @@ struct mandelbrot : acap::aie::tile<AIE, X, Y> {
   void run() {
     // Access to its own memory
     auto& m = t::mem();
-    for (int i = 0; i < image_size; ++i)
-      for (int k, j = 0; j < image_size; ++j) {
-        std::complex c { x0 + xs*(X*image_size + i),
-                         y0 + ys*(Y*image_size + j) };
-        std::complex z { 0.0 };
-        for (k = 0; k <= 255; k++) {
-          z = z*z + c;
-          if (norm(z) > M)
-            break;
+    while (!a.is_done()) {
+      for (int i = 0; i < image_size; ++i)
+        for (int k, j = 0; j < image_size; ++j) {
+          std::complex c { x0 + xs*(X*image_size + i),
+                           y0 + ys*(Y*image_size + j) };
+          std::complex z { 0.0 };
+          for (k = 0; k <= 255; k++) {
+            z = z*z + c;
+            if (norm(z) > M)
+              break;
+          }
+          m.plane[j][i] = k;
         }
-        m.plane[j][i] = k;
-      }
-    a.update_tile_data_image(t::x, t::y, &m.plane[0][0], 0, 255);
+      a.update_tile_data_image(t::x, t::y, &m.plane[0][0], 0, 255);
+    }
   }
 };
 
@@ -57,7 +59,7 @@ int main(int argc, char *argv[]) {
   a.start(argc, argv, decltype(aie)::geo::x_size,
           decltype(aie)::geo::y_size,
           image_size, image_size, 1);
-  a.get_image_grid().get_palette().update(graphics::palette::gray, 0, 8);
+  a.get_image_grid().get_palette().set(graphics::palette::gray, 0, 8);
 
   // Launch the AI Engine program
   aie.run();

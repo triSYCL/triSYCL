@@ -148,6 +148,9 @@ struct palette {
   std::array<rgb, size> color_mapping;
 
   enum kind { gray, rainbow };
+  kind k = gray;
+  int phase = 0;
+  int clip = -1;
 
   /** Create a palette
 
@@ -158,21 +161,14 @@ struct palette {
 
       \param[in] clip is optional and specifies a value to be enhanced
   */
-  palette(kind k = gray, int phase = 0, int clip = -1) {
-    update(k, phase, clip);
-  }
+  palette(kind k = gray, int phase = 0, int clip = -1)
+    : k { k }, phase { phase } , clip { clip } {
+      update();
+    }
 
 
-  /** Update a palette
-
-      \param[in] k is the kind of palette
-
-      \param[in] phase allows the palette to have a phase shift
-      instead of starting at 0
-
-      \param[in] clip specifies a value to be enhanced
-  */
-  void update(kind k, int phase, int clip) {
+  /// Update the palette
+  void update() {
     for (int i = 0; auto &e : color_mapping) {
       if (i == clip)
         e = { 255, 0, 0 };
@@ -185,6 +181,23 @@ struct palette {
   }
 
 
+  /** Set palette parameters and update
+
+      \param[in] new_k is the kind of palette
+
+      \param[in] new_phase allows the palette to have a phase shift
+      instead of starting at 0
+
+      \param[in] new_clip specifies a value to be enhanced
+  */
+  void set(kind new_k, int new_phase, int new_clip) {
+    k = new_k;
+    phase = new_phase;
+    clip = new_clip;
+    update();
+  }
+
+
   /** Transform a value into an RGB color according to the palette
   */
   rgb palettize(double data, double min_value, double max_value) {
@@ -192,6 +205,65 @@ struct palette {
     // Write the same value for RGB to have a grey level
     return color_mapping[v];
   }
+
+
+  void decrease_clip() {
+    --clip;
+    if (clip < -1)
+      clip = size - 1;
+    update();
+  }
+
+  void increase_clip() {
+    ++clip;
+    if (clip >= size)
+      clip = -1;
+    update();
+  }
+
+  void decrease_phase() {
+    --phase;
+    update();
+  }
+
+  void increase_phase() {
+    ++phase;
+    update();
+  }
+
+
+
+  /// Handle with any key pressed
+  bool handle_key_press_event(GdkEventKey &event) {
+    /* Only listen to keys without modifiers (no control, alt...) but
+       still allows shift */
+    if (!(event.state
+          & gtk_accelerator_get_default_mod_mask()
+          & ~GDK_SHIFT_MASK)) {
+      if (event.keyval == GDK_KEY_h)
+        increase_phase();
+      else if (event.keyval == GDK_KEY_H) {
+        increase_phase();
+        decrease_clip();
+      }
+      else if (event.keyval == GDK_KEY_j)
+        decrease_clip();
+      else if (event.keyval == GDK_KEY_k)
+        increase_clip();
+      else if (event.keyval == GDK_KEY_l)
+        decrease_phase();
+      else if (event.keyval == GDK_KEY_L) {
+        decrease_phase();
+        increase_clip();
+      }
+      else
+        // Not a key press for us: let the other listeners to handle
+      return false;
+    }
+    // We have handled the event: do not go on with any other listener
+    return true;
+  }
+
 };
 
 
@@ -257,7 +329,7 @@ struct image_grid : frame_grid {
         // Display the frame with the lower y down
         f.add(images.back());
       }
-    show_all_children();
+
     // Hook a generic dispatcher
     dispatcher.connect([&] {
         {
@@ -271,8 +343,17 @@ struct image_grid : frame_grid {
         // We can serve the next customer
         cv.notify_one();
       });
+
+    // Go live
+    show_all_children();
   }
 
+
+  /// Deal with the key pressed
+  bool on_key_press_event(GdkEventKey* event) override {
+    // Forward to the palette for action
+    return p.handle_key_press_event(*event);
+  }
 
   /// Submit some work to the graphics thread
   void submit(std::function<void(void)> f) {
@@ -442,7 +523,9 @@ struct application {
           });
         // OK, the graphics system is in a usable state, unleash the main thread
         graphics_initialization.set_value();
+        // Launch the graphics event loop handling with the graphics life
         a->run(*w);
+
         // Advertise that the graphics is shutting down
         w->done = true;
       } };
