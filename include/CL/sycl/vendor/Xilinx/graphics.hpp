@@ -168,19 +168,8 @@ struct palette {
     }
 
 
-  /* Update the palette and enforce some value invariants for
-     defensive programming and GUI features */
-  void update() {
-    // Implement modulo arithmetic on interval [-1, size - 1]
-    if (clip < -1)
-      clip = size - 1;
-    else if (clip >= size)
-        clip = -1;
-    // The frequency can only evolve in this interval
-    frequency_log2 = std::clamp(frequency_log2, -8, 7);
-    // The phase can only evolve in this interval
-    phase = std::clamp(phase, 0, size - 1);
-
+  // Create a gray palette
+  void gray_palette() {
     for (int i = 0; auto &e : color_mapping) {
       if (i == clip)
         // Put a full red color for the selected value
@@ -199,7 +188,57 @@ struct palette {
         e = { v,  v,  v };
       }
       ++i;
-    };
+    }
+  }
+
+
+  // Create a rainbow palette
+  void rainbow_palette() {
+    Gdk::RGBA color;
+    for (int i = 0; auto &e : color_mapping) {
+      // Put the selected value as black
+      double luminosity = !(i == clip);
+      int j;
+      // There is no bidirectional shift operator in C++
+      if (frequency_log2 < 0)
+        // Divide the step by 2^{-fl}
+        j = i >> -frequency_log2;
+      else
+        // Multiply the step by 2^{fl}
+        j = i << frequency_log2;
+      auto v = static_cast<std::uint8_t>(j + phase);
+      color.set_hsv(360.*v/size, 1, luminosity);
+      e = { static_cast<std::uint8_t>(color.get_red_u() >> 8),
+            static_cast<std::uint8_t>(color.get_green_u() >> 8),
+            static_cast<std::uint8_t>(color.get_blue_u() >> 8) };
+      ++i;
+    }
+  }
+
+
+  /* Update the palette and enforce some value invariants for
+     defensive programming and GUI features */
+  void update() {
+    // Implement modulo arithmetic on interval [-1, size - 1]
+    if (clip < -1)
+      clip = size - 1;
+    else if (clip >= size)
+        clip = -1;
+    // The frequency can only evolve in this interval
+    frequency_log2 = std::clamp(frequency_log2, -8, 7);
+    /* The phase can evolve modulo size. When there are some negative
+       numbers it is implementation dependent but that is enough for
+       this GUI */
+    phase = phase % size;
+
+    switch (k) {
+      case gray:
+        gray_palette();
+        break;
+      case rainbow:
+        rainbow_palette();
+        break;
+    }
   }
 
 
@@ -266,7 +305,6 @@ struct palette {
   }
 
 
-
   /// Handle with any key pressed
   bool handle_key_press_event(GdkEventKey &event) {
     /* Only listen to keys without modifiers (no control, alt...) but
@@ -275,6 +313,16 @@ struct palette {
           & gtk_accelerator_get_default_mod_mask()
           & ~GDK_SHIFT_MASK)) {
       switch (event.keyval) {
+      case GDK_KEY_0:
+      case GDK_KEY_KP_0:
+        k = gray;
+        update();
+        break;
+      case GDK_KEY_1:
+      case GDK_KEY_KP_1:
+        k = rainbow;
+        update();
+        break;
       case GDK_KEY_minus:
       case GDK_KEY_KP_Subtract:
       case GDK_KEY_underscore:
