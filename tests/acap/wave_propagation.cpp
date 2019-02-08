@@ -8,8 +8,13 @@
    RUN: %{execute}%s
 */
 
-/// Predicate for time-step comparison with sequential cosimulation
-#define COMPARE_WITH_SEQUENTIAL_EXECUTION 1
+/** Predicate for time-step comparison with sequential cosimulation
+
+    0: for no co-simulation
+
+    1: compare the parallel execution with sequential execution
+*/
+#define COMPARE_WITH_SEQUENTIAL_EXECUTION 0
 
 #include <algorithm>
 #include <cmath>
@@ -33,7 +38,10 @@ using namespace cl::sycl::vendor::xilinx;
 namespace fundamentals_v3 = std::experimental::fundamentals_v3;
 
 // The size of the machine to use
-using layout = acap::aie::layout::size<5,4>;
+//using layout = acap::aie::layout::size<5,4>;
+// For a 1920x1080 display
+using layout = acap::aie::layout::size<18,9>;
+// For a 3440x1440 display
 //using layout = acap::aie::layout::size<33,12>;
 using geography = acap::aie::geography<layout>;
 boost::barrier b1 { geography::size };
@@ -58,6 +66,7 @@ graphics::application a;
 
 auto epsilon = 0.01;
 
+#if COMPARE_WITH_SEQUENTIAL_EXECUTION == 1
 /** Compare the values of 2 2D mdspan of the same geometry
 
     Display any discrepancy between an acap and reference mdspan
@@ -73,6 +82,8 @@ auto compare_2D_mdspan = [](auto message, const auto &acap, const auto &ref) {
                        << "  ref(" << j << ',' << i << ") = " << ref(j,i));
       }
 };
+#endif
+
 
 /// A sequential reference implementation of wave propagation
 template <auto size_x, auto size_y, auto display_tile_size>
@@ -213,22 +224,21 @@ struct reference_wave_propagation {
 };
 
 
-// A sequential reference implementation of the wave propagation
+/// A sequential reference implementation of the wave propagation
 reference_wave_propagation
 <(image_size - 1)*acap::aie::geography<layout>::x_size + 1,
  (image_size - 1)*acap::aie::geography<layout>::y_size + 1,
  image_size - 1> seq;
 
 
-// All the memory modules are the same
+/// All the memory modules are the same
 template <typename AIE, int X, int Y>
 struct memory : acap::aie::memory<AIE, X, Y> {
-  // The local pixel buffer
-  double u[image_size][image_size];
-  double v[image_size][image_size];
-  double w[image_size][image_size]; // Local delta depth
-  double side[image_size][image_size];
-  double depth[image_size][image_size]; // Average depth
+  double u[image_size][image_size]; //< Horizontal speed
+  double v[image_size][image_size]; //< Vertical speed
+  double w[image_size][image_size]; //< Local delta depth
+  double side[image_size][image_size]; //< Hard wall limit
+  double depth[image_size][image_size]; //< Average depth
 };
 
 
@@ -239,7 +249,7 @@ static auto minmax_element(const double value[image_size][image_size]) {
 }
 )
 
-// All the tiles run the same program
+/// All the tiles run the same program
 template <typename AIE, int X, int Y>
 struct tile : acap::aie::tile<AIE, X, Y> {
   using t = acap::aie::tile<AIE, X, Y>;
@@ -371,6 +381,9 @@ int main(int argc, char *argv[]) {
   a.start(argc, argv, decltype(aie)::geo::x_size,
           decltype(aie)::geo::y_size,
           image_size, image_size, 1);
+  // Clip the level 127 which is the 0 level of the simulation
+  a.get_image_grid().get_palette().set(graphics::palette::rainbow,
+                                       150, 2, 127);
 #if 0
   // Run the sequential reference implementation
   seq.run();
