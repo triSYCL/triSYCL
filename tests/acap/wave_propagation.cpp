@@ -40,7 +40,7 @@ namespace fundamentals_v3 = std::experimental::fundamentals_v3;
 // The size of the machine to use
 //using layout = acap::aie::layout::size<5,4>;
 // For a 1920x1080 display
-using layout = acap::aie::layout::size<18,9>;
+using layout = acap::aie::layout::size<18,8>;
 // For a 3440x1440 display
 //using layout = acap::aie::layout::size<33,12>;
 using geography = acap::aie::geography<layout>;
