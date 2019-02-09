@@ -88,7 +88,7 @@ struct frame_grid : Gtk::ApplicationWindow {
       \param[in] ny is the numer of tiles vertically
   */
   frame_grid(int nx, int ny) : nx { nx }, ny { ny } {
-    set_default_size(900, 600);
+    set_default_size(1900, 1020);
 
     add(sw);
     sw.add(grid);
