@@ -13,10 +13,11 @@
     License. See LICENSE.TXT for details.
 */
 
-#include "layout/one_pe.hpp"
 #include "layout/full.hpp"
+#include "layout/one_pe.hpp"
 #include "layout/size.hpp"
 #include "layout/small.hpp"
+#include "layout/versal.hpp"
 
 /*
     # Some Emacs stuff:
