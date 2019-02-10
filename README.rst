@@ -18,7 +18,7 @@ Xilinx ACAP extensions
 See `<tests/acap>`_ for some code samples.
 
 The API is described in
-https://pages.gitenterprise.xilinx.com/rkeryell/triSYCL/Doxygen/triSYCL/html/group__acap.html
+https://pages.gitenterprise.xilinx.com/rkeryell/acappp/Doxygen/acappp/html/group__acap.html
 
 
 Introduction
@@ -145,8 +145,9 @@ triSYCL code documentation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The documentation of the triSYCL_ implementation itself can be found in
-http://trisycl.github.io/triSYCL/Doxygen/triSYCL/html and
-http://trisycl.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
+https://pages.gitenterprise.xilinx.com/rkeryell/acappp/Doxygen/acappp/html
+and
+https://pages.gitenterprise.xilinx.com/rkeryell/acappp/Doxygen/acappp/html/acappp-implementation-refman.pdf
 
 
 News

@@ -1,7 +1,7 @@
 # Where the documentation is generated, to match also .doxygen files in
 # doc/ and dev/publish_API
 API_DOXYGEN_DIR=tmp/Doxygen/SYCL
-IMPLEMENTATION_DOXYGEN_DIR=tmp/Doxygen/triSYCL
+IMPLEMENTATION_DOXYGEN_DIR=tmp/Doxygen/acappp
 
 # The target to generate the documentation
 #doc: doc-API doc-implementation
