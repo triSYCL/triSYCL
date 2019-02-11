@@ -1,7 +1,4 @@
-/* Testing the AI Engine Memory Module
-
-   Some ideas from
-   2017-09-18--22-Khronos_F2F_Chicago-Xilinx/2017-09-19--20-Xilinx-SYCL-Next.pd
+/* Testing the AI Engine Memory Module with checkerboard pattern
 
    RUN: %{execute}%s
 */
@@ -12,19 +9,19 @@
 #include <type_traits>
 
 using namespace cl::sycl::vendor::xilinx;
+graphics::application a;
 
-/// To have a chessboard-like pattern
-
+/// To have a checkerboard-like pattern
 bool constexpr is_white(int x, int y) {
   // Bottom left is black
   return (x + y) & 1;
 };
 
-struct white {
+struct black {
   double d = 5.2;
 };
 
-struct black {
+struct white {
   int i = 7;
 };
 
@@ -46,24 +43,29 @@ struct tile : acap::aie::tile<AIE, X, Y> {
   using t = acap::aie::tile<AIE, X, Y>;
 
   void run() {
-   auto &own = t::mem();
-
-   std::cout << "Hello, I am the AI tile (" << X << ',' << Y<< ")"
-             << std::endl;
-   std::cout << "Local v = " << own.v << std::endl;
-   if constexpr (std::remove_reference_t<decltype(own)>::is_white())
-                  std::cout << " d = " << own.d << std::endl;
-    else
+    auto &own = t::mem();
+    std::cout << "Hello, I am the AI tile (" << X << ',' << Y<< ")"
+              << std::endl;
+    std::cout << "Local v = " << own.v << std::endl;
+    if constexpr (std::remove_reference_t<decltype(own)>::is_white()) {
       std::cout << " i = " << own.i << std::endl;
+      a.update_tile_data_image(t::x, t::y, &own.i, 5, 7);
+    }
+    else {
+      std::cout << " d = " << own.d << std::endl;
+      a.update_tile_data_image(t::x, t::y, &own.d, 5, 7);
+    }
   }
 };
 
 
-int main() {
+int main(int argc, char *argv[]) {
   std::cout << std::endl << "Instantiate small MathEngine:"
             << std::endl << std::endl;
   // memory is type defining the memory tiles
-  acap::aie::array<acap::aie::layout::small, tile, memory> aie;
+  acap::aie::array<acap::aie::layout::full, tile, memory> aie;
+  a.start(argc, argv, decltype(aie)::geo::x_size,
+          decltype(aie)::geo::y_size, 1, 1, 100);
   aie.run();
 
   std::cout << std::endl << "Instantiate tiny MathEngine:"
