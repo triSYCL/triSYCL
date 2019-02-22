@@ -84,7 +84,7 @@ private:
 
   /* How to copy back data on buffer destruction, can be modified with
      set_final_data( ... )
-   */
+  */
   boost::optional<std::function<void(void)>> final_write_back;
 
   // Keep the shared pointer used to create the buffer

@@ -27,8 +27,7 @@
 #include "CL/sycl/queue.hpp"
 #include "CL/sycl/range.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 /** \addtogroup data Data access and storage in SYCL
     @{
@@ -499,7 +498,6 @@ public:
 
 /// @} End the data Doxygen group
 
-}
 }
 
 /* Inject a custom specialization of std::hash to have the buffer
