@@ -164,7 +164,7 @@ struct tile {
                    " on the left of this tile in the left column and"
                    " on an even row");
      return aie_array->template
-      get_memory_module<memory_module_linear_id(-1, 0)>();
+       get_memory_module<memory_module_linear_id(-1, 0)>();
   }
 
 
@@ -203,6 +203,10 @@ struct tile {
     else
       return mem_right();
   }
+
+
+  /// The type of the memory module native to the tile
+  using mem_t = typename AIE::template tileable_memory<x, y>;
 
 
   /** Provide a run member function that does nothing so it is

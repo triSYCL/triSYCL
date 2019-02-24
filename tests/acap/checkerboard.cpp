@@ -47,7 +47,8 @@ struct tile : acap::aie::tile<AIE, X, Y> {
     std::cout << "Hello, I am the AI tile (" << X << ',' << Y<< ")"
               << std::endl;
     std::cout << "Local v = " << own.v << std::endl;
-    if constexpr (std::remove_reference_t<decltype(own)>::is_white()) {
+
+    if constexpr (t::mem_t::is_white()) {
       std::cout << " i = " << own.i << std::endl;
       a.update_tile_data_image(t::x, t::y, &own.i, 5, 7);
     }
