@@ -23,7 +23,7 @@
 
     Copyright 2014--2015 Advanced Micro Devices, Inc.
 
-    Copyright 2015--2018 Xilinx, Inc.
+    Copyright 2015--2019 Xilinx, Inc.
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
