@@ -17,7 +17,7 @@ graphics::application a;
 // All the memory modules are the same
 template <typename AIE, int X, int Y>
 struct memory : acap::aie::memory<AIE, X, Y> {
-  // The local pixel plane
+  // The local pixel tile inside the complex plane
   std::uint8_t plane[image_size][image_size];
 };
 
@@ -26,8 +26,8 @@ template <typename AIE, int X, int Y>
 struct mandelbrot : acap::aie::tile<AIE, X, Y> {
   using t = acap::aie::tile<AIE, X, Y>;
   // Computation rectangle in the complex plane
-  static auto constexpr x0 = -2.0, y0 = -1.0, x1 = 1.0, y1 = 1.0;
-  static auto constexpr M = 100;
+  static auto constexpr x0 = -2.1, y0 = -1.2, x1 = 0.6, y1 = 1.2;
+  static auto constexpr D = 100; // Divergence norm
   // Size of an image tile
   static auto constexpr xs = (x1 - x0)/t::geo::x_size/image_size;
   static auto constexpr ys = (y1 - y0)/t::geo::y_size/image_size;
@@ -43,7 +43,7 @@ struct mandelbrot : acap::aie::tile<AIE, X, Y> {
           std::complex z { 0.0 };
           for (k = 0; k <= 255; k++) {
             z = z*z + c;
-            if (norm(z) > M)
+            if (norm(z) > D)
               break;
           }
           m.plane[j][i] = k;
