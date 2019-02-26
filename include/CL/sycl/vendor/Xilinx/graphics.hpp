@@ -571,7 +571,7 @@ struct image_grid : frame_grid {
 
 
   /// Return the palette used to render the value
-  palette &get_palette() {
+  palette &palette() {
     return p;
   }
 
@@ -673,7 +673,7 @@ struct application {
 
 
   /// Return the image_grid in this application
-  graphics::image_grid &get_image_grid() {
+  graphics::image_grid &image_grid() {
     return *w;
   }
 
