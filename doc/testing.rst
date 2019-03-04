@@ -8,9 +8,10 @@ Testing
 Installation
 ------------
 
-Only Clang_ 5+ or GCC_ 7+, `Boost.MultiArray`_ (which adds to `C++`_
-the nice Fortran array semantics and syntax), Boost.Operators and a few
-other Boost libraries are needed.
+Only Clang_ 6+ or GCC_ 7+ (but usually the latest versions are the
+best), `Boost.MultiArray`_ (which adds to `C++`_ the nice Fortran
+array semantics and syntax), Boost.Operators and a few other Boost
+libraries are needed.
 
 To have all the tests compiling, it is better to use Clang_ 5.0+ or GCC_
 7+.
@@ -20,16 +21,18 @@ latest Ubuntu too, just adapt the compiler versions):
 
 .. code:: bash
 
-  sudo apt-get install clang-5.00 g++-7 libboost-dev
+  sudo apt-get install clang-8 g++-8 libboost-dev
 
 There is nothing else to do for now to use the include files from triSYCL_
 ``include`` directory when compiling a program. Just add a
-``-I.../include`` option and ``-std=c++1z`` or ``-std=c++17`` when compiling.
+``-I.../include`` option and ``-std=c++1z``, ``-std=c++17``
+or even better ``-std=c++2a`` when compiling.
 
 triSYCL_ is configurable through preprocessor macros described in
 `macros <macros.rst>`_.
 
-Also use ``-fopenmp`` if you want to use multicore parallelism on the CPU.
+Also use ``-fopenmp`` if you want to use OpenMP multicore parallelism
+on the CPU.
 
 The ``CMake`` support is described in `cmake.rst <cmake.rst>`_.
 
