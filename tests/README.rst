@@ -59,7 +59,7 @@ specify where is LIT_. For example with:
 
 .. code:: bash
 
-  export TRISYCL_LIT=/usr/lib/llvm-3.9/build/utils/lit/lit.py
+  export TRISYCL_LIT=/usr/lib/llvm-8/build/utils/lit/lit.py
 
 Installing the Xilinx SDx software providing OpenCL support for Xilinx
 FPGA sets normally the ``XILINX_SDX`` environment variable. This is
@@ -119,8 +119,8 @@ You can build the binary with different compilers with
 
 .. code:: bash
 
-  make CXX=g++-6
-  make CXX=clang++-3.9
+  make CXX=g++-8
+  make CXX=clang++-8
 
 To compile with some debug options, look around some setting of the
 ``CXXFLAGS`` variable. You can configure triSYCL through various
@@ -168,14 +168,14 @@ To install it on Debian or Ubuntu, use typically:
 
 .. code:: bash
 
-  sudo apt-get install llvm-3.9-tools
+  sudo apt-get install llvm-8-tools
 
 You should direct the following variable to where is LIT_ located on your
 machine, for example:
 
 .. code:: bash
 
-  export TRISYCL_LIT=/usr/lib/llvm-3.9/build/utils/lit/lit.py
+  export TRISYCL_LIT=/usr/lib/llvm-8/build/utils/lit/lit.py
 
 To run with the checker, try:
 

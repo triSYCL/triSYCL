@@ -4,7 +4,7 @@
 
 triSYCL currently has one optional environment variable to turn on a work in
 progress feature. triSYCL also makes use of some libraries that have their own
-environment variables that can effect the build process. 
+environment variables that can effect the build process.
 
 Of course the generic environment variables of the operating system
 have impacts on the execution, for example by selecting the right
@@ -17,7 +17,14 @@ triSYCL Variables
   When set to ``"1"`` the triSYCL Makefile will add the definition
   ``"TRISYCL_USE_OPENCL_ND_RANGE`` to the appropriate compile steps to allow
   the execution of ``parallel_for`` kernels using OpenCL's ND-range. This should
-  be used in conjunction with the other triSYCL OpenCL environment variables.
+  be used in conjunction with the other triSYCL OpenCL environment
+  variables.
+
+  Otherwise the kernels are executed as a single task with 1
+  work-group and 1 work-item only and all the ND-range is actually
+  executed with a loop nest inside the kernel. This is a typical use
+  case for FPGA.
+
 
 Boost.Compute
 =============
