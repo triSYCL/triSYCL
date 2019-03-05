@@ -21,13 +21,12 @@ project(triSYCL CXX) # The name of the project (forward declare language)
 
 # Check that a supported host compiler can be found
 if(CMAKE_COMPILER_IS_GNUCXX)
-  # Require at least gcc 5.4
-  if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5.4)
+  # Require at least gcc 9
+  if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9)
     message(FATAL_ERROR
-      "host compiler - Not found! (gcc version must be at least 5.4)")
+      "host compiler - Not found! (gcc version must be at least 9)")
   else()
     message(STATUS "host compiler - gcc ${CMAKE_CXX_COMPILER_VERSION}")
-    add_compile_options("-std=c++1z") # Use latest available C++ standard
     add_compile_options("-Wall")   # Turn on all warnings
     add_compile_options("-Wextra") # Turn on all warnings
 
@@ -45,13 +44,12 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 
   endif()
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-  # Require at least clang 3.9
-  if (${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 3.9)
+  # Require at least clang 9
+  if (${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 9)
     message(FATAL_ERROR
-      "host compiler - Not found! (clang version must be at least 3.9)")
+      "host compiler - Not found! (clang version must be at least 9)")
   else()
     message(STATUS "host compiler - clang ${CMAKE_CXX_COMPILER_VERSION}")
-    add_compile_options("-std=c++1z") # Use latest available C++ standard
     add_compile_options("-Wall")   # Turn on all warnings
     add_compile_options("-Wextra") # Turn on all warnings
 
@@ -139,7 +137,9 @@ set(CL_SYCL_LANGUAGE_VERSION 121 CACHE VERSION
   "Host language version to be used by triSYCL (default is: 121)")
 set(TRISYCL_CL_LANGUAGE_VERSION 121 CACHE VERSION
   "Device language version to be used by triSYCL (default is: 121)")
-set(CMAKE_CXX_STANDARD 17)
+
+# There is some C++20 code
+set(CMAKE_CXX_STANDARD 20)
 set(CXX_STANDARD_REQUIRED ON)
 
 if(NOT TRISYCL_INCLUDE_DIR)
@@ -175,10 +175,11 @@ endif()
 
 # Find Boost
 set(BOOST_REQUIRED_COMPONENTS chrono log)
+
 if(TRISYCL_OPENCL)
   list(APPEND BOOST_REQUIRED_COMPONENTS filesystem)
 endif()
-find_package(Boost 1.58 REQUIRED COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
+find_package(Boost 1.65 REQUIRED COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
 
 # If debug or trace we need boost log
 if(TRISYCL_DEBUG OR TRISYCL_DEBUG_STRUCTORS OR TRISYCL_TRACE_KERNEL)
@@ -198,6 +199,10 @@ message(STATUS "triSYCL kernel trace:             ${TRISYCL_TRACE_KERNEL}")
 
 find_package(Threads REQUIRED)
 
+# Graphics library used by triSYCL graphics library
+find_package(PkgConfig)
+pkg_check_modules(GTKMM gtkmm-3.0)
+
 #######################
 #  add_sycl_to_target
 #######################
@@ -208,12 +213,13 @@ find_package(Threads REQUIRED)
 #
 function(add_sycl_to_target targetName)
   # Add include directories to the "#include <>" paths
-  target_include_directories (${targetName} PUBLIC
+  target_include_directories(${targetName} PUBLIC
     ${TRISYCL_INCLUDE_DIR}
     ${PROJECT_SOURCE_DIR}/tests/common
     ${Boost_INCLUDE_DIRS}
     $<$<BOOL:${TRISYCL_OPENCL}>:${OpenCL_INCLUDE_DIRS}>
-    $<$<BOOL:${TRISYCL_OPENCL}>:${BOOST_COMPUTE_INCPATH}>)
+    $<$<BOOL:${TRISYCL_OPENCL}>:${BOOST_COMPUTE_INCPATH}>
+    ${GTKMM_INCLUDE_DIRS})
 
   # Link dependencies
   target_link_libraries(${targetName} PUBLIC
@@ -221,7 +227,8 @@ function(add_sycl_to_target targetName)
     Threads::Threads
     $<$<BOOL:${LOG_NEEDED}>:Boost::log>
     Boost::chrono
-    $<$<BOOL:${TRISYCL_OPENCL}>:Boost::filesystem>) #Required by BOOST_COMPUTE_USE_OFFLINE_CACHE.
+    $<$<BOOL:${TRISYCL_OPENCL}>:Boost::filesystem> #Required by BOOST_COMPUTE_USE_OFFLINE_CACHE.
+    ${GTKMM_LIBRARIES})
 
   # Compile definitions
   target_compile_definitions(${targetName} PUBLIC
