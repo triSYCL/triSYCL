@@ -17,8 +17,8 @@ Xilinx ACAP extensions
 
 See `<tests/acap>`_ for some code samples.
 
-The API is described in
-https://pages.gitenterprise.xilinx.com/rkeryell/acappp/Doxygen/acappp/html/group__acap.html
+Look at `<doc/acap.rst>`_ to know more about how to install/use the
+ACAP++ environment.
 
 
 Introduction
