@@ -15,6 +15,7 @@
 #include <thread>
 
 #include "cascade_stream.hpp"
+#include "connection.hpp"
 #include "geography.hpp"
 #include "memory.hpp"
 #include "shim_tile.hpp"
@@ -79,9 +80,25 @@ struct array {
   decltype(geo::template generate_tiles<tileable_tile>()) tiles =
     geo::template generate_tiles<tileable_tile>();
 
-  /// The shim adapter at the South of the CGRA
-  /// \todo use an homogeneous array for now
-  shim_tile shim[geo::x_size];
+  connection::input in[geo::y_size][geo::x_size][2];
+  connection::output out[geo::y_size][geo::x_size][2];
+
+  template <typename T>
+  void connect(std::pair<int, int> source, int src_port,
+               std::pair<int, int> dest, int dst_port) {
+    connection c { cl::sycl::static_pipe<T, 4> {} };
+    auto i = c.in();
+    auto o = c.out();
+    {
+      auto [x, y] = source;
+      out[y][x][src_port] = o;
+    }
+    {
+      auto [x, y] = dest;
+      in[y][x][dst_port] = i;
+    }
+  }
+
 
   /// Get a memory module by its linear id
   template <int LinearId>
