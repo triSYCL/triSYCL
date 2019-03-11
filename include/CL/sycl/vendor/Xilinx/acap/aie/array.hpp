@@ -106,17 +106,22 @@ struct array {
     return boost::hana::at_c<LinearId>(memory_modules);
   }
 
+
+  /// Create the AIE array with the tiles and memory modules
+  array() {
+    boost::hana::for_each(tiles, [&] (auto& t) {
+        // Inform each tile about their CGRA owner
+        t.set_array(this);
+      });
+  }
+
+
   /** Launch the programs of all the tiles of the CGRA in their own
       CPU thread and wait for their completion.
 
       This is the main member function to use to launch the execution.
   */
   void run() {
-    // First inform each tile about their CGRA owner
-    boost::hana::for_each(tiles, [&] (auto& t) {
-        t.set_array(this);
-      });
-
     // Start each tile program in its own CPU thread
     boost::hana::for_each(tiles, [&] (auto& t) {
         t.thread = std::thread {[&] {
