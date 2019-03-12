@@ -3,7 +3,8 @@
 
 /** \file
 
-    The basic AI Engine Memory Module
+    The basic AI Engine heterogeneous Memory Module (i.e. dependent of
+    x & y coordinates)
 
     Based on Math Engine (ME) Architecture Specification, Revision v1.4
     March 2018
@@ -16,9 +17,7 @@
     License. See LICENSE.TXT for details.
  */
 
-#include <thread>
-
-#include "lock.hpp"
+#include "memory_base.hpp"
 
 namespace cl::sycl::vendor::xilinx::acap::aie {
 
@@ -41,16 +40,13 @@ template <typename AIE //< The type representing the full CGRA
           , int X //< The horizontal coordinate of the memory module
           , int Y //< The vertical coordinate of the memory module
           >
-struct memory {
+struct memory : memory_base {
   /** The horizontal tile coordinates in the CGRA grid (starting at 0
       and increasing to the right) */
   static auto constexpr x = X;
   /** The vertical tile coordinates in the CGRA grid (starting at
       increasing to the top) */
   static auto constexpr y = Y;
-
-  /// The lock unit of the memory tile
-  lock_unit lu;
 };
 
 /// @} End the aie Doxygen group

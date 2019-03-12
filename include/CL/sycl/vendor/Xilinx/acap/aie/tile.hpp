@@ -163,7 +163,7 @@ struct tile : tile_base {
                    " on the left of this tile in the left column and"
                    " on an even row");
      return aie_array->template
-       get_memory_module<memory_module_linear_id(-1, 0)>();
+       memory_module<memory_module_linear_id(-1, 0)>();
   }
 
 
@@ -173,7 +173,7 @@ struct tile : tile_base {
                   " on the right of this tile in the right column and"
                    " on an odd row");
     return aie_array->template
-      get_memory_module<memory_module_linear_id(1, 0)>();
+      memory_module<memory_module_linear_id(1, 0)>();
   }
 
 
@@ -182,7 +182,7 @@ struct tile : tile_base {
     static_assert(is_memory_module_down(), "There is no memory module"
                   " below the lower tile row");
     return aie_array->template
-      get_memory_module<memory_module_linear_id(0, -1)>();
+      memory_module<memory_module_linear_id(0, -1)>();
   }
 
 
@@ -191,7 +191,7 @@ struct tile : tile_base {
     static_assert(is_memory_module_up(), "There is no memory module"
                   " above the upper tile row");
     return aie_array->template
-      get_memory_module<memory_module_linear_id(0, 1)>();
+      memory_module<memory_module_linear_id(0, 1)>();
   }
 
 

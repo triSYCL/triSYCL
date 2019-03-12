@@ -19,9 +19,10 @@
 #include "connection.hpp"
 #include "geography.hpp"
 #include "memory.hpp"
+#include "memory_base.hpp"
 #include "shim_tile.hpp"
-#include "tile_base.hpp"
 #include "tile.hpp"
+#include "tile_base.hpp"
 
 /// \ingroup acap
 ///  @{
@@ -71,6 +72,11 @@ struct array {
   decltype(geo::template generate_tiles<tileable_memory>())
   memory_modules = geo::template generate_tiles<tileable_memory>();
 
+  /** Keep track of all the tiled memory modules as a type-erased
+      memory_modules_base type to have a simpler access to the basic
+      position-independent memory module features */
+  memory_base *memory_modules_bases[geo::y_size][geo::x_size];
+
   /// Type describing the programs of all the cores in the CGRA
   template <int X, int Y>
   using tileable_tile = Tile<array, X, Y>;
@@ -87,6 +93,39 @@ struct array {
       have a simpler access to the basic position-independent tile
       features */
   tile_base *tile_bases[geo::y_size][geo::x_size];
+
+
+  /** Access to the common infrastructure part of a memory module
+
+      \param[in] x is the horizontal memory module coordinate
+
+      \param[in] y is the vertical memory module coordinate
+  */
+  memory_base &memory_module(int x, int y) {
+    return *memory_modules_bases[y][x];
+  }
+
+
+  /** Access to a memory module by its linear id
+
+      \param[in] LinearId is the linear id
+  */
+  template <int LinearId>
+  auto &memory_module() {
+    return boost::hana::at_c<LinearId>(memory_modules);
+  }
+
+
+  /** Access to a memory module by its coordinates
+
+      \param[in] X is the horizontal memory module coordinate
+
+      \param[in] Y is the vertical memory module coordinate
+  */
+  template <int X, int Y>
+  auto &memory_module() {
+    return memory_module<geo::linear_id(X, Y)>();
+  }
 
 
   /** Access to the common infrastructure part of a tile
@@ -139,13 +178,6 @@ struct array {
       auto [x, y] = dest;
       in[y][x][dst_port] = i;
     }
-  }
-
-
-  /// Get a memory module by its linear id
-  template <int LinearId>
-  auto &get_memory_module() {
-    return boost::hana::at_c<LinearId>(memory_modules);
   }
 
 
