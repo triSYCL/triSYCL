@@ -13,12 +13,14 @@
 
 #include <iostream>
 #include <thread>
+#include <type_traits>
 
 #include "cascade_stream.hpp"
 #include "connection.hpp"
 #include "geography.hpp"
 #include "memory.hpp"
 #include "shim_tile.hpp"
+#include "tile_base.hpp"
 #include "tile.hpp"
 
 /// \ingroup acap
@@ -80,6 +82,46 @@ struct array {
   decltype(geo::template generate_tiles<tileable_tile>()) tiles =
     geo::template generate_tiles<tileable_tile>();
 
+
+  /** Keep track of all the tiles as a type-erased tile_base type to
+      have a simpler access to the basic position-independent tile
+      features */
+  tile_base *tile_bases[geo::y_size][geo::x_size];
+
+
+  /** Access to the common infrastructure part of a tile
+
+      \param[in] x is the horizontal tile coordinate
+
+      \param[in] y is the vertical tile coordinate
+  */
+  tile_base &tile(int x, int y) {
+    return *tile_bases[y][x];
+  }
+
+
+  /** Access to a tile by linear id
+
+      \param[in] LinearId is the linear id
+  */
+  template <int LinearId>
+  auto &tile() {
+    return boost::hana::at_c<LinearId>(tiles);
+  }
+
+
+  /** Access to a tile by its coordinates
+
+      \param[in] X is the horizontal tile coordinate
+
+      \param[in] Y is the vertical tile coordinate
+  */
+  template <int X, int Y>
+  auto &tile() {
+    return tile<geo::linear_id(X, Y)>();
+  }
+
+
   connection::input in[geo::y_size][geo::x_size][2];
   connection::output out[geo::y_size][geo::x_size][2];
 
@@ -112,6 +154,8 @@ struct array {
     boost::hana::for_each(tiles, [&] (auto& t) {
         // Inform each tile about their CGRA owner
         t.set_array(this);
+        // Keep track of each base tile
+        tile_bases[t.y][t.x] = &t;
       });
   }
 

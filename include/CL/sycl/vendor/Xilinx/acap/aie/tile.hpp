@@ -3,7 +3,8 @@
 
 /** \file
 
-    The basic AI Engine tile
+    The basic AI Engine heterogeneous tile (i.e. dependent of x & y
+    coordinates)
 
     Ronan dot Keryell at Xilinx dot com
 
@@ -14,6 +15,7 @@
 #include <type_traits>
 
 #include "CL/sycl/access.hpp"
+#include "tile_base.hpp"
 
 namespace cl::sycl::vendor::xilinx::acap::aie {
 
@@ -33,7 +35,7 @@ namespace cl::sycl::vendor::xilinx::acap::aie {
     \param Y is the vertical coordinate of the memory module
 */
 template <typename AIE, int X, int Y>
-struct tile {
+struct tile : tile_base {
   /** The horizontal tile coordinates in the CGRA grid (starting at 0
       and increasing to the right) */
   static auto constexpr x = X;
@@ -43,9 +45,6 @@ struct tile {
 
   /// The geography of the CGRA
   using geo = typename AIE::geo;
-
-  /// The thread used to run this tile
-  std::thread thread;
 
   /// Keep a reference to the array owning this tile
   AIE *aie_array;
@@ -207,17 +206,6 @@ struct tile {
 
   /// The type of the memory module native to the tile
   using mem_t = typename AIE::template tileable_memory<x, y>;
-
-
-  /** Provide a run member function that does nothing so it is
-      possible to write a minimum AI Engine program that does nothing.
-
-      Note that even if this function is not virtual, in the common
-      case a programmer implements it to specify the program executed
-      by a tile
-  */
-  void run() {
-  }
 
 
   /// Test if this tile owns the start of the cascade_stream
