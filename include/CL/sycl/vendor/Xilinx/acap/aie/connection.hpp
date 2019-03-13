@@ -35,41 +35,43 @@ struct connection {
     return output { *this };
   }
 
-struct base {
-  std::shared_ptr<std::any> p;
 
-  base(const connection &c)
-    : p { c.p } {}
+  struct base {
+    std::shared_ptr<std::any> p;
 
-  base() = default;
-};
+    base(const connection &c)
+      : p { c.p } {}
+
+    base() = default;
+  };
 
 
-struct input : base {
-  using base::base;
+  struct input : base {
+    using base::base;
 
-  template <typename InputT,
-            access::target Target = access::target::blocking_pipe>
-  auto in() {
-    if (!p)
-      throw "This input has not been connected";
-    return std::any_cast<cl::sycl::static_pipe<InputT, 4>>(*p)
-      .template get_access<access::mode::read, Target>();
-  }
-};
+    template <typename InputT,
+              access::target Target = access::target::blocking_pipe>
+    auto in() {
+      if (!p)
+        throw "This input has not been connected";
+      return std::any_cast<cl::sycl::static_pipe<InputT, 4>>(*p)
+        .template get_access<access::mode::read, Target>();
+    }
+  };
 
-struct output : base {
-  using base::base;
 
-  template <typename OutputT,
-            access::target Target = access::target::blocking_pipe>
-  auto out() {
-    if (!p)
-      throw "This output has not been connected";
-    return std::any_cast<cl::sycl::static_pipe<OutputT, 4>>(*p)
-      .template get_access<access::mode::write, Target>();
-  }
-};
+  struct output : base {
+    using base::base;
+
+    template <typename OutputT,
+              access::target Target = access::target::blocking_pipe>
+    auto out() {
+      if (!p)
+        throw "This output has not been connected";
+      return std::any_cast<cl::sycl::static_pipe<OutputT, 4>>(*p)
+        .template get_access<access::mode::write, Target>();
+    }
+  };
 };
 
 /// @} End the aie Doxygen group
