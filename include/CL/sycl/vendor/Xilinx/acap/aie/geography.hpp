@@ -11,6 +11,7 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <boost/format.hpp>
 #include <boost/hana.hpp>
 
 namespace cl::sycl::vendor::xilinx::acap::aie {
@@ -90,12 +91,65 @@ struct geography : Layout {
   }
 
 
+  /** Validate an horizontal coordinate
+
+      Do nothing but throwing if the coordinate is not a valid tile
+      coordinate.
+
+      \param[in] x is the horizontal tile coordinate
+
+      \throws cl::sycl::runtime_error
+  */
+  static void validate_x(int x) {
+    if (!is_x_valid(x)) {
+      throw cl::sycl::runtime_error {
+        (boost::format { "The x coordinate %1% is not between %2% and %3%" }
+          % x % x_min % layout::x_max).str() };
+    }
+  }
+
+
   /** Test if a vertical coordinate is valid
 
       \param[in] y is the vertical tile coordinate
   */
   static bool constexpr is_y_valid(int y) {
     return y_min <= y && y <= layout::y_max;
+  }
+
+
+  /** Validate a vertical coordinate
+
+      Do nothing but throwing if the coordinate is not a valid tile
+      coordinate.
+
+      \param[in] y is the vertical tile coordinate
+
+      \throws cl::sycl::runtime_error
+  */
+  static void validate_y(int y) {
+    if (!is_y_valid(y)) {
+      throw cl::sycl::runtime_error {
+        (boost::format { "The y coordinate %1% is not between %2% and %3%" }
+          % y % y_min % layout::y_max).str() };
+    }
+  }
+
+
+  /** Validate the horizontal and vertical coordinates
+
+      Do nothing but throwing if the coordinates are not valid tile
+      coordinates.
+
+      \param[in] x is the horizontal tile coordinate
+
+      \param[in] y is the vertical tile coordinate
+
+      \throws cl::sycl::runtime_error
+  */
+  static void validate_x_y(int x, int y) {
+    validate_x(x);
+    validate_y(y);
   }
 
 

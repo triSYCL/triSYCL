@@ -107,6 +107,7 @@ struct array {
       \param[in] y is the vertical memory module coordinate
   */
   memory_base &memory_module(int x, int y) {
+    geo::validate_x_y(x, y);
     return *memory_modules_bases[y][x];
   }
 
@@ -140,6 +141,7 @@ struct array {
       \param[in] y is the vertical tile coordinate
   */
   tile_base &tile(int x, int y) {
+    geo::validate_x_y(x, y);
     return *tile_bases[y][x];
   }
 
