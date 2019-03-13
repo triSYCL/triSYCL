@@ -88,11 +88,16 @@ struct array {
   decltype(geo::template generate_tiles<tileable_tile>()) tiles =
     geo::template generate_tiles<tileable_tile>();
 
-
   /** Keep track of all the tiles as a type-erased tile_base type to
       have a simpler access to the basic position-independent tile
       features */
   tile_base *tile_bases[geo::y_size][geo::x_size];
+
+  /** The shim tiles on the lower row of the tile array
+
+      For now we consider only homogeneous shim tiles.
+  */
+  shim_tile shims[geo::x_size];
 
 
   /** Access to the common infrastructure part of a memory module
@@ -106,7 +111,7 @@ struct array {
   }
 
 
-  /** Access to a memory module by its linear id
+  /** Access to a heterogeneous memory module by its linear id
 
       \param[in] LinearId is the linear id
   */
@@ -116,7 +121,7 @@ struct array {
   }
 
 
-  /** Access to a memory module by its coordinates
+  /** Access to a heterogeneous memory module by its coordinates
 
       \param[in] X is the horizontal memory module coordinate
 
@@ -139,7 +144,7 @@ struct array {
   }
 
 
-  /** Access to a tile by linear id
+  /** Access to a heterogeneous tile by linear id
 
       \param[in] LinearId is the linear id
   */
@@ -149,7 +154,7 @@ struct array {
   }
 
 
-  /** Access to a tile by its coordinates
+  /** Access to a heterogeneous tile by its coordinates
 
       \param[in] X is the horizontal tile coordinate
 
@@ -161,22 +166,22 @@ struct array {
   }
 
 
-  connection::input in[geo::y_size][geo::x_size][2];
-  connection::output out[geo::y_size][geo::x_size][2];
+  /** Connect the ports of 2 tiles together with a switched circuit
 
+      \param[in] Y is the type of the data to be transferred
+  */
   template <typename T>
   void connect(std::pair<int, int> source, int src_port,
                std::pair<int, int> dest, int dst_port) {
+    /// \todo move this into a factory
     connection c { cl::sycl::static_pipe<T, 4> {} };
-    auto i = c.in();
-    auto o = c.out();
     {
       auto [x, y] = source;
-      out[y][x][src_port] = o;
+      tile(x, y).axi_ss.out[src_port] = c.out();
     }
     {
       auto [x, y] = dest;
-      in[y][x][dst_port] = i;
+      tile(x, y).axi_ss.in[dst_port] = c.in();
     }
   }
 
@@ -218,6 +223,15 @@ struct array {
 
     std::cout << "Total size of the own memory of all the tiles: "
               << sizeof(tiles) << " bytes." << std::endl;
+  }
+
+
+  /** Access to the shim tile
+
+      \param[in] x is the horizontal coordinate of the shim tile
+  */
+  auto &shim(int x) {
+    return shims[x];
   }
 };
 

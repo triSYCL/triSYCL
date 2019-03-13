@@ -16,29 +16,40 @@ namespace cl::sycl::vendor::xilinx::acap::aie {
 /// \ingroup aie
 /// @{
 
-using coordinate = std::pair<int, int>;
 
+/// A connection between some AXI Stream Switch
 struct connection {
+  /// The concrete communication media with some type erasure
   std::shared_ptr<std::any> p;
 
+  /** Create a connection
+
+      \param[in] pipe is the communication media to be used
+  */
   template <typename Pipe>
   connection(Pipe && pipe)
     : p { new std::any { std::forward<Pipe>(pipe) } } {}
 
 
+  /// Get the input port of this connection
   auto in() {
     return input { *this };
   }
 
 
+  /// Get the output port of this connection
   auto out() {
     return output { *this };
   }
 
 
+  /// Base class of connection port
   struct base {
+    /// Keep track of the communication media
     std::shared_ptr<std::any> p;
 
+
+    /// Construct a port from a connection
     base(const connection &c)
       : p { c.p } {}
 
@@ -46,11 +57,19 @@ struct connection {
   };
 
 
+  /// Abstract an input port
   struct input : base {
+    /// Recycle the base constructors
     using base::base;
 
-    template <typename InputT,
-              access::target Target = access::target::blocking_pipe>
+    /** Get the input port
+
+        \param[in] InputT is the data type to be used in the transfers
+
+        \param[in] Target specifies if the connection is blocking or
+        not
+    */
+    template <typename InputT, access::target Target>
     auto in() {
       if (!p)
         throw "This input has not been connected";
@@ -60,11 +79,19 @@ struct connection {
   };
 
 
+  /// Abstract an output port
   struct output : base {
+    /// Recycle the base constructors
     using base::base;
 
-    template <typename OutputT,
-              access::target Target = access::target::blocking_pipe>
+    /** Get the output port
+
+        \param[in] InputT is the data type to be used in the transfers
+
+        \param[in] Target specifies if the connection is blocking or
+        not
+    */
+    template <typename OutputT, access::target Target>
     auto out() {
       if (!p)
         throw "This output has not been connected";

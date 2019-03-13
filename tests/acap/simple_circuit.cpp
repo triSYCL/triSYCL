@@ -35,7 +35,7 @@ std::cout << v << std::endl;
 
 
 int main() {
-  acap::aie::array<acap::aie::layout::small, tile> aie;
+  acap::aie::array<acap::aie::layout::size<3,4>, tile> aie;
 /*
   aie.noc.connect<char>(shim { 0 }, { 2, 3 });
   aie.noc.connect<int>({ 1, 2 }, { 2, 3 });
@@ -48,12 +48,13 @@ int main() {
   aie.noc.connect<float>(column { 3 }, broadcast_column);
 */
 
-  aie.connect<int>({ 1, 2 }, 0, { 2, 3 }, 1);
-//  aie.connect<float>({ 1, 2 }, 0, { 2, 3 }, 1);
+  // Connect port 0 of tile(1,2) to port 1 of tile(2,0)
+  aie.connect<int>({ 1, 2 }, 0, { 2, 0 }, 1);
+  //  aie.connect<float>({ 1, 2 }, 0, { 2, 3 }, 1);
 
-  // Test the concept from the CPU directly
-       aie.out[2][1][0].out<int>() << 3;
-       std::cout << aie.in[3][2][1].in<int>().read() << std::endl;
+  // Use the connection from the CPU directly by using the AXI MM to the tile
+  aie.tile(1,2).out<int>(0) << 3;
+  std::cout << aie.tile(2, 0).in<int>(1).read() << std::endl;
 
 exit(1);
   // Launch the AIE

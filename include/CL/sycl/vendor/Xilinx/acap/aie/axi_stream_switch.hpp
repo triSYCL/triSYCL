@@ -17,6 +17,7 @@
 #include <array>
 #include <cstdint>
 
+#include "connection.hpp"
 
 namespace cl::sycl::vendor::xilinx::acap::aie {
 
@@ -26,6 +27,12 @@ namespace cl::sycl::vendor::xilinx::acap::aie {
 class axi_stream_switch {
 
 public:
+
+  /// The input communication ports for the tile
+  connection::input in[2];
+
+  /// The output communication ports for the tile
+  connection::output out[2];
 
   enum class shim_axi_ss_master_port : std::int8_t {
     tile_ctrl,
