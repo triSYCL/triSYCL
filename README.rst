@@ -1,5 +1,5 @@
-triSYCL
-+++++++
+ACAP++: ACAP C++ extensions for triSYCL
++++++++++++++++++++++++++++++++++++++++
 
 ..
   Not supported by GitHub :-(
