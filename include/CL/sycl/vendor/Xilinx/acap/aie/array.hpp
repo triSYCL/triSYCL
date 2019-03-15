@@ -134,6 +134,19 @@ struct array {
   }
 
 
+  /** Iterate on all the memory module bases of the AIE in an
+      homogeneous way
+
+      \param[in] F is the function to apply on each memory module base
+  */
+  template <typename F>
+  void for_each_memory_base(F && f) {
+    for (auto y = 0; y != geo::y_size; ++y)
+      for (auto x = 0; x != geo::x_size; ++x)
+        f(*memory_modules_bases[y][x]);
+  }
+
+
   /** Access to the common infrastructure part of a tile
 
       \param[in] x is the horizontal tile coordinate
@@ -165,6 +178,18 @@ struct array {
   template <int X, int Y>
   auto &tile() {
     return tile<geo::linear_id(X, Y)>();
+  }
+
+
+  /** Iterate on all the tile bases of the AIE in an homogeneous way
+
+      \param[in] F is the function to apply on each tile base
+  */
+  template <typename F>
+  void for_each_tile_base(F && f) {
+    for (auto y = 0; y != geo::y_size; ++y)
+      for (auto x = 0; x != geo::x_size; ++x)
+        f(*tile_bases[y][x]);
   }
 
 
