@@ -18,7 +18,14 @@ namespace cl::sycl::vendor::xilinx::acap::aie {
 /// \ingroup aie
 /// @{
 
+/// Abstraction of a communication port
 struct port {
+  /// Abstraction of a communication port inside a shim tile
+  struct shim {
+    const int x;
+    const int port;
+  };
+/// Abstraction of a communication port inside a tile
   struct tile {
     const int x;
     const int y;
@@ -65,8 +72,15 @@ struct connection {
     base() = default;
 
 
-    /// Access the type erased pipe as type T
-    template <typename T>
+  /** Access the type erased pipe as type T
+
+      \param[in] T is the type of the data transmitted by the
+      connection
+
+      \throws cl::sycl::runtime_error if the connection has not the
+      right type
+  */
+  template <typename T>
     auto pipe_of() {
       try {
         return std::any_cast<cl::sycl::static_pipe<T, 4>>(*p);
@@ -91,11 +105,13 @@ struct connection {
 
         \param[in] Target specifies if the connection is blocking or
         not
+
+        \throws cl::sycl::runtime_error if the input is not connected
     */
     template <typename InputT, access::target Target>
     auto in() {
       if (!p)
-        cl::sycl::runtime_error { "This input is not connected" };
+        throw cl::sycl::runtime_error { "This input is not connected" };
       return
         pipe_of<InputT>().template get_access<access::mode::read, Target>();
     }
@@ -113,6 +129,8 @@ struct connection {
 
         \param[in] Target specifies if the connection is blocking or
         not
+
+        \throws cl::sycl::runtime_error if the output is not connected
     */
     template <typename OutputT, access::target Target>
     auto out() {

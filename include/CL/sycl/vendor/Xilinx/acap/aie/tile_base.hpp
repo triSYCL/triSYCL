@@ -44,7 +44,7 @@ struct tile_base {
   */
   template <typename T, access::target Target = access::target::blocking_pipe>
   auto in(int port) {
-    return axi_ss.in[port].in<T, Target>();
+    return axi_ss.in(port).in<T, Target>();
   }
 
 
@@ -57,7 +57,7 @@ struct tile_base {
   */
   template <typename T, access::target Target = access::target::blocking_pipe>
   auto out(int port) {
-    return axi_ss.out[port].out<T, Target>();
+    return axi_ss.out(port).out<T, Target>();
   }
 
 

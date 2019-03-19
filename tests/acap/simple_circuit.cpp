@@ -11,6 +11,7 @@
 #include <boost/test/minimal.hpp>
 
 using namespace cl::sycl::vendor::xilinx;
+using namespace cl::sycl::vendor::xilinx::acap::aie;
 
 // Number of values to transfer
 constexpr auto size = 10;
@@ -18,18 +19,17 @@ constexpr auto size = 10;
 /// A small AI Engine program
 
 template <typename AIE, int X, int Y>
-struct tile : acap::aie::tile<AIE, X, Y> {
+struct comm : acap::aie::tile<AIE, X, Y> {
   using t = acap::aie::tile<AIE, X, Y>;
   void run() {
     for (int i = 0; i < size; ++i) {
       if constexpr (X == 1 && Y == 2) {
-        auto v = 2 /*t::template in<char>(0).read()*/;
+        auto v = t::template in<char>(0).read();
         t::template out<int>(0) << 2*v;
       }
       if constexpr (X == 2 && Y == 3) {
         auto v = t::template in<int>(1).read();
-std::cout << v << std::endl;
-//        t::template out<float>(1) << v + 1.5;
+        t::template out<float>(1) << v + 1.5;
       }
     }
   }
@@ -38,9 +38,8 @@ std::cout << v << std::endl;
 
 int test_main(int argc, char *argv[]) {
   try {
-  acap::aie::array<acap::aie::layout::size<3,4>, tile> aie;
+  acap::aie::array<acap::aie::layout::size<3,4>, comm> aie;
 /*
-  aie.connect<char>(shim { 0 }, { 2, 3 });
   aie.connect<int>({ 1, 2 }, { 2, 3 });
   aie.connect<float>({ 2, 3 }, shim { 1 });
   aie.connect<float>(all, all);
@@ -51,16 +50,19 @@ int test_main(int argc, char *argv[]) {
   aie.connect<float>(column { 3 }, broadcast_column);
 */
 
-  // Connect port 0 of tile(1,2) to port 1 of tile(2,0)
-  aie.connect<int>(acap::aie::port::tile { 1, 2, 0 },
-                   acap::aie::port::tile { 2, 0, 1 });
-//  aie.connect<int>().tile(1, 2).port(0).tile(2, 0).port(1);
-//  aie.connect<float>(acap::aie::port::tile { 1, 2, 0 },
-//                     acap::aie::port::tile { 2, 3, 1 });
+  // Connect port 1 of shim(0) to port 0 of tile(1,2)
+  aie.connect<char>(port::shim { 0, 1 }, port::tile { 1, 2, 0 });
+  aie.connect<int>(port::tile { 1, 2, 0 }, port::tile { 2, 0, 1 });
+  // Connect port 0 of tile(2,0) to port 0 of shim(1)
+  aie.connect<float>(port::tile { 2, 0, 0 }, port::shim { 1, 0 });
 
   // Use the connection from the CPU directly by using the AXI MM to the tile
-  aie.tile(1,2).out<int>(0) << 3;
+  aie.tile(1, 2).out<int>(0) << 3;
   std::cout << aie.tile(2, 0).in<int>(1).read() << std::endl;
+
+  // Try a shim & tile connection directly from the host
+  aie.shim(0).out<char>(1) << 42;
+  std::cout << int { aie.tile(1, 2).in<char>(0).read() } << std::endl;
 
 exit(1);
   // Launch the AIE

@@ -28,11 +28,55 @@ class axi_stream_switch {
 
 public:
 
+  /// Number of ports usable by the programmer as input or output
+  static constexpr int nb_user_ports = 2;
+
+  /** Validate the port number
+
+      \param[in] p is the port number
+
+      \throws cl::sycl::runtime_error if the port number is invalid
+  */
+  static void validate_port(int p) {
+    if (p < 0 || p >= nb_user_ports)
+      throw cl::sycl::runtime_error {
+        (boost::format { "%1% is not a valid port number between 0 and %1%" }
+         % p % (nb_user_ports - 1)).str() };
+  }
+
+private:
+
   /// The input communication ports for the tile
-  connection::input in[2];
+  connection::input user_in[nb_user_ports];
 
   /// The output communication ports for the tile
-  connection::output out[2];
+  connection::output user_out[nb_user_ports];
+
+public:
+
+  /** Access an input port
+
+      \param[in] p is the input port number
+
+      \throws cl::sycl::runtime_error if the port number is invalid
+  */
+  auto &in(int p) {
+    validate_port(p);
+    return user_in[p];
+  }
+
+
+  /** Access an output port
+
+      \param[in] p is the output port number
+
+      \throws cl::sycl::runtime_error if the port number is invalid
+  */
+  auto &out(int p) {
+    validate_port(p);
+    return user_out[p];
+  }
+
 
   enum class shim_axi_ss_master_port : std::int8_t {
     tile_ctrl,

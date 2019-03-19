@@ -98,7 +98,7 @@ struct geography : Layout {
 
       \param[in] x is the horizontal tile coordinate
 
-      \throws cl::sycl::runtime_error
+      \throws cl::sycl::runtime_error if the coordinate is invalid
   */
   static void validate_x(int x) {
     if (!is_x_valid(x)) {
@@ -125,7 +125,7 @@ struct geography : Layout {
 
       \param[in] y is the vertical tile coordinate
 
-      \throws cl::sycl::runtime_error
+      \throws cl::sycl::runtime_error if the coordinate is invalid
   */
   static void validate_y(int y) {
     if (!is_y_valid(y)) {
@@ -145,7 +145,7 @@ struct geography : Layout {
 
       \param[in] y is the vertical tile coordinate
 
-      \throws cl::sycl::runtime_error
+      \throws cl::sycl::runtime_error if the coordinate is invalid
   */
   static void validate_x_y(int x, int y) {
     validate_x(x);

@@ -152,6 +152,8 @@ struct array {
       \param[in] x is the horizontal tile coordinate
 
       \param[in] y is the vertical tile coordinate
+
+      \throws cl::sycl::runtime_error if the coordinate is invalid
   */
   tile_base &tile(int x, int y) {
     geo::validate_x_y(x, y);
@@ -193,23 +195,43 @@ struct array {
   }
 
 
-  /** Connect the ports of 2 tiles together with a switched circuit
+  /** Connect the ports of 2 tiles or shims together with a switched
+      circuit
 
-      \param[in] Y is the type of the data to be transferred
+      \param[in] T is the type of the data to be transferred
+
+      \param[in] SrcPort is the type of the source port, such as
+      port::tile or port::shim
+
+      \param[in] DstPort is the type of the destination port, such as
+      port::tile or port::shim
+
+      \throws cl::sycl::runtime_error if some coordinates or port
+      numbers are invalid
   */
   template <typename T, typename SrcPort, typename DstPort>
   void connect(SrcPort src, DstPort dst) {
     /// \todo move this into a factory
     connection c { cl::sycl::static_pipe<T, 4> {} };
-    constexpr bool valid_src = std::is_same_v<SrcPort, port::tile>;
-    static_assert(valid_src, "connect first type should be port::tile");
+    constexpr bool valid_src = std::is_same_v<SrcPort, port::tile>
+      || std::is_same_v<SrcPort, port::shim>;
+    static_assert(valid_src,
+                  "SrcPort type should be port::tile or port::shim");
     if constexpr (std::is_same_v<SrcPort, port::tile>) {
-       tile(src.x, src.y).axi_ss.out[src.port] = c.out();
+       tile(src.x, src.y).axi_ss.out(src.port) = c.out();
     }
-    constexpr bool valid_dst = std::is_same_v<DstPort, port::tile>;
-    static_assert(valid_dst, "connect second type should be port::tile");
+    else if constexpr(std::is_same_v<SrcPort, port::shim>) {
+       shim(src.x).axi_ss.out(src.port) = c.out();
+    }
+    constexpr bool valid_dst = std::is_same_v<DstPort, port::tile>
+      || std::is_same_v<DstPort, port::shim>;
+    static_assert(valid_dst,
+                  "DstPort type should be port::tile or port::shim");
     if constexpr (std::is_same_v<DstPort, port::tile>) {
-      tile(dst.x, dst.y).axi_ss.in[dst.port] = c.in();
+      tile(dst.x, dst.y).axi_ss.in(dst.port) = c.in();
+    }
+    else if constexpr(std::is_same_v<DstPort, port::shim>) {
+      shim(dst.x).axi_ss.in(dst.port) = c.in();
     }
   }
 
@@ -257,8 +279,11 @@ struct array {
   /** Access to the shim tile
 
       \param[in] x is the horizontal coordinate of the shim tile
+
+      \throws cl::sycl::runtime_error if the coordinate is invalid
   */
   auto &shim(int x) {
+    geo::validate_x(x);
     return shims[x];
   }
 };
