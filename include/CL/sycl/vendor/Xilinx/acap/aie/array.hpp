@@ -197,18 +197,19 @@ struct array {
 
       \param[in] Y is the type of the data to be transferred
   */
-  template <typename T>
-  void connect(std::pair<int, int> source, int src_port,
-               std::pair<int, int> dest, int dst_port) {
+  template <typename T, typename SrcPort, typename DstPort>
+  void connect(SrcPort src, DstPort dst) {
     /// \todo move this into a factory
     connection c { cl::sycl::static_pipe<T, 4> {} };
-    {
-      auto [x, y] = source;
-      tile(x, y).axi_ss.out[src_port] = c.out();
+    constexpr bool valid_src = std::is_same_v<SrcPort, port::tile>;
+    static_assert(valid_src, "connect first type should be port::tile");
+    if constexpr (std::is_same_v<SrcPort, port::tile>) {
+       tile(src.x, src.y).axi_ss.out[src.port] = c.out();
     }
-    {
-      auto [x, y] = dest;
-      tile(x, y).axi_ss.in[dst_port] = c.in();
+    constexpr bool valid_dst = std::is_same_v<DstPort, port::tile>;
+    static_assert(valid_dst, "connect second type should be port::tile");
+    if constexpr (std::is_same_v<DstPort, port::tile>) {
+      tile(dst.x, dst.y).axi_ss.in[dst.port] = c.in();
     }
   }
 

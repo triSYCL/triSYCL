@@ -18,6 +18,13 @@ namespace cl::sycl::vendor::xilinx::acap::aie {
 /// \ingroup aie
 /// @{
 
+struct port {
+  struct tile {
+    const int x;
+    const int y;
+    const int port;
+  };
+};
 
 /// A connection between some AXI Stream Switch
 struct connection {

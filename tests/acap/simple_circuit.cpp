@@ -8,6 +8,8 @@
 #include <iostream>
 #include <thread>
 
+#include <boost/test/minimal.hpp>
+
 using namespace cl::sycl::vendor::xilinx;
 
 // Number of values to transfer
@@ -34,23 +36,27 @@ std::cout << v << std::endl;
 };
 
 
-int main() {
+int test_main(int argc, char *argv[]) {
+  try {
   acap::aie::array<acap::aie::layout::size<3,4>, tile> aie;
 /*
-  aie.noc.connect<char>(shim { 0 }, { 2, 3 });
-  aie.noc.connect<int>({ 1, 2 }, { 2, 3 });
-  aie.noc.connect<float>({ 2, 3 }, shim { 1 });
-  aie.noc.connect<float>(all, all);
-  aie.noc.connect<float>(all, broadcast_line);
-  aie.noc.connect<float>(all, broadcast_column);
-  aie.noc.connect<float>({ 2, 3 }, broadcast_column);
-  aie.noc.connect<float>(line { 2 }, broadcast_column);
-  aie.noc.connect<float>(column { 3 }, broadcast_column);
+  aie.connect<char>(shim { 0 }, { 2, 3 });
+  aie.connect<int>({ 1, 2 }, { 2, 3 });
+  aie.connect<float>({ 2, 3 }, shim { 1 });
+  aie.connect<float>(all, all);
+  aie.connect<float>(all, broadcast_line);
+  aie.connect<float>(all, broadcast_column);
+  aie.connect<float>({ 2, 3 }, broadcast_column);
+  aie.connect<float>(line { 2 }, broadcast_column);
+  aie.connect<float>(column { 3 }, broadcast_column);
 */
 
   // Connect port 0 of tile(1,2) to port 1 of tile(2,0)
-  aie.connect<int>({ 1, 2 }, 0, { 2, 0 }, 1);
-  //  aie.connect<float>({ 1, 2 }, 0, { 2, 3 }, 1);
+  aie.connect<int>(acap::aie::port::tile { 1, 2, 0 },
+                   acap::aie::port::tile { 2, 0, 1 });
+//  aie.connect<int>().tile(1, 2).port(0).tile(2, 0).port(1);
+//  aie.connect<float>(acap::aie::port::tile { 1, 2, 0 },
+//                     acap::aie::port::tile { 2, 3, 1 });
 
   // Use the connection from the CPU directly by using the AXI MM to the tile
   aie.tile(1,2).out<int>(0) << 3;
@@ -76,4 +82,11 @@ exit(1);
   acap.join();
   producer.join();
   consumer.join();
+
+  } catch (cl::sycl::exception &e) {
+    // Display the string message of the SYCL exception
+    std::cerr << e.what() << std::endl;
+    throw;
+  }
+  return 0;
 }
