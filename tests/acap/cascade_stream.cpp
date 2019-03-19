@@ -11,7 +11,7 @@ using namespace cl::sycl;
 using namespace cl::sycl::vendor::xilinx;
 
 
-/// A small MathEngine program
+/// A small AI Engine program
 template <typename AIE, int X, int Y>
 struct tile_program : acap::aie::tile<AIE, X, Y> {
   // Get tile information through this shortcut

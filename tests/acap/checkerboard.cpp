@@ -61,7 +61,7 @@ struct tile : acap::aie::tile<AIE, X, Y> {
 
 
 int main(int argc, char *argv[]) {
-  std::cout << std::endl << "Instantiate small MathEngine:"
+  std::cout << std::endl << "Instantiate small AI Engine:"
             << std::endl << std::endl;
   // memory is type defining the memory tiles
   acap::aie::array<acap::aie::layout::full, tile, memory> aie;
@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
           decltype(aie)::geo::y_size, 1, 1, 100);
   aie.run();
 
-  std::cout << std::endl << "Instantiate tiny MathEngine:"
+  std::cout << std::endl << "Instantiate tiny AI Engine:"
             << std::endl << std::endl;
   acap::aie::array<acap::aie::layout::one_pe, tile, memory> solitaire_aie;
   solitaire_aie.run();

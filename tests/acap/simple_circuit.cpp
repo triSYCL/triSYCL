@@ -54,10 +54,11 @@ int test_main(int argc, char *argv[]) {
   aie.connect<float>(column { 3 }, broadcast_column);
 */
 
-  // Connect port 1 of shim(0) to port 0 of tile(1,2)
+  // Connect port 1 of shim(0) to port 0 of tile(1,2) with a "char" link
   aie.connect<char>(port::shim { 0, 1 }, port::tile { 1, 2, 0 });
+  // Connect port 0 of tile(1,2) to port 1 of tile(2,0) with a "int" link
   aie.connect<int>(port::tile { 1, 2, 0 }, port::tile { 2, 0, 1 });
-  // Connect port 0 of tile(2,0) to port 0 of shim(1)
+  // Connect port 0 of tile(2,0) to port 0 of shim(1) with a "float" link
   aie.connect<float>(port::tile { 2, 0, 0 }, port::shim { 1, 0 });
 
   // Use the connection from the CPU directly by using the AXI MM to the tile
@@ -95,7 +96,7 @@ int test_main(int argc, char *argv[]) {
   consumer.join();
 
   } catch (cl::sycl::exception &e) {
-    // Display the string message of the SYCL exception
+    // Display the string message of any SYCL exception
     std::cerr << e.what() << std::endl;
     throw;
   }

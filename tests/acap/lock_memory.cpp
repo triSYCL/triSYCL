@@ -65,7 +65,7 @@ struct tile<AIE, 1, 0> : acap::aie::tile<AIE, 1, 0> {
 };
 
 int main(int argc, char *argv[]) {
-  std::cout << std::endl << "Instantiate small MathEngine:"
+  std::cout << std::endl << "Instantiate small AI Engine:"
             << std::endl << std::endl;
   acap::aie::array<acap::aie::layout::small, tile, memory> aie;
 
