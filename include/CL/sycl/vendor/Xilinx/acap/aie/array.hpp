@@ -218,20 +218,20 @@ struct array {
     static_assert(valid_src,
                   "SrcPort type should be port::tile or port::shim");
     if constexpr (std::is_same_v<SrcPort, port::tile>) {
-       tile(src.x, src.y).axi_ss.out(src.port) = c.out();
+       tile(src.x, src.y).out_connection(src.port) = c.out();
     }
     else if constexpr(std::is_same_v<SrcPort, port::shim>) {
-       shim(src.x).axi_ss.out(src.port) = c.out();
+       shim(src.x).out_connection(src.port) = c.out();
     }
     constexpr bool valid_dst = std::is_same_v<DstPort, port::tile>
       || std::is_same_v<DstPort, port::shim>;
     static_assert(valid_dst,
                   "DstPort type should be port::tile or port::shim");
     if constexpr (std::is_same_v<DstPort, port::tile>) {
-      tile(dst.x, dst.y).axi_ss.in(dst.port) = c.in();
+      tile(dst.x, dst.y).in_connection(dst.port) = c.in();
     }
     else if constexpr(std::is_same_v<DstPort, port::shim>) {
-      shim(dst.x).axi_ss.in(dst.port) = c.in();
+      shim(dst.x).in_connection(dst.port) = c.in();
     }
   }
 

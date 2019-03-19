@@ -21,37 +21,7 @@ namespace cl::sycl::vendor::xilinx::acap::aie {
 /// \ingroup aie
 /// @{
 
-class shim_tile {
-
-public:
-
-  axi_stream_switch axi_ss;
-
-  /** Get the input port
-
-      \param[in] InputT is the data type to be used in the transfers
-
-      \param[in] Target specifies if the connection is blocking or
-      not.  It is blocking by default
-  */
-  template <typename T, access::target Target = access::target::blocking_pipe>
-  auto in(int port) {
-    return axi_ss.in(port).in<T, Target>();
-  }
-
-
-  /** Get the output port
-
-      \param[in] InputT is the data type to be used in the transfers
-
-      \param[in] Target specifies if the connection is blocking or
-      not.  It is blocking by default
-  */
-  template <typename T, access::target Target = access::target::blocking_pipe>
-  auto out(int port) {
-    return axi_ss.out(port).out<T, Target>();
-  }
-
+class shim_tile : public axi_stream_switch {
 };
 
 /// @} End the aie Doxygen group

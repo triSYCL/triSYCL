@@ -31,6 +31,16 @@ public:
   /// Number of ports usable by the programmer as input or output
   static constexpr int nb_user_ports = 2;
 
+private:
+
+  /// The input communication ports for the tile
+  connection::input user_in[nb_user_ports];
+
+  /// The output communication ports for the tile
+  connection::output user_out[nb_user_ports];
+
+public:
+
   /** Validate the port number
 
       \param[in] p is the port number
@@ -44,37 +54,53 @@ public:
          % p % (nb_user_ports - 1)).str() };
   }
 
-private:
-
-  /// The input communication ports for the tile
-  connection::input user_in[nb_user_ports];
-
-  /// The output communication ports for the tile
-  connection::output user_out[nb_user_ports];
-
-public:
-
-  /** Access an input port
+  /** Access the input connection behind an input port
 
       \param[in] p is the input port number
 
       \throws cl::sycl::runtime_error if the port number is invalid
   */
-  auto &in(int p) {
+  auto &in_connection(int p) {
     validate_port(p);
     return user_in[p];
   }
 
 
-  /** Access an output port
+  /** Access the output connection behind an output port
 
       \param[in] p is the output port number
 
       \throws cl::sycl::runtime_error if the port number is invalid
   */
-  auto &out(int p) {
+  auto &out_connection(int p) {
     validate_port(p);
     return user_out[p];
+  }
+
+
+  /** Get the input port
+
+      \param[in] InputT is the data type to be used in the transfers
+
+      \param[in] Target specifies if the connection is blocking or
+      not.  It is blocking by default
+  */
+  template <typename T, access::target Target = access::target::blocking_pipe>
+  auto in(int port) {
+    return in_connection(port).in<T, Target>();
+  }
+
+
+  /** Get the output port
+
+      \param[in] InputT is the data type to be used in the transfers
+
+      \param[in] Target specifies if the connection is blocking or
+      not.  It is blocking by default
+  */
+  template <typename T, access::target Target = access::target::blocking_pipe>
+  auto out(int port) {
+    return out_connection(port).out<T, Target>();
   }
 
 
