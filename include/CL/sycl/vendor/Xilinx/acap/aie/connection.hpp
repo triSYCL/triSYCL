@@ -9,6 +9,8 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <boost/type_index.hpp>
+
 #include "CL/sycl/access.hpp"
 
 namespace cl::sycl::vendor::xilinx::acap::aie {
@@ -54,6 +56,20 @@ struct connection {
       : p { c.p } {}
 
     base() = default;
+
+
+    /// Access the type erased pipe as type T
+    template <typename T>
+    auto pipe_of() {
+      try {
+        return std::any_cast<cl::sycl::static_pipe<T, 4>>(*p);
+      } catch (std::bad_any_cast) {
+        throw cl::sycl::runtime_error {
+          "The current connection is not of type "s
+          + boost::typeindex::type_id<T>().pretty_name() };
+      }
+    }
+
   };
 
 
@@ -72,9 +88,9 @@ struct connection {
     template <typename InputT, access::target Target>
     auto in() {
       if (!p)
-        throw "This input has not been connected";
-      return std::any_cast<cl::sycl::static_pipe<InputT, 4>>(*p)
-        .template get_access<access::mode::read, Target>();
+        cl::sycl::runtime_error { "This input is not connected" };
+      return
+        pipe_of<InputT>().template get_access<access::mode::read, Target>();
     }
   };
 
@@ -94,9 +110,9 @@ struct connection {
     template <typename OutputT, access::target Target>
     auto out() {
       if (!p)
-        throw "This output has not been connected";
-      return std::any_cast<cl::sycl::static_pipe<OutputT, 4>>(*p)
-        .template get_access<access::mode::write, Target>();
+        throw cl::sycl::runtime_error { "This output is not connected" };
+      return
+        pipe_of<OutputT>().template get_access<access::mode::write, Target>();
     }
   };
 };

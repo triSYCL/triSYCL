@@ -9,6 +9,8 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <string>
+
 /** \addtogroup defaults Manage default configuration and types
     @{
 */
@@ -95,6 +97,13 @@
 #ifdef _MSC_VER
 #define NOMINMAX
 #endif
+
+
+namespace cl::sycl {
+  // Inside this implementation. make the predefined string literals available
+  using namespace std::literals::string_literals;
+}
+
 
 /*
     # Some Emacs stuff:
