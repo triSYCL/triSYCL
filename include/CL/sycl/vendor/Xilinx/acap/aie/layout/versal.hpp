@@ -24,9 +24,16 @@ namespace cl::sycl::vendor::xilinx::acap::aie::layout {
 /** Describe the layout of a tiny AI Engine with only 1 tile
  */
 struct vc1902 : full {
-  static auto constexpr x_max = 27;
-  static auto constexpr y_max = 13;
+  static auto constexpr x_max = 50;
+  static auto constexpr y_max = 8;
 };
+
+/// Alias to vc1902
+using xc10s80 = vc1902;
+
+/// Alias to vc1902
+using xcvc1902 = vc1902;
+
 
 /// @} End the aie Doxygen group
 
