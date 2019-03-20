@@ -84,7 +84,7 @@ struct generic_mandelbrot {
 /// series to be computed
 auto meta_mandelbrot = [] (auto f) {
   return
-    acap::aie::array<acap::aie::layout::size<4,4>,
+    acap::aie::array<acap::aie::layout::size<8,4>,
                      generic_mandelbrot<decltype(f)>::template m,
                      memory> {};
 };
