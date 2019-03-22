@@ -46,7 +46,7 @@ work on latest Ubuntu too, just adapt the compiler versions):
 There is also a dependency on the ``mdspan`` library from the ISO C++
 TS which is not yet in the standard but you can get with::
 
-  git clone git@github.com:ORNL/cpp-proposals-pub.git
+  git clone https://github.com/ORNL/cpp-proposals-pub.git
 
 and set the ``TRISYCL_MDSPAN_INCPATH`` environment variable to the
 absolute path of the
@@ -67,7 +67,7 @@ Runtime environment
 
 Get ACAP++ itself with::
 
-  git clone git@gitenterprise.xilinx.com:rkeryell/acappp.git
+  git clone https://gitenterprise.xilinx.com/rkeryell/acappp.git
 
 
 ACAP++ uses a lot of stack storage and often the default environment
