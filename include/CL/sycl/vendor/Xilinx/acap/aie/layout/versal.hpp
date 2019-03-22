@@ -20,6 +20,17 @@ namespace cl::sycl::vendor::xilinx::acap::aie::layout {
 /// \ingroup aie
 /// @{
 
+/// Describe the layout of a Versal VE1152 device
+struct ve1152 : size<17, 3> {;
+};
+
+/// Alias to ve1152
+using xc10s10 = ve1152;
+
+/// Alias to ve1152
+using xcve1152 = ve1152;
+
+
 /// Describe the layout of a Versal VC1902 device
 struct vc1902 : size<50, 8> {
 };
