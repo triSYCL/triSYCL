@@ -20,12 +20,8 @@ namespace cl::sycl::vendor::xilinx::acap::aie::layout {
 /// \ingroup aie
 /// @{
 
-#
-/** Describe the layout of a tiny AI Engine with only 1 tile
- */
-struct vc1902 : full {
-  static auto constexpr x_max = 50;
-  static auto constexpr y_max = 8;
+/// Describe the layout of a Versal VC1902 device
+struct vc1902 : size<50, 8> {
 };
 
 /// Alias to vc1902
