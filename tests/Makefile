@@ -44,7 +44,7 @@ LDLIBS += -lpthread
 # To use OpenCL, set the TRISYCL_OPENCL flag
 #CXXFLAGS += -DTRISYCL_OPENCL
 # To use generic OpenCL:
-LDLIBS += -lOpenCL
+#LDLIBS += -lOpenCL
 #To use Xilinx OpenCL library without ICD
 #LDLIBS += -lxilinxopencl
 # To use PoCL directly instead of generic OpenCL:
