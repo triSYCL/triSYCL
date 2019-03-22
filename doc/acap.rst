@@ -40,7 +40,7 @@ work on latest Ubuntu too, just adapt the compiler versions):
 
 .. code:: bash
 
-  sudo apt-get install make cmake clang-9 libomp-9-dev llvm-9-dev  g++-8 \
+  sudo apt-get install git make cmake clang-9 libomp-9-dev llvm-9-dev g++-8 \
     libboost-all-dev libgtkmm-3.0-dev libpocl-dev
 
 There is also a dependency on the ``mdspan`` library from the ISO C++
