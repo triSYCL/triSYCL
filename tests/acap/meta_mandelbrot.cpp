@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
   // wallpaper business
   auto m = meta_mandelbrot(
      /// The tradition:
-     [] (auto z, auto c) { return z*z + c; }
+     // [] (auto z, auto c) { return z*z + c; }
      /// Let's be creative:
      // [] (auto z, auto c) { return z*z*z + c; }
      // [] (auto z, auto c) { return z*z*z*z + c; }
@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
      //+ [] (auto z, auto c) { return z*z*z*z*z*z*z*z*z*z*z*z + c; }
      // [] (auto z, auto c) { return z*std::exp(z) + z + c; }
      // [] (auto z, auto c) { return std::sinh(z) + c; }
-     //+ [] (auto z, auto c) { return std::cosh(z) + c; }
+     [] (auto z, auto c) { return std::cosh(z) + c; }
      //+ [] (auto z, auto c) { return std::cos(z) + c; }
   );
 
