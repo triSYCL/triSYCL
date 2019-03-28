@@ -97,7 +97,7 @@ struct array {
 
       For now we consider only homogeneous shim tiles.
   */
-  shim_tile<typename geo::shim_axi_stream_switch> shims[geo::x_size];
+  shim_tile<array> shims[geo::x_size];
 
 
   /** Access to the common infrastructure part of a memory module
