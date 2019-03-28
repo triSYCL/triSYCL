@@ -32,7 +32,7 @@ struct comm : acap::aie::tile<AIE, X, Y> {
       else if constexpr (X == 2 && Y == 0) {
         auto v = t::template in<int>(1).read();
         // Output = input + 1.5
-        t::template out<float>(0) << v + 1.5;
+        t::template out<float>(0) << v + 1.5f;
       }
     }
   }
