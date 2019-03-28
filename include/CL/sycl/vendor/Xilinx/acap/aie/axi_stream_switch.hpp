@@ -5,8 +5,12 @@
 
     Model of an AXI stream switch
 
-    Based on Math Engine (ME) Architecture Specification, Revision v1.5
-    June 2018, section "4.2 AXI-Stream Tile Interconnect".
+    Based on Math Engine (ME) Architecture Specification, Revision v2.01
+    March 2019:
+
+    - section "4.2 AXI-Stream Tile Interconnect"
+
+    - section "6.5.3 Shim AXI-Stream Interconnect"
 
     Ronan dot Keryell at Xilinx dot com
 
@@ -24,9 +28,18 @@ namespace cl::sycl::vendor::xilinx::acap::aie {
 /// \ingroup aie
 /// @{
 
+/** An AXI stream switch parameterized with some geographic layout
+
+    \param[in] AxiStreamGeography is the geography class used to
+    instantiate the AXI stream switch.
+ */
+template <typename AXIStreamGeography>
 class axi_stream_switch {
 
 public:
+
+  using mpl = typename AXIStreamGeography::master_port_layout;
+  using spl = typename AXIStreamGeography::slave_port_layout;
 
   /// Number of ports usable by the programmer as input or output
   static constexpr int nb_user_ports = 2;
@@ -34,10 +47,12 @@ public:
 private:
 
   /// The input communication ports for the tile
-  connection::input user_in[nb_user_ports];
+  std::array<connection::input,
+             AXIStreamGeography::nb_master_port> user_in;
 
   /// The output communication ports for the tile
-  connection::output user_out[nb_user_ports];
+  std::array<connection::output,
+             AXIStreamGeography::nb_slave_port> user_out;
 
 public:
 
@@ -87,7 +102,7 @@ public:
   */
   template <typename T, access::target Target = access::target::blocking_pipe>
   auto in(int port) {
-    return in_connection(port).in<T, Target>();
+    return in_connection(port).template in<T, Target>();
   }
 
 
@@ -100,67 +115,8 @@ public:
   */
   template <typename T, access::target Target = access::target::blocking_pipe>
   auto out(int port) {
-    return out_connection(port).out<T, Target>();
+    return out_connection(port).template out<T, Target>();
   }
-
-
-  enum class shim_axi_ss_master_port : std::int8_t {
-    tile_ctrl,
-    fifo_0,
-    fifo_1,
-    south_0,
-    south_1,
-    south_2,
-    south_3,
-    south_4,
-    south_5,
-    west_0,
-    west_1,
-    west_2,
-    west_3,
-    north_0,
-    north_1,
-    north_2,
-    north_3,
-    north_4,
-    north_5,
-    east_0,
-    east_1,
-    east_2,
-    east_3,
-    // To measure the enum
-    size
-  };
-
-  enum class shim_axi_ss_slave_port : std::int8_t {
-    tile_ctrl,
-    fifo_0,
-    fifo_1,
-    south_0,
-    south_1,
-    south_2,
-    south_3,
-    south_4,
-    south_5,
-    south_6,
-    south_7,
-    west_0,
-    west_1,
-    west_2,
-    west_3,
-    north_0,
-    north_1,
-    north_2,
-    north_3,
-    east_0,
-    east_1,
-    east_2,
-    east_3,
-    shim_trace,
-    // To measure the enum
-    size
-  };
-
 
   using data_type = std::uint32_t;
   static constexpr auto stream_latency = 4;
@@ -192,10 +148,8 @@ public:
     cl::sycl::static_pipe<data_type, stream_latency> stream;
   };
 
-  std::array<input_port,
-             static_cast<int>(shim_axi_ss_slave_port::size)> input_ports;
-  std::array<output_port,
-             static_cast<int>(shim_axi_ss_slave_port::size)> output_ports;
+  std::array<input_port, AXIStreamGeography::nb_master_port> input_ports;
+  std::array<output_port, AXIStreamGeography::nb_slave_port> output_ports;
 
 /*
   axi_stream_switch(west_input_type wi, west_output_type wo,
@@ -209,18 +163,18 @@ public:
   axi_stream_switch() = default;
 
 
-  auto input(shim_axi_ss_slave_port p) {
-    return input_ports[static_cast<int>(p)].stream
-      .get_access<access::mode::write, access::target::blocking_pipe>();
+  auto input(typename AXIStreamGeography::master_port_layout p) {
+    return input_ports[static_cast<int>(p)].stream.template
+      get_access<access::mode::write, access::target::blocking_pipe>();
   }
 
 
-  auto output(shim_axi_ss_master_port p) {
+  auto output(typename AXIStreamGeography::master_port_layout p) {
     // Lie to implement some "routing" for now
 //    return output_ports[static_cast<int>(p)].stream
 //      .get_access<access::mode::read, access::target::blocking_pipe>();
-    return input_ports[static_cast<int>(p)].stream
-      .get_access<access::mode::read, access::target::blocking_pipe>();
+    return input_ports[static_cast<int>(p)].stream.template
+      get_access<access::mode::read, access::target::blocking_pipe>();
   }
 
 };

@@ -21,7 +21,13 @@ namespace cl::sycl::vendor::xilinx::acap::aie {
 /// \ingroup aie
 /// @{
 
-class shim_tile : public axi_stream_switch {
+/** The AI Engine shim tile infrastructure
+
+    \param Geography is the class describing the concrete layout
+    parameters.
+*/
+template <typename AXIStreamGeography>
+class shim_tile : public axi_stream_switch<AXIStreamGeography> {
 };
 
 /// @} End the aie Doxygen group

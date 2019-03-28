@@ -26,8 +26,13 @@ namespace cl::sycl::vendor::xilinx::acap::aie {
 
     This allows some type erasure while accessing the common
     tile infrastructure.
+
+    \param AIE is the type representing the full CGRA with the
+    programs and memory contents
 */
-struct tile_base : axi_stream_switch {
+template <typename AIE>
+struct tile_base
+  : axi_stream_switch<typename AIE::geo::core_axi_stream_switch> {
   /// The thread used to run this tile
   std::thread thread;
 

@@ -288,6 +288,157 @@ struct geography : Layout {
       // Take into account the horizontal chessboard-like skewing
       return linear_id(x + memory_module_dx_coordinate(y, dx), y);
   }
+
+
+  // The organization of the AXI stream switch on a core tile
+  struct core_axi_stream_switch {
+    /** Layout of the AXI stream master ports in the switch
+
+        Revision v2.01, 4.2.1 Types of AXI-Streams, p. 98 */
+    enum class master_port_layout : std::int8_t {
+      me_0,
+      me_1,
+      dma_0,
+      dma_1,
+      tile_ctrl,
+      fifo_0,
+      fifo_1,
+      south_0,
+      south_1,
+      south_2,
+      south_3,
+      west_0,
+      west_1,
+      west_2,
+      west_3,
+      north_0,
+      north_1,
+      north_2,
+      north_3,
+      north_4,
+      north_5,
+      east_0,
+      east_1,
+      east_2,
+      east_3,
+      // To measure the enum
+      size
+    };
+
+    /// Number of master AXI stream master ports in the switch
+    static constexpr int nb_master_port =
+      static_cast<int>(master_port_layout::size);
+
+    /// Layout of the AXI stream slave ports in the switch
+    enum class slave_port_layout : std::int8_t {
+      me_0,
+      me_1,
+      dma_0,
+      dma_1,
+      tile_ctrl,
+      fifo_0,
+      fifo_1,
+      south_0,
+      south_1,
+      south_2,
+      south_3,
+      south_4,
+      south_5,
+      west_0,
+      west_1,
+      west_2,
+      west_3,
+      north_0,
+      north_1,
+      north_2,
+      north_3,
+      east_0,
+      east_1,
+      east_2,
+      east_3,
+      core_trace,
+      mem_trace,
+      // To measure the enum
+      size
+    };
+
+    /// Number of master AXI stream slave ports in the switch
+    static constexpr int nb_slave_port =
+      static_cast<int>(slave_port_layout::size);
+  };
+
+  // The organization of the AXI stream switch on a shim tile
+  struct shim_axi_stream_switch {
+    /** Layout of the AXI stream master ports in the switch
+
+        Revision v2.01, 6.5.3 Shim AXI-Stream Interconnect, p. 289 */
+    enum class master_port_layout : std::int8_t {
+      tile_ctrl,
+      fifo_0,
+      fifo_1,
+      south_0,
+      south_1,
+      south_2,
+      south_3,
+      south_4,
+      south_5,
+      west_0,
+      west_1,
+      west_2,
+      west_3,
+      north_0,
+      north_1,
+      north_2,
+      north_3,
+      north_4,
+      north_5,
+      east_0,
+      east_1,
+      east_2,
+      east_3,
+      // To measure the enum
+      size
+    };
+
+    /// Number of master AXI stream master ports in the switch
+    static constexpr int nb_master_port =
+      static_cast<int>(master_port_layout::size);
+
+    /// Layout of the AXI stream slave ports in the switch
+    enum class slave_port_layout : std::int8_t {
+      tile_ctrl,
+      fifo_0,
+      fifo_1,
+      south_0,
+      south_1,
+      south_2,
+      south_3,
+      south_4,
+      south_5,
+      south_6,
+      south_7,
+      west_0,
+      west_1,
+      west_2,
+      west_3,
+      north_0,
+      north_1,
+      north_2,
+      north_3,
+      east_0,
+      east_1,
+      east_2,
+      east_3,
+      shim_trace,
+      // To measure the enum
+      size
+    };
+
+    /// Number of master AXI stream slave ports in the switch
+    static constexpr int nb_slave_port =
+      static_cast<int>(slave_port_layout::size);
+  };
+
 };
 
 /// @} End the aie Doxygen group
