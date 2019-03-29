@@ -1,6 +1,5 @@
-#ifndef TRISYCL_SYCL_VENDOR_XILINX_SSDM_INST_HPP
-#define TRISYCL_SYCL_VENDOR_XILINX_SSDM_INST_HPP
-
+#ifndef TRISYCL_SYCL_VENDOR_XILINX_FPGA_SSDM_INST_HPP
+#define TRISYCL_SYCL_VENDOR_XILINX_FPGA_SSDM_INST_HPP
 
 /** \file This file defines some of the SSDM intrinsics used in Xilinx
     tools.
@@ -42,4 +41,4 @@ extern "C" {
     ### End:
 */
 
-#endif // TRISYCL_SYCL_VENDOR_XILINX_SSDM_INST_HPP
+#endif // TRISYCL_SYCL_VENDOR_XILINX_FPGA_SSDM_INST_HPP

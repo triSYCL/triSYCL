@@ -100,4 +100,4 @@ class program
     ### End:
 */
 
-#endif
+#endif // TRISYCL_SYCL_PROGRAM_HPP

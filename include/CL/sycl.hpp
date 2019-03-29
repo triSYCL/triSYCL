@@ -80,11 +80,8 @@
 #include "CL/sycl/platform/detail/opencl_platform_tail.hpp"
 #endif
 
-// Some include files for Xilinx-specific features.
-// SSDM functions needs to be declared before their implementation
-#include "CL/sycl/vendor/Xilinx/ssdm_inst.hpp"
-#include "CL/sycl/vendor/Xilinx/opt_decorate_func.hpp"
-#include "CL/sycl/vendor/Xilinx/partition_array.hpp"
+// Some include files for Xilinx-specific features, such as for FPGA
+#include "CL/sycl/vendor/Xilinx/fpga.hpp"
 
 // An extension about constexpr host introspection API
 //#include "CL/sycl/extension/ce/platform.hpp"

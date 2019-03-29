@@ -1,5 +1,5 @@
-#ifndef TRISYCL_SYCL_VENDOR_XILINX_OPT_DECORATE_FUNC_HPP
-#define TRISYCL_SYCL_VENDOR_XILINX_OPT_DECORATE_FUNC_HPP
+#ifndef TRISYCL_SYCL_VENDOR_XILINX_FPGA_OPT_DECORATE_FUNC_HPP
+#define TRISYCL_SYCL_VENDOR_XILINX_FPGA_OPT_DECORATE_FUNC_HPP
 
 /** \file This file includes some decorating functions for
     some optimizations supported by Xilinx tools.
@@ -52,7 +52,6 @@ auto pipeline = [] (auto functor) noexcept {
   functor();
 };
 
-
 }
 
 /// @} End the Xilinx Doxygen group
@@ -65,4 +64,4 @@ auto pipeline = [] (auto functor) noexcept {
     ### End:
 */
 
-#endif // TRISYCL_SYCL_VENDOR_XILINX_OPT_DECORATE_FUNC_HPP
+#endif // TRISYCL_SYCL_VENDOR_XILINX_FPGA_OPT_DECORATE_FUNC_HPP
