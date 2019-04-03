@@ -297,7 +297,7 @@ struct geography : Layout {
         Revision v2.01, 4.2.1 Types of AXI-Streams, p. 98 */
     enum class master_port_layout : std::int8_t {
       me_0,
-      me_1,
+      me_1, me_last = me_1, ///< Used for user port validation
       dma_0,
       dma_1,
       tile_ctrl,
@@ -332,7 +332,7 @@ struct geography : Layout {
     /// Layout of the AXI stream slave ports in the switch
     enum class slave_port_layout : std::int8_t {
       me_0,
-      me_1,
+      me_1, me_last = me_1, ///< Used for user port validation
       dma_0,
       dma_1,
       tile_ctrl,
@@ -365,6 +365,7 @@ struct geography : Layout {
     /// Number of master AXI stream slave ports in the switch
     static constexpr int nb_slave_port =
       static_cast<int>(slave_port_layout::size);
+
   };
 
   // The organization of the AXI stream switch on a shim tile

@@ -44,6 +44,31 @@ public:
   /// Number of ports usable by the programmer as input or output
   static constexpr int nb_user_ports = 2;
 
+  /** Validate the user port number and translate it to the physical
+      port number
+
+      \param[in] StreamLayout is the port layout description defined
+      in the geography (typically \c master_port_layout or \c
+      slave_port_layout) providing the me_0 and me_last physical port
+      numbers
+
+      \param[in] user_port is the user port number, starting to 0
+
+      \throws cl::sycl::runtime_error if the port number is invalid
+
+      \return the physical port number in the switch
+  */
+  template <typename StreamLayout>
+  static auto validate_port(int user_port) {
+    constexpr auto port_min = static_cast<int>(StreamLayout::me_0);
+    constexpr auto port_max = static_cast<int>(StreamLayout::me_last);
+    constexpr auto last_user_port = port_max - port_min;
+    if (user_port < 0 || user_port > last_user_port)
+      throw cl::sycl::runtime_error {
+        (boost::format { "%1% is not a valid port number between 0 and %1%" }
+           % user_port % last_user_port).str() };
+  }
+
 private:
 
   /// The input communication ports for the tile
@@ -56,19 +81,6 @@ private:
 
 public:
 
-  /** Validate the port number
-
-      \param[in] p is the port number
-
-      \throws cl::sycl::runtime_error if the port number is invalid
-  */
-  static void validate_port(int p) {
-    if (p < 0 || p >= nb_user_ports)
-      throw cl::sycl::runtime_error {
-        (boost::format { "%1% is not a valid port number between 0 and %1%" }
-         % p % (nb_user_ports - 1)).str() };
-  }
-
   /** Access the input connection behind an input port
 
       \param[in] p is the input port number
@@ -76,7 +88,8 @@ public:
       \throws cl::sycl::runtime_error if the port number is invalid
   */
   auto &in_connection(int p) {
-    validate_port(p);
+    /// \todo change for the shim tiles
+    //validate_port<mpl>(p);
     return user_in[p];
   }
 
@@ -88,7 +101,8 @@ public:
       \throws cl::sycl::runtime_error if the port number is invalid
   */
   auto &out_connection(int p) {
-    validate_port(p);
+    /// \todo change for the shim tiles
+    //validate_port<spl>(p);
     return user_out[p];
   }
 
