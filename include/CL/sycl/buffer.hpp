@@ -492,16 +492,17 @@ public:
 
   /** Set destination of buffer data on destruction.
 
-      WARNING: the user has to ensure that the object refered to by the
-      iterator will be alive after buffer destruction, otherwise the behaviour
+      WARNING: the user has to ensure that the object referred to by the
+      iterator will be alive after buffer destruction, otherwise the behavior
       is undefined.
    */
   template <typename Iterator,
-            typename ValueType =
-            typename std::iterator_traits<Iterator>::value_type>
-  void set_final_data(Iterator&& finalData) {
-    implementation->implementation->
-      set_final_data(std::forward<Iterator>(finalData));
+            typename ValueType = typename std::iterator_traits<
+                                          std::remove_reference_t<Iterator>
+                                          >::value_type>
+  void set_final_data(Iterator &&finalData) {
+    implementation->implementation->set_final_data(
+        std::forward<Iterator>(finalData));
   }
 
 };
