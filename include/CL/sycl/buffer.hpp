@@ -497,12 +497,12 @@ public:
       is undefined.
    */
   template <typename Iterator,
-            typename ValueType = typename std::iterator_traits<
-                                          std::remove_reference_t<Iterator>
-                                          >::value_type>
+            typename ValueType =
+            typename std::iterator_traits<
+              std::remove_reference_t<Iterator>>::value_type>
   void set_final_data(Iterator &&finalData) {
     implementation->implementation->set_final_data(
-        std::forward<Iterator>(finalData));
+      std::forward<Iterator>(finalData));
   }
 
 };
