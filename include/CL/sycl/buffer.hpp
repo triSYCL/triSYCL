@@ -27,8 +27,7 @@
 #include "CL/sycl/queue.hpp"
 #include "CL/sycl/range.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 /** \addtogroup data Data access and storage in SYCL
     @{
@@ -64,18 +63,9 @@ class buffer
      shared in the SYCL model */
   : public detail::shared_ptr_implementation<
                          buffer<T, Dimensions, Allocator>,
-                         detail::buffer_waiter<T, Dimensions, Allocator>>,
-    detail::debug<buffer<T, Dimensions, Allocator>> {
-public:
-
-  /// The STL-like types
-  using value_type = T;
-  using reference = value_type&;
-  using const_reference = const value_type&;
-  using allocator_type = Allocator;
-
-private:
-
+                         detail::buffer_waiter<T, Dimensions, Allocator>>
+  , public detail::container_element_aspect<T>
+  , detail::debug<buffer<T, Dimensions, Allocator>> {
   // The type encapsulating the implementation
   using implementation_t = typename buffer::shared_ptr_implementation;
 
@@ -509,7 +499,6 @@ public:
 
 /// @} End the data Doxygen group
 
-}
 }
 
 /* Inject a custom specialization of std::hash to have the buffer

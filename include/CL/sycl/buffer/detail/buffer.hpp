@@ -18,15 +18,12 @@
 #include <boost/optional.hpp>
 
 #include "CL/sycl/access.hpp"
-#include "CL/sycl/buffer/detail/accessor.hpp"
+#include "CL/sycl/buffer/detail/buffer_accessor_shepherd.hpp"
 #include "CL/sycl/buffer/detail/buffer_base.hpp"
 #include "CL/sycl/buffer/detail/buffer_waiter.hpp"
 #include "CL/sycl/range.hpp"
 
-namespace cl {
-namespace sycl {
-namespace detail {
-
+namespace cl::sycl::detail {
 
 /** \addtogroup data Data access and storage in SYCL
     @{
@@ -54,13 +51,15 @@ public:
 
 private:
 
+//Remove
   // \todo Replace U and D somehow by T and Dimensions
   // To allow allocation access
-  template <typename U,
+  template <typename Accessor,
+            typename U,
             int D,
             access::mode Mode,
             access::target Target /* = access::global_buffer */>
-    friend class detail::accessor;
+    friend class detail::buffer_accessor_shepherd;
 
   /** The allocator to be used when some memory is needed
 
@@ -85,7 +84,7 @@ private:
 
   /* How to copy back data on buffer destruction, can be modified with
      set_final_data( ... )
-   */
+  */
   boost::optional<std::function<void(void)>> final_write_back;
 
   // Keep the shared pointer used to create the buffer
@@ -198,8 +197,7 @@ public:
        \c copy_back_cl_buffer any more.
        \todo Optimize for the case the buffer is not based on host memory
     */
-    auto size = access.num_elements() * sizeof(value_type);
-    call_update_buffer_state(host_context, access::mode::read, size, access.data());
+    call_update_buffer_state(host_context, access::mode::read);
 
 #endif
     if (modified && final_write_back)
@@ -214,6 +212,12 @@ public:
    */
   void mark_as_written() {
     modified = true;
+  }
+
+
+  /// Return a low-level accessor on the buffer
+  auto& get_access() {
+    return access ;
   }
 
 
@@ -355,21 +359,19 @@ private:
 
       \todo Use \c if \c constexpr when it is available with C++17
   */
-  template <typename BaseType = T, typename DataType>
+  template <typename BaseType = T>
   void call_update_buffer_state(cl::sycl::context ctx, access::mode mode,
-                                size_t size, DataType* data,
                                 std::enable_if_t<!std::is_const<BaseType>
                                 ::value>* = 0) {
-    update_buffer_state(ctx, mode, size, data);
+    update_buffer_state(ctx, mode, get_size(), access.data());
   }
 
 
   /** Version of \c call_update_buffer_state that does nothing. It is called if
       the type of the data in the buffer is \c const
    */
-  template <typename BaseType = T, typename DataType>
+  template <typename BaseType = T>
   void call_update_buffer_state(cl::sycl::context ctx, access::mode mode,
-                                size_t size, DataType* data,
                                 std::enable_if_t<std::is_const<BaseType>
                                 ::value>* = 0) { }
 
@@ -434,8 +436,6 @@ buffer_add_to_task(BufferDetail buf,
 
 /// @} End the data Doxygen group
 
-}
-}
 }
 
 /*

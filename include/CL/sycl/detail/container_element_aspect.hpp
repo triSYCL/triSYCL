@@ -22,6 +22,8 @@ namespace detail {
 template <typename T>
 struct container_element_aspect {
 
+  /** \todo in the specification: store the types for user request as STL
+      or C++AMP */
   using value_type = T;
   using pointer = value_type*;
   using const_pointer = const value_type*;

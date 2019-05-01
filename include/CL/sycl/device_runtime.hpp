@@ -4,7 +4,7 @@
 /** \file The OpenCL SYCL device-side runtime
 
     This code is expected to be called once some Clang & LLVM passes
-    of the device compiler has been applied.
+    of the device compiler have been applied.
 
     \todo Refactor to be more modular and OpenCL-independent so it can
     more easily be retargeted to some other runtime API.
@@ -28,14 +28,15 @@
 #include "CL/sycl/detail/default_classes.hpp"
 
 #include "CL/sycl/accessor.hpp"
+#include "CL/sycl/buffer/detail/buffer_accessor_view.hpp"
 #include "CL/sycl/command_group/detail/task.hpp"
 #include "CL/sycl/detail/shared_ptr_implementation.hpp"
 #include "CL/sycl/device/detail/host_device.hpp"
 #ifdef TRISYCL_OPENCL
 #include "CL/sycl/device/detail/opencl_device.hpp"
 #endif
-#include "CL/sycl/info/device.hpp"
 #include "CL/sycl/device_selector.hpp"
+#include "CL/sycl/info/device.hpp"
 #include "CL/sycl/platform.hpp"
 
 namespace cl {
@@ -51,7 +52,10 @@ namespace drt {
 /// SYCL accessor seen from a device perspective
 template <typename Accessor>
 class accessor :
-    public detail::container_element_aspect<typename Accessor::value_type> {
+    public detail::buffer_accessor_view<typename Accessor::value_type,
+                                        Accessor::dimensionality,
+                                        Accessor::mode,
+                                        Accessor::target> {
 
   /** The pointer to the data
 
@@ -80,11 +84,14 @@ public:
        run-time, but at least from the kernel point of view it has to
        look like an \c Accessor::value_type * for the kernel
        outlining */
-    buffer {
+    detail::buffer_accessor_view<typename Accessor::value_type,
+                                 Accessor::dimensionality,
+                                 Accessor::mode,
+                                 Accessor::target> {
       reinterpret_cast<TRISYCL_GLOBAL_AS typename Accessor::value_type *>
-        (a.implementation->get_order())
-        },
-    size { a.get_count() }
+        (a.implementation->get_order()),
+        a.get_count()
+        }
   {
 #ifndef TRISYCL_DEVICE
     /* Register the buffer address to be updated with the final
@@ -96,11 +103,12 @@ public:
 #endif
   }
 
-
+#if 0
   /// use the accessor with integers à la []
   auto &operator[](std::size_t index) const noexcept {
     return buffer[index];
   }
+#endif
 
 };
 
