@@ -31,8 +31,10 @@ namespace cl::sycl::vendor::xilinx::acap::aie {
     programs and memory contents
 */
 template <typename AIE>
-struct tile_base
-  : axi_stream_switch<typename AIE::geo::core_axi_stream_switch> {
+struct tile_base {
+  /// The AXI stream switch of the core tile
+  axi_stream_switch<typename AIE::geo::core_axi_stream_switch> axi_ss;
+
   /// The thread used to run this tile
   std::thread thread;
 
@@ -47,6 +49,32 @@ struct tile_base
       by a tile
   */
   void run() {
+  }
+
+
+  /** Get the input port from the AXI stream switch
+
+      \param[in] InputT is the data type to be used in the transfers
+
+      \param[in] Target specifies if the connection is blocking or
+      not. It is blocking by default
+  */
+  template <typename T, access::target Target = access::target::blocking_pipe>
+  auto in(int port) {
+    return axi_ss.in_connection(port).template in<T, Target>();
+  }
+
+
+  /** Get the output port to the AXI stream switch
+
+      \param[in] InputT is the data type to be used in the transfers
+
+      \param[in] Target specifies if the connection is blocking or
+      not. It is blocking by default
+  */
+  template <typename T, access::target Target = access::target::blocking_pipe>
+  auto out(int port) {
+    return axi_ss.out_connection(port).template out<T, Target>();
   }
 
 

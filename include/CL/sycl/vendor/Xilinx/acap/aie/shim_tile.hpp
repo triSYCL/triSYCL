@@ -29,6 +29,35 @@ namespace cl::sycl::vendor::xilinx::acap::aie {
 template <typename AIE>
 class shim_tile
   : public axi_stream_switch<typename AIE::geo::shim_axi_stream_switch> {
+  using base = axi_stream_switch<typename AIE::geo::shim_axi_stream_switch>;
+
+public:
+
+  /** Get the input port from the AXI stream switch
+
+      \param[in] InputT is the data type to be used in the transfers
+
+      \param[in] Target specifies if the connection is blocking or
+      not. It is blocking by default
+  */
+  template <typename T, access::target Target = access::target::blocking_pipe>
+  auto in(int port) {
+    return base::in_connection(port).template in<T, Target>();
+  }
+
+
+  /** Get the output port to the AXI stream switch
+
+      \param[in] InputT is the data type to be used in the transfers
+
+      \param[in] Target specifies if the connection is blocking or
+      not. It is blocking by default
+  */
+  template <typename T, access::target Target = access::target::blocking_pipe>
+  auto out(int port) {
+    return base::out_connection(port).template out<T, Target>();
+  }
+
 };
 
 /// @} End the aie Doxygen group

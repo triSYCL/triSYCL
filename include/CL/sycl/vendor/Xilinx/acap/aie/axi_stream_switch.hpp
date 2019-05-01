@@ -107,31 +107,6 @@ public:
   }
 
 
-  /** Get the input port
-
-      \param[in] InputT is the data type to be used in the transfers
-
-      \param[in] Target specifies if the connection is blocking or
-      not.  It is blocking by default
-  */
-  template <typename T, access::target Target = access::target::blocking_pipe>
-  auto in(int port) {
-    return in_connection(port).template in<T, Target>();
-  }
-
-
-  /** Get the output port
-
-      \param[in] InputT is the data type to be used in the transfers
-
-      \param[in] Target specifies if the connection is blocking or
-      not.  It is blocking by default
-  */
-  template <typename T, access::target Target = access::target::blocking_pipe>
-  auto out(int port) {
-    return out_connection(port).template out<T, Target>();
-  }
-
   using data_type = std::uint32_t;
   static constexpr auto stream_latency = 4;
 
