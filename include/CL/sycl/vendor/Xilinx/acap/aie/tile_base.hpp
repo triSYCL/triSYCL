@@ -36,6 +36,9 @@ struct tile_base
   /// The thread used to run this tile
   std::thread thread;
 
+  /// Keep a reference to the array owning this tile
+  AIE *aie_array;
+
   /** Provide a run member function that does nothing so it is
       possible to write a minimum AI Engine program that does nothing.
 
@@ -44,6 +47,12 @@ struct tile_base
       by a tile
   */
   void run() {
+  }
+
+
+  // Store a way to access to the owner CGRA
+  void set_array(AIE *array) {
+    aie_array = array;
   }
 
 };

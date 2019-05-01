@@ -46,9 +46,8 @@ struct tile : tile_base<AIE> {
   /// The geography of the CGRA
   using geo = typename AIE::geo;
 
-  /// Keep a reference to the array owning this tile
-  AIE *aie_array;
-
+  /// Shortcut to the tile base class
+  using tb = tile_base<AIE>;
 
   /** Return the coordinate of the tile in the given dimension
 
@@ -79,12 +78,6 @@ struct tile : tile_base<AIE> {
     return cl::sycl::id<2> { x, y };
   }
   */
-
-
-  // Store a way to access to the owner CGRA
-  void set_array(AIE *array) {
-    aie_array = array;
-  }
 
 
   /// Test if the tile is in the left column
@@ -162,7 +155,7 @@ struct tile : tile_base<AIE> {
      static_assert(is_memory_module_left(), "There is no memory module"
                    " on the left of this tile in the left column and"
                    " on an even row");
-     return aie_array->template
+     return tb::aie_array->template
        memory_module<memory_module_linear_id(-1, 0)>();
   }
 
@@ -172,7 +165,7 @@ struct tile : tile_base<AIE> {
     static_assert(is_memory_module_right(), "There is no memory module"
                   " on the right of this tile in the right column and"
                    " on an odd row");
-    return aie_array->template
+    return tb::aie_array->template
       memory_module<memory_module_linear_id(1, 0)>();
   }
 
@@ -181,7 +174,7 @@ struct tile : tile_base<AIE> {
   auto &mem_down() {
     static_assert(is_memory_module_down(), "There is no memory module"
                   " below the lower tile row");
-    return aie_array->template
+    return tb::aie_array->template
       memory_module<memory_module_linear_id(0, -1)>();
   }
 
@@ -190,7 +183,7 @@ struct tile : tile_base<AIE> {
   auto &mem_up() {
     static_assert(is_memory_module_up(), "There is no memory module"
                   " above the upper tile row");
-    return aie_array->template
+    return tb::aie_array->template
       memory_module<memory_module_linear_id(0, 1)>();
   }
 
@@ -232,7 +225,7 @@ struct tile : tile_base<AIE> {
   auto get_cascade_stream_in() {
     static_assert(!is_cascade_start(), "You cannot access to the cascade stream"
                   " input on the tile that starts the stream");
-    return aie_array->cs.template get_cascade_stream_in<T, Target>(x, y);
+    return tb::aie_array->cs.template get_cascade_stream_in<T, Target>(x, y);
   }
 
 
@@ -248,7 +241,7 @@ struct tile : tile_base<AIE> {
   auto get_cascade_stream_out() {
     static_assert(!is_cascade_end(), "You cannot access to the cascade stream"
                   " output on the tile that starts the stream");
-    return aie_array->cs.template get_cascade_stream_out<T, Target>(x, y);
+    return tb::aie_array->cs.template get_cascade_stream_out<T, Target>(x, y);
   }
 
 
