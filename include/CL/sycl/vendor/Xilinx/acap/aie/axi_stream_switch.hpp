@@ -36,41 +36,6 @@ namespace cl::sycl::vendor::xilinx::acap::aie {
 template <typename AXIStreamGeography>
 class axi_stream_switch {
 
-public:
-
-  using mpl = typename AXIStreamGeography::master_port_layout;
-  using spl = typename AXIStreamGeography::slave_port_layout;
-
-  /// Number of ports usable by the programmer as input or output
-  static constexpr int nb_user_ports = 2;
-
-  /** Validate the user port number and translate it to the physical
-      port number
-
-      \param[in] StreamLayout is the port layout description defined
-      in the geography (typically \c master_port_layout or \c
-      slave_port_layout) providing the me_0 and me_last physical port
-      numbers
-
-      \param[in] user_port is the user port number, starting to 0
-
-      \throws cl::sycl::runtime_error if the port number is invalid
-
-      \return the physical port number in the switch
-  */
-  template <typename StreamLayout>
-  static auto validate_port(int user_port) {
-    constexpr auto port_min = static_cast<int>(StreamLayout::me_0);
-    constexpr auto port_max = static_cast<int>(StreamLayout::me_last);
-    constexpr auto last_user_port = port_max - port_min;
-    if (user_port < 0 || user_port > last_user_port)
-      throw cl::sycl::runtime_error {
-        (boost::format { "%1% is not a valid port number between 0 and %1%" }
-           % user_port % last_user_port).str() };
-  }
-
-private:
-
   /// The input communication ports for the tile
   std::array<connection::input,
              AXIStreamGeography::nb_master_port> user_in;
@@ -88,8 +53,6 @@ public:
       \throws cl::sycl::runtime_error if the port number is invalid
   */
   auto &in_connection(int p) {
-    /// \todo change for the shim tiles
-    //validate_port<mpl>(p);
     return user_in[p];
   }
 
@@ -101,8 +64,6 @@ public:
       \throws cl::sycl::runtime_error if the port number is invalid
   */
   auto &out_connection(int p) {
-    /// \todo change for the shim tiles
-    //validate_port<spl>(p);
     return user_out[p];
   }
 
