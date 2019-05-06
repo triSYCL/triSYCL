@@ -67,7 +67,7 @@ int test_main(int argc, char *argv[]) {
   BOOST_CHECK(aie.tile(2, 0).in<int>(1).read() == 3);
 
   // Try a shim & tile connection directly from the host
-  aie.shim(0).out<char>(1) << 42;
+  aie.shim(0).bli_out<1, char>() << 42;
   // Check we read the correct value on tile(1,2) port 0
   BOOST_CHECK(aie.tile(1, 2).in<char>(0).read() == 42);
 
@@ -78,13 +78,13 @@ int test_main(int argc, char *argv[]) {
       for (int i = 0; i < size; ++i)
         // Use the AXI-MM access to the shim registers to send a value
         // into the AXI-SS from the host
-        aie.shim(0).out<char>(1) << i;
+        aie.shim(0).bli_out<1, char>() << i;
     }};
   // Launch a CPU consumer
   std::thread consumer { [&] {
       float f;
       for (int i = 0; i < size; ++i) {
-        aie.shim(1).in<float>(0) >> f;
+        aie.shim(1).bli_in<0, float>() >> f;
         // Check we read the correct value
         BOOST_CHECK(f == 2*i + 1.5);
       }

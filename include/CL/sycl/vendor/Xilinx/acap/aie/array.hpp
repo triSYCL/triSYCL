@@ -208,6 +208,8 @@ struct array {
 
       \throws cl::sycl::runtime_error if some coordinates or port
       numbers are invalid
+
+      \todo Refactor, make the difference between user & physical ports
   */
   template <typename T, typename SrcPort, typename DstPort>
   void connect(SrcPort src, DstPort dst) {
@@ -221,7 +223,7 @@ struct array {
        tile(src.x, src.y).axi_ss.out_connection(src.port) = c.out();
     }
     else if constexpr(std::is_same_v<SrcPort, port::shim>) {
-       shim(src.x).out_connection(src.port) = c.out();
+       shim(src.x).bli_out_connection(src.port) = c.out();
     }
     constexpr bool valid_dst = std::is_same_v<DstPort, port::tile>
       || std::is_same_v<DstPort, port::shim>;
@@ -231,7 +233,7 @@ struct array {
       tile(dst.x, dst.y).axi_ss.in_connection(dst.port) = c.in();
     }
     else if constexpr(std::is_same_v<DstPort, port::shim>) {
-      shim(dst.x).in_connection(dst.port) = c.in();
+      shim(dst.x).bli_in_connection(dst.port) = c.in();
     }
   }
 

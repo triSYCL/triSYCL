@@ -5,6 +5,9 @@
 
     Geographic information about the AI Engine CGRA
 
+    Define in a central location most of the ACAP architectural
+    parameters.
+
     Ronan dot Keryell at Xilinx dot com
 
     This file is distributed under the University of Illinois Open Source
@@ -382,7 +385,7 @@ struct geography : Layout {
       south_2,
       south_3,
       south_4,
-      south_5,
+      south_5, south_last = south_5, ///< Used for shim BLI port validation
       west_0,
       west_1,
       west_2,
@@ -417,7 +420,7 @@ struct geography : Layout {
       south_4,
       south_5,
       south_6,
-      south_7,
+      south_7, south_last = south_7, ///< Used for shim BLI port validation
       west_0,
       west_1,
       west_2,
