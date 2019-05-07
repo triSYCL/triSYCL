@@ -5,8 +5,8 @@
 
 #include <CL/sycl.hpp>
 
+#include <future>
 #include <iostream>
-#include <thread>
 
 #include <boost/test/minimal.hpp>
 
@@ -72,28 +72,28 @@ int test_main(int argc, char *argv[]) {
   BOOST_CHECK(aie.tile(1, 2).in<char>(0).read() == 42);
 
   // Launch the AIE
-  auto acap = std::thread([&] { aie.run(); });
+  auto acap = std::async(std::launch::async, [&] { aie.run(); });
   // Launch a CPU producer
-  std::thread producer { [&] {
+  auto producer = std::async(std::launch::async, [&] {
       for (int i = 0; i < size; ++i)
         // Use the AXI-MM access to the shim registers to send a value
         // into the AXI-SS from the host
         aie.shim(0).bli_out<1, char>() << i;
-    }};
+    });
   // Launch a CPU consumer
-  std::thread consumer { [&] {
+  auto consumer = std::async(std::launch::async, [&] {
       float f;
       for (int i = 0; i < size; ++i) {
         aie.shim(1).bli_in<0, float>() >> f;
         // Check we read the correct value
         BOOST_CHECK(f == 2*i + 1.5);
       }
-    }};
+    });
 
   // Wait for everybody to finish
-  acap.join();
-  producer.join();
-  consumer.join();
+  acap.get();
+  producer.get();
+  consumer.get();
 
   } catch (cl::sycl::exception &e) {
     // Display the string message of any SYCL exception
