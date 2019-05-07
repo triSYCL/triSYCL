@@ -21,6 +21,8 @@
 #include <array>
 #include <cstdint>
 
+#include <boost/format.hpp>
+
 #include "connection.hpp"
 
 namespace cl::sycl::vendor::xilinx::acap::aie {
@@ -45,6 +47,38 @@ class axi_stream_switch {
              AXIStreamGeography::nb_slave_port> user_out;
 
 public:
+
+  /** Validate the user port number and translate it to the physical
+      port number
+
+      \param[in] user_port is the logical port number, starting to 0
+
+      \param[in] physical_port_min is the physical lower port number to map to
+
+      \param[in] physical_port_max is the physical higher port number
+      to map to
+
+      \throws cl::sycl::runtime_error if the port number is invalid
+
+      \return the physical port number in the switch corresponding to
+      the logical port
+  */
+  static auto inline translate_port = [] (int user_port,
+                                          auto physical_port_min,
+                                          auto physical_port_max,
+                                          const auto& error_message) {
+    // Cast to int since the physical port might be the enum types
+    auto port_min = static_cast<int>(physical_port_min);
+    auto port_max = static_cast<int>(physical_port_max);
+    auto last_user_port = port_max - port_min;
+    if (user_port < 0 || user_port > last_user_port)
+      throw cl::sycl::runtime_error {
+        (boost::format {
+          "%1%: %2% is not a valid port number between 0 and %3%" }
+           % error_message % user_port % last_user_port).str() };
+    return port_min + user_port;
+  };
+
 
   /** Access the input connection behind an input port
 

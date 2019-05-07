@@ -36,63 +36,30 @@ class shim_tile
   using spl = typename axi_ss_geo::slave_port_layout;
   using base = axi_stream_switch<axi_ss_geo>;
 
-  /** Validate the user port number and translate it to the physical
-      port number
-
-      \param[in] user_port is the logical port number, starting to 0
-
-      \param[in] physical_port_min is the physical lower port number to map to
-
-      \param[in] physical_port_max is the physical higher port number
-      to map to
-
-      \throws cl::sycl::runtime_error if the port number is invalid
-
-      \return the physical port number in the switch corresponding to
-      the logical port
-  */
-  static auto inline translate_port = [] (int user_port,
-                                          auto physical_port_min,
-                                          auto physical_port_max,
-                                          const auto& error_message) {
-    // Cast to int since the physical port might be the enum types
-    auto port_min = static_cast<int>(physical_port_min);
-    auto port_max = static_cast<int>(physical_port_max);
-    auto last_user_port = port_max - port_min;
-    if (user_port < 0 || user_port > last_user_port)
-      throw cl::sycl::runtime_error {
-        (boost::format {
-          "%1%: %2% is not a valid port number between 0 and %3%" }
-           % error_message % user_port % last_user_port).str() };
-    return port_min + user_port;
-  };
-
-
-  /** Map the input BLI id/port to the shim port
+  /** Map the input BLI id/port to the shim AXI stream switch port
 
       \param[in] port is the BLI id/port to use
   */
   static auto translate_input_port(int port) {
-    return translate_port(port, mpl::south_0, mpl::south_last,
-                          "The BLI input port is out of range");
+    return base::translate_port(port, mpl::south_0, mpl::south_last,
+                                "The BLI input port is out of range");
   }
 
 
-  /** Map the input BLI id/port to the shim port
+  /** Map the input BLI id/port to the shim AXI stream switch port
 
       \param[in] port is the BLI id/port to use
   */
   static auto translate_output_port(int port) {
-    return translate_port(port, spl::south_0, spl::south_last,
-                          "The BLI output port is out of range");
+    return base::translate_port(port, spl::south_0, spl::south_last,
+                                "The BLI output port is out of range");
   }
-
 
 public:
 
-  /** Get the input port from the AXI stream switch
+  /** Get the input port from the shim AXI stream switch
 
-      \param[in] InputT is the data type to be used in the transfers
+      \param[in] T is the data type to be used in the transfers
 
       \param[in] Target specifies if the connection is blocking or
       not. It is blocking by default
@@ -103,9 +70,9 @@ public:
   }
 
 
-  /** Get the output port to the AXI stream switch
+  /** Get the output port to the shim AXI stream switch
 
-      \param[in] InputT is the data type to be used in the transfers
+      \param[in] T is the data type to be used in the transfers
 
       \param[in] Target specifies if the connection is blocking or
       not. It is blocking by default
@@ -116,7 +83,7 @@ public:
   }
 
 
-  /** Get the BLI input connection from the shim
+  /** Get the BLI input connection from the shim tile
 
       \param[in] port is the BLI id/port to use
   */
@@ -125,7 +92,7 @@ public:
   }
 
 
-  /** Get the BLI output connection from the shim
+  /** Get the BLI output connection from the shim tile
 
       \param[in] port is the BLI id/port to use
   */
