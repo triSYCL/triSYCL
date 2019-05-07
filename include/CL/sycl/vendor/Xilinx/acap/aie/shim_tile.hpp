@@ -63,6 +63,8 @@ public:
 
       \param[in] Target specifies if the connection is blocking or
       not. It is blocking by default
+
+      \param[in] port is the BLI id/port to use
   */
   template <typename T, access::target Target = access::target::blocking_pipe>
   auto in(int port) {
@@ -76,6 +78,8 @@ public:
 
       \param[in] Target specifies if the connection is blocking or
       not. It is blocking by default
+
+      \param[in] port is the BLI id/port to use
   */
   template <typename T, access::target Target = access::target::blocking_pipe>
   auto out(int port) {
@@ -92,7 +96,7 @@ public:
   }
 
 
-  /** Get the BLI output connection from the shim tile
+  /** Get the BLI output connection to the shim tile
 
       \param[in] port is the BLI id/port to use
   */
@@ -101,7 +105,7 @@ public:
   }
 
 
-  /** Get the BLI (Boundary Logic Interface) input port to the PL
+  /** Get the BLI (Boundary Logic Interface) input port from the PL
       (Programmable Logic in the FPGA) to read data from
 
       \param[in] port is the BLI id/port to use

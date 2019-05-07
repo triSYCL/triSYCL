@@ -220,7 +220,7 @@ struct array {
     static_assert(valid_src,
                   "SrcPort type should be port::tile or port::shim");
     if constexpr (std::is_same_v<SrcPort, port::tile>) {
-       tile(src.x, src.y).axi_ss.out_connection(src.port) = c.out();
+       tile(src.x, src.y).out_connection(src.port) = c.out();
     }
     else if constexpr(std::is_same_v<SrcPort, port::shim>) {
        shim(src.x).bli_out_connection(src.port) = c.out();
@@ -230,7 +230,7 @@ struct array {
     static_assert(valid_dst,
                   "DstPort type should be port::tile or port::shim");
     if constexpr (std::is_same_v<DstPort, port::tile>) {
-      tile(dst.x, dst.y).axi_ss.in_connection(dst.port) = c.in();
+      tile(dst.x, dst.y).in_connection(dst.port) = c.in();
     }
     else if constexpr(std::is_same_v<DstPort, port::shim>) {
       shim(dst.x).bli_in_connection(dst.port) = c.in();
