@@ -50,22 +50,20 @@ class shim_tile
 
       \return the physical port number in the switch corresponding to
       the logical port
-
-      \todo Process the error message
   */
   static auto inline translate_port = [] (int user_port,
                                           auto physical_port_min,
                                           auto physical_port_max,
-                                          auto error_message) {
+                                          const auto& error_message) {
     // Cast to int since the physical port might be the enum types
     auto port_min = static_cast<int>(physical_port_min);
     auto port_max = static_cast<int>(physical_port_max);
     auto last_user_port = port_max - port_min;
     if (user_port < 0 || user_port > last_user_port)
       throw cl::sycl::runtime_error {
-//        "The BLI input port is out of range");
-        (boost::format { "%1% is not a valid port number between 0 and %2%" }
-           % user_port % last_user_port).str() };
+        (boost::format {
+          "%1%: %2% is not a valid port number between 0 and %3%" }
+           % error_message % user_port % last_user_port).str() };
     return port_min + user_port;
   };
 
