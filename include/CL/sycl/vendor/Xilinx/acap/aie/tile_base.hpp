@@ -48,8 +48,12 @@ class tile_base {
   /// The thread used to run this tile
   std::thread thread;
 
+protected:
+
   /// Keep a reference to the array owning this tile
   AIE *aie_array;
+
+private:
 
   /** Map the user input port number to the AXI stream switch port
 
