@@ -46,9 +46,9 @@ standard support provided by the underlying toolchain, e.g.: build may fail \
 on unsupported features.")
       set_property(TARGET ${targetName}
         PROPERTY
-          INTERFACE_COMPILE_OPTIONS ${compilerHasCxxStdFlag})
+          INTERFACE_COMPILE_OPTIONS ${cxxStdFlag})
     else()
-      message(WARNING "Compiler seems to be unable to accept ${compilerHasCxxStdFlag},
+      message(WARNING "Compiler seems to be unable to accept ${cxxStdFlag},
 build will probably fail. Please set CMAKE_CXX_FLAGS to some sensible value for \
 your toolchain.")
     endif()
