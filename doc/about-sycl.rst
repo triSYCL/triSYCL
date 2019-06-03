@@ -35,9 +35,9 @@ other approaches:
 - the exit cost is low since it is *pure* `C++`_ *without any*
   extension or ``#pragma``, by opposition to `C++AMP`_ or OpenMP_ for
   example. Retargeting the SYCL_ classes and functions to use other
-  frameworks such as OpenMP_ 4 or `C++AMP`_ is feasible without
+  frameworks such as OpenMP_ 5, CUDA_ or `C++AMP`_ is feasible without
   rewriting a new compiler for example. This is actually what is done in
-  the `hipSYCL`_ implementation;
+  the `hipSYCL`_ implementation for CUDA_ or HIP_;
 
 - easier debugging
 

@@ -45,7 +45,7 @@ Some ideas of future developments where *you* can contribute too: :-)
 - since SYCL_ is a pretty general programming model for heterogeneous
   computing, if the OpenCL_ compatibility layer is not required, some other
   back-ends could be written besides the current OpenMP_ one: CUDA_,
-  RenderScript_, OpenAMP_, etc.
+  RenderScript_, OpenAMP_, etc. Actually this is the base for hipSYCL_
 
 - make an alternative accelerator version based on OpenMP_ 5
   accelerator target, OpenHMPP_ or OpenACC_;
@@ -97,6 +97,10 @@ Some ideas of future developments where *you* can contribute too: :-)
 .. _GOOPAX: http://www.goopax.com/
 
 .. _HCC: https://github.com/RadeonOpenCompute/hcc
+
+.. _HIP: https://github.com/ROCm-Developer-Tools/HIP
+
+.. _hipSYCL: https://github.com/illuhad/hipSYCL
 
 .. _HSA: http://www.hsafoundation.com/
 
