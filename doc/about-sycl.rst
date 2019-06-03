@@ -136,6 +136,10 @@ Some other known implementations:
 - SYCL-GTX, an implementation using some macros to avoid relying on a
   device compiler https://github.com/ProGTX/sycl-gtx
 
+- A mix of triSYCL and Intel SYCL implementation trying to unify 2
+  open-source implementations to expose advantages of both of them
+  https://github.com/triSYCL/sycl
+
 
 Some presentations and publications related to SYCL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

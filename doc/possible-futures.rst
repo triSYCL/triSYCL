@@ -57,7 +57,12 @@ Some ideas of future developments where *you* can contribute too: :-)
 - SYCL_ concepts (well, classes) can also be ported to some other
   languages to provide heterogeneous support: SYJSCL, SYCamlCL,
   SYJavaCL... It is not clear yet if SYFortranCL is possible with
-  Fortran 2008 or 2015+.
+  Fortran 2008 or 2015+;
+
+- some of the proposed extensions above are actually on-going is some
+  other projects or in the fusion of Intel SYCL and triSYCL
+  https://github.com/triSYCL/sycl
+
 
 .. Some useful link definitions:
 

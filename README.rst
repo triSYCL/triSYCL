@@ -37,6 +37,10 @@ where you might find more futuristic branches.
 This is provided as is, without any warranty, with the same license as
 LLVM_/Clang_.
 
+There is also a new project about merging the Intel SYCL
+implementation with triSYCL at https://github.com/triSYCL/sycl to give
+a greater user experience.
+
 Technical lead: Ronan at keryell point FR. Developments started first
 at AMD_ and are now mainly funded by Xilinx_.
 
