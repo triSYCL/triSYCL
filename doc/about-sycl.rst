@@ -11,10 +11,10 @@ other approaches:
 - SYCL_ is an open standard from Khronos_ with a working committee
   (you can contribute!) and we can expect several implementations
   (commercial or open source) on many platforms soon, ranging from
-  GPU, APU, FPGA, DSP... down to plain CPU;
+  GPU, APU, FPGA, DSP, CGRA, AI/ML accelerators... down to plain CPU;
 
 - it offers a *single-source* `C++`_ programming model that allows
-  taking advantage of the modern C++14/C++17 superpower, unifying both
+  taking advantage of the modern C++20 superpower, unifying both
   the host and accelerator sides. For example it is possible to write
   generic accelerated functions on the accelerators in a terse way by
   using (variadic) templates, meta-programming and generic variadic
@@ -35,9 +35,9 @@ other approaches:
 - the exit cost is low since it is *pure* `C++`_ *without any*
   extension or ``#pragma``, by opposition to `C++AMP`_ or OpenMP_ for
   example. Retargeting the SYCL_ classes and functions to use other
-  frameworks such as OpenMP_ 4 or `C++AMP`_ is feasible without
+  frameworks such as OpenMP_ 5, CUDA_ or `C++AMP`_ is feasible without
   rewriting a new compiler for example. This is actually what is done in
-  the `hipSYCL`_ implementation;
+  the `hipSYCL`_ implementation for CUDA_ or HIP_;
 
 - easier debugging
 
@@ -48,6 +48,10 @@ other approaches:
     the host and debugged using the usual tools and use any system (such
     ``<cstdio>`` or ``<iostream>``...) or data libraries (for nice data
     visualization);
+
+  - by lowering some architectural features down to plain CPU C++, you
+    can even debug weird data-race problems with standard tools such
+    as Valgrind/Helgrind, Clang/GCC ThreadSanitizer...
 
   - since the kernel code is `C++`_ code even when run on an accelerator,
     instrumenting the code by using special array classes or overloading
@@ -97,7 +101,7 @@ other approaches:
   (TLS) queues, its own scheduler, etc. atop the limited OpenCL_ stack to
   provide computation and communication overlap in a natural pain-free
   fashion. This relieves the programmer to reorganize her application to
-  work around these limitation, which can be quite a cumbersome work.
+  work around these limitations, which can be quite cumbersome work.
 
 For introduction material on the interest of DSEL_ in this area, look for
 example at these articles:
@@ -122,11 +126,19 @@ Some other known implementations:
   Clang_/LLVM_. It is not open-source but there is a free community version
   https://www.codeplay.com/products/computesuite/computecpp
 
+- Intel SYCL open-source implementation which is in the process of
+  being up-streamed to Clang_/LLVM
+  https://github.com/intel/llvm/tree/sycl
+
 - hipSYCL_, an implementation of SYCL_ over nVidia CUDA_ or AMD HIP_
   https://github.com/illuhad/hipSYCL
 
 - SYCL-GTX, an implementation using some macros to avoid relying on a
   device compiler https://github.com/ProGTX/sycl-gtx
+
+- A mix of triSYCL and Intel SYCL implementation trying to unify 2
+  open-source implementations to expose advantages of both of them
+  https://github.com/triSYCL/sycl
 
 
 Some presentations and publications related to SYCL

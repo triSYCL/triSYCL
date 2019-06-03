@@ -10,7 +10,8 @@ https://gitenterprise.xilinx.com/rkeryell/triSYCL/issues
 
 Some ideas of future developments where *you* can contribute too: :-)
 
-- go on using the official OpenCL_ SYCL_ conformance test suite (CTS) to
+- go on using the official OpenCL_ SYCL_ conformance test suite (CTS)
+  which is now open-source https://github.com/KhronosGroup/SYCL-CTS to
   extend/debug/validate this implementation;
 
 - finish implementation of basic classes without any OpenCL_ support
@@ -29,7 +30,7 @@ Some ideas of future developments where *you* can contribute too: :-)
 
 - update the dataflow SYCL infrastructure from plain C++ ``std::thread``
   and ``std::condition_variable`` to some more efficient library, such
-  as TBB_;
+  as TBB_ or `Boost.Fiber <https://github.com/boostorg/fiber>`_;
 
 - implement the dataflow SYCL infrastructure directly on top of OpenCL
   event-framework instead of layering the CPU dataflow dependency
@@ -40,14 +41,14 @@ Some ideas of future developments where *you* can contribute too: :-)
   http://jojendersie.de/performance-optimal-vector-swizzling-in-c
   http://www.reedbeta.com/blog/2013/12/28/on-vector-math-libraries ;
 
-- add OpenCL_ 2.x support with SYCL_ 2.x;
+- add OpenCL_ 2.x support;
 
 - since SYCL_ is a pretty general programming model for heterogeneous
   computing, if the OpenCL_ compatibility layer is not required, some other
   back-ends could be written besides the current OpenMP_ one: CUDA_,
-  RenderScript_, OpenAMP_, etc.
+  RenderScript_, OpenAMP_, etc. Actually this is the base for hipSYCL_
 
-- make an alternative accelerator version based on OpenMP_ 4
+- make an alternative accelerator version based on OpenMP_ 5
   accelerator target, OpenHMPP_ or OpenACC_;
 
 - make an alternative accelerator version based on wrapper classes for
@@ -56,7 +57,12 @@ Some ideas of future developments where *you* can contribute too: :-)
 - SYCL_ concepts (well, classes) can also be ported to some other
   languages to provide heterogeneous support: SYJSCL, SYCamlCL,
   SYJavaCL... It is not clear yet if SYFortranCL is possible with
-  Fortran 2008 or 2015+.
+  Fortran 2008 or 2015+;
+
+- some of the proposed extensions above are actually on-going is some
+  other projects or in the fusion of Intel SYCL and triSYCL
+  https://github.com/triSYCL/sycl
+
 
 .. Some useful link definitions:
 
@@ -97,6 +103,10 @@ Some ideas of future developments where *you* can contribute too: :-)
 .. _GOOPAX: http://www.goopax.com/
 
 .. _HCC: https://github.com/RadeonOpenCompute/hcc
+
+.. _HIP: https://github.com/ROCm-Developer-Tools/HIP
+
+.. _hipSYCL: https://github.com/illuhad/hipSYCL
 
 .. _HSA: http://www.hsafoundation.com/
 
