@@ -11,10 +11,10 @@ other approaches:
 - SYCL_ is an open standard from Khronos_ with a working committee
   (you can contribute!) and we can expect several implementations
   (commercial or open source) on many platforms soon, ranging from
-  GPU, APU, FPGA, DSP... down to plain CPU;
+  GPU, APU, FPGA, DSP, CGRA, AI/ML accelerators... down to plain CPU;
 
 - it offers a *single-source* `C++`_ programming model that allows
-  taking advantage of the modern C++14/C++17 superpower, unifying both
+  taking advantage of the modern C++20 superpower, unifying both
   the host and accelerator sides. For example it is possible to write
   generic accelerated functions on the accelerators in a terse way by
   using (variadic) templates, meta-programming and generic variadic
@@ -48,6 +48,10 @@ other approaches:
     the host and debugged using the usual tools and use any system (such
     ``<cstdio>`` or ``<iostream>``...) or data libraries (for nice data
     visualization);
+
+  - by lowering some architectural features down to plain CPU C++, you
+    can even debug weird data-race problems with standard tools such
+    as Valgrind/Helgrind, Clang/GCC ThreadSanitizer...
 
   - since the kernel code is `C++`_ code even when run on an accelerator,
     instrumenting the code by using special array classes or overloading
@@ -97,7 +101,7 @@ other approaches:
   (TLS) queues, its own scheduler, etc. atop the limited OpenCL_ stack to
   provide computation and communication overlap in a natural pain-free
   fashion. This relieves the programmer to reorganize her application to
-  work around these limitation, which can be quite a cumbersome work.
+  work around these limitations, which can be quite cumbersome work.
 
 For introduction material on the interest of DSEL_ in this area, look for
 example at these articles:

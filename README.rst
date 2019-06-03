@@ -16,7 +16,7 @@ Introduction
 ------------
 
 triSYCL_ is an open source implementation to experiment with
-the specification of the SYCL_ 1.2.1 `C++`_ layer and
+the specification of the SYCL_ `C++`_ layer and
 to give feedback to the Khronos_ Group SYCL_ and OpenCL_ C++ 2.2
 kernel language committees and also to the ISO `C++`_ committee.
 
@@ -48,7 +48,7 @@ this. Xilinx_ is also hiring in this area... :-)
 SYCL
 ----
 
-SYCL_ is a single-source C++14/C++17-based DSEL_ (Domain Specific
+SYCL_ is a single-source modern C++-based DSEL_ (Domain Specific
 Embedded Language) aimed at facilitating the programming of heterogeneous
 accelerators by leveraging the OpenCL_ language and concepts.
 
