@@ -126,6 +126,10 @@ Some other known implementations:
   Clang_/LLVM_. It is not open-source but there is a free community version
   https://www.codeplay.com/products/computesuite/computecpp
 
+- Intel SYCL open-source implementation which is in the process of
+  being up-streamed to Clang_/LLVM
+  https://github.com/intel/llvm/tree/sycl
+
 - hipSYCL_, an implementation of SYCL_ over nVidia CUDA_ or AMD HIP_
   https://github.com/illuhad/hipSYCL
 
