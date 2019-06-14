@@ -71,9 +71,7 @@ struct cascade_stream {
   */
   template <typename T, access::target Target>
   auto get_cascade_stream_in(int x, int y) const {
-    // On odd rows, the cascade streams goes in the other direction
-    return cascade_stream_pipes[geo::x_size*y
-                                + ((y & 1) ? geo::x_max - x : x)]
+    return cascade_stream_pipes[geo::cascade_linear_id(x, y)]
       .template get_access<access::mode::read, Target>();
   }
 
@@ -92,9 +90,8 @@ struct cascade_stream {
   */
   template <typename T, access::target Target>
   auto get_cascade_stream_out(int x, int y) const {
-    // On odd rows, the cascade streams goes in the other direction
-    return cascade_stream_pipes[geo::x_size*y + 1
-                                + ((y & 1) ? geo::x_max - x : x)]
+    // The output is connected to the down-stream neighbour of the cascade
+    return cascade_stream_pipes[geo::cascade_linear_id(x, y) + 1]
       .template get_access<access::mode::write, Target>();
   }
 

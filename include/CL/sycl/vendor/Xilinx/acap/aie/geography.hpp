@@ -215,6 +215,18 @@ struct geography : Layout {
   }
 
 
+  /** Compute the linearized coordinate of a tile along the cascade
+      stream
+
+      \param[in] x is the horizontal tile coordinate
+
+      \param[in] y is the vertical tile coordinate
+  */
+  static auto constexpr cascade_linear_id(int x, int y) {
+    return x_size*y + ((y & 1) ? layout::x_max - x : x);
+  }
+
+
   /** Test if a memory module coordinate offset is plausible
 
       1 of the displacement is 0 and the other one is -1 or 1
