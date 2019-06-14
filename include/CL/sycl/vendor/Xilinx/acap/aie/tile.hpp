@@ -213,6 +213,13 @@ struct tile : tile_base<AIE> {
   }
 
 
+  /** Compute the linearized coordinate of a tile along the cascade
+      stream */
+  static auto constexpr cascade_linear_id() {
+    return geo::cascade_linear_id(x, y);
+  }
+
+
   /** Get a read accessor to the cascade stream input
 
       \param T is the data type used to read from the cascade

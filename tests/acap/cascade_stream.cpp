@@ -5,6 +5,7 @@
 
 #include <CL/sycl.hpp>
 
+#include <cassert>
 #include <iostream>
 
 using namespace cl::sycl;
@@ -27,6 +28,9 @@ struct tile_program : acap::aie::tile<AIE, X, Y> {
       std::cout << "< Tile(" << X << ',' << Y << ") is reading "
                 << v << std::endl;
     }
+    // Incrementing the vaue from 0 along the cascade should give
+    // exactly the cascade_linear_id
+    assert(v == t::cascade_linear_id());
     ++v;
     // Do not write at the end of the cascade
     if constexpr (!t::is_cascade_end()) {
