@@ -66,7 +66,7 @@ struct tile : tile_base<AIE> {
 
 
   /// Return the linearized coordinate of the tile
-  static auto constexpr get_linear_id() {
+  static auto constexpr linear_id() {
     return geo::linear_id(x, y);
   }
 

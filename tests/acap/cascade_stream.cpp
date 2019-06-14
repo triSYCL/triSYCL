@@ -41,6 +41,10 @@ struct tile_program : acap::aie::tile<AIE, X, Y> {
       cs_out << v;
     }
   }
+
+  // Some unit tests
+  static_assert(X == t::geo::linear_x(t::linear_id()));
+  static_assert(Y == t::geo::linear_y(t::linear_id()));
 };
 
 

@@ -48,16 +48,6 @@ struct geography : Layout {
   static auto constexpr size = x_size*y_size;
 
 
-  /** Compute the linearized coordinate of a tile
-
-      \param[in] x is the horizontal tile coordinate
-
-      \param[in] y is the vertical tile coordinate
-  */
-  static auto constexpr linear_id(int x, int y) {
-    return x + x_size*y;
-  }
-
   /** A tuple with the coordinate tuples of all the tiles inside the
       CGRA geometry */
   static auto constexpr tile_coordinates = boost::hana::cartesian_product(
@@ -82,6 +72,35 @@ struct geography : Layout {
                           boost::hana::at_c<0>(coord)> {};
         }
                                   );
+  }
+
+
+  /** Compute the linearized coordinate of a tile
+
+      \param[in] x is the horizontal tile coordinate
+
+      \param[in] y is the vertical tile coordinate
+  */
+  static auto constexpr linear_id(int x, int y) {
+    return x + x_size*y;
+  }
+
+
+  /** Compute the horizontal coordinate of a tile from linear id
+
+      \param[in] linear_id is a linearized coordinate
+  */
+  static auto constexpr linear_x(int linear_id) {
+    return linear_id%x_size;
+  }
+
+
+  /** Compute the vertical coordinate of a tile from a linear id
+
+      \param[in] linear_id is a linearized coordinate
+  */
+  static auto constexpr linear_y(int linear_id) {
+    return linear_id/x_size;
   }
 
 
