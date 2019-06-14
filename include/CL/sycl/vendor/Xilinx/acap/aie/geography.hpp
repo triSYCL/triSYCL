@@ -246,6 +246,29 @@ struct geography : Layout {
   }
 
 
+  /** Compute the horizontal coordinate of a tile from a cascade
+      linear id
+
+      \param[in] linear_id is a linear id along the cascade stream
+  */
+  static auto constexpr cascade_linear_x(int linear_id) {
+    auto x = linear_x(linear_id);
+    // According to the row parity, symmetrize the x coordinate
+    return (cascade_linear_y(linear_id) & 1) ? layout::x_max - x : x;
+  }
+
+
+  /** Compute the vertical coordinate of a tile from a cascade
+      linear id
+
+      \param[in] linear_id is a linear id along the cascade stream
+  */
+  static auto constexpr cascade_linear_y(int linear_id) {
+    // Same as the linear id, actually
+    return linear_y(linear_id);
+  }
+
+
   /** Test if a memory module coordinate offset is plausible
 
       1 of the displacement is 0 and the other one is -1 or 1

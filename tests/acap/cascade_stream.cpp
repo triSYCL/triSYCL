@@ -28,7 +28,7 @@ struct tile_program : acap::aie::tile<AIE, X, Y> {
       std::cout << "< Tile(" << X << ',' << Y << ") is reading "
                 << v << std::endl;
     }
-    // Incrementing the vaue from 0 along the cascade should give
+    // Incrementing the value from 0 along the cascade should give
     // exactly the cascade_linear_id
     assert(v == t::cascade_linear_id());
     ++v;
@@ -45,6 +45,8 @@ struct tile_program : acap::aie::tile<AIE, X, Y> {
   // Some unit tests
   static_assert(X == t::geo::linear_x(t::linear_id()));
   static_assert(Y == t::geo::linear_y(t::linear_id()));
+  static_assert(X == t::geo::cascade_linear_x(t::cascade_linear_id()));
+  static_assert(Y == t::geo::cascade_linear_y(t::cascade_linear_id()));
 };
 
 
