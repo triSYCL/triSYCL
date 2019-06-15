@@ -20,9 +20,12 @@ using namespace cl::sycl;
 using namespace cl::sycl::vendor::xilinx;
 using namespace cl::sycl::vendor::xilinx::acap::aie;
 
-// Used to debug metaprogramming
+/// Used to debug metaprogramming on type
 template <typename T>
 class display_type;
+/// Used to debug metaprogramming on value
+template <auto V>
+class display_value;
 
 // An executor to execute stage_number first stages of a pipeline
 template <int stage_number>
@@ -35,7 +38,7 @@ auto pipeline_executor = [] (auto input, auto stages) {
       (pipeline_executor<stage_number - 1>(input, stages));
 };
 
-// Construct an execution pipeline on the host
+/// Construct an execution pipeline on the host
 auto host_pipeliner = [] (auto... stages) {
   auto s = hana::make_tuple(stages...);
   return [=] (auto input) {
@@ -43,6 +46,7 @@ auto host_pipeliner = [] (auto... stages) {
          };
 };
 
+/// A generic AIE program instantiating a pipeline executor
 template <typename FirstT, typename Stages>
 struct cascade_executor {
   static constexpr Stages s;
@@ -55,6 +59,7 @@ struct cascade_executor {
       for the output type of the second stage, etc. */
   template <int i>
   using StageOutput = decltype(pipeline_executor<i>(std::declval<FirstT>(), s));
+  using LastT = StageOutput<stage_number>;
 
   template <typename AIE, int X, int Y>
   struct tile_program : acap::aie::tile<AIE, X, Y> {
@@ -81,7 +86,7 @@ struct cascade_executor {
                   << output << std::endl;
         if constexpr (t::cascade_linear_id() ==  last_stage)
           // Last stage: ship the result through the AIE NoC
-          t::template out<double>(0) << output;
+          t::template out<OutputT>(0) << output;
         else
           // Normal stage: send the result to the cascade neighbor
           t::template get_cascade_stream_out<OutputT>() << output;
@@ -92,15 +97,17 @@ struct cascade_executor {
   acap::aie::array<acap::aie::layout::small, tile_program> a;
 
   auto get_executor() {
+    // NoC connection between shim and input of the pipeline
     a.template connect<FirstT>(port::shim { 0, 0 }, port::tile { 0, 0, 0 });
+    // NoC connection between output of the pipeline and the shim
     auto last_x = decltype(a)::geo::cascade_linear_x(last_stage);
     auto last_y = decltype(a)::geo::cascade_linear_y(last_stage);
-    a.template connect<double>(port::tile { last_x, last_y, 0 },
-                                                port::shim { 0, 0 });
+    a.template connect<LastT>(port::tile { last_x, last_y, 0 },
+                              port::shim { 0, 0 });
     return [&] (FirstT input) {
              a.shim(0).template bli_out<0, FirstT>() << input;
              a.run();
-             return a.shim(0).template bli_in<0, double>().read();
+             return a.shim(0).template bli_in<0, LastT>().read();
            };
   }
 };
