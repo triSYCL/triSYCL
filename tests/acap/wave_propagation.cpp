@@ -55,12 +55,13 @@ static auto constexpr alpha = K*g;
 static auto constexpr damping = 0.999;
 
 static auto constexpr image_size = 100;
-static auto constexpr x_drop = 90;
-static auto constexpr y_drop = 7;
+/// Add a drop almost between tile (1,1) and (2,2)
+static auto constexpr x_drop = image_size*2 - 3;
+static auto constexpr y_drop = image_size*2;
 static auto constexpr drop_value = 100;
 /** Time-step interval between each display.
     Use 1 to display all the frames, 2 for half the frame and so on. */
-static auto constexpr display_time_step = 10 ;
+static auto constexpr display_time_step = 10;
 
 graphics::application a;
 
@@ -83,6 +84,11 @@ auto compare_2D_mdspan = [](auto message, const auto &acap, const auto &ref) {
       }
 };
 #endif
+
+
+auto add_a_drop = [] (auto x, auto y) {
+  return x == x_drop && y == y_drop ? drop_value : 0;
+};
 
 
 /// A sequential reference implementation of wave propagation
@@ -112,10 +118,8 @@ struct reference_wave_propagation {
         u(j,i) = v(j,i) = w(j,i) = 0;
         side(j,i) = K;
         depth(j,i) = 2600.0;
+        w(j,i) += add_a_drop(i, j);
       }
-//    w(size_y/3,size_x/2+size_x/4) = 100;
-    w(y_drop,x_drop) = drop_value;
-//    if (X == 0 && Y == 0) m.w[image_size/3][image_size/2+image_size/4] = 100;
   }
 
 
@@ -224,7 +228,11 @@ struct reference_wave_propagation {
 };
 
 
-/// A sequential reference implementation of the wave propagation
+/** A sequential reference implementation of the wave propagation
+
+    Use (image_size - 1) for the tile size to skip the halo zone of 1
+    pixel in X and Y
+*/
 reference_wave_propagation
 <(image_size - 1)*acap::aie::geography<layout>::x_size + 1,
  (image_size - 1)*acap::aie::geography<layout>::y_size + 1,
@@ -261,9 +269,9 @@ struct tile : acap::aie::tile<AIE, X, Y> {
         m.u[j][i] = m.v[j][i] = m.w[j][i] = 0;
         m.side[j][i] = K;
         m.depth[j][i] = 2600.0;
+        // Add a drop using the global coordinate taking into account the halo
+        m.w[j][i] += add_a_drop(i + (image_size - 1)*X, j + (image_size - 1)*Y);
       }
-    if (X == 0 && Y == 0)
-      m.w[y_drop][x_drop] = drop_value;
   }
 
   void compute() {
