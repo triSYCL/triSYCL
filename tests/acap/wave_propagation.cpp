@@ -1,6 +1,9 @@
 /* Demo of wave propagation for AI Engine
 
-   Recycle my MINES ParisTech ISIA hands-on
+   Simulation with a conic drop, a circle shoal and a square harbor.
+
+   Recycle MINES ParisTech/ISIA/Telecom Bretagne MSc hands-on HPC labs
+   from Ronan Keryell
 
    https://en.wikipedia.org/wiki/Boussinesq_approximation_(water_waves)
    Joseph Valentin Boussinesq, 1872
@@ -101,17 +104,30 @@ auto constexpr add_a_drop = [] (auto x, auto y) {
 };
 
 
-/// The shoal center coordinates
-static auto constexpr x_shoal = image_size*8 - 3;
-static auto constexpr y_shoal = image_size*4;
-
-/// Add a shoal disk in the water with half the depth
+/// Add a circular shoal in the water with half the depth
 auto constexpr shoal_factor = [] (auto x, auto y) {
+  /// The shoal center coordinates
+  auto constexpr x_shoal = image_size*8 - 3;
+  auto constexpr y_shoal = image_size*4;
   auto constexpr shoal_radius = 200.0;
+
   // The square radius to the shoal center
   auto r = square(x - x_shoal) + square(y - y_shoal);
   // A disk centered on the shoal center
   return r < square(shoal_radius) ? 0.5 : 1;
+};
+
+
+/// Add a square harbor in the water
+auto constexpr is_harbor = [] (auto x, auto y) -> bool {
+  /// The square harbor center coordinates
+  auto constexpr x_harbor = image_size*15 - image_size/3;
+  auto constexpr y_harbor = image_size*6 - image_size/3;
+  auto constexpr length_harbor = image_size;
+
+  // A square centered on the harbor center
+  return x_harbor -length_harbor/2 <= x && x <= x_harbor + length_harbor/2
+    && y_harbor - length_harbor/2 <= y && y <= y_harbor + length_harbor/2;
 };
 
 
@@ -140,7 +156,7 @@ struct reference_wave_propagation {
       for (int i = 0; i < size_x; ++i) {
         // No u[j][i] syntax too like in Boost.Multi_Array ?
         u(j,i) = v(j,i) = w(j,i) = 0;
-        side(j,i) = K;
+        side(j,i) = K*(!is_harbor(i, j));
         depth(j,i) = 2600.0*shoal_factor(i, j);
         w(j,i) += add_a_drop(i, j);
       }
@@ -291,9 +307,10 @@ struct tile : acap::aie::tile<AIE, X, Y> {
     for (int j = 0; j < image_size; ++j)
       for (int i = 0; i < image_size; ++i) {
         m.u[j][i] = m.v[j][i] = m.w[j][i] = 0;
-        m.side[j][i] = K;
-        m.depth[j][i] =
-          2600.0*shoal_factor(i + (image_size - 1)*X, j + (image_size - 1)*Y);
+        m.side[j][i] = K*(!is_harbor(i + (image_size - 1)*X,
+                                     j + (image_size - 1)*Y));
+        m.depth[j][i] = 2600.0*shoal_factor(i + (image_size - 1)*X,
+                                            j + (image_size - 1)*Y);
         // Add a drop using the global coordinate taking into account the halo
         m.w[j][i] += add_a_drop(i + (image_size - 1)*X, j + (image_size - 1)*Y);
       }
