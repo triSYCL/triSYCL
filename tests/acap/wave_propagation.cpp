@@ -61,7 +61,7 @@ static auto constexpr y_drop = image_size*2;
 static auto constexpr drop_value = 100;
 /** Time-step interval between each display.
     Use 1 to display all the frames, 2 for half the frame and so on. */
-static auto constexpr display_time_step = 10;
+static auto constexpr display_time_step = 5;
 
 graphics::application a;
 
@@ -86,8 +86,15 @@ auto compare_2D_mdspan = [](auto message, const auto &acap, const auto &ref) {
 #endif
 
 
-auto add_a_drop = [] (auto x, auto y) {
-  return x == x_drop && y == y_drop ? drop_value : 0;
+/// Compute the square power of a value
+auto constexpr square = [] (auto v) { return v*v; };
+
+
+/// Compute the contribution of a drop to the water height
+auto constexpr add_a_drop = [] (auto x, auto y) {
+  // The square radius to the drop center
+  auto r = square(x - x_drop) + square(y - y_drop);
+  return r < 1000 ? drop_value : 0;
 };
 
 
