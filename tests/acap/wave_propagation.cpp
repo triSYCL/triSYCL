@@ -92,9 +92,26 @@ auto constexpr square = [] (auto v) { return v*v; };
 
 /// Compute the contribution of a drop to the water height
 auto constexpr add_a_drop = [] (auto x, auto y) {
+  auto constexpr drop_radius = 30.0;
   // The square radius to the drop center
   auto r = square(x - x_drop) + square(y - y_drop);
-  return r < 1000 ? drop_value : 0;
+  // A cone of height drop_value centered on the drop center
+  return r < square(drop_radius)
+             ? drop_value*(square(drop_radius) - r)/square(drop_radius) : 0;
+};
+
+
+/// The shoal center coordinates
+static auto constexpr x_shoal = image_size*8 - 3;
+static auto constexpr y_shoal = image_size*4;
+
+/// Add a shoal disk in the water with half the depth
+auto constexpr shoal_factor = [] (auto x, auto y) {
+  auto constexpr shoal_radius = 200.0;
+  // The square radius to the shoal center
+  auto r = square(x - x_shoal) + square(y - y_shoal);
+  // A disk centered on the shoal center
+  return r < square(shoal_radius) ? 0.5 : 1;
 };
 
 
@@ -124,7 +141,7 @@ struct reference_wave_propagation {
         // No u[j][i] syntax too like in Boost.Multi_Array ?
         u(j,i) = v(j,i) = w(j,i) = 0;
         side(j,i) = K;
-        depth(j,i) = 2600.0;
+        depth(j,i) = 2600.0*shoal_factor(i, j);
         w(j,i) += add_a_drop(i, j);
       }
   }
@@ -275,7 +292,8 @@ struct tile : acap::aie::tile<AIE, X, Y> {
       for (int i = 0; i < image_size; ++i) {
         m.u[j][i] = m.v[j][i] = m.w[j][i] = 0;
         m.side[j][i] = K;
-        m.depth[j][i] = 2600.0;
+        m.depth[j][i] =
+          2600.0*shoal_factor(i + (image_size - 1)*X, j + (image_size - 1)*Y);
         // Add a drop using the global coordinate taking into account the halo
         m.w[j][i] += add_a_drop(i + (image_size - 1)*X, j + (image_size - 1)*Y);
       }
