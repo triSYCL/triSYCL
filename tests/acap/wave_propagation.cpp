@@ -90,11 +90,11 @@ auto compare_2D_mdspan = [](auto message, const auto &acap, const auto &ref) {
 
 
 /// Compute the square power of a value
-auto constexpr square = [] (auto v) { return v*v; };
+auto square = [] (auto v) constexpr { return v*v; };
 
 
 /// Compute the contribution of a drop to the water height
-auto constexpr add_a_drop = [] (auto x, auto y) {
+auto add_a_drop = [] (auto x, auto y) constexpr {
   auto constexpr drop_radius = 30.0;
   // The square radius to the drop center
   auto r = square(x - x_drop) + square(y - y_drop);
@@ -105,7 +105,7 @@ auto constexpr add_a_drop = [] (auto x, auto y) {
 
 
 /// Add a circular shoal in the water with half the depth
-auto constexpr shoal_factor = [] (auto x, auto y) {
+auto shoal_factor = [] (auto x, auto y) constexpr {
   /// The shoal center coordinates
   auto constexpr x_shoal = image_size*8 - 3;
   auto constexpr y_shoal = image_size*4;
@@ -119,7 +119,7 @@ auto constexpr shoal_factor = [] (auto x, auto y) {
 
 
 /// Add a square harbor in the water
-auto constexpr is_harbor = [] (auto x, auto y) -> bool {
+auto is_harbor = [] (auto x, auto y) constexpr -> bool {
   /// The square harbor center coordinates
   auto constexpr x_harbor = image_size*14 - image_size/3;
   auto constexpr y_harbor = image_size*6 - image_size/3;
