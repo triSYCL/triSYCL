@@ -94,7 +94,7 @@ struct cascade_executor {
     }
   };
 
-  acap::aie::array<acap::aie::layout::small, tile_program> a;
+  acap::aie::array<acap::aie::layout::size<3, 2>, tile_program> a;
 
   auto get_executor() {
     // NoC connection between shim and input of the pipeline
@@ -121,14 +121,15 @@ int main() {
   /// Some pipeline stages
   auto p1 = [] (auto input) { return input + 3; };
   auto p2 = [] (auto input) { return input*7; };
-  auto p3 = [] (auto input) { return double(input)/42; };
+  auto p3 = [] (auto input) { return input*input; };
+  auto p4 = [] (auto input) { return double(input)/42; };
 
-  auto hp = host_pipeliner(p1, p2, p3);
+  auto hp = host_pipeliner(p1, p2, p3, p4);
 
   ranges::for_each(view::ints(0, 10) | view::transform(hp),
                    [] (auto x) { std::cout << x << std::endl; });
 
-  auto aie_cp = make_cascade_pipeliner(0, p1, p2, p3);
+  auto aie_cp = make_cascade_pipeliner(0, p1, p2, p3, p4);
   auto cp = aie_cp.get_executor();
 
   ranges::for_each(view::ints(0, 10) | view::transform(cp),
