@@ -121,13 +121,21 @@ auto constexpr shoal_factor = [] (auto x, auto y) {
 /// Add a square harbor in the water
 auto constexpr is_harbor = [] (auto x, auto y) -> bool {
   /// The square harbor center coordinates
-  auto constexpr x_harbor = image_size*15 - image_size/3;
+  auto constexpr x_harbor = image_size*14 - image_size/3;
   auto constexpr y_harbor = image_size*6 - image_size/3;
   auto constexpr length_harbor = image_size;
 
   // A square centered on the harbor center
-  return x_harbor -length_harbor/2 <= x && x <= x_harbor + length_harbor/2
+  auto harbor =
+    x_harbor -length_harbor/2 <= x && x <= x_harbor + length_harbor/2
     && y_harbor - length_harbor/2 <= y && y <= y_harbor + length_harbor/2;
+  // Add also a breakwater below
+  auto constexpr width_breakwater = image_size/20;
+  auto breakwater = x_harbor <= x && x <= x_harbor + width_breakwater
+    && y < y_harbor - image_size
+    // Add some 4-pixel holes every image_size/2
+    && (y/4)%(image_size/8);
+  return harbor || breakwater;
 };
 
 
