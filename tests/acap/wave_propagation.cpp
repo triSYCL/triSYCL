@@ -64,7 +64,7 @@ static auto constexpr y_drop = image_size*2;
 static auto constexpr drop_value = 100;
 /** Time-step interval between each display.
     Use 1 to display all the frames, 2 for half the frame and so on. */
-static auto constexpr display_time_step = 5;
+static auto constexpr display_time_step = 2;
 
 graphics::application a;
 
