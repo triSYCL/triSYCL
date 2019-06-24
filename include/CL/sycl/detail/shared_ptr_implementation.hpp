@@ -16,9 +16,7 @@
 
 #include <boost/operators.hpp>
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /** Provide an implementation as shared_ptr with total ordering and
     hashing to be used with algorithms and in (un)ordered containers
@@ -86,8 +84,6 @@ struct shared_ptr_implementation : public boost::totally_ordered<Parent> {
 
 };
 
-}
-}
 }
 
 /*

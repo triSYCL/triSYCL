@@ -24,8 +24,7 @@
 #include "CL/sycl/info/context.hpp"
 #include "CL/sycl/platform.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
@@ -228,7 +227,6 @@ inline auto context::get_info<info::context::devices>() const {
 
 /// @} to end the execution Doxygen group
 
-}
 }
 
 namespace std {

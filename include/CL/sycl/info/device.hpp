@@ -13,8 +13,7 @@
 #include "CL/sycl/opencl_types.hpp"
 #include "CL/sycl/info/param_traits.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 class device;
 class platform;
@@ -265,7 +264,6 @@ TRISYCL_INFO_PARAM_TRAITS(info::device::partition_affinity_domains, vector_class
 TRISYCL_INFO_PARAM_TRAITS(info::device::partition_type_property, partition_property)
 TRISYCL_INFO_PARAM_TRAITS(info::device::partition_type_affinity_domain, partition_affinity_domain)
 TRISYCL_INFO_PARAM_TRAITS(info::device::reference_count, cl::sycl::cl_uint)
-}
 }
 }
 

@@ -18,8 +18,7 @@
 #include "CL/sycl/nd_range.hpp"
 #include "CL/sycl/range.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 template <int Dimensions = 1>
 struct group;
@@ -192,7 +191,6 @@ public:
 
 /// @} End the parallelism Doxygen group
 
-}
 }
 
 /*

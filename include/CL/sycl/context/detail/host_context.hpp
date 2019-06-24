@@ -17,9 +17,7 @@
 #include "CL/sycl/info/platform.hpp"
 #include "CL/sycl/context/detail/context.hpp"
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 
 /** \addtogroup execution Platforms, contexts, devices and queues
@@ -117,7 +115,5 @@ public:
 
 /// @} to end the execution Doxygen group
 
-}
-}
 }
 #endif // TRISYCL_SYCL_CONTEXT_DETAIL_HOST_CONTEXT_HPP

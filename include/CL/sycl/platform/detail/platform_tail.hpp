@@ -8,8 +8,7 @@
     License. See LICENSE.TXT for details.
 */
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 inline
 platform::platform(const device_selector &device_selector) {
@@ -34,7 +33,6 @@ platform::get_devices(info::device_type device_type) const {
   return implementation->get_devices(device_type_selector { device_type });
 }
 
-}
 }
 
 #endif

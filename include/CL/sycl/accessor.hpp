@@ -22,8 +22,7 @@
 #include "CL/sycl/pipe_reservation.hpp"
 #include "CL/sycl/pipe/detail/pipe_accessor.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 template <typename T, int Dimensions, typename Allocator>
 class buffer;
@@ -491,7 +490,6 @@ static inline auto &get_pipe_detail(Accessor &a) {
 
 /// @} End the data Doxygen group
 
-}
 }
 
 /*

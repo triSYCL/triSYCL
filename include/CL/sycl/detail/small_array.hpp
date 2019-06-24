@@ -19,9 +19,7 @@
 #include "CL/sycl/detail/debug.hpp"
 
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /** \addtogroup helpers Some helpers for the implementation
     @{
@@ -353,8 +351,6 @@ struct small_array_123<BasicType, FinalType, 3>
 
 /// @} End the helpers Doxygen group
 
-}
-}
 }
 
 /*

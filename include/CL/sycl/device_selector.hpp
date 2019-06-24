@@ -9,8 +9,7 @@
     License. See LICENSE.TXT for details.
 */
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
@@ -50,7 +49,6 @@ public:
 
 /// @} to end the execution Doxygen group
 
-}
 }
 
 /*

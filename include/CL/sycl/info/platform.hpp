@@ -12,8 +12,7 @@
 #include "CL/sycl/detail/global_config.hpp"
 #include "CL/sycl/info/param_traits.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
@@ -85,7 +84,6 @@ TRISYCL_INFO_PARAM_TRAITS(info::platform::host_timer_resolution,
                           unsigned long int)
 #endif
 #endif
-}
 }
 }
 

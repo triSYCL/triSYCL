@@ -20,9 +20,7 @@
 #include "CL/sycl/info/param_traits.hpp"
 #include "CL/sycl/platform.hpp"
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /** SYCL host device
 
@@ -126,8 +124,6 @@ public:
 
 /// @} to end the execution Doxygen group
 
-}
-}
 }
 
 /*

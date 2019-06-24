@@ -17,8 +17,7 @@
 #include <boost/compute.hpp>
 #endif
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
@@ -165,7 +164,6 @@ using host_selector = device_typename_selector<info::device_type::host>;
 
 /// @} to end the execution Doxygen group
 
-}
 }
 
 /*

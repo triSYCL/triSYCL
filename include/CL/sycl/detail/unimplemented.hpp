@@ -10,9 +10,7 @@
 
 #include <iostream>
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /** \addtogroup helpers Some helpers for the implementation
     @{
@@ -34,8 +32,6 @@ inline void unimplemented(const char *func, const char *file, int line) {
 #define TRISYCL_UNIMPL cl::sycl::detail::unimplemented(__func__, __FILE__, __LINE__)
 /// @} End the helpers Doxygen group
 
-}
-}
 }
 
 /*

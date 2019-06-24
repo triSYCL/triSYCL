@@ -11,9 +11,7 @@
     License. See LICENSE.TXT for details.
 */
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
@@ -48,8 +46,6 @@ inline opencl_platform::get_devices(const device_selector &device_selector) cons
 
 /// @} to end the Doxygen group
 
-}
-}
 }
 
 /*

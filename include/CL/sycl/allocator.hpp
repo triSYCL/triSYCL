@@ -11,8 +11,7 @@
 
 #include <memory>
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 /** \addtogroup data Data access and storage in SYCL
     @{
@@ -51,7 +50,6 @@ using map_allocator = std::allocator<T>;
 
 /// @} End the data Doxygen group
 
-}
 }
 
 /*

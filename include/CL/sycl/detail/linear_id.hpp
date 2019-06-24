@@ -11,9 +11,7 @@
 
 #include <cstddef>
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /** \addtogroup helpers Some helpers for the implementation
     @{
@@ -41,8 +39,6 @@ size_t constexpr inline linear_id(Range range, Id id, Id offset = {}) {
 
 /// @} End the helpers Doxygen group
 
-}
-}
 }
 
 /*

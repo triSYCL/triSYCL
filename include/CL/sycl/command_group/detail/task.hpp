@@ -25,9 +25,7 @@
 #include "CL/sycl/kernel.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /** The abstraction to represent SYCL tasks executing inside command_group
 
@@ -312,8 +310,6 @@ std::size_t register_accessor(std::weak_ptr<detail::accessor_base> a) {
 
 };
 
-}
-}
 }
 
 /*

@@ -30,8 +30,7 @@
 #include "CL/sycl/opencl_types.hpp"
 #include "CL/sycl/platform.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 class device_selector;
 class platform;
@@ -254,7 +253,6 @@ public:
 
 /// @} to end the Doxygen group
 
-}
 }
 
 

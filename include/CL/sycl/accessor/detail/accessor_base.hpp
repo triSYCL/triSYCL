@@ -20,8 +20,7 @@
 #include "CL/sycl/command_group/detail/task.hpp"
 #include "CL/sycl/detail/debug.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 class handler;
 
@@ -72,7 +71,6 @@ public:
 
 /// @} End the data Doxygen group
 
-}
 }
 }
 

@@ -20,8 +20,7 @@
 #include "CL/sycl/info/param_traits.hpp"
 #include "CL/sycl/platform/detail/platform.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 class device;
 
@@ -126,7 +125,6 @@ TRISYCL_WEAK_ATTRIB_SUFFIX;
 
 /// @} to end the execution Doxygen group
 
-}
 }
 }
 

@@ -21,9 +21,7 @@
 #include "CL/sycl/queue/detail/queue.hpp"
 
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /// An abstraction of the OpenCL kernel
 class opencl_kernel : public detail::kernel,
@@ -144,8 +142,6 @@ TRISYCL_WEAK_ATTRIB_PREFIX
 detail::cache<cl_kernel, detail::opencl_kernel> opencl_kernel::cache
 TRISYCL_WEAK_ATTRIB_SUFFIX;
 
-}
-}
 }
 
 /*

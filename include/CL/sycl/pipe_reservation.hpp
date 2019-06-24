@@ -15,8 +15,7 @@
 
 #include "CL/sycl/pipe_reservation/detail/pipe_reservation.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 /** \addtogroup data Data access and storage in SYCL
     @{
@@ -169,7 +168,6 @@ struct pipe_reservation {
 
 /// @} End the data Doxygen group
 
-}
 }
 
 /*

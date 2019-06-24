@@ -36,7 +36,15 @@ To compile the tests with OpenCL, use for example on Unix::
   mkdir build
   cd build
   cmake .. -DTRISYCL_OPENCL=ON
-  make -j
+  # Use as many compilation threads as we have CPU cores
+  # but it might be dangerous if there is not enough memory per core
+  make -j`nproc`
+
+Adding the option ``-DCMAKE_EXPORT_COMPILE_COMMANDS=1`` to the CMake
+parameter is useful to generate the compilation database used by some
+tools such as the Clang-based indexing and refactoring tools
+(``run-clang-tidy``...).
+
 
 Notes
 `````
@@ -60,7 +68,7 @@ LIT, can test exit codes and match stdout vs. a regex.
 
 To run the tests once compiled, use for example::
 
-  ctest -j
+  ctest
 
 
 Warning-free

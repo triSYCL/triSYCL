@@ -37,9 +37,7 @@
     @{
 */
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 
 /** A recursive multi-dimensional iterator that ends up calling f
@@ -466,8 +464,6 @@ void parallel_for_workitem_in_group(const group<Dimensions> &g,
 
 /// @} End the parallelism Doxygen group
 
-} // namespace detail
-}
 }
 
 /*

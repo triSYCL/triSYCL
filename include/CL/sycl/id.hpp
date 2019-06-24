@@ -15,8 +15,7 @@
 #include "CL/sycl/detail/small_array.hpp"
 #include "CL/sycl/range.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 template <int Dimensions, bool with_offset> class item;
 
@@ -86,7 +85,6 @@ auto make_id(BasicType... Args) {
 
 /// @} End the parallelism Doxygen group
 
-}
 }
 
 /*

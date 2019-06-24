@@ -18,8 +18,7 @@
 #include "CL/sycl/handler.hpp"
 #include "CL/sycl/pipe/detail/pipe.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 /** \addtogroup data Data access and storage in SYCL
     @{
@@ -126,7 +125,6 @@ public:
 
 /// @} End the execution Doxygen group
 
-}
 }
 
 /*

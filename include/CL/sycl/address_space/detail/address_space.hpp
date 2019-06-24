@@ -49,9 +49,7 @@
 #define TRISYCL_PRIVATE_AS
 
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /** \addtogroup address_spaces
     @{
@@ -388,8 +386,6 @@ struct address_space_object : public ocl_type<T, AS>::type,
 
 /// @} End the address_spaces Doxygen group
 
-}
-}
 }
 
 /*

@@ -19,8 +19,7 @@
 #include "CL/sycl/kernel.hpp"
 #include "CL/sycl/program/detail/program.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 enum class program_state {
   none,
@@ -87,8 +86,6 @@ class program
   }
 #endif
 };
-
-}
 
 }
 

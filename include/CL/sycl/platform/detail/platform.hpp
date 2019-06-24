@@ -13,8 +13,7 @@
 
 #include "CL/sycl/platform.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 class device;
 class device_selector;
@@ -68,7 +67,6 @@ public:
 
 /// @} to end the execution Doxygen group
 
-}
 }
 }
 

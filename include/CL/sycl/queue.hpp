@@ -33,8 +33,7 @@
 #include "CL/sycl/queue/detail/opencl_queue.hpp"
 #endif
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 class context;
 class device_selector;
@@ -374,7 +373,6 @@ inline auto queue::get_info<info::queue::reference_count>() const {
 }
 /// @} to end the execution Doxygen group
 
-}
 }
 
 /* Inject a custom specialization of std::hash to have the buffer

@@ -13,9 +13,7 @@
 #include <mutex>
 #include <unordered_map>
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 
 /** A simple thread safe cache mechanism to cache std::shared_ptr of
@@ -88,8 +86,6 @@ public:
 
 };
 
-}
-}
 }
 
 /*

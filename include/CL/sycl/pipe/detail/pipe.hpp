@@ -27,9 +27,7 @@
 #endif
 #include <boost/circular_buffer.hpp>
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /** \addtogroup data Data access and storage in SYCL
     @{
@@ -494,8 +492,6 @@ public:
 
 /// @} End the execution Doxygen group
 
-}
-}
 }
 
 /*

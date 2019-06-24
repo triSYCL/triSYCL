@@ -22,8 +22,7 @@
 #include "CL/sycl/kernel/detail/opencl_kernel.hpp"
 #endif
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
@@ -111,7 +110,6 @@ class kernel
 
 /// @} End the execution Doxygen group
 
-}
 }
 
 

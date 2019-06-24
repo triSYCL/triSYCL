@@ -22,9 +22,7 @@
 #include "CL/sycl/info/param_traits.hpp"
 #include "CL/sycl/platform.hpp"
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /// SYCL OpenCL device
 class opencl_device : public detail::device {
@@ -132,8 +130,6 @@ TRISYCL_WEAK_ATTRIB_PREFIX
 detail::cache<cl_device_id, detail::opencl_device> opencl_device::cache
 TRISYCL_WEAK_ATTRIB_SUFFIX;
 
-}
-}
 }
 
 /*

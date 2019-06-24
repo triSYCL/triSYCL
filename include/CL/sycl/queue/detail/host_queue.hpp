@@ -18,9 +18,7 @@
 #include "CL/sycl/device.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /** Some implementation details about the SYCL queue
 
@@ -75,8 +73,6 @@ class host_queue : public detail::queue,
 
 };
 
-}
-}
 }
 
 /*

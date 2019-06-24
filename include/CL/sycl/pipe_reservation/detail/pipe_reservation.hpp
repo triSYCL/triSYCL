@@ -14,9 +14,7 @@
 
 #include "CL/sycl/pipe/detail/pipe.hpp"
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 template <typename T,
           int Dimensions,
@@ -190,8 +188,6 @@ public:
 
 /// @} End the data Doxygen group
 
-}
-}
 }
 
 /*

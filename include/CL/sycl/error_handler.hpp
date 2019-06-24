@@ -11,8 +11,7 @@
 
 #include "CL/sycl/exception.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 /** \addtogroup error_handling Error handling
     @{
@@ -62,7 +61,6 @@ namespace trisycl {
 
 /// @} End the error_handling Doxygen group
 
-}
 }
 
 /*

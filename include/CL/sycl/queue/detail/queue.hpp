@@ -21,9 +21,7 @@
 #include "CL/sycl/device.hpp"
 #include "CL/sycl/detail/debug.hpp"
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /** Some implementation details about the SYCL queue
  */
@@ -123,8 +121,6 @@ struct queue : detail::debug<detail::queue> {
 
 };
 
-}
-}
 }
 
 /*

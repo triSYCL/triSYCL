@@ -22,9 +22,7 @@
 #include "CL/sycl/exception.hpp"
 
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /// SYCL OpenCL context
 class opencl_context : public detail::context {
@@ -147,8 +145,6 @@ TRISYCL_WEAK_ATTRIB_PREFIX
 detail::cache<cl_context, detail::opencl_context> opencl_context::cache
 TRISYCL_WEAK_ATTRIB_SUFFIX;
 
-}
-}
 }
 
 /*
