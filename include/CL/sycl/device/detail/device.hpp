@@ -13,9 +13,7 @@
 
 #include "CL/sycl/platform.hpp"
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
@@ -70,8 +68,6 @@ public:
 
 /// @} to end the execution Doxygen group
 
-}
-}
 }
 
 /*

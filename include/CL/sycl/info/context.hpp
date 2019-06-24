@@ -11,8 +11,7 @@
 
 #include "CL/sycl/info/param_traits.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
@@ -38,7 +37,6 @@ TRISYCL_INFO_PARAM_TRAITS_ANY_T(info::context, void)
 TRISYCL_INFO_PARAM_TRAITS(info::context::reference_count, cl::sycl::cl_uint)
 TRISYCL_INFO_PARAM_TRAITS(info::context::platform, cl::sycl::platform)
 TRISYCL_INFO_PARAM_TRAITS(info::context::devices, vector_class<cl::sycl::device>)
-}
 }
 }
 

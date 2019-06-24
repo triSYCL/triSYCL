@@ -29,8 +29,7 @@
 #endif
 
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 // List of the cl_types that will be iterated upon to generate the vector types
 #define TRISYCL_SCALAR_TYPES                                                    \
@@ -179,7 +178,6 @@ template <> struct is_wrapper<type> : std::true_type {};
 // Generate the vector types for all listed scalar types
 BOOST_PP_LIST_FOR_EACH(TRISYCL_DECLARE_CL_TYPES, _, TRISYCL_SCALAR_TYPES)
 
-} // sycl
 } // cl
 
 

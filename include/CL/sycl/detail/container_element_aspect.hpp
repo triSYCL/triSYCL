@@ -10,9 +10,7 @@
     License. See LICENSE.TXT for details.
 */
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /** \addtogroup helpers Some helpers for the implementation
     @{
@@ -32,8 +30,6 @@ struct container_element_aspect {
 
 /// @} End the helpers Doxygen group
 
-}
-}
 }
 
 /*

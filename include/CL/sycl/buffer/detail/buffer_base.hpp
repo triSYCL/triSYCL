@@ -26,8 +26,7 @@
 #include "CL/sycl/command_group/detail/task.hpp"
 #include "CL/sycl/context.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 class handler;
 
@@ -320,7 +319,6 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
 
 /// @} End the data Doxygen group
 
-}
 }
 }
 

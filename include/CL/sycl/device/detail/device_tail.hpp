@@ -11,8 +11,7 @@
     License. See LICENSE.TXT for details.
 */
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
@@ -45,7 +44,6 @@ device::get_devices(info::device_type device_type) {
 
 /// @} to end the Doxygen group
 
-}
 }
 
 /*

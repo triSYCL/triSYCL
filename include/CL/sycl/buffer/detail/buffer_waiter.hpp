@@ -16,9 +16,7 @@
 #include "CL/sycl/buffer_allocator.hpp"
 #include "CL/sycl/detail/shared_ptr_implementation.hpp"
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /** \addtogroup data Data access and storage in SYCL
     @{
@@ -82,8 +80,6 @@ inline auto waiter(detail::buffer<T, Dimensions> *b) {
 
 /// @} End the data Doxygen group
 
-}
-}
 }
 
 /*

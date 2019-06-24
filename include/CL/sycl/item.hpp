@@ -15,8 +15,7 @@
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/range.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 /** \addtogroup parallelism Expressing parallelism through kernels
     @{
@@ -140,7 +139,6 @@ public:
 
 /// @} End the parallelism Doxygen group
 
-}
 }
 
 /*

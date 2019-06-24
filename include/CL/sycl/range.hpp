@@ -13,8 +13,7 @@
 #include <numeric>
 #include "CL/sycl/detail/small_array.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 /** \addtogroup parallelism Expressing parallelism through kernels
     @{
@@ -78,7 +77,6 @@ auto make_range(BasicType... Args) {
 
 /// @} End the parallelism Doxygen group
 
-}
 }
 
 /*

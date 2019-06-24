@@ -17,9 +17,7 @@
 
 #include "CL/sycl/command_group/detail/task.hpp"
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /** Avoid the interprocedural optimization to remove these arguments
     in the kernel instantiation by relying on some dummy static variables.
@@ -108,8 +106,6 @@ void launch_device_kernel(detail::task &t,
   instantiate_kernel<KernelName>(k);
 }
 
-}
-}
 }
 
 /*

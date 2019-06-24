@@ -24,8 +24,7 @@
 #endif
 #include "CL/sycl/platform/detail/platform.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 class device_selector;
 class device;
@@ -177,7 +176,6 @@ PLATFORM_GET_INFO_STRING(vendor)
 
 /// @} to end the execution Doxygen group
 
-}
 }
 
 

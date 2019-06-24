@@ -12,8 +12,7 @@
 #include <cstddef>
 #include <memory>
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 /** \addtogroup data Data access and storage in SYCL
     @{
@@ -29,7 +28,6 @@ using buffer_allocator = std::allocator<T>;
 
 /// @} End the data Doxygen group
 
-}
 }
 
 /*

@@ -10,8 +10,7 @@
 */
 
 // SYCL dwells in the cl::sycl namespace
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 /** \addtogroup data Data access and storage in SYCL
 
@@ -70,7 +69,6 @@ namespace access {
 
 /// @} End the data Doxygen group
 
-}
 }
 
 /*

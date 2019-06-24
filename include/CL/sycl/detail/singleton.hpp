@@ -16,9 +16,7 @@
 #include <boost/operators.hpp>
 
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /// Provide a singleton factory
 template <typename T>
@@ -38,8 +36,6 @@ struct singleton {
 
 };
 
-}
-}
 }
 
 /*

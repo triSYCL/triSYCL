@@ -16,9 +16,7 @@
 #include <tuple>
 #include <utility>
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /** \addtogroup array_tuple_helpers Helpers to do array and tuple conversion
 
@@ -129,8 +127,6 @@ auto expand(Tuple t) {
                            std::tuple_size<Tuple>::value == 1>{}.expand(t));
 }
 
-}
-}
 }
 
 /*

@@ -38,9 +38,7 @@
 #include "CL/sycl/device_selector.hpp"
 #include "CL/sycl/platform.hpp"
 
-namespace cl {
-namespace sycl {
-
+namespace cl::sycl::drt {
 /** \addtogroup device_runtime Device-side runtime implementation
     @{
 */
@@ -227,7 +225,6 @@ set_kernel(detail::task &task,
 
 /// @} to end the Doxygen group
 
-}
 }
 }
 

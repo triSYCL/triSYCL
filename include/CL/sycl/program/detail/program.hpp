@@ -15,9 +15,7 @@
 #include "CL/sycl/detail/debug.hpp"
 #include "CL/sycl/detail/unimplemented.hpp"
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 class program : detail::debug<detail::program> {
 
@@ -35,8 +33,6 @@ class program : detail::debug<detail::program> {
   virtual ~program() {}
 };
 
-}
-}
 }
 
 /*

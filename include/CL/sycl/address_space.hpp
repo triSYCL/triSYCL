@@ -16,14 +16,14 @@
     License. See LICENSE.TXT for details.
 */
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 /** \addtogroup address_spaces Dealing with OpenCL address spaces
     @{
 */
 
 namespace access {
+
 /** Enumerate the different OpenCL 2 address spaces */
 enum class address_space {
   global_space,
@@ -34,16 +34,13 @@ enum class address_space {
 };
 
 }
-}
-}
 /// @} End the address_spaces Doxygen group
-
+}
 
 #include "CL/sycl/address_space/detail/address_space.hpp"
 
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 /** \addtogroup address_spaces
     @{
@@ -154,8 +151,7 @@ multi_ptr<T, AS> make_ptr(T *pointer) {
   return pointer;
 }
 }
-}
-/// @} End the parallelism Doxygen group
+/// @} End the address_spaces Doxygen group
 
 /*
     # Some Emacs stuff:

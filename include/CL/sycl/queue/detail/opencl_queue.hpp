@@ -15,9 +15,7 @@
 #include "CL/sycl/device.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /// Some implementation details about the SYCL queue
 class opencl_queue : public detail::queue,
@@ -107,8 +105,6 @@ TRISYCL_WEAK_ATTRIB_PREFIX
 detail::cache<cl_command_queue, detail::opencl_queue> opencl_queue::cache
 TRISYCL_WEAK_ATTRIB_SUFFIX;
 
-}
-}
 }
 
 /*

@@ -9,9 +9,7 @@
     License. See LICENSE.TXT for details.
 */
 
-namespace cl {
-namespace sycl {
-namespace info {
+namespace cl::sycl::info {
 
 /** Implement a meta-function from (T, value) to T' to express the return type
     value of an OpenCL function of kind (T, value)
@@ -39,8 +37,6 @@ struct param_traits {
     using return_type = RETURN_TYPE;                        \
   };
 
-}
-}
 }
 
 /*

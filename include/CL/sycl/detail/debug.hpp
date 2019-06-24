@@ -51,9 +51,7 @@ using namespace std::string_literals;
 #define TRISYCL_DUMP_T(expression) do { } while(0)
 #endif
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /** \addtogroup debug_trace Debugging and tracing support
     @{
@@ -174,8 +172,6 @@ struct display_vector {
 
 /// @} End the debug_trace Doxygen group
 
-}
-}
 }
 
 /*

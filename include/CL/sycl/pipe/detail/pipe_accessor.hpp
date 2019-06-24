@@ -18,8 +18,7 @@
 #include "CL/sycl/pipe/detail/pipe.hpp"
 #include "CL/sycl/pipe_reservation/detail/pipe_reservation.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 class handler;
 
@@ -289,7 +288,6 @@ public:
 
 /// @} End the data Doxygen group
 
-}
 }
 }
 

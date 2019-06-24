@@ -11,8 +11,7 @@
 
 #include <exception>
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 /** \addtogroup error_handling Error handling
     @{
@@ -206,7 +205,6 @@ class non_cl_error : public runtime_error {
 
 /// @} End the error_handling Doxygen group
 
-}
 }
 
 /*

@@ -11,8 +11,7 @@
     License. See LICENSE.TXT for details.
 */
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 /** \addtogroup data
 
@@ -26,7 +25,6 @@ template <int Dimensions> struct image;
 /// @} End the data Doxygen group
 
 
-}
 }
 
 /*

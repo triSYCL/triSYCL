@@ -23,9 +23,7 @@
 #include "CL/sycl/buffer/detail/buffer_waiter.hpp"
 #include "CL/sycl/range.hpp"
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 
 /** \addtogroup data Data access and storage in SYCL
@@ -434,8 +432,6 @@ buffer_add_to_task(BufferDetail buf,
 
 /// @} End the data Doxygen group
 
-}
-}
 }
 
 /*

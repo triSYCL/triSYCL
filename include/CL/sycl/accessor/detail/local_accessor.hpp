@@ -24,8 +24,7 @@
 #include "CL/sycl/item.hpp"
 #include "CL/sycl/nd_item.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 class handler;
 
@@ -383,7 +382,6 @@ private:
 
 /// @} End the data Doxygen group
 
-}
 }
 }
 

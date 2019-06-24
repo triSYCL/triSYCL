@@ -7,8 +7,7 @@
  */
 
 /* Dummy half implementation - this is enough to get the CTS to build. */
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 class half {
 public:
@@ -16,8 +15,6 @@ public:
 
   bool operator>(const half &h1) { return false; };
 };
-
-}
 
 }
 

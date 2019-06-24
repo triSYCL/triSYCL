@@ -28,8 +28,7 @@
 #include "CL/sycl/parallelism.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
@@ -514,7 +513,6 @@ add_buffer_to_task(handler *command_group_handler,
 
 /// @} End the execution Doxygen group
 
-}
 }
 
 /*

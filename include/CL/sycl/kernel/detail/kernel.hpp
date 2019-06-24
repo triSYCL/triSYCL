@@ -19,9 +19,7 @@
 #include "CL/sycl/queue/detail/queue.hpp"
 #include "CL/sycl/range.hpp"
 
-namespace cl {
-namespace sycl {
-namespace detail {
+namespace cl::sycl::detail {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
@@ -83,8 +81,6 @@ class kernel : detail::debug<detail::kernel> {
 
 /// @} End the execution Doxygen group
 
-}
-}
 }
 
 /*

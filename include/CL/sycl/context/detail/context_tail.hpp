@@ -11,15 +11,13 @@
     License. See LICENSE.TXT for details.
 */
 
-namespace cl {
-namespace sycl {
+namespace cl::sycl {
 
 /* has to be inline as it references default_selector */
 inline context::context(const vector_class<device> &deviceList,
 			async_handler asyncHandler)
   : context(deviceList, asyncHandler, default_selector {}) {}
 
-}
 }
 /*
     # Some Emacs stuff:
