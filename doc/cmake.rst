@@ -36,7 +36,9 @@ To compile the tests with OpenCL, use for example on Unix::
   mkdir build
   cd build
   cmake .. -DTRISYCL_OPENCL=ON
-  make -j
+  # Use as many compilation threads as we have CPU cores
+  # but it might be dangerous if there is not enough memory per core
+  make -j`nproc`
 
 Notes
 `````
@@ -60,7 +62,7 @@ LIT, can test exit codes and match stdout vs. a regex.
 
 To run the tests once compiled, use for example::
 
-  ctest -j
+  ctest
 
 
 Warning-free

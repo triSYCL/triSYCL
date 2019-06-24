@@ -37,6 +37,6 @@ RUN git clone https://github.com/${git_slug}.git -b ${git_branch} /trisycl
 
 RUN cd /trisycl; cmake . -DTRISYCL_OPENCL=${opencl}                            \
     -DTRISYCL_OPENMP=${openmp} -DCMAKE_C_COMPILER=${c_compiler}                \
-    -DCMAKE_CXX_COMPILER=${cxx_compiler} && make -j 4
+    -DCMAKE_CXX_COMPILER=${cxx_compiler} && make -j`nproc`
 
-CMD cd /trisycl && make -j 2 && ctest
+CMD cd /trisycl && make -j`nproc` && ctest

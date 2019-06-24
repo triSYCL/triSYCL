@@ -474,7 +474,7 @@ ctest:
 	# Think to delete this directory first if full recompilation is required...
 	mkdir -p ../build
 	cd ../build; cmake .. -DCMAKE_CXX_COMPILER=$(CXX) \
-	   -DTRISYCL_OPENCL=ON; make -j7; ctest -j7
+	   -DTRISYCL_OPENCL=ON; make -j`nproc`; ctest
 
 # Only display the test list
 ctest-list:
