@@ -3,7 +3,7 @@
    Test the internal small_array<> triSYCL class
 */
 
-#include "CL/sycl/detail/small_array.hpp"
+#include "CL/sycl.hpp"
 #include <boost/test/minimal.hpp>
 
 using namespace cl::sycl;
