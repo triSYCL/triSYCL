@@ -29,7 +29,7 @@
     @{
 */
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 static inline auto to_tbb_range(const range<1> &r)
 {
@@ -157,7 +157,7 @@ template <int Dimensions = 1, typename ParallelForFunctor>
 void parallel_for(nd_range<Dimensions> r, ParallelForFunctor f)
 {
   auto iterate_in_work_group = [&](id<Dimensions> g) {
-    cl::sycl::group<Dimensions> wg{g, r};
+    trisycl::group<Dimensions> wg{g, r};
     parallel_for_workitem<Dimensions, nd_item<Dimensions>, decltype(f)>(
         wg, f);
   };
@@ -177,7 +177,7 @@ void parallel_for_workitem_in_group(const group<Dimensions> &g,
 
 /// @} End the parallelism Doxygen group
 
-} // namespace cl::sycl::detail
+} // namespace trisycl::detail
 
 /*
     # Some Emacs stuff:

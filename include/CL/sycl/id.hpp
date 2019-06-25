@@ -15,7 +15,7 @@
 #include "CL/sycl/detail/small_array.hpp"
 #include "CL/sycl/range.hpp"
 
-namespace cl::sycl {
+namespace trisycl {
 
 template <int Dimensions, bool with_offset> class item;
 

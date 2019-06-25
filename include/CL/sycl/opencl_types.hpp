@@ -29,7 +29,7 @@
 #endif
 
 
-namespace cl::sycl {
+namespace trisycl {
 
 // List of the cl_types that will be iterated upon to generate the vector types
 #define TRISYCL_SCALAR_TYPES                                                    \
@@ -77,7 +77,7 @@ namespace cl::sycl {
 /* When passing the arguments to Boost Compute, we need to know if we have to
    unwrap our type and give Boost Compute the actual OpenCL type. To do this
    we define this meta-function that returns true if \c T is a wrapper type
-   to an OpenCL type. For example \c is_wrapper<cl::sycl::int3>::value == true
+   to an OpenCL type. For example \c is_wrapper<trisycl::int3>::value == true
 */
 template<class T>
 struct is_wrapper : std::false_type {};

@@ -19,7 +19,7 @@
 #include "CL/sycl/kernel.hpp"
 #include "CL/sycl/program/detail/program.hpp"
 
-namespace cl::sycl {
+namespace trisycl {
 
 enum class program_state {
   none,
@@ -79,7 +79,7 @@ class program
   }
 
   template <typename kernelT>
-  cl::sycl::kernel get_kernel() const;
+  ::trisycl::kernel get_kernel() const;
 
   kernel get_kernel(string_class kernelName) const {
     return NULL;

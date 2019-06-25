@@ -4,7 +4,7 @@
 #include "CL/sycl/detail/all_true.hpp"
 #include "CL/sycl/property/queue.hpp"
 
-namespace cl::sycl {
+namespace trisycl {
 
 #define TRISYCL_PROPERTY_CREATE(type, prop_name)                        \
   std::optional<property::type::prop_name> prop_name;                   \
@@ -55,7 +55,7 @@ public:
     return prop_name.has_value();                                       \
   }                                                                     \
   template<>                                                            \
-  inline cl::sycl::property::type::prop_name                            \
+  inline trisycl::property::type::prop_name                             \
   property_list::get_property<property::type::prop_name>() const {      \
     return prop_name.value();                                           \
   }

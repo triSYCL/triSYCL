@@ -33,7 +33,7 @@
 #include "CL/sycl/queue/detail/opencl_queue.hpp"
 #endif
 
-namespace cl::sycl {
+namespace trisycl {
 
 class context;
 class device_selector;
@@ -163,7 +163,7 @@ public:
     device d = deviceSelector.select_device();
     vector_class<device> ctx_devs = syclContext.get_devices();
     if (std::find(ctx_devs.begin(), ctx_devs.end(), d) == ctx_devs.end())
-      throw cl::sycl::invalid_object_error("Device doesn't belong to context\n");
+      throw trisycl::invalid_object_error("Device doesn't belong to context\n");
     implementation =
 #ifdef TRISYCL_OPENCL
       d.is_host() ? std::shared_ptr<detail::queue>{ new detail::host_queue }
@@ -369,7 +369,7 @@ inline auto queue::get_info<info::queue::context>() const {
 
 template<>
 inline auto queue::get_info<info::queue::reference_count>() const {
-  return cl::sycl::cl_uint {0};
+  return trisycl::cl_uint {0};
 }
 /// @} to end the execution Doxygen group
 
@@ -382,9 +382,9 @@ inline auto queue::get_info<info::queue::reference_count>() const {
 */
 namespace std {
 
-template <> struct hash<cl::sycl::queue> {
+template <> struct hash<trisycl::queue> {
 
-  auto operator()(const cl::sycl::queue &q) const {
+  auto operator()(const trisycl::queue &q) const {
     // Forward the hashing to the implementation
     return q.hash();
   }

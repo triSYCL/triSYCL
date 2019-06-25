@@ -10,7 +10,7 @@
 */
 
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 class opencl_event : public detail::event {
   boost::compute::event e;
@@ -42,7 +42,7 @@ public:
     return e.get_profiling_info<cl_ulong>(static_cast<cl_profiling_info>(param));
   }
 
-  cl::sycl::cl_uint get_reference_count() const override {
+  trisycl::cl_uint get_reference_count() const override {
     return e.get_info<CL_EVENT_REFERENCE_COUNT>();
   }
 

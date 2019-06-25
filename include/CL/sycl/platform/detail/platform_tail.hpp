@@ -8,7 +8,7 @@
     License. See LICENSE.TXT for details.
 */
 
-namespace cl::sycl {
+namespace trisycl {
 
 inline
 platform::platform(const device_selector &device_selector) {
@@ -16,7 +16,7 @@ platform::platform(const device_selector &device_selector) {
 #ifdef TRISYCL_OPENCL
   if (host_platform.implementation->get_devices(device_selector).empty()) {
     for (const auto &d : boost::compute::system::platforms()) {
-      auto clplatform = cl::sycl::platform { d };
+      auto clplatform = ::trisycl::platform { d };
       auto devices = clplatform.implementation->get_devices(device_selector);
       if (!devices.empty()) {
         *this = std::move(clplatform);

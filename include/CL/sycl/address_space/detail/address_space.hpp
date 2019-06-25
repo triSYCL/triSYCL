@@ -49,7 +49,7 @@
 #define TRISYCL_PRIVATE_AS
 
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 /** \addtogroup address_spaces
     @{
@@ -261,7 +261,7 @@ struct address_space_fundamental : public address_space_variable<T, AS> {
 
      Need to think further about it...
   */
-  template <typename SomeType, cl::sycl::access::address_space SomeAS>
+  template <typename SomeType, trisycl::access::address_space SomeAS>
   address_space_fundamental(address_space_fundamental<SomeType, SomeAS>& v)
   {
     /* Strangely I cannot have it working in the initializer instead, for
@@ -279,7 +279,7 @@ struct address_space_fundamental : public address_space_variable<T, AS> {
     Note that if \a T is not a pointer type, it is an error.
 
     All the address space pointers inherit from it, which makes trivial
-    the implementation of \c cl::sycl::multi_ptr<T, AS>
+    the implementation of \c trisycl::multi_ptr<T, AS>
 */
 template <typename T, access::address_space AS>
 struct address_space_ptr : public address_space_fundamental<T, AS> {

@@ -18,7 +18,7 @@
 #include "CL/sycl/pipe/detail/pipe.hpp"
 #include "CL/sycl/pipe_reservation/detail/pipe_reservation.hpp"
 
-namespace cl::sycl {
+namespace trisycl {
 
 class handler;
 
@@ -50,7 +50,7 @@ public:
   static constexpr auto target = Target;
 
   static constexpr bool blocking =
-    (target == cl::sycl::access::target::blocking_pipe);
+    (target == trisycl::access::target::blocking_pipe);
 
   /// The STL-like types
   using value_type = T;

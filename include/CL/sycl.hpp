@@ -86,6 +86,12 @@
 // An extension about constexpr host introspection API
 //#include "CL/sycl/extension/ce/platform.hpp"
 
+/// For now just put the triSYCL implementation in the official SYCL 1.2.1
+/// namespace for compatibility
+namespace cl {
+  namespace sycl = ::trisycl;
+}
+
 /*
     # Some Emacs stuff:
     ### Local Variables:

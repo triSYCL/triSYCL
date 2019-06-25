@@ -24,7 +24,7 @@
   #endif
 #endif
 
-namespace cl::sycl {
+namespace trisycl {
 #define TRISYCL_MATH_WRAP(FUN) template<typename T>                            \
   T FUN(T x) {                                                                 \
     return std::FUN(x);                                                        \

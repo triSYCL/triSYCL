@@ -27,7 +27,7 @@
 #include "CL/sycl/queue.hpp"
 #include "CL/sycl/range.hpp"
 
-namespace cl::sycl {
+namespace trisycl {
 
 /** \addtogroup data Data access and storage in SYCL
     @{
@@ -123,7 +123,7 @@ public:
       \param[in] r defines the size
 
       \param[in] allocator is to be used by the SYCL runtime, of type
-      \c cl::sycl::buffer_allocator<T> by default
+      \c trisycl::buffer_allocator<T> by default
 
       The host address is \code const T* \endcode, so the host memory
       is read-only.
@@ -158,7 +158,7 @@ public:
       \param[in] r defines the size
 
       \param[in] allocator is to be used by the SYCL runtime, of type
-      cl::sycl::buffer_allocator<T> by default
+      trisycl::buffer_allocator<T> by default
 
       The memory is owned by the runtime during the lifetime of the
       object.  Data is copied back to the host unless the user
@@ -183,11 +183,11 @@ public:
       \param[in] r defines the size
 
       \param[in] allocator is to be used by the SYCL runtime, of type
-      cl::sycl::buffer_allocator<T> by default
+      trisycl::buffer_allocator<T> by default
 
       The ownership of the host_data is shared between the runtime and the
       user. In order to enable both the user application and the SYCL
-      runtime to use the same pointer, a cl::sycl::mutex_class is
+      runtime to use the same pointer, a trisycl::mutex_class is
       used. The mutex m is locked by the runtime whenever the data is in
       use and unlocked otherwise. Data is synchronized with host_data, when
       the mutex is unlocked by the runtime.
@@ -197,7 +197,7 @@ public:
   */
   buffer(shared_ptr_class<T> &host_data,
          const range<Dimensions> &buffer_range,
-         cl::sycl::mutex_class &m,
+         trisycl::mutex_class &m,
          Allocator allocator = {}) {
     TRISYCL_UNIMPL;
   }
@@ -214,11 +214,11 @@ public:
       \param[inout] m is the mutex used to protect the data access
 
       \param[in] allocator is to be used by the SYCL runtime, of type
-      cl::sycl::buffer_allocator<T> by default
+      trisycl::buffer_allocator<T> by default
 
       The ownership of the host_data is shared between the runtime and the
       user. In order to enable both the user application and the SYCL
-      runtime to use the same pointer, a cl::sycl::mutex_class is
+      runtime to use the same pointer, a trisycl::mutex_class is
       used.
 
       \todo add this mutex-less constructor to the specification
@@ -243,7 +243,7 @@ public:
       \param[in] end_iterator points to just after the last element to copy
 
       \param[in] allocator is to be used by the SYCL runtime, of type
-      cl::sycl::buffer_allocator<T> by default
+      trisycl::buffer_allocator<T> by default
 
       \todo Implement the copy back at buffer destruction
 
@@ -421,9 +421,9 @@ public:
 
       For example
       \code
-      cl::sycl::buffer<int> b { 1000 };
+      trisycl::buffer<int> b { 1000 };
       // Here b.use_count() should return 1
-      cl::sycl::buffer<int> c { b };
+      trisycl::buffer<int> c { b };
       // Here b.use_count() and b.use_count() should return 2
       \endcode
 
@@ -459,7 +459,7 @@ public:
       reside in a different location from the initialization data.
 
       It is defined as a weak_ptr referring to a shared_ptr that is not
-      associated with the cl::sycl::buffer, and so the cl::sycl::buffer
+      associated with the trisycl::buffer, and so the trisycl::buffer
       will have no ownership of finalData.
   */
   void set_final_data(weak_ptr_class<T> finalData) {
@@ -477,14 +477,14 @@ public:
 #ifdef TRISYCL_OPENCL
   /** Check if the buffer is already cached in a certain context
    */
-  bool is_cached(cl::sycl::context& ctx) {
+  bool is_cached(trisycl::context& ctx) {
     return implementation->implementation->is_cached(ctx);
   }
 
 
   /** Check if the data stored in the buffer is up-to-date in a certain context
    */
-  bool is_data_up_to_date(cl::sycl::context& ctx) {
+  bool is_data_up_to_date(trisycl::context& ctx) {
     return implementation->implementation->is_data_up_to_date(ctx);
   }
 #endif
@@ -520,9 +520,9 @@ namespace std {
 template <typename T,
           int Dimensions,
           typename Allocator>
-struct hash<cl::sycl::buffer<T, Dimensions, Allocator>> {
+struct hash<trisycl::buffer<T, Dimensions, Allocator>> {
 
-  auto operator()(const cl::sycl::buffer<T, Dimensions, Allocator> &b) const {
+  auto operator()(const trisycl::buffer<T, Dimensions, Allocator> &b) const {
     // Forward the hashing to the implementation
     return b.hash();
   }

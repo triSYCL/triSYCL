@@ -28,7 +28,7 @@
     @{
 */
 
-namespace cl::sycl::detail::spir {
+namespace trisycl::detail::spir {
 
 // Fills the small_array_123 of the type passed to it up to the dimensionality
 // of the type T (T generally intended to be a sycl id or range, but can be
@@ -91,7 +91,7 @@ auto create_parallel_for_arg(Index_T index_or_range) {
 
 /// @} End the parallelism Doxygen group
 
-} // namespace cl::sycl::details::spir
+} // namespace trisycl::details::spir
 
 /*
     # Some Emacs stuff:

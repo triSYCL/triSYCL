@@ -8,7 +8,7 @@
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
 */
-namespace cl::sycl::property::queue {
+namespace trisycl::property::queue {
 
 class enable_profiling : public detail::property {
 public:

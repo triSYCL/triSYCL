@@ -28,7 +28,7 @@
 /// This is an extension providing scope storage for devices
 #define SYCL_VENDOR_TRISYCL_DEVICE_SCOPE 1
 
-namespace cl::sycl::vendor::trisycl::scope {
+namespace trisycl::vendor::trisycl::scope {
 
 /** \addtogroup vendor_trisycl_scope triSYCL extension for
     storage scopes
@@ -45,23 +45,23 @@ struct empty_device_scope {
 */
 template <typename DeviceStorage
           , typename ScopedPlatform =
-          cl::sycl::vendor::trisycl::scope::empty_platform_scope
+          ::trisycl::vendor::trisycl::scope::empty_platform_scope
           >
 class device
   /* Use the underlying device implementation that can be shared in the
      SYCL model */
   : public
-    cl::sycl::detail::shared_ptr_implementation<device<DeviceStorage,
-                                                       ScopedPlatform>,
-                                                detail::device
+     ::trisycl::detail::shared_ptr_implementation<device<DeviceStorage,
+                                                         ScopedPlatform>,
+                                                  detail::device
                                                   <DeviceStorage,
                                                    ScopedPlatform>> {
   using spi =
-    cl::sycl::detail::shared_ptr_implementation<device<DeviceStorage,
-                                                       ScopedPlatform>,
-                                                detail::device
-                                                  <DeviceStorage,
-                                                   ScopedPlatform>>;
+    ::trisycl::detail::shared_ptr_implementation<device<DeviceStorage,
+                                                        ScopedPlatform>,
+                                                 detail::device
+                                                 <DeviceStorage,
+                                                  ScopedPlatform>>;
 
   // Allows the comparison operation to access the implementation
   friend spi;
@@ -93,7 +93,7 @@ public:
 
       \param[in] d is the real device to use
   */
-  device(const cl::sycl::device &d,
+  device(const ::trisycl::device &d,
          const ScopedPlatform &p = {}) :
     spi {
       new detail::device<DeviceStorage, ScopedPlatform> { d, p }
@@ -101,7 +101,7 @@ public:
 
 
   /// By default use the default (host) device with no platform storage
-  device() : device(cl::sycl::device {}) {}
+  device() : device(::trisycl::device {}) {}
 
 
   /// It is still copyable
@@ -124,9 +124,9 @@ public:
   }
 
 
-  /** Add a conversion to \c cl::sycl::device& so it can be used as
+  /** Add a conversion to \c trisycl::device& so it can be used as
       a normal device */
-    operator cl::sycl::device&() const {
+    operator ::trisycl::device&() const {
       return implementation->get_underlying_device();
     }
 

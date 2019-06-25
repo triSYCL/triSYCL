@@ -11,7 +11,7 @@
 
 #include <cstddef>
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 /** \addtogroup helpers Some helpers for the implementation
     @{

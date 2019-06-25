@@ -15,7 +15,7 @@
 #include "CL/sycl/detail/debug.hpp"
 #include "CL/sycl/detail/unimplemented.hpp"
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 class program : detail::debug<detail::program> {
 

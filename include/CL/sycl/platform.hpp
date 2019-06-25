@@ -24,7 +24,7 @@
 #endif
 #include "CL/sycl/platform/detail/platform.hpp"
 
-namespace cl::sycl {
+namespace trisycl {
 
 class device_selector;
 class device;
@@ -186,9 +186,9 @@ PLATFORM_GET_INFO_STRING(vendor)
 */
 namespace std {
 
-template <> struct hash<cl::sycl::platform> {
+template <> struct hash<trisycl::platform> {
 
-  auto operator()(const cl::sycl::platform &p) const {
+  auto operator()(const trisycl::platform &p) const {
     // Forward the hashing to the implementation
     return p.hash();
   }

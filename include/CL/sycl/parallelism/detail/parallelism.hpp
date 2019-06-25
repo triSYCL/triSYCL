@@ -37,7 +37,7 @@
     @{
 */
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 
 /** A recursive multi-dimensional iterator that ends up calling f
@@ -399,7 +399,7 @@ void parallel_for(nd_range<Dimensions> r,
     //group.display();
 
     // Then iterate on the local work-groups
-    cl::sycl::group<Dimensions> wg {g, r};
+    trisycl::group<Dimensions> wg {g, r};
     parallel_for_workitem<Dimensions,
                           nd_item<Dimensions>,
                           decltype(f)>(wg, f);

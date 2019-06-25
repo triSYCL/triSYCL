@@ -13,7 +13,7 @@
 #include <numeric>
 #include "CL/sycl/detail/small_array.hpp"
 
-namespace cl::sycl {
+namespace trisycl {
 
 /** \addtogroup parallelism Expressing parallelism through kernels
     @{

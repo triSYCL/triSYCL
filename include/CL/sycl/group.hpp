@@ -18,7 +18,7 @@
 #include "CL/sycl/nd_range.hpp"
 #include "CL/sycl/range.hpp"
 
-namespace cl::sycl {
+namespace trisycl {
 
 template <int Dimensions = 1>
 struct group;

@@ -16,7 +16,7 @@
 
 #include <boost/operators.hpp>
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 /** Provide an implementation as shared_ptr with total ordering and
     hashing to be used with algorithms and in (un)ordered containers

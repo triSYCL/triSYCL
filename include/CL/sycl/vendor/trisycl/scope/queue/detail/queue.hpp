@@ -15,7 +15,7 @@
 
 #include "CL/sycl/queue.hpp"
 
-namespace cl::sycl::vendor::trisycl::scope::detail {
+namespace trisycl::vendor::trisycl::scope::detail {
 
 /** \addtogroup vendor_trisycl_scope triSYCL extension for
     storage scopes
@@ -29,7 +29,7 @@ template <typename Device,
           typename QueueStorage>
 class queue {
   /// The storage-less queue behind the scene
-  cl::sycl::queue q;
+  ::trisycl::queue q;
 
   /** The queue-scoped storage default-initialized
 
@@ -49,7 +49,7 @@ public:
 
       \param[in] q is the real queue to use
   */
-  queue(const cl::sycl::queue &q) : q { q } {}
+  queue(const ::trisycl::queue &q) : q { q } {}
 
 
   /** Construct the queue with some queue-scoped storage on top
@@ -58,7 +58,7 @@ public:
       \param[in] q is the real queue to use
       \param[in] d is the a scoped device to use
   */
-  queue(const cl::sycl::queue &q, const Device &d)
+  queue(const ::trisycl::queue &q, const Device &d)
     : q { q }, device_with_scope { d } {}
 
 

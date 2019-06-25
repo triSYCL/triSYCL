@@ -22,7 +22,7 @@
 #include "CL/sycl/kernel/detail/opencl_kernel.hpp"
 #endif
 
-namespace cl::sycl {
+namespace trisycl {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
@@ -120,9 +120,9 @@ class kernel
 */
 namespace std {
 
-template <> struct hash<cl::sycl::kernel> {
+template <> struct hash<trisycl::kernel> {
 
-  auto operator()(const cl::sycl::kernel &k) const {
+  auto operator()(const trisycl::kernel &k) const {
     // Forward the hashing to the implementation
     return k.hash();
   }

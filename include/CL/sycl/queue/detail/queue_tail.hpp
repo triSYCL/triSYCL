@@ -19,7 +19,7 @@
 #define TRISYCL_DEFAULT_QUEUE_SELECTOR host_selector
 #endif
 
-namespace cl::sycl {
+namespace trisycl {
 
 /* has to be inline as it references default_selector */
 /* this should be default selector but until we have device compiler

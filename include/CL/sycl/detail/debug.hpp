@@ -51,7 +51,7 @@ using namespace std::string_literals;
 #define TRISYCL_DUMP_T(expression) do { } while(0)
 #endif
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 /** \addtogroup debug_trace Debugging and tracing support
     @{

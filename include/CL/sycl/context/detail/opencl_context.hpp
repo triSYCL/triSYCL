@@ -22,7 +22,7 @@
 #include "CL/sycl/exception.hpp"
 
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 /// SYCL OpenCL context
 class opencl_context : public detail::context {
@@ -45,14 +45,14 @@ class opencl_context : public detail::context {
 
 public:
 
-  /// Return the underlying \c cl_context of the \c cl::sycl::context
+  /// Return the underlying \c cl_context of the \c trisycl::context
   cl_context get() const override {
     return c.get();
   }
 
 
   /** Return the underlying \c boost::compute::context
-      of the \c cl::sycl::context
+      of the \c trisycl::context
   */
   boost::compute::context &get_boost_compute() override {
     return c;
@@ -91,8 +91,8 @@ public:
 
       \todo To be implemented
   */
-  cl::sycl::platform get_platform() const override {
-    return cl::sycl::platform(c.get_devices()[0].platform());
+  trisycl::platform get_platform() const override {
+    return trisycl::platform(c.get_devices()[0].platform());
   }
 
 
@@ -100,15 +100,15 @@ public:
 
       \todo To be implemented
   */
-  vector_class<cl::sycl::device> get_devices() const override {
-    vector_class<cl::sycl::device> devices;
+  vector_class<trisycl::device> get_devices() const override {
+    vector_class<trisycl::device> devices;
 
     for (const auto &d : c.get_devices())
       devices.push_back(d);
     return devices;
   }
 
-  cl::sycl::cl_uint get_reference_count() const override {
+  trisycl::cl_uint get_reference_count() const override {
     return c.get_info<CL_CONTEXT_REFERENCE_COUNT>();
   }
 

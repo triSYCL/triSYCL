@@ -30,7 +30,7 @@
 #include "CL/sycl/opencl_types.hpp"
 #include "CL/sycl/platform.hpp"
 
-namespace cl::sycl {
+namespace trisycl {
 
 class device_selector;
 class platform;
@@ -179,7 +179,7 @@ public:
       return info::device_type::accelerator;
     else
       // \todo Put a SYCL exception
-      throw std::domain_error("Unknown cl::sycl::info::device_type");
+      throw std::domain_error("Unknown trisycl::info::device_type");
   }
 
 
@@ -232,21 +232,21 @@ public:
   template <info::partition_property prop>
   vector_class<device> create_sub_devices(size_t nbSubDev) const
   {
-    throw cl::sycl::feature_not_supported("unsupported feature\n");
+    throw trisycl::feature_not_supported("unsupported feature\n");
   }
 
   // Available only when prop == info::partition_property::partition_by_counts
   template <info::partition_property prop>
   vector_class<device> create_sub_devices(const vector_class<size_t> &counts) const
   {
-    throw cl::sycl::feature_not_supported("unsupported feature\n");
+    throw trisycl::feature_not_supported("unsupported feature\n");
   }
 
   // Available only when prop == info::partition_property::partition_by_affinity_domain
   template <info::partition_property prop>
   vector_class<device> create_sub_devices(info::partition_affinity_domain affinityDomain) const
   {
-    throw cl::sycl::feature_not_supported("unsupported feature\n");
+    throw trisycl::feature_not_supported("unsupported feature\n");
   }
 
 };
@@ -263,9 +263,9 @@ public:
 */
 namespace std {
 
-template <> struct hash<cl::sycl::device> {
+template <> struct hash<trisycl::device> {
 
-  auto operator()(const cl::sycl::device &d) const {
+  auto operator()(const trisycl::device &d) const {
     // Forward the hashing to the implementation
     return d.hash();
   }

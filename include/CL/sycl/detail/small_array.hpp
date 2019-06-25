@@ -19,7 +19,7 @@
 #include "CL/sycl/detail/debug.hpp"
 
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 /** \addtogroup helpers Some helpers for the implementation
     @{

@@ -12,7 +12,7 @@
 #include "CL/sycl/detail/global_config.hpp"
 #include "CL/sycl/info/param_traits.hpp"
 
-namespace cl::sycl {
+namespace trisycl {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{

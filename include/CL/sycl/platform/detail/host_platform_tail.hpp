@@ -11,7 +11,7 @@
     License. See LICENSE.TXT for details.
 */
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
@@ -25,12 +25,12 @@ namespace cl::sycl::detail {
 
     \return the device list
 */
-vector_class<cl::sycl::device>
+vector_class<::trisycl::device>
 inline host_platform::get_devices(const device_selector &device_selector) const {
   /** If \c get_devices is called with the host platform
       and the right device type, returns the host_device.
   */
-  if (device_selector(cl::sycl::device {}) > 0)
+  if (device_selector(::trisycl::device {}) > 0)
     // Return 1 default device, i.e. the host device
     return { {} };
   else

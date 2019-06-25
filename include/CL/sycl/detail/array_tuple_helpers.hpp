@@ -5,7 +5,7 @@
 
     Some helpers to do array-tuple conversions
 
-    Used for example to implement cl::sycl::vec<> class.
+    Used for example to implement trisycl::vec<> class.
 
     Ronan at Keryell point FR
 
@@ -16,7 +16,7 @@
 #include <tuple>
 #include <utility>
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 /** \addtogroup array_tuple_helpers Helpers to do array and tuple conversion
 

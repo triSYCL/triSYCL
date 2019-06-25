@@ -7,7 +7,7 @@
  */
 
 /* Dummy half implementation - this is enough to get the CTS to build. */
-namespace cl::sycl {
+namespace trisycl {
 
 class half {
 public:

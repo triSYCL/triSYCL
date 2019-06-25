@@ -11,7 +11,7 @@
 
 #include <type_traits>
 
-namespace cl::sycl::vendor::trisycl::scope::detail {
+namespace trisycl::vendor::trisycl::scope::detail {
 
 template <typename ScopedType, typename StorageType = void>
 struct storage_type_trait {

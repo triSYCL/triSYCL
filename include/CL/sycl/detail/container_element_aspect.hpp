@@ -10,7 +10,7 @@
     License. See LICENSE.TXT for details.
 */
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 /** \addtogroup helpers Some helpers for the implementation
     @{

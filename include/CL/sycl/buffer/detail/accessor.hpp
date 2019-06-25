@@ -25,7 +25,7 @@
 #include "CL/sycl/item.hpp"
 #include "CL/sycl/nd_item.hpp"
 
-namespace cl::sycl {
+namespace trisycl {
 
 class handler;
 
@@ -136,7 +136,7 @@ public:
        if a buffer was modified on the host. This is only true because
        host accessors are blocking
      */
-    cl::sycl::context ctx;
+    trisycl::context ctx;
     buf->update_buffer_state(ctx, Mode, get_size(), array.data());
 #endif
   }

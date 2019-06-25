@@ -16,7 +16,7 @@
 #include "CL/sycl/buffer_allocator.hpp"
 #include "CL/sycl/detail/shared_ptr_implementation.hpp"
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 /** \addtogroup data Data access and storage in SYCL
     @{

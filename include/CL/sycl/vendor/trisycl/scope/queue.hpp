@@ -26,7 +26,7 @@
 /// This is an extension providing scope storage for queues
 #define SYCL_VENDOR_TRISYCL_QUEUE_SCOPE 1
 
-namespace cl::sycl::vendor::trisycl::scope {
+namespace trisycl::vendor::trisycl::scope {
 
 /** \addtogroup vendor_trisycl_scope triSYCL extension for
     storage scopes
@@ -47,14 +47,14 @@ class queue
   /* Use the underlying queue implementation that can be shared in the
      SYCL model */
   : public
-    cl::sycl::detail::shared_ptr_implementation<queue<Device, QueueStorage>,
-                                                detail::queue
-                                                <Device, QueueStorage>> {
+    ::trisycl::detail::shared_ptr_implementation<queue<Device, QueueStorage>,
+                                                 detail::queue
+                                                 <Device, QueueStorage>> {
 
   using spi =
-    cl::sycl::detail::shared_ptr_implementation<queue<Device, QueueStorage>,
-                                                detail::queue
-                                                <Device, QueueStorage>>;
+    ::trisycl::detail::shared_ptr_implementation<queue<Device, QueueStorage>,
+                                                 detail::queue
+                                                 <Device, QueueStorage>>;
 
   // Allows the comparison operation to access the implementation
   friend spi;
@@ -92,7 +92,7 @@ public:
       \param[in] q is the real queue to use
       \param[in] d is the a scoped device to use
   */
-  queue(const cl::sycl::queue &q, const Device &d)
+  queue(const ::trisycl::queue &q, const Device &d)
     : spi { new detail::queue<Device, QueueStorage> { q, d } } {}
 
 
@@ -101,7 +101,7 @@ public:
 
       \param[in] d is the a scoped device to use
   */
-  queue(const Device &d) : queue { cl::sycl::queue { d }, d } {}
+  queue(const Device &d) : queue { ::trisycl::queue { d }, d } {}
 
 
   /// It is still copyable
@@ -139,9 +139,9 @@ public:
   auto& platform_scope() { return get_platform().get_storage(); }
 
 
-  /** Add a conversion to \c cl::sycl::queue& so it can be used as
+  /** Add a conversion to \c trisycl::queue& so it can be used as
       a normal queue */
-  operator cl::sycl::queue&() const {
+  operator ::trisycl::queue&() const {
     return implementation->get_underlying_queue();
   }
 
@@ -151,16 +151,16 @@ public:
   struct command_group  {
 
     /// The plain SYCL command-group handler
-    cl::sycl::handler &cgh;
+    ::trisycl::handler &cgh;
     Device &d;
 
-    command_group(cl::sycl::handler &cgh, Device &d)
+    command_group(::trisycl::handler &cgh, Device &d)
       : cgh { cgh }, d { d } {}
 
 
-    /** Add a conversion to \c cl::sycl::handler& so the usual methods
+    /** Add a conversion to \c trisycl::handler& so the usual methods
         such as \c get_access can still work */
-    operator cl::sycl::handler&() {
+    operator ::trisycl::handler&() {
       return cgh;
     }
 
@@ -176,10 +176,10 @@ public:
 
     /// Parallel kernel invocation method on a range iteration space
     template <typename KernelName, int Rank, typename Kernel>
-    void parallel_for(cl::sycl::range<Rank> num_work_items,
+    void parallel_for(::trisycl::range<Rank> num_work_items,
                       Kernel k) {
       cgh.parallel_for<KernelName>(num_work_items,
-                                   [=, *this] (cl::sycl::id<Rank> i) mutable {
+                                   [=, *this] (::trisycl::id<Rank> i) mutable {
                                      k(i, *this);
                                    });
     }
@@ -200,7 +200,7 @@ public:
   template <typename CG>
   void submit(CG cgh) {
     implementation->get_underlying_queue()
-      .submit([&] (cl::sycl::handler &cgh_generic) {
+      .submit([&] (::trisycl::handler &cgh_generic) {
           command_group<CG> cg { cgh_generic, get_device() };
           cgh(cg);
         });

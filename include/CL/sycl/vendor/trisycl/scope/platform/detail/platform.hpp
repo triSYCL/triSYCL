@@ -15,7 +15,7 @@
 
 #include "CL/sycl/platform.hpp"
 
-namespace cl::sycl::vendor::trisycl::scope::detail {
+namespace trisycl::vendor::trisycl::scope::detail {
 
 /** \addtogroup vendor_trisycl_scope triSYCL extension for
     storage scopes
@@ -26,7 +26,7 @@ namespace cl::sycl::vendor::trisycl::scope::detail {
 template <typename PlatformStorage>
 class platform {
   /// The storage-less platform behind the scene
-  cl::sycl::platform p;
+  ::trisycl::platform p;
 
   /** The platform-scoped storage default-initialized
 
@@ -43,7 +43,7 @@ public:
 
       \param[in] p is the real platform to use
   */
-  platform(const cl::sycl::platform &p) : p { p } {}
+  platform(const ::trisycl::platform &p) : p { p } {}
 
   /// Get the platform behind the curtain
   auto get_underlying_platform() {

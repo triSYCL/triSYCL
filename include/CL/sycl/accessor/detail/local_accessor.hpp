@@ -24,7 +24,7 @@
 #include "CL/sycl/item.hpp"
 #include "CL/sycl/nd_item.hpp"
 
-namespace cl::sycl {
+namespace trisycl {
 
 class handler;
 

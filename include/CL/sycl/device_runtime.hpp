@@ -38,7 +38,7 @@
 #include "CL/sycl/device_selector.hpp"
 #include "CL/sycl/platform.hpp"
 
-namespace cl::sycl::drt {
+namespace trisycl::drt {
 /** \addtogroup device_runtime Device-side runtime implementation
     @{
 */
@@ -55,8 +55,8 @@ class accessor :
 
       For now none of the following works yet for various reasons:
       \code
-      cl::sycl::global_ptr<typename Accessor::value_type> buffer;
-      cl::sycl::global<typename Accessor::value_type *> buffer;
+      trisycl::global_ptr<typename Accessor::value_type> buffer;
+      trisycl::global<typename Accessor::value_type *> buffer;
      __global typename Accessor::pointer buffer;
      \endcode
 
@@ -217,7 +217,7 @@ set_kernel(detail::task &task,
   program.build();
 
   // Build a SYCL kernel from the OpenCL kernel
-  cl::sycl::kernel k { boost::compute::kernel { program, kernel_short_name } };
+  trisycl::kernel k { boost::compute::kernel { program, kernel_short_name } };
 
   task.set_kernel(k.implementation);
 #endif

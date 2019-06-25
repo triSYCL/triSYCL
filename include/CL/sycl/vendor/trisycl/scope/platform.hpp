@@ -26,7 +26,7 @@
 /// This is an extension providing scope storage for platforms
 #define SYCL_VENDOR_TRISYCL_PLATFORM_SCOPE 1
 
-namespace cl::sycl::vendor::trisycl::scope {
+namespace trisycl::vendor::trisycl::scope {
 
 /** \addtogroup vendor_trisycl_scope triSYCL extension for
     storage scopes
@@ -44,14 +44,14 @@ class platform
   /* Use the underlying platform implementation that can be shared in the
      SYCL model */
   : public
-    cl::sycl::detail::shared_ptr_implementation<platform<PlatformStorage>,
-                                                detail::platform
-                                                <PlatformStorage>> {
+    ::trisycl::detail::shared_ptr_implementation<platform<PlatformStorage>,
+                                                 detail::platform
+                                                 <PlatformStorage>> {
 
   using spi =
-    cl::sycl::detail::shared_ptr_implementation<platform<PlatformStorage>,
-                                                detail::platform
-                                                <PlatformStorage>>;
+    ::trisycl::detail::shared_ptr_implementation<platform<PlatformStorage>,
+                                                 detail::platform
+                                                 <PlatformStorage>>;
 
   // Allows the comparison operation to access the implementation
   friend spi;
@@ -76,14 +76,14 @@ public:
 
       \param[in] p is the real platform to use
   */
-  platform(const cl::sycl::platform &p) :
+  platform(const ::trisycl::platform &p) :
     spi {
       new detail::platform<PlatformStorage> { p }
     } {}
 
 
   /// By default use the default (host) platform
-  platform() : platform(cl::sycl::platform {}) {}
+  platform() : platform(::trisycl::platform {}) {}
 
 
   /// It is still copyable
@@ -100,9 +100,9 @@ public:
   }
 
 
-  /** Add a conversion to \c cl::sycl::platform& so it can be used as
+  /** Add a conversion to \c trisycl::platform& so it can be used as
       a normal platform */
-    operator cl::sycl::platform&() const {
+    operator ::trisycl::platform&() const {
       return implementation->get_underlying_platform();
     }
 

@@ -11,7 +11,7 @@
 
 #include <memory>
 
-namespace cl::sycl {
+namespace trisycl {
 
 /** \addtogroup data Data access and storage in SYCL
     @{

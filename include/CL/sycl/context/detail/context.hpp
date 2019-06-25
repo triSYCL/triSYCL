@@ -13,7 +13,7 @@
 #include "CL/sycl/platform.hpp"
 #include "CL/sycl/detail/default_classes.hpp"
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
   /** \addtogroup execution Platforms, contexts, devices and queues
       @{
@@ -23,11 +23,11 @@ class context {
 public:
 
 #ifdef TRISYCL_OPENCL
-  /// Return the underlying \c cl_context of the \c cl::sycl::context
+  /// Return the underlying \c cl_context of the \c trisycl::context
   virtual cl_context get() const = 0;
 
   /** Return the underlying \c boost::compute::context
-      of the \c cl::sycl::context
+      of the \c trisycl::context
   */
   virtual boost::compute::context &get_boost_compute() = 0;
 
@@ -41,7 +41,7 @@ public:
   virtual bool is_host() const = 0;
 
   /// Returns the SYCL platform that the context is initialized for
-  virtual cl::sycl::platform get_platform() const = 0;
+  virtual trisycl::platform get_platform() const = 0;
 
   /** \todo virtual cannot be templated
       template <info::context Param>
@@ -50,10 +50,10 @@ public:
   */
 
   /// Returns the set of devices that are part of this context.
-  virtual vector_class<cl::sycl::device> get_devices() const = 0;
+  virtual vector_class<trisycl::device> get_devices() const = 0;
 
   /// Returns the reference count of underlying CL context, or 0 on host.
-  virtual cl::sycl::cl_uint get_reference_count() const = 0;
+  virtual trisycl::cl_uint get_reference_count() const = 0;
 
   /// Virtual to call the real destructor
   virtual ~context() {}

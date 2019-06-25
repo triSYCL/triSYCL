@@ -27,7 +27,7 @@
 #endif
 #include <boost/circular_buffer.hpp>
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 /** \addtogroup data Data access and storage in SYCL
     @{

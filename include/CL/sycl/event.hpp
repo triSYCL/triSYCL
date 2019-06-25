@@ -15,8 +15,7 @@
 #include "CL/sycl/event/detail/opencl_event.hpp"
 #endif
 
-namespace cl {
-namespace sycl {
+namespace trisycl {
 
 /// SYCL event.
 class event : public detail::shared_ptr_implementation<event, detail::event> {
@@ -124,13 +123,12 @@ inline auto event::get_profiling_info<info::event_profiling::command_end>() cons
 
 }
 
-}
 
 namespace std {
 
-template <> struct hash<cl::sycl::event> {
+template <> struct hash<trisycl::event> {
 
-  auto operator()(const cl::sycl::event &e) const {
+  auto operator()(const trisycl::event &e) const {
     // Forward the hashing to the implementation
     return e.hash();
   }

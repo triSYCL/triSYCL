@@ -13,7 +13,7 @@
 #include <mutex>
 #include <unordered_map>
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 
 /** A simple thread safe cache mechanism to cache std::shared_ptr of

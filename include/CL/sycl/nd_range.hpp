@@ -14,7 +14,7 @@
 #include "CL/sycl/id.hpp"
 #include "CL/sycl/range.hpp"
 
-namespace cl::sycl {
+namespace trisycl {
 
 /** \addtogroup parallelism Expressing parallelism through kernels
     @{

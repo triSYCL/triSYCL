@@ -15,7 +15,7 @@
 
 #include "CL/sycl/device.hpp"
 
-namespace cl::sycl::vendor::trisycl::scope::detail {
+namespace trisycl::vendor::trisycl::scope::detail {
 
 /** \addtogroup vendor_trisycl_scope triSYCL extension for
     storage scopes
@@ -29,7 +29,7 @@ template <typename DeviceStorage
           , typename ScopedPlatform>
 class device {
   /// The storage-less device behind the scene
-  cl::sycl::device d;
+  ::trisycl::device d;
 
   /** The device-scoped storage default-initialized
 
@@ -50,7 +50,7 @@ public:
 
       \param[in] d is the real device to use
   */
-  device(const cl::sycl::device &d,
+  device(const ::trisycl::device &d,
          const ScopedPlatform &p)
     : d { d }, platform_with_scope { p } {}
 
@@ -60,7 +60,7 @@ public:
 
       \param[in] d is the real device to use
   */
-  device(const cl::sycl::device &d) : d { d } {}
+  device(const ::trisycl::device &d) : d { d } {}
 
   /// Get the device behind the curtain
   auto& get_underlying_device() {

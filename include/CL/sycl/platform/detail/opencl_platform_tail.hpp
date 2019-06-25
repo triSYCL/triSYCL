@@ -11,7 +11,7 @@
     License. See LICENSE.TXT for details.
 */
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
@@ -26,13 +26,13 @@ namespace cl::sycl::detail {
 
     \return the device list
 */
-vector_class<cl::sycl::device>
-inline opencl_platform::get_devices(const device_selector &device_selector) const {
-  vector_class<cl::sycl::device> devices;
+vector_class<::trisycl::device> inline
+opencl_platform::get_devices(const device_selector &device_selector) const {
+  vector_class<::trisycl::device> devices;
   // Add the desired OpenCL devices
   for (const auto &d : get_boost_compute().devices()) {
     // Get the SYCL device from the Boost Compute device
-    cl::sycl::device sycl_dev { d };
+    ::trisycl::device sycl_dev { d };
     /* Return the devices with the good criterion according to the selector.
        By calling devices on the \c boost::compute::platform we know that
        we iterate only over the device belonging to the current platform,

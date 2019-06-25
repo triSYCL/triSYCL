@@ -28,7 +28,7 @@
 #include "CL/sycl/parallelism.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"
 
-namespace cl::sycl {
+namespace trisycl {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{

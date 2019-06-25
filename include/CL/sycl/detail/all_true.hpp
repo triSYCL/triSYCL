@@ -8,7 +8,7 @@
     License. See LICENSE.TXT for details.
 */
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 template <bool...> struct bool_pack;
 

@@ -22,7 +22,7 @@
 #include "CL/sycl/info/param_traits.hpp"
 #include "CL/sycl/platform.hpp"
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 /// SYCL OpenCL device
 class opencl_device : public detail::device {
@@ -82,7 +82,7 @@ public:
 
       Return synchronous errors via the SYCL exception class.
   */
-  cl::sycl::platform get_platform() const override {
+  trisycl::platform get_platform() const override {
     return d.platform();
   }
 

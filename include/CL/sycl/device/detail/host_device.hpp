@@ -20,7 +20,7 @@
 #include "CL/sycl/info/param_traits.hpp"
 #include "CL/sycl/platform.hpp"
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 /** SYCL host device
 
@@ -83,7 +83,7 @@ public:
 
       \todo To be implemented
   */
-  cl::sycl::platform get_platform() const override {
+  trisycl::platform get_platform() const override {
     TRISYCL_UNIMPL;
     return {};
   }
@@ -100,11 +100,11 @@ public:
   get_info(info::device param) const override {
     switch (param) {
     TRISYCL_DEFINE_DEVICE_HOST_INFO_TEMPLATE(max_work_group_size, static_cast<std::size_t>(8))
-    TRISYCL_DEFINE_DEVICE_HOST_INFO_TEMPLATE(max_work_item_sizes, (cl::sycl::id<3>{ 128, 128, 128 }))
-    TRISYCL_DEFINE_DEVICE_HOST_INFO_TEMPLATE(max_compute_units, static_cast<cl::sycl::cl_uint>(8))
+    TRISYCL_DEFINE_DEVICE_HOST_INFO_TEMPLATE(max_work_item_sizes, (trisycl::id<3>{ 128, 128, 128 }))
+    TRISYCL_DEFINE_DEVICE_HOST_INFO_TEMPLATE(max_compute_units, static_cast<trisycl::cl_uint>(8))
     TRISYCL_DEFINE_DEVICE_HOST_INFO_TEMPLATE(device_type, info::device_type::host)
     TRISYCL_DEFINE_DEVICE_HOST_INFO_TEMPLATE(local_mem_type, info::local_mem_type::global)
-    TRISYCL_DEFINE_DEVICE_HOST_INFO_TEMPLATE(local_mem_size, static_cast<cl::sycl::cl_ulong>(32768))
+    TRISYCL_DEFINE_DEVICE_HOST_INFO_TEMPLATE(local_mem_size, static_cast<trisycl::cl_ulong>(32768))
     default:
       return 0;
     }

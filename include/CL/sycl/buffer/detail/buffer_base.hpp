@@ -26,7 +26,7 @@
 #include "CL/sycl/command_group/detail/task.hpp"
 #include "CL/sycl/context.hpp"
 
-namespace cl::sycl {
+namespace trisycl {
 
 class handler;
 
@@ -69,14 +69,14 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
   boost::optional<std::promise<void>> notify_buffer_destructor;
 
   /// To track contexts in which the data is up-to-date
-  std::unordered_set<cl::sycl::context> fresh_ctx;
+  std::unordered_set<trisycl::context> fresh_ctx;
 
 #ifdef TRISYCL_OPENCL
   /** Buffer-side cache that keeps the \c boost::compute::buffer (and the
       underlying \c cl_buffer ) so that if the buffer already exists inside
       the same context it is not recreated.
    */
-  std::unordered_map<cl::sycl::context, boost::compute::buffer> buffer_cache;
+  std::unordered_map<trisycl::context, boost::compute::buffer> buffer_cache;
 #endif
 
   /** Create a buffer base and marks the host context as the context that
@@ -84,7 +84,7 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
       \todo Use lazy allocation for the context tracking set
    */
   buffer_base() : number_of_users { 0 },
-                  fresh_ctx { cl::sycl::context {} } {}
+                  fresh_ctx { trisycl::context {} } {}
 
 
   /// The destructor waits for not being used anymore
@@ -159,21 +159,21 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
 
 #ifdef TRISYCL_OPENCL
   /// Check if the data of this buffer is up-to-date in a certain context
-  bool is_data_up_to_date(const cl::sycl::context& ctx) {
+  bool is_data_up_to_date(const trisycl::context& ctx) {
     return fresh_ctx.count(ctx);
   }
 
 
   /// Check if the buffer is already cached for a certain context
-  bool is_cached(const cl::sycl::context& ctx) {
+  bool is_cached(const trisycl::context& ctx) {
     return buffer_cache.count(ctx);
   }
 
 
-  /** Create a \c boost::compute::buffer for this \c cl::sycl::buffer in the
+  /** Create a \c boost::compute::buffer for this \c trisycl::buffer in the
       cache and associate it with a given context
   */
-  void create_in_cache(const cl::sycl::context& ctx, size_t size,
+  void create_in_cache(const trisycl::context& ctx, size_t size,
                        cl_mem_flags flags, void* data) {
     buffer_cache[ctx] = boost::compute::buffer
       { ctx.get_boost_compute(),
@@ -188,7 +188,7 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
       if the host version is not already up-to-date
   */
   void sync_with_host(std::size_t size, void* data) {
-    cl::sycl::context host_context;
+    trisycl::context host_context;
     if (!is_data_up_to_date(host_context) && !fresh_ctx.empty()) {
       /* We know that the context(s) in \c fresh_ctx hold the most recent
          version of the buffer
@@ -205,7 +205,7 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
       update the state of the buffer according to the context in which
       the accessor is created and the access mode
   */
-  void update_buffer_state(const cl::sycl::context& target_ctx,
+  void update_buffer_state(const trisycl::context& target_ctx,
                            access::mode mode, std::size_t size, void* data) {
     /* The \c cl_buffer we put in the cache might get accessed again in the
        future, this means that we have to always to create it in read/write
@@ -309,7 +309,7 @@ struct buffer_base : public std::enable_shared_from_this<buffer_base> {
 
 
   /// Returns the cl_buffer for a given context.
-  boost::compute::buffer get_cl_buffer(const cl::sycl::context& context) {
+  boost::compute::buffer get_cl_buffer(const trisycl::context& context) {
     return buffer_cache[context];
   }
 

@@ -13,14 +13,14 @@
     License. See LICENSE.TXT for details.
 */
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
   template <typename T>
   class alignment {
     public: static constexpr int value = 0;
   };
 
   template <typename DataType, int NumElements>
-  class alignment<cl::sycl::vec<DataType, NumElements>> {
+  class alignment<::trisycl::vec<DataType, NumElements>> {
     // Vec3's are SYCL spec defined to be aligned as a Vec4.
     static constexpr int get_align() {
       if  constexpr (NumElements == 3)

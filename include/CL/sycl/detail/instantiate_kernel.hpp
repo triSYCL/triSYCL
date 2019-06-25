@@ -17,7 +17,7 @@
 
 #include "CL/sycl/command_group/detail/task.hpp"
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 /** Avoid the interprocedural optimization to remove these arguments
     in the kernel instantiation by relying on some dummy static variables.

@@ -11,7 +11,7 @@
     License. See LICENSE.TXT for details.
 */
 
-namespace cl::sycl {
+namespace trisycl {
 
 /** Rounding mode for vector conversions.
  */
@@ -76,7 +76,7 @@ using __swizzled_vec__ = vec<DataType, numElements>;
 #include "CL/sycl/detail/alignment_helper.hpp"
 #include "CL/sycl/vec/detail/vec.hpp"
 
-namespace cl::sycl {
+namespace trisycl {
   /** Accessors to access hex indexed elements of a vector
    */
 #define TRISYCL_DECLARE_S(x)                          \
@@ -111,7 +111,7 @@ namespace cl::sycl {
   }
 
 template<typename DataType>
-class alignas(detail::alignment_v<cl::sycl::vec<DataType, 1>>)
+class alignas(detail::alignment_v<::trisycl::vec<DataType, 1>>)
   vec<DataType, 1> : public detail::vec<DataType, 1> {
   using base_vec = detail::vec<DataType, 1>;
 
@@ -142,7 +142,7 @@ public:
 };
 
 template<typename DataType>
-class alignas(detail::alignment_v<cl::sycl::vec<DataType, 2>>)
+class alignas(detail::alignment_v<::trisycl::vec<DataType, 2>>)
   vec<DataType, 2> : public detail::vec<DataType, 2> {
   using base_vec = detail::vec<DataType, 2>;
 
@@ -209,7 +209,7 @@ public:
 };
 
 template<typename DataType>
-class alignas(detail::alignment_v<cl::sycl::vec<DataType, 3>>)
+class alignas(detail::alignment_v<::trisycl::vec<DataType, 3>>)
   vec<DataType, 3> : public detail::vec<DataType, 3> {
   using base_vec = detail::vec<DataType, 3>;
 
@@ -287,7 +287,7 @@ public:
 };
 
 template<typename DataType>
-class alignas(detail::alignment_v<cl::sycl::vec<DataType, 4>>)
+class alignas(detail::alignment_v<::trisycl::vec<DataType, 4>>)
   vec<DataType, 4> : public detail::vec<DataType, 4> {
   using base_vec = detail::vec<DataType, 4>;
 
@@ -421,7 +421,7 @@ public:
 #undef TRISYCL_GEN_SWIZ4
 
 template<typename DataType>
-class alignas(detail::alignment_v<cl::sycl::vec<DataType, 8>>)
+class alignas(detail::alignment_v<::trisycl::vec<DataType, 8>>)
   vec<DataType, 8> : public detail::vec<DataType, 8> {
   using base_vec = detail::vec<DataType, 8>;
 
@@ -475,7 +475,7 @@ public:
 
 
 template<typename DataType>
-class alignas(detail::alignment_v<cl::sycl::vec<DataType, 16>>)
+class alignas(detail::alignment_v<::trisycl::vec<DataType, 16>>)
   vec<DataType, 16> : public detail::vec<DataType, 16> {
   using base_vec = detail::vec<DataType, 16>;
 

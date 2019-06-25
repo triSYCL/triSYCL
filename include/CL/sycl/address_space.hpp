@@ -16,7 +16,7 @@
     License. See LICENSE.TXT for details.
 */
 
-namespace cl::sycl {
+namespace trisycl {
 
 /** \addtogroup address_spaces Dealing with OpenCL address spaces
     @{
@@ -40,7 +40,7 @@ enum class address_space {
 #include "CL/sycl/address_space/detail/address_space.hpp"
 
 
-namespace cl::sycl {
+namespace trisycl {
 
 /** \addtogroup address_spaces
     @{
@@ -131,7 +131,7 @@ template <typename Pointer, access::address_space AS>
 using multi_ptr = detail::address_space_ptr<Pointer, AS>;
 
 
-/** Construct a cl::sycl::multi_ptr<> with the right type
+/** Construct a trisycl::multi_ptr<> with the right type
 
     \param pointer is the address with its address space to point to
 
@@ -141,7 +141,7 @@ multi_ptr<T, AS> make_ptr(multi_ptr<T, AS> pointer) {
   return pointer;
 }
 
-/** Construct a cl::sycl::multi_ptr<> with the right type
+/** Construct a trisycl::multi_ptr<> with the right type
 
     \todo Implement the case with a plain pointer
 */

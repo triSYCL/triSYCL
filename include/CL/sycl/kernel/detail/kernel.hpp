@@ -19,7 +19,7 @@
 #include "CL/sycl/queue/detail/queue.hpp"
 #include "CL/sycl/range.hpp"
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{

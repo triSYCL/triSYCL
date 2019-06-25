@@ -21,7 +21,7 @@
 #include "CL/sycl/queue/detail/queue.hpp"
 
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 /// An abstraction of the OpenCL kernel
 class opencl_kernel : public detail::kernel,

@@ -11,7 +11,7 @@
 
 #include "CL/sycl/exception.hpp"
 
-namespace cl::sycl {
+namespace trisycl {
 
 /** \addtogroup error_handling Error handling
     @{

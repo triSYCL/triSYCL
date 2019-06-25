@@ -13,7 +13,7 @@
 
 #include "CL/sycl/platform.hpp"
 
-namespace cl::sycl {
+namespace trisycl {
 
 class device;
 class device_selector;

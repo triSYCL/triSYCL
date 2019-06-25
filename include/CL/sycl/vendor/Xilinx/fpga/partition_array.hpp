@@ -21,7 +21,7 @@
     @{
 */
 
-namespace cl::sycl::vendor::xilinx {
+namespace trisycl::vendor::xilinx {
 
 /** Kind of array partition
 

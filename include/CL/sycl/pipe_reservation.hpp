@@ -15,7 +15,7 @@
 
 #include "CL/sycl/pipe_reservation/detail/pipe_reservation.hpp"
 
-namespace cl::sycl {
+namespace trisycl {
 
 /** \addtogroup data Data access and storage in SYCL
     @{
@@ -29,7 +29,7 @@ template <typename PipeAccessor>
 struct pipe_reservation {
   using accessor_type = PipeAccessor;
   static constexpr bool blocking =
-    (accessor_type::target == cl::sycl::access::target::blocking_pipe);
+    (accessor_type::target == trisycl::access::target::blocking_pipe);
   using accessor_detail = typename accessor_type::accessor_detail;
   /// The STL-like types
   using value_type = typename accessor_type::value_type;

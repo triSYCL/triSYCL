@@ -23,7 +23,7 @@
 #include "CL/sycl/buffer/detail/buffer_waiter.hpp"
 #include "CL/sycl/range.hpp"
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 
 /** \addtogroup data Data access and storage in SYCL
@@ -99,7 +99,7 @@ private:
   // Track if data have been modified
   bool modified = false;
 
-  cl::sycl::context host_context { cl::sycl::device {} };
+  trisycl::context host_context { trisycl::device {} };
 
 public:
 
@@ -147,7 +147,7 @@ public:
 
       The ownership of the host_data is shared between the runtime and the
       user. In order to enable both the user application and the SYCL
-      runtime to use the same pointer, a cl::sycl::mutex_class is
+      runtime to use the same pointer, a trisycl::mutex_class is
       used.
   */
   buffer(shared_ptr_class<T> &host_data, const range<Dimensions> &r) :
@@ -354,7 +354,7 @@ private:
       \todo Use \c if \c constexpr when it is available with C++17
   */
   template <typename BaseType = T, typename DataType>
-  void call_update_buffer_state(cl::sycl::context ctx, access::mode mode,
+  void call_update_buffer_state(trisycl::context ctx, access::mode mode,
                                 size_t size, DataType* data,
                                 std::enable_if_t<!std::is_const<BaseType>
                                 ::value>* = 0) {
@@ -366,7 +366,7 @@ private:
       the type of the data in the buffer is \c const
    */
   template <typename BaseType = T, typename DataType>
-  void call_update_buffer_state(cl::sycl::context ctx, access::mode mode,
+  void call_update_buffer_state(trisycl::context ctx, access::mode mode,
                                 size_t size, DataType* data,
                                 std::enable_if_t<std::is_const<BaseType>
                                 ::value>* = 0) { }
@@ -374,7 +374,7 @@ private:
 
 public:
 
-  /** Get a \c future to wait from inside the \c cl::sycl::buffer in
+  /** Get a \c future to wait from inside the \c trisycl::buffer in
       case there is something to copy back to the host
 
       \return A \c future in the \c optional if there is something to

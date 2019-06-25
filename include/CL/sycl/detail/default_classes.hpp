@@ -19,7 +19,7 @@
  */
 #include <memory>
 #include <vector>
-namespace cl::sycl {
+namespace trisycl {
 
 template <class T, class Alloc = std::allocator<T>>
 using vector_class = std::vector<T, Alloc>;
@@ -32,7 +32,7 @@ using vector_class = std::vector<T, Alloc>;
 /** The string type to be used as SYCL string
  */
 #include <string>
-namespace cl::sycl {
+namespace trisycl {
 
 using string_class = std::string;
 
@@ -44,7 +44,7 @@ using string_class = std::string;
 /** The functional type to be used as SYCL function
  */
 #include <functional>
-namespace cl::sycl {
+namespace trisycl {
 
 template <class R, class... ArgTypes>
 using function_class = std::function<R(ArgTypes...)>;
@@ -57,7 +57,7 @@ using function_class = std::function<R(ArgTypes...)>;
 /** The mutex type to be used as SYCL mutex
  */
 #include <mutex>
-namespace cl::sycl {
+namespace trisycl {
 
 using mutex_class = std::mutex;
 
@@ -69,7 +69,7 @@ using mutex_class = std::mutex;
 /** The unique pointer type to be used as SYCL unique pointer
  */
 #include <memory>
-namespace cl::sycl {
+namespace trisycl {
 
 template <class T, class D = std::default_delete<T>>
 using unique_ptr_class = std::unique_ptr<T[], D>;
@@ -82,7 +82,7 @@ using unique_ptr_class = std::unique_ptr<T[], D>;
 /** The shared pointer type to be used as SYCL shared pointer
  */
 #include <memory>
-namespace cl::sycl {
+namespace trisycl {
 
 template <class T>
 using shared_ptr_class = std::shared_ptr<T>;
@@ -95,7 +95,7 @@ using shared_ptr_class = std::shared_ptr<T>;
 /** The weak pointer type to be used as SYCL weak pointer
  */
 #include <memory>
-namespace cl::sycl {
+namespace trisycl {
 
 template <class T>
 using weak_ptr_class = std::weak_ptr<T>;
@@ -108,7 +108,7 @@ using weak_ptr_class = std::weak_ptr<T>;
 /** The hash type to be used as SYCL hash
  */
 #include <functional>
-namespace cl::sycl {
+namespace trisycl {
 
 template <class T>
 using hash_class = std::hash<T>;
@@ -121,7 +121,7 @@ using hash_class = std::hash<T>;
 /** The exception pointer type to be used as SYCL exception pointer
  */
 #include <exception>
-namespace cl::sycl {
+namespace trisycl {
 
 using exception_ptr_class = std::exception_ptr;
 

@@ -17,7 +17,7 @@
 #include "CL/sycl/info/platform.hpp"
 #include "CL/sycl/context/detail/context.hpp"
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 
 /** \addtogroup execution Platforms, contexts, devices and queues
@@ -33,7 +33,7 @@ class host_context : public detail::context,
 public:
 
 #ifdef TRISYCL_OPENCL
-  /** Return the underlying \c cl_context of the \c cl::sycl::context
+  /** Return the underlying \c cl_context of the \c trisycl::context
 
       This throws an error since there is no OpenCL context associated
       to the host device.
@@ -75,7 +75,7 @@ public:
 
       Return synchronous errors via the SYCL exception class.
   */
-  cl::sycl::platform get_platform() const override {
+  trisycl::platform get_platform() const override {
     // Return the host platform
     return {};
   }
@@ -101,14 +101,14 @@ public:
 
       \todo To be implemented
   */
-  vector_class<cl::sycl::device>
+  vector_class<trisycl::device>
   get_devices() const override {
     // Return just the host device
     return { {} };
   }
 
   /// Return 0 since the context is a SYCL host context
-  cl::sycl::cl_uint get_reference_count() const override {
+  trisycl::cl_uint get_reference_count() const override {
     return 0;
   }
 };

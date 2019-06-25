@@ -11,7 +11,7 @@
     License. See LICENSE.TXT for details.
 */
 
-namespace cl::sycl {
+namespace trisycl {
 
 /* has to be inline as it references default_selector */
 inline context::context(const vector_class<device> &deviceList,

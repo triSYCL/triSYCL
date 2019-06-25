@@ -9,7 +9,7 @@
     License. See LICENSE.TXT for details.
 */
 
-namespace cl::sycl::info {
+namespace trisycl::info {
 
 /** Implement a meta-function from (T, value) to T' to express the return type
     value of an OpenCL function of kind (T, value)

@@ -18,7 +18,7 @@
 #include "CL/sycl/detail/alignment_helper.hpp"
 #include "CL/sycl/detail/array_tuple_helpers.hpp"
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 template <typename, int>
 class vec;
@@ -28,12 +28,13 @@ using __swizzled_base_vec__ = detail::vec<DataType, numElements>;
 /** Small OpenCL vector class
  */
 template <typename DataType, int NumElements>
-class alignas(alignment_v<cl::sycl::vec<DataType, NumElements>>)
+class alignas(alignment_v<::trisycl::vec<DataType, NumElements>>)
   vec : public detail::small_array<DataType,
-                                  cl::sycl::vec<DataType, NumElements>,
+                                  ::trisycl::vec<DataType, NumElements>,
                                   NumElements> {
   using basic_type = typename detail::small_array<DataType,
-                                                  cl::sycl::vec<DataType, NumElements>,
+                                                  ::trisycl::vec<DataType,
+                                                                 NumElements>,
                                                   NumElements>;
 public:
 
@@ -71,7 +72,7 @@ private:
   }
 
   template <typename V, typename Element, int s>
-  static auto flatten(const cl::sycl::vec<Element, s> i) {
+  static auto flatten(const ::trisycl::vec<Element, s> i) {
     static_assert(s <= V::dimension,
                   "The element i will not fit in the vector");
     return static_cast<std::array<Element, s>>(i);
@@ -106,7 +107,7 @@ private:
   template <typename T, typename F, std::size_t... Is>
   static auto apply_unary_functor_impl(T tuple, F f,
                                        std::index_sequence<Is...>) {
-    return cl::sycl::vec<DataType, NumElements>{f(std::get<Is>(tuple))...};
+    return ::trisycl::vec<DataType, NumElements>{f(std::get<Is>(tuple))...};
   }
 
   template<typename T, typename F>
@@ -123,7 +124,7 @@ private:
   template<typename T, typename T2, typename F, std::size_t... Is>
   static auto apply_binary_functor_impl(T xTuple, T2 yTuple, F f,
     std::index_sequence<Is...>) {
-    return cl::sycl::vec<DataType, NumElements>{f(std::get<Is>(xTuple),
+    return ::trisycl::vec<DataType, NumElements>{f(std::get<Is>(xTuple),
        std::get<Is>(yTuple))...};
   }
 
@@ -158,7 +159,7 @@ public:
     // The alignment for the vec classes are equivalent to the vec's size e.g.
     // a vec of 4 floats would be aligned to 16 bytes which is also the vec's
     // size.
-    return alignment_v<cl::sycl::vec<DataType, NumElements>>;
+    return alignment_v<::trisycl::vec<DataType, NumElements>>;
   }
 
   template<typename convertT, rounding_mode roundingMode>
@@ -202,7 +203,7 @@ public:
   // It would require an extra apply_binary_functor overload and a test to find
   // the smallest index_sequence between the calling vector and x.
   template <typename T, int size, typename F>
-  auto zip(cl::sycl::vec<T, size> x, F f) const {
+  auto zip(::trisycl::vec<T, size> x, F f) const {
      static_assert(size == NumElements,
        "zip currently does not support vec's of differing element size");
      return apply_binary_functor(*this, x, f);

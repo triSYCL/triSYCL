@@ -9,7 +9,7 @@
     License. See LICENSE.TXT for details.
 */
 
-namespace cl::sycl {
+namespace trisycl {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{

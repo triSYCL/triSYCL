@@ -11,7 +11,7 @@
 
 #include <exception>
 
-namespace cl::sycl {
+namespace trisycl {
 
 /** \addtogroup error_handling Error handling
     @{
@@ -105,19 +105,19 @@ class kernel_error : public runtime_error {
 };
 
 
-/// Error regarding the cl::sycl::accessor objects defined
+/// Error regarding the trisycl::accessor objects defined
 class accessor_error : public runtime_error {
   using runtime_error::runtime_error;
 };
 
 
-/// Error regarding the cl::sycl::nd_range specified for the SYCL kernel
+/// Error regarding the trisycl::nd_range specified for the SYCL kernel
 class nd_range_error : public runtime_error {
   using runtime_error::runtime_error;
 };
 
 
-/// Error regarding associated cl::sycl::event objects
+/// Error regarding associated trisycl::event objects
 class event_error : public runtime_error {
   using runtime_error::runtime_error;
 };

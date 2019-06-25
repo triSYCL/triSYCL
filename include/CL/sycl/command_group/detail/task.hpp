@@ -25,7 +25,7 @@
 #include "CL/sycl/kernel.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 /** The abstraction to represent SYCL tasks executing inside command_group
 
@@ -249,7 +249,7 @@ struct task : public std::enable_shared_from_this<task>,
 
 
   /// Set the OpenCL-compatible kernel running this task if any
-  void set_kernel(const std::shared_ptr<cl::sycl::detail::kernel> &k) {
+  void set_kernel(const std::shared_ptr<trisycl::detail::kernel> &k) {
     kernel = k;
   }
 
@@ -258,7 +258,7 @@ struct task : public std::enable_shared_from_this<task>,
 
       \todo Specify this error in the spec
   */
-  cl::sycl::detail::kernel &get_kernel() {
+  trisycl::detail::kernel &get_kernel() {
     if (!kernel)
       throw non_cl_error("Cannot use an OpenCL kernel in this context");
     return *kernel;

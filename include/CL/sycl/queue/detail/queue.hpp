@@ -21,7 +21,7 @@
 #include "CL/sycl/device.hpp"
 #include "CL/sycl/detail/debug.hpp"
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 /** Some implementation details about the SYCL queue
  */
@@ -99,14 +99,14 @@ struct queue : detail::debug<detail::queue> {
 
       Report errors using SYCL exception classes.
   */
-  virtual cl::sycl::context get_context() const = 0;
+  virtual trisycl::context get_context() const = 0;
 
 
   /** Return the SYCL device the queue is associated with
 
       Report errors using SYCL exception classes.
   */
-  virtual cl::sycl::device get_device() const = 0;
+  virtual trisycl::device get_device() const = 0;
 
 
   /// Return whether the queue is executing on a SYCL host device

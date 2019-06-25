@@ -18,7 +18,7 @@
 #include "CL/sycl/device.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 /** Some implementation details about the SYCL queue
 
@@ -51,7 +51,7 @@ class host_queue : public detail::queue,
 
 
   /// Return the SYCL host queue's host context
-  cl::sycl::context get_context() const override {
+  trisycl::context get_context() const override {
     // Return the default context for the default device
     // which is the host context
     return { get_device() };
@@ -59,7 +59,7 @@ class host_queue : public detail::queue,
 
 
   /// Return the SYCL host device the host queue is associated with
-  cl::sycl::device get_device() const override {
+  trisycl::device get_device() const override {
     // Return the default device which is the host device
     return {};
   }

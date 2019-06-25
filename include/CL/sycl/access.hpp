@@ -9,8 +9,8 @@
     License. See LICENSE.TXT for details.
 */
 
-// SYCL dwells in the cl::sycl namespace
-namespace cl::sycl {
+// SYCL dwells in the trisycl namespace
+namespace trisycl {
 
 /** \addtogroup data Data access and storage in SYCL
 
@@ -24,8 +24,8 @@ namespace cl::sycl {
 */
 namespace access {
   /* By using "enum mode" here instead of "enum struct mode", we have for
-     example "write" appearing both as cl::sycl::access::mode::write and
-     cl::sycl::access::write, instead of only the last one. This seems
+     example "write" appearing both as trisycl::access::mode::write and
+     trisycl::access::write, instead of only the last one. This seems
      more conform to the specification. */
 
   /// This describes the type of the access mode to be used via accessor

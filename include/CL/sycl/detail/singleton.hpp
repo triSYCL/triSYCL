@@ -16,7 +16,7 @@
 #include <boost/operators.hpp>
 
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 /// Provide a singleton factory
 template <typename T>

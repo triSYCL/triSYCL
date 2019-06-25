@@ -15,7 +15,7 @@
 #include "CL/sycl/device.hpp"
 #include "CL/sycl/queue/detail/queue.hpp"
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 /// Some implementation details about the SYCL queue
 class opencl_queue : public detail::queue,
@@ -43,13 +43,13 @@ class opencl_queue : public detail::queue,
 
 
   /// Return the SYCL context associated to the queue
-  cl::sycl::context get_context() const override {
+  trisycl::context get_context() const override {
     return q.get_context();
   }
 
 
   /// Return the SYCL device associated to the queue
-  cl::sycl::device get_device() const override {
+  trisycl::device get_device() const override {
     return q.get_device();
   }
 
@@ -81,7 +81,7 @@ public:
       always the same for a given device?
   */
   static std::shared_ptr<detail::queue>
-  instance(const cl::sycl::device &d) {
+  instance(const trisycl::device &d) {
     return instance (boost::compute::command_queue {
         // For now, create a new context every time
         boost::compute::context { d.get_boost_compute() },

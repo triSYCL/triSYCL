@@ -22,7 +22,7 @@
 #include "CL/sycl/pipe_reservation.hpp"
 #include "CL/sycl/pipe/detail/pipe_accessor.hpp"
 
-namespace cl::sycl {
+namespace trisycl {
 
 template <typename T, int Dimensions, typename Allocator>
 class buffer;

@@ -11,7 +11,7 @@
 
 #include "CL/sycl/detail/singleton.hpp"
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 class host_event : public detail::event,
                    public detail::singleton<host_event> {

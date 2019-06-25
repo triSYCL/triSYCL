@@ -13,7 +13,7 @@
 
 #include "CL/sycl/platform.hpp"
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
@@ -50,7 +50,7 @@ public:
 
 
   /// Return the platform of device
-  virtual cl::sycl::platform get_platform() const = 0;
+  virtual trisycl::platform get_platform() const = 0;
 
 
   /// Query the device for OpenCL info::device info

@@ -14,7 +14,7 @@
 
 #include "CL/sycl/pipe/detail/pipe.hpp"
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 template <typename T,
           int Dimensions,
@@ -32,7 +32,7 @@ class pipe_reservation :
     public detail::debug<detail::pipe_reservation<PipeAccessor>> {
   using accessor_type = PipeAccessor;
   static constexpr bool blocking =
-    (accessor_type::target == cl::sycl::access::target::blocking_pipe);
+    (accessor_type::target == trisycl::access::target::blocking_pipe);
   using value_type = typename accessor_type::value_type;
   using reference = typename accessor_type::reference;
 

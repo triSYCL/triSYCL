@@ -17,7 +17,7 @@
 #include <boost/compute.hpp>
 #endif
 
-namespace cl::sycl {
+namespace trisycl {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
@@ -40,7 +40,7 @@ inline device device_selector::select_device(vector_class<platform> platforms) c
     }
   }
   if (best_id == -1)
-    throw cl::sycl::runtime_error("Could not find device");
+    throw ::trisycl::runtime_error("Could not find device");
 
   return best_device;
 }

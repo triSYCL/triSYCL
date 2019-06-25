@@ -12,7 +12,7 @@
     @{
 */
 
-namespace cl::sycl::vendor::xilinx {
+namespace trisycl::vendor::xilinx {
 
 /** Apply dataflow execution on functions or loops
 

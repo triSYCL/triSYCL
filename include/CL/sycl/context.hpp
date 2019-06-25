@@ -24,7 +24,7 @@
 #include "CL/sycl/info/context.hpp"
 #include "CL/sycl/platform.hpp"
 
-namespace cl::sycl {
+namespace trisycl {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
@@ -160,7 +160,7 @@ public:
   }
 
   /** Return the underlying \c boost::compute::context
-      of the \c cl::sycl::context
+      of the \c trisycl::context
   */
   boost::compute::context &get_boost_compute() const {
     return implementation->get_boost_compute();
@@ -231,8 +231,8 @@ inline auto context::get_info<info::context::devices>() const {
 
 namespace std {
 
-  template <> struct hash<cl::sycl::context> {
-    auto operator()(const cl::sycl::context &c) const {
+  template <> struct hash<trisycl::context> {
+    auto operator()(const trisycl::context &c) const {
     return c.hash();
     }
   };

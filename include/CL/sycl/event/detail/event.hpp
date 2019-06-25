@@ -9,7 +9,7 @@
     License. See LICENSE.TXT for details.
 */
 
-namespace cl::sycl::detail {
+namespace trisycl::detail {
 
 struct event : detail::debug<detail::event> {
 

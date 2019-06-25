@@ -20,7 +20,7 @@
 #include "CL/sycl/command_group/detail/task.hpp"
 #include "CL/sycl/detail/debug.hpp"
 
-namespace cl::sycl {
+namespace trisycl {
 
 class handler;
 

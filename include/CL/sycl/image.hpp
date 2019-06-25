@@ -11,7 +11,7 @@
     License. See LICENSE.TXT for details.
 */
 
-namespace cl::sycl {
+namespace trisycl {
 
 /** \addtogroup data
 

@@ -13,7 +13,7 @@
 #include "CL/sycl/opencl_types.hpp"
 #include "CL/sycl/info/param_traits.hpp"
 
-namespace cl::sycl::info {
+namespace trisycl::info {
 
 using queue_profiling = bool;
 
@@ -25,9 +25,9 @@ enum class queue : int {
   reference_count,
 };
 
-TRISYCL_INFO_PARAM_TRAITS(queue::context, cl::sycl::context)
-TRISYCL_INFO_PARAM_TRAITS(queue::device, cl::sycl::device)
-TRISYCL_INFO_PARAM_TRAITS(queue::reference_count, cl::sycl::cl_uint)
+TRISYCL_INFO_PARAM_TRAITS(queue::context, trisycl::context)
+TRISYCL_INFO_PARAM_TRAITS(queue::device, trisycl::device)
+TRISYCL_INFO_PARAM_TRAITS(queue::reference_count, trisycl::cl_uint)
 
 }
 #endif

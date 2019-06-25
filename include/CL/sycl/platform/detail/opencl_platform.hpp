@@ -20,7 +20,7 @@
 #include "CL/sycl/info/param_traits.hpp"
 #include "CL/sycl/platform/detail/platform.hpp"
 
-namespace cl::sycl {
+namespace trisycl {
 
 class device;
 
@@ -98,7 +98,7 @@ public:
 
       \return the device list
   */
-  vector_class<cl::sycl::device>
+  vector_class<trisycl::device>
   get_devices(const device_selector &device_selector) const override;
 
 private:
