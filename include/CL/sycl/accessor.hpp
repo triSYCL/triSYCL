@@ -42,16 +42,19 @@ class handler;
 template <typename DataType,
           int Dimensions,
           access::mode AccessMode,
-          access::target Target = access::target::global_buffer>
+          access::target Target = access::target::global_buffer,
+          access::placeholder PlaceHolder = access::placeholder::false_t>
 class accessor :
     public detail::shared_ptr_implementation<accessor<DataType,
                                                       Dimensions,
                                                       AccessMode,
-                                                      Target>,
+                                                      Target,
+                                                      PlaceHolder>,
                                              detail::accessor<DataType,
                                                               Dimensions,
                                                               AccessMode,
-                                                              Target>>,
+                                                              Target,
+                                                              PlaceHolder>>,
     public detail::container_element_aspect<DataType> {
 
  public:
@@ -64,7 +67,8 @@ class accessor :
   using accessor_detail = typename detail::accessor<DataType,
                                                     Dimensions,
                                                     AccessMode,
-                                                    Target>;
+                                                    Target,
+                                                    PlaceHolder>;
 
   // The type encapsulating the implementation
   using implementation_t = typename accessor::shared_ptr_implementation;
@@ -95,11 +99,11 @@ class accessor :
   template <typename Allocator>
   accessor(buffer<DataType, Dimensions, Allocator> &target_buffer,
            handler &command_group_handler) : implementation_t {
-    new detail::accessor<DataType, Dimensions, AccessMode, Target> {
+    new detail::accessor<DataType, Dimensions, AccessMode, Target, PlaceHolder> {
       target_buffer.implementation->implementation, command_group_handler }
   } {
     static_assert(Target == access::target::global_buffer
-                  || Target == access::target::constant_buffer,
+                  || Target == access::target::constant_buffer || PlaceHolder == access::placeholder::true_t,
                   "access target should be global_buffer or constant_buffer "
                   "when a handler is used");
     // Now the implementation is created, register it
@@ -116,11 +120,11 @@ class accessor :
   template <typename Allocator>
   accessor(buffer<DataType, Dimensions, Allocator> &target_buffer)
     : implementation_t {
-    new detail::accessor<DataType, Dimensions, AccessMode, Target> {
+    new detail::accessor<DataType, Dimensions, AccessMode, Target, PlaceHolder> {
       target_buffer.implementation->implementation }
   } {
-    static_assert(Target == access::target::host_buffer,
-                  "without a handler, access target should be host_buffer");
+    static_assert(Target == access::target::host_buffer || PlaceHolder == access::placeholder::true_t,
+                  "without a handler or placeholder, access target should be host_buffer");
   }
 
 
@@ -163,7 +167,8 @@ class accessor :
     : implementation_t { new detail::accessor<DataType,
                                               Dimensions,
                                               AccessMode,
-                                              access::target::local> {
+                                              access::target::local,
+                                              access::placeholder::false_t> {
       allocation_size, command_group_handler
         }
   }
@@ -193,6 +198,10 @@ class accessor :
     return implementation->get_range();
   }
 
+  /** Returns if the accessor is a placeholder
+   \todo
+   */
+  constexpr bool is_placeholder() const { return PlaceHolder == access::placeholder::true_t; }
 
   /** Returns the total number of elements behind the accessor
 

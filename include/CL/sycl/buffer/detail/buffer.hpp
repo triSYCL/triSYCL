@@ -57,7 +57,8 @@ private:
   template <typename U,
             int D,
             access::mode Mode,
-            access::target Target /* = access::global_buffer */>
+            access::target Target /* = access::global_buffer */,
+            access::placeholder PlaceHolder>
     friend class detail::accessor;
 
   /** The allocator to be used when some memory is needed

@@ -34,7 +34,8 @@ namespace detail {
 template <typename T,
           int Dimensions,
           access::mode Mode,
-          access::target Target>
+          access::target Target,
+          access::placeholder PlaceHolder>
 class accessor;
 
 /** \addtogroup data Data access and storage in SYCL
@@ -50,11 +51,11 @@ class accessor;
 template <typename T,
           int Dimensions,
           access::mode Mode>
-class accessor<T, Dimensions, Mode, access::target::local> :
+class accessor<T, Dimensions, Mode, access::target::local, access::placeholder::false_t> :
     public detail::debug<accessor<T,
                                   Dimensions,
                                   Mode,
-                                  access::target::local>> {
+                                  access::target::local, access::placeholder::false_t>> {
 
   /// The implementation is a multi_array_ref wrapper
   using array_type = boost::multi_array_ref<T, Dimensions>;
