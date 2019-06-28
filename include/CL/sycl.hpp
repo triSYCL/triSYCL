@@ -4,7 +4,7 @@
 /** \file
 
     This is the main SYCL 1.2.1 interoperability header to expose
-    triSYCL into the ::cl::sycl namespace
+    triSYCL into the \c ::cl::sycl namespace
 */
 
 #include "../trisycl.hpp"

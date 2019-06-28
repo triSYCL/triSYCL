@@ -4,15 +4,14 @@
 /** \file
 
     This is the SYCL extension header to expose triSYCL directly into
-    the shorter ::sycl namespace instead of the official SYCL 1.2.1
-    ::cl::sycl
+    the shorter \c ::sycl namespace instead of the official SYCL 1.2.1
+    \c ::cl::sycl
 */
 
 
 #include "trisycl.hpp"
 
 namespace sycl = ::trisycl;
-
 
 /*
     # Some Emacs stuff:

@@ -8,13 +8,13 @@
     This is the main triSYCL C++ header file to experiment with the
     SYCL specification.
 
-    It declares everything into the ::trisycl namespace instead of
-    ::cl::sycl for SYCL 1.2.1 to express triSYCL specific extensions
+    It declares everything into the \c ::trisycl namespace instead of
+    \c ::cl::sycl for SYCL 1.2.1 to express triSYCL specific extensions
     and to be used in full or partially with other SYCL
     implementations without naming conflict.
 
     You can use CL/sycl.hpp or sycl.hpp headers instead to use this
-    implementation with the usual ::cl::sycl or ::sycl namespaces.
+    implementation with the usual \c ::cl::sycl or \c ::sycl namespaces.
 
     For more information about SYCL:
     http://www.khronos.org/sycl/
