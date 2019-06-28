@@ -11,8 +11,8 @@
 
 #include <cstddef>
 
-#include "CL/sycl/id.hpp"
-#include "CL/sycl/range.hpp"
+#include "trisycl/id.hpp"
+#include "trisycl/range.hpp"
 
 namespace trisycl {
 

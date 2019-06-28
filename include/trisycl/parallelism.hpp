@@ -12,9 +12,9 @@
 */
 
 #ifdef TRISYCL_TBB
-#include "CL/sycl/parallelism/detail/parallelism_tbb.hpp"
+#include "trisycl/parallelism/detail/parallelism_tbb.hpp"
 #else
-#include "CL/sycl/parallelism/detail/parallelism.hpp"
+#include "trisycl/parallelism/detail/parallelism.hpp"
 #endif
 
 /*

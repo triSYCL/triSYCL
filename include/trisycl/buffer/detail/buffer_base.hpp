@@ -23,8 +23,8 @@
 #include <unordered_set>
 #include <utility>
 
-#include "CL/sycl/command_group/detail/task.hpp"
-#include "CL/sycl/context.hpp"
+#include "trisycl/command_group/detail/task.hpp"
+#include "trisycl/context.hpp"
 
 namespace trisycl {
 

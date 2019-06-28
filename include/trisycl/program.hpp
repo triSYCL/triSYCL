@@ -13,11 +13,11 @@
 #include <boost/compute.hpp>
 #endif
 
-#include "CL/sycl/detail/debug.hpp"
-#include "CL/sycl/detail/shared_ptr_implementation.hpp"
-#include "CL/sycl/detail/unimplemented.hpp"
-#include "CL/sycl/kernel.hpp"
-#include "CL/sycl/program/detail/program.hpp"
+#include "trisycl/detail/debug.hpp"
+#include "trisycl/detail/shared_ptr_implementation.hpp"
+#include "trisycl/detail/unimplemented.hpp"
+#include "trisycl/kernel.hpp"
+#include "trisycl/program/detail/program.hpp"
 
 namespace trisycl {
 

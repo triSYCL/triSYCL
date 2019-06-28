@@ -15,22 +15,22 @@
 #include <boost/compute.hpp>
 #endif
 
-#include "CL/sycl/context.hpp"
-#include "CL/sycl/detail/debug.hpp"
-#include "CL/sycl/detail/default_classes.hpp"
-#include "CL/sycl/detail/unimplemented.hpp"
-#include "CL/sycl/detail/property.hpp"
-#include "CL/sycl/device.hpp"
-#include "CL/sycl/device_selector.hpp"
-#include "CL/sycl/exception.hpp"
-#include "CL/sycl/handler.hpp"
-#include "CL/sycl/info/param_traits.hpp"
-#include "CL/sycl/info/queue.hpp"
-#include "CL/sycl/parallelism.hpp"
-#include "CL/sycl/property_list.hpp"
-#include "CL/sycl/queue/detail/host_queue.hpp"
+#include "trisycl/context.hpp"
+#include "trisycl/detail/debug.hpp"
+#include "trisycl/detail/default_classes.hpp"
+#include "trisycl/detail/unimplemented.hpp"
+#include "trisycl/detail/property.hpp"
+#include "trisycl/device.hpp"
+#include "trisycl/device_selector.hpp"
+#include "trisycl/exception.hpp"
+#include "trisycl/handler.hpp"
+#include "trisycl/info/param_traits.hpp"
+#include "trisycl/info/queue.hpp"
+#include "trisycl/parallelism.hpp"
+#include "trisycl/property_list.hpp"
+#include "trisycl/queue/detail/host_queue.hpp"
 #ifdef TRISYCL_OPENCL
-#include "CL/sycl/queue/detail/opencl_queue.hpp"
+#include "trisycl/queue/detail/opencl_queue.hpp"
 #endif
 
 namespace trisycl {

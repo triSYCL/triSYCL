@@ -13,7 +13,7 @@
 #include <iterator>
 #include <memory>
 
-#include "CL/sycl/pipe_reservation/detail/pipe_reservation.hpp"
+#include "trisycl/pipe_reservation/detail/pipe_reservation.hpp"
 
 namespace trisycl {
 

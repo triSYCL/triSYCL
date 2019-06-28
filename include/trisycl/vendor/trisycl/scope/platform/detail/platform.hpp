@@ -13,7 +13,7 @@
     License. See LICENSE.TXT for details.
 */
 
-#include "CL/sycl/platform.hpp"
+#include "trisycl/platform.hpp"
 
 namespace trisycl::vendor::trisycl::scope::detail {
 

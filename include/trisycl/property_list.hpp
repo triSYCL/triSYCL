@@ -1,8 +1,8 @@
 #ifndef TRISYCL_SYCL_PROPERTY_LIST_HPP
 #define TRISYCL_SYCL_PROPERTY_LIST_HPP
 
-#include "CL/sycl/detail/all_true.hpp"
-#include "CL/sycl/property/queue.hpp"
+#include "trisycl/detail/all_true.hpp"
+#include "trisycl/property/queue.hpp"
 
 namespace trisycl {
 

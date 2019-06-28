@@ -37,7 +37,7 @@ enum class address_space {
 /// @} End the address_spaces Doxygen group
 }
 
-#include "CL/sycl/address_space/detail/address_space.hpp"
+#include "trisycl/address_space/detail/address_space.hpp"
 
 
 namespace trisycl {

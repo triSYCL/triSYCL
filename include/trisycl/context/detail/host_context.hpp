@@ -9,13 +9,13 @@
     License. See LICENSE.TXT for details.
 */
 
-#include "CL/sycl/detail/default_classes.hpp"
-#include "CL/sycl/detail/unimplemented.hpp"
-#include "CL/sycl/detail/singleton.hpp"
-#include "CL/sycl/exception.hpp"
-#include "CL/sycl/info/param_traits.hpp"
-#include "CL/sycl/info/platform.hpp"
-#include "CL/sycl/context/detail/context.hpp"
+#include "trisycl/detail/default_classes.hpp"
+#include "trisycl/detail/unimplemented.hpp"
+#include "trisycl/detail/singleton.hpp"
+#include "trisycl/exception.hpp"
+#include "trisycl/info/param_traits.hpp"
+#include "trisycl/info/platform.hpp"
+#include "trisycl/context/detail/context.hpp"
 
 namespace trisycl::detail {
 

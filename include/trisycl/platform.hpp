@@ -13,16 +13,16 @@
 #include <boost/compute.hpp>
 #endif
 
-#include "CL/sycl/detail/default_classes.hpp"
-#include "CL/sycl/detail/global_config.hpp"
+#include "trisycl/detail/default_classes.hpp"
+#include "trisycl/detail/global_config.hpp"
 
-#include "CL/sycl/detail/shared_ptr_implementation.hpp"
-#include "CL/sycl/info/device.hpp"
-#include "CL/sycl/platform/detail/host_platform.hpp"
+#include "trisycl/detail/shared_ptr_implementation.hpp"
+#include "trisycl/info/device.hpp"
+#include "trisycl/platform/detail/host_platform.hpp"
 #ifdef TRISYCL_OPENCL
-#include "CL/sycl/platform/detail/opencl_platform.hpp"
+#include "trisycl/platform/detail/opencl_platform.hpp"
 #endif
-#include "CL/sycl/platform/detail/platform.hpp"
+#include "trisycl/platform/detail/platform.hpp"
 
 namespace trisycl {
 

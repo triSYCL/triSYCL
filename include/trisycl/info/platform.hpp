@@ -9,8 +9,8 @@
     License. See LICENSE.TXT for details.
 */
 
-#include "CL/sycl/detail/global_config.hpp"
-#include "CL/sycl/info/param_traits.hpp"
+#include "trisycl/detail/global_config.hpp"
+#include "trisycl/info/param_traits.hpp"
 
 namespace trisycl {
 

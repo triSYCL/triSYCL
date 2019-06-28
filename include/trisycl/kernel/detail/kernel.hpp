@@ -13,11 +13,11 @@
 #include <boost/compute.hpp>
 #endif
 
-#include "CL/sycl/detail/debug.hpp"
-#include "CL/sycl/detail/unimplemented.hpp"
-//#include "CL/sycl/info/kernel.hpp"
-#include "CL/sycl/queue/detail/queue.hpp"
-#include "CL/sycl/range.hpp"
+#include "trisycl/detail/debug.hpp"
+#include "trisycl/detail/unimplemented.hpp"
+//#include "trisycl/info/kernel.hpp"
+#include "trisycl/queue/detail/queue.hpp"
+#include "trisycl/range.hpp"
 
 namespace trisycl::detail {
 

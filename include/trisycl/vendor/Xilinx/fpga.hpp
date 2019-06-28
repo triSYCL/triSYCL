@@ -11,9 +11,9 @@
 
 // Some include files for Xilinx-specific features.
 // SSDM functions needs to be declared before their implementation
-#include "CL/sycl/vendor/Xilinx/fpga/ssdm_inst.hpp"
-#include "CL/sycl/vendor/Xilinx/fpga/opt_decorate_func.hpp"
-#include "CL/sycl/vendor/Xilinx/fpga/partition_array.hpp"
+#include "trisycl/vendor/Xilinx/fpga/ssdm_inst.hpp"
+#include "trisycl/vendor/Xilinx/fpga/opt_decorate_func.hpp"
+#include "trisycl/vendor/Xilinx/fpga/partition_array.hpp"
 
 /*
     # Some Emacs stuff:

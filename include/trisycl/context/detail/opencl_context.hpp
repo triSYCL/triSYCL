@@ -12,14 +12,14 @@
 
 #include <boost/compute.hpp>
 
-#include "CL/sycl/detail/default_classes.hpp"
-#include "CL/sycl/detail/unimplemented.hpp"
-#include "CL/sycl/detail/cache.hpp"
+#include "trisycl/detail/default_classes.hpp"
+#include "trisycl/detail/unimplemented.hpp"
+#include "trisycl/detail/cache.hpp"
 
-#include "CL/sycl/context/detail/context.hpp"
-#include "CL/sycl/platform.hpp"
-#include "CL/sycl/info/param_traits.hpp"
-#include "CL/sycl/exception.hpp"
+#include "trisycl/context/detail/context.hpp"
+#include "trisycl/platform.hpp"
+#include "trisycl/info/param_traits.hpp"
+#include "trisycl/exception.hpp"
 
 
 namespace trisycl::detail {

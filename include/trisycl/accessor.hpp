@@ -11,16 +11,16 @@
 
 #include <cstddef>
 
-#include "CL/sycl/access.hpp"
-#include "CL/sycl/accessor/detail/local_accessor.hpp"
-#include "CL/sycl/buffer/detail/accessor.hpp"
-#include "CL/sycl/detail/container_element_aspect.hpp"
-#include "CL/sycl/detail/shared_ptr_implementation.hpp"
-#include "CL/sycl/id.hpp"
-#include "CL/sycl/item.hpp"
-#include "CL/sycl/nd_item.hpp"
-#include "CL/sycl/pipe_reservation.hpp"
-#include "CL/sycl/pipe/detail/pipe_accessor.hpp"
+#include "trisycl/access.hpp"
+#include "trisycl/accessor/detail/local_accessor.hpp"
+#include "trisycl/buffer/detail/accessor.hpp"
+#include "trisycl/detail/container_element_aspect.hpp"
+#include "trisycl/detail/shared_ptr_implementation.hpp"
+#include "trisycl/id.hpp"
+#include "trisycl/item.hpp"
+#include "trisycl/nd_item.hpp"
+#include "trisycl/pipe_reservation.hpp"
+#include "trisycl/pipe/detail/pipe_accessor.hpp"
 
 namespace trisycl {
 

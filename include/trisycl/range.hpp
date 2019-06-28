@@ -11,7 +11,7 @@
 
 #include <functional>
 #include <numeric>
-#include "CL/sycl/detail/small_array.hpp"
+#include "trisycl/detail/small_array.hpp"
 
 namespace trisycl {
 

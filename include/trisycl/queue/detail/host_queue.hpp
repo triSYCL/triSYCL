@@ -13,10 +13,10 @@
 #include <boost/compute.hpp>
 #endif
 
-#include "CL/sycl/context.hpp"
-#include "CL/sycl/detail/debug.hpp"
-#include "CL/sycl/device.hpp"
-#include "CL/sycl/queue/detail/queue.hpp"
+#include "trisycl/context.hpp"
+#include "trisycl/detail/debug.hpp"
+#include "trisycl/device.hpp"
+#include "trisycl/queue/detail/queue.hpp"
 
 namespace trisycl::detail {
 

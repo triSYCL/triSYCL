@@ -19,11 +19,11 @@
 
 #include <type_traits>
 
-#include "CL/sycl/detail/shared_ptr_implementation.hpp"
-#include "CL/sycl/device.hpp"
-#include "CL/sycl/vendor/trisycl/scope/detail/util.hpp"
-#include "CL/sycl/vendor/trisycl/scope/device/detail/device.hpp"
-#include "CL/sycl/vendor/trisycl/scope/platform.hpp"
+#include "trisycl/detail/shared_ptr_implementation.hpp"
+#include "trisycl/device.hpp"
+#include "trisycl/vendor/trisycl/scope/detail/util.hpp"
+#include "trisycl/vendor/trisycl/scope/device/detail/device.hpp"
+#include "trisycl/vendor/trisycl/scope/platform.hpp"
 
 /// This is an extension providing scope storage for devices
 #define SYCL_VENDOR_TRISYCL_DEVICE_SCOPE 1

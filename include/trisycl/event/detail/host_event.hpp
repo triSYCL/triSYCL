@@ -9,7 +9,7 @@
     License. See LICENSE.TXT for details.
 */
 
-#include "CL/sycl/detail/singleton.hpp"
+#include "trisycl/detail/singleton.hpp"
 
 namespace trisycl::detail {
 

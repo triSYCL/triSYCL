@@ -73,8 +73,8 @@ using __swizzled_vec__ = vec<DataType, numElements>;
 /** Small OpenCL vector class
 */
 
-#include "CL/sycl/detail/alignment_helper.hpp"
-#include "CL/sycl/vec/detail/vec.hpp"
+#include "trisycl/detail/alignment_helper.hpp"
+#include "trisycl/vec/detail/vec.hpp"
 
 namespace trisycl {
   /** Accessors to access hex indexed elements of a vector
@@ -205,7 +205,7 @@ public:
   __swizzled_vec__<DataType, 1> even() {
     return base_vec::swizzle(elem::s0);
   }
-#include "CL/sycl/vec/detail/swiz2.hpp"
+#include "trisycl/vec/detail/swiz2.hpp"
 };
 
 template<typename DataType>
@@ -283,7 +283,7 @@ public:
   __swizzled_vec__<DataType, 2> even() {
     return base_vec::swizzle(elem::s0, elem::s2);
   }
-#include "CL/sycl/vec/detail/swiz3.hpp"
+#include "trisycl/vec/detail/swiz3.hpp"
 };
 
 template<typename DataType>
@@ -412,8 +412,8 @@ public:
   __swizzled_vec__<DataType, 2> even() {
     return base_vec::swizzle(elem::s0, elem::s2);
   }
-#include "CL/sycl/vec/detail/swiz4.hpp"
-#include "CL/sycl/vec/detail/swiz_rgba.hpp"
+#include "trisycl/vec/detail/swiz4.hpp"
+#include "trisycl/vec/detail/swiz_rgba.hpp"
 };
 
 #undef TRISYCL_GEN_SWIZ2

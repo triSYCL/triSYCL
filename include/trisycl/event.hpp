@@ -8,11 +8,11 @@
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
 */
-#include "CL/sycl/info/event.hpp"
-#include "CL/sycl/event/detail/event.hpp"
-#include "CL/sycl/event/detail/host_event.hpp"
+#include "trisycl/info/event.hpp"
+#include "trisycl/event/detail/event.hpp"
+#include "trisycl/event/detail/host_event.hpp"
 #ifdef TRISYCL_OPENCL
-#include "CL/sycl/event/detail/opencl_event.hpp"
+#include "trisycl/event/detail/opencl_event.hpp"
 #endif
 
 namespace trisycl {

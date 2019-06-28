@@ -15,8 +15,8 @@
     License. See LICENSE.TXT for details.
 */
 
-#include "CL/sycl/detail/alignment_helper.hpp"
-#include "CL/sycl/detail/array_tuple_helpers.hpp"
+#include "trisycl/detail/alignment_helper.hpp"
+#include "trisycl/detail/array_tuple_helpers.hpp"
 
 namespace trisycl::detail {
 

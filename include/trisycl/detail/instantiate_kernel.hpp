@@ -15,7 +15,7 @@
 
 #include <tuple>
 
-#include "CL/sycl/command_group/detail/task.hpp"
+#include "trisycl/command_group/detail/task.hpp"
 
 namespace trisycl::detail {
 

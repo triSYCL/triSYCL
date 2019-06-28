@@ -25,7 +25,7 @@
 #ifdef TRISYCL_OPENCL
 #include <boost/compute/types/fundamental.hpp>
 #else
-#include "CL/sycl/vec.hpp"
+#include "trisycl/vec.hpp"
 #endif
 
 

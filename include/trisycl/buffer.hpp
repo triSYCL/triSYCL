@@ -14,18 +14,18 @@
 #include <memory>
 #include <type_traits>
 
-#include "CL/sycl/access.hpp"
-#include "CL/sycl/accessor.hpp"
-#include "CL/sycl/buffer/detail/buffer.hpp"
-#include "CL/sycl/buffer/detail/buffer_waiter.hpp"
-#include "CL/sycl/buffer_allocator.hpp"
-#include "CL/sycl/detail/global_config.hpp"
-#include "CL/sycl/detail/shared_ptr_implementation.hpp"
-#include "CL/sycl/event.hpp"
-#include "CL/sycl/handler.hpp"
-#include "CL/sycl/id.hpp"
-#include "CL/sycl/queue.hpp"
-#include "CL/sycl/range.hpp"
+#include "trisycl/access.hpp"
+#include "trisycl/accessor.hpp"
+#include "trisycl/buffer/detail/buffer.hpp"
+#include "trisycl/buffer/detail/buffer_waiter.hpp"
+#include "trisycl/buffer_allocator.hpp"
+#include "trisycl/detail/global_config.hpp"
+#include "trisycl/detail/shared_ptr_implementation.hpp"
+#include "trisycl/event.hpp"
+#include "trisycl/handler.hpp"
+#include "trisycl/id.hpp"
+#include "trisycl/queue.hpp"
+#include "trisycl/range.hpp"
 
 namespace trisycl {
 

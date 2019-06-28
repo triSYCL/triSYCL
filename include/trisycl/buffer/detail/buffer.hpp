@@ -17,11 +17,11 @@
 // \todo Use C++17 optional when it is mainstream
 #include <boost/optional.hpp>
 
-#include "CL/sycl/access.hpp"
-#include "CL/sycl/buffer/detail/accessor.hpp"
-#include "CL/sycl/buffer/detail/buffer_base.hpp"
-#include "CL/sycl/buffer/detail/buffer_waiter.hpp"
-#include "CL/sycl/range.hpp"
+#include "trisycl/access.hpp"
+#include "trisycl/buffer/detail/accessor.hpp"
+#include "trisycl/buffer/detail/buffer_base.hpp"
+#include "trisycl/buffer/detail/buffer_waiter.hpp"
+#include "trisycl/range.hpp"
 
 namespace trisycl::detail {
 

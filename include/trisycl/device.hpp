@@ -17,18 +17,18 @@
 #include <boost/compute.hpp>
 #endif
 
-#include "CL/sycl/detail/default_classes.hpp"
+#include "trisycl/detail/default_classes.hpp"
 
-#include "CL/sycl/detail/shared_ptr_implementation.hpp"
-#include "CL/sycl/device/detail/host_device.hpp"
+#include "trisycl/detail/shared_ptr_implementation.hpp"
+#include "trisycl/device/detail/host_device.hpp"
 #ifdef TRISYCL_OPENCL
-#include "CL/sycl/device/detail/opencl_device.hpp"
+#include "trisycl/device/detail/opencl_device.hpp"
 #endif
-#include "CL/sycl/id.hpp"
-#include "CL/sycl/info/device.hpp"
-#include "CL/sycl/device_selector.hpp"
-#include "CL/sycl/opencl_types.hpp"
-#include "CL/sycl/platform.hpp"
+#include "trisycl/id.hpp"
+#include "trisycl/info/device.hpp"
+#include "trisycl/device_selector.hpp"
+#include "trisycl/opencl_types.hpp"
+#include "trisycl/platform.hpp"
 
 namespace trisycl {
 

@@ -17,12 +17,12 @@
 #endif
 #include <boost/multi_array.hpp>
 
-#include "CL/sycl/access.hpp"
-#include "CL/sycl/command_group/detail/task.hpp"
-#include "CL/sycl/detail/debug.hpp"
-#include "CL/sycl/id.hpp"
-#include "CL/sycl/item.hpp"
-#include "CL/sycl/nd_item.hpp"
+#include "trisycl/access.hpp"
+#include "trisycl/command_group/detail/task.hpp"
+#include "trisycl/detail/debug.hpp"
+#include "trisycl/id.hpp"
+#include "trisycl/item.hpp"
+#include "trisycl/nd_item.hpp"
 
 namespace trisycl {
 

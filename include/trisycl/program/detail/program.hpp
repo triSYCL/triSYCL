@@ -12,8 +12,8 @@
 #include <boost/compute.hpp>
 #endif
 
-#include "CL/sycl/detail/debug.hpp"
-#include "CL/sycl/detail/unimplemented.hpp"
+#include "trisycl/detail/debug.hpp"
+#include "trisycl/detail/unimplemented.hpp"
 
 namespace trisycl::detail {
 

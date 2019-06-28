@@ -16,16 +16,16 @@
 #include <cstddef>
 #include <boost/multi_array.hpp>
 
-#include "CL/sycl/group.hpp"
-#include "CL/sycl/h_item.hpp"
-#include "CL/sycl/id.hpp"
-#include "CL/sycl/item.hpp"
-#include "CL/sycl/nd_item.hpp"
-#include "CL/sycl/nd_range.hpp"
-#include "CL/sycl/range.hpp"
+#include "trisycl/group.hpp"
+#include "trisycl/h_item.hpp"
+#include "trisycl/id.hpp"
+#include "trisycl/item.hpp"
+#include "trisycl/nd_item.hpp"
+#include "trisycl/nd_range.hpp"
+#include "trisycl/range.hpp"
 
 #if defined(TRISYCL_USE_OPENCL_ND_RANGE)
-#include "CL/sycl/detail/SPIR/opencl_spir_helpers.hpp"
+#include "trisycl/detail/SPIR/opencl_spir_helpers.hpp"
 #endif
 
 #ifdef _OPENMP

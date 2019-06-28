@@ -12,13 +12,13 @@
 
 #include <boost/compute.hpp>
 
-#include "CL/sycl/detail/default_classes.hpp"
+#include "trisycl/detail/default_classes.hpp"
 
-#include "CL/sycl/detail/cache.hpp"
-#include "CL/sycl/device.hpp"
-#include "CL/sycl/exception.hpp"
-#include "CL/sycl/info/param_traits.hpp"
-#include "CL/sycl/platform/detail/platform.hpp"
+#include "trisycl/detail/cache.hpp"
+#include "trisycl/device.hpp"
+#include "trisycl/exception.hpp"
+#include "trisycl/info/param_traits.hpp"
+#include "trisycl/platform/detail/platform.hpp"
 
 namespace trisycl {
 

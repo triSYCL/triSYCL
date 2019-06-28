@@ -15,14 +15,14 @@
 */
 #include <type_traits>
 
-#include "CL/sycl/detail/SPIR/opencl_spir_req.h"
-#include "CL/sycl/group.hpp"
-#include "CL/sycl/h_item.hpp"
-#include "CL/sycl/id.hpp"
-#include "CL/sycl/item.hpp"
-#include "CL/sycl/nd_item.hpp"
-#include "CL/sycl/nd_range.hpp"
-#include "CL/sycl/range.hpp"
+#include "trisycl/detail/SPIR/opencl_spir_req.h"
+#include "trisycl/group.hpp"
+#include "trisycl/h_item.hpp"
+#include "trisycl/id.hpp"
+#include "trisycl/item.hpp"
+#include "trisycl/nd_item.hpp"
+#include "trisycl/nd_range.hpp"
+#include "trisycl/range.hpp"
 
 /** \addtogroup opencl_spir_helpers
     @{

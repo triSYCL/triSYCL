@@ -9,7 +9,7 @@
     License. See LICENSE.TXT for details.
 */
 
-#include "CL/sycl/exception.hpp"
+#include "trisycl/exception.hpp"
 
 namespace trisycl {
 

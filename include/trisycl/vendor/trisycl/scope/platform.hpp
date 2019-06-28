@@ -19,9 +19,9 @@
 
 #include <type_traits>
 
-#include "CL/sycl/detail/shared_ptr_implementation.hpp"
-#include "CL/sycl/platform.hpp"
-#include "CL/sycl/vendor/trisycl/scope/platform/detail/platform.hpp"
+#include "trisycl/detail/shared_ptr_implementation.hpp"
+#include "trisycl/platform.hpp"
+#include "trisycl/vendor/trisycl/scope/platform/detail/platform.hpp"
 
 /// This is an extension providing scope storage for platforms
 #define SYCL_VENDOR_TRISYCL_PLATFORM_SCOPE 1

@@ -12,8 +12,8 @@
 #include <algorithm>
 #include <cstddef>
 
-#include "CL/sycl/detail/small_array.hpp"
-#include "CL/sycl/range.hpp"
+#include "trisycl/detail/small_array.hpp"
+#include "trisycl/range.hpp"
 
 namespace trisycl {
 

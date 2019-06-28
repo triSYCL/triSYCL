@@ -9,9 +9,9 @@
     License. See LICENSE.TXT for details.
 */
 
-#include "CL/sycl/detail/default_classes.hpp"
+#include "trisycl/detail/default_classes.hpp"
 
-#include "CL/sycl/platform.hpp"
+#include "trisycl/platform.hpp"
 
 namespace trisycl::detail {
 

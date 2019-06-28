@@ -13,10 +13,10 @@
 #include <memory>
 #include <type_traits>
 
-#include "CL/sycl/access.hpp"
-#include "CL/sycl/detail/debug.hpp"
-#include "CL/sycl/pipe/detail/pipe.hpp"
-#include "CL/sycl/pipe_reservation/detail/pipe_reservation.hpp"
+#include "trisycl/access.hpp"
+#include "trisycl/detail/debug.hpp"
+#include "trisycl/pipe/detail/pipe.hpp"
+#include "trisycl/pipe_reservation/detail/pipe_reservation.hpp"
 
 namespace trisycl {
 

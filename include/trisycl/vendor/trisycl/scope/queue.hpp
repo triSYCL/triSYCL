@@ -19,9 +19,9 @@
 
 #include <type_traits>
 
-#include "CL/sycl/detail/shared_ptr_implementation.hpp"
-#include "CL/sycl/queue.hpp"
-#include "CL/sycl/vendor/trisycl/scope/queue/detail/queue.hpp"
+#include "trisycl/detail/shared_ptr_implementation.hpp"
+#include "trisycl/queue.hpp"
+#include "trisycl/vendor/trisycl/scope/queue/detail/queue.hpp"
 
 /// This is an extension providing scope storage for queues
 #define SYCL_VENDOR_TRISYCL_QUEUE_SCOPE 1

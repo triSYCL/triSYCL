@@ -13,7 +13,7 @@
     License. See LICENSE.TXT for details.
 */
 
-#include "CL/sycl/queue.hpp"
+#include "trisycl/queue.hpp"
 
 namespace trisycl::vendor::trisycl::scope::detail {
 

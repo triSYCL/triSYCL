@@ -12,9 +12,9 @@
 #include <cstddef>
 #include <future>
 
-#include "CL/sycl/buffer/detail/buffer.hpp"
-#include "CL/sycl/buffer_allocator.hpp"
-#include "CL/sycl/detail/shared_ptr_implementation.hpp"
+#include "trisycl/buffer/detail/buffer.hpp"
+#include "trisycl/buffer_allocator.hpp"
+#include "trisycl/detail/shared_ptr_implementation.hpp"
 
 namespace trisycl::detail {
 

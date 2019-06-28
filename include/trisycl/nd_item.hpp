@@ -11,13 +11,13 @@
 
 #include <cstddef>
 
-#include "CL/sycl/access.hpp"
-#include "CL/sycl/detail/linear_id.hpp"
-#include "CL/sycl/detail/unimplemented.hpp"
-#include "CL/sycl/id.hpp"
-#include "CL/sycl/item.hpp"
-#include "CL/sycl/nd_range.hpp"
-#include "CL/sycl/range.hpp"
+#include "trisycl/access.hpp"
+#include "trisycl/detail/linear_id.hpp"
+#include "trisycl/detail/unimplemented.hpp"
+#include "trisycl/id.hpp"
+#include "trisycl/item.hpp"
+#include "trisycl/nd_range.hpp"
+#include "trisycl/range.hpp"
 
 namespace trisycl {
 

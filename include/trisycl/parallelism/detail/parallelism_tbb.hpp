@@ -5,7 +5,7 @@
 
     Implement the detail of the parallel constructions to launch kernels using
     Intel Threading Building Blocks (TBB). This file gets conditionally included
-    in "CL/sycl/parallelism.hpp" if TRISYCL_TBB is defined by the preprocessor.
+    in "trisycl/parallelism.hpp" if TRISYCL_TBB is defined by the preprocessor.
 
     jeffamstutz at gmail dot com
 
@@ -13,13 +13,13 @@
     License. See LICENSE.TXT for details.
 */
 
-#include "CL/sycl/group.hpp"
-#include "CL/sycl/h_item.hpp"
-#include "CL/sycl/id.hpp"
-#include "CL/sycl/item.hpp"
-#include "CL/sycl/nd_item.hpp"
-#include "CL/sycl/nd_range.hpp"
-#include "CL/sycl/range.hpp"
+#include "trisycl/group.hpp"
+#include "trisycl/h_item.hpp"
+#include "trisycl/id.hpp"
+#include "trisycl/item.hpp"
+#include "trisycl/nd_item.hpp"
+#include "trisycl/nd_range.hpp"
+#include "trisycl/range.hpp"
 
 #include <tbb/blocked_range2d.h>
 #include <tbb/blocked_range3d.h>

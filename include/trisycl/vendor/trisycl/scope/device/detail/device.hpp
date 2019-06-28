@@ -13,7 +13,7 @@
     License. See LICENSE.TXT for details.
 */
 
-#include "CL/sycl/device.hpp"
+#include "trisycl/device.hpp"
 
 namespace trisycl::vendor::trisycl::scope::detail {
 

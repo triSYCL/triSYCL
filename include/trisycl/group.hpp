@@ -12,11 +12,11 @@
 #include <cstddef>
 #include <functional>
 
-#include "CL/sycl/detail/linear_id.hpp"
-#include "CL/sycl/h_item.hpp"
-#include "CL/sycl/id.hpp"
-#include "CL/sycl/nd_range.hpp"
-#include "CL/sycl/range.hpp"
+#include "trisycl/detail/linear_id.hpp"
+#include "trisycl/h_item.hpp"
+#include "trisycl/id.hpp"
+#include "trisycl/nd_range.hpp"
+#include "trisycl/range.hpp"
 
 namespace trisycl {
 

@@ -13,10 +13,10 @@
 #include <cstddef>
 #include <memory>
 
-#include "CL/sycl/access.hpp"
-#include "CL/sycl/accessor.hpp"
-#include "CL/sycl/handler.hpp"
-#include "CL/sycl/pipe/detail/pipe.hpp"
+#include "trisycl/access.hpp"
+#include "trisycl/accessor.hpp"
+#include "trisycl/handler.hpp"
+#include "trisycl/pipe/detail/pipe.hpp"
 
 namespace trisycl {
 

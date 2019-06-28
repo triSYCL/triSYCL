@@ -18,15 +18,15 @@
 #include <boost/compute.hpp>
 #endif
 
-#include "CL/sycl/accessor.hpp"
-#include "CL/sycl/command_group/detail/task.hpp"
-#include "CL/sycl/detail/instantiate_kernel.hpp"
-#include "CL/sycl/detail/unimplemented.hpp"
-#include "CL/sycl/exception.hpp"
-#include "CL/sycl/kernel.hpp"
-#include "CL/sycl/opencl_types.hpp"
-#include "CL/sycl/parallelism.hpp"
-#include "CL/sycl/queue/detail/queue.hpp"
+#include "trisycl/accessor.hpp"
+#include "trisycl/command_group/detail/task.hpp"
+#include "trisycl/detail/instantiate_kernel.hpp"
+#include "trisycl/detail/unimplemented.hpp"
+#include "trisycl/exception.hpp"
+#include "trisycl/kernel.hpp"
+#include "trisycl/opencl_types.hpp"
+#include "trisycl/parallelism.hpp"
+#include "trisycl/queue/detail/queue.hpp"
 
 namespace trisycl {
 

@@ -9,9 +9,9 @@
     License. See LICENSE.TXT for details.
 */
 
-#include "CL/sycl/id.hpp"
-#include "CL/sycl/opencl_types.hpp"
-#include "CL/sycl/info/param_traits.hpp"
+#include "trisycl/id.hpp"
+#include "trisycl/opencl_types.hpp"
+#include "trisycl/info/param_traits.hpp"
 
 namespace trisycl {
 

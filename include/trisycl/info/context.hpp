@@ -9,7 +9,7 @@
     License. See LICENSE.TXT for details.
 */
 
-#include "CL/sycl/info/param_traits.hpp"
+#include "trisycl/info/param_traits.hpp"
 
 namespace trisycl {
 

@@ -16,7 +16,7 @@
 
 #include <boost/operators.hpp>
 
-#include "CL/sycl/detail/debug.hpp"
+#include "trisycl/detail/debug.hpp"
 
 
 namespace trisycl::detail {

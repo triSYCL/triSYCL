@@ -12,7 +12,7 @@
 #include <cstddef>
 #include <memory>
 
-#include "CL/sycl/pipe/detail/pipe.hpp"
+#include "trisycl/pipe/detail/pipe.hpp"
 
 namespace trisycl::detail {
 
