@@ -13,7 +13,7 @@ namespace po = boost::program_options;
 void
 put_file_into_source(std::istream &input_file,
                      std::ostream &output_file) {
-  output_file << R"(#include "CL/sycl.hpp"
+  output_file << R"(#include "trisycl.hpp"
 
 namespace {
 
@@ -32,7 +32,7 @@ const char binary[] = {
   output_file << R"(
 };
 
-cl::sycl::drt::code::program p { sizeof(binary), binary };
+trisycl::drt::code::program p { sizeof(binary), binary };
 
 }
 )";
