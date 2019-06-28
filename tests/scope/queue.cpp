@@ -1,17 +1,10 @@
 /* RUN: %{execute}%s
 
    Experiment with some ideas from
-   ~/Xilinx/Projects/OpenCL/SYCL/Presentations (master)$ a 2017-01-23--27-Khronos_F2F_Vancouver-Xilinx/{code,2017-01-23--27-Khronos-Vancouver-Xilinx-SYCL-expose.pdf}
+   https://www.khronos.org/members/login/groups/OpenCL/F2F%20Meeting%20Materials/Vancouver%20Jan17/SYCL/2017-01-23--27-Khronos-Vancouver-Xilinx-SYCL-expose.pdf
+
+   https://www.khronos.org/members/login/groups/OpenCL/F2F%20Meeting%20Materials/San%20Diego%20Jan19/SYCL/2019-01-22-conceptual-SYCL-Xilinx.pdf
 */
-#include <CL/sycl.hpp>
-// Use the extension providing SYCL objects with scope storage
-#include <CL/sycl/vendor/trisycl/scope.hpp>
-
-#include <iostream>
-
-#include <boost/test/minimal.hpp>
-
-using namespace cl::sycl;
 
 /// \todo Where to put these feature macros?
 
@@ -20,6 +13,21 @@ using namespace cl::sycl;
 
 /// This is an extension allowing the host to access platform pipes
 #define SYCL_VENDOR_TRISYCL_PLATFORM_PIPE_HOST_ACCESS 1
+
+/// Use SYCL 1.2.1 cl::sycl API
+#include <CL/sycl.hpp>
+
+/** Also use the triSYCL extension providing SYCL objects with scope
+    storage which could be somehow compatible with another existing
+    cl::sycl implementation by using a layered approach
+*/
+#include "trisycl/vendor/trisycl/scope.hpp"
+
+#include <iostream>
+
+#include <boost/test/minimal.hpp>
+
+using namespace cl::sycl;
 
 /*
 static inline auto all_devices = bh::make_tuple
