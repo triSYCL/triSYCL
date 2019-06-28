@@ -1,3 +1,6 @@
+#ifndef TRISYCL_CL_SYCL_HPP
+#define TRISYCL_CL_SYCL_HPP
+
 /** \file
 
     This is the main SYCL 1.2.1 interoperability header to expose
@@ -19,3 +22,5 @@ namespace cl {
     ### eval: (flyspell-prog-mode)
     ### End:
 */
+
+#endif // TRISYCL_CL_SYCL_HPP

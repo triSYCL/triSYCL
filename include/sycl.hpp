@@ -1,3 +1,6 @@
+#ifndef TRISYCL_SYCL_HPP
+#define TRISYCL_SYCL_HPP
+
 /** \file
 
     This is the SYCL extension header to expose triSYCL directly into
@@ -18,3 +21,5 @@ namespace sycl = ::trisycl;
     ### eval: (flyspell-prog-mode)
     ### End:
 */
+
+#endif // TRISYCL_SYCL_HPP

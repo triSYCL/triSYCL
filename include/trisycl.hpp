@@ -1,3 +1,6 @@
+#ifndef TRISYCL_TRISYCL_HPP
+#define TRISYCL_TRISYCL_HPP
+
 /** \file
 
     \mainpage
@@ -101,3 +104,5 @@
     ### eval: (flyspell-prog-mode)
     ### End:
 */
+
+#endif // TRISYCL_TRISYCL_HPP
