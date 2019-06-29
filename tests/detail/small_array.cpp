@@ -3,10 +3,12 @@
    Test the internal small_array<> triSYCL class
 */
 
-#include "CL/sycl/detail/small_array.hpp"
+/// Test explicitly a feature of triSYCL, so include the triSYCL header
+#include "trisycl.hpp"
 #include <boost/test/minimal.hpp>
 
-using namespace cl::sycl;
+/// Test explicitly a feature of triSYCL in ::trisycl namespace
+using namespace trisycl;
 
 struct sa1 : public detail::small_array<float, sa1, 1, true> {
   using detail::small_array<float, sa1, 1, true>::small_array;

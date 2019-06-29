@@ -1,90 +1,19 @@
+#ifndef TRISYCL_CL_SYCL_HPP
+#define TRISYCL_CL_SYCL_HPP
+
 /** \file
 
-    \mainpage
-
-    This is the main triSYCL C++ header file to experiment with the
-    SYCL specification.
-
-    For more information about SYCL:
-    http://www.khronos.org/sycl/
-
-    For more information on this project and to access to the source of
-    this file, look at https://github.com/triSYCL/triSYCL
-
-    The Doxygen version of the implementation itself is in
-    http://trisycl.github.io/triSYCL/Doxygen/triSYCL/html and
-    http://trisycl.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
-
-
-    Ronan at keryell dot FR
-
-    Copyright 2014--2015 Advanced Micro Devices, Inc.
-
-    Copyright 2015--2019 Xilinx, Inc.
-
-    This file is distributed under the University of Illinois Open Source
-    License. See LICENSE.TXT for details.
+    This is the main SYCL 1.2.1 interoperability header to expose
+    triSYCL into the \c ::cl::sycl namespace
 */
 
+#include "../trisycl.hpp"
 
-/** Some global triSYCL configuration */
-#include "CL/sycl/detail/global_config.hpp"
-#include "CL/sycl/detail/default_classes.hpp"
-
-
-/* All the SYCL components, one per file */
-#include "CL/sycl/access.hpp"
-#include "CL/sycl/accessor.hpp"
-#include "CL/sycl/allocator.hpp"
-#include "CL/sycl/address_space.hpp"
-#include "CL/sycl/buffer.hpp"
-#include "CL/sycl/context.hpp"
-#include "CL/sycl/device.hpp"
-#include "CL/sycl/device_runtime.hpp"
-#include "CL/sycl/device_selector.hpp"
-#include "CL/sycl/error_handler.hpp"
-#include "CL/sycl/event.hpp"
-#include "CL/sycl/exception.hpp"
-#include "CL/sycl/group.hpp"
-#include "CL/sycl/half.hpp"
-#include "CL/sycl/handler.hpp"
-#include "CL/sycl/h_item.hpp"
-#include "CL/sycl/id.hpp"
-#include "CL/sycl/image.hpp"
-#include "CL/sycl/item.hpp"
-#include "CL/sycl/math.hpp"
-#include "CL/sycl/nd_item.hpp"
-#include "CL/sycl/nd_range.hpp"
-#include "CL/sycl/opencl_types.hpp"
-#include "CL/sycl/parallelism.hpp"
-#include "CL/sycl/pipe.hpp"
-#include "CL/sycl/pipe_reservation.hpp"
-#include "CL/sycl/platform.hpp"
-#include "CL/sycl/program.hpp"
-#include "CL/sycl/queue.hpp"
-#include "CL/sycl/range.hpp"
-#include "CL/sycl/static_pipe.hpp"
-#include "CL/sycl/vec.hpp"
-
-// Some includes at the end to break some dependencies
-#include "CL/sycl/device_selector/detail/device_selector_tail.hpp"
-#include "CL/sycl/context/detail/context_tail.hpp"
-#include "CL/sycl/device/detail/device_tail.hpp"
-#include "CL/sycl/queue/detail/queue_tail.hpp"
-#ifdef TRISYCL_OPENCL
-#include "CL/sycl/device/detail/opencl_device_tail.hpp"
-#endif
-#include "CL/sycl/platform/detail/platform_tail.hpp"
-#include "CL/sycl/platform/detail/host_platform_tail.hpp"
-#ifdef TRISYCL_OPENCL
-#include "CL/sycl/platform/detail/opencl_platform_tail.hpp"
-#endif
-
-// Some include files for Xilinx-specific features, such as for FPGA
-#include "CL/sycl/vendor/Xilinx/fpga.hpp"
-
-// An extension about constexpr host introspection API
-//#include "CL/sycl/extension/ce/platform.hpp"
+namespace cl {
+  /// The official SYCL 1.2.1 specification exposes the API in the
+  /// ::cl::sycl namespace
+  namespace sycl = ::trisycl;
+}
 
 /*
     # Some Emacs stuff:
@@ -93,3 +22,5 @@
     ### eval: (flyspell-prog-mode)
     ### End:
 */
+
+#endif // TRISYCL_CL_SYCL_HPP
