@@ -203,8 +203,8 @@ Then compile for example with::
     -DLLVM_BUILD_LLVM_DYLIB:BOOL=ON \
     -DLLVM_LINK_LLVM_DYLIB:BOOL=ON \
     ../llvm
-  # Use -j8 to speed up compilation if you have 8 cores for example
-  make -j8
+  # Use -j with 1 thread per core to speed up compilation
+  make -j`nproc`
 
 You might replace the ``Release`` by ``Debug`` above if you want to
 debug the compiler itself. Look at https://llvm.org/docs/CMake.html

@@ -11,13 +11,52 @@
 #
 # Tools for finding and building with triSYCL.
 #
-# To use this file with another project please remove
-# ${PROJECT_SOURCE_DIR}/tests/common from the add_sycl_to_target function
-#
 # Requite CMake version 3.5 or higher
 
 cmake_minimum_required (VERSION 3.5)
 project(triSYCL CXX) # The name of the project (forward declare language)
+
+#######################
+#  set_target_cxx_std
+#######################
+#
+#  Sets the specified target to support the required C++ standard level.
+#
+#  targetName : Name of the target to be set.
+#  cxxStdYear : The year of the required C++ standard (e.g.: 17)
+#
+function(set_target_cxx_std targetName cxxStdYear)
+  if(cxx_std_${cxxStdYear} IN_LIST CMAKE_CXX_COMPILE_FEATURES)
+    set_property(TARGET ${targetName}
+      PROPERTY
+        INTERFACE_COMPILE_FEATURES cxx_std_${cxxStdYear})
+  else()
+    if(MSVC)
+      set(cxxStdFlag  /std:c++${cxxStdYear})
+    else()
+      set(cxxStdFlag -std=c++${cxxStdYear})
+    endif()
+    include(CheckCXXCompilerFlag)
+    check_cxx_compiler_flag(${cxxStdFlag} compilerHasCxxStdFlag)
+    if(compilerHasCxxStdFlag)
+      message(STATUS "CMake compile features not available for the current \
+toolchain or CMake version, setting C++ standard level directly via compiler \
+flags. Please be aware that setting flags doesn't check the actual C++${cxxStdYear} \
+standard support provided by the underlying toolchain, e.g.: build may fail \
+on unsupported features.")
+      set_property(TARGET ${targetName}
+        PROPERTY
+          INTERFACE_COMPILE_OPTIONS ${cxxStdFlag})
+    else()
+      message(WARNING "Compiler seems to be unable to accept ${cxxStdFlag},
+build will probably fail. Please set CMAKE_CXX_FLAGS to some sensible value for \
+your toolchain.")
+    endif()
+  endif()
+endfunction(set_target_cxx_std)
+
+add_library(_trisycl_cxxfeatures INTERFACE)
+add_library(triSYCL::cxxfeatures ALIAS _trisycl_cxxfeatures)
 
 # Check that a supported host compiler can be found
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -27,21 +66,25 @@ if(CMAKE_COMPILER_IS_GNUCXX)
       "host compiler - Not found! (gcc version must be at least 9)")
   else()
     message(STATUS "host compiler - gcc ${CMAKE_CXX_COMPILER_VERSION}")
-    add_compile_options("-Wall")   # Turn on all warnings
-    add_compile_options("-Wextra") # Turn on all warnings
 
-    # Disabling specific warnings
-    # warning: ignoring attributes on template argument
-    add_compile_options("-Wno-ignored-attributes")
-    # warning: comparison between signed and unsigned integer expressions
-    add_compile_options("-Wno-sign-compare")
-    # warning: ‘<OpenCL func>’ is deprecated
-    add_compile_options("-Wno-deprecated-declarations")
-    # warning: type qualifiers ignored on function return type
-    add_compile_options("-Wno-ignored-qualifiers")
-    # warning: unused parameter ‘<id>’
-    add_compile_options("-Wno-unused-parameter")
-
+    set_target_cxx_std(_trisycl_cxxfeatures 17)
+    target_compile_options(_trisycl_cxxfeatures
+      INTERFACE
+        # Turn on all warnings:
+        -Wall
+        -Wextra
+        # Disable specific warnings:
+        # warning: type qualifiers ignored on function return type
+        -Wno-ignored-qualifiers
+        # warning: comparison between signed and unsigned integer expressions
+        -Wno-sign-compare
+        # warning: ‘<OpenCL func>’ is deprecated
+        -Wno-deprecated-declarations
+        # warning: unused parameter ‘<id>’
+        -Wno-unused-parameter
+        # warning: ignoring attributes on template argument
+        -Wno-ignored-attributes
+    )
   endif()
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   # Require at least clang 9
@@ -50,64 +93,69 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
       "host compiler - Not found! (clang version must be at least 9)")
   else()
     message(STATUS "host compiler - clang ${CMAKE_CXX_COMPILER_VERSION}")
-    add_compile_options("-Wall")   # Turn on all warnings
-    add_compile_options("-Wextra") # Turn on all warnings
 
-    # Disabling specific warnings
-    # warning: 'const' type qualifier on return type has no effect
-    add_compile_options("-Wno-ignored-qualifiers")
-    # warning: comparison between signed and unsigned integer expressions
-    add_compile_options("-Wno-sign-compare")
-    # warning: ‘<OpenCL func>’ is deprecated
-    add_compile_options("-Wno-deprecated-declarations")
-    # warning: unused parameter ‘<id>’
-    add_compile_options("-Wno-unused-parameter")
-    # warning: suggest braces around initialization of subobject
-    add_compile_options("-Wno-missing-braces")
-    # warning: unused variable '<id>'
-    add_compile_options("-Wno-unused-variable")
-    # warning: instantiation of variable '<templated id>' required here,
-    # but no definition is available
-    add_compile_options("-Wno-undefined-var-template")
-
+    set_target_cxx_std(_trisycl_cxxfeatures 17)
+    target_compile_options(_trisycl_cxxfeatures
+      INTERFACE
+        # Turn on all warnings
+        -Wall
+        -Wextra
+        # Disable specific warnings:
+        # warning: 'const' type qualifier on return type has no effect
+        -Wno-ignored-qualifiers
+        # warning: comparison between signed and unsigned integer expressions
+        -Wno-sign-compare
+        # warning: ‘<OpenCL func>’ is deprecated
+        -Wno-deprecated-declarations
+        # warning: unused parameter ‘<id>’
+        -Wno-unused-parameter
+        # warning: suggest braces around initialization of subobject
+        -Wno-missing-braces
+        # warning: unused variable '<id>'
+        -Wno-unused-variable
+        # warning: instantiation of variable '<templated id>' required here,
+        # but no definition is available
+        -Wno-undefined-var-template
+    )
   endif()
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
   # Change to /std:c++latest once Boost::funtional is fixed
   # (1.63.0 with toolset v141 not working)
-  add_compile_options("/std:c++14")
+  set_target_cxx_std(_trisycl_cxxfeatures 14)
   # Replace default Warning Level 3 with 4 (/Wall is pretty-much useless on MSVC
   # system headers are plagued with warnings)
   string(REGEX REPLACE "/W[0-9]" "/W4" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 
-  # Disabling (default) Warning Level 3 output
-  # warning C4996: Call to '<algorithm name>' with parameters that may be
-  # unsafe - this call relies on the caller to check that the passed values
-  # are correct.
-  add_compile_options("/wd4996")
-  # warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-  add_compile_options("/wd4267")
-  # warning C4244: '=': conversion from 'size_t' to 'double',
-  # possible loss of data
-  add_compile_options("/wd4244")
-  # warning C4305: '<op>': truncation from 'double' to 'float'
-  add_compile_options("/wd4305")
-  # warning C4101: '<id>': unreferenced local variable
-  add_compile_options("/wd4101")
-  # warning C4700: uninitialized local variable '<id>' used
-  add_compile_options("/wd4700")
-  # warning C4189: '<id>': local variable is initialized but not referenced
-  add_compile_options("/wd4189")
-
-  # Disabling Warning Level 4 output
-  # warning C4100: '<param>': unreferenced formal parameter
-  add_compile_options("/wd4100")
-  # warning C4459: declaration of '<id>' hides global declaration
-  add_compile_options("/wd4459")
-  # warning C4127: conditional expression is constant
-  add_compile_options("/wd4127")
-  # warning C4456: declaration of '<id>' hides previous local declaration
-  add_compile_options("/wd4456")
-
+  target_compile_options(_trisycl_cxxfeatures
+      INTERFACE
+        # Disabling (default) Warning Level 3 output
+        # warning C4996: Call to '<algorithm name>' with parameters that may be
+        # unsafe - this call relies on the caller to check that the passed values
+        # are correct.
+        /wd4996
+        # warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+        /wd4267
+        # warning C4244: '=': conversion from 'size_t' to 'double',
+        # possible loss of data
+        /wd4244
+        # warning C4305: '<op>': truncation from 'double' to 'float'
+        /wd4305
+        # warning C4101: '<id>': unreferenced local variable
+        /wd4101
+        # warning C4700: uninitialized local variable '<id>' used
+        /wd4700
+        # warning C4189: '<id>': local variable is initialized but not referenced
+        /wd4189
+        # Disabling Warning Level 4 output
+        # warning C4100: '<param>': unreferenced formal parameter
+        /wd4100
+        # warning C4459: declaration of '<id>' hides global declaration
+        /wd4459
+        # warning C4127: conditional expression is constant
+        /wd4127
+        # warning C4456: declaration of '<id>' hides previous local declaration
+        /wd4456
+    )
 else()
   message(WARNING
     "host compiler - Not found! (triSYCL supports GCC, Clang and MSVC)")
@@ -133,9 +181,9 @@ mark_as_advanced(TRISYCL_TRACE_KERNEL)
 mark_as_advanced(TRISYCL_INCLUDE_DIR)
 
 #triSYCL definitions
-set(CL_SYCL_LANGUAGE_VERSION 121 CACHE VERSION
+set(CL_SYCL_LANGUAGE_VERSION 121 CACHE STRING VERSION
   "Host language version to be used by triSYCL (default is: 121)")
-set(TRISYCL_CL_LANGUAGE_VERSION 121 CACHE VERSION
+set(TRISYCL_CL_LANGUAGE_VERSION 121 CACHE STRING VERSION
   "Device language version to be used by triSYCL (default is: 121)")
 
 # There is some C++20 code
@@ -215,7 +263,6 @@ function(add_sycl_to_target targetName)
   # Add include directories to the "#include <>" paths
   target_include_directories(${targetName} PUBLIC
     ${TRISYCL_INCLUDE_DIR}
-    ${PROJECT_SOURCE_DIR}/tests/common
     ${Boost_INCLUDE_DIRS}
     $<$<BOOL:${TRISYCL_OPENCL}>:${OpenCL_INCLUDE_DIRS}>
     $<$<BOOL:${TRISYCL_OPENCL}>:${BOOST_COMPUTE_INCPATH}>
@@ -223,6 +270,7 @@ function(add_sycl_to_target targetName)
 
   # Link dependencies
   target_link_libraries(${targetName} PUBLIC
+    triSYCL::cxxfeatures
     $<$<BOOL:${TRISYCL_OPENCL}>:${OpenCL_LIBRARIES}>
     Threads::Threads
     $<$<BOOL:${LOG_NEEDED}>:Boost::log>
