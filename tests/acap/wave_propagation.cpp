@@ -27,7 +27,7 @@
 
 #include <experimental/mdspan>
 
-#include <CL/sycl.hpp>
+#include <sycl.hpp>
 
 // Some headers used when debugging
 #include <chrono>
@@ -37,7 +37,7 @@ using namespace std::chrono_literals;
 #include <boost/thread.hpp>
 
 
-using namespace cl::sycl::vendor::xilinx;
+using namespace sycl::vendor::xilinx;
 namespace fundamentals_v3 = std::experimental::fundamentals_v3;
 
 // The size of the machine to use

@@ -9,10 +9,10 @@
 #include <thread>
 #include <type_traits>
 
-#include <CL/sycl.hpp>
+#include <sycl.hpp>
 
 using namespace std::chrono_literals;
-using namespace cl::sycl::vendor::xilinx;
+using namespace sycl::vendor::xilinx;
 
 graphics::application a;
 

@@ -3,14 +3,14 @@
    RUN: %{execute}%s
 */
 
-#include <CL/sycl.hpp>
+#include <sycl.hpp>
 
 #include <iostream>
 
 #include <boost/test/minimal.hpp>
 
-using namespace cl::sycl;
-using namespace cl::sycl::vendor::xilinx;
+using namespace sycl;
+using namespace sycl::vendor::xilinx;
 
 
 /// A small AI Engine program

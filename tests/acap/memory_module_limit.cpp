@@ -3,14 +3,14 @@
    RUN: %{execute}%s
 */
 
-#include <CL/sycl.hpp>
+#include <sycl.hpp>
 
 #include <iostream>
 #include <type_traits>
 
 #include <boost/test/minimal.hpp>
 
-using namespace cl::sycl::vendor::xilinx;
+using namespace sycl::vendor::xilinx;
 
 template <typename Layout>
 struct test_memory {

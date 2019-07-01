@@ -91,8 +91,16 @@
 #include "trisycl/platform/detail/opencl_platform_tail.hpp"
 #endif
 
-// Some include files for Xilinx-specific features, such as for FPGA
+// Some include files for Xilinx-specific features
+
+/// For Xilinx FPGA
 #include "trisycl/vendor/Xilinx/fpga.hpp"
+
+/// For Xilinx ACAP
+#include "trisycl/vendor/Xilinx/acap.hpp"
+
+// Xilinx-specific extension for some graphics support
+#include "trisycl/vendor/Xilinx/graphics.hpp"
 
 // An extension about constexpr host introspection API
 //#include "trisycl/extension/ce/platform.hpp"

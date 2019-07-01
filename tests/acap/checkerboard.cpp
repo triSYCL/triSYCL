@@ -3,12 +3,12 @@
    RUN: %{execute}%s
 */
 
-#include <CL/sycl.hpp>
+#include <sycl.hpp>
 
 #include <iostream>
 #include <type_traits>
 
-using namespace cl::sycl::vendor::xilinx;
+using namespace sycl::vendor::xilinx;
 graphics::application a;
 
 /// To have a checkerboard-like pattern

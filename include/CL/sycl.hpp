@@ -15,11 +15,6 @@ namespace cl {
   namespace sycl = ::trisycl;
 }
 
-// Some include files for Xilinx-specific features
-#include "trisycl/vendor/Xilinx/acap.hpp"
-// Xilinx-specific extension for some graphics support
-#include "trisycl/vendor/Xilinx/graphics.hpp"
-
 /*
     # Some Emacs stuff:
     ### Local Variables:

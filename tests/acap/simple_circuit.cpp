@@ -3,15 +3,15 @@
    RUN: %{execute}%s
 */
 
-#include <CL/sycl.hpp>
+#include <sycl.hpp>
 
 #include <future>
 #include <iostream>
 
 #include <boost/test/minimal.hpp>
 
-using namespace cl::sycl::vendor::xilinx;
-using namespace cl::sycl::vendor::xilinx::acap::aie;
+using namespace sycl::vendor::xilinx;
+using namespace sycl::vendor::xilinx::acap::aie;
 
 // Number of values to transfer
 constexpr auto size = 10;
@@ -95,7 +95,7 @@ int test_main(int argc, char *argv[]) {
   producer.get();
   consumer.get();
 
-  } catch (cl::sycl::exception &e) {
+  } catch (sycl::exception &e) {
     // Display the string message of any SYCL exception
     std::cerr << e.what() << std::endl;
     throw;

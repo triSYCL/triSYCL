@@ -15,9 +15,9 @@
 #include <cstdint>
 #include <iostream>
 
-#include <CL/sycl.hpp>
+#include <sycl.hpp>
 
-using namespace cl::sycl::vendor::xilinx;
+using namespace sycl::vendor::xilinx;
 
 static auto constexpr image_size = 229;
 graphics::application a;

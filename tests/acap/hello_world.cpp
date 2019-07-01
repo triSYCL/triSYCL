@@ -4,9 +4,9 @@
 */
 
 #include <iostream>
-#include <CL/sycl.hpp>
+#include <sycl.hpp>
 
-using namespace cl::sycl::vendor::xilinx;
+using namespace sycl::vendor::xilinx;
 
 /** A small AI Engine program
 

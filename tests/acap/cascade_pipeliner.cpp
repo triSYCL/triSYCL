@@ -4,7 +4,7 @@
    RUN: %{execute}%s
 */
 
-#include <CL/sycl.hpp>
+#include <sycl.hpp>
 
 #include <iostream>
 #include <tuple>
@@ -16,9 +16,9 @@
 
 using namespace boost;
 using namespace ranges;
-using namespace cl::sycl;
-using namespace cl::sycl::vendor::xilinx;
-using namespace cl::sycl::vendor::xilinx::acap::aie;
+using namespace sycl;
+using namespace sycl::vendor::xilinx;
+using namespace sycl::vendor::xilinx::acap::aie;
 
 /// Used to debug metaprogramming on type
 template <typename T>

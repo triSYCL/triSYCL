@@ -3,11 +3,11 @@
    RUN: %{execute}%s
 */
 
-#include <CL/sycl.hpp>
+#include <sycl.hpp>
 
 #include <boost/test/minimal.hpp>
 
-using namespace cl::sycl::vendor::xilinx;
+using namespace sycl::vendor::xilinx;
 
 int test_main(int argc, char *argv[]) {
   /* Test the empty tile program & empty memory module for various

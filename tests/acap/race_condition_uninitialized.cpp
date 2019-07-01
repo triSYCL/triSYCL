@@ -4,9 +4,9 @@
 */
 
 #include <iostream>
-#include <CL/sycl.hpp>
+#include <sycl.hpp>
 
-using namespace cl::sycl::vendor::xilinx;
+using namespace sycl::vendor::xilinx;
 
 // All the memory modules are the same
 template <typename AIE, int X, int Y>
