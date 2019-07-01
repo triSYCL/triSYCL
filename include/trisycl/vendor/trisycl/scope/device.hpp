@@ -43,7 +43,7 @@ struct empty_device_scope {
 /** A conceptual device implementing some device-scoped storage and
     based on a platform with platform-scoped storage
 */
-template <typename DeviceStorage
+template <typename DeviceStorage = empty_device_scope
           , typename ScopedPlatform =
           ::trisycl::vendor::trisycl::scope::empty_platform_scope
           >
