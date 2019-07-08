@@ -12,20 +12,19 @@
 using namespace cl::sycl;
 
 template <typename DeviceSelector>
-void test_device(info::device_type type) {
+void test_device(info::device_type type)
   /* Since the test platform may not have all the requested device
      kinds, protect with a try/catch */
-  try {
-    // Get a queue according to the device_selector
-    queue q { DeviceSelector {} };
-    // Verify the device of the queue is in the list of devices of that kind
-    auto ds = device::get_devices(type);
-    auto f = std::find(ds.cbegin(), ds.cend(), q.get_device());
-    BOOST_CHECK(f != ds.cend());
-  }
-  /// \todo put the final exception class here
-  catch (std::domain_error &e) {
-  }
+try {
+  // Get a queue according to the device_selector
+  queue q { DeviceSelector {} };
+  // Verify the device of the queue is in the list of devices of that kind
+  auto ds = device::get_devices(type);
+  auto f = std::find(ds.cbegin(), ds.cend(), q.get_device());
+  BOOST_CHECK(f != ds.cend());
+}
+/// \todo put the final exception class here
+catch (std::domain_error &e) {
 }
 
 

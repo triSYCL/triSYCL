@@ -23,7 +23,7 @@ int main() {
             myQueue = sycl::queue { myContext, sycl::gpu_selector { } };
         }
         catch (cl::sycl::runtime_error &) {
-	    // Do nothing, host queue already in myQueue.
+          // Do nothing, host queue already in myQueue.
         }
 
         myQueue.submit([&](sycl::handler &cgh) {
