@@ -249,6 +249,22 @@ struct array {
   }
 
 
+  /** Instantiate a kernel in a form that can be outlined by the SYCL
+      device compiler
+
+      \param[in] KernelName k is the kernel name type required by SYCL
+
+      \param[in] k is the kernel functor
+  */
+  template <typename KernelName, typename KernelType>
+#ifdef __SYCL_DEVICE_ONLY__
+  __attribute__((sycl_kernel))
+#endif
+  void kernel_outliner(KernelType k) {
+    k();
+  }
+
+
   /** Launch the programs of all the tiles of the CGRA in their own
       CPU thread and wait for their completion.
 
@@ -260,7 +276,13 @@ struct array {
         t.thread = std::thread {[&] {
             TRISYCL_DUMP_T("Starting ME tile (" << t.x << ',' << t.y
                            << ") linear id = " << t.linear_id());
-            t.run();
+            /* The kernel is the run member function. Just use a
+               capture by reference because there is direct execution
+               here. */
+            auto kernel = [&] { t.run(); };
+            using kernel_type = decltype(kernel);
+            // Use the kernel type as its SYCL name too
+            kernel_outliner<kernel_type, kernel_type>(kernel);
             TRISYCL_DUMP_T("Stopping ME tile (" << t.x << ',' << t.y << ')');
           }
         };
