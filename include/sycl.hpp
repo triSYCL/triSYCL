@@ -9,7 +9,7 @@
 */
 
 
-#include "trisycl.hpp"
+#include "triSYCL/sycl.hpp"
 
 namespace sycl = ::trisycl;
 

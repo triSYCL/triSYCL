@@ -4,7 +4,8 @@
 */
 
 /// Test explicitly a feature of triSYCL, so include the triSYCL header
-#include "trisycl.hpp"
+#include "triSYCL/sycl.hpp"
+
 #include <boost/test/minimal.hpp>
 
 /// Test explicitly a feature of triSYCL in ::trisycl namespace
