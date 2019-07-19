@@ -1,10 +1,12 @@
 /* RUN: %{execute}%s
 
-   Test the internal small_array<> triSYCL class
+   Test the internal small_array<> triSYCL class in trisycl::
+   namespace by using #include "triSYCL/sycl.hpp"
 */
 
 /// Test explicitly a feature of triSYCL, so include the triSYCL header
-#include "trisycl.hpp"
+#include "triSYCL/sycl.hpp"
+
 #include <boost/test/minimal.hpp>
 
 /// Test explicitly a feature of triSYCL in ::trisycl namespace
