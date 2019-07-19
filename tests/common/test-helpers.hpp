@@ -39,27 +39,22 @@ trisycl_for_range(const cl::sycl::range<Dimensions> &r,
   trisycl_for_range_iterate<Dimensions, Functor, Dimensions>(r, it, f);
 }
 
+
 /// Output an id<> on a stream
+/// \todo to generalize in SYCL?
 template <int Dimensions>
 std::ostream& operator<<(std::ostream& stream,
                          const cl::sycl::id<Dimensions>& i) {
   for (auto e : i)
-    stream<< e << " ";
+    stream << e << " ";
   return stream;
 }
 
 
 /// Verify the value of a buffer against a function of the id<>
-template <typename dataType,
-          int Dimensions,
-          cl::sycl::access::mode mode,
-          cl::sycl::access::target target,
-          typename Functor>
-bool trisycl_verify_buffer_value(
-    cl::sycl::buffer<dataType, Dimensions> b,
-    cl::sycl::accessor<dataType, Dimensions, mode, target> a,
-    Functor f) {
-  trisycl_for_range(b.get_range(), [&] (cl::sycl::id<Dimensions> i) {
+auto trisycl_verify_buffer_value = [](auto buf, auto f) {
+  auto a = buf.template get_access<cl::sycl::access::mode::read>();
+  trisycl_for_range(buf.get_range(), [&] (auto i) {
       if (a[i] != f(i)) {
         std::stringstream message;
         message << "Error: got " << a[i] << " instead of expected " << f(i)
@@ -68,10 +63,11 @@ bool trisycl_verify_buffer_value(
       }
     });
   return true;
-}
+};
 
 
-/// Verify that a condition is true
+/// Verify that a condition is true.
+/// Can use BOOST_CHECK() instead.
 #define VERIFY_COND(cond)                                               \
   if (!(cond)) {                                                        \
     std::cout << "In file " __FILE__ " line " << __LINE__ << ": "       \
@@ -87,9 +83,7 @@ bool trisycl_verify_buffer_value(
 #define VERIFY_BUFFER_VALUE(b, func)                                    \
   do {                                                                  \
     try {                                                               \
-      trisycl_verify_buffer_value(b,                                    \
-                                  b.get_access<cl::sycl::access::mode::read>(), \
-                                  func);                                \
+      trisycl_verify_buffer_value(b, func);                             \
     }                                                                   \
     catch (std::runtime_error &e) {                                     \
       std::cout << "In file " __FILE__ " line " << __LINE__ << ": "     \
