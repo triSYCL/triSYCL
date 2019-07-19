@@ -1,6 +1,7 @@
 /* RUN: %{execute}%s
 
-   Test the internal small_array<> triSYCL class
+   Test the internal small_array<> triSYCL class in trisycl::
+   namespace by using #include "triSYCL/sycl.hpp"
 */
 
 /// Test explicitly a feature of triSYCL, so include the triSYCL header

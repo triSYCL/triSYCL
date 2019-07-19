@@ -1,8 +1,10 @@
 /* RUN: %{execute}%s
 
-   Test extension to expose SYCL API directly into ::sycl
+   Test extension to expose SYCL API directly into ::sycl by using
+   #include "SYCL/sycl.hpp"
 */
-#include <sycl.hpp>
+#include "SYCL/sycl.hpp"
+
 #include <iostream>
 
 // Size of the matrices

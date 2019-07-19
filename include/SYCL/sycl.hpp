@@ -1,5 +1,5 @@
-#ifndef TRISYCL_SYCL_HPP
-#define TRISYCL_SYCL_HPP
+#ifndef TRISYCL_SYCL_SYCL_HPP
+#define TRISYCL_SYCL_SYCL_HPP
 
 /** \file
 
@@ -21,4 +21,4 @@ namespace sycl = ::trisycl;
     ### End:
 */
 
-#endif // TRISYCL_SYCL_HPP
+#endif // TRISYCL_SYCL_SYCL_HPP
