@@ -493,6 +493,22 @@ public:
     TRISYCL_UNIMPL;
   }
 
+
+  /** Replicate a value into a memory object
+
+      \param[out] dest is a write accessor to the memory object
+
+      \param[in] src is an integral scalar value or a SYCL vector type
+      to be used to fill the accessor
+  */
+  template<typename T, typename Accessor>
+  void fill(Accessor &dest, const T &src) {
+    parallel_for(dest.get_range(), [=] (id<Accessor::dimensionality> i) {
+      // Initialize all the elements
+      dest[i] = src;
+    });
+  }
+
 };
 
 namespace detail {
