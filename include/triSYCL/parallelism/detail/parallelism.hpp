@@ -273,7 +273,7 @@ template <int Dimensions, typename T_Item, typename ParallelForFunctor>
 void parallel_for_workitem(const group<Dimensions> &g,
                            ParallelForFunctor f) {
 #if defined(_OPENMP) && (!defined(TRISYCL_NO_BARRIER) && !defined(_MSC_VER))
-  /* To implement barriers With OpenMP, one thread is created for each
+  /* To implement barriers with OpenMP, one thread is created for each
      work-item in the group and thus an OpenMP barrier has the same effect
      of an OpenCL barrier executed by the work-items in a workgroup
 

@@ -146,18 +146,20 @@ The dataflow SYCL_ infrastructure between kernels related by
 buffer/accessors dependencies is implemented in
 `<../include/triSYCL/command_group/detail/task.hpp>`_ with plain `C++`_
 ``std::thread`` and ``std::condition_variable``. It should be updated
-to a more efficient library in the future, such as TBB;
+to a more efficient library in the future for the tasking, such as
+Boost.Fiber or TBB;
 
-All the kernel code is accelerated with OpenMP, with various options
-according to some macros parameters. Only the first dimension of
-``range`` is parallelized with OpenMP in
-`<../include/triSYCL/parallelism/detail/parallelism.hpp>`_
+All the kernel code itself is accelerated with OpenMP or with TBB
+according to some macros parameters, allowing various behaviors. See
+`<../include/triSYCL/parallelism/detail/parallelism.hpp>`_ or
+`<../include/triSYCL/parallelism/detail/parallelism_tbb.hpp>`_ for the
+implementation details.
 
 Since in SYCL_ barriers are available and the CPU triSYCL
 implementation does not use a compiler to restructure the kernel code,
-it is implemented in SYCL_ with CPU threads provided by OpenMP. This is
-massively inefficient. If you know that there will be no barrier you
-might define the ``TRISYCL_NO_BARRIER`` macro.
+it is implemented in SYCL_ with CPU threads provided by OpenMP. This
+is massively inefficient. If you know that there will be no barrier
+you should define the ``TRISYCL_NO_BARRIER`` macro first.
 
 Anyway, low-level OpenCL_-style barriers should not be used in modern
 SYCL_ code. Hierarchical parallelism, which is performance portable

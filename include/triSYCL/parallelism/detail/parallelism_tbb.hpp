@@ -75,8 +75,8 @@ void parallel_for_iterate(Range r, ParallelForFunctor &f)
 }
 
 /** Implementation of a data parallel computation with parallelism
-          specified at launch time by a range<>. Kernel index is id or int.
-      */
+    specified at launch time by a range<>. Kernel index is id or int.
+*/
 template <int Dimensions = 1, typename ParallelForFunctor, typename Id>
 void parallel_for(range<Dimensions> r, ParallelForFunctor f, Id)
 {
@@ -84,8 +84,8 @@ void parallel_for(range<Dimensions> r, ParallelForFunctor f, Id)
 }
 
 /** Implementation of a data parallel computation with parallelism
-          specified at launch time by a range<>. Kernel index is item.
-      */
+    specified at launch time by a range<>. Kernel index is item.
+*/
 template <int Dimensions = 1, typename ParallelForFunctor>
 void parallel_for(range<Dimensions> r,
                   ParallelForFunctor f,
@@ -100,8 +100,8 @@ void parallel_for(range<Dimensions> r,
 }
 
 /** Calls the appropriate ternary parallel_for overload based on the
-          index type of the kernel function object f
-      */
+    index type of the kernel function object f
+*/
 template <int Dimensions = 1, typename ParallelForFunctor>
 void parallel_for(range<Dimensions> r, ParallelForFunctor f)
 {
