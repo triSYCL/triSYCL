@@ -4,16 +4,15 @@
 /// Define a level of multi-dimensional iterator
 template <int Dimensions, typename Functor, std::size_t level>
 struct trisycl_for_range_iterate {
-  trisycl_for_range_iterate(const cl::sycl::range<Dimensions> &r,
-                            cl::sycl::id<Dimensions> &it,
+  trisycl_for_range_iterate(cl::sycl::item<Dimensions> &it,
                             const Functor &f) {
     // Iterate in dimension level
-    using value_type = typename cl::sycl::id<Dimensions>::value_type;
-    for (value_type i = 0; r[level - 1] - i != 0; ++i) {
+    using value_type = typename cl::sycl::item<Dimensions>::value_type;
+    for (value_type i = 0; it[level - 1] - i != 0; ++i) {
       // Set current dimension
       it[level - 1] = i;
       // And then iterate at lower level
-      trisycl_for_range_iterate<Dimensions, Functor, level - 1>(r, it, f );
+      trisycl_for_range_iterate<Dimensions, Functor, level - 1>(it, f );
     }
   }
 };
@@ -22,21 +21,25 @@ struct trisycl_for_range_iterate {
 /// Once at level 0, just call the final function with the current coordinate
 template <int Dimensions, typename Functor>
 struct trisycl_for_range_iterate<Dimensions, Functor, 0> {
-  trisycl_for_range_iterate(const cl::sycl::range<Dimensions> &r,
-                            cl::sycl::id<Dimensions> &it,
+  trisycl_for_range_iterate(cl::sycl::item<Dimensions> &it,
                             const Functor &f) {
     f(it);
   }
 };
 
 
-/// Apply a function on all the id<> of a range<>
+/** Apply a function on all the item<> of a range<>
+
+    Prefer item<> to id<> because we can use some range information
+    too in the test cases, use ge_linear_id() and other goodies
+*/
 template <int Dimensions, typename Functor>
 void
 trisycl_for_range(const cl::sycl::range<Dimensions> &r,
                   const Functor &f) {
-  cl::sycl::id<Dimensions> it;
-  trisycl_for_range_iterate<Dimensions, Functor, Dimensions>(r, it, f);
+  // An item with the range but with id and offset to 0
+  cl::sycl::item<Dimensions> it { r, {} };
+  trisycl_for_range_iterate<Dimensions, Functor, Dimensions>(it, f);
 }
 
 
@@ -58,7 +61,7 @@ auto trisycl_verify_buffer_value = [](auto buf, auto f) {
       if (a[i] != f(i)) {
         std::stringstream message;
         message << "Error: got " << a[i] << " instead of expected " << f(i)
-                << " for id<> " << i;
+                << " for id<> " << i.get_id();
         throw std::runtime_error(message.str());
       }
     });
