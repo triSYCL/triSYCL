@@ -1,6 +1,24 @@
 #include <sstream>
 #include <stdexcept>
 
+/** Check that the get method is throwing because the object does not
+    support OpenCL
+*/
+
+/// Check that the execution of some_code throws AnException
+template <typename AnException, typename F>
+void check_throwing(F some_code) {
+  bool exception_seen = false;
+  try {
+    some_code();
+  } catch (AnException e) {
+    exception_seen = true;
+
+  }
+  if (!exception_seen)
+    throw std::logic_error("Exception not seen");
+}
+
 /// Define a level of multi-dimensional iterator
 template <int Dimensions, typename Functor, std::size_t level>
 struct trisycl_for_range_iterate {
