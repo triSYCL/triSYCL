@@ -9,6 +9,7 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <algorithm>
 #include <cstddef>
 #include <memory>
 #include <tuple>
@@ -494,18 +495,45 @@ public:
   }
 
 
+  /** Copies the content of a memory object into another memory object
+
+      \param[in] src is a read accessor to the source memory object
+
+      \param[out] dst is a write accessor to the target memory object
+
+      \p src must have at least as many bytes as the range accessed by
+      \p dst.
+
+      \todo Clarify the specification. This implementation is wider
+      than what is requested in the specification.
+  */
+  template<typename AccessorSrc, typename AccessorDst>
+  void copy(AccessorSrc &src, AccessorDst &dst) {
+    // If any of the src range dimension is less than the dst dimension, error
+    auto cmp = src.get_range() < dst.get_range();
+    if (std::any_of(cmp.cbegin(),  cmp.cend(), [](auto c) { return c; }))
+        throw accessor_error
+        { "The source is too small to match the destination requirement" };
+
+    parallel_for(dst.get_range(),
+                 [=] (item<AccessorDst::dimensionality> i) {
+                   dst[i] = src[i];
+                 });
+  }
+
+
   /** Replicate a value into a memory object
 
-      \param[out] dest is a write accessor to the memory object
+      \param[out] dst is a write accessor to the memory object
 
       \param[in] src is an integral scalar value or a SYCL vector type
       to be used to fill the accessor
   */
   template<typename T, typename Accessor>
-  void fill(Accessor &dest, const T &src) {
-    parallel_for(dest.get_range(), [=] (id<Accessor::dimensionality> i) {
+  void fill(Accessor &dst, const T &src) {
+    parallel_for(dst.get_range(), [=] (id<Accessor::dimensionality> i) {
       // Initialize all the elements
-      dest[i] = src;
+      dst[i] = src;
     });
   }
 
