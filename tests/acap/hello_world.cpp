@@ -4,7 +4,7 @@
 */
 
 #include <iostream>
-#include <sycl.hpp>
+#include <SYCL/sycl.hpp>
 
 using namespace sycl::vendor::xilinx;
 

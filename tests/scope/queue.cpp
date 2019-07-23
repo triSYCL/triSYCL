@@ -21,7 +21,7 @@
     storage which could be somehow compatible with another existing
     cl::sycl implementation by using a layered approach
 */
-#include "trisycl/vendor/trisycl/scope.hpp"
+#include "triSYCL/vendor/trisycl/scope.hpp"
 
 #include <iostream>
 

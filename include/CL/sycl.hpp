@@ -7,7 +7,7 @@
     triSYCL into the \c ::cl::sycl namespace
 */
 
-#include "../trisycl.hpp"
+#include "triSYCL/sycl.hpp"
 
 namespace cl {
   /// The official SYCL 1.2.1 specification exposes the API in the

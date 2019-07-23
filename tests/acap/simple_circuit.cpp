@@ -3,7 +3,7 @@
    RUN: %{execute}%s
 */
 
-#include <sycl.hpp>
+#include <SYCL/sycl.hpp>
 
 #include <future>
 #include <iostream>
