@@ -31,6 +31,8 @@
     @{
 */
 
+class name_for_kernel;
+
 namespace trisycl::vendor::xilinx::acap::aie {
 
 /** Define an AI Engine CGRA program with its code and memory per core
