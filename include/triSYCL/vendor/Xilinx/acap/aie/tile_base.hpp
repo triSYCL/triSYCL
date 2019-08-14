@@ -14,10 +14,77 @@
 
 #include "tile_infrastructure.hpp"
 
+extern "C" {
+  #include <xaiengine.h>
+}
+
 namespace trisycl::vendor::xilinx::acap::aie {
 
 /// \ingroup aie
 /// @{
+
+#ifdef __SYCL_DEVICE_ONLY__
+
+/** The AI Engine device tile infrastructure common to all the tiles when
+    compilied inside of a kernel for device.
+
+    Similar to the tile device class this is an incremental WIP approach to
+    include the desired Tile functionallity on device but essentially this will
+    end up as some kind of tile_base Lite as we work out what works on device
+    and what doesn't. For example std::thread should not be part of this base
+    class and things like functor inheritance seem a little unstable at the
+    moment. Also components of the STL.h can leak in which are not compatible
+    with the device compilation as SYCL has some rules that prevent things like
+    on device memory intialization, this is a problem when accessors leak in as
+    they make use of the STL and memory.h which will kill compilation.
+
+    In the long term it's possible this will end up very similar to tile_base in
+    which case they can be merged with optionally modifications for removing
+    std::thread etc on device
+
+    This allows some type erasure while accessing the common
+    tile infrastructure.
+
+    \param AIE is the type representing the full CGRA with the
+    programs and memory contents
+*/
+template <typename AIE_Program>
+class tile_base {
+
+  using device = typename AIE_Program::device;
+
+protected:
+
+  /// Noop on device, it has to exist for compilation purposes as Host side code
+  /// is still compiled for the device unfortunately.
+  void set_program(AIE_Program &p) {}
+
+  /// Noop on device, it has to exist for compilation purposes as Host side code
+  /// is still compiled for the device unfortunately.
+  void set_hw_tile(XAieGbl_Tile *tile) {}
+
+public:
+
+  /// Routines to run before core starts running.
+  int prerun() { return 1; }
+
+  /** Provide a run member function that does nothing so it is
+      possible to write a minimum AI Engine program that does nothing.
+
+      Note that even if this function is not virtual, in the common
+      case a programmer implements it to specify the program executed
+      by a tile
+  */
+  void run() {}
+
+  /// Routines to run after core completes running.
+  void postrun() {}
+
+};
+
+#endif // ifdef SYCL_DEVICE_ONLY
+
+#ifndef __SYCL_DEVICE_ONLY__
 
 /** The AI Engine tile infrastructure common to all the tiles
 
@@ -37,10 +104,22 @@ protected:
   /// Keep a reference to the AIE_Program with the full tile and memory view
   AIE_Program *program;
 
+  XAieGbl_Tile *aie_hw_tile;
+
+  /// Store a way to access to hw tile instance
+  void set_hw_tile(XAieGbl_Tile *tile) {
+    aie_hw_tile = tile;
+  }
+
   /// Keep a reference to the tile_infrastructure hardware features
   tile_infrastructure<device> *ti;
 
 public:
+
+  /// Routines to run before core starts running.
+  int prerun() {
+    return 1;
+  }
 
   /** Provide a run member function that does nothing so it is
       possible to write a minimum AI Engine program that does nothing.
@@ -52,6 +131,9 @@ public:
   void run() {
   }
 
+  /// Routines to run after core completes running.
+  void postrun() {
+  }
 
   /// Submit a callable on this tile
   template <typename Work>
@@ -125,13 +207,13 @@ public:
     program = &p;
   }
 
-
   /// Store a way to access to hardware infrastructure of the tile
   void set_tile_infrastructure(tile_infrastructure<device> &t) {
     ti = &t;
   }
-
 };
+
+#endif // ifndef SYCL_DEVICE_ONLY
 
 /// @} End the aie Doxygen group
 

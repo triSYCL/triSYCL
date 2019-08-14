@@ -17,10 +17,60 @@
 #include "triSYCL/access.hpp"
 #include "tile_base.hpp"
 
+extern "C" {
+  #include <xaiengine.h>
+}
+
 namespace trisycl::vendor::xilinx::acap::aie {
 
 /// \ingroup aie
 /// @{
+
+#ifdef __SYCL_DEVICE_ONLY__
+
+/** An empty device tile for now, what is enabled for a tile inside of a Kernel
+    the aim is to incrementally add on top of this without breaking the kernel
+    compilation for now.
+
+    It's an incremental WIP approach but essentially this will end up as some
+    kind of Tile Lite as we work out what works on device and what doesn't.
+
+    For example does having the X AI Engine components on the device make sense?
+    I imagine not as they seem to be host only...
+
+    The Intel SYCL runtime has a similar concept with some of it's APIs like
+    accessors, so perhaps it makes sense for Tiles.
+
+    \param AIE is the type representing the full CGRA with the
+    programs and memory contents
+
+    \param X is the horizontal coordinate of the memory module
+
+    \param Y is the vertical coordinate of the memory module
+
+*/
+template <typename AIE, int X, int Y>
+struct tile : tile_base<AIE> {
+  /** The horizontal tile coordinates in the CGRA grid (starting at 0
+      and increasing to the right) */
+  static auto constexpr x = X;
+  /** The vertical tile coordinates in the CGRA grid (starting at
+      increasing to the top) */
+  static auto constexpr y = Y;
+
+  /// Noop on device, it has to exist for compilation purposes as Host side code
+  /// is still compiled for the device unfortunately.
+  std::uint32_t mem_read(std::uint32_t offset) { return 0; }
+
+  /// Noop on device, it has to exist for compilation purposes as Host side code
+  /// is still compiled for the device unfortunately.
+  void mem_write(std::uint32_t offset, std::uint32_t data) {}
+
+};
+
+#endif // ifdef SYCL_DEVICE_ONLY
+
+#ifndef __SYCL_DEVICE_ONLY__
 
 /** The AI Engine tile infrastructure defining the program of a tile
 
@@ -216,6 +266,42 @@ struct tile : tile_base<AIE_Program> {
       return mem_right();
   }
 
+  /// The memory read accessors
+  std::uint32_t mem_read(std::uint32_t offset) {
+    return XAieTile_DmReadWord(tb::aie_hw_tile, offset);
+  }
+
+  /// The memory write accessors
+  void mem_write(std::uint32_t offset, std::uint32_t data) {
+    XAieTile_DmWriteWord(tb::aie_hw_tile, offset, data);
+  }
+
+  /// FIXME: is this right location for these functions?
+  /// Load the elf
+  void load_elf(const char *path) {
+    // global load of elf
+    XAieGbl_LoadElf(tb::aie_hw_tile, (u8 *)path, 0);
+  }
+
+  /// Reset the core
+  void core_reset() {
+    XAieTile_CoreControl(tb::aie_hw_tile, XAIE_DISABLE, XAIE_ENABLE);
+  }
+
+  /// Start the core
+  void core_run() {
+    XAieTile_CoreControl(tb::aie_hw_tile, XAIE_ENABLE, XAIE_DISABLE);
+  }
+
+  /// Stop the core
+  void core_stop() {
+    XAieTile_CoreControl(tb::aie_hw_tile, XAIE_DISABLE, XAIE_DISABLE);
+  }
+
+  /// Wait for the core to complete
+  void core_wait() {
+    while(!XAieTile_CoreWaitStatus(tb::aie_hw_tile, 0, XAIETILE_CORE_STATUS_DONE));
+  }
 
   /// The type of the memory module native to the tile
   using mem_t = typename AIE_Program::template tileable_memory<x, y>;
@@ -356,6 +442,8 @@ struct tile : tile_base<AIE_Program> {
   }
 
 };
+
+#endif // ifndef SYCL_DEVICE_ONLY
 
 /// @} End the aie Doxygen group
 
