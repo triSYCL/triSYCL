@@ -38,41 +38,32 @@ struct prog : acap::aie::tile<AIE, X, Y> {
 
   /// Pre-run
   int prerun() {
-    uint32_t offset = 0;
+    uint32_t offset, tile_offset;
     uint32_t xmax = acap::aie::layout::vc1902::x_max;
     uint32_t buffer_offset = (((xmax + 1) * Y + X) * NUM_INPUT_OFFSET_BYTES_PER_SLICE) / 4;
 
     /// each takes 2 lines, so only 300 tiles are needed
-    if constexpr (((acap::aie::layout::vc1902::x_max + 1) * Y + X) > 300) {
-      std::cout << "Skipping excessive tiles " << X << ',' << Y  << std::endl;
+    /// top 2 rows are not used
+    if constexpr (Y > 5) {
       return -1;
-    }
-    /// right column without memory can't access east memory
-    if constexpr (t::is_right_column() && (Y & 1)) {
-      std::cout << "Skipping " << X << ',' << Y  << std::endl;
-      return -1;
-    } else {
-//      std::cout << "Hello, I am the AIE tile (" << X << ',' << Y  << ")"
-//                << std::endl;
     }
 
     /// FIXME: place it here for now
     t::core_reset();
 
-    /* FIXME: maybe accessor taking memory module as argument is cleaner */
-    /// access the east memory
-    if constexpr (Y & 1)
-      offset += 0x800000;
+    /// north
+    offset = 0x40000;
+    tile_offset = 0x30000;
 
     /// function call args
     /// input: 0x800
-    t::mem_write(offset, 0x38800);
+    t::mem_write(offset, tile_offset + 0x800);
     /// output: 0x4800
-    t::mem_write(offset + 0x4 * 1, 0x3c800);
+    t::mem_write(offset + 0x4 * 1, tile_offset + 0x4800);
     /// width
     t::mem_write(offset + 0x4 * 2, 800);
     /// height
-    t::mem_write(offset + 0x4 * 3, 6);
+    t::mem_write(offset + 0x4 * 3, 4);
 
     // Write some data to memory
     for (unsigned int i = 0; i < NUM_INPUT_BYTES_PER_SLICE / 4; i++)
@@ -83,7 +74,7 @@ struct prog : acap::aie::tile<AIE, X, Y> {
 
   /// Post-run
   void postrun() {
-    uint32_t offset = 0;
+    uint32_t offset, tile_offset;
     uint32_t xmax = acap::aie::layout::vc1902::x_max;
     uint32_t buffer_offset = (((xmax + 1) * Y + X) * NUM_OUTPUT_BYTES_PER_SLICE) / 4;
 
@@ -92,47 +83,45 @@ struct prog : acap::aie::tile<AIE, X, Y> {
     t::core_wait();
     t::core_stop();
 
-    /* FIXME: maybe accessor taking memory module as argument is cleaner */
-    /// access the east memory
-    if constexpr (Y & 1)
-      offset += 0x800000;
+    /// north
+    offset = 0x40000;
+    tile_offset = 0x30000;
 
     /// Read the data
     for (unsigned int i = 0; i < NUM_OUTPUT_BYTES_PER_SLICE / 4; i++) {
-      if (buffer_offset + i > 480000 / 4) {
-        std::cout << "error " << X << ',' << Y  << " " << buffer_offset + i << std::endl;
-        break;
-      }
       out_buffer[buffer_offset + i] = t::mem_read(offset + 0x4800 + i * 4);
     }
   }
 
   /// The run member function is defined as the tile program
   void run() {
-    /// This has to be compiled by the device compiler.
-    /// for (uint32_t w = 1; w < width - 1; w++) {
-    ///   for (uint32_t h = 1; h < height - 1; h++) {
-    ///     int32_t result_x = 0, result_y = 0;
-    ///     uint8_t result = 0;
-    ///     int8_t hori[] = {-1, 0, 1, -2, 0, 2, -1, 0, -1};
-    ///     int8_t vert[] = {1, 2, 1, 0, 0, 0, -1, 0, -1};
+    /// cgh.single_task<sobel>([=] () {
+    ///       uint16_t *input = arg0;
+    ///       uint8_t *output = arg1;
+    ///       uint32_t width = arg2;
+    ///       uint32_t height = arg3;
     ///
-    ///     for (uint32_t x = 0; x < 3; x++) {
-    ///       for (uint32_t y = 0; y < 3; y++) {
-    ///         uint32_t index = (w + x - 1) + (h + y - 1) * width;
-    ///         uint32_t index_filter = x * 3 + y;
+    ///       for (uint32_t w = 1; w < width - 1; w++) {
+    ///         for (uint32_t h = 1; h < height - 1; h++) {
+    ///           int32_t result_x = 0, result_y = 0;
+    ///           uint8_t result = 0;
+    ///           int8_t hori[] = {-1, 0, 1, -2, 0, 2, -1, 0, 1};
+    ///           int8_t vert[] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
     ///
-    ///         result_x += hori[index_filter] * ((input[index] & 0xff));
-    ///         result_y += vert[index_filter] * ((input[index] & 0xff));
+    ///           for (uint32_t x = 0; x < 3; x++) {
+    ///             for (uint32_t y = 0; y < 3; y++) {
+    ///               uint32_t index = (w + x - 1) + (h + y - 1) * width;
+    ///               uint32_t index_filter = x * 3 + y;
+    ///
+    ///               result_x += hori[index_filter] * ((input[index] & 0xff));
+    ///               result_y += vert[index_filter] * ((input[index] & 0xff));
+    ///             }
+    ///           }
+    ///           output[w + (h - 1) * width] = (abs(result_x) + abs(result_y) > 0xff ?
+    ///                           0xff : (abs(result_x) + abs(result_y)));
+    ///         }
     ///       }
-    ///     }
-    ///     output[w + h * width] = (abs(result_x) + abs(result_y) > 0xff ?
-    ///                     (abs(result_x) + abs(result_y)) : 0xff);
-    ///   }
-    /// }
-
     {
-    	t::load_elf("aie-sobel.elf");
     }
   }
 };
@@ -165,24 +154,42 @@ int main() {
   // use yuyv format to skip conversion / decompression
   cap.set(cv::CAP_PROP_FOURCC, cv::VideoWriter::fourcc('Y', 'U', 'Y', 'V'));
 
-  cap >> captureRAW;
-  cv::cvtColor(captureRAW, captureGRAY, cv::COLOR_YUV2GRAY_YUYV);
-  captureGRAY.convertTo(capture, CV_8UC1);
+  /// load the elf. Loaded to all tiles, but it doesn't have to be
+  boost::hana::for_each(aie.tiles, [&] (auto& t) {
+    /// each takes 2 lines, so only 300 tiles are needed
+    /// top row is not used
+    if (!t.is_top_row()) {
+      t.load_elf("aie-sobel.elf");
+    }
+  });
 
-  buffer = (uint32_t *)capture.data;
+  do {
+    input.open("lab-800x600-sobel.data");
+    output.open("lab-800x600-sobel-aie.data");
 
-  input.open("lab-800x600-sobel.data");
-  input.write((char *)buffer, capture.total());
-  input.close();
+    cap >> captureRAW;
+    cv::cvtColor(captureRAW, captureGRAY, cv::COLOR_YUV2GRAY_YUYV);
+    captureGRAY.convertTo(capture, CV_8UC1);
 
-  buffer = (uint32_t *)captureRAW.data;
+    buffer = (uint32_t *)capture.data;
 
-  // Run up to completion of all the tile programs
-  aie.run();
+    input.write((char *)buffer, capture.total());
 
-  output.open("lab-800x600-sobel-aie.data");
-  output.write((char *)out_buffer, 800 * 600);
-  output.close();
+    buffer = (uint32_t *)captureRAW.data;
+
+    // Run up to completion of all the tile programs
+    aie.run();
+
+    output.write((char *)out_buffer, 800 * 600);
+
+    input.close();
+    output.close();
+
+    std::cout << "Press any key for next frame, or ESC and enter" << std::endl;
+    if (getchar() == 27) {
+      break;
+    }
+  } while (1);
 
   return 0;
 }
