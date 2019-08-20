@@ -183,5 +183,7 @@ int main() {
   output.open("lab-800x600-sobel-aie.data");
   output.write((char *)out_buffer, 800 * 600);
   output.close();
+
+  return 0;
 }
 

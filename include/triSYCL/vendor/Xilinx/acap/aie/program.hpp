@@ -267,6 +267,7 @@ struct program {
 //        kernel_outliner(kernel);
 #else
         t.submit([&] {
+             t.core_reset();
              if (t.prerun())
               return;
 
@@ -274,10 +275,9 @@ struct program {
                            << ") linear id = " << t.linear_id());
 
             {
-              t.load_elf("aie-increment.elf");
+              t.load_elf("aie.elf");
             }
 
-            t.core_reset();
             t.core_run();
             t.core_wait();
             t.core_stop();
