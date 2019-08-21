@@ -48,9 +48,6 @@ struct prog : acap::aie::tile<AIE, X, Y> {
       return -1;
     }
 
-    /// FIXME: place it here for now
-    t::core_reset();
-
     /// north
     offset = 0x40000;
     tile_offset = 0x30000;
@@ -78,11 +75,6 @@ struct prog : acap::aie::tile<AIE, X, Y> {
     uint32_t xmax = acap::aie::layout::vc1902::x_max;
     uint32_t buffer_offset = (((xmax + 1) * Y + X) * NUM_OUTPUT_BYTES_PER_SLICE) / 4;
 
-    /// FIXME: place it here for now
-    t::core_run();
-    t::core_wait();
-    t::core_stop();
-
     /// north
     offset = 0x40000;
     tile_offset = 0x30000;
@@ -93,42 +85,48 @@ struct prog : acap::aie::tile<AIE, X, Y> {
     }
   }
 
+  uint16_t *arg0;
+  uint8_t *arg1;
+  uint32_t arg2;
+  uint32_t arg3;
+
   /// The run member function is defined as the tile program
   void run() {
-    /// cgh.single_task<sobel>([=] () {
-    ///       uint16_t *input = arg0;
-    ///       uint8_t *output = arg1;
-    ///       uint32_t width = arg2;
-    ///       uint32_t height = arg3;
-    ///
-    ///       for (uint32_t w = 1; w < width - 1; w++) {
-    ///         for (uint32_t h = 1; h < height - 1; h++) {
-    ///           int32_t result_x = 0, result_y = 0;
-    ///           uint8_t result = 0;
-    ///           int8_t hori[] = {-1, 0, 1, -2, 0, 2, -1, 0, 1};
-    ///           int8_t vert[] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
-    ///
-    ///           for (uint32_t x = 0; x < 3; x++) {
-    ///             for (uint32_t y = 0; y < 3; y++) {
-    ///               uint32_t index = (w + x - 1) + (h + y - 1) * width;
-    ///               uint32_t index_filter = x * 3 + y;
-    ///
-    ///               result_x += hori[index_filter] * ((input[index] & 0xff));
-    ///               result_y += vert[index_filter] * ((input[index] & 0xff));
-    ///             }
-    ///           }
-    ///           output[w + (h - 1) * width] = (abs(result_x) + abs(result_y) > 0xff ?
-    ///                           0xff : (abs(result_x) + abs(result_y)));
-    ///         }
-    ///       }
-    {
-    }
-  }
+     uint16_t *input = arg0;
+     uint8_t *output = arg1;
+     uint32_t width = arg2;
+     uint32_t height = arg3;
+
+     for (uint32_t w = 1; w < width - 1; w++) {
+       for (uint32_t h = 1; h < height - 1; h++) {
+         int32_t result_x = 0, result_y = 0;
+         uint8_t result = 0;
+         int8_t hori[] = {-1, 0, 1, -2, 0, 2, -1, 0, 1};
+         int8_t vert[] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
+
+         for (uint32_t x = 0; x < 3; x++) {
+           for (uint32_t y = 0; y < 3; y++) {
+             uint32_t index = (w + x - 1) + (h + y - 1) * width;
+             uint32_t index_filter = x * 3 + y;
+
+             result_x += hori[index_filter] * ((input[index] & 0xff));
+             result_y += vert[index_filter] * ((input[index] & 0xff));
+           }
+         }
+         output[w + (h - 1) * width] = (abs(result_x) + abs(result_y) > 0xff ?
+                         0xff : (abs(result_x) + abs(result_y)));
+       }
+     }
+   }
 };
 
 int main() {
   // Define AIE CGRA running a program "prog" on all the tiles of a VC1902
+#ifdef __SYCL_DEVICE_ONLY__
+  acap::aie::array<acap::aie::layout::one_pe, prog> aie;
+#else
   acap::aie::array<acap::aie::layout::vc1902, prog> aie;
+#endif
 
   std::ofstream input;
   std::ofstream output;
@@ -153,15 +151,6 @@ int main() {
   cap.set(cv::CAP_PROP_CONVERT_RGB, 0);
   // use yuyv format to skip conversion / decompression
   cap.set(cv::CAP_PROP_FOURCC, cv::VideoWriter::fourcc('Y', 'U', 'Y', 'V'));
-
-  /// load the elf. Loaded to all tiles, but it doesn't have to be
-  boost::hana::for_each(aie.tiles, [&] (auto& t) {
-    /// each takes 2 lines, so only 300 tiles are needed
-    /// top row is not used
-    if (!t.is_top_row()) {
-      t.load_elf("aie-sobel.elf");
-    }
-  });
 
   do {
     input.open("lab-800x600-sobel.data");
