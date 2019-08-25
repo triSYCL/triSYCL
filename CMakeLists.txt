@@ -21,7 +21,9 @@ include_directories(${PROJECT_SOURCE_DIR}/tests/common) # All targets inherit SY
 
 
 # Recurse into tests dir to pick up unit tests
-add_subdirectory(tests)
+if (BUILD_TESTING)
+  add_subdirectory(tests)
+endif()
 
 add_library(${PROJECT_NAME} INTERFACE)
 
