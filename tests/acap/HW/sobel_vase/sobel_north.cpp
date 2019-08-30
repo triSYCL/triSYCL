@@ -127,25 +127,9 @@ struct prog : acap::aie::tile<AIE, X, Y> {
     for (unsigned int i = 0; i < NUM_OUTPUT_BYTES_PER_SLICE / 4; i++) {
       out_buffer[buffer_offset + i] = t::mem_read(offset + 0x4800 + i * 4);
     }
+
   }
 
-  // Immediate TODO:
-  //    1) Investigate into the changes to main when you add more arguements to
-  //       a function
-  //    2) How cardano generates its main and if there is a way to do it through
-  //       llvm IR? I find this unlikely
-  //    3) How to link two objects using xchesscc
-  //
-  // 2.5: Ask Hyun to test the binary in his example, probably have to manually
-  //      name the kernel in some way..? Unless the Main file we generate
-  //      handles it then hopefully it's possible to just run it
-  // 3: Fix host side to do the right data transfers, check Hyuns example
-  // 4: Test it works on AI Engine with a seperate tile program and host program
-  // 5: Do a program_manager for the tiles and check we can access appropriate
-  //    and required integrated header information
-  // 6: Start working out more complex program_manager, compilation process
-  //    and tile loader..
-  // 7: Add more ACAP++ features
   uint8_t *arg0;
   uint8_t *arg1;
   uint32_t arg2;
@@ -180,10 +164,12 @@ struct prog : acap::aie::tile<AIE, X, Y> {
 };
 
 
-// TODO:
-// Why does it Cycle through SemaSYCL twice...? Is this a problem/bug?
 int main() {
+#ifdef __SYCL_DEVICE_ONLY__
+  acap::aie::array<acap::aie::layout::one_pe, prog> aie;
+#else
   acap::aie::array<acap::aie::layout::vc1902, prog> aie;
+#endif
 
   std::ofstream inputFile;
   std::ofstream outputFile;
@@ -204,13 +190,18 @@ int main() {
   inputFile.write((char *)buffer, input.total());
   inputFile.close();
 
+  // Not really neccessary but if the resulting image isn't all black we're at
+  // least sure something happened on the read back
+  for (int i = 0; i < NUM_OUTPUT_BYTES_TOTAL / 4; ++i)
+    out_buffer[i] = 0;
+
   aie.run();
 
-  cv::Mat outputMat(std::vector{600, 800}, CV_8UC1, (char *)buffer);
+  cv::Mat outputMat(std::vector{600, 800}, CV_8UC1, (char *)out_buffer);
   cv::imwrite("output.bmp", outputMat);
 
   outputFile.open("lab-800x600-sobel-aie.data");
-  outputFile.write((char *)buffer, 800 * 600);
+  outputFile.write((char *)out_buffer, 800 * 600);
   outputFile.close();
 
   return 0;

@@ -288,7 +288,11 @@ struct prog : acap::aie::tile<AIE, X, Y> {
 // TODO:
 // Why does it Cycle through SemaSYCL twice...? Is this a problem/bug?
 int main() {
+#ifdef __SYCL_DEVICE_ONLY__
+  acap::aie::array<acap::aie::layout::one_pe, prog> aie;
+#else
   acap::aie::array<acap::aie::layout::vc1902, prog> aie;
+#endif
 
   std::ofstream inputFile;
   std::ofstream outputFile;
@@ -309,13 +313,18 @@ int main() {
   inputFile.write((char *)buffer, input.total());
   inputFile.close();
 
+  // Not really neccessary but if the resulting image isn't all black we're at
+  // least sure something happened on the read back
+  for (int i = 0; i < NUM_OUTPUT_BYTES_TOTAL / 4; ++i)
+    out_buffer[i] = 0;
+
   aie.run();
 
-  cv::Mat outputMat(std::vector{600, 800}, CV_8UC1, (char *)buffer);
+  cv::Mat outputMat(std::vector{600, 800}, CV_8UC1, (char *)out_buffer);
   cv::imwrite("output.bmp", outputMat);
 
   outputFile.open("lab-800x600-sobel-aie.data");
-  outputFile.write((char *)buffer, 800 * 600);
+  outputFile.write((char *)out_buffer, 800 * 600);
   outputFile.close();
 
   return 0;
