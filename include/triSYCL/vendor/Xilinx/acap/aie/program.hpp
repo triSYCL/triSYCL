@@ -21,6 +21,7 @@
 #include "memory_base.hpp"
 #include "tile.hpp"
 #include "tile_base.hpp"
+#include "triSYCL/detail/program_manager.hpp"
 
 extern "C" {
   #include <xaiengine.h>
@@ -273,9 +274,7 @@ struct program {
             TRISYCL_DUMP_T("Starting ME tile (" << t.x << ',' << t.y
                            << ") linear id = " << t.linear_id());
 
-            {
-              t.load_elf("aie.elf");
-            }
+            t.load_elf_image(detail::program_manager::instance()->get_image(0));
 
             t.core_reset();
             t.core_run();

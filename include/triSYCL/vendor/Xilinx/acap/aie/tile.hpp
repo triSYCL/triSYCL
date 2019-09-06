@@ -277,10 +277,16 @@ struct tile : tile_base<AIE_Program> {
   }
 
   /// FIXME: is this right location for these functions?
-  /// Load the elf
-  void load_elf(const char *path) {
+  /// Load the elf via path to a elf binary file, handy for debugging if you
+  /// wish to dump a stored binary or load something AoT compiled seperately
+  void load_elf_file(const char *path) {
     // global load of elf
-    XAieGbl_LoadElf(tb::aie_hw_tile, (u8 *)path, 0);
+    XAieGbl_LoadElf(tb::aie_hw_tile,  reinterpret_cast<const u8*>(path), 0);
+  }
+
+  /// Load the elf via path to a block of memory which contains an elf image
+  void load_elf_image(std::string image) {
+    XAieGbl_LoadElfMem(tb::aie_hw_tile, reinterpret_cast<u8*>(image.data()), 0);
   }
 
   /// Reset the core
