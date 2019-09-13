@@ -136,7 +136,7 @@ class program_manager : public detail::singleton<program_manager> {
 private:
   /// \todo: Can probably get rid of this if we can rip all the data we need from
   /// it when we run through
-  std::unique_ptr<std::vector<__sycl_device_image*>> images;
+  std::vector<__sycl_device_image*> images;
 
   /// A work-around to a work-around, the AI Engine runtime does some
   /// manipulation of the elf binary in memory to work through a chess compiler
@@ -150,14 +150,18 @@ private:
   std::vector<std::pair</*Name*/std::string, /*Binary*/std::string>> image_list;
 
 public:
-  /// This in theory loads all of the images for a module (!= translation unit)
+  /// This in theory loads all of the images for a module, a module may not
+  /// necessarily a translation unit it may also contain kernels from
+  /// other TUs. But this requires a little more investigation as we have no
+  /// test that spans multiple TUs yet! See Intel SYCL LLVM Pull:
+  /// https://github.com/intel/llvm/pull/631
   void addImages(__sycl_bin_desc* desc) {
     /// \todo Probably needs a lock to not have data races when running on
     /// multiple cores, Intel defines a global singleton lock based on C++
     /// mutexs in it's Util.hpp class in the SYCL runtime and uses it as follows:
     /// std::lock_guard<std::mutex> Guard(Sync::getGlobalLock());
-    if (images == nullptr)
-      images.reset(new std::vector<__sycl_device_image*>());
+    if (images.empty())
+      images.clear();
 
     TRISYCL_DUMP_T("Number of Device Images being registered from module: "
                    << desc->NumDeviceImages << "\n");
@@ -184,15 +188,15 @@ public:
       /// incompatibility with Intel's SYCL implementation and OpenMP/HIP
       ///
       /// Push to ro storage images and our writeable copies in image_list
-      images->push_back(img);
+      images.push_back(img);
       image_list.push_back(std::make_pair(std::string(img->BuildOptions),
                            std::string(img->ImageStart, img->ImageEnd)));
     }
   }
 
   // Simple test function to dump an image to file
-  void image_dump(__sycl_device_image * img, std::string filename) {
-    std::ofstream F(filename, std::ios::binary);
+  void image_dump(__sycl_device_image * img, const std::string& filename) {
+    std::ofstream F{filename, std::ios::binary};
 
     if (!F.is_open()) {
       std::cerr << "File for image dump could not be opened \n";
@@ -206,15 +210,15 @@ public:
   }
 
   // Simple test function to dump an image to file
-  void image_dump(std::string img, std::string filename) {
-    std::ofstream F(filename, std::ios::binary);
+  void image_dump(const std::string& img, const std::string& filename) {
+    std::ofstream F{filename, std::ios::binary};
 
     if (!F.is_open()) {
       std::cerr << "File for image dump could not be opened \n";
       return;
     }
 
-    F.write(img.c_str(), img.size());
+    F.write(img.data(), img.size());
     F.close();
   }
 
@@ -223,7 +227,7 @@ public:
   ///
   /// Return by index, only relevant really if you're testing for now and know
   /// the exact location in the vector that the image resides.
-  std::string get_image(unsigned int index) {
+  std::string get_image(const unsigned int index) {
     return std::get<1>(image_list.at(index));
   }
 
@@ -232,19 +236,19 @@ public:
   ///
   /// Return by kernel name, used to map integration header names to offloaded
   /// binary names
-  std::string get_image(std::string kernelName) {
+  std::string get_image(const std::string& kernelName) {
     for (auto image : image_list)
       if (std::get<0>(image) == kernelName) {
         return std::get<1>(image);
       }
-    return "";
+    return {};
   }
 
   /// The original read-only image section of the image stored in the fat-binary
   /// Only really useful for debugging or copying, directly casting off const
   /// and trying to manipulate this will result in a segfault
-  const unsigned char* get_ro_image(unsigned int index) {
-    return images.get()->at(index)->ImageStart;
+  const unsigned char* get_ro_image(const unsigned int index) {
+    return images.at(index)->ImageStart;
   }
 
 };

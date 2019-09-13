@@ -114,14 +114,6 @@ struct prog : acap::aie::tile<AIE, X, Y> {
     }
   }
 
-  // Offloading/Seperate Tile Generation
-  // 1) Create a way for the host to Load the correct tile elf per tile
-  // 2) Tweak the driver to offload a bunch of tiles rather than just one tile
-  // 3) properly implement register functions
-  // 4) Give elf files/main functions Cardano naming convention, i.e.
-  //    underscores between numbers e.g. 1_11 11_1
-
-
   // Linker Script Gen:
   // See linker_script.bcf TODO, but essentially make each tile use its own
   // memory rather than a neighbours
