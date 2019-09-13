@@ -22,6 +22,7 @@
 #include "tile.hpp"
 #include "tile_base.hpp"
 #include "triSYCL/detail/program_manager.hpp"
+#include "triSYCL/detail/kernel_desc.hpp"
 
 extern "C" {
   #include <xaiengine.h>
@@ -35,8 +36,6 @@ extern "C" {
     Extensions to support explicit AI Engine system-wide programming in C++
     @{
 */
-
-class name_for_kernel;
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
@@ -267,20 +266,57 @@ struct program {
         // auto kernel = [=, TileMove = std::move(t)]() mutable {TileMove.run();};
         // kernel_outliner(kernel);
 #else
-        t.submit([&]
+        t.submit([&] {
+            // The name is captured by it's non-reference type and has to be in
+            // the cl::sycl::detail namespace as the integration header is
+            // defined to be in this namespace (and all our implementation
+            // resides in trisycl by default, so ::detail resolves to
+            // trisycl::detail)
+            auto kernelName = cl::sycl::detail::KernelInfo<
+                typename std::remove_reference<decltype(t)>::type>::getName();
+
+            TRISYCL_DUMP_T("Starting ME tile (" << t.x << ',' << t.y
+                           << ") linear id = " << t.linear_id() << ","
+                           << "Associated Tile Kernel Name: " << kernelName
+                           << "- beginning prerun execution");
+
             if (t.prerun())
               return;
 
-            TRISYCL_DUMP_T("Starting ME tile (" << t.x << ',' << t.y
-                           << ") linear id = " << t.linear_id());
+            auto kernelImage =
+                detail::program_manager::instance()->get_image(kernelName);
 
-            t.load_elf_image(detail::program_manager::instance()->get_image(0));
+#ifdef TRISYCL_DEBUG_IMAGE
+            // Image Dump using name retrieval for Debug, separate debug define
+            // as dumping 400 images when at maximum array capacity is not
+            // necessarily something you always want to do when debugging.
+            //
+            // This differentiates from the program_manager image dump in that
+            // it helps check whether the names are correctly correlating to the
+            // correct elf images and if there is some breakage in the storing
+            // of the images.
+            detail::program_manager::instance()->image_dump(
+                kernelName, "run_aie_" + kernelName + ".elf");
+#endif
 
+            TRISYCL_DUMP_T("Loading Kernel " << kernelName << " ELF to tile ("
+                           << t.x << ',' << t.y << ") linear id = "
+                           << t.linear_id());
+
+            t.load_elf_image(kernelImage);
+
+            TRISYCL_DUMP_T("Loaded Kernel " << kernelName << " ELF to tile ("
+                           << t.x << ',' << t.y << ") linear id = "
+                           << t.linear_id() << "beginning tile execution");
             t.core_reset();
             t.core_run();
             t.core_wait();
             t.core_stop();
 
+            TRISYCL_DUMP_T("Stopping ME tile (" << t.x << ',' << t.y
+                           << ") linear id = " << t.linear_id() << ","
+                           << "Associated Tile Kernel Name: " << kernelName
+                           << "- beginning postrun execution");
             t.postrun();
 
             TRISYCL_DUMP_T("Stopping ME tile (" << t.x << ',' << t.y << ')');

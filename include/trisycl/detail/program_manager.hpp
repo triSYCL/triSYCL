@@ -1,10 +1,13 @@
 #ifndef TRISYCL_SYCL_DETAIL_PROGRAM_MANAGER_HPP
 #define TRISYCL_SYCL_DETAIL_PROGRAM_MANAGER_HPP
 
-#include "triSYCL/detail/singleton.hpp"
 #include <iostream>
 #include <string>
+#include <utility>
 #include <fstream>
+
+#include "triSYCL/detail/debug.hpp"
+#include "triSYCL/detail/singleton.hpp"
 
 /** \file The minimum required functions for registering a binary
     using the triSYCL/Intel SYCL frontend, so that the compilation flow stays
@@ -101,81 +104,89 @@ struct __sycl_bin_desc {
 
 // +++ }
 
-// LOOK INTO OFFLOAD BUNDLER BEFORE COMMITTING IN ONE DIRECTION OR THE OTHER
-//
-// FIXME TOMORROW Need to think of a way to synch up the images to the tiles
-// images technically don't have names associated with them.
-// There is some ways I can probably do this, but I really do not want to alter
-// the offload types if I can help it:
-// 1) Create a new offload image type for AI Engine based on existing one,
-//    that's only ever used for AI Engine offloading, but this may break
-//    compatibility
-// 2) Piggy back on one of the existing variables we don't use like BuildOptions
-// 3) Create a new type of Register function that passes a string of image
-//    to tile names..
+
 namespace trisycl::detail {
 
-/// singleton style program manager that's job is to hold all of the compiler
-/// registered binaries and manage them. It's bare-bones and based on the Intel
-/// SYCL implementation for now so it's quite feasible to deviate from it if
-/// desired, the only requirement is that something stores the device_images
-/// passed to the __tgt_register_lib function and that all of the used offload
-/// wrapper types remain identical to the offload wrappers (name can be
-/// different, but if the data layout is incorrect you're probably going to
-/// have a bad time)
-/// TODO: Look into:
-///  1) Locks for Add Images
-///  2) Proper image cleanup/release, there is none at the moment so this is
-///     pretty much one big memory leak
-///  3) Maybe make the structure names a little better than sycl_*
-///  4) This could also just be part of the array.hpp class, but it could also
-///     be more generic and used to store images for other types e.g arm32,
-///     fpga etc.
+  /** Singleton style program manager that's job is to hold all of the compiler
+   registered binaries and manage them. It's bare-bones and based on the Intel
+   SYCL implementation for now so it's quite feasible to deviate from it if
+   desired, the only requirement is that something stores the device_images
+   passed to the __tgt_register_lib function and that all of the used offload
+   wrapper types remain identical to the offload wrappers (name can be
+   different, but if the data layout is incorrect you're probably going to
+   have a bad time).
+
+   Image is equal to binary in the current wording of the documentation/naming,
+   using the words interchangeably just now.
+
+   \todo 1) Locks for addImages and other components that are not thread safe
+   \todo 2) Proper image cleanup/release, there is none at the moment so this
+  					 is pretty much one big memory leak
+   \todo 3) Maybe make the structure names a little better than sycl_*
+   \todo 4) Map<Name, Binary> instead of vector<pair<Name, Binary>> for storing
+  		  		 copies of image data, more efficient than iterating over all images
+   \todo 5) This could also just be part of the array.hpp class, but it could
+  					 also be more generic and used to store images for other types e.g
+  					 arm32, fpga etc.
+   \todo 6) Verify ELF Magic of image on registration so we can catch invalid
+            binaries early
+*/
+
 class program_manager : public detail::singleton<program_manager> {
 private:
-  // TODO: Can probably get rid of this if we can rip all the data we need from
-  // it when we run through
+  /// \todo: Can probably get rid of this if we can rip all the data we need from
+  /// it when we run through
   std::unique_ptr<std::vector<__sycl_device_image*>> images;
 
-  // A work-around to a work-around, the AI Engine runtime does some
-  // manipulation of the elf binary in memory to work through a chess compiler
-  // bug, so we need a copy of it as the original buffer containing each image
-  // is read-only/const (not because of the const pointer defined in the
-  // structure, but because the section inside the host binary that the device
-  // binary is allocated in is a read-only section).
-  std::vector<std::string> image_list;
+  /// A work-around to a work-around, the AI Engine runtime does some
+  /// manipulation of the elf binary in memory to work through a chess compiler
+  /// bug, so we need a copy of it as the original buffer containing each image
+  /// is read-only/const (not because of the const pointer defined in the
+  /// structure, but because the section inside the host binary that the device
+  /// binary is allocated in is a read-only section).
+  ///
+  /// We also need to make a pairing between the binary and its name so we can
+  /// retrieve it via integration header.
+  std::vector<std::pair</*Name*/std::string, /*Binary*/std::string>> image_list;
 
 public:
-  // FIXME: We don't have an OpenCL style programming model where we just feed
-  // it a kernel name for the kernels in the module how do we associate image
-  // with tile?
-  //
-  /// This in theory loads all of the images for a module/translation unit and
-  /// the images should in someway probably be correctly associated with a
-  /// module
+  /// This in theory loads all of the images for a module (!= translation unit)
   void addImages(__sycl_bin_desc* desc) {
-    // TODO: Probably needs a lock to not have data races when running on
-    // multiple cores, Intel defines a global singleton lock based on C++
-    // mutexs in it's Util.hpp class in the SYCL runtime and uses it as follows:
-    // std::lock_guard<std::mutex> Guard(Sync::getGlobalLock());
+    /// \todo Probably needs a lock to not have data races when running on
+    /// multiple cores, Intel defines a global singleton lock based on C++
+    /// mutexs in it's Util.hpp class in the SYCL runtime and uses it as follows:
+    /// std::lock_guard<std::mutex> Guard(Sync::getGlobalLock());
+    if (images == nullptr)
+      images.reset(new std::vector<__sycl_device_image*>());
 
-    std::cout << "tried to register an image desc \n";
-    std::cout << "number of device images in module: "
-              << desc->NumDeviceImages << "\n";
+    TRISYCL_DUMP_T("Number of Device Images being registered from module: "
+                   << desc->NumDeviceImages << "\n");
 
     for (int i = 0; i < desc->NumDeviceImages; ++i) {
-      __sycl_device_image* Img = &(desc->DeviceImages[i]);
+      __sycl_device_image* img = &(desc->DeviceImages[i]);
 
-      if (images == nullptr)
-        images.reset(new std::vector<__sycl_device_image*>());
+      TRISYCL_DUMP_T("Registering Image " << i << " Bin size "
+                     << ((intptr_t)img->ImageEnd - (intptr_t)img->ImageStart)
+                     << " Start Address of RO image section: "
+                     << (void *)img->ImageStart
+                     << " End Address of RO image section: "
+                     << (void *)img->ImageEnd << "\n");
 
-      std::cout << " Bin size : "
-                << ((intptr_t)Img->ImageEnd - (intptr_t)Img->ImageStart)
-                << "\n";
+#ifdef TRISYCL_DEBUG_IMAGE
+      /// Dump image on registration, used to make sure the initial binary image
+      /// is correct before we do anything with it in our runtime
+      image_dump(img, "aie" + std::string(Img->BuildOptions) + ".elf");
+#endif
 
-      image_dump(Img, "aie" + std::to_string(desc->NumDeviceImages) + ".elf");
-      images->push_back(Img);
-      image_list.push_back(std::string(Img->ImageStart, Img->ImageEnd));
+      /// We piggyback off of the BuildOptions parameter of the device_image
+      /// description as it's unused in our case and it allows us to avoid
+      /// altering the ClangOffloadWrappers types which causes them to risk
+      /// incompatibility with Intel's SYCL implementation and OpenMP/HIP
+      ///
+      /// Push to ro storage images and our writeable copies in image_list
+      images->push_back(img);
+      image_list.push_back(std::make_pair(std::string(img->BuildOptions),
+                           std::string(img->ImageStart, img->ImageEnd)));
     }
   }
 
@@ -188,34 +199,51 @@ public:
       return;
     }
 
-    size_t ImgSize = static_cast<size_t>((intptr_t)img->ImageEnd - (intptr_t)img->ImageStart);
+    size_t ImgSize = static_cast<size_t>((intptr_t)img->ImageEnd
+                                       - (intptr_t)img->ImageStart);
     F.write(reinterpret_cast<const char *>(img->ImageStart), ImgSize);
-
     F.close();
   }
 
-  // A write-able copy of our binary image, mainly so the AI Engine runtime can
-  // do some manipulation to workaround some chess problems.
+  // Simple test function to dump an image to file
+  void image_dump(std::string img, std::string filename) {
+    std::ofstream F(filename, std::ios::binary);
+
+    if (!F.is_open()) {
+      std::cerr << "File for image dump could not be opened \n";
+      return;
+    }
+
+    F.write(img.c_str(), img.size());
+    F.close();
+  }
+
+  /// A write-able copy of our binary image, mainly so the AI Engine runtime can
+  /// do some manipulation to workaround some chess problems.
+  ///
+  /// Return by index, only relevant really if you're testing for now and know
+  /// the exact location in the vector that the image resides.
   std::string get_image(unsigned int index) {
-    return image_list.at(index);
+    return std::get<1>(image_list.at(index));
+  }
+
+  /// A write-able copy of our binary image, mainly so the AI Engine runtime can
+  /// do some manipulation to workaround some chess problems.
+  ///
+  /// Return by kernel name, used to map integration header names to offloaded
+  /// binary names
+  std::string get_image(std::string kernelName) {
+    for (auto image : image_list)
+      if (std::get<0>(image) == kernelName) {
+        return std::get<1>(image);
+      }
+    return "";
   }
 
   /// The original read-only image section of the image stored in the fat-binary
   /// Only really useful for debugging or copying, directly casting off const
   /// and trying to manipulate this will result in a segfault
   const unsigned char* get_ro_image(unsigned int index) {
-    std::cout << "Start Address: "
-              << (void *)images.get()->data()[index]->ImageStart << "\n";
-
-    std::cout << "End Address: "
-              << (void *)images.get()->data()[index]->ImageEnd << "\n";
-
-
-    std::cout << " Bin size from get_image: "
-              << ((intptr_t)images.get()->at(index)->ImageEnd -
-                 (intptr_t)images.get()->at(index)->ImageStart)
-              << "\n";
-
     return images.get()->at(index)->ImageStart;
   }
 
