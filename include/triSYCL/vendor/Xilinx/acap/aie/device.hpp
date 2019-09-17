@@ -37,7 +37,7 @@ struct device {
   /** Keep track of all the tiles as a type-erased tile_base type to
       have a simpler access to the basic position-independent tile
       features */
-  tile_infrastructure<device> tile_bases[geo::y_size][geo::x_size];
+  tile_infrastructure<device> ti[geo::y_size][geo::x_size];
 
 
   /** Access to the common infrastructure part of a tile
@@ -50,7 +50,7 @@ struct device {
   */
   auto &tile(int x, int y) {
     geo::validate_x_y(x, y);
-    return tile_bases[y][x];
+    return ti[y][x];
   }
 
 

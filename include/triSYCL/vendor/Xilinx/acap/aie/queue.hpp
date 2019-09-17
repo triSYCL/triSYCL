@@ -24,9 +24,10 @@ namespace trisycl::vendor::xilinx::acap::aie {
 */
 template <typename AIEDevice>
 struct queue {
-  AIEDevice &aie_d;
   using geo = typename AIEDevice::geo;
   using layout = typename geo::layout;
+
+  AIEDevice &aie_d;
 
   queue(AIEDevice &d) : aie_d { d } {}
 
@@ -57,7 +58,7 @@ struct queue {
                       int X,
                       int Y> typename Memory = acap::aie::memory>
   void run() const {
-    program<AIEDevice, Tile, Memory> {}.run();;
+    program<AIEDevice, Tile, Memory> { aie_d }.run();
   }
 
 

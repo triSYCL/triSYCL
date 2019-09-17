@@ -4,8 +4,11 @@
 /** \file
 
     The basic AI Engine homogeneous tile, with the common
-    infrastructure to all the tiles (i.e. independent of x & y
-    coordinates)
+    infrastructure to all the tiles, i.e. independent of x & y
+    coordinates, but also from the tile program itself.
+
+    For example the AXI stream switch configuration and packet can
+    survive to some program changes.
 
     Ronan dot Keryell at Xilinx dot com
 
@@ -33,7 +36,7 @@ namespace trisycl::vendor::xilinx::acap::aie {
     programs and memory contents
 */
 template <typename AIEDevice>
-class tile_infrastructure {
+class tile_infrastructure  {
   using axi_ss_geo = typename AIEDevice::geo::core_axi_stream_switch;
   using mpl = typename axi_ss_geo::master_port_layout;
   using spl = typename axi_ss_geo::slave_port_layout;
@@ -64,17 +67,6 @@ private:
   }
 
 public:
-
-  /** Provide a run member function that does nothing so it is
-      possible to write a minimum AI Engine program that does nothing.
-
-      Note that even if this function is not virtual, in the common
-      case a programmer implements it to specify the program executed
-      by a tile
-  */
-  void run() {
-  }
-
 
   /** Get the user input connection from the AXI stream switch
 

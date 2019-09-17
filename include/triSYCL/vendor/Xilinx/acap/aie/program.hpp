@@ -46,7 +46,7 @@ namespace trisycl::vendor::xilinx::acap::aie {
     \param Memory is the description of the machine memory modules. By
     default the machine has empty memory modules.
 */
-template <typename Device,
+template <typename AIEDevice,
           template <typename AIE,
                     int X,
                     int Y> typename Tile = acap::aie::tile,
@@ -56,7 +56,10 @@ template <typename Device,
 struct program {
 
   /// The geography of the CGRA
-  using geo = typename Device::geo;
+  using geo = typename AIEDevice::geo;
+  using device = AIEDevice;
+
+  AIEDevice &aie_d;
 
   /// Type describing all the memory modules of the CGRA
   template <int X, int Y>
@@ -172,10 +175,10 @@ struct program {
 
 
   /// Create the AIE program with the tiles and memory modules
-  program() {
+  program(AIEDevice &aie_d) : aie_d { aie_d } {
     boost::hana::for_each(tiles, [&] (auto& t) {
-        // Inform each tile about their CGRA owner
-        t.set_program(this);
+        // Inform each tile about their tile infrastructure
+        t.set_tile_infrastructure(aie_d.tile(t.x, t.y));
         // Keep track of each base tile
         tile_bases[t.y][t.x] = &t;
       });

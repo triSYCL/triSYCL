@@ -3,9 +3,8 @@
 
 /** \file
 
-    The basic AI Engine homogeneous tile, with the common
-    infrastructure to all the tiles (i.e. independent of x & y
-    coordinates)
+    The basic AI Engine homogeneous tile, with common content to all
+    the tiles (i.e. independent of x & y coordinates)
 
     Ronan dot Keryell at Xilinx dot com
 
@@ -18,6 +17,7 @@
 #include <boost/format.hpp>
 
 #include "axi_stream_switch.hpp"
+#include "tile_infrastructure.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
@@ -29,50 +29,23 @@ namespace trisycl::vendor::xilinx::acap::aie {
     This allows some type erasure while accessing the common
     tile infrastructure.
 
-    \param AIE_Program is the type representing the full CGRA with the
-    programs and memory contents
+    \param AIE_Program is the type representing the full CGRA program
+    with the tile programs and memory contents
 */
 template <typename AIE_Program>
 class tile_base {
   /// For the aie::program class to play with our thread
   friend AIE_Program;
 
-  using axi_ss_geo = typename AIE_Program::geo::core_axi_stream_switch;
-  using mpl = typename axi_ss_geo::master_port_layout;
-  using spl = typename axi_ss_geo::slave_port_layout;
-  using axi_ss_t = axi_stream_switch<axi_ss_geo>;
-
-  /// The AXI stream switch of the core tile
-  axi_ss_t axi_ss;
+  using device = typename AIE_Program::device;
 
   /// The thread used to run this tile
   std::thread thread;
 
 protected:
 
-  /// Keep a reference to the program owning this tile
-  AIE_Program *aie_program;
-
-private:
-
-  /** Map the user input port number to the AXI stream switch port
-
-      \param[in] port is the user port to use
-  */
-  static auto translate_input_port(int port) {
-    return axi_ss_t::translate_port(port, mpl::me_0, mpl::me_last,
-                                    "The core input port is out of range");
-  }
-
-
-  /** Map the user output port number to the AXI stream switch port
-
-      \param[in] port is the BLI id/port to use
-  */
-  static auto translate_output_port(int port) {
-    return axi_ss_t::translate_port(port, spl::me_0, spl::me_last,
-                                    "The core output port is out of range");
-  }
+  /// Keep a reference to the tile_infrastructure hardware features
+  tile_infrastructure<device> *ti;
 
 public:
 
@@ -92,7 +65,7 @@ public:
       \param[in] port is the port to use
   */
   auto& in_connection(int port) {
-    return axi_ss.in_connection(translate_input_port(port));
+    return ti->in_connection(port);
   }
 
 
@@ -101,7 +74,7 @@ public:
       \param[in] port is port to use
   */
   auto& out_connection(int port) {
-    return axi_ss.out_connection(translate_output_port(port));
+    return ti->out_connection(port);
   }
 
 
@@ -116,8 +89,7 @@ public:
   */
   template <typename T, access::target Target = access::target::blocking_pipe>
   auto in(int port) {
-    return axi_ss.in_connection(translate_input_port(port))
-      .template in<T, Target>();
+    return ti->template in<T, Target>(port);
   }
 
 
@@ -132,14 +104,13 @@ public:
   */
   template <typename T, access::target Target = access::target::blocking_pipe>
   auto out(int port) {
-    return axi_ss.out_connection(translate_output_port(port))
-      .template out<T, Target>();
+    return ti->template out<T, Target>(port);
   }
 
 
-  /// Store a way to access to the owner CGRA
-  void set_program(AIE_Program *program) {
-    aie_program = program;
+  /// Store a way to access to hardware infrastructure of the tile
+  void set_tile_infrastructure(tile_infrastructure<device> &t) {
+    ti = &t;
   }
 
 };

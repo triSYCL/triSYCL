@@ -47,8 +47,9 @@ int test_main(int argc, char *argv[]) {
     // Test the execution of an empty program with empty memory
     d.queue().run<>();
 
-    auto q = d.queue().submit<>();
-    q.wait();
+    // THe same but with an explicit wait
+    d.queue().submit<>().wait();
+
     // Test the communication API from the host point-of-view
 
     // Connect port 1 of shim(0) to port 0 of tile(1,2) with a "char" link
@@ -68,34 +69,32 @@ int test_main(int argc, char *argv[]) {
     // Check we read the correct value on tile(1,2) port 0
     BOOST_CHECK(d.tile(1, 2).in<char>(0).read() == 42);
 
-    //auto q = d.queue().submit<comm>();
-    //q.wait();
+    // Launch the AIE comm program
+    auto aie_future = d.queue().submit<comm>();
 
-#if 0
-  // Launch the AIE
-  auto acap = std::async(std::launch::async, [&] { aie.run(); });
+
   // Launch a CPU producer
   auto producer = std::async(std::launch::async, [&] {
       for (int i = 0; i < size; ++i)
         // Use the AXI-MM access to the shim registers to send a value
         // into the AXI-SS from the host
-        aie.shim(0).bli_out<1, char>() << i;
+        d.shim(0).bli_out<1, char>() << i;
     });
+
   // Launch a CPU consumer
   auto consumer = std::async(std::launch::async, [&] {
       float f;
       for (int i = 0; i < size; ++i) {
-        aie.shim(1).bli_in<0, float>() >> f;
+        d.shim(1).bli_in<0, float>() >> f;
         // Check we read the correct value
         BOOST_CHECK(f == 2*i + 1.5);
       }
     });
 
   // Wait for everybody to finish
-  acap.get();
   producer.get();
   consumer.get();
-#endif
+  aie_future.wait();
 
   } catch (sycl::exception &e) {
     // Display the string message of any SYCL exception
