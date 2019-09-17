@@ -29,15 +29,15 @@ namespace trisycl::vendor::xilinx::acap::aie {
     This allows some type erasure while accessing the common
     tile infrastructure.
 
-    \param AIE is the type representing the full CGRA with the
+    \param AIE_Program is the type representing the full CGRA with the
     programs and memory contents
 */
-template <typename AIE>
+template <typename AIE_Program>
 class tile_base {
-  /// For the aie::array class to play with our thread
-  friend AIE;
+  /// For the aie::program class to play with our thread
+  friend AIE_Program;
 
-  using axi_ss_geo = typename AIE::geo::core_axi_stream_switch;
+  using axi_ss_geo = typename AIE_Program::geo::core_axi_stream_switch;
   using mpl = typename axi_ss_geo::master_port_layout;
   using spl = typename axi_ss_geo::slave_port_layout;
   using axi_ss_t = axi_stream_switch<axi_ss_geo>;
@@ -50,8 +50,8 @@ class tile_base {
 
 protected:
 
-  /// Keep a reference to the array owning this tile
-  AIE *aie_array;
+  /// Keep a reference to the program owning this tile
+  AIE_Program *aie_program;
 
 private:
 
@@ -138,8 +138,8 @@ public:
 
 
   /// Store a way to access to the owner CGRA
-  void set_array(AIE *array) {
-    aie_array = array;
+  void set_program(AIE_Program *program) {
+    aie_program = program;
   }
 
 };

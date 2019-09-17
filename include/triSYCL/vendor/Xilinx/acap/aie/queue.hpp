@@ -11,7 +11,7 @@
     License. See LICENSE.TXT for details.
 */
 
-#include "array.hpp"
+#include "program.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
@@ -48,7 +48,7 @@ struct queue {
   auto submit() {
     return std::async(std::launch::async,
                       [] {
-                        array<AIEDevice, Tile, Memory> {}.run();
+                        program<AIEDevice, Tile, Memory> {}.run();
                       });
   }
 

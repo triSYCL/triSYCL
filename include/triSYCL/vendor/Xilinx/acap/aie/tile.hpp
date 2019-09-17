@@ -27,15 +27,15 @@ namespace trisycl::vendor::xilinx::acap::aie {
     This is the type you need to inherit from to define the program of
     a CGRA tile.
 
-    \param AIE is the type representing the full CGRA with the
+    \param AIE_Program is the type representing the full CGRA with the
     programs and memory contents
 
     \param X is the horizontal coordinate of the memory module
 
     \param Y is the vertical coordinate of the memory module
 */
-template <typename AIE, int X, int Y>
-struct tile : tile_base<AIE> {
+template <typename AIE_Program, int X, int Y>
+struct tile : tile_base<AIE_Program> {
   /** The horizontal tile coordinates in the CGRA grid (starting at 0
       and increasing to the right) */
   static auto constexpr x = X;
@@ -44,10 +44,10 @@ struct tile : tile_base<AIE> {
   static auto constexpr y = Y;
 
   /// The geography of the CGRA
-  using geo = typename AIE::geo;
+  using geo = typename AIE_Program::geo;
 
   /// Shortcut to the tile base class
-  using tb = tile_base<AIE>;
+  using tb = tile_base<AIE_Program>;
 
   /** Return the coordinate of the tile in the given dimension
 
@@ -155,7 +155,7 @@ struct tile : tile_base<AIE> {
      static_assert(is_memory_module_left(), "There is no memory module"
                    " on the left of this tile in the left column and"
                    " on an even row");
-     return tb::aie_array->template
+     return tb::aie_program->template
        memory_module<memory_module_linear_id(-1, 0)>();
   }
 
@@ -165,7 +165,7 @@ struct tile : tile_base<AIE> {
     static_assert(is_memory_module_right(), "There is no memory module"
                   " on the right of this tile in the right column and"
                    " on an odd row");
-    return tb::aie_array->template
+    return tb::aie_program->template
       memory_module<memory_module_linear_id(1, 0)>();
   }
 
@@ -174,7 +174,7 @@ struct tile : tile_base<AIE> {
   auto &mem_down() {
     static_assert(is_memory_module_down(), "There is no memory module"
                   " below the lower tile row");
-    return tb::aie_array->template
+    return tb::aie_program->template
       memory_module<memory_module_linear_id(0, -1)>();
   }
 
@@ -183,7 +183,7 @@ struct tile : tile_base<AIE> {
   auto &mem_up() {
     static_assert(is_memory_module_up(), "There is no memory module"
                   " above the upper tile row");
-    return tb::aie_array->template
+    return tb::aie_program->template
       memory_module<memory_module_linear_id(0, 1)>();
   }
 
@@ -198,7 +198,7 @@ struct tile : tile_base<AIE> {
 
 
   /// The type of the memory module native to the tile
-  using mem_t = typename AIE::template tileable_memory<x, y>;
+  using mem_t = typename AIE_Program::template tileable_memory<x, y>;
 
 
   /// Test if this tile owns the start of the cascade_stream
@@ -232,7 +232,7 @@ struct tile : tile_base<AIE> {
   auto get_cascade_stream_in() {
     static_assert(!is_cascade_start(), "You cannot access to the cascade stream"
                   " input on the tile that starts the stream");
-    return tb::aie_array->cs.template get_cascade_stream_in<T, Target>(x, y);
+    return tb::aie_program->cs.template get_cascade_stream_in<T, Target>(x, y);
   }
 
 
@@ -248,7 +248,7 @@ struct tile : tile_base<AIE> {
   auto get_cascade_stream_out() {
     static_assert(!is_cascade_end(), "You cannot access to the cascade stream"
                   " output on the tile that starts the stream");
-    return tb::aie_array->cs.template get_cascade_stream_out<T, Target>(x, y);
+    return tb::aie_program->cs.template get_cascade_stream_out<T, Target>(x, y);
   }
 
 
@@ -327,7 +327,7 @@ struct tile : tile_base<AIE> {
 
   /** Full barrier using the 2 locks by default
 
-      Implement a barrier across the full tile array by using \c
+      Implement a barrier across the full program by using \c
       horizontal_barrier() and \c vertical_barrier().
   */
   void barrier() {

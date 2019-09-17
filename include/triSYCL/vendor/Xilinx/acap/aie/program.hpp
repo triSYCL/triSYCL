@@ -1,9 +1,9 @@
-#ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_ARRAY_HPP
-#define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_ARRAY_HPP
+#ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_PROGRAM_HPP
+#define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_PROGRAM_HPP
 
 /** \file
 
-    Model of an AI Engine array
+    Model of an AI Engine program
 
     Ronan dot Keryell at Xilinx dot com
 
@@ -53,14 +53,14 @@ template <typename Device,
           template <typename AIE,
                     int X,
                     int Y> typename Memory = acap::aie::memory>
-struct array {
+struct program {
 
   /// The geography of the CGRA
   using geo = typename Device::geo;
 
   /// Type describing all the memory modules of the CGRA
   template <int X, int Y>
-  using tileable_memory = Memory<array, X, Y>;
+  using tileable_memory = Memory<program, X, Y>;
 
   /** The tiled memory modules of the CGRA
 
@@ -76,7 +76,7 @@ struct array {
 
   /// Type describing the programs of all the cores in the CGRA
   template <int X, int Y>
-  using tileable_tile = Tile<array, X, Y>;
+  using tileable_tile = Tile<program, X, Y>;
 
   /** The tiled programs of the CGRA
 
@@ -88,7 +88,7 @@ struct array {
   /** Keep track of all the tiles as a type-erased tile_base type to
       have a simpler access to the basic position-independent tile
       features */
-  tile_base<array> *tile_bases[geo::y_size][geo::x_size];
+  tile_base<program> *tile_bases[geo::y_size][geo::x_size];
 
   /** Access to the common infrastructure part of a memory module
 
@@ -171,11 +171,11 @@ struct array {
   }
 
 
-  /// Create the AIE array with the tiles and memory modules
-  array() {
+  /// Create the AIE program with the tiles and memory modules
+  program() {
     boost::hana::for_each(tiles, [&] (auto& t) {
         // Inform each tile about their CGRA owner
-        t.set_array(this);
+        t.set_program(this);
         // Keep track of each base tile
         tile_bases[t.y][t.x] = &t;
       });
@@ -247,4 +247,4 @@ struct array {
     ### End:
 */
 
-#endif // TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_ARRAY_HPP
+#endif // TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_PROGRAM_HPP
