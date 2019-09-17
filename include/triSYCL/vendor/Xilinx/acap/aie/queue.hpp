@@ -24,14 +24,25 @@ namespace trisycl::vendor::xilinx::acap::aie {
 */
 template <typename AIEDevice>
 struct queue {
-  AIEDevice aie_d;
+  AIEDevice &aie_d;
   using geo = typename AIEDevice::geo;
   using layout = typename geo::layout;
 
   queue(AIEDevice &d) : aie_d { d } {}
 
 
-  /** Launch a AIE execution on this queue
+  /** Provide a wait() function that actually can throw an exception
+      instead of ignoring it by the std::future::wait() */
+  struct queue_waiter : std::future<void> {
+    void wait() {
+      // Just call the function unwrapping the promise, it will
+      // rethrow if there is any exception pending
+      get();
+    }
+  };
+
+
+  /** Run synchronously a program execution on this queue
 
       \param Tile is the description of the program tiles to
       instantiate. By default each tile will run an empty program.
@@ -45,12 +56,34 @@ struct queue {
             template <typename Device,
                       int X,
                       int Y> typename Memory = acap::aie::memory>
-  auto submit() {
-    return std::async(std::launch::async,
-                      [] {
-                        program<AIEDevice, Tile, Memory> {}.run();
-                      });
+  void run() const {
+    program<AIEDevice, Tile, Memory> {}.run();;
   }
+
+
+  /** Submit a program execution on this queue
+
+      \param Tile is the description of the program tiles to
+      instantiate. By default each tile will run an empty program.
+
+      \param Memory is the description of the machine memory modules. By
+      default the machine has empty memory modules.
+  */
+  template <template <typename Device,
+                      int X,
+                      int Y> typename Tile = acap::aie::tile,
+            template <typename Device,
+                      int X,
+                      int Y> typename Memory = acap::aie::memory>
+  auto submit() const {
+    return queue_waiter {
+      std::async(std::launch::async,
+                 /** \fixme implement a real queue with lifetime
+                     support because here it assume the device will
+                     last... */
+                 [*this] { this->run<Tile, Memory>(); }) };
+  }
+
 
 };
 

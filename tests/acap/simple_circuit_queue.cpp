@@ -44,10 +44,11 @@ int test_main(int argc, char *argv[]) {
   try {
     acap::aie::device<acap::aie::layout::size<3,4>> d;
 
-    // Test the execution of empty program with empty memory
-    d.queue().submit<>().wait();
-    //d.queue().submit<comm>().wait();
+    // Test the execution of an empty program with empty memory
+    d.queue().run<>();
 
+    auto q = d.queue().submit<>();
+    q.wait();
     // Test the communication API from the host point-of-view
 
     // Connect port 1 of shim(0) to port 0 of tile(1,2) with a "char" link
@@ -66,6 +67,9 @@ int test_main(int argc, char *argv[]) {
     d.shim(0).bli_out<1, char>() << 42;
     // Check we read the correct value on tile(1,2) port 0
     BOOST_CHECK(d.tile(1, 2).in<char>(0).read() == 42);
+
+    //auto q = d.queue().submit<comm>();
+    //q.wait();
 
 #if 0
   // Launch the AIE
