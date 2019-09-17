@@ -43,25 +43,29 @@ struct comm : acap::aie::tile<AIE, X, Y> {
 int test_main(int argc, char *argv[]) {
   try {
     acap::aie::device<acap::aie::layout::size<3,4>> d;
-    // Not yet implemented
+
+    // Test the execution of empty program with empty memory
+    d.queue().submit<>().wait();
     //d.queue().submit<comm>().wait();
 
-  // Connect port 1 of shim(0) to port 0 of tile(1,2) with a "char" link
-  d.connect<char>(port::shim { 0, 1 }, port::tile { 1, 2, 0 });
-  // Connect port 0 of tile(1,2) to port 1 of tile(2,0) with a "int" link
-  d.connect<int>(port::tile { 1, 2, 0 }, port::tile { 2, 0, 1 });
-  // Connect port 0 of tile(2,0) to port 0 of shim(1) with a "float" link
-  d.connect<float>(port::tile { 2, 0, 0 }, port::shim { 1, 0 });
+    // Test the communication API from the host point-of-view
 
-  // Use the connection from the CPU directly by using the AXI MM to the tile
-  d.tile(1, 2).out<int>(0) << 3;
-  // Check we read the correct value on tile(2,0) port 1
-  BOOST_CHECK(d.tile(2, 0).in<int>(1).read() == 3);
+    // Connect port 1 of shim(0) to port 0 of tile(1,2) with a "char" link
+    d.connect<char>(port::shim { 0, 1 }, port::tile { 1, 2, 0 });
+    // Connect port 0 of tile(1,2) to port 1 of tile(2,0) with a "int" link
+    d.connect<int>(port::tile { 1, 2, 0 }, port::tile { 2, 0, 1 });
+    // Connect port 0 of tile(2,0) to port 0 of shim(1) with a "float" link
+    d.connect<float>(port::tile { 2, 0, 0 }, port::shim { 1, 0 });
 
-  // Try a shim & tile connection directly from the host
-  d.shim(0).bli_out<1, char>() << 42;
-  // Check we read the correct value on tile(1,2) port 0
-  BOOST_CHECK(d.tile(1, 2).in<char>(0).read() == 42);
+    // Use the connection from the CPU directly by using the AXI MM to the tile
+    d.tile(1, 2).out<int>(0) << 3;
+    // Check we read the correct value on tile(2,0) port 1
+    BOOST_CHECK(d.tile(2, 0).in<int>(1).read() == 3);
+
+    // Try a shim & tile connection directly from the host
+    d.shim(0).bli_out<1, char>() << 42;
+    // Check we read the correct value on tile(1,2) port 0
+    BOOST_CHECK(d.tile(1, 2).in<char>(0).read() == 42);
 
 #if 0
   // Launch the AIE

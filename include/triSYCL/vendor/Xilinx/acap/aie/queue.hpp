@@ -39,10 +39,10 @@ struct queue {
       \param Memory is the description of the machine memory modules. By
       default the machine has empty memory modules.
   */
-  template <template <typename AIE,
+  template <template <typename Device,
                       int X,
                       int Y> typename Tile = acap::aie::tile,
-            template <typename AIE,
+            template <typename Device,
                       int X,
                       int Y> typename Memory = acap::aie::memory>
   auto submit() {
