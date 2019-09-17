@@ -11,6 +11,8 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <future>
+
 #include "program.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie {

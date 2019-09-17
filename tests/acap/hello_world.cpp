@@ -28,8 +28,8 @@ struct prog : acap::aie::tile<AIE, X, Y> {
 };
 
 int main() {
-  // Define AIE CGRA running a program "prog" on all the tiles of a VC1902
-  acap::aie::array<acap::aie::layout::vc1902, prog> aie;
+  // Define AIE CGRA with all the tiles of a VC1902
+  acap::aie::device<acap::aie::layout::vc1902> aie;
   // Run up to completion of all the tile programs
-  aie.run();
+  aie.run<prog>();
 }

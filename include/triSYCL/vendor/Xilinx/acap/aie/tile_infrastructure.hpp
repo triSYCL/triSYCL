@@ -16,7 +16,7 @@
     License. See LICENSE.TXT for details.
 */
 
-#include <thread>
+#include <future>
 
 #include <boost/format.hpp>
 
@@ -44,6 +44,9 @@ class tile_infrastructure  {
 
   /// The AXI stream switch of the core tile
   axi_ss_t axi_ss;
+
+  /// Keep track of execution in this tile
+  std::future<void> work;
 
 private:
 
@@ -115,6 +118,20 @@ public:
   auto out(int port) {
     return axi_ss.out_connection(translate_output_port(port))
       .template out<T, Target>();
+  }
+
+
+  /// Submit a callable on this tile
+  template <typename Work>
+  void submit(Work &&f) {
+    work = std::async(std::launch::async,
+                      std::forward<Work>(f));
+  }
+
+
+  /// Wait for the execution of the callable on this tile
+  void wait() {
+    work.get();
   }
 
 };

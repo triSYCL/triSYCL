@@ -12,7 +12,6 @@
 */
 
 #include <iostream>
-#include <thread>
 #include <type_traits>
 
 #include "connection.hpp"
@@ -207,8 +206,8 @@ struct program {
   void run() {
     // Start each tile program in its own CPU thread
     boost::hana::for_each(tiles, [&] (auto& t) {
-        t.thread = std::thread {[&] {
-            TRISYCL_DUMP_T("Starting ME tile (" << t.x << ',' << t.y
+        t.submit([&] {
+            TRISYCL_DUMP_T("Starting AIE tile (" << t.x << ',' << t.y
                            << ") linear id = " << t.linear_id());
             /* The kernel is the run member function. Just use a
                capture by reference because there is direct execution
@@ -217,16 +216,15 @@ struct program {
             using kernel_type = decltype(kernel);
             // Use the kernel type as its SYCL name too
             kernel_outliner<kernel_type, kernel_type>(kernel);
-            TRISYCL_DUMP_T("Stopping ME tile (" << t.x << ',' << t.y << ')');
-          }
-        };
+            TRISYCL_DUMP_T("Stopping AIE tile (" << t.x << ',' << t.y << ')');
+          });
       });
 
     // Wait for the end of the execution of each tile
     boost::hana::for_each(tiles, [&] (auto& t) {
-        TRISYCL_DUMP_T("Joining ME tile (" << t.x << ',' << t.y << ')');
-        t.thread.join();
-        TRISYCL_DUMP_T("Joined ME tile (" << t.x << ',' << t.y << ')');
+        TRISYCL_DUMP_T("Joining AIE tile (" << t.x << ',' << t.y << ')');
+        t.wait();
+        TRISYCL_DUMP_T("Joined AIE tile (" << t.x << ',' << t.y << ')');
       });
 
     std::cout << "Total size of the own memory of all the tiles: "

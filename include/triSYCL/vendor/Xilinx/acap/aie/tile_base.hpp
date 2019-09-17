@@ -12,11 +12,6 @@
     License. See LICENSE.TXT for details.
 */
 
-#include <thread>
-
-#include <boost/format.hpp>
-
-#include "axi_stream_switch.hpp"
 #include "tile_infrastructure.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie {
@@ -34,13 +29,8 @@ namespace trisycl::vendor::xilinx::acap::aie {
 */
 template <typename AIE_Program>
 class tile_base {
-  /// For the aie::program class to play with our thread
-  friend AIE_Program;
 
   using device = typename AIE_Program::device;
-
-  /// The thread used to run this tile
-  std::thread thread;
 
 protected:
 
@@ -57,6 +47,19 @@ public:
       by a tile
   */
   void run() {
+  }
+
+
+  /// Submit a callable on this tile
+  template <typename Work>
+  void submit(Work &&f) {
+    ti->submit(std::forward<Work>(f));
+  }
+
+
+  /// Wait for the execution of the callable on this tile
+  void wait() {
+    ti->wait();
   }
 
 
