@@ -8,9 +8,11 @@
 
 #include "aie/array.hpp"
 #include "aie/cascade_stream.hpp"
+#include "aie/device.hpp"
 #include "aie/geography.hpp"
 #include "aie/layout.hpp"
 #include "aie/memory.hpp"
+#include "aie/queue.hpp"
 #include "aie/tile.hpp"
 
 /*
