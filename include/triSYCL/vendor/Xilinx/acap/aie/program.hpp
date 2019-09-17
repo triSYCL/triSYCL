@@ -15,12 +15,10 @@
 #include <thread>
 #include <type_traits>
 
-#include "cascade_stream.hpp"
 #include "connection.hpp"
 #include "geography.hpp"
 #include "memory.hpp"
 #include "memory_base.hpp"
-#include "shim_tile.hpp"
 #include "tile.hpp"
 #include "tile_base.hpp"
 

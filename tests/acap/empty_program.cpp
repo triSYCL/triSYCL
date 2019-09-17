@@ -11,10 +11,10 @@ using namespace sycl::vendor::xilinx;
 
 int test_main(int argc, char *argv[]) {
   /* Test the empty tile program & empty memory module for various
-     machine sizes */
-  acap::aie::array<acap::aie::layout::one_pe>{}.run();
-  acap::aie::array<acap::aie::layout::small>{}.run();
-  acap::aie::array<acap::aie::layout::full>{}.run();
+     machine sizes & API shortcut */
+  acap::aie::device<acap::aie::layout::one_pe>{}.queue().submit<>().wait();
+  acap::aie::device<acap::aie::layout::small>{}.queue().run<>();
+  acap::aie::device<acap::aie::layout::full>{}.run<>();
 
   return 0;
 }

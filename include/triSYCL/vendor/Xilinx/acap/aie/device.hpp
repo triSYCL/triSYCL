@@ -11,8 +11,12 @@
     License. See LICENSE.TXT for details.
 */
 
+#include "cascade_stream.hpp"
 #include "geography.hpp"
+#include "memory.hpp"
 #include "queue.hpp"
+#include "shim_tile.hpp"
+#include "tile.hpp"
 #include "tile_infrastructure.hpp"
 
 /// \ingroup aie
@@ -76,6 +80,25 @@ struct device {
   /// Create a queue on this device
   auto queue() {
     return vendor::xilinx::acap::aie::queue { *this };
+  }
+
+
+  /** Shortcut to run synchronously a program execution on this queue
+
+      \param Tile is the description of the program tiles to
+      instantiate. By default each tile will run an empty program.
+
+      \param Memory is the description of the machine memory modules. By
+      default the machine has empty memory modules.
+  */
+  template <template <typename Device,
+                      int X,
+                      int Y> typename Tile = acap::aie::tile,
+            template <typename Device,
+                      int X,
+                      int Y> typename Memory = acap::aie::memory>
+  void run() {
+    queue().template run<Tile, Memory>();
   }
 
 
