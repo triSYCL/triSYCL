@@ -48,7 +48,7 @@ struct queue {
   auto submit() {
     return std::async(std::launch::async,
                       [] {
-                        array<layout, Tile, Memory> {}.run();
+                        array<AIEDevice, Tile, Memory> {}.run();
                       });
   }
 
