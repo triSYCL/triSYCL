@@ -42,8 +42,7 @@ struct test_memory {
   };
 
   test_memory() {
-    acap::aie::array<Layout, tile, acap::aie::memory> aie;
-    aie.run();
+    acap::aie::device<Layout> {}.template run<tile, acap::aie::memory>();
     /* Check that the existence of the memory module fits the bondary
        geometry */
     for (int y = 0; y < y_size; ++y)
