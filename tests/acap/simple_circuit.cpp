@@ -1,4 +1,5 @@
-/* Experimenting with simple network connections using circuit switching
+/* Experimenting with simple network connections using circuit
+   switching with own device and queue
 
    RUN: %{execute}%s
 */
@@ -41,59 +42,70 @@ struct comm : acap::aie::tile<AIE, X, Y> {
 
 int test_main(int argc, char *argv[]) {
   try {
-  acap::aie::array<acap::aie::layout::size<3,4>, comm> aie;
-/*
-  Some syntax ideas...
-  aie.connect<int>({ 1, 2 }, { 2, 3 });
-  aie.connect<float>({ 2, 3 }, shim { 1 });
-  aie.connect<float>(all, all);
-  aie.connect<float>(all, broadcast_line);
-  aie.connect<float>(all, broadcast_column);
-  aie.connect<float>({ 2, 3 }, broadcast_column);
-  aie.connect<float>(line { 2 }, broadcast_column);
-  aie.connect<float>(column { 3 }, broadcast_column);
-*/
+    acap::aie::device<acap::aie::layout::size<3,4>> d;
 
-  // Connect port 1 of shim(0) to port 0 of tile(1,2) with a "char" link
-  aie.connect<char>(port::shim { 0, 1 }, port::tile { 1, 2, 0 });
-  // Connect port 0 of tile(1,2) to port 1 of tile(2,0) with a "int" link
-  aie.connect<int>(port::tile { 1, 2, 0 }, port::tile { 2, 0, 1 });
-  // Connect port 0 of tile(2,0) to port 0 of shim(1) with a "float" link
-  aie.connect<float>(port::tile { 2, 0, 0 }, port::shim { 1, 0 });
+    // Test the execution of an empty program with empty memory
+    d.queue().run<>();
 
-  // Use the connection from the CPU directly by using the AXI MM to the tile
-  aie.tile(1, 2).out<int>(0) << 3;
-  // Check we read the correct value on tile(2,0) port 1
-  BOOST_CHECK(aie.tile(2, 0).in<int>(1).read() == 3);
+    // The same but with an explicit wait
+    d.queue().submit<>().wait();
 
-  // Try a shim & tile connection directly from the host
-  aie.shim(0).bli_out<1, char>() << 42;
-  // Check we read the correct value on tile(1,2) port 0
-  BOOST_CHECK(aie.tile(1, 2).in<char>(0).read() == 42);
+    // Test the communication API from the host point-of-view
 
-  // Launch the AIE
-  auto acap = std::async(std::launch::async, [&] { aie.run(); });
+    /*
+      Some syntax ideas...
+      aie.connect<int>({ 1, 2 }, { 2, 3 });
+      aie.connect<float>({ 2, 3 }, shim { 1 });
+      aie.connect<float>(all, all);
+      aie.connect<float>(all, broadcast_line);
+      aie.connect<float>(all, broadcast_column);
+      aie.connect<float>({ 2, 3 }, broadcast_column);
+      aie.connect<float>(line { 2 }, broadcast_column);
+      aie.connect<float>(column { 3 }, broadcast_column);
+    */
+    // Connect port 1 of shim(0) to port 0 of tile(1,2) with a "char" link
+    d.connect<char>(port::shim { 0, 1 }, port::tile { 1, 2, 0 });
+    // Connect port 0 of tile(1,2) to port 1 of tile(2,0) with a "int" link
+    d.connect<int>(port::tile { 1, 2, 0 }, port::tile { 2, 0, 1 });
+    // Connect port 0 of tile(2,0) to port 0 of shim(1) with a "float" link
+    d.connect<float>(port::tile { 2, 0, 0 }, port::shim { 1, 0 });
+
+    // Use the connection from the CPU directly by using the AXI MM to the tile
+    d.tile(1, 2).out<int>(0) << 3;
+    // Check we read the correct value on tile(2,0) port 1
+    BOOST_CHECK(d.tile(2, 0).in<int>(1).read() == 3);
+
+    // Try a shim & tile connection directly from the host
+    d.shim(0).bli_out<1, char>() << 42;
+    // Check we read the correct value on tile(1,2) port 0
+    BOOST_CHECK(d.tile(1, 2).in<char>(0).read() == 42);
+
+    // Launch the AIE comm program
+    auto aie_future = d.queue().submit<comm>();
+
+
   // Launch a CPU producer
   auto producer = std::async(std::launch::async, [&] {
       for (int i = 0; i < size; ++i)
         // Use the AXI-MM access to the shim registers to send a value
         // into the AXI-SS from the host
-        aie.shim(0).bli_out<1, char>() << i;
+        d.shim(0).bli_out<1, char>() << i;
     });
+
   // Launch a CPU consumer
   auto consumer = std::async(std::launch::async, [&] {
       float f;
       for (int i = 0; i < size; ++i) {
-        aie.shim(1).bli_in<0, float>() >> f;
+        d.shim(1).bli_in<0, float>() >> f;
         // Check we read the correct value
         BOOST_CHECK(f == 2*i + 1.5);
       }
     });
 
   // Wait for everybody to finish
-  acap.get();
   producer.get();
   consumer.get();
+  aie_future.wait();
 
   } catch (sycl::exception &e) {
     // Display the string message of any SYCL exception
