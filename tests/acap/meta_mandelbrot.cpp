@@ -80,13 +80,13 @@ struct generic_mandelbrot {
 };
 
 
-/// Create a Mandelbrot-like AI Engine given a function to define the
-/// series to be computed
+/// Create a Mandelbrot-like AI Engine program given a function to
+/// define the series to be computed
 auto meta_mandelbrot = [] (auto f) {
+  static acap::aie::device<acap::aie::layout::size<8,4>> d;
   return
-    acap::aie::array<acap::aie::layout::size<8,4>,
-                     generic_mandelbrot<decltype(f)>::template m,
-                     memory> {};
+    acap::aie::program<generic_mandelbrot<decltype(f)>::template m,
+                       memory> { d };
 };
 
 
