@@ -35,6 +35,9 @@ namespace trisycl::vendor::xilinx::acap::aie {
     4.7 Lock Unit, p. 129
 */
 struct lock_unit {
+  // There are 16 hardware locks per memory tile
+  auto static constexpr lock_number = 16;
+
   /// The individual locking system
   struct locking_device {
     /* The problem here is that \c std::mutex and \c std::condition_variable
@@ -84,8 +87,15 @@ struct lock_unit {
     }
   };
 
-  /// The 16 locking units of the locking device
-  locking_device locks[16];
+  /// The locking units of the locking device
+  locking_device locks[lock_number];
+
+  /// Get the requested lock
+  auto &lock(int i) {
+    assert(0 <= i && i < lock_number);
+    return locks[i];
+  }
+
 };
 
 /// @} End the aie Doxygen group
