@@ -34,6 +34,9 @@ class tile_base {
 
 protected:
 
+  /// Keep a reference to the AIE_Program with the full tile and memory view
+  AIE_Program *program;
+
   /// Keep a reference to the tile_infrastructure hardware features
   tile_infrastructure<device> *ti;
 
@@ -108,6 +111,12 @@ public:
   template <typename T, access::target Target = access::target::blocking_pipe>
   auto out(int port) {
     return ti->template out<T, Target>(port);
+  }
+
+
+  /// Store a way to access to the program
+  void set_program(AIE_Program &p) {
+    program = &p;
   }
 
 

@@ -174,6 +174,8 @@ struct program {
   /// Create the AIE program with the tiles and memory modules
   program(AIEDevice &aie_d) : aie_d { aie_d } {
     boost::hana::for_each(tiles, [&] (auto& t) {
+        // Inform each tile about its program
+        t.set_program(*this);
         // Inform each tile about their tile infrastructure
         t.set_tile_infrastructure(aie_d.tile(t.x, t.y));
         // Keep track of each base tile
