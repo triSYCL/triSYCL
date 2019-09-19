@@ -27,7 +27,7 @@ struct white {
 
 /// A memory tile has to inherit from acap::aie::memory<AIE, X, Y>
 template <typename AIE, int X, int Y>
-struct memory
+struct tile_memory
   : acap::aie::memory<AIE, X, Y>
   , std::conditional_t<is_white(X, Y), white, black> {
   int use_count = 0;
@@ -39,7 +39,7 @@ struct memory
 };
 
 template <typename AIE, int X, int Y>
-struct tile : acap::aie::tile<AIE, X, Y> {
+struct tile_prog : acap::aie::tile<AIE, X, Y> {
   using t = acap::aie::tile<AIE, X, Y>;
 
   void run() {
@@ -64,13 +64,12 @@ int main(int argc, char *argv[]) {
   std::cout << std::endl << "Instantiate small AI Engine:"
             << std::endl << std::endl;
   // memory is type defining the memory tiles
-  acap::aie::array<acap::aie::layout::full, tile, memory> aie;
+  acap::aie::device<acap::aie::layout::full> aie;
   a.start(argc, argv, decltype(aie)::geo::x_size,
           decltype(aie)::geo::y_size, 1, 1, 100);
-  aie.run();
+  aie.run<tile_prog, tile_memory>();
 
   std::cout << std::endl << "Instantiate tiny AI Engine:"
             << std::endl << std::endl;
-  acap::aie::array<acap::aie::layout::one_pe, tile, memory> solitaire_aie;
-  solitaire_aie.run();
+  acap::aie::device<acap::aie::layout::one_pe> {}.run<tile_prog, tile_memory>();
 }
