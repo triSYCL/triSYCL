@@ -52,5 +52,5 @@ struct tile_program : acap::aie::tile<AIE, X, Y> {
 
 int main() {
   // Use an empty memory module
-  acap::aie::array<acap::aie::layout::full, tile_program>{}.run();
+  acap::aie::device<acap::aie::layout::full> {}.run<tile_program>();
 }

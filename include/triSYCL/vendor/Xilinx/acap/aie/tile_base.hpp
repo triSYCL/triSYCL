@@ -66,6 +66,12 @@ public:
   }
 
 
+  /// Access the cascade connections
+  auto &cascade() {
+    return program->cascade();
+  }
+
+
   /** Get the user input connection from the AXI stream switch
 
       \param[in] port is the port to use

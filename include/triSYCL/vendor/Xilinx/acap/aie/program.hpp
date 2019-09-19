@@ -236,6 +236,12 @@ struct program {
                    << std::dec << sizeof(memory_modules) << " bytes.");
   }
 
+
+  /// Access the cascade connections
+  auto &cascade() {
+    return aie_d.cascade();
+  }
+
 };
 
 /// @} End the aie Doxygen group

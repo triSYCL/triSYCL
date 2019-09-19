@@ -77,6 +77,12 @@ struct device {
   }
 
 
+  /// Access the cascade connections
+  auto &cascade() {
+    return cs;
+  }
+
+
   /// Create a queue on this device
   auto queue() {
     return vendor::xilinx::acap::aie::queue { *this };
