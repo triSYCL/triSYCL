@@ -229,11 +229,11 @@ struct tile : tile_base<AIE_Program> {
       \param Target is the access mode to the pipe. It is blocking
       by default
   */
-  template <typename T, access::target Target = access::target::blocking_pipe>
+  template <typename T>
   auto get_cascade_stream_in() {
     static_assert(!is_cascade_start(), "You cannot access to the cascade stream"
                   " input on the tile that starts the stream");
-    return tb::cascade().template get_cascade_stream_in<T, Target>(x, y);
+    return tb::cascade().template get_cascade_stream_in<T>(x, y);
   }
 
 
@@ -245,11 +245,11 @@ struct tile : tile_base<AIE_Program> {
       \param Target is the access mode to the pipe. It is blocking
       by default
   */
-  template <typename T, access::target Target = access::target::blocking_pipe>
+  template <typename T>
   auto get_cascade_stream_out() {
     static_assert(!is_cascade_end(), "You cannot access to the cascade stream"
                   " output on the tile that starts the stream");
-    return tb::cascade().template get_cascade_stream_out<T, Target>(x, y);
+    return tb::cascade().template get_cascade_stream_out<T>(x, y);
   }
 
 
