@@ -3,7 +3,8 @@
 
 /** \file
 
-    Model of an AI Engine program
+    Model of an AI Engine program, that weaves the program of each tile
+    with the memory of each tile for a given device
 
     Ronan dot Keryell at Xilinx dot com
 
@@ -32,9 +33,9 @@
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
-/** Define an AI Engine CGRA with its code and memory per core
+/** Define an AI Engine CGRA program with its code and memory per core
 
-    \param Layout is the layout description of the machine to
+    \param AIEDevice is the device description of the machine to
     instantiate with the physical size
 
     \param Tile is the description of the program tiles to
@@ -229,8 +230,10 @@ struct program {
         TRISYCL_DUMP_T("Joined AIE tile (" << t.x << ',' << t.y << ')');
       });
 
-    std::cout << "Total size of the own memory of all the tiles: "
-              << sizeof(tiles) << " bytes." << std::endl;
+    TRISYCL_DUMP_T("Total size of the own memory of all the tile programs: "
+                   << std::dec << sizeof(tiles) << " bytes.");
+    TRISYCL_DUMP_T("Total size of the memory modules: "
+                   << std::dec << sizeof(memory_modules) << " bytes.");
   }
 
 };
