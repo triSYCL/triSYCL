@@ -94,20 +94,20 @@ struct cascade_executor {
     }
   };
 
-  acap::aie::array<acap::aie::layout::size<3, 2>, tile_program> a;
+  acap::aie::device<acap::aie::layout::size<3, 2>> d;
 
   auto get_executor() {
     // AIE NoC connection between shim and input of the pipeline
-    a.template connect<FirstT>(port::shim { 0, 0 }, port::tile { 0, 0, 0 });
+    d.template connect<FirstT>(port::shim { 0, 0 }, port::tile { 0, 0, 0 });
     // AIE NoC connection between output of the pipeline and the shim
-    auto last_x = decltype(a)::geo::cascade_linear_x(last_stage);
-    auto last_y = decltype(a)::geo::cascade_linear_y(last_stage);
-    a.template connect<LastT>(port::tile { last_x, last_y, 0 },
+    auto last_x = decltype(d)::geo::cascade_linear_x(last_stage);
+    auto last_y = decltype(d)::geo::cascade_linear_y(last_stage);
+    d.template connect<LastT>(port::tile { last_x, last_y, 0 },
                               port::shim { 1, 0 });
     return [&] (FirstT input) {
-             a.shim(0).template bli_out<0, FirstT>() << input;
-             a.run();
-             return a.shim(1).template bli_in<0, LastT>().read();
+             d.shim(0).template bli_out<0, FirstT>() << input;
+             d.run<tile_program>();
+             return d.shim(1).template bli_in<0, LastT>().read();
            };
   }
 };
