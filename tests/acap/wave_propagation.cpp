@@ -17,7 +17,7 @@
 
     1: compare the parallel execution with sequential execution
 */
-#define COMPARE_WITH_SEQUENTIAL_EXECUTION 1
+#define COMPARE_WITH_SEQUENTIAL_EXECUTION 0
 
 #include <algorithm>
 #include <cmath>
@@ -441,7 +441,7 @@ int main(int argc, char *argv[]) {
           image_size, image_size, 1);
   // Clip the level 127 which is the 0 level of the simulation
   a.image_grid().palette().set(graphics::palette::rainbow, 150, 2, 127);
-#if 1
+#if 0
   // Run the sequential reference implementation
   seq.run();
 #endif

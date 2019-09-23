@@ -265,35 +265,35 @@ struct tile : tile_base<AIE_Program> {
       // Propagate a token from left to right and back
       if constexpr (!is_left_column()) {
         // Wait for the left neighbour to be ready
-        mem().lu.locks[lock].acquire_with_value(true);
+        mem().lock(lock).acquire_with_value(true);
       }
       if constexpr (is_memory_module_right()) {
-        mem_right().lu.locks[lock].acquire_with_value(false);
+        mem_right().lock(lock).acquire_with_value(false);
         // Unleash the right neighbour
-        mem_right().lu.locks[lock].release_with_value(true);
+        mem_right().lock(lock).release_with_value(true);
         // Wait for the right neighbour to acknowledge
-        mem_right().lu.locks[lock].acquire_with_value(false);
+        mem_right().lock(lock).acquire_with_value(false);
        }
       if constexpr (!is_left_column()) {
         // Acknowledge to the left neighbour
-        mem().lu.locks[lock].release_with_value(false);
+        mem().lock(lock).release_with_value(false);
       }
     } else {
       // Propagate a token from right to left and back
       if constexpr (!is_right_column()) {
         // Wait for the right neighbour to be ready
-        mem().lu.locks[lock].acquire_with_value(true);
+        mem().lock(lock).acquire_with_value(true);
       }
       if constexpr (is_memory_module_left()) {
-        mem_left().lu.locks[lock].acquire_with_value(false);
+        mem_left().lock(lock).acquire_with_value(false);
         // Unleash the left neighbour
-        mem_left().lu.locks[lock].release_with_value(true);
+        mem_left().lock(lock).release_with_value(true);
         // Wait for the left neighbour to acknowledge
-        mem_left().lu.locks[lock].acquire_with_value(false);
+        mem_left().lock(lock).acquire_with_value(false);
        }
       if constexpr (!is_right_column()) {
         // Acknowledge to the right neighbour
-        mem().lu.locks[lock].release_with_value(false);
+        mem().lock(lock).release_with_value(false);
       }
     }
   }
@@ -310,18 +310,18 @@ struct tile : tile_base<AIE_Program> {
     // Propagate a token from bottom to top and back
     if constexpr (!is_bottom_row()) {
       // Wait for the neighbour below to be ready
-      mem().lu.locks[lock].acquire_with_value(true);
+      mem().lock(lock).acquire_with_value(true);
     }
     if constexpr (is_memory_module_up()) {
-      mem_up().lu.locks[lock].acquire_with_value(false);
+      mem_up().lock(lock).acquire_with_value(false);
       // Unleash the neighbour above
-      mem_up().lu.locks[lock].release_with_value(true);
+      mem_up().lock(lock).release_with_value(true);
       // Wait for the neighbour above to acknowledge
-      mem_up().lu.locks[lock].acquire_with_value(false);
+      mem_up().lock(lock).acquire_with_value(false);
     }
     if constexpr (!is_bottom_row()) {
       // Acknowledge to the neighbour below
-      mem().lu.locks[lock].release_with_value(false);
+      mem().lock(lock).release_with_value(false);
     }
   }
 
