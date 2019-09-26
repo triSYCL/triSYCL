@@ -114,7 +114,7 @@ int main(int argc, char *argv[]) {
   a.start(argc, argv, decltype(m)::geo::x_size,
           decltype(m)::geo::y_size,
           image_size, image_size, 1);
-  a.image_grid().palette().set(graphics::palette::rainbow, 100, 2, 0);
+  a.image_grid().get_palette().set(graphics::palette::rainbow, 100, 2, 0);
 
   // Launch the AI Engine program
   m.run();

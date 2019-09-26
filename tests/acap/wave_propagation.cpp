@@ -440,7 +440,7 @@ int main(int argc, char *argv[]) {
           decltype(d)::geo::y_size,
           image_size, image_size, 1);
   // Clip the level 127 which is the 0 level of the simulation
-  a.image_grid().palette().set(graphics::palette::rainbow, 150, 2, 127);
+  a.image_grid().get_palette().set(graphics::palette::rainbow, 150, 2, 127);
 #if 0
   // Run the sequential reference implementation
   seq.run();
