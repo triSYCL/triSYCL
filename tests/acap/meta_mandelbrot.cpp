@@ -85,13 +85,13 @@ struct generic_mandelbrot {
 auto meta_mandelbrot = [] (auto f) {
   static acap::aie::device<acap::aie::layout::size<8,4>> d;
   return
-    acap::aie::program<generic_mandelbrot<decltype(f)>::template m,
+    acap::aie::program<decltype(d),
+                       generic_mandelbrot<decltype(f)>::template m,
                        memory> { d };
 };
 
 
 int main(int argc, char *argv[]) {
-
   // Use the Mandelbrot DSL with various functions to start a
   // wallpaper business
   auto m = meta_mandelbrot(
@@ -109,7 +109,17 @@ int main(int argc, char *argv[]) {
      [] (auto z, auto c) { return std::cosh(z) + c; }
      //+ [] (auto z, auto c) { return std::cos(z) + c; }
   );
-
+#if 0
+  acap::aie::device<acap::aie::layout::size<8,4>>{}.run<
+    generic_mandelbrot<decltype([] (auto z, auto c) {
+                                  return std::cosh(z) + c; })>:: m,
+    memory>();
+  static acap::aie::device<acap::aie::layout::size<8,4>> d;
+acap::aie::program<acap::aie::device<acap::aie::layout::size<8,4>>,
+generic_mandelbrot<decltype([] (auto z, auto c) {
+                                  return std::cosh(z) + c; })>::m,
+                   memory> m { d };
+#endif
   // Open a graphic view of a ME array
   a.start(argc, argv, decltype(m)::geo::x_size,
           decltype(m)::geo::y_size,
