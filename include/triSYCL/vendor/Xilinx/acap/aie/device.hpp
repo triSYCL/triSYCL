@@ -89,6 +89,25 @@ struct device {
   }
 
 
+  /** Create a program execution for this device
+
+      \param Tile is the description of the program tiles to
+      instantiate. By default each tile will run an empty program.
+
+      \param Memory is the description of the machine memory modules. By
+      default the machine has empty memory modules.
+  */
+  template <template <typename Device,
+                      int X,
+                      int Y> typename Tile = acap::aie::tile,
+            template <typename Device,
+                      int X,
+                      int Y> typename Memory = acap::aie::memory>
+  auto program() {
+    return aie::program<device, Tile, Memory> { *this };
+  }
+
+
   /** Shortcut to run synchronously a program execution on this queue
 
       \param Tile is the description of the program tiles to
