@@ -295,8 +295,9 @@ public:
   /** Set the weak pointer as destination for write-back on buffer
       destruction
   */
-  void set_final_data(std::weak_ptr<T> && final_data) {
-    final_write_back = [=] {
+  void set_final_data(std::weak_ptr<T> final_data) {
+    // Capture this by reference is enough since the buffer will still exist
+    final_write_back = [this, final_data = std::move(final_data)] {
       if (auto sptr = final_data.lock()) {
         std::copy_n(access.data(), access.num_elements(), sptr.get());
       }
@@ -318,11 +319,12 @@ public:
             typename ValueType =
             typename std::iterator_traits<Iterator>::value_type>
   void set_final_data(Iterator final_data) {
- /*   using type_ = typename iterator_value_type<Iterator>::value_type;
-    static_assert(std::is_same<type_, T>::value, "buffer type mismatch");
-    static_assert(!(std::is_const<type_>::value),
-                  "const iterator is not allowed");*/
-    final_write_back = [=] {
+    /*   using type_ = typename iterator_value_type<Iterator>::value_type;
+         static_assert(std::is_same<type_, T>::value, "buffer type mismatch");
+         static_assert(!(std::is_const<type_>::value),
+                       "const iterator is not allowed");*/
+    // Capture this by reference is enough since the buffer will still exist
+    final_write_back = [this, final_data = std::move(final_data)] {
       std::copy_n(access.data(), access.num_elements(), final_data);
     };
   }
