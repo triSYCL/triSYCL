@@ -119,8 +119,8 @@ You can build the binary with different compilers with
 
 .. code:: bash
 
-  make CXX=g++-8
-  make CXX=clang++-8
+  make CXX=g++-9
+  make CXX=clang++-9
 
 To compile with some debug options, look around some setting of the
 ``CXXFLAGS`` variable. You can configure triSYCL through various
