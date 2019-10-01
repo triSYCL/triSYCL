@@ -33,6 +33,25 @@ namespace trisycl::vendor::xilinx::acap::aie {
     \param X is the horizontal coordinate of the memory module
 
     \param Y is the vertical coordinate of the memory module
+
+    \todo (Andrew Gozillon) FYI, until Intel fix the way they handle
+    base classes in the SYCL compiler frontend this tile_base can
+    never have non-default constructed data (on the device side
+    implementation, the host should be fine to have whatever). As the
+    hack I have in place just now only outlines a call to the base
+    classes default constructor, it might be feasible to work around
+    that though by calling a base class "fill" function in the tile
+    constructor or tweaking the way the run function of a tile is
+    outlined so that it outlines it as a copy of the full object
+    rather than components of the object and reconstructing it inside
+    the kernel (although you'll fall into the standard layout trap as
+    you'll be passing a full object to the kernel invocation and it'd
+    take some reworking of the Tile's main generation).
+
+    A proper fix for this is probably quite difficult as you'd need to
+    take into account the base classes dependencies among-st other
+    things like the constructor body not being available in the same
+    TU, some discussion here: https://github.com/intel/llvm/issues/488
 */
 template <typename AIE_Program, int X, int Y>
 struct tile : tile_base<AIE_Program> {

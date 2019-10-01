@@ -57,6 +57,7 @@ struct program {
   using geo = typename AIEDevice::geo;
   using device = AIEDevice;
 
+  /// The device running this program
   AIEDevice &aie_d;
 
   /// Type describing all the memory modules of the CGRA
