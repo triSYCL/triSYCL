@@ -11,7 +11,11 @@
 
 #include "triSYCL/sycl.hpp"
 
-namespace sycl = ::trisycl;
+/// Expose the SYCL API directly in the ::sycl namespace
+namespace sycl {
+  // Make the triSYCL implementation appear here
+  using namespace ::trisycl;
+}
 
 /*
     # Some Emacs stuff:
