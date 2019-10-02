@@ -150,8 +150,6 @@ triSYCL code documentation
 
 The documentation of the triSYCL_ implementation itself can be found in
 https://pages.gitenterprise.xilinx.com/rkeryell/acappp/Doxygen/acappp/html
-and
-https://pages.gitenterprise.xilinx.com/rkeryell/acappp/Doxygen/acappp/html/acappp-implementation-refman.pdf
 
 
 News

@@ -6,11 +6,13 @@
     Experimenting with CGRA & processor arrays such as ACAP/AI Engine
 */
 
-#include "aie/array.hpp"
 #include "aie/cascade_stream.hpp"
+#include "aie/device.hpp"
 #include "aie/geography.hpp"
 #include "aie/layout.hpp"
 #include "aie/memory.hpp"
+#include "aie/program.hpp"
+#include "aie/queue.hpp"
 #include "aie/tile.hpp"
 
 /*

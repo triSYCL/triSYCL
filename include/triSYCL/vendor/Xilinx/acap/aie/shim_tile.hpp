@@ -28,10 +28,10 @@ namespace trisycl::vendor::xilinx::acap::aie {
 
     \todo Assume only AIE Shim PL tiles for now
 */
-template <typename AIE>
+template <typename AIEDevice>
 class shim_tile
-  : public axi_stream_switch<typename AIE::geo::shim_axi_stream_switch> {
-  using axi_ss_geo = typename AIE::geo::shim_axi_stream_switch;
+  : public axi_stream_switch<typename AIEDevice::geo::shim_axi_stream_switch> {
+  using axi_ss_geo = typename AIEDevice::geo::shim_axi_stream_switch;
   using mpl = typename axi_ss_geo::master_port_layout;
   using spl = typename axi_ss_geo::slave_port_layout;
   using base = axi_stream_switch<axi_ss_geo>;

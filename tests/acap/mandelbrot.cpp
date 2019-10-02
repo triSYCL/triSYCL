@@ -54,15 +54,15 @@ struct mandelbrot : acap::aie::tile<AIE, X, Y> {
 };
 
 int main(int argc, char *argv[]) {
-  acap::aie::array<acap::aie::layout::size<2,3>, mandelbrot, memory> aie;
+  acap::aie::device<acap::aie::layout::size<2,3>> aie;
   // Open a graphic view of a ME array
   a.start(argc, argv, decltype(aie)::geo::x_size,
           decltype(aie)::geo::y_size,
           image_size, image_size, 1);
-  a.image_grid().palette().set(graphics::palette::rainbow, 100, 2, 0);
+  a.image_grid().get_palette().set(graphics::palette::rainbow, 100, 2, 0);
 
   // Launch the AI Engine program
-  aie.run();
+  aie.run<mandelbrot, memory>();
   // Wait for the graphics to stop
   a.wait();
 }

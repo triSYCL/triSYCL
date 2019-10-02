@@ -1,9 +1,10 @@
-#ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_ARRAY_HPP
-#define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_ARRAY_HPP
+#ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_PROGRAM_HPP
+#define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_PROGRAM_HPP
 
 /** \file
 
-    Model of an AI Engine array
+    Model of an AI Engine program, that weaves the program of each tile
+    with the memory of each tile for a given device
 
     Ronan dot Keryell at Xilinx dot com
 
@@ -12,15 +13,12 @@
 */
 
 #include <iostream>
-#include <thread>
 #include <type_traits>
 
-#include "cascade_stream.hpp"
 #include "connection.hpp"
 #include "geography.hpp"
 #include "memory.hpp"
 #include "memory_base.hpp"
-#include "shim_tile.hpp"
 #include "tile.hpp"
 #include "tile_base.hpp"
 
@@ -35,9 +33,9 @@
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
-/** Define an AI Engine CGRA with its code and memory per core
+/** Define an AI Engine CGRA program with its code and memory per core
 
-    \param Layout is the layout description of the machine to
+    \param AIEDevice is the device description of the machine to
     instantiate with the physical size
 
     \param Tile is the description of the program tiles to
@@ -46,24 +44,25 @@ namespace trisycl::vendor::xilinx::acap::aie {
     \param Memory is the description of the machine memory modules. By
     default the machine has empty memory modules.
 */
-template <typename Layout,
+template <typename AIEDevice,
           template <typename AIE,
                     int X,
                     int Y> typename Tile = acap::aie::tile,
           template <typename AIE,
                     int X,
                     int Y> typename Memory = acap::aie::memory>
-struct array {
+struct program {
 
   /// The geography of the CGRA
-  using geo = geography<Layout>;
+  using geo = typename AIEDevice::geo;
+  using device = AIEDevice;
 
-  /// The cascade stream infrastructure of the CGRA
-  cascade_stream<geo> cs;
+  /// The device running this program
+  AIEDevice &aie_d;
 
   /// Type describing all the memory modules of the CGRA
   template <int X, int Y>
-  using tileable_memory = Memory<array, X, Y>;
+  using tileable_memory = Memory<program, X, Y>;
 
   /** The tiled memory modules of the CGRA
 
@@ -79,7 +78,7 @@ struct array {
 
   /// Type describing the programs of all the cores in the CGRA
   template <int X, int Y>
-  using tileable_tile = Tile<array, X, Y>;
+  using tileable_tile = Tile<program, X, Y>;
 
   /** The tiled programs of the CGRA
 
@@ -91,14 +90,7 @@ struct array {
   /** Keep track of all the tiles as a type-erased tile_base type to
       have a simpler access to the basic position-independent tile
       features */
-  tile_base<array> *tile_bases[geo::y_size][geo::x_size];
-
-  /** The shim tiles on the lower row of the tile array
-
-      For now we consider only homogeneous shim tiles.
-  */
-  shim_tile<array> shims[geo::x_size];
-
+  tile_base<program> *tile_bases[geo::y_size][geo::x_size];
 
   /** Access to the common infrastructure part of a memory module
 
@@ -147,20 +139,6 @@ struct array {
   }
 
 
-  /** Access to the common infrastructure part of a tile
-
-      \param[in] x is the horizontal tile coordinate
-
-      \param[in] y is the vertical tile coordinate
-
-      \throws trisycl::runtime_error if the coordinate is invalid
-  */
-  auto &tile(int x, int y) {
-    geo::validate_x_y(x, y);
-    return *tile_bases[y][x];
-  }
-
-
   /** Access to a heterogeneous tile by linear id
 
       \param[in] LinearId is the linear id
@@ -195,54 +173,13 @@ struct array {
   }
 
 
-  /** Connect the ports of 2 tiles or shims together with a switched
-      circuit
-
-      \param[in] T is the type of the data to be transferred
-
-      \param[in] SrcPort is the type of the source port, such as
-      port::tile or port::shim
-
-      \param[in] DstPort is the type of the destination port, such as
-      port::tile or port::shim
-
-      \throws trisycl::runtime_error if some coordinates or port
-      numbers are invalid
-
-      \todo Refactor, make the difference between user & physical ports
-  */
-  template <typename T, typename SrcPort, typename DstPort>
-  void connect(SrcPort src, DstPort dst) {
-    /// \todo move this into a factory
-    connection c { ::trisycl::static_pipe<T, 4> {} };
-    constexpr bool valid_src = std::is_same_v<SrcPort, port::tile>
-      || std::is_same_v<SrcPort, port::shim>;
-    static_assert(valid_src,
-                  "SrcPort type should be port::tile or port::shim");
-    if constexpr (std::is_same_v<SrcPort, port::tile>) {
-       tile(src.x, src.y).out_connection(src.port) = c.out();
-    }
-    else if constexpr(std::is_same_v<SrcPort, port::shim>) {
-       shim(src.x).bli_out_connection(src.port) = c.out();
-    }
-    constexpr bool valid_dst = std::is_same_v<DstPort, port::tile>
-      || std::is_same_v<DstPort, port::shim>;
-    static_assert(valid_dst,
-                  "DstPort type should be port::tile or port::shim");
-    if constexpr (std::is_same_v<DstPort, port::tile>) {
-      tile(dst.x, dst.y).in_connection(dst.port) = c.in();
-    }
-    else if constexpr(std::is_same_v<DstPort, port::shim>) {
-      shim(dst.x).bli_in_connection(dst.port) = c.in();
-    }
-  }
-
-
-  /// Create the AIE array with the tiles and memory modules
-  array() {
+  /// Create the AIE program with the tiles and memory modules
+  program(AIEDevice &aie_d) : aie_d { aie_d } {
     boost::hana::for_each(tiles, [&] (auto& t) {
-        // Inform each tile about their CGRA owner
-        t.set_array(this);
+        // Inform each tile about its program
+        t.set_program(*this);
+        // Inform each tile about their tile infrastructure
+        t.set_tile_infrastructure(aie_d.tile(t.x, t.y));
         // Keep track of each base tile
         tile_bases[t.y][t.x] = &t;
       });
@@ -273,8 +210,8 @@ struct array {
   void run() {
     // Start each tile program in its own CPU thread
     boost::hana::for_each(tiles, [&] (auto& t) {
-        t.thread = std::thread {[&] {
-            TRISYCL_DUMP_T("Starting ME tile (" << t.x << ',' << t.y
+        t.submit([&] {
+            TRISYCL_DUMP_T("Starting AIE tile (" << t.x << ',' << t.y
                            << ") linear id = " << t.linear_id());
             /* The kernel is the run member function. Just use a
                capture by reference because there is direct execution
@@ -283,33 +220,29 @@ struct array {
             using kernel_type = decltype(kernel);
             // Use the kernel type as its SYCL name too
             kernel_outliner<kernel_type, kernel_type>(kernel);
-            TRISYCL_DUMP_T("Stopping ME tile (" << t.x << ',' << t.y << ')');
-          }
-        };
+            TRISYCL_DUMP_T("Stopping AIE tile (" << t.x << ',' << t.y << ')');
+          });
       });
 
     // Wait for the end of the execution of each tile
     boost::hana::for_each(tiles, [&] (auto& t) {
-        TRISYCL_DUMP_T("Joining ME tile (" << t.x << ',' << t.y << ')');
-        t.thread.join();
-        TRISYCL_DUMP_T("Joined ME tile (" << t.x << ',' << t.y << ')');
+        TRISYCL_DUMP_T("Joining AIE tile (" << t.x << ',' << t.y << ')');
+        t.wait();
+        TRISYCL_DUMP_T("Joined AIE tile (" << t.x << ',' << t.y << ')');
       });
 
-    std::cout << "Total size of the own memory of all the tiles: "
-              << sizeof(tiles) << " bytes." << std::endl;
+    TRISYCL_DUMP_T("Total size of the own memory of all the tile programs: "
+                   << std::dec << sizeof(tiles) << " bytes.");
+    TRISYCL_DUMP_T("Total size of the memory modules: "
+                   << std::dec << sizeof(memory_modules) << " bytes.");
   }
 
 
-  /** Access to the shim tile
-
-      \param[in] x is the horizontal coordinate of the shim tile
-
-      \throws trisycl::runtime_error if the coordinate is invalid
-  */
-  auto &shim(int x) {
-    geo::validate_x(x);
-    return shims[x];
+  /// Access the cascade connections
+  auto &cascade() {
+    return aie_d.cascade();
   }
+
 };
 
 /// @} End the aie Doxygen group
@@ -325,4 +258,4 @@ struct array {
     ### End:
 */
 
-#endif // TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_ARRAY_HPP
+#endif // TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_PROGRAM_HPP

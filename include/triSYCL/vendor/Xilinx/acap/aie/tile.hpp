@@ -27,15 +27,34 @@ namespace trisycl::vendor::xilinx::acap::aie {
     This is the type you need to inherit from to define the program of
     a CGRA tile.
 
-    \param AIE is the type representing the full CGRA with the
+    \param AIE_Program is the type representing the full CGRA with the
     programs and memory contents
 
     \param X is the horizontal coordinate of the memory module
 
     \param Y is the vertical coordinate of the memory module
+
+    \todo (Andrew Gozillon) FYI, until Intel fix the way they handle
+    base classes in the SYCL compiler frontend this tile_base can
+    never have non-default constructed data (on the device side
+    implementation, the host should be fine to have whatever). As the
+    hack I have in place just now only outlines a call to the base
+    classes default constructor, it might be feasible to work around
+    that though by calling a base class "fill" function in the tile
+    constructor or tweaking the way the run function of a tile is
+    outlined so that it outlines it as a copy of the full object
+    rather than components of the object and reconstructing it inside
+    the kernel (although you'll fall into the standard layout trap as
+    you'll be passing a full object to the kernel invocation and it'd
+    take some reworking of the Tile's main generation).
+
+    A proper fix for this is probably quite difficult as you'd need to
+    take into account the base classes dependencies among-st other
+    things like the constructor body not being available in the same
+    TU, some discussion here: https://github.com/intel/llvm/issues/488
 */
-template <typename AIE, int X, int Y>
-struct tile : tile_base<AIE> {
+template <typename AIE_Program, int X, int Y>
+struct tile : tile_base<AIE_Program> {
   /** The horizontal tile coordinates in the CGRA grid (starting at 0
       and increasing to the right) */
   static auto constexpr x = X;
@@ -44,10 +63,11 @@ struct tile : tile_base<AIE> {
   static auto constexpr y = Y;
 
   /// The geography of the CGRA
-  using geo = typename AIE::geo;
+  using geo = typename AIE_Program::geo;
 
   /// Shortcut to the tile base class
-  using tb = tile_base<AIE>;
+  using tb = tile_base<AIE_Program>;
+
 
   /** Return the coordinate of the tile in the given dimension
 
@@ -155,7 +175,7 @@ struct tile : tile_base<AIE> {
      static_assert(is_memory_module_left(), "There is no memory module"
                    " on the left of this tile in the left column and"
                    " on an even row");
-     return tb::aie_array->template
+     return tb::program->template
        memory_module<memory_module_linear_id(-1, 0)>();
   }
 
@@ -165,7 +185,7 @@ struct tile : tile_base<AIE> {
     static_assert(is_memory_module_right(), "There is no memory module"
                   " on the right of this tile in the right column and"
                    " on an odd row");
-    return tb::aie_array->template
+    return tb::program->template
       memory_module<memory_module_linear_id(1, 0)>();
   }
 
@@ -174,7 +194,7 @@ struct tile : tile_base<AIE> {
   auto &mem_down() {
     static_assert(is_memory_module_down(), "There is no memory module"
                   " below the lower tile row");
-    return tb::aie_array->template
+    return tb::program->template
       memory_module<memory_module_linear_id(0, -1)>();
   }
 
@@ -183,7 +203,7 @@ struct tile : tile_base<AIE> {
   auto &mem_up() {
     static_assert(is_memory_module_up(), "There is no memory module"
                   " above the upper tile row");
-    return tb::aie_array->template
+    return tb::program->template
       memory_module<memory_module_linear_id(0, 1)>();
   }
 
@@ -198,7 +218,7 @@ struct tile : tile_base<AIE> {
 
 
   /// The type of the memory module native to the tile
-  using mem_t = typename AIE::template tileable_memory<x, y>;
+  using mem_t = typename AIE_Program::template tileable_memory<x, y>;
 
 
   /// Test if this tile owns the start of the cascade_stream
@@ -228,11 +248,11 @@ struct tile : tile_base<AIE> {
       \param Target is the access mode to the pipe. It is blocking
       by default
   */
-  template <typename T, access::target Target = access::target::blocking_pipe>
+  template <typename T>
   auto get_cascade_stream_in() {
     static_assert(!is_cascade_start(), "You cannot access to the cascade stream"
                   " input on the tile that starts the stream");
-    return tb::aie_array->cs.template get_cascade_stream_in<T, Target>(x, y);
+    return tb::cascade().template get_cascade_stream_in<T>(x, y);
   }
 
 
@@ -244,11 +264,11 @@ struct tile : tile_base<AIE> {
       \param Target is the access mode to the pipe. It is blocking
       by default
   */
-  template <typename T, access::target Target = access::target::blocking_pipe>
+  template <typename T>
   auto get_cascade_stream_out() {
     static_assert(!is_cascade_end(), "You cannot access to the cascade stream"
                   " output on the tile that starts the stream");
-    return tb::aie_array->cs.template get_cascade_stream_out<T, Target>(x, y);
+    return tb::cascade().template get_cascade_stream_out<T>(x, y);
   }
 
 
@@ -264,35 +284,35 @@ struct tile : tile_base<AIE> {
       // Propagate a token from left to right and back
       if constexpr (!is_left_column()) {
         // Wait for the left neighbour to be ready
-        mem().lu.locks[lock].acquire_with_value(true);
+        mem().lock(lock).acquire_with_value(true);
       }
       if constexpr (is_memory_module_right()) {
-        mem_right().lu.locks[lock].acquire_with_value(false);
+        mem_right().lock(lock).acquire_with_value(false);
         // Unleash the right neighbour
-        mem_right().lu.locks[lock].release_with_value(true);
+        mem_right().lock(lock).release_with_value(true);
         // Wait for the right neighbour to acknowledge
-        mem_right().lu.locks[lock].acquire_with_value(false);
+        mem_right().lock(lock).acquire_with_value(false);
        }
       if constexpr (!is_left_column()) {
         // Acknowledge to the left neighbour
-        mem().lu.locks[lock].release_with_value(false);
+        mem().lock(lock).release_with_value(false);
       }
     } else {
       // Propagate a token from right to left and back
       if constexpr (!is_right_column()) {
         // Wait for the right neighbour to be ready
-        mem().lu.locks[lock].acquire_with_value(true);
+        mem().lock(lock).acquire_with_value(true);
       }
       if constexpr (is_memory_module_left()) {
-        mem_left().lu.locks[lock].acquire_with_value(false);
+        mem_left().lock(lock).acquire_with_value(false);
         // Unleash the left neighbour
-        mem_left().lu.locks[lock].release_with_value(true);
+        mem_left().lock(lock).release_with_value(true);
         // Wait for the left neighbour to acknowledge
-        mem_left().lu.locks[lock].acquire_with_value(false);
+        mem_left().lock(lock).acquire_with_value(false);
        }
       if constexpr (!is_right_column()) {
         // Acknowledge to the right neighbour
-        mem().lu.locks[lock].release_with_value(false);
+        mem().lock(lock).release_with_value(false);
       }
     }
   }
@@ -309,25 +329,25 @@ struct tile : tile_base<AIE> {
     // Propagate a token from bottom to top and back
     if constexpr (!is_bottom_row()) {
       // Wait for the neighbour below to be ready
-      mem().lu.locks[lock].acquire_with_value(true);
+      mem().lock(lock).acquire_with_value(true);
     }
     if constexpr (is_memory_module_up()) {
-      mem_up().lu.locks[lock].acquire_with_value(false);
+      mem_up().lock(lock).acquire_with_value(false);
       // Unleash the neighbour above
-      mem_up().lu.locks[lock].release_with_value(true);
+      mem_up().lock(lock).release_with_value(true);
       // Wait for the neighbour above to acknowledge
-      mem_up().lu.locks[lock].acquire_with_value(false);
+      mem_up().lock(lock).acquire_with_value(false);
     }
     if constexpr (!is_bottom_row()) {
       // Acknowledge to the neighbour below
-      mem().lu.locks[lock].release_with_value(false);
+      mem().lock(lock).release_with_value(false);
     }
   }
 
 
   /** Full barrier using the 2 locks by default
 
-      Implement a barrier across the full tile array by using \c
+      Implement a barrier across the full program by using \c
       horizontal_barrier() and \c vertical_barrier().
   */
   void barrier() {

@@ -35,7 +35,12 @@ namespace trisycl::vendor::xilinx::acap::aie {
 */
 struct memory_base {
   /// The lock unit of the memory tile
-  lock_unit lu;
+  lock_unit memory_locking_unit;
+
+  /// Get an access to the right lock
+  auto &lock(int i) {
+    return memory_locking_unit.lock(i);
+  }
 };
 
 /// @} End the aie Doxygen group

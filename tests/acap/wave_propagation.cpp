@@ -434,19 +434,19 @@ struct tile : acap::aie::tile<AIE, X, Y> {
 
 int main(int argc, char *argv[]) {
   // An ACAP version of the wave propagation
-  acap::aie::array<layout, tile, memory> aie;
+  acap::aie::device<layout> d;
 
-  a.start(argc, argv, decltype(aie)::geo::x_size,
-          decltype(aie)::geo::y_size,
+  a.start(argc, argv, decltype(d)::geo::x_size,
+          decltype(d)::geo::y_size,
           image_size, image_size, 1);
   // Clip the level 127 which is the 0 level of the simulation
-  a.image_grid().palette().set(graphics::palette::rainbow, 150, 2, 127);
+  a.image_grid().get_palette().set(graphics::palette::rainbow, 150, 2, 127);
 #if 0
   // Run the sequential reference implementation
   seq.run();
 #endif
   // Launch the AI Engine program
-  aie.run();
+  d.run<tile, memory>();
   // Wait for the graphics to stop
   a.wait();
 }

@@ -80,18 +80,16 @@ struct generic_mandelbrot {
 };
 
 
-/// Create a Mandelbrot-like AI Engine given a function to define the
-/// series to be computed
+/// Create a Mandelbrot-like AI Engine program given a function to
+/// define the series to be computed
 auto meta_mandelbrot = [] (auto f) {
+  static acap::aie::device<acap::aie::layout::size<8,4>> d;
   return
-    acap::aie::array<acap::aie::layout::size<8,4>,
-                     generic_mandelbrot<decltype(f)>::template m,
-                     memory> {};
+    d.program<generic_mandelbrot<decltype(f)>::template m, memory>();
 };
 
 
 int main(int argc, char *argv[]) {
-
   // Use the Mandelbrot DSL with various functions to start a
   // wallpaper business
   auto m = meta_mandelbrot(
@@ -114,7 +112,7 @@ int main(int argc, char *argv[]) {
   a.start(argc, argv, decltype(m)::geo::x_size,
           decltype(m)::geo::y_size,
           image_size, image_size, 1);
-  a.image_grid().palette().set(graphics::palette::rainbow, 100, 2, 0);
+  a.image_grid().get_palette().set(graphics::palette::rainbow, 100, 2, 0);
 
   // Launch the AI Engine program
   m.run();

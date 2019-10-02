@@ -1,5 +1,11 @@
 /* Testing the tools to detect race condition and uninitialized memory access
 
+   Debug this for example with:
+
+   valgrind --tool=helgrind acap/race_condition_uninitialized
+
+   or with some ThreadSanitizer
+
    RUN: %{execute}%s
 */
 
@@ -29,9 +35,9 @@ struct program : acap::aie::tile<AIE, X, Y> {
     m.v[0] = 42;
 
     // Protected data transfer
-    m.lu.locks[0].acquire_with_value(false);
+    m.lock(0).acquire_with_value(false);
     m.v[1] = 1;
-    m.lu.locks[0].release_with_value(true);
+    m.lock(0).release_with_value(true);
   }
 };
 
@@ -48,10 +54,10 @@ struct program<AIE, 1, 0> : acap::aie::tile<AIE, 1, 0> {
     m.v[0] = 314;
 
     // Protected data transfer
-    m.lu.locks[0].acquire_with_value(true);
+    m.lock(0).acquire_with_value(true);
     std::cout << "Tile (1,0) receives from left neighbour: "
               << m.v[1] << std::endl;
-    m.lu.locks[0].release_with_value(false);
+    m.lock(0).release_with_value(false);
 
     // Oops! Array overrun: writing into m.v[2]
 
@@ -65,5 +71,5 @@ struct program<AIE, 1, 0> : acap::aie::tile<AIE, 1, 0> {
 };
 
 int main(int argc, char *argv[]) {
-  acap::aie::array<acap::aie::layout::size<2,1>, program, memory> {}.run();
+  acap::aie::device<acap::aie::layout::size<2,1>> {}.run<program, memory>();
 }
