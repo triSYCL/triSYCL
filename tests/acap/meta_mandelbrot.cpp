@@ -37,7 +37,7 @@ struct memory : acap::aie::memory<AIE, X, Y> {
 */
 template <typename F, typename AIE, int X, int Y>
 struct mandelbrot : acap::aie::tile<AIE, X, Y> {
-  using t = acap::aie::tile<AIE, X, Y>;
+  using t = mandelbrot;
   // Computation rectangle in the complex plane
   static auto constexpr x0 = -5.0, y0 = -5.0, x1 = 5.0, y1 = 5.0;
   static auto constexpr D = 100; // Divergence norm
