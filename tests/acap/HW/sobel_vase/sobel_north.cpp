@@ -165,7 +165,7 @@ struct prog : acap::aie::tile<AIE, X, Y> {
 
 
 int main() {
-  acap::aie::array<acap::aie::layout::vc1902, prog> aie;
+  acap::aie::device<acap::aie::layout::vc1902> aie;
 
   std::ofstream inputFile;
   std::ofstream outputFile;
@@ -191,7 +191,7 @@ int main() {
   for (int i = 0; i < NUM_OUTPUT_BYTES_TOTAL / 4; ++i)
     out_buffer[i] = 0;
 
-  aie.run();
+  aie<prog>.run();
 
   cv::Mat outputMat(std::vector{600, 800}, CV_8UC1, (char *)out_buffer);
   cv::imwrite("output.bmp", outputMat);

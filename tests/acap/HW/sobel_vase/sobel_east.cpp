@@ -1,86 +1,9 @@
 /*
 
-  Working on cross compile aiengine hello_world...
-
-  Compile for native with libxaiengine:
-    $ISYCL_BIN_DIR/clang++ -std=c++2a  \
-      -I/storage/ogozillo/ACAP++/acap-device/include \
-      -I/storage/ogozillo/libxaiengine/include \
-      -L/storage/ogozillo/libxaiengine/lib \
-      `pkg-config gtkmm-3.0 --cflags` `pkg-config gtkmm-3.0 --libs` \
-      `pkg-config --libs opencv` \
-      -lxaiengine sobel.cpp
-
-  Two-step native device side compilation (only compiles to LLVM IR and outputs
-  the integration header, no host or AI Engine binary, this is primarily to
-  test the integration header output):
-    $ISYCL_BIN_DIR/clang++ -std=c++2a --sycl \
-      -fsycl-use-bitcode \
-      -fsycl-header-only-library \
-       -Xclang -fsycl-int-header=generated_integration_header.h \
-      -I/storage/ogozillo/ACAP++/acap-device/include \
-      -I/storage/ogozillo/libxaiengine/include \
-      `pkg-config gtkmm-3.0 --cflags` -c sobel.cpp -o kernel.out
-
-  Cross compile with libxaiengine no kernel:
-    $ISYCL_BIN_DIR/clang++ -std=c++2a -target aarch64-linux-gnu \
-      -mcpu=cortex-a72 \
-      --sysroot /net/xsjsycl41/srv/Ubuntu-19.04/arm64-root-server-rw-tmp \
-      -I/storage/ogozillo/ACAP++/acap-device/include \
-      -I/storage/ogozillo/libxaiengine-aarch64/include \
-      -L/storage/ogozillo/libxaiengine-aarch64/lib \
-      `pkg-config gtkmm-3.0 --cflags` `pkg-config gtkmm-3.0 --libs` \
-      `pkg-config --libs opencv` \
-      -lxaiengine sobel.cpp
-
-  libxaiengine lib and includes reside inside the arm image, but the LD linker
-  cross compiling it seems to refuse to find it, even when directed at the correct
-  folder. Ldconfig also seems happy with it..
-
-  Cross compile with libxaiengine and kernel:
-    $ISYCL_BIN_DIR/clang++ -std=c++2a  -Xclang -fforce-enable-int128  \
-      -Xclang -aux-triple -Xclang aarch64-linux-gnu \
-      -target aarch64-linux-gnu -mcpu=cortex-a72 -fsycl \
-      -fsycl-targets=aie32-xilinx-unknown-sycldevice \
-      -fsycl-header-only-library \
-      --sysroot /net/xsjsycl41/srv/Ubuntu-19.04/arm64-root-server-rw-tmp \
-      -I/storage/ogozillo/ACAP++/acap-device/include \
-      -I/storage/ogozillo/libxaiengine-aarch64/include \
-      -L/storage/ogozillo/libxaiengine-aarch64/lib \
-      `pkg-config gtkmm-3.0 --cflags` `pkg-config gtkmm-3.0 --libs` \
-      `pkg-config --libs opencv` \
-      -lxaiengine sobel.cpp
-
-  One step cross-compile with unamed lambda and output generated header for
-  inspection (This is the required version for AI Engine):
-    $ISYCL_BIN_DIR/clang++ -std=c++2a  -Xclang -fforce-enable-int128  \
-      -Xclang -aux-triple -Xclang aarch64-linux-gnu \
-      -Xclang -fsycl-int-header=generated_integration_header.h \
-      -target aarch64-linux-gnu -mcpu=cortex-a72 -fsycl \
-      -fsycl-targets=aie32-xilinx-unknown-sycldevice \
-      -fsycl-unnamed-lambda \
-      -fsycl-header-only-library \
-      --sysroot /net/xsjsycl41/srv/Ubuntu-19.04/arm64-root-server-rw-tmp \
-      -I/storage/ogozillo/ACAP++/acap-device/include \
-      -I/storage/ogozillo/libxaiengine-aarch64/include \
-      -L/storage/ogozillo/libxaiengine-aarch64/lib \
-      `pkg-config gtkmm-3.0 --cflags` `pkg-config gtkmm-3.0 --libs` \
-      `pkg-config --libs opencv` \
-      -lxaiengine sobel.cpp
-
-  if you're running qemu-aarch64 to emulate on x86 then you'll probably need to
-  add the following to your LD_LIBRARY PATH, otherwise it won't find the so's
-  for libmetal, libfsys, libopenamp etc.:
-  /net/xsjsycl41/srv/Ubuntu-19.04/arm64-root-server-rw-tmp/usr/local/lib
-
-  `pkg-config --libs opencv` may have some undefined symbols using the
-  current arm image for libarmadillo9 for the libblas/liblapack packages, my
-  current work around was to actually install the arm64 versions of these
-  library on my x86 machine via adding the architecture dists to my apt source
-  list.. this allows some multiarch package installation via:
-  sudo libblas-dev:arm64 libblas3:arm64 liblapack-dev:arm64 liblapack3:arm64
-
-  Not too sure why they can't be found during cross compilation by gnu-ld.
+  Note: This test has identical observable behaviour to sobel_north.cpp but uses
+  east memory only. However, the compiler is hard coded to use north memory for
+  now so the linker script that is packaged with the compiler will need some
+  modifcation to get this particular example working.
 
   RUN: %{execute}%s
 */
@@ -288,11 +211,7 @@ struct prog : acap::aie::tile<AIE, X, Y> {
 // TODO:
 // Why does it Cycle through SemaSYCL twice...? Is this a problem/bug?
 int main() {
-#ifdef __SYCL_DEVICE_ONLY__
-  acap::aie::array<acap::aie::layout::one_pe, prog> aie;
-#else
-  acap::aie::array<acap::aie::layout::vc1902, prog> aie;
-#endif
+  acap::aie::device<acap::aie::layout::vc1902> aie;
 
   std::ofstream inputFile;
   std::ofstream outputFile;
@@ -318,7 +237,7 @@ int main() {
   for (int i = 0; i < NUM_OUTPUT_BYTES_TOTAL / 4; ++i)
     out_buffer[i] = 0;
 
-  aie.run();
+  aie<prog>.run();
 
   cv::Mat outputMat(std::vector{600, 800}, CV_8UC1, (char *)out_buffer);
   cv::imwrite("output.bmp", outputMat);
