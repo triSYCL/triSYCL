@@ -297,7 +297,7 @@ struct program {
                            << "Associated Tile Kernel Name: " << kernelName
                            << "- beginning prerun execution");
 
-            if (t.prerun())
+            if (!t.prerun())
               return;
 
             auto kernelImage =
@@ -342,18 +342,16 @@ struct program {
        t.submit([&] {
             TRISYCL_DUMP_T("Starting AIE tile (" << t.x << ',' << t.y
                            << ") linear id = " << t.linear_id());
-              // prerun/postrun are HW related functionallity for now and are
-              // placeholder functions until a better API for data transfer
-              // between the host and AIE exists
-//            if (t.prerun())
-//              return;
+
+            if (!t.prerun())
+              return;
 
             /* The kernel is the run member function. Just use a
                capture by reference because there is direct execution
                here. */
             t.run();
 
-//            t.postrun();
+            t.postrun();
 
             TRISYCL_DUMP_T("Stopping AIE tile (" << t.x << ',' << t.y << ')');
           });

@@ -105,7 +105,7 @@ struct prog : acap::aie::tile<AIE, X, Y> {
     /// right most column has no neighbour to have east memory, skip it
     if constexpr (t::is_right_column() && (Y & 1)) {
       std::cout << "Skipping " << X << ',' << Y  << std::endl;
-      return -1;
+      return 0;
     }
 
     /// access the east memory for odd rows of tiles, for odd rows of tiles

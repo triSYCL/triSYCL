@@ -88,7 +88,7 @@ struct prog : acap::aie::tile<AIE, X, Y> {
     /// each takes 2 lines, so only 300 tiles are needed
     /// top 2 rows are not used
     if constexpr (Y > 5) {
-      return -1;
+      return 0;
     }
 
     /// north
@@ -109,7 +109,7 @@ struct prog : acap::aie::tile<AIE, X, Y> {
     for (unsigned int i = 0; i < NUM_INPUT_BYTES_PER_SLICE / 4; i++)
       t::mem_write(offset + 0x800 + i * 4, buffer[buffer_offset + i]);
 
-    return 0;
+    return 1;
   }
 
     /// Post-run

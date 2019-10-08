@@ -80,7 +80,7 @@ struct prog : acap::aie::tile<AIE, X, Y> {
     /// each takes 2 lines, so only 300 tiles are needed
     /// top 2 rows are not used
     if constexpr (Y > 5) {
-      return -1;
+      return 0;
     }
 
     /// north
@@ -95,7 +95,7 @@ struct prog : acap::aie::tile<AIE, X, Y> {
     /// height
     t::mem_write(offset + 0x4 * 2, 4);
 
-    return 0;
+    return 1;
   }
 
     /// Post-run
