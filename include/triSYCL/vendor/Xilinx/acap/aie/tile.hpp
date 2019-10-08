@@ -17,9 +17,15 @@
 #include "triSYCL/access.hpp"
 #include "tile_base.hpp"
 
+
+/// TODO: Perhaps worth pushing all Lib X AI Engine functionallity we use down
+/// into a C++ API so it can all be excluded with one #ifdef and kept nice and
+/// cleanly
+#ifdef __SYCL_AIE_DEVICE__
 extern "C" {
   #include <xaiengine.h>
 }
+#endif
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
@@ -266,6 +272,12 @@ struct tile : tile_base<AIE_Program> {
       return mem_right();
   }
 
+// TODO: Perhaps worth pushing all Lib X AI Engine functionallity we use down
+// into a C++ API so it can all be excluded with one #IFDEF and kept nice and
+// cleanly
+// Part of the real current host -> device communication API using Lib X AI
+// Engine
+#ifdef __SYCL_AIE_DEVICE__
   /// The memory read accessors
   std::uint32_t mem_read(std::uint32_t offset) {
     return XAieTile_DmReadWord(tb::aie_hw_tile, offset);
@@ -306,8 +318,10 @@ struct tile : tile_base<AIE_Program> {
 
   /// Wait for the core to complete
   void core_wait() {
-    while(!XAieTile_CoreWaitStatus(tb::aie_hw_tile, 0, XAIETILE_CORE_STATUS_DONE));
+    while(!XAieTile_CoreWaitStatus(tb::aie_hw_tile, 0,
+                                   XAIETILE_CORE_STATUS_DONE));
   }
+#endif
 
   /// The type of the memory module native to the tile
   using mem_t = typename AIE_Program::template tileable_memory<x, y>;

@@ -14,9 +14,14 @@
 
 #include "tile_infrastructure.hpp"
 
+/// TODO: Perhaps worth pushing all Lib X AI Engine functionallity we use down
+/// into a C++ API so it can all be excluded with one #ifdef and kept nice and
+/// cleanly
+#ifdef __SYCL_AIE_DEVICE__
 extern "C" {
   #include <xaiengine.h>
 }
+#endif
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
@@ -104,12 +109,16 @@ protected:
   /// Keep a reference to the AIE_Program with the full tile and memory view
   AIE_Program *program;
 
+/// TODO: Think about where this should go, this is an instance of a HW Tile
+/// that a device instantiates, does it belong here or in tile_infrastructure?
+#ifdef __SYCL_AIE_DEVICE__
   XAieGbl_Tile *aie_hw_tile;
 
   /// Store a way to access to hw tile instance
   void set_hw_tile(XAieGbl_Tile *tile) {
     aie_hw_tile = tile;
   }
+#endif
 
   /// Keep a reference to the tile_infrastructure hardware features
   tile_infrastructure<device> *ti;
