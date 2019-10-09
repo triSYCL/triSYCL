@@ -265,7 +265,7 @@ extern "C" {
   /// implementation
   /// TODO: Make barebones singleton program manager class that keeps track of
   /// our binaries...
-  void __tgt_register_lib(__sycl_bin_desc* desc) {
+  inline void __tgt_register_lib(__sycl_bin_desc* desc) {
     trisycl::detail::program_manager::instance()->addImages(desc);
   }
 
@@ -275,7 +275,7 @@ extern "C" {
   /// \TODO: Implement __tgt_unregister_lib for ACAP++ to enable binary
   /// management, although it isn't implemented in Intel SYCL as of the time of
   /// writing this.
-  void __tgt_unregister_lib(__sycl_bin_desc* desc) {}
+  inline void __tgt_unregister_lib(__sycl_bin_desc* desc) {}
 
   // +++ }
 
