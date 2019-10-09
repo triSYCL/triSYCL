@@ -191,7 +191,7 @@ int main() {
   for (int i = 0; i < NUM_OUTPUT_BYTES_TOTAL / 4; ++i)
     out_buffer[i] = 0;
 
-  aie<prog>.run();
+  aie.run<prog>();
 
   cv::Mat outputMat(std::vector{600, 800}, CV_8UC1, (char *)out_buffer);
   cv::imwrite("output.bmp", outputMat);

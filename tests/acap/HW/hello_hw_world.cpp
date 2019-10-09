@@ -47,5 +47,5 @@ int main() {
   // Define AIE CGRA running a program "prog" on all the tiles of a VC1902
   acap::aie::device<acap::aie::layout::vc1902> aie;
   // Run up to completion of all the tile programs
-  aie<prog>.run();
+  aie.run<prog>();
 }

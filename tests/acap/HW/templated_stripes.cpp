@@ -141,7 +141,7 @@ int main() {
   constexpr auto height = 600; // input.rows;
   constexpr auto width = 800; // input.cols;
 
-  aie<prog>.run();
+  aie.run<prog>();
 
   cv::Mat outputMat(std::vector{600, 800}, CV_8UC1, (char *)out_buffer);
   cv::imwrite("output.bmp", outputMat);

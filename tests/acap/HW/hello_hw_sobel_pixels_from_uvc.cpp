@@ -163,7 +163,7 @@ int main() {
     buffer = (uint32_t *)captureRAW.data;
 
     // Run up to completion of all the tile programs
-    aie<prog>.run();
+    aie.run<prog>();
 
     output.write((char *)out_buffer, 800 * 600);
 

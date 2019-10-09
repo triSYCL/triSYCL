@@ -116,7 +116,7 @@ int main() {
   memcpy(out_buffer, buffer, PPM_HEADER_BYTES);
 
   // Run up to completion of all the tile programs
-  aie<prog>.run();
+  aie.run<prog>();
 
   output.open("gears-800x600-aie.ppm");
   output.write((char *)buffer, SIZE_BYTES);

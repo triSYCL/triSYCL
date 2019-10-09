@@ -58,17 +58,15 @@ class tile_base {
 
   using device = typename AIE_Program::device;
 
-protected:
-
-  /// Noop on device, it has to exist for compilation purposes as Host side code
-  /// is still compiled for the device unfortunately.
-  void set_program(AIE_Program &p) {}
+public:
 
   /// Noop on device, it has to exist for compilation purposes as Host side code
   /// is still compiled for the device unfortunately.
   void set_hw_tile(XAieGbl_Tile *tile) {}
 
-public:
+  /// Noop on device, it has to exist for compilation purposes as Host side code
+  /// is still compiled for the device unfortunately.
+  void set_program(AIE_Program &p) {}
 
   /// Routines to run before core starts running.
   int prerun() { return 1; }
@@ -85,6 +83,7 @@ public:
   /// Routines to run after core completes running.
   void postrun() {}
 
+  void set_tile_infrastructure(tile_infrastructure<device> &t) {}
 };
 
 #endif // ifdef SYCL_DEVICE_ONLY
@@ -113,17 +112,19 @@ protected:
 /// that a device instantiates, does it belong here or in tile_infrastructure?
 #ifdef __SYCL_AIE_DEVICE__
   XAieGbl_Tile *aie_hw_tile;
-
-  /// Store a way to access to hw tile instance
-  void set_hw_tile(XAieGbl_Tile *tile) {
-    aie_hw_tile = tile;
-  }
 #endif
 
   /// Keep a reference to the tile_infrastructure hardware features
   tile_infrastructure<device> *ti;
 
 public:
+
+#ifdef __SYCL_AIE_DEVICE__
+  /// Store a way to access to hw tile instance
+  void set_hw_tile(XAieGbl_Tile *tile) {
+    aie_hw_tile = tile;
+  }
+#endif
 
   /// Routines to run before core starts running.
   int prerun() {

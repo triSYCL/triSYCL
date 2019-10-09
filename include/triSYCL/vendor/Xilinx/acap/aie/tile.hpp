@@ -55,8 +55,8 @@ namespace trisycl::vendor::xilinx::acap::aie {
     \param Y is the vertical coordinate of the memory module
 
 */
-template <typename AIE, int X, int Y>
-struct tile : tile_base<AIE> {
+template <typename AIE_Program, int X, int Y>
+struct tile : tile_base<AIE_Program> {
   /** The horizontal tile coordinates in the CGRA grid (starting at 0
       and increasing to the right) */
   static auto constexpr x = X;

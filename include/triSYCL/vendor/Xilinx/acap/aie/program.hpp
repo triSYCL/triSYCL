@@ -337,7 +337,7 @@ struct program {
             t.postrun();
 
             TRISYCL_DUMP_T("Stopping AIE tile (" << t.x << ',' << t.y << ')');
-          })
+          });
 #else // Code path taken for Software Emulation on CPU
        t.submit([&] {
             TRISYCL_DUMP_T("Starting AIE tile (" << t.x << ',' << t.y

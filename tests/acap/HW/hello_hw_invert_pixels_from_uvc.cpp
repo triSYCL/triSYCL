@@ -137,7 +137,7 @@ int main() {
   input.close();
 
   // Run up to completion of all the tile programs
-  aie<prog>.run();
+  aie.run<prog>();
 
   output.open("lab-800x600-aie.data");
   output.write((char *)buffer, SIZE_BYTES);
