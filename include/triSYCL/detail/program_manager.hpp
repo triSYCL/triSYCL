@@ -262,9 +262,8 @@ public:
 /// Itanium/Microsoft etc).
 ///
 /// It should never be inlined, even though extern C linkage is usually never
-/// inlined by default I thought it's worth being explicit as a lot of triSYCL
-/// ends up with the inline keyword over time as we are very inline trigger
-/// happy..
+/// inlined by default it's worth being explicit as a lot of triSYCL ends up
+/// with the inline keyword over time as we are very inline trigger happy..
 ///
 /// The most important aspect is that it needs to be defined as weak, this is a
 /// C function in a header file that cannot be inlined and cannot be defined
