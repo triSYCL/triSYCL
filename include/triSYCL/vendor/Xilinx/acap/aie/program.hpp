@@ -27,7 +27,7 @@
 /// TODO: Perhaps worth pushing all Lib X AI Engine functionallity we use down
 /// into a C++ API so it can all be excluded with one #ifdef and kept nice and
 /// cleanly
-#ifdef __SYCL_AIE_DEVICE__
+#ifdef __SYCL_XILINX_AIE__
 extern "C" {
   #include <xaiengine.h>
 }
@@ -183,7 +183,7 @@ struct program {
         f(*tile_bases[y][x]);
   }
 
-#ifdef __SYCL_AIE_DEVICE__
+#ifdef __SYCL_XILINX_AIE__
   /// Array of LIB X AI Engine tiles, this is mostly used to instantiate the
   /// tiles right now, perhaps it's feasible for this to simply be some
   /// temporary storage before the individual hw tiles are offloaded to their
@@ -195,7 +195,7 @@ struct program {
   /// Create the AIE program with the tiles and memory modules
   program(AIEDevice &aie_d) : aie_d { aie_d } {
   // Initialization of the AI Engine tile constructs from Lib X AI Engine
-#ifdef __SYCL_AIE_DEVICE__
+#ifdef __SYCL_XILINX_AIE__
     XAieGbl_HwCfg aie_config;
     XAieGbl_Config *aie_config_ptr;
     XAieGbl aie_inst;
@@ -212,7 +212,7 @@ struct program {
         t.set_program(*this);
         // Inform each tile about their tile infrastructure
         t.set_tile_infrastructure(aie_d.tile(t.x, t.y));
-#ifdef __SYCL_AIE_DEVICE__
+#ifdef __SYCL_XILINX_AIE__
         // Inform each tile about their hw tile inst. skip the first shim row.
         t.set_hw_tile(&tile_inst[t.x][t.y + 1]);
 #endif
@@ -282,7 +282,7 @@ struct program {
         // auto kernel = [=, TileMove = std::move(t)]() mutable {TileMove.run();};
         // kernel_outliner(kernel);
 #else // Host code paths
-#ifdef __SYCL_AIE_DEVICE__ // Host code path taken for the Real AI Engine HW
+#ifdef __SYCL_XILINX_AIE__ // Host code path taken for the Real AI Engine HW
         t.submit([&] {
             // The name is captured by it's non-reference type and has to be in
             // the cl::sycl::detail namespace as the integration header is
@@ -355,7 +355,7 @@ struct program {
 
             TRISYCL_DUMP_T("Stopping AIE tile (" << t.x << ',' << t.y << ')');
           });
-#endif // __SYCL_AIE_DEVICE__
+#endif // __SYCL_XILINX_AIE__
 #endif // __SYCL_DEVICE_ONLY__
     });
 

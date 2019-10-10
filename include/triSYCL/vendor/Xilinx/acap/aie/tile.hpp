@@ -21,7 +21,7 @@
 /// TODO: Perhaps worth pushing all Lib X AI Engine functionallity we use down
 /// into a C++ API so it can all be excluded with one #ifdef and kept nice and
 /// cleanly
-#ifdef __SYCL_AIE_DEVICE__
+#ifdef __SYCL_XILINX_AIE__
 extern "C" {
   #include <xaiengine.h>
 }
@@ -277,7 +277,7 @@ struct tile : tile_base<AIE_Program> {
 // cleanly
 // Part of the real current host -> device communication API using Lib X AI
 // Engine
-#ifdef __SYCL_AIE_DEVICE__
+#ifdef __SYCL_XILINX_AIE__
   /// The memory read accessors
   std::uint32_t mem_read(std::uint32_t offset) {
     return XAieTile_DmReadWord(tb::aie_hw_tile, offset);

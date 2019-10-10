@@ -17,7 +17,7 @@
 /// TODO: Perhaps worth pushing all Lib X AI Engine functionallity we use down
 /// into a C++ API so it can all be excluded with one #ifdef and kept nice and
 /// cleanly
-#ifdef __SYCL_AIE_DEVICE__
+#ifdef __SYCL_XILINX_AIE__
 extern "C" {
   #include <xaiengine.h>
 }
@@ -110,7 +110,7 @@ protected:
 
 /// TODO: Think about where this should go, this is an instance of a HW Tile
 /// that a device instantiates, does it belong here or in tile_infrastructure?
-#ifdef __SYCL_AIE_DEVICE__
+#ifdef __SYCL_XILINX_AIE__
   XAieGbl_Tile *aie_hw_tile;
 #endif
 
@@ -119,7 +119,7 @@ protected:
 
 public:
 
-#ifdef __SYCL_AIE_DEVICE__
+#ifdef __SYCL_XILINX_AIE__
   /// Store a way to access to hw tile instance
   void set_hw_tile(XAieGbl_Tile *tile) {
     aie_hw_tile = tile;
