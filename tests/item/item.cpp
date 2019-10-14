@@ -33,12 +33,14 @@ int main() {
   i3.get_range().display();
   i3.get_id().display();
   i3.get_offset().display();
+  // (2 - 1) + 10*((3 - 2) + 11*(6 - 3)) = 341
   std::cout << i3.get_linear_id() << std::endl;
 
   item<2> i2 { { 100, 10 }, { 2, 3 } };
   i2.get_range().display();
   i2.get_id().display();
   i2.get_offset().display();
+  // 2 + 100*3 = 302
   std::cout << i2.get_linear_id() << std::endl;
 
   item<> ic { 7, 3, 2 };
