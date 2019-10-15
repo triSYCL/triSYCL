@@ -26,7 +26,8 @@ static uint32_t out_buffer[NUM_OUTPUT_BYTES_TOTAL / 4];
 /**
      Simple test to check if we are generating unique tiles correctly by
      creating some tiles that will set pixels to black and others that will set
-     them to white based on the tile ID being odd or even.
+     them to white based on the tile ID being odd or even. The output pattern
+     is stripes in this particular case.
 
      Uses north memory.
 
@@ -79,7 +80,7 @@ struct prog : acap::aie::tile<AIE, X, Y> {
     /// each takes 2 lines, so only 300 tiles are needed
     /// top 2 rows are not used
     if constexpr (Y > 5) {
-      return -1;
+      return 0;
     }
 
     /// north
@@ -94,7 +95,7 @@ struct prog : acap::aie::tile<AIE, X, Y> {
     /// height
     t::mem_write(offset + 0x4 * 2, 4);
 
-    return 0;
+    return 1;
   }
 
     /// Post-run
@@ -123,7 +124,7 @@ struct prog : acap::aie::tile<AIE, X, Y> {
   void run() {
     for (int x = 0; x < width; ++x)
       for (int y = 0; y < height; ++y) {
-       if constexpr ((X & 1) && (Y & 1))
+       if constexpr ((X + Y) & 1)
          output[width * y + x] = 255;
        else
          output[width * y + x] = 0;
@@ -133,18 +134,14 @@ struct prog : acap::aie::tile<AIE, X, Y> {
 
 
 int main() {
-//#ifdef __SYCL_DEVICE_ONLY__
-  acap::aie::array<acap::aie::layout::one_pe, prog> aie;
-//#else
-//  acap::aie::array<acap::aie::layout::vc1902, prog> aie;
-//#endif
+  acap::aie::device<acap::aie::layout::vc1902> aie;
 
   std::ofstream outputFile;
 
   constexpr auto height = 600; // input.rows;
   constexpr auto width = 800; // input.cols;
 
-  aie.run();
+  aie.run<prog>();
 
   cv::Mat outputMat(std::vector{600, 800}, CV_8UC1, (char *)out_buffer);
   cv::imwrite("output.bmp", outputMat);

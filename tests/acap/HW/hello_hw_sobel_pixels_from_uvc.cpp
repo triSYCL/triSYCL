@@ -45,7 +45,7 @@ struct prog : acap::aie::tile<AIE, X, Y> {
     /// each takes 2 lines, so only 300 tiles are needed
     /// top 2 rows are not used
     if constexpr (Y > 5) {
-      return -1;
+      return 0;
     }
 
     /// north
@@ -66,7 +66,7 @@ struct prog : acap::aie::tile<AIE, X, Y> {
     for (unsigned int i = 0; i < NUM_INPUT_BYTES_PER_SLICE / 4; i++)
       t::mem_write(offset + 0x800 + i * 4, buffer[buffer_offset + i]);
 
-    return 0;
+    return 1;
   }
 
   /// Post-run
@@ -122,11 +122,7 @@ struct prog : acap::aie::tile<AIE, X, Y> {
 
 int main() {
   // Define AIE CGRA running a program "prog" on all the tiles of a VC1902
-#ifdef __SYCL_DEVICE_ONLY__
-  acap::aie::array<acap::aie::layout::one_pe, prog> aie;
-#else
-  acap::aie::array<acap::aie::layout::vc1902, prog> aie;
-#endif
+  acap::aie::device<acap::aie::layout::vc1902> aie;
 
   std::ofstream input;
   std::ofstream output;
@@ -167,7 +163,7 @@ int main() {
     buffer = (uint32_t *)captureRAW.data;
 
     // Run up to completion of all the tile programs
-    aie.run();
+    aie.run<prog>();
 
     output.write((char *)out_buffer, 800 * 600);
 

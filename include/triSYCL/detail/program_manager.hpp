@@ -255,6 +255,23 @@ public:
 
 }
 
+/// These need to be marked with C Linkage because the offloader will not mangle
+/// the names and mangling them is not a good idea as the functions can be
+/// compiled by the host compiler, which can vary and then the mangled name of
+/// the function will vary dependent on the chosen host compiler (
+/// Itanium/Microsoft etc).
+///
+/// It should never be inlined, even though extern C linkage is usually never
+/// inlined by default it's worth being explicit as a lot of triSYCL ends up
+/// with the inline keyword over time as we are very inline trigger happy..
+///
+/// The most important aspect is that it needs to be defined as weak, this is a
+/// C function in a header file that cannot be inlined and cannot be defined
+/// with internal linkage via static. It will get defined multiple times when
+/// linking across translation units, without weak linkage telling it this
+/// function is arbitrarily replaceable you'll violate the ODR. If this gets
+/// ported to MSVC __declspec(selectany) should do what weak is intended for in
+/// this scenario
 extern "C" {
 
   // +++ Entry points referenced by the offload wrapper object {
@@ -265,7 +282,8 @@ extern "C" {
   /// implementation
   /// TODO: Make barebones singleton program manager class that keeps track of
   /// our binaries...
-  void __tgt_register_lib(__sycl_bin_desc* desc) {
+  void __attribute__((noinline, weak))
+    __tgt_register_lib(__sycl_bin_desc* desc)  {
     trisycl::detail::program_manager::instance()->addImages(desc);
   }
 
@@ -275,7 +293,8 @@ extern "C" {
   /// \TODO: Implement __tgt_unregister_lib for ACAP++ to enable binary
   /// management, although it isn't implemented in Intel SYCL as of the time of
   /// writing this.
-  void __tgt_unregister_lib(__sycl_bin_desc* desc) {}
+  void __attribute__((noinline, weak))
+    __tgt_unregister_lib(__sycl_bin_desc* desc) {}
 
   // +++ }
 

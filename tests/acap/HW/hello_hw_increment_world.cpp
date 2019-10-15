@@ -1,5 +1,11 @@
 /* Simple hello world program for ACAP/AI Engine hardware
 
+   NOTE: This requires tweaking to work with the current compiler, for example
+   the tile functions relating to reset/etc are pushed down into the API and the
+   kernel doesn't need to be commented out. But also some more lower level
+   components like the linker script have changed and the main file (most of the
+   earlier iterations were a hybrid of Cardano Tool Flow and SYCL Frontend flow)
+
    RUN: %{execute}%s
 */
 
@@ -88,7 +94,7 @@ struct prog : acap::aie::tile<AIE, X, Y> {
 
 int main() {
   // Define AIE CGRA running a program "prog" on all the tiles of a VC1902
-  acap::aie::array<acap::aie::layout::vc1902, prog> aie;
+  acap::aie::device<acap::aie::layout::vc1902> aie;
   // Run up to completion of all the tile programs
-  aie.run();
+  aie.run<prog>();
 }

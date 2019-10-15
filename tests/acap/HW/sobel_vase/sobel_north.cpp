@@ -88,7 +88,7 @@ struct prog : acap::aie::tile<AIE, X, Y> {
     /// each takes 2 lines, so only 300 tiles are needed
     /// top 2 rows are not used
     if constexpr (Y > 5) {
-      return -1;
+      return 0;
     }
 
     /// north
@@ -109,7 +109,7 @@ struct prog : acap::aie::tile<AIE, X, Y> {
     for (unsigned int i = 0; i < NUM_INPUT_BYTES_PER_SLICE / 4; i++)
       t::mem_write(offset + 0x800 + i * 4, buffer[buffer_offset + i]);
 
-    return 0;
+    return 1;
   }
 
     /// Post-run
@@ -165,7 +165,7 @@ struct prog : acap::aie::tile<AIE, X, Y> {
 
 
 int main() {
-  acap::aie::array<acap::aie::layout::vc1902, prog> aie;
+  acap::aie::device<acap::aie::layout::vc1902> aie;
 
   std::ofstream inputFile;
   std::ofstream outputFile;
@@ -191,7 +191,7 @@ int main() {
   for (int i = 0; i < NUM_OUTPUT_BYTES_TOTAL / 4; ++i)
     out_buffer[i] = 0;
 
-  aie.run();
+  aie.run<prog>();
 
   cv::Mat outputMat(std::vector{600, 800}, CV_8UC1, (char *)out_buffer);
   cv::imwrite("output.bmp", outputMat);
