@@ -180,6 +180,7 @@ struct prog : acap::aie::tile<AIE, X, Y> {
   uint32_t arg3;
 
   void run() {
+    // don't actually have to do this, should be fine otherwise
     auto input = arg0;
     auto output = arg1;
     auto width = arg2;
