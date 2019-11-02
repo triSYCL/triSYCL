@@ -146,6 +146,13 @@ Some presentations and publications related to SYCL
 
 By reverse chronological order:
 
+- `SYCL: a programming standard for heterogeneous computing based on
+  modern C++
+  <https://github.com/keryell/ronan/blob/gh-pages/Talks/2019/2019-10-09-Bay-Area-C%2B%2B-meetup-SYCL/2019-10-09-Bay-Area-C%2B%2B-meetup-SYCL.pdf>`_,
+  Ronan Keryell. `Association of C and C++ Users - San Francisco Bay Area
+  <https://www.meetup.com/ACCU-Bay-Area/events/264402705>`_
+  Sunnyvale, California, USA. Wednesday, October 9, 2019
+
 - `From post-modern generic C++ to generic heterogeneous
   reconfigurable accelerators with the Khronos Group SYCL standard
   <https://github.com/keryell/ronan/raw/gh-pages/Talks/2018/2018-07-05-Compas-RK-keynote/2018-07-05-COMPAS-keynote-RK-expose.pdf>`_,
