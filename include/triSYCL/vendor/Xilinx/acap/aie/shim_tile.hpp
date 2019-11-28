@@ -31,7 +31,8 @@ namespace trisycl::vendor::xilinx::acap::aie {
 template <typename AIEDevice>
 class shim_tile
   : public axi_stream_switch<typename AIEDevice::geo::shim_axi_stream_switch> {
-  using axi_ss_geo = typename AIEDevice::geo::shim_axi_stream_switch;
+  using geo = typename AIEDevice::geo;
+  using axi_ss_geo = typename geo::shim_axi_stream_switch;
   using mpl = typename axi_ss_geo::master_port_layout;
   using spl = typename axi_ss_geo::slave_port_layout;
   using base = axi_stream_switch<axi_ss_geo>;
@@ -140,6 +141,12 @@ public:
     return bli_out_connection(port).template out<T, target>();
   }
 
+
+  /// Configure a connection of the shim AXI stream switch
+  void connect(typename geo::shim_axi_stream_switch::slave_port_layout sp,
+               typename geo::shim_axi_stream_switch::master_port_layout mp) {
+    /// \todo
+  }
 };
 
 /// @} End the aie Doxygen group

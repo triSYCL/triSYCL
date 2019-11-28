@@ -169,6 +169,14 @@ struct device {
     }
   }
 
+
+  /// A shortcut naming for the various ports used for communication
+  struct shortcut {
+    using ssp = typename geo::shim_axi_stream_switch::slave_port_layout;
+    using smp = typename geo::shim_axi_stream_switch::master_port_layout;
+    using csp = typename geo::core_axi_stream_switch::slave_port_layout;
+    using cmp = typename geo::core_axi_stream_switch::master_port_layout;
+  };
 };
 
 /// @} End the aie Doxygen group

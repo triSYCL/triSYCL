@@ -20,7 +20,10 @@
 
 #include <array>
 #include <cstdint>
+#include <memory>
+#include <utility>
 
+#include <boost/fiber/all.hpp>
 #include <boost/format.hpp>
 
 #include "connection.hpp"
@@ -30,6 +33,38 @@ namespace trisycl::vendor::xilinx::acap::aie {
 /// \ingroup aie
 /// @{
 
+/// Packet moving in AIE network-on-chip (NoC)
+class axi_packet {
+  /// Marker type used to signal network shutdown
+  struct shutdown_t {};
+
+public:
+
+  /// Payload data type
+  using value_type = std::uint32_t;
+
+  /// Marker value used to construct a packet asking for shutdown
+  static constexpr shutdown_t shutdown;
+
+  /// Network payload
+  value_type data;
+
+  /// Signal end of packet stream
+  bool tlast = false;
+
+  /// Signal a router shutdown
+  bool shutdown_request = false;
+
+  /// Implicit constructor from a data value
+  axi_packet(const value_type & data) : data { data } {}
+
+  /// Construct a shutdown request packet from axi_packet::shutdown
+  axi_packet(shutdown_t) : shutdown_request { true } {}
+
+  axi_packet() = default;
+};
+
+
 /** An AXI stream switch parameterized with some geographic layout
 
     \param[in] AxiStreamGeography is the geography class used to
@@ -37,7 +72,6 @@ namespace trisycl::vendor::xilinx::acap::aie {
  */
 template <typename AXIStreamGeography>
 class axi_stream_switch {
-
   /// The input communication ports for the tile
   std::array<connection::input,
              AXIStreamGeography::nb_master_port> user_in;
@@ -47,6 +81,147 @@ class axi_stream_switch {
              AXIStreamGeography::nb_slave_port> user_out;
 
 public:
+
+  /** Abstract interface for a router input port
+
+      Note that a router output is actually implemented as an input to
+      some other consumer (router, core...).
+   */
+  struct router_port {
+    /// Keep track of the AXI stream switch owning this port
+    axi_stream_switch &axi_ss;
+
+    /// Create a router port owned by an AXI stream switch
+    router_port(axi_stream_switch &axi_ss)
+      : axi_ss { axi_ss }
+    {}
+
+
+    /// Enqueue a packet on the router input
+    void virtual write(axi_packet v) = 0;
+
+
+    /** Try to enqueue a packet to input
+
+        \return true if the packet is correctly enqueued
+    */
+    bool virtual try_write(axi_packet v) = 0;
+
+
+    /// Nothing specific to do but need a virtual destructor to avoid slicing
+    virtual ~router_port() = default;
+  };
+
+
+  /// A router input port with routing skills
+  struct router_minion : router_port {
+    /// Router ingress capacity queue
+    /// \todo check with hardware team for the value
+    auto static constexpr capacity = 4;
+
+    /// Ingress packet queue
+    boost::fibers::buffered_channel<axi_packet> c { capacity };
+
+    /// Fiber used as a data mover from an input queue
+    boost::fibers::fiber f
+      { [&] {
+          for (;;) {
+            auto v = c.value_pop();
+            if (v.shutdown_request)
+              // End the execution on shutdown packet reception
+              break;
+            /* for now just write to me_0
+               for (auto o : outputs) {
+               o.write(v);
+               } */
+            this->axi_ss.output_ports[0]->write(v);
+          }
+        }
+      };
+
+    /// Inherit from parent constructors
+    using router_port::router_port;
+
+    /// Enqueue a packet on the router input
+    void write(axi_packet v) override {
+      c.push(v);
+    }
+
+
+    /** Try to enqueue a packet on the router input
+
+        \return true if the packet is correctly enqueued
+    */
+    bool try_write(axi_packet v) override {
+      return c.try_push(v) != boost::fibers::channel_op_status::full;
+    }
+
+
+    /// Destructor handling the correct infrastructure shutdown
+    ~router_minion() override {
+      // Send a special packet to shutdown the routing process
+      write(axi_packet::shutdown);
+      // Wait for shutdown to avoid calling std::terminate on destruction...
+      f.join();
+    }
+  };
+
+
+  /// A router input port directing to a AIE core input
+  struct core_receiver : router_port {
+    /// Router ingress capacity queue
+    /// \todo check with hardware team for the value
+    auto static constexpr capacity = 2;
+
+    /// Payload data type
+    using value_type = typename axi_packet::value_type;
+
+    /* boost::fibers::unbuffered_channel has no try_push() function, so
+       use a buffered version for now
+
+       \todo open a GitHub issue on Boost.Fiber
+    */
+    boost::fibers::buffered_channel<axi_packet> c { capacity };
+
+    /// Inherit from parent constructors
+    using router_port::router_port;
+
+    /// Enqueue a packet to the core input
+    void write(axi_packet v) override {
+      c.push(v);
+    }
+
+
+    /** Try to enqueue a packet to the core input
+
+        \return true if the packet is correctly enqueued
+    */
+    bool try_write(axi_packet v) override {
+      return c.try_push(v) == boost::fibers::channel_op_status::success;
+    }
+
+
+    /// Waiting read to a core input port
+    auto read() {
+      return c.value_pop().data;
+    }
+
+
+    /** Non-blocking read to a core input port
+
+        \return true if the value was correctly read
+    */
+    bool try_read(value_type &v) {
+      axi_packet p;
+
+      if (c.try_pop(p) == boost::fibers::channel_op_status::success) {
+        v = p.data;
+        return true;
+      }
+      return false;
+    }
+  };
+
 
   /** Validate the user port number and translate it to the physical
       port number
@@ -62,6 +237,8 @@ public:
 
       \return the physical port number in the switch corresponding to
       the logical port
+
+      \todo This makes sense only for core tile
   */
   static auto inline translate_port = [] (int user_port,
                                           auto physical_port_min,
@@ -101,28 +278,10 @@ public:
     return user_out[p];
   }
 
-
+  // To deprecate ?
   using data_type = std::uint32_t;
   static constexpr auto stream_latency = 4;
 
-  static constexpr auto west_input_number = 4;
-  static constexpr auto west_output_number = 4;
-  static constexpr auto east_input_number = 4;
-  static constexpr auto east_output_number = 4;
-  static constexpr auto north_input_number = 4;
-  static constexpr auto north_output_number = 6;
-  static constexpr auto south_input_number = 8;
-  static constexpr auto south_output_number = 6;
-/*
-  using west_input_type = std::array<stream, west_input_number>;
-  using west_output_type = std::array<stream, west_output_number>;
-  using east_input_type = std::array<stream, east_input_number>;
-  using east_output_type = std::array<stream, east_output_number>;
-  using north_input_type = std::array<stream, north_input_number>;
-  using north_output_type = std::array<stream, north_output_number>;
-  using south_input_type = std::array<stream, south_input_number>;
-  using south_output_type = std::array<stream, south_output_number>;
-*/
   struct input_port {
     ::trisycl::static_pipe<data_type, stream_latency> stream;
     bool enabled;
@@ -132,20 +291,21 @@ public:
     ::trisycl::static_pipe<data_type, stream_latency> stream;
   };
 
-  std::array<input_port, AXIStreamGeography::nb_master_port> input_ports;
-  std::array<output_port, AXIStreamGeography::nb_slave_port> output_ports;
+  /** The input ports used to send information to the switch
 
-/*
-  axi_stream_switch(west_input_type wi, west_output_type wo,
-                    east_input_type ei, east_output_type eo,
-                    north_input_type ni, north_output_type no,
-                    south_input_type si, south_output_type so)
-  {}
-*/
+      Use a shared pointer to represent the interconnect between
+      switches in a shortcut way.
+  */
+  std::array<std::shared_ptr<router_port>,
+             AXIStreamGeography::nb_slave_port> input_ports;
 
-  ///
-  axi_stream_switch() = default;
+  /** The input ports used to send information to the switch
 
+      Use a shared pointer to represent the interconnect between
+      switches in a shortcut way.
+  */
+  std::array<std::shared_ptr<router_port>,
+             AXIStreamGeography::nb_master_port> output_ports;
 
   auto input(typename AXIStreamGeography::master_port_layout p) {
     return input_ports[static_cast<int>(p)].stream.template
@@ -159,6 +319,24 @@ public:
 //      .get_access<access::mode::read, access::target::blocking_pipe>();
     return input_ports[static_cast<int>(p)].stream.template
       get_access<access::mode::read, access::target::blocking_pipe>();
+  }
+
+
+  /// Connect the internals of the AXI stream switch
+  axi_stream_switch() {
+    // Add a router worker on all switch input
+    for (auto &p : input_ports)
+      p = std::make_shared<router_minion>(*this);
+
+    // The ports to the AIE core
+    for (auto &p : output_ports)
+      p = std::make_shared<core_receiver>(*this);
+
+    // \todo DMA
+
+    // \todo FIFO
+
+    // \todo CTRL
   }
 
 };

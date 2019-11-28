@@ -37,7 +37,8 @@ namespace trisycl::vendor::xilinx::acap::aie {
 */
 template <typename AIEDevice>
 class tile_infrastructure  {
-  using axi_ss_geo = typename AIEDevice::geo::core_axi_stream_switch;
+  using geo = typename AIEDevice::geo;
+  using axi_ss_geo = typename geo::core_axi_stream_switch;
   using mpl = typename axi_ss_geo::master_port_layout;
   using spl = typename axi_ss_geo::slave_port_layout;
   using axi_ss_t = axi_stream_switch<axi_ss_geo>;
@@ -132,6 +133,13 @@ public:
   /// Wait for the execution of the callable on this tile
   void wait() {
     work.get();
+  }
+
+
+  /// Configure a connection of the shim AXI stream switch
+  void connect(typename geo::core_axi_stream_switch::slave_port_layout sp,
+               typename geo::core_axi_stream_switch::master_port_layout mp) {
+    /// \todo
   }
 
 };

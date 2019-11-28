@@ -4,7 +4,7 @@
 
 # Set default compiler instead of default CXX=g++ value
 # Assume some recent compiler
-CXX = clang++-9
+CXX = clang++-10
 # To use libc++ instead of libstdc++, from libc++-dev & libc++abi-dev packages
 #CXXFLAGS += -stdlib=libc++
 
@@ -52,8 +52,8 @@ LDLIBS += -lpthread
 #LDLIBS += $(shell pkg-config --libs-only-l pocl)
 #CXXFLAGS += $(shell pkg-config --cflags pocl)
 
-# To use Boost.Thread
-LDLIBS += -lboost_thread -lboost_system
+# To use Boost.Thread & Boost.Fiber
+LDLIBS += -lboost_thread -lboost_system -lboost_fiber -lboost_context
 
 # For Clang UBSan https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html
 #CXXFLAGS += -fsanitize=undefined
@@ -65,7 +65,7 @@ LDLIBS += -lboost_thread -lboost_system
 # For Clang MemorySanitizer https://clang.llvm.org/docs/MemorySanitizer.html
 #CXXFLAGS += -fsanitize=memory
 # To enable debug and tracing:
-# CXXFLAGS += -g
+CXXFLAGS += -g
 # With optimization and without assertions
 #CXXFLAGS += -O3 -DNDEBUG -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -DNDEBUG
@@ -74,7 +74,7 @@ LDLIBS += -lboost_thread -lboost_system
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DTRISYCL_TRACE_KERNEL -DTRISYCL_DEBUG_STRUCTORS -DBOOST_LOG_DYN_LINK
 # With optimization and without assertions
 #CXXFLAGS += -O3 -DNDEBUG -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
-CXXFLAGS += -O3 -DNDEBUG
+#CXXFLAGS += -O3 -DNDEBUG
 #CXXFLAGS += -O3
 # To have DEBUG mode working
 LDLIBS += -lboost_log -lpthread

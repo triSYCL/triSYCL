@@ -351,15 +351,15 @@ struct geography : Layout {
   struct core_axi_stream_switch {
     /** Layout of the AXI stream master ports in the switch
 
-        Revision v2.01, 4.2.1 Types of AXI-Streams, p. 98 */
+        Revision v2.02, 4.2.1 Types of AXI-Streams, Table 4-2, p. 101 */
     enum class master_port_layout : std::int8_t {
       me_0,
       me_1, me_last = me_1, ///< Used for user port validation
       dma_0,
-      dma_1,
+      dma_1, dma_last = dma_1, ///< Used for DMA validation
       tile_ctrl,
       fifo_0,
-      fifo_1,
+      fifo_1, fifo_last = fifo_1, ///< Used for FIFO validation
       south_0,
       south_1,
       south_2,
@@ -383,18 +383,20 @@ struct geography : Layout {
     };
 
     /// Number of master AXI stream master ports in the switch
-    static constexpr int nb_master_port =
+    static constexpr auto nb_master_port =
       static_cast<int>(master_port_layout::size);
 
-    /// Layout of the AXI stream slave ports in the switch
+    /** Layout of the AXI stream slave ports in the switch
+
+        Revision v2.02, 4.2.1 Types of AXI-Streams, Table 4-3, p. 102 */
     enum class slave_port_layout : std::int8_t {
       me_0,
       me_1, me_last = me_1, ///< Used for user port validation
       dma_0,
-      dma_1,
+      dma_1, dma_last = dma_1, ///< Used for DMA validation
       tile_ctrl,
       fifo_0,
-      fifo_1,
+      fifo_1, fifo_last = fifo_1, ///< Used for FIFO validation
       south_0,
       south_1,
       south_2,
@@ -420,7 +422,7 @@ struct geography : Layout {
     };
 
     /// Number of master AXI stream slave ports in the switch
-    static constexpr int nb_slave_port =
+    static constexpr auto nb_slave_port =
       static_cast<int>(slave_port_layout::size);
 
   };
@@ -429,11 +431,11 @@ struct geography : Layout {
   struct shim_axi_stream_switch {
     /** Layout of the AXI stream master ports in the switch
 
-        Revision v2.01, 6.5.3 Shim AXI-Stream Interconnect, p. 289 */
+        Revision v2.02, 6.5.3 Shim AXI-Stream Interconnect, Table 6-2, p. 291 */
     enum class master_port_layout : std::int8_t {
       tile_ctrl,
       fifo_0,
-      fifo_1,
+      fifo_1, fifo_last = fifo_1, ///< Used for FIFO validation
       south_0,
       south_1,
       south_2,
@@ -459,14 +461,16 @@ struct geography : Layout {
     };
 
     /// Number of master AXI stream master ports in the switch
-    static constexpr int nb_master_port =
+    static constexpr auto nb_master_port =
       static_cast<int>(master_port_layout::size);
 
-    /// Layout of the AXI stream slave ports in the switch
+    /** Layout of the AXI stream slave ports in the switch
+
+        Revision v2.02, 6.5.3 Shim AXI-Stream Interconnect, Table 6-3, p. 291 */
     enum class slave_port_layout : std::int8_t {
       tile_ctrl,
       fifo_0,
-      fifo_1,
+      fifo_1, fifo_last = fifo_1, ///< Used for FIFO validation
       south_0,
       south_1,
       south_2,
@@ -493,7 +497,7 @@ struct geography : Layout {
     };
 
     /// Number of master AXI stream slave ports in the switch
-    static constexpr int nb_slave_port =
+    static constexpr auto nb_slave_port =
       static_cast<int>(slave_port_layout::size);
   };
 
