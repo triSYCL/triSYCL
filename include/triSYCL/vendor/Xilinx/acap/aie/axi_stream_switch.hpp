@@ -21,6 +21,7 @@
 #include <array>
 #include <cstdint>
 #include <memory>
+#include <type_traits>
 #include <utility>
 
 #include <boost/fiber/all.hpp>
@@ -44,7 +45,7 @@ public:
   using value_type = std::uint32_t;
 
   /// Marker value used to construct a packet asking for shutdown
-  static constexpr shutdown_t shutdown;
+  static const shutdown_t shutdown;
 
   /// Network payload
   value_type data;
@@ -72,13 +73,6 @@ public:
  */
 template <typename AXIStreamGeography>
 class axi_stream_switch {
-  /// The input communication ports for the tile
-  std::array<connection::input,
-             AXIStreamGeography::nb_master_port> user_in;
-
-  /// The output communication ports for the tile
-  std::array<connection::output,
-             AXIStreamGeography::nb_slave_port> user_out;
 
 public:
 
@@ -91,6 +85,8 @@ public:
     /// Keep track of the AXI stream switch owning this port
     axi_stream_switch &axi_ss;
 
+    using value_type = axi_packet::value_type;
+
     /// Create a router port owned by an AXI stream switch
     router_port(axi_stream_switch &axi_ss)
       : axi_ss { axi_ss }
@@ -98,14 +94,39 @@ public:
 
 
     /// Enqueue a packet on the router input
-    void virtual write(axi_packet v) = 0;
+    void virtual write(const axi_packet &v) = 0;
+
+
+    /// Alias to enqueue a packet on the router input
+    auto& operator<<(const value_type &v) {
+      write(v);
+      return *this;
+    }
 
 
     /** Try to enqueue a packet to input
 
         \return true if the packet is correctly enqueued
     */
-    bool virtual try_write(axi_packet v) = 0;
+    bool virtual try_write(const axi_packet &v) = 0;
+
+    /// Waiting read to a core input port
+    value_type virtual read() = 0;
+
+
+    /** Non-blocking read to a core input port
+
+        \return true if the value was correctly read
+    */
+    bool virtual try_read(value_type &v) = 0;
+
+
+    /// Alias to the waiting read to a core input port
+    template <typename T>
+    auto& operator>>(T &v) {
+      v = static_cast<T>(read());
+      return *this;
+    }
 
 
     /// Nothing specific to do but need a virtual destructor to avoid slicing
@@ -122,6 +143,8 @@ public:
     /// Ingress packet queue
     boost::fibers::buffered_channel<axi_packet> c { capacity };
 
+    std::vector<std::shared_ptr<router_port>> outputs;
+
     /// Fiber used as a data mover from an input queue
     boost::fibers::fiber f
       { [&] {
@@ -130,20 +153,22 @@ public:
             if (v.shutdown_request)
               // End the execution on shutdown packet reception
               break;
-            /* for now just write to me_0
-               for (auto o : outputs) {
-               o.write(v);
-               } */
-            this->axi_ss.output_ports[0]->write(v);
+            TRISYCL_DUMP_T("router_minion routing data value " << v.data);
+            // The routing itself is a blocking write on each output
+            for (auto &o : outputs)
+               o->write(v);
           }
+          TRISYCL_DUMP_T("router_minion shutting down");
         }
       };
 
     /// Inherit from parent constructors
     using router_port::router_port;
+    using value_type = typename router_port::value_type;
 
     /// Enqueue a packet on the router input
-    void write(axi_packet v) override {
+    void write(const axi_packet &v) override {
+      TRISYCL_DUMP_T("router_minion write data value " << v.data);
       c.push(v);
     }
 
@@ -152,8 +177,36 @@ public:
 
         \return true if the packet is correctly enqueued
     */
-    bool try_write(axi_packet v) override {
+    bool try_write(const axi_packet &v) override {
       return c.try_push(v) != boost::fibers::channel_op_status::full;
+    }
+
+
+    /// Waiting read to a core input port
+    value_type read() override {
+      TRISYCL_DUMP_T("router_minion read");
+      return c.value_pop().data;
+    }
+
+
+    /** Non-blocking read to a core input port
+
+        \return true if the value was correctly read
+    */
+    bool try_read(value_type &v) override {
+      axi_packet p;
+
+      if (c.try_pop(p) == boost::fibers::channel_op_status::success) {
+        v = p.data;
+        return true;
+      }
+      return false;
+    }
+
+
+    /// Connect this routing input to a switch output
+    void connect_to(std::shared_ptr<router_port> dest) {
+      outputs.push_back(dest);
     }
 
 
@@ -187,7 +240,8 @@ public:
     using router_port::router_port;
 
     /// Enqueue a packet to the core input
-    void write(axi_packet v) override {
+    void write(const axi_packet &v) override {
+      TRISYCL_DUMP_T("core_receiver write data value " << v.data);
       c.push(v);
     }
 
@@ -196,13 +250,14 @@ public:
 
         \return true if the packet is correctly enqueued
     */
-    bool try_write(axi_packet v) override {
+    bool try_write(const axi_packet &v) override {
       return c.try_push(v) == boost::fibers::channel_op_status::success;
     }
 
 
     /// Waiting read to a core input port
-    auto read() {
+    value_type read() override {
+      TRISYCL_DUMP_T("core_receiver read");
       return c.value_pop().data;
     }
 
@@ -211,7 +266,7 @@ public:
 
         \return true if the value was correctly read
     */
-    bool try_read(value_type &v) {
+    bool try_read(value_type &v) override {
       axi_packet p;
 
       if (c.try_pop(p) == boost::fibers::channel_op_status::success) {
@@ -253,7 +308,8 @@ public:
         (boost::format {
           "%1%: %2% is not a valid port number between 0 and %3%" }
            % error_message % user_port % last_user_port).str() };
-    return port_min + user_port;
+    // Return the value as the requested enum port
+    return static_cast<decltype(physical_port_min)>(port_min + user_port);
   };
 
 
@@ -263,8 +319,17 @@ public:
 
       \throws ::trisycl::runtime_error if the port number is invalid
   */
-  auto &in_connection(int p) {
-    return user_in[p];
+  auto &
+  in_connection(typename AXIStreamGeography::slave_port_layout sp) {
+    using u_t = std::underlying_type_t<decltype(sp)>;
+    auto port = static_cast<u_t>(sp);
+    // \todo replace by std::ssize() in the future
+    if (port >=  static_cast<std::ptrdiff_t>(std::size(input_ports)))
+      throw ::trisycl::runtime_error {
+        (boost::format {
+          "in_connection: %1% is not a valid port number between 0 and %2%" }
+           % port % (std::size(input_ports) - 1)).str() };
+    return input_ports[port];
   }
 
 
@@ -274,9 +339,42 @@ public:
 
       \throws ::trisycl::runtime_error if the port number is invalid
   */
-  auto &out_connection(int p) {
-    return user_out[p];
+  auto &out_connection(typename AXIStreamGeography::master_port_layout mp) {
+    using u_t = std::underlying_type_t<decltype(mp)>;
+    auto port = static_cast<u_t>(mp);
+    // \todo replace by std::ssize() in the future
+    if (port >= static_cast<std::ptrdiff_t>(std::size(output_ports)))
+      throw ::trisycl::runtime_error {
+        (boost::format {
+          "in_connection: %1% is not a valid port number between 0 and %2%" }
+           % port % (std::size(output_ports) - 1)).str() };
+    return output_ports[port];
   }
+
+
+  /** Configure a connection of the shim AXI stream switch
+
+      \param[in] sp is the input port number
+
+      \param[in] mp is the output port number
+
+      \throws ::trisycl::runtime_error if the port number is invalid
+  */
+  void connect(typename AXIStreamGeography::slave_port_layout sp,
+               typename AXIStreamGeography::master_port_layout mp) {
+    // \todo factorize out
+    using u_t = std::underlying_type_t<decltype(sp)>;
+    auto port = static_cast<u_t>(sp);
+    auto rm = dynamic_cast<router_minion *>(in_connection(sp).get());
+    if (!rm) {
+      throw ::trisycl::runtime_error {
+        (boost::format {
+          "connect: %1% is not a routable switch input port" }
+           % port).str() };
+    }
+    rm->connect_to(out_connection(mp));
+  }
+
 
   // To deprecate ?
   using data_type = std::uint32_t;

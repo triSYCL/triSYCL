@@ -56,7 +56,7 @@ private:
       \param[in] port is the user port to use
   */
   static auto translate_input_port(int port) {
-    return axi_ss_t::translate_port(port, mpl::me_0, mpl::me_last,
+    return axi_ss_t::translate_port(port, spl::me_0, spl::me_last,
                                     "The core input port is out of range");
   }
 
@@ -66,7 +66,7 @@ private:
       \param[in] port is the BLI id/port to use
   */
   static auto translate_output_port(int port) {
-    return axi_ss_t::translate_port(port, spl::me_0, spl::me_last,
+    return axi_ss_t::translate_port(port, mpl::me_0, mpl::me_last,
                                     "The core output port is out of range");
   }
 
@@ -92,33 +92,19 @@ public:
 
   /** Get the user input port from the AXI stream switch
 
-      \param[in] T is the data type to be used in the transfers
-
-      \param[in] Target specifies if the connection is blocking or
-      not. It is blocking by default
-
       \param[in] port is the port to use
   */
-  template <typename T, access::target Target = access::target::blocking_pipe>
-  auto in(int port) {
-    return axi_ss.in_connection(translate_input_port(port))
-      .template in<T, Target>();
+  auto& in(int port) {
+    return *axi_ss.in_connection(translate_input_port(port));
   }
 
 
   /** Get the user output port to the AXI stream switch
 
-      \param[in] T is the data type to be used in the transfers
-
-      \param[in] Target specifies if the connection is blocking or
-      not. It is blocking by default
-
       \param[in] port is the port to use
   */
-  template <typename T, access::target Target = access::target::blocking_pipe>
-  auto out(int port) {
-    return axi_ss.out_connection(translate_output_port(port))
-      .template out<T, Target>();
+  auto& out(int port) {
+    return *axi_ss.out_connection(translate_output_port(port));
   }
 
 
@@ -139,7 +125,7 @@ public:
   /// Configure a connection of the shim AXI stream switch
   void connect(typename geo::core_axi_stream_switch::slave_port_layout sp,
                typename geo::core_axi_stream_switch::master_port_layout mp) {
-    /// \todo
+    axi_ss.connect(sp, mp);
   }
 
 };

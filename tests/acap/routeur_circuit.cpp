@@ -8,6 +8,7 @@
 
 #include <future>
 #include <iostream>
+#include <iostream>
 
 #include <boost/test/minimal.hpp>
 
@@ -59,7 +60,16 @@ int test_main(int argc, char *argv[]) {
     */
     using s = decltype(d)::shortcut;
 //    d.shim(0).connect(s::ssp::south_1, s::smp::north_0);
-    d.tile(0,0).connect(s::csp::south_0, s::cmp::me_0);
+//    d.tile(0,0).connect(s::csp::south_0, s::cmp::me_0);
+    d.tile(0,0).connect(s::csp::me_0, s::cmp::me_1);
+    for (int i = 10; i < 20; ++i) {
+      d.tile(0,0).out(0) << i;
+      int receive;
+      d.tile(0,0).in(1) >> receive;
+      if (i != receive)
+        std::cerr << "tile(0,0) wrongly received " << receive
+                  << " instead of " << i << std::endl;
+    }
 /*    d.tile(0,0)
       .connect(geo::core_axi_stream_switch::slave_port_layout::me_0)
       .to(geo::core_axi_stream_switch::master_port_layout::east_0);
