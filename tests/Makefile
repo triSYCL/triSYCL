@@ -65,13 +65,13 @@ LDLIBS += -lboost_thread -lboost_system -lboost_fiber -lboost_context
 # For Clang MemorySanitizer https://clang.llvm.org/docs/MemorySanitizer.html
 #CXXFLAGS += -fsanitize=memory
 # To enable debug and tracing:
-CXXFLAGS += -g
+#CXXFLAGS += -g
 # With optimization and without assertions
 #CXXFLAGS += -O3 -DNDEBUG -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -DNDEBUG
 #CXXFLAGS += -g -DTRISYCL_TRACE_KERNEL -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
-#CXXFLAGS += -g -DTRISYCL_DEBUG -DTRISYCL_TRACE_KERNEL -DTRISYCL_DEBUG_STRUCTORS -DBOOST_LOG_DYN_LINK
+CXXFLAGS += -g -DTRISYCL_DEBUG -DTRISYCL_TRACE_KERNEL -DTRISYCL_DEBUG_STRUCTORS -DBOOST_LOG_DYN_LINK
 # With optimization and without assertions
 #CXXFLAGS += -O3 -DNDEBUG -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -O3 -DNDEBUG

@@ -147,18 +147,26 @@ public:
 
     /// Fiber used as a data mover from an input queue
     boost::fibers::fiber f
-      { [&] {
+      { /* Use explicit dispatch to have the scheduler starting right
+           away instead of waiting for the join() (called only in the
+           destructor...) to launch it */
+       boost::fibers::launch::dispatch,
+       [&] {
+         TRISYCL_DUMP_T("router_minion " << boost::this_fiber::get_id()
+                        << " starting");
           for (;;) {
             auto v = c.value_pop();
             if (v.shutdown_request)
               // End the execution on shutdown packet reception
               break;
-            TRISYCL_DUMP_T("router_minion routing data value " << v.data);
+            TRISYCL_DUMP_T("router_minion " << boost::this_fiber::get_id()
+                           << " routing data value " << v.data);
             // The routing itself is a blocking write on each output
             for (auto &o : outputs)
                o->write(v);
           }
-          TRISYCL_DUMP_T("router_minion shutting down");
+          TRISYCL_DUMP_T("router_minion " << boost::this_fiber::get_id()
+                         << " shutting down");
         }
       };
 
@@ -167,8 +175,11 @@ public:
     using value_type = typename router_port::value_type;
 
     /// Enqueue a packet on the router input
+    /// \todo Clean up the API to separate data from signaling
     void write(const axi_packet &v) override {
-      TRISYCL_DUMP_T("router_minion write data value " << v.data);
+      /// \todo separate debug from shutdown case
+      TRISYCL_DUMP_T("router_minion " << boost::this_fiber::get_id()
+                     << " write data value " << v.data);
       c.push(v);
     }
 
@@ -184,7 +195,8 @@ public:
 
     /// Waiting read to a core input port
     value_type read() override {
-      TRISYCL_DUMP_T("router_minion read");
+      TRISYCL_DUMP_T("router_minion " << boost::this_fiber::get_id()
+                     << " read");
       return c.value_pop().data;
     }
 
