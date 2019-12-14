@@ -95,7 +95,9 @@ public:
       \param[in] port is the port to use
   */
   auto& in(int port) {
-    return *axi_ss.in_connection(translate_input_port(port));
+    /* The input port for the core is actually the corresponding
+       output on the switch */
+    return *axi_ss.out_connection(translate_output_port(port));
   }
 
 
@@ -104,7 +106,9 @@ public:
       \param[in] port is the port to use
   */
   auto& out(int port) {
-    return *axi_ss.out_connection(translate_output_port(port));
+    /* The output port for the core is actually the corresponding
+       input on the switch */
+    return *axi_ss.in_connection(translate_input_port(port));
   }
 
 
