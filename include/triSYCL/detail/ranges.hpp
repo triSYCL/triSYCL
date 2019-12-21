@@ -13,6 +13,8 @@
 
 #include <range/v3/all.hpp>
 
+#include "triSYCL/detail/enum.hpp"
+
 namespace trisycl::views {
 
 /** Construct a range of integral values iterating between 2 enum
@@ -34,9 +36,8 @@ auto enum_underlying_type = [] (auto begin, auto inclusive_end) {
 
   static_assert(std::is_same_v<begin_t, inclusive_end_t>,
                 "begin and inclusive_end should be from the same enum");
-  using value_t = std::underlying_type_t<begin_t>;
-  return ranges::iota_view { static_cast<value_t>(begin),
-                             static_cast<value_t>(inclusive_end) + 1 };
+  return ranges::iota_view { detail::underlying_value(begin),
+                             detail::underlying_value(inclusive_end) + 1 };
 };
 
 
