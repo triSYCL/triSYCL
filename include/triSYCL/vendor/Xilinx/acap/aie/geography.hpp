@@ -363,21 +363,21 @@ struct geography : Layout {
       south_0,
       south_1,
       south_2,
-      south_3,
+      south_3, south_last = south_3, ///< Used for south validation
       west_0,
       west_1,
       west_2,
-      west_3,
+      west_3, west_last = west_3, ///< Used for west validation
       north_0,
       north_1,
       north_2,
       north_3,
       north_4,
-      north_5,
+      north_5, north_last = north_5, ///< Used for north validation
       east_0,
       east_1,
       east_2,
-      east_3,
+      east_3, east_last = east_3, ///< Used for east validation
       // To measure the enum
       size
     };
@@ -402,19 +402,19 @@ struct geography : Layout {
       south_2,
       south_3,
       south_4,
-      south_5,
+      south_5, south_last = south_5, ///< Used for south validation
       west_0,
       west_1,
       west_2,
-      west_3,
+      west_3, west_last = west_3, ///< Used for west validation
       north_0,
       north_1,
       north_2,
-      north_3,
+      north_3, north_last = north_3, ///< Used for north validation
       east_0,
       east_1,
       east_2,
-      east_3,
+      east_3, east_last = east_3, ///< Used for east validation
       core_trace,
       mem_trace,
       // To measure the enum
@@ -445,17 +445,17 @@ struct geography : Layout {
       west_0,
       west_1,
       west_2,
-      west_3,
+      west_3, west_last = west_3, ///< Used for west validation
       north_0,
       north_1,
       north_2,
       north_3,
       north_4,
-      north_5,
+      north_5, north_last = north_5, ///< Used for north validation
       east_0,
       east_1,
       east_2,
-      east_3,
+      east_3, east_last = east_3, ///< Used for east validation
       // To measure the enum
       size
     };
@@ -482,15 +482,15 @@ struct geography : Layout {
       west_0,
       west_1,
       west_2,
-      west_3,
+      west_3, west_last = west_3, ///< Used for west validation
       north_0,
       north_1,
       north_2,
-      north_3,
+      north_3, north_last = north_3, ///< Used for north validation
       east_0,
       east_1,
       east_2,
-      east_3,
+      east_3, east_last = east_3, ///< Used for east validation
       shim_trace,
       // To measure the enum
       size
