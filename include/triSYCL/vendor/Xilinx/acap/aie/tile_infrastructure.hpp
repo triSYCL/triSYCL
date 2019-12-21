@@ -72,6 +72,71 @@ private:
 
 public:
 
+  /// A router input port directing to a AIE core input
+  struct core_receiver : axi_ss_t::router_port {
+    /// Router ingress capacity queue
+    /// \todo check with hardware team for the value
+    auto static constexpr capacity = 2;
+
+    /// Payload data type
+    using value_type = typename axi_packet::value_type;
+
+    /* boost::fibers::unbuffered_channel has no try_push() function, so
+       use a buffered version for now
+
+       \todo open a GitHub issue on Boost.Fiber
+    */
+    boost::fibers::buffered_channel<axi_packet> c { capacity };
+
+    /// Inherit from parent constructors
+    using axi_ss_t::router_port::router_port;
+
+    /// Enqueue a packet to the core input
+    void write(const axi_packet &v) override {
+      TRISYCL_DUMP_T("core_receiver write data value " << v.data);
+      c.push(v);
+    }
+
+
+    /** Try to enqueue a packet to the core input
+
+        \return true if the packet is correctly enqueued
+    */
+    bool try_write(const axi_packet &v) override {
+      return c.try_push(v) == boost::fibers::channel_op_status::success;
+    }
+
+
+    /// Waiting read to a core input port
+    value_type read() override {
+      TRISYCL_DUMP_T("core_receiver read");
+      return c.value_pop().data;
+    }
+
+
+    /** Non-blocking read to a core input port
+
+        \return true if the value was correctly read
+    */
+    bool try_read(value_type &v) override {
+      axi_packet p;
+
+      if (c.try_pop(p) == boost::fibers::channel_op_status::success) {
+        v = p.data;
+        return true;
+      }
+      return false;
+    }
+  };
+
+
+  tile_infrastructure() {
+    // Connect the core receivers to its AXI stream switch
+    for (auto &p : axi_ss.output_ports)
+      p = std::make_shared<core_receiver>(axi_ss);
+  }
+
+
   /** Get the user input connection from the AXI stream switch
 
       \param[in] port is the port to use
