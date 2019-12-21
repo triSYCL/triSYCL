@@ -72,6 +72,22 @@ int test_main(int argc, char *argv[]) {
         std::cerr << "tile(0,0) wrongly received " << receive
                   << " instead of " << i << std::endl;
     }
+
+    // Test neighbour core connection
+    d.tile(0,0).connect(d_t::csp::me_1, d_t::cmp::east_0);
+    d.tile(1,0).connect(d_t::csp::west_0, d_t::cmp::me_0);
+    // From the host point of view
+    for (int i = 1; i < 9; ++i) {
+      d.tile(0,0).out(1) << i;
+      int receive;
+      d.tile(1,0).in(0) >> receive;
+      if (i != receive)
+        std::cerr << "tile(0,0) wrongly received " << receive
+                  << " instead of " << i << std::endl;
+    }
+    // From the device point of view
+//    d.run<neighbor>();
+
 /*    d.tile(0,0)
       .connect(geo::core_axi_stream_switch::slave_port_layout::me_0)
       .to(geo::core_axi_stream_switch::master_port_layout::east_0);

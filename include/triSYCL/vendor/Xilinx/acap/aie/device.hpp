@@ -51,6 +51,29 @@ struct device {
   tile_infrastructure<device> ti[geo::y_size][geo::x_size];
 
 
+  /** Apply a function for each tile index of the device
+
+      \param f is a callable that is to be called like \c f(x,y) for
+      each tile
+  */
+  static auto inline for_each_tile_index = [] (auto f) {
+    for (auto [ x, y ] : ranges::views::cartesian_product
+           (ranges::views::iota(0, geo::x_size),
+            ranges::views::iota(0, geo::y_size)))
+      f(x, y);
+  };
+
+
+  /** Apply a function for each tile of the device
+
+      \param f is a callable that is to be called like \c f(x,y) for
+      each tile
+  */
+  static auto inline for_each_tile = [] (auto f) {
+    for_each_tile_index([&] (auto x, auto y) { f(ti[y][x]); });
+  };
+
+
   /** Access to the common infrastructure part of a tile
 
       \param[in] x is the horizontal tile coordinate
@@ -176,6 +199,18 @@ struct device {
     }
   }
 
+
+  /// Build some device level infrastructure
+  device() {
+    // Connect the NoC towards East of the switches
+    for_each_tile_index([&] (auto x, auto y) {
+      if (x != geo::x_max)
+        for (auto [o, i] : ranges::views::zip
+               (views::enum_type(cmp::east_0, cmp::east_last),
+                views::enum_type(csp::west_0, csp::west_last)))
+          tile(x, y).output(o) = tile(x + 1, y).input(i);
+    });
+  }
 };
 
 /// @} End the aie Doxygen group

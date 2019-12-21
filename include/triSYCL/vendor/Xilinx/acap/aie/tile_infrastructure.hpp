@@ -133,8 +133,8 @@ public:
 
   tile_infrastructure() {
     // Connect the core receivers to its AXI stream switch
-    for (auto i : views::enum_underlying_type(mpl::me_0, mpl::me_last))
-      axi_ss.output_ports[i] = std::make_shared<core_receiver>(axi_ss);
+    for (auto p : views::enum_type(mpl::me_0, mpl::me_last))
+      output(p) = std::make_shared<core_receiver>(axi_ss);
   }
 
 
@@ -175,6 +175,26 @@ public:
     /* The output port for the core is actually the corresponding
        input on the switch */
     return *axi_ss.in_connection(translate_input_port(port));
+  }
+
+
+  /** Get the input router port of the AXI stream switch
+
+      \param p is the slave_port_layout for the stream
+  */
+  auto & input(spl p) {
+    // No index validation required because of type safety
+    return axi_ss.input(p);
+  }
+
+
+  /** Get the output router port of the AXI stream switch
+
+      \param p is the master_port_layout for the stream
+  */
+  auto & output(mpl p) {
+    // No index validation required because of type safety
+    return axi_ss.output(p);
   }
 
 

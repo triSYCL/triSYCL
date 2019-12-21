@@ -28,6 +28,7 @@
 #include <boost/format.hpp>
 
 #include "connection.hpp"
+#include "triSYCL/detail/enum.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
@@ -75,6 +76,9 @@ template <typename AXIStreamGeography>
 class axi_stream_switch {
 
 public:
+
+  using mpl = typename AXIStreamGeography::master_port_layout;
+  using spl = typename AXIStreamGeography::slave_port_layout;
 
   /** Abstract interface for a router input port
 
@@ -159,11 +163,15 @@ public:
             if (v.shutdown_request)
               // End the execution on shutdown packet reception
               break;
-            TRISYCL_DUMP_T("router_minion " << boost::this_fiber::get_id()
+            TRISYCL_DUMP_T("router_minion " << this
+                           << " on fiber " << boost::this_fiber::get_id()
                            << " routing data value " << v.data);
             // The routing itself is a blocking write on each output
-            for (auto &o : outputs)
+            for (auto &o : outputs) {
+              TRISYCL_DUMP_T("router_minion " << this
+                             << " to router_minion " << o.get());
                o->write(v);
+            }
           }
           TRISYCL_DUMP_T("router_minion " << boost::this_fiber::get_id()
                          << " shutting down");
@@ -274,7 +282,7 @@ public:
       \throws ::trisycl::runtime_error if the port number is invalid
   */
   auto &
-  in_connection(typename AXIStreamGeography::slave_port_layout sp) {
+  in_connection(spl sp) {
     using u_t = std::underlying_type_t<decltype(sp)>;
     auto port = static_cast<u_t>(sp);
     // \todo replace by std::ssize() in the future
@@ -293,7 +301,7 @@ public:
 
       \throws ::trisycl::runtime_error if the port number is invalid
   */
-  auto &out_connection(typename AXIStreamGeography::master_port_layout mp) {
+  auto &out_connection(mpl mp) {
     using u_t = std::underlying_type_t<decltype(mp)>;
     auto port = static_cast<u_t>(mp);
     // \todo replace by std::ssize() in the future
@@ -314,8 +322,7 @@ public:
 
       \throws ::trisycl::runtime_error if the port number is invalid
   */
-  void connect(typename AXIStreamGeography::slave_port_layout sp,
-               typename AXIStreamGeography::master_port_layout mp) {
+  void connect(spl sp, mpl mp) {
     // \todo factorize out
     using u_t = std::underlying_type_t<decltype(sp)>;
     auto port = static_cast<u_t>(sp);
@@ -359,18 +366,24 @@ public:
   std::array<std::shared_ptr<router_port>,
              AXIStreamGeography::nb_master_port> output_ports;
 
-  auto input(typename AXIStreamGeography::master_port_layout p) {
-    return input_ports[static_cast<int>(p)].stream.template
-      get_access<access::mode::write, access::target::blocking_pipe>();
+
+  /** Get the input router port of the AXI stream switch
+
+      \param p is the slave_port_layout for the stream
+  */
+  auto & input(spl p) {
+    // No index validation required because of type safety
+    return input_ports[detail::underlying_value(p)];
   }
 
 
-  auto output(typename AXIStreamGeography::master_port_layout p) {
-    // Lie to implement some "routing" for now
-//    return output_ports[static_cast<int>(p)].stream
-//      .get_access<access::mode::read, access::target::blocking_pipe>();
-    return input_ports[static_cast<int>(p)].stream.template
-      get_access<access::mode::read, access::target::blocking_pipe>();
+  /** Get the input router port of the AXI stream switch
+
+      \param p is the master_port_layout for the stream
+  */
+  auto & output(mpl p) {
+    // No index validation required because of type safety
+    return output_ports[detail::underlying_value(p)];
   }
 
 
