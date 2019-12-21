@@ -21,6 +21,7 @@
 #include <boost/format.hpp>
 
 #include "axi_stream_switch.hpp"
+#include "triSYCL/detail/ranges.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
@@ -132,8 +133,8 @@ public:
 
   tile_infrastructure() {
     // Connect the core receivers to its AXI stream switch
-    for (auto &p : axi_ss.output_ports)
-      p = std::make_shared<core_receiver>(axi_ss);
+    for (auto i : views::enum_underlying_type(mpl::me_0, mpl::me_last))
+      axi_ss.output_ports[i] = std::make_shared<core_receiver>(axi_ss);
   }
 
 
