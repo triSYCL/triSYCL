@@ -58,10 +58,12 @@ int test_main(int argc, char *argv[]) {
       aie.connect<float>(line { 2 }, broadcast_column);
       aie.connect<float>(column { 3 }, broadcast_column);
     */
-    using s = decltype(d)::shortcut;
+    using d_t = decltype(d);
 //    d.shim(0).connect(s::ssp::south_1, s::smp::north_0);
 //    d.tile(0,0).connect(s::csp::south_0, s::cmp::me_0);
-    d.tile(0,0).connect(s::csp::me_0, s::cmp::me_1);
+
+    // Test intra core connection
+    d.tile(0,0).connect(d_t::csp::me_0, d_t::cmp::me_1);
     for (int i = 10; i < 20; ++i) {
       d.tile(0,0).out(0) << i;
       int receive;

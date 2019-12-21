@@ -35,6 +35,13 @@ struct device {
   /// The geography of the CGRA
   using geo = geography<Layout>;
 
+  /** A shortcut naming for the various ports used for communication
+      in the device */
+  using ssp = typename geo::shim_axi_stream_switch::slave_port_layout;
+  using smp = typename geo::shim_axi_stream_switch::master_port_layout;
+  using csp = typename geo::core_axi_stream_switch::slave_port_layout;
+  using cmp = typename geo::core_axi_stream_switch::master_port_layout;
+
   /// The cascade stream infrastructure of the CGRA
   cascade_stream<geo> cs;
 
@@ -169,14 +176,6 @@ struct device {
     }
   }
 
-
-  /// A shortcut naming for the various ports used for communication
-  struct shortcut {
-    using ssp = typename geo::shim_axi_stream_switch::slave_port_layout;
-    using smp = typename geo::shim_axi_stream_switch::master_port_layout;
-    using csp = typename geo::core_axi_stream_switch::slave_port_layout;
-    using cmp = typename geo::core_axi_stream_switch::master_port_layout;
-  };
 };
 
 /// @} End the aie Doxygen group
