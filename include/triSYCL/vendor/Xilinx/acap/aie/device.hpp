@@ -202,13 +202,19 @@ struct device {
 
   /// Build some device level infrastructure
   device() {
-    // Connect the NoC towards East of the switches
     for_each_tile_index([&] (auto x, auto y) {
-      if (x != geo::x_max)
+      // Connect the NoC towards East of the switches
+      if (geo::is_x_valid(x + 1))
         for (auto [o, i] : ranges::views::zip
                (views::enum_type(cmp::east_0, cmp::east_last),
                 views::enum_type(csp::west_0, csp::west_last)))
           tile(x, y).output(o) = tile(x + 1, y).input(i);
+      // Connect the NoC towards West of the switches
+      if (geo::is_x_valid(x - 1))
+        for (auto [o, i] : ranges::views::zip
+               (views::enum_type(cmp::west_0, cmp::west_last),
+                views::enum_type(csp::east_0, csp::east_last)))
+          tile(x, y).output(o) = tile(x - 1, y).input(i);
     });
   }
 };
