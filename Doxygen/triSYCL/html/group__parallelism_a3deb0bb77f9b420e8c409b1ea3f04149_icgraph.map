@@ -1,0 +1,4 @@
+<map id="trisycl::h_item::get_group" name="trisycl::h_item::get_group">
+<area shape="rect" id="node2" href="$group__parallelism.html#af1d5e354b8dd3ca2a0d54c6d0ecf7056" title="Return the constituent element of the group id representing the work&#45;group&#39;s position within the over..." alt="" coords="184,5,315,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#a414d403e2b7b818a57a0d46db5b662c7" title="Return the flattened id of the current work&#45;group. " alt="" coords="184,71,315,112"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="trisycl::handler::set_arg" name="trisycl::handler::set_arg">
+<area shape="rect" id="node2" href="$group__execution.html#a283452d4263d2314ea79cf379ff7ee78" title="Helper to individually call set_arg() for each argument. " alt="" coords="212,5,376,47"/>
+<area shape="rect" id="node3" href="$group__execution.html#ab0ab95a48d1ab99e68e78a5686a73544" title="Set all kernel args for an OpenCL kernel which is used through the SYCL/OpenCL interop interface..." alt="" coords="424,13,589,39"/>
+</map>

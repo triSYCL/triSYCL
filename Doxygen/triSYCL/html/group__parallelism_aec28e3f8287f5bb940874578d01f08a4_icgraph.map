@@ -1,0 +1,4 @@
+<map id="trisycl::h_item::get_group_range" name="trisycl::h_item::get_group_range">
+<area shape="rect" id="node2" href="$group__parallelism.html#a414d403e2b7b818a57a0d46db5b662c7" title="Return the flattened id of the current work&#45;group. " alt="" coords="184,5,315,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#ac6f2a6c3524c0cc592d882b5e4bd560b" title="Return the number of groups for dimension in the nd_range. " alt="" coords="184,71,315,112"/>
+</map>

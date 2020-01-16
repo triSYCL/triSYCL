@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>triSYCL implementation of SYCL: include/CL/sycl/handler.hpp File Reference</title>
+<title>triSYCL implementation of SYCL: include/triSYCL/handler.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -58,7 +58,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_8358e9aed72341d13c81ba12a462bec7.html">CL</a></li><li class="navelem"><a class="el" href="dir_dd7d3bcc93139b1cbc3b663242fe4a67.html">sycl</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_aaf3c766ec178046651f3200d7a96209.html">triSYCL</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -76,58 +76,63 @@ $(function() {
 <code>#include &lt;tuple&gt;</code><br />
 <code>#include &lt;utility&gt;</code><br />
 <code>#include &lt;boost/compute.hpp&gt;</code><br />
-<code>#include &quot;<a class="el" href="accessor_8hpp_source.html">CL/sycl/accessor.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="task_8hpp_source.html">CL/sycl/command_group/detail/task.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="instantiate__kernel_8hpp_source.html">CL/sycl/detail/instantiate_kernel.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="unimplemented_8hpp_source.html">CL/sycl/detail/unimplemented.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="exception_8hpp_source.html">CL/sycl/exception.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="kernel_8hpp_source.html">CL/sycl/kernel.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="opencl__types_8hpp_source.html">CL/sycl/opencl_types.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="parallelism_2detail_2parallelism_8hpp_source.html">CL/sycl/parallelism/detail/parallelism.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="queue_2detail_2queue_8hpp_source.html">CL/sycl/queue/detail/queue.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="accessor_8hpp_source.html">triSYCL/accessor.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="task_8hpp_source.html">triSYCL/command_group/detail/task.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="instantiate__kernel_8hpp_source.html">triSYCL/detail/instantiate_kernel.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="unimplemented_8hpp_source.html">triSYCL/detail/unimplemented.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="exception_8hpp_source.html">triSYCL/exception.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="kernel_8hpp_source.html">triSYCL/kernel.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="opencl__types_8hpp_source.html">triSYCL/opencl_types.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="parallelism_8hpp_source.html">triSYCL/parallelism.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="queue_2detail_2queue_8hpp_source.html">triSYCL/queue/detail/queue.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for handler.hpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="handler_8hpp__incl.png" border="0" usemap="#include_2CL_2sycl_2handler_8hpp" alt=""/></div>
-<map name="include_2CL_2sycl_2handler_8hpp" id="include_2CL_2sycl_2handler_8hpp">
-<area shape="rect" id="node7" href="accessor_8hpp.html" title="CL/sycl/accessor.hpp" alt="" coords="1316,87,1465,114"/>
-<area shape="rect" id="node11" href="task_8hpp.html" title="CL/sycl/command_group\l/detail/task.hpp" alt="" coords="2069,259,2235,300"/>
-<area shape="rect" id="node20" href="kernel_8hpp.html" title="CL/sycl/kernel.hpp" alt="" coords="2723,348,2853,375"/>
-<area shape="rect" id="node22" href="unimplemented_8hpp.html" title="CL/sycl/detail/unimplemented.hpp" alt="" coords="2760,609,2979,635"/>
-<area shape="rect" id="node24" href="queue_2detail_2queue_8hpp.html" title="CL/sycl/queue/detail\l/queue.hpp" alt="" coords="2443,601,2584,643"/>
-<area shape="rect" id="node33" href="instantiate__kernel_8hpp.html" title="CL/sycl/detail/instantiate\l_kernel.hpp" alt="" coords="2350,80,2517,121"/>
-<area shape="rect" id="node34" href="exception_8hpp.html" title="CL/sycl/exception.hpp" alt="" coords="3213,87,3365,114"/>
-<area shape="rect" id="node36" href="opencl__types_8hpp.html" title="triSYCL wrapper for OpenCL types " alt="" coords="4057,87,4231,114"/>
-<area shape="rect" id="node48" href="parallelism_2detail_2parallelism_8hpp.html" title="Implement the detail of the parallel constructions to launch kernels. " alt="" coords="182,80,330,121"/>
-<area shape="rect" id="node8" href="access_8hpp.html" title="CL/sycl/access.hpp" alt="" coords="1156,348,1295,375"/>
-<area shape="rect" id="node9" href="local__accessor_8hpp.html" title="CL/sycl/accessor/detail\l/local_accessor.hpp" alt="" coords="913,169,1071,211"/>
-<area shape="rect" id="node21" href="shared__ptr__implementation_8hpp.html" title="CL/sycl/detail/shared\l_ptr_implementation.hpp" alt="" coords="2454,423,2618,464"/>
-<area shape="rect" id="node26" href="id_8hpp.html" title="CL/sycl/id.hpp" alt="" coords="469,430,576,457"/>
-<area shape="rect" id="node27" href="item_8hpp.html" title="CL/sycl/item.hpp" alt="" coords="462,348,583,375"/>
-<area shape="rect" id="node28" href="nd__item_8hpp.html" title="CL/sycl/nd_item.hpp" alt="" coords="710,266,853,293"/>
-<area shape="rect" id="node29" href="buffer_2detail_2accessor_8hpp.html" title="CL/sycl/buffer/detail\l/accessor.hpp" alt="" coords="1397,169,1536,211"/>
-<area shape="rect" id="node30" href="container__element__aspect_8hpp.html" title="CL/sycl/detail/container\l_element_aspect.hpp" alt="" coords="1611,169,1770,211"/>
-<area shape="rect" id="node31" href="pipe__reservation_8hpp.html" title="CL/sycl/pipe_reservation.hpp" alt="" coords="1569,430,1759,457"/>
-<area shape="rect" id="node32" href="pipe__accessor_8hpp.html" title="CL/sycl/pipe/detail\l/pipe_accessor.hpp" alt="" coords="1606,259,1741,300"/>
-<area shape="rect" id="node17" href="debug_8hpp.html" title="CL/sycl/detail/debug.hpp" alt="" coords="1765,691,1931,717"/>
-<area shape="rect" id="node16" href="accessor__base_8hpp.html" title="CL/sycl/accessor/detail\l/accessor_base.hpp" alt="" coords="1334,423,1493,464"/>
-<area shape="rect" id="node19" href="buffer__base_8hpp.html" title="CL/sycl/buffer/detail\l/buffer_base.hpp" alt="" coords="2189,423,2328,464"/>
-<area shape="rect" id="node23" href="kernel_2detail_2kernel_8hpp.html" title="CL/sycl/kernel/detail\l/kernel.hpp" alt="" coords="2709,512,2851,553"/>
-<area shape="rect" id="node25" href="opencl__kernel_8hpp.html" title="CL/sycl/kernel/detail\l/opencl_kernel.hpp" alt="" coords="2744,423,2885,464"/>
-<area shape="rect" id="node49" href="group_8hpp.html" title="CL/sycl/group.hpp" alt="" coords="67,177,195,203"/>
-<area shape="rect" id="node50" href="h__item_8hpp.html" title="CL/sycl/h_item.hpp" alt="" coords="145,266,279,293"/>
+<div class="center"><img src="handler_8hpp__incl.png" border="0" usemap="#include_2triSYCL_2handler_8hpp" alt=""/></div>
+<map name="include_2triSYCL_2handler_8hpp" id="include_2triSYCL_2handler_8hpp">
+<area shape="rect" id="node7" href="accessor_8hpp.html" title="triSYCL/accessor.hpp" alt="" coords="754,87,905,114"/>
+<area shape="rect" id="node10" href="task_8hpp.html" title="triSYCL/command_group\l/detail/task.hpp" alt="" coords="1889,259,2057,300"/>
+<area shape="rect" id="node22" href="exception_8hpp.html" title="triSYCL/exception.hpp" alt="" coords="2158,773,2311,799"/>
+<area shape="rect" id="node24" href="kernel_8hpp.html" title="triSYCL/kernel.hpp" alt="" coords="2547,348,2679,375"/>
+<area shape="rect" id="node25" href="unimplemented_8hpp.html" title="triSYCL/detail/unimplemented.hpp" alt="" coords="2933,609,3153,635"/>
+<area shape="rect" id="node27" href="queue_2detail_2queue_8hpp.html" title="triSYCL/queue/detail\l/queue.hpp" alt="" coords="1754,601,1897,643"/>
+<area shape="rect" id="node36" href="instantiate__kernel_8hpp.html" title="triSYCL/detail/instantiate\l_kernel.hpp" alt="" coords="1898,80,2065,121"/>
+<area shape="rect" id="node37" href="opencl__types_8hpp.html" title="triSYCL wrapper for OpenCL types " alt="" coords="3153,87,3327,114"/>
+<area shape="rect" id="node49" href="parallelism_8hpp.html" title="Implement parallel constructions to launch kernels. " alt="" coords="285,87,443,114"/>
+<area shape="rect" id="node8" href="access_8hpp.html" title="triSYCL/access.hpp" alt="" coords="703,348,841,375"/>
+<area shape="rect" id="node9" href="local__accessor_8hpp.html" title="triSYCL/accessor/detail\l/local_accessor.hpp" alt="" coords="657,169,817,211"/>
+<area shape="rect" id="node21" href="shared__ptr__implementation_8hpp.html" title="triSYCL/detail/shared\l_ptr_implementation.hpp" alt="" coords="1745,765,1909,807"/>
+<area shape="rect" id="node29" href="id_8hpp.html" title="triSYCL/id.hpp" alt="" coords="367,430,473,457"/>
+<area shape="rect" id="node30" href="item_8hpp.html" title="triSYCL/item.hpp" alt="" coords="359,348,481,375"/>
+<area shape="rect" id="node31" href="nd__item_8hpp.html" title="triSYCL/nd_item.hpp" alt="" coords="499,266,642,293"/>
+<area shape="rect" id="node32" href="buffer_2detail_2accessor_8hpp.html" title="triSYCL/buffer/detail\l/accessor.hpp" alt="" coords="1077,169,1217,211"/>
+<area shape="rect" id="node33" href="container__element__aspect_8hpp.html" title="triSYCL/detail/container\l_element_aspect.hpp" alt="" coords="841,169,1001,211"/>
+<area shape="rect" id="node34" href="pipe__reservation_8hpp.html" title="triSYCL/pipe_reservation.hpp" alt="" coords="916,691,1108,717"/>
+<area shape="rect" id="node35" href="pipe__accessor_8hpp.html" title="triSYCL/pipe/detail\l/pipe_accessor.hpp" alt="" coords="971,259,1106,300"/>
+<area shape="rect" id="node16" href="debug_8hpp.html" title="triSYCL/detail/debug.hpp" alt="" coords="2461,691,2627,717"/>
+<area shape="rect" id="node15" href="accessor__base_8hpp.html" title="triSYCL/accessor/detail\l/accessor_base.hpp" alt="" coords="1921,601,2081,643"/>
+<area shape="rect" id="node18" href="buffer__base_8hpp.html" title="triSYCL/buffer/detail\l/buffer_base.hpp" alt="" coords="1487,601,1627,643"/>
+<area shape="rect" id="node20" href="context_8hpp.html" title="triSYCL/context.hpp" alt="" coords="1834,691,1974,717"/>
+<area shape="rect" id="node26" href="kernel_2detail_2kernel_8hpp.html" title="triSYCL/kernel/detail\l/kernel.hpp" alt="" coords="2663,512,2806,553"/>
+<area shape="rect" id="node28" href="opencl__kernel_8hpp.html" title="triSYCL/kernel/detail\l/opencl_kernel.hpp" alt="" coords="2663,423,2806,464"/>
+<area shape="rect" id="node50" href="parallelism_2detail_2parallelism_8hpp.html" title="Implement the detail of the parallel constructions to launch kernels. " alt="" coords="94,169,242,211"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><img src="handler_8hpp__dep__incl.png" border="0" usemap="#include_2CL_2sycl_2handler_8hppdep" alt=""/></div>
-<map name="include_2CL_2sycl_2handler_8hppdep" id="include_2CL_2sycl_2handler_8hppdep">
-<area shape="rect" id="node2" href="buffer_8hpp.html" title="include/CL/sycl/buffer.hpp" alt="" coords="31,169,206,196"/>
-<area shape="rect" id="node3" href="sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="175,244,313,271"/>
-<area shape="rect" id="node4" href="pipe_8hpp.html" title="include/CL/sycl/pipe.hpp" alt="" coords="281,169,447,196"/>
-<area shape="rect" id="node5" href="queue_8hpp.html" title="include/CL/sycl/queue.hpp" alt="" coords="152,87,328,114"/>
-<area shape="rect" id="node6" href="static__pipe_8hpp.html" title="include/CL/sycl/static\l_pipe.hpp" alt="" coords="407,80,555,121"/>
+<div class="center"><img src="handler_8hpp__dep__incl.png" border="0" usemap="#include_2triSYCL_2handler_8hppdep" alt=""/></div>
+<map name="include_2triSYCL_2handler_8hppdep" id="include_2triSYCL_2handler_8hppdep">
+<area shape="rect" id="node2" href="buffer_8hpp.html" title="include/triSYCL/buffer.hpp" alt="" coords="323,184,497,211"/>
+<area shape="rect" id="node3" href="triSYCL_2sycl_8hpp.html" title="include/triSYCL/sycl.hpp" alt="" coords="201,281,368,307"/>
+<area shape="rect" id="node6" href="pipe_8hpp.html" title="include/triSYCL/pipe.hpp" alt="" coords="5,184,172,211"/>
+<area shape="rect" id="node7" href="queue_8hpp.html" title="include/triSYCL/queue.hpp" alt="" coords="472,87,649,114"/>
+<area shape="rect" id="node11" href="static__pipe_8hpp.html" title="include/triSYCL/static\l_pipe.hpp" alt="" coords="247,80,397,121"/>
+<area shape="rect" id="node4" href="CL_2sycl_8hpp.html" title="This is the main SYCL 1.2.1 interoperability header to expose triSYCL into the cl::sycl namespace..." alt="" coords="333,370,471,397"/>
+<area shape="rect" id="node5" href="SYCL_2sycl_8hpp.html" title="This is the SYCL extension header to expose triSYCL directly into the shorter sycl namespace instead ..." alt="" coords="154,370,309,397"/>
+<area shape="rect" id="node8" href="vendor_2trisycl_2scope_2queue_2detail_2queue_8hpp.html" title="include/triSYCL/vendor\l/trisycl/scope/queue/detail\l/queue.hpp" alt="" coords="624,169,799,225"/>
+<area shape="rect" id="node9" href="vendor_2trisycl_2scope_2queue_8hpp.html" title="include/triSYCL/vendor\l/trisycl/scope/queue.hpp" alt="" coords="556,273,720,315"/>
+<area shape="rect" id="node10" href="scope_8hpp.html" title="include/triSYCL/vendor\l/trisycl/scope.hpp" alt="" coords="560,363,716,404"/>
 </map>
 </div>
 </div>
@@ -135,19 +140,16 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:classcl_1_1sycl_1_1handler"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#classcl_1_1sycl_1_1handler">cl::sycl::handler</a></td></tr>
-<tr class="memdesc:classcl_1_1sycl_1_1handler"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command group handler class.  <a href="group__execution.html#classcl_1_1sycl_1_1handler">More...</a><br /></td></tr>
-<tr class="separator:classcl_1_1sycl_1_1handler"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:classtrisycl_1_1handler"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__execution.html#classtrisycl_1_1handler">trisycl::handler</a></td></tr>
+<tr class="memdesc:classtrisycl_1_1handler"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command group handler class.  <a href="group__execution.html#classtrisycl_1_1handler">More...</a><br /></td></tr>
+<tr class="separator:classtrisycl_1_1handler"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr class="memitem:namespacecl"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl.html">cl</a></td></tr>
-<tr class="memdesc:namespacecl"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector type to be used as SYCL vector. <br /></td></tr>
+<tr class="memitem:namespacetrisycl"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetrisycl.html">trisycl</a></td></tr>
+<tr class="memdesc:namespacetrisycl"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector type to be used as SYCL vector. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacecl_1_1sycl"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html">cl::sycl</a></td></tr>
-<tr class="memdesc:namespacecl_1_1sycl"><td class="mdescLeft">&#160;</td><td class="mdescRight">Small OpenCL vector class. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacecl_1_1sycl_1_1detail"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl_1_1detail.html">cl::sycl::detail</a></td></tr>
+<tr class="memitem:namespacetrisycl_1_1detail"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetrisycl_1_1detail.html">trisycl::detail</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
@@ -163,9 +165,9 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aae348f7dd0791acc1096b1f2204ff7af"><td class="memItemLeft" align="right" valign="top">static std::shared_ptr&lt; detail::task &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl_1_1detail.html#aae348f7dd0791acc1096b1f2204ff7af">cl::sycl::detail::add_buffer_to_task</a> (handler *command_group_handler, std::shared_ptr&lt; detail::buffer_base &gt; <a class="el" href="opencl__spir_8h.html#a3fd8c63fddfb0d3ba796ef725a8cc5ce">b</a>, <a class="el" href="classbool.html">bool</a> is_write_mode)</td></tr>
-<tr class="memdesc:aae348f7dd0791acc1096b1f2204ff7af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a buffer as used by a task.  <a href="namespacecl_1_1sycl_1_1detail.html#aae348f7dd0791acc1096b1f2204ff7af">More...</a><br /></td></tr>
-<tr class="separator:aae348f7dd0791acc1096b1f2204ff7af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68b25506d2c4446a60b20cab9a322b8a"><td class="memItemLeft" align="right" valign="top">static std::shared_ptr&lt; detail::task &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetrisycl_1_1detail.html#a68b25506d2c4446a60b20cab9a322b8a">trisycl::detail::add_buffer_to_task</a> (handler *command_group_handler, std::shared_ptr&lt; detail::buffer_base &gt; <a class="el" href="opencl__spir_8h.html#a3fd8c63fddfb0d3ba796ef725a8cc5ce">b</a>, <a class="el" href="classbool.html">bool</a> is_write_mode)</td></tr>
+<tr class="memdesc:a68b25506d2c4446a60b20cab9a322b8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a buffer as used by a task.  <a href="namespacetrisycl_1_1detail.html#a68b25506d2c4446a60b20cab9a322b8a">More...</a><br /></td></tr>
+<tr class="separator:a68b25506d2c4446a60b20cab9a322b8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="ad26870978d25ea83d36d36d3ea9fca35"></a>
@@ -183,7 +185,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> KernelName = std::nullptr_t,                       \</div><div class="line">            typename ParallelForFunctor&gt;                                \</div><div class="line">  void <a class="code" href="group__parallelism.html#ga5cf01f5b2a22ffa82891b1bc09c3e962">parallel_for</a>(range&lt;N&gt; global_size,                               \</div><div class="line">                    ParallelForFunctor f) {                             \</div><div class="line">    schedule_kernel&lt;KernelName&gt;([=] {                                   <a class="code" href="group__parallelism.html#ga5cf01f5b2a22ffa82891b1bc09c3e962">\</a></div><div class="line"><a class="code" href="group__parallelism.html#ga5cf01f5b2a22ffa82891b1bc09c3e962">        detail::parallel_for</a>(global_size, f);                           \</div><div class="line">      });                                                               \</div><div class="line">  }</div><div class="ttc" id="group__parallelism_html_ga5cf01f5b2a22ffa82891b1bc09c3e962"><div class="ttname"><a href="group__parallelism.html#ga5cf01f5b2a22ffa82891b1bc09c3e962">cl::sycl::detail::parallel_for</a></div><div class="ttdeci">void parallel_for(range&lt; Dimensions &gt; r, ParallelForFunctor f, Id)</div><div class="ttdoc">Implementation of a data parallel computation with parallelism specified at launch time by a range&lt;&gt;...</div><div class="ttdef"><b>Definition:</b> <a href="parallelism_2detail_2parallelism_8hpp_source.html#l00128">parallelism.hpp:128</a></div></div>
+<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> KernelName = std::nullptr_t,                       \</div><div class="line">            typename ParallelForFunctor&gt;                                \</div><div class="line">  void <a class="code" href="group__parallelism.html#gade69cd4aa408811c685ac3b3168271ae">parallel_for</a>(range&lt;N&gt; global_size,                               \</div><div class="line">                    ParallelForFunctor f) {                             \</div><div class="line">    schedule_kernel&lt;KernelName&gt;([=] {                                   <a class="code" href="group__parallelism.html#gade69cd4aa408811c685ac3b3168271ae">\</a></div><div class="line"><a class="code" href="group__parallelism.html#gade69cd4aa408811c685ac3b3168271ae">        detail::parallel_for</a>(global_size, f);                           \</div><div class="line">     });                                                                \</div><div class="line">  }</div><div class="ttc" id="group__parallelism_html_gade69cd4aa408811c685ac3b3168271ae"><div class="ttname"><a href="group__parallelism.html#gade69cd4aa408811c685ac3b3168271ae">trisycl::detail::parallel_for</a></div><div class="ttdeci">void parallel_for(range&lt; Dimensions &gt; r, ParallelForFunctor f, Id)</div><div class="ttdoc">Implementation of a data parallel computation with parallelism specified at launch time by a range&lt;&gt;...</div><div class="ttdef"><b>Definition:</b> <a href="parallelism_2detail_2parallelism_8hpp_source.html#l00131">parallelism.hpp:131</a></div></div>
 </div><!-- fragment -->
 <p>SYCL parallel_for launches a data parallel computation with parallelism specified at launch time by a range&lt;&gt; </p>
 <p>Kernel invocation method of a kernel defined as a lambda or functor, for the specified range and given an id or item for indexing in the indexing space defined by range.</p>
@@ -199,7 +201,7 @@ Functions</h2></td></tr>
 </dl>
 <p>Unfortunately, to have implicit conversion to work on the range, the function can not be templated, so instantiate it for all the Dimensions </p>
 
-<p class="definition">Definition at line <a class="el" href="handler_8hpp_source.html#l00236">236</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="handler_8hpp_source.html#l00272">272</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
 
 </div>
 </div>
@@ -218,9 +220,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> KernelName = std::nullptr_t,                 \</div><div class="line">            typename ParallelForFunctor&gt;                          \</div><div class="line">  void <a class="code" href="group__parallelism.html#ga5cf01f5b2a22ffa82891b1bc09c3e962">parallel_for</a>(range&lt;N&gt; global_size,                         \</div><div class="line">                    id&lt;N&gt; <a class="code" href="opencl__spir_8h.html#a30c1789509ffb2ea07b060fc6e1344c1">offset</a>,                                 \</div><div class="line">                    ParallelForFunctor f) {                       \</div><div class="line">    schedule_kernel&lt;KernelName&gt;([=] {                             <a class="code" href="group__parallelism.html#gadd585203df163dadc5975119f59f8bd8">\</a></div><div class="line"><a class="code" href="group__parallelism.html#gadd585203df163dadc5975119f59f8bd8">        detail::parallel_for_global_offset</a>(global_size,           \</div><div class="line">                                           offset,                \</div><div class="line">                                           f);                    \</div><div class="line">      });                                                         \</div><div class="line">  }</div><div class="ttc" id="opencl__spir_8h_html_a30c1789509ffb2ea07b060fc6e1344c1"><div class="ttname"><a href="opencl__spir_8h.html#a30c1789509ffb2ea07b060fc6e1344c1">offset</a></div><div class="ttdeci">void size_t offset</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l05062">opencl_spir.h:5062</a></div></div>
-<div class="ttc" id="group__parallelism_html_gadd585203df163dadc5975119f59f8bd8"><div class="ttname"><a href="group__parallelism.html#gadd585203df163dadc5975119f59f8bd8">cl::sycl::detail::parallel_for_global_offset</a></div><div class="ttdeci">void parallel_for_global_offset(range&lt; Dimensions &gt; global_size, id&lt; Dimensions &gt; offset, ParallelForFunctor f)</div><div class="ttdoc">Implementation of parallel_for with a range&lt;&gt; and an offset. </div><div class="ttdef"><b>Definition:</b> <a href="parallelism_2detail_2parallelism_8hpp_source.html#l00194">parallelism.hpp:194</a></div></div>
-<div class="ttc" id="group__parallelism_html_ga5cf01f5b2a22ffa82891b1bc09c3e962"><div class="ttname"><a href="group__parallelism.html#ga5cf01f5b2a22ffa82891b1bc09c3e962">cl::sycl::detail::parallel_for</a></div><div class="ttdeci">void parallel_for(range&lt; Dimensions &gt; r, ParallelForFunctor f, Id)</div><div class="ttdoc">Implementation of a data parallel computation with parallelism specified at launch time by a range&lt;&gt;...</div><div class="ttdef"><b>Definition:</b> <a href="parallelism_2detail_2parallelism_8hpp_source.html#l00128">parallelism.hpp:128</a></div></div>
+<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> KernelName = std::nullptr_t,                 \</div><div class="line">            typename ParallelForFunctor&gt;                          \</div><div class="line">  void <a class="code" href="group__parallelism.html#gade69cd4aa408811c685ac3b3168271ae">parallel_for</a>(range&lt;N&gt; global_size,                         \</div><div class="line">                    id&lt;N&gt; <a class="code" href="opencl__spir_8h.html#a30c1789509ffb2ea07b060fc6e1344c1">offset</a>,                                 \</div><div class="line">                    ParallelForFunctor f) {                       \</div><div class="line">    schedule_kernel&lt;KernelName&gt;([=] {                             <a class="code" href="group__parallelism.html#ga33858ef5d1b5893ad47bf7397905d6e0">\</a></div><div class="line"><a class="code" href="group__parallelism.html#ga33858ef5d1b5893ad47bf7397905d6e0">        detail::parallel_for_global_offset</a>(global_size,           \</div><div class="line">                                           offset,                \</div><div class="line">                                           f);                    \</div><div class="line">      });                                                         \</div><div class="line">  }</div><div class="ttc" id="opencl__spir_8h_html_a30c1789509ffb2ea07b060fc6e1344c1"><div class="ttname"><a href="opencl__spir_8h.html#a30c1789509ffb2ea07b060fc6e1344c1">offset</a></div><div class="ttdeci">void size_t offset</div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l05062">opencl_spir.h:5062</a></div></div>
+<div class="ttc" id="group__parallelism_html_ga33858ef5d1b5893ad47bf7397905d6e0"><div class="ttname"><a href="group__parallelism.html#ga33858ef5d1b5893ad47bf7397905d6e0">trisycl::detail::parallel_for_global_offset</a></div><div class="ttdeci">void parallel_for_global_offset(range&lt; Dimensions &gt; global_size, id&lt; Dimensions &gt; offset, ParallelForFunctor f)</div><div class="ttdoc">Implementation of parallel_for with a range&lt;&gt; and an offset. </div><div class="ttdef"><b>Definition:</b> <a href="parallelism_2detail_2parallelism_8hpp_source.html#l00234">parallelism.hpp:234</a></div></div>
+<div class="ttc" id="group__parallelism_html_gade69cd4aa408811c685ac3b3168271ae"><div class="ttname"><a href="group__parallelism.html#gade69cd4aa408811c685ac3b3168271ae">trisycl::detail::parallel_for</a></div><div class="ttdeci">void parallel_for(range&lt; Dimensions &gt; r, ParallelForFunctor f, Id)</div><div class="ttdoc">Implementation of a data parallel computation with parallelism specified at launch time by a range&lt;&gt;...</div><div class="ttdef"><b>Definition:</b> <a href="parallelism_2detail_2parallelism_8hpp_source.html#l00131">parallelism.hpp:131</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -239,19 +241,19 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code" href="group__parallelism.html#ga5cf01f5b2a22ffa82891b1bc09c3e962">parallel_for</a>(range&lt;N&gt; num_work_items,                            \</div><div class="line">                    kernel sycl_kernel) {                               \</div><div class="line">    <span class="comment">/* For now just use the usual host task system to schedule          \</span></div><div class="line"><span class="comment">       manually the OpenCL kernels instead of using OpenCL event-based  \</span></div><div class="line"><span class="comment">       scheduling                                                       \</span></div><div class="line"><span class="comment">                                                                        \</span></div><div class="line"><span class="comment">       \todo Move the tracing inside the kernel implementation          \</span></div><div class="line"><span class="comment">                                                                        \</span></div><div class="line"><span class="comment">       \todo Simplify this 2 step ugly interface                        \</span></div><div class="line"><span class="comment">    */</span>                                                                  \</div><div class="line">    task-&gt;set_kernel(sycl_kernel.implementation);                       \</div><div class="line">    <span class="comment">/* Use an intermediate variable to capture task by copy because     \</span></div><div class="line"><span class="comment">       otherwise &quot;this&quot; is captured by reference and havoc with task    \</span></div><div class="line"><span class="comment">       just accessing the dead &quot;this&quot;. Nasty bug to find... */</span>          \</div><div class="line">    task-&gt;schedule(detail::trace_kernel&lt;kernel&gt;([=, t = task] {         \</div><div class="line">          sycl_kernel.implementation-&gt;parallel_for(t, t-&gt;get_queue(),   \</div><div class="line">                                                   num_work_items); })); \</div><div class="line">  }</div><div class="ttc" id="group__parallelism_html_ga5cf01f5b2a22ffa82891b1bc09c3e962"><div class="ttname"><a href="group__parallelism.html#ga5cf01f5b2a22ffa82891b1bc09c3e962">cl::sycl::detail::parallel_for</a></div><div class="ttdeci">void parallel_for(range&lt; Dimensions &gt; r, ParallelForFunctor f, Id)</div><div class="ttdoc">Implementation of a data parallel computation with parallelism specified at launch time by a range&lt;&gt;...</div><div class="ttdef"><b>Definition:</b> <a href="parallelism_2detail_2parallelism_8hpp_source.html#l00128">parallelism.hpp:128</a></div></div>
+<b>Value:</b><div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code" href="group__parallelism.html#gade69cd4aa408811c685ac3b3168271ae">parallel_for</a>(range&lt;N&gt; num_work_items,                            \</div><div class="line">                    kernel sycl_kernel) {                               \</div><div class="line">    <span class="comment">/* For now just use the usual host task system to schedule          \</span></div><div class="line"><span class="comment">       manually the OpenCL kernels instead of using OpenCL event-based  \</span></div><div class="line"><span class="comment">       scheduling                                                       \</span></div><div class="line"><span class="comment">                                                                        \</span></div><div class="line"><span class="comment">       \todo Move the tracing inside the kernel implementation          \</span></div><div class="line"><span class="comment">                                                                        \</span></div><div class="line"><span class="comment">       \todo Simplify this 2 step ugly interface                        \</span></div><div class="line"><span class="comment">    */</span>                                                                  \</div><div class="line">    task-&gt;set_kernel(sycl_kernel.implementation);                       \</div><div class="line">    <span class="comment">/* Use an intermediate variable to capture task by copy because     \</span></div><div class="line"><span class="comment">       otherwise &quot;this&quot; is captured by reference and havoc with task    \</span></div><div class="line"><span class="comment">       just accessing the dead &quot;this&quot;. Nasty bug to find... */</span>          \</div><div class="line">    task-&gt;schedule(detail::trace_kernel&lt;kernel&gt;([=, t = task] {         \</div><div class="line">          sycl_kernel.implementation-&gt;parallel_for(t, t-&gt;get_queue(),   \</div><div class="line">                                                   num_work_items); })); \</div><div class="line">  }</div><div class="ttc" id="group__parallelism_html_gade69cd4aa408811c685ac3b3168271ae"><div class="ttname"><a href="group__parallelism.html#gade69cd4aa408811c685ac3b3168271ae">trisycl::detail::parallel_for</a></div><div class="ttdeci">void parallel_for(range&lt; Dimensions &gt; r, ParallelForFunctor f, Id)</div><div class="ttdoc">Implementation of a data parallel computation with parallelism specified at launch time by a range&lt;&gt;...</div><div class="ttdef"><b>Definition:</b> <a href="parallelism_2detail_2parallelism_8hpp_source.html#l00131">parallelism.hpp:131</a></div></div>
 </div><!-- fragment -->
 <p>Kernel invocation method of a kernel defined as a kernel object, for the specified range and given an id or item for indexing in the indexing space defined by range, described in detail in 5.4. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000185">Todo:</a></b></dt><dd>Add in the spec a version taking a kernel and a functor, to have host fall-back </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000186">Todo:</a></b></dt><dd>Add in the spec a version taking a kernel and a functor, to have host fall-back </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="handler_8hpp_source.html#l00413">413</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="handler_8hpp_source.html#l00450">450</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 16 2020 13:26:36 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

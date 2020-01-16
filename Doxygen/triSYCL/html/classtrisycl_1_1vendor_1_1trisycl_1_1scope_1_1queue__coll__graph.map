@@ -1,0 +1,5 @@
+<map id="trisycl::vendor::trisycl::scope::queue&lt; Device, QueueStorage &gt;" name="trisycl::vendor::trisycl::scope::queue&lt; Device, QueueStorage &gt;">
+<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1shared__ptr__implementation.html" title="trisycl::detail::shared\l_ptr_implementation\&lt; queue\l\&lt; Device, QueueStorage \&gt;,\l detail::queue\&lt; Device, QueueStorage \&gt; \&gt;" alt="" coords="384,23,652,93"/>
+<area shape="rect" id="node4" href="$classstd_1_1shared__ptr_3_01detail_1_1queue_3_01Device_00_01QueueStorage_01_4_01_4.html" title="shared_ptr\&lt; detail\l::queue\&lt; Device, QueueStorage \&gt; \&gt;" alt="" coords="7,71,241,112"/>
+<area shape="rect" id="node5" href="$classbool.html" title="bool" alt="" coords="495,118,541,145"/>
+</map>

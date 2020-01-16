@@ -1,0 +1,4 @@
+<map id="trisycl::nd_item::get_group_range" name="trisycl::nd_item::get_group_range">
+<area shape="rect" id="node2" href="$group__parallelism.html#a4a286438cf5fce9d95b1b2e6cc9ce9b6" title="Return the number of groups in the nd_range. " alt="" coords="191,5,328,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#ae24d7da0b3d7ccf08bf6b80c086d4631" title="Return the nd_range&lt;&gt; of the current execution. " alt="" coords="376,5,513,47"/>
+</map>

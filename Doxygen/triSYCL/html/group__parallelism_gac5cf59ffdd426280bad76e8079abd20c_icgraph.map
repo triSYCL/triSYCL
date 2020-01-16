@@ -1,5 +1,0 @@
-<map id="cl::sycl::detail::parallel_for_workitem" name="cl::sycl::detail::parallel_for_workitem">
-<area shape="rect" id="node2" href="$group__parallelism.html#ga3156c9a9179d62eb40321f2b86448cea" title="Implement a variation of parallel_for to take into account a nd_range&lt;&gt; " alt="" coords="205,5,380,32"/>
-<area shape="rect" id="node3" href="$group__parallelism.html#ga029353158fa91ee719ef7d50cba7e98f" title="Implement the loop on the work&#45;items inside a work&#45;group. " alt="" coords="213,57,373,98"/>
-<area shape="rect" id="node4" href="$group__parallelism.html#a08a586ca51493ef84914290fef699b72" title="Loop on the work&#45;items inside a work&#45;group. " alt="" coords="428,57,581,98"/>
-</map>

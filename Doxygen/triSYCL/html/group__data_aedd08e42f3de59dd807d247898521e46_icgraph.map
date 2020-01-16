@@ -1,6 +1,0 @@
-<map id="cl::sycl::detail::buffer_base::is_data_up_to_date" name="cl::sycl::detail::buffer_base::is_data_up_to_date">
-<area shape="rect" id="node2" href="$group__data.html#a74166dd335ea6d43de5298cc3ade8dbd" title="Transfer the most up&#45;to&#45;date version of the data to the host if the host version is not already up&#45;to..." alt="" coords="232,5,388,47"/>
-<area shape="rect" id="node3" href="$group__data.html#a43ad593cdde6aaaf0b1c3d641b61d5f6" title="When a transfer is requested this function is called, it will update the state of the buffer accordin..." alt="" coords="436,35,616,76"/>
-<area shape="rect" id="node4" href="$group__data.html#a18c84f42244a43a6d0949740aea54039" title="Function pair to work around the fact that T might be a const type. " alt="" coords="664,35,836,76"/>
-<area shape="rect" id="node5" href="$group__data.html#aff094e6da92d7103b9d5f382c0c1bc7d" title="Create a new sub&#45;buffer without allocation to have separate accessors later. " alt="" coords="884,35,1028,76"/>
-</map>

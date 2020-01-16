@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['queue',['queue',['../namespacecl_1_1sycl_1_1info.html#a86e91e6deadca35d20f77932c0550426',1,'cl::sycl::info']]]
+  ['queue',['queue',['../namespacetrisycl_1_1info.html#a6af2bb53ab541e50a116aadb93a4c1f8',1,'trisycl::info']]]
 ];

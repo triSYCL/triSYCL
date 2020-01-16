@@ -1,5 +1,0 @@
-<map id="cl::sycl::detail::accessor::copy_in_cl_buffer" name="cl::sycl::detail::accessor::copy_in_cl_buffer">
-<area shape="rect" id="node2" href="$structcl_1_1sycl_1_1detail_1_1task.html#a11f2b6d13ebe35956f57985a7808218f" title="Get the queue behind the task to run a kernel on. " alt="" coords="231,5,367,47"/>
-<area shape="rect" id="node3" href="$group__data.html#a3e7c6b885a1c98bcbd904f921bbcc4d5" title="Returns the size of the underlying buffer storage in bytes. " alt="" coords="217,71,381,112"/>
-<area shape="rect" id="node4" href="$group__data.html#a415392a1e1fac8fa8b43d929f36058b1" title="Returns the total number of elements behind the accessor. " alt="" coords="429,71,593,112"/>
-</map>

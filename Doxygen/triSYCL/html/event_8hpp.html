@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>triSYCL implementation of SYCL: include/CL/sycl/event.hpp File Reference</title>
+<title>triSYCL implementation of SYCL: include/triSYCL/event.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -58,24 +58,43 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_8358e9aed72341d13c81ba12a462bec7.html">CL</a></li><li class="navelem"><a class="el" href="dir_dd7d3bcc93139b1cbc3b663242fe4a67.html">sycl</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_aaf3c766ec178046651f3200d7a96209.html">triSYCL</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">event.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><div class="dynheader">
+<div class="textblock"><code>#include &quot;<a class="el" href="info_2event_8hpp_source.html">triSYCL/info/event.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="event_2detail_2event_8hpp_source.html">triSYCL/event/detail/event.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="host__event_8hpp_source.html">triSYCL/event/detail/host_event.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="opencl__event_8hpp_source.html">triSYCL/event/detail/opencl_event.hpp</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for event.hpp:</div>
+<div class="dyncontent">
+<div class="center"><img src="event_8hpp__incl.png" border="0" usemap="#include_2triSYCL_2event_8hpp" alt=""/></div>
+<map name="include_2triSYCL_2event_8hpp" id="include_2triSYCL_2event_8hpp">
+<area shape="rect" id="node2" href="info_2event_8hpp.html" title="triSYCL/info/event.hpp" alt="" coords="5,87,160,114"/>
+<area shape="rect" id="node3" href="event_2detail_2event_8hpp.html" title="triSYCL/event/detail\l/event.hpp" alt="" coords="184,80,323,121"/>
+<area shape="rect" id="node4" href="host__event_8hpp.html" title="triSYCL/event/detail\l/host_event.hpp" alt="" coords="347,80,485,121"/>
+<area shape="rect" id="node10" href="opencl__event_8hpp.html" title="triSYCL/event/detail\l/opencl_event.hpp" alt="" coords="509,80,648,121"/>
+<area shape="rect" id="node5" href="singleton_8hpp.html" title="triSYCL/detail/singleton.hpp" alt="" coords="324,169,508,196"/>
+</map>
+</div>
+</div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><img src="event_8hpp__dep__incl.png" border="0" usemap="#include_2CL_2sycl_2event_8hppdep" alt=""/></div>
-<map name="include_2CL_2sycl_2event_8hppdep" id="include_2CL_2sycl_2event_8hppdep">
-<area shape="rect" id="node2" href="buffer_8hpp.html" title="include/CL/sycl/buffer.hpp" alt="" coords="5,80,180,107"/>
-<area shape="rect" id="node3" href="sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="87,155,224,181"/>
+<div class="center"><img src="event_8hpp__dep__incl.png" border="0" usemap="#include_2triSYCL_2event_8hppdep" alt=""/></div>
+<map name="include_2triSYCL_2event_8hppdep" id="include_2triSYCL_2event_8hppdep">
+<area shape="rect" id="node2" href="buffer_8hpp.html" title="include/triSYCL/buffer.hpp" alt="" coords="9,80,184,107"/>
+<area shape="rect" id="node3" href="triSYCL_2sycl_8hpp.html" title="include/triSYCL/sycl.hpp" alt="" coords="76,155,243,181"/>
+<area shape="rect" id="node4" href="CL_2sycl_8hpp.html" title="This is the main SYCL 1.2.1 interoperability header to expose triSYCL into the cl::sycl namespace..." alt="" coords="5,229,143,256"/>
+<area shape="rect" id="node5" href="SYCL_2sycl_8hpp.html" title="This is the SYCL extension header to expose triSYCL directly into the shorter sycl namespace instead ..." alt="" coords="167,229,322,256"/>
 </map>
 </div>
 </div>
@@ -83,22 +102,42 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcl_1_1sycl_1_1event.html">cl::sycl::event</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtrisycl_1_1event.html">trisycl::event</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">SYCL event.  <a href="classtrisycl_1_1event.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structstd_1_1hash_3_01trisycl_1_1event_01_4.html">std::hash&lt; trisycl::event &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr class="memitem:namespacecl"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl.html">cl</a></td></tr>
-<tr class="memdesc:namespacecl"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector type to be used as SYCL vector. <br /></td></tr>
+<tr class="memitem:namespacetrisycl"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetrisycl.html">trisycl</a></td></tr>
+<tr class="memdesc:namespacetrisycl"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector type to be used as SYCL vector. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacecl_1_1sycl"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html">cl::sycl</a></td></tr>
-<tr class="memdesc:namespacecl_1_1sycl"><td class="mdescLeft">&#160;</td><td class="mdescRight">Small OpenCL vector class. <br /></td></tr>
+<tr class="memitem:namespacestd"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestd.html">std</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a73f9fd103a86c5d7ca8b565700eec3b5"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:a73f9fd103a86c5d7ca8b565700eec3b5"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetrisycl.html#a73f9fd103a86c5d7ca8b565700eec3b5">trisycl::event::get_info&lt; info::event::command_execution_status &gt;</a> () const</td></tr>
+<tr class="separator:a73f9fd103a86c5d7ca8b565700eec3b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a612eea8f5fa427963f2be5adf29f5f89"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:a612eea8f5fa427963f2be5adf29f5f89"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetrisycl.html#a612eea8f5fa427963f2be5adf29f5f89">trisycl::event::get_info&lt; info::event::reference_count &gt;</a> () const</td></tr>
+<tr class="separator:a612eea8f5fa427963f2be5adf29f5f89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9d0af269c2dc027a01e559068df930f"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:af9d0af269c2dc027a01e559068df930f"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetrisycl.html#af9d0af269c2dc027a01e559068df930f">trisycl::event::get_profiling_info&lt; info::event_profiling::command_submit &gt;</a> () const</td></tr>
+<tr class="separator:af9d0af269c2dc027a01e559068df930f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a695601ea2dc5737ff22470c14cc1bc70"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:a695601ea2dc5737ff22470c14cc1bc70"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetrisycl.html#a695601ea2dc5737ff22470c14cc1bc70">trisycl::event::get_profiling_info&lt; info::event_profiling::command_start &gt;</a> () const</td></tr>
+<tr class="separator:a695601ea2dc5737ff22470c14cc1bc70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae741d33845a8869e6085bc7c4e3fd8f1"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:ae741d33845a8869e6085bc7c4e3fd8f1"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetrisycl.html#ae741d33845a8869e6085bc7c4e3fd8f1">trisycl::event::get_profiling_info&lt; info::event_profiling::command_end &gt;</a> () const</td></tr>
+<tr class="separator:ae741d33845a8869e6085bc7c4e3fd8f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 16 2020 13:26:36 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

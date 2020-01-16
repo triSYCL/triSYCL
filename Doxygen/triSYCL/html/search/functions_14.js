@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['unimplemented',['unimplemented',['../group__helpers.html#ga049782b4b19913105e7c2ce0d0c6cd93',1,'cl::sycl::detail']]],
-  ['update_5fbuffer_5fstate',['update_buffer_state',['../group__data.html#a43ad593cdde6aaaf0b1c3d641b61d5f6',1,'cl::sycl::detail::buffer_base']]],
-  ['use',['use',['../group__data.html#a25b9b8b3a3ee2ecdf33f5b10afe60a66',1,'cl::sycl::detail::buffer_base']]],
-  ['use_5fcount',['use_count',['../group__data.html#a798b7336a30856e100009d8e39580a87',1,'cl::sycl::buffer']]]
+  ['unimplemented',['unimplemented',['../group__helpers.html#ga7bd7e00b76f5b2bef1deb898507f1f37',1,'trisycl::detail']]],
+  ['update_5fbuffer_5fstate',['update_buffer_state',['../group__data.html#aad6218af1679f6e4f06ae001a36a86bb',1,'trisycl::detail::buffer_base']]],
+  ['use',['use',['../group__data.html#affe31d2f9f9eca682ea798abc155a90b',1,'trisycl::detail::buffer_base']]],
+  ['use_5fcount',['use_count',['../group__data.html#a543940ea05f65b229970c0ded5eb1c22',1,'trisycl::buffer']]]
 ];

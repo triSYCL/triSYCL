@@ -1,0 +1,5 @@
+<map id="trisycl::detail::opencl_device::get_platform" name="trisycl::detail::opencl_device::get_platform">
+<area shape="rect" id="node2" href="$classtrisycl_1_1detail_1_1opencl__device.html#a8cb5a17338ce1c00a5c1189c83e2069c" title="trisycl::detail::opencl\l_device::get_info" alt="" coords="200,5,343,47"/>
+<area shape="rect" id="node3" href="$group__execution.html#a26be58353aff0aa056c9e0ccb5ddd1e5" title="Default constructor for platform which is the host platform. " alt="" coords="211,71,331,112"/>
+<area shape="rect" id="node4" href="$structtrisycl_1_1detail_1_1singleton.html#a009fd0942ad638840002092537db892f" title="Get a singleton instance of T. " alt="" coords="391,71,573,112"/>
+</map>

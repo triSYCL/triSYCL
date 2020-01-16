@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['linear_5fid_2ehpp',['linear_id.hpp',['../linear__id_8hpp.html',1,'']]],
-  ['local_5faccessor_2ehpp',['local_accessor.hpp',['../local__accessor_8hpp.html',1,'']]]
+  ['kernel_2ehpp',['kernel.hpp',['../kernel_2detail_2kernel_8hpp.html',1,'(Global Namespace)'],['../kernel_8hpp.html',1,'(Global Namespace)']]]
 ];

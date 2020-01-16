@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>triSYCL implementation of SYCL: include/CL/sycl/detail/SPIR/opencl_spir.h File Reference</title>
+<title>triSYCL implementation of SYCL: include/triSYCL/detail/SPIR/opencl_spir.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -58,7 +58,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_8358e9aed72341d13c81ba12a462bec7.html">CL</a></li><li class="navelem"><a class="el" href="dir_dd7d3bcc93139b1cbc3b663242fe4a67.html">sycl</a></li><li class="navelem"><a class="el" href="dir_399fbdfcd25b70941a9dab34251f0ee8.html">detail</a></li><li class="navelem"><a class="el" href="dir_28988227be3e13b4503129d81826f7c3.html">SPIR</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_aaf3c766ec178046651f3200d7a96209.html">triSYCL</a></li><li class="navelem"><a class="el" href="dir_f344767bae51d34c648f686d6eb83a10.html">detail</a></li><li class="navelem"><a class="el" href="dir_bef60b290399884c93f61e40e2025bbb.html">SPIR</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -76,10 +76,10 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a581bf62ead660af113e4c2dd690b13a4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a>&#160;&#160;&#160;<a class="el" href="opencl__spir_8h.html#af40876aa5931ad90d82185f96cc459d8">__attribute__</a>((const))</td></tr>
+<tr class="memitem:a581bf62ead660af113e4c2dd690b13a4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a>&#160;&#160;&#160;<a class="el" href="opencl__spir__req_8h.html#a273f952356867fd091b72013fd8072ae">__attribute__</a>((const))</td></tr>
 <tr class="memdesc:a581bf62ead660af113e4c2dd690b13a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Added according to pocl/examples/example1-spir64/generate_spir.sh.  <a href="#a581bf62ead660af113e4c2dd690b13a4">More...</a><br /></td></tr>
 <tr class="separator:a581bf62ead660af113e4c2dd690b13a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5cfb79d07b035c8a13fdfa16287088af"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a5cfb79d07b035c8a13fdfa16287088af">readonly</a>&#160;&#160;&#160;<a class="el" href="opencl__spir_8h.html#af40876aa5931ad90d82185f96cc459d8">__attribute__</a>((pure))</td></tr>
+<tr class="memitem:a5cfb79d07b035c8a13fdfa16287088af"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a5cfb79d07b035c8a13fdfa16287088af">readonly</a>&#160;&#160;&#160;<a class="el" href="opencl__spir__req_8h.html#a273f952356867fd091b72013fd8072ae">__attribute__</a>((pure))</td></tr>
 <tr class="separator:a5cfb79d07b035c8a13fdfa16287088af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e9e29217f6ec61105a4520ec5942225"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a5e9e29217f6ec61105a4520ec5942225">MAXFLOAT</a>&#160;&#160;&#160;0x1.fffffep127f</td></tr>
 <tr class="memdesc:a5e9e29217f6ec61105a4520ec5942225"><td class="mdescLeft">&#160;</td><td class="mdescRight">Value of maximum non-infinite single-precision floating-point number.  <a href="#a5e9e29217f6ec61105a4520ec5942225">More...</a><br /></td></tr>
@@ -485,72 +485,72 @@ Typedefs</h2></td></tr>
 <tr class="separator:ac2abfb965e6a308c5912f9e749740d4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46d30f10b56cc57713eb284f0c9712f8"><td class="memItemLeft" align="right" valign="top">typedef size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a46d30f10b56cc57713eb284f0c9712f8">uintptr_t</a></td></tr>
 <tr class="separator:a46d30f10b56cc57713eb284f0c9712f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ef6354d60aebcd0975cedfed7792a26"><td class="memItemLeft" align="right" valign="top">typedef char char2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a6ef6354d60aebcd0975cedfed7792a26">__attribute__</a>((ext_vector_type(2)))</td></tr>
-<tr class="memdesc:a6ef6354d60aebcd0975cedfed7792a26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of global work-items specified for dimension identified by dimindx.  <a href="#a6ef6354d60aebcd0975cedfed7792a26">More...</a><br /></td></tr>
-<tr class="separator:a6ef6354d60aebcd0975cedfed7792a26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade5ca30de096b4d94aa7c2a5385ece3d"><td class="memItemLeft" align="right" valign="top">typedef char char2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#ade5ca30de096b4d94aa7c2a5385ece3d">__attribute__</a>((ext_vector_type(2)))</td></tr>
+<tr class="memdesc:ade5ca30de096b4d94aa7c2a5385ece3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of global work-items specified for dimension identified by dimindx.  <a href="#ade5ca30de096b4d94aa7c2a5385ece3d">More...</a><br /></td></tr>
+<tr class="separator:ade5ca30de096b4d94aa7c2a5385ece3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5797d9de1a2cd74ff3b3cb4585d26ca6"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="opencl__spir_8h.html#a91ad9478d81a7aaf2593e8d9c3d06a14">uint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a5797d9de1a2cd74ff3b3cb4585d26ca6">cl_mem_fence_flags</a></td></tr>
 <tr class="memdesc:a5797d9de1a2cd74ff3b3cb4585d26ca6"><td class="mdescLeft">&#160;</td><td class="mdescRight">All work-items in a work-group executing the kernel on a processor must execute this function before any are allowed to continue execution beyond the barrier.  <a href="#a5797d9de1a2cd74ff3b3cb4585d26ca6">More...</a><br /></td></tr>
 <tr class="separator:a5797d9de1a2cd74ff3b3cb4585d26ca6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:af40876aa5931ad90d82185f96cc459d8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="opencl__spir_8h.html#a91ad9478d81a7aaf2593e8d9c3d06a14">uint</a> <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#af40876aa5931ad90d82185f96cc459d8">__attribute__</a> ((overloadable)) get_work_dim(void)</td></tr>
+<tr class="memitem:af40876aa5931ad90d82185f96cc459d8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="opencl__spir_8h.html#a91ad9478d81a7aaf2593e8d9c3d06a14">uint</a> <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#af40876aa5931ad90d82185f96cc459d8">__attribute__</a> ((overloadable)) get_work_dim(void)</td></tr>
 <tr class="memdesc:af40876aa5931ad90d82185f96cc459d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of dimensions in use.  <a href="#af40876aa5931ad90d82185f96cc459d8">More...</a><br /></td></tr>
 <tr class="separator:af40876aa5931ad90d82185f96cc459d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a04577b2fc18a306a881fd5e33e5b40ba"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a04577b2fc18a306a881fd5e33e5b40ba">printf</a> (__constant const char *st,...)</td></tr>
+<tr class="memitem:a04577b2fc18a306a881fd5e33e5b40ba"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a04577b2fc18a306a881fd5e33e5b40ba">printf</a> (<a class="el" href="opencl__spir__req_8h.html#a27b608b5ba1de1611f39147081570d4e">__constant</a> const char *st,...)</td></tr>
 <tr class="separator:a04577b2fc18a306a881fd5e33e5b40ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a520ae4ccf48d2f8fa7d054d2e1762db1"><td class="memItemLeft" align="right" valign="top">float <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a520ae4ccf48d2f8fa7d054d2e1762db1">x</a></td></tr>
+<tr class="memitem:a520ae4ccf48d2f8fa7d054d2e1762db1"><td class="memItemLeft" align="right" valign="top">float <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a520ae4ccf48d2f8fa7d054d2e1762db1">x</a></td></tr>
 <tr class="separator:a520ae4ccf48d2f8fa7d054d2e1762db1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aabbe89c8fd42d52b959b6f16d73a3147"><td class="memItemLeft" align="right" valign="top">float <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#aabbe89c8fd42d52b959b6f16d73a3147">y</a></td></tr>
+<tr class="memitem:aabbe89c8fd42d52b959b6f16d73a3147"><td class="memItemLeft" align="right" valign="top">float <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#aabbe89c8fd42d52b959b6f16d73a3147">y</a></td></tr>
 <tr class="separator:aabbe89c8fd42d52b959b6f16d73a3147"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3fd8c63fddfb0d3ba796ef725a8cc5ce"><td class="memItemLeft" align="right" valign="top">float <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a3fd8c63fddfb0d3ba796ef725a8cc5ce">b</a></td></tr>
+<tr class="memitem:a3fd8c63fddfb0d3ba796ef725a8cc5ce"><td class="memItemLeft" align="right" valign="top">float <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a3fd8c63fddfb0d3ba796ef725a8cc5ce">b</a></td></tr>
 <tr class="separator:a3fd8c63fddfb0d3ba796ef725a8cc5ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b302851bd36c93d2ea8c990ddddb91a"><td class="memItemLeft" align="right" valign="top">float <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> float float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a3b302851bd36c93d2ea8c990ddddb91a">c</a></td></tr>
+<tr class="memitem:a3b302851bd36c93d2ea8c990ddddb91a"><td class="memItemLeft" align="right" valign="top">float <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> float float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a3b302851bd36c93d2ea8c990ddddb91a">c</a></td></tr>
 <tr class="separator:a3b302851bd36c93d2ea8c990ddddb91a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa78dbbf4206ad708c26d8cc081d36259"><td class="memItemLeft" align="right" valign="top">float __global float *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#aa78dbbf4206ad708c26d8cc081d36259">iptr</a></td></tr>
+<tr class="memitem:aa78dbbf4206ad708c26d8cc081d36259"><td class="memItemLeft" align="right" valign="top">float <a class="el" href="opencl__spir__req_8h.html#a0bcdca9f6e5923ea191d934ec3400d9e">__global</a> float *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#aa78dbbf4206ad708c26d8cc081d36259">iptr</a></td></tr>
 <tr class="separator:aa78dbbf4206ad708c26d8cc081d36259"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac9dbeca74b5c810d2c2eeaa473e688fc"><td class="memItemLeft" align="right" valign="top">float __global int *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#ac9dbeca74b5c810d2c2eeaa473e688fc">exp</a></td></tr>
+<tr class="memitem:ac9dbeca74b5c810d2c2eeaa473e688fc"><td class="memItemLeft" align="right" valign="top">float <a class="el" href="opencl__spir__req_8h.html#a0bcdca9f6e5923ea191d934ec3400d9e">__global</a> int *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#ac9dbeca74b5c810d2c2eeaa473e688fc">exp</a></td></tr>
 <tr class="separator:ac9dbeca74b5c810d2c2eeaa473e688fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9224774a9f20082765170987d74bfc3e"><td class="memItemLeft" align="right" valign="top">float <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a9224774a9f20082765170987d74bfc3e">n</a></td></tr>
+<tr class="memitem:a9224774a9f20082765170987d74bfc3e"><td class="memItemLeft" align="right" valign="top">float <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a9224774a9f20082765170987d74bfc3e">n</a></td></tr>
 <tr class="separator:a9224774a9f20082765170987d74bfc3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaf02cd0d4335f885b6565ca84312b1af"><td class="memItemLeft" align="right" valign="top">float __global int *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#aaf02cd0d4335f885b6565ca84312b1af">signp</a></td></tr>
+<tr class="memitem:aaf02cd0d4335f885b6565ca84312b1af"><td class="memItemLeft" align="right" valign="top">float <a class="el" href="opencl__spir__req_8h.html#a0bcdca9f6e5923ea191d934ec3400d9e">__global</a> int *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#aaf02cd0d4335f885b6565ca84312b1af">signp</a></td></tr>
 <tr class="separator:aaf02cd0d4335f885b6565ca84312b1af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4a11961ecea62a902a111f74b18a3c5"><td class="memItemLeft" align="right" valign="top">float float __global int *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#ad4a11961ecea62a902a111f74b18a3c5">quo</a></td></tr>
+<tr class="memitem:ad4a11961ecea62a902a111f74b18a3c5"><td class="memItemLeft" align="right" valign="top">float float <a class="el" href="opencl__spir__req_8h.html#a0bcdca9f6e5923ea191d934ec3400d9e">__global</a> int *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#ad4a11961ecea62a902a111f74b18a3c5">quo</a></td></tr>
 <tr class="separator:ad4a11961ecea62a902a111f74b18a3c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a050b1c863bf29a07640f780f1616cc3b"><td class="memItemLeft" align="right" valign="top">float __global float *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a050b1c863bf29a07640f780f1616cc3b">cosval</a></td></tr>
+<tr class="memitem:a050b1c863bf29a07640f780f1616cc3b"><td class="memItemLeft" align="right" valign="top">float <a class="el" href="opencl__spir__req_8h.html#a0bcdca9f6e5923ea191d934ec3400d9e">__global</a> float *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a050b1c863bf29a07640f780f1616cc3b">cosval</a></td></tr>
 <tr class="separator:a050b1c863bf29a07640f780f1616cc3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0340001eda66a0b2c27402f0be29b263"><td class="memItemLeft" align="right" valign="top">char <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a0340001eda66a0b2c27402f0be29b263">minval</a></td></tr>
+<tr class="memitem:a0340001eda66a0b2c27402f0be29b263"><td class="memItemLeft" align="right" valign="top">char <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a0340001eda66a0b2c27402f0be29b263">minval</a></td></tr>
 <tr class="separator:a0340001eda66a0b2c27402f0be29b263"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a36a82759b38bde802f0cdc0bb3acf5dc"><td class="memItemLeft" align="right" valign="top">char <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> char char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a36a82759b38bde802f0cdc0bb3acf5dc">maxval</a></td></tr>
+<tr class="memitem:a36a82759b38bde802f0cdc0bb3acf5dc"><td class="memItemLeft" align="right" valign="top">char <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> char char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a36a82759b38bde802f0cdc0bb3acf5dc">maxval</a></td></tr>
 <tr class="separator:a36a82759b38bde802f0cdc0bb3acf5dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a58cbf454cb6069623756197ea924f9fa"><td class="memItemLeft" align="right" valign="top">char <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a58cbf454cb6069623756197ea924f9fa">i</a></td></tr>
+<tr class="memitem:a58cbf454cb6069623756197ea924f9fa"><td class="memItemLeft" align="right" valign="top">char <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a58cbf454cb6069623756197ea924f9fa">i</a></td></tr>
 <tr class="separator:a58cbf454cb6069623756197ea924f9fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adec77eae3e956fc86edc6c3f172e2ec8"><td class="memItemLeft" align="right" valign="top">short <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> <a class="el" href="opencl__spir_8h.html#a65f85814a8290f9797005d3b28e7e5fc">uchar</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#adec77eae3e956fc86edc6c3f172e2ec8">lo</a></td></tr>
+<tr class="memitem:adec77eae3e956fc86edc6c3f172e2ec8"><td class="memItemLeft" align="right" valign="top">short <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> <a class="el" href="opencl__spir_8h.html#a65f85814a8290f9797005d3b28e7e5fc">uchar</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#adec77eae3e956fc86edc6c3f172e2ec8">lo</a></td></tr>
 <tr class="separator:adec77eae3e956fc86edc6c3f172e2ec8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb7707a3c851dd18980f1b98eec20785"><td class="memItemLeft" align="right" valign="top">int <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> int int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#acb7707a3c851dd18980f1b98eec20785">z</a></td></tr>
+<tr class="memitem:acb7707a3c851dd18980f1b98eec20785"><td class="memItemLeft" align="right" valign="top">int <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> int int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#acb7707a3c851dd18980f1b98eec20785">z</a></td></tr>
 <tr class="separator:acb7707a3c851dd18980f1b98eec20785"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afce50bc7a23ec77afc73ea78f6f569e9"><td class="memItemLeft" align="right" valign="top">float <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> float float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#afce50bc7a23ec77afc73ea78f6f569e9">a</a></td></tr>
+<tr class="memitem:afce50bc7a23ec77afc73ea78f6f569e9"><td class="memItemLeft" align="right" valign="top">float <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> float float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#afce50bc7a23ec77afc73ea78f6f569e9">a</a></td></tr>
 <tr class="separator:afce50bc7a23ec77afc73ea78f6f569e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f7d648ca36d83b502c61e24ccf189cd"><td class="memItemLeft" align="right" valign="top">float <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a3f7d648ca36d83b502c61e24ccf189cd">edge1</a></td></tr>
+<tr class="memitem:a3f7d648ca36d83b502c61e24ccf189cd"><td class="memItemLeft" align="right" valign="top">float <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a3f7d648ca36d83b502c61e24ccf189cd">edge1</a></td></tr>
 <tr class="separator:a3f7d648ca36d83b502c61e24ccf189cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a26a68f73ed82766ee9d6c672593ad885"><td class="memItemLeft" align="right" valign="top">float4 <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> float4&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a26a68f73ed82766ee9d6c672593ad885">p1</a></td></tr>
+<tr class="memitem:a26a68f73ed82766ee9d6c672593ad885"><td class="memItemLeft" align="right" valign="top">float4 <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> float4&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a26a68f73ed82766ee9d6c672593ad885">p1</a></td></tr>
 <tr class="separator:a26a68f73ed82766ee9d6c672593ad885"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1baa6eb49c37d5aba9ba4a6837438355"><td class="memItemLeft" align="right" valign="top">char2 const __global char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a1baa6eb49c37d5aba9ba4a6837438355">p</a></td></tr>
+<tr class="memitem:a1baa6eb49c37d5aba9ba4a6837438355"><td class="memItemLeft" align="right" valign="top">char2 const <a class="el" href="opencl__spir__req_8h.html#a0bcdca9f6e5923ea191d934ec3400d9e">__global</a> char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a1baa6eb49c37d5aba9ba4a6837438355">p</a></td></tr>
 <tr class="separator:a1baa6eb49c37d5aba9ba4a6837438355"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30c1789509ffb2ea07b060fc6e1344c1"><td class="memItemLeft" align="right" valign="top">void size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a30c1789509ffb2ea07b060fc6e1344c1">offset</a></td></tr>
 <tr class="separator:a30c1789509ffb2ea07b060fc6e1344c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71257c38fdda44af08aafe923dc76b5b"><td class="memItemLeft" align="right" valign="top">event_t const __global char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a71257c38fdda44af08aafe923dc76b5b">src</a></td></tr>
+<tr class="memitem:a71257c38fdda44af08aafe923dc76b5b"><td class="memItemLeft" align="right" valign="top">event_t const <a class="el" href="opencl__spir__req_8h.html#a0bcdca9f6e5923ea191d934ec3400d9e">__global</a> char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a71257c38fdda44af08aafe923dc76b5b">src</a></td></tr>
 <tr class="separator:a71257c38fdda44af08aafe923dc76b5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a235f150c5378642da833b0bcb2ecbe11"><td class="memItemLeft" align="right" valign="top">event_t const __global char size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a235f150c5378642da833b0bcb2ecbe11">num_elements</a></td></tr>
+<tr class="memitem:a235f150c5378642da833b0bcb2ecbe11"><td class="memItemLeft" align="right" valign="top">event_t const <a class="el" href="opencl__spir__req_8h.html#a0bcdca9f6e5923ea191d934ec3400d9e">__global</a> char size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a235f150c5378642da833b0bcb2ecbe11">num_elements</a></td></tr>
 <tr class="separator:a235f150c5378642da833b0bcb2ecbe11"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17229badafbc2a2aa4e047146ef9d417"><td class="memItemLeft" align="right" valign="top">event_t const __global char size_t event_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a17229badafbc2a2aa4e047146ef9d417">event</a></td></tr>
+<tr class="memitem:a17229badafbc2a2aa4e047146ef9d417"><td class="memItemLeft" align="right" valign="top">event_t const <a class="el" href="opencl__spir__req_8h.html#a0bcdca9f6e5923ea191d934ec3400d9e">__global</a> char size_t event_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a17229badafbc2a2aa4e047146ef9d417">event</a></td></tr>
 <tr class="separator:a17229badafbc2a2aa4e047146ef9d417"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0feb7a0b79b7d7078770c08ccbb20931"><td class="memItemLeft" align="right" valign="top">event_t const __global char size_t size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a0feb7a0b79b7d7078770c08ccbb20931">src_stride</a></td></tr>
+<tr class="memitem:a0feb7a0b79b7d7078770c08ccbb20931"><td class="memItemLeft" align="right" valign="top">event_t const <a class="el" href="opencl__spir__req_8h.html#a0bcdca9f6e5923ea191d934ec3400d9e">__global</a> char size_t size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a0feb7a0b79b7d7078770c08ccbb20931">src_stride</a></td></tr>
 <tr class="separator:a0feb7a0b79b7d7078770c08ccbb20931"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6c43a402e574846e3f5952ad247415f"><td class="memItemLeft" align="right" valign="top">event_t const __local char size_t size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#ad6c43a402e574846e3f5952ad247415f">dst_stride</a></td></tr>
+<tr class="memitem:ad6c43a402e574846e3f5952ad247415f"><td class="memItemLeft" align="right" valign="top">event_t const <a class="el" href="opencl__spir__req_8h.html#a16d401f6ba8f83048211693549eba342">__local</a> char size_t size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#ad6c43a402e574846e3f5952ad247415f">dst_stride</a></td></tr>
 <tr class="separator:ad6c43a402e574846e3f5952ad247415f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e97e6446616dcb06ffbc08601068e9d"><td class="memItemLeft" align="right" valign="top">void event_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a3e97e6446616dcb06ffbc08601068e9d">event_list</a></td></tr>
 <tr class="separator:a3e97e6446616dcb06ffbc08601068e9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -558,7 +558,7 @@ Variables</h2></td></tr>
 <tr class="separator:af326b2c82711bff036dfc4cdb8de9964"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada44854b55c58faa491accaf99e084ae"><td class="memItemLeft" align="right" valign="top">int int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#ada44854b55c58faa491accaf99e084ae">cmp</a></td></tr>
 <tr class="separator:ada44854b55c58faa491accaf99e084ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4aecd0c863ecbe831812726ea8ca327a"><td class="memItemLeft" align="right" valign="top">char2 <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> uchar2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a4aecd0c863ecbe831812726ea8ca327a">mask</a></td></tr>
+<tr class="memitem:a4aecd0c863ecbe831812726ea8ca327a"><td class="memItemLeft" align="right" valign="top">char2 <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> uchar2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#a4aecd0c863ecbe831812726ea8ca327a">mask</a></td></tr>
 <tr class="separator:a4aecd0c863ecbe831812726ea8ca327a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2a49ee5bdbd7fa39b2650f84101acdf"><td class="memItemLeft" align="right" valign="top">float4 sampler_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="opencl__spir_8h.html#ab2a49ee5bdbd7fa39b2650f84101acdf">sampler</a></td></tr>
 <tr class="separator:ab2a49ee5bdbd7fa39b2650f84101acdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -593,7 +593,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><a class="code" href="opencl__spir_8h.html#a6ef6354d60aebcd0975cedfed7792a26">__kernel \</a></div><div class="line"><a class="code" href="opencl__spir_8h.html#a6ef6354d60aebcd0975cedfed7792a26">	__attribute__</a>((work_group_size_hint(X, 1, 1))) \</div><div class="line">    __attribute__((vec_type_hint(typen)))</div><div class="ttc" id="opencl__spir_8h_html_a6ef6354d60aebcd0975cedfed7792a26"><div class="ttname"><a href="opencl__spir_8h.html#a6ef6354d60aebcd0975cedfed7792a26">__attribute__</a></div><div class="ttdeci">char char2 __attribute__((ext_vector_type(2)))</div><div class="ttdoc">Returns the number of global work-items specified for dimension identified by dimindx. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l00077">opencl_spir.h:77</a></div></div>
+<b>Value:</b><div class="fragment"><div class="line"><a class="code" href="opencl__spir_8h.html#ade5ca30de096b4d94aa7c2a5385ece3d">__kernel \</a></div><div class="line"><a class="code" href="opencl__spir_8h.html#ade5ca30de096b4d94aa7c2a5385ece3d">	__attribute__</a>((work_group_size_hint(X, 1, 1))) \</div><div class="line">    __attribute__((vec_type_hint(typen)))</div><div class="ttc" id="opencl__spir_8h_html_ade5ca30de096b4d94aa7c2a5385ece3d"><div class="ttname"><a href="opencl__spir_8h.html#ade5ca30de096b4d94aa7c2a5385ece3d">__attribute__</a></div><div class="ttdeci">char char2 __attribute__((ext_vector_type(2)))</div><div class="ttdoc">Returns the number of global work-items specified for dimension identified by dimindx. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l00077">opencl_spir.h:77</a></div></div>
 </div><!-- fragment -->
 <p class="definition">Definition at line <a class="el" href="opencl__spir_8h_source.html#l06483">6483</a> of file <a class="el" href="opencl__spir_8h_source.html">opencl_spir.h</a>.</p>
 
@@ -2658,13 +2658,13 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define const_func&#160;&#160;&#160;<a class="el" href="opencl__spir_8h.html#af40876aa5931ad90d82185f96cc459d8">__attribute__</a>((const))</td>
+          <td class="memname">#define const_func&#160;&#160;&#160;<a class="el" href="opencl__spir__req_8h.html#a273f952356867fd091b72013fd8072ae">__attribute__</a>((const))</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Added according to pocl/examples/example1-spir64/generate_spir.sh. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000138">Todo:</a></b></dt><dd>avoid this hack </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000136">Todo:</a></b></dt><dd>avoid this hack </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="opencl__spir_8h_source.html#l00021">21</a> of file <a class="el" href="opencl__spir_8h_source.html">opencl_spir.h</a>.</p>
 
@@ -3279,7 +3279,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><a class="code" href="opencl__spir_8h.html#a6ef6354d60aebcd0975cedfed7792a26">__kernel \</a></div><div class="line"><a class="code" href="opencl__spir_8h.html#a6ef6354d60aebcd0975cedfed7792a26">	__attribute__</a>((work_group_size_hint(X, 1, 1))) \</div><div class="line">    __attribute__((vec_type_hint(typen)))</div><div class="ttc" id="opencl__spir_8h_html_a6ef6354d60aebcd0975cedfed7792a26"><div class="ttname"><a href="opencl__spir_8h.html#a6ef6354d60aebcd0975cedfed7792a26">__attribute__</a></div><div class="ttdeci">char char2 __attribute__((ext_vector_type(2)))</div><div class="ttdoc">Returns the number of global work-items specified for dimension identified by dimindx. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l00077">opencl_spir.h:77</a></div></div>
+<b>Value:</b><div class="fragment"><div class="line"><a class="code" href="opencl__spir_8h.html#ade5ca30de096b4d94aa7c2a5385ece3d">__kernel \</a></div><div class="line"><a class="code" href="opencl__spir_8h.html#ade5ca30de096b4d94aa7c2a5385ece3d">	__attribute__</a>((work_group_size_hint(X, 1, 1))) \</div><div class="line">    __attribute__((vec_type_hint(typen)))</div><div class="ttc" id="opencl__spir_8h_html_ade5ca30de096b4d94aa7c2a5385ece3d"><div class="ttname"><a href="opencl__spir_8h.html#ade5ca30de096b4d94aa7c2a5385ece3d">__attribute__</a></div><div class="ttdeci">char char2 __attribute__((ext_vector_type(2)))</div><div class="ttdoc">Returns the number of global work-items specified for dimension identified by dimindx. </div><div class="ttdef"><b>Definition:</b> <a href="opencl__spir_8h_source.html#l00077">opencl_spir.h:77</a></div></div>
 </div><!-- fragment -->
 <p class="definition">Definition at line <a class="el" href="opencl__spir_8h_source.html#l06487">6487</a> of file <a class="el" href="opencl__spir_8h_source.html">opencl_spir.h</a>.</p>
 
@@ -3776,7 +3776,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define readonly&#160;&#160;&#160;<a class="el" href="opencl__spir_8h.html#af40876aa5931ad90d82185f96cc459d8">__attribute__</a>((pure))</td>
+          <td class="memname">#define readonly&#160;&#160;&#160;<a class="el" href="opencl__spir__req_8h.html#a273f952356867fd091b72013fd8072ae">__attribute__</a>((pure))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -3914,14 +3914,14 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a id="a6ef6354d60aebcd0975cedfed7792a26"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6ef6354d60aebcd0975cedfed7792a26">&#9670;&nbsp;</a></span>__attribute__</h2>
+<a id="ade5ca30de096b4d94aa7c2a5385ece3d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade5ca30de096b4d94aa7c2a5385ece3d">&#9670;&nbsp;</a></span>__attribute__</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double16 <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> __attribute__ </td>
+          <td class="memname">std::size_t <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> __attribute__ </td>
           <td>(</td>
           <td class="paramtype">(ext_vector_type(2))&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -4109,8 +4109,8 @@ Variables</h2></td></tr>
 <p>. get_num_groups(dimindx) – 1. Valid values of dimindx are 0 to get_work_dim() – 1. For other values, get_group_id() returns 0. For clEnqueueTask, this returns 0.</p>
 <p>Valid values of dimindx are 0 to get_work_dim() – 1. For other values, get_global_offset() returns 0. For clEnqueueTask, this returns 0.</p>
 <p>Rounding of intermediate products shall not occur. Edge case behavior is per the IEEE 754-2008 standard.</p>
-<p>If one argument is a NaN, fmax() returns the other argument. If both arguments are NaNs, fmax() returns a NaN.</p>
-<p>If one argument is a NaN, fmin() returns the other argument. If both arguments are NaNs, fmin() returns a NaN.</p>
+<p>If one argument is a NaN, <a class="el" href="namespacetrisycl.html#a7c5644e23ec227962b3684cf29056f28">fmax()</a> returns the other argument. If both arguments are NaNs, <a class="el" href="namespacetrisycl.html#a7c5644e23ec227962b3684cf29056f28">fmax()</a> returns a NaN.</p>
+<p>If one argument is a NaN, <a class="el" href="namespacetrisycl.html#a5984dbaaf0c9bf50de7584d00476db7e">fmin()</a> returns the other argument. If both arguments are NaNs, <a class="el" href="namespacetrisycl.html#a5984dbaaf0c9bf50de7584d00476db7e">fmin()</a> returns a NaN.</p>
 <p>Returns x – y * trunc (x/y).</p>
 <p>floor(x) is returned in iptr.</p>
 <p>For each component the mantissa returned is a float with magnitude in the interval [1/2, 1) or 0. Each component of x equals mantissa returned * 2^exp.</p>
@@ -4323,7 +4323,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="opencl__spir_8h.html#a91ad9478d81a7aaf2593e8d9c3d06a14">uint</a> <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> __attribute__ </td>
+          <td class="memname"><a class="el" href="opencl__spir_8h.html#a91ad9478d81a7aaf2593e8d9c3d06a14">uint</a> <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> __attribute__ </td>
           <td>(</td>
           <td class="paramtype">(overloadable)&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -4513,8 +4513,8 @@ Variables</h2></td></tr>
 <p>. get_num_groups(dimindx) – 1. Valid values of dimindx are 0 to get_work_dim() – 1. For other values, get_group_id() returns 0. For clEnqueueTask, this returns 0.</p>
 <p>Valid values of dimindx are 0 to get_work_dim() – 1. For other values, get_global_offset() returns 0. For clEnqueueTask, this returns 0.</p>
 <p>Rounding of intermediate products shall not occur. Edge case behavior is per the IEEE 754-2008 standard.</p>
-<p>If one argument is a NaN, fmax() returns the other argument. If both arguments are NaNs, fmax() returns a NaN.</p>
-<p>If one argument is a NaN, fmin() returns the other argument. If both arguments are NaNs, fmin() returns a NaN.</p>
+<p>If one argument is a NaN, <a class="el" href="namespacetrisycl.html#a7c5644e23ec227962b3684cf29056f28">fmax()</a> returns the other argument. If both arguments are NaNs, <a class="el" href="namespacetrisycl.html#a7c5644e23ec227962b3684cf29056f28">fmax()</a> returns a NaN.</p>
+<p>If one argument is a NaN, <a class="el" href="namespacetrisycl.html#a5984dbaaf0c9bf50de7584d00476db7e">fmin()</a> returns the other argument. If both arguments are NaNs, <a class="el" href="namespacetrisycl.html#a5984dbaaf0c9bf50de7584d00476db7e">fmin()</a> returns a NaN.</p>
 <p>Returns x – y * trunc (x/y).</p>
 <p>floor(x) is returned in iptr.</p>
 <p>For each component the mantissa returned is a float with magnitude in the interval [1/2, 1) or 0. Each component of x equals mantissa returned * 2^exp.</p>
@@ -4600,7 +4600,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">int printf </td>
           <td>(</td>
-          <td class="paramtype">__constant const char *&#160;</td>
+          <td class="paramtype"><a class="el" href="opencl__spir__req_8h.html#a27b608b5ba1de1611f39147081570d4e">__constant</a> const char *&#160;</td>
           <td class="paramname"><em>st</em>, </td>
         </tr>
         <tr>
@@ -4627,14 +4627,14 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double16 <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> double16 double a</td>
+          <td class="memname">double16 <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> double16 double a</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="opencl__spir_8h_source.html#l03613">3613</a> of file <a class="el" href="opencl__spir_8h_source.html">opencl_spir.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="device__runtime_8hpp_source.html#l00077">cl::sycl::drt::accessor&lt; Accessor &gt;::accessor()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="device__runtime_8hpp_source.html#l00075">trisycl::drt::drt::accessor&lt; Accessor &gt;::accessor()</a>.</p>
 
 </div>
 </div>
@@ -4645,14 +4645,14 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double16 <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> double16 b</td>
+          <td class="memname">double16 <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> double16 b</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="opencl__spir_8h_source.html#l00915">915</a> of file <a class="el" href="opencl__spir_8h_source.html">opencl_spir.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="task_8hpp_source.html#l00144">cl::sycl::detail::task::release_buffers()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="task_8hpp_source.html#l00140">trisycl::detail::task::release_buffers()</a>.</p>
 
 </div>
 </div>
@@ -4663,7 +4663,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double16 <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> double16 ulong16 c</td>
+          <td class="memname">double16 <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> double16 ulong16 c</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -4727,7 +4727,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double16 __private double16 * cosval</td>
+          <td class="memname">double16 <a class="el" href="opencl__spir__req_8h.html#a82a45efe1ccd4ca18b19e5584bd0254c">__private</a> double16 * cosval</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -4743,7 +4743,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">event_t const __local half16 size_t size_t dst_stride</td>
+          <td class="memname">event_t const <a class="el" href="opencl__spir__req_8h.html#a16d401f6ba8f83048211693549eba342">__local</a> half16 size_t size_t dst_stride</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -4759,7 +4759,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double16 <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> double16 edge1</td>
+          <td class="memname">double16 <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> double16 edge1</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -4775,12 +4775,14 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">event_t const __local half16 size_t size_t event_t event</td>
+          <td class="memname">event_t const <a class="el" href="opencl__spir__req_8h.html#a16d401f6ba8f83048211693549eba342">__local</a> half16 size_t size_t event_t event</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="opencl__spir_8h_source.html#l05863">5863</a> of file <a class="el" href="opencl__spir_8h_source.html">opencl_spir.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="event_8hpp_source.html#l00036">trisycl::event::event()</a>.</p>
 
 </div>
 </div>
@@ -4807,14 +4809,12 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double16 __private int16 * exp</td>
+          <td class="memname">double16 <a class="el" href="opencl__spir__req_8h.html#a82a45efe1ccd4ca18b19e5584bd0254c">__private</a> int16 * exp</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="opencl__spir_8h_source.html#l01102">1102</a> of file <a class="el" href="opencl__spir_8h_source.html">opencl_spir.h</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="math_8hpp_source.html#l00133">cl::sycl::TRISYCL_MATH_WRAP2s()</a>.</p>
 
 </div>
 </div>
@@ -4825,14 +4825,14 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">ulong16 <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> ulong16 i</td>
+          <td class="memname">ulong16 <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> ulong16 i</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="opencl__spir_8h_source.html#l03222">3222</a> of file <a class="el" href="opencl__spir_8h_source.html">opencl_spir.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="vec_2detail_2vec_8hpp_source.html#l00063">cl::sycl::detail::vec&lt; DataType, 8 &gt;::flatten()</a>, <a class="el" href="vec_2detail_2vec_8hpp_source.html#l00093">cl::sycl::detail::vec&lt; DataType, 8 &gt;::flatten_to_tuple()</a>, <a class="el" href="cache_8hpp_source.html#l00062">cl::sycl::detail::cache&lt; cl_device_id, cl::sycl::detail::opencl_device &gt;::get_or_register()</a>, <a class="el" href="linear__id_8hpp_source.html#l00028">cl::sycl::detail::linear_id()</a>, <a class="el" href="id_8hpp_source.html#l00071">cl::sycl::make_id()</a>, <a class="el" href="partition__array_8hpp_source.html#l00227">cl::sycl::vendor::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;::operator[]()</a>, <a class="el" href="parallelism_2detail_2parallelism_8hpp_source.html#l00233">cl::sycl::detail::parallel_for_workitem()</a>, <a class="el" href="pipe_2detail_2pipe_8hpp_source.html#l00389">cl::sycl::detail::pipe&lt; value_type &gt;::reserve_write()</a>, and <a class="el" href="device__selector__tail_8hpp_source.html#l00026">cl::sycl::device_selector::select_device()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="vec_2detail_2vec_8hpp_source.html#l00068">trisycl::detail::vec&lt; DataType, 8 &gt;::flatten()</a>, <a class="el" href="vec_2detail_2vec_8hpp_source.html#l00098">trisycl::detail::vec&lt; DataType, 8 &gt;::flatten_to_tuple()</a>, <a class="el" href="cache_8hpp_source.html#l00060">trisycl::detail::cache&lt; cl_kernel, trisycl::detail::opencl_kernel &gt;::get_or_register()</a>, <a class="el" href="linear__id_8hpp_source.html#l00026">trisycl::detail::linear_id()</a>, <a class="el" href="opencl__spir__helpers_8hpp_source.html#l00037">trisycl::detail::spir::make_array_with_func()</a>, <a class="el" href="id_8hpp_source.html#l00073">trisycl::make_id()</a>, <a class="el" href="partition__array_8hpp_source.html#l00227">trisycl::vendor::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;::operator[]()</a>, <a class="el" href="vendor_2trisycl_2scope_2queue_8hpp_source.html#l00178">trisycl::vendor::trisycl::scope::queue&lt; Device, QueueStorage &gt;::command_group&lt; CGH &gt;::parallel_for()</a>, <a class="el" href="parallelism_2detail_2parallelism_8hpp_source.html#l00273">trisycl::detail::parallel_for_workitem()</a>, <a class="el" href="pipe_2detail_2pipe_8hpp_source.html#l00387">trisycl::detail::pipe&lt; value_type &gt;::reserve_write()</a>, and <a class="el" href="device__selector__tail_8hpp_source.html#l00025">trisycl::device_selector::select_device()</a>.</p>
 
 </div>
 </div>
@@ -4843,7 +4843,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double16 __private double16 * iptr</td>
+          <td class="memname">double16 <a class="el" href="opencl__spir__req_8h.html#a82a45efe1ccd4ca18b19e5584bd0254c">__private</a> double16 * iptr</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -4859,7 +4859,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">ulong16 <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> uint16 lo</td>
+          <td class="memname">ulong16 <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> uint16 lo</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -4875,7 +4875,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double16 <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> double16 ulong16 mask</td>
+          <td class="memname">double16 <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> double16 ulong16 mask</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -4891,7 +4891,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double16 <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> double double maxval</td>
+          <td class="memname">double16 <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> double double maxval</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -4907,7 +4907,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double16 <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> double minval</td>
+          <td class="memname">double16 <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> double minval</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -4923,14 +4923,14 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double16 <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> int n</td>
+          <td class="memname">double16 <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> int n</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="opencl__spir_8h_source.html#l01205">1205</a> of file <a class="el" href="opencl__spir_8h_source.html">opencl_spir.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="vec_2detail_2vec_8hpp_source.html#l00122">cl::sycl::detail::vec&lt; DataType, 8 &gt;::convert()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="vec_2detail_2vec_8hpp_source.html#l00166">trisycl::detail::vec&lt; DataType, 8 &gt;::convert()</a>.</p>
 
 </div>
 </div>
@@ -4964,7 +4964,7 @@ Variables</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="opencl__spir_8h_source.html#l05062">5062</a> of file <a class="el" href="opencl__spir_8h_source.html">opencl_spir.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="linear__id_8hpp_source.html#l00028">cl::sycl::detail::linear_id()</a>, and <a class="el" href="parallelism_2detail_2parallelism_8hpp_source.html#l00194">cl::sycl::detail::parallel_for_global_offset()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="linear__id_8hpp_source.html#l00026">trisycl::detail::linear_id()</a>, <a class="el" href="parallelism_2detail_2parallelism_8hpp_source.html#l00234">trisycl::detail::parallel_for_global_offset()</a>, and <a class="el" href="parallelism__tbb_8hpp_source.html#l00070">trisycl::detail::parallel_for_iterate()</a>.</p>
 
 </div>
 </div>
@@ -4975,14 +4975,14 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void size_t __private half * p</td>
+          <td class="memname">void size_t <a class="el" href="opencl__spir__req_8h.html#a82a45efe1ccd4ca18b19e5584bd0254c">__private</a> half * p</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="opencl__spir_8h_source.html#l04827">4827</a> of file <a class="el" href="opencl__spir_8h_source.html">opencl_spir.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="address__space_2detail_2address__space_8hpp_source.html#l00304">cl::sycl::detail::address_space_ptr&lt; T, AS &gt;::address_space_ptr()</a>, <a class="el" href="pipe__accessor_8hpp_source.html#l00083">cl::sycl::detail::pipe_accessor&lt; DataType, AccessMode, access::target::blocking_pipe &gt;::pipe_accessor()</a>, <a class="el" href="task_8hpp_source.html#l00224">cl::sycl::detail::task::postlude()</a>, <a class="el" href="task_8hpp_source.html#l00212">cl::sycl::detail::task::prelude()</a>, and <a class="el" href="device__runtime_8hpp_source.html#l00172">cl::sycl::drt::code::program::program()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="address__space_2detail_2address__space_8hpp_source.html#l00302">trisycl::detail::address_space_ptr&lt; T, AS &gt;::address_space_ptr()</a>, <a class="el" href="vendor_2trisycl_2scope_2device_2detail_2device_8hpp_source.html#l00052">trisycl::vendor::trisycl::scope::detail::device&lt; DeviceStorage, ScopedPlatform &gt;::device()</a>, <a class="el" href="vendor_2trisycl_2scope_2device_8hpp_source.html#l00095">trisycl::vendor::trisycl::scope::device&lt; DeviceStorage, ScopedPlatform &gt;::device()</a>, <a class="el" href="pipe__accessor_8hpp_source.html#l00082">trisycl::detail::pipe_accessor&lt; DataType, AccessMode, access::target::blocking_pipe &gt;::pipe_accessor()</a>, <a class="el" href="task_8hpp_source.html#l00220">trisycl::detail::task::postlude()</a>, <a class="el" href="task_8hpp_source.html#l00208">trisycl::detail::task::prelude()</a>, and <a class="el" href="device__runtime_8hpp_source.html#l00170">trisycl::drt::drt::code::program::program()</a>.</p>
 
 </div>
 </div>
@@ -4993,7 +4993,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">float <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> float4 p1</td>
+          <td class="memname">float <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> float4 p1</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -5009,7 +5009,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double16 double16 __private int16 * quo</td>
+          <td class="memname">double16 double16 <a class="el" href="opencl__spir__req_8h.html#a82a45efe1ccd4ca18b19e5584bd0254c">__private</a> int16 * quo</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -5025,7 +5025,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint4 <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> sampler_t sampler</td>
+          <td class="memname">uint4 <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> sampler_t sampler</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -5041,7 +5041,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double16 __private int16 * signp</td>
+          <td class="memname">double16 <a class="el" href="opencl__spir__req_8h.html#a82a45efe1ccd4ca18b19e5584bd0254c">__private</a> int16 * signp</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -5057,14 +5057,14 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">event_t const __local half16 * src</td>
+          <td class="memname">event_t const <a class="el" href="opencl__spir__req_8h.html#a16d401f6ba8f83048211693549eba342">__local</a> half16 * src</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="opencl__spir_8h_source.html#l05863">5863</a> of file <a class="el" href="opencl__spir_8h_source.html">opencl_spir.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="partition__array_8hpp_source.html#l00201">cl::sycl::vendor::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;::partition_array()</a>, and <a class="el" href="small__array_8hpp_source.html#l00123">cl::sycl::detail::small_array&lt; BasicType, FinalType, 3 &gt;::small_array()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="partition__array_8hpp_source.html#l00201">trisycl::vendor::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;::partition_array()</a>, and <a class="el" href="small__array_8hpp_source.html#l00124">trisycl::detail::small_array&lt; BasicType, FinalType, 3 &gt;::small_array()</a>.</p>
 
 </div>
 </div>
@@ -5075,7 +5075,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">event_t const __global half16 size_t size_t src_stride</td>
+          <td class="memname">event_t const <a class="el" href="opencl__spir__req_8h.html#a0bcdca9f6e5923ea191d934ec3400d9e">__global</a> half16 size_t size_t src_stride</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -5107,14 +5107,14 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double16 <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> double16 double16 x</td>
+          <td class="memname">double16 <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> double16 double16 x</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="opencl__spir_8h_source.html#l00489">489</a> of file <a class="el" href="opencl__spir_8h_source.html">opencl_spir.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="small__array_8hpp_source.html#l00287">cl::sycl::detail::small_array_123&lt; BasicType, FinalType, 1 &gt;::small_array_123()</a>, <a class="el" href="small__array_8hpp_source.html#l00304">cl::sycl::detail::small_array_123&lt; BasicType, FinalType, 2 &gt;::small_array_123()</a>, and <a class="el" href="small__array_8hpp_source.html#l00330">cl::sycl::detail::small_array_123&lt; BasicType, FinalType, 3 &gt;::small_array_123()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="vec_2detail_2vec_8hpp_source.html#l00132">trisycl::detail::vec&lt; DataType, 8 &gt;::apply_binary_functor()</a>, <a class="el" href="vec_2detail_2vec_8hpp_source.html#l00114">trisycl::detail::vec&lt; DataType, 8 &gt;::apply_unary_functor()</a>, <a class="el" href="math_8hpp_source.html#l00198">trisycl::length()</a>, <a class="el" href="small__array_8hpp_source.html#l00288">trisycl::detail::small_array_123&lt; BasicType, FinalType, 1 &gt;::small_array_123()</a>, <a class="el" href="small__array_8hpp_source.html#l00305">trisycl::detail::small_array_123&lt; BasicType, FinalType, 2 &gt;::small_array_123()</a>, and <a class="el" href="small__array_8hpp_source.html#l00331">trisycl::detail::small_array_123&lt; BasicType, FinalType, 3 &gt;::small_array_123()</a>.</p>
 
 </div>
 </div>
@@ -5125,7 +5125,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double16 <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> double16 y</td>
+          <td class="memname">double16 <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> double16 y</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -5141,7 +5141,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint16 <a class="el" href="opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> uint16 uint16 z</td>
+          <td class="memname">uint16 <a class="el" href="opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4">const_func</a> uint16 uint16 z</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -5153,7 +5153,7 @@ Variables</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 16 2020 13:26:35 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

@@ -1,7 +1,0 @@
-<map id="cl::sycl::detail::task::schedule" name="cl::sycl::detail::task::schedule">
-<area shape="rect" id="node2" href="$structcl_1_1sycl_1_1detail_1_1task.html#ad4606b29bd336c40586e583e1fcc4348" title="Notify the waiting tasks that we are done. " alt="" coords="191,5,327,47"/>
-<area shape="rect" id="node3" href="$structcl_1_1sycl_1_1detail_1_1task.html#a18f4bf63403e822c0917432430ff87d4" title="Execute the epilogues. " alt="" coords="191,71,327,112"/>
-<area shape="rect" id="node4" href="$structcl_1_1sycl_1_1detail_1_1task.html#af10a532006cd46573a4bb1664f9e87a8" title="Execute the prologues. " alt="" coords="191,136,327,177"/>
-<area shape="rect" id="node5" href="$structcl_1_1sycl_1_1detail_1_1task.html#a791b4ba6341f103e6d71437156d6fafc" title="Release the buffers that have been used by this task. " alt="" coords="191,201,327,243"/>
-<area shape="rect" id="node6" href="$structcl_1_1sycl_1_1detail_1_1task.html#a3b176556e36e4ff5c1491a1ddf19579b" title="Wait for the required producer tasks to be ready. " alt="" coords="189,267,329,308"/>
-</map>

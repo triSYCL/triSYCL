@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['vec',['vec',['../classcl_1_1sycl_1_1detail_1_1vec.html#a0408d52d10cc184abb92e874545f7545',1,'cl::sycl::detail::vec::vec(const Types... args)'],['../classcl_1_1sycl_1_1detail_1_1vec.html#a1d884f8f85ff06e434ce949bcca8ddb9',1,'cl::sycl::detail::vec::vec()=default']]]
+  ['vec',['vec',['../classtrisycl_1_1detail_1_1vec.html#a6d0035e14965a655858bf5ac3d664252',1,'trisycl::detail::vec::vec(const Types... args)'],['../classtrisycl_1_1detail_1_1vec.html#aacc008e2f3c3993069cba831f7fcf1f3',1,'trisycl::detail::vec::vec()=default']]]
 ];

@@ -1,0 +1,6 @@
+<map id="trisycl::context::get_boost_compute" name="trisycl::context::get_boost_compute">
+<area shape="rect" id="node2" href="$group__data.html#a31930d97b31c40b843a1de541060cc24" title="Create a boost::compute::buffer for this trisycl::buffer in the cache and associate it with a given c..." alt="" coords="188,5,348,47"/>
+<area shape="rect" id="node3" href="$group__data.html#aad6218af1679f6e4f06ae001a36a86bb" title="When a transfer is requested this function is called, it will update the state of the buffer accordin..." alt="" coords="396,5,576,47"/>
+<area shape="rect" id="node4" href="$group__data.html#a9e59e9641989421feb7f541081d86272" title="Function pair to work around the fact that T might be a const type. " alt="" coords="624,5,796,47"/>
+<area shape="rect" id="node5" href="$group__data.html#a360bd2887a957b3ef46e7af5dec9c2bc" title="Create a new sub&#45;buffer without allocation to have separate accessors later. " alt="" coords="844,5,981,47"/>
+</map>

@@ -1,8 +1,8 @@
-<map id="include/CL/sycl/info/device.hpp" name="include/CL/sycl/info/device.hpp">
-<area shape="rect" id="node2" href="$id_8hpp.html" title="CL/sycl/id.hpp" alt="" coords="353,102,459,129"/>
-<area shape="rect" id="node19" href="$opencl__types_8hpp.html" title="triSYCL wrapper for OpenCL types " alt="" coords="1265,102,1438,129"/>
-<area shape="rect" id="node31" href="$param__traits_8hpp.html" title="CL/sycl/info/param\l_traits.hpp" alt="" coords="1463,95,1595,136"/>
-<area shape="rect" id="node5" href="$small__array_8hpp.html" title="CL/sycl/detail/small\l_array.hpp" alt="" coords="337,273,475,315"/>
-<area shape="rect" id="node16" href="$range_8hpp.html" title="CL/sycl/range.hpp" alt="" coords="225,191,353,218"/>
-<area shape="rect" id="node9" href="$debug_8hpp.html" title="CL/sycl/detail/debug.hpp" alt="" coords="256,363,423,389"/>
+<map id="include/triSYCL/info/device.hpp" name="include/triSYCL/info/device.hpp">
+<area shape="rect" id="node2" href="$id_8hpp.html" title="triSYCL/id.hpp" alt="" coords="386,102,493,129"/>
+<area shape="rect" id="node19" href="$opencl__types_8hpp.html" title="triSYCL wrapper for OpenCL types " alt="" coords="1297,102,1472,129"/>
+<area shape="rect" id="node31" href="$param__traits_8hpp.html" title="triSYCL/info/param\l_traits.hpp" alt="" coords="1497,95,1630,136"/>
+<area shape="rect" id="node5" href="$small__array_8hpp.html" title="triSYCL/detail/small\l_array.hpp" alt="" coords="370,273,509,315"/>
+<area shape="rect" id="node16" href="$range_8hpp.html" title="triSYCL/range.hpp" alt="" coords="256,191,385,218"/>
+<area shape="rect" id="node9" href="$debug_8hpp.html" title="triSYCL/detail/debug.hpp" alt="" coords="256,363,423,389"/>
 </map>

@@ -1,4 +1,6 @@
-<map id="include/CL/sycl/program/detail/program.hpp" name="include/CL/sycl/program/detail/program.hpp">
-<area shape="rect" id="node2" href="$program_8hpp.html" title="include/CL/sycl/program.hpp" alt="" coords="5,95,193,121"/>
-<area shape="rect" id="node3" href="$sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="31,169,168,196"/>
+<map id="include/triSYCL/program/detail/program.hpp" name="include/triSYCL/program/detail/program.hpp">
+<area shape="rect" id="node2" href="$program_8hpp.html" title="include/triSYCL/program.hpp" alt="" coords="65,95,254,121"/>
+<area shape="rect" id="node3" href="$triSYCL_2sycl_8hpp.html" title="include/triSYCL/sycl.hpp" alt="" coords="76,169,243,196"/>
+<area shape="rect" id="node4" href="$CL_2sycl_8hpp.html" title="This is the main SYCL 1.2.1 interoperability header to expose triSYCL into the cl::sycl namespace..." alt="" coords="5,244,143,271"/>
+<area shape="rect" id="node5" href="$SYCL_2sycl_8hpp.html" title="This is the SYCL extension header to expose triSYCL directly into the shorter sycl namespace instead ..." alt="" coords="167,244,322,271"/>
 </map>

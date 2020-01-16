@@ -1,4 +1,0 @@
-<map id="cl::sycl::feature_not_supported" name="cl::sycl::feature_not_supported">
-<area shape="rect" id="node2" href="$group__error__handling.html#classcl_1_1sycl_1_1device__error" title="The SYCL device will trigger this exception on error. " alt="" coords="5,171,148,197"/>
-<area shape="rect" id="node3" href="$group__error__handling.html#classcl_1_1sycl_1_1exception" title="Encapsulate a SYCL error information. " alt="" coords="13,95,141,121"/>
-</map>

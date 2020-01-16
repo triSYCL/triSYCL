@@ -1,0 +1,6 @@
+<map id="trisycl::detail::task::get_queue" name="trisycl::detail::task::get_queue">
+<area shape="rect" id="node2" href="$group__data.html#a3394999b292edcaf3ffbab2d9355af95" title="Lazily associate a CL buffer to the SYCL buffer and copy data in it if required, updates the state of..." alt="" coords="183,5,340,47"/>
+<area shape="rect" id="node3" href="$group__data.html#a21266c6ebba45da03ee63e0342f8e7fc" title="Get the boost::compute::buffer or throw if unset. " alt="" coords="183,71,340,112"/>
+<area shape="rect" id="node4" href="$group__data.html#a9acc187ff81ce7b877785d2fd9116e52" title="Register the accessor once a std::shared_ptr is created on it. " alt="" coords="183,136,340,177"/>
+<area shape="rect" id="node5" href="$group__device__runtime.html#ga77c5530f02bdddb55d1ac58880af38bd" title="Set the kernel for a later invocation. " alt="" coords="206,201,317,243"/>
+</map>

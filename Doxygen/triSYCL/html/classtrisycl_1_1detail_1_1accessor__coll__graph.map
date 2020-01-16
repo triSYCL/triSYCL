@@ -1,0 +1,4 @@
+<map id="trisycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;" name="trisycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;">
+<area shape="rect" id="node2" href="$group__data.html#classtrisycl_1_1detail_1_1accessor__base" title="The buffer accessor base is here mainly to be accessed from the task without dependency on the buffer..." alt="" coords="217,35,409,61"/>
+<area shape="rect" id="node6" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; accessor\&lt; T, Dimensions,\l Mode, Target \&gt; \&gt;" alt="" coords="219,181,407,237"/>
+</map>

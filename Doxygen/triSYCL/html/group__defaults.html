@@ -70,15 +70,15 @@ Collaboration diagram for Manage default configuration and types:</div>
 <div class="dyncontent">
 <center><table><tr><td><img src="group__defaults.png" border="0" alt="" usemap="#group____defaults"/>
 <map name="group____defaults" id="group____defaults">
-<area shape="rect" id="node2" href="group__parallelism.html" title="Expressing parallelism\l through kernels" alt="" coords="253,5,407,47"/>
+<area shape="rect" id="node2" href="group__vector.html" title="Vector types in SYCL" alt="" coords="279,13,428,39"/>
 </map>
 </td></tr></table></center>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr class="memitem:namespacecl"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl.html">cl</a></td></tr>
-<tr class="memdesc:namespacecl"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector type to be used as SYCL vector. <br /></td></tr>
+<tr class="memitem:namespacetrisycl"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetrisycl.html">trisycl</a></td></tr>
+<tr class="memdesc:namespacetrisycl"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector type to be used as SYCL vector. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
@@ -96,11 +96,8 @@ Macros</h2></td></tr>
 <tr class="separator:gab59a9dc96be73a852e0e9424617076b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9f14fea6d1bd568aa5ae33b77f9c54d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__defaults.html#ga9f14fea6d1bd568aa5ae33b77f9c54d5">TRISYCL_MAKE_BOOST_CIRCULARBUFFER_THREAD_SAFE</a></td></tr>
 <tr class="separator:ga9f14fea6d1bd568aa5ae33b77f9c54d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1782a4471b1f94191c6e7379b513d785"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__defaults.html#ga1782a4471b1f94191c6e7379b513d785">SDX_KERNEL_PROGRAM_OWNING_BUG</a></td></tr>
-<tr class="memdesc:ga1782a4471b1f94191c6e7379b513d785"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define TRISYCL_OPENCL to add OpenCL.  <a href="#ga1782a4471b1f94191c6e7379b513d785">More...</a><br /></td></tr>
-<tr class="separator:ga1782a4471b1f94191c6e7379b513d785"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf358c4a94080e7af23ffae898cf39e04"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__defaults.html#gaf358c4a94080e7af23ffae898cf39e04">TRISYCL_OPENCL_ONLY</a>(...)&#160;&#160;&#160;__VA_ARGS__</td></tr>
-<tr class="memdesc:gaf358c4a94080e7af23ffae898cf39e04"><td class="mdescLeft">&#160;</td><td class="mdescRight">A macro to keep some stuff in OpenCL mode.  <a href="#gaf358c4a94080e7af23ffae898cf39e04">More...</a><br /></td></tr>
+<tr class="memdesc:gaf358c4a94080e7af23ffae898cf39e04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define TRISYCL_OPENCL to add OpenCL.  <a href="#gaf358c4a94080e7af23ffae898cf39e04">More...</a><br /></td></tr>
 <tr class="separator:gaf358c4a94080e7af23ffae898cf39e04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga001f43e1709fc382f20ba63b20d5f5d1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__defaults.html#ga001f43e1709fc382f20ba63b20d5f5d1">TRISYCL_DEVICE_ONLY</a>(...)</td></tr>
 <tr class="separator:ga001f43e1709fc382f20ba63b20d5f5d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -121,7 +118,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;<a class="el" href="global__config_8hpp.html">include/CL/sycl/detail/global_config.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="global__config_8hpp.html">include/triSYCL/detail/global_config.hpp</a>&gt;</code></p>
 
 <p>This source is compiled by a single source compiler. </p>
 
@@ -141,7 +138,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;<a class="el" href="global__config_8hpp.html">include/CL/sycl/detail/global_config.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="global__config_8hpp.html">include/triSYCL/detail/global_config.hpp</a>&gt;</code></p>
 
 <p class="definition">Definition at line <a class="el" href="global__config_8hpp_source.html#l00027">27</a> of file <a class="el" href="global__config_8hpp_source.html">global_config.hpp</a>.</p>
 
@@ -159,32 +156,11 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;<a class="el" href="global__config_8hpp.html">include/CL/sycl/detail/global_config.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="global__config_8hpp.html">include/triSYCL/detail/global_config.hpp</a>&gt;</code></p>
 
 <p>This implements SYCL 1.2.1. </p>
 
 <p class="definition">Definition at line <a class="el" href="global__config_8hpp_source.html#l00019">19</a> of file <a class="el" href="global__config_8hpp_source.html">global_config.hpp</a>.</p>
-
-</div>
-</div>
-<a id="ga1782a4471b1f94191c6e7379b513d785"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga1782a4471b1f94191c6e7379b513d785">&#9670;&nbsp;</a></span>SDX_KERNEL_PROGRAM_OWNING_BUG</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define SDX_KERNEL_PROGRAM_OWNING_BUG</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;<a class="el" href="global__config_8hpp.html">include/CL/sycl/detail/global_config.hpp</a>&gt;</code></p>
-
-<p>Define TRISYCL_OPENCL to add OpenCL. </p>
-<p>triSYCL can indeed work without OpenCL if only host support is needed. </p>
-
-<p class="definition">Definition at line <a class="el" href="global__config_8hpp_source.html#l00046">46</a> of file <a class="el" href="global__config_8hpp_source.html">global_config.hpp</a>.</p>
 
 </div>
 </div>
@@ -200,7 +176,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;<a class="el" href="global__config_8hpp.html">include/CL/sycl/detail/global_config.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="global__config_8hpp.html">include/triSYCL/detail/global_config.hpp</a>&gt;</code></p>
 
 <p>This implements triSYCL 1.2.1. </p>
 
@@ -224,9 +200,9 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;<a class="el" href="global__config_8hpp.html">include/CL/sycl/detail/global_config.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="global__config_8hpp.html">include/triSYCL/detail/global_config.hpp</a>&gt;</code></p>
 
-<p class="definition">Definition at line <a class="el" href="global__config_8hpp_source.html#l00078">78</a> of file <a class="el" href="global__config_8hpp_source.html">global_config.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="global__config_8hpp_source.html#l00074">74</a> of file <a class="el" href="global__config_8hpp_source.html">global_config.hpp</a>.</p>
 
 </div>
 </div>
@@ -246,9 +222,9 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;<a class="el" href="global__config_8hpp.html">include/CL/sycl/detail/global_config.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="global__config_8hpp.html">include/triSYCL/detail/global_config.hpp</a>&gt;</code></p>
 
-<p class="definition">Definition at line <a class="el" href="global__config_8hpp_source.html#l00072">72</a> of file <a class="el" href="global__config_8hpp_source.html">global_config.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="global__config_8hpp_source.html#l00068">68</a> of file <a class="el" href="global__config_8hpp_source.html">global_config.hpp</a>.</p>
 
 </div>
 </div>
@@ -264,7 +240,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;<a class="el" href="global__config_8hpp.html">include/CL/sycl/detail/global_config.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="global__config_8hpp.html">include/triSYCL/detail/global_config.hpp</a>&gt;</code></p>
 
 <p class="definition">Definition at line <a class="el" href="global__config_8hpp_source.html#l00035">35</a> of file <a class="el" href="global__config_8hpp_source.html">global_config.hpp</a>.</p>
 
@@ -286,18 +262,19 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;<a class="el" href="global__config_8hpp.html">include/CL/sycl/detail/global_config.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="global__config_8hpp.html">include/triSYCL/detail/global_config.hpp</a>&gt;</code></p>
 
-<p>A macro to keep some stuff in OpenCL mode. </p>
+<p>Define TRISYCL_OPENCL to add OpenCL. </p>
+<p>triSYCL can indeed work without OpenCL if only host support is needed.A macro to keep some stuff in OpenCL mode </p>
 
-<p class="definition">Definition at line <a class="el" href="global__config_8hpp_source.html#l00058">58</a> of file <a class="el" href="global__config_8hpp_source.html">global_config.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="global__config_8hpp_source.html#l00054">54</a> of file <a class="el" href="global__config_8hpp_source.html">global_config.hpp</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 16 2020 13:26:36 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

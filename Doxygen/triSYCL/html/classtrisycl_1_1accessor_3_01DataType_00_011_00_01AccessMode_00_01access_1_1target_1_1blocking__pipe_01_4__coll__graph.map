@@ -1,0 +1,7 @@
+<map id="trisycl::accessor&lt; DataType, 1, AccessMode, access::target::blocking_pipe &gt;" name="trisycl::accessor&lt; DataType, 1, AccessMode, access::target::blocking_pipe &gt;">
+<area shape="rect" id="node2" href="$group__data.html" title="trisycl::detail::pipe\l_accessor\&lt; DataType,\l AccessMode, access::target\l::blocking_pipe \&gt;" alt="" coords="333,137,527,208"/>
+<area shape="rect" id="node3" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; detail::pipe_accessor\l\&lt; DataType, AccessMode,\l Target \&gt; \&gt;" alt="" coords="9,5,188,76"/>
+<area shape="rect" id="node4" href="$classstatic_01constexpr_01bool.html" title="static constexpr bool" alt="" coords="27,101,170,127"/>
+<area shape="rect" id="node5" href="$classstd_1_1shared__ptr_3_01trisycl_1_1detail_1_1pipe_3_01DataType_01_4_01_4.html" title="shared_ptr\&lt; trisycl\l::detail::pipe\&lt; DataType \&gt; \&gt;" alt="" coords="5,152,192,193"/>
+<area shape="rect" id="node6" href="$classbool.html" title="bool" alt="" coords="75,218,122,245"/>
+</map>

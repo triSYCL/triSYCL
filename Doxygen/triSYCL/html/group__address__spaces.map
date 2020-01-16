@@ -1,5 +1,3 @@
 <map id="Dealing with OpenCL address spaces" name="Dealing with OpenCL address spaces">
-<area shape="rect" id="node1" href="$group__data.html" title="Data access and storage\l in SYCL" alt="" coords="293,5,461,47"/>
-<area shape="rect" id="node2" href="$group__vector.html" title="Vector types in SYCL" alt="" coords="303,71,452,98"/>
-<area shape="rect" id="node4" href="$group__parallelism.html" title="Expressing parallelism\l through kernels" alt="" coords="301,123,454,164"/>
+<area shape="rect" id="node1" href="$group__data.html" title="Data access and storage\l in SYCL" alt="" coords="285,5,453,47"/>
 </map>

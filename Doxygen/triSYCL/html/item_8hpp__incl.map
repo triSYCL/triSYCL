@@ -1,7 +1,7 @@
-<map id="include/CL/sycl/item.hpp" name="include/CL/sycl/item.hpp">
-<area shape="rect" id="node3" href="$linear__id_8hpp.html" title="CL/sycl/detail/linear\l_id.hpp" alt="" coords="5,155,143,196"/>
-<area shape="rect" id="node4" href="$id_8hpp.html" title="CL/sycl/id.hpp" alt="" coords="229,80,335,107"/>
-<area shape="rect" id="node17" href="$range_8hpp.html" title="CL/sycl/range.hpp" alt="" coords="370,162,498,189"/>
-<area shape="rect" id="node6" href="$small__array_8hpp.html" title="CL/sycl/detail/small\l_array.hpp" alt="" coords="328,244,465,285"/>
-<area shape="rect" id="node10" href="$debug_8hpp.html" title="CL/sycl/detail/debug.hpp" alt="" coords="493,333,660,360"/>
+<map id="include/triSYCL/item.hpp" name="include/triSYCL/item.hpp">
+<area shape="rect" id="node3" href="$linear__id_8hpp.html" title="triSYCL/detail/linear\l_id.hpp" alt="" coords="5,155,144,196"/>
+<area shape="rect" id="node4" href="$id_8hpp.html" title="triSYCL/id.hpp" alt="" coords="229,80,336,107"/>
+<area shape="rect" id="node17" href="$range_8hpp.html" title="triSYCL/range.hpp" alt="" coords="371,162,501,189"/>
+<area shape="rect" id="node6" href="$small__array_8hpp.html" title="triSYCL/detail/small\l_array.hpp" alt="" coords="328,244,467,285"/>
+<area shape="rect" id="node10" href="$debug_8hpp.html" title="triSYCL/detail/debug.hpp" alt="" coords="494,333,661,360"/>
 </map>

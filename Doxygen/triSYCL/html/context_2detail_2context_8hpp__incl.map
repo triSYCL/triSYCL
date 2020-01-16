@@ -1,25 +1,25 @@
-<map id="include/CL/sycl/context/detail/context.hpp" name="include/CL/sycl/context/detail/context.hpp">
-<area shape="rect" id="node2" href="$device_8hpp.html" title="CL/sycl/device.hpp" alt="" coords="2078,95,2213,121"/>
-<area shape="rect" id="node7" href="$default__classes_8hpp.html" title="CL/sycl/detail/default\l_classes.hpp" alt="" coords="3618,601,3763,643"/>
-<area shape="rect" id="node21" href="$platform_8hpp.html" title="CL/sycl/platform.hpp" alt="" coords="2774,348,2917,375"/>
-<area shape="rect" id="node13" href="$shared__ptr__implementation_8hpp.html" title="CL/sycl/detail/shared\l_ptr_implementation.hpp" alt="" coords="2735,601,2899,643"/>
-<area shape="rect" id="node15" href="$host__device_8hpp.html" title="CL/sycl/device/detail\l/host_device.hpp" alt="" coords="2864,169,3008,211"/>
-<area shape="rect" id="node24" href="$info_2device_8hpp.html" title="CL/sycl/info/device.hpp" alt="" coords="1777,430,1935,457"/>
-<area shape="rect" id="node25" href="$id_8hpp.html" title="CL/sycl/id.hpp" alt="" coords="155,519,261,546"/>
-<area shape="rect" id="node29" href="$opencl__types_8hpp.html" title="triSYCL wrapper for OpenCL types " alt="" coords="1409,519,1583,546"/>
-<area shape="rect" id="node49" href="$opencl__device_8hpp.html" title="CL/sycl/device/detail\l/opencl_device.hpp" alt="" coords="3279,169,3423,211"/>
-<area shape="rect" id="node50" href="$device__selector_8hpp.html" title="CL/sycl/device_selector.hpp" alt="" coords="3032,177,3219,203"/>
-<area shape="rect" id="node16" href="$singleton_8hpp.html" title="CL/sycl/detail/singleton.hpp" alt="" coords="2923,609,3106,635"/>
-<area shape="rect" id="node18" href="$unimplemented_8hpp.html" title="CL/sycl/detail/unimplemented.hpp" alt="" coords="2061,519,2280,546"/>
-<area shape="rect" id="node20" href="$device_2detail_2device_8hpp.html" title="CL/sycl/device/detail\l/device.hpp" alt="" coords="3333,259,3477,300"/>
-<area shape="rect" id="node41" href="$param__traits_8hpp.html" title="CL/sycl/info/param\l_traits.hpp" alt="" coords="2363,601,2495,643"/>
-<area shape="rect" id="node43" href="$exception_8hpp.html" title="CL/sycl/exception.hpp" alt="" coords="3779,519,3931,546"/>
-<area shape="rect" id="node22" href="$global__config_8hpp.html" title="CL/sycl/detail/global\l_config.hpp" alt="" coords="2519,601,2659,643"/>
-<area shape="rect" id="node42" href="$host__platform_8hpp.html" title="CL/sycl/platform/detail\l/host_platform.hpp" alt="" coords="2750,423,2903,464"/>
-<area shape="rect" id="node45" href="$platform_2detail_2platform_8hpp.html" title="CL/sycl/platform/detail\l/platform.hpp" alt="" coords="2902,512,3055,553"/>
-<area shape="rect" id="node46" href="$opencl__platform_8hpp.html" title="CL/sycl/platform/detail\l/opencl_platform.hpp" alt="" coords="3283,423,3437,464"/>
-<area shape="rect" id="node27" href="$small__array_8hpp.html" title="CL/sycl/detail/small\l_array.hpp" alt="" coords="145,691,282,732"/>
-<area shape="rect" id="node28" href="$range_8hpp.html" title="CL/sycl/range.hpp" alt="" coords="195,609,323,635"/>
-<area shape="rect" id="node44" href="$info_2platform_8hpp.html" title="CL/sycl/info/platform.hpp" alt="" coords="2456,519,2624,546"/>
-<area shape="rect" id="node47" href="$cache_8hpp.html" title="CL/sycl/detail/cache.hpp" alt="" coords="3385,519,3551,546"/>
+<map id="include/triSYCL/context/detail/context.hpp" name="include/triSYCL/context/detail/context.hpp">
+<area shape="rect" id="node2" href="$device_8hpp.html" title="triSYCL/device.hpp" alt="" coords="2079,95,2214,121"/>
+<area shape="rect" id="node7" href="$default__classes_8hpp.html" title="triSYCL/detail/default\l_classes.hpp" alt="" coords="3623,601,3769,643"/>
+<area shape="rect" id="node21" href="$platform_8hpp.html" title="triSYCL/platform.hpp" alt="" coords="2796,348,2940,375"/>
+<area shape="rect" id="node13" href="$shared__ptr__implementation_8hpp.html" title="triSYCL/detail/shared\l_ptr_implementation.hpp" alt="" coords="2739,601,2903,643"/>
+<area shape="rect" id="node15" href="$host__device_8hpp.html" title="triSYCL/device/detail\l/host_device.hpp" alt="" coords="2831,169,2977,211"/>
+<area shape="rect" id="node24" href="$info_2device_8hpp.html" title="triSYCL/info/device.hpp" alt="" coords="1776,430,1936,457"/>
+<area shape="rect" id="node25" href="$id_8hpp.html" title="triSYCL/id.hpp" alt="" coords="155,519,261,546"/>
+<area shape="rect" id="node29" href="$opencl__types_8hpp.html" title="triSYCL wrapper for OpenCL types " alt="" coords="1411,519,1586,546"/>
+<area shape="rect" id="node49" href="$opencl__device_8hpp.html" title="triSYCL/device/detail\l/opencl_device.hpp" alt="" coords="3285,169,3430,211"/>
+<area shape="rect" id="node50" href="$device__selector_8hpp.html" title="triSYCL/device_selector.hpp" alt="" coords="3001,177,3189,203"/>
+<area shape="rect" id="node16" href="$singleton_8hpp.html" title="triSYCL/detail/singleton.hpp" alt="" coords="2928,609,3112,635"/>
+<area shape="rect" id="node18" href="$unimplemented_8hpp.html" title="triSYCL/detail/unimplemented.hpp" alt="" coords="2062,519,2282,546"/>
+<area shape="rect" id="node20" href="$device_2detail_2device_8hpp.html" title="triSYCL/device/detail\l/device.hpp" alt="" coords="3339,259,3485,300"/>
+<area shape="rect" id="node41" href="$param__traits_8hpp.html" title="triSYCL/info/param\l_traits.hpp" alt="" coords="2365,601,2499,643"/>
+<area shape="rect" id="node43" href="$exception_8hpp.html" title="triSYCL/exception.hpp" alt="" coords="3785,519,3938,546"/>
+<area shape="rect" id="node22" href="$global__config_8hpp.html" title="triSYCL/detail/global\l_config.hpp" alt="" coords="2523,601,2664,643"/>
+<area shape="rect" id="node42" href="$host__platform_8hpp.html" title="triSYCL/platform/detail\l/host_platform.hpp" alt="" coords="2755,423,2909,464"/>
+<area shape="rect" id="node45" href="$platform_2detail_2platform_8hpp.html" title="triSYCL/platform/detail\l/platform.hpp" alt="" coords="2907,512,3061,553"/>
+<area shape="rect" id="node46" href="$opencl__platform_8hpp.html" title="triSYCL/platform/detail\l/opencl_platform.hpp" alt="" coords="3288,423,3443,464"/>
+<area shape="rect" id="node27" href="$small__array_8hpp.html" title="triSYCL/detail/small\l_array.hpp" alt="" coords="144,691,283,732"/>
+<area shape="rect" id="node28" href="$range_8hpp.html" title="triSYCL/range.hpp" alt="" coords="195,609,325,635"/>
+<area shape="rect" id="node44" href="$info_2platform_8hpp.html" title="triSYCL/info/platform.hpp" alt="" coords="2459,519,2629,546"/>
+<area shape="rect" id="node47" href="$cache_8hpp.html" title="triSYCL/detail/cache.hpp" alt="" coords="3390,519,3557,546"/>
 </map>

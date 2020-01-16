@@ -1,5 +1,0 @@
-<map id="cl::sycl::detail::opencl_platform::get_boost_compute" name="cl::sycl::detail::opencl_platform::get_boost_compute">
-<area shape="rect" id="node2" href="$group__execution.html#ga8334815bd4fabdce1e3a8dc431414b82" title="Get all the available devices for this OpenCL platform. " alt="" coords="252,5,407,47"/>
-<area shape="rect" id="node3" href="$group__execution.html#ac795a054d022a641d2c3ae52229d6fda" title="cl::sycl::detail::opencl\l_platform::instance" alt="" coords="455,5,604,47"/>
-<area shape="rect" id="node4" href="$group__execution.html#a8b15b178d6f19233667a73df004cc08e" title="Construct a platform class instance using a boost::compute::platform. " alt="" coords="652,5,771,47"/>
-</map>

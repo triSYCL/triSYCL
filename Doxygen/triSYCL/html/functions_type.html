@@ -62,225 +62,261 @@ $(function() {
 
 <h3><a id="index_a"></a>- a -</h3><ul>
 <li>accessor_detail
-: <a class="el" href="group__data.html#a071e0503daa2e10412616a395f063d11">cl::sycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;</a>
-, <a class="el" href="group__data.html#a98508558a03f6e8c13730d737bfc23c1">cl::sycl::accessor&lt; DataType, 1, AccessMode, access::target::blocking_pipe &gt;</a>
-, <a class="el" href="group__data.html#af5a8097ac549e2486bdca0234813e748">cl::sycl::accessor&lt; DataType, 1, AccessMode, access::target::pipe &gt;</a>
-, <a class="el" href="group__data.html#afcf49bc69d599d4a1423b364e58d6c06">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
+: <a class="el" href="group__data.html#a4404c712ea8d82efbc30e9d1bc0e1a66">trisycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;</a>
+, <a class="el" href="group__data.html#a973d28611f2f69bfea87a22e8f75d018">trisycl::accessor&lt; DataType, 1, AccessMode, access::target::blocking_pipe &gt;</a>
+, <a class="el" href="group__data.html#a526f545d427ceb574733e2bc7e3c37fe">trisycl::accessor&lt; DataType, 1, AccessMode, access::target::pipe &gt;</a>
+, <a class="el" href="group__data.html#a3a0674836169773001f815e421fac179">trisycl::pipe_reservation&lt; PipeAccessor &gt;</a>
 </li>
 <li>accessor_type
-: <a class="el" href="group__data.html#a0b22e137e942abc279adae689bcc4013">cl::sycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
-, <a class="el" href="group__data.html#a7b3aa39fd98136a8584e5dce163d5013">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
+: <a class="el" href="group__data.html#ac8b6022527dc7ac33401385fd78a40e1">trisycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
+, <a class="el" href="group__data.html#a4121069faaef4097016ed506b0480ed9">trisycl::pipe_reservation&lt; PipeAccessor &gt;</a>
 </li>
 <li>allocator_type
-: <a class="el" href="group__data.html#ac573e8eaa158a09ea84df760434d6f26">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
+: <a class="el" href="group__data.html#a1661bbf9e82979db4c946581732e3957">trisycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
 </li>
 <li>array_type
-: <a class="el" href="group__data.html#adabd5ed47e053a172a9e853c7eea084f">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
+: <a class="el" href="group__data.html#a21e6d6e398166d808284d3d5da8d1d88">trisycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 </li>
 <li>array_view_type
-: <a class="el" href="group__data.html#a66282fabc215ea1f290cd5fa28f1ee6a">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+: <a class="el" href="group__data.html#a8204d76ce9f23d93f33816d1f8f20b69">trisycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
 </li>
 </ul>
 
 
 <h3><a id="index_b"></a>- b -</h3><ul>
 <li>base_vec
-: <a class="el" href="group__vector.html#a5babeee9e82477a01bc466ecb88df762">cl::sycl::vec&lt; DataType, 1 &gt;</a>
-, <a class="el" href="group__vector.html#a4168b3086fec60d538a0664e95e15ffb">cl::sycl::vec&lt; DataType, 16 &gt;</a>
-, <a class="el" href="group__vector.html#abe05d9783b9fd7b08a04a757f38a5231">cl::sycl::vec&lt; DataType, 2 &gt;</a>
-, <a class="el" href="group__vector.html#aff3a6c3aeeb8e9d662ef9d8c12539a48">cl::sycl::vec&lt; DataType, 3 &gt;</a>
-, <a class="el" href="group__vector.html#aef234ba4a6b1054dc1f57a5e5b2852b9">cl::sycl::vec&lt; DataType, 4 &gt;</a>
-, <a class="el" href="group__vector.html#a25d693ad03886256dc3f633e2158921e">cl::sycl::vec&lt; DataType, 8 &gt;</a>
+: <a class="el" href="group__vector.html#a22d96c0545bfef690fe51aef50e0a3c7">trisycl::vec&lt; DataType, 1 &gt;</a>
+, <a class="el" href="group__vector.html#ae30911cf5b7bfa0524a519fdcb506cb2">trisycl::vec&lt; DataType, 16 &gt;</a>
+, <a class="el" href="group__vector.html#aabc2e99d2f48c6ab1318a8f14f52d8d3">trisycl::vec&lt; DataType, 2 &gt;</a>
+, <a class="el" href="group__vector.html#a95cd26e847602cd14f5389192c028132">trisycl::vec&lt; DataType, 3 &gt;</a>
+, <a class="el" href="group__vector.html#a6aaf1767d00c668e9b4364620e0fc833">trisycl::vec&lt; DataType, 4 &gt;</a>
+, <a class="el" href="group__vector.html#a62ba1aa2fcddb1960dd3f9daf02a7ebd">trisycl::vec&lt; DataType, 8 &gt;</a>
 </li>
 <li>basic_type
-: <a class="el" href="classcl_1_1sycl_1_1detail_1_1vec.html#a909c5a781b2e5d871f727636a02541de">cl::sycl::detail::vec&lt; DataType, NumElements &gt;</a>
+: <a class="el" href="classtrisycl_1_1detail_1_1vec.html#a23bb4153bcda17925c57128b828c1f24">trisycl::detail::vec&lt; DataType, NumElements &gt;</a>
 </li>
 </ul>
 
 
 <h3><a id="index_c"></a>- c -</h3><ul>
 <li>const_iterator
-: <a class="el" href="group__data.html#af1d7488962e1aa48f6664b647bc2c4a5">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
-, <a class="el" href="group__data.html#a9f0ce10d4bf285522a6c1f9b2d63171f">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
-, <a class="el" href="group__data.html#aff43addb79dfdaf3d7b4e5d88bf292e2">cl::sycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
-, <a class="el" href="group__data.html#a20e551c45fdd5b7786a1674a4b479772">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
+: <a class="el" href="group__data.html#a28faf24ed56c38017ee3598cb4b2ffb2">trisycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+, <a class="el" href="group__data.html#a897a188dee2eee2c4d79458df800c1b8">trisycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
+, <a class="el" href="group__data.html#a58c5063e48700173f96ef610ce29ac18">trisycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
+, <a class="el" href="group__data.html#afed521b7cf13e1bb6cb9f2f959789021">trisycl::pipe_reservation&lt; PipeAccessor &gt;</a>
 </li>
 <li>const_pointer
-: <a class="el" href="group__helpers.html#a2ec892b0cb5fa67f5a83dfa682ec7d89">cl::sycl::detail::container_element_aspect&lt; T &gt;</a>
-, <a class="el" href="group__data.html#a760f5c3c2db96a6cde03e518ca358337">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
+: <a class="el" href="group__helpers.html#a8239b062a652c390dac9f82b8ccd1924">trisycl::detail::container_element_aspect&lt; T &gt;</a>
+, <a class="el" href="group__data.html#a99a0fa7ee06612b92211a422bd2ae186">trisycl::pipe_reservation&lt; PipeAccessor &gt;</a>
 </li>
 <li>const_reference
-: <a class="el" href="group__data.html#a5529e4c07422297be4814e19e02def0f">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
-, <a class="el" href="group__data.html#ac440122946b23951fdeaa1d2136187ae">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
-, <a class="el" href="group__data.html#ab8b4cbae8c9df3fd86690fbf2bb1e1d6">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
-, <a class="el" href="group__helpers.html#aa9647c61c8b59e41c41f9ceeb90219ae">cl::sycl::detail::container_element_aspect&lt; T &gt;</a>
-, <a class="el" href="group__data.html#acb92e9db09d7c64414ef90712e29b01d">cl::sycl::detail::pipe_accessor&lt; T, AccessMode, Target &gt;</a>
-, <a class="el" href="group__data.html#ac6726fdc8b1bca23c2cdfbc02fa1eea5">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
+: <a class="el" href="group__data.html#ac16be27cee5d83c2c4312c9155a12d8a">trisycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
+, <a class="el" href="group__data.html#aa9e519e6db4a1b575746deb82b81438e">trisycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+, <a class="el" href="group__data.html#a86108c6a8e0e49cbc78a812e9af7c284">trisycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
+, <a class="el" href="group__helpers.html#a49c711c0170340e041b6597b80dbbaaa">trisycl::detail::container_element_aspect&lt; T &gt;</a>
+, <a class="el" href="group__data.html#a644f13bb6070e28ec59c33f5735ddbb6">trisycl::detail::pipe_accessor&lt; T, AccessMode, Target &gt;</a>
+, <a class="el" href="group__data.html#a6459fda1651895c6012daad603e2b4d2">trisycl::pipe_reservation&lt; PipeAccessor &gt;</a>
 </li>
 <li>const_reverse_iterator
-: <a class="el" href="group__data.html#a826d411397872c8e25bb1a0772f33300">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
-, <a class="el" href="group__data.html#aee8f3be038e611611ff6cb11ac60d8e2">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
-, <a class="el" href="group__data.html#a36e75084a3bcb4d5237b9114f7c62d4e">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
+: <a class="el" href="group__data.html#ad335bf324733b35a88e1a701dfa3048d">trisycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+, <a class="el" href="group__data.html#a42f80e7dd582e8006d5066e56ed3bc85">trisycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
+, <a class="el" href="group__data.html#a36d0484aeacac991ae87553e147f8898">trisycl::pipe_reservation&lt; PipeAccessor &gt;</a>
 </li>
 </ul>
 
 
 <h3><a id="index_d"></a>- d -</h3><ul>
+<li>device_scope_type
+: <a class="el" href="group__vendor__trisycl__scope.html#ac0ec46f24d82872a7c1dc84026580bc3">trisycl::vendor::trisycl::scope::device&lt; DeviceStorage, ScopedPlatform &gt;</a>
+, <a class="el" href="group__vendor__trisycl__scope.html#a26b4340e7a98c65004dbf6ab5d9cdc68">trisycl::vendor::trisycl::scope::queue&lt; Device, QueueStorage &gt;</a>
+</li>
+<li>device_type
+: <a class="el" href="group__vendor__trisycl__scope.html#af5141009a8e00d15fda52bf117977ad0">trisycl::vendor::trisycl::scope::queue&lt; Device, QueueStorage &gt;</a>
+</li>
 <li>difference_type
-: <a class="el" href="group__data.html#adaa37496b0cc6a543049b5027c6261c0">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
+: <a class="el" href="group__data.html#a11c3d6f139e465198a626054589d24ab">trisycl::pipe_reservation&lt; PipeAccessor &gt;</a>
 </li>
 </ul>
 
 
 <h3><a id="index_e"></a>- e -</h3><ul>
 <li>element
-: <a class="el" href="group__data.html#a8b3f6cfc5029101a6cb23cdd4cd26d6a">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
-, <a class="el" href="group__data.html#a324e73490da511091fd9af88a72c2e47">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
-, <a class="el" href="group__data.html#ad0994dbca2c28c62501effcdfabb4591">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
+: <a class="el" href="group__data.html#a17e2eb9033a8e7b2eee12be99913f85c">trisycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+, <a class="el" href="group__data.html#a44bbd1feb2f8feff1d06ed35013f3a20">trisycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
+, <a class="el" href="group__data.html#a51ce72e4da4a4f6a00c60cfa1d1a7eb4">trisycl::detail::buffer&lt; T, Dimensions &gt;</a>
 </li>
 <li>element_type
-: <a class="el" href="group__helpers.html#a1cdbabd8537ecb267b05acb538068e06">cl::sycl::detail::small_array&lt; BasicType, FinalType, Dims, EnableArgsConstructor &gt;</a>
-, <a class="el" href="group__Xilinx.html#a0973b254e42a5b44fcdf5835008933c8">cl::sycl::vendor::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;</a>
+: <a class="el" href="group__helpers.html#ac31aab3dca2816d1005f24ef7f1dc7af">trisycl::detail::small_array&lt; BasicType, FinalType, Dims, EnableArgsConstructor &gt;</a>
+, <a class="el" href="group__Xilinx.html#a8714085f9d941ae559e8f30393ca8461">trisycl::vendor::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;</a>
 </li>
 </ul>
 
 
 <h3><a id="index_i"></a>- i -</h3><ul>
 <li>implementation_t
-: <a class="el" href="group__data.html#a5fecc3cc87635d3a7e274b1dc79eeddf">cl::sycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;</a>
-, <a class="el" href="group__data.html#aec497bae2519cd9efa911822009ba3e3">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
-, <a class="el" href="group__execution.html#a11a42595707896661acdc907393d9275">cl::sycl::context</a>
-, <a class="el" href="group__data.html#adfeb51fca445ee8a14b813f2586c2f7d">cl::sycl::detail::buffer_waiter&lt; T, Dimensions, Allocator &gt;</a>
-, <a class="el" href="group__data.html#a2b8ffbe4e0912183dcc0da79631c23a2">cl::sycl::detail::pipe&lt; T &gt;</a>
-, <a class="el" href="group__execution.html#ac5fff15fb7c96232738cef785ea29033">cl::sycl::device</a>
-, <a class="el" href="group__execution.html#a0df7fa408feef1c5560e6904718c1591">cl::sycl::kernel</a>
-, <a class="el" href="group__data.html#aae23a3df5143ff6041f2bc521563212b">cl::sycl::pipe&lt; T &gt;</a>
-, <a class="el" href="classcl_1_1sycl_1_1program.html#ab81370172a64683339014f667f053299">cl::sycl::program</a>
-, <a class="el" href="group__execution.html#ad4935855c321feba0130854c68bbd158">cl::sycl::queue</a>
-, <a class="el" href="group__data.html#ae661d4393e31e898e2a3771bee472a02">cl::sycl::static_pipe&lt; T, Capacity &gt;</a>
+: <a class="el" href="group__data.html#ad6b5f331932268e315c85d8b2091c2e4">trisycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;</a>
+, <a class="el" href="group__data.html#a32d3250591416d4d5213f06d39a9d282">trisycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
+, <a class="el" href="group__execution.html#ac264a3a63564c67b479a357d2fb1ac07">trisycl::context</a>
+, <a class="el" href="group__data.html#a10594330779e1bc4476d8272c9fffed4">trisycl::detail::buffer_waiter&lt; T, Dimensions, Allocator &gt;</a>
+, <a class="el" href="group__data.html#a9116017b547ef8daac18fd0ea6e3ec41">trisycl::detail::pipe&lt; T &gt;</a>
+, <a class="el" href="group__execution.html#a94565b97060a9a9fee7d24f1b9793361">trisycl::device</a>
+, <a class="el" href="classtrisycl_1_1event.html#addb3de1a5c3f3ced027e116256b9dfee">trisycl::event</a>
+, <a class="el" href="group__execution.html#a1ce414fc7ccaa16f1564d1d9fc2457e7">trisycl::kernel</a>
+, <a class="el" href="group__data.html#a8dc16899592e88ac2b0daced7d54247a">trisycl::pipe&lt; T &gt;</a>
+, <a class="el" href="classtrisycl_1_1program.html#a456fb3bfab35c7b654f2e6aff669d0ba">trisycl::program</a>
+, <a class="el" href="group__execution.html#ae90c619812d741631b880cfcae382891">trisycl::queue</a>
+, <a class="el" href="group__data.html#a04c9e3b2aa2f4dcfa5aad9390ca18a8b">trisycl::static_pipe&lt; T, Capacity &gt;</a>
 </li>
 <li>iterator
-: <a class="el" href="group__data.html#a05d9cb27cc80b7769c81c4a4e0c03308">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
-, <a class="el" href="group__data.html#a68d306d368e8979efa16fbd451c760cc">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
-, <a class="el" href="group__data.html#a07b1cd1f37e8e43d55758be53b780450">cl::sycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
-, <a class="el" href="group__data.html#a5f5d788e23c0c4d45ed2dc334b93a9ce">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
+: <a class="el" href="group__data.html#a910e13896c07d10a3cc413a060b7af16">trisycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+, <a class="el" href="group__data.html#aaf17e60a85af4723a1b726e25fc525ab">trisycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
+, <a class="el" href="group__data.html#abd257d3d313e399361cfcefa14f7db4b">trisycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
+, <a class="el" href="group__data.html#aabc6e0713f764c0f48c9a1295d99b7db">trisycl::pipe_reservation&lt; PipeAccessor &gt;</a>
 </li>
 </ul>
 
 
 <h3><a id="index_k"></a>- k -</h3><ul>
 <li>key_type
-: <a class="el" href="classcl_1_1sycl_1_1detail_1_1cache.html#a526777c797db85b83731d04ef70dc2ba">cl::sycl::detail::cache&lt; Key, Value &gt;</a>
+: <a class="el" href="classtrisycl_1_1detail_1_1cache.html#af7fac95de2cc348e58b4d413c7fd2000">trisycl::detail::cache&lt; Key, Value &gt;</a>
 </li>
 </ul>
 
 
 <h3><a id="index_n"></a>- n -</h3><ul>
 <li>non_const_value_type
-: <a class="el" href="group__data.html#a64a54d662dc842748b1d57b0b0c438b1">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
+: <a class="el" href="group__data.html#accd455aac4a6e5cdd6d1bda1730985b8">trisycl::detail::buffer&lt; T, Dimensions &gt;</a>
 </li>
 </ul>
 
 
 <h3><a id="index_o"></a>- o -</h3><ul>
 <li>opencl_type
-: <a class="el" href="group__address__spaces.html#a1abb0d0ed5b5d7da5263130a98468f81">cl::sycl::detail::address_space_base&lt; T, AS &gt;</a>
-, <a class="el" href="group__address__spaces.html#af0ca2f136c15b231f646b688e2addae3">cl::sycl::detail::address_space_object&lt; T, AS &gt;</a>
-, <a class="el" href="group__address__spaces.html#aac96a0b4381cba2e3191536eb50a42dd">cl::sycl::detail::address_space_variable&lt; T, AS &gt;</a>
+: <a class="el" href="group__address__spaces.html#ac2e6f60054f5580a32cd4e91f1f8a7d3">trisycl::detail::address_space_base&lt; T, AS &gt;</a>
+, <a class="el" href="group__address__spaces.html#aed1e27158090ce761cf4a876e4d07446">trisycl::detail::address_space_object&lt; T, AS &gt;</a>
+, <a class="el" href="group__address__spaces.html#a8a09dddb84831a7c87785c43f6645a47">trisycl::detail::address_space_variable&lt; T, AS &gt;</a>
 </li>
 </ul>
 
 
 <h3><a id="index_p"></a>- p -</h3><ul>
+<li>platform_scope_type
+: <a class="el" href="group__vendor__trisycl__scope.html#a9a86d4ab7a284178422a8b597e004898">trisycl::vendor::trisycl::scope::device&lt; DeviceStorage, ScopedPlatform &gt;</a>
+, <a class="el" href="group__vendor__trisycl__scope.html#a7558f6de58e71712a8d2570a0b9ffb25">trisycl::vendor::trisycl::scope::platform&lt; PlatformStorage &gt;</a>
+, <a class="el" href="group__vendor__trisycl__scope.html#a6c87732cea533ca9ae312e2e2400ad73">trisycl::vendor::trisycl::scope::queue&lt; Device, QueueStorage &gt;</a>
+</li>
+<li>platform_type
+: <a class="el" href="group__vendor__trisycl__scope.html#a61217910e70a8441bd56d8eb939674c2">trisycl::vendor::trisycl::scope::device&lt; DeviceStorage, ScopedPlatform &gt;</a>
+, <a class="el" href="group__vendor__trisycl__scope.html#ac81c92297401aa982eb05819b882260f">trisycl::vendor::trisycl::scope::queue&lt; Device, QueueStorage &gt;</a>
+</li>
 <li>pointer
-: <a class="el" href="group__helpers.html#a42008d2e8bc144a76b2fa03901bbd6ac">cl::sycl::detail::container_element_aspect&lt; T &gt;</a>
-, <a class="el" href="group__data.html#ae3baac9f42ddbf464584059222a83eb4">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
+: <a class="el" href="group__helpers.html#a1c317687aa8ed1ba885303c25676875b">trisycl::detail::container_element_aspect&lt; T &gt;</a>
+, <a class="el" href="group__data.html#ae0aa8ce301e77f3a74eb0fe32f8c5828">trisycl::pipe_reservation&lt; PipeAccessor &gt;</a>
 </li>
 <li>pointer_t
-: <a class="el" href="group__address__spaces.html#ac44e6d02be06dd5b262ab5585a6a17ff">cl::sycl::detail::address_space_ptr&lt; T, AS &gt;</a>
+: <a class="el" href="group__address__spaces.html#aedc90e499b0a3e6df69caec48076095b">trisycl::detail::address_space_ptr&lt; T, AS &gt;</a>
+</li>
+</ul>
+
+
+<h3><a id="index_q"></a>- q -</h3><ul>
+<li>queue_scope_type
+: <a class="el" href="group__vendor__trisycl__scope.html#accca736500e010a55f6c1dab89ec98c4">trisycl::vendor::trisycl::scope::queue&lt; Device, QueueStorage &gt;</a>
 </li>
 </ul>
 
 
 <h3><a id="index_r"></a>- r -</h3><ul>
 <li>reference
-: <a class="el" href="group__data.html#a8326722c12afd6532d7cbf9f3e31ebc3">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
-, <a class="el" href="group__data.html#aada3fa2ad2e97c273ec819b159938caf">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
-, <a class="el" href="group__data.html#a609f946bb7ff327f0ac44bc6627e73df">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
-, <a class="el" href="group__helpers.html#aa6403452e6faf0c6e05f77b4a8502234">cl::sycl::detail::container_element_aspect&lt; T &gt;</a>
-, <a class="el" href="group__data.html#af6de3d4de5d5a09c58c6ebc439d0f707">cl::sycl::detail::pipe_accessor&lt; T, AccessMode, Target &gt;</a>
-, <a class="el" href="group__data.html#a0fcf9c908f54480b092d60ef3bf18928">cl::sycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
-, <a class="el" href="group__data.html#a55644c9befb1e34de84b9511e9b66f0d">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
+: <a class="el" href="group__data.html#a75627cf65137ebfba9a08e7236ac0a52">trisycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
+, <a class="el" href="group__data.html#a151ecaee62fa002120d935c8c5b5b404">trisycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+, <a class="el" href="group__data.html#a9acf1f6d0959bcd33eeab37b0564677b">trisycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
+, <a class="el" href="group__helpers.html#a589da6033f56d3649535b727d476565b">trisycl::detail::container_element_aspect&lt; T &gt;</a>
+, <a class="el" href="group__data.html#a0c17e5c042c8ec18df88f0265045e7ac">trisycl::detail::pipe_accessor&lt; T, AccessMode, Target &gt;</a>
+, <a class="el" href="group__data.html#aa00f9be507a3d24a310cd72805a00867">trisycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
+, <a class="el" href="group__data.html#a708778aa3fcfc6be75850acc620ea1ac">trisycl::pipe_reservation&lt; PipeAccessor &gt;</a>
 </li>
 <li>reference_t
-: <a class="el" href="group__address__spaces.html#a7b6e64220fd6fcdb20ab3456fbb7d16b">cl::sycl::detail::address_space_ptr&lt; T, AS &gt;</a>
+: <a class="el" href="group__address__spaces.html#a68a37747f3becf225250686158b0e84b">trisycl::detail::address_space_ptr&lt; T, AS &gt;</a>
 </li>
 <li>reverse_iterator
-: <a class="el" href="group__data.html#a0c90b32d38cfe7f85b1578c76d59cecc">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
-, <a class="el" href="group__data.html#a78f4468f7963e2ac651f0e6368a730ed">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
-, <a class="el" href="group__data.html#acec44de1f2ce79df21baedefd183adfc">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
+: <a class="el" href="group__data.html#a0f2025076c0d4cb849a609e4eb49bd7c">trisycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+, <a class="el" href="group__data.html#a8dd9afa87089f61b5f53aa6b09a1139b">trisycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
+, <a class="el" href="group__data.html#a7376de6de2b607c23050bfc450d7dd0b">trisycl::pipe_reservation&lt; PipeAccessor &gt;</a>
 </li>
 <li>rid_iterator
-: <a class="el" href="group__data.html#a8515b3fa664d1f1444ed1c9bf1aa463f">cl::sycl::detail::pipe&lt; T &gt;</a>
+: <a class="el" href="group__data.html#a78b556f984ce46d8bc2125710af06791">trisycl::detail::pipe&lt; T &gt;</a>
 </li>
 </ul>
 
 
 <h3><a id="index_s"></a>- s -</h3><ul>
 <li>size_type
-: <a class="el" href="group__data.html#a6f4ddc18370e4ecce63c4e8835bd7d6f">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
+: <a class="el" href="group__data.html#ae48e952cc21acee7dd73dd20b9f1adaf">trisycl::pipe_reservation&lt; PipeAccessor &gt;</a>
+</li>
+<li>spi
+: <a class="el" href="group__vendor__trisycl__scope.html#aed50e072907d194a8bd7d31696b742f0">trisycl::vendor::trisycl::scope::device&lt; DeviceStorage, ScopedPlatform &gt;</a>
+, <a class="el" href="group__vendor__trisycl__scope.html#a3b63a3879b359bdfe0fcd3d09f7e7378">trisycl::vendor::trisycl::scope::platform&lt; PlatformStorage &gt;</a>
+, <a class="el" href="group__vendor__trisycl__scope.html#a86460cce4334ae0884ca3368b8a36974">trisycl::vendor::trisycl::scope::queue&lt; Device, QueueStorage &gt;</a>
+</li>
+<li>storage_type
+: <a class="el" href="group__vendor__trisycl__scope.html#a25607fcea00266a9ca92d2d52bbe93d3">trisycl::vendor::trisycl::scope::device&lt; DeviceStorage, ScopedPlatform &gt;</a>
+, <a class="el" href="group__vendor__trisycl__scope.html#a8d0dceb74b48e7f720cbd5407bdcb3d2">trisycl::vendor::trisycl::scope::platform&lt; PlatformStorage &gt;</a>
+, <a class="el" href="group__vendor__trisycl__scope.html#af9b70cb3429b5fb9cdfc843b823bebe8">trisycl::vendor::trisycl::scope::queue&lt; Device, QueueStorage &gt;</a>
 </li>
 <li>super
-: <a class="el" href="group__address__spaces.html#a5973c3900ad79b40550d91ea386fef28">cl::sycl::detail::address_space_array&lt; T, AS &gt;</a>
-, <a class="el" href="group__address__spaces.html#a2144af10dcb5607bcde86493110096ea">cl::sycl::detail::address_space_fundamental&lt; T, AS &gt;</a>
-, <a class="el" href="group__address__spaces.html#a34968ca4293aafe8ab2808b4ef1d17b3">cl::sycl::detail::address_space_ptr&lt; T, AS &gt;</a>
-, <a class="el" href="group__address__spaces.html#ab49542b9e353567a0b70b7fd82a06445">cl::sycl::detail::address_space_variable&lt; T, AS &gt;</a>
+: <a class="el" href="group__address__spaces.html#a75c1f0161ce36201efb85c40bb4f99f8">trisycl::detail::address_space_array&lt; T, AS &gt;</a>
+, <a class="el" href="group__address__spaces.html#a8feb2915444321718f52bf0ce20113a1">trisycl::detail::address_space_fundamental&lt; T, AS &gt;</a>
+, <a class="el" href="group__address__spaces.html#a6394c7cdab13fa7b069de2143e6405e6">trisycl::detail::address_space_ptr&lt; T, AS &gt;</a>
+, <a class="el" href="group__address__spaces.html#ab9fbfedf7d5dba1d4a5989c5efe4f6aa">trisycl::detail::address_space_variable&lt; T, AS &gt;</a>
 </li>
 </ul>
 
 
 <h3><a id="index_t"></a>- t -</h3><ul>
 <li>type
-: <a class="el" href="group__address__spaces.html#ad7c5bd48239875e82fd2bb43c98b134d">cl::sycl::detail::address_space_base&lt; T, AS &gt;</a>
-, <a class="el" href="group__address__spaces.html#a27d1bcf84032cb1f4eed1a51a0ea492e">cl::sycl::detail::ocl_type&lt; T, AS &gt;</a>
-, <a class="el" href="group__address__spaces.html#ab6e7fc7d29b2c653d0e0c5b67eb1d5d2">cl::sycl::detail::ocl_type&lt; T, access::address_space::constant_space &gt;</a>
-, <a class="el" href="group__address__spaces.html#add9de8b2d3ae0705d799d685084dbc0f">cl::sycl::detail::ocl_type&lt; T, access::address_space::global_space &gt;</a>
-, <a class="el" href="group__address__spaces.html#aa5874fae5843755f8493a41f1d2920d7">cl::sycl::detail::ocl_type&lt; T, access::address_space::local_space &gt;</a>
-, <a class="el" href="group__address__spaces.html#a197419df5ec341f0736e9a645fb2e0b1">cl::sycl::detail::ocl_type&lt; T, access::address_space::private_space &gt;</a>
+: <a class="el" href="group__address__spaces.html#ac90ec25f56f0713152c10a0bfb414cc0">trisycl::detail::address_space_base&lt; T, AS &gt;</a>
+, <a class="el" href="group__address__spaces.html#ad5416b00a1d9751eada6520af09ddac9">trisycl::detail::ocl_type&lt; T, AS &gt;</a>
+, <a class="el" href="group__address__spaces.html#a6a08c349f69be917418b3bb15c53348e">trisycl::detail::ocl_type&lt; T, access::address_space::constant_space &gt;</a>
+, <a class="el" href="group__address__spaces.html#a26bc37030b545a87a9e36c60bf28e4d4">trisycl::detail::ocl_type&lt; T, access::address_space::global_space &gt;</a>
+, <a class="el" href="group__address__spaces.html#aaa0432fc495ae003e3a8a7ddfe443b52">trisycl::detail::ocl_type&lt; T, access::address_space::local_space &gt;</a>
+, <a class="el" href="group__address__spaces.html#a21fab113740754f319c625a5e1f07445">trisycl::detail::ocl_type&lt; T, access::address_space::private_space &gt;</a>
+, <a class="el" href="structtrisycl_1_1vendor_1_1trisycl_1_1scope_1_1detail_1_1storage__type__trait.html#ad01aa650ee910abca7e97f090a256bf6">trisycl::vendor::trisycl::scope::detail::storage_type_trait&lt; ScopedType, StorageType &gt;</a>
+, <a class="el" href="structtrisycl_1_1vendor_1_1trisycl_1_1scope_1_1detail_1_1storage__type__trait_3_01ScopedType_00_45dbd26b181f54f4fa0bbc89596620fa.html#aa3c3109b70d64d85443eed441d1b99d8">trisycl::vendor::trisycl::scope::detail::storage_type_trait&lt; ScopedType, typename ScopedType::storage_type &gt;</a>
 </li>
 </ul>
 
 
 <h3><a id="index_v"></a>- v -</h3><ul>
 <li>value_type
-: <a class="el" href="group__data.html#abf509183b12f7183dd8b065c05d651bd">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
-, <a class="el" href="group__data.html#a5d1e50e51c8fe240063d25f8da69efb9">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
-, <a class="el" href="group__data.html#ab9e18000b6c49195c556a93b50decc48">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
-, <a class="el" href="group__data.html#a8821577189448eeefeb70b133eb7be02">cl::sycl::detail::buffer&lt; T, Dimensions &gt;</a>
-, <a class="el" href="classcl_1_1sycl_1_1detail_1_1cache.html#ac00d07214346281587a26f5f23ae8627">cl::sycl::detail::cache&lt; Key, Value &gt;</a>
-, <a class="el" href="group__helpers.html#a70dca993571b23ac0c9b27ffcb005189">cl::sycl::detail::container_element_aspect&lt; T &gt;</a>
-, <a class="el" href="group__data.html#a23de6c2090d9d4bbc72abea6e4306b30">cl::sycl::detail::pipe&lt; T &gt;</a>
-, <a class="el" href="group__data.html#ad09a908a72903abfcee731d2baacb280">cl::sycl::detail::pipe_accessor&lt; T, AccessMode, Target &gt;</a>
-, <a class="el" href="group__data.html#a8f2e9eb3908980726be3e7eb3df5d02b">cl::sycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
-, <a class="el" href="group__data.html#a292c56cb7641c650b5f552226f385b77">cl::sycl::pipe&lt; T &gt;</a>
-, <a class="el" href="group__data.html#a62e2bbdbff3d786962b498498645bf6a">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
-, <a class="el" href="group__data.html#aa676a55a38d164359233c9e3925c38fa">cl::sycl::static_pipe&lt; T, Capacity &gt;</a>
+: <a class="el" href="group__data.html#ae97d555c503db95f43b186067f36a418">trisycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
+, <a class="el" href="group__data.html#af7c2ad7048c2a3c3dc09bdcadd12575a">trisycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+, <a class="el" href="group__data.html#aef1204431c624542676968beed9e6125">trisycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
+, <a class="el" href="group__data.html#ac7c7751f9e4667422c26d9d784c29b67">trisycl::detail::buffer&lt; T, Dimensions &gt;</a>
+, <a class="el" href="classtrisycl_1_1detail_1_1cache.html#abc9b6f4be621483736d75cf62ab58de1">trisycl::detail::cache&lt; Key, Value &gt;</a>
+, <a class="el" href="group__helpers.html#aa2af948217ea3bd3d7bd7c428fe01cec">trisycl::detail::container_element_aspect&lt; T &gt;</a>
+, <a class="el" href="group__data.html#a65af967aeba25878310625a457b0f903">trisycl::detail::pipe&lt; T &gt;</a>
+, <a class="el" href="group__data.html#a4b30b00715d26b8d9557103aae95e699">trisycl::detail::pipe_accessor&lt; T, AccessMode, Target &gt;</a>
+, <a class="el" href="group__data.html#acda837853c07aecf964a0d952b2089dd">trisycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
+, <a class="el" href="group__data.html#a1e73db1f70ff0d2b14c94532a62a2bc2">trisycl::pipe&lt; T &gt;</a>
+, <a class="el" href="group__data.html#a4c313b0b4ceff004785c63ea8ae660c4">trisycl::pipe_reservation&lt; PipeAccessor &gt;</a>
+, <a class="el" href="group__data.html#ac89bbe3b84af6517709c3fe60d0af692">trisycl::static_pipe&lt; T, Capacity &gt;</a>
 </li>
 </ul>
 
 
 <h3><a id="index_w"></a>- w -</h3><ul>
 <li>writable_array_type
-: <a class="el" href="group__data.html#aaa01116d1e6eceecefdd3b6d30b64873">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
+: <a class="el" href="group__data.html#a42d68b52bb14b0a9206017075c335dc4">trisycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 </li>
 <li>writable_array_view_type
-: <a class="el" href="group__data.html#a56dddc4f7bc02b93e936e1c30c0d9b6b">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+: <a class="el" href="group__data.html#a5f1616428eedb0dbf34ece37f38c6b55">trisycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
 </li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 16 2020 13:26:36 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

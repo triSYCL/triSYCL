@@ -1,0 +1,4 @@
+<map id="trisycl::device_selector::select_device" name="trisycl::device_selector::select_device">
+<area shape="rect" id="node2" href="$group__execution.html#ac802fc57b7124056c8df9fc62a533944" title="Get the list of all the platforms available to the application. " alt="" coords="209,5,329,47"/>
+<area shape="rect" id="node3" href="$group__execution.html#abe14fd5953c87dec3117b875f2e2b7a2" title="Get the OpenCL information about the requested parameter. " alt="" coords="377,5,497,47"/>
+</map>

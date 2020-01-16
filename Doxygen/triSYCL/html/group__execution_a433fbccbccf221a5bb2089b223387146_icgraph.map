@@ -1,0 +1,7 @@
+<map id="trisycl::platform::get_devices" name="trisycl::platform::get_devices">
+<area shape="rect" id="node2" href="$group__execution.html#a624545d0d85c361fa0c017f7d9d4855c" title="Constructs a context object using a platform object. " alt="" coords="173,5,332,32"/>
+<area shape="rect" id="node3" href="$group__execution.html#acfeda545445a0f718d768e3d7350ee8d" title="Test if this platform is a host platform. " alt="" coords="193,57,313,98"/>
+<area shape="rect" id="node4" href="$group__execution.html#ga99569e50b383303596c39c3dedd1f6a1" title="trisycl::device_selector\l::select_device" alt="" coords="175,122,331,163"/>
+<area shape="rect" id="node5" href="$group__execution.html#a786701b3dada165fa44061b76ca06c05" title="trisycl::context::context" alt="" coords="380,104,539,131"/>
+<area shape="rect" id="node6" href="$group__execution.html#acfa9f1c2e9f145e51d3e37a9d8b42438" title="This constructor chooses a device based on the provided device_selector, which needs to be in the giv..." alt="" coords="388,155,531,181"/>
+</map>

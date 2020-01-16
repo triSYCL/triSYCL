@@ -1,0 +1,7 @@
+<map id="trisycl::group::get_nd_range" name="trisycl::group::get_nd_range">
+<area shape="rect" id="node2" href="$group__parallelism.html#ga003201ce3c2a95af831b1c58fbb3804c" title="trisycl::detail::parallel\l_for_iterate" alt="" coords="585,5,730,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#gae45ef8f8ab2c96ae4f647e10f656c13a" title="Implement the loop on the work&#45;items inside a work&#45;group. " alt="" coords="176,35,321,76"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#ga51d38178288f87c00720c90adf099b12" title="Implement a variation of parallel_for to take into account a nd_range&lt;&gt; " alt="" coords="369,63,536,90"/>
+<area shape="rect" id="node5" href="$group__parallelism.html#ga876d173bd185aefef8daf2459267fe9f" title="Implement the loop on the work&#45;items inside a work&#45;group. " alt="" coords="373,115,533,156"/>
+<area shape="rect" id="node6" href="$group__parallelism.html#af8b3fe6b818b38f0bd960e6c807de88c" title="Loop on the work&#45;items inside a work&#45;group. " alt="" coords="584,115,731,156"/>
+</map>

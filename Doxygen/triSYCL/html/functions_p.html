@@ -62,89 +62,109 @@ $(function() {
 
 <h3><a id="index_p"></a>- p -</h3><ul>
 <li>p
-: <a class="el" href="group__execution.html#ab9937c0dc035989cd764edc1e31f1944">cl::sycl::detail::opencl_platform</a>
-, <a class="el" href="group__data.html#aeb2052d947c4c379122de7253cc03fca">cl::sycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
-, <a class="el" href="structcl_1_1sycl_1_1drt_1_1code_1_1program.html#a3acb7ac6ccd71164b32e0f7571d98dfa">cl::sycl::drt::code::program</a>
+: <a class="el" href="group__execution.html#ada263cd3c8ae0a4e4d276d447298d4f5">trisycl::detail::opencl_platform</a>
+, <a class="el" href="group__data.html#a69f2911493718c5cd067192cdabfef2a">trisycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
+, <a class="el" href="structtrisycl_1_1drt_1_1drt_1_1code_1_1program.html#a74b5260f1bb8f147ac39f8dcc9e9b8ff">trisycl::drt::drt::code::program</a>
+, <a class="el" href="group__vendor__trisycl__scope.html#ae4807716c32df811160502c2b81b8530">trisycl::vendor::trisycl::scope::detail::platform&lt; PlatformStorage &gt;</a>
 </li>
 <li>parallel_for()
-: <a class="el" href="group__execution.html#a212c72af3a1b7ffaec88354ae6e8900d">cl::sycl::handler</a>
+: <a class="el" href="group__execution.html#a5c04b7f4071feb465157d74fc6bfa5d8">trisycl::handler</a>
+, <a class="el" href="structtrisycl_1_1vendor_1_1trisycl_1_1scope_1_1queue_1_1command__group.html#a8aa7e5062b6eaaa8a43d8b9b3a580af7">trisycl::vendor::trisycl::scope::queue&lt; Device, QueueStorage &gt;::command_group&lt; CGH &gt;</a>
 </li>
 <li>parallel_for_iterate()
-: <a class="el" href="group__parallelism.html#abdd7f72511f36b81e936df177ceb7fae">cl::sycl::detail::parallel_for_iterate&lt; level, Range, ParallelForFunctor, Id &gt;</a>
-, <a class="el" href="group__parallelism.html#a8c037e7dd5a462b03a454a1621bee206">cl::sycl::detail::parallel_for_iterate&lt; 0, Range, ParallelForFunctor, Id &gt;</a>
+: <a class="el" href="group__parallelism.html#a1451e6486dda945d124df15156199f2a">trisycl::detail::parallel_for_iterate&lt; level, Range, ParallelForFunctor, Id &gt;</a>
+, <a class="el" href="group__parallelism.html#aad9fa73b2a557a18ba6aa44644e2a13f">trisycl::detail::parallel_for_iterate&lt; 0, Range, ParallelForFunctor, Id &gt;</a>
 </li>
 <li>parallel_for_work_group()
-: <a class="el" href="group__execution.html#ae027732012b54eea62f2b7ffd9104f46">cl::sycl::handler</a>
+: <a class="el" href="group__execution.html#a35cee6d51dca6e9ce16a5bcd840a6a52">trisycl::handler</a>
 </li>
 <li>parallel_for_work_item()
-: <a class="el" href="group__parallelism.html#a08a586ca51493ef84914290fef699b72">cl::sycl::group&lt; Dimensions &gt;</a>
-</li>
-<li>parallel_OpenMP_for_iterate()
-: <a class="el" href="group__parallelism.html#a23695122fac23fd8c657981ee9992f4b">cl::sycl::detail::parallel_OpenMP_for_iterate&lt; level, Range, ParallelForFunctor, Id &gt;</a>
+: <a class="el" href="group__parallelism.html#af8b3fe6b818b38f0bd960e6c807de88c">trisycl::group&lt; Dimensions &gt;</a>
 </li>
 <li>partition_array()
-: <a class="el" href="group__Xilinx.html#a9c617193272416ee6c01b37c97bd6a05">cl::sycl::vendor::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;</a>
+: <a class="el" href="group__Xilinx.html#a3aa1487be9d0d9a004dee63194f65139">trisycl::vendor::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;</a>
 </li>
 <li>partition_dim
-: <a class="el" href="structcl_1_1sycl_1_1vendor_1_1xilinx_1_1partition_1_1block.html#a3bd2accb9c01324ba839e7a2f4f802ed">cl::sycl::vendor::xilinx::partition::block&lt; ElmInEachPhyMem, PDim &gt;</a>
-, <a class="el" href="structcl_1_1sycl_1_1vendor_1_1xilinx_1_1partition_1_1complete.html#ab09f938fc1359ea2ddd9573f84f32bbb">cl::sycl::vendor::xilinx::partition::complete&lt; PDim &gt;</a>
-, <a class="el" href="structcl_1_1sycl_1_1vendor_1_1xilinx_1_1partition_1_1cyclic.html#a4328a3cbdf1c13c5e9dcb724444d9ce2">cl::sycl::vendor::xilinx::partition::cyclic&lt; PhyMemNum, PDim &gt;</a>
+: <a class="el" href="structtrisycl_1_1vendor_1_1xilinx_1_1partition_1_1block.html#ae86beee4566ca7c88e0f0124dd8ae6a1">trisycl::vendor::xilinx::partition::block&lt; ElmInEachPhyMem, PDim &gt;</a>
+, <a class="el" href="structtrisycl_1_1vendor_1_1xilinx_1_1partition_1_1complete.html#a3b642136c8af08842d77d1d49c6ac4e9">trisycl::vendor::xilinx::partition::complete&lt; PDim &gt;</a>
+, <a class="el" href="structtrisycl_1_1vendor_1_1xilinx_1_1partition_1_1cyclic.html#a103d27b36441af51a29a424ffa52fda3">trisycl::vendor::xilinx::partition::cyclic&lt; PhyMemNum, PDim &gt;</a>
 </li>
 <li>partition_type
-: <a class="el" href="structcl_1_1sycl_1_1vendor_1_1xilinx_1_1partition_1_1block.html#a884f7150766b82530cc12e194ebf078b">cl::sycl::vendor::xilinx::partition::block&lt; ElmInEachPhyMem, PDim &gt;</a>
-, <a class="el" href="structcl_1_1sycl_1_1vendor_1_1xilinx_1_1partition_1_1complete.html#a3413763d7ac594150c924c1ae235fd60">cl::sycl::vendor::xilinx::partition::complete&lt; PDim &gt;</a>
-, <a class="el" href="structcl_1_1sycl_1_1vendor_1_1xilinx_1_1partition_1_1cyclic.html#ab9a82d6c9deffcea62a5ce2c4f8fa302">cl::sycl::vendor::xilinx::partition::cyclic&lt; PhyMemNum, PDim &gt;</a>
-, <a class="el" href="structcl_1_1sycl_1_1vendor_1_1xilinx_1_1partition_1_1none.html#a0e0aea214ebef55052972452aefffa38">cl::sycl::vendor::xilinx::partition::none</a>
-, <a class="el" href="group__Xilinx.html#a915ee6b90112394b537b63fbcd9b923b">cl::sycl::vendor::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;</a>
+: <a class="el" href="structtrisycl_1_1vendor_1_1xilinx_1_1partition_1_1block.html#afda941e20dd5560e6fcb1c1085e6a4d5">trisycl::vendor::xilinx::partition::block&lt; ElmInEachPhyMem, PDim &gt;</a>
+, <a class="el" href="structtrisycl_1_1vendor_1_1xilinx_1_1partition_1_1complete.html#ab9a9cb8ab02d66caff8fe4dbf71115d0">trisycl::vendor::xilinx::partition::complete&lt; PDim &gt;</a>
+, <a class="el" href="structtrisycl_1_1vendor_1_1xilinx_1_1partition_1_1cyclic.html#a5b616d4ef8080097ed03220cff7596a9">trisycl::vendor::xilinx::partition::cyclic&lt; PhyMemNum, PDim &gt;</a>
+, <a class="el" href="structtrisycl_1_1vendor_1_1xilinx_1_1partition_1_1none.html#ac358fcc46344730ff051b70732c2cc73">trisycl::vendor::xilinx::partition::none</a>
+, <a class="el" href="group__Xilinx.html#ad40870139e55600ca9c2dc527b3726a9">trisycl::vendor::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;</a>
 </li>
 <li>physical_mem_num
-: <a class="el" href="structcl_1_1sycl_1_1vendor_1_1xilinx_1_1partition_1_1cyclic.html#a05a538f08c1f468884bff2a10bbb2e8e">cl::sycl::vendor::xilinx::partition::cyclic&lt; PhyMemNum, PDim &gt;</a>
+: <a class="el" href="structtrisycl_1_1vendor_1_1xilinx_1_1partition_1_1cyclic.html#a8a912b0ab3ceca308cfca8baef36ee52">trisycl::vendor::xilinx::partition::cyclic&lt; PhyMemNum, PDim &gt;</a>
 </li>
 <li>pipe()
-: <a class="el" href="group__data.html#a91b79417e857a3acb489f3625d004eaa">cl::sycl::detail::pipe&lt; T &gt;</a>
-, <a class="el" href="group__data.html#a9b4bd20a90997c2210ccbc74bb0b3127">cl::sycl::pipe&lt; T &gt;</a>
+: <a class="el" href="group__data.html#a7d0c985bbaff0847af1151b50d6da73f">trisycl::detail::pipe&lt; T &gt;</a>
+, <a class="el" href="group__data.html#adb19d8df7df4bcf9be1bc9a0069f9e8a">trisycl::pipe&lt; T &gt;</a>
 </li>
 <li>pipe_accessor()
-: <a class="el" href="group__data.html#a2d87d5e35ad6088955a32c54c7c66947">cl::sycl::detail::pipe_accessor&lt; T, AccessMode, Target &gt;</a>
+: <a class="el" href="group__data.html#a6e40d4c425e013f71e3ae99754f2b83f">trisycl::detail::pipe_accessor&lt; T, AccessMode, Target &gt;</a>
 </li>
 <li>pipe_reservation()
-: <a class="el" href="group__data.html#a5800f657e50cbab3cf70bc259c96906c">cl::sycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
-, <a class="el" href="group__data.html#aa1f5e1be018022c1ab270c1eeea621b5">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
+: <a class="el" href="group__data.html#a0213ad8ed96e6d1b3db38e5bed442b28">trisycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
+, <a class="el" href="group__data.html#acf30e071059b25a6b2b592ba2d68719b">trisycl::pipe_reservation&lt; PipeAccessor &gt;</a>
 </li>
 <li>platform()
-: <a class="el" href="group__execution.html#aa82f9c674ad0852797a14908a4c33e07">cl::sycl::platform</a>
+: <a class="el" href="group__execution.html#a26be58353aff0aa056c9e0ccb5ddd1e5">trisycl::platform</a>
+, <a class="el" href="group__vendor__trisycl__scope.html#a0c2ce790890a241eb1d9a78341a65110">trisycl::vendor::trisycl::scope::detail::platform&lt; PlatformStorage &gt;</a>
+, <a class="el" href="group__vendor__trisycl__scope.html#a14caa0e58a0b097870a3cabf8bcfa112">trisycl::vendor::trisycl::scope::platform&lt; PlatformStorage &gt;</a>
 </li>
 <li>platform_extensions
-: <a class="el" href="group__execution.html#a4f9ca53c15ba69199b0993c9d957dba8">cl::sycl::detail::host_platform</a>
+: <a class="el" href="group__execution.html#a372a23de5f5095bfe3db0d705e61575b">trisycl::detail::host_platform</a>
+</li>
+<li>platform_scope()
+: <a class="el" href="structtrisycl_1_1vendor_1_1trisycl_1_1scope_1_1queue_1_1command__group.html#a4f558fc6cb9c8a61b79e0dcb6a73c5b0">trisycl::vendor::trisycl::scope::queue&lt; Device, QueueStorage &gt;::command_group&lt; CGH &gt;</a>
+, <a class="el" href="group__vendor__trisycl__scope.html#a22f9b2fe1382c50f71d902461efe5ef2">trisycl::vendor::trisycl::scope::queue&lt; Device, QueueStorage &gt;</a>
+</li>
+<li>platform_scope_type
+: <a class="el" href="group__vendor__trisycl__scope.html#a9a86d4ab7a284178422a8b597e004898">trisycl::vendor::trisycl::scope::device&lt; DeviceStorage, ScopedPlatform &gt;</a>
+, <a class="el" href="group__vendor__trisycl__scope.html#a7558f6de58e71712a8d2570a0b9ffb25">trisycl::vendor::trisycl::scope::platform&lt; PlatformStorage &gt;</a>
+, <a class="el" href="group__vendor__trisycl__scope.html#a6c87732cea533ca9ae312e2e2400ad73">trisycl::vendor::trisycl::scope::queue&lt; Device, QueueStorage &gt;</a>
+</li>
+<li>platform_type
+: <a class="el" href="group__vendor__trisycl__scope.html#a61217910e70a8441bd56d8eb939674c2">trisycl::vendor::trisycl::scope::device&lt; DeviceStorage, ScopedPlatform &gt;</a>
+, <a class="el" href="group__vendor__trisycl__scope.html#ac81c92297401aa982eb05819b882260f">trisycl::vendor::trisycl::scope::queue&lt; Device, QueueStorage &gt;</a>
+</li>
+<li>platform_with_scope
+: <a class="el" href="group__vendor__trisycl__scope.html#aa8ed9409ab9c15ab96afece083caf92c">trisycl::vendor::trisycl::scope::detail::device&lt; DeviceStorage, ScopedPlatform &gt;</a>
 </li>
 <li>pointer
-: <a class="el" href="group__helpers.html#a42008d2e8bc144a76b2fa03901bbd6ac">cl::sycl::detail::container_element_aspect&lt; T &gt;</a>
-, <a class="el" href="group__data.html#ae3baac9f42ddbf464584059222a83eb4">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
+: <a class="el" href="group__helpers.html#a1c317687aa8ed1ba885303c25676875b">trisycl::detail::container_element_aspect&lt; T &gt;</a>
+, <a class="el" href="group__data.html#ae0aa8ce301e77f3a74eb0fe32f8c5828">trisycl::pipe_reservation&lt; PipeAccessor &gt;</a>
 </li>
 <li>pointer_t
-: <a class="el" href="group__address__spaces.html#ac44e6d02be06dd5b262ab5585a6a17ff">cl::sycl::detail::address_space_ptr&lt; T, AS &gt;</a>
+: <a class="el" href="group__address__spaces.html#aedc90e499b0a3e6df69caec48076095b">trisycl::detail::address_space_ptr&lt; T, AS &gt;</a>
 </li>
 <li>postlude()
-: <a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#a18f4bf63403e822c0917432430ff87d4">cl::sycl::detail::task</a>
+: <a class="el" href="structtrisycl_1_1detail_1_1task.html#af48ae14e192b9d3a4140002a4a7d5920">trisycl::detail::task</a>
 </li>
 <li>prelude()
-: <a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#af10a532006cd46573a4bb1664f9e87a8">cl::sycl::detail::task</a>
+: <a class="el" href="structtrisycl_1_1detail_1_1task.html#a75a321166d5aa76e8d887035204a905a">trisycl::detail::task</a>
 </li>
 <li>producer_tasks
-: <a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#ac022fb4cbc8c6ae4ed388aa70dde2d3f">cl::sycl::detail::task</a>
+: <a class="el" href="structtrisycl_1_1detail_1_1task.html#a0560e3518a81bba798f9963703eb0cc2">trisycl::detail::task</a>
 </li>
 <li>program()
-: <a class="el" href="structcl_1_1sycl_1_1drt_1_1code_1_1program.html#a9be7628f3fa7b2ef9d215c6f063ba891">cl::sycl::drt::code::program</a>
-, <a class="el" href="classcl_1_1sycl_1_1program.html#a961883f892c3c224eac3d908ebfcde6d">cl::sycl::program</a>
+: <a class="el" href="structtrisycl_1_1drt_1_1drt_1_1code_1_1program.html#a18024d9dc782dc5d4560a5fdb719e78b">trisycl::drt::drt::code::program</a>
+, <a class="el" href="classtrisycl_1_1program.html#aba0595cf376bf0f237d7bdb44702219e">trisycl::program</a>
 </li>
 <li>prologues
-: <a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#ab03b590ef7c93fccb74456c52a60d4e6">cl::sycl::detail::task</a>
+: <a class="el" href="structtrisycl_1_1detail_1_1task.html#a997d283896cab31f0d7b850c974a8901">trisycl::detail::task</a>
+</li>
+<li>property_list()
+: <a class="el" href="classtrisycl_1_1property__list.html#a5cc304e7245429c48088dc9fdf79e404">trisycl::property_list</a>
 </li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 16 2020 13:26:36 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

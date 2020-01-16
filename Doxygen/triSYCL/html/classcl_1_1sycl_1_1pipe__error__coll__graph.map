@@ -1,4 +1,0 @@
-<map id="cl::sycl::pipe_error" name="cl::sycl::pipe_error">
-<area shape="rect" id="node2" href="$group__error__handling.html#classcl_1_1sycl_1_1runtime__error" title="cl::sycl::runtime_error" alt="" coords="5,171,153,197"/>
-<area shape="rect" id="node3" href="$group__error__handling.html#classcl_1_1sycl_1_1exception" title="Encapsulate a SYCL error information. " alt="" coords="15,95,143,121"/>
-</map>

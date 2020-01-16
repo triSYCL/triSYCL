@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['xilinx_20vendor_20extensions',['Xilinx vendor extensions',['../group__Xilinx.html',1,'']]]
+  ['trisycl_20extension_20for_20storage_20scopes',['triSYCL extension for storage scopes',['../group__vendor__trisycl__scope.html',1,'']]]
 ];

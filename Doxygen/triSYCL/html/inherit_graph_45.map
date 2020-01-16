@@ -1,3 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$group__error__handling.html#structcl_1_1sycl_1_1exception__list" title="Exception list to store several exceptions. " alt="" coords="5,29,157,56"/>
+<area shape="rect" id="node1" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; detail::kernel \&gt;" alt="" coords="5,5,144,47"/>
+<area shape="rect" id="node2" href="$group__execution.html#classtrisycl_1_1detail_1_1kernel" title="Abstract SYCL kernel. " alt="" coords="192,13,331,39"/>
+<area shape="rect" id="node3" href="$classtrisycl_1_1detail_1_1opencl__kernel.html" title="An abstraction of the OpenCL kernel. " alt="" coords="379,35,521,76"/>
+<area shape="rect" id="node4" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; opencl_kernel \&gt;" alt="" coords="192,64,331,105"/>
 </map>

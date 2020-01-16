@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>triSYCL implementation of SYCL: include/CL/sycl/address_space.hpp File Reference</title>
+<title>triSYCL implementation of SYCL: include/triSYCL/address_space.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -58,7 +58,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_8358e9aed72341d13c81ba12a462bec7.html">CL</a></li><li class="navelem"><a class="el" href="dir_dd7d3bcc93139b1cbc3b663242fe4a67.html">sycl</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_aaf3c766ec178046651f3200d7a96209.html">triSYCL</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -74,21 +74,23 @@ $(function() {
 
 <p>Implement OpenCL address spaces in SYCL with C++-style.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="address__space_2detail_2address__space_8hpp_source.html">CL/sycl/address_space/detail/address_space.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="address__space_2detail_2address__space_8hpp_source.html">triSYCL/address_space/detail/address_space.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for address_space.hpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="address__space_8hpp__incl.png" border="0" usemap="#include_2CL_2sycl_2address__space_8hpp" alt=""/></div>
-<map name="include_2CL_2sycl_2address__space_8hpp" id="include_2CL_2sycl_2address__space_8hpp">
+<div class="center"><img src="address__space_8hpp__incl.png" border="0" usemap="#include_2triSYCL_2address__space_8hpp" alt=""/></div>
+<map name="include_2triSYCL_2address__space_8hpp" id="include_2triSYCL_2address__space_8hpp">
 <area shape="rect" id="node2" href="address__space_2detail_2address__space_8hpp.html" title="Implement OpenCL address spaces in SYCL with C++&#45;style. " alt="" coords="5,95,180,136"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><img src="address__space_8hpp__dep__incl.png" border="0" usemap="#include_2CL_2sycl_2address__space_8hppdep" alt=""/></div>
-<map name="include_2CL_2sycl_2address__space_8hppdep" id="include_2CL_2sycl_2address__space_8hppdep">
-<area shape="rect" id="node2" href="sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="18,95,155,121"/>
+<div class="center"><img src="address__space_8hpp__dep__incl.png" border="0" usemap="#include_2triSYCL_2address__space_8hppdep" alt=""/></div>
+<map name="include_2triSYCL_2address__space_8hppdep" id="include_2triSYCL_2address__space_8hppdep">
+<area shape="rect" id="node2" href="triSYCL_2sycl_8hpp.html" title="include/triSYCL/sycl.hpp" alt="" coords="76,95,243,121"/>
+<area shape="rect" id="node3" href="CL_2sycl_8hpp.html" title="This is the main SYCL 1.2.1 interoperability header to expose triSYCL into the cl::sycl namespace..." alt="" coords="5,169,143,196"/>
+<area shape="rect" id="node4" href="SYCL_2sycl_8hpp.html" title="This is the SYCL extension header to expose triSYCL directly into the shorter sycl namespace instead ..." alt="" coords="167,169,322,196"/>
 </map>
 </div>
 </div>
@@ -96,83 +98,80 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr class="memitem:namespacecl"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl.html">cl</a></td></tr>
-<tr class="memdesc:namespacecl"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector type to be used as SYCL vector. <br /></td></tr>
+<tr class="memitem:namespacetrisycl"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetrisycl.html">trisycl</a></td></tr>
+<tr class="memdesc:namespacetrisycl"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector type to be used as SYCL vector. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacecl_1_1sycl"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html">cl::sycl</a></td></tr>
-<tr class="memdesc:namespacecl_1_1sycl"><td class="mdescLeft">&#160;</td><td class="mdescRight">Small OpenCL vector class. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacecl_1_1sycl_1_1access"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl_1_1access.html">cl::sycl::access</a></td></tr>
-<tr class="memdesc:namespacecl_1_1sycl_1_1access"><td class="mdescLeft">&#160;</td><td class="mdescRight">Describe the type of access by kernels. <br /></td></tr>
+<tr class="memitem:namespacetrisycl_1_1access"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetrisycl_1_1access.html">trisycl::access</a></td></tr>
+<tr class="memdesc:namespacetrisycl_1_1access"><td class="mdescLeft">&#160;</td><td class="mdescRight">Describe the type of access by kernels. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:gac9953334bcf785abd34954d74ec9824e"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:gac9953334bcf785abd34954d74ec9824e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#gac9953334bcf785abd34954d74ec9824e">cl::sycl::constant</a> = detail::addr_space&lt; T, access::address_space::constant_space &gt;</td></tr>
-<tr class="memdesc:gac9953334bcf785abd34954d74ec9824e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL constant address space.  <a href="group__address__spaces.html#gac9953334bcf785abd34954d74ec9824e">More...</a><br /></td></tr>
-<tr class="separator:gac9953334bcf785abd34954d74ec9824e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga171a0e0131c2cb6703a218f5504e2310"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga171a0e0131c2cb6703a218f5504e2310"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga171a0e0131c2cb6703a218f5504e2310">cl::sycl::constant_ptr</a> = constant&lt; T * &gt;</td></tr>
-<tr class="memdesc:ga171a0e0131c2cb6703a218f5504e2310"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL constant address space.  <a href="group__address__spaces.html#ga171a0e0131c2cb6703a218f5504e2310">More...</a><br /></td></tr>
-<tr class="separator:ga171a0e0131c2cb6703a218f5504e2310"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6187daeb8856d3a32e1163e084a590bc"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga6187daeb8856d3a32e1163e084a590bc"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga6187daeb8856d3a32e1163e084a590bc">cl::sycl::generic</a> = detail::addr_space&lt; T, access::address_space::generic_space &gt;</td></tr>
-<tr class="memdesc:ga6187daeb8856d3a32e1163e084a590bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL 2 generic address space.  <a href="group__address__spaces.html#ga6187daeb8856d3a32e1163e084a590bc">More...</a><br /></td></tr>
-<tr class="separator:ga6187daeb8856d3a32e1163e084a590bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga45327d8a36fee424889c79d2288e380c"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga45327d8a36fee424889c79d2288e380c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga45327d8a36fee424889c79d2288e380c">cl::sycl::global</a> = detail::addr_space&lt; T, access::address_space::global_space &gt;</td></tr>
-<tr class="memdesc:ga45327d8a36fee424889c79d2288e380c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL global address space.  <a href="group__address__spaces.html#ga45327d8a36fee424889c79d2288e380c">More...</a><br /></td></tr>
-<tr class="separator:ga45327d8a36fee424889c79d2288e380c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7f2b1f5f8d938b1abc395e55554ba16a"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga7f2b1f5f8d938b1abc395e55554ba16a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga7f2b1f5f8d938b1abc395e55554ba16a">cl::sycl::global_ptr</a> = global&lt; T * &gt;</td></tr>
-<tr class="memdesc:ga7f2b1f5f8d938b1abc395e55554ba16a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL global address space.  <a href="group__address__spaces.html#ga7f2b1f5f8d938b1abc395e55554ba16a">More...</a><br /></td></tr>
-<tr class="separator:ga7f2b1f5f8d938b1abc395e55554ba16a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga883b9282bda545bcf2d9a05a42916b8c"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga883b9282bda545bcf2d9a05a42916b8c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga883b9282bda545bcf2d9a05a42916b8c">cl::sycl::local</a> = detail::addr_space&lt; T, access::address_space::local_space &gt;</td></tr>
-<tr class="memdesc:ga883b9282bda545bcf2d9a05a42916b8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL local address space.  <a href="group__address__spaces.html#ga883b9282bda545bcf2d9a05a42916b8c">More...</a><br /></td></tr>
-<tr class="separator:ga883b9282bda545bcf2d9a05a42916b8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5c0e2468bb7dc8ac85e64f7ce1586ef2"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga5c0e2468bb7dc8ac85e64f7ce1586ef2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga5c0e2468bb7dc8ac85e64f7ce1586ef2">cl::sycl::local_ptr</a> = local&lt; T * &gt;</td></tr>
-<tr class="memdesc:ga5c0e2468bb7dc8ac85e64f7ce1586ef2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL local address space.  <a href="group__address__spaces.html#ga5c0e2468bb7dc8ac85e64f7ce1586ef2">More...</a><br /></td></tr>
-<tr class="separator:ga5c0e2468bb7dc8ac85e64f7ce1586ef2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6535d11d97fb2aefeaf0dcf589c27fab"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga6535d11d97fb2aefeaf0dcf589c27fab"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga6535d11d97fb2aefeaf0dcf589c27fab">cl::sycl::priv</a> = detail::addr_space&lt; T, access::address_space::private_space &gt;</td></tr>
-<tr class="memdesc:ga6535d11d97fb2aefeaf0dcf589c27fab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL private address space.  <a href="group__address__spaces.html#ga6535d11d97fb2aefeaf0dcf589c27fab">More...</a><br /></td></tr>
-<tr class="separator:ga6535d11d97fb2aefeaf0dcf589c27fab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaae6ba26f7808ba467ed324b7296e7ad4"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:gaae6ba26f7808ba467ed324b7296e7ad4"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#gaae6ba26f7808ba467ed324b7296e7ad4">cl::sycl::private_ptr</a> = priv&lt; T * &gt;</td></tr>
-<tr class="memdesc:gaae6ba26f7808ba467ed324b7296e7ad4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL private address space.  <a href="group__address__spaces.html#gaae6ba26f7808ba467ed324b7296e7ad4">More...</a><br /></td></tr>
-<tr class="separator:gaae6ba26f7808ba467ed324b7296e7ad4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9dafd4b1b4d7ad7fb7d93eab429942f9"><td class="memTemplParams" colspan="2">template&lt;typename Pointer , access::address_space AS&gt; </td></tr>
-<tr class="memitem:ga9dafd4b1b4d7ad7fb7d93eab429942f9"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga9dafd4b1b4d7ad7fb7d93eab429942f9">cl::sycl::multi_ptr</a> = detail::address_space_ptr&lt; Pointer, AS &gt;</td></tr>
-<tr class="memdesc:ga9dafd4b1b4d7ad7fb7d93eab429942f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">A pointer that can be statically associated to any address-space.  <a href="group__address__spaces.html#ga9dafd4b1b4d7ad7fb7d93eab429942f9">More...</a><br /></td></tr>
-<tr class="separator:ga9dafd4b1b4d7ad7fb7d93eab429942f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga711b3cf3ba768b46b0fdd9f3e9dd902b"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga711b3cf3ba768b46b0fdd9f3e9dd902b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga711b3cf3ba768b46b0fdd9f3e9dd902b">trisycl::constant</a> = detail::addr_space&lt; T, access::address_space::constant_space &gt;</td></tr>
+<tr class="memdesc:ga711b3cf3ba768b46b0fdd9f3e9dd902b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL constant address space.  <a href="group__address__spaces.html#ga711b3cf3ba768b46b0fdd9f3e9dd902b">More...</a><br /></td></tr>
+<tr class="separator:ga711b3cf3ba768b46b0fdd9f3e9dd902b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9ebfd81f4eb262af5c6eefb26558f0ad"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga9ebfd81f4eb262af5c6eefb26558f0ad"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga9ebfd81f4eb262af5c6eefb26558f0ad">trisycl::constant_ptr</a> = constant&lt; T * &gt;</td></tr>
+<tr class="memdesc:ga9ebfd81f4eb262af5c6eefb26558f0ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL constant address space.  <a href="group__address__spaces.html#ga9ebfd81f4eb262af5c6eefb26558f0ad">More...</a><br /></td></tr>
+<tr class="separator:ga9ebfd81f4eb262af5c6eefb26558f0ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0bb3ce257766666fc58affd6d28e5862"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga0bb3ce257766666fc58affd6d28e5862"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga0bb3ce257766666fc58affd6d28e5862">trisycl::generic</a> = detail::addr_space&lt; T, access::address_space::generic_space &gt;</td></tr>
+<tr class="memdesc:ga0bb3ce257766666fc58affd6d28e5862"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL 2 generic address space.  <a href="group__address__spaces.html#ga0bb3ce257766666fc58affd6d28e5862">More...</a><br /></td></tr>
+<tr class="separator:ga0bb3ce257766666fc58affd6d28e5862"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4c3bebf3b40bd070bdacff4100adc3df"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga4c3bebf3b40bd070bdacff4100adc3df"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga4c3bebf3b40bd070bdacff4100adc3df">trisycl::global</a> = detail::addr_space&lt; T, access::address_space::global_space &gt;</td></tr>
+<tr class="memdesc:ga4c3bebf3b40bd070bdacff4100adc3df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL global address space.  <a href="group__address__spaces.html#ga4c3bebf3b40bd070bdacff4100adc3df">More...</a><br /></td></tr>
+<tr class="separator:ga4c3bebf3b40bd070bdacff4100adc3df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0be2cdf098959e828e90116c6b53a00a"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga0be2cdf098959e828e90116c6b53a00a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga0be2cdf098959e828e90116c6b53a00a">trisycl::global_ptr</a> = global&lt; T * &gt;</td></tr>
+<tr class="memdesc:ga0be2cdf098959e828e90116c6b53a00a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL global address space.  <a href="group__address__spaces.html#ga0be2cdf098959e828e90116c6b53a00a">More...</a><br /></td></tr>
+<tr class="separator:ga0be2cdf098959e828e90116c6b53a00a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga31e381a664954f8d0fdb6af55e048a63"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga31e381a664954f8d0fdb6af55e048a63"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga31e381a664954f8d0fdb6af55e048a63">trisycl::local</a> = detail::addr_space&lt; T, access::address_space::local_space &gt;</td></tr>
+<tr class="memdesc:ga31e381a664954f8d0fdb6af55e048a63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL local address space.  <a href="group__address__spaces.html#ga31e381a664954f8d0fdb6af55e048a63">More...</a><br /></td></tr>
+<tr class="separator:ga31e381a664954f8d0fdb6af55e048a63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga92001b213cd1f1a161227632bf91bebe"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga92001b213cd1f1a161227632bf91bebe"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga92001b213cd1f1a161227632bf91bebe">trisycl::local_ptr</a> = local&lt; T * &gt;</td></tr>
+<tr class="memdesc:ga92001b213cd1f1a161227632bf91bebe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL local address space.  <a href="group__address__spaces.html#ga92001b213cd1f1a161227632bf91bebe">More...</a><br /></td></tr>
+<tr class="separator:ga92001b213cd1f1a161227632bf91bebe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2624c68f3a1bdc708378addb3c0b5b8e"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga2624c68f3a1bdc708378addb3c0b5b8e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga2624c68f3a1bdc708378addb3c0b5b8e">trisycl::priv</a> = detail::addr_space&lt; T, access::address_space::private_space &gt;</td></tr>
+<tr class="memdesc:ga2624c68f3a1bdc708378addb3c0b5b8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL private address space.  <a href="group__address__spaces.html#ga2624c68f3a1bdc708378addb3c0b5b8e">More...</a><br /></td></tr>
+<tr class="separator:ga2624c68f3a1bdc708378addb3c0b5b8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaac3b520b009b1f2889ea4134bfe042c6"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:gaac3b520b009b1f2889ea4134bfe042c6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#gaac3b520b009b1f2889ea4134bfe042c6">trisycl::private_ptr</a> = priv&lt; T * &gt;</td></tr>
+<tr class="memdesc:gaac3b520b009b1f2889ea4134bfe042c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a variable to be in the OpenCL private address space.  <a href="group__address__spaces.html#gaac3b520b009b1f2889ea4134bfe042c6">More...</a><br /></td></tr>
+<tr class="separator:gaac3b520b009b1f2889ea4134bfe042c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga57d94299b89e3270c6b1b6d9d2d203e0"><td class="memTemplParams" colspan="2">template&lt;typename Pointer , access::address_space AS&gt; </td></tr>
+<tr class="memitem:ga57d94299b89e3270c6b1b6d9d2d203e0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga57d94299b89e3270c6b1b6d9d2d203e0">trisycl::multi_ptr</a> = detail::address_space_ptr&lt; Pointer, AS &gt;</td></tr>
+<tr class="memdesc:ga57d94299b89e3270c6b1b6d9d2d203e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">A pointer that can be statically associated to any address-space.  <a href="group__address__spaces.html#ga57d94299b89e3270c6b1b6d9d2d203e0">More...</a><br /></td></tr>
+<tr class="separator:ga57d94299b89e3270c6b1b6d9d2d203e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:ga5e27fb52200a87529fd9cdb404334a27"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga5e27fb52200a87529fd9cdb404334a27">cl::sycl::access::address_space</a> { <br />
-&#160;&#160;<a class="el" href="group__address__spaces.html#gga5e27fb52200a87529fd9cdb404334a27a8b6e19b80779e1f75b1c5f54a800dca4">cl::sycl::access::address_space::global_space</a>, 
-<a class="el" href="group__address__spaces.html#gga5e27fb52200a87529fd9cdb404334a27a619fb1f3a892c810ac284e01782c8531">cl::sycl::access::address_space::local_space</a>, 
-<a class="el" href="group__address__spaces.html#gga5e27fb52200a87529fd9cdb404334a27ac7a17f9f56c653a22f0e5cb25b241aeb">cl::sycl::access::address_space::constant_space</a>, 
-<a class="el" href="group__address__spaces.html#gga5e27fb52200a87529fd9cdb404334a27a9c3fa85807d489cc15cbbef1fcc1f9b0">cl::sycl::access::address_space::private_space</a>, 
+<tr class="memitem:ae0c4ce371692500c7d0e4ccbcf5771fb"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetrisycl_1_1access.html#ae0c4ce371692500c7d0e4ccbcf5771fb">trisycl::access::address_space</a> { <br />
+&#160;&#160;<a class="el" href="namespacetrisycl_1_1access.html#ae0c4ce371692500c7d0e4ccbcf5771fba8b6e19b80779e1f75b1c5f54a800dca4">trisycl::access::address_space::global_space</a>, 
+<a class="el" href="namespacetrisycl_1_1access.html#ae0c4ce371692500c7d0e4ccbcf5771fba619fb1f3a892c810ac284e01782c8531">trisycl::access::address_space::local_space</a>, 
+<a class="el" href="namespacetrisycl_1_1access.html#ae0c4ce371692500c7d0e4ccbcf5771fbac7a17f9f56c653a22f0e5cb25b241aeb">trisycl::access::address_space::constant_space</a>, 
+<a class="el" href="namespacetrisycl_1_1access.html#ae0c4ce371692500c7d0e4ccbcf5771fba9c3fa85807d489cc15cbbef1fcc1f9b0">trisycl::access::address_space::private_space</a>, 
 <br />
-&#160;&#160;<a class="el" href="group__address__spaces.html#gga5e27fb52200a87529fd9cdb404334a27ab64cf594a8528b084ef86cf7cc5689d3">cl::sycl::access::address_space::generic_space</a>
+&#160;&#160;<a class="el" href="namespacetrisycl_1_1access.html#ae0c4ce371692500c7d0e4ccbcf5771fbab64cf594a8528b084ef86cf7cc5689d3">trisycl::access::address_space::generic_space</a>
 <br />
- }<tr class="memdesc:ga5e27fb52200a87529fd9cdb404334a27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerate the different OpenCL 2 address spaces.  <a href="group__address__spaces.html#ga5e27fb52200a87529fd9cdb404334a27">More...</a><br /></td></tr>
+ }<tr class="memdesc:ae0c4ce371692500c7d0e4ccbcf5771fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerate the different OpenCL 2 address spaces.  <a href="namespacetrisycl_1_1access.html#ae0c4ce371692500c7d0e4ccbcf5771fb">More...</a><br /></td></tr>
 </td></tr>
-<tr class="separator:ga5e27fb52200a87529fd9cdb404334a27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:ae0c4ce371692500c7d0e4ccbcf5771fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gab52ff48248bf64397b6ae0b0bbad900c"><td class="memTemplParams" colspan="2">template&lt;typename T , access::address_space AS&gt; </td></tr>
-<tr class="memitem:gab52ff48248bf64397b6ae0b0bbad900c"><td class="memTemplItemLeft" align="right" valign="top">multi_ptr&lt; T, AS &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#gab52ff48248bf64397b6ae0b0bbad900c">cl::sycl::make_ptr</a> (multi_ptr&lt; T, AS &gt; pointer)</td></tr>
-<tr class="memdesc:gab52ff48248bf64397b6ae0b0bbad900c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <a class="el" href="group__address__spaces.html#ga9dafd4b1b4d7ad7fb7d93eab429942f9" title="A pointer that can be statically associated to any address-space. ">cl::sycl::multi_ptr&lt;&gt;</a> with the right type.  <a href="group__address__spaces.html#gab52ff48248bf64397b6ae0b0bbad900c">More...</a><br /></td></tr>
-<tr class="separator:gab52ff48248bf64397b6ae0b0bbad900c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga864ec7404628d44d6b025f5584b67ea9"><td class="memTemplParams" colspan="2">template&lt;typename T , access::address_space AS&gt; </td></tr>
-<tr class="memitem:ga864ec7404628d44d6b025f5584b67ea9"><td class="memTemplItemLeft" align="right" valign="top">multi_ptr&lt; T, AS &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga864ec7404628d44d6b025f5584b67ea9">cl::sycl::make_ptr</a> (T *pointer)</td></tr>
-<tr class="memdesc:ga864ec7404628d44d6b025f5584b67ea9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <a class="el" href="group__address__spaces.html#ga9dafd4b1b4d7ad7fb7d93eab429942f9" title="A pointer that can be statically associated to any address-space. ">cl::sycl::multi_ptr&lt;&gt;</a> with the right type.  <a href="group__address__spaces.html#ga864ec7404628d44d6b025f5584b67ea9">More...</a><br /></td></tr>
-<tr class="separator:ga864ec7404628d44d6b025f5584b67ea9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga686a4e781d5d10da1a6fe3fe37daadfd"><td class="memTemplParams" colspan="2">template&lt;typename T , access::address_space AS&gt; </td></tr>
+<tr class="memitem:ga686a4e781d5d10da1a6fe3fe37daadfd"><td class="memTemplItemLeft" align="right" valign="top">multi_ptr&lt; T, AS &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#ga686a4e781d5d10da1a6fe3fe37daadfd">trisycl::make_ptr</a> (multi_ptr&lt; T, AS &gt; pointer)</td></tr>
+<tr class="memdesc:ga686a4e781d5d10da1a6fe3fe37daadfd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <a class="el" href="group__address__spaces.html#ga57d94299b89e3270c6b1b6d9d2d203e0" title="A pointer that can be statically associated to any address-space. ">trisycl::multi_ptr&lt;&gt;</a> with the right type.  <a href="group__address__spaces.html#ga686a4e781d5d10da1a6fe3fe37daadfd">More...</a><br /></td></tr>
+<tr class="separator:ga686a4e781d5d10da1a6fe3fe37daadfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaccf54fa4b9f430bdbc5e24058c6264e3"><td class="memTemplParams" colspan="2">template&lt;typename T , access::address_space AS&gt; </td></tr>
+<tr class="memitem:gaccf54fa4b9f430bdbc5e24058c6264e3"><td class="memTemplItemLeft" align="right" valign="top">multi_ptr&lt; T, AS &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__address__spaces.html#gaccf54fa4b9f430bdbc5e24058c6264e3">trisycl::make_ptr</a> (T *pointer)</td></tr>
+<tr class="memdesc:gaccf54fa4b9f430bdbc5e24058c6264e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <a class="el" href="group__address__spaces.html#ga57d94299b89e3270c6b1b6d9d2d203e0" title="A pointer that can be statically associated to any address-space. ">trisycl::multi_ptr&lt;&gt;</a> with the right type.  <a href="group__address__spaces.html#gaccf54fa4b9f430bdbc5e24058c6264e3">More...</a><br /></td></tr>
+<tr class="separator:gaccf54fa4b9f430bdbc5e24058c6264e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implement OpenCL address spaces in SYCL with C++-style. </p>
@@ -185,7 +184,7 @@ Functions</h2></td></tr>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 16 2020 13:26:35 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

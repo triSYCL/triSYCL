@@ -1,7 +1,12 @@
-<map id="include/CL/sycl/handler.hpp" name="include/CL/sycl/handler.hpp">
-<area shape="rect" id="node2" href="$buffer_8hpp.html" title="include/CL/sycl/buffer.hpp" alt="" coords="31,169,206,196"/>
-<area shape="rect" id="node3" href="$sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="175,244,313,271"/>
-<area shape="rect" id="node4" href="$pipe_8hpp.html" title="include/CL/sycl/pipe.hpp" alt="" coords="281,169,447,196"/>
-<area shape="rect" id="node5" href="$queue_8hpp.html" title="include/CL/sycl/queue.hpp" alt="" coords="152,87,328,114"/>
-<area shape="rect" id="node6" href="$static__pipe_8hpp.html" title="include/CL/sycl/static\l_pipe.hpp" alt="" coords="407,80,555,121"/>
+<map id="include/triSYCL/handler.hpp" name="include/triSYCL/handler.hpp">
+<area shape="rect" id="node2" href="$buffer_8hpp.html" title="include/triSYCL/buffer.hpp" alt="" coords="323,184,497,211"/>
+<area shape="rect" id="node3" href="$triSYCL_2sycl_8hpp.html" title="include/triSYCL/sycl.hpp" alt="" coords="201,281,368,307"/>
+<area shape="rect" id="node6" href="$pipe_8hpp.html" title="include/triSYCL/pipe.hpp" alt="" coords="5,184,172,211"/>
+<area shape="rect" id="node7" href="$queue_8hpp.html" title="include/triSYCL/queue.hpp" alt="" coords="472,87,649,114"/>
+<area shape="rect" id="node11" href="$static__pipe_8hpp.html" title="include/triSYCL/static\l_pipe.hpp" alt="" coords="247,80,397,121"/>
+<area shape="rect" id="node4" href="$CL_2sycl_8hpp.html" title="This is the main SYCL 1.2.1 interoperability header to expose triSYCL into the cl::sycl namespace..." alt="" coords="333,370,471,397"/>
+<area shape="rect" id="node5" href="$SYCL_2sycl_8hpp.html" title="This is the SYCL extension header to expose triSYCL directly into the shorter sycl namespace instead ..." alt="" coords="154,370,309,397"/>
+<area shape="rect" id="node8" href="$vendor_2trisycl_2scope_2queue_2detail_2queue_8hpp.html" title="include/triSYCL/vendor\l/trisycl/scope/queue/detail\l/queue.hpp" alt="" coords="624,169,799,225"/>
+<area shape="rect" id="node9" href="$vendor_2trisycl_2scope_2queue_8hpp.html" title="include/triSYCL/vendor\l/trisycl/scope/queue.hpp" alt="" coords="556,273,720,315"/>
+<area shape="rect" id="node10" href="$scope_8hpp.html" title="include/triSYCL/vendor\l/trisycl/scope.hpp" alt="" coords="560,363,716,404"/>
 </map>

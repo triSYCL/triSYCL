@@ -1,8 +1,0 @@
-<map id="cl::sycl::detail::buffer&lt; T, Dimensions &gt;" name="cl::sycl::detail::buffer&lt; T, Dimensions &gt;">
-<area shape="rect" id="node2" href="$group__data.html#structcl_1_1sycl_1_1detail_1_1buffer__base" title="Factorize some template independent buffer aspects in a base class. " alt="" coords="686,245,865,271"/>
-<area shape="rect" id="node11" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; buffer\&lt; T, Dimensions \&gt; \&gt;" alt="" coords="681,325,869,367"/>
-<area shape="rect" id="node13" href="$group__execution.html#classcl_1_1sycl_1_1context" title="SYCL context. " alt="" coords="718,457,833,483"/>
-<area shape="rect" id="node14" href="$structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html" title="cl::sycl::detail::shared\l_ptr_implementation\&lt; context,\l detail::context \&gt;" alt="" coords="293,502,492,558"/>
-<area shape="rect" id="node16" href="$classstd_1_1shared__ptr_3_01detail_1_1context_01_4.html" title="shared_ptr\&lt; detail\l::context \&gt;" alt="" coords="15,541,142,583"/>
-<area shape="rect" id="node19" href="$classbool.html" title="bool" alt="" coords="752,639,799,666"/>
-</map>

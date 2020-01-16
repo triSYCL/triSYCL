@@ -1,0 +1,4 @@
+<map id="trisycl::invalid_parameter_error" name="trisycl::invalid_parameter_error">
+<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1runtime__error" title="trisycl::runtime_error" alt="" coords="18,171,159,197"/>
+<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information. " alt="" coords="28,95,149,121"/>
+</map>

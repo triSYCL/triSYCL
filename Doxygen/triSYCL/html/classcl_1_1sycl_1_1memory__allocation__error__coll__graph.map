@@ -1,4 +1,0 @@
-<map id="cl::sycl::memory_allocation_error" name="cl::sycl::memory_allocation_error">
-<area shape="rect" id="node2" href="$group__error__handling.html#classcl_1_1sycl_1_1device__error" title="The SYCL device will trigger this exception on error. " alt="" coords="25,171,167,197"/>
-<area shape="rect" id="node3" href="$group__error__handling.html#classcl_1_1sycl_1_1exception" title="Encapsulate a SYCL error information. " alt="" coords="32,95,160,121"/>
-</map>

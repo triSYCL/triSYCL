@@ -1,0 +1,4 @@
+<map id="trisycl::platform::get_info" name="trisycl::platform::get_info">
+<area shape="rect" id="node2" href="$group__execution.html#ac802fc57b7124056c8df9fc62a533944" title="Get the list of all the platforms available to the application. " alt="" coords="173,5,293,47"/>
+<area shape="rect" id="node3" href="$group__execution.html#gab6eeb6abc59d436d6a41947f3281d0a8" title="Returns a selected device using the functor operator defined in sub&#45;classes operator()(const device &amp;..." alt="" coords="341,5,497,47"/>
+</map>

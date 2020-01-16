@@ -1,4 +1,0 @@
-<map id="cl::sycl::context::context" name="cl::sycl::context::context">
-<area shape="rect" id="node2" href="$group__execution.html#a99116ba67a5c0afccb8c01a97b7e18ef" title="Default constructor that chooses the context according the heuristics of the default selector..." alt="" coords="176,5,299,47"/>
-<area shape="rect" id="node3" href="$group__execution.html#aa4b0de49ca31efb4779ba4f29bf1a380" title="Get all the available devices for this platform. " alt="" coords="178,71,297,112"/>
-</map>

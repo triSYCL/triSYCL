@@ -1,6 +1,6 @@
-<map id="include/CL/sycl/pipe/detail/pipe_accessor.hpp" name="include/CL/sycl/pipe/detail/pipe_accessor.hpp">
-<area shape="rect" id="node5" href="$access_8hpp.html" title="CL/sycl/access.hpp" alt="" coords="597,102,736,129"/>
-<area shape="rect" id="node6" href="$debug_8hpp.html" title="CL/sycl/detail/debug.hpp" alt="" coords="299,102,466,129"/>
-<area shape="rect" id="node13" href="$pipe_2detail_2pipe_8hpp.html" title="CL/sycl/pipe/detail\l/pipe.hpp" alt="" coords="952,184,1082,225"/>
-<area shape="rect" id="node18" href="$pipe__reservation_2detail_2pipe__reservation_8hpp.html" title="CL/sycl/pipe_reservation\l/detail/pipe_reservation.hpp" alt="" coords="810,95,992,136"/>
+<map id="include/triSYCL/pipe/detail/pipe_accessor.hpp" name="include/triSYCL/pipe/detail/pipe_accessor.hpp">
+<area shape="rect" id="node5" href="$access_8hpp.html" title="triSYCL/access.hpp" alt="" coords="597,102,736,129"/>
+<area shape="rect" id="node6" href="$debug_8hpp.html" title="triSYCL/detail/debug.hpp" alt="" coords="299,102,466,129"/>
+<area shape="rect" id="node13" href="$pipe_2detail_2pipe_8hpp.html" title="triSYCL/pipe/detail\l/pipe.hpp" alt="" coords="952,184,1082,225"/>
+<area shape="rect" id="node18" href="$pipe__reservation_2detail_2pipe__reservation_8hpp.html" title="triSYCL/pipe_reservation\l/detail/pipe_reservation.hpp" alt="" coords="810,95,992,136"/>
 </map>

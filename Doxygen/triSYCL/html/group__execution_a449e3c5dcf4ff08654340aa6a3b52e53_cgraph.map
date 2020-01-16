@@ -1,5 +1,0 @@
-<map id="cl::sycl::device::device" name="cl::sycl::device::device">
-<area shape="rect" id="node2" href="$classcl_1_1sycl_1_1detail_1_1opencl__device.html#aec6fec1e2dbdaf981781b4db3191db9e" title="cl::sycl::detail::opencl\l_device::instance" alt="" coords="209,39,359,80"/>
-<area shape="rect" id="node3" href="$classcl_1_1sycl_1_1detail_1_1cache.html#a9a918c2a5233b5538b248a195c3446c3" title="Get a value stored in the cache if present or insert by calling a generator function. " alt="" coords="408,5,555,47"/>
-<area shape="rect" id="node4" href="$classcl_1_1sycl_1_1detail_1_1opencl__device.html#aeda012efa9ca4292cb9d761272e10de1" title="cl::sycl::detail::opencl\l_device::get_info" alt="" coords="407,71,556,112"/>
-</map>

@@ -1,8 +1,0 @@
-<map id="cl::sycl::platform::platform" name="cl::sycl::platform::platform">
-<area shape="rect" id="node2" href="$group__execution.html#ac795a054d022a641d2c3ae52229d6fda" title="cl::sycl::detail::opencl\l_platform::instance" alt="" coords="172,71,321,112"/>
-<area shape="rect" id="node6" href="$group__execution.html#ac766c25f9104682dd44f2bfce9ee1e1b" title="Default constructor for platform which is the host platform. " alt="" coords="187,136,306,177"/>
-<area shape="rect" id="node3" href="$group__execution.html#ga8334815bd4fabdce1e3a8dc431414b82" title="Get all the available devices for this OpenCL platform. " alt="" coords="383,5,538,47"/>
-<area shape="rect" id="node5" href="$classcl_1_1sycl_1_1detail_1_1cache.html#a9a918c2a5233b5538b248a195c3446c3" title="Get a value stored in the cache if present or insert by calling a generator function. " alt="" coords="387,71,534,112"/>
-<area shape="rect" id="node4" href="$group__execution.html#a7f5ca2aa742552385caca81ea1651e12" title="Return the underlying Boost.Compute platform. " alt="" coords="600,5,799,47"/>
-<area shape="rect" id="node7" href="$structcl_1_1sycl_1_1detail_1_1singleton.html#a7c274b2391d671987579bcea736743aa" title="Get a singleton instance of T. " alt="" coords="369,136,552,177"/>
-</map>

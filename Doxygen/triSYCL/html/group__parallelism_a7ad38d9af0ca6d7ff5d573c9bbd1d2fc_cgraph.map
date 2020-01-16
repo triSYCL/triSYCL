@@ -1,6 +1,0 @@
-<map id="cl::sycl::item::get_linear_id" name="cl::sycl::item::get_linear_id">
-<area shape="rect" id="node2" href="$group__parallelism.html#a4c38e76aa159843386b35c50ec332bc0" title="Return the constituent local or global id&lt;&gt; representing the work&#45;item&#39;s position in the iteration sp..." alt="" coords="185,5,325,32"/>
-<area shape="rect" id="node3" href="$group__parallelism.html#ab3f4294ed0145490ff3cf44f40d0de2f" title="Returns an id&lt;&gt; representing the n&#45;dimensional offset provided to the parallel_for and that is added ..." alt="" coords="194,57,317,98"/>
-<area shape="rect" id="node4" href="$group__parallelism.html#aa25cbb3098e4305ee87e77efad6806c1" title="Returns a range&lt;&gt; representing the dimensions of the range of possible values of the item..." alt="" coords="194,122,317,163"/>
-<area shape="rect" id="node5" href="$group__helpers.html#ga8ccbed3e03e1b92e0a4f01b691c093cf" title="Compute a linearized array access used in the OpenCL 2 world. " alt="" coords="176,188,335,215"/>
-</map>

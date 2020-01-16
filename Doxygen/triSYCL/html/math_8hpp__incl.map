@@ -1,2 +1,10 @@
-<map id="include/CL/sycl/math.hpp" name="include/CL/sycl/math.hpp">
+<map id="include/triSYCL/math.hpp" name="include/triSYCL/math.hpp">
+<area shape="rect" id="node5" href="$vec_8hpp.html" title="Implement the small OpenCL vector class. " alt="" coords="417,80,485,107"/>
+<area shape="rect" id="node6" href="$alignment__helper_8hpp.html" title="A simple trait to help generate the appropriate alignment data for a SYCL type when specified appropr..." alt="" coords="5,244,168,285"/>
+<area shape="rect" id="node7" href="$vec_2detail_2vec_8hpp.html" title="Implement the detail base OpenCL vector class. " alt="" coords="159,155,287,196"/>
+<area shape="rect" id="node12" href="$swiz2_8hpp.html" title="triSYCL/vec/detail\l/swiz2.hpp" alt="" coords="311,155,439,196"/>
+<area shape="rect" id="node13" href="$swiz3_8hpp.html" title="triSYCL/vec/detail\l/swiz3.hpp" alt="" coords="463,155,591,196"/>
+<area shape="rect" id="node14" href="$swiz4_8hpp.html" title="triSYCL/vec/detail\l/swiz4.hpp" alt="" coords="615,155,743,196"/>
+<area shape="rect" id="node15" href="$swiz__rgba_8hpp.html" title="triSYCL/vec/detail\l/swiz_rgba.hpp" alt="" coords="767,155,895,196"/>
+<area shape="rect" id="node10" href="$array__tuple__helpers_8hpp.html" title="Some helpers to do array&#45;tuple conversions. " alt="" coords="328,244,464,285"/>
 </map>

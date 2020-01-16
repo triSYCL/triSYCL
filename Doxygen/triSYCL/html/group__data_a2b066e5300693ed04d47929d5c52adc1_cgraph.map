@@ -1,3 +1,0 @@
-<map id="cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;::get_size" name="cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;::get_size">
-<area shape="rect" id="node2" href="$group__data.html#a415392a1e1fac8fa8b43d929f36058b1" title="Returns the total number of elements behind the accessor. " alt="" coords="263,13,427,54"/>
-</map>

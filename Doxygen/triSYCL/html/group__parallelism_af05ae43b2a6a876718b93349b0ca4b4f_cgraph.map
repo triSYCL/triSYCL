@@ -1,0 +1,6 @@
+<map id="trisycl::item::get_linear_id" name="trisycl::item::get_linear_id">
+<area shape="rect" id="node2" href="$group__parallelism.html#a95a7f84f5f4c9e88135e9d88764d0a7f" title="Return the constituent local or global id&lt;&gt; representing the work&#45;item&#39;s position in the iteration sp..." alt="" coords="179,5,312,32"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#a692f19f2049a3447bbd0eda96e1c481d" title="Returns an id&lt;&gt; representing the n&#45;dimensional offset provided to the parallel_for and that is added ..." alt="" coords="187,57,303,98"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#a7a254a2ef8ffc47b3c3d3c84d1d95a18" title="Returns a range&lt;&gt; representing the dimensions of the range of possible values of the item..." alt="" coords="187,122,303,163"/>
+<area shape="rect" id="node5" href="$group__helpers.html#ga185ce9faf9e1d586e4f57871ac4c3058" title="Compute a linearized array access used in the OpenCL 2 world. " alt="" coords="169,188,321,215"/>
+</map>

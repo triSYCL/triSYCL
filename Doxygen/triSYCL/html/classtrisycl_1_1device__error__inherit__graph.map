@@ -1,0 +1,10 @@
+<map id="trisycl::device_error" name="trisycl::device_error">
+<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1compile__program__error" title="Error while compiling the SYCL kernel to a SYCL device. " alt="" coords="364,5,528,47"/>
+<area shape="rect" id="node4" href="$group__error__handling.html#classtrisycl_1_1feature__not__supported" title="Exception thrown when an optional feature or extension is used in a kernel but its not available on t..." alt="" coords="381,71,511,112"/>
+<area shape="rect" id="node5" href="$group__error__handling.html#classtrisycl_1_1invalid__object__error" title="Error regarding any memory objects being used inside the kernel. " alt="" coords="374,136,518,177"/>
+<area shape="rect" id="node6" href="$group__error__handling.html#classtrisycl_1_1link__program__error" title="Error while linking the SYCL kernel to a SYCL device. " alt="" coords="377,201,515,243"/>
+<area shape="rect" id="node7" href="$group__error__handling.html#classtrisycl_1_1memory__allocation__error" title="Error on memory allocation on the SYCL device for a SYCL kernel. " alt="" coords="359,267,533,308"/>
+<area shape="rect" id="node8" href="$group__error__handling.html#classtrisycl_1_1platform__error" title="The SYCL platform will trigger this exception on error. " alt="" coords="373,333,519,359"/>
+<area shape="rect" id="node9" href="$group__error__handling.html#classtrisycl_1_1profiling__error" title="The SYCL runtime will trigger this error if there is an error when profiling info is enabled..." alt="" coords="391,384,501,425"/>
+<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information. " alt="" coords="5,209,127,235"/>
+</map>

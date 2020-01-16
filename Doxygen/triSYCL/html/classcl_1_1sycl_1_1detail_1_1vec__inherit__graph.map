@@ -1,5 +1,0 @@
-<map id="cl::sycl::detail::vec&lt; DataType, NumElements &gt;" name="cl::sycl::detail::vec&lt; DataType, NumElements &gt;">
-<area shape="rect" id="node9" href="$group__vector.html#classcl_1_1sycl_1_1vec_3_01DataType_00_011_01_4" title="cl::sycl::vec\&lt; DataType, 1 \&gt;" alt="" coords="813,218,1003,245"/>
-<area shape="rect" id="node2" href="$group__helpers.html" title="cl::sycl::detail::small\l_array\&lt; DataType, cl::\lsycl::vec\&lt; DataType, NumElements\l \&gt;, NumElements \&gt;" alt="" coords="288,196,523,267"/>
-<area shape="rect" id="node8" href="$group__debug__trace.html" title="cl::sycl::detail::display\l_vector\&lt; cl::sycl::vec\l\&lt; DataType, NumElements \&gt; \&gt;" alt="" coords="19,407,226,463"/>
-</map>

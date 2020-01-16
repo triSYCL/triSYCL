@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structcl_1_1sycl_1_1drt_1_1code_1_1program.html" title="A binary program containing some kernels. " alt="" coords="5,5,128,47"/>
+<area shape="rect" id="node1" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; detail::pipe_accessor\l\&lt; DataType, AccessMode,\l Target \&gt; \&gt;" alt="" coords="5,53,184,124"/>
+<area shape="rect" id="node2" href="$group__data.html" title="trisycl::detail::pipe\l_accessor\&lt; DataType,\l AccessMode, access::target\l::blocking_pipe \&gt;" alt="" coords="232,5,425,76"/>
+<area shape="rect" id="node4" href="$group__data.html" title="trisycl::detail::pipe\l_accessor\&lt; DataType,\l AccessMode, access::target\l::pipe \&gt;" alt="" coords="232,100,425,171"/>
+<area shape="rect" id="node3" href="$group__data.html#classtrisycl_1_1accessor_3_01DataType_00_011_00_01AccessMode_00_01access_1_1target_1_1blocking__pipe_01_4" title="The pipe accessor abstracts the way pipe data are accessed inside a kernel. " alt="" coords="473,13,681,69"/>
+<area shape="rect" id="node5" href="$group__data.html#classtrisycl_1_1accessor_3_01DataType_00_011_00_01AccessMode_00_01access_1_1target_1_1pipe_01_4" title="The pipe accessor abstracts the way pipe data are accessed inside a kernel. " alt="" coords="484,107,671,163"/>
 </map>

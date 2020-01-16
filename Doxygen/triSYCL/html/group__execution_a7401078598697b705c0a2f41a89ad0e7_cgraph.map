@@ -1,0 +1,5 @@
+<map id="trisycl::detail::opencl_platform::instance" name="trisycl::detail::opencl_platform::instance">
+<area shape="rect" id="node2" href="$group__execution.html#ga1ba73e5a9ba54cb746bef3aa464d04fb" title="Get all the available devices for this OpenCL platform. " alt="" coords="196,5,351,47"/>
+<area shape="rect" id="node4" href="$classtrisycl_1_1detail_1_1cache.html#acf94820e866b304f627288919d123e9e" title="Get a value stored in the cache if present or insert by calling a generator function. " alt="" coords="204,71,343,112"/>
+<area shape="rect" id="node3" href="$group__execution.html#abd713f2f262f4ca87685f02a4cfbb3e7" title="Return the underlying Boost.Compute platform. " alt="" coords="399,5,597,47"/>
+</map>

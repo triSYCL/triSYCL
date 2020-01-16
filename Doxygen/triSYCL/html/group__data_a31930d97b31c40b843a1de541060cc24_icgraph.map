@@ -1,0 +1,5 @@
+<map id="trisycl::detail::buffer_base::create_in_cache" name="trisycl::detail::buffer_base::create_in_cache">
+<area shape="rect" id="node2" href="$group__data.html#aad6218af1679f6e4f06ae001a36a86bb" title="When a transfer is requested this function is called, it will update the state of the buffer accordin..." alt="" coords="213,5,393,47"/>
+<area shape="rect" id="node3" href="$group__data.html#a9e59e9641989421feb7f541081d86272" title="Function pair to work around the fact that T might be a const type. " alt="" coords="441,5,613,47"/>
+<area shape="rect" id="node4" href="$group__data.html#a360bd2887a957b3ef46e7af5dec9c2bc" title="Create a new sub&#45;buffer without allocation to have separate accessors later. " alt="" coords="661,5,799,47"/>
+</map>

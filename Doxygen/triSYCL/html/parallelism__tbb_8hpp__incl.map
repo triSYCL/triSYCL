@@ -1,0 +1,14 @@
+<map id="include/triSYCL/parallelism/detail/parallelism_tbb.hpp" name="include/triSYCL/parallelism/detail/parallelism_tbb.hpp">
+<area shape="rect" id="node2" href="$group_8hpp.html" title="triSYCL/group.hpp" alt="" coords="901,95,1030,121"/>
+<area shape="rect" id="node6" href="$h__item_8hpp.html" title="triSYCL/h_item.hpp" alt="" coords="873,169,1009,196"/>
+<area shape="rect" id="node10" href="$id_8hpp.html" title="triSYCL/id.hpp" alt="" coords="289,326,396,353"/>
+<area shape="rect" id="node22" href="$range_8hpp.html" title="triSYCL/range.hpp" alt="" coords="567,408,697,435"/>
+<area shape="rect" id="node24" href="$item_8hpp.html" title="triSYCL/item.hpp" alt="" coords="844,244,967,271"/>
+<area shape="rect" id="node25" href="$nd__range_8hpp.html" title="triSYCL/nd_range.hpp" alt="" coords="354,244,505,271"/>
+<area shape="rect" id="node26" href="$nd__item_8hpp.html" title="triSYCL/nd_item.hpp" alt="" coords="631,169,774,196"/>
+<area shape="rect" id="node5" href="$linear__id_8hpp.html" title="triSYCL/detail/linear\l_id.hpp" alt="" coords="1276,319,1415,360"/>
+<area shape="rect" id="node7" href="$access_8hpp.html" title="triSYCL/access.hpp" alt="" coords="631,244,769,271"/>
+<area shape="rect" id="node8" href="$unimplemented_8hpp.html" title="triSYCL/detail/unimplemented.hpp" alt="" coords="1143,244,1363,271"/>
+<area shape="rect" id="node12" href="$small__array_8hpp.html" title="triSYCL/detail/small\l_array.hpp" alt="" coords="252,483,391,524"/>
+<area shape="rect" id="node16" href="$debug_8hpp.html" title="triSYCL/detail/debug.hpp" alt="" coords="238,572,405,599"/>
+</map>

@@ -1,5 +1,8 @@
-<map id="include/CL/sycl/detail/array_tuple_helpers.hpp" name="include/CL/sycl/detail/array_tuple_helpers.hpp">
-<area shape="rect" id="node2" href="$vec_2detail_2vec_8hpp.html" title="Implement the detail base OpenCL vector class. " alt="" coords="19,95,156,136"/>
-<area shape="rect" id="node3" href="$vec_8hpp.html" title="Implement the small OpenCL vector class. " alt="" coords="6,184,169,211"/>
-<area shape="rect" id="node4" href="$sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="19,259,156,285"/>
+<map id="include/triSYCL/detail/array_tuple_helpers.hpp" name="include/triSYCL/detail/array_tuple_helpers.hpp">
+<area shape="rect" id="node2" href="$vec_2detail_2vec_8hpp.html" title="Implement the detail base OpenCL vector class. " alt="" coords="90,95,229,136"/>
+<area shape="rect" id="node3" href="$vec_8hpp.html" title="Implement the small OpenCL vector class. " alt="" coords="78,184,241,211"/>
+<area shape="rect" id="node4" href="$math_8hpp.html" title="Implement a wrapper around OpenCL math operations Joan.Thibault AT ens&#45;rennes POINT fr This file is d..." alt="" coords="13,259,183,285"/>
+<area shape="rect" id="node5" href="$triSYCL_2sycl_8hpp.html" title="include/triSYCL/sycl.hpp" alt="" coords="76,333,243,360"/>
+<area shape="rect" id="node6" href="$CL_2sycl_8hpp.html" title="This is the main SYCL 1.2.1 interoperability header to expose triSYCL into the cl::sycl namespace..." alt="" coords="5,408,143,435"/>
+<area shape="rect" id="node7" href="$SYCL_2sycl_8hpp.html" title="This is the SYCL extension header to expose triSYCL directly into the shorter sycl namespace instead ..." alt="" coords="167,408,322,435"/>
 </map>

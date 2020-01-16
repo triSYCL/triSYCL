@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>triSYCL implementation of SYCL: include/CL/sycl/buffer/detail/buffer_waiter.hpp File Reference</title>
+<title>triSYCL implementation of SYCL: include/triSYCL/buffer/detail/buffer_waiter.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -58,7 +58,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_8358e9aed72341d13c81ba12a462bec7.html">CL</a></li><li class="navelem"><a class="el" href="dir_dd7d3bcc93139b1cbc3b663242fe4a67.html">sycl</a></li><li class="navelem"><a class="el" href="dir_38fb0cb001a33d459c1d00d29c2c5311.html">buffer</a></li><li class="navelem"><a class="el" href="dir_be26ddf9b11730c7356126bacc795397.html">detail</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_aaf3c766ec178046651f3200d7a96209.html">triSYCL</a></li><li class="navelem"><a class="el" href="dir_4855c3139d3d4b59a98868d318452328.html">buffer</a></li><li class="navelem"><a class="el" href="dir_abe9acc7d17422dd7d1d48b331fc035a.html">detail</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -72,50 +72,52 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &lt;cstddef&gt;</code><br />
 <code>#include &lt;future&gt;</code><br />
-<code>#include &quot;<a class="el" href="buffer_2detail_2buffer_8hpp_source.html">CL/sycl/buffer/detail/buffer.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="buffer__allocator_8hpp_source.html">CL/sycl/buffer_allocator.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="shared__ptr__implementation_8hpp_source.html">CL/sycl/detail/shared_ptr_implementation.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="buffer_2detail_2buffer_8hpp_source.html">triSYCL/buffer/detail/buffer.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="buffer__allocator_8hpp_source.html">triSYCL/buffer_allocator.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="shared__ptr__implementation_8hpp_source.html">triSYCL/detail/shared_ptr_implementation.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for buffer_waiter.hpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="buffer__waiter_8hpp__incl.png" border="0" usemap="#include_2CL_2sycl_2buffer_2detail_2buffer__waiter_8hpp" alt=""/></div>
-<map name="include_2CL_2sycl_2buffer_2detail_2buffer__waiter_8hpp" id="include_2CL_2sycl_2buffer_2detail_2buffer__waiter_8hpp">
-<area shape="rect" id="node4" href="buffer_2detail_2buffer_8hpp.html" title="CL/sycl/buffer/detail\l/buffer.hpp" alt="" coords="845,95,984,136"/>
-<area shape="rect" id="node31" href="shared__ptr__implementation_8hpp.html" title="CL/sycl/detail/shared\l_ptr_implementation.hpp" alt="" coords="1721,705,1885,747"/>
-<area shape="rect" id="node50" href="buffer__allocator_8hpp.html" title="CL/sycl/buffer_allocator.hpp" alt="" coords="459,713,645,739"/>
-<area shape="rect" id="node9" href="access_8hpp.html" title="CL/sycl/access.hpp" alt="" coords="941,623,1080,650"/>
-<area shape="rect" id="node10" href="buffer_2detail_2accessor_8hpp.html" title="CL/sycl/buffer/detail\l/accessor.hpp" alt="" coords="1307,184,1445,225"/>
-<area shape="rect" id="node18" href="buffer__base_8hpp.html" title="CL/sycl/buffer/detail\l/buffer_base.hpp" alt="" coords="1923,452,2061,493"/>
-<area shape="rect" id="node41" href="range_8hpp.html" title="CL/sycl/range.hpp" alt="" coords="771,795,899,821"/>
-<area shape="rect" id="node12" href="accessor__base_8hpp.html" title="CL/sycl/accessor/detail\l/accessor_base.hpp" alt="" coords="2205,273,2363,315"/>
-<area shape="rect" id="node13" href="task_8hpp.html" title="CL/sycl/command_group\l/detail/task.hpp" alt="" coords="2366,363,2533,404"/>
-<area shape="rect" id="node35" href="id_8hpp.html" title="CL/sycl/id.hpp" alt="" coords="973,713,1080,739"/>
-<area shape="rect" id="node37" href="debug_8hpp.html" title="CL/sycl/detail/debug.hpp" alt="" coords="2755,959,2922,985"/>
-<area shape="rect" id="node46" href="item_8hpp.html" title="CL/sycl/item.hpp" alt="" coords="521,623,642,650"/>
-<area shape="rect" id="node48" href="nd__item_8hpp.html" title="CL/sycl/nd_item.hpp" alt="" coords="721,541,863,568"/>
-<area shape="rect" id="node44" href="kernel_8hpp.html" title="CL/sycl/kernel.hpp" alt="" coords="2348,623,2479,650"/>
-<area shape="rect" id="node45" href="queue_2detail_2queue_8hpp.html" title="CL/sycl/queue/detail\l/queue.hpp" alt="" coords="2419,452,2560,493"/>
-<area shape="rect" id="node22" href="context_8hpp.html" title="CL/sycl/context.hpp" alt="" coords="1816,541,1955,568"/>
-<area shape="rect" id="node23" href="host__context_8hpp.html" title="CL/sycl/context/detail\l/host_context.hpp" alt="" coords="1900,616,2049,657"/>
-<area shape="rect" id="node24" href="default__classes_8hpp.html" title="CL/sycl/detail/default\l_classes.hpp" alt="" coords="1909,705,2054,747"/>
-<area shape="rect" id="node29" href="exception_8hpp.html" title="CL/sycl/exception.hpp" alt="" coords="2129,713,2281,739"/>
-<area shape="rect" id="node30" href="opencl__context_8hpp.html" title="CL/sycl/context/detail\l/opencl_context.hpp" alt="" coords="2175,616,2324,657"/>
-<area shape="rect" id="node33" href="device_8hpp.html" title="CL/sycl/device.hpp" alt="" coords="1589,623,1723,650"/>
-<area shape="rect" id="node43" href="device__selector_8hpp.html" title="CL/sycl/device_selector.hpp" alt="" coords="1408,713,1595,739"/>
-<area shape="rect" id="node27" href="unimplemented_8hpp.html" title="CL/sycl/detail/unimplemented.hpp" alt="" coords="2305,713,2524,739"/>
-<area shape="rect" id="node36" href="small__array_8hpp.html" title="CL/sycl/detail/small\l_array.hpp" alt="" coords="1025,869,1162,911"/>
-<area shape="rect" id="node47" href="linear__id_8hpp.html" title="CL/sycl/detail/linear\l_id.hpp" alt="" coords="246,705,383,747"/>
-<area shape="rect" id="node49" href="nd__range_8hpp.html" title="CL/sycl/nd_range.hpp" alt="" coords="717,623,867,650"/>
+<div class="center"><img src="buffer__waiter_8hpp__incl.png" border="0" usemap="#include_2triSYCL_2buffer_2detail_2buffer__waiter_8hpp" alt=""/></div>
+<map name="include_2triSYCL_2buffer_2detail_2buffer__waiter_8hpp" id="include_2triSYCL_2buffer_2detail_2buffer__waiter_8hpp">
+<area shape="rect" id="node4" href="buffer_2detail_2buffer_8hpp.html" title="triSYCL/buffer/detail\l/buffer.hpp" alt="" coords="845,95,985,136"/>
+<area shape="rect" id="node31" href="shared__ptr__implementation_8hpp.html" title="triSYCL/detail/shared\l_ptr_implementation.hpp" alt="" coords="1723,705,1887,747"/>
+<area shape="rect" id="node50" href="buffer__allocator_8hpp.html" title="triSYCL/buffer_allocator.hpp" alt="" coords="459,713,645,739"/>
+<area shape="rect" id="node9" href="access_8hpp.html" title="triSYCL/access.hpp" alt="" coords="941,623,1080,650"/>
+<area shape="rect" id="node10" href="buffer_2detail_2accessor_8hpp.html" title="triSYCL/buffer/detail\l/accessor.hpp" alt="" coords="1307,184,1447,225"/>
+<area shape="rect" id="node18" href="buffer__base_8hpp.html" title="triSYCL/buffer/detail\l/buffer_base.hpp" alt="" coords="1925,452,2065,493"/>
+<area shape="rect" id="node41" href="range_8hpp.html" title="triSYCL/range.hpp" alt="" coords="770,795,899,821"/>
+<area shape="rect" id="node12" href="accessor__base_8hpp.html" title="triSYCL/accessor/detail\l/accessor_base.hpp" alt="" coords="2212,273,2372,315"/>
+<area shape="rect" id="node13" href="task_8hpp.html" title="triSYCL/command_group\l/detail/task.hpp" alt="" coords="2373,363,2541,404"/>
+<area shape="rect" id="node35" href="id_8hpp.html" title="triSYCL/id.hpp" alt="" coords="973,713,1080,739"/>
+<area shape="rect" id="node37" href="debug_8hpp.html" title="triSYCL/detail/debug.hpp" alt="" coords="2763,959,2930,985"/>
+<area shape="rect" id="node46" href="item_8hpp.html" title="triSYCL/item.hpp" alt="" coords="517,623,640,650"/>
+<area shape="rect" id="node48" href="nd__item_8hpp.html" title="triSYCL/nd_item.hpp" alt="" coords="719,541,862,568"/>
+<area shape="rect" id="node44" href="kernel_8hpp.html" title="triSYCL/kernel.hpp" alt="" coords="2354,623,2486,650"/>
+<area shape="rect" id="node45" href="queue_2detail_2queue_8hpp.html" title="triSYCL/queue/detail\l/queue.hpp" alt="" coords="2427,452,2570,493"/>
+<area shape="rect" id="node22" href="context_8hpp.html" title="triSYCL/context.hpp" alt="" coords="1817,541,1957,568"/>
+<area shape="rect" id="node23" href="host__context_8hpp.html" title="triSYCL/context/detail\l/host_context.hpp" alt="" coords="1902,616,2053,657"/>
+<area shape="rect" id="node24" href="default__classes_8hpp.html" title="triSYCL/detail/default\l_classes.hpp" alt="" coords="1912,705,2059,747"/>
+<area shape="rect" id="node29" href="exception_8hpp.html" title="triSYCL/exception.hpp" alt="" coords="2134,713,2287,739"/>
+<area shape="rect" id="node30" href="opencl__context_8hpp.html" title="triSYCL/context/detail\l/opencl_context.hpp" alt="" coords="2179,616,2330,657"/>
+<area shape="rect" id="node33" href="device_8hpp.html" title="triSYCL/device.hpp" alt="" coords="1590,623,1725,650"/>
+<area shape="rect" id="node43" href="device__selector_8hpp.html" title="triSYCL/device_selector.hpp" alt="" coords="1409,713,1597,739"/>
+<area shape="rect" id="node27" href="unimplemented_8hpp.html" title="triSYCL/detail/unimplemented.hpp" alt="" coords="2311,713,2531,739"/>
+<area shape="rect" id="node36" href="small__array_8hpp.html" title="triSYCL/detail/small\l_array.hpp" alt="" coords="1025,869,1164,911"/>
+<area shape="rect" id="node47" href="linear__id_8hpp.html" title="triSYCL/detail/linear\l_id.hpp" alt="" coords="245,705,384,747"/>
+<area shape="rect" id="node49" href="nd__range_8hpp.html" title="triSYCL/nd_range.hpp" alt="" coords="715,623,866,650"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><img src="buffer__waiter_8hpp__dep__incl.png" border="0" usemap="#include_2CL_2sycl_2buffer_2detail_2buffer__waiter_8hppdep" alt=""/></div>
-<map name="include_2CL_2sycl_2buffer_2detail_2buffer__waiter_8hppdep" id="include_2CL_2sycl_2buffer_2detail_2buffer__waiter_8hppdep">
-<area shape="rect" id="node2" href="buffer_2detail_2buffer_8hpp.html" title="include/CL/sycl/buffer\l/detail/buffer.hpp" alt="" coords="11,95,161,136"/>
-<area shape="rect" id="node3" href="buffer_8hpp.html" title="include/CL/sycl/buffer.hpp" alt="" coords="55,184,229,211"/>
-<area shape="rect" id="node4" href="sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="73,259,211,285"/>
+<div class="center"><img src="buffer__waiter_8hpp__dep__incl.png" border="0" usemap="#include_2triSYCL_2buffer_2detail_2buffer__waiter_8hppdep" alt=""/></div>
+<map name="include_2triSYCL_2buffer_2detail_2buffer__waiter_8hppdep" id="include_2triSYCL_2buffer_2detail_2buffer__waiter_8hppdep">
+<area shape="rect" id="node2" href="buffer_2detail_2buffer_8hpp.html" title="include/triSYCL/buffer\l/detail/buffer.hpp" alt="" coords="28,95,179,136"/>
+<area shape="rect" id="node3" href="buffer_8hpp.html" title="include/triSYCL/buffer.hpp" alt="" coords="72,184,247,211"/>
+<area shape="rect" id="node4" href="triSYCL_2sycl_8hpp.html" title="include/triSYCL/sycl.hpp" alt="" coords="76,259,243,285"/>
+<area shape="rect" id="node5" href="CL_2sycl_8hpp.html" title="This is the main SYCL 1.2.1 interoperability header to expose triSYCL into the cl::sycl namespace..." alt="" coords="5,333,143,360"/>
+<area shape="rect" id="node6" href="SYCL_2sycl_8hpp.html" title="This is the SYCL extension header to expose triSYCL directly into the shorter sycl namespace instead ..." alt="" coords="167,333,322,360"/>
 </map>
 </div>
 </div>
@@ -123,32 +125,26 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:classcl_1_1sycl_1_1detail_1_1buffer__waiter"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#classcl_1_1sycl_1_1detail_1_1buffer__waiter">cl::sycl::detail::buffer_waiter&lt; T, Dimensions, Allocator &gt;</a></td></tr>
-<tr class="memdesc:classcl_1_1sycl_1_1detail_1_1buffer__waiter"><td class="mdescLeft">&#160;</td><td class="mdescRight">A helper class to wait for the final buffer destruction if the conditions for blocking are met.  <a href="group__data.html#classcl_1_1sycl_1_1detail_1_1buffer__waiter">More...</a><br /></td></tr>
-<tr class="separator:classcl_1_1sycl_1_1detail_1_1buffer__waiter"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:classtrisycl_1_1detail_1_1buffer__waiter"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__data.html#classtrisycl_1_1detail_1_1buffer__waiter">trisycl::detail::buffer_waiter&lt; T, Dimensions, Allocator &gt;</a></td></tr>
+<tr class="memdesc:classtrisycl_1_1detail_1_1buffer__waiter"><td class="mdescLeft">&#160;</td><td class="mdescRight">A helper class to wait for the final buffer destruction if the conditions for blocking are met.  <a href="group__data.html#classtrisycl_1_1detail_1_1buffer__waiter">More...</a><br /></td></tr>
+<tr class="separator:classtrisycl_1_1detail_1_1buffer__waiter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr class="memitem:namespacecl"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl.html">cl</a></td></tr>
-<tr class="memdesc:namespacecl"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector type to be used as SYCL vector. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacecl_1_1sycl"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html">cl::sycl</a></td></tr>
-<tr class="memdesc:namespacecl_1_1sycl"><td class="mdescLeft">&#160;</td><td class="mdescRight">Small OpenCL vector class. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacecl_1_1sycl_1_1detail"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl_1_1detail.html">cl::sycl::detail</a></td></tr>
+<tr class="memitem:namespacetrisycl_1_1detail"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetrisycl_1_1detail.html">trisycl::detail</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga8496185ecbdad5dcafffd374a5f7db20"><td class="memTemplParams" colspan="2">template&lt;typename T , int Dimensions = 1, typename Allocator  = buffer_allocator&lt;std::remove_const_t&lt;T&gt;&gt;&gt; </td></tr>
-<tr class="memitem:ga8496185ecbdad5dcafffd374a5f7db20"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__data.html#ga8496185ecbdad5dcafffd374a5f7db20">cl::sycl::detail::waiter</a> (detail::buffer&lt; T, Dimensions &gt; *<a class="el" href="opencl__spir_8h.html#a3fd8c63fddfb0d3ba796ef725a8cc5ce">b</a>)</td></tr>
-<tr class="memdesc:ga8496185ecbdad5dcafffd374a5f7db20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function to create a new <a class="el" href="group__data.html#classcl_1_1sycl_1_1detail_1_1buffer__waiter" title="A helper class to wait for the final buffer destruction if the conditions for blocking are met...">buffer_waiter</a>.  <a href="group__data.html#ga8496185ecbdad5dcafffd374a5f7db20">More...</a><br /></td></tr>
-<tr class="separator:ga8496185ecbdad5dcafffd374a5f7db20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga39aab9a5c74f01bd53de448ab7d9048a"><td class="memTemplParams" colspan="2">template&lt;typename T , int Dimensions = 1, typename Allocator  = buffer_allocator&lt;std::remove_const_t&lt;T&gt;&gt;&gt; </td></tr>
+<tr class="memitem:ga39aab9a5c74f01bd53de448ab7d9048a"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__data.html#ga39aab9a5c74f01bd53de448ab7d9048a">trisycl::detail::waiter</a> (detail::buffer&lt; T, Dimensions &gt; *<a class="el" href="opencl__spir_8h.html#a3fd8c63fddfb0d3ba796ef725a8cc5ce">b</a>)</td></tr>
+<tr class="memdesc:ga39aab9a5c74f01bd53de448ab7d9048a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function to create a new <a class="el" href="group__data.html#classtrisycl_1_1detail_1_1buffer__waiter" title="A helper class to wait for the final buffer destruction if the conditions for blocking are met...">buffer_waiter</a>.  <a href="group__data.html#ga39aab9a5c74f01bd53de448ab7d9048a">More...</a><br /></td></tr>
+<tr class="separator:ga39aab9a5c74f01bd53de448ab7d9048a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 16 2020 13:26:35 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

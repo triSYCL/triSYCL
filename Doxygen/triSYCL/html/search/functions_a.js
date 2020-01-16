@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['kernel',['kernel',['../group__execution.html#ab6fe902d9b06d8a228686cb1942cfa75',1,'cl::sycl::kernel::kernel()=delete'],['../group__execution.html#a636018c776760834a64f6976af86b233',1,'cl::sycl::kernel::kernel(cl_kernel k)'],['../group__execution.html#a038232c2856180eb934d69ec2d280544',1,'cl::sycl::kernel::kernel(const boost::compute::kernel &amp;k)']]],
-  ['kernel_5fend',['kernel_end',['../structcl_1_1sycl_1_1detail_1_1queue.html#a802bd793742c6497154e32dab107577b',1,'cl::sycl::detail::queue']]],
-  ['kernel_5fstart',['kernel_start',['../structcl_1_1sycl_1_1detail_1_1queue.html#a7a39a319e3c529655a951f0025c3b5b4',1,'cl::sycl::detail::queue']]]
+  ['kernel',['kernel',['../group__execution.html#aa98441afee17f62dee41f7cff4377cc7',1,'trisycl::kernel::kernel()=delete'],['../group__execution.html#a0f517affe1d99b5e79a5c0f27c86d990',1,'trisycl::kernel::kernel(cl_kernel k)'],['../group__execution.html#ad1b3eb330401620f40c830207bc659bd',1,'trisycl::kernel::kernel(const boost::compute::kernel &amp;k)']]],
+  ['kernel_5fend',['kernel_end',['../structtrisycl_1_1detail_1_1queue.html#a2afa74466e62e95800018364d7ea12d6',1,'trisycl::detail::queue']]],
+  ['kernel_5fstart',['kernel_start',['../structtrisycl_1_1detail_1_1queue.html#a0c61b09d6ef0321f4538694bb1ec9270',1,'trisycl::detail::queue']]]
 ];

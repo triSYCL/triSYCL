@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['y',['y',['../group__vector.html#ga5cfcdcdca9ada16b8ec61188feeeb428',1,'cl::sycl::elem::y()'],['../opencl__spir_8h.html#aabbe89c8fd42d52b959b6f16d73a3147',1,'y():&#160;opencl_spir.h'],['../namespacecl_1_1sycl.html#ae88a2c531d62f0f155400689cb1ad180',1,'cl::sycl::y()']]]
+  ['y',['y',['../group__vector.html#ga7018f313e525c5854ac776f1f784fbfb',1,'trisycl::elem::y()'],['../opencl__spir_8h.html#aabbe89c8fd42d52b959b6f16d73a3147',1,'y():&#160;opencl_spir.h'],['../namespacetrisycl.html#a4cd6c686a56491991ccbe47824998c01',1,'trisycl::y()']]]
 ];

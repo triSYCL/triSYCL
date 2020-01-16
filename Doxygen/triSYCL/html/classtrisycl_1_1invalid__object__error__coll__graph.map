@@ -1,0 +1,4 @@
+<map id="trisycl::invalid_object_error" name="trisycl::invalid_object_error">
+<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1device__error" title="The SYCL device will trigger this exception on error. " alt="" coords="9,171,145,197"/>
+<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information. " alt="" coords="17,95,138,121"/>
+</map>

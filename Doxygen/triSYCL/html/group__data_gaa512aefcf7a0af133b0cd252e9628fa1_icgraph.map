@@ -1,5 +1,0 @@
-<map id="cl::sycl::get_pipe_detail" name="cl::sycl::get_pipe_detail">
-<area shape="rect" id="node2" href="$group__data.html#a7039600ff8953ee7d7fbd449aec93cca" title="Get the underlying pipe implementation. " alt="" coords="175,5,369,76"/>
-<area shape="rect" id="node3" href="$group__data.html#a156e19d4481a98ae94d763ce4623a4ba" title="Get the underlying pipe implementation. " alt="" coords="175,100,369,171"/>
-<area shape="rect" id="node4" href="$group__data.html#aeb8c715b41f2b30a7cf3a65811ce0c9f" title="Create a pipe_reservation for an accessor and a number of elements. " alt="" coords="189,195,355,236"/>
-</map>

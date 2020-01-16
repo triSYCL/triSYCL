@@ -1,0 +1,8 @@
+<map id="trisycl::platform::platform" name="trisycl::platform::platform">
+<area shape="rect" id="node2" href="$group__execution.html#a7401078598697b705c0a2f41a89ad0e7" title="trisycl::detail::opencl\l_platform::instance" alt="" coords="173,71,316,112"/>
+<area shape="rect" id="node6" href="$group__execution.html#a26be58353aff0aa056c9e0ccb5ddd1e5" title="Default constructor for platform which is the host platform. " alt="" coords="185,136,305,177"/>
+<area shape="rect" id="node3" href="$group__execution.html#ga1ba73e5a9ba54cb746bef3aa464d04fb" title="Get all the available devices for this OpenCL platform. " alt="" coords="378,5,533,47"/>
+<area shape="rect" id="node5" href="$classtrisycl_1_1detail_1_1cache.html#acf94820e866b304f627288919d123e9e" title="Get a value stored in the cache if present or insert by calling a generator function. " alt="" coords="386,71,525,112"/>
+<area shape="rect" id="node4" href="$group__execution.html#abd713f2f262f4ca87685f02a4cfbb3e7" title="Return the underlying Boost.Compute platform. " alt="" coords="595,5,793,47"/>
+<area shape="rect" id="node7" href="$structtrisycl_1_1detail_1_1singleton.html#a009fd0942ad638840002092537db892f" title="Get a singleton instance of T. " alt="" coords="364,136,547,177"/>
+</map>

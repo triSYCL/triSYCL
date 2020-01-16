@@ -1,4 +1,0 @@
-<map id="cl::sycl::kernel_error" name="cl::sycl::kernel_error">
-<area shape="rect" id="node2" href="$group__error__handling.html#classcl_1_1sycl_1_1runtime__error" title="cl::sycl::runtime_error" alt="" coords="5,80,153,107"/>
-<area shape="rect" id="node3" href="$group__error__handling.html#classcl_1_1sycl_1_1exception" title="Encapsulate a SYCL error information. " alt="" coords="15,5,143,32"/>
-</map>

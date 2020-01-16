@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>triSYCL implementation of SYCL: include/CL/sycl/vec.hpp File Reference</title>
+<title>triSYCL implementation of SYCL: include/triSYCL/vec.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -58,7 +58,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_8358e9aed72341d13c81ba12a462bec7.html">CL</a></li><li class="navelem"><a class="el" href="dir_dd7d3bcc93139b1cbc3b663242fe4a67.html">sycl</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_aaf3c766ec178046651f3200d7a96209.html">triSYCL</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -75,30 +75,35 @@ $(function() {
 
 <p>Implement the small OpenCL vector class.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="vec_2detail_2vec_8hpp_source.html">CL/sycl/vec/detail/vec.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="swiz2_8hpp_source.html">CL/sycl/vec/detail/swiz2.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="swiz3_8hpp_source.html">CL/sycl/vec/detail/swiz3.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="swiz4_8hpp_source.html">CL/sycl/vec/detail/swiz4.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="swiz__rgba_8hpp_source.html">CL/sycl/vec/detail/swiz_rgba.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="alignment__helper_8hpp_source.html">triSYCL/detail/alignment_helper.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="vec_2detail_2vec_8hpp_source.html">triSYCL/vec/detail/vec.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="swiz2_8hpp_source.html">triSYCL/vec/detail/swiz2.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="swiz3_8hpp_source.html">triSYCL/vec/detail/swiz3.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="swiz4_8hpp_source.html">triSYCL/vec/detail/swiz4.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="swiz__rgba_8hpp_source.html">triSYCL/vec/detail/swiz_rgba.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for vec.hpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="vec_8hpp__incl.png" border="0" usemap="#include_2CL_2sycl_2vec_8hpp" alt=""/></div>
-<map name="include_2CL_2sycl_2vec_8hpp" id="include_2CL_2sycl_2vec_8hpp">
-<area shape="rect" id="node2" href="vec_2detail_2vec_8hpp.html" title="Implement the detail base OpenCL vector class. " alt="" coords="34,80,161,121"/>
-<area shape="rect" id="node7" href="swiz2_8hpp.html" title="CL/sycl/vec/detail\l/swiz2.hpp" alt="" coords="185,80,311,121"/>
-<area shape="rect" id="node8" href="swiz3_8hpp.html" title="CL/sycl/vec/detail\l/swiz3.hpp" alt="" coords="335,80,462,121"/>
-<area shape="rect" id="node9" href="swiz4_8hpp.html" title="CL/sycl/vec/detail\l/swiz4.hpp" alt="" coords="486,80,613,121"/>
-<area shape="rect" id="node10" href="swiz__rgba_8hpp.html" title="CL/sycl/vec/detail\l/swiz_rgba.hpp" alt="" coords="637,80,763,121"/>
-<area shape="rect" id="node4" href="array__tuple__helpers_8hpp.html" title="Some helpers to do array&#45;tuple conversions. " alt="" coords="91,169,226,211"/>
+<div class="center"><img src="vec_8hpp__incl.png" border="0" usemap="#include_2triSYCL_2vec_8hpp" alt=""/></div>
+<map name="include_2triSYCL_2vec_8hpp" id="include_2triSYCL_2vec_8hpp">
+<area shape="rect" id="node2" href="alignment__helper_8hpp.html" title="A simple trait to help generate the appropriate alignment data for a SYCL type when specified appropr..." alt="" coords="5,169,168,211"/>
+<area shape="rect" id="node3" href="vec_2detail_2vec_8hpp.html" title="Implement the detail base OpenCL vector class. " alt="" coords="159,80,287,121"/>
+<area shape="rect" id="node8" href="swiz2_8hpp.html" title="triSYCL/vec/detail\l/swiz2.hpp" alt="" coords="311,80,439,121"/>
+<area shape="rect" id="node9" href="swiz3_8hpp.html" title="triSYCL/vec/detail\l/swiz3.hpp" alt="" coords="463,80,591,121"/>
+<area shape="rect" id="node10" href="swiz4_8hpp.html" title="triSYCL/vec/detail\l/swiz4.hpp" alt="" coords="615,80,743,121"/>
+<area shape="rect" id="node11" href="swiz__rgba_8hpp.html" title="triSYCL/vec/detail\l/swiz_rgba.hpp" alt="" coords="767,80,895,121"/>
+<area shape="rect" id="node6" href="array__tuple__helpers_8hpp.html" title="Some helpers to do array&#45;tuple conversions. " alt="" coords="328,169,464,211"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><img src="vec_8hpp__dep__incl.png" border="0" usemap="#include_2CL_2sycl_2vec_8hppdep" alt=""/></div>
-<map name="include_2CL_2sycl_2vec_8hppdep" id="include_2CL_2sycl_2vec_8hppdep">
-<area shape="rect" id="node2" href="sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="18,80,155,107"/>
+<div class="center"><img src="vec_8hpp__dep__incl.png" border="0" usemap="#include_2triSYCL_2vec_8hppdep" alt=""/></div>
+<map name="include_2triSYCL_2vec_8hppdep" id="include_2triSYCL_2vec_8hppdep">
+<area shape="rect" id="node2" href="math_8hpp.html" title="Implement a wrapper around OpenCL math operations Joan.Thibault AT ens&#45;rennes POINT fr This file is d..." alt="" coords="13,80,183,107"/>
+<area shape="rect" id="node3" href="triSYCL_2sycl_8hpp.html" title="include/triSYCL/sycl.hpp" alt="" coords="76,155,243,181"/>
+<area shape="rect" id="node4" href="CL_2sycl_8hpp.html" title="This is the main SYCL 1.2.1 interoperability header to expose triSYCL into the cl::sycl namespace..." alt="" coords="5,229,143,256"/>
+<area shape="rect" id="node5" href="SYCL_2sycl_8hpp.html" title="This is the SYCL extension header to expose triSYCL directly into the shorter sycl namespace instead ..." alt="" coords="167,229,322,256"/>
 </map>
 </div>
 </div>
@@ -106,29 +111,29 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:structcl_1_1sycl_1_1elem"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#structcl_1_1sycl_1_1elem">cl::sycl::elem</a></td></tr>
-<tr class="memdesc:structcl_1_1sycl_1_1elem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Series of values to specify named swizzle indexes Used when calling the swizzle member function template.  <a href="group__vector.html#structcl_1_1sycl_1_1elem">More...</a><br /></td></tr>
-<tr class="separator:structcl_1_1sycl_1_1elem"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:classcl_1_1sycl_1_1vec"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#classcl_1_1sycl_1_1vec">cl::sycl::vec&lt; typename, int &gt;</a></td></tr>
-<tr class="memdesc:classcl_1_1sycl_1_1vec"><td class="mdescLeft">&#160;</td><td class="mdescRight">forward decl to use in the detail class  <a href="group__vector.html#classcl_1_1sycl_1_1vec">More...</a><br /></td></tr>
-<tr class="separator:classcl_1_1sycl_1_1vec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:classcl_1_1sycl_1_1vec_3_01DataType_00_011_01_4"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#classcl_1_1sycl_1_1vec_3_01DataType_00_011_01_4">cl::sycl::vec&lt; DataType, 1 &gt;</a></td></tr>
-<tr class="separator:classcl_1_1sycl_1_1vec_3_01DataType_00_011_01_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:classcl_1_1sycl_1_1vec_3_01DataType_00_012_01_4"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#classcl_1_1sycl_1_1vec_3_01DataType_00_012_01_4">cl::sycl::vec&lt; DataType, 2 &gt;</a></td></tr>
-<tr class="separator:classcl_1_1sycl_1_1vec_3_01DataType_00_012_01_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:classcl_1_1sycl_1_1vec_3_01DataType_00_013_01_4"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#classcl_1_1sycl_1_1vec_3_01DataType_00_013_01_4">cl::sycl::vec&lt; DataType, 3 &gt;</a></td></tr>
-<tr class="separator:classcl_1_1sycl_1_1vec_3_01DataType_00_013_01_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:classcl_1_1sycl_1_1vec_3_01DataType_00_014_01_4"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#classcl_1_1sycl_1_1vec_3_01DataType_00_014_01_4">cl::sycl::vec&lt; DataType, 4 &gt;</a></td></tr>
-<tr class="separator:classcl_1_1sycl_1_1vec_3_01DataType_00_014_01_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:classcl_1_1sycl_1_1vec_3_01DataType_00_018_01_4"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#classcl_1_1sycl_1_1vec_3_01DataType_00_018_01_4">cl::sycl::vec&lt; DataType, 8 &gt;</a></td></tr>
-<tr class="separator:classcl_1_1sycl_1_1vec_3_01DataType_00_018_01_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:classcl_1_1sycl_1_1vec_3_01DataType_00_0116_01_4"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#classcl_1_1sycl_1_1vec_3_01DataType_00_0116_01_4">cl::sycl::vec&lt; DataType, 16 &gt;</a></td></tr>
-<tr class="separator:classcl_1_1sycl_1_1vec_3_01DataType_00_0116_01_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structtrisycl_1_1elem"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#structtrisycl_1_1elem">trisycl::elem</a></td></tr>
+<tr class="memdesc:structtrisycl_1_1elem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Series of values to specify named swizzle indexes Used when calling the swizzle member function template.  <a href="group__vector.html#structtrisycl_1_1elem">More...</a><br /></td></tr>
+<tr class="separator:structtrisycl_1_1elem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:classtrisycl_1_1vec"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#classtrisycl_1_1vec">trisycl::vec&lt; typename, int &gt;</a></td></tr>
+<tr class="memdesc:classtrisycl_1_1vec"><td class="mdescLeft">&#160;</td><td class="mdescRight">forward decl to use in the detail class  <a href="group__vector.html#classtrisycl_1_1vec">More...</a><br /></td></tr>
+<tr class="separator:classtrisycl_1_1vec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:classtrisycl_1_1vec_3_01DataType_00_011_01_4"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#classtrisycl_1_1vec_3_01DataType_00_011_01_4">trisycl::vec&lt; DataType, 1 &gt;</a></td></tr>
+<tr class="separator:classtrisycl_1_1vec_3_01DataType_00_011_01_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:classtrisycl_1_1vec_3_01DataType_00_012_01_4"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#classtrisycl_1_1vec_3_01DataType_00_012_01_4">trisycl::vec&lt; DataType, 2 &gt;</a></td></tr>
+<tr class="separator:classtrisycl_1_1vec_3_01DataType_00_012_01_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:classtrisycl_1_1vec_3_01DataType_00_013_01_4"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#classtrisycl_1_1vec_3_01DataType_00_013_01_4">trisycl::vec&lt; DataType, 3 &gt;</a></td></tr>
+<tr class="separator:classtrisycl_1_1vec_3_01DataType_00_013_01_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:classtrisycl_1_1vec_3_01DataType_00_014_01_4"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#classtrisycl_1_1vec_3_01DataType_00_014_01_4">trisycl::vec&lt; DataType, 4 &gt;</a></td></tr>
+<tr class="separator:classtrisycl_1_1vec_3_01DataType_00_014_01_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:classtrisycl_1_1vec_3_01DataType_00_018_01_4"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#classtrisycl_1_1vec_3_01DataType_00_018_01_4">trisycl::vec&lt; DataType, 8 &gt;</a></td></tr>
+<tr class="separator:classtrisycl_1_1vec_3_01DataType_00_018_01_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:classtrisycl_1_1vec_3_01DataType_00_0116_01_4"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#classtrisycl_1_1vec_3_01DataType_00_0116_01_4">trisycl::vec&lt; DataType, 16 &gt;</a></td></tr>
+<tr class="separator:classtrisycl_1_1vec_3_01DataType_00_0116_01_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr class="memitem:namespacecl_1_1sycl"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl.html">cl::sycl</a></td></tr>
-<tr class="memdesc:namespacecl_1_1sycl"><td class="mdescLeft">&#160;</td><td class="mdescRight">Small OpenCL vector class. <br /></td></tr>
+<tr class="memitem:namespacetrisycl"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetrisycl.html">trisycl</a></td></tr>
+<tr class="memdesc:namespacetrisycl"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector type to be used as SYCL vector. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
@@ -136,11 +141,11 @@ Macros</h2></td></tr>
 <tr class="memitem:gaa6e4c792ebb2006b972633ef48422d27"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#gaa6e4c792ebb2006b972633ef48422d27">TRISYCL_DECLARE_S</a>(<a class="el" href="opencl__spir_8h.html#a520ae4ccf48d2f8fa7d054d2e1762db1">x</a>)</td></tr>
 <tr class="memdesc:gaa6e4c792ebb2006b972633ef48422d27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accessors to access hex indexed elements of a vector.  <a href="group__vector.html#gaa6e4c792ebb2006b972633ef48422d27">More...</a><br /></td></tr>
 <tr class="separator:gaa6e4c792ebb2006b972633ef48422d27"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa4e279e5dba2939a1309e51cd7fcd2d6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#gaa4e279e5dba2939a1309e51cd7fcd2d6">TRISYCL_GEN_SWIZ2</a>(str,  idx0,  idx1)&#160;&#160;&#160;__swizzled_vec__&lt;DataType, 2&gt; str() const { return base_vec::swizzle(idx0, idx1); }</td></tr>
+<tr class="memitem:gaa4e279e5dba2939a1309e51cd7fcd2d6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#gaa4e279e5dba2939a1309e51cd7fcd2d6">TRISYCL_GEN_SWIZ2</a>(str,  idx0,  idx1)</td></tr>
 <tr class="separator:gaa4e279e5dba2939a1309e51cd7fcd2d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa35089380c31e2c10432ac5f2fb6ff9e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#gaa35089380c31e2c10432ac5f2fb6ff9e">TRISYCL_GEN_SWIZ3</a>(str,  idx0,  idx1,  idx2)&#160;&#160;&#160;__swizzled_vec__&lt;DataType, 3&gt; str() const { return base_vec::swizzle(idx0, idx1, idx2); }</td></tr>
+<tr class="memitem:gaa35089380c31e2c10432ac5f2fb6ff9e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#gaa35089380c31e2c10432ac5f2fb6ff9e">TRISYCL_GEN_SWIZ3</a>(str,  idx0,  idx1,  idx2)</td></tr>
 <tr class="separator:gaa35089380c31e2c10432ac5f2fb6ff9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa2201e543bb78644680d0368f82b8f6b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#gaa2201e543bb78644680d0368f82b8f6b">TRISYCL_GEN_SWIZ4</a>(str,  idx0,  idx1,  idx2,  idx3)&#160;&#160;&#160;__swizzled_vec__&lt;DataType, 4&gt; str() const { return base_vec::swizzle(idx0, idx1, idx2, idx3); }</td></tr>
+<tr class="memitem:gaa2201e543bb78644680d0368f82b8f6b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#gaa2201e543bb78644680d0368f82b8f6b">TRISYCL_GEN_SWIZ4</a>(str,  idx0,  idx1,  idx2,  idx3)</td></tr>
 <tr class="separator:gaa2201e543bb78644680d0368f82b8f6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga310c41ff3eb00ee3c82b929c76069cd4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#ga310c41ff3eb00ee3c82b929c76069cd4">TRISYCL_DEFINE_VEC_TYPE_SIZE</a>(type,  size,  actual_type)&#160;&#160;&#160;using type##size = vec&lt;actual_type, size&gt;;</td></tr>
 <tr class="memdesc:ga310c41ff3eb00ee3c82b929c76069cd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">A macro to define type alias, such as for type=uchar, size=4 and actual_type=unsigned char, uchar4 is equivalent to vec&lt;unsigned char, 4&gt;  <a href="group__vector.html#ga310c41ff3eb00ee3c82b929c76069cd4">More...</a><br /></td></tr>
@@ -151,23 +156,23 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ga88c7f6b5fe2c434fae3bbdab23940ce6"><td class="memTemplParams" colspan="2">template&lt;typename DataType , int numElements&gt; </td></tr>
-<tr class="memitem:ga88c7f6b5fe2c434fae3bbdab23940ce6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__vector.html#ga88c7f6b5fe2c434fae3bbdab23940ce6">cl::sycl::__swizzled_vec__</a> = vec&lt; DataType, numElements &gt;</td></tr>
-<tr class="separator:ga88c7f6b5fe2c434fae3bbdab23940ce6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaeafe04079319949d3763f60ab3522789"><td class="memTemplParams" colspan="2">template&lt;typename DataType , int numElements&gt; </td></tr>
+<tr class="memitem:gaeafe04079319949d3763f60ab3522789"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__vector.html#gaeafe04079319949d3763f60ab3522789">trisycl::__swizzled_vec__</a> = vec&lt; DataType, numElements &gt;</td></tr>
+<tr class="separator:gaeafe04079319949d3763f60ab3522789"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:ga16ab217f4d07c904f763adf0a270d1c0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#ga16ab217f4d07c904f763adf0a270d1c0">cl::sycl::rounding_mode</a> { <br />
-&#160;&#160;<a class="el" href="group__vector.html#gga16ab217f4d07c904f763adf0a270d1c0a2bd9c0ed00116be1258e0cc66617d7c8">cl::sycl::rounding_mode::automatic</a>, 
-<a class="el" href="group__vector.html#gga16ab217f4d07c904f763adf0a270d1c0ae3fd2afa75b6e2e40021c7054361fbf4">cl::sycl::rounding_mode::rte</a>, 
-<a class="el" href="group__vector.html#gga16ab217f4d07c904f763adf0a270d1c0acf5c5662f49f76f9bbd776d77935b422">cl::sycl::rounding_mode::rtz</a>, 
-<a class="el" href="group__vector.html#gga16ab217f4d07c904f763adf0a270d1c0ac766e112de79c244fdaed0ed34ca5e12">cl::sycl::rounding_mode::rtp</a>, 
+<tr class="memitem:gace6557c9368309621d29aaf117bc8841"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vector.html#gace6557c9368309621d29aaf117bc8841">trisycl::rounding_mode</a> { <br />
+&#160;&#160;<a class="el" href="group__vector.html#ggace6557c9368309621d29aaf117bc8841a2bd9c0ed00116be1258e0cc66617d7c8">trisycl::rounding_mode::automatic</a>, 
+<a class="el" href="group__vector.html#ggace6557c9368309621d29aaf117bc8841ae3fd2afa75b6e2e40021c7054361fbf4">trisycl::rounding_mode::rte</a>, 
+<a class="el" href="group__vector.html#ggace6557c9368309621d29aaf117bc8841acf5c5662f49f76f9bbd776d77935b422">trisycl::rounding_mode::rtz</a>, 
+<a class="el" href="group__vector.html#ggace6557c9368309621d29aaf117bc8841ac766e112de79c244fdaed0ed34ca5e12">trisycl::rounding_mode::rtp</a>, 
 <br />
-&#160;&#160;<a class="el" href="group__vector.html#gga16ab217f4d07c904f763adf0a270d1c0aa1ddc56bf1413a90046522963aaf37ab">cl::sycl::rounding_mode::rtn</a>
+&#160;&#160;<a class="el" href="group__vector.html#ggace6557c9368309621d29aaf117bc8841aa1ddc56bf1413a90046522963aaf37ab">trisycl::rounding_mode::rtn</a>
 <br />
- }<tr class="memdesc:ga16ab217f4d07c904f763adf0a270d1c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rounding mode for vector conversions.  <a href="group__vector.html#ga16ab217f4d07c904f763adf0a270d1c0">More...</a><br /></td></tr>
+ }<tr class="memdesc:gace6557c9368309621d29aaf117bc8841"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rounding mode for vector conversions.  <a href="group__vector.html#gace6557c9368309621d29aaf117bc8841">More...</a><br /></td></tr>
 </td></tr>
-<tr class="separator:ga16ab217f4d07c904f763adf0a270d1c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:gace6557c9368309621d29aaf117bc8841"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implement the small OpenCL vector class. </p>
@@ -178,7 +183,7 @@ Enumerations</h2></td></tr>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 16 2020 13:26:36 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

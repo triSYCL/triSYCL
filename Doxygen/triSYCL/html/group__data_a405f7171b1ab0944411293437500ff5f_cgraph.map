@@ -1,0 +1,5 @@
+<map id="trisycl::detail::buffer::track_access_mode" name="trisycl::detail::buffer::track_access_mode">
+<area shape="rect" id="node2" href="$group__data.html#aae2f9755df12109f3d7c7fa55e2805a5" title="Allocate uninitialized buffer memory. " alt="" coords="200,5,337,47"/>
+<area shape="rect" id="node4" href="$group__data.html#a43d44f1e74423c97a4058c93e3132f7b" title="Return a range object representing the size of the buffer in terms of number of elements in each dime..." alt="" coords="200,71,337,112"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#a55c2d38bfa586195fc9e1d789e011a0f" title="Return the number of elements in the range. " alt="" coords="385,13,515,39"/>
+</map>

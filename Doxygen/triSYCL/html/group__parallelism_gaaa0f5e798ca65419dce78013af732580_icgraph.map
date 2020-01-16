@@ -1,4 +1,0 @@
-<map id="cl::sycl::detail::parallel_for_workgroup" name="cl::sycl::detail::parallel_for_workgroup">
-<area shape="rect" id="node2" href="$group__execution.html#a5ae74565e39d4763c7efdba3581d087b" title="Hierarchical kernel invocation method of a kernel defined as a lambda encoding the body of each work&#45;..." alt="" coords="205,5,364,47"/>
-<area shape="rect" id="node3" href="$group__execution.html#ae027732012b54eea62f2b7ffd9104f46" title="Hierarchical kernel invocation method of a kernel defined as a lambda encoding the body of each work&#45;..." alt="" coords="412,5,571,47"/>
-</map>

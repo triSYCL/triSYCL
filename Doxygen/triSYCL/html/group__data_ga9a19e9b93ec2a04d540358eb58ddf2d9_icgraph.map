@@ -1,0 +1,5 @@
+<map id="trisycl::get_pipe_detail" name="trisycl::get_pipe_detail">
+<area shape="rect" id="node2" href="$group__data.html#a72a9223d9711ab6d6eb4cf0232276e0c" title="Get the underlying pipe implementation. " alt="" coords="205,5,392,76"/>
+<area shape="rect" id="node3" href="$group__data.html#a714afe9a163fa80c4b8fc80979ac9bf9" title="Get the underlying pipe implementation. " alt="" coords="205,100,392,171"/>
+<area shape="rect" id="node4" href="$group__data.html#a4121a5d23aa1caa47c39c91606a7eddf" title="Create a pipe_reservation for an accessor and a number of elements. " alt="" coords="219,195,379,236"/>
+</map>

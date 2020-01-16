@@ -62,79 +62,84 @@ $(function() {
 
 <h3><a id="index_i"></a>- i -</h3><ul>
 <li>id()
-: <a class="el" href="group__parallelism.html#a777b39deded6748f39279b21c09cf34e">cl::sycl::id&lt; Dimensions &gt;</a>
+: <a class="el" href="group__parallelism.html#aecc69aa58f385cd4db4fce6180a9f1d2">trisycl::id&lt; Dimensions &gt;</a>
 </li>
 <li>instance()
-: <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a470a3c9c0c3db21d2fa0fc18ef4f1bc5">cl::sycl::detail::opencl_context</a>
-, <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__device.html#aec6fec1e2dbdaf981781b4db3191db9e">cl::sycl::detail::opencl_device</a>
-, <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__kernel.html#af8fbdabbbde85d55ac42cfd530a64b80">cl::sycl::detail::opencl_kernel</a>
-, <a class="el" href="group__execution.html#ac795a054d022a641d2c3ae52229d6fda">cl::sycl::detail::opencl_platform</a>
-, <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__queue.html#ac511d322863e8f6f9e8e9adbe1c45172">cl::sycl::detail::opencl_queue</a>
-, <a class="el" href="structcl_1_1sycl_1_1detail_1_1singleton.html#a7c274b2391d671987579bcea736743aa">cl::sycl::detail::singleton&lt; T &gt;</a>
+: <a class="el" href="classtrisycl_1_1detail_1_1opencl__context.html#a871e1c031698e0e1ea29c14522e84241">trisycl::detail::opencl_context</a>
+, <a class="el" href="classtrisycl_1_1detail_1_1opencl__device.html#a792cb9b62f4fa4f510f9259a22db14ef">trisycl::detail::opencl_device</a>
+, <a class="el" href="classtrisycl_1_1detail_1_1opencl__event.html#a2e829fdd052e7137abd455d9fc9c014c">trisycl::detail::opencl_event</a>
+, <a class="el" href="classtrisycl_1_1detail_1_1opencl__kernel.html#aa8af1758847d737ebafdcda24e46c29e">trisycl::detail::opencl_kernel</a>
+, <a class="el" href="group__execution.html#a7401078598697b705c0a2f41a89ad0e7">trisycl::detail::opencl_platform</a>
+, <a class="el" href="classtrisycl_1_1detail_1_1opencl__queue.html#ad163a6c78ca779be85bbb53801e53c28">trisycl::detail::opencl_queue</a>
+, <a class="el" href="structtrisycl_1_1detail_1_1singleton.html#a009fd0942ad638840002092537db892f">trisycl::detail::singleton&lt; T &gt;</a>
 </li>
 <li>is_accelerator()
-: <a class="el" href="group__execution.html#a24bd04fa4064117bfa6c4b593d7ee2f7">cl::sycl::detail::device</a>
-, <a class="el" href="classcl_1_1sycl_1_1detail_1_1host__device.html#a81b0e0d2545c53375b7e786bdd709bad">cl::sycl::detail::host_device</a>
-, <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__device.html#ad8cea9706886a6dc97f78adfa213820b">cl::sycl::detail::opencl_device</a>
-, <a class="el" href="group__execution.html#a4c46ad9dfc37b0ae3aee39e1ea98ca03">cl::sycl::device</a>
+: <a class="el" href="group__execution.html#a4f31fdd586b36cfe171cd21c2f726ca9">trisycl::detail::device</a>
+, <a class="el" href="classtrisycl_1_1detail_1_1host__device.html#a9d631771413ac3cbd6d8c39de45aa2e4">trisycl::detail::host_device</a>
+, <a class="el" href="classtrisycl_1_1detail_1_1opencl__device.html#abd06500b57573f4feb9596c3ebffd013">trisycl::detail::opencl_device</a>
+, <a class="el" href="group__execution.html#a00cddd2c75a2bc2c8390c2eb5686ca56">trisycl::device</a>
 </li>
 <li>is_cached()
-: <a class="el" href="group__data.html#a2190a5873bbe43c780f6cc4c00a577ed">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
-, <a class="el" href="group__data.html#a7be35ab8e3552d46596dc094ebc8350b">cl::sycl::detail::buffer_base</a>
+: <a class="el" href="group__data.html#acfcfd2145ed456649d68a914a48b79b7">trisycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
+, <a class="el" href="group__data.html#ae652de9b841f564c285311373fa96563">trisycl::detail::buffer_base</a>
 </li>
 <li>is_cpu()
-: <a class="el" href="group__execution.html#a56af3212ec761d354c1ebdb2d2e5159e">cl::sycl::detail::device</a>
-, <a class="el" href="classcl_1_1sycl_1_1detail_1_1host__device.html#a7c944e29be7ac8faba1808c4303579d8">cl::sycl::detail::host_device</a>
-, <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__device.html#abe82fb9139aed52a2ce912105c79a36d">cl::sycl::detail::opencl_device</a>
-, <a class="el" href="group__execution.html#af232cc1464ff46474750f3511243e017">cl::sycl::device</a>
+: <a class="el" href="group__execution.html#afbb5df942220e613909f04ce88656e20">trisycl::detail::device</a>
+, <a class="el" href="classtrisycl_1_1detail_1_1host__device.html#a3a8a200312dabd46ed6864f570088fdd">trisycl::detail::host_device</a>
+, <a class="el" href="classtrisycl_1_1detail_1_1opencl__device.html#af3fd0249b9521da2df4fbf6007d006f4">trisycl::detail::opencl_device</a>
+, <a class="el" href="group__execution.html#ab6bff55c4bd74685958ae4bdf31dcd45">trisycl::device</a>
 </li>
 <li>is_data_up_to_date()
-: <a class="el" href="group__data.html#a5cb402aa7f420f31764dee2cad7dc60b">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
-, <a class="el" href="group__data.html#aedd08e42f3de59dd807d247898521e46">cl::sycl::detail::buffer_base</a>
+: <a class="el" href="group__data.html#a39c184163daeeb7a746aa752bc2b4af0">trisycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
+, <a class="el" href="group__data.html#a42b361442b007be017d62301d726ef3e">trisycl::detail::buffer_base</a>
 </li>
 <li>is_gpu()
-: <a class="el" href="group__execution.html#a44a183f5bb8b50446dd2f128d3305c7f">cl::sycl::detail::device</a>
-, <a class="el" href="classcl_1_1sycl_1_1detail_1_1host__device.html#a95848636a019cd6488e781ab6a062bf6">cl::sycl::detail::host_device</a>
-, <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__device.html#a801581e6a21d0778b8e99bd9f2ea39a8">cl::sycl::detail::opencl_device</a>
-, <a class="el" href="group__execution.html#aa21e8acf32bdacb8b55e8a150f7357be">cl::sycl::device</a>
+: <a class="el" href="group__execution.html#a29b842a45e83b7df520a31e41e44c8ef">trisycl::detail::device</a>
+, <a class="el" href="classtrisycl_1_1detail_1_1host__device.html#a04a87f0d9724b64b8aa9f0a11216654c">trisycl::detail::host_device</a>
+, <a class="el" href="classtrisycl_1_1detail_1_1opencl__device.html#a521dd5e9076210b49e25902fc6a0c236">trisycl::detail::opencl_device</a>
+, <a class="el" href="group__execution.html#a7289977e7ff9170ec98cc30f6f380f5e">trisycl::device</a>
 </li>
 <li>is_host()
-: <a class="el" href="group__execution.html#a86e0d2c756c13114e0464cc42956dd66">cl::sycl::context</a>
-, <a class="el" href="group__execution.html#a68ecb5982e09f4db4c0ac1a70c30ab83">cl::sycl::detail::context</a>
-, <a class="el" href="group__execution.html#a370636925842e969a208f16c59899c45">cl::sycl::detail::device</a>
-, <a class="el" href="group__execution.html#a5cef7bb41c2a18765feef04fc20362a7">cl::sycl::detail::host_context</a>
-, <a class="el" href="classcl_1_1sycl_1_1detail_1_1host__device.html#a5e49ec37f0973dae9c7722c409826b5c">cl::sycl::detail::host_device</a>
-, <a class="el" href="group__execution.html#a4a41166d2c11219d9c77e53e053c8fb7">cl::sycl::detail::host_platform</a>
-, <a class="el" href="classcl_1_1sycl_1_1detail_1_1host__queue.html#ac9ffba69758a2290c1c7eb9a2cfa6be4">cl::sycl::detail::host_queue</a>
-, <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__context.html#a91535a9409081018e7058c33bcc3504e">cl::sycl::detail::opencl_context</a>
-, <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__device.html#a10be9efcfb838ed324a5043961d39760">cl::sycl::detail::opencl_device</a>
-, <a class="el" href="group__execution.html#af35cee14d1bfa74124dab70c89e16f75">cl::sycl::detail::opencl_platform</a>
-, <a class="el" href="classcl_1_1sycl_1_1detail_1_1opencl__queue.html#aa6fa7eedbb1db0d6ef452c3d38d7d70d">cl::sycl::detail::opencl_queue</a>
-, <a class="el" href="group__execution.html#ab0d3c4081dcafff825f4a1d5b81dd337">cl::sycl::detail::platform</a>
-, <a class="el" href="structcl_1_1sycl_1_1detail_1_1queue.html#abdbcf6fcd9c68d78e71c0453e335f23f">cl::sycl::detail::queue</a>
-, <a class="el" href="group__execution.html#af563f0e0d74afdadb195bb80c20a3d32">cl::sycl::device</a>
-, <a class="el" href="group__execution.html#a945019993c817216ac19617d5a9cb62e">cl::sycl::platform</a>
-, <a class="el" href="group__execution.html#adfbbd03cb8e3021fab6835538ff72a65">cl::sycl::queue</a>
+: <a class="el" href="group__execution.html#a5cb11be9fe698ee1e6e44df9ea0e9e04">trisycl::context</a>
+, <a class="el" href="group__execution.html#ad7bd0a49542db0a48db9a964d86dd90d">trisycl::detail::context</a>
+, <a class="el" href="group__execution.html#ad2bc4aa9d4db9e8e24d56dc59e134081">trisycl::detail::device</a>
+, <a class="el" href="structtrisycl_1_1detail_1_1event.html#a73153a5638c213ff6ce1bf14aed64a88">trisycl::detail::event</a>
+, <a class="el" href="group__execution.html#a4865e8c6a8ffd2a386b2b523e6a16734">trisycl::detail::host_context</a>
+, <a class="el" href="classtrisycl_1_1detail_1_1host__device.html#a4c9dd9867a2836fca203f9f3e47c3b03">trisycl::detail::host_device</a>
+, <a class="el" href="classtrisycl_1_1detail_1_1host__event.html#af8bcf65702a46b0905cdc8bb5d623e55">trisycl::detail::host_event</a>
+, <a class="el" href="group__execution.html#ad7dfa6589d46d45481ec0d09f7fef96b">trisycl::detail::host_platform</a>
+, <a class="el" href="classtrisycl_1_1detail_1_1host__queue.html#afff628dff9ceca343a8309f745615d37">trisycl::detail::host_queue</a>
+, <a class="el" href="classtrisycl_1_1detail_1_1opencl__context.html#ab826d76550cf1c47a3a7a6e7bfd00de4">trisycl::detail::opencl_context</a>
+, <a class="el" href="classtrisycl_1_1detail_1_1opencl__device.html#ae8da60e4f61c3cd4d8f6d89235bba55e">trisycl::detail::opencl_device</a>
+, <a class="el" href="classtrisycl_1_1detail_1_1opencl__event.html#a1ad20d7a05f92c5d0e02ed50231909fe">trisycl::detail::opencl_event</a>
+, <a class="el" href="group__execution.html#ab901fb9d1c7602ab910d50e703bc7509">trisycl::detail::opencl_platform</a>
+, <a class="el" href="classtrisycl_1_1detail_1_1opencl__queue.html#a0419c45782cd2fb332ead5be4ed1a2fe">trisycl::detail::opencl_queue</a>
+, <a class="el" href="group__execution.html#ad1286bcacf5a75f3154fdb61af90d601">trisycl::detail::platform</a>
+, <a class="el" href="structtrisycl_1_1detail_1_1queue.html#a61ff300306a6806b22d78e966bf2c733">trisycl::detail::queue</a>
+, <a class="el" href="group__execution.html#a85994f72e781307e4cdf671e18dfb6fc">trisycl::device</a>
+, <a class="el" href="classtrisycl_1_1event.html#ab60c97c46011a74178773cb467daa735">trisycl::event</a>
+, <a class="el" href="group__execution.html#acfeda545445a0f718d768e3d7350ee8d">trisycl::platform</a>
+, <a class="el" href="group__execution.html#a96f9033c66379e86199cff1afd0fa69c">trisycl::queue</a>
 </li>
 <li>is_read_access()
-: <a class="el" href="group__data.html#af184c192174b463b833d4db3b7e7fc1e">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
-, <a class="el" href="group__data.html#ab1a1e220c2bd22fe219582544d174de4">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
+: <a class="el" href="group__data.html#a48edd495ed98735815a64a4ebfb2942e">trisycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+, <a class="el" href="group__data.html#a31c96abde005a7df4d21dd509bc521c1">trisycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 </li>
 <li>is_read_only()
-: <a class="el" href="group__data.html#a64147fabbac34a209f6cab100ec8f1dc">cl::sycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
+: <a class="el" href="group__data.html#a857af808d85b625925d4ba6718665102">trisycl::buffer&lt; T, Dimensions, Allocator &gt;</a>
 </li>
 <li>is_write_access()
-: <a class="el" href="group__data.html#a1829f7efbd021afede206d1975d40183">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
-, <a class="el" href="group__data.html#acbf5517a9828d9a91c5fe7e140d32ba5">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
+: <a class="el" href="group__data.html#ae93b6f20bc4c61705ae616c02b5ad8ed">trisycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+, <a class="el" href="group__data.html#a383b576b5a8172b97799ce039c66754c">trisycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 </li>
 <li>item()
-: <a class="el" href="group__parallelism.html#a43da48dbb86f4e792a80defda15682bc">cl::sycl::item&lt; Dimensions, with_offset &gt;</a>
+: <a class="el" href="group__parallelism.html#a2f23d71bcf4b70976ac2ade05368cb1c">trisycl::item&lt; Dimensions, with_offset &gt;</a>
 </li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 16 2020 13:26:36 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

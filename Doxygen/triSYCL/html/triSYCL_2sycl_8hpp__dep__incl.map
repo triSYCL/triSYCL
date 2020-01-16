@@ -1,0 +1,4 @@
+<map id="include/triSYCL/sycl.hpp" name="include/triSYCL/sycl.hpp">
+<area shape="rect" id="node2" href="$CL_2sycl_8hpp.html" title="This is the main SYCL 1.2.1 interoperability header to expose triSYCL into the cl::sycl namespace..." alt="" coords="5,80,143,107"/>
+<area shape="rect" id="node3" href="$SYCL_2sycl_8hpp.html" title="This is the SYCL extension header to expose triSYCL directly into the shorter sycl namespace instead ..." alt="" coords="167,80,322,107"/>
+</map>

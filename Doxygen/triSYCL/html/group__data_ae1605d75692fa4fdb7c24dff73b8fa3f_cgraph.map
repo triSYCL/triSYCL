@@ -1,5 +1,0 @@
-<map id="cl::sycl::detail::pipe_reservation::pipe_reservation" name="cl::sycl::detail::pipe_reservation::pipe_reservation">
-<area shape="rect" id="node2" href="$group__data.html#a5800f657e50cbab3cf70bc259c96906c" title="Keep the default constructors too. " alt="" coords="249,5,445,47"/>
-<area shape="rect" id="node3" href="$group__data.html#af8c2168eb8ed3a162dd724fa7fbc4030" title="Reserve some part of the pipe for reading. " alt="" coords="280,71,415,112"/>
-<area shape="rect" id="node4" href="$group__data.html#ae3d2d0ded3383e9faacd2522c4a4a291" title="Reserve some part of the pipe for writing. " alt="" coords="280,136,415,177"/>
-</map>

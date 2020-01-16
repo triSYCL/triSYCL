@@ -1,3 +1,21 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structstd_1_1hash_3_01cl_1_1sycl_1_1buffer_3_01T_00_01Dimensions_00_01Allocator_01_4_01_4.html" title="std::hash\&lt; cl::sycl\l::buffer\&lt; T, Dimensions,\l Allocator \&gt; \&gt;" alt="" coords="5,5,169,61"/>
+<area shape="rect" id="node1" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information. " alt="" coords="5,217,127,243"/>
+<area shape="rect" id="node2" href="$group__error__handling.html#structtrisycl_1_1async__exception" title="An error stored in an exception_list for asynchronous errors. " alt="" coords="175,141,337,167"/>
+<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1cl__exception" title="Returns the OpenCL error code encapsulated in the exception. " alt="" coords="187,191,325,218"/>
+<area shape="rect" id="node4" href="$group__error__handling.html#classtrisycl_1_1device__error" title="The SYCL device will trigger this exception on error. " alt="" coords="188,242,324,269"/>
+<area shape="rect" id="node12" href="$group__error__handling.html#classtrisycl_1_1runtime__error" title="trisycl::runtime_error" alt="" coords="185,589,327,615"/>
+<area shape="rect" id="node5" href="$group__error__handling.html#classtrisycl_1_1compile__program__error" title="Error while compiling the SYCL kernel to a SYCL device. " alt="" coords="391,5,555,47"/>
+<area shape="rect" id="node6" href="$group__error__handling.html#classtrisycl_1_1feature__not__supported" title="Exception thrown when an optional feature or extension is used in a kernel but its not available on t..." alt="" coords="407,71,538,112"/>
+<area shape="rect" id="node7" href="$group__error__handling.html#classtrisycl_1_1invalid__object__error" title="Error regarding any memory objects being used inside the kernel. " alt="" coords="401,136,545,177"/>
+<area shape="rect" id="node8" href="$group__error__handling.html#classtrisycl_1_1link__program__error" title="Error while linking the SYCL kernel to a SYCL device. " alt="" coords="403,201,542,243"/>
+<area shape="rect" id="node9" href="$group__error__handling.html#classtrisycl_1_1memory__allocation__error" title="Error on memory allocation on the SYCL device for a SYCL kernel. " alt="" coords="385,267,560,308"/>
+<area shape="rect" id="node10" href="$group__error__handling.html#classtrisycl_1_1platform__error" title="The SYCL platform will trigger this exception on error. " alt="" coords="400,333,545,359"/>
+<area shape="rect" id="node11" href="$group__error__handling.html#classtrisycl_1_1profiling__error" title="The SYCL runtime will trigger this error if there is an error when profiling info is enabled..." alt="" coords="417,384,528,425"/>
+<area shape="rect" id="node13" href="$group__error__handling.html#classtrisycl_1_1accessor__error" title="Error regarding the trisycl::accessor objects defined. " alt="" coords="397,450,548,477"/>
+<area shape="rect" id="node14" href="$group__error__handling.html#classtrisycl_1_1event__error" title="Error regarding associated trisycl::event objects. " alt="" coords="407,501,538,527"/>
+<area shape="rect" id="node15" href="$group__error__handling.html#classtrisycl_1_1invalid__parameter__error" title="Error regarding parameters to the SYCL kernel, it may apply to any captured parameters to the kernel ..." alt="" coords="389,552,556,593"/>
+<area shape="rect" id="node16" href="$group__error__handling.html#classtrisycl_1_1kernel__error" title="Error that occurred before or while enqueuing the SYCL kernel. " alt="" coords="406,618,539,645"/>
+<area shape="rect" id="node17" href="$group__error__handling.html#classtrisycl_1_1nd__range__error" title="Error regarding the trisycl::nd_range specified for the SYCL kernel. " alt="" coords="397,669,548,695"/>
+<area shape="rect" id="node18" href="$group__error__handling.html#classtrisycl_1_1non__cl__error" title="Exception for an OpenCL operation requested in a non OpenCL area. " alt="" coords="405,719,541,746"/>
+<area shape="rect" id="node19" href="$group__error__handling.html#classtrisycl_1_1pipe__error" title="A failing pipe error will trigger this exception on error. " alt="" coords="411,770,534,797"/>
 </map>

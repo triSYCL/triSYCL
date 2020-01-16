@@ -1,3 +1,0 @@
-<map id="cl::sycl::detail::queue::wait_for_kernel_execution" name="cl::sycl::detail::queue::wait_for_kernel_execution">
-<area shape="rect" id="node2" href="$structcl_1_1sycl_1_1detail_1_1queue.html#a43bee70b08ce8c58858debc83ae62177" title="Wait for all kernel completion before the queue destruction. " alt="" coords="235,5,381,47"/>
-</map>

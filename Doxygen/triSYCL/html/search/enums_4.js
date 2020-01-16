@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['fence_5fspace',['fence_space',['../namespacecl_1_1sycl_1_1access.html#a1e26dc60d7c93fcc056d6be0c41d1d42',1,'cl::sycl::access']]],
-  ['fp_5fconfig',['fp_config',['../group__execution.html#ga1f763ed06ac5c82a02a7425bd7739745',1,'cl::sycl::info']]]
+  ['fence_5fspace',['fence_space',['../namespacetrisycl_1_1access.html#a5c869c9b2987306a2de14e70132621b4',1,'trisycl::access']]],
+  ['fp_5fconfig',['fp_config',['../group__execution.html#gaac05c8c1302f6960e8b717686a625723',1,'trisycl::info']]]
 ];

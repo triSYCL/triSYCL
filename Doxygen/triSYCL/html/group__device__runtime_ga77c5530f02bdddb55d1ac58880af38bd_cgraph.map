@@ -1,0 +1,4 @@
+<map id="trisycl::drt::drt::set_kernel" name="trisycl::drt::drt::set_kernel">
+<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1task.html#aef85e4bc2c97856581c09a62484b3f91" title="Get the queue behind the task to run a kernel on. " alt="" coords="164,5,293,47"/>
+<area shape="rect" id="node3" href="$structtrisycl_1_1detail_1_1task.html#a57401f85f13c9b3cb158b4c9e512c291" title="Set the OpenCL&#45;compatible kernel running this task if any. " alt="" coords="164,71,293,112"/>
+</map>

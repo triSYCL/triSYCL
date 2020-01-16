@@ -1,4 +1,0 @@
-<map id="cl::sycl::detail::pipe_reservation::commit" name="cl::sycl::detail::pipe_reservation::commit">
-<area shape="rect" id="node2" href="$group__data.html#a9e7e8dffd532cae5b7ab538174578b3c" title="Process the read reservations that are ready to be released in the reservation queue. " alt="" coords="199,5,364,61"/>
-<area shape="rect" id="node3" href="$group__data.html#a1102b729805ff4d364d0df64b5081858" title="Process the write reservations that are ready to be released in the reservation queue. " alt="" coords="197,85,365,141"/>
-</map>

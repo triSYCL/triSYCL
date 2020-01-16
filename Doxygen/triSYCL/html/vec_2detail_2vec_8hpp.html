@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>triSYCL implementation of SYCL: include/CL/sycl/vec/detail/vec.hpp File Reference</title>
+<title>triSYCL implementation of SYCL: include/triSYCL/vec/detail/vec.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -58,7 +58,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_8358e9aed72341d13c81ba12a462bec7.html">CL</a></li><li class="navelem"><a class="el" href="dir_dd7d3bcc93139b1cbc3b663242fe4a67.html">sycl</a></li><li class="navelem"><a class="el" href="dir_03b293aa3a1413cc261c6fe443366027.html">vec</a></li><li class="navelem"><a class="el" href="dir_1ad4a430c3a2f0ebc2c6607d7b5f5cf4.html">detail</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_aaf3c766ec178046651f3200d7a96209.html">triSYCL</a></li><li class="navelem"><a class="el" href="dir_ad58e15af3cba3134dfa5ce471aeebde.html">vec</a></li><li class="navelem"><a class="el" href="dir_d45832f2d624c2feb6b6cbbe874f5f39.html">detail</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -74,22 +74,28 @@ $(function() {
 <p>Implement the detail base OpenCL vector class.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;cstring&gt;</code><br />
-<code>#include &quot;<a class="el" href="array__tuple__helpers_8hpp_source.html">CL/sycl/detail/array_tuple_helpers.hpp</a>&quot;</code><br />
+<code>#include &lt;utility&gt;</code><br />
+<code>#include &quot;<a class="el" href="alignment__helper_8hpp_source.html">triSYCL/detail/alignment_helper.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="array__tuple__helpers_8hpp_source.html">triSYCL/detail/array_tuple_helpers.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for vec.hpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="vec_2detail_2vec_8hpp__incl.png" border="0" usemap="#include_2CL_2sycl_2vec_2detail_2vec_8hpp" alt=""/></div>
-<map name="include_2CL_2sycl_2vec_2detail_2vec_8hpp" id="include_2CL_2sycl_2vec_2detail_2vec_8hpp">
-<area shape="rect" id="node3" href="array__tuple__helpers_8hpp.html" title="Some helpers to do array&#45;tuple conversions. " alt="" coords="91,95,226,136"/>
+<div class="center"><img src="vec_2detail_2vec_8hpp__incl.png" border="0" usemap="#include_2triSYCL_2vec_2detail_2vec_8hpp" alt=""/></div>
+<map name="include_2triSYCL_2vec_2detail_2vec_8hpp" id="include_2triSYCL_2vec_2detail_2vec_8hpp">
+<area shape="rect" id="node4" href="alignment__helper_8hpp.html" title="A simple trait to help generate the appropriate alignment data for a SYCL type when specified appropr..." alt="" coords="141,95,304,136"/>
+<area shape="rect" id="node5" href="array__tuple__helpers_8hpp.html" title="Some helpers to do array&#45;tuple conversions. " alt="" coords="328,95,464,136"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><img src="vec_2detail_2vec_8hpp__dep__incl.png" border="0" usemap="#include_2CL_2sycl_2vec_2detail_2vec_8hppdep" alt=""/></div>
-<map name="include_2CL_2sycl_2vec_2detail_2vec_8hppdep" id="include_2CL_2sycl_2vec_2detail_2vec_8hppdep">
-<area shape="rect" id="node2" href="vec_8hpp.html" title="Implement the small OpenCL vector class. " alt="" coords="5,95,168,121"/>
-<area shape="rect" id="node3" href="sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="18,169,155,196"/>
+<div class="center"><img src="vec_2detail_2vec_8hpp__dep__incl.png" border="0" usemap="#include_2triSYCL_2vec_2detail_2vec_8hppdep" alt=""/></div>
+<map name="include_2triSYCL_2vec_2detail_2vec_8hppdep" id="include_2triSYCL_2vec_2detail_2vec_8hppdep">
+<area shape="rect" id="node2" href="vec_8hpp.html" title="Implement the small OpenCL vector class. " alt="" coords="78,95,241,121"/>
+<area shape="rect" id="node3" href="math_8hpp.html" title="Implement a wrapper around OpenCL math operations Joan.Thibault AT ens&#45;rennes POINT fr This file is d..." alt="" coords="13,169,183,196"/>
+<area shape="rect" id="node4" href="triSYCL_2sycl_8hpp.html" title="include/triSYCL/sycl.hpp" alt="" coords="76,244,243,271"/>
+<area shape="rect" id="node5" href="CL_2sycl_8hpp.html" title="This is the main SYCL 1.2.1 interoperability header to expose triSYCL into the cl::sycl namespace..." alt="" coords="5,319,143,345"/>
+<area shape="rect" id="node6" href="SYCL_2sycl_8hpp.html" title="This is the SYCL extension header to expose triSYCL directly into the shorter sycl namespace instead ..." alt="" coords="167,319,322,345"/>
 </map>
 </div>
 </div>
@@ -97,23 +103,23 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcl_1_1sycl_1_1detail_1_1vec.html">cl::sycl::detail::vec&lt; DataType, NumElements &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Small OpenCL vector class.  <a href="classcl_1_1sycl_1_1detail_1_1vec.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtrisycl_1_1detail_1_1vec.html">trisycl::detail::vec&lt; DataType, NumElements &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Small OpenCL vector class.  <a href="classtrisycl_1_1detail_1_1vec.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcl_1_1sycl_1_1detail_1_1vec.html">cl::sycl::detail::vec&lt; DataType, NumElements &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Small OpenCL vector class.  <a href="classcl_1_1sycl_1_1detail_1_1vec.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtrisycl_1_1detail_1_1vec.html">trisycl::detail::vec&lt; DataType, NumElements &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Small OpenCL vector class.  <a href="classtrisycl_1_1detail_1_1vec.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr class="memitem:namespacecl_1_1sycl_1_1detail"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl_1_1detail.html">cl::sycl::detail</a></td></tr>
+<tr class="memitem:namespacetrisycl_1_1detail"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetrisycl_1_1detail.html">trisycl::detail</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:acbb13b7fd12656f3d0d968542cfdf6d9"><td class="memTemplParams" colspan="2">template&lt;typename DataType , int numElements&gt; </td></tr>
-<tr class="memitem:acbb13b7fd12656f3d0d968542cfdf6d9"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecl_1_1sycl_1_1detail.html#acbb13b7fd12656f3d0d968542cfdf6d9">cl::sycl::detail::__swizzled_base_vec__</a> = detail::vec&lt; DataType, numElements &gt;</td></tr>
-<tr class="separator:acbb13b7fd12656f3d0d968542cfdf6d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ef746371302a22b7f6a4bc5512fdae2"><td class="memTemplParams" colspan="2">template&lt;typename DataType , int numElements&gt; </td></tr>
+<tr class="memitem:a6ef746371302a22b7f6a4bc5512fdae2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetrisycl_1_1detail.html#a6ef746371302a22b7f6a4bc5512fdae2">trisycl::detail::__swizzled_base_vec__</a> = detail::vec&lt; DataType, numElements &gt;</td></tr>
+<tr class="separator:a6ef746371302a22b7f6a4bc5512fdae2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implement the detail base OpenCL vector class. </p>
@@ -124,7 +130,7 @@ Typedefs</h2></td></tr>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 16 2020 13:26:36 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

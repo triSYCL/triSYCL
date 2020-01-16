@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classstd_1_1shared__ptr_3_01detail_1_1device_01_4.html" title="shared_ptr\&lt; detail\l::device \&gt;" alt="" coords="5,5,132,47"/>
+<area shape="rect" id="node1" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; detail::event \&gt;" alt="" coords="5,67,144,108"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1event.html" title="trisycl::detail::event" alt="" coords="202,74,338,101"/>
+<area shape="rect" id="node3" href="$classtrisycl_1_1detail_1_1host__event.html" title="trisycl::detail::host\l_event" alt="" coords="403,5,532,47"/>
+<area shape="rect" id="node4" href="$classtrisycl_1_1detail_1_1opencl__event.html" title="trisycl::detail::opencl\l_event" alt="" coords="396,71,539,112"/>
+<area shape="rect" id="node5" href="$structtrisycl_1_1detail_1_1singleton.html" title="trisycl::detail::singleton\l\&lt; host_event \&gt;" alt="" coords="192,5,348,47"/>
 </map>

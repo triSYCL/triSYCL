@@ -1,4 +1,0 @@
-<map id="cl::sycl::detail::device" name="cl::sycl::detail::device">
-<area shape="rect" id="node2" href="$classcl_1_1sycl_1_1detail_1_1host__device.html" title="SYCL host device. " alt="" coords="5,80,141,121"/>
-<area shape="rect" id="node3" href="$classcl_1_1sycl_1_1detail_1_1opencl__device.html" title="SYCL OpenCL device. " alt="" coords="165,80,315,121"/>
-</map>

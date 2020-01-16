@@ -62,53 +62,60 @@ $(function() {
 
 <h3><a id="index_p"></a>- p -</h3><ul>
 <li>parallel_for()
-: <a class="el" href="group__execution.html#a212c72af3a1b7ffaec88354ae6e8900d">cl::sycl::handler</a>
+: <a class="el" href="group__execution.html#a5c04b7f4071feb465157d74fc6bfa5d8">trisycl::handler</a>
+, <a class="el" href="structtrisycl_1_1vendor_1_1trisycl_1_1scope_1_1queue_1_1command__group.html#a8aa7e5062b6eaaa8a43d8b9b3a580af7">trisycl::vendor::trisycl::scope::queue&lt; Device, QueueStorage &gt;::command_group&lt; CGH &gt;</a>
 </li>
 <li>parallel_for_iterate()
-: <a class="el" href="group__parallelism.html#abdd7f72511f36b81e936df177ceb7fae">cl::sycl::detail::parallel_for_iterate&lt; level, Range, ParallelForFunctor, Id &gt;</a>
-, <a class="el" href="group__parallelism.html#a8c037e7dd5a462b03a454a1621bee206">cl::sycl::detail::parallel_for_iterate&lt; 0, Range, ParallelForFunctor, Id &gt;</a>
+: <a class="el" href="group__parallelism.html#a1451e6486dda945d124df15156199f2a">trisycl::detail::parallel_for_iterate&lt; level, Range, ParallelForFunctor, Id &gt;</a>
+, <a class="el" href="group__parallelism.html#aad9fa73b2a557a18ba6aa44644e2a13f">trisycl::detail::parallel_for_iterate&lt; 0, Range, ParallelForFunctor, Id &gt;</a>
 </li>
 <li>parallel_for_work_group()
-: <a class="el" href="group__execution.html#a5ae74565e39d4763c7efdba3581d087b">cl::sycl::handler</a>
+: <a class="el" href="group__execution.html#a35cee6d51dca6e9ce16a5bcd840a6a52">trisycl::handler</a>
 </li>
 <li>parallel_for_work_item()
-: <a class="el" href="group__parallelism.html#a08a586ca51493ef84914290fef699b72">cl::sycl::group&lt; Dimensions &gt;</a>
-</li>
-<li>parallel_OpenMP_for_iterate()
-: <a class="el" href="group__parallelism.html#a23695122fac23fd8c657981ee9992f4b">cl::sycl::detail::parallel_OpenMP_for_iterate&lt; level, Range, ParallelForFunctor, Id &gt;</a>
+: <a class="el" href="group__parallelism.html#af8b3fe6b818b38f0bd960e6c807de88c">trisycl::group&lt; Dimensions &gt;</a>
 </li>
 <li>partition_array()
-: <a class="el" href="group__Xilinx.html#a9c617193272416ee6c01b37c97bd6a05">cl::sycl::vendor::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;</a>
+: <a class="el" href="group__Xilinx.html#a3aa1487be9d0d9a004dee63194f65139">trisycl::vendor::xilinx::partition_array&lt; ValueType, Size, PartitionType &gt;</a>
 </li>
 <li>pipe()
-: <a class="el" href="group__data.html#a91b79417e857a3acb489f3625d004eaa">cl::sycl::detail::pipe&lt; T &gt;</a>
-, <a class="el" href="group__data.html#a9b4bd20a90997c2210ccbc74bb0b3127">cl::sycl::pipe&lt; T &gt;</a>
+: <a class="el" href="group__data.html#a7d0c985bbaff0847af1151b50d6da73f">trisycl::detail::pipe&lt; T &gt;</a>
+, <a class="el" href="group__data.html#adb19d8df7df4bcf9be1bc9a0069f9e8a">trisycl::pipe&lt; T &gt;</a>
 </li>
 <li>pipe_accessor()
-: <a class="el" href="group__data.html#aafbb4f812bac0e6341d7001efc3923b3">cl::sycl::detail::pipe_accessor&lt; T, AccessMode, Target &gt;</a>
+: <a class="el" href="group__data.html#a6e40d4c425e013f71e3ae99754f2b83f">trisycl::detail::pipe_accessor&lt; T, AccessMode, Target &gt;</a>
 </li>
 <li>pipe_reservation()
-: <a class="el" href="group__data.html#ae1605d75692fa4fdb7c24dff73b8fa3f">cl::sycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
-, <a class="el" href="group__data.html#aa1f5e1be018022c1ab270c1eeea621b5">cl::sycl::pipe_reservation&lt; PipeAccessor &gt;</a>
+: <a class="el" href="group__data.html#ab836aba470ca9e7a2b2085144afe497f">trisycl::detail::pipe_reservation&lt; PipeAccessor &gt;</a>
+, <a class="el" href="group__data.html#acf30e071059b25a6b2b592ba2d68719b">trisycl::pipe_reservation&lt; PipeAccessor &gt;</a>
 </li>
 <li>platform()
-: <a class="el" href="group__execution.html#a8b15b178d6f19233667a73df004cc08e">cl::sycl::platform</a>
+: <a class="el" href="group__execution.html#a26be58353aff0aa056c9e0ccb5ddd1e5">trisycl::platform</a>
+, <a class="el" href="group__vendor__trisycl__scope.html#a0c2ce790890a241eb1d9a78341a65110">trisycl::vendor::trisycl::scope::detail::platform&lt; PlatformStorage &gt;</a>
+, <a class="el" href="group__vendor__trisycl__scope.html#a007be57f2bfb33b1644e5c416a5f508a">trisycl::vendor::trisycl::scope::platform&lt; PlatformStorage &gt;</a>
+</li>
+<li>platform_scope()
+: <a class="el" href="structtrisycl_1_1vendor_1_1trisycl_1_1scope_1_1queue_1_1command__group.html#a4f558fc6cb9c8a61b79e0dcb6a73c5b0">trisycl::vendor::trisycl::scope::queue&lt; Device, QueueStorage &gt;::command_group&lt; CGH &gt;</a>
+, <a class="el" href="group__vendor__trisycl__scope.html#a22f9b2fe1382c50f71d902461efe5ef2">trisycl::vendor::trisycl::scope::queue&lt; Device, QueueStorage &gt;</a>
 </li>
 <li>postlude()
-: <a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#a18f4bf63403e822c0917432430ff87d4">cl::sycl::detail::task</a>
+: <a class="el" href="structtrisycl_1_1detail_1_1task.html#af48ae14e192b9d3a4140002a4a7d5920">trisycl::detail::task</a>
 </li>
 <li>prelude()
-: <a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#af10a532006cd46573a4bb1664f9e87a8">cl::sycl::detail::task</a>
+: <a class="el" href="structtrisycl_1_1detail_1_1task.html#a75a321166d5aa76e8d887035204a905a">trisycl::detail::task</a>
 </li>
 <li>program()
-: <a class="el" href="structcl_1_1sycl_1_1drt_1_1code_1_1program.html#a9be7628f3fa7b2ef9d215c6f063ba891">cl::sycl::drt::code::program</a>
-, <a class="el" href="classcl_1_1sycl_1_1program.html#ad079279a106d0005a44ceea860ffe5dc">cl::sycl::program</a>
+: <a class="el" href="structtrisycl_1_1drt_1_1drt_1_1code_1_1program.html#a18024d9dc782dc5d4560a5fdb719e78b">trisycl::drt::drt::code::program</a>
+, <a class="el" href="classtrisycl_1_1program.html#aba0595cf376bf0f237d7bdb44702219e">trisycl::program</a>
+</li>
+<li>property_list()
+: <a class="el" href="classtrisycl_1_1property__list.html#a87c585991aa6125544de51acf948c3e7">trisycl::property_list</a>
 </li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 16 2020 13:26:36 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

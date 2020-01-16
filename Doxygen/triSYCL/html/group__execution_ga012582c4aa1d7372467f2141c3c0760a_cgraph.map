@@ -1,0 +1,4 @@
+<map id="trisycl::get_info&lt; info::context::devices &gt;" name="trisycl::get_info&lt; info::context::devices &gt;">
+<area shape="rect" id="node2" href="$group__execution.html#a6d64abcc422ecda7b61f8a9fa640ebf8" title="Returns the set of devices that are part of this context. " alt="" coords="216,5,351,47"/>
+<area shape="rect" id="node3" href="$group__execution.html#acb6dbf237c55830bacb4ff0d21ba64db" title="Queries OpenCL information for the under&#45;lying cl context. " alt="" coords="399,13,561,39"/>
+</map>

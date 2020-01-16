@@ -1,4 +1,0 @@
-<map id="cl::sycl::device_type_selector" name="cl::sycl::device_type_selector">
-<area shape="rect" id="node3" href="$group__execution.html#classcl_1_1sycl_1_1device__typename__selector" title="Select a device by template device_type parameter. " alt="" coords="5,169,180,211"/>
-<area shape="rect" id="node2" href="$group__execution.html#classcl_1_1sycl_1_1device__selector" title="The SYCL heuristics to select a device. " alt="" coords="11,5,174,32"/>
-</map>

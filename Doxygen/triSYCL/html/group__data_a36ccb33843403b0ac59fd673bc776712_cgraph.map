@@ -1,5 +1,0 @@
-<map id="cl::sycl::detail::accessor::accessor" name="cl::sycl::detail::accessor::accessor">
-<area shape="rect" id="node2" href="$group__data.html#a3e7c6b885a1c98bcbd904f921bbcc4d5" title="Returns the size of the underlying buffer storage in bytes. " alt="" coords="217,5,381,47"/>
-<area shape="rect" id="node4" href="$group__data.html#a1829f7efbd021afede206d1975d40183" title="Test if the accessor has a write access right. " alt="" coords="217,71,381,112"/>
-<area shape="rect" id="node3" href="$group__data.html#a415392a1e1fac8fa8b43d929f36058b1" title="Returns the total number of elements behind the accessor. " alt="" coords="429,5,593,47"/>
-</map>

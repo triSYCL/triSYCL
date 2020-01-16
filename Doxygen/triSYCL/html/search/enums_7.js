@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['mode',['mode',['../namespacecl_1_1sycl_1_1access.html#a9ae8c23f772316322be407bbb6498b17',1,'cl::sycl::access']]]
+  ['mode',['mode',['../namespacetrisycl_1_1access.html#a2ee71c8ee80896e782636c805fab297c',1,'trisycl::access']]]
 ];

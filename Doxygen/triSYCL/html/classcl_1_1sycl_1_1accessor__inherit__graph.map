@@ -1,4 +1,0 @@
-<map id="cl::sycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;" name="cl::sycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;">
-<area shape="rect" id="node2" href="$structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html" title="cl::sycl::detail::shared\l_ptr_implementation\&lt; accessor\l\&lt; DataType, Dimensions, AccessMode,\l Target \&gt;, detail::accessor\&lt; DataType,\l Dimensions, AccessMode, Target \&gt; \&gt;" alt="" coords="236,5,492,91"/>
-<area shape="rect" id="node4" href="$group__helpers.html" title="cl::sycl::detail::container\l_element_aspect\&lt; DataType \&gt;" alt="" coords="263,115,465,157"/>
-</map>

@@ -1,0 +1,9 @@
+<map id="trisycl::nd_item::get_global_id" name="trisycl::nd_item::get_global_id">
+<area shape="rect" id="node2" href="$group__parallelism.html#a08e80a8c95f36c2d8f1ac7589f6be81a" title="Return the constituent element of the global id representing the work&#45;item&#39;s position in the global i..." alt="" coords="207,5,344,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#a51c9052fd19cf4b610b6baaec3edfd16" title="Return the flattened id of the current work&#45;item after subtracting the offset. " alt="" coords="207,71,344,112"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#a8741fffea15e3f4a4b9775c9bf236709" title="Return the constituent group representing the work&#45;group&#39;s position within the overall nd_range..." alt="" coords="207,136,344,177"/>
+<area shape="rect" id="node7" href="$group__parallelism.html#a444421f3c90aceddbeb841fd33f0569a" title="Allows projection down to an item. " alt="" coords="191,202,360,229"/>
+<area shape="rect" id="node8" href="$group__data.html#ae85bfaad7788e09a3ad2ed6c69c769a3" title="To use an accessor with an [nd_item&lt;&gt;]. " alt="" coords="212,253,339,295"/>
+<area shape="rect" id="node5" href="$group__parallelism.html#aeb30eb06737d5ba2879710cbe0d5179b" title="Return the constituent element of the group id representing the work&#45;group;s position within the over..." alt="" coords="408,104,545,145"/>
+<area shape="rect" id="node6" href="$group__parallelism.html#abd89a34250b22ec61c999f34e49db167" title="Return the flattened id of the current work&#45;group. " alt="" coords="408,169,545,211"/>
+</map>

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['vec_2ehpp',['vec.hpp',['../vec_2detail_2vec_8hpp.html',1,'(Global Namespace)'],['../vec_8hpp.html',1,'(Global Namespace)']]]
+  ['unimplemented_2ehpp',['unimplemented.hpp',['../unimplemented_8hpp.html',1,'']]],
+  ['util_2ehpp',['util.hpp',['../util_8hpp.html',1,'']]]
 ];

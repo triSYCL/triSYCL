@@ -1,4 +1,0 @@
-<map id="cl::sycl::detail::pipe::move_write_reservation_forward" name="cl::sycl::detail::pipe::move_write_reservation_forward">
-<area shape="rect" id="node2" href="$group__data.html#a79268d724bea6d0733adea9da85453a4" title="Commit the reservation station. " alt="" coords="221,13,365,54"/>
-<area shape="rect" id="node3" href="$group__data.html#a313c3a16cfb3ffe357949a4ec5a15082" title="An implicit commit is made in the destructor. " alt="" coords="413,13,617,54"/>
-</map>

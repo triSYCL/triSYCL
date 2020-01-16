@@ -1,0 +1,4 @@
+<map id="trisycl::detail::accessor::get_size" name="trisycl::detail::accessor::get_size">
+<area shape="rect" id="node2" href="$group__data.html#a94174fd654b3d92ef3b845329bc7caf0" title="Construct a host accessor from an existing buffer. " alt="" coords="211,5,368,47"/>
+<area shape="rect" id="node3" href="$group__data.html#a3394999b292edcaf3ffbab2d9355af95" title="Lazily associate a CL buffer to the SYCL buffer and copy data in it if required, updates the state of..." alt="" coords="211,71,368,112"/>
+</map>

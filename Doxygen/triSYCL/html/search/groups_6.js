@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['vector_20types_20in_20sycl',['Vector types in SYCL',['../group__vector.html',1,'']]]
+  ['some_20helpers_20for_20the_20implementation',['Some helpers for the implementation',['../group__helpers.html',1,'']]]
 ];

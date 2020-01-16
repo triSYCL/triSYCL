@@ -1,3 +1,0 @@
-<map id="cl::sycl::handler::dispatch_set_arg" name="cl::sycl::handler::dispatch_set_arg">
-<area shape="rect" id="node2" href="$group__execution.html#a529b800f175828a7edc07b0d1a19a176" title="Set all kernel args for an OpenCL kernel which is used through the SYCL/OpenCL interop interface..." alt="" coords="176,5,299,47"/>
-</map>

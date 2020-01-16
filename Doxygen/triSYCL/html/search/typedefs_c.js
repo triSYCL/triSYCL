@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['map_5fallocator',['map_allocator',['../group__data.html#gaa5ab7472bc98afc7f70032036e6cc501',1,'cl::sycl']]],
-  ['multi_5fptr',['multi_ptr',['../group__address__spaces.html#ga9dafd4b1b4d7ad7fb7d93eab429942f9',1,'cl::sycl']]],
-  ['mutex_5fclass',['mutex_class',['../namespacecl_1_1sycl.html#a0e818f1ac2ba5084b08dd41ca813ef28',1,'cl::sycl']]]
+  ['map_5fallocator',['map_allocator',['../group__data.html#gae530ec4a956b74088b45ee1ef2f5e492',1,'trisycl']]],
+  ['multi_5fptr',['multi_ptr',['../group__address__spaces.html#ga57d94299b89e3270c6b1b6d9d2d203e0',1,'trisycl']]],
+  ['mutex_5fclass',['mutex_class',['../namespacetrisycl.html#aa3bd3b66b2b8b0d4de44838b05c4ae1d',1,'trisycl']]]
 ];

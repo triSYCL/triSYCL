@@ -1,0 +1,4 @@
+<map id="trisycl::compile_program_error" name="trisycl::compile_program_error">
+<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1device__error" title="The SYCL device will trigger this exception on error. " alt="" coords="19,80,155,107"/>
+<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information. " alt="" coords="27,5,148,32"/>
+</map>

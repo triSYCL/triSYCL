@@ -1,4 +1,0 @@
-<map id="cl::sycl::detail::opencl_platform::get_devices" name="cl::sycl::detail::opencl_platform::get_devices">
-<area shape="rect" id="node2" href="$group__execution.html#ac795a054d022a641d2c3ae52229d6fda" title="cl::sycl::detail::opencl\l_platform::instance" alt="" coords="208,5,357,47"/>
-<area shape="rect" id="node3" href="$group__execution.html#a8b15b178d6f19233667a73df004cc08e" title="Construct a platform class instance using a boost::compute::platform. " alt="" coords="405,5,524,47"/>
-</map>

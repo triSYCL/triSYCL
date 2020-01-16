@@ -1,5 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$group__execution.html#classcl_1_1sycl_1_1device__selector" title="The SYCL heuristics to select a device. " alt="" coords="5,13,168,39"/>
-<area shape="rect" id="node2" href="$group__execution.html#classcl_1_1sycl_1_1device__type__selector" title="A device selector by device_type. " alt="" coords="216,5,359,47"/>
-<area shape="rect" id="node3" href="$group__execution.html#classcl_1_1sycl_1_1device__typename__selector" title="Select a device by template device_type parameter. " alt="" coords="407,5,581,47"/>
+<area shape="rect" id="node1" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; accessor\&lt; T, Dimensions,\l Mode, access::target::local \&gt; \&gt;" alt="" coords="5,5,213,61"/>
+<area shape="rect" id="node2" href="$group__data.html#classtrisycl_1_1detail_1_1accessor_3_01T_00_01Dimensions_00_01Mode_00_01access_1_1target_1_1local_01_4" title="The local accessor specialization abstracts the way local memory is allocated to a kernel to be share..." alt="" coords="261,5,424,61"/>
 </map>

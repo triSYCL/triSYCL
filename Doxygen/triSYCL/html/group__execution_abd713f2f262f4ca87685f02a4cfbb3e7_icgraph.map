@@ -1,0 +1,5 @@
+<map id="trisycl::detail::opencl_platform::get_boost_compute" name="trisycl::detail::opencl_platform::get_boost_compute">
+<area shape="rect" id="node2" href="$group__execution.html#ga1ba73e5a9ba54cb746bef3aa464d04fb" title="Get all the available devices for this OpenCL platform. " alt="" coords="252,5,407,47"/>
+<area shape="rect" id="node3" href="$group__execution.html#a7401078598697b705c0a2f41a89ad0e7" title="trisycl::detail::opencl\l_platform::instance" alt="" coords="455,5,597,47"/>
+<area shape="rect" id="node4" href="$group__execution.html#ac62f63894ad6c386b7fb5d49fe8d9c9d" title="Construct a platform class instance using a boost::compute::platform. " alt="" coords="645,5,765,47"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="trisycl::context::context" name="trisycl::context::context">
+<area shape="rect" id="node2" href="$classtrisycl_1_1detail_1_1opencl__context.html#a871e1c031698e0e1ea29c14522e84241" title="Get a singleton instance of the opencl_context. " alt="" coords="212,5,355,47"/>
+<area shape="rect" id="node3" href="$classtrisycl_1_1detail_1_1cache.html#acf94820e866b304f627288919d123e9e" title="Get a value stored in the cache if present or insert by calling a generator function. " alt="" coords="403,5,541,47"/>
+</map>

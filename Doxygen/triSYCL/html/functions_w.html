@@ -62,47 +62,53 @@ $(function() {
 
 <h3><a id="index_w"></a>- w -</h3><ul>
 <li>w
-: <a class="el" href="group__vector.html#ga391e19e48ff05630f1f1fdd0b49e08b3">cl::sycl::elem</a>
-, <a class="el" href="group__vector.html#aac9e5ea86d8d4409db22a00dbb207598">cl::sycl::vec&lt; DataType, 4 &gt;</a>
+: <a class="el" href="group__vector.html#ga4110c04010fe88c4f9f30e87d3aa46cf">trisycl::elem</a>
+, <a class="el" href="group__vector.html#a29e8267119985feb0c1cb794e6253c8a">trisycl::vec&lt; DataType, 4 &gt;</a>
 </li>
 <li>w_rid_q
-: <a class="el" href="group__data.html#a15de0ef2c1600a5013a14d129a604590">cl::sycl::detail::pipe&lt; T &gt;</a>
+: <a class="el" href="group__data.html#ae403aeac9579a356397631b5608abf87">trisycl::detail::pipe&lt; T &gt;</a>
 </li>
 <li>wait()
-: <a class="el" href="group__data.html#a93b4c2b305fd93a55f81689a6260ad21">cl::sycl::detail::buffer_base</a>
-, <a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#a91d400fd40ede4ae00662dd124dd1b8a">cl::sycl::detail::task</a>
-, <a class="el" href="group__execution.html#ac46bc8ee7cff0a3f77c7afb7d60184b4">cl::sycl::queue</a>
+: <a class="el" href="group__data.html#a6c75ff99123dc8dd4eca7dc5dc446d72">trisycl::detail::buffer_base</a>
+, <a class="el" href="structtrisycl_1_1detail_1_1event.html#ae218a6aa48b3cc64c1b11aaa2c702f36">trisycl::detail::event</a>
+, <a class="el" href="classtrisycl_1_1detail_1_1host__event.html#aae2c091e1371ab1efad14eaefd452c2f">trisycl::detail::host_event</a>
+, <a class="el" href="classtrisycl_1_1detail_1_1opencl__event.html#adca300d94499952071088cb4133d0bcd">trisycl::detail::opencl_event</a>
+, <a class="el" href="structtrisycl_1_1detail_1_1task.html#ad558ca5e22248f578b7acaddefacc3bf">trisycl::detail::task</a>
+, <a class="el" href="classtrisycl_1_1event.html#aea96914658f2ecdb08da6a827b7542e3">trisycl::event</a>
+, <a class="el" href="group__execution.html#a1ba33245bf82d7ad1cdd5f72afc45a98">trisycl::queue</a>
+, <a class="el" href="group__vendor__trisycl__scope.html#afe1587994e0574ad6b7ccf91c39f67e8">trisycl::vendor::trisycl::scope::queue&lt; Device, QueueStorage &gt;</a>
 </li>
 <li>wait_and_throw()
-: <a class="el" href="group__execution.html#abfa510446db9f4edd0c16270b199a232">cl::sycl::queue</a>
+: <a class="el" href="classtrisycl_1_1event.html#aa681397b6980f39004e1c2a878fbe57f">trisycl::event</a>
+, <a class="el" href="group__execution.html#a6414bc656f3648664daa6b4dba14090d">trisycl::queue</a>
 </li>
 <li>wait_for_kernel_execution()
-: <a class="el" href="structcl_1_1sycl_1_1detail_1_1queue.html#a7f89462189bb20d409acb73392a5f679">cl::sycl::detail::queue</a>
+: <a class="el" href="structtrisycl_1_1detail_1_1queue.html#a199e75a5b7c55233e6559815c45e9175">trisycl::detail::queue</a>
 </li>
 <li>wait_for_producers()
-: <a class="el" href="structcl_1_1sycl_1_1detail_1_1task.html#a3b176556e36e4ff5c1491a1ddf19579b">cl::sycl::detail::task</a>
+: <a class="el" href="structtrisycl_1_1detail_1_1task.html#a99398a4640aa89bb9fc5dc26feb747c5">trisycl::detail::task</a>
 </li>
 <li>what()
-: <a class="el" href="group__error__handling.html#a2b36ecbe953cc13d770700b5bfcc9a01">cl::sycl::exception</a>
+: <a class="el" href="group__error__handling.html#a92c14053745af1f0b367e29baefa441d">trisycl::exception</a>
 </li>
 <li>writable_array_type
-: <a class="el" href="group__data.html#aaa01116d1e6eceecefdd3b6d30b64873">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
+: <a class="el" href="group__data.html#a42d68b52bb14b0a9206017075c335dc4">trisycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;</a>
 </li>
 <li>writable_array_view_type
-: <a class="el" href="group__data.html#a56dddc4f7bc02b93e936e1c30c0d9b6b">cl::sycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
+: <a class="el" href="group__data.html#a5f1616428eedb0dbf34ece37f38c6b55">trisycl::detail::accessor&lt; T, Dimensions, Mode, Target &gt;</a>
 </li>
 <li>write()
-: <a class="el" href="group__data.html#ab2336f619ca77560c413b8ae33bdbf43">cl::sycl::detail::pipe&lt; T &gt;</a>
-, <a class="el" href="group__data.html#ac0298d907bca3642019eae14f299123e">cl::sycl::detail::pipe_accessor&lt; T, AccessMode, Target &gt;</a>
+: <a class="el" href="group__data.html#af8131899519273fdb126dc0c32bb9176">trisycl::detail::pipe&lt; T &gt;</a>
+, <a class="el" href="group__data.html#ae14bd59f1c7b640bd5468afbed34b173">trisycl::detail::pipe_accessor&lt; T, AccessMode, Target &gt;</a>
 </li>
 <li>write_done
-: <a class="el" href="group__data.html#a7a7df3d5199a3a00c8ab655234fe7189">cl::sycl::detail::pipe&lt; T &gt;</a>
+: <a class="el" href="group__data.html#ace3be1326a8613d3909fc168d215cdf9">trisycl::detail::pipe&lt; T &gt;</a>
 </li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 6 2018 14:04:18 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 16 2020 13:26:36 for triSYCL implementation of SYCL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

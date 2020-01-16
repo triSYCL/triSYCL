@@ -1,5 +1,0 @@
-<map id="cl::sycl::detail::host_queue" name="cl::sycl::detail::host_queue">
-<area shape="rect" id="node2" href="$structcl_1_1sycl_1_1detail_1_1queue.html" title="Some implementation details about the SYCL queue. " alt="" coords="236,117,383,143"/>
-<area shape="rect" id="node3" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; detail::queue \&gt;" alt="" coords="5,5,152,47"/>
-<area shape="rect" id="node7" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; host_queue \&gt;" alt="" coords="407,109,553,151"/>
-</map>

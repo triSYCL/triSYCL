@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classstd_1_1shared__ptr_3_01cl_1_1sycl_1_1detail_1_1pipe_3_01DataType_01_4_01_4.html" title="shared_ptr\&lt; cl::sycl\l::detail::pipe\&lt; DataType \&gt; \&gt;" alt="" coords="5,5,192,47"/>
+<area shape="rect" id="node1" href="$classtrisycl_1_1detail_1_1property.html" title="trisycl::detail::property" alt="" coords="5,13,156,39"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1property_1_1queue_1_1enable__profiling.html" title="trisycl::property::\lqueue::enable_profiling" alt="" coords="204,5,359,47"/>
 </map>

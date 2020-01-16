@@ -7,14 +7,15 @@ var searchData=
   ['uintptr_5ft',['uintptr_t',['../opencl__spir_8h.html#a46d30f10b56cc57713eb284f0c9712f8',1,'opencl_spir.h']]],
   ['ulong',['ulong',['../opencl__spir_8h.html#a718b4eb2652c286f4d42dc18a8e71a1a',1,'opencl_spir.h']]],
   ['ulong_5fmax',['ULONG_MAX',['../opencl__spir_8h.html#a41c51926a1997aab3503f9083935e06c',1,'opencl_spir.h']]],
-  ['unimplemented',['unimplemented',['../group__helpers.html#ga049782b4b19913105e7c2ce0d0c6cd93',1,'cl::sycl::detail']]],
+  ['unimplemented',['unimplemented',['../group__helpers.html#ga7bd7e00b76f5b2bef1deb898507f1f37',1,'trisycl::detail']]],
   ['unimplemented_2ehpp',['unimplemented.hpp',['../unimplemented_8hpp.html',1,'']]],
-  ['unique_5fptr_5fclass',['unique_ptr_class',['../namespacecl_1_1sycl.html#a7297c7f7107f609a00c08c1808f4b765',1,'cl::sycl']]],
-  ['update_5fbuffer_5fstate',['update_buffer_state',['../group__data.html#a43ad593cdde6aaaf0b1c3d641b61d5f6',1,'cl::sycl::detail::buffer_base']]],
-  ['use',['use',['../group__data.html#a25b9b8b3a3ee2ecdf33f5b10afe60a66',1,'cl::sycl::detail::buffer_base']]],
-  ['use_5fcount',['use_count',['../group__data.html#a798b7336a30856e100009d8e39580a87',1,'cl::sycl::buffer']]],
-  ['used_5ffor_5freading',['used_for_reading',['../group__data.html#a1bfd345a504f028b34108fba8a765835',1,'cl::sycl::detail::pipe']]],
-  ['used_5ffor_5fwriting',['used_for_writing',['../group__data.html#a3a9c0543074863d7f12c5b27dd2651f9',1,'cl::sycl::detail::pipe']]],
+  ['unique_5fptr_5fclass',['unique_ptr_class',['../namespacetrisycl.html#a365ed275d6285235e64788c4ad1a83a9',1,'trisycl']]],
+  ['update_5fbuffer_5fstate',['update_buffer_state',['../group__data.html#aad6218af1679f6e4f06ae001a36a86bb',1,'trisycl::detail::buffer_base']]],
+  ['use',['use',['../group__data.html#affe31d2f9f9eca682ea798abc155a90b',1,'trisycl::detail::buffer_base']]],
+  ['use_5fcount',['use_count',['../group__data.html#a543940ea05f65b229970c0ded5eb1c22',1,'trisycl::buffer']]],
+  ['used_5ffor_5freading',['used_for_reading',['../group__data.html#aa34730e3e09beea70972330ff8a96b5b',1,'trisycl::detail::pipe']]],
+  ['used_5ffor_5fwriting',['used_for_writing',['../group__data.html#a4287a6d3c175bb6bb9e2d55c4a072ca0',1,'trisycl::detail::pipe']]],
   ['ushort',['ushort',['../opencl__spir_8h.html#ab95f123a6c9bcfee6a343170ef8c5f69',1,'opencl_spir.h']]],
-  ['ushrt_5fmax',['USHRT_MAX',['../opencl__spir_8h.html#a689b119da994dece91d44b5aeac643ed',1,'opencl_spir.h']]]
+  ['ushrt_5fmax',['USHRT_MAX',['../opencl__spir_8h.html#a689b119da994dece91d44b5aeac643ed',1,'opencl_spir.h']]],
+  ['util_2ehpp',['util.hpp',['../util_8hpp.html',1,'']]]
 ];

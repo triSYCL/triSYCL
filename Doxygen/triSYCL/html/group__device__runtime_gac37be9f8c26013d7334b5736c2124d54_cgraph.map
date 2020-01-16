@@ -1,6 +1,0 @@
-<map id="cl::sycl::drt::serialize_accessor_arg" name="cl::sycl::drt::serialize_accessor_arg">
-<area shape="rect" id="node2" href="$structcl_1_1sycl_1_1detail_1_1task.html#a5903381a3034cf853ef0179c0c95ba40" title="Get the Boost.Compute buffer for an accessor of the task. " alt="" coords="196,5,341,47"/>
-<area shape="rect" id="node3" href="$structcl_1_1sycl_1_1detail_1_1task.html#a1141090d4da31755a9761a6dca2be534" title="Set a kernel argument by address. " alt="" coords="201,71,337,112"/>
-<area shape="rect" id="node4" href="$structcl_1_1sycl_1_1detail_1_1task.html#ae7dc8fc39b9dfe9de9b1d5bd6be174c7" title="Get the kernel running if any. " alt="" coords="395,37,531,79"/>
-<area shape="rect" id="node5" href="$group__execution.html#afa7c424818bfefb86e9b39657a6a0432" title="Return the Boost.Compute OpenCL kernel object for this kernel. " alt="" coords="389,103,536,144"/>
-</map>

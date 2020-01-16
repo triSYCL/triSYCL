@@ -1,4 +1,0 @@
-<map id="cl::sycl::detail::buffer::allocate_buffer" name="cl::sycl::detail::buffer::allocate_buffer">
-<area shape="rect" id="node2" href="$group__data.html#ae5a617cb28362bbccebb68515590075d" title="Create a new read&#45;write buffer of size. " alt="" coords="199,5,343,47"/>
-<area shape="rect" id="node3" href="$group__data.html#ad15b2a8c2fee6759f08296404babc06c" title="This method is to be called whenever an accessor is created. " alt="" coords="197,71,344,112"/>
-</map>

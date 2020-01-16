@@ -1,3 +1,6 @@
-<map id="include/CL/sycl/vec.hpp" name="include/CL/sycl/vec.hpp">
-<area shape="rect" id="node2" href="$sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="18,80,155,107"/>
+<map id="include/triSYCL/vec.hpp" name="include/triSYCL/vec.hpp">
+<area shape="rect" id="node2" href="$math_8hpp.html" title="Implement a wrapper around OpenCL math operations Joan.Thibault AT ens&#45;rennes POINT fr This file is d..." alt="" coords="13,80,183,107"/>
+<area shape="rect" id="node3" href="$triSYCL_2sycl_8hpp.html" title="include/triSYCL/sycl.hpp" alt="" coords="76,155,243,181"/>
+<area shape="rect" id="node4" href="$CL_2sycl_8hpp.html" title="This is the main SYCL 1.2.1 interoperability header to expose triSYCL into the cl::sycl namespace..." alt="" coords="5,229,143,256"/>
+<area shape="rect" id="node5" href="$SYCL_2sycl_8hpp.html" title="This is the SYCL extension header to expose triSYCL directly into the shorter sycl namespace instead ..." alt="" coords="167,229,322,256"/>
 </map>

@@ -1,12 +1,17 @@
-<map id="include/CL/sycl/pipe_reservation/detail/pipe_reservation.hpp" name="include/CL/sycl/pipe_reservation/detail/pipe_reservation.hpp">
-<area shape="rect" id="node2" href="$pipe__accessor_8hpp.html" title="include/CL/sycl/pipe\l/detail/pipe_accessor.hpp" alt="" coords="541,109,711,151"/>
-<area shape="rect" id="node11" href="$pipe__reservation_8hpp.html" title="include/CL/sycl/pipe\l_reservation.hpp" alt="" coords="736,109,876,151"/>
-<area shape="rect" id="node3" href="$accessor_8hpp.html" title="include/CL/sycl/accessor.hpp" alt="" coords="529,199,723,225"/>
-<area shape="rect" id="node4" href="$buffer_8hpp.html" title="include/CL/sycl/buffer.hpp" alt="" coords="5,445,180,471"/>
-<area shape="rect" id="node5" href="$sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="488,527,625,553"/>
-<area shape="rect" id="node6" href="$device__runtime_8hpp.html" title="include/CL/sycl/device\l_runtime.hpp" alt="" coords="711,437,866,479"/>
-<area shape="rect" id="node7" href="$handler_8hpp.html" title="include/CL/sycl/handler.hpp" alt="" coords="293,273,476,300"/>
-<area shape="rect" id="node8" href="$pipe_8hpp.html" title="include/CL/sycl/pipe.hpp" alt="" coords="362,355,527,382"/>
-<area shape="rect" id="node10" href="$static__pipe_8hpp.html" title="include/CL/sycl/static\l_pipe.hpp" alt="" coords="552,348,700,389"/>
-<area shape="rect" id="node9" href="$queue_8hpp.html" title="include/CL/sycl/queue.hpp" alt="" coords="111,355,287,382"/>
+<map id="include/triSYCL/pipe_reservation/detail/pipe_reservation.hpp" name="include/triSYCL/pipe_reservation/detail/pipe_reservation.hpp">
+<area shape="rect" id="node2" href="$pipe__accessor_8hpp.html" title="include/triSYCL/pipe\l/detail/pipe_accessor.hpp" alt="" coords="711,109,882,151"/>
+<area shape="rect" id="node16" href="$pipe__reservation_8hpp.html" title="include/triSYCL/pipe\l_reservation.hpp" alt="" coords="906,109,1047,151"/>
+<area shape="rect" id="node3" href="$accessor_8hpp.html" title="include/triSYCL/accessor.hpp" alt="" coords="699,199,894,225"/>
+<area shape="rect" id="node4" href="$buffer_8hpp.html" title="include/triSYCL/buffer.hpp" alt="" coords="313,467,488,493"/>
+<area shape="rect" id="node5" href="$triSYCL_2sycl_8hpp.html" title="include/triSYCL/sycl.hpp" alt="" coords="637,563,804,590"/>
+<area shape="rect" id="node8" href="$device__runtime_8hpp.html" title="include/triSYCL/device\l_runtime.hpp" alt="" coords="891,273,1046,315"/>
+<area shape="rect" id="node9" href="$handler_8hpp.html" title="include/triSYCL/handler.hpp" alt="" coords="309,281,493,307"/>
+<area shape="rect" id="node10" href="$pipe_8hpp.html" title="include/triSYCL/pipe.hpp" alt="" coords="713,370,880,397"/>
+<area shape="rect" id="node15" href="$static__pipe_8hpp.html" title="include/triSYCL/static\l_pipe.hpp" alt="" coords="539,363,689,404"/>
+<area shape="rect" id="node6" href="$CL_2sycl_8hpp.html" title="This is the main SYCL 1.2.1 interoperability header to expose triSYCL into the cl::sycl namespace..." alt="" coords="567,653,704,679"/>
+<area shape="rect" id="node7" href="$SYCL_2sycl_8hpp.html" title="This is the SYCL extension header to expose triSYCL directly into the shorter sycl namespace instead ..." alt="" coords="729,653,883,679"/>
+<area shape="rect" id="node11" href="$queue_8hpp.html" title="include/triSYCL/queue.hpp" alt="" coords="185,370,363,397"/>
+<area shape="rect" id="node12" href="$vendor_2trisycl_2scope_2queue_2detail_2queue_8hpp.html" title="include/triSYCL/vendor\l/trisycl/scope/queue/detail\l/queue.hpp" alt="" coords="63,452,237,508"/>
+<area shape="rect" id="node13" href="$vendor_2trisycl_2scope_2queue_8hpp.html" title="include/triSYCL/vendor\l/trisycl/scope/queue.hpp" alt="" coords="5,556,169,597"/>
+<area shape="rect" id="node14" href="$scope_8hpp.html" title="include/triSYCL/vendor\l/trisycl/scope.hpp" alt="" coords="9,645,165,687"/>
 </map>

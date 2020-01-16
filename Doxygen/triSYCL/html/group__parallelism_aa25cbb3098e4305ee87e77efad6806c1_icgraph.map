@@ -1,4 +1,0 @@
-<map id="cl::sycl::item::get_range" name="cl::sycl::item::get_range">
-<area shape="rect" id="node2" href="$group__parallelism.html#a7ad38d9af0ca6d7ff5d573c9bbd1d2fc" title="Return the linearized ID in the item&#39;s range. " alt="" coords="202,5,325,47"/>
-<area shape="rect" id="node3" href="$group__parallelism.html#a54d032fc4f73960ab98cab5920e87a65" title="Returns an item with same dimensions but offset set to 0. " alt="" coords="176,71,351,112"/>
-</map>

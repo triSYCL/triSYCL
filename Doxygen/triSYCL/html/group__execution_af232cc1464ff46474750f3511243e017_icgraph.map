@@ -1,4 +1,0 @@
-<map id="cl::sycl::device::is_cpu" name="cl::sycl::device::is_cpu">
-<area shape="rect" id="node2" href="$group__execution.html#accdadd6fafa11f1ef766d17659f00c20" title="Return the device_type of a device. " alt="" coords="209,13,352,39"/>
-<area shape="rect" id="node3" href="$group__execution.html#a4f3044b21621558fe7df7bb896107597" title="This pure virtual operator allows the customization of device selection. " alt="" coords="400,5,543,47"/>
-</map>

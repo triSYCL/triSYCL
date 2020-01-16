@@ -1,0 +1,5 @@
+<map id="trisycl::queue::queue" name="trisycl::queue::queue">
+<area shape="rect" id="node2" href="$classtrisycl_1_1detail_1_1opencl__queue.html#ad163a6c78ca779be85bbb53801e53c28" title="Get a singleton instance of the opencl_queue. " alt="" coords="201,5,344,47"/>
+<area shape="rect" id="node4" href="$group__execution.html#a85994f72e781307e4cdf671e18dfb6fc" title="Return true if the device is the SYCL host device. " alt="" coords="196,71,349,98"/>
+<area shape="rect" id="node3" href="$classtrisycl_1_1detail_1_1cache.html#acf94820e866b304f627288919d123e9e" title="Get a value stored in the cache if present or insert by calling a generator function. " alt="" coords="397,5,536,47"/>
+</map>

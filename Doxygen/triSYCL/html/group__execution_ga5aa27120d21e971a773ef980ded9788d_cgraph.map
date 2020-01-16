@@ -1,4 +1,0 @@
-<map id="cl::sycl::device_selector::select_device" name="cl::sycl::device_selector::select_device">
-<area shape="rect" id="node2" href="$group__execution.html#aabb03c54d8e57513595cbb363b52af96" title="Get the list of all the platforms available to the application. " alt="" coords="216,5,335,47"/>
-<area shape="rect" id="node3" href="$group__execution.html#a3d9f84ebb5dce0bc7e209eede43ef0db" title="Get the OpenCL information about the requested parameter. " alt="" coords="383,5,501,47"/>
-</map>

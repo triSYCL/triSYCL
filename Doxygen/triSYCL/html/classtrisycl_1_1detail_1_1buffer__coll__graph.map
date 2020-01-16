@@ -1,0 +1,8 @@
+<map id="trisycl::detail::buffer&lt; T, Dimensions &gt;" name="trisycl::detail::buffer&lt; T, Dimensions &gt;">
+<area shape="rect" id="node2" href="$group__data.html#structtrisycl_1_1detail_1_1buffer__base" title="Factorize some template independent buffer aspects in a base class. " alt="" coords="689,223,861,250"/>
+<area shape="rect" id="node11" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; buffer\&lt; T, Dimensions \&gt; \&gt;" alt="" coords="681,275,869,316"/>
+<area shape="rect" id="node15" href="$group__execution.html#classtrisycl_1_1context" title="SYCL context. " alt="" coords="721,537,829,563"/>
+<area shape="rect" id="node16" href="$structtrisycl_1_1detail_1_1shared__ptr__implementation.html" title="trisycl::detail::shared\l_ptr_implementation\&lt; context,\l detail::context \&gt;" alt="" coords="293,522,492,578"/>
+<area shape="rect" id="node18" href="$classstd_1_1shared__ptr_3_01detail_1_1context_01_4.html" title="shared_ptr\&lt; detail\l::context \&gt;" alt="" coords="15,561,142,603"/>
+<area shape="rect" id="node19" href="$classbool.html" title="bool" alt="" coords="752,587,799,614"/>
+</map>

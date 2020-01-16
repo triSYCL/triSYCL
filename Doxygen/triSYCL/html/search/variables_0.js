@@ -1,11 +1,12 @@
 var searchData=
 [
-  ['a',['a',['../group__vector.html#gaeace5e4b3952b15bfa6c81bce1450168',1,'cl::sycl::elem::a()'],['../opencl__spir_8h.html#afce50bc7a23ec77afc73ea78f6f569e9',1,'a():&#160;opencl_spir.h']]],
-  ['access',['access',['../group__data.html#afaef5dac2d23161a54412d133e0b8a98',1,'cl::sycl::detail::buffer']]],
-  ['accessors',['accessors',['../structcl_1_1sycl_1_1detail_1_1task.html#a6dd6d9ed9eb53763fd37941a304f6c5a',1,'cl::sycl::detail::task']]],
-  ['address_5fspace',['address_space',['../group__address__spaces.html#a7896b1c3f0cf5bd961febc91388ad599',1,'cl::sycl::detail::address_space_base']]],
-  ['alloc',['alloc',['../group__data.html#aec7f4cafcddc86e6fb5359f436e133c8',1,'cl::sycl::detail::buffer']]],
-  ['allocation',['allocation',['../group__data.html#afc4283fa1c95ac732192ed5e73c7a4f1',1,'cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;::allocation()'],['../group__data.html#a636c14a5b356e9c9bdb2aac955c3a107',1,'cl::sycl::detail::buffer::allocation()']]],
-  ['array',['array',['../group__data.html#ac7bc8b3b0b67d7311c831160dfe369eb',1,'cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;::array()'],['../group__data.html#ad3e968477237a7e8e31f0f75906ede6d',1,'cl::sycl::detail::accessor::array()']]],
-  ['array_5fsize',['array_size',['../group__Xilinx.html#a358ea5dda4090d80c0667d3d781be34c',1,'cl::sycl::vendor::xilinx::partition_array']]]
+  ['a',['a',['../group__vector.html#ga2d7148b260885227566192e2b56bcd97',1,'trisycl::elem::a()'],['../opencl__spir_8h.html#afce50bc7a23ec77afc73ea78f6f569e9',1,'a():&#160;opencl_spir.h']]],
+  ['access',['access',['../group__data.html#afddecae65e5cbb11e36b5e9a44d6d6dc',1,'trisycl::detail::buffer']]],
+  ['accessors',['accessors',['../structtrisycl_1_1detail_1_1task.html#a145e21dd7309dcdfc5d34e0b9d210942',1,'trisycl::detail::task']]],
+  ['address_5fspace',['address_space',['../group__address__spaces.html#a821b4be804e95c1ea63e79be0d765074',1,'trisycl::detail::address_space_base']]],
+  ['alignment_5fv',['alignment_v',['../namespacetrisycl_1_1detail.html#a792746be38e2d14492e3cef8d69806fe',1,'trisycl::detail']]],
+  ['alloc',['alloc',['../group__data.html#ae628ae58284e27eb2dcf85329e85d03c',1,'trisycl::detail::buffer']]],
+  ['allocation',['allocation',['../group__data.html#a23a9ef670c525b11193902d1d01b8639',1,'trisycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;::allocation()'],['../group__data.html#ac73c48ed173d005befc7c0f63a26c51e',1,'trisycl::detail::buffer::allocation()']]],
+  ['array',['array',['../group__data.html#ae9ccf309fd44fdb99636923906d7862e',1,'trisycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;::array()'],['../group__data.html#a831390d0fdcb10668c0a0cbc53ef7bdc',1,'trisycl::detail::accessor::array()']]],
+  ['array_5fsize',['array_size',['../group__Xilinx.html#ae0377a12b22e6b157c98a9048f4ee184',1,'trisycl::vendor::xilinx::partition_array']]]
 ];

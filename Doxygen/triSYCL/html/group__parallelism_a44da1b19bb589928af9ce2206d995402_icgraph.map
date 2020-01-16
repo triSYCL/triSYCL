@@ -1,6 +1,0 @@
-<map id="cl::sycl::h_item::get_local_range" name="cl::sycl::h_item::get_local_range">
-<area shape="rect" id="node2" href="$group__parallelism.html#a927aa2388473af13200e7ab301882d5f" title="Return the constituent group group representing the work&#45;group&#39;s position within the overall nd_range..." alt="" coords="191,37,328,79"/>
-<area shape="rect" id="node5" href="$group__parallelism.html#ada0e19d9d3a48626149f486c23905fc2" title="Return the flattened id of the current work&#45;item within the current work&#45;group. " alt="" coords="191,103,328,144"/>
-<area shape="rect" id="node3" href="$group__parallelism.html#a543e927c63044c44e254431ed507586d" title="Return the constituent element of the group id representing the work&#45;group&#39;s position within the over..." alt="" coords="376,5,513,47"/>
-<area shape="rect" id="node4" href="$group__parallelism.html#a6fbd0a8916d50bb028caec0093663c25" title="Return the flattened id of the current work&#45;group. " alt="" coords="376,71,513,112"/>
-</map>

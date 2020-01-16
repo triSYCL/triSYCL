@@ -1,46 +1,51 @@
-<map id="include/CL/sycl/range.hpp" name="include/CL/sycl/range.hpp">
-<area shape="rect" id="node2" href="$buffer_2detail_2buffer_8hpp.html" title="include/CL/sycl/buffer\l/detail/buffer.hpp" alt="" coords="664,1361,813,1403"/>
-<area shape="rect" id="node4" href="$buffer_8hpp.html" title="include/CL/sycl/buffer.hpp" alt="" coords="799,1629,974,1656"/>
-<area shape="rect" id="node5" href="$sycl_8hpp.html" title="include/CL/sycl.hpp" alt="" coords="1565,1704,1702,1731"/>
-<area shape="rect" id="node6" href="$group_8hpp.html" title="include/CL/sycl/group.hpp" alt="" coords="2460,1190,2633,1217"/>
-<area shape="rect" id="node7" href="$parallelism_2detail_2parallelism_8hpp.html" title="Implement the detail of the parallel constructions to launch kernels. " alt="" coords="2212,1272,2391,1313"/>
-<area shape="rect" id="node13" href="$h__item_8hpp.html" title="include/CL/sycl/h_item.hpp" alt="" coords="2341,1101,2521,1127"/>
-<area shape="rect" id="node14" href="$id_8hpp.html" title="include/CL/sycl/id.hpp" alt="" coords="1870,80,2021,107"/>
-<area shape="rect" id="node30" href="$kernel_2detail_2kernel_8hpp.html" title="include/CL/sycl/kernel\l/detail/kernel.hpp" alt="" coords="403,825,554,867"/>
-<area shape="rect" id="node43" href="$item_8hpp.html" title="include/CL/sycl/item.hpp" alt="" coords="2086,1011,2253,1038"/>
-<area shape="rect" id="node44" href="$nd__item_8hpp.html" title="include/CL/sycl/nd\l_item.hpp" alt="" coords="1983,1093,2113,1135"/>
-<area shape="rect" id="node45" href="$nd__range_8hpp.html" title="include/CL/sycl/nd\l_range.hpp" alt="" coords="2531,1004,2661,1045"/>
-<area shape="rect" id="node3" href="$buffer__waiter_8hpp.html" title="include/CL/sycl/buffer\l/detail/buffer_waiter.hpp" alt="" coords="665,1451,826,1492"/>
-<area shape="rect" id="node8" href="$handler_8hpp.html" title="include/CL/sycl/handler.hpp" alt="" coords="1026,1458,1209,1485"/>
-<area shape="rect" id="node12" href="$parallelism_8hpp.html" title="Implement parallel constructions to launch kernels. " alt="" coords="2188,1458,2391,1485"/>
-<area shape="rect" id="node9" href="$pipe_8hpp.html" title="include/CL/sycl/pipe.hpp" alt="" coords="1369,1547,1535,1574"/>
-<area shape="rect" id="node10" href="$queue_8hpp.html" title="include/CL/sycl/queue.hpp" alt="" coords="636,1547,812,1574"/>
-<area shape="rect" id="node11" href="$static__pipe_8hpp.html" title="include/CL/sycl/static\l_pipe.hpp" alt="" coords="1559,1540,1707,1581"/>
-<area shape="rect" id="node15" href="$local__accessor_8hpp.html" title="include/CL/sycl/accessor\l/detail/local_accessor.hpp" alt="" coords="1535,1183,1708,1224"/>
-<area shape="rect" id="node16" href="$accessor_8hpp.html" title="include/CL/sycl/accessor.hpp" alt="" coords="1573,1369,1768,1395"/>
-<area shape="rect" id="node18" href="$buffer_2detail_2accessor_8hpp.html" title="include/CL/sycl/buffer\l/detail/accessor.hpp" alt="" coords="816,1272,965,1313"/>
-<area shape="rect" id="node19" href="$device_8hpp.html" title="include/CL/sycl/device.hpp" alt="" coords="1037,244,1216,271"/>
-<area shape="rect" id="node42" href="$info_2device_8hpp.html" title="include/CL/sycl/info\l/device.hpp" alt="" coords="1747,155,1885,196"/>
-<area shape="rect" id="node17" href="$device__runtime_8hpp.html" title="include/CL/sycl/device\l_runtime.hpp" alt="" coords="1357,1451,1512,1492"/>
-<area shape="rect" id="node20" href="$context_2detail_2context_8hpp.html" title="include/CL/sycl/context\l/detail/context.hpp" alt="" coords="803,483,962,524"/>
-<area shape="rect" id="node22" href="$context_8hpp.html" title="include/CL/sycl/context.hpp" alt="" coords="880,661,1064,688"/>
-<area shape="rect" id="node27" href="$host__queue_8hpp.html" title="include/CL/sycl/queue\l/detail/host_queue.hpp" alt="" coords="873,825,1026,867"/>
-<area shape="rect" id="node28" href="$opencl__queue_8hpp.html" title="include/CL/sycl/queue\l/detail/opencl_queue.hpp" alt="" coords="630,825,797,867"/>
-<area shape="rect" id="node29" href="$queue_2detail_2queue_8hpp.html" title="include/CL/sycl/queue\l/detail/queue.hpp" alt="" coords="769,736,919,777"/>
-<area shape="rect" id="node35" href="$opencl__platform_8hpp.html" title="include/CL/sycl/platform\l/detail/opencl_platform.hpp" alt="" coords="1037,319,1216,360"/>
-<area shape="rect" id="node21" href="$host__context_8hpp.html" title="include/CL/sycl/context\l/detail/host_context.hpp" alt="" coords="707,572,869,613"/>
-<area shape="rect" id="node34" href="$opencl__context_8hpp.html" title="include/CL/sycl/context\l/detail/opencl_context.hpp" alt="" coords="893,572,1067,613"/>
-<area shape="rect" id="node23" href="$buffer__base_8hpp.html" title="include/CL/sycl/buffer\l/detail/buffer_base.hpp" alt="" coords="1051,1004,1205,1045"/>
-<area shape="rect" id="node24" href="$task_8hpp.html" title="include/CL/sycl/command\l_group/detail/task.hpp" alt="" coords="949,1093,1123,1135"/>
-<area shape="rect" id="node25" href="$accessor__base_8hpp.html" title="include/CL/sycl/accessor\l/detail/accessor_base.hpp" alt="" coords="823,1183,998,1224"/>
-<area shape="rect" id="node26" href="$instantiate__kernel_8hpp.html" title="include/CL/sycl/detail\l/instantiate_kernel.hpp" alt="" coords="1041,1272,1194,1313"/>
-<area shape="rect" id="node31" href="$opencl__kernel_8hpp.html" title="include/CL/sycl/kernel\l/detail/opencl_kernel.hpp" alt="" coords="454,915,621,956"/>
-<area shape="rect" id="node32" href="$kernel_8hpp.html" title="include/CL/sycl/kernel.hpp" alt="" coords="445,1011,621,1038"/>
-<area shape="rect" id="node33" href="$program_8hpp.html" title="include/CL/sycl/program.hpp" alt="" coords="311,1629,499,1656"/>
-<area shape="rect" id="node36" href="$platform_8hpp.html" title="include/CL/sycl/platform.hpp" alt="" coords="1183,408,1371,435"/>
-<area shape="rect" id="node37" href="$device_2detail_2device_8hpp.html" title="include/CL/sycl/device\l/detail/device.hpp" alt="" coords="1427,483,1581,524"/>
-<area shape="rect" id="node38" href="$host__device_8hpp.html" title="include/CL/sycl/device\l/detail/host_device.hpp" alt="" coords="1383,572,1539,613"/>
-<area shape="rect" id="node39" href="$opencl__device_8hpp.html" title="include/CL/sycl/device\l/detail/opencl_device.hpp" alt="" coords="1563,572,1733,613"/>
-<area shape="rect" id="node40" href="$platform_2detail_2platform_8hpp.html" title="include/CL/sycl/platform\l/detail/platform.hpp" alt="" coords="1037,483,1200,524"/>
-<area shape="rect" id="node41" href="$host__platform_8hpp.html" title="include/CL/sycl/platform\l/detail/host_platform.hpp" alt="" coords="1092,572,1257,613"/>
+<map id="include/triSYCL/range.hpp" name="include/triSYCL/range.hpp">
+<area shape="rect" id="node2" href="$buffer_2detail_2buffer_8hpp.html" title="include/triSYCL/buffer\l/detail/buffer.hpp" alt="" coords="2305,1316,2455,1357"/>
+<area shape="rect" id="node4" href="$buffer_8hpp.html" title="include/triSYCL/buffer.hpp" alt="" coords="2135,1599,2310,1625"/>
+<area shape="rect" id="node5" href="$triSYCL_2sycl_8hpp.html" title="include/triSYCL/sycl.hpp" alt="" coords="1579,1695,1746,1722"/>
+<area shape="rect" id="node8" href="$opencl__spir__helpers_8hpp.html" title="Adds helper functions to populate Id&#39;s and Range&#39;s with OpenCL SPIR intrinsics data: e..." alt="" coords="112,423,315,464"/>
+<area shape="rect" id="node9" href="$group_8hpp.html" title="include/triSYCL/group.hpp" alt="" coords="251,333,426,360"/>
+<area shape="rect" id="node10" href="$parallelism_2detail_2parallelism_8hpp.html" title="Implement the detail of the parallel constructions to launch kernels. " alt="" coords="1109,423,1288,464"/>
+<area shape="rect" id="node19" href="$parallelism__tbb_8hpp.html" title="Implement the detail of the parallel constructions to launch kernels using Intel Threading Building B..." alt="" coords="577,423,756,464"/>
+<area shape="rect" id="node20" href="$h__item_8hpp.html" title="include/triSYCL/h_item.hpp" alt="" coords="448,244,629,271"/>
+<area shape="rect" id="node21" href="$id_8hpp.html" title="include/triSYCL/id.hpp" alt="" coords="1201,80,1353,107"/>
+<area shape="rect" id="node35" href="$kernel_2detail_2kernel_8hpp.html" title="include/triSYCL/kernel\l/detail/kernel.hpp" alt="" coords="2131,869,2283,911"/>
+<area shape="rect" id="node48" href="$item_8hpp.html" title="include/triSYCL/item.hpp" alt="" coords="870,162,1037,189"/>
+<area shape="rect" id="node49" href="$nd__item_8hpp.html" title="include/triSYCL/nd\l_item.hpp" alt="" coords="907,326,1037,367"/>
+<area shape="rect" id="node50" href="$nd__range_8hpp.html" title="include/triSYCL/nd\l_range.hpp" alt="" coords="448,155,579,196"/>
+<area shape="rect" id="node3" href="$buffer__waiter_8hpp.html" title="include/triSYCL/buffer\l/detail/buffer_waiter.hpp" alt="" coords="2294,1405,2455,1447"/>
+<area shape="rect" id="node6" href="$CL_2sycl_8hpp.html" title="This is the main SYCL 1.2.1 interoperability header to expose triSYCL into the cl::sycl namespace..." alt="" coords="1509,1785,1646,1811"/>
+<area shape="rect" id="node7" href="$SYCL_2sycl_8hpp.html" title="This is the SYCL extension header to expose triSYCL directly into the shorter sycl namespace instead ..." alt="" coords="1671,1785,1825,1811"/>
+<area shape="rect" id="node11" href="$parallelism_8hpp.html" title="Implement parallel constructions to launch kernels. " alt="" coords="1873,1323,2077,1350"/>
+<area shape="rect" id="node12" href="$handler_8hpp.html" title="include/triSYCL/handler.hpp" alt="" coords="1923,1413,2107,1439"/>
+<area shape="rect" id="node14" href="$queue_8hpp.html" title="include/triSYCL/queue.hpp" alt="" coords="2649,1502,2826,1529"/>
+<area shape="rect" id="node13" href="$pipe_8hpp.html" title="include/triSYCL/pipe.hpp" alt="" coords="1579,1502,1746,1529"/>
+<area shape="rect" id="node18" href="$static__pipe_8hpp.html" title="include/triSYCL/static\l_pipe.hpp" alt="" coords="1405,1495,1555,1536"/>
+<area shape="rect" id="node15" href="$vendor_2trisycl_2scope_2queue_2detail_2queue_8hpp.html" title="include/triSYCL/vendor\l/trisycl/scope/queue/detail\l/queue.hpp" alt="" coords="3114,1584,3289,1640"/>
+<area shape="rect" id="node16" href="$vendor_2trisycl_2scope_2queue_8hpp.html" title="include/triSYCL/vendor\l/trisycl/scope/queue.hpp" alt="" coords="3175,1688,3339,1729"/>
+<area shape="rect" id="node17" href="$scope_8hpp.html" title="include/triSYCL/vendor\l/trisycl/scope.hpp" alt="" coords="3239,1777,3395,1819"/>
+<area shape="rect" id="node22" href="$local__accessor_8hpp.html" title="include/triSYCL/accessor\l/detail/local_accessor.hpp" alt="" coords="1195,1227,1368,1268"/>
+<area shape="rect" id="node23" href="$accessor_8hpp.html" title="include/triSYCL/accessor.hpp" alt="" coords="1383,1323,1577,1350"/>
+<area shape="rect" id="node25" href="$buffer_2detail_2accessor_8hpp.html" title="include/triSYCL/buffer\l/detail/accessor.hpp" alt="" coords="1443,1227,1594,1268"/>
+<area shape="rect" id="node26" href="$device_8hpp.html" title="include/triSYCL/device.hpp" alt="" coords="2614,244,2794,271"/>
+<area shape="rect" id="node46" href="$info_2device_8hpp.html" title="include/triSYCL/info\l/device.hpp" alt="" coords="1720,155,1859,196"/>
+<area shape="rect" id="node47" href="$info_2queue_8hpp.html" title="include/triSYCL/info\l/queue.hpp" alt="" coords="3040,691,3179,732"/>
+<area shape="rect" id="node24" href="$device__runtime_8hpp.html" title="include/triSYCL/device\l_runtime.hpp" alt="" coords="1643,1405,1797,1447"/>
+<area shape="rect" id="node27" href="$context_2detail_2context_8hpp.html" title="include/triSYCL/context\l/detail/context.hpp" alt="" coords="2516,512,2676,553"/>
+<area shape="rect" id="node29" href="$context_8hpp.html" title="include/triSYCL/context.hpp" alt="" coords="2358,698,2543,725"/>
+<area shape="rect" id="node32" href="$host__queue_8hpp.html" title="include/triSYCL/queue\l/detail/host_queue.hpp" alt="" coords="2701,869,2854,911"/>
+<area shape="rect" id="node33" href="$opencl__queue_8hpp.html" title="include/triSYCL/queue\l/detail/opencl_queue.hpp" alt="" coords="2510,869,2677,911"/>
+<area shape="rect" id="node34" href="$queue_2detail_2queue_8hpp.html" title="include/triSYCL/queue\l/detail/queue.hpp" alt="" coords="2179,780,2331,821"/>
+<area shape="rect" id="node40" href="$opencl__platform_8hpp.html" title="include/triSYCL/platform\l/detail/opencl_platform.hpp" alt="" coords="2116,326,2295,367"/>
+<area shape="rect" id="node44" href="$vendor_2trisycl_2scope_2device_2detail_2device_8hpp.html" title="include/triSYCL/vendor\l/trisycl/scope/device\l/detail/device.hpp" alt="" coords="3031,319,3187,375"/>
+<area shape="rect" id="node45" href="$vendor_2trisycl_2scope_2device_8hpp.html" title="include/triSYCL/vendor\l/trisycl/scope/device.hpp" alt="" coords="3021,423,3187,464"/>
+<area shape="rect" id="node28" href="$host__context_8hpp.html" title="include/triSYCL/context\l/detail/host_context.hpp" alt="" coords="2541,601,2702,643"/>
+<area shape="rect" id="node39" href="$opencl__context_8hpp.html" title="include/triSYCL/context\l/detail/opencl_context.hpp" alt="" coords="2342,601,2517,643"/>
+<area shape="rect" id="node30" href="$buffer__base_8hpp.html" title="include/triSYCL/buffer\l/detail/buffer_base.hpp" alt="" coords="1907,1048,2061,1089"/>
+<area shape="rect" id="node31" href="$task_8hpp.html" title="include/triSYCL/command\l_group/detail/task.hpp" alt="" coords="1877,1137,2051,1179"/>
+<area shape="rect" id="node36" href="$opencl__kernel_8hpp.html" title="include/triSYCL/kernel\l/detail/opencl_kernel.hpp" alt="" coords="2198,959,2365,1000"/>
+<area shape="rect" id="node37" href="$kernel_8hpp.html" title="include/triSYCL/kernel.hpp" alt="" coords="2187,1055,2365,1082"/>
+<area shape="rect" id="node38" href="$program_8hpp.html" title="include/triSYCL/program.hpp" alt="" coords="2383,1145,2572,1171"/>
+<area shape="rect" id="node41" href="$platform_8hpp.html" title="include/triSYCL/platform.hpp" alt="" coords="2156,430,2345,457"/>
+<area shape="rect" id="node42" href="$device_2detail_2device_8hpp.html" title="include/triSYCL/device\l/detail/device.hpp" alt="" coords="2059,512,2213,553"/>
+<area shape="rect" id="node43" href="$host__device_8hpp.html" title="include/triSYCL/device\l/detail/host_device.hpp" alt="" coords="2009,601,2165,643"/>
 </map>

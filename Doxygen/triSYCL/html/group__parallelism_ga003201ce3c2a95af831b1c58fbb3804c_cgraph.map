@@ -1,0 +1,16 @@
+<map id="trisycl::detail::parallel_for_iterate" name="trisycl::detail::parallel_for_iterate">
+<area shape="rect" id="node2" href="$group__parallelism.html#a9c662a1f7b82ef2c239ae70b24b1d7d2" title="Get the range of work&#45;groups needed to run this ND&#45;range. " alt="" coords="427,31,553,72"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#a47af93dd969d17838d6437719e33f1ba" title="Return an id representing the index of the group within the nd_range for every dimension. " alt="" coords="647,101,787,127"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#a9408b24089f91b98a25460e6e18a7cc7" title="Get the local range for this work_group. " alt="" coords="656,283,779,324"/>
+<area shape="rect" id="node5" href="$group__parallelism.html#a176fdbaafeb6d0e0aaf18ce156fee74e" title="trisycl::group::get\l_nd_range" alt="" coords="656,348,779,389"/>
+<area shape="rect" id="node6" href="$group__parallelism.html#gade69cd4aa408811c685ac3b3168271ae" title="Implementation of a data parallel computation with parallelism specified at launch time by a range&lt;&gt;..." alt="" coords="407,429,573,455"/>
+<area shape="rect" id="node7" href="$group__parallelism.html#ga33858ef5d1b5893ad47bf7397905d6e0" title="Implementation of parallel_for with a range&lt;&gt; and an offset. " alt="" coords="206,392,351,433"/>
+<area shape="rect" id="node8" href="$group__parallelism.html#ga1d85d211443af84683e6126ad69eb216" title="Implement the loop on the work&#45;groups. " alt="" coords="206,5,351,47"/>
+<area shape="rect" id="node9" href="$group__parallelism.html#gae45ef8f8ab2c96ae4f647e10f656c13a" title="Implement the loop on the work&#45;items inside a work&#45;group. " alt="" coords="417,224,563,265"/>
+<area shape="rect" id="node12" href="$group__parallelism.html#ga876d173bd185aefef8daf2459267fe9f" title="Implement the loop on the work&#45;items inside a work&#45;group. " alt="" coords="199,173,359,215"/>
+<area shape="rect" id="node13" href="$group__parallelism.html#ga2ad88e5860ae877dd4484ce388005691" title="trisycl::detail::to\l_sycl_id" alt="" coords="221,509,336,551"/>
+<area shape="rect" id="node15" href="$group__parallelism.html#ga9b7dd035f097ecb053e2518ff8655dcc" title="trisycl::detail::to\l_tbb_range" alt="" coords="221,575,336,616"/>
+<area shape="rect" id="node10" href="$group__parallelism.html#a55c2d38bfa586195fc9e1d789e011a0f" title="Return the number of elements in the range. " alt="" coords="653,231,782,258"/>
+<area shape="rect" id="node11" href="$group__helpers.html#ad4f44e8a98b8ac82456b46d7c3d11552" title="Return the element of the array. " alt="" coords="621,151,813,207"/>
+<area shape="rect" id="node14" href="$group__parallelism.html#ga50306145d27a37cd0f56aa7cb899fa25" title="Implement a make_id to construct an id&lt;&gt; of the right dimension with implicit conversion from an init..." alt="" coords="433,517,547,543"/>
+</map>

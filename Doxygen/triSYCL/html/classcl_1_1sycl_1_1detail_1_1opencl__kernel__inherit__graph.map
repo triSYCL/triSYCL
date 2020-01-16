@@ -1,5 +1,0 @@
-<map id="cl::sycl::detail::opencl_kernel" name="cl::sycl::detail::opencl_kernel">
-<area shape="rect" id="node2" href="$group__execution.html#classcl_1_1sycl_1_1detail_1_1kernel" title="Abstract SYCL kernel. " alt="" coords="5,102,152,129"/>
-<area shape="rect" id="node3" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; detail::kernel \&gt;" alt="" coords="5,5,152,47"/>
-<area shape="rect" id="node4" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; opencl_kernel \&gt;" alt="" coords="176,95,323,136"/>
-</map>

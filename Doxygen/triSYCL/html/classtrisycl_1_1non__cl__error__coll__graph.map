@@ -1,0 +1,4 @@
+<map id="trisycl::non_cl_error" name="trisycl::non_cl_error">
+<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1runtime__error" title="trisycl::runtime_error" alt="" coords="5,171,147,197"/>
+<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information. " alt="" coords="15,95,137,121"/>
+</map>

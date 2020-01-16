@@ -1,0 +1,4 @@
+<map id="trisycl::detail::pipe_reservation::size" name="trisycl::detail::pipe_reservation::size">
+<area shape="rect" id="node2" href="$group__data.html#a96eca8a6f96041c03555e48e50721341" title="Test that the reservation is in a usable state. " alt="" coords="181,5,328,61"/>
+<area shape="rect" id="node3" href="$group__data.html#a5e083d486cf599f1282d00fa5702f24d" title="Get the current number of elements in the pipe that can be read. " alt="" coords="191,86,319,127"/>
+</map>

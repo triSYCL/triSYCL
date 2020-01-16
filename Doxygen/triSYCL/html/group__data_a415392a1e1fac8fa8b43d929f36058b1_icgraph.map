@@ -1,6 +1,0 @@
-<map id="cl::sycl::detail::accessor::get_count" name="cl::sycl::detail::accessor::get_count">
-<area shape="rect" id="node2" href="$group__data.html#a2b066e5300693ed04d47929d5c52adc1" title="Returns the size of the underlying buffer storage in bytes. " alt="" coords="217,5,427,61"/>
-<area shape="rect" id="node3" href="$group__data.html#a3e7c6b885a1c98bcbd904f921bbcc4d5" title="Returns the size of the underlying buffer storage in bytes. " alt="" coords="240,86,404,127"/>
-<area shape="rect" id="node4" href="$group__data.html#a36ccb33843403b0ac59fd673bc776712" title="Construct a host accessor from an existing buffer. " alt="" coords="475,53,639,94"/>
-<area shape="rect" id="node5" href="$group__data.html#a1764f8fc5824b392b8ff42d3bacc6ea3" title="Lazily associate a CL buffer to the SYCL buffer and copy data in it if required, updates the state of..." alt="" coords="475,118,639,159"/>
-</map>

@@ -1,4 +1,0 @@
-<map id="cl::sycl::platform::get_info" name="cl::sycl::platform::get_info">
-<area shape="rect" id="node2" href="$group__execution.html#aabb03c54d8e57513595cbb363b52af96" title="Get the list of all the platforms available to the application. " alt="" coords="172,5,291,47"/>
-<area shape="rect" id="node3" href="$group__execution.html#ga5aa27120d21e971a773ef980ded9788d" title="Returns a selected device using the functor operator defined in sub&#45;classes operator()(const device &amp;..." alt="" coords="339,5,501,47"/>
-</map>

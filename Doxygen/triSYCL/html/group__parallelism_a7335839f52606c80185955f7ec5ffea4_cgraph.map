@@ -1,0 +1,6 @@
+<map id="trisycl::h_item::get_local_linear_id" name="trisycl::h_item::get_local_linear_id">
+<area shape="rect" id="node2" href="$group__parallelism.html#a317b1d5f7fd4dac3657bfdf01cc9955f" title="Return the constituent local id representing the work&#45;item&#39;s position within the current work&#45;group..." alt="" coords="195,5,325,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#ac228a1f75a8786d3377d48fae9dfd0ec" title="Return a range&lt;&gt; representing the dimensions of the current work&#45;group. " alt="" coords="195,71,325,112"/>
+<area shape="rect" id="node5" href="$group__helpers.html#ga185ce9faf9e1d586e4f57871ac4c3058" title="Compute a linearized array access used in the OpenCL 2 world. " alt="" coords="184,137,336,163"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#a28c94147f9763325b4bef600b7e85695" title="Return the nd_range&lt;&gt; of the current execution. " alt="" coords="384,71,515,112"/>
+</map>

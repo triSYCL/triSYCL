@@ -1,17 +1,17 @@
 var searchData=
 [
-  ['w',['w',['../group__vector.html#ga391e19e48ff05630f1f1fdd0b49e08b3',1,'cl::sycl::elem::w()'],['../group__vector.html#aac9e5ea86d8d4409db22a00dbb207598',1,'cl::sycl::vec&lt; DataType, 4 &gt;::w()']]],
-  ['w_5frid_5fq',['w_rid_q',['../group__data.html#a15de0ef2c1600a5013a14d129a604590',1,'cl::sycl::detail::pipe']]],
-  ['wait',['wait',['../group__data.html#a93b4c2b305fd93a55f81689a6260ad21',1,'cl::sycl::detail::buffer_base::wait()'],['../structcl_1_1sycl_1_1detail_1_1task.html#a91d400fd40ede4ae00662dd124dd1b8a',1,'cl::sycl::detail::task::wait()'],['../group__execution.html#ac46bc8ee7cff0a3f77c7afb7d60184b4',1,'cl::sycl::queue::wait()']]],
-  ['wait_5fand_5fthrow',['wait_and_throw',['../group__execution.html#abfa510446db9f4edd0c16270b199a232',1,'cl::sycl::queue']]],
-  ['wait_5ffor_5fkernel_5fexecution',['wait_for_kernel_execution',['../structcl_1_1sycl_1_1detail_1_1queue.html#a7f89462189bb20d409acb73392a5f679',1,'cl::sycl::detail::queue']]],
-  ['wait_5ffor_5fproducers',['wait_for_producers',['../structcl_1_1sycl_1_1detail_1_1task.html#a3b176556e36e4ff5c1491a1ddf19579b',1,'cl::sycl::detail::task']]],
-  ['waiter',['waiter',['../group__data.html#ga8496185ecbdad5dcafffd374a5f7db20',1,'cl::sycl::detail']]],
-  ['weak_5fptr_5fclass',['weak_ptr_class',['../namespacecl_1_1sycl.html#a8cc65d5e679773a053245819fa2a13de',1,'cl::sycl']]],
-  ['what',['what',['../group__error__handling.html#a2b36ecbe953cc13d770700b5bfcc9a01',1,'cl::sycl::exception']]],
-  ['writable_5farray_5ftype',['writable_array_type',['../group__data.html#aaa01116d1e6eceecefdd3b6d30b64873',1,'cl::sycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;']]],
-  ['writable_5farray_5fview_5ftype',['writable_array_view_type',['../group__data.html#a56dddc4f7bc02b93e936e1c30c0d9b6b',1,'cl::sycl::detail::accessor']]],
-  ['write',['write',['../group__data.html#ab2336f619ca77560c413b8ae33bdbf43',1,'cl::sycl::detail::pipe::write()'],['../group__data.html#ac0298d907bca3642019eae14f299123e',1,'cl::sycl::detail::pipe_accessor::write()'],['../namespacecl_1_1sycl_1_1access.html#a9ae8c23f772316322be407bbb6498b17aefb2a684e4afb7d55e6147fbe5a332ee',1,'cl::sycl::access::write()']]],
-  ['write_5fdone',['write_done',['../group__data.html#a7a7df3d5199a3a00c8ab655234fe7189',1,'cl::sycl::detail::pipe']]],
-  ['write_5fonly',['write_only',['../group__execution.html#gga8986fcccc4479065bdbf37d9b9d8def5a2629564984b808cf7e6cfc61a0286d69',1,'cl::sycl::info']]]
+  ['w',['w',['../group__vector.html#ga4110c04010fe88c4f9f30e87d3aa46cf',1,'trisycl::elem::w()'],['../group__vector.html#a29e8267119985feb0c1cb794e6253c8a',1,'trisycl::vec&lt; DataType, 4 &gt;::w() const'],['../group__vector.html#a35287455a23a29696b9fe0fd48ee7555',1,'trisycl::vec&lt; DataType, 4 &gt;::w()']]],
+  ['w_5frid_5fq',['w_rid_q',['../group__data.html#ae403aeac9579a356397631b5608abf87',1,'trisycl::detail::pipe']]],
+  ['wait',['wait',['../group__data.html#a6c75ff99123dc8dd4eca7dc5dc446d72',1,'trisycl::detail::buffer_base::wait()'],['../structtrisycl_1_1detail_1_1task.html#ad558ca5e22248f578b7acaddefacc3bf',1,'trisycl::detail::task::wait()'],['../structtrisycl_1_1detail_1_1event.html#ae218a6aa48b3cc64c1b11aaa2c702f36',1,'trisycl::detail::event::wait()'],['../classtrisycl_1_1detail_1_1host__event.html#aae2c091e1371ab1efad14eaefd452c2f',1,'trisycl::detail::host_event::wait()'],['../classtrisycl_1_1detail_1_1opencl__event.html#adca300d94499952071088cb4133d0bcd',1,'trisycl::detail::opencl_event::wait()'],['../classtrisycl_1_1event.html#aea96914658f2ecdb08da6a827b7542e3',1,'trisycl::event::wait()'],['../classtrisycl_1_1event.html#a37f781363a2f9a24afb66447b17f0539',1,'trisycl::event::wait(const vector_class&lt; event &gt; &amp;eventList)'],['../group__execution.html#a1ba33245bf82d7ad1cdd5f72afc45a98',1,'trisycl::queue::wait()'],['../group__vendor__trisycl__scope.html#afe1587994e0574ad6b7ccf91c39f67e8',1,'trisycl::vendor::trisycl::scope::queue::wait()']]],
+  ['wait_5fand_5fthrow',['wait_and_throw',['../classtrisycl_1_1event.html#ad56ccc49fbf6f0bbc79b07d95e0afcb3',1,'trisycl::event::wait_and_throw()'],['../classtrisycl_1_1event.html#aa681397b6980f39004e1c2a878fbe57f',1,'trisycl::event::wait_and_throw(const vector_class&lt; event &gt; &amp;eventList)'],['../group__execution.html#a6414bc656f3648664daa6b4dba14090d',1,'trisycl::queue::wait_and_throw()']]],
+  ['wait_5ffor_5fkernel_5fexecution',['wait_for_kernel_execution',['../structtrisycl_1_1detail_1_1queue.html#a199e75a5b7c55233e6559815c45e9175',1,'trisycl::detail::queue']]],
+  ['wait_5ffor_5fproducers',['wait_for_producers',['../structtrisycl_1_1detail_1_1task.html#a99398a4640aa89bb9fc5dc26feb747c5',1,'trisycl::detail::task']]],
+  ['waiter',['waiter',['../group__data.html#ga39aab9a5c74f01bd53de448ab7d9048a',1,'trisycl::detail']]],
+  ['weak_5fptr_5fclass',['weak_ptr_class',['../namespacetrisycl.html#aeeda429d2a18afa01f0da7fa444b8da9',1,'trisycl']]],
+  ['what',['what',['../group__error__handling.html#a92c14053745af1f0b367e29baefa441d',1,'trisycl::exception']]],
+  ['writable_5farray_5ftype',['writable_array_type',['../group__data.html#a42d68b52bb14b0a9206017075c335dc4',1,'trisycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;']]],
+  ['writable_5farray_5fview_5ftype',['writable_array_view_type',['../group__data.html#a5f1616428eedb0dbf34ece37f38c6b55',1,'trisycl::detail::accessor']]],
+  ['write',['write',['../group__data.html#af8131899519273fdb126dc0c32bb9176',1,'trisycl::detail::pipe::write()'],['../group__data.html#ae14bd59f1c7b640bd5468afbed34b173',1,'trisycl::detail::pipe_accessor::write()'],['../namespacetrisycl_1_1access.html#a2ee71c8ee80896e782636c805fab297caefb2a684e4afb7d55e6147fbe5a332ee',1,'trisycl::access::write()']]],
+  ['write_5fdone',['write_done',['../group__data.html#ace3be1326a8613d3909fc168d215cdf9',1,'trisycl::detail::pipe']]],
+  ['write_5fonly',['write_only',['../group__execution.html#ggaad038e3b94eb3b2df62f0137140e2fd9a2629564984b808cf7e6cfc61a0286d69',1,'trisycl::info']]]
 ];

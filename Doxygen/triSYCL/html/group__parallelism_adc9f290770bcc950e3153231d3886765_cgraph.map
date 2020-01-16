@@ -1,0 +1,7 @@
+<map id="trisycl::h_item::get_global_linear_id" name="trisycl::h_item::get_global_linear_id">
+<area shape="rect" id="node2" href="$group__parallelism.html#a0e22fd179ea5ff2c38bdeba9ba3bbcec" title="Return the constituent global id representing the work&#45;item&#39;s position in the global iteration space..." alt="" coords="195,5,325,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#a0261db967b39bd42a20df4aaf6515ba6" title="Return a range&lt;&gt; representing the dimensions of the nd_range&lt;&gt; " alt="" coords="195,71,325,112"/>
+<area shape="rect" id="node5" href="$group__parallelism.html#a77d4e7ebe0bec8add1d1c9867f6462f6" title="Return an id&lt;&gt; representing the n&#45;dimensional offset provided to the constructor of the nd_range&lt;&gt; an..." alt="" coords="195,136,325,177"/>
+<area shape="rect" id="node6" href="$group__helpers.html#ga185ce9faf9e1d586e4f57871ac4c3058" title="Compute a linearized array access used in the OpenCL 2 world. " alt="" coords="184,202,336,229"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#a28c94147f9763325b4bef600b7e85695" title="Return the nd_range&lt;&gt; of the current execution. " alt="" coords="384,104,515,145"/>
+</map>

@@ -1,5 +1,0 @@
-<map id="cl::sycl::detail::task::get_kernel" name="cl::sycl::detail::task::get_kernel">
-<area shape="rect" id="node2" href="$structcl_1_1sycl_1_1detail_1_1task.html#a1141090d4da31755a9761a6dca2be534" title="Set a kernel argument by address. " alt="" coords="189,27,325,69"/>
-<area shape="rect" id="node3" href="$group__device__runtime.html#gae93a9a9de55ffe125a24247829659b92" title="Set an argument value of the kernel. " alt="" coords="373,5,541,32"/>
-<area shape="rect" id="node4" href="$group__device__runtime.html#gac37be9f8c26013d7334b5736c2124d54" title="Set an accessor argument of the kernel. " alt="" coords="386,57,529,98"/>
-</map>

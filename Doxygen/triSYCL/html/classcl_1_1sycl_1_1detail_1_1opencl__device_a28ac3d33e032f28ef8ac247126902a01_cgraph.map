@@ -1,5 +1,0 @@
-<map id="cl::sycl::detail::opencl_device::get_platform" name="cl::sycl::detail::opencl_device::get_platform">
-<area shape="rect" id="node2" href="$classcl_1_1sycl_1_1detail_1_1opencl__device.html#aeda012efa9ca4292cb9d761272e10de1" title="cl::sycl::detail::opencl\l_device::get_info" alt="" coords="203,5,352,47"/>
-<area shape="rect" id="node3" href="$group__execution.html#ac766c25f9104682dd44f2bfce9ee1e1b" title="Default constructor for platform which is the host platform. " alt="" coords="218,71,337,112"/>
-<area shape="rect" id="node4" href="$structcl_1_1sycl_1_1detail_1_1singleton.html#a7c274b2391d671987579bcea736743aa" title="Get a singleton instance of T. " alt="" coords="400,71,583,112"/>
-</map>

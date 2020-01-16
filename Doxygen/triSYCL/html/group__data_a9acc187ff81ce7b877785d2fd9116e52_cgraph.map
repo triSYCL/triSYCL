@@ -1,0 +1,7 @@
+<map id="trisycl::detail::accessor::register_accessor" name="trisycl::detail::accessor::register_accessor">
+<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1task.html#ab27a8d3c2bb97ad431a0917778065b21" title="Add a function to the postlude to run after kernel execution. " alt="" coords="225,5,354,47"/>
+<area shape="rect" id="node3" href="$structtrisycl_1_1detail_1_1task.html#a9d4b2c6c423e3ddf52f802800b2fa70f" title="Add a function to the prelude to run before kernel execution. " alt="" coords="225,71,354,112"/>
+<area shape="rect" id="node4" href="$structtrisycl_1_1detail_1_1task.html#aef85e4bc2c97856581c09a62484b3f91" title="Get the queue behind the task to run a kernel on. " alt="" coords="225,136,354,177"/>
+<area shape="rect" id="node5" href="$structtrisycl_1_1detail_1_1task.html#a630e6c1b3c6f7b21029d401c78b1a2cc" title="Register an accessor and return its registration order. " alt="" coords="223,201,356,243"/>
+<area shape="rect" id="node6" href="$group__data.html#a0f17346e18ae668ecb8175ff3b2ccb76" title="Set the order of the accessor. " alt="" coords="211,267,368,308"/>
+</map>

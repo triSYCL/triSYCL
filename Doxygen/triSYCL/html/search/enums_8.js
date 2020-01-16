@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['partition_5faffinity_5fdomain',['partition_affinity_domain',['../group__execution.html#gaea3b7860826830db91022d3cc985119f',1,'cl::sycl::info']]],
-  ['partition_5fproperty',['partition_property',['../group__execution.html#ga66692c125641cb0e2716a89739b20260',1,'cl::sycl::info']]],
-  ['platform',['platform',['../group__execution.html#ga3ea7e38ccbc7de5270c4f69bbae20463',1,'cl::sycl::info']]],
-  ['program_5fstate',['program_state',['../namespacecl_1_1sycl.html#a104e4e04504c3752e3ba5a3d4013e0eb',1,'cl::sycl']]]
+  ['partition_5faffinity_5fdomain',['partition_affinity_domain',['../group__execution.html#ga6796f93a7599deb4900203644e8063a0',1,'trisycl::info']]],
+  ['partition_5fproperty',['partition_property',['../group__execution.html#ga3a5be86982e6389bfc7dd6684c226271',1,'trisycl::info']]],
+  ['platform',['platform',['../group__execution.html#ga31199ad270f6beeae537afd64ae36d3b',1,'trisycl::info']]],
+  ['program_5fstate',['program_state',['../namespacetrisycl.html#ab038614eebb8ca3061943932bc4e59ff',1,'trisycl']]]
 ];

@@ -1,5 +1,0 @@
-<map id="cl::sycl::queue" name="cl::sycl::queue">
-<area shape="rect" id="node2" href="$structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html" title="cl::sycl::detail::shared\l_ptr_implementation\&lt; queue,\l detail::queue \&gt;" alt="" coords="293,30,484,86"/>
-<area shape="rect" id="node4" href="$classstd_1_1shared__ptr_3_01detail_1_1queue_01_4.html" title="shared_ptr\&lt; detail\l::queue \&gt;" alt="" coords="15,71,142,112"/>
-<area shape="rect" id="node5" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; queue \&gt;" alt="" coords="315,111,462,152"/>
-</map>

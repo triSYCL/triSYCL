@@ -1,0 +1,5 @@
+<map id="trisycl::detail::opencl_kernel" name="trisycl::detail::opencl_kernel">
+<area shape="rect" id="node2" href="$group__execution.html#classtrisycl_1_1detail_1_1kernel" title="Abstract SYCL kernel. " alt="" coords="5,102,144,129"/>
+<area shape="rect" id="node3" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; detail::kernel \&gt;" alt="" coords="5,5,144,47"/>
+<area shape="rect" id="node4" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; opencl_kernel \&gt;" alt="" coords="168,95,307,136"/>
+</map>

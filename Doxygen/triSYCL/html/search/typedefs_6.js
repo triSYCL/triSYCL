@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['function_5fclass',['function_class',['../namespacecl_1_1sycl.html#a427c818ec6c3428c273fbc8a17d0b185',1,'cl::sycl']]]
+  ['function_5fclass',['function_class',['../namespacetrisycl.html#ae10c2586b58498f87398ddd61280b341',1,'trisycl']]]
 ];

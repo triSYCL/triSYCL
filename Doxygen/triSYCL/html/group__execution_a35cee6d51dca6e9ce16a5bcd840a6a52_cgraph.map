@@ -1,0 +1,4 @@
+<map id="trisycl::handler::parallel_for_work_group" name="trisycl::handler::parallel_for_work_group">
+<area shape="rect" id="node2" href="$group__parallelism.html#ga1d85d211443af84683e6126ad69eb216" title="Implement the loop on the work&#45;groups. " alt="" coords="209,5,355,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#a9c662a1f7b82ef2c239ae70b24b1d7d2" title="Get the range of work&#45;groups needed to run this ND&#45;range. " alt="" coords="403,5,529,47"/>
+</map>

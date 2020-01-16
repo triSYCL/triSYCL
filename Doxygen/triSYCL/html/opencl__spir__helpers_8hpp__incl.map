@@ -1,0 +1,15 @@
+<map id="include/triSYCL/detail/SPIR/opencl_spir_helpers.hpp" name="include/triSYCL/detail/SPIR/opencl_spir_helpers.hpp">
+<area shape="rect" id="node3" href="$opencl__spir__req_8h.html" title="triSYCL/detail/SPIR\l/opencl_spir_req.h" alt="" coords="1575,408,1713,449"/>
+<area shape="rect" id="node5" href="$group_8hpp.html" title="triSYCL/group.hpp" alt="" coords="399,95,529,121"/>
+<area shape="rect" id="node8" href="$h__item_8hpp.html" title="triSYCL/h_item.hpp" alt="" coords="848,169,984,196"/>
+<area shape="rect" id="node12" href="$id_8hpp.html" title="triSYCL/id.hpp" alt="" coords="383,326,489,353"/>
+<area shape="rect" id="node23" href="$range_8hpp.html" title="triSYCL/range.hpp" alt="" coords="483,415,613,442"/>
+<area shape="rect" id="node25" href="$item_8hpp.html" title="triSYCL/item.hpp" alt="" coords="1175,244,1297,271"/>
+<area shape="rect" id="node26" href="$nd__range_8hpp.html" title="triSYCL/nd_range.hpp" alt="" coords="389,244,539,271"/>
+<area shape="rect" id="node27" href="$nd__item_8hpp.html" title="triSYCL/nd_item.hpp" alt="" coords="557,169,699,196"/>
+<area shape="rect" id="node7" href="$linear__id_8hpp.html" title="triSYCL/detail/linear\l_id.hpp" alt="" coords="1260,319,1399,360"/>
+<area shape="rect" id="node9" href="$access_8hpp.html" title="triSYCL/access.hpp" alt="" coords="665,244,804,271"/>
+<area shape="rect" id="node10" href="$unimplemented_8hpp.html" title="triSYCL/detail/unimplemented.hpp" alt="" coords="879,244,1099,271"/>
+<area shape="rect" id="node14" href="$small__array_8hpp.html" title="triSYCL/detail/small\l_array.hpp" alt="" coords="288,497,427,539"/>
+<area shape="rect" id="node17" href="$debug_8hpp.html" title="triSYCL/detail/debug.hpp" alt="" coords="274,587,441,613"/>
+</map>

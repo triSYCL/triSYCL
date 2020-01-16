@@ -1,0 +1,4 @@
+<map id="trisycl::detail::task::set_arg" name="trisycl::detail::task::set_arg">
+<area shape="rect" id="node2" href="$group__execution.html#a2d013c9c8fe88c7de4e6e8d97091bfaa" title="Return the Boost.Compute OpenCL kernel object for this kernel. " alt="" coords="183,5,327,47"/>
+<area shape="rect" id="node3" href="$structtrisycl_1_1detail_1_1task.html#aa7bdd79368892c60a2f183140db5e67e" title="Get the kernel running if any. " alt="" coords="190,71,319,112"/>
+</map>

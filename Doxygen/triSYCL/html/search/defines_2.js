@@ -45,5 +45,5 @@ var searchData=
   ['clk_5funsigned_5fint16',['CLK_UNSIGNED_INT16',['../opencl__spir_8h.html#a977a8172889be2dc24f52a2ad878b1f8',1,'opencl_spir.h']]],
   ['clk_5funsigned_5fint32',['CLK_UNSIGNED_INT32',['../opencl__spir_8h.html#ae3945138d5af503c841622299f3a2afe',1,'opencl_spir.h']]],
   ['clk_5funsigned_5fint8',['CLK_UNSIGNED_INT8',['../opencl__spir_8h.html#a3af5afd01aff2fc782a22e1f9102b3b2',1,'opencl_spir.h']]],
-  ['const_5ffunc',['const_func',['../opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4',1,'opencl_spir.h']]]
+  ['const_5ffunc',['const_func',['../opencl__spir_8h.html#a581bf62ead660af113e4c2dd690b13a4',1,'const_func():&#160;opencl_spir.h'],['../opencl__spir__req_8h.html#a581bf62ead660af113e4c2dd690b13a4',1,'const_func():&#160;opencl_spir_req.h']]]
 ];

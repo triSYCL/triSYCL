@@ -1,0 +1,5 @@
+<map id="trisycl::detail::queue" name="trisycl::detail::queue">
+<area shape="rect" id="node3" href="$classtrisycl_1_1detail_1_1host__queue.html" title="Some implementation details about the SYCL queue. " alt="" coords="5,169,135,211"/>
+<area shape="rect" id="node4" href="$classtrisycl_1_1detail_1_1opencl__queue.html" title="Some implementation details about the SYCL queue. " alt="" coords="159,169,301,211"/>
+<area shape="rect" id="node2" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; detail::queue \&gt;" alt="" coords="81,5,219,47"/>
+</map>

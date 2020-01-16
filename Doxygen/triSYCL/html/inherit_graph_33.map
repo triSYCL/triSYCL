@@ -1,32 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$group__helpers.html" title="cl::sycl::detail::container\l_element_aspect\&lt; DataType \&gt;" alt="" coords="187,166,389,207"/>
-<area shape="rect" id="node2" href="$group__data.html#classcl_1_1sycl_1_1accessor" title="The accessor abstracts the way buffer or pipe data are accessed inside a kernel in a multidimensional..." alt="" coords="464,203,636,259"/>
-<area shape="rect" id="node3" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; buffer\&lt; T, Dimensions,\l Allocator \&gt; \&gt;" alt="" coords="204,531,372,587"/>
-<area shape="rect" id="node4" href="$group__data.html#classcl_1_1sycl_1_1buffer" title="A SYCL buffer is a multidimensional variable length array (à la C99 VLA or even Fortran before) that ..." alt="" coords="467,491,633,533"/>
-<area shape="rect" id="node5" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; buffer_waiter\&lt; T, Dimensions,\l Allocator \&gt; \&gt;" alt="" coords="183,611,393,667"/>
-<area shape="rect" id="node6" href="$group__data.html#classcl_1_1sycl_1_1detail_1_1buffer__waiter" title="A helper class to wait for the final buffer destruction if the conditions for blocking are met..." alt="" coords="467,655,633,711"/>
-<area shape="rect" id="node7" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; pipe\&lt; T \&gt; \&gt;" alt="" coords="215,947,361,989"/>
-<area shape="rect" id="node8" href="$group__data.html#classcl_1_1sycl_1_1detail_1_1pipe" title="Implement a pipe object. " alt="" coords="467,955,633,981"/>
-<area shape="rect" id="node9" href="$group__data.html#classcl_1_1sycl_1_1pipe" title="A SYCL pipe. " alt="" coords="486,892,614,919"/>
-<area shape="rect" id="node10" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; queue \&gt;" alt="" coords="215,1013,361,1054"/>
-<area shape="rect" id="node11" href="$group__execution.html#classcl_1_1sycl_1_1queue" title="SYCL queue, similar to the OpenCL queue concept. " alt="" coords="497,1057,603,1084"/>
-<area shape="rect" id="node12" href="$group__debug__trace.html" title="cl::sycl::detail::debug\l\&lt; static_pipe\&lt; T, Capacity \&gt; \&gt;" alt="" coords="187,1159,389,1201"/>
-<area shape="rect" id="node13" href="$group__data.html#classcl_1_1sycl_1_1static__pipe" title="A SYCL static&#45;scoped pipe equivalent to an OpenCL program&#45;scoped pipe. " alt="" coords="483,1199,617,1241"/>
-<area shape="rect" id="node15" href="$structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html" title="Provide an implementation as shared_ptr with total ordering and hashing to be used with algorithms an..." alt="" coords="191,787,385,843"/>
-<area shape="rect" id="node16" href="$structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html" title="cl::sycl::detail::shared\l_ptr_implementation\&lt; accessor\l\&lt; DataType, Dimensions, AccessMode,\l Target \&gt;, detail::accessor\&lt; DataType,\l Dimensions, AccessMode, Target \&gt; \&gt;" alt="" coords="160,232,416,317"/>
-<area shape="rect" id="node17" href="$structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html" title="cl::sycl::detail::shared\l_ptr_implementation\&lt; buffer\l\&lt; T, Dimensions, Allocator\l \&gt;, detail::buffer_waiter\&lt;\l T, Dimensions, Allocator \&gt; \&gt;" alt="" coords="191,421,385,507"/>
-<area shape="rect" id="node18" href="$structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html" title="cl::sycl::detail::shared\l_ptr_implementation\&lt; buffer\l_waiter\&lt; T, Dimensions, Allocator\l \&gt;, detail::buffer\&lt; T, Dimensions \&gt; \&gt;" alt="" coords="171,691,405,762"/>
-<area shape="rect" id="node19" href="$structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html" title="cl::sycl::detail::shared\l_ptr_implementation\&lt; context,\l detail::context \&gt;" alt="" coords="189,1320,387,1376"/>
-<area shape="rect" id="node21" href="$structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html" title="cl::sycl::detail::shared\l_ptr_implementation\&lt; device,\l detail::device \&gt;" alt="" coords="191,1400,385,1456"/>
-<area shape="rect" id="node23" href="$structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html" title="cl::sycl::detail::shared\l_ptr_implementation\&lt; kernel,\l detail::kernel \&gt;" alt="" coords="193,5,383,61"/>
-<area shape="rect" id="node25" href="$structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html" title="cl::sycl::detail::shared\l_ptr_implementation\&lt; pipe\l\&lt; T \&gt;, detail::pipe\&lt; T \&gt; \&gt;" alt="" coords="201,867,375,923"/>
-<area shape="rect" id="node26" href="$structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html" title="cl::sycl::detail::shared\l_ptr_implementation\&lt; platform,\l detail::platform \&gt;" alt="" coords="187,85,389,141"/>
-<area shape="rect" id="node28" href="$structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html" title="cl::sycl::detail::shared\l_ptr_implementation\&lt; program,\l detail::program \&gt;" alt="" coords="187,341,389,397"/>
-<area shape="rect" id="node30" href="$structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html" title="cl::sycl::detail::shared\l_ptr_implementation\&lt; queue,\l detail::queue \&gt;" alt="" coords="193,1079,383,1135"/>
-<area shape="rect" id="node31" href="$structcl_1_1sycl_1_1detail_1_1shared__ptr__implementation.html" title="cl::sycl::detail::shared\l_ptr_implementation\&lt; static\l_pipe\&lt; T, Capacity \&gt;, detail\l::pipe\&lt; T \&gt; \&gt;" alt="" coords="196,1225,380,1295"/>
-<area shape="rect" id="node20" href="$group__execution.html#classcl_1_1sycl_1_1context" title="SYCL context. " alt="" coords="493,1335,607,1361"/>
-<area shape="rect" id="node22" href="$group__execution.html#classcl_1_1sycl_1_1device" title="SYCL device. " alt="" coords="495,1415,605,1441"/>
-<area shape="rect" id="node24" href="$group__execution.html#classcl_1_1sycl_1_1kernel" title="SYCL kernel. " alt="" coords="497,20,603,47"/>
-<area shape="rect" id="node27" href="$group__execution.html#classcl_1_1sycl_1_1platform" title="Abstract the OpenCL platform. " alt="" coords="491,100,609,127"/>
-<area shape="rect" id="node29" href="$classcl_1_1sycl_1_1program.html" title="SYCL program. " alt="" coords="491,356,609,383"/>
+<area shape="rect" id="node1" href="$classtrisycl_1_1detail_1_1cache.html" title="trisycl::detail::cache\l\&lt; cl_event, trisycl::detail\l::opencl_event \&gt;" alt="" coords="5,5,171,61"/>
 </map>

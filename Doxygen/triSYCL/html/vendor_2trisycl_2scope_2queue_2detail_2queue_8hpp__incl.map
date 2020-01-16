@@ -1,0 +1,34 @@
+<map id="include/triSYCL/vendor/trisycl/scope/queue/detail/queue.hpp" name="include/triSYCL/vendor/trisycl/scope/queue/detail/queue.hpp">
+<area shape="rect" id="node2" href="$queue_8hpp.html" title="triSYCL/queue.hpp" alt="" coords="1410,109,1542,136"/>
+<area shape="rect" id="node5" href="$context_8hpp.html" title="triSYCL/context.hpp" alt="" coords="1742,527,1882,553"/>
+<area shape="rect" id="node8" href="$default__classes_8hpp.html" title="triSYCL/detail/default\l_classes.hpp" alt="" coords="1972,840,2119,881"/>
+<area shape="rect" id="node14" href="$unimplemented_8hpp.html" title="triSYCL/detail/unimplemented.hpp" alt="" coords="1563,765,1783,792"/>
+<area shape="rect" id="node16" href="$exception_8hpp.html" title="triSYCL/exception.hpp" alt="" coords="929,765,1082,792"/>
+<area shape="rect" id="node17" href="$param__traits_8hpp.html" title="triSYCL/info/param\l_traits.hpp" alt="" coords="359,929,492,971"/>
+<area shape="rect" id="node25" href="$device_8hpp.html" title="triSYCL/device.hpp" alt="" coords="1105,601,1239,628"/>
+<area shape="rect" id="node29" href="$device__selector_8hpp.html" title="triSYCL/device_selector.hpp" alt="" coords="397,683,585,710"/>
+<area shape="rect" id="node31" href="$debug_8hpp.html" title="triSYCL/detail/debug.hpp" alt="" coords="2250,527,2417,553"/>
+<area shape="rect" id="node36" href="$property_8hpp.html" title="triSYCL/detail/property.hpp" alt="" coords="3325,184,3504,211"/>
+<area shape="rect" id="node37" href="$handler_8hpp.html" title="triSYCL/handler.hpp" alt="" coords="1901,184,2040,211"/>
+<area shape="rect" id="node45" href="$parallelism_8hpp.html" title="Implement parallel constructions to launch kernels. " alt="" coords="43,266,202,293"/>
+<area shape="rect" id="node47" href="$info_2queue_8hpp.html" title="triSYCL/info/queue.hpp" alt="" coords="539,847,696,874"/>
+<area shape="rect" id="node48" href="$property__list_8hpp.html" title="triSYCL/property_list.hpp" alt="" coords="3528,184,3696,211"/>
+<area shape="rect" id="node49" href="$host__queue_8hpp.html" title="triSYCL/queue/detail\l/host_queue.hpp" alt="" coords="1790,348,1933,389"/>
+<area shape="rect" id="node50" href="$opencl__queue_8hpp.html" title="triSYCL/queue/detail\l/opencl_queue.hpp" alt="" coords="1623,348,1766,389"/>
+<area shape="rect" id="node7" href="$host__context_8hpp.html" title="triSYCL/context/detail\l/host_context.hpp" alt="" coords="1082,676,1233,717"/>
+<area shape="rect" id="node18" href="$opencl__context_8hpp.html" title="triSYCL/context/detail\l/opencl_context.hpp" alt="" coords="1851,676,2002,717"/>
+<area shape="rect" id="node19" href="$platform_8hpp.html" title="triSYCL/platform.hpp" alt="" coords="1859,765,2003,792"/>
+<area shape="rect" id="node20" href="$shared__ptr__implementation_8hpp.html" title="triSYCL/detail/shared\l_ptr_implementation.hpp" alt="" coords="2435,840,2599,881"/>
+<area shape="rect" id="node30" href="$info_2context_8hpp.html" title="triSYCL/info/context.hpp" alt="" coords="244,765,409,792"/>
+<area shape="rect" id="node21" href="$info_2device_8hpp.html" title="triSYCL/info/device.hpp" alt="" coords="821,847,981,874"/>
+<area shape="rect" id="node22" href="$id_8hpp.html" title="triSYCL/id.hpp" alt="" coords="683,937,789,963"/>
+<area shape="rect" id="node24" href="$opencl__types_8hpp.html" title="triSYCL wrapper for OpenCL types " alt="" coords="814,937,989,963"/>
+<area shape="rect" id="node27" href="$host__device_8hpp.html" title="triSYCL/device/detail\l/host_device.hpp" alt="" coords="1257,676,1402,717"/>
+<area shape="rect" id="node28" href="$opencl__device_8hpp.html" title="triSYCL/device/detail\l/opencl_device.hpp" alt="" coords="1478,676,1623,717"/>
+<area shape="rect" id="node40" href="$accessor_8hpp.html" title="triSYCL/accessor.hpp" alt="" coords="2889,765,3039,792"/>
+<area shape="rect" id="node41" href="$task_8hpp.html" title="triSYCL/command_group\l/detail/task.hpp" alt="" coords="2245,348,2413,389"/>
+<area shape="rect" id="node42" href="$kernel_8hpp.html" title="triSYCL/kernel.hpp" alt="" coords="2169,445,2301,471"/>
+<area shape="rect" id="node43" href="$queue_2detail_2queue_8hpp.html" title="triSYCL/queue/detail\l/queue.hpp" alt="" coords="1899,437,2042,479"/>
+<area shape="rect" id="node44" href="$instantiate__kernel_8hpp.html" title="triSYCL/detail/instantiate\l_kernel.hpp" alt="" coords="2110,259,2277,300"/>
+<area shape="rect" id="node46" href="$parallelism_2detail_2parallelism_8hpp.html" title="Implement the detail of the parallel constructions to launch kernels. " alt="" coords="113,840,261,881"/>
+</map>

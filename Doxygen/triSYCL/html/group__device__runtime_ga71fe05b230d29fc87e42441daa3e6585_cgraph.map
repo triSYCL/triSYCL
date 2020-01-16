@@ -1,4 +1,0 @@
-<map id="cl::sycl::drt::set_kernel" name="cl::sycl::drt::set_kernel">
-<area shape="rect" id="node2" href="$structcl_1_1sycl_1_1detail_1_1task.html#a11f2b6d13ebe35956f57985a7808218f" title="Get the queue behind the task to run a kernel on. " alt="" coords="167,5,303,47"/>
-<area shape="rect" id="node3" href="$structcl_1_1sycl_1_1detail_1_1task.html#a845d535dec2d784c9fa6299ea9c07f1c" title="Set the OpenCL&#45;compatible kernel running this task if any. " alt="" coords="167,71,303,112"/>
-</map>

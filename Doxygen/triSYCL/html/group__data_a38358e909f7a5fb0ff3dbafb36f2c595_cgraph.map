@@ -1,4 +1,0 @@
-<map id="cl::sycl::detail::accessor::accessor" name="cl::sycl::detail::accessor::accessor">
-<area shape="rect" id="node2" href="$group__data.html#ga92da4a9b4248ca82db1b5d1804a209f5" title="Proxy function to avoid some circular type recursion. " alt="" coords="227,5,371,47"/>
-<area shape="rect" id="node3" href="$group__data.html#a1829f7efbd021afede206d1975d40183" title="Test if the accessor has a write access right. " alt="" coords="217,71,381,112"/>
-</map>

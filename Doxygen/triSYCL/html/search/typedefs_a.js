@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['key_5ftype',['key_type',['../classcl_1_1sycl_1_1detail_1_1cache.html#a526777c797db85b83731d04ef70dc2ba',1,'cl::sycl::detail::cache']]]
+  ['key_5ftype',['key_type',['../classtrisycl_1_1detail_1_1cache.html#af7fac95de2cc348e58b4d413c7fd2000',1,'trisycl::detail::cache']]]
 ];

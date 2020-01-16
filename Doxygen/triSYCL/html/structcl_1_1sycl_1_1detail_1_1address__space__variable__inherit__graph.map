@@ -1,6 +1,0 @@
-<map id="cl::sycl::detail::address_space_variable&lt; T, AS &gt;" name="cl::sycl::detail::address_space_variable&lt; T, AS &gt;">
-<area shape="rect" id="node3" href="$group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1address__space__array" title="Implementation of an array variable with an OpenCL address space. " alt="" coords="454,5,613,47"/>
-<area shape="rect" id="node4" href="$group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1address__space__fundamental" title="Implementation of a fundamental type with an OpenCL address space. " alt="" coords="433,71,633,112"/>
-<area shape="rect" id="node2" href="$group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1address__space__base" title="Implementation of the base infrastructure to wrap something in an OpenCL address space. " alt="" coords="5,39,163,80"/>
-<area shape="rect" id="node5" href="$group__address__spaces.html#structcl_1_1sycl_1_1detail_1_1address__space__ptr" title="Implementation for an OpenCL address space pointer. " alt="" coords="681,71,839,112"/>
-</map>

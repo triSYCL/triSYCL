@@ -1,12 +1,12 @@
-<map id="include/CL/sycl/group.hpp" name="include/CL/sycl/group.hpp">
-<area shape="rect" id="node4" href="$linear__id_8hpp.html" title="CL/sycl/detail/linear\l_id.hpp" alt="" coords="660,229,797,271"/>
-<area shape="rect" id="node5" href="$h__item_8hpp.html" title="CL/sycl/h_item.hpp" alt="" coords="533,80,668,107"/>
-<area shape="rect" id="node9" href="$id_8hpp.html" title="CL/sycl/id.hpp" alt="" coords="158,237,265,263"/>
-<area shape="rect" id="node21" href="$range_8hpp.html" title="CL/sycl/range.hpp" alt="" coords="383,319,511,345"/>
-<area shape="rect" id="node24" href="$nd__range_8hpp.html" title="CL/sycl/nd_range.hpp" alt="" coords="137,155,286,181"/>
-<area shape="rect" id="node6" href="$access_8hpp.html" title="CL/sycl/access.hpp" alt="" coords="609,155,747,181"/>
-<area shape="rect" id="node7" href="$unimplemented_8hpp.html" title="CL/sycl/detail/unimplemented.hpp" alt="" coords="1025,319,1243,345"/>
-<area shape="rect" id="node23" href="$item_8hpp.html" title="CL/sycl/item.hpp" alt="" coords="463,155,584,181"/>
-<area shape="rect" id="node11" href="$small__array_8hpp.html" title="CL/sycl/detail/small\l_array.hpp" alt="" coords="149,393,287,435"/>
-<area shape="rect" id="node15" href="$debug_8hpp.html" title="CL/sycl/detail/debug.hpp" alt="" coords="287,483,453,509"/>
+<map id="include/triSYCL/group.hpp" name="include/triSYCL/group.hpp">
+<area shape="rect" id="node4" href="$linear__id_8hpp.html" title="triSYCL/detail/linear\l_id.hpp" alt="" coords="682,229,821,271"/>
+<area shape="rect" id="node5" href="$h__item_8hpp.html" title="triSYCL/h_item.hpp" alt="" coords="555,80,691,107"/>
+<area shape="rect" id="node9" href="$id_8hpp.html" title="triSYCL/id.hpp" alt="" coords="179,237,286,263"/>
+<area shape="rect" id="node21" href="$range_8hpp.html" title="triSYCL/range.hpp" alt="" coords="405,319,535,345"/>
+<area shape="rect" id="node24" href="$nd__range_8hpp.html" title="triSYCL/nd_range.hpp" alt="" coords="157,155,308,181"/>
+<area shape="rect" id="node6" href="$access_8hpp.html" title="triSYCL/access.hpp" alt="" coords="631,155,770,181"/>
+<area shape="rect" id="node7" href="$unimplemented_8hpp.html" title="triSYCL/detail/unimplemented.hpp" alt="" coords="1048,319,1268,345"/>
+<area shape="rect" id="node23" href="$item_8hpp.html" title="triSYCL/item.hpp" alt="" coords="485,155,607,181"/>
+<area shape="rect" id="node11" href="$small__array_8hpp.html" title="triSYCL/detail/small\l_array.hpp" alt="" coords="171,393,310,435"/>
+<area shape="rect" id="node15" href="$debug_8hpp.html" title="triSYCL/detail/debug.hpp" alt="" coords="287,483,453,509"/>
 </map>

@@ -1,0 +1,4 @@
+<map id="trisycl::item::get_range" name="trisycl::item::get_range">
+<area shape="rect" id="node2" href="$group__parallelism.html#af05ae43b2a6a876718b93349b0ca4b4f" title="Return the linearized ID in the item&#39;s range. " alt="" coords="199,5,315,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#a39c350a7631c1fb5c810cf2cf4141d5b" title="Returns an item with same dimensions but offset set to 0. " alt="" coords="169,71,344,112"/>
+</map>

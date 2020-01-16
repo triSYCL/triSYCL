@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['some_20helpers_20for_20the_20implementation',['Some helpers for the implementation',['../group__helpers.html',1,'']]]
+  ['platforms_2c_20contexts_2c_20devices_20and_20queues',['Platforms, contexts, devices and queues',['../group__execution.html',1,'']]]
 ];

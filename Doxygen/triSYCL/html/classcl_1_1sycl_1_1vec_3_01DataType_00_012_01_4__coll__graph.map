@@ -1,6 +1,0 @@
-<map id="cl::sycl::vec&lt; DataType, 2 &gt;" name="cl::sycl::vec&lt; DataType, 2 &gt;">
-<area shape="rect" id="node2" href="$classcl_1_1sycl_1_1detail_1_1vec.html" title="cl::sycl::detail::vec\l\&lt; DataType, 2 \&gt;" alt="" coords="660,295,792,336"/>
-<area shape="rect" id="node3" href="$group__helpers.html" title="cl::sycl::detail::small\l_array\&lt; DataType, cl::\lsycl::vec\&lt; DataType, NumElements\l \&gt;, NumElements \&gt;" alt="" coords="376,280,611,351"/>
-<area shape="rect" id="node9" href="$group__debug__trace.html" title="cl::sycl::detail::display\l_vector\&lt; cl::sycl::vec\l\&lt; DataType, NumElements \&gt; \&gt;" alt="" coords="19,407,226,463"/>
-<area shape="rect" id="node11" href="$classstatic_01const_01size__t.html" title="static const size_t" alt="" coords="58,538,187,565"/>
-</map>

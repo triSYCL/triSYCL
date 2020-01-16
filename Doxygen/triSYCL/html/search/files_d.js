@@ -1,12 +1,16 @@
 var searchData=
 [
-  ['parallelism_2ehpp',['parallelism.hpp',['../parallelism_2detail_2parallelism_8hpp.html',1,'(Global Namespace)'],['../parallelism_8hpp.html',1,'(Global Namespace)']]],
-  ['param_5ftraits_2ehpp',['param_traits.hpp',['../param__traits_8hpp.html',1,'']]],
-  ['partition_5farray_2ehpp',['partition_array.hpp',['../partition__array_8hpp.html',1,'']]],
-  ['pipe_2ehpp',['pipe.hpp',['../pipe_2detail_2pipe_8hpp.html',1,'(Global Namespace)'],['../pipe_8hpp.html',1,'(Global Namespace)']]],
-  ['pipe_5faccessor_2ehpp',['pipe_accessor.hpp',['../pipe__accessor_8hpp.html',1,'']]],
-  ['pipe_5freservation_2ehpp',['pipe_reservation.hpp',['../pipe__reservation_2detail_2pipe__reservation_8hpp.html',1,'(Global Namespace)'],['../pipe__reservation_8hpp.html',1,'(Global Namespace)']]],
-  ['platform_2ehpp',['platform.hpp',['../info_2platform_8hpp.html',1,'(Global Namespace)'],['../platform_2detail_2platform_8hpp.html',1,'(Global Namespace)'],['../platform_8hpp.html',1,'(Global Namespace)']]],
-  ['platform_5ftail_2ehpp',['platform_tail.hpp',['../platform__tail_8hpp.html',1,'']]],
-  ['program_2ehpp',['program.hpp',['../program_2detail_2program_8hpp.html',1,'(Global Namespace)'],['../program_8hpp.html',1,'(Global Namespace)']]]
+  ['opencl_5fcontext_2ehpp',['opencl_context.hpp',['../opencl__context_8hpp.html',1,'']]],
+  ['opencl_5fdevice_2ehpp',['opencl_device.hpp',['../opencl__device_8hpp.html',1,'']]],
+  ['opencl_5fdevice_5ftail_2ehpp',['opencl_device_tail.hpp',['../opencl__device__tail_8hpp.html',1,'']]],
+  ['opencl_5fevent_2ehpp',['opencl_event.hpp',['../opencl__event_8hpp.html',1,'']]],
+  ['opencl_5fkernel_2ehpp',['opencl_kernel.hpp',['../opencl__kernel_8hpp.html',1,'']]],
+  ['opencl_5fplatform_2ehpp',['opencl_platform.hpp',['../opencl__platform_8hpp.html',1,'']]],
+  ['opencl_5fplatform_5ftail_2ehpp',['opencl_platform_tail.hpp',['../opencl__platform__tail_8hpp.html',1,'']]],
+  ['opencl_5fqueue_2ehpp',['opencl_queue.hpp',['../opencl__queue_8hpp.html',1,'']]],
+  ['opencl_5fspir_2eh',['opencl_spir.h',['../opencl__spir_8h.html',1,'']]],
+  ['opencl_5fspir_5fhelpers_2ehpp',['opencl_spir_helpers.hpp',['../opencl__spir__helpers_8hpp.html',1,'']]],
+  ['opencl_5fspir_5freq_2eh',['opencl_spir_req.h',['../opencl__spir__req_8h.html',1,'']]],
+  ['opencl_5ftypes_2ehpp',['opencl_types.hpp',['../opencl__types_8hpp.html',1,'']]],
+  ['opt_5fdecorate_5ffunc_2ehpp',['opt_decorate_func.hpp',['../opt__decorate__func_8hpp.html',1,'']]]
 ];
