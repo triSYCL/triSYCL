@@ -23,7 +23,8 @@
     this file, look at https://github.com/triSYCL/triSYCL
 
     The Doxygen version of the implementation itself is in
-    http://trisycl.github.io/triSYCL/Doxygen/triSYCL/html
+    http://trisycl.github.io/triSYCL/Doxygen/triSYCL/html and
+    http://trisycl.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
 
 
     Ronan at keryell dot FR
