@@ -25,7 +25,7 @@
     The Doxygen version of the implementation itself is in
     https://pages.gitenterprise.xilinx.com/rkeryell/acappp/Doxygen/acappp/html
     and
-    https://pages.gitenterprise.xilinx.com/rkeryell/acappp/Doxygen/acappp/triSYCL-implementation-refman.pdf
+    https://pages.gitenterprise.xilinx.com/rkeryell/acappp/Doxygen/acappp/acappp-implementation-refman.pdf
 
 
     Ronan at keryell dot FR
