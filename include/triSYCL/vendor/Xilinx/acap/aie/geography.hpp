@@ -158,6 +158,16 @@ struct geography : Layout {
   }
 
 
+  /** Test if horizontal and vertical coordinates are valid
+
+      \param[in] x is the horizontal tile coordinate
+
+      \param[in] y is the vertical tile coordinate
+  */
+  static bool constexpr is_x_y_valid(int x, int y) {
+    return is_x_valid(x) && is_y_valid(y);
+  }
+
   /** Validate the horizontal and vertical coordinates
 
       Do nothing but throwing if the coordinates are not valid tile

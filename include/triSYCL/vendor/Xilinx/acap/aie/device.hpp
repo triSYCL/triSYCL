@@ -201,6 +201,7 @@ struct device {
 
 
   /// Build some device level infrastructure
+/*
   device() {
     for_each_tile_index([&] (auto x, auto y) {
       // Connect the NoC towards East of the switches
@@ -217,6 +218,32 @@ struct device {
           tile(x, y).output(o) = tile(x - 1, y).input(i);
     });
   }
+*/
+  device() {
+    // Connect the inter core tile NoC
+    for_each_tile_index([&] (auto x, auto y) {
+      boost::hana::tuple noc = {
+          // Connection topology of the NoC towards East of the switches
+          std::tuple { 1, 0,
+                       cmp::east_0, cmp::east_last,
+                       csp::west_0, csp::west_last }
+          // Connection topology of the NoC towards West of the switches
+        , std::tuple { -1, 0,
+                       cmp::west_0, cmp::west_last,
+                       csp::east_0, csp::east_last }
+        };
+      boost::hana::for_each(noc, [&] (auto direction) {
+        auto [ dx, dy, output_start, output_last, input_start, input_last ] =
+          direction;
+        if (geo::is_x_y_valid(x + dx, y + dy))
+          for (auto [o, i] : ranges::views::zip
+                 (views::enum_type(output_start, output_last),
+                  views::enum_type(input_start, input_last)))
+            tile(x, y).output(o) = tile(x + dx, y + dy).input(i);
+      });
+    });
+  }
+
 };
 
 /// @} End the aie Doxygen group
