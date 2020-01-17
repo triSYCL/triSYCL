@@ -73,30 +73,29 @@ int test_main(int argc, char *argv[]) {
                   << " instead of " << i << std::endl;
     }
 
-    // Test neighbour core connection
-    d.tile(0,0).connect(d_t::csp::me_1, d_t::cmp::east_0);
-    d.tile(1,0).connect(d_t::csp::west_0, d_t::cmp::me_0);
-    // From the host point of view
-    for (int i = 1; i < 9; ++i) {
-      d.tile(0,0).out(1) << i;
-      int receive;
-      d.tile(1,0).in(0) >> receive;
-      if (i != receive)
-        std::cerr << "tile(1,0) wrongly received " << receive
-                  << " instead of " << i << std::endl;
-    }
-    // Test neighbour core connection
-    d.tile(1,0).connect(d_t::csp::me_1, d_t::cmp::west_0);
-    d.tile(0,0).connect(d_t::csp::east_0, d_t::cmp::me_0);
-    // From the host point of view
-    for (int i = 1; i < 9; ++i) {
-      d.tile(1,0).out(1) << i;
-      int receive;
-      d.tile(0,0).in(0) >> receive;
-      if (i != receive)
-        std::cerr << "tile(0,0) wrongly received " << receive
-                  << " instead of " << i << std::endl;
-    }
+    // Test neighbour connections from host side
+    boost::hana::tuple host_tests = {
+      std::tuple { 1, 1, d_t::cmp::east_0, 2, 1, d_t::csp::west_0 },
+      std::tuple { 2, 1, d_t::cmp::west_0, 1, 1, d_t::csp::east_0 },
+    };
+    boost::hana::for_each(host_tests, [&] (auto t) {
+      auto [ sender_x, sender_y, sender_output,
+             receiver_x, receiver_y, receiver_input] = t;
+      // The sender always use me_1 port
+      d.tile(sender_x, sender_y).connect(d_t::csp::me_1, sender_output);
+      // The receiver always use me_0 port
+      d.tile(receiver_x, receiver_y).connect(receiver_input, d_t::cmp::me_0);
+      for (int i = 1; i < 9; ++i) {
+        // Communicate from the host point of view
+        d.tile(sender_x, sender_y).out(1) << i;
+        int receive;
+        d.tile(receiver_x, receiver_y).in(0) >> receive;
+        if (i != receive)
+          std::cerr << "tile(" << receiver_x << ',' << receiver_y
+                    << ") wrongly received " << receive
+                    << " instead of " << i << std::endl;
+      }
+    });
     // From the device point of view
 //    d.run<neighbor>();
 
