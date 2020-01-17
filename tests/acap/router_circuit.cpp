@@ -75,8 +75,14 @@ int test_main(int argc, char *argv[]) {
 
     // Test neighbour connections from host side
     boost::hana::tuple host_tests = {
+      // Towards East
       std::tuple { 1, 1, d_t::cmp::east_0, 2, 1, d_t::csp::west_0 },
+      // Towards West
       std::tuple { 2, 1, d_t::cmp::west_0, 1, 1, d_t::csp::east_0 },
+      // Towards North
+      std::tuple { 2, 2, d_t::cmp::north_0, 2, 3, d_t::csp::south_0 },
+      // Towards South
+      std::tuple { 2, 3, d_t::cmp::south_0, 2, 2, d_t::csp::north_0 },
     };
     boost::hana::for_each(host_tests, [&] (auto t) {
       auto [ sender_x, sender_y, sender_output,

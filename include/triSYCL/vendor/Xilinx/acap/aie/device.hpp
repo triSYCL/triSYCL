@@ -201,28 +201,10 @@ struct device {
 
 
   /// Build some device level infrastructure
-/*
-  device() {
-    for_each_tile_index([&] (auto x, auto y) {
-      // Connect the NoC towards East of the switches
-      if (geo::is_x_valid(x + 1))
-        for (auto [o, i] : ranges::views::zip
-               (views::enum_type(cmp::east_0, cmp::east_last),
-                views::enum_type(csp::west_0, csp::west_last)))
-          tile(x, y).output(o) = tile(x + 1, y).input(i);
-      // Connect the NoC towards West of the switches
-      if (geo::is_x_valid(x - 1))
-        for (auto [o, i] : ranges::views::zip
-               (views::enum_type(cmp::west_0, cmp::west_last),
-                views::enum_type(csp::east_0, csp::east_last)))
-          tile(x, y).output(o) = tile(x - 1, y).input(i);
-    });
-  }
-*/
   device() {
     // Connect the inter core tile NoC
     for_each_tile_index([&] (auto x, auto y) {
-      boost::hana::tuple noc = {
+      boost::hana::tuple constexpr noc = {
           // Connection topology of the NoC towards East of the switches
           std::tuple { 1, 0,
                        cmp::east_0, cmp::east_last,
@@ -231,10 +213,18 @@ struct device {
         , std::tuple { -1, 0,
                        cmp::west_0, cmp::west_last,
                        csp::east_0, csp::east_last }
+          // Connection topology of the NoC towards North of the switches
+        , std::tuple { 0, 1,
+                       cmp::north_0, cmp::north_last,
+                       csp::south_0, csp::south_last }
+          // Connection topology of the NoC towards South of the switches
+        , std::tuple { 0, -1,
+                       cmp::south_0, cmp::south_last,
+                       csp::north_0, csp::north_last }
         };
-      boost::hana::for_each(noc, [&] (auto direction) {
+      boost::hana::for_each(noc, [&] (auto connections) {
         auto [ dx, dy, output_start, output_last, input_start, input_last ] =
-          direction;
+          connections;
         if (geo::is_x_y_valid(x + dx, y + dy))
           for (auto [o, i] : ranges::views::zip
                  (views::enum_type(output_start, output_last),
