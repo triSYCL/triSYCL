@@ -94,7 +94,10 @@ public:
 
     /// Enqueue a packet to the core input
     void write(const axi_packet &v) override {
-      TRISYCL_DUMP_T("core_receiver write data value " << v.data);
+      TRISYCL_DUMP_T("core_receiver " << this << " on fiber "
+                     << boost::this_fiber::get_id()
+                     << " write data value " << v.data
+                     << " to buffered_channel " << &c);
       c.push(v);
     }
 
@@ -110,7 +113,9 @@ public:
 
     /// Waiting read to a core input port
     value_type read() override {
-      TRISYCL_DUMP_T("core_receiver read");
+      TRISYCL_DUMP_T("core_receiver " << this << " on fiber "
+                     << boost::this_fiber::get_id()
+                     << " read from buffered_channel " << &c);
       return c.value_pop().data;
     }
 
@@ -201,6 +206,7 @@ public:
   /// Submit a callable on this tile
   template <typename Work>
   void submit(Work &&f) {
+    // Launch the tile program immediately on a new thread
     work = std::async(std::launch::async,
                       std::forward<Work>(f));
   }

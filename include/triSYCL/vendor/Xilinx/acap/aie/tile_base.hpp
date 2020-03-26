@@ -76,7 +76,7 @@ public:
 
       \param[in] port is the port to use
   */
-  auto& in_connection(int port) {
+  auto &in_connection(int port) {
     return ti->in_connection(port);
   }
 
@@ -85,38 +85,20 @@ public:
 
       \param[in] port is port to use
   */
-  auto& out_connection(int port) {
+  auto &out_connection(int port) {
     return ti->out_connection(port);
   }
 
 
-  /** Get the user input port from the AXI stream switch
-
-      \param[in] T is the data type to be used in the transfers
-
-      \param[in] Target specifies if the connection is blocking or
-      not. It is blocking by default
-
-      \param[in] port is the port to use
-  */
-  template <typename T, access::target Target = access::target::blocking_pipe>
-  auto in(int port) {
-    return ti->template in<T, Target>(port);
+  /// Get the user input port from the AXI stream switch
+  auto &in(int port) {
+    return ti->in(port);
   }
 
 
-  /** Get the user output port to the AXI stream switch
-
-      \param[in] T is the data type to be used in the transfers
-
-      \param[in] Target specifies if the connection is blocking or
-      not. It is blocking by default
-
-      \param[in] port is the port to use
-  */
-  template <typename T, access::target Target = access::target::blocking_pipe>
-  auto out(int port) {
-    return ti->template out<T, Target>(port);
+  /// Get the user output port to the AXI stream switch
+  auto &out(int port) {
+    return ti->out(port);
   }
 
 

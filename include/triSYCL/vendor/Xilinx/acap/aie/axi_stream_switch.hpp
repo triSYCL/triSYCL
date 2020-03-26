@@ -20,6 +20,7 @@
 
 #include <array>
 #include <cstdint>
+#include <future>
 #include <memory>
 #include <type_traits>
 #include <utility>
@@ -74,6 +75,8 @@ public:
  */
 template <typename AXIStreamGeography>
 class axi_stream_switch {
+  /// Handle to the thread used to run the routing minions
+  std::future<void> fiber_runner;
 
 public:
 
@@ -148,7 +151,7 @@ public:
     boost::fibers::buffered_channel<axi_packet> c { capacity };
 
     std::vector<std::shared_ptr<router_port>> outputs;
-
+#if 0
     /// Fiber used as a data mover from an input queue
     boost::fibers::fiber f
       { /* Use explicit dispatch to have the scheduler starting right
@@ -156,28 +159,35 @@ public:
            destructor...) to launch it */
        boost::fibers::launch::dispatch,
        [&] {
-         TRISYCL_DUMP_T("router_minion " << boost::this_fiber::get_id()
-                        << " starting");
+         TRISYCL_DUMP_T("router_minion " << this << " on fiber "
+                        << boost::this_fiber::get_id()
+                        << " starting with buffered_channel " << &c);
           for (;;) {
+            TRISYCL_DUMP_T("router_minion " << this << " on fiber "
+                           << boost::this_fiber::get_id()
+                           << " reading from buffered_channel "
+                           << &c << " ...");
             auto v = c.value_pop();
             if (v.shutdown_request)
               // End the execution on shutdown packet reception
               break;
-            TRISYCL_DUMP_T("router_minion " << this
-                           << " on fiber " << boost::this_fiber::get_id()
+            TRISYCL_DUMP_T("router_minion " << this << " on fiber "
+                           << boost::this_fiber::get_id()
                            << " routing data value " << v.data);
             // The routing itself is a blocking write on each output
             for (auto &o : outputs) {
-              TRISYCL_DUMP_T("router_minion " << this
+              TRISYCL_DUMP_T("router_minion " << this << " on fiber "
+                             << boost::this_fiber::get_id()
                              << " to router_minion " << o.get());
                o->write(v);
             }
           }
-          TRISYCL_DUMP_T("router_minion " << boost::this_fiber::get_id()
+          TRISYCL_DUMP_T("router_minion " << this << " on fiber "
+                         << boost::this_fiber::get_id()
                          << " shutting down");
         }
       };
-
+#endif
     /// Inherit from parent constructors
     using router_port::router_port;
     using value_type = typename router_port::value_type;
@@ -186,8 +196,10 @@ public:
     /// \todo Clean up the API to separate data from signaling
     void write(const axi_packet &v) override {
       /// \todo separate debug from shutdown case
-      TRISYCL_DUMP_T("router_minion " << boost::this_fiber::get_id()
-                     << " write data value " << v.data);
+      TRISYCL_DUMP_T("router_minion " << this << " on fiber "
+                     << boost::this_fiber::get_id()
+                     << " write data value " << v.data
+                     << " to buffered_channel " << &c);
       c.push(v);
     }
 
@@ -203,8 +215,9 @@ public:
 
     /// Waiting read to a core input port
     value_type read() override {
-      TRISYCL_DUMP_T("router_minion " << boost::this_fiber::get_id()
-                     << " read");
+      TRISYCL_DUMP_T("router_minion " << this << " on fiber "
+                     << boost::this_fiber::get_id()
+                     << " reading from buffered_channel " << &c << " ...");
       return c.value_pop().data;
     }
 
@@ -230,12 +243,26 @@ public:
     }
 
 
+    /** Wait for the fiber to complete if any
+
+        Allow 2 different use cases: either end-user is waiting on
+        completion by calling this function or otherwise the
+        destructor will wait for it
+    */
+    void join() {
+#if 0
+      if (f.joinable())
+        f.join();
+#endif
+    }
+
+
     /// Destructor handling the correct infrastructure shutdown
     ~router_minion() override {
       // Send a special packet to shutdown the routing process
       write(axi_packet::shutdown);
       // Wait for shutdown to avoid calling std::terminate on destruction...
-      f.join();
+      join();
     }
   };
 
@@ -389,17 +416,32 @@ public:
 
   /// Connect the internals of the AXI stream switch
   axi_stream_switch() {
-    // Add a router worker on all switch input
-    for (auto &p : input_ports)
-      p = std::make_shared<router_minion>(*this);
+    std::cout << "Starting axi_stream_switch()" << std::endl;
+    fiber_runner = std::async(std::launch::async, [&] {
+      // Add a router worker on all switch input
+      for (auto &p : input_ports)
+        p = std::make_shared<router_minion>(*this);
+    std::cout << "Fibers launched" << std::endl;
 
-    // \todo DMA
+      // \todo DMA
 
-    // \todo FIFO
+      // \todo FIFO
 
-    // \todo CTRL
+      // \todo CTRL
+
+      // Wait for each fiber to complete
+      for (auto &p : input_ports)
+        static_cast<router_minion *>(p.get())->join();
+    });
+    std::cout << "axi_stream_switch() created" << std::endl;
   }
 
+
+  /// Connect the internals of the AXI stream switch
+  ~axi_stream_switch() {
+    // Wait for everybody to finish
+    fiber_runner.get();
+  }
 };
 
 /// @} End the aie Doxygen group

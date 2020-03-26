@@ -41,10 +41,37 @@ struct comm : acap::aie::tile<AIE, X, Y> {
 };
 
 
-int test_main(int argc, char *argv[]) {
-  try {
-    acap::aie::device<acap::aie::layout::size<3,4>> d;
+// Test neighbor communication from tile(0,0) to tile(1,0)
+template <typename AIE, int X, int Y>
+struct neighbor : acap::aie::tile<AIE, X, Y> {
+  using t = acap::aie::tile<AIE, X, Y>;
+  void run() {
+    for (int i = 0; i < size; ++i) {
+      // tile(0,0) write to port 1
+      if constexpr (X == 0 && Y == 0) {
+        t::out(1) << i;
+        TRISYCL_DUMP_T("tile(0,0) wrote " << i);
+      }
+      // tile(1,0) read from port 0
+      else if constexpr (X == 1 && Y == 0) {
+        int receive;
+        TRISYCL_DUMP_T("tile(1,0) receiving...");
+        t::in(0) >> receive;
+        std::cerr << "tile(1,0) wrongly received " << receive
+                  << " instead of " << i << std::endl;
+      }
+    }
+  }
+};
 
+
+int test_main(int argc, char *argv[]) {
+//boost::fibers::use_scheduling_algorithm< boost::fibers::algo::shared_work >();
+  try {
+    //acap::aie::device<acap::aie::layout::size<3,4>> d;
+    acap::aie::device<acap::aie::layout::size<2,1>> d;
+    using d_t = decltype(d);
+#if 0
     // Test the communication API from the host point-of-view
 
     /*
@@ -58,7 +85,6 @@ int test_main(int argc, char *argv[]) {
       aie.connect<float>(line { 2 }, broadcast_column);
       aie.connect<float>(column { 3 }, broadcast_column);
     */
-    using d_t = decltype(d);
 //    d.shim(0).connect(s::ssp::south_1, s::smp::north_0);
 //    d.tile(0,0).connect(s::csp::south_0, s::cmp::me_0);
 
@@ -102,8 +128,13 @@ int test_main(int argc, char *argv[]) {
                     << " instead of " << i << std::endl;
       }
     });
+#endif
+    // Test neighbor core connection
+//    d.tile(0,0).connect(d_t::csp::me_1, d_t::cmp::east_0);
+//    d.tile(1,0).connect(d_t::csp::west_0, d_t::cmp::me_0);
+    std::cout << "From the device point of view" << std::endl;
     // From the device point of view
-//    d.run<neighbor>();
+    d.run<neighbor>();
 
 /*    d.tile(0,0)
       .connect(geo::core_axi_stream_switch::slave_port_layout::me_0)

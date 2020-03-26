@@ -45,6 +45,8 @@ struct device {
   /// The cascade stream infrastructure of the CGRA
   cascade_stream<geo> cs;
 
+  detail::fiber_executor fe;
+
   /** Keep track of all the tiles as a type-erased tile_base type to
       have a simpler access to the basic position-independent tile
       features */
@@ -56,11 +58,14 @@ struct device {
       \param f is a callable that is to be called like \c f(x,y) for
       each tile
   */
-  static auto inline for_each_tile_index = [] (auto f) {
+  template <typename F>
+  void for_each_tile_index(F f) {
     for (auto [ x, y ] : ranges::views::cartesian_product
            (ranges::views::iota(0, geo::x_size),
-            ranges::views::iota(0, geo::y_size)))
+            ranges::views::iota(0, geo::y_size))) {
+      std::cout << "for_each_tile_index " << x << ' ' << y << std::endl;
       f(x, y);
+    }
   };
 
 
@@ -69,7 +74,8 @@ struct device {
       \param f is a callable that is to be called like \c f(x,y) for
       each tile
   */
-  static auto inline for_each_tile = [] (auto f) {
+  template <typename F>
+  void for_each_tile(F f) {
     for_each_tile_index([&] (auto x, auto y) { f(ti[y][x]); });
   };
 
@@ -88,6 +94,7 @@ struct device {
   }
 
 
+#if 0
   /** The shim tiles on the lower row of the tile array
 
       For now we consider only homogeneous shim tiles.
@@ -105,7 +112,7 @@ struct device {
     geo::validate_x(x);
     return shims[x];
   }
-
+#endif
 
   /// Access the cascade connections
   auto &cascade() {
@@ -202,13 +209,28 @@ struct device {
 
   /// Build some device level infrastructure
   device() {
+    fe.enqueue([] {
+                 for (;;) {
+                   std::cerr << "fiber runner 1" << std::endl;
+                   boost::this_fiber::yield();
+                 }
+               });
+    fe.enqueue([] {
+                 for (;;) {
+                   std::cerr << "fiber runner 2" << std::endl;
+                   //boost::this_fiber::yield();
+                 }
+               });
+for (;;);
     // Connect the inter core tile NoC
     for_each_tile_index([&] (auto x, auto y) {
-      boost::hana::tuple constexpr noc = {
+      // No CTAD yet with Boost::Hana and Clang++-10 (but works with g++-9)
+      auto noc = boost::hana::make_tuple(
           // Connection topology of the NoC towards East of the switches
           std::tuple { 1, 0,
                        cmp::east_0, cmp::east_last,
                        csp::west_0, csp::west_last }
+#if 0
           // Connection topology of the NoC towards West of the switches
         , std::tuple { -1, 0,
                        cmp::west_0, cmp::west_last,
@@ -221,7 +243,8 @@ struct device {
         , std::tuple { 0, -1,
                        cmp::south_0, cmp::south_last,
                        csp::north_0, csp::north_last }
-        };
+#endif
+        );
       boost::hana::for_each(noc, [&] (auto connections) {
         auto [ dx, dy, output_start, output_last, input_start, input_last ] =
           connections;

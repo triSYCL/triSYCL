@@ -208,6 +208,7 @@ struct program {
       This is the main member function to use to launch the execution.
   */
   void run() {
+      std::cout << "program run" << std::endl;
     // Start each tile program in its own CPU thread
     boost::hana::for_each(tiles, [&] (auto& t) {
         t.submit([&] {
@@ -226,7 +227,7 @@ struct program {
 
     // Wait for the end of the execution of each tile
     boost::hana::for_each(tiles, [&] (auto& t) {
-        TRISYCL_DUMP_T("Joining AIE tile (" << t.x << ',' << t.y << ')');
+        TRISYCL_DUMP_T("Joining AIE tile (" << t.x << ',' << t.y << ")...");
         t.wait();
         TRISYCL_DUMP_T("Joined AIE tile (" << t.x << ',' << t.y << ')');
       });
