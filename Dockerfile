@@ -12,7 +12,8 @@ RUN apt-get -y update
 
 # Utilities
 RUN apt-get install -y --allow-downgrades --allow-remove-essential             \
-    --allow-change-held-packages git wget apt-utils cmake libboost-all-dev
+    --allow-change-held-packages git wget apt-utils cmake libboost-all-dev \
+    librange-v3-dev
 
 # Clang 6.0
 RUN if [ "${c_compiler}" = 'clang-6.0' ]; then apt-get install -y              \
