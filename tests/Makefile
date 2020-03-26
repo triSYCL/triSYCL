@@ -10,6 +10,9 @@ CXX = clang++-11
 
 #CXXFLAGS += -I/home/rkeryell/Xilinx/Projects/C++/Boost/fiber/include
 
+# Work around Clang++-11 dev that breaks concepts for range-v3
+CXXFLAGS += -U__cpp_concepts
+
 # But everything works fine with GCC 9 at least
 #CXX = g++
 

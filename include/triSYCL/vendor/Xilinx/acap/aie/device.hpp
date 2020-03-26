@@ -19,6 +19,8 @@
 #include "tile.hpp"
 #include "tile_infrastructure.hpp"
 
+#include "triSYCL/detail/fiber_pool.hpp"
+
 /// \ingroup aie
 /// @{
 
@@ -45,7 +47,9 @@ struct device {
   /// The cascade stream infrastructure of the CGRA
   cascade_stream<geo> cs;
 
-  detail::fiber_executor fe;
+  /// A fiber pool executor to run the infrastructure
+  detail::fiber_pool fiber_executor
+    { 1, detail::fiber_pool::sched::round_robin, false };
 
   /** Keep track of all the tiles as a type-erased tile_base type to
       have a simpler access to the basic position-independent tile
@@ -209,16 +213,16 @@ struct device {
 
   /// Build some device level infrastructure
   device() {
-    fe.enqueue([] {
+    fiber_executor.submit([] {
                  for (;;) {
                    std::cerr << "fiber runner 1" << std::endl;
                    boost::this_fiber::yield();
                  }
                });
-    fe.enqueue([] {
+    fiber_executor.submit([] {
                  for (;;) {
                    std::cerr << "fiber runner 2" << std::endl;
-                   //boost::this_fiber::yield();
+                   boost::this_fiber::yield();
                  }
                });
 for (;;);
