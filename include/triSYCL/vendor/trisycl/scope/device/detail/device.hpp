@@ -17,8 +17,7 @@
 
 namespace trisycl::vendor::trisycl::scope::detail {
 
-/** \addtogroup vendor_trisycl_scope triSYCL extension for
-    storage scopes
+/** \addtogroup vendor_trisycl_scope triSYCL extension for storage scopes
     @{
 */
 

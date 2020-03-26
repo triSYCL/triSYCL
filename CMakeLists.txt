@@ -20,7 +20,9 @@ include_directories(${PROJECT_SOURCE_DIR}/tests/common) # All targets inherit SY
 
 
 # Recurse into tests dir to pick up unit tests
-add_subdirectory(tests)
+if (BUILD_TESTING)
+  add_subdirectory(tests)
+endif()
 
 add_library(${PROJECT_NAME} INTERFACE)
 
@@ -96,7 +98,7 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${TRISYCL_VERSION_MAJOR} )
 set(CPACK_PACKAGE_VERSION_MINOR ${TRISYCL_VERSION_MINOR} )
 set(CPACK_PACKAGE_VERSION_PATCH ${TRISYCL_VERSION_PATCH} )
 
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-dev")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-dev,librange-v3-dev")
 set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "opencl-c-headers (>=1.2), build-essential, cmake")
 
 include(CPack)

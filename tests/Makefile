@@ -8,12 +8,9 @@ CXX = clang++-11
 # To use libc++ instead of libstdc++, from libc++-dev & libc++abi-dev packages
 #CXXFLAGS += -stdlib=libc++
 
-# Work around Clang++-11 dev that breaks concepts for range-v3
-CXXFLAGS += -U__cpp_concepts
+#CXXFLAGS += -I/home/rkeryell/Xilinx/Projects/C++/Boost/fiber/include
 
-CXXFLAGS += -I/home/rkeryell/Xilinx/Projects/C++/Boost/fiber/include
-
-# But everything works fine with GCC 7 at least
+# But everything works fine with GCC 9 at least
 #CXX = g++
 
 # The device compiler to use.
@@ -83,6 +80,9 @@ CXXFLAGS += -g
 #CXXFLAGS += -O3
 # To have DEBUG mode working
 LDLIBS += -lboost_log -lpthread
+# To have Boost.Fibers
+LDLIBS += -lboost_fiber -lboost_context -lboost_thread -lboost_system
+
 # To use Clang sanitizer modes
 #CXXFLAGS += -fsanitize=address -fno-omit-frame-pointer
 #CXXFLAGS += -fsanitize=thread -fno-omit-frame-pointer
@@ -291,9 +291,9 @@ check:  $(TARGETS_CC)
 	# Launch testing with lit tool from LLVM in current directory
 	echo Using $(CXX) compiler:
 	# lit can be found for example on Debian/Ubuntu in package
-	# llvm-6.0-tools in /usr/lib/llvm-6.0/build/utils/lit/lit.py
+	# llvm-9-tools in /usr/lib/llvm-9/build/utils/lit/lit.py
 	# so try before running the check:
-	# export TRISYCL_LIT=/usr/lib/llvm-6.0/build/utils/lit/lit.py
+	# export TRISYCL_LIT=/usr/lib/llvm-9/build/utils/lit/lit.py
 	# The config file for triSYCL needs at least Python 3.3
 	test "unset$$TRISYCL_LIT == unset" \
 	  && echo 'Initialize TRISYCL_LIT variable to the path of "lit" command' ; \
@@ -308,8 +308,8 @@ check-list:
 
 check-compilers:
 	# Launch the check with various compilers
-	-FORCE_CXX=g++-7 $(MAKE) clean check
-	-FORCE_CXX=clang++-6.0 $(MAKE) clean check
+	-FORCE_CXX=g++-9 $(MAKE) clean check
+	-FORCE_CXX=clang++-9 $(MAKE) clean check
 	-FORCE_CXX=g++ $(MAKE) clean check
 
 # A special target to be called as from the test as "make execute

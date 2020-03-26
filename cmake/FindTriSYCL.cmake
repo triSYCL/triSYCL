@@ -1,4 +1,4 @@
-#.rst:
+ #.rst:
 # FindTriSYCL
 #---------------
 #
@@ -222,8 +222,7 @@ if(TRISYCL_TBB)
 endif()
 
 # Find Boost
-set(BOOST_REQUIRED_COMPONENTS chrono log)
-
+set(BOOST_REQUIRED_COMPONENTS chrono fiber log)
 if(TRISYCL_OPENCL)
   list(APPEND BOOST_REQUIRED_COMPONENTS filesystem)
 endif()
@@ -275,6 +274,7 @@ function(add_sycl_to_target targetName)
     Threads::Threads
     $<$<BOOL:${LOG_NEEDED}>:Boost::log>
     Boost::chrono
+    Boost::fiber
     $<$<BOOL:${TRISYCL_OPENCL}>:Boost::filesystem> #Required by BOOST_COMPUTE_USE_OFFLINE_CACHE.
     ${GTKMM_LIBRARIES})
 

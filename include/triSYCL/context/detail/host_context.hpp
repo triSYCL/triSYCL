@@ -22,8 +22,9 @@ namespace trisycl::detail {
 
 /** \addtogroup execution Platforms, contexts, devices and queues
     @{
+*/
 
-    SYCL host context
+/** SYCL host context
 
     \todo The implementation is quite minimal for now. :-)
 */
