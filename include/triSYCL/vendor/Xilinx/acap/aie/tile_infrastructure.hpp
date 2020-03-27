@@ -21,6 +21,7 @@
 #include <boost/format.hpp>
 
 #include "axi_stream_switch.hpp"
+#include "triSYCL/detail/fiber_pool.hpp"
 #include "triSYCL/detail/ranges.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie {
@@ -136,10 +137,17 @@ public:
   };
 
 
+  /// Construct the tile infrastructure
   tile_infrastructure() {
     // Connect the core receivers to its AXI stream switch
     for (auto p : views::enum_type(mpl::me_0, mpl::me_last))
       output(p) = std::make_shared<core_receiver>(axi_ss);
+  }
+
+
+  /// Start the tile infrastructure associated to the AIE device
+  void start(detail::fiber_pool &fiber_executor) {
+    axi_ss.start(fiber_executor);
   }
 
 

@@ -213,21 +213,11 @@ struct device {
 
   /// Build some device level infrastructure
   device() {
-    fiber_executor.submit([] {
-                 for (;;) {
-                   std::cerr << "fiber runner 1" << std::endl;
-                   boost::this_fiber::yield();
-                 }
-               });
-    fiber_executor.submit([] {
-                 for (;;) {
-                   std::cerr << "fiber runner 2" << std::endl;
-                   boost::this_fiber::yield();
-                 }
-               });
-for (;;);
-    // Connect the inter core tile NoC
+    // Initialize the inter core tile NoC
     for_each_tile_index([&] (auto x, auto y) {
+      // Start the tile infrastructure
+      tile(x, y).start(fiber_executor);
+      // Connect the inter core tile NoC
       // No CTAD yet with Boost::Hana and Clang++-10 (but works with g++-9)
       auto noc = boost::hana::make_tuple(
           // Connection topology of the NoC towards East of the switches
