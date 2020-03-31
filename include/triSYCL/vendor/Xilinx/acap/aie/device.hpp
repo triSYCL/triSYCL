@@ -213,18 +213,19 @@ struct device {
 
   /// Build some device level infrastructure
   device() {
-    // Initialize the inter core tile NoC
+    // Initialize all the tiles with their network connections first
     for_each_tile_index([&] (auto x, auto y) {
       // Start the tile infrastructure
       tile(x, y).start(fiber_executor);
-      // Connect the inter core tile NoC
+    });
+    // Only then we can connect the inter core tile NoC
+    for_each_tile_index([&] (auto x, auto y) {
       // No CTAD yet with Boost::Hana and Clang++-10 (but works with g++-9)
       auto noc = boost::hana::make_tuple(
           // Connection topology of the NoC towards East of the switches
           std::tuple { 1, 0,
                        cmp::east_0, cmp::east_last,
                        csp::west_0, csp::west_last }
-#if 0
           // Connection topology of the NoC towards West of the switches
         , std::tuple { -1, 0,
                        cmp::west_0, cmp::west_last,
@@ -237,7 +238,6 @@ struct device {
         , std::tuple { 0, -1,
                        cmp::south_0, cmp::south_last,
                        csp::north_0, csp::north_last }
-#endif
         );
       boost::hana::for_each(noc, [&] (auto connections) {
         auto [ dx, dy, output_start, output_last, input_start, input_last ] =

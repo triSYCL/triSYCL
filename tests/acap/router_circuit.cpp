@@ -57,8 +57,8 @@ struct neighbor : acap::aie::tile<AIE, X, Y> {
         int receive;
         TRISYCL_DUMP_T("tile(1,0) receiving...");
         t::in(0) >> receive;
-        std::cerr << "tile(1,0) wrongly received " << receive
-                  << " instead of " << i << std::endl;
+        std::cerr << "tile(1,0) received " << receive
+                  << " expected: " << i << std::endl;
       }
     }
   }
@@ -130,8 +130,8 @@ int test_main(int argc, char *argv[]) {
     });
 #endif
     // Test neighbor core connection
-//    d.tile(0,0).connect(d_t::csp::me_1, d_t::cmp::east_0);
-//    d.tile(1,0).connect(d_t::csp::west_0, d_t::cmp::me_0);
+    d.tile(0,0).connect(d_t::csp::me_1, d_t::cmp::east_0);
+    d.tile(1,0).connect(d_t::csp::west_0, d_t::cmp::me_0);
     std::cout << "From the device point of view" << std::endl;
     // From the device point of view
     d.run<neighbor>();

@@ -203,6 +203,9 @@ public:
 
     /// Connect this routing input to a switch output
     void connect_to(std::shared_ptr<router_port> dest) {
+      TRISYCL_DUMP_T("connect_to router_minion " << this << " on fiber "
+                     << boost::this_fiber::get_id()
+                     << " to dest " << &*dest);
       outputs.push_back(dest);
     }
 
