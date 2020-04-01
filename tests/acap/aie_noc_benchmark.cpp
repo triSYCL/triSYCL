@@ -1,5 +1,4 @@
-/* Experimenting with simple network connections using circuit
-   switching with own device and queue
+/* AIE NoC benchmark
 
    RUN: %{execute}%s
 */
@@ -18,15 +17,19 @@ using namespace sycl::vendor::xilinx;
 using namespace sycl::vendor::xilinx::acap::aie;
 
 // Number of values to transfer
-constexpr auto transfers = 100'000;
-constexpr auto size = transfers*sizeof(std::int32_t);
+constexpr auto transfers = 1'000'000;
 
-// Test neighbor communication from tile(0,0) to tile(1,0)
+// Actual transfers to be done on each tile
+// \todo do not use a global variable...
+auto local_transfers = transfers;
+
+
+// Test neighbor communication from each tile to its right neighbor
 template <typename AIE, int X, int Y>
 struct right_neighbor : acap::aie::tile<AIE, X, Y> {
   using t = acap::aie::tile<AIE, X, Y>;
   void run() {
-    for (int i = 0; i < size; ++i) {
+    for (int i = 0; i < local_transfers; ++i) {
       if constexpr (!t::is_right_column())
         // There is a neighbor on the right: send some data
         t::out(1) << i;
@@ -72,9 +75,12 @@ int test_main(int argc, char *argv[]) {
       });
       std::cout << "Start with AIE device (" << d_t::geo::x_size
                 << ',' << d_t::geo::y_size << ')' << std::endl;
+      // Right now the communications are globall costly so keep them
+      // globally constant
+      local_transfers = transfers/d_t::geo::x_max/d_t::geo::y_size;
       // Only x_max since the last column has no right neigbors to talk to
       auto transmitted_bytes =
-        sizeof(std::int32_t)*transfers*d_t::geo::x_max*d_t::geo::y_size;
+        sizeof(std::int32_t)*local_transfers*d_t::geo::x_max*d_t::geo::y_size;
       measure_bandwidth(transmitted_bytes,
                         [&] { d.template run<right_neighbor>(); });
     });
