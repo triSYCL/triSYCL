@@ -18,7 +18,7 @@ using namespace sycl::vendor::xilinx;
 using namespace sycl::vendor::xilinx::acap::aie;
 
 // Number of values to transfer
-constexpr auto transfers = 1'000'000;
+constexpr auto transfers = 100'000;
 constexpr auto size = transfers*sizeof(std::int32_t);
 
 // Test neighbor communication from tile(0,0) to tile(1,0)
@@ -53,8 +53,13 @@ auto measure_bandwidth = [] (auto transfered_bytes, auto some_work) {
 
 int test_main(int argc, char *argv[]) {
   try {
-    {
-      using d_t = acap::aie::device<acap::aie::layout::size<4,4>>;
+    // Run on various sizes
+    auto sizes = boost::hana::make_tuple(layout::size<2,1> {},
+                                         layout::size<2,2> {},
+                                         layout::size<4,4> {},
+                                         layout::vc1902 {});
+    boost::hana::for_each(sizes, [&] (auto s) {
+      using d_t = acap::aie::device<decltype(s)>;
       d_t d;
       // Test neighbor core connection.
       // Configure the AIE NoC connections
@@ -65,17 +70,14 @@ int test_main(int argc, char *argv[]) {
           d.tile(x + 1, y).connect(d_t::csp::west_0, d_t::cmp::me_0);
         }
       });
+      std::cout << "Start with AIE device (" << d_t::geo::x_size
+                << ',' << d_t::geo::y_size << ')' << std::endl;
       // Only x_max since the last column has no right neigbors to talk to
       auto transmitted_bytes =
         sizeof(std::int32_t)*transfers*d_t::geo::x_max*d_t::geo::y_size;
-      measure_bandwidth(transmitted_bytes, [&] { d.run<right_neighbor>(); });
-    }
-    using d_t = acap::aie::device<acap::aie::layout::size<2,1>>;
-    d_t d;
-    // Test neighbor core connection
-    d.tile(0,0).connect(d_t::csp::me_1, d_t::cmp::east_0);
-    d.tile(1,0).connect(d_t::csp::west_0, d_t::cmp::me_0);
-    measure_bandwidth(size, [&] { d.run<right_neighbor>(); });
+      measure_bandwidth(transmitted_bytes,
+                        [&] { d.template run<right_neighbor>(); });
+    });
   } catch (sycl::exception &e) {
     // Display the string message of any SYCL exception
     std::cerr << e.what() << std::endl;
