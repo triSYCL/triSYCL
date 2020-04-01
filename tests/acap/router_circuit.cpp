@@ -8,7 +8,6 @@
 
 #include <future>
 #include <iostream>
-#include <iostream>
 
 #include <boost/test/minimal.hpp>
 
