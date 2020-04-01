@@ -142,7 +142,10 @@ public:
 
 
   /// A router input port with routing skills
-  struct router_minion : router_port {
+  class router_minion : public router_port {
+
+  public:
+
     /// Router ingress capacity queue
     /// \todo check with hardware team for the value
     auto static constexpr capacity = 4;
@@ -155,6 +158,9 @@ public:
     /// Inherit from parent constructors
     using router_port::router_port;
     using value_type = typename router_port::value_type;
+
+    /// To shepherd the routing fibers
+    std::vector<detail::fiber_pool::future<void>> futures;
 
     /// Enqueue a packet on the router input
     /// \todo Clean up the API to separate data from signaling
@@ -209,21 +215,17 @@ public:
       outputs.push_back(dest);
     }
 
+  private:
 
-    /** Wait for the fiber to complete if any
-
-        Allow 2 different use cases: either end-user is waiting on
-        completion by calling this function or otherwise the
-        destructor will wait for it
-    */
+    /// Wait for the fibers to complete
     void join() {
-/// \todo implement a wait on group of fibers?
-#if 0
-      if (f.joinable())
-        f.join();
-#endif
+      // Wait on all the fibers to finish
+      for (auto &f : futures)
+        // Get the value of the future, to get an exception if any
+        f.get();
     }
 
+  public:
 
     /// Create a router minion on this switch using a fiber executor
     router_minion(axi_stream_switch &axi_ss,
@@ -231,7 +233,7 @@ public:
       : router_port { axi_ss }
     {
       /// Use a fiber as a data mover from the input queue
-      fiber_executor.submit([&] {
+      futures.push_back(fiber_executor.submit([&] {
          TRISYCL_DUMP_T("router_minion " << this << " on fiber "
                         << boost::this_fiber::get_id()
                         << " starting with buffered_channel " << &c);
@@ -258,7 +260,7 @@ public:
           TRISYCL_DUMP_T("router_minion " << this << " on fiber "
                          << boost::this_fiber::get_id()
                          << " shutting down");
-      });
+      }));
     }
 
 
