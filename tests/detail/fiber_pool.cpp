@@ -46,13 +46,19 @@ void benchmark(int thread_number,
                  ++f;
                };
 
+  // Keep track of each fiber
+  std::vector<trisycl::detail::fiber_pool::future<void>> futures;
+
   auto starting_point = clk::now();
 
   // The first thread start fiber_number fibers running bench
   for (int i = fiber_number; i != 0; --i)
-    fp.submit(bench);
+    futures.push_back(fp.submit(bench));
 
-  fp.join();
+  // Wait on all the fibers to finish
+  for (auto &f : futures)
+    // Get the value of the future, to get an exception if any
+    f.get();
 
   // Get the duration in seconds as a double
   std::chrono::duration<double> duration = clk::now() - starting_point;
@@ -90,7 +96,6 @@ int test_main(int argc, char *argv[]) {
                       scheduler,
                       true);
         }
-
 
   return 0;
 }
