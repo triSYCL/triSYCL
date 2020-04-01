@@ -8,6 +8,12 @@
     The use case is for circuit emulation when there are a lot of
     fibers launched at the beginning and they have to run concurrently.
 
+    The fiber executors can use several std::thread.
+
+    It allows the execution of some callable and return some future
+    for later shepherding.
+
+
     Ronan at Keryell point FR
 
     This file is distributed under the University of Illinois Open Source
@@ -47,8 +53,7 @@ private:
   std::vector<std::future<void>> working_threads;
 
   /// The queue to submit work
-  boost::fibers::unbuffered_channel
-  <boost::fibers::packaged_task<void(void)>> submission;
+  boost::fibers::unbuffered_channel<std::function<void(void)>> submission;
 
   //static auto constexpr starting_mode = boost::fibers::launch::post;
   static auto constexpr starting_mode = boost::fibers::launch::dispatch;
@@ -72,6 +77,10 @@ private:
   pooled_shared_work::ctx pc_shared;
 
 public:
+
+  /// The type of the future used by the implementation underneath
+  template <typename T>
+  using future = boost::fibers::future<T>;
 
   /// Create a fiber_pool
   fiber_pool(int thread_number,
@@ -99,12 +108,25 @@ public:
   }
 
 
-  /// Submit some work
+  /** Submit some work on a new fiber
+
+      \param[in] work is the callable to execute, taking no arguments
+      and returning a result of some type R
+
+      \return a future<R>
+  */
   template <typename Callable>
-  void submit(Callable && work) {
-    submission.push(boost::fibers::packaged_task<void(void)> {
-        [f = std::move(work)] { f(); }
-          });
+  auto submit(Callable && work) {
+    // Put the packaged_task into a shared_ptr to fit it later in a
+    // lambda in a std::function since the type is move-only
+    auto pt = std::make_shared<boost::fibers::packaged_task<void(void)>>
+      ([w = std::move(work)] { return w(); });
+    auto f = pt->get_future();
+    // Submit a lambda to do the type erasure so the submission queue
+    // type is independent of the type of the packaged_task
+    submission.push([p = std::move(pt)] ()  { (*p)(); });
+    // Return the future to the client to get the result or the exception
+    return f;
   }
 
 
@@ -154,24 +176,20 @@ private:
 
     // Only the first thread receives and starts the work
     if (i == 0) {
-      // Keep track of each fiber execution to forward exception if any
-      std::vector<boost::fibers::future<void>> futures;
+      // Keep track of each fiber execution to avoid quitting before completion
+      std::vector<boost::fibers::fiber> fibers;
       for (;;) {
         decltype(submission)::value_type work;
         if (submission.pop(work)
             == boost::fibers::channel_op_status::closed)
           // Someone asked to stop accepting work
           break;
-        // \todo implement with packaged_task to handle exception and
-        // avoid std::function
-        futures.push_back(work.get_future());
-        // Launch the work on a new unattended fiber
-        boost::fibers::fiber { starting_mode, std::move(work) }.detach();
+        // Launch the work on a new fiber
+        fibers.emplace_back(starting_mode, std::move(work));
       }
-      // Handle any exception here. Well, actually only the first one
-      // because it will just throw
-      for (auto &f : futures)
-        f.get();
+      // Now wait for the completion of each fiber
+      for (auto &f : fibers)
+        f.join();
     }
     // Wait for all the threads to finish their fiber execution
     finish_line.wait();
