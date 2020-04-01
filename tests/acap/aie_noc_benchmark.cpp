@@ -40,6 +40,17 @@ struct neighbor : acap::aie::tile<AIE, X, Y> {
 };
 
 
+auto measure_bandwidth = [] (auto transfered_bytes, auto some_work) {
+  auto starting_point = clk::now();
+  some_work();
+  // Get the duration in seconds as a double
+  std::chrono::duration<double> duration = clk::now() - starting_point;
+  std::cout << " time: " << duration.count()
+            << " s, bandwidth: " << transfered_bytes/duration.count() << " B/s"
+            << std::endl;
+};
+
+
 int test_main(int argc, char *argv[]) {
   try {
     using d_t = acap::aie::device<acap::aie::layout::size<2,1>>;
@@ -47,13 +58,7 @@ int test_main(int argc, char *argv[]) {
     // Test neighbor core connection
     d.tile(0,0).connect(d_t::csp::me_1, d_t::cmp::east_0);
     d.tile(1,0).connect(d_t::csp::west_0, d_t::cmp::me_0);
-    auto starting_point = clk::now();
-    d.run<neighbor>();
-    // Get the duration in seconds as a double
-    std::chrono::duration<double> duration = clk::now() - starting_point;
-    std::cout << " time: " << duration.count()
-              << " s, bandwidth: " << size/duration.count() << " B/s"
-              << std::endl;
+    measure_bandwidth(size, [&] { d.run<neighbor>(); });
   } catch (sycl::exception &e) {
     // Display the string message of any SYCL exception
     std::cerr << e.what() << std::endl;
