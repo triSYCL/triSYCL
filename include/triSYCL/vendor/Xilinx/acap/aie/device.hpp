@@ -69,10 +69,8 @@ struct device {
   void for_each_tile_index(F f) {
     for (auto [ x, y ] : ranges::views::cartesian_product
            (ranges::views::iota(0, geo::x_size),
-            ranges::views::iota(0, geo::y_size))) {
-      std::cout << "for_each_tile_index " << x << ' ' << y << std::endl;
+            ranges::views::iota(0, geo::y_size)))
       f(x, y);
-    }
   };
 
 

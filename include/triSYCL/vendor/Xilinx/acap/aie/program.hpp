@@ -203,13 +203,12 @@ struct program {
 
 
   /** Launch the programs of all the tiles of the CGRA in their own
-      CPU thread and wait for their completion.
+      executor (CPU thread, fiber...) and wait for their completion.
 
       This is the main member function to use to launch the execution.
   */
   void run() {
-      std::cout << "program run" << std::endl;
-    // Start each tile program in its own CPU thread
+    // Start each tile program in its own executor
     boost::hana::for_each(tiles, [&] (auto& t) {
         t.submit([&] {
             TRISYCL_DUMP_T("Starting AIE tile (" << t.x << ',' << t.y

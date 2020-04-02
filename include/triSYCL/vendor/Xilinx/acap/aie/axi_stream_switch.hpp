@@ -423,9 +423,7 @@ public:
 
   /// Connect the internals of the AXI stream switch
   axi_stream_switch() {
-    std::cout << "Starting axi_stream_switch()" << std::endl;
-
-      // \todo DMA
+     // \todo DMA
 
       // \todo FIFO
 
@@ -438,17 +436,6 @@ public:
     // Add a router worker on all switch input
     for (auto &p : input_ports)
       p = std::make_shared<router_minion>(*this, fiber_executor);
-    std::cout << "router_minion launched" << std::endl;
-  }
-
-
-  /// Connect the internals of the AXI stream switch
-  ~axi_stream_switch() {
-/// \todo Wait for everybody to finish
-      // Wait for each fiber to complete
-//      for (auto &p : input_ports)
-  //      static_cast<router_minion *>(p.get())->join();
-    std::cout << "~axi_stream_switch() destructed" << std::endl;
   }
 
 };
