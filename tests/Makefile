@@ -21,6 +21,14 @@ CXXFLAGS += -U__cpp_concepts
 # environment variable is set.
 CL_CXX = $(LLVM_BUILD_DIR)/bin/clang++
 
+
+# Configure some Xilinx AIE parameters
+# Use a real std::thread to run the tile core program instead of a Boost.Fiber
+#CXXFLAGS += -DTRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER=0
+# Use a specific number of std::thread to run the Boost.Fiber executor
+#CXXFLAGS += -DTRISYCL_XILINX_AIE_FIBER_EXECUTOR_THREADS=12
+
+
 # Set OpenCL_INCPATH variable to where CL/cl.h like headers are if
 # required
 

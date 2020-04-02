@@ -23,6 +23,7 @@
 #include "axi_stream_switch.hpp"
 #include "triSYCL/detail/fiber_pool.hpp"
 #include "triSYCL/detail/ranges.hpp"
+#include "triSYCL/vendor/Xilinx/config.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
@@ -48,10 +49,18 @@ class tile_infrastructure  {
   /// The AXI stream switch of the core tile
   axi_ss_t axi_ss;
 
-  /// Keep track of execution in this tile
-  std::future<void> work;
-
 private:
+
+#if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
+  /// Keep track of the fiber executor
+  detail::fiber_pool *fe;
+
+  /// To shepherd the working fiber
+  detail::fiber_pool::future<void> future_work;
+#else
+  /// Keep track of execution in this tile
+  std::future<void> future_work;
+#endif
 
   /** Map the user input port number to the AXI stream switch port
 
@@ -147,6 +156,9 @@ public:
 
   /// Start the tile infrastructure associated to the AIE device
   void start(detail::fiber_pool &fiber_executor) {
+#if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
+    fe = &fiber_executor;
+#endif
     axi_ss.start(fiber_executor);
   }
 
@@ -214,15 +226,19 @@ public:
   /// Submit a callable on this tile
   template <typename Work>
   void submit(Work &&f) {
-    // Launch the tile program immediately on a new thread
-    work = std::async(std::launch::async,
-                      std::forward<Work>(f));
+    // Launch the tile program immediately on a new executor engine
+#if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
+    future_work = fe->submit(std::forward<Work>(f));
+#else
+    future_work = std::async(std::launch::async,
+                             std::forward<Work>(f));
+#endif
   }
 
 
   /// Wait for the execution of the callable on this tile
   void wait() {
-    work.get();
+    future_work.get();
   }
 
 

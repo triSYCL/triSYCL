@@ -47,12 +47,12 @@ struct device {
   /// The cascade stream infrastructure of the CGRA
   cascade_stream<geo> cs;
 
-  /// A fiber pool executor to run the infrastructure
+  /// A fiber pool executor to run the infrastructure powered by
+  /// TRISYCL_XILINX_AIE_FIBER_EXECUTOR_THREADS std::thread
   detail::fiber_pool fiber_executor
-    //    { 1, detail::fiber_pool::sched::round_robin, false };
-    // This seems to be an optimal on 6 core machine
-    // \todo make this configurable
-    { 4, detail::fiber_pool::sched::work_stealing, false };
+    // { 1, detail::fiber_pool::sched::round_robin, false };
+    { TRISYCL_XILINX_AIE_FIBER_EXECUTOR_THREADS,
+      detail::fiber_pool::sched::work_stealing, false };
 
   /** Keep track of all the tiles as a type-erased tile_base type to
       have a simpler access to the basic position-independent tile
