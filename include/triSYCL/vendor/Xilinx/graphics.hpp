@@ -445,8 +445,13 @@ struct image_grid : frame_grid {
           // Only 1 customer at a time
           std::lock_guard lock { dispatch_protection };
           // Skip the work when done to avoid dead lock
-          if (!done)
+          if (done)
+            // Wake-up everybody waiting for sending some work to
+            // realize that they have to give up on their hope
+            cv.notify_all();
+          else
             work_to_dispatch();
+          // Discard the previous work
           work_to_dispatch = nullptr;
         }
         // We can serve the next customer
