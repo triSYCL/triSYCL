@@ -421,7 +421,7 @@ struct tile : acap::aie::tile<AIE, X, Y> {
     auto& m = t::mem();
     std::experimental::mdspan<double, image_size, image_size> md { &m.w[0][0] };
     /// Loop on simulated time
-    for (int time = 0; !a.is_done(); ++time) {
+    for (int time = 0; !a.is_done_barrier(); ++time) {
       seq.compare_with_sequential_reference(time, t::x, t::y, m);
       compute();
       // Display every display_time_step

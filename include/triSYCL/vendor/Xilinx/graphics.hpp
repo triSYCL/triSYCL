@@ -33,6 +33,8 @@
 
 #include <experimental/mdspan>
 
+#include <boost/thread/barrier.hpp>
+
 #include <gtkmm.h>
 
 /** \defgroup graphics Graphics support for CGRA-like interaction
@@ -395,6 +397,14 @@ struct image_grid : frame_grid {
   /// The RGB palette used to render the image values
   palette p;
 
+  /// A global done state across all the tile to allow a global shutdown
+  bool done_snapshot;
+
+  /// Set to true once "done" state has been sampled
+  std::atomic_flag done_has_been_sampled;
+
+  /// Barrier to compute the global done state across the tiles
+  boost::barrier done_barrier { static_cast<unsigned int>(nx*ny) };
 
   /** Create a grid of tiled images
 
@@ -461,7 +471,7 @@ struct image_grid : frame_grid {
     cv.wait(lock, [&] { return !work_to_dispatch || done; } );
     // Do not submit anything if we are in the shutdown process already
     if (!done) {
-      work_to_dispatch = f;
+      work_to_dispatch = std::move(f);
       // Ask the graphics thread for some work
       dispatcher.emit();
     }
@@ -573,6 +583,20 @@ struct image_grid : frame_grid {
     return p;
   }
 
+
+  /// Test if the window has been closed after synchronizing with a
+  /// barrier accross all the tiles
+  bool is_done_barrier() {
+    // Only 1 thread sample the graphics status
+    if (done_has_been_sampled.test_and_set())
+      done_snapshot = done;
+    // Then wait for everybody to synchronize
+    done_barrier.count_down_and_wait();
+    // Reinitialize the flag for the next iteration
+    done_has_been_sampled.clear();
+    return done_snapshot;
+  }
+
 };
 
 
@@ -642,6 +666,12 @@ struct application {
   /// Test if the window has been closed
   bool is_done() {
     return w->done;
+  }
+
+
+  /// Test if the window has been closed after synchronizing with a barrier
+  bool is_done_barrier() {
+    return w->is_done_barrier();
   }
 
 
