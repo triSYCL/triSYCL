@@ -38,7 +38,6 @@ using namespace std::chrono_literals;
 
 
 using namespace sycl::vendor::xilinx;
-namespace fundamentals_v3 = std::experimental::fundamentals_v3;
 
 // The size of the machine to use
 //using layout = acap::aie::layout::size<5,4>;
@@ -142,7 +141,7 @@ auto is_harbor = [] (auto x, auto y) constexpr -> bool {
 /// A sequential reference implementation of wave propagation
 template <auto size_x, auto size_y, auto display_tile_size>
 struct reference_wave_propagation {
-  using space = fundamentals_v3::mdspan<double, size_y, size_x>;
+  using space = std::experimental::mdspan<double, size_y, size_x>;
   // It would be nice to have a constexpr static member to express this,
   // but right now size() is a member function
   //double u_m[space::size()];
@@ -212,7 +211,7 @@ struct reference_wave_propagation {
              Display actually one redundant line/column on each
              bottom/left to mimic the halo in the ACAP case
           */
-          auto sp = fundamentals_v3::subspan
+          auto sp = std::experimental::subspan
             (w,
              std::make_pair(j*display_tile_size,
                             1 + (j + 1)*display_tile_size),
@@ -227,17 +226,18 @@ struct reference_wave_propagation {
   void compare_with_sequential_reference_e(const char *message, int x, int y,
                                            Array &arr,
                                            const MDspan_ref &ref) {
-    const fundamentals_v3::mdspan<double, image_size, image_size> md
+    const std::experimental::mdspan<double, image_size, image_size> md
     { &arr[0][0] };
 
     // Take into account 1 line/column of overlapping halo
     int x_offset = md.extent(1) - 1;
     int y_offset = md.extent(0) - 1;
-    auto mdref = fundamentals_v3::subspan(ref,
-                                          std::make_pair(y*y_offset,
-                                                         1 + (y + 1)*y_offset),
-                                          std::make_pair(x*x_offset,
-                                                         1 + (x + 1)*x_offset));
+    auto mdref =
+      std::experimental::subspan(ref,
+                                 std::make_pair(y*y_offset,
+                                                1 + (y + 1)*y_offset),
+                                 std::make_pair(x*x_offset,
+                                                1 + (x + 1)*x_offset));
     compare_2D_mdspan(message, md, mdref);
   }
 
@@ -419,7 +419,7 @@ struct tile : acap::aie::tile<AIE, X, Y> {
   void run() {
     initialize_space();
     auto& m = t::mem();
-    fundamentals_v3::mdspan<double, image_size, image_size> md { &m.w[0][0] };
+    std::experimental::mdspan<double, image_size, image_size> md { &m.w[0][0] };
     /// Loop on simulated time
     for (int time = 0; !a.is_done(); ++time) {
       seq.compare_with_sequential_reference(time, t::x, t::y, m);

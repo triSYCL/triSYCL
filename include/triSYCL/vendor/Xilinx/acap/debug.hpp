@@ -42,9 +42,9 @@ template <typename Geography>
 class bsp_checker {
   /// A vector clock to compare differerent tiles together
   std::array<std::atomic<int>, Geography::size> vector_clock_alloc;
-  std::experimental::fundamentals_v3::mdspan<std::atomic<int>,
-                                             Geography::x_size,
-                                             Geography::y_size>
+  std::experimental::mdspan<std::atomic<int>,
+                            Geography::x_size,
+                            Geography::y_size>
   vector_clock { &vector_clock_alloc[0] };
 
 public:

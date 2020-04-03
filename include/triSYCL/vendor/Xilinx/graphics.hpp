@@ -44,8 +44,6 @@
 
 namespace trisycl::vendor::xilinx::graphics {
 
-namespace fundamentals_v3 = std::experimental::fundamentals_v3;
-
 // RGB 8 bit images, so 3 bytes per pixel
 using rgb = std::array<std::uint8_t, 3>;
 
@@ -499,9 +497,9 @@ struct image_grid : frame_grid {
        std::make_shared taking an array size comes only in C++20 while
        it is available for std::make_unique in C++17... */
     std::shared_ptr<std::uint8_t[]> d { new std::uint8_t[3*image_x*image_y] };
-    fundamentals_v3::mdspan<rgb,
-                            fundamentals_v3::dynamic_extent,
-                            fundamentals_v3::dynamic_extent> output {
+    std::experimental::mdspan<rgb,
+                              std::experimental::dynamic_extent,
+                              std::experimental::dynamic_extent> output {
       reinterpret_cast<rgb *>(d.get()),
       image_y,
       image_x
@@ -559,9 +557,9 @@ struct image_grid : frame_grid {
                               RangeValue min_value,
                               RangeValue max_value) {
     // Wrap the pointed area into an MDspan
-    const fundamentals_v3::mdspan<DataType,
-                                  fundamentals_v3::dynamic_extent,
-                                  fundamentals_v3::dynamic_extent> md {
+    const std::experimental::mdspan<DataType,
+                                    std::experimental::dynamic_extent,
+                                    std::experimental::dynamic_extent> md {
       data,
       image_y,
       image_x
