@@ -1,7 +1,10 @@
-#ifndef TRISYCL_SYCL_PIPE_HPP
-#define TRISYCL_SYCL_PIPE_HPP
+#ifndef TRISYCL_SYCL_SYCL_2_2_PIPE_HPP
+#define TRISYCL_SYCL_SYCL_2_2_PIPE_HPP
 
-/** \file The SYCL dataflow pipe<>
+/** \file The SYCL 2.2 dataflow pipe<>
+
+    This is a proposal for the now abandoned SYCL 2.2 provisional specification.
+    This is still here for historical reasons.
 
     Ronan at Keryell point FR
 
@@ -15,9 +18,9 @@
 #include "triSYCL/access.hpp"
 #include "triSYCL/accessor.hpp"
 #include "triSYCL/handler.hpp"
-#include "triSYCL/pipe/detail/pipe.hpp"
+#include "triSYCL/sycl_2_2/pipe/detail/pipe.hpp"
 
-namespace trisycl {
+namespace trisycl::sycl_2_2 {
 
 /** \addtogroup old_data Data access and storage in old version of SYCL
     @{
@@ -35,7 +38,8 @@ template <typename T>
 class pipe
     /* Use the underlying pipe implementation that can be shared in
        the SYCL model */
-  : public detail::shared_ptr_implementation<pipe<T>, detail::pipe<T>>,
+  : public detail::shared_ptr_implementation<pipe<T>,
+                                             detail::sycl_2_2::pipe<T>>,
     detail::debug<pipe<T>> {
 
   // The type encapsulating the implementation
@@ -57,7 +61,7 @@ public:
 
   /// Construct a pipe able to store up to capacity T objects
   pipe(std::size_t capacity)
-    : implementation_t { new detail::pipe<T> { capacity } } { }
+    : implementation_t { new detail::sycl_2_2::pipe<T> { capacity } } { }
 
 
   /** Get an accessor to the pipe with the required mode
@@ -100,4 +104,4 @@ public:
     ### End:
 */
 
-#endif // TRISYCL_SYCL_PIPE_HPP
+#endif // TRISYCL_SYCL_SYCL_2_2_PIPE_HPP

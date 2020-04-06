@@ -10,7 +10,7 @@ constexpr size_t N = 3;
 using Vector = float[N];
 
 // A static-scoped pipe of 4 float elements
-cl::sycl::static_pipe<float, 4> p;
+cl::sycl::sycl_2_2::static_pipe<float, 4> p;
 
 int main() {
   Vector va = { 1, 2, 3 };

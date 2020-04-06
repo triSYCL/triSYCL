@@ -26,7 +26,7 @@ int main() {
     cl::sycl::buffer<float> bc { vc, N };
 
     // A pipe of 2 float elements
-    cl::sycl::pipe<float> p { 2 };
+    cl::sycl::sycl_2_2::pipe<float> p { 2 };
 
     // Create a queue to launch the kernels
     cl::sycl::queue q;

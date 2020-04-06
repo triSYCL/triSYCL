@@ -1,7 +1,7 @@
-#ifndef TRISYCL_SYCL_STATIC_PIPE_HPP
-#define TRISYCL_SYCL_STATIC_PIPE_HPP
+#ifndef TRISYCL_SYCL_SYCL_2_2_STATIC_PIPE_HPP
+#define TRISYCL_SYCL_SYCL_2_2_STATIC_PIPE_HPP
 
-/** \file The OpenCL SYCL static-scoped pipe equivalent to an OpenCL
+/** \file TheSYCL static-scoped pipe equivalent to an OpenCL
     program-scoped pipe
 
     This is a proposal for the now abandoned SYCL 2.2 provisional specification.
@@ -19,9 +19,9 @@
 #include "triSYCL/access.hpp"
 #include "triSYCL/accessor.hpp"
 #include "triSYCL/handler.hpp"
-#include "triSYCL/pipe/detail/pipe.hpp"
+#include "triSYCL/sycl_2_2/pipe/detail/pipe.hpp"
 
-namespace trisycl {
+namespace trisycl::sycl_2_2 {
 
 /** \addtogroup old_data Data access and storage in old version of SYCL
     @{
@@ -53,7 +53,7 @@ class static_pipe
     /* Use the underlying pipe implementation that can be shared in
        the SYCL model */
   : public detail::shared_ptr_implementation<static_pipe<T, Capacity>,
-                                             detail::pipe<T>>,
+                                             detail::sycl_2_2::pipe<T>>,
     detail::debug<static_pipe<T, Capacity>> {
 
   // The type encapsulating the implementation
@@ -73,7 +73,7 @@ public:
 
   /// Construct a static-scoped pipe able to store up to Capacity T objects
   static_pipe()
-    : implementation_t { new detail::pipe<T> { Capacity } } { }
+    : implementation_t { new detail::sycl_2_2::pipe<T> { Capacity } } { }
 
 
   /** Get an accessor to the pipe with the required mode
@@ -138,4 +138,4 @@ public:
     ### End:
 */
 
-#endif // TRISYCL_SYCL_STATIC_PIPE_HPP
+#endif // TRISYCL_SYCL_SYCL_2_2_STATIC_PIPE_HPP

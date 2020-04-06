@@ -1,5 +1,5 @@
-#ifndef TRISYCL_SYCL_PIPE_DETAIL_PIPE_HPP
-#define TRISYCL_SYCL_PIPE_DETAIL_PIPE_HPP
+#ifndef TRISYCL_SYCL_SYCL_2_2_PIPE_DETAIL_PIPE_HPP
+#define TRISYCL_SYCL_SYCL_2_2_PIPE_DETAIL_PIPE_HPP
 
 /** \file The SYCL pipe<> details
 
@@ -30,7 +30,7 @@
 #endif
 #include <boost/circular_buffer.hpp>
 
-namespace trisycl::detail {
+namespace trisycl::detail::sycl_2_2 {
 
 /** \addtogroup old_data Data access and storage in old version of SYCL
     @{
@@ -505,4 +505,4 @@ public:
     ### End:
 */
 
-#endif // TRISYCL_SYCL_PIPE_DETAIL_PIPE_HPP
+#endif // TRISYCL_SYCL_SYCL_2_2_PIPE_DETAIL_PIPE_HPP

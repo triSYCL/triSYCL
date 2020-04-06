@@ -1,5 +1,5 @@
-#ifndef TRISYCL_SYCL_PIPE_RESERVATION_DETAIL_PIPE_RESERVATION_HPP
-#define TRISYCL_SYCL_PIPE_RESERVATION_DETAIL_PIPE_RESERVATION_HPP
+#ifndef TRISYCL_SYCL_SYCL_2_2_PIPE_RESERVATION_DETAIL_PIPE_RESERVATION_HPP
+#define TRISYCL_SYCL_SYCL_2_2_PIPE_RESERVATION_DETAIL_PIPE_RESERVATION_HPP
 
 /** \file The SYCL pipe reservation detail behind the scene
 
@@ -15,7 +15,7 @@
 #include <cstddef>
 #include <memory>
 
-#include "triSYCL/pipe/detail/pipe.hpp"
+#include "triSYCL/sycl_2_2/pipe/detail/pipe.hpp"
 
 namespace trisycl::detail {
 
@@ -25,6 +25,8 @@ template <typename T,
           access::target Target>
 class accessor;
 
+namespace sycl_2_2 {
+
 /** \addtogroup old_data Data access and storage in old version of SYCL
     @{
 */
@@ -32,7 +34,7 @@ class accessor;
 /// The implementation of the pipe reservation station
 template <typename PipeAccessor>
 class pipe_reservation :
-    public detail::debug<detail::pipe_reservation<PipeAccessor>> {
+    public detail::debug<detail::sycl_2_2::pipe_reservation<PipeAccessor>> {
   using accessor_type = PipeAccessor;
   static constexpr bool blocking =
     (accessor_type::target == trisycl::access::target::blocking_pipe);
@@ -41,10 +43,10 @@ class pipe_reservation :
 
 public:
 
-  using iterator =
-    typename detail::pipe<value_type>::implementation_t::iterator;
-  using const_iterator =
-    typename detail::pipe<value_type>::implementation_t::const_iterator;
+  using iterator = typename
+    detail::sycl_2_2::pipe<value_type>::implementation_t::iterator;
+  using const_iterator = typename
+    detail::sycl_2_2::pipe<value_type>::implementation_t::const_iterator;
 
   // \todo Add to the specification
   static constexpr access::mode mode = accessor_type::mode;
@@ -56,13 +58,13 @@ public:
   bool ok = false;
 
   /// Point into the reservation buffer. Only valid if ok is true
-  typename detail::pipe<value_type>::rid_iterator rid;
+  typename detail::sycl_2_2::pipe<value_type>::rid_iterator rid;
 
   /** Keep a reference on the pipe to access to the data and methods
 
       Note that with inlining and CSE it should not use more register
       when compiler optimization is in use. */
-  detail::pipe<value_type> &p;
+  detail::sycl_2_2::pipe<value_type> &p;
 
 
   /** Test that the reservation is in a usable state
@@ -76,7 +78,9 @@ public:
 public:
 
   /// Create a pipe reservation station that reserves the pipe itself
-  pipe_reservation(detail::pipe<value_type> &p, std::size_t s) : p { p } {
+  pipe_reservation(detail::sycl_2_2::pipe<value_type> &p,
+                   std::size_t s)
+    : p { p } {
     static_assert(mode == access::mode::write
                   || mode == access::mode::read,
                   "A pipe can only be accesed in read or write mode,"
@@ -192,6 +196,7 @@ public:
 /// @} End the data Doxygen group
 
 }
+}
 
 /*
     # Some Emacs stuff:
@@ -201,4 +206,4 @@ public:
     ### End:
 */
 
-#endif // TRISYCL_SYCL_PIPE_RESERVATION_DETAIL_PIPE_RESERVATION_HPP
+#endif // TRISYCL_SYCL_SYCL_2_2_PIPE_RESERVATION_DETAIL_PIPE_RESERVATION_HPP

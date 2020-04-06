@@ -1,5 +1,5 @@
-#ifndef TRISYCL_SYCL_PIPE_RESERVATION_HPP
-#define TRISYCL_SYCL_PIPE_RESERVATION_HPP
+#ifndef TRISYCL_SYCL_SYCL_2_2_PIPE_RESERVATION_HPP
+#define TRISYCL_SYCL_SYCL_2_2_PIPE_RESERVATION_HPP
 
 /** \file The reservation station for SYCL pipe accessor<>
 
@@ -16,9 +16,9 @@
 #include <iterator>
 #include <memory>
 
-#include "triSYCL/pipe_reservation/detail/pipe_reservation.hpp"
+#include "triSYCL/sycl_2_2/pipe_reservation/detail/pipe_reservation.hpp"
 
-namespace trisycl {
+namespace trisycl::sycl_2_2 {
 
 /** \addtogroup old_data Data access and storage in old version of SYCL
     @{
@@ -43,15 +43,15 @@ struct pipe_reservation {
   using size_type = std::size_t;
   using difference_type = ptrdiff_t;
   using iterator =
-    typename detail::pipe_reservation<accessor_detail>::iterator;
+    typename detail::sycl_2_2::pipe_reservation<accessor_detail>::iterator;
   using const_iterator =
-    typename detail::pipe_reservation<accessor_detail>::const_iterator;
+    typename detail::sycl_2_2::pipe_reservation<accessor_detail>::const_iterator;
   using reverse_iterator = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
   /** Point to the underlying implementation that can be shared in the
       SYCL model with a handler semantics */
-  typename std::shared_ptr<detail::pipe_reservation<accessor_detail>>
+  typename std::shared_ptr<detail::sycl_2_2::pipe_reservation<accessor_detail>>
   implementation;
 
   /** Use default constructors so that we can create a new buffer copy
@@ -67,7 +67,7 @@ struct pipe_reservation {
   /// Create a pipe_reservation for an accessor and a number of elements
   pipe_reservation(accessor_type &accessor, std::size_t s)
     : implementation {
-    new detail::pipe_reservation<accessor_detail> {
+    new detail::sycl_2_2::pipe_reservation<accessor_detail> {
       get_pipe_detail(accessor), s }
   } {}
 
@@ -80,9 +80,9 @@ struct pipe_reservation {
 
       \todo Make it private and add required friends
    */
-  pipe_reservation(detail::pipe_reservation<accessor_detail> &&pr)
+  pipe_reservation(detail::sycl_2_2::pipe_reservation<accessor_detail> &&pr)
     : implementation {
-    new detail::pipe_reservation<accessor_detail> { std::move(pr) } }
+    new detail::sycl_2_2::pipe_reservation<accessor_detail> { std::move(pr) } }
   {}
 
 
@@ -181,4 +181,4 @@ struct pipe_reservation {
     ### End:
 */
 
-#endif // TRISYCL_SYCL_PIPE_RESERVATION_HPP
+#endif // TRISYCL_SYCL_SYCL_2_2_PIPE_RESERVATION_HPP

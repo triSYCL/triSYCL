@@ -30,7 +30,7 @@ int test_main(int argc, char *argv[]) {
   cl::sycl::buffer<Type> c { N };
 
   // The plumbing
-  cl::sycl::pipe<Type> pa { WI };
+  cl::sycl::sycl_2_2::pipe<Type> pa { WI };
 
   // Create a queue to launch the kernels
   cl::sycl::queue q;

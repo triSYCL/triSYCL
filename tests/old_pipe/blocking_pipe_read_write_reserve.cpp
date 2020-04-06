@@ -31,7 +31,7 @@ int test_main(int argc, char *argv[]) {
   cl::sycl::buffer<Type> c { N };
 
   // The plumbing with some weird size prime to WI to exercise the system
-  cl::sycl::pipe<Type> pa { 2*WI + 7 };
+  cl::sycl::sycl_2_2::pipe<Type> pa { 2*WI + 7 };
 
   // Create a queue to launch the kernels
   cl::sycl::queue q;

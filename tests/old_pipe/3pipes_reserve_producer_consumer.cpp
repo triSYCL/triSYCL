@@ -36,9 +36,9 @@ int test_main(int argc, char *argv[]) {
   cl::sycl::buffer<Type> c { N };
 
   // The plumbing pipes
-  cl::sycl::pipe<Type> pa { WI };
-  cl::sycl::pipe<Type> pb { 1 };
-  cl::sycl::pipe<Type> pc { 1 };
+  cl::sycl::sycl_2_2::pipe<Type> pa { WI };
+  cl::sycl::sycl_2_2::pipe<Type> pb { 1 };
+  cl::sycl::sycl_2_2::pipe<Type> pc { 1 };
 
   // Create a queue to launch the kernels
   cl::sycl::queue q;
