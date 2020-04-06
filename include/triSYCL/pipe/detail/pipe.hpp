@@ -1,7 +1,10 @@
 #ifndef TRISYCL_SYCL_PIPE_DETAIL_PIPE_HPP
 #define TRISYCL_SYCL_PIPE_DETAIL_PIPE_HPP
 
-/** \file The OpenCL SYCL pipe<> details
+/** \file The SYCL pipe<> details
+
+    This is a proposal for the now abandoned SYCL 2.2 provisional specification.
+    This is still here for historical reasons.
 
     Ronan at Keryell point FR
 
@@ -29,7 +32,7 @@
 
 namespace trisycl::detail {
 
-/** \addtogroup data Data access and storage in SYCL
+/** \addtogroup old_data Data access and storage in old version of SYCL
     @{
 */
 

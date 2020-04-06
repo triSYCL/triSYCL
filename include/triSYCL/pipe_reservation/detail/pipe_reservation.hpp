@@ -1,7 +1,10 @@
 #ifndef TRISYCL_SYCL_PIPE_RESERVATION_DETAIL_PIPE_RESERVATION_HPP
 #define TRISYCL_SYCL_PIPE_RESERVATION_DETAIL_PIPE_RESERVATION_HPP
 
-/** \file The OpenCL SYCL pipe reservation detail behind the scene
+/** \file The SYCL pipe reservation detail behind the scene
+
+    This is a proposal for the now abandoned SYCL 2.2 provisional specification.
+    This is still here for historical reasons.
 
     Ronan at Keryell point FR
 
@@ -22,7 +25,7 @@ template <typename T,
           access::target Target>
 class accessor;
 
-/** \addtogroup data Data access and storage in SYCL
+/** \addtogroup old_data Data access and storage in old version of SYCL
     @{
 */
 

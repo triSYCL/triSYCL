@@ -1,7 +1,10 @@
 #ifndef TRISYCL_SYCL_PIPE_RESERVATION_HPP
 #define TRISYCL_SYCL_PIPE_RESERVATION_HPP
 
-/** \file The reservation station for OpenCL SYCL pipe accessor<>
+/** \file The reservation station for SYCL pipe accessor<>
+
+    This is a proposal for the now abandoned SYCL 2.2 provisional specification.
+    This is still here for historical reasons.
 
     Ronan at Keryell point FR
 
@@ -17,7 +20,7 @@
 
 namespace trisycl {
 
-/** \addtogroup data Data access and storage in SYCL
+/** \addtogroup old_data Data access and storage in old version of SYCL
     @{
 */
 

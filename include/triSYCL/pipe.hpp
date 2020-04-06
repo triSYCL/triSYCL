@@ -1,7 +1,7 @@
 #ifndef TRISYCL_SYCL_PIPE_HPP
 #define TRISYCL_SYCL_PIPE_HPP
 
-/** \file The OpenCL SYCL pipe<>
+/** \file The SYCL dataflow pipe<>
 
     Ronan at Keryell point FR
 
@@ -19,11 +19,14 @@
 
 namespace trisycl {
 
-/** \addtogroup data Data access and storage in SYCL
+/** \addtogroup old_data Data access and storage in old version of SYCL
     @{
 */
 
 /** A SYCL pipe
+
+    This is a proposal for the now abandoned SYCL 2.2 provisional specification.
+    This is still here for historical reasons.
 
     Implement a FIFO-style object that can be used through accessors
     to send some objects T from the input to the output

@@ -1,7 +1,7 @@
 #ifndef TRISYCL_SYCL_ACCESSOR_HPP
 #define TRISYCL_SYCL_ACCESSOR_HPP
 
-/** \file The OpenCL SYCL accessor<>
+/** \file The SYCL accessor<>
 
     Ronan at Keryell point FR
 
@@ -396,9 +396,18 @@ class accessor :
 
 };
 
+/// @} End the execution Doxygen group
+
+
+/** \addtogroup old_data Data access and storage in old version of SYCL
+    @{
+*/
 
 /** The pipe accessor abstracts the way pipe data are accessed inside
     a kernel
+
+    This is a proposal for the now abandoned SYCL 2.2 provisional specification.
+    This is still here for historical reasons.
 
     A specialization for an non-blocking pipe
 */
@@ -437,6 +446,9 @@ public:
 
 /** The pipe accessor abstracts the way pipe data are accessed inside
     a kernel
+
+    This is a proposal for the now abandoned SYCL 2.2 provisional specification.
+    This is still here for historical reasons.
 
     A specialization for a blocking pipe
 */

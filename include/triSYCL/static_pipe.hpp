@@ -4,6 +4,9 @@
 /** \file The OpenCL SYCL static-scoped pipe equivalent to an OpenCL
     program-scoped pipe
 
+    This is a proposal for the now abandoned SYCL 2.2 provisional specification.
+    This is still here for historical reasons.
+
     Ronan at Keryell point FR
 
     This file is distributed under the University of Illinois Open Source
@@ -20,7 +23,7 @@
 
 namespace trisycl {
 
-/** \addtogroup data Data access and storage in SYCL
+/** \addtogroup old_data Data access and storage in old version of SYCL
     @{
 */
 

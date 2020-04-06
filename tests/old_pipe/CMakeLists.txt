@@ -1,3 +1,6 @@
+# This is a proposal for the now abandoned SYCL 2.2 provisional specification.
+# This is still here for historical reasons.
+
 cmake_minimum_required (VERSION 3.0) # The minimum version of CMake necessary to build this project
 project (old_pipe) # The name of our project
 

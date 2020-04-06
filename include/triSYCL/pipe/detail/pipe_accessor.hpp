@@ -1,7 +1,10 @@
 #ifndef TRISYCL_SYCL_PIPE_DETAIL_PIPE_ACCESSOR_HPP
 #define TRISYCL_SYCL_PIPE_DETAIL_PIPE_ACCESSOR_HPP
 
-/** \file The OpenCL SYCL pipe accessor<> detail behind the scene
+/** \file The SYCL pipe accessor<> detail behind the scene
+
+    This is a proposal for the now abandoned SYCL 2.2 provisional specification.
+    This is still here for historical reasons.
 
     Ronan at Keryell point FR
 
@@ -30,7 +33,7 @@ template <typename T,
           access::mode Mode,
           access::target Target>
 class accessor;
-/** \addtogroup data Data access and storage in SYCL
+/** \addtogroup old_data Data access and storage in old version of SYCL
     @{
 */
 
