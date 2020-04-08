@@ -54,6 +54,9 @@ CXXFLAGS += -g
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DTRISYCL_TRACE_KERNEL -DTRISYCL_DEBUG_STRUCTORS -DBOOST_LOG_DYN_LINK
 # To have DEBUG mode working
 LDLIBS += -lboost_log -lpthread
+# To have Boost.Fibers
+LDLIBS += -lboost_fiber -lboost_context -lboost_thread -lboost_system
+
 # To use Clang sanitizer modes
 #CXXFLAGS += -fsanitize=address -fno-omit-frame-pointer
 #CXXFLAGS += -fsanitize=thread -fno-omit-frame-pointer

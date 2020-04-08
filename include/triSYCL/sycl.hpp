@@ -68,6 +68,7 @@
 #include "triSYCL/nd_range.hpp"
 #include "triSYCL/opencl_types.hpp"
 #include "triSYCL/parallelism.hpp"
+#include "triSYCL/pipe.hpp"
 #include "triSYCL/platform.hpp"
 #include "triSYCL/program.hpp"
 #include "triSYCL/queue.hpp"
