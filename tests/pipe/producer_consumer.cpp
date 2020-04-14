@@ -4,6 +4,8 @@
 */
 #include <CL/sycl.hpp>
 
+#include <future>
+
 #include <boost/test/minimal.hpp>
 
 // Number of values sent in each test
