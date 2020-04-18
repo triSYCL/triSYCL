@@ -19,11 +19,7 @@ doc-implementation:
 	mkdir -p $(IMPLEMENTATION_DOXYGEN_DIR)
 	doxygen doc/triSYCL-implementation.doxygen
 	# Compile the PDF version
-	## Skip it for now because it does not compile :-(
-	## pdfTeX error (ext4): \pdfendlink ended up in different nesting level than \pdfstartlink.
-	## \AtBegShi@Output ...ipout \box \AtBeginShipoutBox \fi \fi
-	## l.3846 ..._aie_ac19bae78f84462e7dfe1e85008f32744}}
-	# cd $(IMPLEMENTATION_DOXYGEN_DIR)/latex; make
+	cd $(IMPLEMENTATION_DOXYGEN_DIR)/latex; make
 
 doc-clean:
 	rm -rf $(API_DOXYGEN_DIR) $(IMPLEMENTATION_DOXYGEN_DIR)

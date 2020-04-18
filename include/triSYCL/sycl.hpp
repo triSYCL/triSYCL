@@ -20,10 +20,12 @@
     http://www.khronos.org/sycl/
 
     For more information on this project and to access to the source of
-    this file, look at https://github.com/triSYCL/triSYCL
+    this file, look at https://gitenterprise.xilinx.com/rkeryell/acappp
 
     The Doxygen version of the implementation itself is in
-    http://trisycl.github.io/triSYCL/Doxygen/triSYCL/html
+    https://pages.gitenterprise.xilinx.com/rkeryell/acappp/Doxygen/acappp/html
+    and
+    https://pages.gitenterprise.xilinx.com/rkeryell/acappp/Doxygen/acappp/acappp-implementation-refman.pdf
 
 
     Ronan at keryell dot FR
