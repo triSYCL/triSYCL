@@ -533,7 +533,7 @@ struct image_grid : frame_grid {
                                                 max_value);
       }
     // Send the graphics updating code
-    submit([=] {
+    submit([=, this] {
         // Create a first buffer, allowing later zooming
         auto pb = Gdk::Pixbuf::create_from_data(d.get()
                                               , Gdk::Colorspace::COLORSPACE_RGB
