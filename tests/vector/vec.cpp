@@ -74,6 +74,8 @@ int test_main(int argc, char *argv[]) {
                 2.6, 2.6, 2.6, 2.6,
                 2.6, 2.6, 2.6, 2.6,
                 }));
+        v = 0;
+        BOOST_CHECK(equal(v16_broadcast + v, v16_broadcast));
         uchar2 uc2 = 3;
         BOOST_CHECK(equal(uc2, { '\003', 3 }));
         char3 c3(1, uc2);
