@@ -84,7 +84,7 @@ struct connection {
     auto pipe_of() {
       try {
         return std::any_cast<::trisycl::static_pipe<T, 4>>(*p);
-      } catch (std::bad_any_cast) {
+      } catch (std::bad_any_cast &) {
         throw ::trisycl::runtime_error {
           "The current connection is not of type "s
           + boost::typeindex::type_id<T>().pretty_name() };
