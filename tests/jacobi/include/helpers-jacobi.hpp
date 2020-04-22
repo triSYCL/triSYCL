@@ -5,10 +5,11 @@
 #include <boost/lexical_cast.hpp>
 
 // ISO C++
+#include <chrono>
+#include <cmath>
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
-#include <cstdlib>
-#include <chrono>
 
 // SYCL
 #include <CL/sycl.hpp>
@@ -69,8 +70,6 @@ int es = PAPI_NULL; //event set
 #ifndef VEC_CONST_SIZE
 #define VEC_CONST_SIZE 8
 #endif
-
-#define ABS(a) (a < 0)?-a:a;
 
 #define ERR_MAX 1.0e-06
 
@@ -390,7 +389,7 @@ void ute_and_are(std::vector<float>& a_test,
   for(size_t i = 0; i < M; ++i){
     for(size_t j = 0; j < N; ++j){
       // Compare the result to the analytic value
-      float err = ABS((C[i][j] - a_test[i*N+j]) / a_test[i*N+j]);
+      float err = std::abs((C[i][j] - a_test[i*N+j]) / a_test[i*N+j]);
       if ( err > ERR_MAX) {
         std::cout << "Wrong value " << C[i][j] << " on element "
                   << i << ' ' << j << " (error : " << err << ")" << std::endl;
