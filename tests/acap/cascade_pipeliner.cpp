@@ -30,8 +30,10 @@ class display_value;
 // An executor to execute stage_number first stages of a pipeline
 template <int stage_number>
 auto pipeline_executor = [] (auto input, auto stages) {
-  if constexpr (stage_number == 0)
+  if constexpr (stage_number == 0) {
+    (void) stages; // unused in that case
     return input;
+  }
   else
     // Apply requested stage on the rest of the pipeline
     return hana::at_c<stage_number - 1>(stages)
@@ -49,7 +51,7 @@ auto host_pipeliner = [] (auto... stages) {
 /// A generic AIE program instantiating a pipeline executor
 template <typename FirstT, typename Stages>
 struct cascade_executor {
-  static constexpr Stages s;
+  static constexpr Stages s {};
   static auto constexpr stage_number = hana::value(hana::length(s));
   static auto constexpr last_stage = stage_number - 1;
 
