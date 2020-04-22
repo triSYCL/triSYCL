@@ -219,7 +219,8 @@ public:
         cl::sycl::accessor<T, 2, cl::sycl::access::mode::write> _B {*B, cgh};
         cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> _aB {*aB, cgh};
         cl::sycl::accessor<T, 1, cl::sycl::access::mode::read> _bB {*bB, cgh};
-        cgh.parallel_for<class KernelCompute>(range, [=](cl::sycl::id<2> id){
+        cgh.parallel_for<class KernelCompute>(range,
+                                              [=, *this](cl::sycl::id<2> id){
             operation_var2D<T, B, f, st, aB, bB, a_f, b_f>::eval(id, _B, _aB, _bB);
           });
       });
@@ -230,9 +231,10 @@ public:
         cl::sycl::accessor<T, 2, cl::sycl::access::mode::write> _B {*B, cgh};
         cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> _aB {*aB, cgh};
         cl::sycl::accessor<T, 1, cl::sycl::access::mode::read> _bB {*bB, cgh};
-        cgh.parallel_for_work_group<class KernelCompute>(nd_range, [=](cl::sycl::group<2> group){
+        cgh.parallel_for_work_group<class KernelCompute>(nd_range,
+          [=, *this] (cl::sycl::group<2> group) {
             T * local = new T[local_dim0 * local_dim1];
-            group.parallel_for_work_item([=](cl::sycl::h_item<2> it){
+            group.parallel_for_work_item([=, *this] (cl::sycl::h_item<2> it) {
                 //local copy
                 /* group shoudn't be needed, neither global max*/
                 /* static function needed for st use a priori, but static not compatible
@@ -240,7 +242,7 @@ public:
                 store_local(local, _aB, it, group, global_max0+d0, global_max1+d1); 
               });
             //synchro
-            group.parallel_for_work_item([=](cl::sycl::h_item<2> it){
+            group.parallel_for_work_item([=, *this] (cl::sycl::h_item<2> it) {
                 //computing
                 /*operation_var2D<T, B, f, st, aB, bB, a_f, b_f>::*/
                 eval_local(it, _B, local, _bB, global_max0, global_max1);
