@@ -9,11 +9,6 @@ class Complex {
 public:
   Complex() : r(0.0), i(0.0) {}
   Complex(float real, float imagine) : r(real), i(imagine) {}
-  Complex& operator= (const Complex& other) {
-    r = other.r;
-    i = other.i;
-    return *this;
-  }
   float r, i;
 };
 
