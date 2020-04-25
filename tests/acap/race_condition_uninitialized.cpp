@@ -24,13 +24,13 @@ struct memory : acap::aie::memory<AIE, X, Y> {
 
 /** Default program. This will be tile(0,0) only.
 
-    The tile(0,0) uses memory module on the right */
+    The tile(0,0) uses memory module to the East */
 template <typename AIE, int X, int Y>
 struct program : acap::aie::tile<AIE, X, Y> {
   using t = acap::aie::tile<AIE, X, Y>;
 
   void run() {
-    auto &m = t::mem_right();
+    auto &m = t::mem_east();
     // Unprotected access in respect to tile(1,0)
     m.v[0] = 42;
 
@@ -43,19 +43,19 @@ struct program : acap::aie::tile<AIE, X, Y> {
 
 /** Specialize for the tile(1,0).
 
-    The tile(1,0) uses memory module on the left */
+    The tile(1,0) uses memory module to the West */
 template <typename AIE>
 struct program<AIE, 1, 0> : acap::aie::tile<AIE, 1, 0> {
   using t = acap::aie::tile<AIE, 1, 0>;
 
   void run() {
-    auto &m = t::mem_left();
+    auto &m = t::mem_west();
     // Unprotected access in respect to tile(0,0)
     m.v[0] = 314;
 
     // Protected data transfer
     m.lock(0).acquire_with_value(true);
-    std::cout << "Tile (1,0) receives from left neighbour: "
+    std::cout << "Tile (1,0) receives from West neighbour: "
               << m.v[1] << std::endl;
     m.lock(0).release_with_value(false);
 

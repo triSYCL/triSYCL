@@ -78,7 +78,7 @@ struct connection {
       connection
 
       \throws trisycl::runtime_error if the connection has not the
-      right type
+      correct type
   */
   template <typename T>
     auto pipe_of() {

@@ -175,38 +175,38 @@ struct geography : Layout {
   }
 
 
-  /** Test if a tile is in the left column
+  /** Test if a tile is in the Western column
 
       \param[in] x is the horizontal tile coordinate
   */
-  static bool constexpr is_left_column(int x) {
+  static bool constexpr is_west_column(int x) {
     return x == x_min;
   }
 
 
-  /** Test if a tile is in the right column
+  /** Test if a tile is in the Eastern column
 
       \param[in] x is the horizontal tile coordinate
   */
-  static bool constexpr is_right_column(int x) {
+  static bool constexpr is_east_column(int x) {
     return x == layout::x_max;
   }
 
 
-  /** Test if a tile is in the bottom row
+  /** Test if a tile is in the Southern row
 
       \param[in] y is the vertical tile coordinate
   */
-  static bool constexpr is_bottom_row(int y) {
+  static bool constexpr is_south_row(int y) {
     return y == y_min;
   }
 
 
-  /** Test if a tile is in the top row
+  /** Test if a tile is in the Northern row
 
       \param[in] y is the vertical tile coordinate
   */
-  static bool constexpr is_top_row(int y) {
+  static bool constexpr is_north_row(int y) {
     return y == layout::y_max;
   }
 
@@ -301,16 +301,18 @@ struct geography : Layout {
     if (!is_valid_memory_module_offset(dx, dy))
       return false;
     if (y == y_min && dy == -1)
-      // No memory module below the first line
+      // No memory module on the South of the first (Southern) line
       return false;
     else if (y == layout::y_max && dy == 1)
-      // No memory module above the last line
+      // No memory module on the North of the last (Northern) line
       return false;
     else if (x == x_min && !(y & 1) && (dx == -1))
-      // No memory module on the left of the first column on even lines
+      // No memory module on the West of the first (Western) column on
+      // even lines
       return false;
     else if (x == layout::x_max && (y & 1) && (dx == 1))
-      // No memory module on the right of the last column on odd lines
+      // No memory module on the East of the last (Eastern) column on
+      // odd lines
       return false;
     else return true;
   }

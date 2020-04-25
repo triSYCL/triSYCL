@@ -4,12 +4,12 @@
 
 # Set default compiler instead of default CXX=g++ value
 # Assume some recent compiler
-CXX = clang++
+#CXX = clang++-11
 # To use libc++ instead of libstdc++, from libc++-dev & libc++abi-dev packages
 #CXXFLAGS += -stdlib=libc++
 
 # But everything works fine with GCC 9 at least
-#CXX = g++
+CXX = g++
 
 # The device compiler to use.
 # Assume that the device compiler is in $(LLVM_BUILD_DIR) and this

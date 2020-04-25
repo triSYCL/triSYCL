@@ -37,7 +37,7 @@ struct memory_base {
   /// The lock unit of the memory tile
   lock_unit memory_locking_unit;
 
-  /// Get an access to the right lock
+  /// Get an access to the a specific lock
   auto &lock(int i) {
     return memory_locking_unit.lock(i);
   }
