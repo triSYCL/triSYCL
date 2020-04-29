@@ -1,5 +1,6 @@
 project(acap) # The name of our project
 
+declare_trisycl_test(TARGET cascade_pipeliner)
 declare_trisycl_test(TARGET cascade_stream)
 declare_trisycl_test(TARGET checkerboard)
 declare_trisycl_test(TARGET empty_program)

@@ -72,7 +72,7 @@ struct lock_unit {
     /// Wait until the internal value has the expectation
     void acquire_with_value(bool expectation) {
       std::unique_lock lk { *m };
-      cv->wait(lk, [=]{ return expectation == value; });
+      cv->wait(lk, [&] { return expectation == value; });
     }
 
 

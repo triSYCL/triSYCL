@@ -100,7 +100,7 @@ struct frame_grid : Gtk::ApplicationWindow {
         frames.back().set_shadow_type(Gtk::SHADOW_ETCHED_OUT);
         // A minimal border to save space on main window
         frames.back().set_border_width(1);
-        // Display the frame with the lower y down in a mathematical sense
+        // Display the frame with the lower y South in a mathematical sense
         grid.attach(frames.back(), x, ny - y - 1, 1, 1);
       }
 
@@ -435,7 +435,7 @@ struct image_grid : frame_grid {
                                     , image_y*zoom //< height
                                       );
         images.emplace_back(pb);
-        // Display the frame with the lower y down
+        // Display the frame with the lower y to the South
         f.add(images.back());
       }
 
@@ -533,7 +533,7 @@ struct image_grid : frame_grid {
                                                 max_value);
       }
     // Send the graphics updating code
-    submit([=] {
+    submit([=, this] {
         // Create a first buffer, allowing later zooming
         auto pb = Gdk::Pixbuf::create_from_data(d.get()
                                               , Gdk::Colorspace::COLORSPACE_RGB
