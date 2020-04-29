@@ -30,10 +30,10 @@ struct right_neighbor : acap::aie::tile<AIE, X, Y> {
   using t = acap::aie::tile<AIE, X, Y>;
   void run() {
     for (int i = 0; i < local_transfers; ++i) {
-      if constexpr (!t::is_right_column())
+      if constexpr (!t::is_east_column())
         // There is a neighbor on the right: send some data
         t::out(1) << i;
-      if constexpr (!t::is_left_column()) {
+      if constexpr (!t::is_west_column()) {
         // There is a neighbor on the left: receive some data
         int receive;
         t::in(0) >> receive;
