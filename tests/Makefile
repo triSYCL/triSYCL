@@ -8,6 +8,7 @@ CXX = clang++-11
 # To use libc++ instead of libstdc++, from libc++-dev & libc++abi-dev packages
 #CXXFLAGS += -stdlib=libc++
 
+CXXFLAGS += -I/home/rkeryell/Xilinx/Projects/C++/magic_enum/include
 #CXXFLAGS += -I/home/rkeryell/Xilinx/Projects/C++/Boost/fiber/include
 
 # Work around Clang++-11 dev that breaks concepts for range-v3
@@ -65,9 +66,6 @@ LDLIBS += -lpthread
 #LDLIBS += $(shell pkg-config --libs-only-l pocl)
 #CXXFLAGS += $(shell pkg-config --cflags pocl)
 
-# To use Boost.Thread & Boost.Fiber
-LDLIBS += -lboost_thread -lboost_system -lboost_fiber -lboost_context
-
 # For Clang UBSan https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html
 #CXXFLAGS += -fsanitize=undefined
 # For Clang AddressSanitizer https://clang.llvm.org/docs/AddressSanitizer.html
@@ -87,8 +85,8 @@ LDLIBS += -lboost_thread -lboost_system -lboost_fiber -lboost_context
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DTRISYCL_TRACE_KERNEL -DTRISYCL_DEBUG_STRUCTORS -DBOOST_LOG_DYN_LINK
 # With optimization and without assertions
 #CXXFLAGS += -O3 -DNDEBUG -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
-CXXFLAGS += -O3 -DNDEBUG
-#CXXFLAGS += -O3
+#CXXFLAGS += -O3 -DNDEBUG
+CXXFLAGS += -O3
 # To have DEBUG mode working
 LDLIBS += -lboost_log -lpthread
 # To have Boost.Fibers

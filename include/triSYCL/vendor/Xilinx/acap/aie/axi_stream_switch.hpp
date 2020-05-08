@@ -27,6 +27,7 @@
 
 #include <boost/fiber/buffered_channel.hpp>
 #include <boost/format.hpp>
+#include "magic_enum.hpp"
 
 #include "connection.hpp"
 #include "triSYCL/detail/enum.hpp"
@@ -166,8 +167,10 @@ public:
     /// \todo Clean up the API to separate data from signaling
     void write(const axi_packet &v) override {
       /// \todo separate debug from shutdown case
-      TRISYCL_DUMP_T("router_minion " << this << " on fiber "
-                     << boost::this_fiber::get_id()
+      TRISYCL_DUMP_T("router_minion " << this
+                     << " on tile(" << router_minion::axi_ss.x_coordinate << ','
+                     << router_minion::axi_ss.y_coordinate
+                     << ") on fiber " << boost::this_fiber::get_id()
                      << " write data value " << v.data
                      << " to buffered_channel " << &c);
       c.push(v);
@@ -185,8 +188,10 @@ public:
 
     /// Waiting read to a core input port
     value_type read() override {
-      TRISYCL_DUMP_T("router_minion " << this << " on fiber "
-                     << boost::this_fiber::get_id()
+      TRISYCL_DUMP_T("router_minion " << this << " on tile("
+                     << router_minion::axi_ss.x_coordinate
+                     << ',' << router_minion::axi_ss.y_coordinate
+                     << ") on fiber " << boost::this_fiber::get_id()
                      << " reading from buffered_channel " << &c << " ...");
       return c.value_pop().data;
     }
@@ -209,8 +214,10 @@ public:
 
     /// Connect this routing input to a switch output
     void connect_to(std::shared_ptr<router_port> dest) {
-      TRISYCL_DUMP_T("connect_to router_minion " << this << " on fiber "
-                     << boost::this_fiber::get_id()
+      TRISYCL_DUMP_T("connect_to router_minion " << this << " on tile("
+                     << router_minion::axi_ss.x_coordinate
+                     << ',' << router_minion::axi_ss.y_coordinate
+                     << ") on fiber " << boost::this_fiber::get_id()
                      << " to dest " << &*dest);
       outputs.push_back(dest);
     }
@@ -234,31 +241,42 @@ public:
     {
       /// Use a fiber as a data mover from the input queue
       futures.push_back(fiber_executor.submit([&] {
-         TRISYCL_DUMP_T("router_minion " << this << " on fiber "
-                        << boost::this_fiber::get_id()
+         TRISYCL_DUMP_T("router_minion " << this << " on tile("
+                        << router_minion::axi_ss.x_coordinate
+                        << ',' << router_minion::axi_ss.y_coordinate
+                        << ") on fiber " << boost::this_fiber::get_id()
                         << " starting with buffered_channel " << &c);
           for (;;) {
-            TRISYCL_DUMP_T("router_minion " << this << " on fiber "
-                           << boost::this_fiber::get_id()
+            TRISYCL_DUMP_T("router_minion " << this << " on tile("
+                           << router_minion::axi_ss.x_coordinate
+                           << ',' << router_minion::axi_ss.y_coordinate
+                           << ") on fiber " << boost::this_fiber::get_id()
                            << " reading from buffered_channel "
                            << &c << " ...");
             auto v = c.value_pop();
             if (v.shutdown_request)
               // End the execution on shutdown packet reception
               break;
-            TRISYCL_DUMP_T("router_minion " << this << " on fiber "
-                           << boost::this_fiber::get_id()
-                           << " routing data value " << v.data);
+            TRISYCL_DUMP_T("router_minion " << this << " on tile("
+                           << router_minion::axi_ss.x_coordinate
+                           << ',' << router_minion::axi_ss.y_coordinate
+                           << ") on fiber " << boost::this_fiber::get_id()
+                           << " routing data value " << v.data
+                           << " received from buffered_channel " << &c);
             // The routing itself is a blocking write on each output
             for (auto &o : outputs) {
-              TRISYCL_DUMP_T("router_minion " << this << " on fiber "
-                             << boost::this_fiber::get_id()
-                             << " to router_minion " << o.get());
+              TRISYCL_DUMP_T("router_minion " << this << " on tile("
+                             << router_minion::axi_ss.x_coordinate
+                             << ',' << router_minion::axi_ss.y_coordinate
+                             << ") on fiber " << boost::this_fiber::get_id()
+                             << " forwarding to router_minion " << o.get());
                o->write(v);
             }
           }
-          TRISYCL_DUMP_T("router_minion " << this << " on fiber "
-                         << boost::this_fiber::get_id()
+          TRISYCL_DUMP_T("router_minion " << this << " on tile("
+                         << router_minion::axi_ss.x_coordinate
+                         << ',' << router_minion::axi_ss.y_coordinate
+                         << ") on fiber " << boost::this_fiber::get_id()
                          << " shutting down");
       }));
     }
@@ -357,6 +375,9 @@ public:
       \throws ::trisycl::runtime_error if the port number is invalid
   */
   void connect(spl sp, mpl mp) {
+    TRISYCL_DUMP_T("connect " << this
+                   << " input: " << magic_enum::enum_name(sp)
+                   << " to output: " << magic_enum::enum_name(mp));
     // \todo factorize out
     using u_t = std::underlying_type_t<decltype(sp)>;
     auto port = static_cast<u_t>(sp);
@@ -365,7 +386,7 @@ public:
       throw ::trisycl::runtime_error {
         (boost::format {
           "connect: %1% is not a routable switch input port" }
-           % port).str() };
+          % port).str() };
     }
     rm->connect_to(out_connection(mp));
   }
@@ -400,6 +421,12 @@ public:
   std::array<std::shared_ptr<router_port>,
              AXIStreamGeography::nb_master_port> output_ports;
 
+  /// Keep the horizontal coordinate for debug purpose
+  int x_coordinate;
+
+  /// Keep the vertical coordinate for debug purpose
+  int y_coordinate;
+
 
   /** Get the input router port of the AXI stream switch
 
@@ -432,10 +459,20 @@ public:
 
 
   /// Start the tile infrastructure associated to the AIE device
-  void start(detail::fiber_pool &fiber_executor) {
+  void start(int x, int y, detail::fiber_pool &fiber_executor) {
+    x_coordinate = x;
+    y_coordinate = y;
     // Add a router worker on all switch input
-    for (auto &p : input_ports)
+    for (auto &p : input_ports) {
+#ifdef TRISYCL_DEBUG
+      auto port_enum = static_cast<spl>(&p - std::begin(input_ports));
+      auto port_name = magic_enum::enum_name(port_enum);
+#endif
+      TRISYCL_DUMP_T("axi_stream_switch " << this
+                     << " (" << x_coordinate << ',' << y_coordinate
+                     << ") start initialize input: " << port_name);
       p = std::make_shared<router_minion>(*this, fiber_executor);
+    }
   }
 
 };

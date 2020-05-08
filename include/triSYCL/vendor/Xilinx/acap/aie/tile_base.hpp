@@ -35,6 +35,7 @@ class tile_base {
 protected:
 
   /// Keep a reference to the AIE_Program with the full tile and memory view
+  /// \todo can probably be removed
   AIE_Program *program;
 
   /// Keep a reference to the tile_infrastructure hardware features
@@ -68,6 +69,7 @@ public:
 
   /// Access the cascade connections
   auto &cascade() {
+    // \todo the cascade should be part of the tile infrastructure instead
     return program->cascade();
   }
 

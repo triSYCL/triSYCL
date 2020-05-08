@@ -74,7 +74,7 @@ struct device {
   };
 
 
-  /** Apply a function for each tile of the device
+  /** Apply a function for each tile infrastructure of the device
 
       \param f is a callable that is to be called like \c f(x,y) for
       each tile
@@ -217,7 +217,7 @@ struct device {
     // Initialize all the tiles with their network connections first
     for_each_tile_index([&] (auto x, auto y) {
       // Start the tile infrastructure
-      tile(x, y).start(fiber_executor);
+      tile(x, y).start(x, y, fiber_executor);
     });
     // Only then we can connect the inter core tile NoC
     for_each_tile_index([&] (auto x, auto y) {

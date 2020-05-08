@@ -46,6 +46,12 @@ class tile_infrastructure  {
   using spl = typename axi_ss_geo::slave_port_layout;
   using axi_ss_t = axi_stream_switch<axi_ss_geo>;
 
+  /// Keep the horizontal coordinate for debug purpose
+  int x_coordinate;
+
+  /// Keep the vertical coordinate for debug purpose
+  int y_coordinate;
+
   /// The AXI stream switch of the core tile
   axi_ss_t axi_ss;
 
@@ -58,9 +64,10 @@ private:
   /// To shepherd the working fiber
   detail::fiber_pool::future<void> future_work;
 #else
-  /// Keep track of execution in this tile
+  /// Keep track of the std::thread execution in this tile
   std::future<void> future_work;
 #endif
+
 
   /** Map the user input port number to the AXI stream switch port
 
@@ -85,6 +92,8 @@ public:
 
   /// A router input port directing to a AIE core input
   struct core_receiver : axi_ss_t::router_port {
+    using rp = typename axi_ss_t::router_port;
+
     /// Router ingress capacity queue
     /// \todo check with hardware team for the value
     auto static constexpr capacity = 2;
@@ -102,10 +111,12 @@ public:
     /// Inherit from parent constructors
     using axi_ss_t::router_port::router_port;
 
-    /// Enqueue a packet to the core input
+    /// Enqueue a packet ()coming from the switch) to the core input
     void write(const axi_packet &v) override {
-      TRISYCL_DUMP_T("core_receiver " << this << " on fiber "
-                     << boost::this_fiber::get_id()
+      TRISYCL_DUMP_T("core_receiver " << this << " on tile("
+                     << rp::axi_ss.x_coordinate
+                     << ',' << rp::axi_ss.y_coordinate
+                     << ") on fiber " << boost::this_fiber::get_id()
                      << " write data value " << v.data
                      << " to buffered_channel " << &c);
       c.push(v);
@@ -121,11 +132,13 @@ public:
     }
 
 
-    /// Waiting read to a core input port
+    /// Waiting read by a tile program on a core input port from the switch
     value_type read() override {
-      TRISYCL_DUMP_T("core_receiver " << this << " on fiber "
-                     << boost::this_fiber::get_id()
-                     << " read from buffered_channel " << &c);
+      TRISYCL_DUMP_T("core_receiver " << this << " on tile("
+                     << rp::axi_ss.x_coordinate
+                     << ',' << rp::axi_ss.y_coordinate
+                     << ") on fiber " << boost::this_fiber::get_id()
+                     << " reading from buffered_channel " << &c << "...");
       return c.value_pop().data;
     }
 
@@ -154,12 +167,22 @@ public:
   }
 
 
-  /// Start the tile infrastructure associated to the AIE device
-  void start(detail::fiber_pool &fiber_executor) {
+  /** Start the tile infrastructure associated to the AIE device
+
+      \param[in] x is the horizontal coordinate for this tile
+
+      \param[in] y is the vertical coordinate for this tile
+
+      \param[in] fiber_executor is the executor used to run
+      infrastructure details
+  */
+  void start(int x, int y, detail::fiber_pool &fiber_executor) {
+    x_coordinate = x;
+    y_coordinate = y;
 #if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
     fe = &fiber_executor;
 #endif
-    axi_ss.start(fiber_executor);
+    axi_ss.start(x, y, fiber_executor);
   }
 
 
@@ -186,6 +209,8 @@ public:
       \param[in] port is the port to use
   */
   auto& in(int port) {
+    TRISYCL_DUMP_T("in(" << port << ") on tile(" << x_coordinate << ','
+                   << y_coordinate << ')');
     /* The input port for the core is actually the corresponding
        output on the switch */
     return *axi_ss.out_connection(translate_output_port(port));
@@ -197,6 +222,8 @@ public:
       \param[in] port is the port to use
   */
   auto& out(int port) {
+    TRISYCL_DUMP_T("out(" << port << ") on tile(" << x_coordinate << ','
+                   << y_coordinate << ')');
     /* The output port for the core is actually the corresponding
        input on the switch */
     return *axi_ss.in_connection(translate_input_port(port));
@@ -231,7 +258,7 @@ public:
     future_work = fe->submit(std::forward<Work>(f));
 #else
     future_work = std::async(std::launch::async,
-                             std::forward<Work>(f));
+                             [ work = std::move(f) ] { work(); });
 #endif
   }
 
