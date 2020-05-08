@@ -19,9 +19,9 @@
 #endif
 
 #ifndef TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
-/// Use a fiber to run the tile core program by default if undefined
+/// Do not use a fiber to run the tile core program by default if undefined
 /// in the compiler option
-#define TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER 1
+#define TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER 0
 #endif
 
 /*
