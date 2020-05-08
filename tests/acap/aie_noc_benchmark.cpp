@@ -78,9 +78,9 @@ int test_main(int argc, char *argv[]) {
   try {
     // Run on various sizes
     auto sizes = boost::hana::make_tuple(layout::size<2,1> {},
-                                         layout::size<2,2> {},
+                                         layout::size<2,2> {}/*,
                                          layout::size<4,4> {},
-                                         layout::vc1902 {});
+                                         layout::vc1902 {}*/);
     boost::hana::for_each(sizes, [&] (auto s) {
       using d_t = acap::aie::device<decltype(s)>;
       d_t d;
@@ -133,6 +133,7 @@ int test_main(int argc, char *argv[]) {
           sizeof(std::int32_t)*local_transfers*d_t::geo::x_max*d_t::geo::y_max;
         measure_bandwidth(transmitted_bytes,
                           [&] { d.template run<square_neighbor>(); });
+        std::cerr << d.display() <<std::endl;
       }
     });
   } catch (sycl::exception &e) {

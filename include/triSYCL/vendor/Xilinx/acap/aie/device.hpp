@@ -11,6 +11,11 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <string>
+
+#include <boost/format.hpp>
+#include <boost/hana.hpp>
+
 #include "cascade_stream.hpp"
 #include "geography.hpp"
 #include "memory.hpp"
@@ -252,6 +257,36 @@ struct device {
     });
   }
 
+  auto display() {
+    std::string out = R"(
+\documentclass{article}
+\usepackage{tikz}
+\usetikzlibrary{backgrounds,calc,decorations.pathmorphing,fit,patterns,mindmap}
+\definecolor{orangeSYCL}{RGB}{242,104,34}
+% Some cool palettes
+\usepackage{xcolor-material}
+\usepackage{xcolor-solarized}
+
+\begin{document}
+
+% Use remembering in every picture so we can use named coordinates
+% across them
+\tikzstyle{every picture}+=[remember picture]
+\begin{tikzpicture}[framed]
+
+)";
+
+    for_each_tile_index([&] (auto x, auto y) {
+      out += (boost::format {
+        R"(\node(TileX%1%Y%2%) at (%1%,%2%) {tile(%1%,%2%)};)"
+          } % x % y).str() + '\n';
+    });
+    out += R"(
+\end{tikzpicture}
+\end{document}
+)";
+    return out;
+  }
 };
 
 /// @} End the aie Doxygen group
