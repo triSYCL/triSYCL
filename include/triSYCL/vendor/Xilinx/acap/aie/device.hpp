@@ -258,10 +258,10 @@ struct device {
   }
 
   auto display() {
-    std::string out = R"(
-\documentclass{article}
+    std::string out = R"(\documentclass{article}
 \usepackage{tikz}
 \usetikzlibrary{backgrounds,calc,decorations.pathmorphing,fit,patterns,mindmap}
+\usepackage{tikzlings}
 \definecolor{orangeSYCL}{RGB}{242,104,34}
 % Some cool palettes
 \usepackage{xcolor-material}
@@ -277,14 +277,12 @@ struct device {
 )";
 
     for_each_tile_index([&] (auto x, auto y) {
-      out += (boost::format {
-        R"(\node(TileX%1%Y%2%) at (%1%,%2%) {tile(%1%,%2%)};)"
-          } % x % y).str() + '\n';
+      out += tile(x, y).display();
     });
     out += R"(
 \end{tikzpicture}
-\end{document}
-)";
+
+\end{document})";
     return out;
   }
 };
