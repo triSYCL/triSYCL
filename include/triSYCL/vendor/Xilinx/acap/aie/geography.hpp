@@ -17,6 +17,8 @@
 #include <boost/format.hpp>
 #include <boost/hana.hpp>
 
+#include "triSYCL/detail/ranges.hpp"
+
 namespace trisycl::vendor::xilinx::acap::aie {
 
 /// \ingroup aie
@@ -394,9 +396,42 @@ struct geography : Layout {
       size
     };
 
-    /// Number of master AXI stream master ports in the switch
+    /// Number of AXI stream master ports in the switch
     static constexpr auto nb_master_port =
       static_cast<int>(master_port_layout::size);
+
+    /// A range of the master ports connected to the tile inputs
+    static auto inline m_me_range =
+      views::enum_type(master_port_layout::me_0, master_port_layout::me_last);
+
+    /// A range of the master ports connected to the DMA inputs
+    static auto inline m_dma_range =
+      views::enum_type(master_port_layout::dma_0, master_port_layout::dma_last);
+
+    /// A range of the master ports connected to the FIFO inputs
+    static auto inline m_fifo_range =
+      views::enum_type(master_port_layout::fifo_0,
+                       master_port_layout::fifo_last);
+
+    /// A range of the South master ports
+    static auto inline m_south_range =
+      views::enum_type(master_port_layout::south_0,
+                       master_port_layout::south_last);
+
+    /// A range of the West master ports
+    static auto inline m_west_range =
+      views::enum_type(master_port_layout::west_0,
+                       master_port_layout::west_last);
+
+    /// A range of the North master ports
+    static auto inline m_north_range =
+      views::enum_type(master_port_layout::north_0,
+                       master_port_layout::north_last);
+
+    /// A range of the East master ports
+    static auto inline m_east_range =
+      views::enum_type(master_port_layout::east_0,
+                       master_port_layout::east_last);
 
     /** Layout of the AXI stream slave ports in the switch
 
@@ -433,10 +468,39 @@ struct geography : Layout {
       size
     };
 
-    /// Number of master AXI stream slave ports in the switch
+    /// Number of AXI stream slave ports in the switch
     static constexpr auto nb_slave_port =
       static_cast<int>(slave_port_layout::size);
 
+    /// A range of the slave ports connected to the tile outputs
+    static auto inline s_me_range =
+      views::enum_type(slave_port_layout::me_0, slave_port_layout::me_last);
+
+    /// A range of the slave ports connected to the DMA outputs
+    static auto inline s_dma_range =
+      views::enum_type(slave_port_layout::dma_0, slave_port_layout::dma_last);
+
+    /// A range of the slave ports connected to the FIFO outputs
+    static auto inline s_fifo_range =
+      views::enum_type(slave_port_layout::fifo_0, slave_port_layout::fifo_last);
+
+    /// A range of the South slave ports
+    static auto inline s_south_range =
+      views::enum_type(slave_port_layout::south_0,
+                       slave_port_layout::south_last);
+
+    /// A range of the West slave ports
+    static auto inline s_west_range =
+      views::enum_type(slave_port_layout::west_0, slave_port_layout::west_last);
+
+    /// A range of the North slave ports
+    static auto inline s_north_range =
+      views::enum_type(slave_port_layout::north_0,
+                       slave_port_layout::north_last);
+
+    /// A range of the East slave ports
+    static auto inline s_east_range =
+      views::enum_type(slave_port_layout::east_0, slave_port_layout::east_last);
   };
 
   // The organization of the AXI stream switch on a shim tile
