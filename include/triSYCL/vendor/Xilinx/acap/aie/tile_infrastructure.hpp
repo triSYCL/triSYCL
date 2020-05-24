@@ -279,24 +279,32 @@ public:
   auto display() {
     auto get_tikz_coordinate = [&] (auto x, auto y) {
       return (boost::format { "(%1%,%2%)" }
-              % (x_coordinate*4 + x) % (y_coordinate*5 + y)).str();
+              % (x_coordinate*14 + x) % (y_coordinate*15 + y)).str();
     };
     auto out = (boost::format {
         "  \\begin{scope}[name prefix = TileX%1%Y%2%]\n" }
-      % x_coordinate % y_coordinate).str();
+      % x_coordinate % y_coordinate).str()
+    + axi_ss.display();
 
     // Connect the core receivers to its AXI stream switch
     auto inputs = views::enum_type(mpl::me_0, mpl::me_last);
     auto inputs_size = ranges::distance(inputs);
     for (auto [i, p] : inputs | ranges::views::enumerate) {
-      out += (boost::format { "    \\node(CoreIn%1%) at %2% {in(%1%)};\n" }
+      out += (boost::format { "    \\node[rotate=90,anchor=north](CoreIn%1%) at %2% {in(%1%)};\n" }
               % i % get_tikz_coordinate(i, inputs_size + 1)).str();
+      out += (boost::format {
+          "    \\draw[line width=0.4mm,->] (node cs:name=MasterME%1%)"
+          " to (node cs:name=CoreIn%1%);\n" } % i).str();
     };
+    // Use \coordinate and [label:] instead?
     auto outputs = views::enum_type(spl::me_0, spl::me_last);
     auto outputs_size = ranges::distance(outputs);
     for (auto [i, p] : outputs | ranges::views::enumerate) {
       out += (boost::format { "    \\node(CoreOut%1%) at %2% {out(%1%)};\n" }
               % i % get_tikz_coordinate(outputs_size, i + 1)).str();
+      out += (boost::format {
+          "    \\draw[line width=0.4mm,->] (node cs:name=CoreOut%1%)"
+          " to (node cs:name=SlaveME%1%);\n" } % i).str();
     };
     out += (boost::format { "    \\node() at %1% {\\texttt{tile<%2%,%3%>}};\n" }
             % get_tikz_coordinate(1, 0) % x_coordinate % y_coordinate).str()

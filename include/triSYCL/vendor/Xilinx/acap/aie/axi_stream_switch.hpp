@@ -476,6 +476,30 @@ public:
     }
   }
 
+
+  auto display() {
+    auto get_tikz_coordinate = [&] (auto x, auto y) {
+      return (boost::format { "(%1%,%2%)" }
+              % (x_coordinate*14 + x) % (y_coordinate*15 + y)).str();
+    };
+    std::string out;
+    // Master ports to the core receivers
+    auto inputs = views::enum_type(mpl::me_0, mpl::me_last);
+    auto inputs_size = ranges::distance(inputs);
+    for (auto [i, p] : inputs | ranges::views::enumerate) {
+      out += (boost::format { "    \\node[anchor=south east](MasterME%1%) at %2% {me(%1%)};\n" }
+              % i % get_tikz_coordinate(3, 3 + inputs_size - i)).str();
+    };
+    auto outputs = views::enum_type(spl::me_0, spl::me_last);
+    auto outputs_size = ranges::distance(outputs);
+    for (auto [i, p] : outputs | ranges::views::enumerate) {
+      out += (boost::format { "    \\node[rotate=90](SlaveME%1%) at %2% {me(%1%)};\n" }
+              % i % get_tikz_coordinate(2 + outputs_size - i, 3)).str();
+    };
+
+    return out;
+  }
+
 };
 
 /// @} End the aie Doxygen group

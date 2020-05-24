@@ -260,7 +260,7 @@ struct device {
   auto display() {
     std::string out = R"(\documentclass{article}
 % Use maximum of a page surface
-\usepackage[paperwidth=100cm,paperheight=50cm,margin=0mm]{geometry}
+\usepackage[paperwidth=200cm,paperheight=100cm,margin=0mm]{geometry}
 \usepackage{tikz}
 \usetikzlibrary{backgrounds,calc,decorations.pathmorphing,fit,patterns,mindmap}
 \usepackage{tikzlings}
