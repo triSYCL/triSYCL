@@ -81,8 +81,9 @@ class axi_stream_switch {
 
 public:
 
-  using mpl = typename AXIStreamGeography::master_port_layout;
-  using spl = typename AXIStreamGeography::slave_port_layout;
+  using axi_ss_geo = AXIStreamGeography;
+  using mpl = typename axi_ss_geo::master_port_layout;
+  using spl = typename axi_ss_geo::slave_port_layout;
 
   /** Abstract interface for a router input port
 
@@ -412,7 +413,7 @@ public:
       switches in a shortcut way.
   */
   std::array<std::shared_ptr<router_port>,
-             AXIStreamGeography::nb_slave_port> input_ports;
+             axi_ss_geo::nb_slave_port> input_ports;
 
   /** The input ports used to send information to the switch
 
@@ -420,7 +421,7 @@ public:
       switches in a shortcut way.
   */
   std::array<std::shared_ptr<router_port>,
-             AXIStreamGeography::nb_master_port> output_ports;
+             axi_ss_geo::nb_master_port> output_ports;
 
   /// Keep the horizontal coordinate for debug purpose
   int x_coordinate;
@@ -486,27 +487,27 @@ public:
     auto constexpr x_me = 2;
     auto constexpr y_me = 3;
     // Draw the master ports to the core receivers
-    auto inputs = views::enum_type(mpl::me_0, mpl::me_last);
+    auto inputs = axi_ss_geo::m_me_range;
     auto inputs_size = ranges::distance(inputs);
     for (auto [i, p] : inputs | ranges::views::enumerate) {
       out += (boost::format { R"(
     \coordinate(MasterME%1%) at %2%;
-    \node[anchor=south east] at %2% {me(%1%)};)" }
+    \node[anchor=south east] at %2% {me\_%1%};)" }
         % i % get_tikz_coordinate(x_me, y_me + inputs_size - i)).str();
     };
     // Draw the slave ports from the core senders
-    auto outputs = views::enum_type(spl::me_0, spl::me_last);
+    auto outputs = axi_ss_geo::s_me_range;
     auto outputs_size = ranges::distance(outputs);
     for (auto [i, p] : outputs | ranges::views::enumerate) {
       out += (boost::format { R"(
     \coordinate(SlaveME%1%) at %2%;
-    \node[rotate=90,anchor=north east] at %2% {me(%1%)};)" }
+    \node[rotate=90,anchor=north east] at %2% {me\_%1%};)" }
         % i % get_tikz_coordinate(x_me + outputs_size - i, y_me)).str();
     };
+    // Draw the master ports to the Western tile
     auto x_mwest = x_me;
     auto y_mwest = y_me + inputs_size;
-    // Draw the master ports to the Western tile
-    auto ports = views::enum_type(mpl::west_0, mpl::west_last);
+    auto ports = axi_ss_geo::m_west_range;
     auto ports_size = ranges::distance(ports);
     for (auto [i, p] : ports | ranges::views::enumerate) {
       out += (boost::format { R"(
