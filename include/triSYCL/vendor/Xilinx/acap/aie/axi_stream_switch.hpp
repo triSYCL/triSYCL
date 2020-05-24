@@ -483,23 +483,36 @@ public:
               % (x_coordinate*14 + x) % (y_coordinate*15 + y)).str();
     };
     std::string out;
-    // Master ports to the core receivers
+    auto constexpr x_me = 2;
+    auto constexpr y_me = 3;
+    // Draw the master ports to the core receivers
     auto inputs = views::enum_type(mpl::me_0, mpl::me_last);
     auto inputs_size = ranges::distance(inputs);
     for (auto [i, p] : inputs | ranges::views::enumerate) {
       out += (boost::format { R"(
     \coordinate(MasterME%1%) at %2%;
     \node[anchor=south east] at %2% {me(%1%)};)" }
-        % i % get_tikz_coordinate(2, 3 + inputs_size - i)).str();
+        % i % get_tikz_coordinate(x_me, y_me + inputs_size - i)).str();
     };
+    // Draw the slave ports from the core senders
     auto outputs = views::enum_type(spl::me_0, spl::me_last);
     auto outputs_size = ranges::distance(outputs);
     for (auto [i, p] : outputs | ranges::views::enumerate) {
       out += (boost::format { R"(
     \coordinate(SlaveME%1%) at %2%;
-    \node[rotate=90,anchor=north east] at %2% {me(%1%)};
-)" }
-        % i % get_tikz_coordinate(2 + outputs_size - i, 3)).str();
+    \node[rotate=90,anchor=north east] at %2% {me(%1%)};)" }
+        % i % get_tikz_coordinate(x_me + outputs_size - i, y_me)).str();
+    };
+    auto x_mwest = x_me;
+    auto y_mwest = y_me + inputs_size;
+    // Draw the master ports to the Western tile
+    auto ports = views::enum_type(mpl::west_0, mpl::west_last);
+    auto ports_size = ranges::distance(ports);
+    for (auto [i, p] : ports | ranges::views::enumerate) {
+      out += (boost::format { R"(
+    \coordinate(MasterWest%1%) at %2%;
+    \node[anchor=south east] at %2% {west\_%1%};)" }
+        % i % get_tikz_coordinate(x_mwest, y_mwest + ports_size - i)).str();
     };
 
     return out;
