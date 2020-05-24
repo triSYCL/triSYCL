@@ -259,6 +259,8 @@ struct device {
 
   auto display() {
     std::string out = R"(\documentclass{article}
+% Use maximum of a page surface
+\usepackage[paperwidth=100cm,paperheight=50cm,margin=0mm]{geometry}
 \usepackage{tikz}
 \usetikzlibrary{backgrounds,calc,decorations.pathmorphing,fit,patterns,mindmap}
 \usepackage{tikzlings}
@@ -268,6 +270,10 @@ struct device {
 \usepackage{xcolor-solarized}
 
 \begin{document}
+% No page number, header or footer
+\thispagestyle{empty}
+% Skip the usual space at the beginning of a paragraph
+\noindent
 
 % Use remembering in every picture so we can use named coordinates
 % across them
