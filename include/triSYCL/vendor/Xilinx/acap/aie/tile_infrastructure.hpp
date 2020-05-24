@@ -290,30 +290,34 @@ public:
     auto inputs = views::enum_type(mpl::me_0, mpl::me_last);
     auto inputs_size = ranges::distance(inputs);
     for (auto [i, p] : inputs | ranges::views::enumerate) {
-      out += (boost::format { "    \\node[rotate=90,anchor=north](CoreIn%1%) at %2% {in(%1%)};\n" }
-              % i % get_tikz_coordinate(i, inputs_size + 1)).str();
-      out += (boost::format {
-          "    \\draw[line width=0.4mm,->] (node cs:name=MasterME%1%)"
-          " to (node cs:name=CoreIn%1%);\n" } % i).str();
+      out += (boost::format { R"(
+    \coordinate(CoreIn%1%) at %2%;
+    \node[rotate=90,anchor=east](CoreIn%1%Label) at %2% {in(%1%)};
+    \draw[line width=0.4mm,->] (node cs:name=MasterME%1%)
+                            -| (node cs:name=CoreIn%1%);)" }
+        % i % get_tikz_coordinate(i, inputs_size + 1)).str();
     };
     // Use \coordinate and [label:] instead?
     auto outputs = views::enum_type(spl::me_0, spl::me_last);
     auto outputs_size = ranges::distance(outputs);
     for (auto [i, p] : outputs | ranges::views::enumerate) {
-      out += (boost::format { "    \\node(CoreOut%1%) at %2% {out(%1%)};\n" }
-              % i % get_tikz_coordinate(outputs_size, i + 1)).str();
-      out += (boost::format {
-          "    \\draw[line width=0.4mm,->] (node cs:name=CoreOut%1%)"
-          " to (node cs:name=SlaveME%1%);\n" } % i).str();
+      out += (boost::format {  R"(
+    \coordinate(CoreOut%1%) at %2%;
+    \node[anchor=east](CoreOut%1%Label) at %2%  {out(%1%)};
+    \draw[line width=0.4mm,->] (node cs:name=CoreOut%1%)
+                            -| (node cs:name=SlaveME%1%);)" }
+        % i % get_tikz_coordinate(outputs_size, i + 1)).str();
     };
-    out += (boost::format { "    \\node() at %1% {\\texttt{tile<%2%,%3%>}};\n" }
-            % get_tikz_coordinate(1, 0) % x_coordinate % y_coordinate).str()
-      + R"(    \begin{scope}[on background layer]
-      \node [fill=orange!30, fit={(node cs:name=CoreIn0)
-                                  (node cs:name=CoreOut0)}]
+    out += (boost::format { R"(
+    \node() at %1% {\texttt{tile<%2%,%3%>}};
+    \begin{scope}[on background layer]
+      \node [fill=orange!30, fit={(node cs:name=CoreIn0Label)
+                                  (node cs:name=CoreOut0Label)}]
             (Core) {};
-    \end{scope})"
-      + "\n  \\end{scope}\n\n";
+    \end{scope}
+  \end{scope}
+
+)" } % get_tikz_coordinate(1, 0) % x_coordinate % y_coordinate).str();
     return out;
   }
 

@@ -487,14 +487,19 @@ public:
     auto inputs = views::enum_type(mpl::me_0, mpl::me_last);
     auto inputs_size = ranges::distance(inputs);
     for (auto [i, p] : inputs | ranges::views::enumerate) {
-      out += (boost::format { "    \\node[anchor=south east](MasterME%1%) at %2% {me(%1%)};\n" }
-              % i % get_tikz_coordinate(3, 3 + inputs_size - i)).str();
+      out += (boost::format { R"(
+    \coordinate(MasterME%1%) at %2%;
+    \node[anchor=south east] at %2% {me(%1%)};)" }
+        % i % get_tikz_coordinate(2, 3 + inputs_size - i)).str();
     };
     auto outputs = views::enum_type(spl::me_0, spl::me_last);
     auto outputs_size = ranges::distance(outputs);
     for (auto [i, p] : outputs | ranges::views::enumerate) {
-      out += (boost::format { "    \\node[rotate=90](SlaveME%1%) at %2% {me(%1%)};\n" }
-              % i % get_tikz_coordinate(2 + outputs_size - i, 3)).str();
+      out += (boost::format { R"(
+    \coordinate(SlaveME%1%) at %2%;
+    \node[rotate=90,anchor=north east] at %2% {me(%1%)};
+)" }
+        % i % get_tikz_coordinate(2 + outputs_size - i, 3)).str();
     };
 
     return out;
