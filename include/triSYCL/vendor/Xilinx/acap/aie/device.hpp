@@ -268,6 +268,8 @@ struct device {
 % Some cool palettes
 \usepackage{xcolor-material}
 \usepackage{xcolor-solarized}
+% Consider '_' as a (almost) normal character
+\usepackage[strings]{underscore}
 
 \begin{document}
 % No page number, header or footer

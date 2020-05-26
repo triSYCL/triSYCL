@@ -492,7 +492,7 @@ public:
     for (auto [i, p] : inputs | ranges::views::enumerate) {
       out += (boost::format { R"(
     \coordinate(MasterME%1%) at %2%;
-    \node[anchor=south east] at %2% {me\_%1%};)" }
+    \node[anchor=south east] at %2% {me_%1%};)" }
         % i % get_tikz_coordinate(x_me, y_me + inputs_size - i)).str();
     };
     // Draw the slave ports from the core senders
@@ -501,7 +501,7 @@ public:
     for (auto [i, p] : outputs | ranges::views::enumerate) {
       out += (boost::format { R"(
     \coordinate(SlaveME%1%) at %2%;
-    \node[rotate=90,anchor=north east] at %2% {me\_%1%};)" }
+    \node[rotate=90,anchor=north east] at %2% {me_%1%};)" }
         % i % get_tikz_coordinate(x_me + outputs_size - i, y_me)).str();
     };
     // Draw the master ports to the Western tile
@@ -512,7 +512,7 @@ public:
     for (auto [i, p] : ports | ranges::views::enumerate) {
       out += (boost::format { R"(
     \coordinate(MasterWest%1%) at %2%;
-    \node[anchor=south east] at %2% {west\_%1%};)" }
+    \node[anchor=south east] at %2% {west_%1%};)" }
         % i % get_tikz_coordinate(x_mwest, y_mwest + ports_size - i)).str();
     };
 
