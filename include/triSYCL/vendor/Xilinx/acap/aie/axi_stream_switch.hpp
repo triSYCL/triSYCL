@@ -480,6 +480,36 @@ public:
   }
 
 
+  template <typename F, typename... EnumRanges>
+  auto display_border(const std::string_view& node_attribute,
+                      const std::string_view& side,
+                      F&& coordinate_function,
+                      EnumRanges&&... enum_ranges) {
+    auto get_tikz_coordinate = [&] (auto x, auto y) {
+      return (boost::format { "(%1%,%2%)" }
+              % (x_coordinate*14 + x) % (y_coordinate*15 + y)).str();
+    };
+    std::string out;
+    // Index each connection displayed in order
+    auto i = 0;
+    boost::hana::for_each(boost::hana::make_tuple(enum_ranges...),
+      [&] (auto&& r) {
+        for (auto p : r) {
+          auto [x, y] = coordinate_function(i);
+          out += (boost::format { R"(
+    \coordinate(%3%) at %2%;
+    \node[%1%] at %2% {%4%};)" }
+            % node_attribute
+            % get_tikz_coordinate(x, y)
+            % latex::clean_node(magic_enum::enum_name(p), side)
+            % magic_enum::enum_name(p)).str();
+          ++i;
+        };
+      });
+    return out;
+  }
+
+
   auto display() {
     auto get_tikz_coordinate = [&] (auto x, auto y) {
       return (boost::format { "(%1%,%2%)" }
@@ -523,6 +553,10 @@ public:
         % latex::clean_node(magic_enum::enum_name(p), "Master")
         % magic_enum::enum_name(p)).str();
     };
+
+    out += display_border("rotate=90,anchor=north west", "Top",
+                          [] (auto i) { return std::tuple { 5 + i, 10 }; },
+                          axi_ss_geo::m_north_range, axi_ss_geo::s_south_range);
 
     return out;
   }
