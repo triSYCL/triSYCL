@@ -19,11 +19,14 @@
 #include <future>
 
 #include <boost/format.hpp>
+#include "magic_enum.hpp"
+#include <range/v3/all.hpp>
 
 #include "axi_stream_switch.hpp"
 #include "triSYCL/detail/fiber_pool.hpp"
 #include "triSYCL/detail/ranges.hpp"
 #include "triSYCL/vendor/Xilinx/config.hpp"
+#include "triSYCL/vendor/Xilinx/latex.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
@@ -291,7 +294,7 @@ public:
       out += (boost::format { R"(
     \coordinate(CoreIn%1%) at %2%;
     \node[rotate=90,anchor=east](CoreIn%1%Label) at %2% {in(%1%)};
-    \draw[line width=0.4mm,->] (node cs:name=MasterME%1%)
+    \draw[line width=0.4mm,->] (node cs:name=MasterMe%1%)
                             -| (node cs:name=CoreIn%1%);)" }
         % i % get_tikz_coordinate(i,
                                   ranges::distance(axi_ss_geo::m_me_range) + 1)
@@ -303,7 +306,7 @@ public:
     \coordinate(CoreOut%1%) at %2%;
     \node[anchor=east](CoreOut%1%Label) at %2%  {out(%1%)};
     \draw[line width=0.4mm,->] (node cs:name=CoreOut%1%)
-                            -| (node cs:name=SlaveME%1%);)" }
+                            -| (node cs:name=SlaveMe%1%);)" }
         % i % get_tikz_coordinate(ranges::distance(axi_ss_geo::s_me_range),
                                   i + 1)).str();
     };

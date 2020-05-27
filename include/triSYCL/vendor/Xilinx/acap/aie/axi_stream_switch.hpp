@@ -29,10 +29,12 @@
 #include <boost/fiber/buffered_channel.hpp>
 #include <boost/format.hpp>
 #include "magic_enum.hpp"
+#include <range/v3/all.hpp>
 
 #include "connection.hpp"
 #include "triSYCL/detail/enum.hpp"
 #include "triSYCL/detail/fiber_pool.hpp"
+#include "triSYCL/vendor/Xilinx/latex.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
@@ -491,18 +493,22 @@ public:
     auto inputs_size = ranges::distance(inputs);
     for (auto [i, p] : inputs | ranges::views::enumerate) {
       out += (boost::format { R"(
-    \coordinate(MasterME%1%) at %2%;
-    \node[anchor=south east] at %2% {me_%1%};)" }
-        % i % get_tikz_coordinate(x_me, y_me + inputs_size - i)).str();
+    \coordinate(%2%) at %1%;
+    \node[anchor=south east] at %1% {%3%};)" }
+        % get_tikz_coordinate(x_me, y_me + inputs_size - i)
+        % latex::clean_node(magic_enum::enum_name(p), "Master")
+        % magic_enum::enum_name(p)).str();
     };
     // Draw the slave ports from the core senders
     auto outputs = axi_ss_geo::s_me_range;
     auto outputs_size = ranges::distance(outputs);
     for (auto [i, p] : outputs | ranges::views::enumerate) {
       out += (boost::format { R"(
-    \coordinate(SlaveME%1%) at %2%;
-    \node[rotate=90,anchor=north east] at %2% {me_%1%};)" }
-        % i % get_tikz_coordinate(x_me + outputs_size - i, y_me)).str();
+    \coordinate(%2%) at %1%;
+    \node[rotate=90,anchor=north east] at %1% {%3%};)" }
+        % get_tikz_coordinate(x_me + outputs_size - i, y_me)
+        % latex::clean_node(magic_enum::enum_name(p), "Slave")
+        % magic_enum::enum_name(p)).str();
     };
     // Draw the master ports to the Western tile
     auto x_mwest = x_me;
@@ -511,9 +517,11 @@ public:
     auto ports_size = ranges::distance(ports);
     for (auto [i, p] : ports | ranges::views::enumerate) {
       out += (boost::format { R"(
-    \coordinate(MasterWest%1%) at %2%;
-    \node[anchor=south east] at %2% {west_%1%};)" }
-        % i % get_tikz_coordinate(x_mwest, y_mwest + ports_size - i)).str();
+    \coordinate(%2%) at %1%;
+    \node[anchor=south east] at %1% {%3%};)" }
+        % get_tikz_coordinate(x_mwest, y_mwest + ports_size - i)
+        % latex::clean_node(magic_enum::enum_name(p), "Master")
+        % magic_enum::enum_name(p)).str();
     };
 
     return out;
