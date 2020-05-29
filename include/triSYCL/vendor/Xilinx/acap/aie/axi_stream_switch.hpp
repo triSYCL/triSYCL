@@ -480,10 +480,11 @@ public:
   }
 
 
-  template <typename F, typename... EnumRanges>
+  template <typename FG, typename FL, typename... EnumRanges>
   auto display_border(const std::string_view& node_attribute,
                       const std::string_view& side,
-                      F&& coordinate_function,
+                      FG&& global_coordinate_function,
+                      FL&& local_coordinate_function,
                       EnumRanges&&... enum_ranges) {
     auto get_tikz_coordinate = [&] (auto x, auto y) {
       return (boost::format { "(%1%,%2%)" }
@@ -495,12 +496,12 @@ public:
     boost::hana::for_each(boost::hana::make_tuple(enum_ranges...),
       [&] (auto&& r) {
         for (auto p : r) {
-          auto [x, y] = coordinate_function(i);
+          auto [x, y] = local_coordinate_function(i);
           out += (boost::format { R"(
     \coordinate(%3%) at %2%;
     \node[%1%] at %2% {%4%};)" }
             % node_attribute
-            % get_tikz_coordinate(x, y)
+            % global_coordinate_function(x, y)
             % latex::clean_node(magic_enum::enum_name(p), side)
             % magic_enum::enum_name(p)).str();
           ++i;
@@ -511,52 +512,45 @@ public:
 
 
   auto display() {
+    std::string out;
+    auto constexpr x_me = 2;
+    auto constexpr y_me = 3;
+    auto height = ranges::distance(axi_ss_geo::m_me_range)
+      + ranges::distance(axi_ss_geo::m_west_range)
+      + ranges::distance(axi_ss_geo::s_east_range);
+    auto width = ranges::distance(axi_ss_geo::s_me_range)
+      + ranges::distance(axi_ss_geo::m_south_range)
+      + ranges::distance(axi_ss_geo::s_north_range);
+
     auto get_tikz_coordinate = [&] (auto x, auto y) {
       return (boost::format { "(%1%,%2%)" }
               % (x_coordinate*14 + x) % (y_coordinate*15 + y)).str();
     };
-    std::string out;
-    auto constexpr x_me = 2;
-    auto constexpr y_me = 3;
-    // Draw the master ports to the core receivers
-    auto inputs = axi_ss_geo::m_me_range;
-    auto inputs_size = ranges::distance(inputs);
-    for (auto [i, p] : inputs | ranges::views::enumerate) {
-      out += (boost::format { R"(
-    \coordinate(%2%) at %1%;
-    \node[anchor=south east] at %1% {%3%};)" }
-        % get_tikz_coordinate(x_me, y_me + inputs_size - i)
-        % latex::clean_node(magic_enum::enum_name(p), "Master")
-        % magic_enum::enum_name(p)).str();
-    };
-    // Draw the slave ports from the core senders
-    auto outputs = axi_ss_geo::s_me_range;
-    auto outputs_size = ranges::distance(outputs);
-    for (auto [i, p] : outputs | ranges::views::enumerate) {
-      out += (boost::format { R"(
-    \coordinate(%2%) at %1%;
-    \node[rotate=90,anchor=north east] at %1% {%3%};)" }
-        % get_tikz_coordinate(x_me + outputs_size - i, y_me)
-        % latex::clean_node(magic_enum::enum_name(p), "Slave")
-        % magic_enum::enum_name(p)).str();
-    };
-    // Draw the master ports to the Western tile
-    auto x_mwest = x_me;
-    auto y_mwest = y_me + inputs_size;
-    auto ports = axi_ss_geo::m_west_range;
-    auto ports_size = ranges::distance(ports);
-    for (auto [i, p] : ports | ranges::views::enumerate) {
-      out += (boost::format { R"(
-    \coordinate(%2%) at %1%;
-    \node[anchor=south east] at %1% {%3%};)" }
-        % get_tikz_coordinate(x_mwest, y_mwest + ports_size - i)
-        % latex::clean_node(magic_enum::enum_name(p), "Master")
-        % magic_enum::enum_name(p)).str();
-    };
 
     out += display_border("rotate=90,anchor=north west", "Top",
-                          [] (auto i) { return std::tuple { 5 + i, 10 }; },
+                          get_tikz_coordinate,
+                          [&] (auto i) { return std::tuple { x_me*2 + i, y_me + height }; },
                           axi_ss_geo::m_north_range, axi_ss_geo::s_south_range);
+    out += display_border("rotate=90,anchor=north east", "Bottom",
+                          get_tikz_coordinate,
+                          [&] (auto i) { return std::tuple { x_me + i, y_me }; },
+                          ranges::views::reverse(axi_ss_geo::s_me_range),
+                          axi_ss_geo::m_south_range,
+                          axi_ss_geo::s_north_range);
+    out += display_border("anchor=south east", "Left",
+                          get_tikz_coordinate,
+                          [&] (auto i) { return std::tuple { x_me, y_me + i}; },
+                          ranges::views::reverse(axi_ss_geo::m_me_range),
+                          axi_ss_geo::m_west_range,
+                          axi_ss_geo::s_east_range);
+    out += display_border("anchor=south east", "Right",
+                          get_tikz_coordinate,
+                          [&] (auto i) { return std::tuple
+                            { x_me,
+                              y_me + ranges::distance(axi_ss_geo::m_me_range) + i };
+                          },
+                          axi_ss_geo::m_east_range,
+                          axi_ss_geo::s_west_range);
 
     return out;
   }
