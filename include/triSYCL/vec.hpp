@@ -561,6 +561,45 @@ public:
 
 }
 
+
+namespace std {
+/* Provide a tuple-like interface to the SYCL vec with some type
+   traits and function template specialization in std::, besides the
+   get<> member function.
+
+   This is useful to have a data type compatible with structure binding
+*/
+
+/// The std::tuple_element specialization for vec
+template<std::size_t I, typename T, int Size>
+struct tuple_element<I, trisycl::vec<T, Size>> {
+  static_assert(I < Size, "The vec<> has not enough elements!");
+  // All the elements have the same type
+  using type = T;
+};
+
+
+/// The std::tuple_size specialization for vec
+template <typename T, int Size>
+class tuple_size<trisycl::vec<T, Size>>
+  : public integral_constant<size_t, Size>
+{ };
+
+
+/** Provide a get<> accessor to have C++17 structured binding working
+
+    Note that it works without this with current std::array based
+    implementation on the host device but we prefer to have a more
+    realistic const binding
+*/
+template <int I, typename T, int Size>
+auto get(const trisycl::vec<T, Size>& v) {
+  static_assert(I < Size, "The vec<> has not enough elements!");
+  return v[I];
+}
+
+}
+
 /*
     # Some Emacs stuff:
     ### Local Variables:
