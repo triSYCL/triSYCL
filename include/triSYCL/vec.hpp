@@ -3,7 +3,7 @@
 
 /** \file
 
-    Implement the small OpenCL vector class
+    Implement the small vector class
 
     Ronan at Keryell point FR
 
@@ -11,21 +11,19 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <tuple>
+#include <utility>
+
+#include "triSYCL/rounding_mode.hpp"
+#include "triSYCL/detail/alignment_helper.hpp"
+#include "triSYCL/vec/detail/vec.hpp"
+
 namespace trisycl {
 
-/** Rounding mode for vector conversions.
- */
-enum class rounding_mode {
-  automatic, /// Default rounding mode, rtz for integers, rte for floating-point
-  rte,       /// Round to nearest even
-  rtz,       /// Round towards zero
-  rtp,       /// Round towards positive infinity
-  rtn        /// Round towards negative infinity
-};
-
 /** Series of values to specify named swizzle indexes
- *  Used when calling the swizzle member function template.
- */
+
+    Used when calling the swizzle member function template
+*/
 struct elem {
   static constexpr int x = 0;
   static constexpr int y = 1;
@@ -53,32 +51,19 @@ struct elem {
   static constexpr int sF = 15;
 };
 
-/** forward decl to use in the detail class
- */
-template<typename, int>
-class vec;
-
 template <typename DataType, int numElements>
 using __swizzled_vec__ = vec<DataType, numElements>;
 
 }
-
 
 /** \addtogroup vector Vector types in SYCL
 
     @{
 */
 
-
-/** Small OpenCL vector class
-*/
-
-#include "triSYCL/detail/alignment_helper.hpp"
-#include "triSYCL/vec/detail/vec.hpp"
-
+/// Small SYCL vector class
 namespace trisycl {
-  /** Accessors to access hex indexed elements of a vector
-   */
+  /// Accessors to access hex indexed elements of a vector
 #define TRISYCL_DECLARE_S(x)                          \
   const DataType& s##x() const {                      \
     return (*this)[0x##x];                            \
