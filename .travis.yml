@@ -1,6 +1,6 @@
-# Use the latest Ubuntu available now on Travis-CI: 18.04 instead of
+# Use the latest Ubuntu available now on Travis-CI: 20.04 instead of
 # default 16.04 https://docs.travis-ci.com/user/reference/linux/
-dist: bionic
+dist: focal
 
 language: cpp
 
@@ -9,6 +9,7 @@ services:
     - docker
 
 env:
+  # Launch tests in parallel https://docs.travis-ci.com/user/build-matrix/
   matrix:
     - CC_BUILD=gcc-8
       CXX_BUILD=g++-8
