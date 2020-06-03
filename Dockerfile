@@ -10,17 +10,19 @@ ARG git_slug=triSYCL/triSYCL
 
 RUN apt-get -y update
 
-# Utilities
-RUN apt-get install -y --allow-downgrades --allow-remove-essential             \
+# Utilities. Use noninteractive frontend to avoid hanging forever on
+# "Setting up tzdata"
+RUN DEBIAN_FRONTEND=noninteractive                                             \
+    apt-get install -y --allow-downgrades --allow-remove-essential             \
     --allow-change-held-packages git wget apt-utils cmake libboost-all-dev
 
 # Clang 10
-RUN if [ "${c_compiler}" = 'clang-10' ]; then apt-get install -y              \
+RUN if [ "${c_compiler}" = 'clang-10' ]; then apt-get install -y               \
     --allow-downgrades --allow-remove-essential --allow-change-held-packages   \
      clang-10; fi
 
 # GCC 10
-RUN if [ "${c_compiler}" = 'gcc-10' ]; then apt-get install -y                  \
+RUN if [ "${c_compiler}" = 'gcc-10' ]; then apt-get install -y                 \
     --allow-downgrades --allow-remove-essential --allow-change-held-packages   \
     g++-10 gcc-10; fi
 
