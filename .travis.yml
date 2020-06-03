@@ -12,25 +12,23 @@ services:
 env:
   # Launch tests in parallel https://docs.travis-ci.com/user/build-matrix/
   matrix:
-    - CC_BUILD=gcc-8
-      CXX_BUILD=g++-8
+    - CC_BUILD=gcc-10
+      CXX_BUILD=g++-10
       OPENMP=ON
       OPENCL=OFF
 
-    - CC_BUILD=clang-6.0
-      CXX_BUILD=clang++-6.0
+    - CC_BUILD=clang-10
+      CXX_BUILD=clang++-10
       OPENMP=ON
       OPENCL=OFF
 
-      # There is a bug with shipped version of Boost.Compute incompatible
-      # with g++-8
-    - CC_BUILD=gcc-7
-      CXX_BUILD=g++-7
+    - CC_BUILD=gcc-10
+      CXX_BUILD=g++-10
       OPENMP=ON
       OPENCL=ON
 
-    - CC_BUILD=clang-6.0
-      CXX_BUILD=clang++-6.0
+    - CC_BUILD=clang-10
+      CXX_BUILD=clang++-10
       OPENMP=ON
       OPENCL=ON
 
