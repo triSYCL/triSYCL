@@ -1,5 +1,10 @@
+# Use the latest Ubuntu available now on Travis-CI: 18.04 instead of
+# default 16.04 https://docs.travis-ci.com/user/reference/linux/
+dist: bionic
+
 language: cpp
 
+# Use docker to run more modern OS in it
 services:
     - docker
 
@@ -29,6 +34,7 @@ env:
 
 before_install:
     - |
+      # https://docs.travis-ci.com/user/environment-variables/
       if [[ ${TRAVIS_PULL_REQUEST} == "false" ]]; then
          export GIT_SLUG=${TRAVIS_REPO_SLUG}
          export GIT_BRANCH=${TRAVIS_BRANCH}
