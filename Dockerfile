@@ -1,4 +1,4 @@
-FROM ubuntu:bionic
+FROM ubuntu:focal
 
 # Default values for the build
 ARG c_compiler=gcc-8

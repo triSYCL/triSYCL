@@ -4,7 +4,8 @@ dist: focal
 
 language: cpp
 
-# Use docker to run more modern OS in it
+# Use docker to allow more modern OS in it, so we depart from basic
+# https://docs.travis-ci.com/user/languages/cpp/ here
 services:
     - docker
 
