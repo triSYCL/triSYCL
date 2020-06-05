@@ -1,36 +1,40 @@
-sudo: required
+# Use the latest Ubuntu available now on Travis-CI: 20.04 instead of
+# default 16.04 https://docs.travis-ci.com/user/reference/linux/
+dist: focal
 
 language: cpp
 
+# Use docker to allow more modern OS in it, so we depart from basic
+# https://docs.travis-ci.com/user/languages/cpp/ here
 services:
     - docker
 
 env:
+  # Launch tests in parallel https://docs.travis-ci.com/user/build-matrix/
   matrix:
-    - CC_BUILD=gcc-8
-      CXX_BUILD=g++-8
+    - CC_BUILD=gcc-10
+      CXX_BUILD=g++-10
       OPENMP=ON
       OPENCL=OFF
 
-    - CC_BUILD=clang-6.0
-      CXX_BUILD=clang++-6.0
+    - CC_BUILD=clang-10
+      CXX_BUILD=clang++-10
       OPENMP=ON
       OPENCL=OFF
 
-      # There is a bug with shipped version of Boost.Compute incompatible
-      # with g++-8
-    - CC_BUILD=gcc-7
-      CXX_BUILD=g++-7
+    - CC_BUILD=gcc-10
+      CXX_BUILD=g++-10
       OPENMP=ON
       OPENCL=ON
 
-    - CC_BUILD=clang-6.0
-      CXX_BUILD=clang++-6.0
+    - CC_BUILD=clang-10
+      CXX_BUILD=clang++-10
       OPENMP=ON
       OPENCL=ON
 
 before_install:
     - |
+      # https://docs.travis-ci.com/user/environment-variables/
       if [[ ${TRAVIS_PULL_REQUEST} == "false" ]]; then
          export GIT_SLUG=${TRAVIS_REPO_SLUG}
          export GIT_BRANCH=${TRAVIS_BRANCH}
