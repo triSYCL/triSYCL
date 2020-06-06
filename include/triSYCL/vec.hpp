@@ -581,8 +581,8 @@ struct tuple_element<I, trisycl::vec<T, Size>> {
 
 /// The std::tuple_size specialization for vec
 template <typename T, int Size>
-class tuple_size<trisycl::vec<T, Size>>
-  : public integral_constant<size_t, Size>
+struct tuple_size<trisycl::vec<T, Size>>
+  : integral_constant<size_t, Size>
 { };
 
 
