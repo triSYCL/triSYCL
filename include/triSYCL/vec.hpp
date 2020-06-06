@@ -3,7 +3,7 @@
 
 /** \file
 
-    Implement the small OpenCL vector class
+    Implement the small vector class
 
     Ronan at Keryell point FR
 
@@ -11,21 +11,19 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <tuple>
+#include <utility>
+
+#include "triSYCL/rounding_mode.hpp"
+#include "triSYCL/detail/alignment_helper.hpp"
+#include "triSYCL/vec/detail/vec.hpp"
+
 namespace trisycl {
 
-/** Rounding mode for vector conversions.
- */
-enum class rounding_mode {
-  automatic, /// Default rounding mode, rtz for integers, rte for floating-point
-  rte,       /// Round to nearest even
-  rtz,       /// Round towards zero
-  rtp,       /// Round towards positive infinity
-  rtn        /// Round towards negative infinity
-};
-
 /** Series of values to specify named swizzle indexes
- *  Used when calling the swizzle member function template.
- */
+
+    Used when calling the swizzle member function template
+*/
 struct elem {
   static constexpr int x = 0;
   static constexpr int y = 1;
@@ -53,32 +51,19 @@ struct elem {
   static constexpr int sF = 15;
 };
 
-/** forward decl to use in the detail class
- */
-template<typename, int>
-class vec;
-
 template <typename DataType, int numElements>
 using __swizzled_vec__ = vec<DataType, numElements>;
 
 }
-
 
 /** \addtogroup vector Vector types in SYCL
 
     @{
 */
 
-
-/** Small OpenCL vector class
-*/
-
-#include "triSYCL/detail/alignment_helper.hpp"
-#include "triSYCL/vec/detail/vec.hpp"
-
+/// Small SYCL vector class
 namespace trisycl {
-  /** Accessors to access hex indexed elements of a vector
-   */
+  /// Accessors to access hex indexed elements of a vector
 #define TRISYCL_DECLARE_S(x)                          \
   const DataType& s##x() const {                      \
     return (*this)[0x##x];                            \
@@ -573,6 +558,45 @@ public:
   TRISYCL_DEFINE_VEC_TYPE(double, double)
 
 /// @} End the vector Doxygen group
+
+}
+
+
+namespace std {
+/* Provide a tuple-like interface to the SYCL vec with some type
+   traits and function template specialization in std::, besides the
+   get<> member function.
+
+   This is useful to have a data type compatible with structure binding
+*/
+
+/// The std::tuple_element specialization for vec
+template<std::size_t I, typename T, int Size>
+struct tuple_element<I, trisycl::vec<T, Size>> {
+  static_assert(I < Size, "The vec<> has not enough elements!");
+  // All the elements have the same type
+  using type = T;
+};
+
+
+/// The std::tuple_size specialization for vec
+template <typename T, int Size>
+struct tuple_size<trisycl::vec<T, Size>>
+  : integral_constant<size_t, Size>
+{ };
+
+
+/** Provide a get<> accessor to have C++17 structured binding working
+
+    Note that it works without this with current std::array based
+    implementation on the host device but we prefer to have a more
+    realistic const binding
+*/
+template <int I, typename T, int Size>
+auto get(const trisycl::vec<T, Size>& v) {
+  static_assert(I < Size, "The vec<> has not enough elements!");
+  return v[I];
+}
 
 }
 

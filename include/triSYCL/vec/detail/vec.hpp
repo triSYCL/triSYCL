@@ -2,11 +2,12 @@
 #define TRISYCL_SYCL_VEC_DETAIL_VEC_HPP
 
 #include <cstring>
+#include <tuple>
 #include <utility>
 
 /** \file
 
-    Implement the detail base OpenCL vector class
+    Implement the detail base SYCL vector class
 
     Ronan at Keryell point FR
     Dave Airlie
@@ -15,18 +16,27 @@
     License. See LICENSE.TXT for details.
 */
 
+#include "triSYCL/rounding_mode.hpp"
 #include "triSYCL/detail/alignment_helper.hpp"
 #include "triSYCL/detail/array_tuple_helpers.hpp"
 
+namespace trisycl {
+
+template <typename DataType, int numElements>
+using __swizzled_vec__ = vec<DataType, numElements>;
+
+}
+
 namespace trisycl::detail {
 
+/// forward declaration to use in the detail class
 template <typename, int>
 class vec;
-template <typename DataType, int numElements>
-using __swizzled_base_vec__ = detail::vec<DataType, numElements>;
 
-/** Small OpenCL vector class
- */
+template <typename DataType, int numElements>
+using __swizzled_base_vec__ = vec<DataType, numElements>;
+
+/// Small SYCL vector class
 template <typename DataType, int NumElements>
 class alignas(alignment_v<::trisycl::vec<DataType, NumElements>>)
   vec : public detail::small_array<DataType,
@@ -48,7 +58,7 @@ public:
     : basic_type { detail::expand<vec>(flatten_to_tuple<vec>(args...)) } { }
 
 
-/// Use classical constructors too
+  /// Use classical constructors too
   vec() = default;
 
 
