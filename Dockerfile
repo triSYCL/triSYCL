@@ -14,12 +14,13 @@ RUN apt-get -y update
 # "Setting up tzdata"
 RUN DEBIAN_FRONTEND=noninteractive                                             \
     apt-get install -y --allow-downgrades --allow-remove-essential             \
-    --allow-change-held-packages git wget apt-utils cmake libboost-all-dev
+    --allow-change-held-packages git wget apt-utils cmake libboost-all-dev     \
+    librange-v3-dev
 
 # Clang 10
 RUN if [ "${c_compiler}" = 'clang-10' ]; then apt-get install -y               \
     --allow-downgrades --allow-remove-essential --allow-change-held-packages   \
-     clang-10; fi
+    clang-10; fi
 
 # GCC 10
 RUN if [ "${c_compiler}" = 'gcc-10' ]; then apt-get install -y                 \
