@@ -1,11 +1,12 @@
 /* RUN: %{execute}%s
 
    2 kernels producing, transforming and consuming data through 1 pipe
-   with write reservation
+   with read reservation
 */
 #include <CL/sycl.hpp>
 #include <iostream>
 #include <iterator>
+#include <numeric>
 
 #include <boost/test/minimal.hpp>
 
@@ -30,7 +31,7 @@ int test_main(int argc, char *argv[]) {
   cl::sycl::buffer<Type> c { N };
 
   // The plumbing
-  cl::sycl::pipe<Type> pa { WI };
+  cl::sycl::sycl_2_2::pipe<Type> pa { WI };
 
   // Create a queue to launch the kernels
   cl::sycl::queue q;
@@ -41,33 +42,10 @@ int test_main(int argc, char *argv[]) {
       auto apa = pa.get_access<cl::sycl::access::mode::write>(cgh);
       // Get read access to the data
       auto aa = a.get_access<cl::sycl::access::mode::read>(cgh);
-      /* Create a kernel with WI work-items executed by work-groups of
-         size WI, that is only 1 work-group of WI work-items */
-      cgh.parallel_for_work_group<class producer>(
-        { WI, WI },
-        [=] (auto group) {
-          // Use a sequential loop in the work-group to stream chunks in order
-          for (int start = 0; start != N; start += WI) {
-            /* To keep the reservation status outside the scope of the
-               reservation itself */
-            bool ok;
-            do {
-              // Try to reserve a chunk of WI elements of the pipe for writing
-              auto r = apa.reserve(WI);
-              // Evaluating the reservation as a bool returns the status
-              ok = r;
-              if (ok) {
-                /* There was enough room for the reservation, then
-                   launch the work-items in this work-group to do the
-                   writing in parallel */
-                group.parallel_for_work_item([=] (cl::sycl::h_item<> i) {
-                    r[i.get_global_id(0)] = aa[start + i.get_global_id(0)];
-                  });
-              }
-              // Here the reservation object goes out of scope: commit
-            }
-            while (!ok);
-          }
+      cgh.single_task<class producer>([=] {
+          for (int i = 0; i != N; i++)
+            // Try to write 1 element from the pipe up to success
+            while (!(apa << aa[i])) ;
         });
     });
 
@@ -78,10 +56,33 @@ int test_main(int argc, char *argv[]) {
       // Get write access to the data
       auto ac = c.get_access<cl::sycl::access::mode::write>(cgh);
 
-      cgh.single_task<class consumer>([=] {
-          for (int i = 0; i != N; i++)
-            // Try to read 1 element from the pipe up to success
-            while (!(apa >> ac[i])) ;
+      /* Create a kernel with WI work-items executed by work-groups of
+         size WI, that is only 1 work-group of WI work-items */
+      cgh.parallel_for_work_group<class consumer>(
+        { WI, WI },
+        [=] (auto group) {
+          // Use a sequential loop in the work-group to stream chunks in order
+          for (int start = 0; start != N; start += WI) {
+            /* To keep the reservation status outside the scope of the
+               reservation itself */
+            bool ok;
+            do {
+              // Try to reserve a chunk of WI elements of the pipe for reading
+              auto r = apa.reserve(WI);
+              // Evaluating the reservation as a bool returns the status
+              ok = r;
+              if (ok) {
+                /* There was enough room for the reservation, then
+                   launch the work-items in this work-group to do the
+                   reading in parallel */
+                group.parallel_for_work_item([=] (cl::sycl::h_item<> i) {
+                    ac[start + i.get_global_id(0)] = r[i.get_global_id(0)];
+                  });
+              }
+              // Here the reservation object goes out of scope: commit
+            }
+            while (!ok);
+          }
         });
     });
 

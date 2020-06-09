@@ -26,7 +26,7 @@ int main() {
     cl::sycl::buffer<float> bc { vc, N };
 
     // A pipe of 2 float elements
-    cl::sycl::pipe<float> p { 2 };
+    cl::sycl::sycl_2_2::pipe<float> p { 2 };
 
     // Create a queue to launch the kernels
     cl::sycl::queue q;
@@ -41,7 +41,7 @@ int main() {
 
       cgh.single_task<class producer>([=] {
           for (int i = 0; i != N; i++)
-            kp.write(ka[i]);
+            kp << ka[i];
         });
       });
 
@@ -56,12 +56,12 @@ int main() {
       auto kc = bc.get_access<cl::sycl::access::mode::write>(cgh);
 
       cgh.single_task<class consumer>([=] {
-          for (int i = 0; i != N; i++) {
+          for (int i = 0; i != N; i++)
             kc[i] = kp.read() + kb[i];
-          }
         });
       });
-  } //< End scope for the queue and the buffers, so wait for completion
+  } /*< End scope for the queue and the buffers:
+        wait for completion q completion & bc copied back to v */
 
   std::cout << std::endl << "Result:" << std::endl;
   for (auto e : vc)
