@@ -18,12 +18,18 @@ protected:
 template <class c_or0_s2D, class c_or1_s2D, typename T>
 class stencil_fxd2D : private auth_in_st_fxd, private auth_in_op_fxd {
 public:
-  static_assert(std::is_base_of<auth_in_st_fxd, c_or0_s2D>::value,"A stencil must be built from a coef or a stencil.");
-  static_assert(std::is_base_of<auth_in_st_fxd, c_or1_s2D>::value,"A stencil must be built from a coef or a stencil.");
-  static const int min_ind0 = MIN((c_or0_s2D::min_ind0), (c_or1_s2D::min_ind0));
-  static const int max_ind0 = MAX((c_or0_s2D::max_ind0), (c_or1_s2D::max_ind0));
-  static const int min_ind1 = MIN((c_or0_s2D::min_ind1), (c_or1_s2D::min_ind1));
-  static const int max_ind1 = MAX((c_or0_s2D::max_ind1), (c_or1_s2D::max_ind1));
+  static_assert(std::is_base_of<auth_in_st_fxd, c_or0_s2D>::value,
+                "A stencil must be built from a coef or a stencil.");
+  static_assert(std::is_base_of<auth_in_st_fxd, c_or1_s2D>::value,
+                "A stencil must be built from a coef or a stencil.");
+  static const int min_ind0 = std::min(c_or0_s2D::min_ind0,
+                                       c_or1_s2D::min_ind0);
+  static const int max_ind0 = std::max(c_or0_s2D::max_ind0,
+                                       c_or1_s2D::max_ind0);
+  static const int min_ind1 = std::min(c_or0_s2D::min_ind1,
+                                       c_or1_s2D::min_ind1);
+  static const int max_ind1 = std::max(c_or0_s2D::max_ind1,
+                                       c_or1_s2D::max_ind1);
 
   stencil_fxd2D(c_or0_s2D st0, c_or1_s2D st1) : st_left(st0), st_right(st1) {}
 
@@ -132,10 +138,10 @@ public:
   static const int d1 = st::max_ind1-st::min_ind1;
 
   // offsets ands paddings for global memory
-  static const int of0 = MAX(-st::min_ind0, 0); //offset left
-  static const int of1 = MAX(-st::min_ind1, 0); //offset top
-  static const int pad0 = MAX(0, st::max_ind0); //padding right
-  static const int pad1 = MAX(0, st::max_ind1); //padding bottom
+  static const int of0 = std::max(-st::min_ind0, 0); //offset left
+  static const int of1 = std::max(-st::min_ind1, 0); //offset top
+  static const int pad0 = std::max(0, st::max_ind0); //padding right
+  static const int pad1 = std::max(0, st::max_ind1); //padding bottom
 
   // offset for local tile
   // ajusted in 0
@@ -192,7 +198,7 @@ public:
     f(i, j, out) = stencil.template eval_local<local_dim1>(local_tab, i_local, j_local);
   }
 
-  inline void store_local(T * local_tab, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> in, cl::sycl::h_item<2> it, cl::sycl::group<2> gr, int glob_max0, int glob_max1) {
+  inline void store_local(T * local_tab, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> in, cl::sycl::h_item<2> it, cl::sycl::group<2> gr, int glob_max0, int glob_max1) const {
     cl::sycl::range<2> l_range = it.get_local_range();
     cl::sycl::id<2> g_ind = gr.get_id(); //it.get_group_id(); error because ambiguous / operator redefinition 
     cl::sycl::id<2> l_ind = it.get_local_id();
@@ -238,7 +244,8 @@ public:
     queue.submit([&](cl::sycl::handler &cgh) {
         cl::sycl::accessor<T, 2, cl::sycl::access::mode::write> _B {*B, cgh};
         cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> _aB {*aB, cgh};
-        cgh.parallel_for<class KernelCompute>(range, [=](cl::sycl::id<2> id){
+        cgh.parallel_for<class KernelCompute>(range,
+          [=, this] (cl::sycl::id<2> id) {
             eval(id, _B, _aB);
           });
       });
@@ -248,9 +255,11 @@ public:
     queue.submit([&](cl::sycl::handler &cgh) {
         cl::sycl::accessor<T, 2, cl::sycl::access::mode::write> _B {*B, cgh};
         cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> _aB {*aB, cgh};
-        cgh.parallel_for_work_group<class KernelCompute>(nd_range, [=](cl::sycl::group<2> group){
+        cgh.parallel_for_work_group<class KernelCompute>(nd_range,
+          [=, this] (cl::sycl::group<2> group) {
+            // \todo make this real non-CPU SYCL
             T * local = new T[local_dim0 * local_dim1];
-            group.parallel_for_work_item([=](cl::sycl::h_item<2> it){
+            group.parallel_for_work_item([&](cl::sycl::h_item<2> it){
                 //local copy
                 /* group shoudn't be needed, neither global max*/
                 /* static function needed for st use a priori, but static not compatible
@@ -258,7 +267,7 @@ public:
                 store_local(local, _aB, it, group, global_max0+d0, global_max1+d1); 
               });
             //synchro
-            group.parallel_for_work_item([=](cl::sycl::h_item<2> it){
+            group.parallel_for_work_item([&] (cl::sycl::h_item<2> it) {
                 //computing
                 /*operation_fxd2D<T, B, f, st, aB, bB, a_f, b_f>::*/
                 eval_local(it, _B, local, global_max0, global_max1);

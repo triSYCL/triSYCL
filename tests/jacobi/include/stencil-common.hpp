@@ -5,10 +5,6 @@
 
 #include "helpers-jacobi.hpp"
 
-// not for templates ...
-#define MIN(a,b) ((a > b) ? b : a)
-#define MAX(a,b) ((a > b) ? a : b)
-
 // operator redef
 
 template <typename T>
