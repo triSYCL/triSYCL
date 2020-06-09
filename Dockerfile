@@ -17,15 +17,18 @@ RUN DEBIAN_FRONTEND=noninteractive                                             \
     --allow-change-held-packages git wget apt-utils cmake libboost-all-dev     \
     librange-v3-dev
 
-# Clang 10
-RUN if [ "${c_compiler}" = 'clang-10' ]; then apt-get install -y               \
-    --allow-downgrades --allow-remove-essential --allow-change-held-packages   \
-    clang-10; fi
+# If Clang is requested, just install it
+RUN if echo "${c_compiler}" | egrep -q -- '^clang' ; then                      \
+      apt-get install -y --allow-downgrades --allow-remove-essential           \
+        --allow-change-held-packages "${c_compiler}" ;                         \
+    fi
 
-# GCC 10
-RUN if [ "${c_compiler}" = 'gcc-10' ]; then apt-get install -y                 \
-    --allow-downgrades --allow-remove-essential --allow-change-held-packages   \
-    g++-10 gcc-10; fi
+# If GCC is requested, install gcc and g++
+RUN if echo "${c_compiler}" | egrep -q -- '^gcc' ; then                        \
+      cxx_compiler=`echo "${c_compiler}" | sed -e 's/gcc/g++/'`                \
+      apt-get install -y --allow-downgrades --allow-remove-essential           \
+      --allow-change-held-packages "${c_compiler}" "${cxx_compiler}" ;         \
+    fi
 
 # OpenMP
 RUN if [ "${openmp}" = 'ON' ]; then apt-get install -y --allow-downgrades      \
