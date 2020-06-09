@@ -12,7 +12,9 @@ CXXFLAGS += -I/home/rkeryell/Xilinx/Projects/C++/magic_enum/include
 #CXXFLAGS += -I/home/rkeryell/Xilinx/Projects/C++/Boost/fiber/include
 
 # Work around Clang++-11 dev that breaks concepts for range-v3
-CXXFLAGS += -U__cpp_concepts
+# CXXFLAGS += -U__cpp_concepts
+# Even better: use the latest version because it solves other things too
+CXXFLAGS += -I/home/rkeryell/Xilinx/Projects/C++/range-v3/include
 
 # But everything works fine with GCC 9 at least
 #CXX = g++
