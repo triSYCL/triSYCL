@@ -47,7 +47,7 @@ struct cascade_stream {
 
       \todo Use a data type with 384 bits
   */
-  ::trisycl::static_pipe<int, 4>
+  ::trisycl::sycl_2_2::static_pipe<int, 4>
   cascade_stream_pipes[geo::x_size*geo::y_size + 1];
 
   /* Cascade stream layout

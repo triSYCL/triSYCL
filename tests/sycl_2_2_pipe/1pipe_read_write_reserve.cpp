@@ -34,7 +34,7 @@ int test_main(int argc, char *argv[]) {
   cl::sycl::buffer<Type> c { N };
 
   // The plumbing with some weird size prime to WI to exercise the system
-  cl::sycl::pipe<Type> pa { 2*WI + 7 };
+  cl::sycl::sycl_2_2::pipe<Type> pa { 2*WI + 7 };
 
   // Create a queue to launch the kernels
   cl::sycl::queue q;
@@ -91,9 +91,9 @@ int test_main(int argc, char *argv[]) {
              demonstrate the way to use an explicit commit as proposed
              by Alex Bourd */
 #ifdef _MSC_VER
-          cl::sycl::pipe_reservation<cl::sycl::accessor<int, 1, cl::sycl::access::mode::read, cl::sycl::access::target::pipe>> r;
+          cl::sycl::sycl_2_2::pipe_reservation<cl::sycl::accessor<int, 1, cl::sycl::access::mode::read, cl::sycl::access::target::pipe>> r;
 #else
-          cl::sycl::pipe_reservation<decltype(apa)> r;
+          cl::sycl::sycl_2_2::pipe_reservation<decltype(apa)> r;
 #endif
           // Use a sequential loop in the work-group to stream chunks in order
           for (int start = 0; start != N; start += WI) {

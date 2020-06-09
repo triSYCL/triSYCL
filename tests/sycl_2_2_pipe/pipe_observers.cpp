@@ -9,7 +9,9 @@ constexpr size_t N = 3;
 
 
 /** A kernel to send a value into a pipe */
-auto send_element = [] (auto a_queue, cl::sycl::pipe<char> &a_pipe, char a_value) {
+auto send_element = [] (auto a_queue,
+                        cl::sycl::sycl_2_2::pipe<char> &a_pipe,
+                        char a_value) {
    a_queue.submit([&] (cl::sycl::handler &cgh) {
       // Get write access to the pipe
       auto p = a_pipe.get_access<cl::sycl::access::mode::write>(cgh);
@@ -36,7 +38,8 @@ auto send_element = [] (auto a_queue, cl::sycl::pipe<char> &a_pipe, char a_value
     So use a static dispatch by instantiating 1 kernel per method.
 */
 #define MAKE_GET_OBSERVER(METHOD, VALUE_TYPE)                           \
-auto get_##METHOD = [] (auto &a_queue, cl::sycl::pipe<char> &a_pipe) {  \
+auto get_##METHOD = [] (auto &a_queue,                                  \
+                        cl::sycl::sycl_2_2::pipe<char> &a_pipe) {       \
   cl::sycl::buffer<VALUE_TYPE> value { 1 };                             \
   a_queue.submit([&] (cl::sycl::handler &cgh) {                         \
       /* Get write access to the pipe */                                \
@@ -61,7 +64,7 @@ MAKE_GET_OBSERVER(capacity, std::size_t);
 
 int test_main(int argc, char *argv[]) {
   // A pipe of N char elements
-  cl::sycl::pipe<char> p { N };
+  cl::sycl::sycl_2_2::pipe<char> p { N };
 
   // Create a queue to launch the kernels
   cl::sycl::queue q;

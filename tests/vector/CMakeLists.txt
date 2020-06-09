@@ -3,6 +3,7 @@ project (vector) # The name of our project
 
 declare_trisycl_test(TARGET operators)
 declare_trisycl_test(TARGET vec)
+declare_trisycl_test(TARGET vec_structured_binding)
 declare_trisycl_test(TARGET vecalign)
 declare_trisycl_test(TARGET vecas)
 declare_trisycl_test(TARGET vecconvert)

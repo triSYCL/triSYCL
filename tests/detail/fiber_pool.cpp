@@ -48,7 +48,7 @@ void benchmark(int thread_number,
 
   // Keep track of each fiber
   std::vector<trisycl::detail::fiber_pool::future<void>> futures;
-  
+
   auto starting_point = clk::now();
 
   // The first thread start fiber_number fibers running bench

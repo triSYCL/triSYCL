@@ -401,12 +401,12 @@ public:
   static constexpr auto stream_latency = 4;
 
   struct input_port {
-    ::trisycl::static_pipe<data_type, stream_latency> stream;
+    ::trisycl::sycl_2_2::static_pipe<data_type, stream_latency> stream;
     bool enabled;
   };
 
   struct output_port {
-    ::trisycl::static_pipe<data_type, stream_latency> stream;
+    ::trisycl::sycl_2_2::static_pipe<data_type, stream_latency> stream;
   };
 
   /** The input ports used to send information to the switch

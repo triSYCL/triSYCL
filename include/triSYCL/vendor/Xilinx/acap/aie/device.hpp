@@ -193,7 +193,7 @@ struct device {
   template <typename T, typename SrcPort, typename DstPort>
   void connect(SrcPort src, DstPort dst) {
     /// \todo move this into a factory
-    connection c { ::trisycl::static_pipe<T, 4> {} };
+    connection c { ::trisycl::sycl_2_2::static_pipe<T, 4> {} };
     constexpr bool valid_src = std::is_same_v<SrcPort, port::tile>
       || std::is_same_v<SrcPort, port::shim>;
     static_assert(valid_src,

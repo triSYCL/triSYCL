@@ -83,7 +83,7 @@ struct connection {
   template <typename T>
     auto pipe_of() {
       try {
-        return std::any_cast<::trisycl::static_pipe<T, 4>>(*p);
+        return std::any_cast<::trisycl::sycl_2_2::static_pipe<T, 4>>(*p);
       } catch (std::bad_any_cast &) {
         throw ::trisycl::runtime_error {
           "The current connection is not of type "s

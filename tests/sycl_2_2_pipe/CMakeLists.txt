@@ -1,5 +1,8 @@
+# This is a proposal for the now abandoned SYCL 2.2 provisional specification.
+# This is still here for historical reasons.
+
 cmake_minimum_required (VERSION 3.0) # The minimum version of CMake necessary to build this project
-project (pipe) # The name of our project
+project (sycl_2_2_pipe) # The name of our project
 
 declare_trisycl_test(TARGET 1pipe_read_reserve)
 declare_trisycl_test(TARGET 1pipe_read_write_reserve)
