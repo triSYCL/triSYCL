@@ -34,8 +34,8 @@ namespace trisycl::vendor::xilinx::latex {
 
     \input[in] prefix is an optional string-like prefix
 */
-std::string clean_node(const std::string_view& node_name,
-                       const std::string_view& prefix = "") {
+std::string inline clean_node(const std::string_view& node_name,
+                              const std::string_view& prefix = "") {
   // All the characters but the '_'
   auto without_ = ranges::views::remove(node_name, '_');
   return ranges::views::concat
