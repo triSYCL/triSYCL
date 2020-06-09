@@ -10,6 +10,7 @@ CXX = clang++-11
 
 CXXFLAGS += -I/home/rkeryell/Xilinx/Projects/C++/magic_enum/include
 #CXXFLAGS += -I/home/rkeryell/Xilinx/Projects/C++/Boost/fiber/include
+CXXFLAGS += -I/home/rkeryell/Xilinx/Projects/C++/range-v3/include
 
 # Work around Clang++-11 dev that breaks concepts for range-v3
 # CXXFLAGS += -U__cpp_concepts

@@ -279,15 +279,32 @@ public:
   }
 
 
+  /// Compute the size of the graphics representation of the processor
+  static vec<int, 2> display_core_size() {
+    // This is the minimum rectangle fitting all the processor outputs & inputs
+    return { 1 + ranges::distance(axi_ss_geo::m_me_range),
+             1 + ranges::distance(axi_ss_geo::s_me_range) };
+  }
+
+
+  /// Compute the size of the graphics representation of the tile
+  static vec<int, 2> display_size() {
+    // Just the sum of the size of its content
+    return display_core_size() + axi_ss_t::display_size();
+  }
+
+
+  /// Display the tile
   auto display() {
     auto get_tikz_coordinate = [&] (auto x, auto y) {
+      auto const [x_size, y_size] = display_size();
       return (boost::format { "(%1%,%2%)" }
-              % (x_coordinate*14 + x) % (y_coordinate*15 + y)).str();
+              % (x_coordinate*x_size + x) % (y_coordinate*y_size + y)).str();
     };
     auto out = (boost::format {
         "  \\begin{scope}[name prefix = TileX%1%Y%2%]\n" }
       % x_coordinate % y_coordinate).str()
-    + axi_ss.display();
+      + axi_ss.display(display_core_size(), get_tikz_coordinate);
 
     // Connect the core receivers to its AXI stream switch
     for (auto [i, p] : axi_ss_geo::m_me_range | ranges::views::enumerate) {

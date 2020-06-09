@@ -486,10 +486,6 @@ public:
                       FG&& global_coordinate_function,
                       FL&& local_coordinate_function,
                       EnumRanges&&... enum_ranges) {
-    auto get_tikz_coordinate = [&] (auto x, auto y) {
-      return (boost::format { "(%1%,%2%)" }
-              % (x_coordinate*14 + x) % (y_coordinate*15 + y)).str();
-    };
     std::string out;
     // Index each connection displayed in order
     auto i = 0;
@@ -511,47 +507,58 @@ public:
   }
 
 
-  auto display() {
+  /// Compute the size of the graphics representation of the switch
+  static vec<int, 2> display_size() {
+    // Combine the lengths of the most packed sides,
+    // + 2 to keep room for labels on each side
+    return { 2 + ranges::distance(axi_ss_geo::s_me_range)
+             + ranges::distance(axi_ss_geo::m_south_range)
+             + ranges::distance(axi_ss_geo::s_south_range),
+             2 + ranges::distance(axi_ss_geo::m_me_range)
+             + ranges::distance(axi_ss_geo::m_west_range)
+             + ranges::distance(axi_ss_geo::s_west_range) };
+  }
+
+
+  /// Display the AXI stream switch
+  template <typename GTC>
+  auto display(const vec<int, 2>& core_size, const GTC& get_tikz_coordinate) {
     std::string out;
-    auto constexpr x_me = 2;
-    auto constexpr y_me = 3;
-    auto height = ranges::distance(axi_ss_geo::m_me_range)
-      + ranges::distance(axi_ss_geo::m_west_range)
-      + ranges::distance(axi_ss_geo::s_east_range);
-    auto width = ranges::distance(axi_ss_geo::s_me_range)
-      + ranges::distance(axi_ss_geo::m_south_range)
-      + ranges::distance(axi_ss_geo::s_north_range);
-
-    auto get_tikz_coordinate = [&] (auto x, auto y) {
-      return (boost::format { "(%1%,%2%)" }
-              % (x_coordinate*14 + x) % (y_coordinate*15 + y)).str();
-    };
-
+    const auto [ width, height ] = display_size();
+    // Display the network interfaces on the top of the switch
     out += display_border("rotate=90,anchor=north west", "Top",
                           get_tikz_coordinate,
-                          [&] (auto i) { return std::tuple { x_me*2 + i, y_me + height }; },
-                          axi_ss_geo::m_north_range, axi_ss_geo::s_south_range);
+                          [&, height = height] (auto i) { return std::tuple
+                              { core_size.x()
+                                 + ranges::distance(axi_ss_geo::s_me_range) + i,
+                                core_size.y() + height - 1 }; },
+                          axi_ss_geo::m_north_range, axi_ss_geo::s_north_range);
+    // Display the network interfaces on the bottom of the switch
     out += display_border("rotate=90,anchor=north east", "Bottom",
                           get_tikz_coordinate,
-                          [&] (auto i) { return std::tuple { x_me + i, y_me }; },
+                          [&] (auto i) { return std::tuple { core_size.x() + i,
+                                                             core_size.y() }; },
                           ranges::views::reverse(axi_ss_geo::s_me_range),
-                          axi_ss_geo::m_south_range,
-                          axi_ss_geo::s_north_range);
+                          axi_ss_geo::s_south_range,
+                          axi_ss_geo::m_south_range);
+    // Display the network interfaces on the left of the switch
     out += display_border("anchor=south east", "Left",
                           get_tikz_coordinate,
-                          [&] (auto i) { return std::tuple { x_me, y_me + i}; },
+                          [&] (auto i) { return std::tuple
+                              { core_size.x() - 1, core_size.y() + i + 1 }; },
                           ranges::views::reverse(axi_ss_geo::m_me_range),
                           axi_ss_geo::m_west_range,
-                          axi_ss_geo::s_east_range);
+                          axi_ss_geo::s_west_range);
+    // Display the network interfaces on the right of the switch
     out += display_border("anchor=south east", "Right",
                           get_tikz_coordinate,
-                          [&] (auto i) { return std::tuple
-                            { x_me,
-                              y_me + ranges::distance(axi_ss_geo::m_me_range) + i };
-                          },
-                          axi_ss_geo::m_east_range,
-                          axi_ss_geo::s_west_range);
-
+                          [&, width = width] (auto i) { return std::tuple
+                              { core_size.x() + width - 1,
+                                core_size.y() + i + 1
+                                 + ranges::distance(axi_ss_geo::m_me_range)
+                              }; },
+                          axi_ss_geo::s_east_range,
+                          axi_ss_geo::m_east_range);
     return out;
   }
 

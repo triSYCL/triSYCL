@@ -77,9 +77,9 @@ auto measure_bandwidth = [] (auto transfered_bytes, auto some_work) {
 int test_main(int argc, char *argv[]) {
   try {
     // Run on various sizes
-    auto sizes = boost::hana::make_tuple(layout::size<2,1> {},
-                                         layout::size<2,2> {}/*,
-                                         layout::size<4,4> {},
+    auto sizes = boost::hana::make_tuple(/*layout::size<2,1> {},
+                                         layout::size<2,2> {},*/
+                                         layout::size<4,4> {}/*,
                                          layout::vc1902 {}*/);
     boost::hana::for_each(sizes, [&] (auto s) {
       using d_t = acap::aie::device<decltype(s)>;
