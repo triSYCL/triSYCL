@@ -1,7 +1,7 @@
 #ifndef TRISYCL_SYCL_ACCESSOR_HPP
 #define TRISYCL_SYCL_ACCESSOR_HPP
 
-/** \file The OpenCL SYCL accessor<>
+/** \file The SYCL accessor<>
 
     Ronan at Keryell point FR
 
@@ -19,15 +19,21 @@
 #include "triSYCL/id.hpp"
 #include "triSYCL/item.hpp"
 #include "triSYCL/nd_item.hpp"
-#include "triSYCL/pipe_reservation.hpp"
-#include "triSYCL/pipe/detail/pipe_accessor.hpp"
+#include "triSYCL/sycl_2_2/pipe_reservation.hpp"
+#include "triSYCL/sycl_2_2/pipe/detail/pipe_accessor.hpp"
 
 namespace trisycl {
 
 template <typename T, int Dimensions, typename Allocator>
 class buffer;
+
+namespace sycl_2_2 {
+
 template <typename T>
 class pipe;
+
+}
+
 class handler;
 
 /** \addtogroup data Data access and storage in SYCL
@@ -396,20 +402,31 @@ class accessor :
 
 };
 
+/// @} End the execution Doxygen group
+
+
+/** \addtogroup old_data Data access and storage in old version of SYCL
+    @{
+*/
 
 /** The pipe accessor abstracts the way pipe data are accessed inside
     a kernel
+
+    This is a proposal for the now abandoned SYCL 2.2 provisional specification.
+    This is still here for historical reasons.
 
     A specialization for an non-blocking pipe
 */
 template <typename DataType,
           access::mode AccessMode>
 class accessor<DataType, 1, AccessMode, access::target::pipe> :
-    public detail::pipe_accessor<DataType, AccessMode, access::target::pipe> {
+    public detail::sycl_2_2::pipe_accessor<DataType,
+                                           AccessMode,
+                                           access::target::pipe> {
 public:
 
   using accessor_detail =
-    detail::pipe_accessor<DataType, AccessMode, access::target::pipe>;
+    detail::sycl_2_2::pipe_accessor<DataType, AccessMode, access::target::pipe>;
   // Inherit of the constructors to have accessor constructor from detail
   using accessor_detail::accessor_detail;
 
@@ -418,11 +435,11 @@ public:
 
       access_target defines the form of access being obtained.
   */
-  accessor(pipe<DataType> &p, handler &command_group_handler)
+  accessor(sycl_2_2::pipe<DataType> &p, handler &command_group_handler)
     : accessor_detail { p.implementation, command_group_handler } { }
 
   /// Make a reservation inside the pipe
-  pipe_reservation<accessor> reserve(std::size_t size) const {
+  sycl_2_2::pipe_reservation<accessor> reserve(std::size_t size) const {
     return accessor_detail::reserve(size);
   }
 
@@ -438,16 +455,23 @@ public:
 /** The pipe accessor abstracts the way pipe data are accessed inside
     a kernel
 
+    This is a proposal for the now abandoned SYCL 2.2 provisional specification.
+    This is still here for historical reasons.
+
     A specialization for a blocking pipe
 */
 template <typename DataType,
           access::mode AccessMode>
 class accessor<DataType, 1, AccessMode, access::target::blocking_pipe> :
-    public detail::pipe_accessor<DataType, AccessMode, access::target::blocking_pipe> {
+    public detail::sycl_2_2::pipe_accessor<DataType,
+                                           AccessMode,
+                                           access::target::blocking_pipe> {
 public:
 
   using accessor_detail =
-    detail::pipe_accessor<DataType, AccessMode, access::target::blocking_pipe>;
+    detail::sycl_2_2::pipe_accessor<DataType,
+                                    AccessMode,
+                                    access::target::blocking_pipe>;
   // Inherit of the constructors to have accessor constructor from detail
   using accessor_detail::accessor_detail;
 
@@ -456,19 +480,19 @@ public:
 
       access_target defines the form of access being obtained.
   */
-  accessor(pipe<DataType> &p, handler &command_group_handler)
+  accessor(sycl_2_2::pipe<DataType> &p, handler &command_group_handler)
     : accessor_detail { p.implementation, command_group_handler } { }
 
 
   /** Construct a pipe accessor from a pipe outside of a normal
       kernel, for example in host code
   */
-  accessor(pipe<DataType> &p)
+  accessor(sycl_2_2::pipe<DataType> &p)
     : accessor_detail { p.implementation } { }
 
 
   /// Make a reservation inside the pipe
-  pipe_reservation<accessor> reserve(std::size_t size) const {
+  sycl_2_2::pipe_reservation<accessor> reserve(std::size_t size) const {
     return accessor_detail::reserve(size);
   }
 

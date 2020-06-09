@@ -1,8 +1,8 @@
-FROM ubuntu:bionic
+FROM ubuntu:focal
 
 # Default values for the build
-ARG c_compiler=gcc-8
-ARG cxx_compiler=g++-8
+ARG c_compiler=gcc-9
+ARG cxx_compiler=g++-9
 ARG opencl=ON
 ARG openmp=ON
 ARG git_branch=master
@@ -10,19 +10,25 @@ ARG git_slug=triSYCL/triSYCL
 
 RUN apt-get -y update
 
-# Utilities
-RUN apt-get install -y --allow-downgrades --allow-remove-essential             \
-    --allow-change-held-packages git wget apt-utils cmake libboost-all-dev
+# Utilities. Use noninteractive frontend to avoid hanging forever on
+# "Setting up tzdata"
+RUN DEBIAN_FRONTEND=noninteractive                                             \
+    apt-get install -y --allow-downgrades --allow-remove-essential             \
+    --allow-change-held-packages git wget apt-utils cmake libboost-all-dev     \
+    librange-v3-dev
 
-# Clang 6.0
-RUN if [ "${c_compiler}" = 'clang-6.0' ]; then apt-get install -y              \
-    --allow-downgrades --allow-remove-essential --allow-change-held-packages   \
-     clang-6.0; fi
+# If Clang is requested, just install it
+RUN if echo "${c_compiler}" | egrep -q -- '^clang' ; then                      \
+      apt-get install -y --allow-downgrades --allow-remove-essential           \
+        --allow-change-held-packages "${c_compiler}" ;                         \
+    fi
 
-# GCC 8
-RUN if [ "${c_compiler}" = 'gcc-8' ]; then apt-get install -y                  \
-    --allow-downgrades --allow-remove-essential --allow-change-held-packages   \
-    g++-8 gcc-8; fi
+# If GCC is requested, install gcc and g++
+RUN if echo "${c_compiler}" | egrep -q -- '^gcc' ; then                        \
+      cxx_compiler=`echo "${c_compiler}" | sed -e 's/gcc/g++/'`                \
+      apt-get install -y --allow-downgrades --allow-remove-essential           \
+      --allow-change-held-packages "${c_compiler}" "${cxx_compiler}" ;         \
+    fi
 
 # OpenMP
 RUN if [ "${openmp}" = 'ON' ]; then apt-get install -y --allow-downgrades      \

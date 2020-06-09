@@ -1,7 +1,10 @@
-#ifndef TRISYCL_SYCL_PIPE_DETAIL_PIPE_ACCESSOR_HPP
-#define TRISYCL_SYCL_PIPE_DETAIL_PIPE_ACCESSOR_HPP
+#ifndef TRISYCL_SYCL_SYCL_2_2_PIPE_DETAIL_PIPE_ACCESSOR_HPP
+#define TRISYCL_SYCL_SYCL_2_2_PIPE_DETAIL_PIPE_ACCESSOR_HPP
 
-/** \file The OpenCL SYCL pipe accessor<> detail behind the scene
+/** \file The SYCL pipe accessor<> detail behind the scene
+
+    This is a proposal for the now abandoned SYCL 2.2 provisional specification.
+    This is still here for historical reasons.
 
     Ronan at Keryell point FR
 
@@ -15,8 +18,8 @@
 
 #include "triSYCL/access.hpp"
 #include "triSYCL/detail/debug.hpp"
-#include "triSYCL/pipe/detail/pipe.hpp"
-#include "triSYCL/pipe_reservation/detail/pipe_reservation.hpp"
+#include "triSYCL/sycl_2_2/pipe/detail/pipe.hpp"
+#include "triSYCL/sycl_2_2/pipe_reservation/detail/pipe_reservation.hpp"
 
 namespace trisycl {
 
@@ -30,7 +33,10 @@ template <typename T,
           access::mode Mode,
           access::target Target>
 class accessor;
-/** \addtogroup data Data access and storage in SYCL
+
+namespace sycl_2_2 {
+
+/** \addtogroup old_data Data access and storage in old version of SYCL
     @{
 */
 
@@ -41,8 +47,8 @@ template <typename T,
           access::mode AccessMode,
           access::target Target>
 class pipe_accessor :
-    public detail::debug<detail::pipe_accessor<T, AccessMode, Target>> {
-
+    public detail::debug<detail::sycl_2_2::pipe_accessor<T, AccessMode, Target>>
+{
 public:
 
   static constexpr auto rank = 1;
@@ -60,7 +66,7 @@ public:
 private:
 
   /// The real pipe implementation behind the hood
-  std::shared_ptr<detail::pipe<T>> implementation;
+  std::shared_ptr<detail::sycl_2_2::pipe<T>> implementation;
 
   /** Store the success status of last pipe operation
 
@@ -79,7 +85,7 @@ public:
 
   /** Construct a pipe accessor from an existing pipe
    */
-  pipe_accessor(const std::shared_ptr<detail::pipe<T>> &p)
+  pipe_accessor(const std::shared_ptr<detail::sycl_2_2::pipe<T>> &p)
     : implementation { p } {
     //    TRISYCL_DUMP_T("Create a kernel pipe accessor write = "
     //                 << is_write_access());
@@ -102,7 +108,7 @@ public:
 
       For now the handler is not used.
   */
-  pipe_accessor(const std::shared_ptr<detail::pipe<T>> &p,
+  pipe_accessor(const std::shared_ptr<detail::sycl_2_2::pipe<T>> &p,
                 handler &command_group_handler)
     : pipe_accessor(p) {}
 
@@ -260,7 +266,8 @@ public:
   }
 
 
-  detail::pipe_reservation<pipe_accessor> reserve(std::size_t size) const {
+  detail::sycl_2_2::pipe_reservation<pipe_accessor>
+  reserve(std::size_t size) const {
     return { *implementation, size };
   }
 
@@ -290,6 +297,7 @@ public:
 
 }
 }
+}
 
 /*
     # Some Emacs stuff:
@@ -299,4 +307,4 @@ public:
     ### End:
 */
 
-#endif // TRISYCL_SYCL_PIPE_DETAIL_PIPE_ACCESSOR_HPP
+#endif // TRISYCL_SYCL_SYCL_2_2_PIPE_DETAIL_PIPE_ACCESSOR_HPP

@@ -33,7 +33,7 @@ int main() {
     cl::sycl::buffer<float> C { c, N };
 
     //  A pipe of float with at least N elements to avoid the dead-lock
-    cl::sycl::pipe<float> P { N };
+    cl::sycl::sycl_2_2::pipe<float> P { N };
 
     // Launch the producer to stream A to the pipe on its own queue
     cl::sycl::queue {}.submit([&](cl::sycl::handler &cgh) {

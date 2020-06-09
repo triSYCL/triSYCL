@@ -26,7 +26,7 @@ int main() {
     cl::sycl::buffer<float> bc { vc, N };
 
     // A pipe of 2 float elements
-    cl::sycl::pipe<float> p { 2 };
+    cl::sycl::sycl_2_2::pipe<float> p { 2 };
 
     // Create a queue to launch the kernels
     cl::sycl::queue q;
@@ -34,34 +34,41 @@ int main() {
     // Launch the producer to stream A to the pipe
     q.submit([&](cl::sycl::handler &cgh) {
       // Get write access to the pipe
-      auto kp = p.get_access<cl::sycl::access::mode::write,
-                             cl::sycl::access::target::blocking_pipe>(cgh);
+      auto kp = p.get_access<cl::sycl::access::mode::write>(cgh);
       // Get read access to the data
       auto ka = ba.get_access<cl::sycl::access::mode::read>(cgh);
 
       cgh.single_task<class producer>([=] {
           for (int i = 0; i != N; i++)
-            kp << ka[i];
+            // Try to write to the pipe up to success
+            while (!(kp.write(ka[i])))
+              ;
         });
       });
 
     // Launch the consumer that adds the pipe stream with B to C
     q.submit([&](cl::sycl::handler &cgh) {
       // Get read access to the pipe
-      auto kp = p.get_access<cl::sycl::access::mode::read,
-                             cl::sycl::access::target::blocking_pipe>(cgh);
+      auto kp = p.get_access<cl::sycl::access::mode::read>(cgh);
 
       // Get access to the input/output buffers
       auto kb = bb.get_access<cl::sycl::access::mode::read>(cgh);
       auto kc = bc.get_access<cl::sycl::access::mode::write>(cgh);
 
       cgh.single_task<class consumer>([=] {
-          for (int i = 0; i != N; i++)
-            kc[i] = kp.read() + kb[i];
+          for (int i = 0; i != N; i++) {
+            /* Declare a variable of the same type as what the pipe
+               can deal (a good example of single source advantage)
+            */
+            decltype(kp)::value_type e;
+            // Try to read from the pipe up to success
+            while (!(kp.read(e)))
+              ;
+            kc[i] = e + kb[i];
+          }
         });
       });
-  } /*< End scope for the queue and the buffers:
-        wait for completion q completion & bc copied back to v */
+  } //< End scope for the queue and the buffers, so wait for completion
 
   std::cout << std::endl << "Result:" << std::endl;
   for (auto e : vc)

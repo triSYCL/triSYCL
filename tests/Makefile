@@ -78,6 +78,9 @@ CXXFLAGS += -O3 -DNDEBUG
 #CXXFLAGS += -O3
 # To have DEBUG mode working
 LDLIBS += -lboost_log -lpthread
+# To have Boost.Fibers
+LDLIBS += -lboost_fiber -lboost_context -lboost_thread -lboost_system
+
 # To use Clang sanitizer modes
 #CXXFLAGS += -fsanitize=address -fno-omit-frame-pointer
 #CXXFLAGS += -fsanitize=thread -fno-omit-frame-pointer
@@ -181,7 +184,7 @@ CLEANING_TARGETS += $(KERNELS_BC) $(KERNELS_BIN) $(KERNELS_INTERNALIZED_CXX) \
 	$(KERNELS_CALLER_BC) $(KERNELS_CALLER) $(KERNELS_XPIRBC) $(KERNELS_XO) \
 	$(KERNELS_BIN_INFO)
 
-# The implementation uses C++14.
+# The implementation uses C++17.
 # Use -Wno-ignored-attributes to avoid a lot of warning with
 # Boost.Compute and g++ version >= 6
 CXXFLAGS += -Wall -Wno-ignored-attributes -std=c++2a -I$(triSYCL_DIR)/include \
@@ -286,9 +289,9 @@ check:  $(TARGETS_CC)
 	# Launch testing with lit tool from LLVM in current directory
 	echo Using $(CXX) compiler:
 	# lit can be found for example on Debian/Ubuntu in package
-	# llvm-9-tools in /usr/lib/llvm-9/build/utils/lit/lit.py
+	# llvm-10-tools in /usr/lib/llvm-10/build/utils/lit/lit.py
 	# so try before running the check:
-	# export TRISYCL_LIT=/usr/lib/llvm-9/build/utils/lit/lit.py
+	# export TRISYCL_LIT=/usr/lib/llvm-10/build/utils/lit/lit.py
 	# The config file for triSYCL needs at least Python 3.3
 	test "unset$$TRISYCL_LIT == unset" \
 	  && echo 'Initialize TRISYCL_LIT variable to the path of "lit" command' ; \

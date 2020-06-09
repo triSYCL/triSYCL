@@ -124,12 +124,12 @@ public:
   using south_output_type = std::array<stream, south_output_number>;
 */
   struct input_port {
-    ::trisycl::static_pipe<data_type, stream_latency> stream;
+    ::trisycl::sycl_2_2::static_pipe<data_type, stream_latency> stream;
     bool enabled;
   };
 
   struct output_port {
-    ::trisycl::static_pipe<data_type, stream_latency> stream;
+    ::trisycl::sycl_2_2::static_pipe<data_type, stream_latency> stream;
   };
 
   std::array<input_port, AXIStreamGeography::nb_master_port> input_ports;

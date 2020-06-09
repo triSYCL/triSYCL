@@ -70,12 +70,13 @@
 #include "triSYCL/opencl_types.hpp"
 #include "triSYCL/parallelism.hpp"
 #include "triSYCL/pipe.hpp"
-#include "triSYCL/pipe_reservation.hpp"
 #include "triSYCL/platform.hpp"
 #include "triSYCL/program.hpp"
 #include "triSYCL/queue.hpp"
 #include "triSYCL/range.hpp"
-#include "triSYCL/static_pipe.hpp"
+#include "triSYCL/sycl_2_2/pipe.hpp"
+#include "triSYCL/sycl_2_2/pipe_reservation.hpp"
+#include "triSYCL/sycl_2_2/static_pipe.hpp"
 #include "triSYCL/vec.hpp"
 
 // Some includes at the end to break some dependencies

@@ -1,6 +1,9 @@
 /* RUN: %{execute}%s | %{filecheck} %s
    CHECK: Result:
    CHECK-NEXT: 6 8 11
+
+   Extend a pipe program example from Andrew Richards
+   https://cvs.khronos.org/bugzilla/show_bug.cgi?id=14215
 */
 #include <CL/sycl.hpp>
 #include <iostream>
@@ -8,9 +11,6 @@
 
 constexpr size_t N = 3;
 using Vector = float[N];
-
-// A static-scoped pipe of 4 float elements
-cl::sycl::static_pipe<float, 4> p;
 
 int main() {
   Vector va = { 1, 2, 3 };
@@ -25,28 +25,31 @@ int main() {
     // A buffer of N float using the storage of vc
     cl::sycl::buffer<float> bc { vc, N };
 
+    // A pipe of 2 float elements
+    cl::sycl::sycl_2_2::pipe<float> p { 2 };
+
     // Create a queue to launch the kernels
     cl::sycl::queue q;
 
     // Launch the producer to stream A to the pipe
     q.submit([&](cl::sycl::handler &cgh) {
       // Get write access to the pipe
-      auto kp = p.get_access<cl::sycl::access::mode::write>(cgh);
+      auto kp = p.get_access<cl::sycl::access::mode::write,
+                             cl::sycl::access::target::blocking_pipe>(cgh);
       // Get read access to the data
       auto ka = ba.get_access<cl::sycl::access::mode::read>(cgh);
 
       cgh.single_task<class producer>([=] {
           for (int i = 0; i != N; i++)
-            // Try to write to the pipe up to success
-            while (!(kp.write(ka[i])))
-              ;
+            kp.write(ka[i]);
         });
       });
 
     // Launch the consumer that adds the pipe stream with B to C
     q.submit([&](cl::sycl::handler &cgh) {
       // Get read access to the pipe
-      auto kp = p.get_access<cl::sycl::access::mode::read>(cgh);
+      auto kp = p.get_access<cl::sycl::access::mode::read,
+                             cl::sycl::access::target::blocking_pipe>(cgh);
 
       // Get access to the input/output buffers
       auto kb = bb.get_access<cl::sycl::access::mode::read>(cgh);
@@ -54,14 +57,7 @@ int main() {
 
       cgh.single_task<class consumer>([=] {
           for (int i = 0; i != N; i++) {
-            /* Declare a variable of the same type as what the pipe
-               can deal (a good example of single source advantage)
-            */
-            decltype(kp)::value_type e;
-            // Try to read from the pipe up to success
-            while (!(kp.read(e)))
-              ;
-            kc[i] = e + kb[i];
+            kc[i] = kp.read() + kb[i];
           }
         });
       });
