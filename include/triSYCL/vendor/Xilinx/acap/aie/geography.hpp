@@ -521,6 +521,28 @@ struct geography : Layout {
     /// A range of the East slave ports
     static auto inline s_east_range =
       views::enum_type(slave_port_layout::east_0, slave_port_layout::east_last);
+
+    /// Describe the AXI stream switch interconnection neighborhood
+    auto static constexpr interconnect = boost::hana::make_tuple(
+        // Connection topology of the NoC towards East of the switches
+        std::tuple { 1, 0,
+                     master_port_layout::east_0, master_port_layout::east_last,
+                     slave_port_layout::west_0, slave_port_layout::west_last }
+        // Connection topology of the NoC towards West of the switches
+      , std::tuple { -1, 0,
+                     master_port_layout::west_0, master_port_layout::west_last,
+                     slave_port_layout::east_0, slave_port_layout::east_last }
+        // Connection topology of the NoC towards North of the switches
+      , std::tuple { 0, 1,
+                     master_port_layout::north_0, master_port_layout::north_last,
+                     slave_port_layout::south_0, slave_port_layout::south_last }
+        // Connection topology of the NoC towards South of the switches
+      , std::tuple { 0, -1,
+                     master_port_layout::south_0, master_port_layout::south_last,
+                     slave_port_layout::north_0, slave_port_layout::north_last }
+      );
+
+
   };
 
   // The organization of the AXI stream switch on a shim tile

@@ -220,27 +220,10 @@ struct device {
   /// Apply a function on all the AXI stream of the neighborhood of each tile
   template <typename F>
   void for_each_tile_neighborhood(F&& f) {
-    auto constexpr noc = boost::hana::make_tuple(
-        // Connection topology of the NoC towards East of the switches
-        std::tuple { 1, 0,
-                     cmp::east_0, cmp::east_last,
-                     csp::west_0, csp::west_last }
-        // Connection topology of the NoC towards West of the switches
-      , std::tuple { -1, 0,
-                     cmp::west_0, cmp::west_last,
-                     csp::east_0, csp::east_last }
-        // Connection topology of the NoC towards North of the switches
-      , std::tuple { 0, 1,
-                     cmp::north_0, cmp::north_last,
-                     csp::south_0, csp::south_last }
-        // Connection topology of the NoC towards South of the switches
-      , std::tuple { 0, -1,
-                     cmp::south_0, cmp::south_last,
-                     csp::north_0, csp::north_last }
-      );
     for_each_tile_index([&] (auto x, auto y) {
       // No CTAD yet with Boost::Hana and Clang++-10 (but works with g++-9)
-      boost::hana::for_each(noc, [&] (auto connections) {
+      boost::hana::for_each(geo::core_axi_stream_switch::interconnect,
+                            [&] (auto connections) {
         auto [ dx, dy, output_start, output_last, input_start, input_last ] =
           connections;
         if (geo::is_x_y_valid(x + dx, y + dy))
