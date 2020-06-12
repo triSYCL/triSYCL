@@ -257,6 +257,8 @@ struct device {
     });
   }
 
+
+  /// Display the device layout
   auto display() {
     std::string out = R"(\documentclass{article}
 % Use maximum of a page surface

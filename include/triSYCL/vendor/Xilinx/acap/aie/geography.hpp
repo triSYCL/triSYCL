@@ -396,6 +396,16 @@ struct geography : Layout {
       size
     };
 
+  private:
+
+    /// Use a hidden friend to have introspection for master_port_layout
+    friend bool constexpr is_axi_master(master_port_layout) {
+      // Yes, master_port_layout is definitely an AXI master
+      return true;
+    }
+
+  public:
+
     /// Number of AXI stream master ports in the switch
     static constexpr auto nb_master_port =
       static_cast<int>(master_port_layout::size);
@@ -468,6 +478,16 @@ struct geography : Layout {
       size
     };
 
+  private:
+
+    /// Use a hidden friend to have introspection for slave_port_layout
+    friend bool constexpr is_axi_master(slave_port_layout) {
+       // No, slave_port_layout is definitely not an AXI master
+      return false;
+    }
+
+  public:
+
     /// Number of AXI stream slave ports in the switch
     static constexpr auto nb_slave_port =
       static_cast<int>(slave_port_layout::size);
@@ -536,6 +556,16 @@ struct geography : Layout {
       size
     };
 
+  private:
+
+    /// Use a hidden friend to have introspection for master_port_layout
+    friend bool constexpr is_axi_master(master_port_layout) {
+      // Yes, master_port_layout is definitely an AXI master
+      return true;
+    }
+
+  public:
+
     /// Number of master AXI stream master ports in the switch
     static constexpr auto nb_master_port =
       static_cast<int>(master_port_layout::size);
@@ -571,6 +601,16 @@ struct geography : Layout {
       // To measure the enum
       size
     };
+
+  private:
+
+    /// Use a hidden friend to have introspection for slave_port_layout
+    friend bool constexpr is_axi_master(slave_port_layout) {
+       // No, slave_port_layout is definitely not an AXI master
+      return false;
+    }
+
+  public:
 
     /// Number of master AXI stream slave ports in the switch
     static constexpr auto nb_slave_port =

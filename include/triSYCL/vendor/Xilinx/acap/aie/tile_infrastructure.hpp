@@ -311,7 +311,7 @@ public:
       out += (boost::format { R"(
     \coordinate(CoreIn%1%) at %2%;
     \node[rotate=90,anchor=east](CoreIn%1%Label) at %2% {in(%1%)};
-    \draw[line width=0.4mm,->] (node cs:name=LeftMe%1%)
+    \draw[line width=0.4mm,->] (node cs:name=MMe%1%)
                             -| (node cs:name=CoreIn%1%);)" }
         % i % get_tikz_coordinate(i,
                                   ranges::distance(axi_ss_geo::m_me_range) + 1)
@@ -323,7 +323,7 @@ public:
     \coordinate(CoreOut%1%) at %2%;
     \node[anchor=east](CoreOut%1%Label) at %2%  {out(%1%)};
     \draw[line width=0.4mm,->] (node cs:name=CoreOut%1%)
-                            -| (node cs:name=BottomMe%1%);)" }
+                            -| (node cs:name=SMe%1%);)" }
         % i % get_tikz_coordinate(ranges::distance(axi_ss_geo::s_me_range),
                                   i + 1)).str();
     };

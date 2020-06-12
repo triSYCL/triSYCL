@@ -480,9 +480,9 @@ public:
   }
 
 
+  /// Display a border of the AXI stream switch
   template <typename FG, typename FL, typename... EnumRanges>
   auto display_border(const std::string_view& node_attribute,
-                      const std::string_view& side,
                       FG&& global_coordinate_function,
                       FL&& local_coordinate_function,
                       EnumRanges&&... enum_ranges) {
@@ -498,7 +498,8 @@ public:
     \node[%1%] at %2% {%4%};)" }
             % node_attribute
             % global_coordinate_function(x, y)
-            % latex::clean_node(magic_enum::enum_name(p), side)
+            % latex::clean_node(magic_enum::enum_name(p),
+                                is_axi_master(p) ? "M" : "S")
             % magic_enum::enum_name(p)).str();
           ++i;
         };
@@ -526,7 +527,7 @@ public:
     std::string out;
     const auto [ width, height ] = display_size();
     // Display the network interfaces on the top of the switch
-    out += display_border("rotate=90,anchor=north west", "Top",
+    out += display_border("rotate=90,anchor=north west",
                           get_tikz_coordinate,
                           [&, height = height] (auto i) { return std::tuple
                               { core_size.x()
@@ -534,7 +535,7 @@ public:
                                 core_size.y() + height - 1 }; },
                           axi_ss_geo::m_north_range, axi_ss_geo::s_north_range);
     // Display the network interfaces on the bottom of the switch
-    out += display_border("rotate=90,anchor=north east", "Bottom",
+    out += display_border("rotate=90,anchor=north east",
                           get_tikz_coordinate,
                           [&] (auto i) { return std::tuple { core_size.x() + i,
                                                              core_size.y() }; },
@@ -542,7 +543,7 @@ public:
                           axi_ss_geo::s_south_range,
                           axi_ss_geo::m_south_range);
     // Display the network interfaces on the left of the switch
-    out += display_border("anchor=south east", "Left",
+    out += display_border("anchor=south east",
                           get_tikz_coordinate,
                           [&] (auto i) { return std::tuple
                               { core_size.x() - 1, core_size.y() + i + 1 }; },
@@ -550,7 +551,7 @@ public:
                           axi_ss_geo::m_west_range,
                           axi_ss_geo::s_west_range);
     // Display the network interfaces on the right of the switch
-    out += display_border("anchor=south east", "Right",
+    out += display_border("anchor=south east",
                           get_tikz_coordinate,
                           [&, width = width] (auto i) { return std::tuple
                               { core_size.x() + width - 1,
