@@ -279,6 +279,17 @@ struct device {
     for_each_tile_index([&] (auto x, auto y) {
       out += tile(x, y).display();
     });
+
+    // Connect each tile to its neighbors
+    for_each_tile_neighborhood([&] (auto x, auto y, auto nx, auto ny,
+                                    auto m, auto s) {
+          out += (boost::format { R"(
+    \draw[line width=0.4mm,->] (node cs:name=TileX%1%Y%2%M%3%)
+                            -- (node cs:name=TileX%4%Y%5%S%6%);)" }
+            % x % y % latex::clean_node(magic_enum::enum_name(m))
+            % nx % ny % latex::clean_node(magic_enum::enum_name(s))).str();
+    });
+
     out += R"(
 \end{tikzpicture}
 
