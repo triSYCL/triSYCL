@@ -224,12 +224,9 @@ struct device {
       // No CTAD yet with Boost::Hana and Clang++-10 (but works with g++-9)
       boost::hana::for_each(geo::core_axi_stream_switch::interconnect,
                             [&] (auto connections) {
-        auto [ dx, dy, output_start, output_last, input_start, input_last ] =
-          connections;
+        auto [ dx, dy, master_range, slave_range ] = connections;
         if (geo::is_x_y_valid(x + dx, y + dy))
-          for (auto [o, i] : ranges::views::zip
-                 (views::enum_type(output_start, output_last),
-                  views::enum_type(input_start, input_last)))
+          for (auto [o, i] : ranges::views::zip(master_range, slave_range))
             f(x, y, x + dx, y + dy, o, i);
       });
     });

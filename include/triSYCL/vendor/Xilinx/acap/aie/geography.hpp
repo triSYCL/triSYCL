@@ -523,23 +523,15 @@ struct geography : Layout {
       views::enum_type(slave_port_layout::east_0, slave_port_layout::east_last);
 
     /// Describe the AXI stream switch interconnection neighborhood
-    auto static constexpr interconnect = boost::hana::make_tuple(
+    static auto inline interconnect = boost::hana::make_tuple(
         // Connection topology of the NoC towards East of the switches
-        std::tuple { 1, 0,
-                     master_port_layout::east_0, master_port_layout::east_last,
-                     slave_port_layout::west_0, slave_port_layout::west_last }
+        std::tuple { 1, 0, m_east_range, s_west_range }
         // Connection topology of the NoC towards West of the switches
-      , std::tuple { -1, 0,
-                     master_port_layout::west_0, master_port_layout::west_last,
-                     slave_port_layout::east_0, slave_port_layout::east_last }
+      , std::tuple { -1, 0, m_west_range, s_east_range }
         // Connection topology of the NoC towards North of the switches
-      , std::tuple { 0, 1,
-                     master_port_layout::north_0, master_port_layout::north_last,
-                     slave_port_layout::south_0, slave_port_layout::south_last }
+      , std::tuple { 0, 1, m_north_range, s_south_range }
         // Connection topology of the NoC towards South of the switches
-      , std::tuple { 0, -1,
-                     master_port_layout::south_0, master_port_layout::south_last,
-                     slave_port_layout::north_0, slave_port_layout::north_last }
+      , std::tuple { 0, -1, m_south_range, s_north_range }
       );
 
 

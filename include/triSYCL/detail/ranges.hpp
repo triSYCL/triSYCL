@@ -30,7 +30,7 @@ namespace trisycl::views {
     \return a range of integral values of the underlying type of the
     enum from \p begin to the \p inclusive_end
 */
-auto enum_underlying_type = [] (auto begin, auto inclusive_end) {
+auto constexpr enum_underlying_type = [] (auto begin, auto inclusive_end) {
   using begin_t = decltype(begin);
   using inclusive_end_t = decltype(inclusive_end);
 
@@ -53,7 +53,7 @@ auto enum_underlying_type = [] (auto begin, auto inclusive_end) {
     \return a range of enum values from \p begin to the \p
     inclusive_end
 */
-auto enum_type = [] (auto begin, auto inclusive_end) {
+auto constexpr enum_type = [] (auto begin, auto inclusive_end) {
   using begin_t = decltype(begin);
 
   return enum_underlying_type(begin, inclusive_end)
