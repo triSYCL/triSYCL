@@ -201,7 +201,7 @@ struct device {
     if constexpr (std::is_same_v<SrcPort, port::tile>) {
        tile(src.x, src.y).out_connection(src.port) = c.out();
     }
-    else if constexpr(std::is_same_v<SrcPort, port::shim>) {
+    else if constexpr (std::is_same_v<SrcPort, port::shim>) {
        shim(src.x).bli_out_connection(src.port) = c.out();
     }
     constexpr bool valid_dst = std::is_same_v<DstPort, port::tile>
@@ -211,9 +211,45 @@ struct device {
     if constexpr (std::is_same_v<DstPort, port::tile>) {
       tile(dst.x, dst.y).in_connection(dst.port) = c.in();
     }
-    else if constexpr(std::is_same_v<DstPort, port::shim>) {
+    else if constexpr (std::is_same_v<DstPort, port::shim>) {
       shim(dst.x).bli_in_connection(dst.port) = c.in();
     }
+  }
+
+
+  /// Apply a function on all the AXI stream of the neighborhood of each tile
+  template <typename F>
+  void for_each_tile_neighborhood(F&& f) {
+    auto constexpr noc = boost::hana::make_tuple(
+        // Connection topology of the NoC towards East of the switches
+        std::tuple { 1, 0,
+                     cmp::east_0, cmp::east_last,
+                     csp::west_0, csp::west_last }
+        // Connection topology of the NoC towards West of the switches
+      , std::tuple { -1, 0,
+                     cmp::west_0, cmp::west_last,
+                     csp::east_0, csp::east_last }
+        // Connection topology of the NoC towards North of the switches
+      , std::tuple { 0, 1,
+                     cmp::north_0, cmp::north_last,
+                     csp::south_0, csp::south_last }
+        // Connection topology of the NoC towards South of the switches
+      , std::tuple { 0, -1,
+                     cmp::south_0, cmp::south_last,
+                     csp::north_0, csp::north_last }
+      );
+    for_each_tile_index([&] (auto x, auto y) {
+      // No CTAD yet with Boost::Hana and Clang++-10 (but works with g++-9)
+      boost::hana::for_each(noc, [&] (auto connections) {
+        auto [ dx, dy, output_start, output_last, input_start, input_last ] =
+          connections;
+        if (geo::is_x_y_valid(x + dx, y + dy))
+          for (auto [o, i] : ranges::views::zip
+                 (views::enum_type(output_start, output_last),
+                  views::enum_type(input_start, input_last)))
+            f(x, y, x + dx, y + dy, o, i);
+      });
+    });
   }
 
 
@@ -224,36 +260,10 @@ struct device {
       // Start the tile infrastructure
       tile(x, y).start(x, y, fiber_executor);
     });
-    // Only then we can connect the inter core tile NoC
-    for_each_tile_index([&] (auto x, auto y) {
-      // No CTAD yet with Boost::Hana and Clang++-10 (but works with g++-9)
-      auto noc = boost::hana::make_tuple(
-          // Connection topology of the NoC towards East of the switches
-          std::tuple { 1, 0,
-                       cmp::east_0, cmp::east_last,
-                       csp::west_0, csp::west_last }
-          // Connection topology of the NoC towards West of the switches
-        , std::tuple { -1, 0,
-                       cmp::west_0, cmp::west_last,
-                       csp::east_0, csp::east_last }
-          // Connection topology of the NoC towards North of the switches
-        , std::tuple { 0, 1,
-                       cmp::north_0, cmp::north_last,
-                       csp::south_0, csp::south_last }
-          // Connection topology of the NoC towards South of the switches
-        , std::tuple { 0, -1,
-                       cmp::south_0, cmp::south_last,
-                       csp::north_0, csp::north_last }
-        );
-      boost::hana::for_each(noc, [&] (auto connections) {
-        auto [ dx, dy, output_start, output_last, input_start, input_last ] =
-          connections;
-        if (geo::is_x_y_valid(x + dx, y + dy))
-          for (auto [o, i] : ranges::views::zip
-                 (views::enum_type(output_start, output_last),
-                  views::enum_type(input_start, input_last)))
-            tile(x, y).output(o) = tile(x + dx, y + dy).input(i);
-      });
+    // Only then we can connect the inter-core tile AXI stream NoC
+    for_each_tile_neighborhood([&] (auto x, auto y, auto nx, auto ny,
+                                    auto m, auto s) {
+      tile(x, y).output(m) = tile(nx, ny).input(s);
     });
   }
 
