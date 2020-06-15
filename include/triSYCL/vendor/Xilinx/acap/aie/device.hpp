@@ -250,9 +250,14 @@ struct device {
 
   /// Display the device layout
   auto display() {
-    std::string out = R"(\documentclass{article}
+    std::string out = R"(
+% To be compiled with lualatex instead of pdflatex to avoid a bug on _
+\documentclass{article}
 % Use maximum of a page surface
-\usepackage[paperwidth=200cm,paperheight=100cm,margin=0mm]{geometry}
+\usepackage[paperwidth=20cm,paperheight=20cm,margin=0mm]{geometry}
+% Use a font allowing arbitrary size
+\usepackage{lmodern}
+% The turbo-charged graphics package
 \usepackage{tikz}
 \usetikzlibrary{backgrounds,calc,decorations.pathmorphing,fit,patterns,mindmap}
 \usepackage{tikzlings}
@@ -268,11 +273,19 @@ struct device {
 \thispagestyle{empty}
 % Skip the usual space at the beginning of a paragraph
 \noindent
+% Use a super small font. Use sans-serif for readability
+\fontsize{1}{1}\selectfont\sffamily
 
 % Use remembering in every picture so we can use named coordinates
 % across them
 \tikzstyle{every picture}+=[remember picture]
-\begin{tikzpicture}[framed]
+\begin{tikzpicture}[% Scale by 0.1, so the unit is 1mm instead of default 1cm
+  scale = 0.1,
+  % Default style
+  red,
+  style = {line width = 0.01mm, ->},
+  % Draw a frame
+  framed]
 
 )";
 
@@ -284,8 +297,8 @@ struct device {
     for_each_tile_neighborhood([&] (auto x, auto y, auto nx, auto ny,
                                     auto m, auto s) {
           out += (boost::format { R"(
-    \draw[line width=0.4mm,->] (node cs:name=TileX%1%Y%2%M%3%)
-                            -- (node cs:name=TileX%4%Y%5%S%6%);)" }
+    \draw (node cs:name=TileX%1%Y%2%M%3%)
+       -- (node cs:name=TileX%4%Y%5%S%6%);)" }
             % x % y % latex::clean_node(magic_enum::enum_name(m))
             % nx % ny % latex::clean_node(magic_enum::enum_name(s))).str();
     });

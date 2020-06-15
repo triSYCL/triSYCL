@@ -512,7 +512,7 @@ public:
   static vec<int, 2> display_size() {
     // Combine the lengths of the most packed sides,
     // + 2 to keep room for labels on each side
-    return { 2 + ranges::distance(axi_ss_geo::s_me_range)
+    return { 1 + ranges::distance(axi_ss_geo::s_me_range)
              + ranges::distance(axi_ss_geo::m_south_range)
              + ranges::distance(axi_ss_geo::s_south_range),
              2 + ranges::distance(axi_ss_geo::m_me_range)
@@ -551,7 +551,7 @@ public:
                           axi_ss_geo::m_west_range,
                           axi_ss_geo::s_west_range);
     // Display the network interfaces on the right of the switch
-    out += display_border("anchor=south east",
+    out += display_border("anchor=south west",
                           get_tikz_coordinate,
                           [&, width = width] (auto i) { return std::tuple
                               { core_size.x() + width - 1,
