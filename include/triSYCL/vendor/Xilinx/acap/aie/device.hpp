@@ -250,12 +250,22 @@ struct device {
 
   /// Display the device layout
   auto display() {
-    std::string out = R"(
-% To be compiled with lualatex instead of pdflatex to avoid a bug on _
+    // Compute the drawing size starting with the individual tile size
+    auto tile_size = tile(0, 0).display_size();
+    // And expanding according to the device size. Add 1 in each
+    // dimension to fit in the page because of the borders
+    auto x_size = tile_size.x()*geo::x_size + 1;
+    auto y_size = tile_size.y()*geo::y_size + 1;
+    std::string out = R"(% To be compiled with lualatex instead of pdflatex
+% to avoid a bug on _ and to handle huge memory automatically.
 \documentclass{article}
-% Use maximum of a page surface
-\usepackage[paperwidth=20cm,paperheight=20cm,margin=0mm]{geometry}
-% Use a font allowing arbitrary size
+% Use maximum of the page surface
+)";
+    out += (boost::format {
+        R"(\usepackage[paperwidth=%1%mm,paperheight=%2%mm,top=0mm,bottom=0mm,
+  left=0mm,right=0mm]{geometry}
+)" } % x_size % y_size).str();
+    out += R"(% Use a font allowing arbitrary size
 \usepackage{lmodern}
 % The turbo-charged graphics package
 \usepackage{tikz}
@@ -275,7 +285,6 @@ struct device {
 \noindent
 % Use a super small font. Use sans-serif for readability
 \fontsize{1}{1}\selectfont\sffamily
-
 % Use remembering in every picture so we can use named coordinates
 % across them
 \tikzstyle{every picture}+=[remember picture]
@@ -283,9 +292,7 @@ struct device {
   scale = 0.1,
   % Default style
   red,
-  style = {line width = 0.01mm, ->},
-  % Draw a frame
-  framed]
+  style = {line width = 0.01mm, ->}]
 
 )";
 

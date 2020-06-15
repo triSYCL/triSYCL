@@ -302,7 +302,7 @@ public:
               % (x_coordinate*x_size + x) % (y_coordinate*y_size + y)).str();
     };
     auto out = (boost::format {
-        "  \\begin{scope}[name prefix = TileX%1%Y%2%]\n" }
+        "  \\begin{scope}[name prefix = TileX%1%Y%2%]" }
       % x_coordinate % y_coordinate).str()
       + axi_ss.display(display_core_size(), get_tikz_coordinate);
 
