@@ -32,7 +32,7 @@ struct context {
   static double constexpr max_size = 574;
 
   /// Scale all the coordinates by this factor to be under the TeX max size
-  double scaling;
+  double scaling_factor;
 
   /// Size of the drawing in the original units (unscaled)
   vec<int, 2> size;
@@ -47,47 +47,44 @@ struct context {
   context(const vec<int, 2>& s) : size { s } {
     // Compute the scaling factor to remain under the TeX limit
     auto m = std::max(size.x(), size.y());
-    scaling = m > max_size ? max_size/m : 1;
+    scaling_factor = m > max_size ? max_size/m : 1;
     // Generate the LaTeX header
-    out = R"(% To be compiled with lualatex instead of pdflatex
-% to avoid a bug on _ and to handle huge memory automatically.
+    out = (boost::format { R"(%% To be compiled with lualatex instead of pdflatex
+%% to avoid a bug on _ and to handle huge memory automatically.
 \documentclass{article}
-% Use maximum of the page surface
-)";
-    out += (boost::format {
-        R"(\usepackage[paperwidth=%1%mm,paperheight=%2%mm,top=0mm,bottom=0mm,
+%% Use maximum of the page surface
+\usepackage[paperwidth=%1%mm,paperheight=%2%mm,top=0mm,bottom=0mm,
   left=0mm,right=0mm]{geometry}
-)" } % size.x() % size.y()).str();
-    out += R"(% Use a font allowing arbitrary size
+%% Use a font allowing arbitrary size
 \usepackage{lmodern}
-% The turbo-charged graphics package
+%% The turbo-charged graphics package
 \usepackage{tikz}
 \usetikzlibrary{backgrounds,calc,decorations.pathmorphing,fit,patterns,mindmap}
 \usepackage{tikzlings}
 \definecolor{orangeSYCL}{RGB}{242,104,34}
-% Some cool palettes
+%% Some cool palettes
 \usepackage{xcolor-material}
 \usepackage{xcolor-solarized}
-% Consider '_' as a (almost) normal character
+%% Consider '_' as a (almost) normal character
 \usepackage[strings]{underscore}
 
 \begin{document}
-% No page number, header or footer
+%% No page number, header or footer
 \thispagestyle{empty}
-% Skip the usual space at the beginning of a paragraph
+%% Skip the usual space at the beginning of a paragraph
 \noindent
-% Use a super small font. Use sans-serif for readability
-\fontsize{1}{1}\selectfont\sffamily
-% Use remembering in every picture so we can use named coordinates
-% across them
+%% Use a super small font. Use sans-serif for readability
+\fontsize{%3%}{%3%}\selectfont\sffamily
+%% Use remembering in every picture so we can use named coordinates
+%% across them
 \tikzstyle{every picture}+=[remember picture]
-\begin{tikzpicture}[% Scale by 0.1, so the unit is 1mm instead of default 1cm
+\begin{tikzpicture}[%% Scale by 0.1, so the unit is 1mm instead of default 1cm
   scale = 0.1,
-  % Default style
+  %% Default style
   red,
-  style = {line width = 0.01mm, ->}]
+  style = {line width = %4%mm, ->}]
 
-)";
+)" } % scale(size.x()) % scale(size.y()) % scale(1) % scale(0.01)).str();
   }
 
 
@@ -96,6 +93,11 @@ struct context {
     out += content;
   }
 
+
+  // Scale a coordinate according to the scaling factor
+  double scale(double v) const {
+    return v*scaling_factor;
+  }
 
 private:
 

@@ -299,11 +299,12 @@ public:
     auto get_tikz_coordinate = [&] (auto x, auto y) {
       auto const [x_size, y_size] = display_size();
       return (boost::format { "(%1%,%2%)" }
-              % (x_coordinate*x_size + x) % (y_coordinate*y_size + y)).str();
+              // Scale real LaTeX coordinate to fit
+              % c.scale(x_coordinate*x_size + x)
+              % c.scale(y_coordinate*y_size + y)).str();
     };
-    c.add((boost::format {
-        "  \\begin{scope}[name prefix = TileX%1%Y%2%]" }
-        % x_coordinate % y_coordinate).str());
+    c.add((boost::format { "  \\begin{scope}[name prefix = TileX%1%Y%2%]" }
+           % x_coordinate % y_coordinate).str());
     axi_ss.display(c, display_core_size(), get_tikz_coordinate);
 
     // Connect the core receivers to its AXI stream switch

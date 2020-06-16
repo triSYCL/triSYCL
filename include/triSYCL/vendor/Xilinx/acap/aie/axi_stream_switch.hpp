@@ -498,8 +498,10 @@ public:
     \node[%1%] at %2% {%4%};)" }
             % node_attribute
             % global_coordinate_function(x, y)
+            // Make a node name from enum name prefixed with master/slave status
             % latex::context::clean_node(magic_enum::enum_name(p),
                                          is_axi_master(p) ? "M" : "S")
+            // Use the enum name as the port name to display
             % magic_enum::enum_name(p)).str();
           ++i;
         };
