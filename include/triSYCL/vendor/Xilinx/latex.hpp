@@ -27,24 +27,44 @@
 
 namespace trisycl::vendor::xilinx::latex {
 
-/** Build a TikZ/PGF valid name string by concatenating a prefix and a
-    capitalized node name after having removed any '_'
+struct context {
+  // There is a limit in TeX for the dimensions to be under 575mm
+  static double constexpr max_size = 574;
 
-    \input[in] node_name is a string-like TikZ/PGF that may contain some '_'
+  /// Scale all the coordinates by this factor to be under the TeX max size
+  double scaling;
 
-    \input[in] prefix is an optional string-like prefix
-*/
-std::string inline clean_node(const std::string_view& node_name,
-                              const std::string_view& prefix = "") {
-  // All the characters but the '_'
-  auto without_ = ranges::views::remove(node_name, '_');
-  return ranges::views::concat
-    (ranges::views::all(prefix),
-     without_ | ranges::views::take(1)
-     | ranges::views::transform([] (auto c) { return std::toupper(c); }),
-     ranges::views::drop(without_, 1))
-    | ranges::to<std::string>;
-}
+  /// Size of the drawing in the original units (unscaled)
+  vec<int, 2> size;
+
+  /// Create a graphics context with a 2D size in mm
+  context(const vec<int, 2>& s) : size { s } {
+    // Compute the scaling factor to remain under the TeX limit
+    auto m = std::max(size.x(), size.y());
+    scaling = m > max_size ? max_size/m : 1;
+  }
+
+
+  /** Build a TikZ/PGF valid name string by concatenating a prefix and a
+      capitalized node name after having removed any '_'
+
+      \input[in] node_name is a string-like TikZ/PGF that may contain some '_'
+
+      \input[in] prefix is an optional string-like prefix
+  */
+  static std::string  clean_node(const std::string_view& node_name,
+                                 const std::string_view& prefix = "") {
+    // All the characters but the '_'
+    auto without_ = ranges::views::remove(node_name, '_');
+    return ranges::views::concat
+      (ranges::views::all(prefix),
+       without_ | ranges::views::take(1)
+       | ranges::views::transform([] (auto c) { return std::toupper(c); }),
+       ranges::views::drop(without_, 1))
+      | ranges::to<std::string>;
+  }
+
+};
 
 }
 

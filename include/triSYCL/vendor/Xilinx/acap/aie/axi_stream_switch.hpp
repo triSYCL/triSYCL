@@ -498,8 +498,8 @@ public:
     \node[%1%] at %2% {%4%};)" }
             % node_attribute
             % global_coordinate_function(x, y)
-            % latex::clean_node(magic_enum::enum_name(p),
-                                is_axi_master(p) ? "M" : "S")
+            % latex::context::clean_node(magic_enum::enum_name(p),
+                                         is_axi_master(p) ? "M" : "S")
             % magic_enum::enum_name(p)).str();
           ++i;
         };

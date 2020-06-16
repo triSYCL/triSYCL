@@ -256,6 +256,7 @@ struct device {
     // dimension to fit in the page because of the borders
     auto x_size = tile_size.x()*geo::x_size + 1;
     auto y_size = tile_size.y()*geo::y_size + 1;
+    latex::context c {{ x_size, y_size }};
     std::string out = R"(% To be compiled with lualatex instead of pdflatex
 % to avoid a bug on _ and to handle huge memory automatically.
 \documentclass{article}
@@ -306,8 +307,8 @@ struct device {
           out += (boost::format { R"(
     \draw (node cs:name=TileX%1%Y%2%M%3%)
        -- (node cs:name=TileX%4%Y%5%S%6%);)" }
-            % x % y % latex::clean_node(magic_enum::enum_name(m))
-            % nx % ny % latex::clean_node(magic_enum::enum_name(s))).str();
+            % x % y % c.clean_node(magic_enum::enum_name(m))
+            % nx % ny % c.clean_node(magic_enum::enum_name(s))).str();
     });
 
     out += R"(
