@@ -256,66 +256,24 @@ struct device {
     // dimension to fit in the page because of the borders
     auto x_size = tile_size.x()*geo::x_size + 1;
     auto y_size = tile_size.y()*geo::y_size + 1;
+    /// The LaTeX generation is handled by a LaTeX context
     latex::context c {{ x_size, y_size }};
-    std::string out = R"(% To be compiled with lualatex instead of pdflatex
-% to avoid a bug on _ and to handle huge memory automatically.
-\documentclass{article}
-% Use maximum of the page surface
-)";
-    out += (boost::format {
-        R"(\usepackage[paperwidth=%1%mm,paperheight=%2%mm,top=0mm,bottom=0mm,
-  left=0mm,right=0mm]{geometry}
-)" } % x_size % y_size).str();
-    out += R"(% Use a font allowing arbitrary size
-\usepackage{lmodern}
-% The turbo-charged graphics package
-\usepackage{tikz}
-\usetikzlibrary{backgrounds,calc,decorations.pathmorphing,fit,patterns,mindmap}
-\usepackage{tikzlings}
-\definecolor{orangeSYCL}{RGB}{242,104,34}
-% Some cool palettes
-\usepackage{xcolor-material}
-\usepackage{xcolor-solarized}
-% Consider '_' as a (almost) normal character
-\usepackage[strings]{underscore}
-
-\begin{document}
-% No page number, header or footer
-\thispagestyle{empty}
-% Skip the usual space at the beginning of a paragraph
-\noindent
-% Use a super small font. Use sans-serif for readability
-\fontsize{1}{1}\selectfont\sffamily
-% Use remembering in every picture so we can use named coordinates
-% across them
-\tikzstyle{every picture}+=[remember picture]
-\begin{tikzpicture}[% Scale by 0.1, so the unit is 1mm instead of default 1cm
-  scale = 0.1,
-  % Default style
-  red,
-  style = {line width = 0.01mm, ->}]
-
-)";
 
     for_each_tile_index([&] (auto x, auto y) {
-      out += tile(x, y).display();
+      tile(x, y).display(c);
     });
 
     // Connect each tile to its neighbors
     for_each_tile_neighborhood([&] (auto x, auto y, auto nx, auto ny,
                                     auto m, auto s) {
-          out += (boost::format { R"(
+          c.add((boost::format { R"(
     \draw (node cs:name=TileX%1%Y%2%M%3%)
        -- (node cs:name=TileX%4%Y%5%S%6%);)" }
-            % x % y % c.clean_node(magic_enum::enum_name(m))
-            % nx % ny % c.clean_node(magic_enum::enum_name(s))).str();
+              % x % y % c.clean_node(magic_enum::enum_name(m))
+              % nx % ny % c.clean_node(magic_enum::enum_name(s))).str());
     });
 
-    out += R"(
-\end{tikzpicture}
-
-\end{document})";
-    return out;
+    return c.display();
   }
 };
 

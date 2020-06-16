@@ -294,40 +294,40 @@ public:
   }
 
 
-  /// Display the tile
-  auto display() {
+  /// Display the tile to a LaTeX context
+  void display(latex::context& c) const {
     auto get_tikz_coordinate = [&] (auto x, auto y) {
       auto const [x_size, y_size] = display_size();
       return (boost::format { "(%1%,%2%)" }
               % (x_coordinate*x_size + x) % (y_coordinate*y_size + y)).str();
     };
-    auto out = (boost::format {
+    c.add((boost::format {
         "  \\begin{scope}[name prefix = TileX%1%Y%2%]" }
-      % x_coordinate % y_coordinate).str()
-      + axi_ss.display(display_core_size(), get_tikz_coordinate);
+        % x_coordinate % y_coordinate).str());
+    axi_ss.display(c, display_core_size(), get_tikz_coordinate);
 
     // Connect the core receivers to its AXI stream switch
     for (auto [i, p] : axi_ss_geo::m_me_range | ranges::views::enumerate) {
-      out += (boost::format { R"(
+      c.add((boost::format { R"(
     \coordinate(CoreIn%1%) at %2%;
     \node[rotate=90,anchor=east](CoreIn%1%Label) at %2% {in(%1%)};
     \draw (node cs:name=MMe%1%)
        -| (node cs:name=CoreIn%1%);)" }
         % i % get_tikz_coordinate(i,
                                   ranges::distance(axi_ss_geo::m_me_range) + 1)
-        ).str();
+        ).str());
     };
     // Connect the core senders to its AXI stream switch
     for (auto [i, p] : axi_ss_geo::s_me_range | ranges::views::enumerate) {
-      out += (boost::format { R"(
+      c.add((boost::format { R"(
     \coordinate(CoreOut%1%) at %2%;
     \node[anchor=east](CoreOut%1%Label) at %2%  {out(%1%)};
     \draw (node cs:name=CoreOut%1%)
        -| (node cs:name=SMe%1%);)" }
-        % i % get_tikz_coordinate(ranges::distance(axi_ss_geo::s_me_range),
-                                  i + 1)).str();
+          % i % get_tikz_coordinate(ranges::distance(axi_ss_geo::s_me_range),
+                                    i + 1)).str());
     };
-    out += (boost::format { R"(
+    c.add((boost::format { R"(
     \node() at %1% {\texttt{tile<%2%,%3%>}};
     \begin{scope}[on background layer]
       \node [fill=orange!30, fit={(node cs:name=CoreIn0Label)
@@ -336,8 +336,7 @@ public:
     \end{scope}
   \end{scope}
 
-)" } % get_tikz_coordinate(1, 0) % x_coordinate % y_coordinate).str();
-    return out;
+)" } % get_tikz_coordinate(1, 0) % x_coordinate % y_coordinate).str());
   }
 
 };
