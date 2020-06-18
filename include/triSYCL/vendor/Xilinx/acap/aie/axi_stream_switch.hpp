@@ -93,8 +93,7 @@ public:
       some other consumer (router, core...).
    */
   struct router_port {
-    /// Keep track of the AXI stream switch owning this port
-    /// \todo not sure it is required...
+    /// Keep track of the AXI stream switch owning this port for debugging
     axi_stream_switch &axi_ss;
 
     using value_type = axi_packet::value_type;
@@ -158,6 +157,13 @@ public:
     /// Ingress packet queue
     boost::fibers::buffered_channel<axi_packet> c { capacity };
 
+    /// The ids of the outputs port the router minion has to forward to.
+    /// Used by introspection to track current routing configuration
+    std::vector<axi_stream_switch::mpl> mpl_outputs;
+
+    /** The outputs the router minion has to forward to.
+        This what is used to speed up the routing itself even if the id
+        could be enough */
     std::vector<std::shared_ptr<router_port>> outputs;
 
     /// Inherit from parent constructors
@@ -217,14 +223,23 @@ public:
 
 
     /// Connect this routing input to a switch output
-    void connect_to(std::shared_ptr<router_port> dest) {
+    void connect_to(axi_stream_switch::mpl port_dest,
+                    std::shared_ptr<router_port> dest) {
       TRISYCL_DUMP_T("connect_to router_minion " << this << " on tile("
                      << router_minion::axi_ss.x_coordinate
                      << ',' << router_minion::axi_ss.y_coordinate
                      << ") on fiber " << boost::this_fiber::get_id()
                      << " to dest " << &*dest);
+      mpl_outputs.push_back(port_dest);
       outputs.push_back(dest);
     }
+
+
+    /// Return a vector of the master ports this router is forwarding
+    const auto& get_master_port_dests() {
+      return mpl_outputs;
+    }
+
 
   private:
 
@@ -392,7 +407,7 @@ public:
           "connect: %1% is not a routable switch input port" }
           % port).str() };
     }
-    rm->connect_to(out_connection(mp));
+    rm->connect_to(mp, out_connection(mp));
   }
 
 
@@ -498,7 +513,7 @@ public:
     \node[%1%] at %2% {%4%};)" }
             % node_attribute
             % global_coordinate_function(x, y)
-            // Make a node name from enum name prefixed with master/slave status
+            // Make a node name from enum name prefixed with master/slave statu7s
             % latex::context::clean_node(magic_enum::enum_name(p),
                                          is_axi_master(p) ? "M" : "S")
             // Use the enum name as the port name to display
@@ -513,13 +528,29 @@ public:
   /// Compute the size of the graphics representation of the switch
   static vec<int, 2> display_size() {
     // Combine the lengths of the most packed sides,
-    // + 2 to keep room for labels on each side
+    // + 1/+ 2 to keep room for labels on each side
     return { 1 + ranges::distance(axi_ss_geo::s_me_range)
              + ranges::distance(axi_ss_geo::m_south_range)
              + ranges::distance(axi_ss_geo::s_south_range),
              2 + ranges::distance(axi_ss_geo::m_me_range)
              + ranges::distance(axi_ss_geo::m_west_range)
              + ranges::distance(axi_ss_geo::s_west_range) };
+  }
+
+
+  /// Display the internal switch connections
+  void display_routing_configuration(latex::context& c) const {
+    for (const auto& [i, p] :  ranges::views::enumerate(input_ports)) {
+      auto input_port = static_cast<spl>(i);
+      auto rm = dynamic_cast<router_minion *>(p.get());
+      for (auto output_port : rm->get_master_port_dests()) {
+        c.add((boost::format { R"(
+    \draw (node cs:name=S%1%)
+       -- (node cs:name=M%2%);)" }
+            % c.clean_node(magic_enum::enum_name(input_port))
+            % c.clean_node(magic_enum::enum_name(output_port))).str());
+      }
+    }
   }
 
 
@@ -571,6 +602,8 @@ public:
                          },
                          axi_ss_geo::s_east_range,
                          axi_ss_geo::m_east_range));
+
+    display_routing_configuration(c);
   }
 
 };
