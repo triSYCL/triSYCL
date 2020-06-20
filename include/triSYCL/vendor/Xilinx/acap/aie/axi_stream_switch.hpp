@@ -495,6 +495,55 @@ public:
   }
 
 
+  /** Compute the edge angle for a port name according a list of
+      description associating a port name prefix and an associated
+      angle in degree
+   */
+  int tikz_edge_angle(const std::string_view& port_name,
+                      const std::initializer_list<std::tuple<std::string_view,
+                                                             int>>& desc)
+    const {
+    for (auto& [prefix, angle] : desc)
+      if (port_name.starts_with(prefix))
+        return angle;
+    assert(0 && "Unknown port name");
+    return 0;
+  }
+
+
+  /// Display the internal switch connections with routing arrows
+  /// perpendicular to the borders
+  void display_routing_configuration(latex::context& c) const {
+    for (const auto& [i, p] :  ranges::views::enumerate(input_ports)) {
+      auto input_port = static_cast<spl>(i);
+      auto rm = dynamic_cast<router_minion *>(p.get());
+      for (auto output_port : rm->get_master_port_dests()) {
+        auto input_port_name = magic_enum::enum_name(input_port);
+        // Compute the angle of the starting arrow from the input
+        auto input_angle = tikz_edge_angle(input_port_name,
+                                           { { "east", 180 },
+                                             { "north", -90 },
+                                             { "west", 0 },
+                                             { "me", 90 },
+                                             { "south", 90 } });
+        auto output_port_name = magic_enum::enum_name(output_port);
+        // Compute the angle of the ending arrow to the output
+        auto output_angle = tikz_edge_angle(output_port_name,
+                                            { { "east", 180 },
+                                              { "north", -90 },
+                                              { "me", 0 },
+                                              { "west", 0 },
+                                              { "south", 90 } });
+        c.add((boost::format { R"(
+    \draw (node cs:name=S%1%)
+       to [out=%2%, in=%4%] (node cs:name=M%3%);)" }
+            % c.clean_node(input_port_name) % input_angle
+            % c.clean_node(output_port_name) % output_angle).str());
+      }
+    }
+  }
+
+
   /// Display a border of the AXI stream switch
   template <typename FG, typename FL, typename... EnumRanges>
   auto display_border(const std::string_view& node_attribute,
@@ -535,22 +584,6 @@ public:
              2 + ranges::distance(axi_ss_geo::m_me_range)
              + ranges::distance(axi_ss_geo::m_west_range)
              + ranges::distance(axi_ss_geo::s_west_range) };
-  }
-
-
-  /// Display the internal switch connections
-  void display_routing_configuration(latex::context& c) const {
-    for (const auto& [i, p] :  ranges::views::enumerate(input_ports)) {
-      auto input_port = static_cast<spl>(i);
-      auto rm = dynamic_cast<router_minion *>(p.get());
-      for (auto output_port : rm->get_master_port_dests()) {
-        c.add((boost::format { R"(
-    \draw (node cs:name=S%1%)
-       -- (node cs:name=M%2%);)" }
-            % c.clean_node(magic_enum::enum_name(input_port))
-            % c.clean_node(magic_enum::enum_name(output_port))).str());
-      }
-    }
   }
 
 

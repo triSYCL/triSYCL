@@ -27,7 +27,10 @@
 
 namespace trisycl::vendor::xilinx::latex {
 
-struct context {
+class context {
+
+public:
+
   // There is a limit in TeX for the dimensions to be under 575mm
   static double constexpr max_size = 574;
 
