@@ -15,31 +15,46 @@ triSYCL
 Introduction
 ------------
 
-triSYCL_ is an open source implementation to experiment with
-the specification of the SYCL_ `C++`_ layer and
-to give feedback to the Khronos_ Group SYCL_ and OpenCL_ C++ 2.2
-kernel language committees and also to the ISO `C++`_ committee.
+triSYCL_ is a research project to experiment with the specification of
+the SYCL_ standard and to give feedback to the Khronos_ Group
+SYCL_committee and also to the ISO `C++`_ committee.
 
-This SYCL_ implementation is mainly based on C++17 and OpenMP_ or TBB_ for
-execution on the CPU, with `Boost.Compute`_ for the non single-source
-OpenCL_ interoperability layer and with LLVM_/Clang_ for the device
-compiler providing full single-source SYCL_ experience, typically
-targeting a SPIR_ device. Since in SYCL_ there is a host fall-back,
-this CPU implementation can be seen as an implementation of this
-fall-back too...
+Because of lack of resources **this SYCL implementation is very
+incomplete and should not be used by a normal end-user.** Fortunately
+there are now several strong implementations of SYCL_ available, such
+as ComputeCpp_, `DPC++`_ or hipSYCL_ that can be used on various
+targets.
 
-For legal reasons, the specification used for this open source project is
-the published current provisional specification and not the last one
-currently discussed in the Khronos_ SYCL_ committee. If you are a
-Khronos_ member, you can access to https://gitlab.khronos.org/sycl/triSYCL
-where you might find more futuristic branches.
+This implementation is mainly based on C++17 with increasing C++20
+features backed with OpenMP_ or TBB_ for parallel execution on the
+CPU, with `Boost.Compute`_ for the non single-source OpenCL_
+interoperability layer and with an experimental (but now obsolete
+2017-2018) LLVM_/Clang_ version for the device compiler providing full
+single-source SYCL_ experience, typically targeting a SPIR_
+device. Since in SYCL_ there is a host fall-back, this CPU
+implementation can be seen as an implementation of this fall-back too.
+
+Since around 2018 Intel put a lot of effort in their own `DPC++`_
+project to up-stream SYCL_ into LLVM_/Clang_, there is another project
+about merging the Intel SYCL_ implementation with triSYCL_ at
+https://github.com/triSYCL/sycl to give a greater user experience for
+Xilinx_ FPGA instead of using our experimental clunky device compiler.
+But this is still very experimental because the Xilinx_ tool-chain is
+based on old incompatible versions of LLVM_/Clang_.
+
+Most of our efforts are focused on extensions, such as supporting
+Xilinx_ FPGA and Versal ACAP CGRA
+https://gitenterprise.xilinx.com/rkeryell/acappp, which is not
+open-source yet since it would expose too much architectural details
+for now.
+
+
+triSYCL_ has been used to experiment and provide feedback for SYCL_
+1.2, 1.2.1, 2.2, 2020 and even the OpenCL_ C++ 1.0 kernel language
+from OpenCL_ 2.2.
 
 This is provided as is, without any warranty, with the same license as
 LLVM_/Clang_.
-
-There is also a new project about merging the Intel SYCL
-implementation with triSYCL at https://github.com/triSYCL/sycl to give
-a greater user experience.
 
 Technical lead: Ronan at keryell point FR. Developments started first
 at AMD_ and are now mainly funded by Xilinx_.
@@ -125,7 +140,7 @@ macros used in triSYCL <doc/macros.rst>`_ to discover some of them.
 
 
 Environment variables used in triSYCL
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 See `Environment variables with triSYCL <doc/environment.rst>`_.
 
@@ -157,10 +172,10 @@ News
   experimental, there is a growing interest around it and it is
   always useful to get started as a contributor.
 
-- 2018/01/05: there are some internship openings at Xilinx to work on
+- 2018/01/05: there are some internship openings at Xilinx_ to work on
   triSYCL for FPGA
   https://xilinx.referrals.selectminds.com/jobs/compiler-engineer-intern-on-sycl-for-fpga-4685
-  and more generally Xilinx is hiring in compilation, runtime, C++,
+  and more generally Xilinx_ is hiring in compilation, runtime, C++,
   SYCL_, OpenCL_, machine-learning...
 
 - 2017/12/06: the brand-new SYCL 1.2.1 specification is out and
@@ -172,7 +187,7 @@ News
 
 - 2017/09/19: there is a prototype of device compiler based on
   Clang_/LLVM_ generating SPIR 2.0 "de facto" (SPIR-df) and working at least
-  with PoCL_ and Xilinx SDx `xocc` for FPGA.
+  with PoCL_ and Xilinx_ SDx `xocc` for FPGA.
 
 - 2017/03/03: triSYCL can use CMake & ``ctest`` and works on Windows 10 with
   Visual Studio 2017. It works also with Ubuntu WSL on Windows. :-)
@@ -227,6 +242,8 @@ News
 
 .. _DirectX: http://en.wikipedia.org/wiki/DirectX
 
+.. _DPC++: https://github.com/intel/llvm/tree/sycl
+
 .. _DSEL: http://en.wikipedia.org/wiki/Domain-specific_language
 
 .. _Eigen: http://eigen.tuxfamily.org
@@ -236,6 +253,12 @@ News
 .. _GCC: http://gcc.gnu.org/
 
 .. _GOOPAX: http://www.goopax.com/
+
+.. _HCC: https://github.com/RadeonOpenCompute/hcc
+
+.. _HIP: https://github.com/ROCm-Developer-Tools/HIP
+
+.. _hipSYCL: https://github.com/illuhad/hipSYCL
 
 .. _HSA: http://www.hsafoundation.com/
 
