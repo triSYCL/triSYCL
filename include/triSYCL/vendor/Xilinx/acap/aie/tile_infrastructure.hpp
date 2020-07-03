@@ -329,7 +329,7 @@ public:
                                     i + 1)).str());
     };
     c.add((boost::format { R"(
-    \node() at %1% {\texttt{tile<%2%,%3%>}};
+    \node[black] () at %1% {\texttt{tile<%2%,%3%>}};
     \begin{scope}[on background layer]
       \node [fill=orange!30, fit={(node cs:name=CoreIn0Label)
                                   (node cs:name=CoreOut0Label)}]

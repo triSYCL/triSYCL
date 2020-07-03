@@ -15,6 +15,7 @@
 
 #include <boost/format.hpp>
 #include <boost/hana.hpp>
+#include "magic_enum.hpp"
 
 #include "cascade_stream.hpp"
 #include "geography.hpp"

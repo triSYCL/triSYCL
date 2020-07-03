@@ -84,7 +84,7 @@ public:
 \begin{tikzpicture}[%% Scale by 0.1, so the unit is 1mm instead of default 1cm
   scale = 0.1,
   %% Default style
-  red,
+  gray,
   style = {line width = %4%mm, ->}]
 
 )" } % scale(size.x()) % scale(size.y()) % scale(1) % scale(0.01)).str();

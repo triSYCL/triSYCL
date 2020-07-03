@@ -534,11 +534,15 @@ public:
                                               { "me", 0 },
                                               { "west", 0 },
                                               { "south", 90 } });
+        // Use specific color for core emission or reception
+        auto color = input_port_name.starts_with("me") ? "red"
+          : output_port_name.starts_with("me") ? "teal" : "blue";
         c.add((boost::format { R"(
-    \draw (node cs:name=S%1%)
+    \draw[%5%] (node cs:name=S%1%)
        to [out=%2%, in=%4%] (node cs:name=M%3%);)" }
             % c.clean_node(input_port_name) % input_angle
-            % c.clean_node(output_port_name) % output_angle).str());
+            % c.clean_node(output_port_name) % output_angle
+            % color).str());
       }
     }
   }
