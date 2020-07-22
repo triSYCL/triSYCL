@@ -114,7 +114,7 @@ public:
     /// Inherit from parent constructors
     using axi_ss_t::router_port::router_port;
 
-    /// Enqueue a packet ()coming from the switch) to the core input
+    /// Enqueue a packet (coming from the switch) to the core input
     void write(const axi_packet &v) override {
       TRISYCL_DUMP_T("core_receiver " << this << " on tile("
                      << rp::axi_ss.x_coordinate

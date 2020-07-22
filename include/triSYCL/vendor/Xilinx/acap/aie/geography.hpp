@@ -363,6 +363,13 @@ struct geography : Layout {
 
   // The organization of the AXI stream switch on a core tile
   struct core_axi_stream_switch {
+
+    /// Default number of registers on default router paths
+    static auto constexpr latency = 4;
+
+    /// Depth of additional FIFO on specific FIFO paths
+    static auto constexpr fifo_depth = 16;
+
     /** Layout of the AXI stream master ports in the switch
 
         Revision v2.02, 4.2.1 Types of AXI-Streams, Table 4-2, p. 101 */
@@ -405,6 +412,8 @@ struct geography : Layout {
     }
 
   public:
+
+    /// \todo factorize with a mix-in the following between master and slave
 
     /// Number of AXI stream master ports in the switch
     static constexpr auto nb_master_port =

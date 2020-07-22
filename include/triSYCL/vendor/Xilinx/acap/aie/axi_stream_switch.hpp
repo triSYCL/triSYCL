@@ -151,11 +151,11 @@ public:
   public:
 
     /// Router ingress capacity queue
-    /// \todo check with hardware team for the value
-    auto static constexpr capacity = 4;
+    const int capacity;
 
     /// Ingress packet queue
-    boost::fibers::buffered_channel<axi_packet> c { capacity };
+    boost::fibers::buffered_channel<axi_packet> c
+      { static_cast<std::size_t>(capacity) };
 
     /// The ids of the outputs port the router minion has to forward to.
     /// Used by introspection to track current routing configuration
@@ -255,8 +255,10 @@ public:
 
     /// Create a router minion on this switch using a fiber executor
     router_minion(axi_stream_switch &axi_ss,
-                  detail::fiber_pool &fiber_executor)
+                  detail::fiber_pool &fiber_executor,
+                  int capacity = axi_ss_geo::latency)
       : router_port { axi_ss }
+      , capacity { capacity }
     {
       /// Use a fiber as a data mover from the input queue
       futures.push_back(fiber_executor.submit([&] {
@@ -469,11 +471,9 @@ public:
 
   /// Connect the internals of the AXI stream switch
   axi_stream_switch() {
-     // \todo DMA
+    // \todo DMA
 
-      // \todo FIFO
-
-      // \todo CTRL
+    // \todo CTRL
   }
 
 
@@ -482,16 +482,38 @@ public:
     x_coordinate = x;
     y_coordinate = y;
     // Add a router worker on all switch input
-    for (auto &p : input_ports) {
+    for (auto& p : input_ports) {
+      auto port_enum =
+        magic_enum::enum_cast<spl>(std::distance(input_ports.begin(), &p));
 #ifdef TRISYCL_DEBUG
-      auto port_enum = static_cast<spl>(&p - std::begin(input_ports));
       auto port_name = magic_enum::enum_name(port_enum);
 #endif
       TRISYCL_DUMP_T("axi_stream_switch " << this
                      << " (" << x_coordinate << ',' << y_coordinate
                      << ") start initialize input: " << port_name);
-      p = std::make_shared<router_minion>(*this, fiber_executor);
+      // If the port comes from the FIFO, use a FIFO-featured
+      // router_minion instead
+      if (ranges::find(axi_ss_geo::s_fifo_range, port_enum)
+          != std::end(axi_ss_geo::s_fifo_range))
+        /* A special AXI switch routing interface which provides a
+           FIFO.  Since a router_minion has already some internal FIFO
+           behavior, some deeper FIFO behavior can actually be
+           implemented with a specific router_minion with a deeper
+           FIFO internally, to avoid having 2 active components, the
+           FIFO + the router_minion */
+        p = std::make_shared<router_minion>(*this,
+                                            fiber_executor,
+                                            axi_ss_geo::fifo_depth);
+      else
+        p = std::make_shared<router_minion>(*this, fiber_executor);
     }
+    // Since the FIFO behavior is actually implemented with a
+    // router_minion with a deeper FIFO internally, the "input" of the
+    // "FIFO" can be just directly connected to this specific
+    // router_minion
+    for (auto [o, i] : ranges::views::zip(axi_ss_geo::m_fifo_range,
+                                          axi_ss_geo::s_fifo_range))
+      output(o) = input(i);
   }
 
 
