@@ -313,6 +313,24 @@ public:
   };
 
 
+  /// Get the routeur_minion behind a router_port
+  static router_minion *
+  get_as_router_minion(router_port * rp) {
+#ifdef NDEBUG
+    // No assert mode
+    auto rm = static_cast<router_minion *>(rp);
+#else
+    // In mode with assertion, check this is really a router_minion
+    auto rm = dynamic_cast<router_minion *>(rp);
+    if (!rm) {
+      throw ::trisycl::runtime_error {
+        "This is not a routable switch port" };
+    }
+#endif
+    return rm;
+  }
+
+
   /** Validate the user port number and translate it to the physical
       port number
 
@@ -399,17 +417,8 @@ public:
     TRISYCL_DUMP_T("connect " << this
                    << " input: " << magic_enum::enum_name(sp)
                    << " to output: " << magic_enum::enum_name(mp));
-    // \todo factorize out
-    using u_t = std::underlying_type_t<decltype(sp)>;
-    auto port = static_cast<u_t>(sp);
-    auto rm = dynamic_cast<router_minion *>(in_connection(sp).get());
-    if (!rm) {
-      throw ::trisycl::runtime_error {
-        (boost::format {
-          "connect: %1% is not a routable switch input port" }
-          % port).str() };
-    }
-    rm->connect_to(mp, out_connection(mp));
+    get_as_router_minion(in_connection(sp).get())
+      ->connect_to(mp, out_connection(mp));
   }
 
 
@@ -538,7 +547,7 @@ public:
   void display_routing_configuration(latex::context& c) const {
     for (const auto& [i, p] :  ranges::views::enumerate(input_ports)) {
       auto input_port = static_cast<spl>(i);
-      auto rm = dynamic_cast<router_minion *>(p.get());
+      auto rm = get_as_router_minion(p.get());
       for (auto output_port : rm->get_master_port_dests()) {
         auto input_port_name = magic_enum::enum_name(input_port);
         // Compute the angle of the starting arrow from the input
