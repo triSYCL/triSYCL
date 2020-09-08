@@ -264,7 +264,7 @@ struct task : public std::enable_shared_from_this<task>,
 
 
   /// Set a kernel argument by address
-  void set_arg(int arg_index, std::size_t arg_size, const void *scalar_value) {
+  void set_arg(std::size_t arg_index, std::size_t arg_size, const void *scalar_value) {
 #ifdef TRISYCL_OPENCL
     // Forward to the OpenCL kernel
     get_kernel().get_boost_compute().set_arg(arg_index,
@@ -278,7 +278,7 @@ struct task : public std::enable_shared_from_this<task>,
 
   /// Set a kernel argument by value
   template <typename T>
-  void set_arg(int arg_index, const T &scalar_value) {
+  void set_arg(std::size_t arg_index, const T &scalar_value) {
 #ifdef TRISYCL_OPENCL
     // Forward to the OpenCL kernel
     get_kernel().get_boost_compute().set_arg(arg_index, scalar_value);
