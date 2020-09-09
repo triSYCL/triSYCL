@@ -163,7 +163,7 @@ struct palette {
       \param[in] clip is optional and specifies a value to be enhanced
   */
   palette(kind k = gray, int phase = 0, int frequency_log2 = 0, int clip = -1)
-    : k { k }, phase { phase } , clip { clip } {
+    : k { k }, phase { phase } , clip { clip }, frequency_log2{frequency_log2} {
       update();
     }
 
