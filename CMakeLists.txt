@@ -4,10 +4,10 @@ set(TRISYCL_VERSION_MAJOR 0)
 set(TRISYCL_VERSION_MINOR 1)
 set(TRISYCL_VERSION_PATCH 0)
 set(TRISYCL_VERSION "${TRISYCL_VERSION_MAJOR}.${TRISYCL_VERSION_MINOR}.${TRISYCL_VERSION_PATCH}")
+
 project(triSYCL VERSION ${TRISYCL_VERSION} LANGUAGES CXX)
-
-
 set(CMAKE_CXX_STANDARD 17)
+
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 include(FindTriSYCL)
@@ -16,9 +16,10 @@ include(FindTriSYCL)
 include(CTest)
 enable_testing()
 
-include_directories(${PROJECT_SOURCE_DIR}/include) # All targets inherit SYCL include dir
-include_directories(${PROJECT_SOURCE_DIR}/tests/common) # All targets inherit SYCL include dir
-
+ # All targets inherit SYCL include dir
+include_directories(${PROJECT_SOURCE_DIR}/include)
+ # All targets inherit SYCL test include dir since it is about testing here
+include_directories(${PROJECT_SOURCE_DIR}/tests/common)
 
 # Recurse into tests dir to pick up unit tests
 if (BUILD_TESTING)
