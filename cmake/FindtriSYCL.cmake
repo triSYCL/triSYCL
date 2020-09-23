@@ -249,6 +249,8 @@ message(STATUS "triSYCL kernel trace:             ${TRISYCL_TRACE_KERNEL}")
 
 find_package(Threads REQUIRED)
 
+find_package(range-v3 REQUIRED)
+
 #######################
 #  add_sycl_to_target
 #######################
