@@ -1,16 +1,18 @@
-cmake_minimum_required (VERSION 3.5) # The minimum version of CMake necessary to build this project
+# The minimum version of CMake necessary to build this project
+cmake_minimum_required (VERSION 3.5)
 
 set(TRISYCL_VERSION_MAJOR 0)
 set(TRISYCL_VERSION_MINOR 1)
 set(TRISYCL_VERSION_PATCH 0)
-set(TRISYCL_VERSION "${TRISYCL_VERSION_MAJOR}.${TRISYCL_VERSION_MINOR}.${TRISYCL_VERSION_PATCH}")
+set(TRISYCL_VERSION
+  "${TRISYCL_VERSION_MAJOR}.${TRISYCL_VERSION_MINOR}.${TRISYCL_VERSION_PATCH}")
 
 project(triSYCL VERSION ${TRISYCL_VERSION} LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
-include(FindTriSYCL)
+include(FindtriSYCL)
 
 # Enable CTest
 include(CTest)

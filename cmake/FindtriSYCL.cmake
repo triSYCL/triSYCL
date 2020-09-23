@@ -1,12 +1,12 @@
 #.rst:
-# FindTriSYCL
+# FindtriSYCL
 #---------------
 #
 # This file is distributed under the University of Illinois Open Source
 # License. See LICENSE.TXT for details.
 
 #########################
-#  FindTriSYCL.cmake
+#  FindtriSYCL.cmake
 #########################
 #
 # Tools for finding and building with triSYCL.
