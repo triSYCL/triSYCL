@@ -275,8 +275,8 @@ function(add_sycl_to_target targetName)
     Boost::context
     Boost::fiber
     Boost::thread
-    $<$<BOOL:${TRISYCL_OPENCL}>:Boost::filesystem> #Required by BOOST_COMPUTE_USE_OFFLINE_CACHE.
-    ${GTKMM_LIBRARIES})
+    #Required by BOOST_COMPUTE_USE_OFFLINE_CACHE:
+    $<$<BOOL:${TRISYCL_OPENCL}>:Boost::filesystem>)
 
   # Compile definitions
   target_compile_definitions(${targetName} PUBLIC
