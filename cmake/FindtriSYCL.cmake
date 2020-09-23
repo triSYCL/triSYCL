@@ -223,8 +223,8 @@ if(TRISYCL_TBB)
   find_package(TBB REQUIRED)
 endif()
 
-# Find Boost
-set(BOOST_REQUIRED_COMPONENTS chrono fiber log thread)
+# Find specifically the non pure header Boost library packages
+set(BOOST_REQUIRED_COMPONENTS context fiber log thread)
 
 if(TRISYCL_OPENCL)
   list(APPEND BOOST_REQUIRED_COMPONENTS filesystem)
@@ -272,6 +272,7 @@ function(add_sycl_to_target targetName)
     Threads::Threads
     $<$<BOOL:${LOG_NEEDED}>:Boost::log>
     Boost::chrono
+    Boost::context
     Boost::fiber
     Boost::thread
     $<$<BOOL:${TRISYCL_OPENCL}>:Boost::filesystem> #Required by BOOST_COMPUTE_USE_OFFLINE_CACHE.
