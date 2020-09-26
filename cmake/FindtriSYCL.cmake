@@ -278,7 +278,9 @@ function(add_sycl_to_target targetName)
     Boost::fiber
     Boost::thread
     #Required by BOOST_COMPUTE_USE_OFFLINE_CACHE:
-    $<$<BOOL:${TRISYCL_OPENCL}>:Boost::filesystem>)
+    $<$<BOOL:${TRISYCL_OPENCL}>:Boost::filesystem>
+    range-v3::range-v3
+  )
 
   # Compile definitions
   target_compile_definitions(${targetName} PUBLIC
