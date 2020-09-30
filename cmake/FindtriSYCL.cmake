@@ -1,12 +1,12 @@
 #.rst:
-# FindTriSYCL
+# FindtriSYCL
 #---------------
 #
 # This file is distributed under the University of Illinois Open Source
 # License. See LICENSE.TXT for details.
 
 #########################
-#  FindTriSYCL.cmake
+#  FindtriSYCL.cmake
 #########################
 #
 # Tools for finding and building with triSYCL.
@@ -14,7 +14,8 @@
 # Requite CMake version 3.5 or higher
 
 cmake_minimum_required (VERSION 3.5)
-project(triSYCL CXX) # The name of the project (forward declare language)
+# The name of the project (forward declare language)
+project(triSYCL CXX)
 
 #######################
 #  set_target_cxx_std
@@ -189,7 +190,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CXX_STANDARD_REQUIRED ON)
 
 if(NOT TRISYCL_INCLUDE_DIR)
-  set(TRISYCL_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
+  # Set the location from the local directory instead of the project
+  # directory, so the location is correct even when this file is
+  # included from anywhere
+  set(TRISYCL_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/../include)
 endif()
 
 if(EXISTS ${TRISYCL_INCLUDE_DIR})
@@ -219,8 +223,8 @@ if(TRISYCL_TBB)
   find_package(TBB REQUIRED)
 endif()
 
-# Find Boost
-set(BOOST_REQUIRED_COMPONENTS chrono fiber log thread)
+# Find specifically the non pure header Boost library packages
+set(BOOST_REQUIRED_COMPONENTS context fiber log thread)
 
 if(TRISYCL_OPENCL)
   list(APPEND BOOST_REQUIRED_COMPONENTS filesystem)
@@ -245,6 +249,8 @@ message(STATUS "triSYCL kernel trace:             ${TRISYCL_TRACE_KERNEL}")
 
 find_package(Threads REQUIRED)
 
+find_package(range-v3 REQUIRED)
+
 #######################
 #  add_sycl_to_target
 #######################
@@ -268,10 +274,13 @@ function(add_sycl_to_target targetName)
     Threads::Threads
     $<$<BOOL:${LOG_NEEDED}>:Boost::log>
     Boost::chrono
+    Boost::context
     Boost::fiber
     Boost::thread
-    $<$<BOOL:${TRISYCL_OPENCL}>:Boost::filesystem> #Required by BOOST_COMPUTE_USE_OFFLINE_CACHE.
-    ${GTKMM_LIBRARIES})
+    #Required by BOOST_COMPUTE_USE_OFFLINE_CACHE:
+    $<$<BOOL:${TRISYCL_OPENCL}>:Boost::filesystem>
+    range-v3::range-v3
+  )
 
   # Compile definitions
   target_compile_definitions(${targetName} PUBLIC
