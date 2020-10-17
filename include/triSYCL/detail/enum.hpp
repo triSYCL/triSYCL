@@ -18,10 +18,19 @@ namespace trisycl::detail {
 /** Get the enum value as an integral value of the underlying integer
     type
 */
-auto underlying_value = [] (auto e) {
+auto constexpr underlying_value = [] (auto e) {
   using value_t = std::underlying_type_t<decltype(e)>;
   return static_cast<value_t>(e);
 };
+
+
+/// Get the distance between 2 enum underlying values
+auto constexpr enum_distance = [] (auto enum_start, auto enum_end) {
+  static_assert(std::is_same_v<decltype(enum_start), decltype(enum_end)>,
+                "enum_start and auto enum_end should have the same type");
+  return underlying_value(enum_end) - underlying_value(enum_start);
+};
+
 
 }
 
