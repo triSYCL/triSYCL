@@ -91,10 +91,15 @@ public:
 
       Note that a router output is actually implemented as an input to
       some other consumer (router, core...).
-   */
-  struct router_port {
+
+      \todo Rename this communication_port since it is more generic
+      and move it in its own file
+  */
+  class router_port {
     /// Keep track of the AXI stream switch owning this port for debugging
     axi_stream_switch &axi_ss;
+
+  public:
 
     using value_type = axi_packet::value_type;
 
@@ -120,6 +125,7 @@ public:
         \return true if the packet is correctly enqueued
     */
     bool virtual try_write(const axi_packet &v) = 0;
+
 
     /// Waiting read to a core input port
     value_type virtual read() = 0;
@@ -148,8 +154,6 @@ public:
   /// A router input port with routing skills
   class router_minion : public router_port {
 
-  public:
-
     /// Router ingress capacity queue
     const int capacity;
 
@@ -168,10 +172,21 @@ public:
 
     /// Inherit from parent constructors
     using router_port::router_port;
-    using value_type = typename router_port::value_type;
 
     /// To shepherd the routing fibers
     std::vector<detail::fiber_pool::future<void>> futures;
+
+    /// Wait for the fibers to complete
+    void join() {
+      // Wait on all the fibers to finish
+      for (auto &f : futures)
+        // Get the value of the future, to get an exception if any
+        f.get();
+    }
+
+  public:
+
+    using value_type = typename router_port::value_type;
 
     /// Enqueue a packet on the router input
     /// \todo Clean up the API to separate data from signaling
@@ -240,18 +255,6 @@ public:
       return mpl_outputs;
     }
 
-
-  private:
-
-    /// Wait for the fibers to complete
-    void join() {
-      // Wait on all the fibers to finish
-      for (auto &f : futures)
-        // Get the value of the future, to get an exception if any
-        f.get();
-    }
-
-  public:
 
     /// Create a router minion on this switch using a fiber executor
     router_minion(axi_stream_switch &axi_ss,

@@ -94,7 +94,7 @@ private:
 public:
 
   /// A router input port directing to a AIE core input
-  struct core_receiver : axi_ss_t::router_port {
+  class core_receiver : public axi_ss_t::router_port {
     using rp = typename axi_ss_t::router_port;
 
     /// Router ingress capacity queue
@@ -113,6 +113,8 @@ public:
 
     /// Inherit from parent constructors
     using axi_ss_t::router_port::router_port;
+
+  public:
 
     /// Enqueue a packet (coming from the switch) to the core input
     void write(const axi_packet &v) override {
