@@ -68,14 +68,14 @@ template <char...> struct KernelInfoData; // Should this have dummy impl?
 // C++14 like index_sequence and make_index_sequence
 // not needed C++14 members (value_type, size) not implemented
 template <class T, T...> struct integer_sequence {};
-template <size_t... I> using index_sequence = integer_sequence<size_t, I...>;
-template <size_t N>
-using make_index_sequence = __make_integer_seq<integer_sequence, size_t, N>;
+template <unsigned... I> using index_sequence = integer_sequence<unsigned, I...>;
+template <unsigned N>
+using make_index_sequence = __make_integer_seq<integer_sequence, unsigned, N>;
 
 template <typename T> struct KernelInfoImpl {
 private:
-  static constexpr auto n = __unique_stable_name(T);
-  template <size_t... I>
+  static constexpr auto n = __builtin_unique_stable_name(T);
+  template <unsigned... I>
   static KernelInfoData<n[I]...> impl(index_sequence<I...>) {
     return {};
   }
@@ -88,6 +88,7 @@ template <typename T> using KernelInfo = typename KernelInfoImpl<T>::type;
 
 } // namespace trisycl::detail
 
+#define __SYCL_DLL_LOCAL
 
 #endif // TRISYCL_SYCL_DETAIL_KERNEL_DESC_HPP
 

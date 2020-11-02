@@ -237,7 +237,7 @@ struct program {
 // template <typename KernelName, typename KernelType> and do not compile with
 // the -fsycl-unnamed-lambda option.
 #ifdef __SYCL_DEVICE_ONLY__
-  template <typename KernelType>
+  template <typename KernelName, typename KernelType>
   __attribute__((sycl_kernel))
   void kernel_outliner(KernelType k) {
     k.run();
@@ -267,7 +267,7 @@ struct program {
         // destructor, but you can run -O3 and it'll clean it up quite a bit
         // without nuking everything so it's progress. The result seems semi-
         // reasonable and passes through xchesscc at a reasonable speed
-        kernel_outliner(std::move(t));
+        kernel_outliner<typename std::decay<decltype(t)>::type>(std::move(t));
 
         // Method 2: This needs us to turn off diagnostic about std layout
         // but allows us to use some normal SYCL like lambda generation rather
@@ -289,8 +289,8 @@ struct program {
             // defined to be in this namespace (and all our implementation
             // resides in trisycl by default, so ::detail resolves to
             // trisycl::detail)
-            auto kernelName = cl::sycl::detail::KernelInfo<
-                typename std::remove_reference<decltype(t)>::type>::getName();
+            auto kernelName = ::trisycl::detail::KernelInfo<
+                typename std::decay<decltype(t)>::type>::getName();
 
             TRISYCL_DUMP_T("Starting AIE tile (" << t.x << ',' << t.y
                            << ") linear id = " << t.linear_id() << ","
