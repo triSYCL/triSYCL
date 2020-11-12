@@ -283,7 +283,7 @@ extern "C" {
   /// TODO: Make barebones singleton program manager class that keeps track of
   /// our binaries...
   void __attribute__((noinline, weak))
-    __tgt_register_lib(__sycl_bin_desc* desc)  {
+    __sycl_register_lib(__sycl_bin_desc* desc)  {
     trisycl::detail::program_manager::instance()->addImages(desc);
   }
 
@@ -294,7 +294,7 @@ extern "C" {
   /// management, although it isn't implemented in Intel SYCL as of the time of
   /// writing this.
   void __attribute__((noinline, weak))
-    __tgt_unregister_lib(__sycl_bin_desc* desc) {}
+    __sycl_unregister_lib(__sycl_bin_desc* desc) {}
 
   // +++ }
 
