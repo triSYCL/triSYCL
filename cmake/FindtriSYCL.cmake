@@ -199,7 +199,7 @@ endif()
 if(EXISTS ${TRISYCL_INCLUDE_DIR})
   message(STATUS "Found triSYCL include directory: " ${TRISYCL_INCLUDE_DIR})
 else()
-  message(FATAL_ERROR "triSYCL include directory - no found! "
+  message(FATAL_ERROR "triSYCL include directory - not found! "
     ${TRISYCL_INCLUDE_DIR})
 endif()
 
