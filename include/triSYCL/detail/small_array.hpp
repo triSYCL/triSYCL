@@ -48,18 +48,22 @@ namespace trisycl::detail {
 
     This handles both a[] op b[] and a[] op b, where b is a BasicType.
 */
-#define TRISYCL_LOGICAL_OPERATOR_VECTOR_OP(op)          \
-  FinalType operator op(const FinalType &rhs) const {   \
-    FinalType res;                                      \
-    for (std::size_t i = 0; i != Dims; ++i)             \
-      res[i] = (*this)[i] op rhs[i];                    \
-    return res;                                         \
-  }                                                     \
-  FinalType operator op(const BasicType &rhs) {         \
-    FinalType res;                                      \
-    for (std::size_t i = 0; i != Dims; ++i)             \
-      res[i] = (*this)[i] op rhs;                       \
-    return res;                                         \
+#define TRISYCL_LOGICAL_OPERATOR_VECTOR_OP(op)                    \
+  FinalType operator op(const FinalType &rhs) const {             \
+    FinalType res;                                                \
+    for (std::size_t i = 0; i != Dims; ++i)                       \
+      res[i] = (*this)[i] op rhs[i];                              \
+    return res;                                                   \
+  }                                                               \
+  /* Skip this for Dims = 1 to avoid ambiguity with implicit type \
+     conversion between the vector type and its basic type */     \
+  template <typename FT = FinalType,                              \
+            typename = std::enable_if_t<Dims != 1, FT>>           \
+  FinalType operator op(const BasicType &rhs) {                   \
+    FinalType res;                                                \
+    for (std::size_t i = 0; i != Dims; ++i)                       \
+      res[i] = (*this)[i] op rhs;                                 \
+    return res;                                                   \
   }
 
 /** Helper macro to declare a vector unary operation.
