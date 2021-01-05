@@ -119,8 +119,8 @@ You can build the binary with different compilers with
 
 .. code:: bash
 
-  make CXX=g++-9
-  make CXX=clang++-9
+  make CXX=g++-10
+  make CXX=clang++-10
 
 To compile with some debug options, look around some setting of the
 ``CXXFLAGS`` variable. You can configure triSYCL through various
@@ -168,14 +168,14 @@ To install it on Debian or Ubuntu, use typically:
 
 .. code:: bash
 
-  sudo apt-get install llvm-8-tools
+  sudo apt-get install llvm-11-tools
 
 You should direct the following variable to where is LIT_ located on your
 machine, for example:
 
 .. code:: bash
 
-  export TRISYCL_LIT=/usr/lib/llvm-8/build/utils/lit/lit.py
+  export TRISYCL_LIT=/usr/lib/llvm-11/build/utils/lit/lit.py
 
 To run with the checker, try:
 
