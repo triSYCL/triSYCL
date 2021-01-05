@@ -28,6 +28,13 @@
    CHECK_NEXT: 0 1 1
    CHECK_NEXT: 1 0 0
    CHECK_NEXT: 1 1 0
+   CHECK_NEXT: 7 8 9
+   CHECK_NEXT: 6 6 6
+   CHECK_NEXT: 0 1 2
+   CHECK_NEXT: 1 2 3
+   CHECK_NEXT: 1 2 3
+   CHECK_NEXT: 0 1 2
+   CHECK_NEXT: 1 2 3
 */
 #include <CL/sycl.hpp>
 #include <iostream>
@@ -118,5 +125,19 @@ int main() {
   r4.display();
   r4 = r1 >= r2;
   r4.display();
+
+  {
+    range<3> r1 { 7, 8, 9 };
+    (+r1).display();
+    range<3> r2 { 1, 2, 3 };
+    auto r3 = r1 + (-r2);
+    r3.display();
+    (--r2).display();
+    (++r2).display();
+    (r2--).display();
+    (r2++).display();
+    r2.display();
+  }
+
   return 0;
 }

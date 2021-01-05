@@ -23,8 +23,8 @@ auto equal = [] (auto const &v, auto const &verif) {
   return true;
 };
 
-/* Use the std::valarray<> implementation to compare computations on vec<>
-   and std::valarray<>
+/** Use the std::valarray<> implementation to compare computations on
+   vec<> and std::valarray<>
 */
 #define TRISYCL_CHECK(OPERATOR, TYPE, SIZE, VAL1, VAL2) \
   {                                                     \
@@ -44,6 +44,40 @@ auto equal = [] (auto const &v, auto const &verif) {
     v3 OPERATOR##= v1;                                  \
     va3 OPERATOR##= va1;                                \
     BOOST_CHECK(equal(v3, va3));                        \
+  }
+
+
+/** Use the std::valarray<> implementation to compare unary
+    computations on vec<> and std::valarray<>
+*/
+#define TRISYCL_UNARY_CHECK(OPERATOR, TYPE, SIZE, VAL1) \
+  {                                                     \
+    std::initializer_list<TYPE> vil1 VAL1;              \
+    using v = vec<TYPE, SIZE>;                          \
+    using va = std::valarray<TYPE>;                     \
+    v v1 VAL1;                                          \
+    va va1 { vil1 };                                    \
+    BOOST_CHECK(equal(v1, va1));                        \
+    v v2 = OPERATOR v1;                                 \
+    va va2 = OPERATOR va1;                              \
+    BOOST_CHECK(equal(v1, va1));                        \
+    BOOST_CHECK(equal(v2, va2));                        \
+  }
+
+/** Use the std::valarray<> implementation to compare unary
+    computations on vec<> and std::valarray<>
+
+   The unary operator can be before or after the argument (like ++a or
+   a++)
+*/
+#define TRISYCL_PREPOSTFIX_CHECK(BEFORE_OP, AFTER_OP, TYPE, SIZE, \
+                           VAL, VAL_AFTER, RESULT)                \
+  {                                                               \
+    using v = vec<TYPE, SIZE>;                                    \
+    v v1 VAL;                                                     \
+    v v2 = BEFORE_OP v1 AFTER_OP;                                 \
+    BOOST_CHECK(equal(v1, v VAL_AFTER));                          \
+    BOOST_CHECK(equal(v2, v RESULT));                             \
   }
 
 
@@ -95,6 +129,26 @@ int test_main(int argc, char *argv[]) {
         TRISYCL_CHECK(<<, int, 4, ({ 4, 5, 6, 7}), ({ 1, 2, 3, 4}));
         TRISYCL_CHECK(>>, int, 4, ({ 4, 5, 6, 7}), ({ 1, 2, 3, 4}));
         //TRISYCL_CHECK(&&, int, ({ 4, 5, 6, 7}), ({ 1, 2, 3, 4}));
+        // +v
+        TRISYCL_UNARY_CHECK(+, int, 4, ({ 1, 2, 3, 4}));
+        // -v
+        TRISYCL_UNARY_CHECK(-, int, 4, ({ 1, 2, 3, 4}));
+
+        // std::valarray does not support -- and ++ :-(
+        // ++v
+        TRISYCL_PREPOSTFIX_CHECK(++,, int, 4, ({ 1, 2, 3, 4}),
+                            ({ 2, 3, 4, 5}), ({ 2, 3, 4, 5}));
+
+        // --v
+        TRISYCL_PREPOSTFIX_CHECK(--,, int, 4, ({ 2, 3, 4, 5}),
+                                 ({ 1, 2, 3, 4}), ({ 1, 2, 3, 4}));
+        // v++
+        TRISYCL_PREPOSTFIX_CHECK(,++, int, 4, ({ 1, 2, 3, 4}),
+                                 ({ 2, 3, 4, 5}), ({ 1, 2, 3, 4}));
+        // v--
+        TRISYCL_PREPOSTFIX_CHECK(,--, int, 4, ({ 2, 3, 4, 5}),
+                                 ({ 1, 2, 3, 4}), ({ 2, 3, 4, 5}));
+
                                        });
       }); // End of our commands for this queue
   } // End scope, so we wait for the queue to complete
