@@ -165,7 +165,8 @@ namespace code {
 
         \todo Deal with several programs
     */
-    static boost::optional<program> p;
+    static TRISYCL_WEAK_ATTRIB_PREFIX boost::optional<program> TRISYCL_WEAK_ATTRIB_SUFFIX
+    p;
 
     program(std::size_t binary_size, const char *binary)
       : binary_size { binary_size }
