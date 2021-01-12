@@ -38,13 +38,11 @@
 #include "triSYCL/device_selector.hpp"
 #include "triSYCL/platform.hpp"
 
+/// The device-side runtime
 namespace trisycl::drt {
 /** \addtogroup device_runtime Device-side runtime implementation
     @{
 */
-
-/// The device-side runtime
-namespace drt {
 
 /// SYCL accessor seen from a device perspective
 template <typename Accessor>
@@ -226,7 +224,6 @@ set_kernel(detail::task &task,
 
 /// @} to end the Doxygen group
 
-}
 }
 
 /*
