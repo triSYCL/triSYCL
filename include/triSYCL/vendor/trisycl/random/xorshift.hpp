@@ -14,6 +14,7 @@
 
 #include <array>
 #include <cstdint>
+#include <limits>
 #include <type_traits>
 
 /// Random generators
@@ -55,11 +56,27 @@ struct xorshift {
   /// The type of the internal state of the generator
   using value_type = std::remove_const_t<decltype(initial_state)>;
 
+  /// The type of the result
+  using result_type = value_type;
+
   static_assert(!std::is_same_v<value_type, std::nullptr_t>,
                 "Bit size not implemented");
 
   /// The internal state of the pseudo random generator
   value_type state = initial_state;
+
+
+  /// The minimum returned value
+  static auto constexpr min() {
+    // It cannot return 0
+    return std::numeric_limits<result_type>::min() + 1;
+  };
+
+
+  /// The maximum returned value
+  static auto constexpr max() {
+    return std::numeric_limits<result_type>::max();
+  };
 
 
   /** Initialize the internal state from a user-given value
@@ -75,7 +92,7 @@ struct xorshift {
 
 
   /// Compute a new pseudo random integer
-  const value_type& operator()() {
+  const result_type& operator()() {
     if constexpr (bit_size == 32) {
       /* Pick the one of type "I" with best bit equidistribution from
          Panneton & L'Écuyer, Section "5.1 Equidistribution

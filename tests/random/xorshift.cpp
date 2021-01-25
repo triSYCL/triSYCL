@@ -3,6 +3,7 @@
    Exercise triSYCL sycl::vendor::trisycl::random::xorshift extension
 */
 #include <iostream>
+#include <random>
 #include <type_traits>
 
 #include <triSYCL/vendor/trisycl/random/xorshift.hpp>
@@ -42,5 +43,15 @@ int test_main(int argc, char *argv[]) {
 
   r::xorshift<128> rng128_0 { { 1, 2, 3, 4 } };
   BOOST_CHECK((rng128_0() == r::xorshift<128>::value_type { 2, 3, 4, 0x80d }));
+
+  // To generate integer values between 0 and 9
+  std::uniform_int_distribution<int> dist { 0, 9 };
+  BOOST_CHECK(dist(rng32) == 8);
+  BOOST_CHECK(dist(rng32) == 3);
+
+  std::uniform_real_distribution<float> rdist { 0, 1 };
+  for (int n = 0; n < 10; ++n)
+        std::cout << rdist(rng32) << '\n';
+
   return 0;
 }
