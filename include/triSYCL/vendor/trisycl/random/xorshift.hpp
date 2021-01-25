@@ -41,8 +41,12 @@ struct xorshift {
   /// The type of the internal state of the generator
   using state_t = std::conditional_t
     <bit_size == 32, std::uint32_t, std::conditional_t
-     <bit_size == 64, std::uint64_t,  state_128_t>>;
+     <bit_size == 64, std::uint64_t, std::conditional_t
+      <bit_size == 128, state_128_t, void>>>;
 
+  static_assert(!std::is_void_v<state_t>, "Bit size not implemented");
+
+  /// The internal state of the pseudo random generator
   state_t state;
 
   /// Compute a new pseudo random integer
