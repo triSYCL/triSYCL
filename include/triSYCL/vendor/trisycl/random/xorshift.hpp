@@ -121,7 +121,7 @@ struct xorshift {
     }
     else
       // Just to error in that case
-      return;
+      return nullptr;
 
     return state;
   }
