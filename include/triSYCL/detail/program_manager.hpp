@@ -72,8 +72,11 @@ struct __sycl_device_image {
   /// architecture
   const char *DeviceTargetSpec;
   /// a null-terminated string; target- and compiler-specific options
-  /// which are suggested to use to "build" program at runtime
-  const char *BuildOptions;
+  /// which are suggested to use to "compile" program at runtime
+  const char *CompileOptions;
+  /// a null-terminated string; target- and compiler-specific options
+  /// which are suggested to use to "link" program at runtime
+  const char *LinkOptions;
   /// Pointer to the manifest data start
   const unsigned char *ManifestStart;
   /// Pointer to the manifest data end
@@ -85,6 +88,10 @@ struct __sycl_device_image {
   /// the entry table
   __sycl_offload_entry *EntriesBegin;
   __sycl_offload_entry *EntriesEnd;
+
+  /// Unused for now.
+  void* PropertySetsBegin;
+  void* PropertySetsEnd;
 };
 
 /// This must match the __tgt_bin_desc of the clang-offload-wrapper
@@ -189,7 +196,7 @@ public:
       ///
       /// Push to ro storage images and our writeable copies in image_list
       images.push_back(img);
-      image_list.push_back(std::make_pair(std::string(img->BuildOptions),
+      image_list.push_back(std::make_pair(std::string(img->CompileOptions),
                            std::string(img->ImageStart, img->ImageEnd)));
     }
   }

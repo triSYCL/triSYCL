@@ -124,9 +124,7 @@ struct geography : Layout {
   */
   static void validate_x(int x) {
     if (!is_x_valid(x)) {
-      throw ::trisycl::runtime_error {
-        (boost::format { "The x coordinate %1% is not between %2% and %3%" }
-          % x % x_min % layout::x_max).str() };
+      throw ::trisycl::runtime_error {"" };
     }
   }
 
@@ -151,9 +149,7 @@ struct geography : Layout {
   */
   static void validate_y(int y) {
     if (!is_y_valid(y)) {
-      throw ::trisycl::runtime_error {
-        (boost::format { "The y coordinate %1% is not between %2% and %3%" }
-          % y % y_min % layout::y_max).str() };
+      throw ::trisycl::runtime_error { "" };
     }
   }
 
