@@ -21,6 +21,7 @@
 #include "memory_base.hpp"
 #include "tile.hpp"
 #include "tile_base.hpp"
+#include "aie_utils.hpp"
 #include "triSYCL/detail/program_manager.hpp"
 #include "triSYCL/detail/kernel_desc.hpp"
 
@@ -31,6 +32,14 @@
 extern "C" {
   #include <xaiengine.h>
 }
+#define XAIE_BASE_ADDR 0x20000000000
+#define XAIE_COL_SHIFT 23
+#define XAIE_ROW_SHIFT 18
+#define XAIE_SHIM_ROW 0
+#define XAIE_RES_TILE_ROW_START 0
+#define XAIE_RES_TILE_NUM_ROWS 0
+#define XAIE_AIE_TILE_ROW_START 1
+#define XAIE_AIE_TILE_NUM_ROWS 8
 #endif
 
 /// \ingroup acap
@@ -184,11 +193,12 @@ struct program {
   }
 
 #ifdef __SYCL_XILINX_AIE__
-  /// Array of LIB X AI Engine tiles, this is mostly used to instantiate the
-  /// tiles right now, perhaps it's feasible for this to simply be some
-  /// temporary storage before the individual hw tiles are offloaded to their
-  /// respective ACAP Tile
-  XAieGbl_Tile tile_inst[geo::x_size][geo::y_size + 1];
+  XAie_SetupConfig(aie_config, XAIE_DEV_GEN_AIE, XAIE_BASE_ADDR,
+                   XAIE_COL_SHIFT, XAIE_ROW_SHIFT, geo::y_size, geo::x_size,
+                   XAIE_SHIM_ROW, XAIE_RES_TILE_ROW_START,
+                   XAIE_RES_TILE_NUM_ROWS, XAIE_AIE_TILE_ROW_START,
+                   XAIE_AIE_TILE_NUM_ROWS);
+  XAie_InstDeclare(aie_inst, &aie_config);
 #endif
 
 
@@ -196,31 +206,28 @@ struct program {
   program(AIEDevice &aie_d) : aie_d { aie_d } {
   // Initialization of the AI Engine tile constructs from Lib X AI Engine
 #ifdef __SYCL_XILINX_AIE__
-    XAieGbl_HwCfg aie_config;
-    XAieGbl_Config *aie_config_ptr;
-    XAieGbl aie_inst;
-
-     // FIXME: hardcoded array offset = 0x800
-    XAIEGBL_HWCFG_SET_CONFIG((&aie_config), geo::y_size, geo::x_size, 0x800);
-    XAieGbl_HwInit(&aie_config);
-    aie_config_ptr = XAieGbl_LookupConfig(XPAR_AIE_DEVICE_ID);
-    (void)XAieGbl_CfgInitialize(&aie_inst, &tile_inst[0][0], aie_config_ptr);
+  TRISYCL_XAIE(XAie_CfgInitialize(&aie_inst, &aie_config));
 #endif
 
-    boost::hana::for_each(tiles, [&] (auto& t) {
-        // Inform each tile about its program
-        t.set_program(*this);
-        // Inform each tile about their tile infrastructure
-        t.set_tile_infrastructure(aie_d.tile(t.x, t.y));
+  boost::hana::for_each(tiles, [&](auto &t) {
+    // Inform each tile about its program
+    t.set_program(*this);
+    // Inform each tile about their tile infrastructure
+    t.set_tile_infrastructure(aie_d.tile(t.x, t.y));
 #ifdef __SYCL_XILINX_AIE__
-        // Inform each tile about their hw tile inst. skip the first shim row.
-        t.set_hw_tile(&tile_inst[t.x][t.y + 1]);
+    // Inform each tile about their hw tile inst. skip the first shim row.
+    t.set_hw_tile(XAie_TileLoc(t.x, t.y + 1), &aie_inst);
 #endif
-        // Keep track of each base tile
-        tile_bases[t.y][t.x] = &t;
-      });
+    // Keep track of each base tile
+    tile_bases[t.y][t.x] = &t;
+  });
   }
 
+#ifdef __SYCL_XILINX_AIE__
+  ~program() {
+    TRISYCL_XAIE(XAie_Finish(&aie_inst));
+  }
+#endif
 
   /** Instantiate a kernel in a form that can be outlined by the SYCL
       device compiler

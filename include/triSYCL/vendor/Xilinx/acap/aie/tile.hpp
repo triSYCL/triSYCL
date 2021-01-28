@@ -16,6 +16,7 @@
 
 #include "triSYCL/access.hpp"
 #include "tile_base.hpp"
+#include "aie_utils.hpp"
 
 
 /// TODO: Perhaps worth pushing all Lib X AI Engine functionallity we use down
@@ -280,12 +281,14 @@ struct tile : tile_base<AIE_Program> {
 #ifdef __SYCL_XILINX_AIE__
   /// The memory read accessors
   std::uint32_t mem_read(std::uint32_t offset) {
-    return XAieTile_DmReadWord(tb::aie_hw_tile, offset);
+    std::uint32_t Data;
+    TRISYCL_XAIE(XAieTile_DmReadWord(tb::aie_inst, tb::aie_hw_tile, offset, &Data));
+    return Data;
   }
 
   /// The memory write accessors
   void mem_write(std::uint32_t offset, std::uint32_t data) {
-    XAieTile_DmWriteWord(tb::aie_hw_tile, offset, data);
+    TRISYCL_XAIE(XAie_DataMemWrWord(tb::aie_inst, tb::aie_hw_tile, offset, data));
   }
 
   /// FIXME: is this right location for these functions?
@@ -293,33 +296,35 @@ struct tile : tile_base<AIE_Program> {
   /// wish to dump a stored binary or load something AoT compiled seperately
   void load_elf_file(const char *path) {
     // global load of elf
-    XAieGbl_LoadElf(tb::aie_hw_tile,  reinterpret_cast<const u8*>(path), 0);
+    TRISYCL_XAIE(XAie_LoadElf(tb::aie_inst, tb::aie_hw_tile,
+                              reinterpret_cast<const u8 *>(path), 0));
   }
 
   /// Load the elf via path to a block of memory which contains an elf image
   void load_elf_image(std::string image) {
-    XAieGbl_LoadElfMem(tb::aie_hw_tile, reinterpret_cast<u8*>(image.data()), 0);
+    TRISYCL_XAIE(XAie_LoadElfMem(tb::aie_inst, tb::aie_hw_tile,
+                                 reinterpret_cast<u8 *>(image.data())));
   }
 
   /// Reset the core
   void core_reset() {
-    XAieTile_CoreControl(tb::aie_hw_tile, XAIE_DISABLE, XAIE_ENABLE);
+    TRISYCL_XAIE(XAie_CoreReset(tb::aie_inst, tb::aie_hw_tile));
   }
 
   /// Start the core
   void core_run() {
-    XAieTile_CoreControl(tb::aie_hw_tile, XAIE_ENABLE, XAIE_DISABLE);
+    TRISYCL_XAIE(XAie_CoreUnreset(tb::aie_inst, tb::aie_hw_tile));
   }
 
   /// Stop the core
   void core_stop() {
-    XAieTile_CoreControl(tb::aie_hw_tile, XAIE_DISABLE, XAIE_DISABLE);
+    TRISYCL_XAIE(XAie_CoreDisable(tb::aie_inst, tb::aie_hw_tile));
   }
 
   /// Wait for the core to complete
   void core_wait() {
-    while(!XAieTile_CoreWaitStatus(tb::aie_hw_tile, 0,
-                                   XAIETILE_CORE_STATUS_DONE));
+    while (!XAie_CoreWaitForDone(tb::aie_inst, tb::aie_hw_tile, 0))
+      ;
   }
 #endif
 

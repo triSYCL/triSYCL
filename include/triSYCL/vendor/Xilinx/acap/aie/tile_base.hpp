@@ -62,7 +62,7 @@ public:
 
   /// Noop on device, it has to exist for compilation purposes as Host side code
   /// is still compiled for the device unfortunately.
-  void set_hw_tile(XAieGbl_Tile *tile) {}
+  void set_hw_tile(XAie_LocType, XAie_DevInst*) {}
 
   /// Noop on device, it has to exist for compilation purposes as Host side code
   /// is still compiled for the device unfortunately.
@@ -111,7 +111,8 @@ protected:
 /// TODO: Think about where this should go, this is an instance of a HW Tile
 /// that a device instantiates, does it belong here or in tile_infrastructure?
 #ifdef __SYCL_XILINX_AIE__
-  XAieGbl_Tile *aie_hw_tile;
+  XAie_LocType aie_hw_tile;
+  XAie_DevInst* aie_inst;
 #endif
 
   /// Keep a reference to the tile_infrastructure hardware features
@@ -121,8 +122,9 @@ public:
 
 #ifdef __SYCL_XILINX_AIE__
   /// Store a way to access to hw tile instance
-  void set_hw_tile(XAieGbl_Tile *tile) {
+  void set_hw_tile(XAie_LocType tile, XAie_DevInst* inst) {
     aie_hw_tile = tile;
+    aie_inst = inst;
   }
 #endif
 
