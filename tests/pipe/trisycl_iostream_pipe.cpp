@@ -7,7 +7,7 @@
 */
 
 #include <sycl/sycl.hpp>
-#include <sycl/vendor/trisycl/pipe/cout.hpp>
+#include <sycl/vendor/triSYCL/pipe/cout.hpp>
 
 namespace ts = sycl::vendor::trisycl;
 
