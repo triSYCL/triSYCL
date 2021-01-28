@@ -28,7 +28,7 @@ namespace trisycl::vendor::xilinx {
     \param[in] f is a function that functions or loops in f will be executed
     in a dataflow manner.
 */
-auto dataflow = [] (auto functor) noexcept {
+auto inline dataflow = [] (auto functor) noexcept {
   /* SSDM instruction is inserted before the argument functor to guide xocc to
      do dataflow. */
   _ssdm_op_SpecDataflowPipeline(-1, "");
@@ -45,7 +45,7 @@ auto dataflow = [] (auto functor) noexcept {
     \param[in] f is a function with an innermost loop to be executed in a
     pipeline way.
 */
-auto pipeline = [] (auto functor) noexcept {
+auto inline pipeline = [] (auto functor) noexcept {
   /* SSDM instruction is inserted before the argument functor to guide xocc to
      do pipeline. */
   _ssdm_op_SpecPipeline(1, 1, 0, 0, "");

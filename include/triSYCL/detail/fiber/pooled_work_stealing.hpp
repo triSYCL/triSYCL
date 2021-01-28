@@ -107,11 +107,8 @@ class pooled_work_stealing : public boost::fibers::algo::algorithm {
     }
 
 
-  ~pooled_work_stealing() {
-    // Wait for all thread of the pool such that pointers in pool_ctx_
-    // stay valid while still in use
-    pool_ctx_->barrier_.wait();
-  }
+  // This will not be called until all other fibers are ready.
+  ~pooled_work_stealing() = default;
 
   pooled_work_stealing(pooled_work_stealing const&) = delete;
   pooled_work_stealing(pooled_work_stealing &&) = delete;

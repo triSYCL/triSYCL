@@ -306,8 +306,8 @@ check-list:
 
 check-compilers:
 	# Launch the check with various compilers
-	-FORCE_CXX=g++-9 $(MAKE) clean check
-	-FORCE_CXX=clang++-9 $(MAKE) clean check
+	-FORCE_CXX=g++-10 $(MAKE) clean check
+	-FORCE_CXX=clang++-11 $(MAKE) clean check
 	-FORCE_CXX=g++ $(MAKE) clean check
 
 # A special target to be called as from the test as "make execute

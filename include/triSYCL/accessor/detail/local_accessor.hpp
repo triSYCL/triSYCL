@@ -64,6 +64,13 @@ class accessor<T, Dimensions, Mode, access::target::local> :
   using writable_array_type =
     typename std::remove_const<array_type>::type;
 
+  /** The allocation on the host for the local accessor
+
+      Note that this is uninitialized memory, as stated in SYCL
+      specification.
+  */
+  mutable T *allocation = nullptr;
+
   /** The way the buffer is really accessed
 
       Use a mutable member because the accessor needs to be captured
@@ -72,13 +79,6 @@ class accessor<T, Dimensions, Mode, access::target::local> :
       previously done in this implementation
    */
   mutable writable_array_type array;
-
-  /** The allocation on the host for the local accessor
-
-      Note that this is uninitialized memory, as stated in SYCL
-      specification.
-  */
-  mutable T *allocation = nullptr;
 
 public:
 

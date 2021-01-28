@@ -27,7 +27,7 @@
 
 #include <experimental/mdspan>
 
-#include <SYCL/sycl.hpp>
+#include <sycl/sycl.hpp>
 
 // Some headers used when debugging
 #include <chrono>

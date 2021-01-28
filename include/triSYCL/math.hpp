@@ -25,29 +25,35 @@
 #endif
 
 namespace trisycl {
-#define TRISYCL_MATH_WRAP(FUN) template<typename T>                            \
-  T FUN(T x) {                                                                 \
-    return std::FUN(x);                                                        \
+
+#define TRISYCL_MATH_WRAP(FUN) template<typename T>                     \
+  T FUN(const T& x) {                                                   \
+    return std::FUN(x);                                                 \
   }
-#define TRISYCL_MATH_WRAP2(FUN) template<typename T>                           \
-  T FUN(T x, T y) {                                                            \
-    return std::FUN(x, y);                                                     \
+
+#define TRISYCL_MATH_WRAP2(FUN) template<typename T>                    \
+  T FUN(const T& x, const T& y) {                                       \
+    return std::FUN(x, y);                                              \
   }
-#define TRISYCL_MATH_WRAP2s(FUN) template<typename T, typename U>              \
-  T FUN(T x, U y) {                                                            \
-    return std::FUN(x, y);                                                     \
+
+#define TRISYCL_MATH_WRAP2s(FUN) template<typename T, typename U>       \
+  T FUN(const T& x, const U& y) {                                       \
+    return std::FUN(x, y);                                              \
   }
-#define TRISYCL_MATH_WRAP3(FUN) template<typename T>                           \
-  T FUN(T x, T y, T z) {                                                       \
-    return std::FUN(x, y, z);                                                  \
+
+#define TRISYCL_MATH_WRAP3(FUN) template<typename T>                 \
+  T FUN(const T& x, const T& y, const T& z) {                        \
+    return std::FUN(x, y, z);                                        \
   }
-#define TRISYCL_MATH_WRAP3s(FUN) template<typename T, typename U>              \
-  T FUN(T x, T y, U z) {                                                       \
-    return std::FUN(x, y, z);                                                  \
+
+#define TRISYCL_MATH_WRAP3s(FUN) template<typename T, typename U> \
+  T FUN(const T& x, const T& y, const U& z) {                     \
+    return std::FUN(x, y, z);                                     \
   }
-#define TRISYCL_MATH_WRAP3ss(FUN) template<typename T, typename U>             \
-  T FUN(T x, U y, U z) {                                                       \
-    return std::FUN(x, y, z);                                                  \
+
+#define TRISYCL_MATH_WRAP3ss(FUN) template<typename T, typename U>  \
+  T FUN(const T& x, const U& y, const U& z) {                       \
+    return std::FUN(x, y, z);                                       \
   }
 
 TRISYCL_MATH_WRAP(abs)//I
@@ -109,9 +115,10 @@ TRISYCL_MATH_WRAP(logb)
 //
 //TRISYCL_MATH_WRAP3s(max) //I
 template<typename T>
-T max(T x, T y, T z) {
+T max(const T& x, const T& y, const T& z) {
   return std::max(x, std::max(y, z));
 }
+
 /* geninteger max (geninteger, geninteger)
  * geninteger max (geninteger, sgeninteger)
  */
@@ -122,9 +129,10 @@ T max(T x, T y, T z) {
 //
 //TRISYCL_MATH_WRAP3s(min) //I
 template<typename T>
-T min(T x, T y, T z) {
+T min(const T& x, const T& y, const T& z) {
   return std::min(x, std::min(y, z));
 }
+
 /* geninteger min (geninteger, geninteger)
  * geninteger min (geninteger, sgeninteger)
  */
@@ -176,7 +184,7 @@ TRISYCL_MATH_WRAP(trunc)
 // Returns the cross product of x.xyz and y.xyz. The w component of float4
 // result returned will be 0.0.
 template <typename T, int size>
-auto cross(vec<T, size> x, vec<T, size> y) {
+auto cross(const vec<T, size>& x, const vec<T, size>& y) {
   static_assert((size == 4 || size == 3),
                 "vec type should be 3 or 4 dimensions");
   if constexpr (size > 3) {
@@ -195,34 +203,34 @@ auto cross(vec<T, size> x, vec<T, size> y) {
 
 // Return the length of vector x, i.e., sqrt(x.x^2 + x.y^2 + ...)
 template <typename T, int size>
-auto length(vec<T, size> x) {
+auto length(const vec<T, size>& x) {
   auto temp = x * x;
   return sqrt(std::accumulate(temp.begin(), temp.end(), T{0}));
 }
 
 // Compute dot product.
 template <typename T, int size>
-auto dot(vec<T, size> x, vec<T, size> y) {
+auto dot(const vec<T, size>& x, const vec<T, size>& y) {
   return std::inner_product(x.begin(), x.end(), y.begin(), T{0});
 }
 
 template <typename T, int size>
-auto clamp(vec<T, size> x, T minval, T maxval) {
-  return x.map([=](auto e) {
+auto clamp(const vec<T, size>& x, const T& minval, const T& maxval) {
+  return x.map([&](auto e) {
     return clamp(e, minval, maxval);
   });
 }
 
 // Returns a vector in the same direction as x but with a length of 1.
 template <typename T, int size>
-auto normalize(vec<T, size> x) {
+auto normalize(const vec<T, size>& x) {
   return x / length(x);
 }
 
 // Round to integral value using the round to
 // negative infinity rounding mode.
 template <typename T, int size>
-auto floor(vec<T, size> x) {
+auto floor(const vec<T, size>& x) {
   return x.map(floor<T>);
 }
 
@@ -235,8 +243,8 @@ auto floor(vec<T, size> x) {
 // \todo Perhaps worth adding an isNaN check as I'm not sure if the < operator
 //       conforms to what the function requires
 template <typename T, int size>
-auto fmin(vec<T, size> x,
-          vec<T, size> y) {
+auto fmin(const vec<T, size>& x,
+          const vec<T, size>& y) {
   return x.zip(y, fmin<T,T>);
 }
 
@@ -245,8 +253,8 @@ auto fmin(vec<T, size> x,
 // the other argument. If both arguments are
 // NaNs, fmax() returns a NaN
 template <typename T, int size>
-auto fmax(vec<T, size> x,
-          vec<T, size> y) {
+auto fmax(const vec<T, size>& x,
+          const vec<T, size>& y) {
   return x.zip(y, fmax<T,T>);
 }
 
@@ -259,14 +267,14 @@ auto fmax(vec<T, size> x,
 // geninteger max (geninteger x, geninteger y)
 // geninteger max (geninteger x, sgeninteger y)
 template <typename T, int size>
-auto max(vec<T, size> x,
-         vec<T, size> y) {
+auto max(const vec<T, size>& x,
+         const vec<T, size>& y) {
   return fmax(x,y);
 }
 
 template <typename T, int size>
-auto min(vec<T, size> x,
-         vec<T, size> y) {
+auto min(const vec<T, size>& x,
+         const vec<T, size>& y) {
   return fmin(x,y);
 }
 

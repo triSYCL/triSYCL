@@ -38,13 +38,11 @@
 #include "triSYCL/device_selector.hpp"
 #include "triSYCL/platform.hpp"
 
+/// The device-side runtime
 namespace trisycl::drt {
 /** \addtogroup device_runtime Device-side runtime implementation
     @{
 */
-
-/// The device-side runtime
-namespace drt {
 
 /// SYCL accessor seen from a device perspective
 template <typename Accessor>
@@ -165,7 +163,8 @@ namespace code {
 
         \todo Deal with several programs
     */
-    static boost::optional<program> p;
+    static TRISYCL_WEAK_ATTRIB_PREFIX boost::optional<program> TRISYCL_WEAK_ATTRIB_SUFFIX
+    p;
 
     program(std::size_t binary_size, const char *binary)
       : binary_size { binary_size }
@@ -225,7 +224,6 @@ set_kernel(detail::task &task,
 
 /// @} to end the Doxygen group
 
-}
 }
 
 /*

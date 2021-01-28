@@ -25,7 +25,7 @@ namespace trisycl::detail {
     Using \c [[gnu::used]] does not work on arguments but only
     on static variable, so use this function.
 */
-auto prevent_arguments_from_optimization = [] (auto & ...args) {
+auto inline prevent_arguments_from_optimization = [] (auto & ...args) {
   /* Just keep track of the address of all the given objects,
      otherwise the objects are copied, may throw, are registered for
      destruction with \c atexit(), etc. */

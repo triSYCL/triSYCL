@@ -156,6 +156,12 @@ public:
   ~fiber_pool() {
     // Join first if not done already
     join();
+    // There is a circular dependecy of shared_ptr/intrusive_ptr between
+    // pc_stealing and its schedulers_. after we join we know none of the
+    // schedulers_ are still running so we break the cycle and everything
+    // cleansup itself.
+    if (pc_stealing)
+      pc_stealing->schedulers_.clear();
   }
 
 private:
