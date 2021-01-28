@@ -6,8 +6,8 @@
    Test the triSYCL iostream pipe extension
 */
 
-#include <SYCL/sycl.hpp>
-#include <SYCL/vendor/trisycl/pipe/cout.hpp>
+#include <sycl/sycl.hpp>
+#include <sycl/vendor/trisycl/pipe/cout.hpp>
 
 namespace ts = sycl::vendor::trisycl;
 

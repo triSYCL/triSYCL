@@ -13,7 +13,7 @@
     and to be used in full or partially with other SYCL
     implementations without naming conflict.
 
-    You can use CL/sycl.hpp or SYCL/sycl.hpp headers instead to use this
+    You can use CL/sycl.hpp or sycl/sycl.hpp headers instead to use this
     implementation with the usual \c ::cl::sycl or \c ::sycl namespaces.
 
     For more information about SYCL:
