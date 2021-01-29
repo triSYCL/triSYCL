@@ -32,6 +32,13 @@ auto constexpr enum_distance = [] (auto enum_start, auto enum_end) {
 };
 
 
+/** Count the number of enums between 2 enum boundaries,
+    including the boundaries */
+auto constexpr enum_count  = [] (auto enum_start, auto enum_end) {
+  return 1 + enum_distance(enum_start, enum_end);
+};
+
+
 }
 
 /*

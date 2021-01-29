@@ -425,8 +425,7 @@ struct geography : Layout {
 
     /// Number of master ports connected to the tile inputs
     static constexpr auto m_me_size =
-      detail::enum_distance(master_port_layout::me_0,
-                            master_port_layout::me_last);
+      detail::enum_count(master_port_layout::me_0, master_port_layout::me_last);
 
     /// A range of the master ports connected to the DMA inputs
     static auto inline m_dma_range =
@@ -434,8 +433,8 @@ struct geography : Layout {
 
     /// Number of master ports connected to the DMA inputs
     static constexpr auto m_dma_size =
-      detail::enum_distance(master_port_layout::dma_0,
-                            master_port_layout::dma_last);
+      detail::enum_count(master_port_layout::dma_0,
+                         master_port_layout::dma_last);
 
     /// A range of the master ports connected to the FIFO inputs
     static auto inline m_fifo_range =
@@ -444,8 +443,8 @@ struct geography : Layout {
 
     /// Number of master ports connected to the FIFO inputs
     static constexpr auto m_fifo_size =
-      detail::enum_distance(master_port_layout::fifo_0,
-                            master_port_layout::fifo_last);
+      detail::enum_count(master_port_layout::fifo_0,
+                         master_port_layout::fifo_last);
 
     /// A range of the South master ports
     static auto inline m_south_range =
@@ -454,8 +453,8 @@ struct geography : Layout {
 
     /// Number of South master ports
     static constexpr auto m_south_size =
-      detail::enum_distance(master_port_layout::south_0,
-                            master_port_layout::south_last);
+      detail::enum_count(master_port_layout::south_0,
+                         master_port_layout::south_last);
 
     /// A range of the West master ports
     static auto inline m_west_range =
@@ -464,8 +463,8 @@ struct geography : Layout {
 
     /// Number of West master ports
     static constexpr auto m_west_size =
-      detail::enum_distance(master_port_layout::west_0,
-                            master_port_layout::west_last);
+      detail::enum_count(master_port_layout::west_0,
+                         master_port_layout::west_last);
 
     /// A range of the North master ports
     static auto inline m_north_range =
@@ -474,8 +473,8 @@ struct geography : Layout {
 
     /// Number of North master ports
     static constexpr auto m_north_size =
-      detail::enum_distance(master_port_layout::north_0,
-                            master_port_layout::north_last);
+      detail::enum_count(master_port_layout::north_0,
+                         master_port_layout::north_last);
 
     /// A range of the East master ports
     static auto inline m_east_range =
@@ -484,8 +483,8 @@ struct geography : Layout {
 
     /// Number of East master ports
     static constexpr auto m_east_size =
-      detail::enum_distance(master_port_layout::east_0,
-                            master_port_layout::east_last);
+      detail::enum_count(master_port_layout::east_0,
+                         master_port_layout::east_last);
 
     /** Layout of the AXI stream slave ports in the switch
 
@@ -542,8 +541,7 @@ struct geography : Layout {
 
     /// Number of slave ports connected to the tile outputs
     static constexpr auto s_me_size =
-      detail::enum_distance(slave_port_layout::me_0,
-                            slave_port_layout::me_last);
+      detail::enum_count(slave_port_layout::me_0, slave_port_layout::me_last);
 
     /// A range of the slave ports connected to the DMA outputs
     static auto inline s_dma_range =
@@ -551,8 +549,7 @@ struct geography : Layout {
 
     /// Number of slave ports connected to the DMA outputs
     static constexpr auto s_dma_size =
-      detail::enum_distance(slave_port_layout::dma_0,
-                            slave_port_layout::dma_last);
+      detail::enum_count(slave_port_layout::dma_0, slave_port_layout::dma_last);
 
     /// A range of the slave ports connected to the FIFO outputs
     static auto inline s_fifo_range =
@@ -560,8 +557,8 @@ struct geography : Layout {
 
     /// Number of slave ports connected to the FIFO outputs
     static constexpr auto s_fifo_size =
-      detail::enum_distance(slave_port_layout::fifo_0,
-                            slave_port_layout::fifo_last);
+      detail::enum_count(slave_port_layout::fifo_0,
+                         slave_port_layout::fifo_last);
 
     /// A range of the South slave ports
     static auto inline s_south_range =
@@ -570,8 +567,8 @@ struct geography : Layout {
 
     /// Number of South slave ports
     static constexpr auto s_south_size =
-      detail::enum_distance(slave_port_layout::south_0,
-                            slave_port_layout::south_last);
+      detail::enum_count(slave_port_layout::south_0,
+                         slave_port_layout::south_last);
 
     /// A range of the West slave ports
     static auto inline s_west_range =
@@ -579,8 +576,8 @@ struct geography : Layout {
 
     /// Number of West slave ports
     static constexpr auto s_west_size =
-      detail::enum_distance(slave_port_layout::west_0,
-                            slave_port_layout::west_last);
+      detail::enum_count(slave_port_layout::west_0,
+                         slave_port_layout::west_last);
 
     /// A range of the North slave ports
     static auto inline s_north_range =
@@ -589,8 +586,8 @@ struct geography : Layout {
 
     /// Number of North slave ports
     static constexpr auto s_north_size =
-      detail::enum_distance(slave_port_layout::north_0,
-                            slave_port_layout::north_last);
+      detail::enum_count(slave_port_layout::north_0,
+                         slave_port_layout::north_last);
 
     /// A range of the East slave ports
     static auto inline s_east_range =
@@ -598,8 +595,8 @@ struct geography : Layout {
 
     /// Number of East slave ports
     static constexpr auto s_east_size =
-      detail::enum_distance(slave_port_layout::east_0,
-                            slave_port_layout::east_last);
+      detail::enum_count(slave_port_layout::east_0,
+                         slave_port_layout::east_last);
 
     /// Describe the AXI stream switch interconnection neighborhood
     static auto inline interconnect = boost::hana::make_tuple(
