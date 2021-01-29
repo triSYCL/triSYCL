@@ -316,7 +316,7 @@ public:
   };
 
 
-  /// Get the routeur_minion behind a router_port
+  /// Get the router_minion behind a router_port
   static router_minion *
   get_as_router_minion(router_port * rp) {
 #ifdef NDEBUG
@@ -402,7 +402,7 @@ public:
     if (port >= static_cast<std::ptrdiff_t>(std::size(output_ports)))
       throw ::trisycl::runtime_error {
         (boost::format {
-          "in_connection: %1% is not a valid port number between 0 and %2%" }
+          "out_connection: %1% is not a valid port number between 0 and %2%" }
            % port % (std::size(output_ports) - 1)).str() };
     return output_ports[port];
   }
@@ -423,7 +423,6 @@ public:
     get_as_router_minion(in_connection(sp).get())
       ->connect_to(mp, out_connection(mp));
   }
-
 
   // To deprecate ?
   using data_type = std::uint32_t;

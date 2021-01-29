@@ -84,7 +84,7 @@ private:
 
   /** Map the user output port number to the AXI stream switch port
 
-      \param[in] port is the BLI id/port to use
+      \param[in] port is the user port to use
   */
   static auto translate_output_port(int port) {
     return axi_ss_t::translate_port(port, mpl::me_0, mpl::me_last,
@@ -239,7 +239,7 @@ public:
 
       \param p is the slave_port_layout for the stream
   */
-  auto & input(spl p) {
+  auto& input(spl p) {
     // No index validation required because of type safety
     return axi_ss.input(p);
   }
@@ -249,7 +249,7 @@ public:
 
       \param p is the master_port_layout for the stream
   */
-  auto & output(mpl p) {
+  auto& output(mpl p) {
     // No index validation required because of type safety
     return axi_ss.output(p);
   }
