@@ -21,7 +21,7 @@
 
 #include "triSYCL/detail/shared_ptr_implementation.hpp"
 #include "triSYCL/platform.hpp"
-#include "triSYCL/vendor/trisycl/scope/platform/detail/platform.hpp"
+#include "triSYCL/vendor/triSYCL/scope/platform/detail/platform.hpp"
 
 /// This is an extension providing scope storage for platforms
 #define SYCL_VENDOR_TRISYCL_PLATFORM_SCOPE 1
