@@ -195,6 +195,7 @@ TRISYCL_MATH_WRAP2s(frexp)
 TRISYCL_MATH_WRAP2(hypot)
 //log
 //ilogb
+TRISYCL_MATH_WRAP(isnan)
 //ldexp
 TRISYCL_MATH_WRAP(lgamma)
 //*TRISYCL_MATH_WRAP2s(lgamma_r)
@@ -334,6 +335,21 @@ auto normalize(const vec<T, size>& x) {
   return x / length(x);
 }
 
+// returns     x if x is +/- 0,
+// otherwise  +0 if x is NaN,
+// otherwise   1 if x is > 0,
+// otherwise  -1
+template<typename T>
+T sign(const T & val) {
+  if (val == 0) return val;
+  if (isnan(val)) return 0;
+  return (val > 0) ? 1 : -1;
+}
+
+template <typename T, int size>
+auto sign(const vec<T, size>& x) {
+  return x.map(sign<T>);
+}
 //
 namespace native {
 TRISYCL_MATH_WRAP(cos)
