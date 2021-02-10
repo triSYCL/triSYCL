@@ -22,6 +22,7 @@
 #include <thread>
 
 #include <boost/log/trivial.hpp>
+#include <boost/log/core.hpp>
 #include <boost/type_index.hpp>
 
 // To be able to construct string literals like "blah"s
@@ -32,11 +33,13 @@ using namespace std::string_literals;
     Use an intermediate ostringstream because there are issues with
     BOOST_LOG_TRIVIAL to display C strings
 */
-#define TRISYCL_INTERNAL_DUMP(expression) do {       \
-    std::ostringstream s;                            \
-    s << expression;                                 \
-    BOOST_LOG_TRIVIAL(debug) << s.str();             \
-  } while(0)
+#define TRISYCL_INTERNAL_DUMP(expression)                                      \
+  do {                                                                         \
+    std::ostringstream s;                                                      \
+    s << expression;                                                           \
+    BOOST_LOG_TRIVIAL(debug) << s.str();                                       \
+    boost::log::core::get()->flush();                                          \
+  } while (0)
 #endif
 
 #ifdef TRISYCL_DEBUG

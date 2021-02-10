@@ -27,15 +27,17 @@ using namespace std::string_literals;
 #if defined(TRISYCL_DEBUG) || defined(TRISYCL_XAIE_DEBUG)
 #define TRISYCL_XAIE(XAIE_CALL)                                                \
   do {                                                                         \
-    BOOST_LOG_TRIVIAL(debug) << __FILE__ << ":" << __LINE__;                   \
     BOOST_LOG_TRIVIAL(debug) << #XAIE_CALL;                                    \
+    boost::log::core::get()->flush();                                          \
     AieRC RC = XAIE_CALL;                                                      \
     if (RC != XAIE_OK) {                                                       \
       BOOST_LOG_TRIVIAL(debug)                                                 \
           << "XAIE call failed:" << RC << ":" << #XAIE_CALL;                   \
+      boost::log::core::get()->flush();                                        \
       assert(false);                                                           \
     }                                                                          \
-    BOOST_LOG_TRIVIAL(debug) << " done\n";                                     \
+    BOOST_LOG_TRIVIAL(debug) << " done";                                       \
+    boost::log::core::get()->flush();                                          \
   } while (0)
 #else
 #define TRISYCL_XAIE(XAIE_CALL)                                                \
@@ -44,6 +46,7 @@ using namespace std::string_literals;
     if (RC != XAIE_OK) {                                                       \
       BOOST_LOG_TRIVIAL(debug)                                                 \
           << "XAIE call failed:" << RC << ":" << #XAIE_CALL;                   \
+      boost::log::core::get()->flush();                                        \
       assert(false);                                                           \
     }                                                                          \
   } while (0)

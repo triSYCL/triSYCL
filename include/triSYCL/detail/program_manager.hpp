@@ -141,10 +141,6 @@ namespace trisycl::detail {
 
 class program_manager : public detail::singleton<program_manager> {
 private:
-  /// \todo: Can probably get rid of this if we can rip all the data we need from
-  /// it when we run through
-  std::vector<__sycl_device_image*> images;
-
   /// A work-around to a work-around, the AI Engine runtime does some
   /// manipulation of the elf binary in memory to work through a chess compiler
   /// bug, so we need a copy of it as the original buffer containing each image
@@ -157,19 +153,16 @@ private:
   std::vector<std::pair</*Name*/std::string, /*Binary*/std::string>> image_list;
 
 public:
+  static bool isELFMagic(char *BinStart) {
+    return BinStart[0] == 0x7f && BinStart[1] == 'E' && BinStart[2] == 'L' &&
+           BinStart[3] == 'F';
+  }
   /// This in theory loads all of the images for a module, a module may not
   /// necessarily a translation unit it may also contain kernels from
   /// other TUs. But this requires a little more investigation as we have no
   /// test that spans multiple TUs yet! See Intel SYCL LLVM Pull:
   /// https://github.com/intel/llvm/pull/631
   void addImages(__sycl_bin_desc* desc) {
-    /// \todo Probably needs a lock to not have data races when running on
-    /// multiple cores, Intel defines a global singleton lock based on C++
-    /// mutexs in it's Util.hpp class in the SYCL runtime and uses it as follows:
-    /// std::lock_guard<std::mutex> Guard(Sync::getGlobalLock());
-    if (images.empty())
-      images.clear();
-
     TRISYCL_DUMP_T("Number of Device Images being registered from module: "
                    << desc->NumDeviceImages << "\n");
 
@@ -189,15 +182,29 @@ public:
       image_dump(img, "aie" + std::string(Img->BuildOptions) + ".elf");
 #endif
 
-      /// We piggyback off of the BuildOptions parameter of the device_image
-      /// description as it's unused in our case and it allows us to avoid
-      /// altering the ClangOffloadWrappers types which causes them to risk
-      /// incompatibility with Intel's SYCL implementation and OpenMP/HIP
-      ///
-      /// Push to ro storage images and our writeable copies in image_list
-      images.push_back(img);
-      image_list.push_back(std::make_pair(std::string(img->CompileOptions),
-                           std::string(img->ImageStart, img->ImageEnd)));
+      const char* ptr = (const char*)img->ImageStart;
+      while ((uintptr_t)ptr < (uintptr_t)img->ImageEnd) {
+        unsigned next_size = 0;
+        while (ptr[next_size] != '\n') next_size++;
+        std::string name(ptr, next_size);
+        ptr += next_size + 1;
+        next_size = 0;
+        while (ptr[next_size] != '\n') next_size++;
+        unsigned bin_sise = atoi(std::string(ptr, next_size).data());
+        ptr += next_size + 1;
+        next_size = 0;
+        std::string bin(ptr, bin_sise);
+        ptr += bin_sise;
+        TRISYCL_DUMP_T("Loading Name: " << name << " Size: " << bin_sise
+                                        << " Magic: \"" << bin.substr(0, 4)
+                                        << "\" IsElf: "
+                                        << isELFMagic(bin.data()));
+        /// We piggyback off of the BuildOptions parameter of the device_image
+        /// description as it's unused in our case and it allows us to avoid
+        /// altering the ClangOffloadWrappers types which causes them to risk
+        /// incompatibility with Intel's SYCL implementation and OpenMP/HIP
+        image_list.push_back(std::make_pair(std::move(name), std::move(bin)));
+      }
     }
   }
 
@@ -250,14 +257,6 @@ public:
       }
     return {};
   }
-
-  /// The original read-only image section of the image stored in the fat-binary
-  /// Only really useful for debugging or copying, directly casting off const
-  /// and trying to manipulate this will result in a segfault
-  const unsigned char* get_ro_image(const unsigned int index) {
-    return images.at(index)->ImageStart;
-  }
-
 };
 
 }

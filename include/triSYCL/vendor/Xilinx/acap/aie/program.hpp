@@ -32,12 +32,17 @@
 extern "C" {
   #include <xaiengine.h>
 }
+#define HW_GEN XAIE_DEV_GEN_AIE
+#define XAIE_NUM_ROWS            9
+#define XAIE_NUM_COLS            50
+#define XAIE_ADDR_ARRAY_OFF      0x800
+
 #define XAIE_BASE_ADDR 0x20000000000
 #define XAIE_COL_SHIFT 23
 #define XAIE_ROW_SHIFT 18
 #define XAIE_SHIM_ROW 0
-#define XAIE_RES_TILE_ROW_START 0
-#define XAIE_RES_TILE_NUM_ROWS 0
+#define XAIE_MEM_TILE_ROW_START 0
+#define XAIE_MEM_TILE_NUM_ROWS 0
 #define XAIE_AIE_TILE_ROW_START 1
 #define XAIE_AIE_TILE_NUM_ROWS 8
 #endif
@@ -193,11 +198,10 @@ struct program {
   }
 
 #ifdef __SYCL_XILINX_AIE__
-  XAie_SetupConfig(aie_config, XAIE_DEV_GEN_AIE, XAIE_BASE_ADDR,
-                   XAIE_COL_SHIFT, XAIE_ROW_SHIFT, geo::y_size, geo::x_size,
-                   XAIE_SHIM_ROW, XAIE_RES_TILE_ROW_START,
-                   XAIE_RES_TILE_NUM_ROWS, XAIE_AIE_TILE_ROW_START,
-                   XAIE_AIE_TILE_NUM_ROWS);
+  XAie_SetupConfig(aie_config, HW_GEN, XAIE_BASE_ADDR, XAIE_COL_SHIFT,
+                   XAIE_ROW_SHIFT, XAIE_NUM_COLS, XAIE_NUM_ROWS, XAIE_SHIM_ROW,
+                   XAIE_MEM_TILE_ROW_START, XAIE_MEM_TILE_NUM_ROWS,
+                   XAIE_AIE_TILE_ROW_START, XAIE_AIE_TILE_NUM_ROWS);
   XAie_InstDeclare(aie_inst, &aie_config);
 #endif
 
@@ -207,6 +211,7 @@ struct program {
   // Initialization of the AI Engine tile constructs from Lib X AI Engine
 #ifdef __SYCL_XILINX_AIE__
   TRISYCL_XAIE(XAie_CfgInitialize(&aie_inst, &aie_config));
+  TRISYCL_XAIE(XAie_PmRequestTiles(&aie_inst, NULL, 0));
 #endif
 
   boost::hana::for_each(tiles, [&](auto &t) {
@@ -243,10 +248,14 @@ struct program {
 // To specify explicitly the name just change the template signature to
 // template <typename KernelName, typename KernelType> and do not compile with
 // the -fsycl-unnamed-lambda option.
+// NOTE: the name of this function - "kernel_outliner" - is used by the
+// Front End to determine kernel invocation kind.
 #ifdef __SYCL_DEVICE_ONLY__
   template <typename KernelName, typename KernelType>
   __attribute__((sycl_kernel))
-  void kernel_outliner(KernelType k) {
+  __attribute__((annotate("xilinx_acap_tile", KernelType::x,
+                          KernelType::y))) void
+  kernel_outliner(KernelType &k) {
     k.run();
   }
 #endif
@@ -274,7 +283,7 @@ struct program {
         // destructor, but you can run -O3 and it'll clean it up quite a bit
         // without nuking everything so it's progress. The result seems semi-
         // reasonable and passes through xchesscc at a reasonable speed
-        kernel_outliner<typename std::decay<decltype(t)>::type>(std::move(t));
+        kernel_outliner<typename std::decay<decltype(t)>::type>(t);
 
         // Method 2: This needs us to turn off diagnostic about std layout
         // but allows us to use some normal SYCL like lambda generation rather
@@ -299,14 +308,6 @@ struct program {
             auto kernelName = ::trisycl::detail::KernelInfo<
                 typename std::decay<decltype(t)>::type>::getName();
 
-            TRISYCL_DUMP_T("Starting AIE tile (" << t.x << ',' << t.y
-                           << ") linear id = " << t.linear_id() << ","
-                           << "Associated Tile Kernel Name: " << kernelName
-                           << "- beginning prerun execution");
-
-            if (!t.prerun())
-              return;
-
             auto kernelImage =
                 detail::program_manager::instance()->get_image(kernelName);
 
@@ -322,6 +323,7 @@ struct program {
             detail::program_manager::instance()->image_dump(
                 kernelName, "run_aie_" + kernelName + ".elf");
 #endif
+            t.core_reset();
 
             TRISYCL_DUMP_T("Loading Kernel " << kernelName << " ELF to tile ("
                            << t.x << ',' << t.y << ") linear id = "
@@ -332,10 +334,21 @@ struct program {
             TRISYCL_DUMP_T("Loaded Kernel " << kernelName << " ELF to tile ("
                            << t.x << ',' << t.y << ") linear id = "
                            << t.linear_id() << "beginning tile execution");
-            t.core_reset();
+
+            /// Setup DMA for parameter passing
+            t.mem_dma(0x1000, 0x100);
+
+            TRISYCL_DUMP_T("Starting AIE tile ("
+                           << t.x << ',' << t.y
+                           << ") linear id = " << t.linear_id() << ","
+                           << "Associated Tile Kernel Name: " << kernelName
+                           << "- beginning prerun execution");
+
+            if (!t.prerun())
+              return;
+
             t.core_run();
             t.core_wait();
-            t.core_stop();
 
             TRISYCL_DUMP_T("Stopping AIE tile (" << t.x << ',' << t.y
                            << ") linear id = " << t.linear_id() << ","
