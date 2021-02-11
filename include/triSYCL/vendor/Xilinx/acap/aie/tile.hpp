@@ -17,17 +17,12 @@
 #include "triSYCL/access.hpp"
 #include "triSYCL/detail/program_manager.hpp"
 #include "tile_base.hpp"
-#include "aie_utils.hpp"
+#include "xaie_wrapper.hpp"
 
 
 /// TODO: Perhaps worth pushing all Lib X AI Engine functionallity we use down
 /// into a C++ API so it can all be excluded with one #ifdef and kept nice and
 /// cleanly
-#ifdef __SYCL_XILINX_AIE__
-extern "C" {
-  #include <xaiengine.h>
-}
-#endif
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
@@ -284,7 +279,7 @@ struct tile : tile_base<AIE_Program> {
   std::uint32_t mem_read(std::uint32_t offset) {
     std::uint32_t Data;
     TRISYCL_XAIE(
-        XAie_DataMemRdWord(tb::aie_inst, tb::aie_hw_tile, offset, &Data));
+        xaie::XAie_DataMemRdWord(tb::aie_inst, tb::aie_hw_tile, offset, &Data));
     TRISYCL_DUMP_T("Reading: (" << X << ", " << Y << ") + 0x" << std::hex
                               << offset << " = " << std::dec << Data);
     return Data;
@@ -293,16 +288,16 @@ struct tile : tile_base<AIE_Program> {
   /// The memory write accessors
   void mem_write(std::uint32_t offset, std::uint32_t data) {
     TRISYCL_XAIE(
-        XAie_DataMemWrWord(tb::aie_inst, tb::aie_hw_tile, offset, data));
+        xaie::XAie_DataMemWrWord(tb::aie_inst, tb::aie_hw_tile, offset, data));
     TRISYCL_DUMP_T("Writing: (" << X << ", " << Y << ") + 0x" << std::hex
                                << offset << " = " << std::dec << data);
   }
 
   /// Configure device for dma.
   void mem_dma(uint32_t offset, uint32_t size) {
-    XAie_DmaDesc DmaDesc;
-    TRISYCL_XAIE(XAie_DmaDescInit(tb::aie_inst, &DmaDesc, tb::aie_hw_tile));
-    TRISYCL_XAIE(XAie_DmaSetAddrLen(&DmaDesc, offset, size));
+    xaie::XAie_DmaDesc DmaDesc;
+    TRISYCL_XAIE(xaie::XAie_DmaDescInit(tb::aie_inst, &DmaDesc, tb::aie_hw_tile));
+    TRISYCL_XAIE(xaie::XAie_DmaSetAddrLen(&DmaDesc, offset, size));
     TRISYCL_DUMP_T("Setup Dma: (" << X << ", " << Y << ") 0x" << std::hex
                                 << offset << "-0x" << (offset + size));
   }
@@ -312,39 +307,39 @@ struct tile : tile_base<AIE_Program> {
   /// wish to dump a stored binary or load something AoT compiled seperately
   void load_elf_file(const char *path) {
     // global load of elf
-    TRISYCL_XAIE(XAie_LoadElf(tb::aie_inst, tb::aie_hw_tile, path, 0));
+    TRISYCL_XAIE(xaie::XAie_LoadElf(tb::aie_inst, tb::aie_hw_tile, path, 0));
   }
 
   /// Load the elf via path to a block of memory which contains an elf image
   void load_elf_image(std::string image) {
     assert(detail::program_manager::isELFMagic(image.data()) &&
-           "invalid elf magic");
-    TRISYCL_XAIE(XAie_LoadElfMem(tb::aie_inst, tb::aie_hw_tile,
+           "invalid ELF magic");
+    TRISYCL_XAIE(xaie::XAie_LoadElfMem(tb::aie_inst, tb::aie_hw_tile,
                                  reinterpret_cast<u8 *>(image.data())));
   }
 
   /// Reset the core
   void core_reset() {
-    TRISYCL_XAIE(XAie_CoreUnreset(tb::aie_inst, tb::aie_hw_tile));
+    TRISYCL_XAIE(xaie::XAie_CoreUnreset(tb::aie_inst, tb::aie_hw_tile));
   }
 
   /// Start the core
   void core_run() {
-    TRISYCL_XAIE(XAie_CoreEnable(tb::aie_inst, tb::aie_hw_tile));
+    TRISYCL_XAIE(xaie::XAie_CoreEnable(tb::aie_inst, tb::aie_hw_tile));
   }
 
   /// Stop the core
   void core_stop() {
-    TRISYCL_XAIE(XAie_CoreDisable(tb::aie_inst, tb::aie_hw_tile));
+    TRISYCL_XAIE(xaie::XAie_CoreDisable(tb::aie_inst, tb::aie_hw_tile));
   }
 
   /// Wait for the core to complete
   void core_wait() {
     TRISYCL_DUMP_T("(" << X << ", " << Y << ") Waiting for kernel...");
-    AieRC RC = XAIE_OK;
+    xaie::AieRC RC = xaie::XAIE_OK;
     do {
-      RC = XAie_CoreWaitForDone(tb::aie_inst, tb::aie_hw_tile, 0);
-    } while (RC != XAIE_OK);
+      RC = xaie::XAie_CoreWaitForDone(tb::aie_inst, tb::aie_hw_tile, 0);
+    } while (RC != xaie::XAIE_OK);
     TRISYCL_DUMP_T("(" << X << ", " << Y << ") done");
   }
 #endif

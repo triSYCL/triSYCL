@@ -124,7 +124,7 @@ struct geography : Layout {
   */
   static void validate_x(int x) {
     if (!is_x_valid(x)) {
-      throw ::trisycl::runtime_error {"" };
+      throw ::trisycl::runtime_error{""};
     }
   }
 
@@ -149,7 +149,7 @@ struct geography : Layout {
   */
   static void validate_y(int y) {
     if (!is_y_valid(y)) {
-      throw ::trisycl::runtime_error { "" };
+      throw ::trisycl::runtime_error{""};
     }
   }
 

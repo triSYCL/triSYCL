@@ -21,8 +21,8 @@
 #include <string>
 #include <thread>
 
-#include <boost/log/trivial.hpp>
 #include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
 #include <boost/type_index.hpp>
 
 // To be able to construct string literals like "blah"s

@@ -21,31 +21,13 @@
 #include "memory_base.hpp"
 #include "tile.hpp"
 #include "tile_base.hpp"
-#include "aie_utils.hpp"
+#include "xaie_wrapper.hpp"
 #include "triSYCL/detail/program_manager.hpp"
 #include "triSYCL/detail/kernel_desc.hpp"
 
 /// TODO: Perhaps worth pushing all Lib X AI Engine functionallity we use down
 /// into a C++ API so it can all be excluded with one #ifdef and kept nice and
 /// cleanly
-#ifdef __SYCL_XILINX_AIE__
-extern "C" {
-  #include <xaiengine.h>
-}
-#define HW_GEN XAIE_DEV_GEN_AIE
-#define XAIE_NUM_ROWS            9
-#define XAIE_NUM_COLS            50
-#define XAIE_ADDR_ARRAY_OFF      0x800
-
-#define XAIE_BASE_ADDR 0x20000000000
-#define XAIE_COL_SHIFT 23
-#define XAIE_ROW_SHIFT 18
-#define XAIE_SHIM_ROW 0
-#define XAIE_MEM_TILE_ROW_START 0
-#define XAIE_MEM_TILE_NUM_ROWS 0
-#define XAIE_AIE_TILE_ROW_START 1
-#define XAIE_AIE_TILE_NUM_ROWS 8
-#endif
 
 /// \ingroup acap
 ///  @{
@@ -198,11 +180,11 @@ struct program {
   }
 
 #ifdef __SYCL_XILINX_AIE__
-  XAie_SetupConfig(aie_config, HW_GEN, XAIE_BASE_ADDR, XAIE_COL_SHIFT,
+  xaie::XAie_SetupConfig(aie_config, HW_GEN, XAIE_BASE_ADDR, XAIE_COL_SHIFT,
                    XAIE_ROW_SHIFT, XAIE_NUM_COLS, XAIE_NUM_ROWS, XAIE_SHIM_ROW,
                    XAIE_MEM_TILE_ROW_START, XAIE_MEM_TILE_NUM_ROWS,
                    XAIE_AIE_TILE_ROW_START, XAIE_AIE_TILE_NUM_ROWS);
-  XAie_InstDeclare(aie_inst, &aie_config);
+  xaie::XAie_InstDeclare(aie_inst, &aie_config);
 #endif
 
 
@@ -210,18 +192,18 @@ struct program {
   program(AIEDevice &aie_d) : aie_d { aie_d } {
   // Initialization of the AI Engine tile constructs from Lib X AI Engine
 #ifdef __SYCL_XILINX_AIE__
-  TRISYCL_XAIE(XAie_CfgInitialize(&aie_inst, &aie_config));
-  TRISYCL_XAIE(XAie_PmRequestTiles(&aie_inst, NULL, 0));
+  TRISYCL_XAIE(xaie::XAie_CfgInitialize(&aie_inst, &aie_config));
+  TRISYCL_XAIE(xaie::XAie_PmRequestTiles(&aie_inst, NULL, 0));
 #endif
 
-  boost::hana::for_each(tiles, [&](auto &t) {
+  boost::hana::for_each(tiles, [&](auto& t) {
     // Inform each tile about its program
     t.set_program(*this);
     // Inform each tile about their tile infrastructure
     t.set_tile_infrastructure(aie_d.tile(t.x, t.y));
 #ifdef __SYCL_XILINX_AIE__
-    // Inform each tile about their hw tile inst. skip the first shim row.
-    t.set_hw_tile(XAie_TileLoc(t.x, t.y + 1), &aie_inst);
+    // Inform each tile about their hw tile instance. Skip the first shim row.
+    t.set_hw_tile(xaie::XAie_TileLoc(t.x, t.y + 1), &aie_inst);
 #endif
     // Keep track of each base tile
     tile_bases[t.y][t.x] = &t;
@@ -230,7 +212,7 @@ struct program {
 
 #ifdef __SYCL_XILINX_AIE__
   ~program() {
-    TRISYCL_XAIE(XAie_Finish(&aie_inst));
+    TRISYCL_XAIE(xaie::XAie_Finish(&aie_inst));
   }
 #endif
 

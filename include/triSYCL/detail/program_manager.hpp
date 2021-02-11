@@ -1,6 +1,7 @@
 #ifndef TRISYCL_SYCL_DETAIL_PROGRAM_MANAGER_HPP
 #define TRISYCL_SYCL_DETAIL_PROGRAM_MANAGER_HPP
 
+#include <cassert>
 #include <iostream>
 #include <string>
 #include <utility>
@@ -182,20 +183,34 @@ public:
       image_dump(img, "aie" + std::string(Img->BuildOptions) + ".elf");
 #endif
 
-      const char* ptr = (const char*)img->ImageStart;
-      while ((uintptr_t)ptr < (uintptr_t)img->ImageEnd) {
+      /// Images are not directly ELF binaries, they can contain multiple ELF
+      /// binaries, and also contain their name. The images are built inside
+      /// sycl-chess.
+      /// The current format of each kernels is:
+      /// name_of_kernel\n
+      /// size_of_kernel(in characters not binary form)\n
+      /// the binary
+      /// next kernel of end of file.
+      /// It is assumed in the following code that the format is correct, there
+      /// is no attempt to detect or correct invalid formats.
+      const char* ptr = reinterpret_cast<const char*>(img->ImageStart);
+      /// Loop until we have seen the hole image.
+      while (reinterpret_cast<uintptr_t>(ptr) <
+             reinterpret_cast<uintptr_t>(img->ImageEnd)) {
         unsigned next_size = 0;
-        while (ptr[next_size] != '\n') next_size++;
+        while (ptr[next_size] != '\n')
+          next_size++;
         std::string name(ptr, next_size);
         ptr += next_size + 1;
         next_size = 0;
-        while (ptr[next_size] != '\n') next_size++;
-        unsigned bin_sise = atoi(std::string(ptr, next_size).data());
+        while (ptr[next_size] != '\n')
+          next_size++;
+        unsigned bin_size = atoi(std::string(ptr, next_size).data());
         ptr += next_size + 1;
         next_size = 0;
-        std::string bin(ptr, bin_sise);
-        ptr += bin_sise;
-        TRISYCL_DUMP_T("Loading Name: " << name << " Size: " << bin_sise
+        std::string bin(ptr, bin_size);
+        ptr += bin_size;
+        TRISYCL_DUMP_T("Loading Name: " << name << " Size: " << bin_size
                                         << " Magic: \"" << bin.substr(0, 4)
                                         << "\" IsElf: "
                                         << isELFMagic(bin.data()));
@@ -203,8 +218,11 @@ public:
         /// description as it's unused in our case and it allows us to avoid
         /// altering the ClangOffloadWrappers types which causes them to risk
         /// incompatibility with Intel's SYCL implementation and OpenMP/HIP
-        image_list.push_back(std::make_pair(std::move(name), std::move(bin)));
+        image_list.emplace_back(std::move(name), std::move(bin));
       }
+      assert(reinterpret_cast<uintptr_t>(ptr) ==
+                 reinterpret_cast<uintptr_t>(img->ImageEnd) &&
+             "invalid Image format");
     }
   }
 

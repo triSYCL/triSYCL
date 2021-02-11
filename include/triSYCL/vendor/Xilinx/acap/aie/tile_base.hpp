@@ -13,15 +13,11 @@
 */
 
 #include "tile_infrastructure.hpp"
+#include "xaie_wrapper.hpp"
 
 /// TODO: Perhaps worth pushing all Lib X AI Engine functionallity we use down
 /// into a C++ API so it can all be excluded with one #ifdef and kept nice and
 /// cleanly
-#ifdef __SYCL_XILINX_AIE__
-extern "C" {
-  #include <xaiengine.h>
-}
-#endif
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
@@ -62,7 +58,7 @@ public:
 
   /// Noop on device, it has to exist for compilation purposes as Host side code
   /// is still compiled for the device unfortunately.
-  void set_hw_tile(XAie_LocType, XAie_DevInst*) {}
+  void set_hw_tile(xaie::XAie_LocType, xaie::XAie_DevInst*) {}
 
   /// Noop on device, it has to exist for compilation purposes as Host side code
   /// is still compiled for the device unfortunately.
@@ -111,8 +107,8 @@ protected:
 /// TODO: Think about where this should go, this is an instance of a HW Tile
 /// that a device instantiates, does it belong here or in tile_infrastructure?
 #ifdef __SYCL_XILINX_AIE__
-  XAie_LocType aie_hw_tile;
-  XAie_DevInst* aie_inst;
+  xaie::XAie_LocType aie_hw_tile;
+  xaie::XAie_DevInst* aie_inst;
 #endif
 
   /// Keep a reference to the tile_infrastructure hardware features
@@ -122,7 +118,7 @@ public:
 
 #ifdef __SYCL_XILINX_AIE__
   /// Store a way to access to hw tile instance
-  void set_hw_tile(XAie_LocType tile, XAie_DevInst* inst) {
+  void set_hw_tile(xaie::XAie_LocType tile, xaie::XAie_DevInst* inst) {
     aie_hw_tile = tile;
     aie_inst = inst;
   }
