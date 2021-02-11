@@ -180,13 +180,16 @@ struct program {
   }
 
 #ifdef __SYCL_XILINX_AIE__
-  xaie::XAie_SetupConfig(aie_config, HW_GEN, XAIE_BASE_ADDR, XAIE_COL_SHIFT,
-                   XAIE_ROW_SHIFT, XAIE_NUM_COLS, XAIE_NUM_ROWS, XAIE_SHIM_ROW,
-                   XAIE_MEM_TILE_ROW_START, XAIE_MEM_TILE_NUM_ROWS,
-                   XAIE_AIE_TILE_ROW_START, XAIE_AIE_TILE_NUM_ROWS);
+  xaie::XAie_SetupConfig(aie_config, xaie::aiev1::dev_gen,
+                         xaie::aiev1::base_addr, xaie::aiev1::col_shift,
+                         xaie::aiev1::row_shift, xaie::aiev1::num_hw_col,
+                         xaie::aiev1::num_hw_row, xaie::aiev1::num_shim_row,
+                         xaie::aiev1::mem_tile_row_start,
+                         xaie::aiev1::mem_tile_row_num,
+                         xaie::aiev1::aie_tile_row_start,
+                         xaie::aiev1::aie_tile_row_num);
   xaie::XAie_InstDeclare(aie_inst, &aie_config);
 #endif
-
 
   /// Create the AIE program with the tiles and memory modules
   program(AIEDevice &aie_d) : aie_d { aie_d } {
@@ -318,7 +321,7 @@ struct program {
                            << t.linear_id() << "beginning tile execution");
 
             /// Setup DMA for parameter passing
-            t.mem_dma(0x1000, 0x100);
+            t.mem_dma(xaie::aiev1::args_start, xaie::aiev1::args_size);
 
             TRISYCL_DUMP_T("Starting AIE tile ("
                            << t.x << ',' << t.y
