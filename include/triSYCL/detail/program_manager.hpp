@@ -190,7 +190,7 @@ public:
       /// name_of_kernel\n
       /// size_of_kernel(in characters not binary form)\n
       /// the binary
-      /// next kernel of end of file.
+      /// next kernel or end of file.
       /// It is assumed in the following code that the format is correct, there
       /// is no attempt to detect or correct invalid formats.
       const char* ptr = reinterpret_cast<const char*>(img->ImageStart);
@@ -205,7 +205,7 @@ public:
         next_size = 0;
         while (ptr[next_size] != '\n')
           next_size++;
-        unsigned bin_size = atoi(std::string(ptr, next_size).data());
+        unsigned bin_size = std::stoi(std::string(ptr, next_size));
         ptr += next_size + 1;
         next_size = 0;
         std::string bin(ptr, bin_size);
