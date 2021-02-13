@@ -74,6 +74,14 @@ TRISYCL_MATH_WRAP(cbrt)
 TRISYCL_MATH_WRAP(ceil)
 //geninteger clamp(geninteger, sgeninteger, sgeninteger)
 TRISYCL_MATH_WRAP3ss(clamp)//I
+
+template <typename T, int size>
+auto clamp(const vec<T, size>& x, const T& minval, const T& maxval) {
+  return x.map([&](auto e) {
+    return clamp(e, minval, maxval);
+  });
+}
+
 //*TRISYCL_MATH_WRAP(clz)
 TRISYCL_MATH_WRAP2(copysign)
 TRISYCL_MATH_WRAP(cos)
@@ -88,12 +96,46 @@ TRISYCL_MATH_WRAP(expm1)
 TRISYCL_MATH_WRAP(fabs)
 TRISYCL_MATH_WRAP2(fdim)
 TRISYCL_MATH_WRAP(floor)
+
+// Round to integral value using the round to
+// negative infinity rounding mode.
+template <typename T, int size>
+auto floor(const vec<T, size>& x) {
+  return x.map(floor<T>);
+}
+
 TRISYCL_MATH_WRAP3(fma)
 /* genfloat fmax ( genfloat x, genfloat y)
  * genfloat fmax ( genfloat x, sgenfloat y)
  */
+
 TRISYCL_MATH_WRAP2s(fmax)
+// Returns y if x < y, otherwise it returns x.
+// If one argument is a NaN, fmax() returns
+// the other argument. If both arguments are
+// NaNs, fmax() returns a NaN
+template <typename T, int size>
+auto fmax(const vec<T, size>& x,
+          const vec<T, size>& y) {
+  return x.zip(y, fmax<T,T>);
+}
+
 TRISYCL_MATH_WRAP2s(fmin)
+
+// Returns y if y < x, otherwise it returns x.
+// genfloat fmin ( genfloat x, sgenfloat y )
+// If one argument is a NaN, fmin() returns
+// the other argument. If both arguments are
+// NaNs, fmin() returns a NaN.
+//
+// \todo Perhaps worth adding an isNaN check as I'm not sure if the < operator
+//       conforms to what the function requires
+template <typename T, int size>
+auto fmin(const vec<T, size>& x,
+          const vec<T, size>& y) {
+  return x.zip(y, fmin<T,T>);
+}
+
 TRISYCL_MATH_WRAP2(fmod)
 //*TRISYCL_MATH_WRAP2s(fract)
 TRISYCL_MATH_WRAP2s(frexp)
@@ -122,8 +164,22 @@ T max(const T& x, const T& y, const T& z) {
 /* geninteger max (geninteger, geninteger)
  * geninteger max (geninteger, sgeninteger)
  */
-  // Just import std::max from <algorithm>
-  using std::max;
+// Just import std::max from <algorithm>
+using std::max;
+
+// seems to essentially be the same as fmax but cover different types, even the
+// first type definition matches fmax's first? Is there a need for two
+// similar definitions of max? same goes for fmin...
+// genfloat max (genfloat x, genfloat y)
+// genfloatf max (genfloatf x, float y)
+// genfloatd max (genfloatd x, double y)
+// geninteger max (geninteger x, geninteger y)
+// geninteger max (geninteger x, sgeninteger y)
+template <typename T, int size>
+auto max(const vec<T, size>& x,
+         const vec<T, size>& y) {
+  return fmax(x,y);
+}
 
 //*TRISYCL_MATH_WRAP2(maxmag)
 //
@@ -137,7 +193,13 @@ T min(const T& x, const T& y, const T& z) {
  * geninteger min (geninteger, sgeninteger)
  */
   // Just import std::min from <algorithm>
-  using std::min;
+using std::min;
+
+template <typename T, int size>
+auto min(const vec<T, size>& x,
+         const vec<T, size>& y) {
+  return fmin(x,y);
+}
 
 //*TRISYCL_MATH_WRAP2(minmag)
 TRISYCL_MATH_WRAP2s(modf)
@@ -214,68 +276,10 @@ auto dot(const vec<T, size>& x, const vec<T, size>& y) {
   return std::inner_product(x.begin(), x.end(), y.begin(), T{0});
 }
 
-template <typename T, int size>
-auto clamp(const vec<T, size>& x, const T& minval, const T& maxval) {
-  return x.map([&](auto e) {
-    return clamp(e, minval, maxval);
-  });
-}
-
 // Returns a vector in the same direction as x but with a length of 1.
 template <typename T, int size>
 auto normalize(const vec<T, size>& x) {
   return x / length(x);
-}
-
-// Round to integral value using the round to
-// negative infinity rounding mode.
-template <typename T, int size>
-auto floor(const vec<T, size>& x) {
-  return x.map(floor<T>);
-}
-
-// Returns y if y < x, otherwise it returns x.
-// genfloat fmin ( genfloat x, sgenfloat y )
-// If one argument is a NaN, fmin() returns
-// the other argument. If both arguments are
-// NaNs, fmin() returns a NaN.
-//
-// \todo Perhaps worth adding an isNaN check as I'm not sure if the < operator
-//       conforms to what the function requires
-template <typename T, int size>
-auto fmin(const vec<T, size>& x,
-          const vec<T, size>& y) {
-  return x.zip(y, fmin<T,T>);
-}
-
-// Returns y if x < y, otherwise it returns x.
-// If one argument is a NaN, fmax() returns
-// the other argument. If both arguments are
-// NaNs, fmax() returns a NaN
-template <typename T, int size>
-auto fmax(const vec<T, size>& x,
-          const vec<T, size>& y) {
-  return x.zip(y, fmax<T,T>);
-}
-
-// seems to essentially be the same as fmax but cover different types, even the
-// first type definition matches fmax's first? Is there a need for two
-// similar definitions of max? same goes for fmin...
-// genfloat max (genfloat x, genfloat y)
-// genfloatf max (genfloatf x, float y)
-// genfloatd max (genfloatd x, double y)
-// geninteger max (geninteger x, geninteger y)
-// geninteger max (geninteger x, sgeninteger y)
-template <typename T, int size>
-auto max(const vec<T, size>& x,
-         const vec<T, size>& y) {
-  return fmax(x,y);
-}
-
-template <typename T, int size>
-auto min(const vec<T, size>& x,
-         const vec<T, size>& y) {
-  return fmin(x,y);
 }
 
 //
