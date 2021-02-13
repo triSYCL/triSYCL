@@ -13,6 +13,7 @@
 
 template <typename T, int Dim>
 void do_vec_unary_math(sycl::vec<T, Dim> v) {
+  auto abs = sycl::abs(v);
   auto clamp = sycl::clamp(v, 2.0f, 4.0f);
   auto floor = sycl::floor(v);
   auto length = sycl::length(v);
@@ -28,6 +29,7 @@ void do_vec_unary_math(sycl::vec<T, Dim> v) {
   BOOST_CHECK(length == len);
 
   for (int i = 0; i < Dim; ++i) {
+    BOOST_CHECK(abs[i] == std::abs(v[i]));
     BOOST_CHECK(clamp[i] == std::clamp(v[i], 2.0f, 4.0f));
     BOOST_CHECK(floor[i] == std::floor(v[i]));
     BOOST_CHECK(normalize[i] == v[i] / len);

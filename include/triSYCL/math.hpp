@@ -26,35 +26,100 @@
 
 namespace trisycl {
 
+/// Declare a FUN unary function for scalar and vector types
 #define TRISYCL_MATH_WRAP(FUN) template<typename T>                     \
+  /* Just forward the scalar case to the C++ math library */            \
   T FUN(const T& x) {                                                   \
     return std::FUN(x);                                                 \
+  }                                                                     \
+  /* Declare the vector version as applying the scalar version on each  \
+     element */                                                         \
+  template <typename T, int size>                                       \
+  auto FUN(const vec<T, size>& x) {                                     \
+    return x.map(FUN<T>);                                               \
   }
 
+
+/// Declare a FUN binary function for scalar and vector types
 #define TRISYCL_MATH_WRAP2(FUN) template<typename T>                    \
+  /* Just forward the scalar case to the C++ math library */            \
   T FUN(const T& x, const T& y) {                                       \
     return std::FUN(x, y);                                              \
+  }                                                                     \
+  /* Declare the vector version as applying the scalar version on each  \
+     element */                                                         \
+  template <typename T, int size>                                       \
+  auto FUN(const vec<T, size>& x,                                       \
+           const vec<T, size>& y) {                                     \
+    return x.zip(y, FUN<T,T>);                                          \
   }
 
+
+/** Declare a FUN binary function for scalar and vector types, with 2
+    different types */
 #define TRISYCL_MATH_WRAP2s(FUN) template<typename T, typename U>       \
+  /* Just forward the scalar case to the C++ math library */            \
   T FUN(const T& x, const U& y) {                                       \
     return std::FUN(x, y);                                              \
+  }                                                                     \
+  /* Declare the vector version as applying the scalar version on each  \
+     element */                                                         \
+  template <typename T, typename U, int size>                           \
+  auto FUN(const vec<T, size>& x,                                       \
+           const U& y) {                                                \
+    return x.map([&] (auto e) { return FUN(e, y); });                   \
   }
 
-#define TRISYCL_MATH_WRAP3(FUN) template<typename T>                 \
-  T FUN(const T& x, const T& y, const T& z) {                        \
-    return std::FUN(x, y, z);                                        \
-  }
 
-#define TRISYCL_MATH_WRAP3s(FUN) template<typename T, typename U> \
-  T FUN(const T& x, const T& y, const U& z) {                     \
-    return std::FUN(x, y, z);                                     \
-  }
+/// Declare a FUN ternary function for scalar and vector types
+#define TRISYCL_MATH_WRAP3(FUN) template<typename T>                    \
+  /* Just forward the scalar case to the C++ math library */            \
+  T FUN(const T& x, const T& y, const T& z) {                           \
+    return std::FUN(x, y, z);                                           \
+  }                                                                     \
+  /* Declare the vector version as applying the scalar version on each  \
+     element */                                                         \
+  template <typename T, int size>                                       \
+  auto FUN(const vec<T, size>& x,                                       \
+           const vec<T, size>& y,                                       \
+           const vec<T, size>& z) {                                     \
+  return x.zip(y, z, FUN<T,T,T>);                                       \
+}
 
-#define TRISYCL_MATH_WRAP3ss(FUN) template<typename T, typename U>  \
-  T FUN(const T& x, const U& y, const U& z) {                       \
-    return std::FUN(x, y, z);                                       \
-  }
+
+/** Declare a FUN ternary function for scalar and vector types, with 2
+    different types, the 2 first arguments have the same type */
+#define TRISYCL_MATH_WRAP3s(FUN) template<typename T, typename U>       \
+  /* Just forward the scalar case to the C++ math library */            \
+  T FUN(const T& x, const T& y, const U& z) {                           \
+    return std::FUN(x, y, z);                                           \
+  }                                                                     \
+  /* Declare the vector version as applying the scalar version on each  \
+     element */                                                         \
+  template <typename T, typename U, int size>                           \
+  auto FUN(const vec<T, size>& x,                                       \
+           const vec<T, size>& y,                                       \
+           const U& z) {                                                \
+    return x.zip(y, [&] (auto ex, auto ey) { return FUN(ex, ey, z); }); \
+}
+
+
+/** Declare a FUN ternary function for scalar and vector types, with 2
+    different types, the 2 last arguments have the same type */
+#define TRISYCL_MATH_WRAP3ss(FUN) template<typename T, typename U>      \
+  /* Just forward the scalar case to the C++ math library */            \
+  T FUN(const T& x, const U& y, const U& z) {                           \
+    return std::FUN(x, y, z);                                           \
+  }                                                                     \
+  /* Declare the vector version as applying the scalar version on each  \
+     element */                                                         \
+  template <typename T, typename U, int size>                           \
+  auto FUN(const vec<T, size>& x,                                       \
+           const U& y,                                                  \
+           const U& z) {                                                \
+    return x.map([&] (auto e) { return FUN(e, y, z); });                \
+}
+
 
 TRISYCL_MATH_WRAP(abs)//I
 //*TRISYCL_MATH_WRAP2(abs_diff)//I
@@ -75,13 +140,6 @@ TRISYCL_MATH_WRAP(ceil)
 //geninteger clamp(geninteger, sgeninteger, sgeninteger)
 TRISYCL_MATH_WRAP3ss(clamp)//I
 
-template <typename T, int size>
-auto clamp(const vec<T, size>& x, const T& minval, const T& maxval) {
-  return x.map([&](auto e) {
-    return clamp(e, minval, maxval);
-  });
-}
-
 //*TRISYCL_MATH_WRAP(clz)
 TRISYCL_MATH_WRAP2(copysign)
 TRISYCL_MATH_WRAP(cos)
@@ -95,15 +153,9 @@ TRISYCL_MATH_WRAP(exp2)
 TRISYCL_MATH_WRAP(expm1)
 TRISYCL_MATH_WRAP(fabs)
 TRISYCL_MATH_WRAP2(fdim)
-TRISYCL_MATH_WRAP(floor)
-
 // Round to integral value using the round to
 // negative infinity rounding mode.
-template <typename T, int size>
-auto floor(const vec<T, size>& x) {
-  return x.map(floor<T>);
-}
-
+TRISYCL_MATH_WRAP(floor)
 TRISYCL_MATH_WRAP3(fma)
 /* genfloat fmax ( genfloat x, genfloat y)
  * genfloat fmax ( genfloat x, sgenfloat y)
