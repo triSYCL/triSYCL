@@ -4,13 +4,12 @@
 
 # Set default compiler instead of default CXX=g++ value
 # Assume some recent compiler
-CXX = clang++-11
+CXX = clang++-13
 # To use libc++ instead of libstdc++, from libc++-dev & libc++abi-dev packages
 #CXXFLAGS += -stdlib=libc++
 
 CXXFLAGS += -I/home/rkeryell/Xilinx/Projects/C++/magic_enum/include
 #CXXFLAGS += -I/home/rkeryell/Xilinx/Projects/C++/Boost/fiber/include
-CXXFLAGS += -I/home/rkeryell/Xilinx/Projects/C++/range-v3/include
 
 # Work around Clang++-11 dev that breaks concepts for range-v3
 # CXXFLAGS += -U__cpp_concepts
@@ -201,7 +200,7 @@ CLEANING_TARGETS += $(KERNELS_BC) $(KERNELS_BIN) $(KERNELS_INTERNALIZED_CXX) \
 # The implementation uses C++17.
 # Use -Wno-ignored-attributes to avoid a lot of warning with
 # Boost.Compute and g++ version >= 6
-CXXFLAGS += -Wall -Wno-ignored-attributes -std=c++2a -I$(triSYCL_DIR)/include \
+CXXFLAGS += -Wall -Wno-ignored-attributes -std=c++20 -I$(triSYCL_DIR)/include \
 	-I$(triSYCL_DIR)/tests/common
 
 # Vivado HLS path

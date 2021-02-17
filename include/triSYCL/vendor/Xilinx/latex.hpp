@@ -12,6 +12,8 @@
 */
 
 #include <cctype>
+#include <fstream>
+#include <iostream>
 #include <string>
 
 #include <boost/format.hpp>
@@ -40,14 +42,24 @@ public:
   /// Size of the drawing in the original units (unscaled)
   vec<int, 2> size;
 
+  /// Name of the file to write into
+  std::string file_name;
+
   /// Store the LaTeX output
   std::string out;
 
   /// Keep track whether the content is finalized for final user consumption
   bool finalized = false;
 
-  /// Create a graphics context with a 2D size in mm
-  context(const vec<int, 2>& s) : size { s } {
+  /** Create a graphics context
+
+      \param[in] s is the 2D size of the drawing to be generated in mm
+
+      \param[in] f_name is the file name of the LaTeX to be generated
+      into or standard output by default
+  */
+  context(const vec<int, 2>& s, const std::string& f_name = {})
+    : size { s }, file_name { f_name } {
     // Compute the scaling factor to remain under the TeX limit
     auto m = std::max(size.x(), size.y());
     scaling_factor = m > max_size ? max_size/m : 1;
@@ -117,14 +129,17 @@ private:
 
 public:
 
-  /** Get the display content
+  /** Display the content
 
-      \return the LaTeX textual content as a std::string to be
+      Display the LaTeX textual content on or into a file, to be
       compiled for example with lualatex
   */
-  const std::string& display() {
+  void display() {
     finalize();
-    return out;
+    if (file_name.empty())
+      std::cerr << out << std::endl;
+    else
+      std::ofstream { file_name, std::ios::trunc } << out;
   }
 
 

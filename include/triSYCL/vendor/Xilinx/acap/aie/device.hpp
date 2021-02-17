@@ -12,6 +12,7 @@
 */
 
 #include <string>
+#include <type_traits>
 
 #include <boost/format.hpp>
 #include <boost/hana.hpp>
@@ -249,8 +250,12 @@ struct device {
   }
 
 
-  /// Display the device layout
-  auto display() {
+  /** Display the device layout
+
+      \param[in] file_name is the name of the file to write the LaTeX
+      drawing into or use std::cerr by default
+  */
+  auto display(const std::string& file_name = {}) {
     // Compute the drawing size starting with the individual tile size
     auto tile_size = tile(0, 0).display_size();
     // And expanding according to the device size. Add 1 in each
@@ -258,7 +263,7 @@ struct device {
     auto x_size = tile_size.x()*geo::x_size + 1;
     auto y_size = tile_size.y()*geo::y_size + 1;
     /// The LaTeX generation is handled by a LaTeX context
-    latex::context c {{ x_size, y_size }};
+    latex::context c {{ x_size, y_size }, file_name};
 
     for_each_tile_index([&] (auto x, auto y) {
       tile(x, y).display(c);
@@ -274,7 +279,7 @@ struct device {
               % nx % ny % c.clean_node(magic_enum::enum_name(s))).str());
     });
 
-    return c.display();
+    c.display();
   }
 };
 

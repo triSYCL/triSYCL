@@ -133,7 +133,8 @@ int test_main(int argc, char *argv[]) {
           sizeof(std::int32_t)*local_transfers*d_t::geo::x_max*d_t::geo::y_max;
         measure_bandwidth(transmitted_bytes,
                           [&] { d.template run<square_neighbor>(); });
-        std::cerr << d.display() <<std::endl;
+        // Dump the configuration in LaTeX
+        d.display();
       }
     });
   } catch (sycl::exception &e) {
