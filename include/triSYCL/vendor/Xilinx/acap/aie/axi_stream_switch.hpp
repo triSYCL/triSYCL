@@ -497,7 +497,7 @@ public:
       auto port_enum =
         magic_enum::enum_cast<spl>(std::distance(input_ports.begin(), &p));
 #ifdef TRISYCL_DEBUG
-      auto port_name = magic_enum::enum_name(port_enum);
+      auto port_name = magic_enum::enum_name(port_enum.value());
 #endif
       TRISYCL_DUMP_T("axi_stream_switch " << this
                      << " (" << x_coordinate << ',' << y_coordinate
@@ -531,11 +531,11 @@ public:
   /** Compute the edge angle for a port name according a list of
       description associating a port name prefix and an associated
       angle in degree
-   */
-  int tikz_edge_angle(const std::string_view& port_name,
-                      const std::initializer_list<std::tuple<std::string_view,
-                                                             int>>& desc)
-    const {
+  */
+  int
+  tikz_edge_angle(const std::string_view& port_name,
+                  const std::initializer_list<std::tuple<std::string_view,
+                                                         int>>& desc) const {
     for (auto& [prefix, angle] : desc)
       if (port_name.starts_with(prefix))
         return angle;
@@ -554,22 +554,30 @@ public:
         auto input_port_name = magic_enum::enum_name(input_port);
         // Compute the angle of the starting arrow from the input
         auto input_angle = tikz_edge_angle(input_port_name,
-                                           { { "east", 180 },
-                                             { "north", -90 },
-                                             { "west", 0 },
+                                           { { "east", 180 }, ///< To the left
+                                             { "north", -90 }, ///< Downwards
+                                             { "west", 0 }, ///< To the right
+                                             { "dma", 90 }, ///< Upwards
+                                             { "fifo", 90 },
                                              { "me", 90 },
+                                             { "tile_ctrl", 90 },
                                              { "south", 90 } });
         auto output_port_name = magic_enum::enum_name(output_port);
         // Compute the angle of the ending arrow to the output
         auto output_angle = tikz_edge_angle(output_port_name,
-                                            { { "east", 180 },
-                                              { "north", -90 },
+                                            { { "east", 180 }, ///< To the left
+                                              { "north", -90 }, ///< Downwards
+                                              { "dma", 0 }, ///< To the right
+                                              { "fifo", 0 },
                                               { "me", 0 },
+                                              { "tile_ctrl", 0 },
                                               { "west", 0 },
-                                              { "south", 90 } });
+                                              { "south", 90 } }); ///< Upwards
         // Use specific color for core emission or reception
         auto color = input_port_name.starts_with("me") ? "red"
-          : output_port_name.starts_with("me") ? "teal" : "blue";
+          : output_port_name.starts_with("me") ? "teal"
+          : input_port_name.starts_with("dma") ? "magenta"
+          : output_port_name.starts_with("dma") ? "violet" : "blue";
         c.add((boost::format { R"(
     \draw[%5%] (node cs:name=S%1%)
        to [out=%2%, in=%4%] (node cs:name=M%3%);)" }
@@ -616,9 +624,15 @@ public:
     // Combine the lengths of the most packed sides,
     // + 1/+ 2 to keep room for labels on each side
     return { 1 + ranges::distance(axi_ss_geo::s_me_range)
+             + ranges::distance(axi_ss_geo::m_dma_range)
+             + ranges::distance(axi_ss_geo::m_tile_ctrl_range)
+             + ranges::distance(axi_ss_geo::m_fifo_range)
              + ranges::distance(axi_ss_geo::m_south_range)
              + ranges::distance(axi_ss_geo::s_south_range),
-             2 + ranges::distance(axi_ss_geo::m_me_range)
+             2 + ranges::distance(axi_ss_geo::s_me_range)
+             + ranges::distance(axi_ss_geo::s_dma_range)
+             + ranges::distance(axi_ss_geo::s_tile_ctrl_range)
+             + ranges::distance(axi_ss_geo::s_fifo_range)
              + ranges::distance(axi_ss_geo::m_west_range)
              + ranges::distance(axi_ss_geo::s_west_range) };
   }
@@ -631,16 +645,19 @@ public:
                const GTC& get_tikz_coordinate) const {
     const auto [ width, height ] = display_size();
     // Display the network interfaces on the top of the switch
-    c.add(display_border("rotate=90,anchor=north west",
-                         get_tikz_coordinate,
-                         [&, height = height] (auto i) {
-                           return std::tuple
-                             { core_size.x()
-                                + ranges::distance(axi_ss_geo::s_me_range) + i,
-                               core_size.y() + height - 1 };
-                         },
-                         axi_ss_geo::m_north_range,
-                         axi_ss_geo::s_north_range));
+    c.add(display_border
+          ("rotate=90,anchor=north west", get_tikz_coordinate,
+           [&, height = height] (auto i) {
+             return std::tuple
+               { core_size.x()
+                   + ranges::distance(axi_ss_geo::s_me_range)
+                   + ranges::distance(axi_ss_geo::s_dma_range)
+                   + ranges::distance(axi_ss_geo::s_tile_ctrl_range)
+                   + ranges::distance(axi_ss_geo::s_fifo_range) + i,
+                  core_size.y() + height - 1 };
+           },
+           axi_ss_geo::m_north_range,
+           axi_ss_geo::s_north_range));
     // Display the network interfaces on the bottom of the switch
     c.add(display_border("rotate=90,anchor=north east",
                          get_tikz_coordinate,
@@ -649,6 +666,9 @@ public:
                                                core_size.y() };
                          },
                          ranges::views::reverse(axi_ss_geo::s_me_range),
+                         axi_ss_geo::s_dma_range,
+                         axi_ss_geo::s_tile_ctrl_range,
+                         axi_ss_geo::s_fifo_range,
                          axi_ss_geo::s_south_range,
                          axi_ss_geo::m_south_range));
     // Display the network interfaces on the left of the switch
@@ -659,19 +679,26 @@ public:
                                                core_size.y() + i + 1 };
                          },
                          ranges::views::reverse(axi_ss_geo::m_me_range),
+                         axi_ss_geo::m_dma_range,
+                         axi_ss_geo::m_tile_ctrl_range,
+                         axi_ss_geo::m_fifo_range,
                          axi_ss_geo::m_west_range,
                          axi_ss_geo::s_west_range));
     // Display the network interfaces on the right of the switch
-    c.add(display_border("anchor=south west",
-                         get_tikz_coordinate,
-                         [&, width = width] (auto i) {
-                           return std::tuple
-                             { core_size.x() + width - 1,
-                               core_size.y() + i + 1
-                                + ranges::distance(axi_ss_geo::m_me_range) };
-                         },
-                         axi_ss_geo::s_east_range,
-                         axi_ss_geo::m_east_range));
+    c.add(display_border
+          ("anchor=south west",
+           get_tikz_coordinate,
+           [&, width = width] (auto i) {
+             return std::tuple
+               { core_size.x() + width - 1,
+                  core_size.y() + i + 1
+                  + ranges::distance(axi_ss_geo::m_me_range)
+                  + ranges::distance(axi_ss_geo::m_dma_range)
+                  + ranges::distance(axi_ss_geo::m_tile_ctrl_range)
+                  + ranges::distance(axi_ss_geo::m_fifo_range) };
+           },
+           axi_ss_geo::s_east_range,
+           axi_ss_geo::m_east_range));
 
     display_routing_configuration(c);
   }

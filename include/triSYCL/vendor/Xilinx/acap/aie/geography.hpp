@@ -378,7 +378,7 @@ struct geography : Layout {
       me_1, me_last = me_1, ///< Used for user port validation
       dma_0,
       dma_1, dma_last = dma_1, ///< Used for DMA validation
-      tile_ctrl,
+      tile_ctrl, tile_ctrl_last = tile_ctrl, ///< Used for validation
       fifo_0,
       fifo_1, fifo_last = fifo_1, ///< Used for FIFO validation
       south_0,
@@ -435,6 +435,16 @@ struct geography : Layout {
     static constexpr auto m_dma_size =
       detail::enum_count(master_port_layout::dma_0,
                          master_port_layout::dma_last);
+
+    /// A range of the master ports connected to the tile control inputs
+    static auto inline m_tile_ctrl_range =
+      views::enum_type(master_port_layout::tile_ctrl,
+                       master_port_layout::tile_ctrl_last);
+
+    /// Number of master ports connected to the tile control inputs
+    static constexpr auto m_tile_ctrl_size =
+      detail::enum_count(master_port_layout::tile_ctrl,
+                         master_port_layout::tile_ctrl_last);
 
     /// A range of the master ports connected to the FIFO inputs
     static auto inline m_fifo_range =
@@ -494,7 +504,7 @@ struct geography : Layout {
       me_1, me_last = me_1, ///< Used for user port validation
       dma_0,
       dma_1, dma_last = dma_1, ///< Used for DMA validation
-      tile_ctrl,
+      tile_ctrl, tile_ctrl_last = tile_ctrl, ///< Used for validation,
       fifo_0,
       fifo_1, fifo_last = fifo_1, ///< Used for FIFO validation
       south_0,
@@ -550,6 +560,16 @@ struct geography : Layout {
     /// Number of slave ports connected to the DMA outputs
     static constexpr auto s_dma_size =
       detail::enum_count(slave_port_layout::dma_0, slave_port_layout::dma_last);
+
+    /// A range of the slave ports connected to the tile control outputs
+    static auto inline s_tile_ctrl_range =
+      views::enum_type(slave_port_layout::tile_ctrl,
+                       slave_port_layout::tile_ctrl_last);
+
+    /// Number of slave ports connected to the tile control outputs
+    static constexpr auto s_tile_ctrl_size =
+      detail::enum_count(slave_port_layout::tile_ctrl,
+                         slave_port_layout::tile_ctrl_last);
 
     /// A range of the slave ports connected to the FIFO outputs
     static auto inline s_fifo_range =
