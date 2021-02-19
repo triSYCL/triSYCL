@@ -71,7 +71,7 @@ public:
   ~dma() {
 std::cerr << "~dma()" << std::endl;
       // Close the command queue so the DMA does not accept any work
-      //c.close();
+      c.close();
 std::cerr << "~dma() c.close(), joining..." << std::endl;
       /* Wait for the commands to drain to avoid calling
          std::terminate on destruction... */
@@ -95,11 +95,14 @@ std::cerr << "dma launched!" << std::endl;
       at some point the queue will be empty so there is no continuous
       DMA command enqueuing for example. */
   SpecializedDMA& wait() {
+std::cerr << "Entering waiting room of " << (void*) this
+          << " with nb_command = " << nb_command << std::endl;
     if (nb_command != 0) {
       // We need to wait because there are still operations executing
       std::unique_lock lk { waiting_mutex };
       waiting_room.wait(lk, [&] { return nb_command == 0; });
     }
+std::cerr << "Exiting waiting room of " << (void*) this << std::endl;
     /* To be able to chain another DMA operation on it, return the DMA
        object itself */
     return *static_cast<SpecializedDMA *>(this);
@@ -108,7 +111,7 @@ std::cerr << "dma launched!" << std::endl;
 protected:
 
   /// Enqueue a DMA command
-  void push(const dma_command& cmd) {
+  void push_command(const dma_command& cmd) {
     ++nb_command;
 try {
     c.push(cmd);
@@ -117,18 +120,15 @@ try {
 
 
   /// Dequeue a DMA command
-  auto pop() {
-    typename decltype(c)::value_type command;
-try {
-    command = c.value_pop();
-    //auto command = c.value_pop();
-} catch(...) { std::cerr << "dma pop throwed!" << std::endl;}
-    return command;
-  }
+  auto pop_command(typename decltype(c)::value_type& command) {
+    return c.pop(command);
+      }
 
 
   /// Notify a command has been processed
   void commit_command() {
+std::cerr << "commit_command() nb_command = " << nb_command << std::endl;
+
     if (--nb_command == 0)
       // Warn anyone waiting for the DMA queue to drain it might be empty now
       waiting_room.notify_all();
@@ -165,7 +165,7 @@ std::cerr << "receiving_dma fiber starting" << std::endl;
 std::cerr << "receiving_dma Read a DMA command" << std::endl;
                          /* Read a DMA command which is a span
                             expressing memory destination */
-                         if (this->c.pop(sp)
+                         if (this->pop_command(sp)
                              != boost::fibers::channel_op_status::success)
                            // The channel is closed, stop working
                            break;
@@ -232,10 +232,7 @@ try {
 
   /// Enqueue a DMA transfer to receive a span
   auto& receive(typename dma_base::dma_command cmd) {
-try {
-    this->c.push(std::move(cmd));
-} catch(...) { std::cerr << "receiving_dma::receive throwed!" << std::endl;}
-    // To be able to chain another DMA operation on it
+    this->push_command(std::move(cmd));
     return *this;
   }
 };
@@ -261,7 +258,7 @@ std::cerr << "sending_dma fiber starting" << std::endl;
 std::cerr << "sending_dma Read a DMA command" << std::endl;
                          /* Read a DMA command which is a span
                             describing what to read from memory */
-                         if (this->c.pop(sp)
+                         if (this->pop_command(sp)
                              != boost::fibers::channel_op_status::success)
                            // The channel is closed, stop working
                            break;
@@ -282,8 +279,8 @@ std::cerr << "sending_dma fiber ending" << std::endl;
   /// Enqueue a DMA transfer to send a span
   auto& send(const typename dma_base::dma_command& cmd) {
 try {
-  std::cerr << "sending_dma c.push(cmd)" << std::endl;
-    this->c.push(cmd);
+  std::cerr << "sending_dma push(cmd)" << std::endl;
+    this->push_command(cmd);
 } catch(...) { std::cerr << "sending_dma::send throwed!" << std::endl;}
     // To be able to chain another DMA operation on it
     return *this;
