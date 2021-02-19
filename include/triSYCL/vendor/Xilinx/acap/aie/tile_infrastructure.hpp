@@ -1,3 +1,4 @@
+#include "magic_enum.hpp"
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_TILE_INFRASTRUCTURE_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_TILE_INFRASTRUCTURE_HPP
 
@@ -16,13 +17,17 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <array>
 #include <future>
+#include <memory>
+#include <optional>
 
 #include <boost/format.hpp>
 #include "magic_enum.hpp"
 #include <range/v3/all.hpp>
 
 #include "axi_stream_switch.hpp"
+#include "dma.hpp"
 #include "triSYCL/detail/fiber_pool.hpp"
 #include "triSYCL/detail/ranges.hpp"
 #include "triSYCL/vendor/Xilinx/config.hpp"
@@ -57,6 +62,12 @@ class tile_infrastructure  {
 
   /// The AXI stream switch of the core tile
   axi_ss_t axi_ss;
+
+  /** Sending DMAs
+
+      Use std::optional to postpone initialization */
+  std::array<std::optional<sending_dma<axi_ss_t>>,
+             axi_ss_geo::s_dma_size> tx_dmas;
 
 private:
 
@@ -188,6 +199,22 @@ public:
     fe = &fiber_executor;
 #endif
     axi_ss.start(x, y, fiber_executor);
+    /* Create the core tile receiver DMAs and make them directly the
+       switch output ports */
+    for (auto p : axi_ss_geo::m_dma_range) {
+std::cerr << "Receiver " << magic_enum::enum_name(p) << std::endl;
+      output(p) = std::make_shared<receiving_dma<axi_ss_t>>(axi_ss,
+                                                            fiber_executor);
+std::cerr << "Créé" << std::endl;
+}
+std::cerr << "Create the core tile sender DMAs" << std::endl;
+    /* Create the core tile sender DMAs and connect them internally to
+       their switch input ports */
+    for (const auto& [ d, p ] : ranges::views::zip(tx_dmas,
+                                                   axi_ss_geo::s_dma_range))
+{ std::cerr << "Sender " << magic_enum::enum_name(p) << std::endl;
+      d.emplace(fiber_executor, input(p));
+}
   }
 
 
@@ -232,6 +259,27 @@ public:
     /* The output port for the core is actually the corresponding
        input on the switch */
     return *axi_ss.in_connection(translate_input_port(port));
+  }
+
+
+  /** Get access to a receiver DMA
+
+      \param[in] id specifies which DMA to access */
+  auto& rx_dma(int id) {
+    /** The output of the switch is actually a receiving DMA, so we
+        can view it as a DMA */
+    return static_cast<receiving_dma<axi_ss_t>&>
+      (*output(axi_ss_t::translate_port(id, mpl::dma_0, mpl::dma_last,
+                                        "The receiver DMA port is out of range")
+               ));
+  }
+
+
+  /** Get access to a transmit DMA
+
+      \param[in] id specifies which DMA to access */
+  auto& tx_dma(int id) {
+    return *tx_dmas.at(id);
   }
 
 

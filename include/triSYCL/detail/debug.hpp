@@ -73,6 +73,9 @@ struct debug {
                  << " " << (void*) this);
   }
 
+#if 0
+/// Since Clang++-11 this is no longer working, because it should not have
+/// never been working! But is seems to work with G++
 
   /** Trace the copy construction with the compiler-dependent mangled
       named
@@ -110,7 +113,7 @@ struct debug {
     TRISYCL_DUMP("Move of " << boost::typeindex::type_id<T>().pretty_name()
                  << " " << (void*) this);
   }
-
+#endif
 
   /// Trace the destruction with the compiler-dependent mangled named
   ~debug() {

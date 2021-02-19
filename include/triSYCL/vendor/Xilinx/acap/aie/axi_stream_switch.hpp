@@ -79,7 +79,8 @@ public:
     instantiate the AXI stream switch.
  */
 template <typename AXIStreamGeography>
-class axi_stream_switch {
+class axi_stream_switch
+  : detail::debug<axi_stream_switch <AXIStreamGeography>> {
 
 public:
 
@@ -95,7 +96,9 @@ public:
       \todo Rename this communication_port since it is more generic
       and move it in its own file
   */
-  class router_port {
+  class router_port : detail::debug<router_port> {
+
+  protected:
     /// Keep track of the AXI stream switch owning this port for debugging
     axi_stream_switch &axi_ss;
 
@@ -153,7 +156,7 @@ public:
 
   /// A router input port with routing skills
   class router_minion : public router_port {
-
+public  :
     /// Router ingress capacity queue
     const int capacity;
 
@@ -478,6 +481,28 @@ public:
     // No index validation required because of type safety
     return output_ports[detail::underlying_value(p)];
   }
+
+
+#if 0
+  /** Map the user receive DMA port number to the AXI stream switch port
+
+      \param[in] port is the user port to use
+  */
+  static auto translate_rx_dma_port(int port) {
+    return axi_ss_t::translate_port(port, spl::dma_0, spl::dma_last,
+                                    "The receive DMA port is out of range");
+  }
+
+
+  /** Map the user transmit DMA port number to the AXI stream switch port
+
+      \param[in] port is the user port to use
+  */
+  static auto translate_tx_dma_port(int port) {
+    return axi_ss_t::translate_port(port, mpl::dma_0, mpl::dma_last,
+                                    "The transmit DMA port is out of range");
+  }
+#endif
 
 
   /// Connect the internals of the AXI stream switch
