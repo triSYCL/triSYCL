@@ -76,9 +76,9 @@ LDLIBS += -lpthread
 # For Clang ThreadSanitizer https://clang.llvm.org/docs/ThreadSanitizer.html
 #CXXFLAGS += -fsanitize=thread
 # For Clang MemorySanitizer https://clang.llvm.org/docs/MemorySanitizer.html
-#CXXFLAGS += -fsanitize=memory
+#CXXFLAGS += -fsanitize=memory -fsanitize-recover=all
 # To enable debug and tracing:
-#CXXFLAGS += -g
+#CXXFLAGS += -g -O0
 # Without optimization and without assertions
 #CXXFLAGS += -g -DNDEBUG -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -DNDEBUG

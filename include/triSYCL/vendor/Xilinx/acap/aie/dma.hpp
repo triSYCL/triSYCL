@@ -36,10 +36,12 @@ namespace trisycl::vendor::xilinx::acap::aie {
 template <typename AXIStreamSwitch, typename SpecializedDMA>
 class dma : detail::debug<SpecializedDMA> {
 
-public:
+protected:
 
   /// Use std::span for 1D contiguous transfers only for now
   using dma_command = std::span<axi_packet::value_type>;
+
+private:
 
   /// DMA command queue
   boost::fibers::buffered_channel<dma_command> c { 8 };
@@ -58,36 +60,50 @@ public:
 
   /// Wait for the fiber to complete
   void join() {
-std::cerr << "dma join()" << std::endl;
     // Get the value of the future, to get an exception if any
     data_mover.get();
-std::cerr << "dma joined()" << std::endl;
   }
 
 
-public:
+protected:
 
   /// Destructor handling the correct infrastructure shutdown
   ~dma() {
-std::cerr << "~dma()" << std::endl;
       // Close the command queue so the DMA does not accept any work
       c.close();
-std::cerr << "~dma() c.close(), joining..." << std::endl;
       /* Wait for the commands to drain to avoid calling
          std::terminate on destruction... */
       join();
-std::cerr << "~dma() done!" << std::endl;
     }
 
 
   /// Launch the data mover on the execution pool
   template <typename Invokable>
   void launch(detail::fiber_pool &fiber_executor, Invokable&& f) {
-std::cerr << "dma launching..." << std::endl;
     data_mover = fiber_executor.submit(std::forward<Invokable>(f));
-std::cerr << "dma launched!" << std::endl;
   }
 
+  /// Enqueue a DMA command
+  void push_command(const dma_command& cmd) {
+    ++nb_command;
+    c.push(cmd);
+  }
+
+
+  /// Dequeue a DMA command
+  auto pop_command(typename decltype(c)::value_type& command) {
+    return c.pop(command);
+  }
+
+
+  /// Notify a command has been processed
+  void commit_command() {
+    if (--nb_command == 0)
+      // Warn anyone waiting for the DMA queue to drain it might be empty now
+      waiting_room.notify_all();
+  }
+
+public:
 
   /** Wait for the transfers to complete
 
@@ -95,44 +111,16 @@ std::cerr << "dma launched!" << std::endl;
       at some point the queue will be empty so there is no continuous
       DMA command enqueuing for example. */
   SpecializedDMA& wait() {
-std::cerr << "Entering waiting room of " << (void*) this
-          << " with nb_command = " << nb_command << std::endl;
     if (nb_command != 0) {
       // We need to wait because there are still operations executing
       std::unique_lock lk { waiting_mutex };
       waiting_room.wait(lk, [&] { return nb_command == 0; });
     }
-std::cerr << "Exiting waiting room of " << (void*) this << std::endl;
     /* To be able to chain another DMA operation on it, return the DMA
        object itself */
-    return *static_cast<SpecializedDMA *>(this);
+    return static_cast<SpecializedDMA&>(*this);
   }
 
-protected:
-
-  /// Enqueue a DMA command
-  void push_command(const dma_command& cmd) {
-    ++nb_command;
-try {
-    c.push(cmd);
-} catch(...) { std::cerr << "dma push throwed!" << std::endl;}
-  }
-
-
-  /// Dequeue a DMA command
-  auto pop_command(typename decltype(c)::value_type& command) {
-    return c.pop(command);
-      }
-
-
-  /// Notify a command has been processed
-  void commit_command() {
-std::cerr << "commit_command() nb_command = " << nb_command << std::endl;
-
-    if (--nb_command == 0)
-      // Warn anyone waiting for the DMA queue to drain it might be empty now
-      waiting_room.notify_all();
-  }
 };
 
 
@@ -155,14 +143,20 @@ class receiving_dma : public dma<AXIStreamSwitch,
 
 public:
 
+  /// Enqueue a DMA transfer to receive a span
+  auto& receive(typename dma_base::dma_command cmd) {
+    this->push_command(std::move(cmd));
+    return *this;
+  }
+
+  // \todo Make the following private and friend as it is not for the user
+
   /// Start the DMA engine using an executor
   receiving_dma(AXIStreamSwitch& axi_ss, detail::fiber_pool &fe)
     : AXIStreamSwitch::router_port { axi_ss } {
     this->launch(fe, [&] {
-std::cerr << "receiving_dma fiber starting" << std::endl;
                        typename dma_base::dma_command sp;
                        for(;;) {
-std::cerr << "receiving_dma Read a DMA command" << std::endl;
                          /* Read a DMA command which is a span
                             expressing memory destination */
                          if (this->pop_command(sp)
@@ -173,22 +167,17 @@ std::cerr << "receiving_dma Read a DMA command" << std::endl;
                             router port into the memory described by
                             DMA operation */
                          for (auto& e : sp) {
-                           std::cerr << "receiving_dma read before" << std::endl;
                            e = read();
-                           std::cerr << "receiving_dma read after " << e << std::endl;
                          }
                          this->commit_command();
                        }
-std::cerr << "receiving_dma fiber ending" << std::endl;
                      });
   }
 
 
   /// The network sends some data to the DMA receiver input
   void write(const axi_packet &v) override {
-try {
     fifo.push(v);
-} catch(...) { std::cerr << "receiving_dma::write throwed!" << std::endl;}
   }
 
 
@@ -207,11 +196,7 @@ try {
 
   /// Waiting read by a tile program on a core input port from the switch
   axi_packet::value_type read() override {
-try {
     return fifo.value_pop().data;
-} catch(const boost::fibers::fiber_error& e) {
-  std::cerr << "receiving_dma::read throwed! " << e.what()
-            << (void*) this << std::endl;} return {};
   }
 
 
@@ -229,12 +214,6 @@ try {
     return false;
   }
 
-
-  /// Enqueue a DMA transfer to receive a span
-  auto& receive(typename dma_base::dma_command cmd) {
-    this->push_command(std::move(cmd));
-    return *this;
-  }
 };
 
 
@@ -251,11 +230,9 @@ public:
   /// Start the DMA engine using an executor to push things on a port
   sending_dma(detail::fiber_pool &fe,
               std::shared_ptr<typename AXIStreamSwitch::router_port> output) {
-std::cerr << "sending_dma fiber starting" << std::endl;
     this->launch(fe, [o = std::move(output), this] {
                        typename dma_base::dma_command sp;
                        for(;;) {
-std::cerr << "sending_dma Read a DMA command" << std::endl;
                          /* Read a DMA command which is a span
                             describing what to read from memory */
                          if (this->pop_command(sp)
@@ -265,23 +242,17 @@ std::cerr << "sending_dma Read a DMA command" << std::endl;
                          /* Send each element of this span to the output
                             port */
                          for (const auto& e : sp) {
-                           std::cerr << "sending_dma write before " << e << std::endl;
                            o->write(e);
-                           std::cerr << "sending_dma write after " << e << std::endl;
                          }
                          this->commit_command();
                        }
-std::cerr << "sending_dma fiber ending" << std::endl;
                      });
   }
 
 
   /// Enqueue a DMA transfer to send a span
   auto& send(const typename dma_base::dma_command& cmd) {
-try {
-  std::cerr << "sending_dma push(cmd)" << std::endl;
     this->push_command(cmd);
-} catch(...) { std::cerr << "sending_dma::send throwed!" << std::endl;}
     // To be able to chain another DMA operation on it
     return *this;
   }

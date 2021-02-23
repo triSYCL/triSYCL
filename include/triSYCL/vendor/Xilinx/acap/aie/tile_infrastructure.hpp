@@ -201,20 +201,14 @@ public:
     axi_ss.start(x, y, fiber_executor);
     /* Create the core tile receiver DMAs and make them directly the
        switch output ports */
-    for (auto p : axi_ss_geo::m_dma_range) {
-std::cerr << "Receiver " << magic_enum::enum_name(p) << std::endl;
+    for (auto p : axi_ss_geo::m_dma_range)
       output(p) = std::make_shared<receiving_dma<axi_ss_t>>(axi_ss,
                                                             fiber_executor);
-std::cerr << "Créé" << std::endl;
-}
-std::cerr << "Create the core tile sender DMAs" << std::endl;
     /* Create the core tile sender DMAs and connect them internally to
        their switch input ports */
     for (const auto& [ d, p ] : ranges::views::zip(tx_dmas,
                                                    axi_ss_geo::s_dma_range))
-{ std::cerr << "Sender " << magic_enum::enum_name(p) << std::endl;
       d.emplace(fiber_executor, input(p));
-}
   }
 
 

@@ -66,12 +66,12 @@ template <typename AIE, int X, int Y>
 struct right_neighbor : acap::aie::tile<AIE, X, Y> {
   using t = acap::aie::tile<AIE, X, Y>;
   void run() {
-    unsigned int src[1];
+    unsigned int src[100];
     std::iota(std::begin(src), std::end(src), 0);
     if constexpr (!t::is_east_column())
       // There is a neighbor on the right: send some data
       t::tx_dma(0).send(src);
-    unsigned int dst[1];
+    unsigned int dst[100];
     if constexpr (!t::is_west_column())
       // There is a neighbor on the left: receive some data
       t::rx_dma(0).receive(dst);
@@ -82,9 +82,7 @@ struct right_neighbor : acap::aie::tile<AIE, X, Y> {
       // Once it is received, we can check the result
       BOOST_CHECK(ranges::equal(src, dst));
     }
-std::cerr << "Sleeping" << std::endl;
-boost::this_fiber::sleep_for(std::chrono::seconds { 1 });
-  }
+}
 };
 
 
