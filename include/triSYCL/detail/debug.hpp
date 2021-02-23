@@ -163,7 +163,7 @@ struct display_vector {
     std::cout << boost::typeindex::type_id<T>().pretty_name() << ":";
 #endif
     // Get a pointer to the real object
-    for (auto e : *static_cast<const T *>(this))
+    for (auto e : static_cast<const T&>(*this))
       std::cout << " " << e;
     std::cout << std::endl;
   }
