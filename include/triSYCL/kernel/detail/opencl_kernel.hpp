@@ -114,7 +114,7 @@ class opencl_kernel : public detail::kernel,
       (k,                                                               \
        static_cast<size_t>(N),                                          \
        NULL,                                                            \
-       static_cast<const size_t*>(num_work_items.data()) ,              \
+       static_cast<const size_t*>(num_work_items.data()),               \
        NULL);                                                           \
     /* For now use a crude synchronization mechanism to map directly a  \
        host task to an accelerator task */                              \

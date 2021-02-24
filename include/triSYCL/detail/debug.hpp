@@ -67,27 +67,29 @@ namespace trisycl::detail {
 template <typename T>
 struct debug {
 #ifdef TRISYCL_DEBUG_STRUCTORS
+  /// Get the name of T itself
+  static auto constexpr pn() {
+    return boost::typeindex::type_id<T>().pretty_name();
+  }
+
+
   /// Trace the construction with the compiler-dependent mangled named
   debug() {
-    TRISYCL_DUMP("Constructor of "
-                 << boost::typeindex::type_id<T>().pretty_name()
-                 << " " << static_cast<void*>(this));
+    TRISYCL_DUMP("Constructor of " << pn() << " " << static_cast<void*>(this));
   }
 
 
   /** Trace the copy construction with the compiler-dependent mangled
       named */
   debug(debug const& old) {
-    TRISYCL_DUMP("Copy of " << boost::typeindex::type_id<T>().pretty_name()
-                 << " into " << static_cast<void*>(this)
+    TRISYCL_DUMP("Copy of " << pn() << " into " << static_cast<void*>(this)
                  << " from " << static_cast<const void*>(&old));
   }
 
 
   /// Trace the copy assignment
   debug& operator=(const debug& rhs) {
-    TRISYCL_DUMP("Copy assignment of "
-                 << boost::typeindex::type_id<T>().pretty_name()
+    TRISYCL_DUMP("Copy assignment of " << pn()
                  << " into " << static_cast<void*>(this)
                  << " from " << static_cast<const void*>(&rhs));
     return *this;
@@ -97,16 +99,14 @@ struct debug {
   /** Trace the move construction with the compiler-dependent mangled
       named */
   debug(debug&& old) {
-    TRISYCL_DUMP("Move of " << boost::typeindex::type_id<T>().pretty_name()
-                 << " into " << static_cast<void*>(this)
+    TRISYCL_DUMP("Move of " << pn() << " into " << static_cast<void*>(this)
                  << " from " << static_cast<void*>(&old));
   }
 
 
   /// Trace the move assignment
   debug& operator=(debug&& rhs) {
-    TRISYCL_DUMP("Move assignment of "
-                 << boost::typeindex::type_id<T>().pretty_name()
+    TRISYCL_DUMP("Move assignment of " << pn()
                  << " into " << static_cast<void*>(this)
                  << " from " << static_cast<void*>(&rhs));
     return *this;
@@ -115,9 +115,7 @@ struct debug {
 
   /// Trace the destruction with the compiler-dependent mangled named
   ~debug() {
-    TRISYCL_DUMP("~ Destructor of "
-                 << boost::typeindex::type_id<T>().pretty_name()
-                 << " " << static_cast<void*>(this));
+    TRISYCL_DUMP("~ Destructor of " << pn() << " " << static_cast<void*>(this));
   }
 #endif
 };
