@@ -134,7 +134,7 @@ int test_main(int argc, char *argv[]) {
         measure_bandwidth(transmitted_bytes,
                           [&] { d.template run<square_neighbor>(); });
         // Dump the configuration in LaTeX
-        d.display();
+        d.display("aie_noc_benchmark.tex");
       }
     });
   } catch (sycl::exception &e) {
