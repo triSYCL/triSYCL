@@ -241,7 +241,7 @@ public:
                    << y_coordinate << ')');
     /* The input port for the core is actually the corresponding
        output on the switch */
-    return *axi_ss.out_connection(translate_output_port(port));
+    return *out_connection(port);
   }
 
 
@@ -254,7 +254,7 @@ public:
                    << y_coordinate << ')');
     /* The output port for the core is actually the corresponding
        input on the switch */
-    return *axi_ss.in_connection(translate_input_port(port));
+    return *in_connection(port);
   }
 
 
