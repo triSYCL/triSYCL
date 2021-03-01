@@ -131,7 +131,7 @@ public:
 template <typename AXIStreamSwitch>
 class receiving_dma : public dma<AXIStreamSwitch,
                                  receiving_dma<AXIStreamSwitch>>,
-                      public AXIStreamSwitch::router_port {
+                      public communicator_port {
   using dma_base = dma<AXIStreamSwitch, receiving_dma<AXIStreamSwitch>>;
 
   /* boost::fibers::unbuffered_channel has no try_push() function, so
@@ -140,6 +140,9 @@ class receiving_dma : public dma<AXIStreamSwitch,
      \todo open a GitHub issue on Boost.Fiber
   */
   boost::fibers::buffered_channel<axi_packet> fifo { 8 };
+
+  /// Keep track of the AXI stream switch owning this port for debugging
+  AXIStreamSwitch &axi_ss;
 
 public:
 
@@ -153,7 +156,7 @@ public:
 
   /// Start the DMA engine using an executor
   receiving_dma(AXIStreamSwitch& axi_ss, detail::fiber_pool &fe)
-    : AXIStreamSwitch::router_port { axi_ss } {
+    : axi_ss { axi_ss } {
     this->launch(fe, [&] {
                        typename dma_base::dma_command sp;
                        for(;;) {
@@ -229,7 +232,7 @@ public:
 
   /// Start the DMA engine using an executor to push things on a port
   sending_dma(detail::fiber_pool &fe,
-              std::shared_ptr<typename AXIStreamSwitch::router_port> output) {
+              std::shared_ptr<communicator_port> output) {
     this->launch(fe, [o = std::move(output), this] {
                        typename dma_base::dma_command sp;
                        for(;;) {

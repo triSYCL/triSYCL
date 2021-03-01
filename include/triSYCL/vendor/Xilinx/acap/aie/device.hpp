@@ -107,7 +107,6 @@ struct device {
   }
 
 
-#if 0
   /** The shim tiles on the lower row of the tile array
 
       For now we consider only homogeneous shim tiles.
@@ -125,7 +124,7 @@ struct device {
     geo::validate_x(x);
     return shims[x];
   }
-#endif
+
 
   /// Access the cascade connections
   auto &cascade() {
@@ -177,8 +176,14 @@ struct device {
   }
 
 
-  /** Connect the ports of 2 tiles or shims together with a switched
-      circuit
+  /** Connect the ports of 2 tiles or shims together with an
+      hyperspace switched circuit, jumping over the underlying routing
+      infrastructure.
+
+      This is used to speed up communication in emulation and to skip
+      the need of a routing planner.
+
+      \todo To deprecate and implement in another way?
 
       \param[in] T is the type of the data to be transferred
 
@@ -195,10 +200,9 @@ struct device {
   */
   template <typename T, typename SrcPort, typename DstPort>
   void connect(SrcPort src, DstPort dst) {
-    /// \todo move this into a factory
-    connection c { ::trisycl::sycl_2_2::static_pipe<T, 4> {} };
     constexpr bool valid_src = std::is_same_v<SrcPort, port::tile>
       || std::is_same_v<SrcPort, port::shim>;
+#if 0
     static_assert(valid_src,
                   "SrcPort type should be port::tile or port::shim");
     if constexpr (std::is_same_v<SrcPort, port::tile>) {
@@ -217,6 +221,7 @@ struct device {
     else if constexpr (std::is_same_v<DstPort, port::shim>) {
       shim(dst.x).bli_in_connection(dst.port) = c.in();
     }
+#endif
   }
 
 

@@ -1,7 +1,12 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_ARRAY_CONNECTION_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_ARRAY_CONNECTION_HPP
 
-/** \file
+/** \file Simple connections between AIE AXI stream switch and inside
+    AXI stream switch
+
+    \todo Deprecate \c connection since now we have a more precise routing
+    involving the AXI stream switches so we should instead use the
+    same data types.
 
     Ronan dot Keryell at Xilinx dot com
 
@@ -17,6 +22,89 @@ namespace trisycl::vendor::xilinx::acap::aie {
 
 /// \ingroup aie
 /// @{
+
+/// Packet moving in AIE network-on-chip (NoC)
+class axi_packet {
+  /// Marker type used to signal network shutdown
+  struct shutdown_t {};
+
+public:
+
+  /// Payload data type
+  using value_type = std::uint32_t;
+
+  /// Marker value used to construct a packet asking for shutdown
+  static const shutdown_t shutdown;
+
+  /// Network payload
+  value_type data;
+
+  /// Signal end of packet stream
+  bool tlast = false;
+
+  /// Signal a router shutdown
+  bool shutdown_request = false;
+
+  /// Implicit constructor from a data value
+  axi_packet(const value_type & data) : data { data } {}
+
+  /// Construct a shutdown request packet from axi_packet::shutdown
+  axi_packet(shutdown_t) : shutdown_request { true } {}
+
+  axi_packet() = default;
+};
+
+
+  /** Abstract interface for a communication port
+
+      For example a router output is actually implemented as an input
+      to some other consumer (router, core...).
+  */
+  class communicator_port : detail::debug<communicator_port> {
+
+  public:
+
+    /// Enqueue a packet on the communicator input
+    void virtual write(const axi_packet&) = 0;
+
+
+    /// Alias to enqueue a packet on the communicator input
+    auto& operator<<(const axi_packet::value_type& v) {
+      write(v);
+      return *this;
+    }
+
+
+    /** Try to enqueue a packet to input
+
+        \return true if the packet is correctly enqueued
+    */
+    bool virtual try_write(const axi_packet&) = 0;
+
+
+    /// Waiting read to a core input port
+    axi_packet::value_type virtual read() = 0;
+
+
+    /** Non-blocking read from a communicator output port
+
+        \return true if the value was correctly read
+    */
+    bool virtual try_read(axi_packet::value_type&) = 0;
+
+
+    /// Alias to the waiting read to a communicator output port
+    template <typename T>
+    auto& operator>>(T& v) {
+      v = static_cast<T>(read());
+      return *this;
+    }
+
+
+    /// Nothing specific to do but need a virtual destructor to avoid slicing
+    virtual ~communicator_port() = default;
+  };
+
 
 /// Abstraction of a communication port
 struct port {

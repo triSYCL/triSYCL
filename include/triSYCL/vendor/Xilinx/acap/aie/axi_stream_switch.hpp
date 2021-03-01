@@ -41,38 +41,6 @@ namespace trisycl::vendor::xilinx::acap::aie {
 /// \ingroup aie
 /// @{
 
-/// Packet moving in AIE network-on-chip (NoC)
-class axi_packet {
-  /// Marker type used to signal network shutdown
-  struct shutdown_t {};
-
-public:
-
-  /// Payload data type
-  using value_type = std::uint32_t;
-
-  /// Marker value used to construct a packet asking for shutdown
-  static const shutdown_t shutdown;
-
-  /// Network payload
-  value_type data;
-
-  /// Signal end of packet stream
-  bool tlast = false;
-
-  /// Signal a router shutdown
-  bool shutdown_request = false;
-
-  /// Implicit constructor from a data value
-  axi_packet(const value_type & data) : data { data } {}
-
-  /// Construct a shutdown request packet from axi_packet::shutdown
-  axi_packet(shutdown_t) : shutdown_request { true } {}
-
-  axi_packet() = default;
-};
-
-
 /** An AXI stream switch parameterized with some geographic layout
 
     \param[in] AxiStreamGeography is the geography class used to
@@ -88,74 +56,8 @@ public:
   using mpl = typename axi_ss_geo::master_port_layout;
   using spl = typename axi_ss_geo::slave_port_layout;
 
-  /** Abstract interface for a router input port
-
-      Note that a router output is actually implemented as an input to
-      some other consumer (router, core...).
-
-      \todo Rename this communication_port since it is more generic
-      and move it in its own file
-  */
-  class router_port : detail::debug<router_port> {
-
-  protected:
-    /// Keep track of the AXI stream switch owning this port for debugging
-    axi_stream_switch &axi_ss;
-
-  public:
-
-    using value_type = axi_packet::value_type;
-
-    /// Create a router port owned by an AXI stream switch
-    router_port(axi_stream_switch &axi_ss)
-      : axi_ss { axi_ss }
-    {}
-
-
-    /// Enqueue a packet on the router input
-    void virtual write(const axi_packet &v) = 0;
-
-
-    /// Alias to enqueue a packet on the router input
-    auto& operator<<(const value_type &v) {
-      write(v);
-      return *this;
-    }
-
-
-    /** Try to enqueue a packet to input
-
-        \return true if the packet is correctly enqueued
-    */
-    bool virtual try_write(const axi_packet &v) = 0;
-
-
-    /// Waiting read to a core input port
-    value_type virtual read() = 0;
-
-
-    /** Non-blocking read to a core input port
-
-        \return true if the value was correctly read
-    */
-    bool virtual try_read(value_type &v) = 0;
-
-
-    /// Alias to the waiting read to a core input port
-    template <typename T>
-    auto& operator>>(T &v) {
-      v = static_cast<T>(read());
-      return *this;
-    }
-
-
-    /// Nothing specific to do but need a virtual destructor to avoid slicing
-    virtual ~router_port() = default;
-  };
-
-
   /// A router input port with routing skills
-  class router_minion : public router_port {
+  class router_minion : public communicator_port {
 public  :
     /// Router ingress capacity queue
     const int capacity;
@@ -171,13 +73,13 @@ public  :
     /** The outputs the router minion has to forward to.
         This what is used to speed up the routing itself even if the id
         could be enough */
-    std::vector<std::shared_ptr<router_port>> outputs;
-
-    /// Inherit from parent constructors
-    using router_port::router_port;
+    std::vector<std::shared_ptr<communicator_port>> outputs;
 
     /// To shepherd the routing fibers
     std::vector<detail::fiber_pool::future<void>> futures;
+
+    /// Keep track of the AXI stream switch owning this port for debugging
+    axi_stream_switch &axi_ss;
 
     /// Wait for the fibers to complete
     void join() {
@@ -189,7 +91,7 @@ public  :
 
   public:
 
-    using value_type = typename router_port::value_type;
+    using value_type = axi_packet::value_type;
 
     /// Enqueue a packet on the router input
     /// \todo Clean up the API to separate data from signaling
@@ -242,7 +144,7 @@ public  :
 
     /// Connect this routing input to a switch output
     void connect_to(axi_stream_switch::mpl port_dest,
-                    std::shared_ptr<router_port> dest) {
+                    std::shared_ptr<communicator_port> dest) {
       TRISYCL_DUMP_T("connect_to router_minion " << this << " on tile("
                      << router_minion::axi_ss.x_coordinate
                      << ',' << router_minion::axi_ss.y_coordinate
@@ -263,8 +165,8 @@ public  :
     router_minion(axi_stream_switch &axi_ss,
                   detail::fiber_pool &fiber_executor,
                   int capacity = axi_ss_geo::latency)
-      : router_port { axi_ss }
-      , capacity { capacity }
+      : capacity { capacity }
+      , axi_ss { axi_ss }
     {
       /// Use a fiber as a data mover from the input queue
       futures.push_back(fiber_executor.submit([&] {
@@ -319,9 +221,9 @@ public  :
   };
 
 
-  /// Get the router_minion behind a router_port
+  /// Get the router_minion behind a communicator_port
   static router_minion *
-  get_as_router_minion(router_port * rp) {
+  get_as_router_minion(communicator_port * rp) {
 #ifdef NDEBUG
     // No assert mode
     auto rm = static_cast<router_minion *>(rp);
@@ -427,7 +329,7 @@ public  :
       ->connect_to(mp, out_connection(mp));
   }
 
-  // To deprecate ?
+  // \todo To deprecate ?
   using data_type = std::uint32_t;
   static constexpr auto stream_latency = 4;
 
@@ -445,7 +347,7 @@ public  :
       Use a shared pointer to represent the interconnect between
       switches in a shortcut way.
   */
-  std::array<std::shared_ptr<router_port>,
+  std::array<std::shared_ptr<communicator_port>,
              axi_ss_geo::nb_slave_port> input_ports;
 
   /** The input ports used to send information to the switch
@@ -453,7 +355,7 @@ public  :
       Use a shared pointer to represent the interconnect between
       switches in a shortcut way.
   */
-  std::array<std::shared_ptr<router_port>,
+  std::array<std::shared_ptr<communicator_port>,
              axi_ss_geo::nb_master_port> output_ports;
 
   /// Keep the horizontal coordinate for debug purpose
