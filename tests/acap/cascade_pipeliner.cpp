@@ -128,12 +128,12 @@ int main() {
 
   auto hp = host_pipeliner(p1, p2, p3, p4);
 
-  ranges::for_each(view::ints(0, 10) | view::transform(hp),
+  ranges::for_each(views::iota(0, 10) | views::transform(hp),
                    [] (auto x) { std::cout << x << std::endl; });
 
   auto aie_cp = make_cascade_pipeliner(0, p1, p2, p3, p4);
   auto cp = aie_cp.get_executor();
 
-  ranges::for_each(view::ints(0, 10) | view::transform(cp),
+  ranges::for_each(views::iota(0, 10) | views::transform(cp),
                    [] (auto x) { std::cout << x << std::endl; });
 }
