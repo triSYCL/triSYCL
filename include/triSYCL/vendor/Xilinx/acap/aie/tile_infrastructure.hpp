@@ -105,6 +105,7 @@ private:
 public:
 
   /// A router input port directing to a AIE core input
+  /// \todo factorize with fifo_port
   class core_receiver : public communicator_port {
     /// Router ingress capacity queue
     /// \todo check with hardware team for the value

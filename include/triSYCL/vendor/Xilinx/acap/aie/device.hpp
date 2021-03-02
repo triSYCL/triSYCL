@@ -198,30 +198,29 @@ struct device {
 
       \todo Refactor, make the difference between user & physical ports
   */
-  template <typename T, typename SrcPort, typename DstPort>
+  template <typename SrcPort, typename DstPort>
   void connect(SrcPort src, DstPort dst) {
     constexpr bool valid_src = std::is_same_v<SrcPort, port::tile>
       || std::is_same_v<SrcPort, port::shim>;
-#if 0
     static_assert(valid_src,
                   "SrcPort type should be port::tile or port::shim");
+    auto fc = std::make_shared<fifo_channel>();
     if constexpr (std::is_same_v<SrcPort, port::tile>) {
-       tile(src.x, src.y).out_connection(src.port) = c.out();
+       tile(src.x, src.y).out_connection(src.port) = fc;
     }
     else if constexpr (std::is_same_v<SrcPort, port::shim>) {
-       shim(src.x).bli_out_connection(src.port) = c.out();
+       shim(src.x).bli_out_connection(src.port) = fc;
     }
     constexpr bool valid_dst = std::is_same_v<DstPort, port::tile>
       || std::is_same_v<DstPort, port::shim>;
     static_assert(valid_dst,
                   "DstPort type should be port::tile or port::shim");
     if constexpr (std::is_same_v<DstPort, port::tile>) {
-      tile(dst.x, dst.y).in_connection(dst.port) = c.in();
+      tile(dst.x, dst.y).in_connection(dst.port) = fc;
     }
     else if constexpr (std::is_same_v<DstPort, port::shim>) {
-      shim(dst.x).bli_in_connection(dst.port) = c.in();
+      shim(dst.x).bli_in_connection(dst.port) = fc;
     }
-#endif
   }
 
 

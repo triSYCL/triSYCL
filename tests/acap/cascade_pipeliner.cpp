@@ -15,7 +15,6 @@
 #include <range/v3/all.hpp>
 
 using namespace boost;
-using namespace ranges;
 using namespace sycl;
 using namespace sycl::vendor::xilinx;
 using namespace sycl::vendor::xilinx::acap::aie;
@@ -76,7 +75,7 @@ struct cascade_executor {
         InputT input;
         if constexpr (t::is_cascade_start())
           // Read from input 0 of the AXI stream switch
-          input = t::template in<InputT>(0).read();
+          input = t::in(0).read();
         else
           // Normal stage: read the input from the cascade neighbor
           input = t::template get_cascade_stream_in<InputT>().read();
@@ -88,7 +87,7 @@ struct cascade_executor {
                   << output << std::endl;
         if constexpr (t::cascade_linear_id() ==  last_stage)
           // Last stage: ship the result through the AIE NoC
-          t::template out<OutputT>(0) << output;
+          t::out(0) << output;
         else
           // Normal stage: send the result to the cascade neighbor
           t::template get_cascade_stream_out<OutputT>() << output;
@@ -100,16 +99,16 @@ struct cascade_executor {
 
   auto get_executor() {
     // AIE NoC connection between shim and input of the pipeline
-    d.template connect<FirstT>(port::shim { 0, 0 }, port::tile { 0, 0, 0 });
+    d.template connect(port::shim { 0, 0 }, port::tile { 0, 0, 0 });
     // AIE NoC connection between output of the pipeline and the shim
     auto last_x = decltype(d)::geo::cascade_linear_x(last_stage);
     auto last_y = decltype(d)::geo::cascade_linear_y(last_stage);
-    d.template connect<LastT>(port::tile { last_x, last_y, 0 },
+    d.template connect(port::tile { last_x, last_y, 0 },
                               port::shim { 1, 0 });
     return [&] (FirstT input) {
-             d.shim(0).template bli_out<0, FirstT>() << input;
+             d.shim(0).bli_out(0) << input;
              d.run<tile_program>();
-             return d.shim(1).template bli_in<0, LastT>().read();
+             return d.shim(1).bli_in(0).read();
            };
   }
 };
@@ -128,12 +127,12 @@ int main() {
 
   auto hp = host_pipeliner(p1, p2, p3, p4);
 
-  ranges::for_each(view::ints(0, 10) | view::transform(hp),
+  ranges::for_each(ranges::views::iota(0, 10) | ranges::views::transform(hp),
                    [] (auto x) { std::cout << x << std::endl; });
 
   auto aie_cp = make_cascade_pipeliner(0, p1, p2, p3, p4);
   auto cp = aie_cp.get_executor();
 
-  ranges::for_each(view::ints(0, 10) | view::transform(cp),
+  ranges::for_each(ranges::views::iota(0, 10) | ranges::views::transform(cp),
                    [] (auto x) { std::cout << x << std::endl; });
 }

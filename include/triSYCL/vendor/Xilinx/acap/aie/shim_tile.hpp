@@ -57,43 +57,13 @@ class shim_tile
   }
 
 public:
-
-  /** Get the input port from the shim AXI stream switch
-
-      \param[in] T is the data type to be used in the transfers
-
-      \param[in] Target specifies if the connection is blocking or
-      not. It is blocking by default
-
-      \param[in] port is the BLI id/port to use
-  */
-  template <typename T, access::target Target = access::target::blocking_pipe>
-  auto in(int port) {
-    return base::in_connection(port).template in<T, Target>();
-  }
-
-
-  /** Get the output port to the shim AXI stream switch
-
-      \param[in] T is the data type to be used in the transfers
-
-      \param[in] Target specifies if the connection is blocking or
-      not. It is blocking by default
-
-      \param[in] port is the BLI id/port to use
-  */
-  template <typename T, access::target Target = access::target::blocking_pipe>
-  auto out(int port) {
-    return base::out_connection(port).template out<T, Target>();
-  }
-
-
   /** Get the BLI input connection from the shim tile
 
       \param[in] port is the BLI id/port to use
   */
   auto& bli_in_connection(int port) {
-    return base::in_connection(translate_input_port(port));
+    // The input is actually the output of the switch
+    return base::out_connection(translate_input_port(port));
   }
 
 
@@ -102,7 +72,8 @@ public:
       \param[in] port is the BLI id/port to use
   */
   auto& bli_out_connection(int port) {
-    return base::out_connection(translate_output_port(port));
+    // The output is actually the input of the switch
+    return base::in_connection(translate_output_port(port));
   }
 
 
@@ -111,16 +82,9 @@ public:
 
       \param[in] port is the BLI id/port to use
 
-      \param[in] T is the data type to be used in the transfers
-
-      \param[in] Target specifies if the connection is blocking or
-      not. It is blocking by default
   */
-  template <int port,
-            typename T,
-            access::target target = access::target::blocking_pipe>
-  auto bli_in() {
-    return bli_in_connection(port).template in<T, target>();
+  auto& bli_in(int port) {
+    return *bli_in_connection(port);
   }
 
 
@@ -128,25 +92,11 @@ public:
       (Programmable Logic in the FPGA) to write data to
 
       \param[in] port is the BLI id/port to use
-
-      \param[in] T is the data type to be used in the transfers
-
-      \param[in] Target specifies if the connection is blocking or
-      not. It is blocking by default
   */
-  template <int port,
-            typename T,
-            access::target target = access::target::blocking_pipe>
-  auto bli_out() {
-    return bli_out_connection(port).template out<T, target>();
+  auto& bli_out(int port) {
+    return *bli_out_connection(port);
   }
 
-
-  /// Configure a connection of the shim AXI stream switch
-  void connect(typename geo::shim_axi_stream_switch::slave_port_layout sp,
-               typename geo::shim_axi_stream_switch::master_port_layout mp) {
-    /// \todo
-  }
 };
 
 /// @} End the aie Doxygen group

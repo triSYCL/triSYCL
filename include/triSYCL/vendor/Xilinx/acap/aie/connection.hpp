@@ -55,55 +55,107 @@ public:
 };
 
 
-  /** Abstract interface for a communication port
+/** Abstract interface for a communication port
 
-      For example a router output is actually implemented as an input
-      to some other consumer (router, core...).
+    For example a router output is actually implemented as an input
+    to some other consumer (router, core...).
+*/
+class communicator_port : detail::debug<communicator_port> {
+
+public:
+
+  /// Enqueue a packet on the communicator input
+  void virtual write(const axi_packet&) = 0;
+
+
+  /// Alias to enqueue a packet on the communicator input
+  auto& operator<<(const axi_packet::value_type& v) {
+    write(v);
+    return *this;
+  }
+
+
+  /** Try to enqueue a packet to input
+
+      \return true if the packet is correctly enqueued
   */
-  class communicator_port : detail::debug<communicator_port> {
-
-  public:
-
-    /// Enqueue a packet on the communicator input
-    void virtual write(const axi_packet&) = 0;
+  bool virtual try_write(const axi_packet&) = 0;
 
 
-    /// Alias to enqueue a packet on the communicator input
-    auto& operator<<(const axi_packet::value_type& v) {
-      write(v);
-      return *this;
+  /// Waiting read to a core input port
+  axi_packet::value_type virtual read() = 0;
+
+
+  /** Non-blocking read from a communicator output port
+
+      \return true if the value was correctly read
+  */
+  bool virtual try_read(axi_packet::value_type&) = 0;
+
+
+  /// Alias to the waiting read to a communicator output port
+  template <typename T>
+  auto& operator>>(T& v) {
+    v = static_cast<T>(read());
+    return *this;
+  }
+
+
+  /// Nothing specific to do but need a virtual destructor to avoid slicing
+  virtual ~communicator_port() = default;
+};
+
+
+/// A FIFO channel connection
+/// \todo factorize out router minion
+class fifo_channel : public communicator_port {
+  /// FIFO capacity queue
+  /// \todo check with hardware team for the value
+  auto static constexpr capacity = 16;
+
+  /// Payload data type
+  using value_type = axi_packet::value_type;
+
+  /// The underlying FIFO
+  boost::fibers::buffered_channel<axi_packet> c { capacity };
+
+public:
+
+  /// Enqueue a packet to the FIFO channel
+  void write(const axi_packet &v) override {
+    c.push(v);
+  }
+
+
+  /** Try to enqueue a packet to the FIFO channel
+
+      \return true if the packet is correctly enqueued
+  */
+  bool try_write(const axi_packet &v) override {
+    return c.try_push(v) == boost::fibers::channel_op_status::success;
+  }
+
+
+  /// Waiting read from the FIFO channel
+  value_type read() override {
+    return c.value_pop().data;
+  }
+
+
+  /** Non-blocking read from the FIFO channel
+
+      \return true if the value was correctly read
+  */
+  bool try_read(value_type &v) override {
+    axi_packet p;
+    if (c.try_pop(p) == boost::fibers::channel_op_status::success) {
+      v = p.data;
+      return true;
     }
+    return false;
+  }
 
-
-    /** Try to enqueue a packet to input
-
-        \return true if the packet is correctly enqueued
-    */
-    bool virtual try_write(const axi_packet&) = 0;
-
-
-    /// Waiting read to a core input port
-    axi_packet::value_type virtual read() = 0;
-
-
-    /** Non-blocking read from a communicator output port
-
-        \return true if the value was correctly read
-    */
-    bool virtual try_read(axi_packet::value_type&) = 0;
-
-
-    /// Alias to the waiting read to a communicator output port
-    template <typename T>
-    auto& operator>>(T& v) {
-      v = static_cast<T>(read());
-      return *this;
-    }
-
-
-    /// Nothing specific to do but need a virtual destructor to avoid slicing
-    virtual ~communicator_port() = default;
-  };
+};
 
 
 /// Abstraction of a communication port
