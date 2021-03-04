@@ -104,85 +104,14 @@ private:
 
 public:
 
-  /// A router input port directing to a AIE core input
-  /// \todo factorize with fifo_port
-  class core_receiver : public communicator_port {
-    /// Router ingress capacity queue
-    /// \todo check with hardware team for the value
-    auto static constexpr capacity = 2;
-
-    /// Payload data type
-    using value_type = axi_packet::value_type;
-
-    /* boost::fibers::unbuffered_channel has no try_push() function, so
-       use a buffered version for now
-
-       \todo open a GitHub issue on Boost.Fiber
-    */
-    boost::fibers::buffered_channel<axi_packet> c { capacity };
-
-    /// Keep track of the AXI stream switch owning this port for debugging
-    axi_ss_t &axi_ss;
-
-  public:
-
-    core_receiver(axi_ss_t& axi_ss) : axi_ss { axi_ss } {}
-
-
-    /// Enqueue a packet (coming from the switch) to the core input
-    void write(const axi_packet &v) override {
-      TRISYCL_DUMP_T("core_receiver " << this << " on tile("
-                     << axi_ss.x_coordinate
-                     << ',' << axi_ss.y_coordinate
-                     << ") on fiber " << boost::this_fiber::get_id()
-                     << " write data value " << v.data
-                     << " to buffered_channel " << &c);
-      c.push(v);
-    }
-
-
-    /** Try to enqueue a packet to the core input
-
-        \return true if the packet is correctly enqueued
-    */
-    bool try_write(const axi_packet &v) override {
-      return c.try_push(v) == boost::fibers::channel_op_status::success;
-    }
-
-
-    /// Waiting read by a tile program on a core input port from the switch
-    value_type read() override {
-      TRISYCL_DUMP_T("core_receiver " << this << " on tile("
-                     << axi_ss.x_coordinate
-                     << ',' << axi_ss.y_coordinate
-                     << ") on fiber " << boost::this_fiber::get_id()
-                     << " reading from buffered_channel " << &c << "...");
-      return c.value_pop().data;
-    }
-
-
-    /** Non-blocking read to a core input port
-
-        \return true if the value was correctly read
-    */
-    bool try_read(value_type &v) override {
-      axi_packet p;
-
-      if (c.try_pop(p) == boost::fibers::channel_op_status::success) {
-        v = p.data;
-        return true;
-      }
-      return false;
-    }
-
-  };
 
 
   /// Construct the tile infrastructure
   tile_infrastructure() {
     // Connect the core receivers to its AXI stream switch
     for (auto p : views::enum_type(mpl::me_0, mpl::me_last))
-      output(p) = std::make_shared<core_receiver>(axi_ss);
+      output(p) = std::make_shared<port_receiver<axi_ss_t>>(axi_ss,
+                                                            "core_receiver");
   }
 
 
