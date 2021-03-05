@@ -1,4 +1,3 @@
-#include "magic_enum.hpp"
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_TILE_INFRASTRUCTURE_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_TILE_INFRASTRUCTURE_HPP
 
@@ -69,8 +68,6 @@ class tile_infrastructure  {
   std::array<std::optional<sending_dma<axi_ss_t>>,
              axi_ss_geo::s_dma_size> tx_dmas;
 
-private:
-
 #if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
   /// Keep track of the fiber executor
   detail::fiber_pool *fe;
@@ -103,8 +100,6 @@ private:
   }
 
 public:
-
-
 
   /// Construct the tile infrastructure
   tile_infrastructure() {

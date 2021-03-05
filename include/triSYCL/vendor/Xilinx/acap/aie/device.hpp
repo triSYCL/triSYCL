@@ -44,12 +44,23 @@ struct device {
   /// The geography of the CGRA
   using geo = geography<Layout>;
 
-  /** A shortcut naming for the various ports used for communication
-      in the device */
-  using ssp = typename geo::shim_axi_stream_switch::slave_port_layout;
-  using smp = typename geo::shim_axi_stream_switch::master_port_layout;
-  using csp = typename geo::core_axi_stream_switch::slave_port_layout;
-  using cmp = typename geo::core_axi_stream_switch::master_port_layout;
+  /// Naming shortcut for the core AXI stream switch
+  using cass = typename geo::core_axi_stream_switch;
+
+  /// Naming shortcut for the slave ports of the core AXI stream switch
+  using csp = typename cass::slave_port_layout;
+
+  /// Naming shortcut for the master ports of the core AXI stream switch
+  using cmp = typename cass::master_port_layout;
+
+  /// Naming shortcut for the shim AXI stream switch
+  using sass = typename geo::shim_axi_stream_switch;
+
+  /// Naming shortcut for the slave ports of the shim AXI stream switch
+  using ssp = typename sass::slave_port_layout;
+
+  /// Naming shortcut for the master ports of the shim AXI stream switch
+  using smp = typename sass::master_port_layout;
 
   /// The cascade stream infrastructure of the CGRA
   cascade_stream<geo> cs;
@@ -90,6 +101,30 @@ struct device {
   template <typename F>
   void for_each_tile(F f) {
     for_each_tile_index([&] (auto x, auto y) { f(ti[y][x]); });
+  };
+
+
+  /** Apply a function for each x tile index of the device
+
+      \param f is a callable that is to be called like \c f(x) for
+      each horizontal index value
+  */
+  template <typename F>
+  void for_each_tile_x_index(F f) {
+    for (auto x : ranges::views::iota(0, geo::x_size))
+      f(x);
+  };
+
+
+  /** Apply a function for each y tile index of the device
+
+      \param f is a callable that is to be called like \c f(x) for
+      each vertical index value
+  */
+  template <typename F>
+  void for_each_tile_y_index(F f) {
+    for (auto y : ranges::views::iota(0, geo::y_size))
+      f(y);
   };
 
 
@@ -202,24 +237,23 @@ struct device {
   void connect(SrcPort src, DstPort dst) {
     constexpr bool valid_src = std::is_same_v<SrcPort, port::tile>
       || std::is_same_v<SrcPort, port::shim>;
-    static_assert(valid_src,
-                  "SrcPort type should be port::tile or port::shim");
-    auto fc = std::make_shared<fifo_channel>();
-    if constexpr (std::is_same_v<SrcPort, port::tile>) {
-       tile(src.x, src.y).out_connection(src.port) = fc;
-    }
-    else if constexpr (std::is_same_v<SrcPort, port::shim>) {
-       shim(src.x).bli_out_connection(src.port) = fc;
-    }
     constexpr bool valid_dst = std::is_same_v<DstPort, port::tile>
       || std::is_same_v<DstPort, port::shim>;
     static_assert(valid_dst,
                   "DstPort type should be port::tile or port::shim");
-    if constexpr (std::is_same_v<DstPort, port::tile>) {
-      tile(dst.x, dst.y).in_connection(dst.port) = fc;
+    auto channel = [&] {
+      if constexpr (std::is_same_v<DstPort, port::tile>)
+        return tile(dst.x, dst.y).in_connection(dst.port);
+      else if constexpr (std::is_same_v<DstPort, port::shim>)
+        return shim(dst.x).bli_in_connection(dst.port);
+    }();
+    static_assert(valid_src,
+                  "SrcPort type should be port::tile or port::shim");
+    if constexpr (std::is_same_v<SrcPort, port::tile>) {
+       tile(src.x, src.y).out_connection(src.port) = channel;
     }
-    else if constexpr (std::is_same_v<DstPort, port::shim>) {
-      shim(dst.x).bli_in_connection(dst.port) = fc;
+    else if constexpr (std::is_same_v<SrcPort, port::shim>) {
+       shim(src.x).bli_out_connection(src.port) = channel;
     }
   }
 
@@ -247,11 +281,37 @@ struct device {
       // Start the tile infrastructure
       tile(x, y).start(x, y, fiber_executor);
     });
+    for_each_tile_x_index([&] (auto x) {
+      // Start the shim infrastructure
+      shim(x).start(x, fiber_executor);
+    });
+
     // Only then we can connect the inter-core tile AXI stream NoC
     for_each_tile_neighborhood([&] (auto x, auto y, auto nx, auto ny,
                                     auto m, auto s) {
       tile(x, y).output(m) = tile(nx, ny).input(s);
     });
+
+    /// Make the connections around the shim tiles
+    for_each_tile_x_index([&] (auto x) {
+      // The connection from shim tile to core tile
+      for (auto [o, i] : ranges::views::zip(sass::m_north_range,
+                                            cass::s_south_range))
+        shim(x).output(o) = tile(x, 0).input(i);
+      // The connection from core tile to shim tile
+      for (auto [o, i] : ranges::views::zip(cass::m_south_range,
+                                            sass::s_north_range))
+        tile(x, 0).output(o) = shim(x).input(i);
+      if (!geo::is_east_column(x))
+        for (auto [o, i] : ranges::views::zip(sass::m_east_range,
+                                              sass::s_west_range))
+          shim(x).output(o) = shim(x + 1).input(i);
+      if (!geo::is_west_column(x))
+        for (auto [o, i] : ranges::views::zip(sass::m_west_range,
+                                              sass::s_east_range))
+          shim(x).output(o) = shim(x - 1).input(i);
+    });
+
   }
 
 

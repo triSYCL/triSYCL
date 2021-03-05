@@ -29,21 +29,80 @@ namespace trisycl::vendor::xilinx::acap::aie {
     \todo Assume only AIE Shim PL tiles for now
 */
 template <typename AIEDevice>
-class shim_tile
-  : public axi_stream_switch<typename AIEDevice::geo::shim_axi_stream_switch> {
+class shim_tile {
   using geo = typename AIEDevice::geo;
   using axi_ss_geo = typename geo::shim_axi_stream_switch;
   using mpl = typename axi_ss_geo::master_port_layout;
   using spl = typename axi_ss_geo::slave_port_layout;
-  using base = axi_stream_switch<axi_ss_geo>;
+  using axi_ss_t = axi_stream_switch<axi_ss_geo>;
+
+  /// Keep the horizontal coordinate for debug purpose
+  int x_coordinate;
+
+  /// \todo Remove?
+  /// Keep the vertical coordinate for debug purpose
+  int y_coordinate = -1;
+
+  /// The AXI stream switch of the core tile
+  axi_ss_t axi_ss;
+
+#if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
+  /// Keep track of the fiber executor
+  detail::fiber_pool *fe;
+
+  /// To shepherd the working fiber
+  detail::fiber_pool::future<void> future_work;
+#else
+  /// Keep track of the std::thread execution in this tile
+  std::future<void> future_work;
+#endif
+
+public:
+
+  /** Start the shim tile infrastructure associated to the AIE device
+
+      \param[in] x is the horizontal coordinate for this tile
+
+      \param[in] fiber_executor is the executor used to run
+      infrastructure details
+  */
+  void start(int x, detail::fiber_pool &fiber_executor) {
+    x_coordinate = x;
+#if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
+    fe = &fiber_executor;
+#endif
+    axi_ss.start(x, -1, fiber_executor);
+  }
+
+
+  /// \todo Factorize some code between core tile and shim tile
+  /** Get the input router port of the AXI stream switch
+
+      \param p is the slave_port_layout for the stream
+  */
+  auto& input(spl p) {
+    // No index validation required because of type safety
+    return axi_ss.input(p);
+  }
+
+
+  /** Get the output router port of the AXI stream switch
+
+      \param p is the master_port_layout for the stream
+  */
+  auto& output(mpl p) {
+    // No index validation required because of type safety
+    return axi_ss.output(p);
+  }
+
 
   /** Map the input BLI id/port to the shim AXI stream switch port
 
       \param[in] port is the BLI id/port to use
   */
   static auto translate_input_port(int port) {
-    return base::translate_port(port, mpl::south_0, mpl::south_last,
-                                "The BLI input port is out of range");
+    return axi_ss_t::translate_port(port, mpl::south_0, mpl::south_last,
+                                    "The BLI input port is out of range");
   }
 
 
@@ -52,18 +111,19 @@ class shim_tile
       \param[in] port is the BLI id/port to use
   */
   static auto translate_output_port(int port) {
-    return base::translate_port(port, spl::south_0, spl::south_last,
-                                "The BLI output port is out of range");
+    return axi_ss_t::translate_port(port, spl::south_0, spl::south_last,
+                                    "The BLI output port is out of range");
   }
 
 public:
+
   /** Get the BLI input connection from the shim tile
 
       \param[in] port is the BLI id/port to use
   */
   auto& bli_in_connection(int port) {
     // The input is actually the output of the switch
-    return base::out_connection(translate_input_port(port));
+    return axi_ss.out_connection(translate_input_port(port));
   }
 
 
@@ -73,7 +133,7 @@ public:
   */
   auto& bli_out_connection(int port) {
     // The output is actually the input of the switch
-    return base::in_connection(translate_output_port(port));
+    return axi_ss.in_connection(translate_output_port(port));
   }
 
 

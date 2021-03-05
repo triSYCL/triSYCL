@@ -26,7 +26,7 @@
 #include <type_traits>
 #include <utility>
 
-#include <boost/fiber/buffered_channel.hpp>
+#include <boost/fiber/all.hpp>
 #include <boost/format.hpp>
 #include "magic_enum.hpp"
 #include <range/v3/all.hpp>

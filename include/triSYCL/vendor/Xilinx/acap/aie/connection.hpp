@@ -16,6 +16,7 @@
 
 #include <string_view>
 
+#include <boost/fiber/all.hpp>
 #include <boost/type_index.hpp>
 
 #include "triSYCL/access.hpp"
@@ -192,7 +193,7 @@ public:
 
   /// Enqueue a packet (coming from the switch) to the core input
   void write(const axi_packet &v) override {
-    TRISYCL_DUMP_T(ComponentName << ' ' << this << " on tile("
+    TRISYCL_DUMP_T(component_name << ' ' << this << " on tile("
                    << axi_ss.x_coordinate
                    << ',' << axi_ss.y_coordinate
                    << ") on fiber " << boost::this_fiber::get_id()
@@ -213,7 +214,7 @@ public:
 
   /// Waiting read by a tile program on a core input port from the switch
   value_type read() override {
-    TRISYCL_DUMP_T(ComponentName << ' ' << this << " on tile("
+    TRISYCL_DUMP_T(component_name << ' ' << this << " on tile("
                    << axi_ss.x_coordinate
                    << ',' << axi_ss.y_coordinate
                    << ") on fiber " << boost::this_fiber::get_id()
