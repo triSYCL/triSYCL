@@ -363,7 +363,6 @@ struct geography : Layout {
 
   // The organization of the AXI stream switch on a core tile
   struct core_axi_stream_switch {
-
     /// Default number of registers on default router paths
     static auto constexpr latency = 4;
 
@@ -635,11 +634,18 @@ struct geography : Layout {
 
   // The organization of the AXI stream switch on a shim tile
   struct shim_axi_stream_switch {
+    /// \todo factorize the 2 following values with core tiles?
+    /// Default number of registers on default router paths
+    static auto constexpr latency = 4;
+
+    /// Depth of additional FIFO on specific FIFO paths
+    static auto constexpr fifo_depth = 16;
+
     /** Layout of the AXI stream master ports in the switch
 
         Revision v2.02, 6.5.3 Shim AXI-Stream Interconnect, Table 6-2, p. 291 */
     enum class master_port_layout : std::int8_t {
-      tile_ctrl,
+      tile_ctrl, tile_ctrl_last = tile_ctrl, ///< Used for validation,
       fifo_0,
       fifo_1, fifo_last = fifo_1, ///< Used for FIFO validation
       south_0,
@@ -668,6 +674,7 @@ struct geography : Layout {
 
   private:
 
+    /// \todo Factorize out
     /// Use a hidden friend to have introspection for master_port_layout
     friend bool constexpr is_axi_master(master_port_layout) {
       // Yes, master_port_layout is definitely an AXI master
@@ -676,15 +683,79 @@ struct geography : Layout {
 
   public:
 
-    /// Number of master AXI stream master ports in the switch
+    /// \todo factorize with a mix-in the following between master and slave
+
+    /// Number of AXI stream master ports in the switch
     static constexpr auto nb_master_port =
-      static_cast<int>(master_port_layout::size);
+      detail::underlying_value(master_port_layout::size);
+
+    /// \todo Factorize out this range code with core tile
+
+    /// A range of the master ports connected to the tile control inputs
+    static auto inline m_tile_ctrl_range =
+      views::enum_type(master_port_layout::tile_ctrl,
+                       master_port_layout::tile_ctrl_last);
+
+    /// Number of master ports connected to the tile control inputs
+    static constexpr auto m_tile_ctrl_size =
+      detail::enum_count(master_port_layout::tile_ctrl,
+                         master_port_layout::tile_ctrl_last);
+
+    /// A range of the master ports connected to the FIFO inputs
+    static auto inline m_fifo_range =
+      views::enum_type(master_port_layout::fifo_0,
+                       master_port_layout::fifo_last);
+
+    /// Number of master ports connected to the FIFO inputs
+    static constexpr auto m_fifo_size =
+      detail::enum_count(master_port_layout::fifo_0,
+                         master_port_layout::fifo_last);
+
+    /// A range of the South master ports
+    static auto inline m_south_range =
+      views::enum_type(master_port_layout::south_0,
+                       master_port_layout::south_last);
+
+    /// Number of South master ports
+    static constexpr auto m_south_size =
+      detail::enum_count(master_port_layout::south_0,
+                         master_port_layout::south_last);
+
+    /// A range of the West master ports
+    static auto inline m_west_range =
+      views::enum_type(master_port_layout::west_0,
+                       master_port_layout::west_last);
+
+    /// Number of West master ports
+    static constexpr auto m_west_size =
+      detail::enum_count(master_port_layout::west_0,
+                         master_port_layout::west_last);
+
+    /// A range of the North master ports
+    static auto inline m_north_range =
+      views::enum_type(master_port_layout::north_0,
+                       master_port_layout::north_last);
+
+    /// Number of North master ports
+    static constexpr auto m_north_size =
+      detail::enum_count(master_port_layout::north_0,
+                         master_port_layout::north_last);
+
+    /// A range of the East master ports
+    static auto inline m_east_range =
+      views::enum_type(master_port_layout::east_0,
+                       master_port_layout::east_last);
+
+    /// Number of East master ports
+    static constexpr auto m_east_size =
+      detail::enum_count(master_port_layout::east_0,
+                         master_port_layout::east_last);
 
     /** Layout of the AXI stream slave ports in the switch
 
         Revision v2.02, 6.5.3 Shim AXI-Stream Interconnect, Table 6-3, p. 291 */
     enum class slave_port_layout : std::int8_t {
-      tile_ctrl,
+      tile_ctrl, tile_ctrl_last = tile_ctrl, ///< Used for validation,
       fifo_0,
       fifo_1, fifo_last = fifo_1, ///< Used for FIFO validation
       south_0,
@@ -725,6 +796,64 @@ struct geography : Layout {
     /// Number of master AXI stream slave ports in the switch
     static constexpr auto nb_slave_port =
       static_cast<int>(slave_port_layout::size);
+
+    /// A range of the slave ports connected to the tile control outputs
+    static auto inline s_tile_ctrl_range =
+      views::enum_type(slave_port_layout::tile_ctrl,
+                       slave_port_layout::tile_ctrl_last);
+
+    /// Number of slave ports connected to the tile control outputs
+    static constexpr auto s_tile_ctrl_size =
+      detail::enum_count(slave_port_layout::tile_ctrl,
+                         slave_port_layout::tile_ctrl_last);
+
+    /// A range of the slave ports connected to the FIFO outputs
+    static auto inline s_fifo_range =
+      views::enum_type(slave_port_layout::fifo_0, slave_port_layout::fifo_last);
+
+    /// Number of slave ports connected to the FIFO outputs
+    static constexpr auto s_fifo_size =
+      detail::enum_count(slave_port_layout::fifo_0,
+                         slave_port_layout::fifo_last);
+
+    /// A range of the South slave ports
+    static auto inline s_south_range =
+      views::enum_type(slave_port_layout::south_0,
+                       slave_port_layout::south_last);
+
+    /// Number of South slave ports
+    static constexpr auto s_south_size =
+      detail::enum_count(slave_port_layout::south_0,
+                         slave_port_layout::south_last);
+
+    /// A range of the West slave ports
+    static auto inline s_west_range =
+      views::enum_type(slave_port_layout::west_0, slave_port_layout::west_last);
+
+    /// Number of West slave ports
+    static constexpr auto s_west_size =
+      detail::enum_count(slave_port_layout::west_0,
+                         slave_port_layout::west_last);
+
+    /// A range of the North slave ports
+    static auto inline s_north_range =
+      views::enum_type(slave_port_layout::north_0,
+                       slave_port_layout::north_last);
+
+    /// Number of North slave ports
+    static constexpr auto s_north_size =
+      detail::enum_count(slave_port_layout::north_0,
+                         slave_port_layout::north_last);
+
+    /// A range of the East slave ports
+    static auto inline s_east_range =
+      views::enum_type(slave_port_layout::east_0, slave_port_layout::east_last);
+
+    /// Number of East slave ports
+    static constexpr auto s_east_size =
+      detail::enum_count(slave_port_layout::east_0,
+                         slave_port_layout::east_last);
+
   };
 
 };
