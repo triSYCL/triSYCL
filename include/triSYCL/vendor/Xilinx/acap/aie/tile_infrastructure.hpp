@@ -144,7 +144,9 @@ public:
       \param[in] port is the port to use
   */
   auto& in_connection(int port) {
-    return axi_ss.in_connection(translate_input_port(port));
+    /* The input port for the core is actually the corresponding
+       output on the switch */
+    return axi_ss.out_connection(translate_output_port(port));
   }
 
 
@@ -153,7 +155,9 @@ public:
       \param[in] port is port to use
   */
   auto& out_connection(int port) {
-    return axi_ss.out_connection(translate_output_port(port));
+    /* The output port for the core is actually the corresponding
+       input on the switch */
+    return axi_ss.in_connection(translate_input_port(port));
   }
 
 
@@ -164,9 +168,7 @@ public:
   auto& in(int port) {
     TRISYCL_DUMP_T("in(" << port << ") on tile(" << x_coordinate << ','
                    << y_coordinate << ')');
-    /* The input port for the core is actually the corresponding
-       output on the switch */
-    return *out_connection(port);
+    return *in_connection(port);
   }
 
 
@@ -177,9 +179,7 @@ public:
   auto& out(int port) {
     TRISYCL_DUMP_T("out(" << port << ") on tile(" << x_coordinate << ','
                    << y_coordinate << ')');
-    /* The output port for the core is actually the corresponding
-       input on the switch */
-    return *in_connection(port);
+    return *out_connection(port);
   }
 
 
@@ -243,7 +243,7 @@ public:
   }
 
 
-  /// Configure a connection of the shim AXI stream switch
+  /// Configure a connection of the core tile AXI stream switch
   void connect(typename geo::core_axi_stream_switch::slave_port_layout sp,
                typename geo::core_axi_stream_switch::master_port_layout mp) {
     axi_ss.connect(sp, mp);

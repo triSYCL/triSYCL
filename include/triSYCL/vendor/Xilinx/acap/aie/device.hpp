@@ -235,26 +235,24 @@ struct device {
   */
   template <typename SrcPort, typename DstPort>
   void connect(SrcPort src, DstPort dst) {
-    constexpr bool valid_src = std::is_same_v<SrcPort, port::tile>
-      || std::is_same_v<SrcPort, port::shim>;
-    constexpr bool valid_dst = std::is_same_v<DstPort, port::tile>
-      || std::is_same_v<DstPort, port::shim>;
-    static_assert(valid_dst,
+    static_assert(std::is_same_v<SrcPort, port::tile>
+                  || std::is_same_v<SrcPort, port::shim>,
+                  "SrcPort type should be port::tile or port::shim");
+    static_assert(std::is_same_v<DstPort, port::tile>
+                  || std::is_same_v<DstPort, port::shim>,
                   "DstPort type should be port::tile or port::shim");
+    // Get the destination in the final switch
     auto channel = [&] {
       if constexpr (std::is_same_v<DstPort, port::tile>)
         return tile(dst.x, dst.y).in_connection(dst.port);
       else if constexpr (std::is_same_v<DstPort, port::shim>)
         return shim(dst.x).bli_in_connection(dst.port);
     }();
-    static_assert(valid_src,
-                  "SrcPort type should be port::tile or port::shim");
-    if constexpr (std::is_same_v<SrcPort, port::tile>) {
+    // And connect the source  port to it
+    if constexpr (std::is_same_v<SrcPort, port::tile>)
        tile(src.x, src.y).out_connection(src.port) = channel;
-    }
-    else if constexpr (std::is_same_v<SrcPort, port::shim>) {
+    else if constexpr (std::is_same_v<SrcPort, port::shim>)
        shim(src.x).bli_out_connection(src.port) = channel;
-    }
   }
 
 

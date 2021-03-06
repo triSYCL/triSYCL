@@ -59,7 +59,16 @@ class shim_tile {
 
 public:
 
-  /** Start the shim tile infrastructure associated to the AIE device
+  /// Construct the shim tile infrastructure
+  shim_tile() {
+    // Connect the core receivers to its AXI stream switch
+    for (auto p : axi_ss_geo::m_south_range)
+      output(p) = std::make_shared<port_receiver<axi_ss_t>>
+        (axi_ss, "BLI_shim_receiver");
+  }
+
+
+    /** Start the shim tile infrastructure associated to the AIE device
 
       \param[in] x is the horizontal coordinate for this tile
 
@@ -101,7 +110,7 @@ public:
       \param[in] port is the BLI id/port to use
   */
   static auto translate_input_port(int port) {
-    return axi_ss_t::translate_port(port, mpl::south_0, mpl::south_last,
+    return axi_ss_t::translate_port(port, spl::south_0, spl::south_last,
                                     "The BLI input port is out of range");
   }
 
@@ -111,7 +120,7 @@ public:
       \param[in] port is the BLI id/port to use
   */
   static auto translate_output_port(int port) {
-    return axi_ss_t::translate_port(port, spl::south_0, spl::south_last,
+    return axi_ss_t::translate_port(port, mpl::south_0, mpl::south_last,
                                     "The BLI output port is out of range");
   }
 
@@ -123,7 +132,7 @@ public:
   */
   auto& bli_in_connection(int port) {
     // The input is actually the output of the switch
-    return axi_ss.out_connection(translate_input_port(port));
+    return axi_ss.out_connection(translate_output_port(port));
   }
 
 
@@ -133,7 +142,7 @@ public:
   */
   auto& bli_out_connection(int port) {
     // The output is actually the input of the switch
-    return axi_ss.in_connection(translate_output_port(port));
+    return axi_ss.in_connection(translate_input_port(port));
   }
 
 
@@ -156,6 +165,14 @@ public:
   auto& bli_out(int port) {
     return *bli_out_connection(port);
   }
+
+
+  /// Configure a connection of the shim tile AXI stream switch
+  void connect(typename geo::shim_axi_stream_switch::slave_port_layout sp,
+               typename geo::shim_axi_stream_switch::master_port_layout mp) {
+    axi_ss.connect(sp, mp);
+  }
+
 
 };
 

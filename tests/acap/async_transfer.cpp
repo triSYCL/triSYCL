@@ -84,7 +84,7 @@ struct right_neighbor : acap::aie::tile<AIE, X, Y> {
   }
 };
 
-auto measure_bandwidth = [](auto transfered_bytes, auto some_work) {
+auto measure_bandwidth = [](auto transfered_bytes, const auto& some_work) {
   auto starting_point = clk::now();
   some_work();
   // Get the duration in seconds as a double
