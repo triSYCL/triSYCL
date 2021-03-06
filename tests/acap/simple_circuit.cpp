@@ -4,6 +4,9 @@
    RUN: %{execute}%s
 */
 
+// Put the tile code on fiber too to boost the performances
+#define TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER 1
+
 #include <SYCL/sycl.hpp>
 
 #include <future>
@@ -32,7 +35,7 @@ struct comm : acap::aie::tile<AIE, X, Y> {
       // tile(2,0) read from port 1 and write to port 0
       else if constexpr (X == 2 && Y == 0) {
         auto v = t::in(1).read();
-        // Output = input + 1.5
+        // Output = input + 1
         t::out(0) << v + 1;
       }
     }
@@ -63,6 +66,7 @@ int test_main(int argc, char *argv[]) {
       aie.connect<float>(line { 2 }, broadcast_column);
       aie.connect<float>(column { 3 }, broadcast_column);
     */
+
     // Connect port 1 of shim(0) to port 0 of tile(1,2)
     d.connect(port::shim { 0, 1 }, port::tile { 1, 2, 0 });
     // Connect port 0 of tile(1,2) to port 1 of tile(2,0)
@@ -98,7 +102,7 @@ int test_main(int argc, char *argv[]) {
       for (int i = 0; i < size; ++i) {
         d.shim(1).bli_in(0) >> f;
         // Check we read the correct value
-        BOOST_CHECK(f == 2*i + 1.5);
+        BOOST_CHECK(f == 2*i + 1);
       }
     });
 
