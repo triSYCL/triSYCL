@@ -15,10 +15,10 @@
     License. See LICENSE.TXT for details.
  */
 
-#include <condition_variable>
 #include <memory>
 #include <mutex>
 
+#include <boost/fiber/all.hpp>
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
@@ -48,11 +48,11 @@ struct lock_unit {
        so globally the type is moveable */
 
     /// The mutex to provide the basic protection mechanism
-    std::unique_ptr<std::mutex> m { new std::mutex { } };
+    std::unique_ptr<boost::fibers::mutex> m { new boost::fibers::mutex { } };
 
     /// The condition variable to wait/notify for some value
-    std::unique_ptr<std::condition_variable> cv {
-      new std::condition_variable { } };
+    std::unique_ptr<boost::fibers::condition_variable> cv {
+      new boost::fibers::condition_variable { } };
 
     /// The value to be waited for, initialized to false on reset
     bool value = false;
