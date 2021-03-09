@@ -104,22 +104,6 @@ public:
   }
 
 
-  /** Get access on a receiver DMA
-
-      \param[in] port specifies which DMA to access, starting at 0 */
-  auto& rx_dma(int port) {
-    return ti->rx_dma(port);
-  }
-
-
-  /** Get access on a transmit DMA
-
-      \param[in] port specifies which DMA to access, starting at 0 */
-  auto& tx_dma(int port) {
-    return ti->tx_dma(port);
-  }
-
-
   /// Store a way to access to the program
   void set_program(AIE_Program &p) {
     program = &p;

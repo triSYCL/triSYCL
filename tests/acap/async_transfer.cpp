@@ -73,10 +73,11 @@ struct right_neighbor : acap::aie::tile<AIE, X, Y> {
         // There is a neighbor on the left: receive some data
         t::rx_dma(0).receive(dst);
       if constexpr (!t::is_east_column())
+        // There is a neighbor on the right: wait for the end of transmission
         t::tx_dma(0).wait();
       if constexpr (!t::is_west_column())
+        // There is a neighbor on the left: wait for the end of reception
         t::rx_dma(0).wait();
-      // Once it is received, we can check the result
     }
     if constexpr (!t::is_west_column())
       // Once it is received, we can check the result

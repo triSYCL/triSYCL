@@ -40,7 +40,7 @@ struct lock_unit {
 
   /// The individual locking system
   struct locking_device {
-    /* The problem here is that \c std::mutex and \c std::condition_variable
+    /* The problem here is that \c mutex and \c condition_variable
        are not moveable while the instantiation of a memory module uses
        move assignment with Boost.Hana...
 

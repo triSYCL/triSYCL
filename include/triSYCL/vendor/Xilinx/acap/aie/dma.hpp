@@ -32,6 +32,76 @@ namespace trisycl::vendor::xilinx::acap::aie {
 /// \ingroup aie
 /// @{
 
+/** Implement a small DSL to chain DMA & locking operations like
+    allowed by the hardware
+
+    \param[in] Tile is the type of tile to keep a reference on it
+
+    \param[in] DMA is the type of the DMA involved in the operation
+
+    \param[in] LockRef is the type of the reference to the lock once a
+    lock() operation is involved. Otherwise just use a \c bool as a
+    dummy type internally.
+*/
+template <typename Tile, typename DMA, typename LockRef = bool>
+class dma_dsl {
+  /// Keep track of the tile involved in the operation chain
+  Tile& tile;
+
+  /// Keep track of the DMA involved in the operation chain
+  DMA& dma;
+
+  /** Keep track of the current lock involved in the operation chain
+      if any */
+  LockRef lck;
+
+public:
+
+  /// Keep track of operation with only DMA involved
+  dma_dsl(Tile& t, DMA& d) : tile { t }, dma { d } {}
+
+  /// Keep track of operation with DMA and lock involved
+  dma_dsl(Tile& t, DMA& d, LockRef l) : tile { t }, dma { d }, lck { l } {}
+
+  /// Select a lock for the following operations
+  auto lock(int l) {
+    auto& lock_ref = tile.mem().lock(l);
+    return dma_dsl<Tile, DMA, decltype(lock_ref)> { tile, dma, lock_ref };
+  }
+
+
+  /// Enqueue a DMA receive command
+  template <typename Cmd>
+  auto& receive(Cmd&& cmd) {
+     dma.receive(std::forward<Cmd>(cmd));
+    // To be able to chain another DMA operation on it
+    return *this;
+  }
+
+
+  /// Enqueue a DMA transfer command
+  template <typename Cmd>
+  auto& send(Cmd&& cmd) {
+    dma.send(std::forward<Cmd>(cmd));
+    // To be able to chain another DMA operation on it
+    return *this;
+  }
+
+
+  /** Wait for the transfers to complete
+
+      The API assumes that the program is written in such a way that
+      at some point the queue will be empty so there is no continuous
+      DMA command enqueuing for example. */
+  auto& wait() {
+    dma.wait();
+    // To be able to chain another DMA operation on it
+    return *this;
+  }
+
+};
+
+
 /// Generic DMA
 template <typename AXIStreamSwitch, typename SpecializedDMA>
 class dma : detail::debug<SpecializedDMA> {
