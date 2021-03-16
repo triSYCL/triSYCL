@@ -15,14 +15,15 @@
 
 #include <iostream>
 
-// The common debug and trace infrastructure
+#include <boost/type_index.hpp>
+
+// Only when the common debug or trace infrastructure is required
 #if defined(TRISYCL_DEBUG) || defined(TRISYCL_TRACE_KERNEL)
 #include <sstream>
 #include <string>
 #include <thread>
 
 #include <boost/log/trivial.hpp>
-#include <boost/type_index.hpp>
 
 // To be able to construct string literals like "blah"s
 using namespace std::string_literals;
@@ -60,62 +61,64 @@ namespace trisycl::detail {
 /** Class used to trace the construction, copy-construction,
     move-construction and destruction of classes that inherit from it
 
-    Also trace the assignments.
+    Also trace the copy and move assignments.
 
     \param T is the real type name to be used in the debug output.
 */
 template <typename T>
 struct debug {
-#ifdef TRISYCL_DEBUG_STRUCTORS
-  /// Get the name of T itself
-  static auto constexpr pn() {
+  /// Get the pretty name of T itself
+  static auto constexpr type_pretty_name() {
     return boost::typeindex::type_id<T>().pretty_name();
   }
 
+#ifdef TRISYCL_DEBUG_STRUCTORS
 
-  /// Trace the construction with the compiler-dependent mangled named
+  /// Trace the construction
   debug() {
-    TRISYCL_DUMP("Constructor of " << pn() << " " << static_cast<void*>(this));
+    TRISYCL_DUMP("Constructor of " << type_pretty_name() << " "
+                 << static_cast<void*>(this));
   }
 
 
-  /** Trace the copy construction with the compiler-dependent mangled
-      named */
+  /// Trace the copy construction
   debug(debug const& old) {
-    TRISYCL_DUMP("Copy of " << pn() << " into " << static_cast<void*>(this)
-                 << " from " << static_cast<const void*>(&old));
+    TRISYCL_DUMP("Copy of " << type_pretty_name() << " into "
+                 << static_cast<void*>(this) << " from "
+                 << static_cast<const void*>(&old));
   }
 
 
   /// Trace the copy assignment
   debug& operator=(const debug& rhs) {
-    TRISYCL_DUMP("Copy assignment of " << pn()
+    TRISYCL_DUMP("Copy assignment of " << type_pretty_name()
                  << " into " << static_cast<void*>(this)
                  << " from " << static_cast<const void*>(&rhs));
     return *this;
   }
 
 
-  /** Trace the move construction with the compiler-dependent mangled
-      named */
+  /// Trace the move construction
   debug(debug&& old) {
-    TRISYCL_DUMP("Move of " << pn() << " into " << static_cast<void*>(this)
-                 << " from " << static_cast<void*>(&old));
+    TRISYCL_DUMP("Move of " << type_pretty_name() << " into "
+                 << static_cast<void*>(this) << " from "
+                 << static_cast<void*>(&old));
   }
 
 
   /// Trace the move assignment
   debug& operator=(debug&& rhs) {
-    TRISYCL_DUMP("Move assignment of " << pn()
+    TRISYCL_DUMP("Move assignment of " << type_pretty_name()
                  << " into " << static_cast<void*>(this)
                  << " from " << static_cast<void*>(&rhs));
     return *this;
   }
 
 
-  /// Trace the destruction with the compiler-dependent mangled named
+  /// Trace the destruction
   ~debug() {
-    TRISYCL_DUMP("~ Destructor of " << pn() << " " << static_cast<void*>(this));
+    TRISYCL_DUMP("~ Destructor of " << type_pretty_name() << " "
+                 << static_cast<void*>(this));
   }
 #endif
 };
