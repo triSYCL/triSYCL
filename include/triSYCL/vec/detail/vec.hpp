@@ -157,15 +157,6 @@ private:
         std::make_index_sequence<std::tuple_size<decltype(xTuple)>::value>());
   }
 
-
-  template<typename T, typename T2, typename F>
-  static auto apply_ternary_functor(const T x, const T2 y, const T2 z, F f) {
-    auto xTuple = flatten_to_tuple<T>(x);
-    auto yTuple = flatten_to_tuple<T>(y);
-    return apply_binary_functor_impl(xTuple, yTuple, f,
-        std::make_index_sequence<std::tuple_size<decltype(xTuple)>::value>());
-  }
-
 protected:
 
   /// Apply a swizzle operation from swizzleIndexes parameters
