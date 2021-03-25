@@ -4,8 +4,11 @@
 
 */
 
+#include <array>
 #include <cmath>
+#include <cstdint>
 #include <iostream>
+#include <limits>
 #include <numeric>
 
 #include <sycl/sycl.hpp>
@@ -50,6 +53,33 @@ void do_vec_binary_math(sycl::vec<T, Dim> v, sycl::vec<T, Dim> v2) {
     BOOST_CHECK(fmax[i] == std::fmax(v[i], v2[i]));
     BOOST_CHECK(min[i] == std::min(v2[i], v[i]));
     BOOST_CHECK(max[i] == std::max(v[i], v2[i]));
+  }
+}
+
+inline void do_check_sign() {
+  sycl::float8 input{std::numeric_limits<float>::quiet_NaN(),
+                     std::numeric_limits<float>::signaling_NaN(),
+                     std::numeric_limits<float>::infinity(),
+                     -1. * std::numeric_limits<float>::infinity(),
+                     std::numeric_limits<float>::lowest(),
+                     std::numeric_limits<float>::max(),
+                     0.,
+                     -0.};
+
+  auto res = sycl::sign(input);
+  float one = 1.;
+  float mone = -1.;
+  std::array<uint32_t, 8> expected_output{0,
+                                          0,
+                                          reinterpret_cast<uint32_t &>(one),
+                                          reinterpret_cast<uint32_t &>(mone),
+                                          reinterpret_cast<uint32_t &>(mone),
+                                          reinterpret_cast<uint32_t &>(one),
+                                          0,
+                                          uint32_t{1} << 31};
+
+  for (std::size_t i = 0; i < 8; ++i) {
+    BOOST_CHECK(reinterpret_cast<uint32_t &>(res[i]) == expected_output[i]);
   }
 }
 
@@ -99,6 +129,8 @@ int test_main(int argc, char *argv[]) {
   BOOST_CHECK(dot3_ab == 32);
   BOOST_CHECK(dot4_ab == 40);
   BOOST_CHECK(dot16_ab == 2400);
+
+  do_check_sign();
 
   return 0;
 }
