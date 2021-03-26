@@ -295,8 +295,8 @@ struct small_array : std::array<BasicType, Dims>,
 
   /** Since the boost::operator work on the small_array, add an implicit
       conversion to produce the expected type */
-  operator FinalType () {
-    return *static_cast<FinalType *>(this);
+  operator FinalType() {
+    return static_cast<FinalType&>(*this);
   }
 };
 

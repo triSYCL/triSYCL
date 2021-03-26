@@ -6,7 +6,7 @@
 #include <random>
 #include <type_traits>
 
-#include <triSYCL/vendor/trisycl/random/xorshift.hpp>
+#include <triSYCL/vendor/triSYCL/random/xorshift.hpp>
 
 #include <boost/test/minimal.hpp>
 

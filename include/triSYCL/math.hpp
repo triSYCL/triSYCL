@@ -26,35 +26,100 @@
 
 namespace trisycl {
 
+/// Declare a FUN unary function for scalar and vector types
 #define TRISYCL_MATH_WRAP(FUN) template<typename T>                     \
+  /* Just forward the scalar case to the C++ math library */            \
   T FUN(const T& x) {                                                   \
     return std::FUN(x);                                                 \
+  }                                                                     \
+  /* Declare the vector version as applying the scalar version on each  \
+     element */                                                         \
+  template <typename T, int size>                                       \
+  auto FUN(const vec<T, size>& x) {                                     \
+    return x.map(FUN<T>);                                               \
   }
 
+
+/// Declare a FUN binary function for scalar and vector types
 #define TRISYCL_MATH_WRAP2(FUN) template<typename T>                    \
+  /* Just forward the scalar case to the C++ math library */            \
   T FUN(const T& x, const T& y) {                                       \
     return std::FUN(x, y);                                              \
+  }                                                                     \
+  /* Declare the vector version as applying the scalar version on each  \
+     element */                                                         \
+  template <typename T, int size>                                       \
+  auto FUN(const vec<T, size>& x,                                       \
+           const vec<T, size>& y) {                                     \
+    return x.zip(y, FUN<T,T>);                                          \
   }
 
+
+/** Declare a FUN binary function for scalar and vector types, with 2
+    different types */
 #define TRISYCL_MATH_WRAP2s(FUN) template<typename T, typename U>       \
+  /* Just forward the scalar case to the C++ math library */            \
   T FUN(const T& x, const U& y) {                                       \
     return std::FUN(x, y);                                              \
+  }                                                                     \
+  /* Declare the vector version as applying the scalar version on each  \
+     element */                                                         \
+  template <typename T, typename U, int size>                           \
+  auto FUN(const vec<T, size>& x,                                       \
+           const U& y) {                                                \
+    return x.map([&] (auto e) { return FUN(e, y); });                   \
   }
 
-#define TRISYCL_MATH_WRAP3(FUN) template<typename T>                 \
-  T FUN(const T& x, const T& y, const T& z) {                        \
-    return std::FUN(x, y, z);                                        \
-  }
 
-#define TRISYCL_MATH_WRAP3s(FUN) template<typename T, typename U> \
-  T FUN(const T& x, const T& y, const U& z) {                     \
-    return std::FUN(x, y, z);                                     \
-  }
+/// Declare a FUN ternary function for scalar and vector types
+#define TRISYCL_MATH_WRAP3(FUN) template<typename T>                    \
+  /* Just forward the scalar case to the C++ math library */            \
+  T FUN(const T& x, const T& y, const T& z) {                           \
+    return std::FUN(x, y, z);                                           \
+  }                                                                     \
+  /* Declare the vector version as applying the scalar version on each  \
+     element */                                                         \
+  template <typename T, int size>                                       \
+  auto FUN(const vec<T, size>& x,                                       \
+           const vec<T, size>& y,                                       \
+           const vec<T, size>& z) {                                     \
+  return x.zip(y, z, FUN<T,T,T>);                                       \
+}
 
-#define TRISYCL_MATH_WRAP3ss(FUN) template<typename T, typename U>  \
-  T FUN(const T& x, const U& y, const U& z) {                       \
-    return std::FUN(x, y, z);                                       \
-  }
+
+/** Declare a FUN ternary function for scalar and vector types, with 2
+    different types, the 2 first arguments have the same type */
+#define TRISYCL_MATH_WRAP3s(FUN) template<typename T, typename U>       \
+  /* Just forward the scalar case to the C++ math library */            \
+  T FUN(const T& x, const T& y, const U& z) {                           \
+    return std::FUN(x, y, z);                                           \
+  }                                                                     \
+  /* Declare the vector version as applying the scalar version on each  \
+     element */                                                         \
+  template <typename T, typename U, int size>                           \
+  auto FUN(const vec<T, size>& x,                                       \
+           const vec<T, size>& y,                                       \
+           const U& z) {                                                \
+    return x.zip(y, [&] (auto ex, auto ey) { return FUN(ex, ey, z); }); \
+}
+
+
+/** Declare a FUN ternary function for scalar and vector types, with 2
+    different types, the 2 last arguments have the same type */
+#define TRISYCL_MATH_WRAP3ss(FUN) template<typename T, typename U>      \
+  /* Just forward the scalar case to the C++ math library */            \
+  T FUN(const T& x, const U& y, const U& z) {                           \
+    return std::FUN(x, y, z);                                           \
+  }                                                                     \
+  /* Declare the vector version as applying the scalar version on each  \
+     element */                                                         \
+  template <typename T, typename U, int size>                           \
+  auto FUN(const vec<T, size>& x,                                       \
+           const U& y,                                                  \
+           const U& z) {                                                \
+    return x.map([&] (auto e) { return FUN(e, y, z); });                \
+}
+
 
 TRISYCL_MATH_WRAP(abs)//I
 //*TRISYCL_MATH_WRAP2(abs_diff)//I
@@ -74,6 +139,7 @@ TRISYCL_MATH_WRAP(cbrt)
 TRISYCL_MATH_WRAP(ceil)
 //geninteger clamp(geninteger, sgeninteger, sgeninteger)
 TRISYCL_MATH_WRAP3ss(clamp)//I
+
 //*TRISYCL_MATH_WRAP(clz)
 TRISYCL_MATH_WRAP2(copysign)
 TRISYCL_MATH_WRAP(cos)
@@ -87,13 +153,41 @@ TRISYCL_MATH_WRAP(exp2)
 TRISYCL_MATH_WRAP(expm1)
 TRISYCL_MATH_WRAP(fabs)
 TRISYCL_MATH_WRAP2(fdim)
+// Round to integral value using the round to
+// negative infinity rounding mode.
 TRISYCL_MATH_WRAP(floor)
 TRISYCL_MATH_WRAP3(fma)
 /* genfloat fmax ( genfloat x, genfloat y)
  * genfloat fmax ( genfloat x, sgenfloat y)
  */
+
 TRISYCL_MATH_WRAP2s(fmax)
+// Returns y if x < y, otherwise it returns x.
+// If one argument is a NaN, fmax() returns
+// the other argument. If both arguments are
+// NaNs, fmax() returns a NaN
+template <typename T, int size>
+auto fmax(const vec<T, size>& x,
+          const vec<T, size>& y) {
+  return x.zip(y, fmax<T,T>);
+}
+
 TRISYCL_MATH_WRAP2s(fmin)
+
+// Returns y if y < x, otherwise it returns x.
+// genfloat fmin ( genfloat x, sgenfloat y )
+// If one argument is a NaN, fmin() returns
+// the other argument. If both arguments are
+// NaNs, fmin() returns a NaN.
+//
+// \todo Perhaps worth adding an isNaN check as I'm not sure if the < operator
+//       conforms to what the function requires
+template <typename T, int size>
+auto fmin(const vec<T, size>& x,
+          const vec<T, size>& y) {
+  return x.zip(y, fmin<T,T>);
+}
+
 TRISYCL_MATH_WRAP2(fmod)
 //*TRISYCL_MATH_WRAP2s(fract)
 TRISYCL_MATH_WRAP2s(frexp)
@@ -101,6 +195,7 @@ TRISYCL_MATH_WRAP2s(frexp)
 TRISYCL_MATH_WRAP2(hypot)
 //log
 //ilogb
+TRISYCL_MATH_WRAP(isnan)
 //ldexp
 TRISYCL_MATH_WRAP(lgamma)
 //*TRISYCL_MATH_WRAP2s(lgamma_r)
@@ -122,8 +217,22 @@ T max(const T& x, const T& y, const T& z) {
 /* geninteger max (geninteger, geninteger)
  * geninteger max (geninteger, sgeninteger)
  */
-  // Just import std::max from <algorithm>
-  using std::max;
+// Just import std::max from <algorithm>
+using std::max;
+
+// seems to essentially be the same as fmax but cover different types, even the
+// first type definition matches fmax's first? Is there a need for two
+// similar definitions of max? same goes for fmin...
+// genfloat max (genfloat x, genfloat y)
+// genfloatf max (genfloatf x, float y)
+// genfloatd max (genfloatd x, double y)
+// geninteger max (geninteger x, geninteger y)
+// geninteger max (geninteger x, sgeninteger y)
+template <typename T, int size>
+auto max(const vec<T, size>& x,
+         const vec<T, size>& y) {
+  return fmax(x,y);
+}
 
 //*TRISYCL_MATH_WRAP2(maxmag)
 //
@@ -137,7 +246,13 @@ T min(const T& x, const T& y, const T& z) {
  * geninteger min (geninteger, sgeninteger)
  */
   // Just import std::min from <algorithm>
-  using std::min;
+using std::min;
+
+template <typename T, int size>
+auto min(const vec<T, size>& x,
+         const vec<T, size>& y) {
+  return fmin(x,y);
+}
 
 //*TRISYCL_MATH_WRAP2(minmag)
 TRISYCL_MATH_WRAP2s(modf)
@@ -214,70 +329,27 @@ auto dot(const vec<T, size>& x, const vec<T, size>& y) {
   return std::inner_product(x.begin(), x.end(), y.begin(), T{0});
 }
 
-template <typename T, int size>
-auto clamp(const vec<T, size>& x, const T& minval, const T& maxval) {
-  return x.map([&](auto e) {
-    return clamp(e, minval, maxval);
-  });
-}
-
 // Returns a vector in the same direction as x but with a length of 1.
 template <typename T, int size>
 auto normalize(const vec<T, size>& x) {
   return x / length(x);
 }
 
-// Round to integral value using the round to
-// negative infinity rounding mode.
-template <typename T, int size>
-auto floor(const vec<T, size>& x) {
-  return x.map(floor<T>);
-}
-
-// Returns y if y < x, otherwise it returns x.
-// genfloat fmin ( genfloat x, sgenfloat y )
-// If one argument is a NaN, fmin() returns
-// the other argument. If both arguments are
-// NaNs, fmin() returns a NaN.
-//
-// \todo Perhaps worth adding an isNaN check as I'm not sure if the < operator
-//       conforms to what the function requires
-template <typename T, int size>
-auto fmin(const vec<T, size>& x,
-          const vec<T, size>& y) {
-  return x.zip(y, fmin<T,T>);
-}
-
-// Returns y if x < y, otherwise it returns x.
-// If one argument is a NaN, fmax() returns
-// the other argument. If both arguments are
-// NaNs, fmax() returns a NaN
-template <typename T, int size>
-auto fmax(const vec<T, size>& x,
-          const vec<T, size>& y) {
-  return x.zip(y, fmax<T,T>);
-}
-
-// seems to essentially be the same as fmax but cover different types, even the
-// first type definition matches fmax's first? Is there a need for two
-// similar definitions of max? same goes for fmin...
-// genfloat max (genfloat x, genfloat y)
-// genfloatf max (genfloatf x, float y)
-// genfloatd max (genfloatd x, double y)
-// geninteger max (geninteger x, geninteger y)
-// geninteger max (geninteger x, sgeninteger y)
-template <typename T, int size>
-auto max(const vec<T, size>& x,
-         const vec<T, size>& y) {
-  return fmax(x,y);
+// returns     x if x is +/- 0,
+// otherwise  +0 if x is NaN,
+// otherwise   1 if x is > 0,
+// otherwise  -1
+template<typename T>
+T sign(const T & val) {
+  if (val == 0) return val;
+  if (isnan(val)) return 0;
+  return (val > 0) ? 1 : -1;
 }
 
 template <typename T, int size>
-auto min(const vec<T, size>& x,
-         const vec<T, size>& y) {
-  return fmin(x,y);
+auto sign(const vec<T, size>& x) {
+  return x.map(sign<T>);
 }
-
 //
 namespace native {
 TRISYCL_MATH_WRAP(cos)

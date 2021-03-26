@@ -21,9 +21,9 @@
 
 #include "triSYCL/detail/shared_ptr_implementation.hpp"
 #include "triSYCL/device.hpp"
-#include "triSYCL/vendor/trisycl/scope/detail/util.hpp"
-#include "triSYCL/vendor/trisycl/scope/device/detail/device.hpp"
-#include "triSYCL/vendor/trisycl/scope/platform.hpp"
+#include "triSYCL/vendor/triSYCL/scope/detail/util.hpp"
+#include "triSYCL/vendor/triSYCL/scope/device/detail/device.hpp"
+#include "triSYCL/vendor/triSYCL/scope/platform.hpp"
 
 /// This is an extension providing scope storage for devices
 #define SYCL_VENDOR_TRISYCL_DEVICE_SCOPE 1

@@ -110,6 +110,7 @@ private:
     return std::tuple_cat(flatten<V>(i)...);
   }
 
+
   /* apply_unary_functor_impl & apply_unary_functor generate a sequence from
     a passed in vector and then execute a function across the range of the
     vector returning the result as a new vector.
@@ -127,6 +128,7 @@ private:
         std::make_index_sequence<std::tuple_size<decltype(tuple)>::value>());
   }
 
+
   /* apply_binary_functor_impl & apply_binary_functor generate two sequences
    from a passed in vector and then execute a function across the range of
     vector x returning the result as a new vector.
@@ -137,6 +139,15 @@ private:
     return ::trisycl::vec<DataType, NumElements>{f(std::get<Is>(xTuple),
        std::get<Is>(yTuple))...};
   }
+
+
+  template<typename T, typename T2, typename T3, typename F, std::size_t... Is>
+  static auto apply_ternary_functor_impl(T xTuple, T2 yTuple, T3 zTuple, F f,
+    std::index_sequence<Is...>) {
+    return ::trisycl::vec<DataType, NumElements>{f(std::get<Is>(xTuple),
+       std::get<Is>(yTuple),  std::get<Is>(zTuple))...};
+  }
+
 
   template<typename T, typename T2, typename F>
   static auto apply_binary_functor(const T x, const T2 y, F f) {
@@ -172,6 +183,7 @@ public:
     return alignment_v<::trisycl::vec<DataType, NumElements>>;
   }
 
+
   template<typename convertT, rounding_mode roundingMode>
   vec<convertT, NumElements> convert() const {
     vec<convertT, NumElements> result;
@@ -183,12 +195,14 @@ public:
     return result;
   };
 
+
   template<typename asT> asT as() const {
     asT result;
     assert(result.get_size() == this->get_size());
     std::memcpy(result.data(), this->data(), this->get_size());
     return result;
   };
+
 
   // Swizzle methods (see notes)
   template <int... swizzleIndexs>
@@ -197,12 +211,14 @@ public:
         swizzle(swizzleIndexs...));
   }
 
+
   // Applies a function across each element of the vector to generate a new
   // vector, it leaves the original vector unaltered.
   template <typename F>
   auto map(F f) const {
     return apply_unary_functor(*this, f);
   }
+
 
   // Applies a binary function across each element of the calling vector and the
   // passed in vector x to generate a new vector. It leaves both the original
@@ -217,6 +233,15 @@ public:
      static_assert(size == NumElements,
        "zip currently does not support vec's of differing element size");
      return apply_binary_functor(*this, x, f);
+  }
+
+
+  /// \todo this should be generalized to any arity
+  template <typename T, int size, typename F>
+  auto zip(::trisycl::vec<T, size> y, ::trisycl::vec<T, size> z, F f) const {
+     static_assert(size == NumElements,
+       "zip currently does not support vec's of differing element size");
+     return apply_ternary_functor(*this, y, z, f);
   }
 
 };
