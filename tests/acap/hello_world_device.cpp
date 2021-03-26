@@ -13,9 +13,9 @@ int main() {
   acap::aie::device<acap::aie::layout::vc1902> d;
   // Submit some work on each tile, which is SYCL sub-device
   d.for_each_tile([] (auto& t) {
-                    t.submit([] (auto &h) {
-                            std::cout << "Hello, I am the AIE tile (" << h.x()
-                                      << ','  << h.y()  << ")" << std::endl;
+                    t.submit([&] {
+                            std::cout << "Hello, I am the AIE tile (" << t.x()
+                                      << ','  << t.y()  << ")" << std::endl;
                           });
                     });
   // Wait for the end of each tile execution

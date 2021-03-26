@@ -147,7 +147,8 @@ triSYCL_DIR = $(abspath $(dir $(lastword $(MAKEFILE_LIST)))/..)
 # Use all the .cpp C++ files from the subdirectories that have a 1-1
 # mapping with the binaries to generate, that means the binary is made
 # from only one compilation unit (1 source file)
-FILES_CPP = $(wildcard */*.cpp)
+#FILES_CPP = $(wildcard */*.cpp)
+FILES_CPP = $(wildcard acap/*.cpp)
 TARGETS = $(basename $(FILES_CPP))
 
 # There are also .cc C++ files that are used to test binaries made from

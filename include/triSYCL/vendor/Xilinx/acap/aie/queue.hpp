@@ -45,7 +45,7 @@ struct queue {
   };
 
 
-  /** Run synchronously a program execution on this queue
+  /** Run synchronously a program on this queue
 
       \param Tile is the description of the program tiles to
       instantiate. By default each tile will run an empty program.
@@ -63,6 +63,28 @@ struct queue {
     program<AIEDevice, Tile, Memory> { aie_d }.run();
   }
 
+
+  /** Run synchronously an heterogeneous invokable on this queue
+
+      \param f is an invokable taking an heterogeneous tile handler
+  */
+  template <typename Invokable>
+  void run(const Invokable& f) const {
+    program { f }.run();
+  }
+
+
+  /** Run synchronously a uniform invokable on this queue
+
+      \param f is an invokable taking a uniform tile handler
+  */
+  template <typename Invokable>
+  void uniform_run(const Invokable& f) const {
+    program { f }.uniform_run(f);
+  }
+
+
+///\todo SUBMIT
 
   /** Submit a program execution on this queue
 

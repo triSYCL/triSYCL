@@ -53,10 +53,10 @@ class tile_infrastructure  {
   using spl = typename axi_ss_geo::slave_port_layout;
   using axi_ss_t = axi_stream_switch<axi_ss_geo>;
 
-  /// Keep the horizontal coordinate for debug purpose
+  /// Keep the horizontal coordinate
   int x_coordinate;
 
-  /// Keep the vertical coordinate for debug purpose
+  /// Keep the vertical coordinate
   int y_coordinate;
 
   /// The AXI stream switch of the core tile
@@ -138,6 +138,11 @@ public:
       d.emplace(fiber_executor, input(p));
   }
 
+  /// Get the horizontal coordinate
+  int x() { return x_coordinate; }
+
+  /// Get the vertical coordinate
+  int y() { return y_coordinate; }
 
   /** Get the user input connection from the AXI stream switch
 
@@ -232,7 +237,7 @@ public:
     future_work = fe->submit(std::forward<Work>(f));
 #else
     future_work = std::async(std::launch::async,
-                             [ work = std::move(f) ] { work(); });
+                             [ work = std::forward<Work>(f) ] { work(); });
 #endif
   }
 

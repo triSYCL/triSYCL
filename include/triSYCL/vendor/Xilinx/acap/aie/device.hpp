@@ -192,7 +192,7 @@ struct device {
   }
 
 
-  /** Shortcut to run synchronously a program execution on this queue
+  /** Shortcut to run synchronously a program on this queue
 
       \param Tile is the description of the program tiles to
       instantiate. By default each tile will run an empty program.
@@ -208,6 +208,28 @@ struct device {
                       int Y> typename Memory = acap::aie::memory>
   void run() {
     queue().template run<Tile, Memory>();
+  }
+
+
+  /** Shortcut to run synchronously an heterogeneous invokable on this
+      queue
+
+      \param f is an invokable taking an heterogeneous tile handler
+  */
+  template <typename Invokable>
+  void run(const Invokable& f) {
+    queue().template run(f);
+  }
+
+
+  /** Shortcut to run synchronously a uniform invokable on
+      this queue
+
+      \param f is an invokable taking a uniform tile handler
+  */
+  template <typename Invokable>
+  void uniform_run(const Invokable& f) {
+    queue().template uniform_run(f);
   }
 
 
