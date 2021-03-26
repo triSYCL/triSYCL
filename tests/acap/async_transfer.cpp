@@ -102,7 +102,7 @@ int test_main(int argc, char* argv[]) {
     d_t d;
     // Configure the AIE NoC connections
     d.for_each_tile_index([&](auto x, auto y) {
-      // When it is possble, connect each tile to its right neighbor
+      // When it is possible, connect each tile to its right neighbor
       if (d_t::geo::is_x_y_valid(x + 1, y)) {
         d.tile(x, y).connect(d_t::csp::dma_0, d_t::cmp::east_0);
         d.tile(x + 1, y).connect(d_t::csp::west_0, d_t::cmp::dma_0);
