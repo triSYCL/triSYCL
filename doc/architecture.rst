@@ -23,7 +23,7 @@ the SYCL_ 1.2.1 standard.
 As a convenience extension, there are 2 other include files that can
 be used instead:
 
-- `<../include/SYCL/sycl.hpp>`_ to have the SYCL_ API defined inside
+- `<../include/sycl/sycl.hpp>`_ to have the SYCL_ API defined inside
   ``::sycl`` as a shortcut to save 4 letters. It does not define
   anything inside the ``::cl::sycl`` namespace, allowing another
   ``SYCL_`` implementation to coexist there;

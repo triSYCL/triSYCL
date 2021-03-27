@@ -66,13 +66,6 @@ private:
   */
   std::allocator<non_const_value_type> alloc;
 
-  /** This is the multi-dimensional interface to the data that may point
-      to either allocation in the case of storage managed by SYCL itself
-      or to some other memory location in the case of host memory or
-      storage<> abstraction use
-  */
-  boost::multi_array_ref<value_type, Dimensions> access;
-
   /** If some allocation is requested on the host for the buffer
       memory, this is where the memory is attached to.
 
@@ -80,6 +73,13 @@ private:
       specification.
   */
   non_const_value_type *allocation = nullptr;
+
+  /** This is the multi-dimensional interface to the data that may point
+      to either allocation in the case of storage managed by SYCL itself
+      or to some other memory location in the case of host memory or
+      storage<> abstraction use
+  */
+  boost::multi_array_ref<value_type, Dimensions> access;
 
   /* How to copy back data on buffer destruction, can be modified with
      set_final_data( ... )

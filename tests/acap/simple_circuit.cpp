@@ -7,7 +7,7 @@
 // Put the tile code on fiber too to boost the performances
 #define TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER 1
 
-#include <SYCL/sycl.hpp>
+#include <sycl/sycl.hpp>
 
 #include <future>
 #include <iostream>

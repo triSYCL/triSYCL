@@ -4,7 +4,7 @@
    RUN: %{execute}%s
 */
 
-#include <SYCL/sycl.hpp>
+#include <sycl/sycl.hpp>
 
 #include <iostream>
 #include <tuple>

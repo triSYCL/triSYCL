@@ -9,9 +9,9 @@
     License. See LICENSE.TXT for details.
 */
 
-#include "triSYCL/vendor/trisycl/scope/device.hpp"
-#include "triSYCL/vendor/trisycl/scope/platform.hpp"
-#include "triSYCL/vendor/trisycl/scope/queue.hpp"
+#include "triSYCL/vendor/triSYCL/scope/device.hpp"
+#include "triSYCL/vendor/triSYCL/scope/platform.hpp"
+#include "triSYCL/vendor/triSYCL/scope/queue.hpp"
 
 /// This is an extension providing a conceptual API for devices, platforms...
 #define SYCL_VENDOR_TRISYCL_CONCEPTUAL_API 1

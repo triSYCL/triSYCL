@@ -9,7 +9,7 @@
 #include <thread>
 #include <type_traits>
 
-#include <SYCL/sycl.hpp>
+#include <sycl/sycl.hpp>
 
 using namespace std::chrono_literals;
 using namespace sycl::vendor::xilinx;

@@ -15,14 +15,15 @@
 
 #include <iostream>
 
-// The common debug and trace infrastructure
+#include <boost/type_index.hpp>
+
+// Only when the common debug or trace infrastructure is required
 #if defined(TRISYCL_DEBUG) || defined(TRISYCL_TRACE_KERNEL)
 #include <sstream>
 #include <string>
 #include <thread>
 
 #include <boost/log/trivial.hpp>
-#include <boost/type_index.hpp>
 
 // To be able to construct string literals like "blah"s
 using namespace std::string_literals;
@@ -60,66 +61,67 @@ namespace trisycl::detail {
 /** Class used to trace the construction, copy-construction,
     move-construction and destruction of classes that inherit from it
 
+    Also trace the copy and move assignments.
+
     \param T is the real type name to be used in the debug output.
 */
 template <typename T>
 struct debug {
-  // To trace the execution of the conSTRUCTORs and deSTRUCTORs
+  /// Get the pretty name of T itself
+  static auto constexpr type_pretty_name() {
+    return boost::typeindex::type_id<T>().pretty_name();
+  }
+
 #ifdef TRISYCL_DEBUG_STRUCTORS
-  /// Trace the construction with the compiler-dependent mangled named
+
+  /// Trace the construction
   debug() {
-    TRISYCL_DUMP("Constructor of "
-                 << boost::typeindex::type_id<T>().pretty_name()
-                 << " " << (void*) this);
+    TRISYCL_DUMP("Constructor of " << type_pretty_name() << " "
+                 << static_cast<void*>(this));
   }
 
 #if 0
 /// Since Clang++-11 this is no longer working, because it should not have
 /// never been working! But is seems to work with G++
 
-  /** Trace the copy construction with the compiler-dependent mangled
-      named
-
-      Only add this constructor if T has itself the same constructor,
-      otherwise it may prevent the synthesis of default copy
-      constructor and assignment.
-  */
-  template <typename U = T>
-  debug(debug const &,
-        /* Use intermediate U type to have the type dependent for
-           enable_if to work
-
-        \todo Use is_copy_constructible_v when moving to C++17 */
-        std::enable_if_t<std::is_copy_constructible<U>::value> * = 0) {
-    TRISYCL_DUMP("Copy of " << boost::typeindex::type_id<T>().pretty_name()
-                 << " " << (void*) this);
+  /// Trace the copy construction
+  debug(debug const& old) {
+    TRISYCL_DUMP("Copy of " << type_pretty_name() << " into "
+                 << static_cast<void*>(this) << " from "
+                 << static_cast<const void*>(&old));
   }
 
 
-  /** Trace the move construction with the compiler-dependent mangled
-      named
+  /// Trace the copy assignment
+  debug& operator=(const debug& rhs) {
+    TRISYCL_DUMP("Copy assignment of " << type_pretty_name()
+                 << " into " << static_cast<void*>(this)
+                 << " from " << static_cast<const void*>(&rhs));
+    return *this;
+  }
 
-      Only add this constructor if T has itself the same constructor,
-      otherwise it may prevent the synthesis of default move
-      constructor and move assignment.
-  */
-  template <typename U = T>
-  debug(debug &&,
-        /* Use intermediate U type to have the type dependent for
-           enable_if to work
 
-        \todo Use is_move_constructible_v when moving to C++17 */
-        std::enable_if_t<std::is_move_constructible<U>::value> * = 0) {
-    TRISYCL_DUMP("Move of " << boost::typeindex::type_id<T>().pretty_name()
-                 << " " << (void*) this);
+  /// Trace the move construction
+  debug(debug&& old) {
+    TRISYCL_DUMP("Move of " << type_pretty_name() << " into "
+                 << static_cast<void*>(this) << " from "
+                 << static_cast<void*>(&old));
+  }
+
+
+  /// Trace the move assignment
+  debug& operator=(debug&& rhs) {
+    TRISYCL_DUMP("Move assignment of " << type_pretty_name()
+                 << " into " << static_cast<void*>(this)
+                 << " from " << static_cast<void*>(&rhs));
+    return *this;
   }
 #endif
 
-  /// Trace the destruction with the compiler-dependent mangled named
+  /// Trace the destruction
   ~debug() {
-    TRISYCL_DUMP("~ Destructor of "
-                 << boost::typeindex::type_id<T>().pretty_name()
-                 << " " << (void*) this);
+    TRISYCL_DUMP("~ Destructor of " << type_pretty_name() << " "
+                 << static_cast<void*>(this));
   }
 #endif
 };
@@ -166,7 +168,7 @@ struct display_vector {
     std::cout << boost::typeindex::type_id<T>().pretty_name() << ":";
 #endif
     // Get a pointer to the real object
-    for (auto e : *static_cast<const T *>(this))
+    for (auto e : static_cast<const T&>(*this))
       std::cout << " " << e;
     std::cout << std::endl;
   }

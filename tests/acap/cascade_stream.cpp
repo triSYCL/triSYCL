@@ -3,7 +3,7 @@
    RUN: %{execute}%s
 */
 
-#include <SYCL/sycl.hpp>
+#include <sycl/sycl.hpp>
 
 #include <cassert>
 #include <iostream>

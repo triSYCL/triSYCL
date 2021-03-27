@@ -28,6 +28,7 @@ namespace trisycl::detail {
 
 /** Helper macro to declare a vector operation with the given side-effect
     operator.
+
     This handles both a[i] op b[i] and a[i] op b, where b is a BasicType.
 */
 #define TRISYCL_BOOST_OPERATOR_VECTOR_OP(op)            \
@@ -47,18 +48,57 @@ namespace trisycl::detail {
 
     This handles both a[] op b[] and a[] op b, where b is a BasicType.
 */
-#define TRISYCL_LOGICAL_OPERATOR_VECTOR_OP(op)          \
-  FinalType operator op(const FinalType &rhs) {         \
-    FinalType res;                                      \
-    for (std::size_t i = 0; i != Dims; ++i)             \
-      res[i] = (*this)[i] op rhs[i];                    \
-    return res;                                         \
-  }                                                     \
-  FinalType operator op(const BasicType &rhs) {         \
-    FinalType res;                                      \
-    for (std::size_t i = 0; i != Dims; ++i)             \
-      res[i] = (*this)[i] op rhs;                       \
-    return res;                                         \
+#define TRISYCL_LOGICAL_OPERATOR_VECTOR_OP(op)                    \
+  FinalType operator op(const FinalType &rhs) const {             \
+    FinalType res;                                                \
+    for (std::size_t i = 0; i != Dims; ++i)                       \
+      res[i] = (*this)[i] op rhs[i];                              \
+    return res;                                                   \
+  }                                                               \
+  /* Skip this for Dims = 1 to avoid ambiguity with implicit type \
+     conversion between the vector type and its basic type */     \
+  template <typename FT = FinalType,                              \
+            typename = std::enable_if_t<Dims != 1, FT>>           \
+  FinalType operator op(const BasicType &rhs) {                   \
+    FinalType res;                                                \
+    for (std::size_t i = 0; i != Dims; ++i)                       \
+      res[i] = (*this)[i] op rhs;                                 \
+    return res;                                                   \
+  }
+
+/** Helper macro to declare a vector unary operation.
+
+    This handles op a.
+*/
+#define TRISYCL_UNARY_OPERATOR_VECTOR_OP(op)    \
+  FinalType operator op() const {               \
+    FinalType result;                           \
+    for (std::size_t i = 0; i != Dims; ++i)     \
+      result[i] = op(*this)[i];                 \
+    return result;                              \
+  }
+
+/** Helper macro to declare a vector prefix unary operation.
+
+    This handles ++a and --a.
+*/
+#define TRISYCL_UNARY_PREFIX_OPERATOR_VECTOR_OP(op) \
+  FinalType operator op() {                         \
+    for (std::size_t i = 0; i != Dims; ++i)         \
+      op(*this)[i];                                 \
+    return *this;                                   \
+  }
+
+/** Helper macro to declare a vector prefix unary operation.
+
+    This handles a++ and a--.
+*/
+#define TRISYCL_UNARY_POSTFIX_OPERATOR_VECTOR_OP(op)  \
+  FinalType operator op(int) {                        \
+    FinalType result = *this;                         \
+    for (std::size_t i = 0; i != Dims; ++i)           \
+      op(*this)[i];                                   \
+    return result;                                    \
   }
 
 
@@ -91,7 +131,7 @@ template <typename BasicType,
           bool EnableArgsConstructor = false>
 struct small_array : std::array<BasicType, Dims>,
   // To have all the usual arithmetic operations on this type and bitwise
-  // operations. Note these opeation classes are chained via:
+  // operations. Note these operation classes are chained via:
   // https://www.boost.org/doc/libs/1_69_0/libs/utility/operators.htm#chaining
   // without the chaining the empty base class optimization will break and the
   // class will bloat other types like vec.hpp
@@ -215,6 +255,8 @@ struct small_array : std::array<BasicType, Dims>,
   /// Add | like operations on the id<> and others
   TRISYCL_BOOST_OPERATOR_VECTOR_OP(|=)
 
+#undef TRISYCL_BOOST_OPERATOR_VECTOR_OP
+
   /// Add && operations on the id<> and others
   TRISYCL_LOGICAL_OPERATOR_VECTOR_OP(&&)
 
@@ -231,12 +273,31 @@ struct small_array : std::array<BasicType, Dims>,
   TRISYCL_LOGICAL_OPERATOR_VECTOR_OP(<<)
   TRISYCL_LOGICAL_OPERATOR_VECTOR_OP(>>)
 
+#undef TRISYCL_LOGICAL_OPERATOR_VECTOR_OP
+
+  /// Implement unary operations
+  TRISYCL_UNARY_OPERATOR_VECTOR_OP(-)
+  TRISYCL_UNARY_OPERATOR_VECTOR_OP(+)
+
+#undef TRISYCL_UNARY_OPERATOR_VECTOR_OP
+
+  /// Implement prefix unary operations
+  TRISYCL_UNARY_PREFIX_OPERATOR_VECTOR_OP(--)
+  TRISYCL_UNARY_PREFIX_OPERATOR_VECTOR_OP(++)
+
+#undef TRISYCL_UNARY_PREFIX_OPERATOR_VECTOR_OP
+
+  /// Implement postfix unary operations
+  TRISYCL_UNARY_POSTFIX_OPERATOR_VECTOR_OP(--)
+  TRISYCL_UNARY_POSTFIX_OPERATOR_VECTOR_OP(++)
+
+#undef TRISYCL_UNARY_POSTFIX_OPERATOR_VECTOR_OP
+
   /** Since the boost::operator work on the small_array, add an implicit
       conversion to produce the expected type */
-  operator FinalType () {
-    return *static_cast<FinalType *>(this);
+  operator FinalType() {
+    return static_cast<FinalType&>(*this);
   }
-
 };
 
 /** Helper macro to declare out-of-class operators for b vs a[]
