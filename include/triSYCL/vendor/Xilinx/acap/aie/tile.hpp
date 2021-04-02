@@ -3,8 +3,8 @@
 
 /** \file
 
-    The basic AI Engine heterogeneous tile (i.e. dependent of x & y
-    coordinates)
+    The basic AI Engine heterogeneous tile that dependent of x & y
+    coordinates but also from the collective program run on it.
 
     Ronan dot Keryell at Xilinx dot com
 

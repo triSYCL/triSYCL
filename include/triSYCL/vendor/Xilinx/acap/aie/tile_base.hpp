@@ -4,7 +4,8 @@
 /** \file
 
     The basic AI Engine homogeneous tile, with common content to all
-    the tiles (i.e. independent of x & y coordinates)
+    the tiles (i.e. independent of x & y coordinates) but depending on
+    a collective program.
 
     Ronan dot Keryell at Xilinx dot com
 

@@ -7,8 +7,11 @@
     infrastructure to all the tiles, i.e. independent of x & y
     coordinates, but also from the tile program itself.
 
-    For example the AXI stream switch configuration and packet can
-    survive to some program changes.
+    This tile can be seen as the raw CGRA subdevice to run elemental
+    functions.
+
+    This is owned by the device, so for example the AXI stream switch
+    configuration and packet can survive to some program changes.
 
     Ronan dot Keryell at Xilinx dot com
 
@@ -232,6 +235,8 @@ public:
   /// Submit a callable on this tile
   template <typename Work>
   void submit(Work &&f) {
+    if (future_work.valid())
+      throw std::logic_error("Something is already running on this tile");
     // Launch the tile program immediately on a new executor engine
 #if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
     future_work = fe->submit(std::forward<Work>(f));
