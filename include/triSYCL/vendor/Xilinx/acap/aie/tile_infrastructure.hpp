@@ -232,9 +232,9 @@ public:
   }
 
 
-  /// Submit a callable on this tile
+  /// Launch a callable on this tile
   template <typename Work>
-  void submit(Work &&f) {
+  void single_task(Work &&f) {
     if (future_work.valid())
       throw std::logic_error("Something is already running on this tile");
     // Launch the tile program immediately on a new executor engine

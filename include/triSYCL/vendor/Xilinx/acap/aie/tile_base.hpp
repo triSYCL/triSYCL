@@ -57,8 +57,8 @@ public:
 
   /// Submit a callable on this tile
   template <typename Work>
-  void submit(Work &&f) {
-    ti->submit(std::forward<Work>(f));
+  void single_task(Work &&f) {
+    ti->single_task(std::forward<Work>(f));
   }
 
 

@@ -210,7 +210,7 @@ struct program {
   void run() {
     // Start each tile program in its own executor
     boost::hana::for_each(tiles, [&] (auto& t) {
-        t.submit([&] {
+        t.single_task([&] {
             TRISYCL_DUMP_T("Starting AIE tile (" << t.x << ',' << t.y
                            << ") linear id = " << t.linear_id());
             /* The kernel is the run member function. Just use a
