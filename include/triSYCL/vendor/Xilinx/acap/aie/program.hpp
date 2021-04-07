@@ -58,7 +58,7 @@ struct program {
   using device = AIEDevice;
 
   /// The device running this program
-  AIEDevice &aie_d;
+  AIEDevice aie_d;
 
   /// Type describing all the memory modules of the CGRA
   template <int X, int Y>

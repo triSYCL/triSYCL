@@ -31,7 +31,7 @@ namespace trisycl::vendor::xilinx::acap::aie {
 template <typename AIE_Program>
 class tile_base {
 
-  using device = typename AIE_Program::device;
+  using device = typename AIE_Program::device::detail_t;
 
 protected:
 
