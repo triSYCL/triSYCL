@@ -74,10 +74,21 @@ template <typename Layout> struct device {
        detail::fiber_pool::sched::work_stealing, false };
   */
 
-  /** Keep track of all the tiles as a type-erased tile_base type to
-      have a simpler access to the basic position-independent tile
-      features */
-  tile_infrastructure<device> ti[geo::y_size][geo::x_size];
+  /// Keep track of all the (non detail) infrastructure tiles of this device
+  aie::tile_infrastructure<geo> ti[geo::y_size][geo::x_size];
+
+  /** Access to the common infrastructure part of a tile
+
+      \param[in] x is the horizontal tile coordinate
+
+      \param[in] y is the vertical tile coordinate
+
+      \throws trisycl::runtime_error if the coordinate is invalid
+  */
+  auto& tile(int x, int y) {
+    geo::validate_x_y(x, y);
+    return ti[y][x];
+  }
 
   /** Apply a function for each tile index of the device
 
@@ -97,7 +108,7 @@ template <typename Layout> struct device {
       each tile
   */
   template <typename F> void for_each_tile(F f) {
-    for_each_tile_index([&](auto x, auto y) { f(ti[y][x]); });
+    for_each_tile_index([&](auto x, auto y) { f(tile(x, y)); });
   };
 
   /** Apply a function for each x tile index of the device
@@ -119,19 +130,6 @@ template <typename Layout> struct device {
     for (auto y : ranges::views::iota(0, geo::y_size))
       f(y);
   };
-
-  /** Access to the common infrastructure part of a tile
-
-      \param[in] x is the horizontal tile coordinate
-
-      \param[in] y is the vertical tile coordinate
-
-      \throws trisycl::runtime_error if the coordinate is invalid
-  */
-  auto& tile(int x, int y) {
-    geo::validate_x_y(x, y);
-    return ti[y][x];
-  }
 
   /** The shim tiles on the lower row of the tile array
 
@@ -216,8 +214,8 @@ template <typename Layout> struct device {
   device() {
     // Initialize all the tiles with their network connections first
     for_each_tile_index([&](auto x, auto y) {
-      // Start the tile infrastructure
-      tile(x, y).start(x, y, fiber_executor);
+      // Create & start the tile infrastructure
+      tile(x, y) = { x, y, fiber_executor };
     });
     for_each_tile_x_index([&](auto x) {
       // Start the shim infrastructure

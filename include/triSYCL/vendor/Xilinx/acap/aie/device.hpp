@@ -27,8 +27,7 @@ namespace trisycl::vendor::xilinx::acap::aie {
     instantiate with the physical size
 */
 template <typename Layout>
-class device : public facade::device<device<Layout>,
-                                     detail::device<Layout>> {
+class device : public facade::device<device<Layout>, detail::device<Layout>> {
   /// The type encapsulating the implementation
   using dd = detail::device<Layout>;
 
@@ -50,7 +49,8 @@ class device : public facade::device<device<Layout>,
   using smp = typename dd::smp;
 
   /// The default constructor makes a new device
-  device() : facade_t { new dd } {}
+  device()
+      : facade_t { new dd } {}
 
   /** Apply a function for each tile index of the device
 

@@ -408,7 +408,7 @@ struct tile : tile_base<AIE_Program> {
 
       \param[in] port specifies which DMA to access, starting at 0 */
   auto rx_dma(int port) {
-    return dma_dsl { *this, this->ti->rx_dma(port) };
+    return dma_dsl { *this, this->ti.rx_dma(port) };
   }
 
 
@@ -416,7 +416,7 @@ struct tile : tile_base<AIE_Program> {
 
       \param[in] port specifies which DMA to access, starting at 0 */
   auto tx_dma(int port) {
-    return dma_dsl { *this, this->ti->tx_dma(port) };
+    return dma_dsl { *this, this->ti.tx_dma(port) };
   }
 
 

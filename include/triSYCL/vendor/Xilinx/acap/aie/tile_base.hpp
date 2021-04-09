@@ -31,7 +31,7 @@ namespace trisycl::vendor::xilinx::acap::aie {
 template <typename AIE_Program>
 class tile_base {
 
-  using device = typename AIE_Program::device::detail_t;
+  using geo = typename AIE_Program::device::geo;
 
 protected:
 
@@ -40,7 +40,7 @@ protected:
   AIE_Program *program;
 
   /// Keep a reference to the tile_infrastructure hardware features
-  tile_infrastructure<device> *ti;
+  tile_infrastructure<geo> ti;
 
 public:
 
@@ -58,13 +58,13 @@ public:
   /// Submit a callable on this tile
   template <typename Work>
   void single_task(Work &&f) {
-    ti->single_task(std::forward<Work>(f));
+    ti.single_task(std::forward<Work>(f));
   }
 
 
   /// Wait for the execution of the callable on this tile
   void wait() {
-    ti->wait();
+    ti.wait();
   }
 
 
@@ -80,7 +80,7 @@ public:
       \param[in] port is the port to use
   */
   auto &in_connection(int port) {
-    return ti->in_connection(port);
+    return ti.in_connection(port);
   }
 
 
@@ -89,19 +89,19 @@ public:
       \param[in] port is port to use
   */
   auto &out_connection(int port) {
-    return ti->out_connection(port);
+    return ti.out_connection(port);
   }
 
 
   /// Get the user input port from the AXI stream switch
   auto &in(int port) {
-    return ti->in(port);
+    return ti.in(port);
   }
 
 
   /// Get the user output port to the AXI stream switch
   auto &out(int port) {
-    return ti->out(port);
+    return ti.out(port);
   }
 
 
@@ -112,8 +112,8 @@ public:
 
 
   /// Store a way to access to hardware infrastructure of the tile
-  void set_tile_infrastructure(tile_infrastructure<device> &t) {
-    ti = &t;
+  void set_tile_infrastructure(tile_infrastructure<geo> t) {
+    ti = t;
   }
 
 };
