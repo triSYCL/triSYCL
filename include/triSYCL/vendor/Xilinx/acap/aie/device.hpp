@@ -11,6 +11,8 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <utility>
+
 #include "device/detail/device.hpp"
 #include "triSYCL/device/facade/device.hpp"
 
@@ -25,15 +27,16 @@ namespace trisycl::vendor::xilinx::acap::aie {
     instantiate with the physical size
 */
 template <typename Layout>
-class device : public facade::device<device<Layout>, detail::device<Layout>> {
-  using implementation_t =
-      facade::device<device<Layout>, detail::device<Layout>>;
-
-  // The type encapsulating the implementation
+class device : public facade::device<device<Layout>,
+                                     detail::device<Layout>> {
+  /// The type encapsulating the implementation
   using dd = detail::device<Layout>;
 
-  // Make the implementation member directly accessible in this class
-  using implementation_t::implementation;
+  /// The façade used to implement part of the use facing type
+  using facade_t = facade::device<device<Layout>, dd>;
+
+  /// Make the implementation member directly accessible in this class
+  using facade_t::implementation;
 
  public:
   /// Expose some useful internal implementation.
@@ -47,8 +50,7 @@ class device : public facade::device<device<Layout>, detail::device<Layout>> {
   using smp = typename dd::smp;
 
   /// The default constructor makes a new device
-  device()
-      : implementation_t { new detail::device<Layout>() } {}
+  device() : facade_t { new dd } {}
 
   /** Apply a function for each tile index of the device
 
@@ -208,13 +210,5 @@ class device : public facade::device<device<Layout>, detail::device<Layout>> {
 /// @} End the aie Doxygen group
 
 } // namespace trisycl::vendor::xilinx::acap::aie
-
-/*
-    # Some Emacs stuff:
-    ### Local Variables:
-    ### ispell-local-dictionary: "american"
-    ### eval: (flyspell-prog-mode)
-    ### End:
-*/
 
 #endif // TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_DEVICE_HPP

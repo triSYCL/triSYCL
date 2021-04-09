@@ -62,6 +62,7 @@ template <typename Layout> struct device {
   using smp = typename sass::master_port_layout;
 
   /// The cascade stream infrastructure of the CGRA
+  /// \todo remove and distribute it instead
   cascade_stream<geo> cs;
 
   /** A fiber pool executor to run the infrastructure powered by
