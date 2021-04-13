@@ -124,6 +124,54 @@ struct tile : tile_base<AIE_Program> {
   }
 
 
+  /// Test if the tile has a Western neighbor
+  static bool constexpr is_west_valid() {
+    return !geo::is_west_column(x);
+  }
+
+
+  /// Test if the tile has a Eastern neighbor
+  static bool constexpr is_east_valid() {
+    return !geo::is_east_column(x);
+  }
+
+
+  /// Test if the tile has a Southern neighbor
+  static bool constexpr is_south_valid() {
+    return !geo::is_south_row(y);
+  }
+
+
+  /// Test if the tile has a South West neighbor
+  static bool constexpr is_south_west_valid() {
+    return is_south_valid() && is_west_valid();
+  }
+
+
+  /// Test if the tile has a South East neighbor
+  static bool constexpr is_south_east_valid() {
+    return is_south_valid() && is_east_valid();
+  }
+
+
+  /// Test if the tile has a Northern neighbor
+  static bool constexpr is_north_valid() {
+    return !geo::is_north_row(y);
+  }
+
+
+  /// Test if the tile has a North East neighbor
+  static bool constexpr is_north_east_valid() {
+    return is_north_valid() && is_east_valid();
+  }
+
+
+  /// Test if the tile has a North West neighbor
+  static bool constexpr is_north_west_valid() {
+    return is_north_valid() && is_west_valid();
+  }
+
+
   /** Test if a memory module exists and is connected to this tile
 
       \param[in] dx is the horizontal displacement (-1,0,+1)
@@ -354,6 +402,23 @@ struct tile : tile_base<AIE_Program> {
     horizontal_barrier();
     vertical_barrier();
   }
+
+
+  /** Get access on a receiver DMA
+
+      \param[in] port specifies which DMA to access, starting at 0 */
+  auto rx_dma(int port) {
+    return dma_dsl { *this, this->ti->rx_dma(port) };
+  }
+
+
+  /** Get access on a transmit DMA
+
+      \param[in] port specifies which DMA to access, starting at 0 */
+  auto tx_dma(int port) {
+    return dma_dsl { *this, this->ti->tx_dma(port) };
+  }
+
 
 };
 

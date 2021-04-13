@@ -4,6 +4,9 @@
    RUN: %{execute}%s
 */
 
+// Put the tile code on fiber too to boost the performances
+#define TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER 1
+
 #include <sycl/sycl.hpp>
 
 #include <future>
@@ -25,15 +28,15 @@ struct comm : acap::aie::tile<AIE, X, Y> {
     for (int i = 0; i < size; ++i) {
       // tile(1,2) read from port 0 and write to port 0
       if constexpr (X == 1 && Y == 2) {
-        auto v = t::template in<char>(0).read();
+        auto v = t::in(0).read();
         // Output = input*2
-        t::template out<int>(0) << 2*v;
+        t::out(0) << 2*v;
       }
       // tile(2,0) read from port 1 and write to port 0
       else if constexpr (X == 2 && Y == 0) {
-        auto v = t::template in<int>(1).read();
-        // Output = input + 1.5
-        t::template out<float>(0) << v + 1.5f;
+        auto v = t::in(1).read();
+        // Output = input + 1
+        t::out(0) << v + 1;
       }
     }
   }
@@ -63,22 +66,23 @@ int test_main(int argc, char *argv[]) {
       aie.connect<float>(line { 2 }, broadcast_column);
       aie.connect<float>(column { 3 }, broadcast_column);
     */
-    // Connect port 1 of shim(0) to port 0 of tile(1,2) with a "char" link
-    d.connect<char>(port::shim { 0, 1 }, port::tile { 1, 2, 0 });
-    // Connect port 0 of tile(1,2) to port 1 of tile(2,0) with a "int" link
-    d.connect<int>(port::tile { 1, 2, 0 }, port::tile { 2, 0, 1 });
-    // Connect port 0 of tile(2,0) to port 0 of shim(1) with a "float" link
-    d.connect<float>(port::tile { 2, 0, 0 }, port::shim { 1, 0 });
+
+    // Connect port 1 of shim(0) to port 0 of tile(1,2)
+    d.connect(port::shim { 0, 1 }, port::tile { 1, 2, 0 });
+    // Connect port 0 of tile(1,2) to port 1 of tile(2,0)
+    d.connect(port::tile { 1, 2, 0 }, port::tile { 2, 0, 1 });
+    // Connect port 0 of tile(2,0) to port 0 of shim(1)
+    d.connect(port::tile { 2, 0, 0 }, port::shim { 1, 0 });
 
     // Use the connection from the CPU directly by using the AXI MM to the tile
-    d.tile(1, 2).out<int>(0) << 3;
+    d.tile(1, 2).out(0) << 3;
     // Check we read the correct value on tile(2,0) port 1
-    BOOST_CHECK(d.tile(2, 0).in<int>(1).read() == 3);
+    BOOST_CHECK(d.tile(2, 0).in(1).read() == 3);
 
     // Try a shim & tile connection directly from the host
-    d.shim(0).bli_out<1, char>() << 42;
+    d.shim(0).bli_out(1) << 42;
     // Check we read the correct value on tile(1,2) port 0
-    BOOST_CHECK(d.tile(1, 2).in<char>(0).read() == 42);
+    BOOST_CHECK(d.tile(1, 2).in(0).read() == 42);
 
     // Launch the AIE comm program
     auto aie_future = d.queue().submit<comm>();
@@ -89,16 +93,16 @@ int test_main(int argc, char *argv[]) {
       for (int i = 0; i < size; ++i)
         // Use the AXI-MM access to the shim registers to send a value
         // into the AXI-SS from the host
-        d.shim(0).bli_out<1, char>() << i;
+        d.shim(0).bli_out(1) << i;
     });
 
   // Launch a CPU consumer
   auto consumer = std::async(std::launch::async, [&] {
       float f;
       for (int i = 0; i < size; ++i) {
-        d.shim(1).bli_in<0, float>() >> f;
+        d.shim(1).bli_in(0) >> f;
         // Check we read the correct value
-        BOOST_CHECK(f == 2*i + 1.5);
+        BOOST_CHECK(f == 2*i + 1);
       }
     });
 

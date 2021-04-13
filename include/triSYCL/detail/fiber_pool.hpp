@@ -124,7 +124,7 @@ public:
     auto f = pt->get_future();
     // Submit a lambda to do the type erasure so the submission queue
     // type is independent of the type of the packaged_task
-    submission.push([p = std::move(pt)] ()  { (*p)(); });
+    submission.push([p = std::move(pt)] { (*p)(); });
     // Return the future to the client to get the result or the exception
     return f;
   }
