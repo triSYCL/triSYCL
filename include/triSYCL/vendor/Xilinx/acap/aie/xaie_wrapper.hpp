@@ -12,32 +12,51 @@
     License. See LICENSE.TXT for details.
 */
 
-#ifdef __SYCL_XILINX_AIE__
-namespace trisycl::vendor::xilinx::acap::aie::xaie {
-extern "C" {
-  #include <xaiengine.h>
-}
-}
 #include <iostream>
 #include "triSYCL/detail/debug.hpp"
 
 #include <boost/log/trivial.hpp>
 #include <boost/type_index.hpp>
 
+#ifdef __SYCL_XILINX_AIE__
+namespace trisycl::vendor::xilinx::acap::aie::xaie {
+extern "C" {
+  #include <xaiengine.h>
+}
+
+/// RAII move-only object for libxaiengine transactions.
+class XAie_Transaction {
+  XAie_DevInst *DevInst = nullptr;
+
+public:
+  XAie_Transaction() = default;
+  XAie_Transaction(XAie_DevInst *dev,
+                   uint32_t flags = XAIE_TRANSACTION_ENABLE_AUTO_FLUSH)
+      : DevInst(dev) {
+    XAie_StartTransaction(DevInst, flags);
+  }
+  XAie_Transaction(const XAie_Transaction &) = delete;
+  XAie_Transaction(XAie_Transaction &&) = default;
+  ~XAie_Transaction() {
+    if (DevInst)
+      XAie_SubmitTransaction(DevInst, nullptr);
+  }
+};
+} // namespace trisycl::vendor::xilinx::acap::aie::xaie
+
 #if defined(TRISYCL_DEBUG) || defined(TRISYCL_XAIE_DEBUG)
 #define TRISYCL_XAIE(XAIE_CALL)                                                \
   do {                                                                         \
     using namespace ::trisycl::vendor::xilinx::acap::aie::xaie;                \
-    BOOST_LOG_TRIVIAL(debug) << #XAIE_CALL;                                    \
+    TRISYCL_DUMP2(#XAIE_CALL, "xaie");                                \
     boost::log::core::get()->flush();                                          \
     AieRC RC = XAIE_CALL;                                                      \
     if (RC != XAIE_OK) {                                                       \
-      BOOST_LOG_TRIVIAL(debug)                                                 \
-          << "XAIE call failed:" << RC << ":" << #XAIE_CALL;                   \
+      TRISYCL_DUMP_ALWAYS("XAIE call failed:" << RC << ":" << #XAIE_CALL);     \
       boost::log::core::get()->flush();                                        \
       assert(false);                                                           \
     }                                                                          \
-    BOOST_LOG_TRIVIAL(debug) << " done";                                       \
+    TRISYCL_DUMP2("", "done");                                        \
     boost::log::core::get()->flush();                                          \
   } while (0)
 #else
@@ -46,16 +65,16 @@ extern "C" {
     using namespace ::trisycl::vendor::xilinx::acap::aie::xaie;                \
     AieRC RC = XAIE_CALL;                                                      \
     if (RC != XAIE_OK) {                                                       \
-      BOOST_LOG_TRIVIAL(debug)                                                 \
-          << "XAIE call failed:" << RC << ":" << #XAIE_CALL;                   \
+      TRISYCL_DUMP_ALWAYS("XAIE call failed:" << RC << ":" << #XAIE_CALL);     \
       boost::log::core::get()->flush();                                        \
       assert(false);                                                           \
     }                                                                          \
   } while (0)
 #endif
+
 namespace trisycl::vendor::xilinx::acap::aie::xaie {
 
-struct aiev1 {
+namespace aiev1 {
 
 static constexpr auto dev_gen = XAIE_DEV_GEN_AIE;
 static constexpr auto num_hw_row = 9;
@@ -70,7 +89,6 @@ static constexpr auto mem_tile_row_num = 0;
 static constexpr auto aie_tile_row_start = 1;
 static constexpr auto aie_tile_row_num = 8;
 static constexpr auto args_start = 0x1000;
-static constexpr auto args_size = 0x100;
 
 };
 }

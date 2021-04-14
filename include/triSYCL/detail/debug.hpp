@@ -15,6 +15,13 @@
 
 #include <iostream>
 
+
+/// IS_MACRO detect at runtime if a macro was defined.
+/// it can be made constexpr.
+#define IS_MACRO_STR(MACRO) "" #MACRO
+#define IS_MACRO(MACRO)                                                        \
+  []() -> bool { return strcmp("" #MACRO, IS_MACRO_STR(MACRO)); }()
+
 // The common debug and trace infrastructure
 #if defined(TRISYCL_DEBUG) || defined(TRISYCL_TRACE_KERNEL)
 #include <sstream>
@@ -33,25 +40,58 @@ using namespace std::string_literals;
     Use an intermediate ostringstream because there are issues with
     BOOST_LOG_TRIVIAL to display C strings
 */
-#define TRISYCL_INTERNAL_DUMP(expression)                                      \
+
+namespace {
+
+bool shouldBeLogged(std::string kind) {
+  const char* env = getenv("TRISYCL_LOG");
+  if (!env)
+    return true;
+  std::string str(env);
+  size_t pos = str.find(kind);
+  return pos != std::string::npos;
+}
+
+std::string getBaseName(const char* file_name) {
+  std::string str = file_name;
+  unsigned start = str.find_last_of('/');
+  start = start == std::string::npos ? 0 : start + 1;
+  unsigned end = str.find_last_of('.');
+  end = end == std::string::npos ? str.size() : end;
+  return str.substr(start, end - start);
+}
+
+}
+
+#define TRISYCL_DUMP_ALWAYS(EXPR)                                              \
   do {                                                                         \
-    std::ostringstream s;                                                      \
-    s << expression;                                                           \
-    BOOST_LOG_TRIVIAL(debug) << s.str();                                       \
+    BOOST_LOG_TRIVIAL(debug) << EXPR;                                          \
     boost::log::core::get()->flush();                                          \
   } while (0)
+#define TRISYCL_DUMP2(EXPR, KIND)                                              \
+  do {                                                                         \
+    if (!::shouldBeLogged(KIND))                                               \
+      break;                                                                   \
+    TRISYCL_DUMP_ALWAYS(" " << KIND << " " << EXPR);                           \
+  } while (0)
+#else
+#define TRISYCL_DUMP_ALWAYS(EXPR) do { } while(0)
+#define TRISYCL_DUMP2(EXPR, KIND) do { } while(0)
 #endif
 
 #ifdef TRISYCL_DEBUG
-#define TRISYCL_DUMP(expression) TRISYCL_INTERNAL_DUMP(expression)
+#define TRISYCL_DUMP(EXPR)                                                     \
+  do {                                                                         \
+    TRISYCL_DUMP2(EXPR, getBaseName(__FILE__));                                \
+  } while (0)
 
 /// Same as TRISYCL_DUMP() but with thread id first
-#define TRISYCL_DUMP_T(expression)                                      \
-  TRISYCL_DUMP("Thread " << std::hex                                    \
-               << std::this_thread::get_id() << ": " << expression)
+/// The default logger already contains the thread id so this is equivalent to
+/// TRISYCL_DUMP
+#define TRISYCL_DUMP_T(EXPR) TRISYCL_DUMP(EXPR)
 #else
-#define TRISYCL_DUMP(expression) do { } while(0)
-#define TRISYCL_DUMP_T(expression) do { } while(0)
+#define TRISYCL_DUMP(EXPR) do { } while(0)
+#define TRISYCL_DUMP_T(EXPR) do { } while(0)
 #endif
 
 namespace trisycl::detail {
@@ -135,11 +175,11 @@ auto trace_kernel(Functor f) {
     /* Since the class KernelName may just be declared and not really
        defined, just use it through a class pointer to have
        typeid().name() not complaining */
-    TRISYCL_INTERNAL_DUMP(
+    TRISYCL_DUMP(
       "Kernel started "
       << boost::typeindex::type_id<KernelName *>().pretty_name());
     f();
-    TRISYCL_INTERNAL_DUMP(
+    TRISYCL_DUMP(
       "Kernel stopped "
       << boost::typeindex::type_id<KernelName *>().pretty_name());
   };

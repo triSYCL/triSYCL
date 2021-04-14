@@ -275,13 +275,26 @@ struct tile : tile_base<AIE_Program> {
 // Part of the real current host -> device communication API using Lib X AI
 // Engine
 #ifdef __SYCL_XILINX_AIE__
+  /// Store a way to access to hw tile instance
+  void set_hw_tile(xaie::XAie_LocType tile, xaie::XAie_DevInst* inst) {
+    TRISYCL_DUMP2(std::dec << "Mapping: (X = " << X << ", Y = " << Y
+                            << ") to  (Row = " << (int)tile.Row
+                            << ", Col = " << (int)tile.Col << ")","exec");
+    tb::set_hw_tile(tile, inst);
+  }
+
+  xaie::XAie_Transaction
+  get_transaction(uint32_t flags = XAIE_TRANSACTION_ENABLE_AUTO_FLUSH) {
+    return {tb::aie_inst, flags};
+  }
+
   /// The memory read accessors
   std::uint32_t mem_read(std::uint32_t offset) {
     std::uint32_t Data;
     TRISYCL_XAIE(
         xaie::XAie_DataMemRdWord(tb::aie_inst, tb::aie_hw_tile, offset, &Data));
-    TRISYCL_DUMP_T("Reading: (" << X << ", " << Y << ") + 0x" << std::hex
-                              << offset << " = " << std::dec << Data);
+    TRISYCL_DUMP2("Reading: (" << X << ", " << Y << ") + 0x" << std::hex
+                              << offset << " = " << std::dec << Data,"memory");
     return Data;
   }
 
@@ -289,8 +302,28 @@ struct tile : tile_base<AIE_Program> {
   void mem_write(std::uint32_t offset, std::uint32_t data) {
     TRISYCL_XAIE(
         xaie::XAie_DataMemWrWord(tb::aie_inst, tb::aie_hw_tile, offset, data));
-    TRISYCL_DUMP_T("Writing: (" << X << ", " << Y << ") + 0x" << std::hex
-                               << offset << " = " << std::dec << data);
+    TRISYCL_DUMP2("Writing: (" << X << ", " << Y << ") + 0x" << std::hex
+                               << offset << " = " << std::dec << data,"memory");
+  }
+
+  /// memcpy from device to host
+  void memcpyD2H(void* data, std::uint32_t offset, std::uint32_t size) {
+    TRISYCL_XAIE(xaie::XAie_DataMemBlockRead(tb::aie_inst, tb::aie_hw_tile,
+                                             offset, data, size));
+    TRISYCL_DUMP2("CopyD2H: (" << X << ", " << Y << ") + 0x" << std::hex
+                                << offset << "-0x" << offset + size << " -> 0x"
+                                << (uintptr_t)data << "-0x"
+                                << ((uintptr_t)data) + size,"memory");
+  }
+
+  /// memcpy from host to device
+  void memcpyH2D(std::uint32_t offset, void* data, std::uint32_t size) {
+    TRISYCL_XAIE(xaie::XAie_DataMemBlockWrite(tb::aie_inst, tb::aie_hw_tile,
+                                              offset, data, size));
+    TRISYCL_DUMP2("CopyH2D: (" << X << ", " << Y << ") + 0x" << std::hex
+                                << offset << "-0x" << offset + size << " <- 0x"
+                                << (uintptr_t)data << "-0x"
+                                << ((uintptr_t)data) + size,"memory");
   }
 
   /// Configure device for dma.
@@ -298,8 +331,8 @@ struct tile : tile_base<AIE_Program> {
     xaie::XAie_DmaDesc DmaDesc;
     TRISYCL_XAIE(xaie::XAie_DmaDescInit(tb::aie_inst, &DmaDesc, tb::aie_hw_tile));
     TRISYCL_XAIE(xaie::XAie_DmaSetAddrLen(&DmaDesc, offset, size));
-    TRISYCL_DUMP_T("Setup Dma: (" << X << ", " << Y << ") 0x" << std::hex
-                                << offset << "-0x" << (offset + size));
+    TRISYCL_DUMP2("Setup Dma: (" << X << ", " << Y << ") 0x" << std::hex
+                                << offset << "-0x" << (offset + size),"memory");
   }
 
   /// FIXME: is this right location for these functions?
@@ -335,12 +368,12 @@ struct tile : tile_base<AIE_Program> {
 
   /// Wait for the core to complete
   void core_wait() {
-    TRISYCL_DUMP_T("(" << X << ", " << Y << ") Waiting for kernel...");
+    TRISYCL_DUMP2(std::dec << "(" << X << ", " << Y << ") Waiting for kernel...", "execution");
     xaie::AieRC RC = xaie::XAIE_OK;
     do {
       RC = xaie::XAie_CoreWaitForDone(tb::aie_inst, tb::aie_hw_tile, 0);
     } while (RC != xaie::XAIE_OK);
-    TRISYCL_DUMP_T("(" << X << ", " << Y << ") done");
+    TRISYCL_DUMP2(std::dec << "(" << X << ", " << Y << ") done", "execution");
   }
 #endif
 

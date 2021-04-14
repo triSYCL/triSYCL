@@ -308,45 +308,49 @@ struct program {
             detail::program_manager::instance()->image_dump(
                 kernelName, "run_aie_" + kernelName + ".elf");
 #endif
-            t.core_reset();
+            {
+              // auto Transaction = t.get_transaction();
+              t.core_reset();
 
-            TRISYCL_DUMP_T("Loading Kernel " << kernelName << " ELF to tile ("
-                           << t.x << ',' << t.y << ") linear id = "
-                           << t.linear_id());
+              TRISYCL_DUMP2("Loading Kernel "
+                             << kernelName << " ELF to tile (" << t.x << ','
+                             << t.y << ") linear id = " << t.linear_id(), "exec");
 
-            t.load_elf_image(kernelImage);
+              t.load_elf_image(kernelImage);
 
-            TRISYCL_DUMP_T("Loaded Kernel " << kernelName << " ELF to tile ("
-                           << t.x << ',' << t.y << ") linear id = "
-                           << t.linear_id() << "beginning tile execution");
+              TRISYCL_DUMP2("Loaded Kernel "
+                             << kernelName << " ELF to tile (" << t.x << ','
+                             << t.y << ") linear id = " << t.linear_id()
+                             << "beginning tile execution", "exec");
 
             /// Setup DMA for parameter passing
-            t.mem_dma(xaie::aiev1::args_start, xaie::aiev1::args_size);
+            t.mem_dma(xaie::aiev1::args_start, 0x2000);
 
-            TRISYCL_DUMP_T("Starting AIE tile ("
-                           << t.x << ',' << t.y
-                           << ") linear id = " << t.linear_id() << ","
-                           << "Associated Tile Kernel Name: " << kernelName
-                           << "- beginning prerun execution");
+              TRISYCL_DUMP2("Starting AIE tile ("
+                             << t.x << ',' << t.y
+                             << ") linear id = " << t.linear_id() << ","
+                             << "Associated Tile Kernel Name: " << kernelName
+                             << "- beginning prerun execution", "exec");
 
-            if (!t.prerun())
-              return;
+              if (!t.prerun())
+                return;
 
-            t.core_run();
+              t.core_run();
+            }
             t.core_wait();
 
-            TRISYCL_DUMP_T("Stopping AIE tile (" << t.x << ',' << t.y
+            TRISYCL_DUMP2("Stopping AIE tile (" << t.x << ',' << t.y
                            << ") linear id = " << t.linear_id() << ","
                            << "Associated Tile Kernel Name: " << kernelName
-                           << "- beginning postrun execution");
+                           << "- beginning postrun execution", "exec");
             t.postrun();
 
-            TRISYCL_DUMP_T("Stopping AIE tile (" << t.x << ',' << t.y << ')');
+            TRISYCL_DUMP2("Stopping AIE tile (" << t.x << ',' << t.y << ')', "exec");
           });
 #else // Code path taken for Software Emulation on CPU
        t.submit([&] {
-            TRISYCL_DUMP_T("Starting AIE tile (" << t.x << ',' << t.y
-                           << ") linear id = " << t.linear_id());
+            TRISYCL_DUMP2("Starting AIE tile (" << t.x << ',' << t.y
+                           << ") linear id = " << t.linear_id(), "exec");
 
             if (!t.prerun())
               return;
@@ -358,7 +362,7 @@ struct program {
 
             t.postrun();
 
-            TRISYCL_DUMP_T("Stopping AIE tile (" << t.x << ',' << t.y << ')');
+            TRISYCL_DUMP2("Stopping AIE tile (" << t.x << ',' << t.y << ')', "exec");
           });
 #endif // __SYCL_XILINX_AIE__
 #endif // __SYCL_DEVICE_ONLY__
@@ -369,18 +373,17 @@ struct program {
 #ifndef __SYCL_DEVICE_ONLY__
 //     Wait for the end of the execution of each tile
     boost::hana::for_each(tiles, [&] (auto& t) {
-        TRISYCL_DUMP_T("Joining AIE tile (" << t.x << ',' << t.y << ')');
+        TRISYCL_DUMP2("Joining AIE tile (" << t.x << ',' << t.y << ')', "exec");
         t.wait();
-        TRISYCL_DUMP_T("Joined AIE tile (" << t.x << ',' << t.y << ')');
+        TRISYCL_DUMP2("Joined AIE tile (" << t.x << ',' << t.y << ')', "exec");
       });
 #endif
 
-    TRISYCL_DUMP_T("Total size of the own memory of all the tile programs: "
-                   << std::dec << sizeof(tiles) << " bytes.");
-    TRISYCL_DUMP_T("Total size of the memory modules: "
-                   << std::dec << sizeof(memory_modules) << " bytes.");
+    TRISYCL_DUMP2("Total size of the own memory of all the tile programs: "
+                   << std::dec << sizeof(tiles) << " bytes.", "exec");
+    TRISYCL_DUMP2("Total size of the memory modules: "
+                   << std::dec << sizeof(memory_modules) << " bytes.", "exec");
   }
-
 
   /// Access the cascade connections
   auto &cascade() {
