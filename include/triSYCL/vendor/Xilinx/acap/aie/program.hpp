@@ -323,8 +323,8 @@ struct program {
                              << t.y << ") linear id = " << t.linear_id()
                              << "beginning tile execution", "exec");
 
-            /// Setup DMA for parameter passing
-            t.mem_dma(xaie::aiev1::args_start, 0x2000);
+              /// Setup DMA for parameter passing
+              t.mem_dma(xaie::aiev1::args_start, xaie::aiev1::args_size);
 
               TRISYCL_DUMP2("Starting AIE tile ("
                              << t.x << ',' << t.y

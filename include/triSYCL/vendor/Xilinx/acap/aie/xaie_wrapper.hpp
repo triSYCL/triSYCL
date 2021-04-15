@@ -48,7 +48,7 @@ public:
 #define TRISYCL_XAIE(XAIE_CALL)                                                \
   do {                                                                         \
     using namespace ::trisycl::vendor::xilinx::acap::aie::xaie;                \
-    TRISYCL_DUMP2(#XAIE_CALL, "xaie");                                \
+    TRISYCL_DUMP2(#XAIE_CALL, "xaie");                                         \
     boost::log::core::get()->flush();                                          \
     AieRC RC = XAIE_CALL;                                                      \
     if (RC != XAIE_OK) {                                                       \
@@ -56,7 +56,7 @@ public:
       boost::log::core::get()->flush();                                        \
       assert(false);                                                           \
     }                                                                          \
-    TRISYCL_DUMP2("", "done");                                        \
+    TRISYCL_DUMP2("", "done");                                                 \
     boost::log::core::get()->flush();                                          \
   } while (0)
 #else
@@ -89,6 +89,7 @@ static constexpr auto mem_tile_row_num = 0;
 static constexpr auto aie_tile_row_start = 1;
 static constexpr auto aie_tile_row_num = 8;
 static constexpr auto args_start = 0x1000;
+static constexpr auto args_size = 0x2000;
 
 };
 }

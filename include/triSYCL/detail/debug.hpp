@@ -16,12 +16,6 @@
 #include <iostream>
 
 
-/// IS_MACRO detect at runtime if a macro was defined.
-/// it can be made constexpr.
-#define IS_MACRO_STR(MACRO) "" #MACRO
-#define IS_MACRO(MACRO)                                                        \
-  []() -> bool { return strcmp("" #MACRO, IS_MACRO_STR(MACRO)); }()
-
 // The common debug and trace infrastructure
 #if defined(TRISYCL_DEBUG) || defined(TRISYCL_TRACE_KERNEL)
 #include <sstream>
@@ -43,7 +37,7 @@ using namespace std::string_literals;
 
 namespace {
 
-bool shouldBeLogged(std::string kind) {
+bool should_be_logged(std::string kind) {
   const char* env = getenv("TRISYCL_LOG");
   if (!env)
     return true;
@@ -52,7 +46,7 @@ bool shouldBeLogged(std::string kind) {
   return pos != std::string::npos;
 }
 
-std::string getBaseName(const char* file_name) {
+std::string get_base_name(const char* file_name) {
   std::string str = file_name;
   unsigned start = str.find_last_of('/');
   start = start == std::string::npos ? 0 : start + 1;
@@ -70,7 +64,7 @@ std::string getBaseName(const char* file_name) {
   } while (0)
 #define TRISYCL_DUMP2(EXPR, KIND)                                              \
   do {                                                                         \
-    if (!::shouldBeLogged(KIND))                                               \
+    if (!::should_be_logged(KIND))                                             \
       break;                                                                   \
     TRISYCL_DUMP_ALWAYS(" " << KIND << " " << EXPR);                           \
   } while (0)
@@ -82,7 +76,7 @@ std::string getBaseName(const char* file_name) {
 #ifdef TRISYCL_DEBUG
 #define TRISYCL_DUMP(EXPR)                                                     \
   do {                                                                         \
-    TRISYCL_DUMP2(EXPR, getBaseName(__FILE__));                                \
+    TRISYCL_DUMP2(EXPR, ::get_base_name(__FILE__));                            \
   } while (0)
 
 /// Same as TRISYCL_DUMP() but with thread id first

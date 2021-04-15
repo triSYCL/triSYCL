@@ -279,7 +279,7 @@ struct tile : tile_base<AIE_Program> {
   void set_hw_tile(xaie::XAie_LocType tile, xaie::XAie_DevInst* inst) {
     TRISYCL_DUMP2(std::dec << "Mapping: (X = " << X << ", Y = " << Y
                             << ") to  (Row = " << (int)tile.Row
-                            << ", Col = " << (int)tile.Col << ")","exec");
+                            << ", Col = " << (int)tile.Col << ")", "exec");
     tb::set_hw_tile(tile, inst);
   }
 
@@ -307,32 +307,36 @@ struct tile : tile_base<AIE_Program> {
   }
 
   /// memcpy from device to host
-  void memcpyD2H(void* data, std::uint32_t offset, std::uint32_t size) {
+  void memcpy_d2h(void *data, std::uint32_t offset, std::uint32_t size) {
     TRISYCL_XAIE(xaie::XAie_DataMemBlockRead(tb::aie_inst, tb::aie_hw_tile,
                                              offset, data, size));
-    TRISYCL_DUMP2("CopyD2H: (" << X << ", " << Y << ") + 0x" << std::hex
-                                << offset << "-0x" << offset + size << " -> 0x"
-                                << (uintptr_t)data << "-0x"
-                                << ((uintptr_t)data) + size,"memory");
+    TRISYCL_DUMP2("memcpy_d2h: (" << X << ", " << Y << ") + 0x" << std::hex
+                                  << offset << "-0x" << offset + size
+                                  << " -> 0x" << (uintptr_t)data << "-0x"
+                                  << ((uintptr_t)data) + size,
+                  "memory");
   }
 
   /// memcpy from host to device
-  void memcpyH2D(std::uint32_t offset, void* data, std::uint32_t size) {
+  void memcpy_h2d(std::uint32_t offset, void *data, std::uint32_t size) {
     TRISYCL_XAIE(xaie::XAie_DataMemBlockWrite(tb::aie_inst, tb::aie_hw_tile,
                                               offset, data, size));
-    TRISYCL_DUMP2("CopyH2D: (" << X << ", " << Y << ") + 0x" << std::hex
-                                << offset << "-0x" << offset + size << " <- 0x"
-                                << (uintptr_t)data << "-0x"
-                                << ((uintptr_t)data) + size,"memory");
+    TRISYCL_DUMP2("memcpy_h2d: (" << X << ", " << Y << ") + 0x" << std::hex
+                                  << offset << "-0x" << offset + size
+                                  << " <- 0x" << (uintptr_t)data << "-0x"
+                                  << ((uintptr_t)data) + size,
+                  "memory");
   }
 
   /// Configure device for dma.
   void mem_dma(uint32_t offset, uint32_t size) {
     xaie::XAie_DmaDesc DmaDesc;
-    TRISYCL_XAIE(xaie::XAie_DmaDescInit(tb::aie_inst, &DmaDesc, tb::aie_hw_tile));
+    TRISYCL_XAIE(
+        xaie::XAie_DmaDescInit(tb::aie_inst, &DmaDesc, tb::aie_hw_tile));
     TRISYCL_XAIE(xaie::XAie_DmaSetAddrLen(&DmaDesc, offset, size));
     TRISYCL_DUMP2("Setup Dma: (" << X << ", " << Y << ") 0x" << std::hex
-                                << offset << "-0x" << (offset + size),"memory");
+                                 << offset << "-0x" << (offset + size),
+                  "memory");
   }
 
   /// FIXME: is this right location for these functions?
@@ -344,11 +348,11 @@ struct tile : tile_base<AIE_Program> {
   }
 
   /// Load the elf via path to a block of memory which contains an elf image
-  void load_elf_image(std::string image) {
+  void load_elf_image(std::string_view image) {
     assert(detail::program_manager::isELFMagic(image.data()) &&
            "invalid ELF magic");
     TRISYCL_XAIE(xaie::XAie_LoadElfMem(tb::aie_inst, tb::aie_hw_tile,
-                                 reinterpret_cast<u8 *>(image.data())));
+                                       (u8 *)(image.data())));
   }
 
   /// Reset the core
@@ -368,12 +372,12 @@ struct tile : tile_base<AIE_Program> {
 
   /// Wait for the core to complete
   void core_wait() {
-    TRISYCL_DUMP2(std::dec << "(" << X << ", " << Y << ") Waiting for kernel...", "execution");
+    TRISYCL_DUMP2(std::dec << "(" << X << ", " << Y << ") Waiting for kernel...", "exec");
     xaie::AieRC RC = xaie::XAIE_OK;
     do {
       RC = xaie::XAie_CoreWaitForDone(tb::aie_inst, tb::aie_hw_tile, 0);
     } while (RC != xaie::XAIE_OK);
-    TRISYCL_DUMP2(std::dec << "(" << X << ", " << Y << ") done", "execution");
+    TRISYCL_DUMP2(std::dec << "(" << X << ", " << Y << ") done", "exec");
   }
 #endif
 

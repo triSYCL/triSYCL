@@ -10,9 +10,9 @@
 */
 
 #include <SYCL/sycl.hpp>
-#include <vector>
 #include <cstring>
 #include <iostream>
+#include <vector>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -24,41 +24,41 @@ using namespace sycl::vendor::xilinx;
 auto size_x = 800;
 auto size_y = 600;
 
-uint8_t* input_data;
-uint8_t* output_data;
+uint8_t *input_data;
+uint8_t *output_data;
 
 template <typename AIE, int X, int Y> struct prog : acap::aie::tile<AIE, X, Y> {
   using t = acap::aie::tile<AIE, X, Y>;
-  static constexpr unsigned device_tile_start =  ((Y & 1) ? 0x29000 : 0x39000);
-  auto get_tile_index() {
-    return Y * 50 + X;
-  } 
-  auto get_tile_size() {
-    return size_x * size_y / 400 * 3;
-  }
-  auto get_tile_offset() {
-    return get_tile_index() * get_tile_size();
-  }
+  static constexpr unsigned device_tile_start = ((Y & 1) ? 0x29000 : 0x39000);
+  auto get_tile_index() { return Y * 50 + X; }
+  auto get_tile_size() { return size_x * size_y / 400 * 3; }
+  auto get_tile_offset() { return get_tile_index() * get_tile_size(); }
   bool prerun() {
-    t::mem_write(acap::aie::xaie::aiev1::args_start, device_tile_start + sizeof(*this));
+    t::mem_write(acap::aie::xaie::aiev1::args_start,
+                 device_tile_start + sizeof(*this));
     t::mem_write(acap::aie::xaie::aiev1::args_start + 4, get_tile_size());
-    
-    t::memcpyH2D(acap::aie::xaie::aiev1::args_start + sizeof(*this), input_data + get_tile_offset(), get_tile_size());
-    return 1;
+
+    t::memcpy_h2d(acap::aie::xaie::aiev1::args_start + sizeof(*this),
+                  input_data + get_tile_offset(), get_tile_size());
+    return true;
   }
 
   /// The run member function is defined as the tile program
-  int8_t* dev_data;
+  int8_t *dev_data;
   unsigned size;
   void run() {
     for (unsigned i = 0; i + 3 <= size; i += 3) {
-      unsigned mean = ((uint16_t)dev_data[i] + (uint16_t)dev_data[i + 1] + (uint16_t)dev_data[i + 2]) / 3;
+      unsigned mean = ((uint16_t)dev_data[i] + (uint16_t)dev_data[i + 1] +
+                       (uint16_t)dev_data[i + 2]) /
+                      3;
       dev_data[i] = dev_data[i + 1] = dev_data[i + 2] = mean;
     }
   }
 
   void postrun() {
-    t::memcpyD2H(output_data + get_tile_offset(), acap::aie::xaie::aiev1::args_start + sizeof(*this), get_tile_size());
+    t::memcpy_d2h(output_data + get_tile_offset(),
+                  acap::aie::xaie::aiev1::args_start + sizeof(*this),
+                  get_tile_size());
   }
 };
 
@@ -66,13 +66,11 @@ int main(int argc, char **argv) {
 
   cv::Mat input = cv::imread("vase2.bmp", cv::IMREAD_COLOR);
 
-  std::cout << "input size = " << input.cols << "x" << input.rows << "x3" << std::endl;
+  std::cout << "input size = " << input.cols << "x" << input.rows << "x3"
+            << std::endl;
 
   cv::Mat ouput = input.clone();
 
-  // int size = input.cols * input.rows / 400 * 3;
-  // if (argc > 0)
-  //   size = std::atoi(argv[1]);
   auto size_x = input.cols;
   auto size_y = input.rows;
 

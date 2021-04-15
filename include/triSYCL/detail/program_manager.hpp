@@ -151,10 +151,10 @@ private:
   ///
   /// We also need to make a pairing between the binary and its name so we can
   /// retrieve it via integration header.
-  std::vector<std::pair</*Name*/std::string, /*Binary*/std::string>> image_list;
+  std::vector<std::pair</*Name*/std::string, /*Binary*/std::string_view>> image_list;
 
 public:
-  static bool isELFMagic(char *BinStart) {
+  static bool isELFMagic(const char *BinStart) {
     return BinStart[0] == 0x7f && BinStart[1] == 'E' && BinStart[2] == 'L' &&
            BinStart[3] == 'F';
   }
@@ -208,7 +208,7 @@ public:
         unsigned bin_size = std::stoi(std::string(ptr, next_size));
         ptr += next_size + 1;
         next_size = 0;
-        std::string bin(ptr, bin_size);
+        std::string_view bin(ptr, bin_size);
         ptr += bin_size;
         TRISYCL_DUMP_T("Loading Name: " << name << " Size: " << bin_size
                                         << " Magic: \"" << bin.substr(0, 4)
@@ -218,7 +218,7 @@ public:
         /// description as it's unused in our case and it allows us to avoid
         /// altering the ClangOffloadWrappers types which causes them to risk
         /// incompatibility with Intel's SYCL implementation and OpenMP/HIP
-        image_list.emplace_back(std::move(name), std::move(bin));
+        image_list.emplace_back(std::move(name), bin);
       }
       assert(reinterpret_cast<uintptr_t>(ptr) ==
                  reinterpret_cast<uintptr_t>(img->ImageEnd) &&
@@ -259,7 +259,7 @@ public:
   ///
   /// Return by index, only relevant really if you're testing for now and know
   /// the exact location in the vector that the image resides.
-  std::string get_image(const unsigned int index) {
+  std::string_view get_image(const unsigned int index) {
     return std::get<1>(image_list.at(index));
   }
 
@@ -268,7 +268,7 @@ public:
   ///
   /// Return by kernel name, used to map integration header names to offloaded
   /// binary names
-  std::string get_image(const std::string& kernelName) {
+  std::string_view get_image(const std::string& kernelName) {
     for (auto image : image_list)
       if (std::get<0>(image) == kernelName) {
         return std::get<1>(image);
