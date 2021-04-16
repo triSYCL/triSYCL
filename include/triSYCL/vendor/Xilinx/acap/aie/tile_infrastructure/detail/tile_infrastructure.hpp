@@ -219,16 +219,27 @@ template <typename Geography> class tile_infrastructure {
     return axi_ss.output(p);
   }
 
-  /// Launch a callable on this tile
+  /// Launch an invocable on this tile
   template <typename Work> void single_task(Work&& f) {
     if (future_work.valid())
-      throw std::logic_error("Something is already running on this tile");
-      // Launch the tile program immediately on a new executor engine
+      throw std::logic_error("Something is already running on this tile!");
+    // Launch the tile program immediately on a new executor engine
+    /** \todo In a device implementation we should have a real
+        tile_handler type making sense on the device instead of just
+        *this */
+    auto kernel = [&] {
+      if constexpr (requires { f(); })
+        /* If the invocable is not interested by the handler, do not
+           provide it. Add the outer lambda to avoid a warning about
+           capturing this when non using it */
+        return [work = std::forward<Work>(f)] { return work(); };
+      else
+        return [this, work = std::forward<Work>(f)] { return work(*this); };
+    }();
 #if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
-    future_work = fe->submit(std::forward<Work>(f));
+    future_work = fe->submit(kernel);
 #else
-    future_work = std::async(std::launch::async,
-                             [work = std::forward<Work>(f)] { work(); });
+    future_work = std::async(std::launch::async, kernel);
 #endif
   }
 

@@ -26,12 +26,13 @@ namespace trisycl::vendor::xilinx::acap::aie {
 */
 template <typename AIEDevice>
 struct queue {
-  using geo = typename AIEDevice::geo;
+  using device = AIEDevice;
+  using geo = typename device::geo;
   using layout = typename geo::layout;
 
-  AIEDevice &aie_d;
+  device& aie_d;
 
-  queue(AIEDevice &d) : aie_d { d } {}
+  queue(device &d) : aie_d { d } {}
 
 
   /** Provide a wait() function that actually can throw an exception
@@ -45,7 +46,7 @@ struct queue {
   };
 
 
-  /** Run synchronously a program on this queue
+  /** Run synchronously a program execution on this queue
 
       \param Tile is the description of the program tiles to
       instantiate. By default each tile will run an empty program.
@@ -60,7 +61,7 @@ struct queue {
                       int X,
                       int Y> typename Memory = acap::aie::memory>
   void run() const {
-    program<AIEDevice, Tile, Memory> { aie_d }.run();
+    program<device, Tile, Memory> { aie_d }.run();
   }
 
 
