@@ -213,10 +213,17 @@ struct program {
         t.single_task([&] {
             TRISYCL_DUMP_T("Starting AIE tile (" << t.x << ',' << t.y
                            << ") linear id = " << t.linear_id());
-            /* The kernel is the run member function. Just use a
-               capture by reference because there is direct execution
-               here. */
-            auto kernel = [&] { t.run(); };
+            /* Just use a capture by reference in the following
+               because there is direct execution here */
+            auto kernel = [&] {
+                            // If the tile has an operator(), use it
+                            if constexpr (requires { t(); })
+                              return [&] { t(); };
+                            /* Else the kernel should have a run
+                               member function and use it. */
+                            else
+                              return [&] { t.run(); };
+            }();
             using kernel_type = decltype(kernel);
             // Use the kernel type as its SYCL name too
             kernel_outliner<kernel_type, kernel_type>(kernel);
