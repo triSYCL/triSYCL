@@ -1,7 +1,7 @@
 #ifndef TRISYCL_SYCL_DETAIL_OVERLOADED_HPP
 #define TRISYCL_SYCL_DETAIL_OVERLOADED_HPP
 
-/** \file Helper type for the std::visit to do pattern matching on invokables
+/** \file Helper type for the std::visit to do pattern matching on invocables
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
@@ -13,7 +13,7 @@ namespace trisycl::detail {
     @{
 */
 
-/// Helper type for the visitor to do pattern matching on invokables
+/// Helper type for the visitor to do pattern matching on invocables
 /// https://en.cppreference.com/w/cpp/utility/variant/visit
 template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 

@@ -65,23 +65,23 @@ struct queue {
   }
 
 
-  /** Run synchronously an heterogeneous invokable on this queue
+  /** Run synchronously an heterogeneous invocable on this queue
 
-      \param f is an invokable taking an heterogeneous tile handler
+      \param f is an invocable taking an heterogeneous tile handler
   */
-  template <typename Invokable>
-  void run(const Invokable& f) const {
-    program { f }.run();
+  template <typename Invocable>
+  void run((Invocable&& f) const {
+    program<device> { aie_d }.run(f);
   }
 
 
-  /** Run synchronously a uniform invokable on this queue
+  /** Run synchronously a uniform invocable on this queue
 
-      \param f is an invokable taking a uniform tile handler
+      \param f is an invocable taking a uniform tile handler
   */
-  template <typename Invokable>
-  void uniform_run(const Invokable& f) const {
-    program { f }.uniform_run(f);
+  template <typename Invocable>
+  void uniform_run((Invocable&& f) const {
+    program<device> { aie_d }.uniform_run(f);
   }
 
 

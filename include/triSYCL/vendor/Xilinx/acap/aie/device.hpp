@@ -145,21 +145,21 @@ class device : public facade::device<device<Layout>, detail::device<Layout>> {
     queue().template run<Tile, Memory>();
   }
 
-  /** Shortcut to run synchronously an heterogeneous invokable on this
+  /** Shortcut to run synchronously an heterogeneous invocable on this
       queue
 
-      \param f is an invokable taking an heterogeneous tile handler
+      \param f is an invocable taking an heterogeneous tile handler
   */
-  template <typename Invocable> void run(const Invocable& f) {
+  template <typename Invocable> void run(Invocable&& f) {
     queue().template run(f);
   }
 
-  /** Shortcut to run synchronously a uniform invokable on
+  /** Shortcut to run synchronously a uniform invocable on
       this queue
 
-      \param f is an invokable taking a uniform tile handler
+      \param f is an invocable taking a uniform tile handler
   */
-  template <typename Invocable> void uniform_run(const Invocable& f) {
+  template <typename Invocable> void uniform_run(Invocable&& f) {
     queue().template uniform_run(f);
   }
 

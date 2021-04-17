@@ -131,8 +131,8 @@ class dma : detail::debug<SpecializedDMA> {
   }
 
   /// Launch the data mover on the execution pool
-  template <typename Invokable>
-  void launch(detail::fiber_pool& fiber_executor, Invokable&& f) {}
+  template <typename Invocable>
+  void launch(detail::fiber_pool& fiber_executor, Invocable&& f) {}
 
   /// Dequeue a DMA command
   auto pop_command(auto& command) { return c.pop(command); }
