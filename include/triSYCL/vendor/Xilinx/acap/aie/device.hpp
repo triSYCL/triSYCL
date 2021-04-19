@@ -50,7 +50,7 @@ class device : public facade::device<device<Layout>, detail::device<Layout>> {
 
   /// The default constructor makes a new device
   device()
-      : facade_t { new dd } {}
+      : facade_t { std::make_shared<dd>() } {}
 
   /** Apply a function for each tile index of the device
 
@@ -66,7 +66,7 @@ class device : public facade::device<device<Layout>, detail::device<Layout>> {
       \param f is a callable that is to be called like \c f(x,y) for
       each tile
   */
-  template <typename F> void for_each_tile(F f) {
+  template <typename F> void for_each_tile(F&& f) {
     implementation->for_each_tile(std::forward<F>(f));
   };
 
@@ -75,7 +75,7 @@ class device : public facade::device<device<Layout>, detail::device<Layout>> {
       \param f is a callable that is to be called like \c f(x) for
       each horizontal index value
   */
-  template <typename F> void for_each_tile_x_index(F f) {
+  template <typename F> void for_each_tile_x_index(F&& f) {
     implementation->for_each_tile_x_index(std::forward<F>(f));
   };
 
@@ -84,7 +84,7 @@ class device : public facade::device<device<Layout>, detail::device<Layout>> {
       \param f is a callable that is to be called like \c f(x) for
       each vertical index value
   */
-  template <typename F> void for_each_tile_y_index(F f) {
+  template <typename F> void for_each_tile_y_index(F&& f) {
     implementation->for_each_tile_y_index(std::forward<F>(f));
   };
 
@@ -151,7 +151,7 @@ class device : public facade::device<device<Layout>, detail::device<Layout>> {
       \param f is an invocable taking an heterogeneous tile handler
   */
   template <typename Invocable> void run(Invocable&& f) {
-    queue().template run(f);
+    queue().run(f);
   }
 
   /** Shortcut to run synchronously a uniform invocable on
@@ -160,7 +160,8 @@ class device : public facade::device<device<Layout>, detail::device<Layout>> {
       \param f is an invocable taking a uniform tile handler
   */
   template <typename Invocable> void uniform_run(Invocable&& f) {
-    queue().template uniform_run(f);
+    queue().uniform_run(f);
+    queue().wait();
   }
 
   /** Connect the ports of 2 tiles or shims together with an

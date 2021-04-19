@@ -12,6 +12,7 @@
 */
 
 #include <future>
+#include <utility>
 
 #include "program.hpp"
 
@@ -22,6 +23,8 @@ namespace trisycl::vendor::xilinx::acap::aie {
 
 /** The AI Engine minimal queue
 
+    \todo Make a real queue implementation instead of this mock-up
+
     \param AIEDevice is the AIE device targeted by the queue
 */
 template <typename AIEDevice>
@@ -30,6 +33,7 @@ struct queue {
   using geo = typename device::geo;
   using layout = typename geo::layout;
 
+  /// \todo Why using a reference since now a device is a shared_ptr?
   device& aie_d;
 
   queue(device &d) : aie_d { d } {}
@@ -70,18 +74,23 @@ struct queue {
       \param f is an invocable taking an heterogeneous tile handler
   */
   template <typename Invocable>
-  void run((Invocable&& f) const {
-    program<device> { aie_d }.run(f);
+  void run(Invocable&& f) const {
+    program<device> { aie_d }.run(std::forward<Invocable>(f));
   }
 
+
+  /// Wait for all the device tiles on this queue to finish
+  void wait() {
+    aie_d.for_each_tile([](auto& t) { t.wait(); });
+  }
 
   /** Run synchronously a uniform invocable on this queue
 
       \param f is an invocable taking a uniform tile handler
   */
   template <typename Invocable>
-  void uniform_run((Invocable&& f) const {
-    program<device> { aie_d }.uniform_run(f);
+  void uniform_run(Invocable&& f) const {
+    aie_d.for_each_tile(std::forward<Invocable>(f));
   }
 
 

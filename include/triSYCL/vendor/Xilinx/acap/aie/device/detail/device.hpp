@@ -95,7 +95,7 @@ template <typename Layout> struct device {
       \param f is a callable that is to be called like \c f(x,y) for
       each tile
   */
-  template <typename F> void for_each_tile_index(F f) {
+  template <typename F> void for_each_tile_index(F&& f) {
     for (auto [x, y] :
          ranges::views::cartesian_product(ranges::views::iota(0, geo::x_size),
                                           ranges::views::iota(0, geo::y_size)))
@@ -107,7 +107,7 @@ template <typename Layout> struct device {
       \param f is a callable that is to be called like \c f(x,y) for
       each tile
   */
-  template <typename F> void for_each_tile(F f) {
+  template <typename F> void for_each_tile(F&& f) {
     for_each_tile_index([&](auto x, auto y) { f(tile(x, y)); });
   };
 
@@ -116,7 +116,7 @@ template <typename Layout> struct device {
       \param f is a callable that is to be called like \c f(x) for
       each horizontal index value
   */
-  template <typename F> void for_each_tile_x_index(F f) {
+  template <typename F> void for_each_tile_x_index(F&& f) {
     for (auto x : ranges::views::iota(0, geo::x_size))
       f(x);
   };
@@ -126,7 +126,7 @@ template <typename Layout> struct device {
       \param f is a callable that is to be called like \c f(x) for
       each vertical index value
   */
-  template <typename F> void for_each_tile_y_index(F f) {
+  template <typename F> void for_each_tile_y_index(F&& f) {
     for (auto y : ranges::views::iota(0, geo::y_size))
       f(y);
   };
@@ -175,7 +175,7 @@ template <typename Layout> struct device {
       \todo Refactor, make the difference between user & physical ports
   */
   template <typename SrcPort, typename DstPort>
-  void connect(SrcPort src, DstPort dst) {
+  void connect(SrcPort&& src, DstPort&& dst) {
     static_assert(std::is_same_v<SrcPort, port::tile> ||
                       std::is_same_v<SrcPort, port::shim>,
                   "SrcPort type should be port::tile or port::shim");
