@@ -244,7 +244,9 @@ template <typename Geography> class tile_infrastructure {
   }
 
   /// Wait for the execution of the callable on this tile
-  void wait() { future_work.get(); }
+  void wait() { if (future_work.valid())
+      future_work.get();
+  }
 
   /// Configure a connection of the core tile AXI stream switch
   void connect(typename geo::core_axi_stream_switch::slave_port_layout sp,
