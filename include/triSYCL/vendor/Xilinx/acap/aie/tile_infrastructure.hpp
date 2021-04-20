@@ -127,17 +127,25 @@ class tile_infrastructure
   auto& output(mpl p) { return implementation->output(p); }
 
   /// Launch a callable on this tile
-  template <typename Work> void single_task(Work&& f) {
+  template <typename Work> auto& single_task(Work&& f) {
     implementation->single_task(std::forward<Work>(f));
+    // To allow chaining commands
+    return *this;
   }
 
   /// Wait for the execution of the callable on this tile
-  void wait() { implementation->wait(); }
+  auto& wait() {
+    implementation->wait();
+    // To allow chaining commands
+    return *this;
+  }
 
   /// Configure a connection of the core tile AXI stream switch
-  void connect(typename geo::core_axi_stream_switch::slave_port_layout sp,
-               typename geo::core_axi_stream_switch::master_port_layout mp) {
+  auto& connect(typename geo::core_axi_stream_switch::slave_port_layout sp,
+                typename geo::core_axi_stream_switch::master_port_layout mp) {
     implementation->connect(sp, mp);
+    // To allow chaining commands
+    return *this;
   }
 
   /// Compute the size of the graphics representation of the tile

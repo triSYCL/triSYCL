@@ -11,8 +11,7 @@ using namespace sycl::vendor::xilinx;
 
 int main() {
   // Define an AIE CGRA with all the tiles of a VC1902
-  using d_t = acap::aie::device<acap::aie::layout::vc1902>;
-  d_t d;
+  acap::aie::device<acap::aie::layout::vc1902> d;
   //  Submit some work on each tile, which is SYCL sub-device
   d.for_each_tile([](auto& t) {
     /* This will instantiate uniformly the same
@@ -26,4 +25,6 @@ int main() {
   });
   // Wait for the end of each tile execution
   d.for_each_tile([](auto& t) { t.wait(); });
+  d.tile(3,4).single_task([&] { std::cout << "Hello from (3,4)" << std::endl; })
+    .wait();
 }
