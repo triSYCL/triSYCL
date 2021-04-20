@@ -98,6 +98,16 @@ class device : public facade::device<device<Layout>, detail::device<Layout>> {
   */
   auto& tile(int x, int y) { return implementation->tile(x, y); }
 
+  /** Access to the common infrastructure part of a tile memory
+
+      \param[in] x is the horizontal tile coordinate
+
+      \param[in] y is the vertical tile coordinate
+
+      \throws trisycl::runtime_error if the coordinate is invalid
+  */
+  auto& mem(int x, int y) { return implementation->mem(x, y); }
+
   /** Access to the shim tile
 
       \param[in] x is the horizontal coordinate of the shim tile

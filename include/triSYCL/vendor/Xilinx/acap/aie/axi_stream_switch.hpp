@@ -32,6 +32,7 @@
 #include <range/v3/all.hpp>
 
 #include "connection.hpp"
+#include "triSYCL/detail/debug.hpp"
 #include "triSYCL/detail/enum.hpp"
 #include "triSYCL/detail/fiber_pool.hpp"
 #include "triSYCL/vendor/Xilinx/latex.hpp"
@@ -48,7 +49,7 @@ namespace trisycl::vendor::xilinx::acap::aie {
  */
 template <typename AXIStreamGeography>
 class axi_stream_switch
-  : detail::debug<axi_stream_switch <AXIStreamGeography>> {
+  : ::trisycl::detail::debug<axi_stream_switch <AXIStreamGeography>> {
 
 public:
 
@@ -76,7 +77,7 @@ public  :
     std::vector<std::shared_ptr<communicator_port>> outputs;
 
     /// To shepherd the routing fibers
-    std::vector<detail::fiber_pool::future<void>> futures;
+    std::vector<::trisycl::detail::fiber_pool::future<void>> futures;
 
     /// Keep track of the AXI stream switch owning this port for debugging
     axi_stream_switch &axi_ss;
@@ -163,7 +164,7 @@ public  :
 
     /// Create a router minion on this switch using a fiber executor
     router_minion(axi_stream_switch &axi_ss,
-                  detail::fiber_pool &fiber_executor,
+                  ::trisycl::detail::fiber_pool &fiber_executor,
                   int capacity = axi_ss_geo::latency)
       : capacity { capacity }
       , axi_ss { axi_ss }
@@ -371,7 +372,7 @@ public  :
   */
   auto & input(spl p) {
     // No index validation required because of type safety
-    return input_ports[detail::underlying_value(p)];
+    return input_ports[::trisycl::detail::underlying_value(p)];
   }
 
 
@@ -381,7 +382,7 @@ public  :
   */
   auto & output(mpl p) {
     // No index validation required because of type safety
-    return output_ports[detail::underlying_value(p)];
+    return output_ports[::trisycl::detail::underlying_value(p)];
   }
 
 
@@ -416,7 +417,7 @@ public  :
 
 
   /// Start the tile infrastructure associated to the AIE device
-  void start(int x, int y, detail::fiber_pool &fiber_executor) {
+  void start(int x, int y, ::trisycl::detail::fiber_pool &fiber_executor) {
     x_coordinate = x;
     y_coordinate = y;
     // Add a router worker on all switch input

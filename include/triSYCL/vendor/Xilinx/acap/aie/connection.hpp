@@ -20,6 +20,7 @@
 #include <boost/type_index.hpp>
 
 #include "triSYCL/access.hpp"
+#include "triSYCL/detail/debug.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
@@ -63,7 +64,7 @@ public:
     For example a router output is actually implemented as an input
     to some other consumer (router, core...).
 */
-class communicator_port : detail::debug<communicator_port> {
+class communicator_port : ::trisycl::detail::debug<communicator_port> {
 
 public:
 

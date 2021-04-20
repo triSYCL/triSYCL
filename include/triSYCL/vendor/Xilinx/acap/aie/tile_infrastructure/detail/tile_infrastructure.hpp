@@ -115,11 +115,9 @@ template <typename Geography> class tile_infrastructure {
   tile_infrastructure(int x, int y,
                       ::trisycl::detail::fiber_pool& fiber_executor)
       : x_coordinate { x }
-      , y_coordinate {
-    y
-  }
+      , y_coordinate { y }
 #if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
-  , fe { &fiber_executor }
+      , fe { &fiber_executor }
 #endif
   {
     // Connect the core receivers to its AXI stream switch

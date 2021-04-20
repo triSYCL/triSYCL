@@ -51,7 +51,7 @@ struct memory : memory_base {
 
 /// @} End the aie Doxygen group
 
-}
+} // namespace trisycl::vendor::xilinx::acap::aie
 
 /*
     # Some Emacs stuff:

@@ -68,7 +68,7 @@ class tile_infrastructure
   */
   tile_infrastructure(int x, int y,
                       ::trisycl::detail::fiber_pool& fiber_executor)
-      : facade_t { new dti { x, y, fiber_executor } } {}
+      : facade_t { std::make_shared<dti>(x, y, fiber_executor) } {}
 
   tile_infrastructure() = default;
 

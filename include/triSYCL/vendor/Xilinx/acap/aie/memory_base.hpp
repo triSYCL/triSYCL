@@ -20,7 +20,7 @@
 
 #include <thread>
 
-#include "lock.hpp"
+#include "memory_infrastructure.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
@@ -34,25 +34,18 @@ namespace trisycl::vendor::xilinx::acap::aie {
     module infrastructure.
 */
 struct memory_base {
-  /// The lock unit of the memory tile
-  lock_unit memory_locking_unit;
+  /// Keep a reference to the memory_infrastructure hardware features
+  memory_infrastructure mi;
 
   /// Get an access to the a specific lock
-  auto &lock(int i) {
-    return memory_locking_unit.lock(i);
-  }
+  auto& lock(int i) { return mi->lock(i); }
+
+  /// Store a way to access to hardware infrastructure of the tile
+  void set_memory_infrastructure(memory_infrastructure m) { mi = m; }
 };
 
 /// @} End the aie Doxygen group
 
-}
-
-/*
-    # Some Emacs stuff:
-    ### Local Variables:
-    ### ispell-local-dictionary: "american"
-    ### eval: (flyspell-prog-mode)
-    ### End:
-*/
+} // namespace trisycl::vendor::xilinx::acap::aie
 
 #endif // TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_MEMORY_BASE_HPP
