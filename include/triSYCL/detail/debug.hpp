@@ -48,9 +48,9 @@ bool should_be_logged(std::string kind) {
 
 std::string get_base_name(const char* file_name) {
   std::string str = file_name;
-  unsigned start = str.find_last_of('/');
+  size_t start = str.find_last_of('/');
   start = start == std::string::npos ? 0 : start + 1;
-  unsigned end = str.find_last_of('.');
+  size_t end = str.find_last_of('.');
   end = end == std::string::npos ? str.size() : end;
   return str.substr(start, end - start);
 }

@@ -18,6 +18,8 @@
 #include "triSYCL/detail/program_manager.hpp"
 #include "tile_base.hpp"
 #include "xaie_wrapper.hpp"
+#include "hw_memory.hpp"
+#include "program.hpp"
 
 
 /// TODO: Perhaps worth pushing all Lib X AI Engine functionallity we use down
@@ -29,51 +31,6 @@ namespace trisycl::vendor::xilinx::acap::aie {
 /// \ingroup aie
 /// @{
 
-#ifdef __SYCL_DEVICE_ONLY__
-
-/** An empty device tile for now, what is enabled for a tile inside of a Kernel
-    the aim is to incrementally add on top of this without breaking the kernel
-    compilation for now.
-
-    It's an incremental WIP approach but essentially this will end up as some
-    kind of Tile Lite as we work out what works on device and what doesn't.
-
-    For example does having the X AI Engine components on the device make sense?
-    I imagine not as they seem to be host only...
-
-    The Intel SYCL runtime has a similar concept with some of it's APIs like
-    accessors, so perhaps it makes sense for Tiles.
-
-    \param AIE is the type representing the full CGRA with the
-    programs and memory contents
-
-    \param X is the horizontal coordinate of the memory module
-
-    \param Y is the vertical coordinate of the memory module
-
-*/
-template <typename AIE_Program, int X, int Y>
-struct tile : tile_base<AIE_Program> {
-  /** The horizontal tile coordinates in the CGRA grid (starting at 0
-      and increasing to the right) */
-  static auto constexpr x = X;
-  /** The vertical tile coordinates in the CGRA grid (starting at
-      increasing to the top) */
-  static auto constexpr y = Y;
-
-  /// Noop on device, it has to exist for compilation purposes as Host side code
-  /// is still compiled for the device unfortunately.
-  std::uint32_t mem_read(std::uint32_t offset) { return 0; }
-
-  /// Noop on device, it has to exist for compilation purposes as Host side code
-  /// is still compiled for the device unfortunately.
-  void mem_write(std::uint32_t offset, std::uint32_t data) {}
-
-};
-
-#endif // ifdef SYCL_DEVICE_ONLY
-
-#ifndef __SYCL_DEVICE_ONLY__
 
 /** The AI Engine tile infrastructure defining the program of a tile
 
@@ -222,6 +179,10 @@ struct tile : tile_base<AIE_Program> {
     return geo:: memory_module_linear_id(x, y, dx, dy);
   }
 
+/// This could be refactored to minimized duplication by separating between host
+/// and device at address computation instead of all the function.
+#ifndef __SYCL_DEVICE_ONLY__
+  /// On the host
 
   /// Get the memory module on the left if it does exist
    auto &mem_left() {
@@ -268,7 +229,61 @@ struct tile : tile_base<AIE_Program> {
     else
       return mem_right();
   }
+#else
+  /// On device
 
+  /// The type of the memory module of a tile at offset (dx, dy) from the
+  /// current tile.
+  /// It is marked volatile because it may be modified by other tiles.
+  /// This should be atomic but there is not atomic implementation yet.
+  template <int dx, int dy>
+  using tile_mem_t =
+      volatile typename AIE_Program::template tileable_memory<X + dx, Y + dy>;
+
+  /// Get the memory module on the left if it does exist
+  auto &mem_left() {
+    static_assert(is_memory_module_left(),
+                  "There is no memory module"
+                  " on the left of this tile in the left column and"
+                  " on an even row");
+    return *(tile_mem_t<-1, 0> *)(hw_mem::west_or_self_tile_addr + hw_mem::tile_mem_beg_off);
+  }
+
+  /// Get the memory module on the right if it does exist
+  auto &mem_right() {
+    static_assert(is_memory_module_right(),
+                  "There is no memory module"
+                  " on the right of this tile in the right column and"
+                  " on an odd row");
+    return *(tile_mem_t<1, 0> *)(hw_mem::east_or_self_tile_addr + hw_mem::tile_mem_beg_off);
+  }
+
+  /// Get the memory module below if it does exist
+  auto &mem_down() {
+    static_assert(is_memory_module_down(), "There is no memory module"
+                  " below the lower tile row");
+    return *(tile_mem_t<0, -1> *)(hw_mem::south_tile_addr + hw_mem::tile_mem_beg_off);
+  }
+
+  /// Get the memory module above if it does exist
+  auto &mem_up() {
+    static_assert(is_memory_module_up(), "There is no memory module"
+                  " above the upper tile row");
+    return *(tile_mem_t<0, 1>*)(hw_mem::north_tile_addr + hw_mem::tile_mem_beg_off);
+  }
+
+  /// The memory module native to the tile
+  auto &mem() {
+    return *(tile_mem_t<0, 0>*)(hw_mem::self_tile_addr<X, Y> + hw_mem::tile_mem_beg_off);
+  }
+
+  auto &mem_side() {
+    if constexpr (Y & 1)
+      return mem_left();
+    else
+      return mem_right();
+  }
+#endif
 // TODO: Perhaps worth pushing all Lib X AI Engine functionallity we use down
 // into a C++ API so it can all be excluded with one #IFDEF and kept nice and
 // cleanly
@@ -520,8 +535,6 @@ struct tile : tile_base<AIE_Program> {
   }
 
 };
-
-#endif // ifndef SYCL_DEVICE_ONLY
 
 /// @} End the aie Doxygen group
 

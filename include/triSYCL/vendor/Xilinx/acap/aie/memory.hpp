@@ -37,10 +37,19 @@ namespace trisycl::vendor::xilinx::acap::aie {
     \param Y is the vertical coordinate of the memory module
 */
 template <typename AIE //< The type representing the full CGRA
-          , int X //< The horizontal coordinate of the memory module
-          , int Y //< The vertical coordinate of the memory module
+          ,
+          int X //< The horizontal coordinate of the memory module
+          ,
+          int Y //< The vertical coordinate of the memory module
           >
-struct memory : memory_base {
+struct memory
+#ifndef __SYCL_DEVICE_ONLY__
+    /// making lock part the memory tile is a weird deisign choice and this
+    /// makes it harder to do calculate offsets of elements in the memory tile.
+    /// this is with its removed
+    : memory_base
+#endif
+{
   /** The horizontal tile coordinates in the CGRA grid (starting at 0
       and increasing to the right) */
   static auto constexpr x = X;

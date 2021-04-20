@@ -1,12 +1,4 @@
-/* Simple hello world program for ACAP/AI Engine hardware
-
-   NOTE: This requires tweaking to work with the current compiler, for example
-   the tile functions relating to reset/etc are pushed down into the API and the
-   kernel doesn't need to be commented out. But also some more lower level
-   components like the linker script have changed and the main file (most of the
-   earlier iterations were a hybrid of Cardano Tool Flow and SYCL Frontend flow)
-
-   RUN: %{execute}%s
+/* Grey scale example on 400 acap cores.
 */
 
 #include <SYCL/sycl.hpp>
@@ -29,18 +21,33 @@ uint8_t *output_data;
 
 template <typename AIE, int X, int Y> struct prog : acap::aie::tile<AIE, X, Y> {
   using t = acap::aie::tile<AIE, X, Y>;
-  static constexpr unsigned device_tile_start = ((Y & 1) ? 0x29000 : 0x39000);
   auto get_tile_index() { return Y * 50 + X; }
   auto get_tile_size() { return size_x * size_y / 400 * 3; }
   auto get_tile_offset() { return get_tile_index() * get_tile_size(); }
   bool prerun() {
-    t::mem_write(acap::aie::xaie::aiev1::args_start,
-                 device_tile_start + sizeof(*this));
-    t::mem_write(acap::aie::xaie::aiev1::args_start + 4, get_tile_size());
+    /// acap::hw_mem::args_beg_off is the start of a region of memory
+    /// that is suitable for parmeter passing
+    /// acap::hw_mem::self_tile_addr<X, Y> is the start of the tile from the
+    /// from the device perspective.
+    /// the start of the tile from the host's perspective is 0
 
-    t::memcpy_h2d(acap::aie::xaie::aiev1::args_start + sizeof(*this),
-                  input_data + get_tile_offset(), get_tile_size());
-    return true;
+    /// The code below is assuming that sizeof(*this) on the host is >= to
+    /// sizeof(*this) on the device. this is should always true since
+    /// the only different I know is that pointer a 32bits in the device instead
+    /// of 64bits on the host
+
+    /// setup int8_t *dev_data to point just after the this object on device.
+    t::mem_write(acap::hw_mem::args_beg_off,
+                 acap::hw_mem::self_tile_addr<X, Y> +
+                     acap::hw_mem::args_beg_off + sizeof(*this));
+
+    /// setup unsigned size;
+    t::mem_write(acap::hw_mem::args_beg_off + 4, get_tile_size());
+
+    /// copies input_data to where dev_data is pointing on device.
+    t::memcpy_h2d(acap::hw_mem::args_beg_off + sizeof(*this),
+                 input_data + get_tile_offset(), get_tile_size());
+    return 1;
   }
 
   /// The run member function is defined as the tile program
@@ -56,9 +63,10 @@ template <typename AIE, int X, int Y> struct prog : acap::aie::tile<AIE, X, Y> {
   }
 
   void postrun() {
+
+    /// copies the data pointed by dev_data on device to output_data on the host.
     t::memcpy_d2h(output_data + get_tile_offset(),
-                  acap::aie::xaie::aiev1::args_start + sizeof(*this),
-                  get_tile_size());
+                  acap::hw_mem::args_beg_off + sizeof(*this), get_tile_size());
   }
 };
 
@@ -79,7 +87,6 @@ int main(int argc, char **argv) {
 
   // Define AIE CGRA running a program "prog" on all the tiles of a VC1902
   acap::aie::device<acap::aie::layout::vc1902> aie;
-  // acap::aie::device<acap::aie::layout::size<1, 1>> aie;
   // Run up to completion of all the tile programs
   aie.run<prog>();
 

@@ -180,14 +180,14 @@ struct program {
   }
 
 #ifdef __SYCL_XILINX_AIE__
-  xaie::XAie_SetupConfig(aie_config, xaie::aiev1::dev_gen,
-                         xaie::aiev1::base_addr, xaie::aiev1::col_shift,
-                         xaie::aiev1::row_shift, xaie::aiev1::num_hw_col,
-                         xaie::aiev1::num_hw_row, xaie::aiev1::num_shim_row,
-                         xaie::aiev1::mem_tile_row_start,
-                         xaie::aiev1::mem_tile_row_num,
-                         xaie::aiev1::aie_tile_row_start,
-                         xaie::aiev1::aie_tile_row_num);
+  xaie::XAie_SetupConfig(aie_config, aiev1::dev_gen,
+                         aiev1::base_addr, aiev1::col_shift,
+                         aiev1::row_shift, aiev1::num_hw_col,
+                         aiev1::num_hw_row, aiev1::num_shim_row,
+                         aiev1::mem_tile_row_start,
+                         aiev1::mem_tile_row_num,
+                         aiev1::aie_tile_row_start,
+                         aiev1::aie_tile_row_num);
   xaie::XAie_InstDeclare(aie_inst, &aie_config);
 #endif
 
@@ -313,27 +313,28 @@ struct program {
               t.core_reset();
 
               TRISYCL_DUMP2("Loading Kernel "
-                             << kernelName << " ELF to tile (" << t.x << ','
-                             << t.y << ") linear id = " << t.linear_id(), "exec");
+                                << kernelName << " ELF to tile (" << t.x << ','
+                                << t.y << ") linear id = " << t.linear_id(),
+                            "exec");
 
               t.load_elf_image(kernelImage);
 
               TRISYCL_DUMP2("Loaded Kernel "
-                             << kernelName << " ELF to tile (" << t.x << ','
-                             << t.y << ") linear id = " << t.linear_id()
-                             << "beginning tile execution", "exec");
-
+                                << kernelName << " ELF to tile (" << t.x << ','
+                                << t.y << ") linear id = " << t.linear_id()
+                                << "beginning tile execution",
+                            "exec");
               /// Setup DMA for parameter passing
-              t.mem_dma(xaie::aiev1::args_start, xaie::aiev1::args_size);
-
-              TRISYCL_DUMP2("Starting AIE tile ("
-                             << t.x << ',' << t.y
-                             << ") linear id = " << t.linear_id() << ","
-                             << "Associated Tile Kernel Name: " << kernelName
-                             << "- beginning prerun execution", "exec");
-
+              t.mem_dma(hw_mem::args_beg_off, hw_mem::args_size);
               if (!t.prerun())
                 return;
+
+              TRISYCL_DUMP2("Starting AIE tile ("
+                                << t.x << ',' << t.y
+                                << ") linear id = " << t.linear_id() << ","
+                                << "Associated Tile Kernel Name: " << kernelName
+                                << "- beginning prerun execution",
+                            "exec");
 
               t.core_run();
             }
