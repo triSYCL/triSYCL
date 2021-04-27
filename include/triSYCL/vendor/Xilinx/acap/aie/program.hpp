@@ -58,7 +58,7 @@ struct program {
   using device = AIEDevice;
 
   /// The device running this program
-  AIEDevice &aie_d;
+  AIEDevice aie_d;
 
   /// Type describing all the memory modules of the CGRA
   template <int X, int Y>
@@ -183,6 +183,13 @@ struct program {
         // Keep track of each base tile
         tile_bases[t.y][t.x] = &t;
       });
+    // Connect each memory to its infrastructure
+    boost::hana::for_each(memory_modules, [&] (auto& m) {
+        // Inform each tile about their tile infrastructure
+        m.set_memory_infrastructure(aie_d.mem(m.x, m.y));
+        // Keep track of each base tile
+        memory_modules_bases[m.y][m.x] = &m;
+      });
   }
 
 
@@ -201,6 +208,14 @@ struct program {
     k();
   }
 
+  /// Wait for the end of the execution of each tile
+  void wait() {
+    boost::hana::for_each(tiles, [&] (auto& t) {
+        TRISYCL_DUMP_T("Joining AIE tile (" << t.x << ',' << t.y << ")...");
+        t.wait();
+        TRISYCL_DUMP_T("Joined AIE tile (" << t.x << ',' << t.y << ')');
+      });
+  }
 
   /** Launch the programs of all the tiles of the CGRA in their own
       executor (CPU thread, fiber...) and wait for their completion.
@@ -210,33 +225,52 @@ struct program {
   void run() {
     // Start each tile program in its own executor
     boost::hana::for_each(tiles, [&] (auto& t) {
-        t.submit([&] {
+        t.single_task([&] {
             TRISYCL_DUMP_T("Starting AIE tile (" << t.x << ',' << t.y
                            << ") linear id = " << t.linear_id());
-            /* The kernel is the run member function. Just use a
-               capture by reference because there is direct execution
-               here. */
-            auto kernel = [&] { t.run(); };
+            /* Just use a capture by reference in the following
+               because there is direct execution here */
+            auto kernel = [&] {
+                            // If the tile has an operator(), use it
+                            if constexpr (requires { t(); })
+                              return [&] { t(); };
+                            /* Else the kernel should have a run
+                               member function and use it. */
+                            else
+                              return [&] { t.run(); };
+            }();
             using kernel_type = decltype(kernel);
             // Use the kernel type as its SYCL name too
             kernel_outliner<kernel_type, kernel_type>(kernel);
             TRISYCL_DUMP_T("Stopping AIE tile (" << t.x << ',' << t.y << ')');
           });
       });
-
-    // Wait for the end of the execution of each tile
-    boost::hana::for_each(tiles, [&] (auto& t) {
-        TRISYCL_DUMP_T("Joining AIE tile (" << t.x << ',' << t.y << ")...");
-        t.wait();
-        TRISYCL_DUMP_T("Joined AIE tile (" << t.x << ',' << t.y << ')');
-      });
-
-    TRISYCL_DUMP_T("Total size of the own memory of all the tile programs: "
-                   << std::dec << sizeof(tiles) << " bytes.");
-    TRISYCL_DUMP_T("Total size of the memory modules: "
-                   << std::dec << sizeof(memory_modules) << " bytes.");
+    wait();
   }
 
+  /** Run synchronously an heterogeneous invocable collectively on the device
+
+      \param f is an invocable taking an heterogeneous tile handler
+
+      \todo Factorize out the 2 run functions
+  */
+  template <typename Invocable>
+  void run(Invocable&& f) {
+    // Start each tile program in its own executor
+    boost::hana::for_each(tiles, [&] (auto& t) {
+        t.single_task([&] {
+            TRISYCL_DUMP_T("Starting AIE tile (" << t.x << ',' << t.y
+                           << ") linear id = " << t.linear_id());
+            /// Each tile gets its own copy of work
+            auto kernel = [&, work = f] { work(t); };
+            using kernel_type = decltype(kernel);
+            // Use the kernel type as its SYCL name too
+            kernel_outliner<kernel_type, kernel_type>(kernel);
+            TRISYCL_DUMP_T("Stopping AIE tile (" << t.x << ',' << t.y << ')');
+          });
+      });
+    wait();
+  }
 
   /// Access the cascade connections
   auto &cascade() {

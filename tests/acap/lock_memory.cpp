@@ -55,7 +55,7 @@ struct tile<AIE, 1, 0> : acap::aie::tile<AIE, 1, 0> {
     auto &m = t::mem_west();
     for (int i = 0; i < 100; ++i) {
       m.lock(0).acquire_with_value(true);
-      a.update_tile_data_image(t::x, t::y, &m.v, 42, 142);
+      a.update_tile_data_image(t::x, t::y, &m.v, 42, 143);
       std::cout << "Tile (1,0) receives from West neighbour: "
                 << m.v << std::endl;
       m.lock(0).release_with_value(false);

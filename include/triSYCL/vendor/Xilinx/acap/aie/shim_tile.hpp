@@ -48,10 +48,10 @@ class shim_tile {
 
 #if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
   /// Keep track of the fiber executor
-  detail::fiber_pool *fe;
+  ::trisycl::detail::fiber_pool *fe;
 
   /// To shepherd the working fiber
-  detail::fiber_pool::future<void> future_work;
+  ::trisycl::detail::fiber_pool::future<void> future_work;
 #else
   /// Keep track of the std::thread execution in this tile
   std::future<void> future_work;
@@ -75,7 +75,7 @@ public:
       \param[in] fiber_executor is the executor used to run
       infrastructure details
   */
-  void start(int x, detail::fiber_pool &fiber_executor) {
+  void start(int x, ::trisycl::detail::fiber_pool &fiber_executor) {
     x_coordinate = x;
 #if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
     fe = &fiber_executor;

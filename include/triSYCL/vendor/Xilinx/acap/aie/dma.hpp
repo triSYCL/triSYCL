@@ -100,7 +100,7 @@ template <typename Tile, typename DMA, typename LockRef = bool> class dma_dsl {
 
 /// Generic DMA
 template <typename AXIStreamSwitch, typename SpecializedDMA>
-class dma : detail::debug<SpecializedDMA> {
+class dma : ::trisycl::detail::debug<SpecializedDMA> {
 
   /// Use std::span for 1D contiguous transfers only for now
   // using dma_command = std::span<axi_packet::value_type>;
@@ -113,7 +113,7 @@ class dma : detail::debug<SpecializedDMA> {
   boost::fibers::buffered_channel<dma_command> c { 8 };
 
   /// To shepherd the fiber playing the data mover behind the DMA
-  detail::fiber_pool::future<void> data_mover;
+  ::trisycl::detail::fiber_pool::future<void> data_mover;
 
   /// Count the in-flight commands
   std::atomic<int> nb_command { 0 };
@@ -131,8 +131,8 @@ class dma : detail::debug<SpecializedDMA> {
   }
 
   /// Launch the data mover on the execution pool
-  template <typename Invokable>
-  void launch(detail::fiber_pool& fiber_executor, Invokable&& f) {}
+  template <typename Invocable>
+  void launch(::trisycl::detail::fiber_pool& fiber_executor, Invocable&& f) {}
 
   /// Dequeue a DMA command
   auto pop_command(auto& command) { return c.pop(command); }
@@ -153,7 +153,7 @@ class dma : detail::debug<SpecializedDMA> {
 
  public:
   /// Start the DMA engine using an executor
-  dma(detail::fiber_pool& fe) {
+  dma(::trisycl::detail::fiber_pool& fe) {
     data_mover = fe.submit([&] {
       dma_command sp;
       for (;;) {
@@ -216,7 +216,7 @@ class receiving_dma
 
  public:
   /// Start the receiving DMA engine using an executor
-  receiving_dma(AXIStreamSwitch& axi_ss, detail::fiber_pool& fe)
+  receiving_dma(AXIStreamSwitch& axi_ss, ::trisycl::detail::fiber_pool& fe)
       : dma_base { fe }
       , axi_ss { axi_ss } {}
 
@@ -279,7 +279,8 @@ class sending_dma : public dma<AXIStreamSwitch, sending_dma<AXIStreamSwitch>> {
 
  public:
   /// Start the DMA engine using an executor to push things on a port
-  sending_dma(detail::fiber_pool& fe, std::shared_ptr<communicator_port> output)
+  sending_dma(::trisycl::detail::fiber_pool& fe,
+              std::shared_ptr<communicator_port> output)
       : dma_base { fe }
       , output_port { output } {}
 
