@@ -40,6 +40,22 @@
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
+/// This could be extracted into a macro to make it generic.
+template <typename T> class has_function_lock {
+  template <typename...> static constexpr bool true_t = true;
+  static std::false_type detect(...) { return {}; }
+  template <typename Ty,
+            typename std::enable_if<
+                true_t<decltype(std::declval<Ty>().lock())>, int>::type = 0>
+  static std::true_type detect(Ty) {
+    return {};
+  }
+
+public:
+  static constexpr bool value = decltype(detect(std::declval<T>()))::value;
+};
+
+
 /** Define an AI Engine CGRA program with its code and memory per core
 
     \param AIEDevice is the device description of the machine to
@@ -260,6 +276,11 @@ struct program {
       This is the main member function to use to launch the execution.
   */
   void run() {
+    boost::hana::for_each(tiles, [&](auto &t) {
+      if constexpr (has_function_lock<decltype(t)>::value)
+        t.lock();
+    });
+
     // Start each tile program in its own CPU thread
     boost::hana::for_each(tiles, [&] (auto& t) {
 #ifdef __SYCL_DEVICE_ONLY__ // The outlining of the device binary

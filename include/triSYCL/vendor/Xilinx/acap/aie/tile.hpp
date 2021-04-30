@@ -20,6 +20,7 @@
 #include "xaie_wrapper.hpp"
 #include "hw_memory.hpp"
 #include "program.hpp"
+#include "lock.hpp"
 
 
 /// TODO: Perhaps worth pushing all Lib X AI Engine functionallity we use down
@@ -179,6 +180,9 @@ struct tile : tile_base<AIE_Program> {
     return geo:: memory_module_linear_id(x, y, dx, dy);
   }
 
+  using tile_t = hw_tile<X, Y>;
+  using dir = typename tile_t::dir;
+
 /// This could be refactored to minimized duplication by separating between host
 /// and device at address computation instead of all the function.
 #ifndef __SYCL_DEVICE_ONLY__
@@ -229,16 +233,24 @@ struct tile : tile_base<AIE_Program> {
     else
       return mem_right();
   }
+
+  device_lock get_lock(int8_t id, dir d = dir::self) {
+    TRISYCL_DUMP2(std::dec << "get_lock: (X = " << X << ", Y = " << Y
+                           << ") dir:" << tile_t::dir_to_str[d],
+                  "sync");
+    return {id, tb::aie_inst,
+            xaie::XAie_TileLoc(tb::aie_hw_tile.Col + tile_t::get_offset(d).y,
+                               tb::aie_hw_tile.Row + tile_t::get_offset(d).x)};
+  }
+
 #else
   /// On device
 
   /// The type of the memory module of a tile at offset (dx, dy) from the
   /// current tile.
-  /// It is marked volatile because it may be modified by other tiles.
-  /// This should be atomic but there is not atomic implementation yet.
   template <int dx, int dy>
   using tile_mem_t =
-      volatile typename AIE_Program::template tileable_memory<X + dx, Y + dy>;
+      typename AIE_Program::template tileable_memory<X + dx, Y + dy>;
 
   /// Get the memory module on the left if it does exist
   auto &mem_left() {
@@ -246,7 +258,9 @@ struct tile : tile_base<AIE_Program> {
                   "There is no memory module"
                   " on the left of this tile in the left column and"
                   " on an even row");
-    return *(tile_mem_t<-1, 0> *)(hw_mem::west_or_self_tile_addr + hw_mem::tile_mem_beg_off);
+    return *(tile_mem_t<tile_t::get_pos(dir::left).x,
+                        tile_t::get_pos(dir::left).y>
+                 *)(hw_mem::west_or_self_tile_addr + hw_mem::tile_mem_beg_off);
   }
 
   /// Get the memory module on the right if it does exist
@@ -255,26 +269,33 @@ struct tile : tile_base<AIE_Program> {
                   "There is no memory module"
                   " on the right of this tile in the right column and"
                   " on an odd row");
-    return *(tile_mem_t<1, 0> *)(hw_mem::east_or_self_tile_addr + hw_mem::tile_mem_beg_off);
+    return *(
+        tile_mem_t<tile_t::get_pos(dir::right).x, tile_t::get_pos(dir::right).y>
+            *)(hw_mem::east_or_self_tile_addr + hw_mem::tile_mem_beg_off);
   }
 
   /// Get the memory module below if it does exist
   auto &mem_down() {
     static_assert(is_memory_module_down(), "There is no memory module"
-                  " below the lower tile row");
-    return *(tile_mem_t<0, -1> *)(hw_mem::south_tile_addr + hw_mem::tile_mem_beg_off);
+                                           " below the lower tile row");
+    return *(
+        tile_mem_t<tile_t::get_pos(dir::down).x, tile_t::get_pos(dir::down).y>
+            *)(hw_mem::south_tile_addr + hw_mem::tile_mem_beg_off);
   }
 
   /// Get the memory module above if it does exist
   auto &mem_up() {
     static_assert(is_memory_module_up(), "There is no memory module"
-                  " above the upper tile row");
-    return *(tile_mem_t<0, 1>*)(hw_mem::north_tile_addr + hw_mem::tile_mem_beg_off);
+                                         " above the upper tile row");
+    return *(tile_mem_t<tile_t::get_pos(dir::up).x, tile_t::get_pos(dir::up).y>
+                 *)(hw_mem::north_tile_addr + hw_mem::tile_mem_beg_off);
   }
 
   /// The memory module native to the tile
   auto &mem() {
-    return *(tile_mem_t<0, 0>*)(hw_mem::self_tile_addr<X, Y> + hw_mem::tile_mem_beg_off);
+    return *(
+        tile_mem_t<tile_t::get_pos(dir::self).x, tile_t::get_pos(dir::self).y>
+            *)(hw_mem::self_tile_addr<X, Y> + hw_mem::tile_mem_beg_off);
   }
 
   auto &mem_side() {
@@ -283,6 +304,9 @@ struct tile : tile_base<AIE_Program> {
     else
       return mem_right();
   }
+
+  device_lock get_lock(int8_t id, dir d = dir::self) { return {id + d * 16}; }
+
 #endif
 // TODO: Perhaps worth pushing all Lib X AI Engine functionallity we use down
 // into a C++ API so it can all be excluded with one #IFDEF and kept nice and

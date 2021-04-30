@@ -55,12 +55,17 @@ std::string get_base_name(const char* file_name) {
   return str.substr(start, end - start);
 }
 
+void log_string(const std::string& str) {
+  BOOST_LOG_TRIVIAL(debug) << str;
+  boost::log::core::get()->flush();
+}
 }
 
 #define TRISYCL_DUMP_ALWAYS(EXPR)                                              \
   do {                                                                         \
-    BOOST_LOG_TRIVIAL(debug) << EXPR;                                          \
-    boost::log::core::get()->flush();                                          \
+    std::stringstream ss;                                                      \
+    ss << EXPR;                                                                \
+    log_string(ss.str());                                                      \
   } while (0)
 #define TRISYCL_DUMP2(EXPR, KIND)                                              \
   do {                                                                         \
