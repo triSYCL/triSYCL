@@ -265,6 +265,35 @@ struct tile : tile_base<AIE_Program> {
   }
 
 
+  /** Get the memory module relative to the tile
+
+      \param[in] Dx is the horizontal offset relative to the current core tile
+
+      \param[in] Dy is the vertical offset relative to the current core tile
+
+      \return the memory tile object
+
+      Note that since a core tile has a 4-neighbor connectivity, at
+      least one of the offset needs to be 0 and the other to be either
+      1 or -1.
+  */
+  template <int Dx, int Dy>
+  auto &mem() {
+    static_assert(geo::is_valid_memory_module_offset(Dx, Dy),
+                  "Note that since a core tile has a 4-neighbor connectivity,"
+                  " one of the offset needs to be 0 and the other to be either"
+                  " 1 or -1");
+    if constexpr (Dx == -1)
+      return mem_west();
+    else if constexpr (Dx == 1)
+      return mem_east();
+    else if constexpr (Dy == -1)
+      return mem_south();
+    else
+      return mem_north();
+  }
+
+
   /// The type of the memory module native to the tile
   using mem_t = typename AIE_Program::template tileable_memory<x, y>;
 
