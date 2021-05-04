@@ -59,6 +59,9 @@ class memory_infrastructure
 
   // Forward everything to the implementation detail
   auto& operator->() { return implementation; }
+
+  /// Get access to a specific lock in this memory module
+  auto& lock(int i) { return implementation->lock(i); }
 };
 
 /// @} End the aie Doxygen group

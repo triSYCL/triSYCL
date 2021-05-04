@@ -44,7 +44,7 @@ class memory_infrastructure {
   lock_unit memory_locking_unit;
 
  public:
-  /// Get an access to the a specific lock
+  /// Get access to a specific lock in this memory module
   auto& lock(int i) { return memory_locking_unit.lock(i); }
 };
 
