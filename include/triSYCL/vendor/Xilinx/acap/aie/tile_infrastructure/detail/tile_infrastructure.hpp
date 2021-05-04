@@ -67,6 +67,13 @@ template <typename Geography> class tile_infrastructure {
   /// The AXI stream switch of the core tile
   axi_ss_t axi_ss;
 
+  /** Keep track of all the (non detail) infrastructure tile memories
+      of this device
+
+      \todo Could be back again a simple object instead of a shared_ptr?
+  */
+  aie::memory_infrastructure mi;
+
   /** Sending DMAs
 
       Use std::optional to postpone initialization */
@@ -142,6 +149,11 @@ template <typename Geography> class tile_infrastructure {
 
   /// Get the vertical coordinate
   int y() { return y_coordinate; }
+
+  /// Access to the common infrastructure part of a tile memory
+  auto& mem() {
+    return mi;
+  }
 
   /** Get the user input connection from the AXI stream switch
 

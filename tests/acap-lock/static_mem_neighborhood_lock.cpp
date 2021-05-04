@@ -56,7 +56,10 @@ int main(int argc, char* argv[]) {
   // Notify the memory module of tile(0,0)
   d.mem(0,0).lock(0).release_with_value(true);
   // Wait for the tile(0,1)
-  d.mem(0,1).lock(4).acquire_with_value(true);
+  // Short-cut API
+  // d.mem(0,1).lock(4).acquire_with_value(true);
+  // Alternative API
+  d.tile(0,1).mem().lock(4).acquire_with_value(true);
   // Wait for all the tiles to complete
   aie_future.get();
 }

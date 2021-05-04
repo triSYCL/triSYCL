@@ -42,7 +42,7 @@ class memory_infrastructure
   using dti = detail::memory_infrastructure;
 
  public:
-  /// The façade used to implement part of the use facing type
+  /// The façade used to implement part of the user-facing type
   using facade_t = facade::device<memory_infrastructure, dti>;
 
   /// Make the implementation member directly accessible in this class

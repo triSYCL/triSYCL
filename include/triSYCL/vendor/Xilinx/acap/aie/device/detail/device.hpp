@@ -131,11 +131,7 @@ template <typename Layout> struct device {
       f(y);
   };
 
-  /** Keep track of all the (non detail) infrastructure tile memories
-      of this device */
-  aie::memory_infrastructure mi[geo::y_size][geo::x_size];
-
-  /** Access to the common infrastructure part of a tile memory
+  /** Shortcut to access to the common infrastructure part of a tile memory
 
       \param[in] x is the horizontal tile coordinate
 
@@ -144,8 +140,7 @@ template <typename Layout> struct device {
       \throws trisycl::runtime_error if the coordinate is invalid
   */
   auto& mem(int x, int y) {
-    geo::validate_x_y(x, y);
-    return mi[y][x];
+    return tile(x, y).mem();
   }
 
   /** The shim tiles on the lower row of the tile array
