@@ -21,6 +21,7 @@
 
 #include <utility>
 
+#include "memory_infrastructure.hpp"
 #include "tile_infrastructure/detail/tile_infrastructure.hpp"
 #include "triSYCL/device/facade/device.hpp"
 
@@ -45,7 +46,7 @@ class tile_infrastructure
   using dti = detail::tile_infrastructure<Geography>;
 
  public:
-  /// The façade used to implement part of the use facing type
+  /// The façade used to implement part of the user-facing type
   using facade_t = facade::device<tile_infrastructure<Geography>, dti>;
 
   using geo = Geography;
@@ -77,6 +78,11 @@ class tile_infrastructure
 
   /// Get the vertical coordinate
   int y() { return implementation->y(); }
+
+  /// Access to the common infrastructure part of a tile memory
+  auto& mem() {
+    return implementation->mem();
+  }
 
   /** Get the user input connection from the AXI stream switch
 
