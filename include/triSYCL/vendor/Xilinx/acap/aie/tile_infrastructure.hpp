@@ -88,6 +88,23 @@ class tile_infrastructure
     return implementation->mem();
   }
 
+  struct cgh_t {
+    tile_infrastructure ti;
+    cgh_t(tile_infrastructure t) : ti { t } {}
+
+  template <typename Invocable>
+    void single_task(Invocable&& t) {
+      ti.single_task([=] { t(); });
+    }
+  };
+
+  /// Submit a command group to the tile
+  template <typename Invocable>
+  void submit(Invocable&& f) const {
+    cgh_t cgh { *this };
+    std::forward<Invocable>(f)(cgh);
+  }
+
   /** Get the user input connection from the AXI stream switch
 
       \param[in] port is the port to use
