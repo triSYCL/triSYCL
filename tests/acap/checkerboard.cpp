@@ -4,6 +4,7 @@
 */
 
 #include <sycl/sycl.hpp>
+#include "triSYCL/vendor/Xilinx/graphics.hpp"
 
 #include <iostream>
 #include <type_traits>

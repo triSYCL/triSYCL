@@ -16,6 +16,7 @@
 #include <iostream>
 
 #include <sycl/sycl.hpp>
+#include "triSYCL/vendor/Xilinx/graphics.hpp"
 
 using namespace sycl::vendor::xilinx;
 
