@@ -64,14 +64,19 @@ template <typename Geography> class tile_infrastructure {
   /// Keep the vertical coordinate
   int y_coordinate;
 
+  /** Keep track of the aie::detail::device for hardware resource
+      control in device mode or for debugging purpose for better
+      messages.
+
+      Use void* for now to avoid cyclic header dependencies for now
+      instead of the aie::detail::device */
+  void* dev [[maybe_unused]];
+
   /// The AXI stream switch of the core tile
   axi_ss_t axi_ss;
 
-  /** Keep track of all the (non detail) infrastructure tile memories
-      of this device
-
-      \todo Could be back again a simple object instead of a shared_ptr?
-  */
+  /** Keep track of all the infrastructure tile memories
+      of this device */
   aie::memory_infrastructure mi;
 
   /** Sending DMAs
@@ -110,19 +115,25 @@ template <typename Geography> class tile_infrastructure {
   }
 
  public:
-  /** Start the tile infrastructure associated to the AIE device
+  /** Start the tile infrastructure associated to the AIE device tile
 
       \param[in] x is the horizontal coordinate for this tile
 
       \param[in] y is the vertical coordinate for this tile
 
+      \param[in] dev is the aie::detail::device used to control
+      hardware when using real hardware and provide some debug
+      information from inside the tile_infrastructure. Use auto
+      concept here to avoid explicit type causing circular dependency
+
       \param[in] fiber_executor is the executor used to run
       infrastructure details
   */
-  tile_infrastructure(int x, int y,
+  tile_infrastructure(int x, int y, auto& dev,
                       ::trisycl::detail::fiber_pool& fiber_executor)
       : x_coordinate { x }
       , y_coordinate { y }
+      , dev { &dev }
 #if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
       , fe { &fiber_executor }
 #endif

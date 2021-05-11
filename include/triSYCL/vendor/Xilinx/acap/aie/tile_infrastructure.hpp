@@ -64,13 +64,17 @@ class tile_infrastructure
 
       \param[in] y is the vertical coordinate for this tile
 
+      \param[in] dev is the aie::detail::device used to control
+      hardware when using real hardware and provide some debug
+      information from inside the tile_infrastructure. Use auto
+      concept here to avoid explicit type causing circular dependency
+
       \param[in] fiber_executor is the executor used to run
       infrastructure details
   */
-  tile_infrastructure(int x, int y,
+  tile_infrastructure(int x, int y, auto& dev,
                       ::trisycl::detail::fiber_pool& fiber_executor)
-      : facade_t { std::make_shared<dti>(x, y, fiber_executor) } {}
-
+      : facade_t { std::make_shared<dti>(x, y, dev, fiber_executor) } {}
   tile_infrastructure() = default;
 
   /// Get the horizontal coordinate
