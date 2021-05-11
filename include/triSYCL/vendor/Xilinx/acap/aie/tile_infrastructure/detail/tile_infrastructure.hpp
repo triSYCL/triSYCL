@@ -134,6 +134,7 @@ template <typename Geography> class tile_infrastructure {
       : x_coordinate { x }
       , y_coordinate { y }
       , dev { &dev }
+      , mi { dev }
 #if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
       , fe { &fiber_executor }
 #endif

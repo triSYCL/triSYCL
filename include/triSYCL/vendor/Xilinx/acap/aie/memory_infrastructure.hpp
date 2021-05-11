@@ -34,11 +34,29 @@ class memory_infrastructure {
   /// The lock unit of the memory tile
   lock_unit memory_locking_unit;
 
+  /** Keep track of the aie::detail::device for hardware resource
+      control in device mode or for debugging purpose for better
+      messages.
+
+      Use void* for now to avoid cyclic header dependencies for now
+      instead of the aie::detail::device */
+  void* dev [[maybe_unused]];
+
  public:
+  /** Start the memory infrastructure associated to the AIE device tile
+
+      \param[in] dev is the aie::detail::device used to control
+      hardware when using real hardware and provide some debug
+      information from inside the tile_infrastructure.
+
+      Use auto concept here to avoid explicit type causing circular
+      dependency
+  */
+  memory_infrastructure(auto& dev)
+      : dev { &dev } {}
 
   /// Get access to a specific lock in this memory module
   auto& lock(int i) { return memory_locking_unit.lock(i); }
-
 };
 
 /// @} End the aie Doxygen group
