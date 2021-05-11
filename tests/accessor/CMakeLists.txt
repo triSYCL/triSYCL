@@ -4,6 +4,7 @@ project (accessor) # The name of our project
 declare_trisycl_test(TARGET accessor)
 declare_trisycl_test(TARGET accessor_sizes)
 declare_trisycl_test(TARGET demo_parallel_matrix_add)
+declare_trisycl_test(TARGET host_accessor)
 declare_trisycl_test(TARGET iterators)
 declare_trisycl_test(TARGET local_accessor_hierarchical_convolution)
 declare_trisycl_test(TARGET uninitialized_local)
