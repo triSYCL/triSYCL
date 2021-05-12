@@ -20,10 +20,14 @@ class stencil_var2D : private auth_in_st_var, private auth_in_op_var {
 public:
   static_assert(std::is_base_of<auth_in_st_var, c_or0_s2D>::value,"A stencil must be built from a coef or a stencil.");
   static_assert(std::is_base_of<auth_in_st_var, c_or1_s2D>::value,"A stencil must be built from a coef or a stencil.");
-  static const int min_ind0 = MIN((c_or0_s2D::min_ind0), (c_or1_s2D::min_ind0));
-  static const int max_ind0 = MAX((c_or0_s2D::max_ind0), (c_or1_s2D::max_ind0));
-  static const int min_ind1 = MIN((c_or0_s2D::min_ind1), (c_or1_s2D::min_ind1));
-  static const int max_ind1 = MAX((c_or0_s2D::max_ind1), (c_or1_s2D::max_ind1));
+  static const int min_ind0 = std::min(c_or0_s2D::min_ind0,
+                                       c_or1_s2D::min_ind0);
+  static const int max_ind0 = std::max(c_or0_s2D::max_ind0,
+                                       c_or1_s2D::max_ind0);
+  static const int min_ind1 = std::min(c_or0_s2D::min_ind1,
+                                       c_or1_s2D::min_ind1);
+  static const int max_ind1 = std::max(c_or0_s2D::max_ind1,
+                                       c_or1_s2D::max_ind1);
   template<typename T, T (*a_f) (int,int, cl::sycl::accessor<T, 2, cl::sycl::access::mode::read>), T (*b_f) (int,int,int,int, cl::sycl::accessor<T, 1, cl::sycl::access::mode::read>), T (*c_f) (T, T) = coef_times<T>, T (*r_f) (T, T) = coef_plus<T>>
   static inline T eval(cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> a, cl::sycl::accessor<T, 1, cl::sycl::access::mode::read> b, int k, int l) {
     return r_f(c_or0_s2D::template eval<T, a_f, b_f, c_f>(a, b, k, l), c_or1_s2D::template eval<T, a_f, b_f, c_f>(a, b, k, l));
@@ -111,10 +115,10 @@ public:
   static const int d1 = st::max_ind1-st::min_ind1;
 
   // offsets ands paddings for global memory
-  static const int of0 = MAX(-st::min_ind0, 0); //offset left
-  static const int of1 = MAX(-st::min_ind1, 0); //offset top
-  static const int pad0 = MAX(0, st::max_ind0); //padding right
-  static const int pad1 = MAX(0, st::max_ind1); //padding bottom
+  static const int of0 = std::max(-st::min_ind0, 0); // offset left
+  static const int of1 = std::max(-st::min_ind1, 0); // offset top
+  static const int pad0 = std::max(0, st::max_ind0); // padding right
+  static const int pad1 = std::max(0, st::max_ind1); // padding bottom
 
   // offset for local tile
   // ajusted in 0
@@ -229,9 +233,11 @@ public:
         cl::sycl::accessor<T, 2, cl::sycl::access::mode::write> _B {*B, cgh};
         cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> _aB {*aB, cgh};
         cl::sycl::accessor<T, 1, cl::sycl::access::mode::read> _bB {*bB, cgh};
-        cgh.parallel_for_work_group<class KernelCompute>(nd_range, [=](cl::sycl::group<2> group){
+        cgh.parallel_for_work_group<class KernelCompute>(nd_range,
+          [=, this] (cl::sycl::group<2> group) {
+            // \todo make this code real on accelerators...
             T * local = new T[local_dim0 * local_dim1];
-            group.parallel_for_work_item([=](cl::sycl::h_item<2> it){
+            group.parallel_for_work_item([=, this](cl::sycl::h_item<2> it){
                 //local copy
                 /* group shoudn't be needed, neither global max*/
                 /* static function needed for st use a priori, but static not compatible
@@ -239,7 +245,8 @@ public:
                 store_local(local, _aB, it, group, global_max0+d0, global_max1+d1); 
               });
             //synchro
-            group.parallel_for_work_item([=](cl::sycl::h_item<2> it){
+            group.parallel_for_work_item(
+              [=, this] (cl::sycl::h_item<2> it) {
                 //computing
                 /*operation_var2D<T, B, f, st, aB, bB, a_f, b_f>::*/
                 eval_local(it, _B, local, _bB, global_max0, global_max1);

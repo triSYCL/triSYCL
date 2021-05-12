@@ -44,32 +44,32 @@ template <typename AIE, int X, int Y> struct prog : acap::aie::tile<AIE, X, Y> {
     __builtin_memset(this, 0xff, sizeof(*this));
 
     output[0] = {t::mem().x, t::mem().y, (int32_t)&t::mem(), t::mem().id};
-    if constexpr (t::is_memory_module_up()) {
+    if constexpr (t::is_memory_module_north()) {
       /// spinlock on the tile being initialized by the host before accessing
       /// it. This only works because t::mem_* function return a reference on
       /// volatile(on device), so spinlock loops like this one are not dead.
-      while (t::mem_up().id == 0)
+      while (t::mem_north().id == 0)
         ;
-      output[1] = {t::mem_up().x, t::mem_up().y, (int32_t)&t::mem_up(),
-                   t::mem_up().id};
+      output[1] = {t::mem_north().x, t::mem_north().y, (int32_t)&t::mem_north(),
+                   t::mem_north().id};
     }
-    if constexpr (t::is_memory_module_down()) {
-      while (t::mem_down().id == 0)
+    if constexpr (t::is_memory_module_south()) {
+      while (t::mem_south().id == 0)
         ;
-      output[2] = {t::mem_down().x, t::mem_down().y, (int32_t)&t::mem_down(),
-                   t::mem_down().id};
+      output[2] = {t::mem_south().x, t::mem_south().y, (int32_t)&t::mem_south(),
+                   t::mem_south().id};
     }
-    if constexpr (t::is_memory_module_right()) {
-      while (t::mem_right().id == 0)
+    if constexpr (t::is_memory_module_east()) {
+      while (t::mem_east().id == 0)
         ;
-      output[3] = {t::mem_right().x, t::mem_right().y, (int32_t)&t::mem_right(),
-                   t::mem_right().id};
+      output[3] = {t::mem_east().x, t::mem_east().y, (int32_t)&t::mem_east(),
+                   t::mem_east().id};
     }
-    if constexpr (t::is_memory_module_left()) {
-      while (t::mem_left().id == 0)
+    if constexpr (t::is_memory_module_west()) {
+      while (t::mem_west().id == 0)
         ;
-      output[4] = {t::mem_left().x, t::mem_left().y, (int32_t)&t::mem_left(),
-                   t::mem_left().id};
+      output[4] = {t::mem_west().x, t::mem_west().y, (int32_t)&t::mem_west(),
+                   t::mem_west().id};
     }
   }
 

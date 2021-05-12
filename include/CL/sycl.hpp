@@ -9,10 +9,11 @@
 
 #include "triSYCL/sycl.hpp"
 
-namespace cl {
-  /// The official SYCL 1.2.1 specification exposes the API in the
-  /// ::cl::sycl namespace
-  namespace sycl = ::trisycl;
+/// The official SYCL 1.2.1 specification exposes the API in the
+/// ::cl::sycl namespace
+namespace cl::sycl {
+  // Make the triSYCL implementation appear here
+  using namespace ::trisycl;
 }
 
 /*

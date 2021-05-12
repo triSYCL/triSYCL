@@ -38,6 +38,9 @@ namespace trisycl::vendor::xilinx::acap::aie {
 
     Direct stream interface: One cascade stream in, one cascade stream
     out (384-bits)
+
+    \todo Remove this global infrastructure and distribute it on the
+    tile_infrastructure itself
 */
 template <typename Geography>
 struct cascade_stream {
@@ -47,7 +50,7 @@ struct cascade_stream {
 
       \todo Use a data type with 384 bits
   */
-  ::trisycl::static_pipe<int, 4>
+  ::trisycl::sycl_2_2::static_pipe<int, 4>
   cascade_stream_pipes[geo::x_size*geo::y_size + 1];
 
   /* Cascade stream layout

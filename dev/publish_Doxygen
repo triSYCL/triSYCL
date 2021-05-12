@@ -36,7 +36,7 @@ update_doc() {
   cp -a $DOXYGEN_DIR/html $PUB_DIR
 
   # Add the PDF documentation at the top level of SYCL API
-#  cp $DOXYGEN_DIR/latex/refman.pdf $PUB_DIR/$PDF_NAME
+  cp $DOXYGEN_DIR/latex/refman.pdf $PUB_DIR/$PDF_NAME
 
   # Add the generated directory to the index
   git add $PUB_DIR
@@ -69,9 +69,7 @@ mkdir Doxygen
 
 # Move the generated documentation at the right place
 #update_doc Doxygen/SYCL SYCL-API-refman.pdf
-## Skip the PDF for now because of errors
-##update_doc Doxygen/acappp acappp-implementation-refman.pdf
-update_doc Doxygen/acappp
+update_doc Doxygen/acappp acappp-implementation-refman.pdf
 
 # Take also into account what has been deleted
 git add --update

@@ -44,16 +44,16 @@ template <typename AIE //< The type representing the full CGRA
           >
 struct memory : memory_base {
   /** The horizontal tile coordinates in the CGRA grid (starting at 0
-      and increasing to the right) */
+      and increasing towards East) */
   static auto constexpr x = X;
   /** The vertical tile coordinates in the CGRA grid (starting at
-      increasing to the top) */
+      increasing towards North) */
   static auto constexpr y = Y;
 };
 
 /// @} End the aie Doxygen group
 
-}
+} // namespace trisycl::vendor::xilinx::acap::aie
 
 /*
     # Some Emacs stuff:

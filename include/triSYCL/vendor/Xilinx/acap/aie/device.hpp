@@ -11,13 +11,10 @@
     License. See LICENSE.TXT for details.
 */
 
-#include "cascade_stream.hpp"
-#include "geography.hpp"
-#include "memory.hpp"
-#include "queue.hpp"
-#include "shim_tile.hpp"
-#include "tile.hpp"
-#include "tile_infrastructure.hpp"
+#include <utility>
+
+#include "device/detail/device.hpp"
+#include "triSYCL/device/facade/device.hpp"
 
 /// \ingroup aie
 /// @{
@@ -30,19 +27,66 @@ namespace trisycl::vendor::xilinx::acap::aie {
     instantiate with the physical size
 */
 template <typename Layout>
-struct device {
+class device : public facade::device<device<Layout>, detail::device<Layout>> {
+  /// The type encapsulating the implementation
+  using dd = detail::device<Layout>;
 
-  /// The geography of the CGRA
-  using geo = geography<Layout>;
+  /// The façade used to implement part of the use facing type
+  using facade_t = facade::device<device<Layout>, dd>;
 
-  /// The cascade stream infrastructure of the CGRA
-  cascade_stream<geo> cs;
+  /// Make the implementation member directly accessible in this class
+  using facade_t::implementation;
 
-  /** Keep track of all the tiles as a type-erased tile_base type to
-      have a simpler access to the basic position-independent tile
-      features */
-  tile_infrastructure<device> ti[geo::y_size][geo::x_size];
+ public:
+  /// Expose some useful internal implementation.
+  /// Look at them for their documentation
+  using geo = typename dd::geo;
+  using cass = typename dd::cass;
+  using csp = typename dd::csp;
+  using cmp = typename dd::cmp;
+  using sass = typename dd::sass;
+  using ssp = typename dd::ssp;
+  using smp = typename dd::smp;
 
+  /// The default constructor makes a new device
+  device()
+      : facade_t { std::make_shared<dd>() } {}
+
+  /** Apply a function for each tile index of the device
+
+      \param f is a callable that is to be called like \c f(x,y) for
+      each tile
+  */
+  template <typename F> void for_each_tile_index(F&& f) {
+    implementation->for_each_tile_index(std::forward<F>(f));
+  };
+
+  /** Apply a function for each tile infrastructure of the device
+
+      \param f is a callable that is to be called like \c f(x,y) for
+      each tile
+  */
+  template <typename F> void for_each_tile(F&& f) {
+    implementation->for_each_tile(std::forward<F>(f));
+  };
+
+  /** Apply a function for each x tile index of the device
+
+      \param f is a callable that is to be called like \c f(x) for
+      each horizontal index value
+  */
+  template <typename F> void for_each_tile_x_index(F&& f) {
+    implementation->for_each_tile_x_index(std::forward<F>(f));
+  };
+
+  /** Apply a function for each y tile index of the device
+
+      \param f is a callable that is to be called like \c f(x) for
+      each vertical index value
+  */
+  template <typename F> void for_each_tile_y_index(F&& f) {
+    implementation->for_each_tile_y_index(std::forward<F>(f));
+  };
 
   /** Access to the common infrastructure part of a tile
 
@@ -52,18 +96,17 @@ struct device {
 
       \throws trisycl::runtime_error if the coordinate is invalid
   */
-  auto &tile(int x, int y) {
-    geo::validate_x_y(x, y);
-    return ti[y][x];
-  }
+  auto& tile(int x, int y) { return implementation->tile(x, y); }
 
+  /** Access to the common infrastructure part of a tile memory
 
-  /** The shim tiles on the lower row of the tile array
+      \param[in] x is the horizontal tile coordinate
 
-      For now we consider only homogeneous shim tiles.
+      \param[in] y is the vertical tile coordinate
+
+      \throws trisycl::runtime_error if the coordinate is invalid
   */
-  shim_tile<device> shims[geo::x_size];
-
+  auto& mem(int x, int y) { return implementation->mem(x, y); }
 
   /** Access to the shim tile
 
@@ -71,23 +114,14 @@ struct device {
 
       \throws trisycl::runtime_error if the coordinate is invalid
   */
-  auto &shim(int x) {
-    geo::validate_x(x);
-    return shims[x];
-  }
-
+  auto& shim(int x) { return implementation->shim(x); }
 
   /// Access the cascade connections
-  auto &cascade() {
-    return cs;
-  }
-
+  /// \todo To remove?
+  auto& cascade() { return implementation->cascade(); }
 
   /// Create a queue on this device
-  auto queue() {
-    return vendor::xilinx::acap::aie::queue { *this };
-  }
-
+  auto queue() { return vendor::xilinx::acap::aie::queue { *this }; }
 
   /** Create a program execution for this device
 
@@ -97,18 +131,15 @@ struct device {
       \param Memory is the description of the machine memory modules. By
       default the machine has empty memory modules.
   */
-  template <template <typename Device,
-                      int X,
-                      int Y> typename Tile = acap::aie::tile,
-            template <typename Device,
-                      int X,
-                      int Y> typename Memory = acap::aie::memory>
+  template <template <typename Device, int X, int Y>
+            typename Tile = acap::aie::tile,
+            template <typename Device, int X, int Y>
+            typename Memory = acap::aie::memory>
   auto program() {
     return aie::program<device, Tile, Memory> { *this };
   }
 
-
-  /** Shortcut to run synchronously a program execution on this queue
+  /** Shortcut to run synchronously a program on this queue
 
       \param Tile is the description of the program tiles to
       instantiate. By default each tile will run an empty program.
@@ -116,19 +147,41 @@ struct device {
       \param Memory is the description of the machine memory modules. By
       default the machine has empty memory modules.
   */
-  template <template <typename Device,
-                      int X,
-                      int Y> typename Tile = acap::aie::tile,
-            template <typename Device,
-                      int X,
-                      int Y> typename Memory = acap::aie::memory>
+  template <template <typename Device, int X, int Y>
+            typename Tile = acap::aie::tile,
+            template <typename Device, int X, int Y>
+            typename Memory = acap::aie::memory>
   void run() {
     queue().template run<Tile, Memory>();
   }
 
+  /** Shortcut to run synchronously an heterogeneous invocable on this
+      queue
 
-  /** Connect the ports of 2 tiles or shims together with a switched
-      circuit
+      \param f is an invocable taking an heterogeneous tile handler
+  */
+  template <typename Invocable> void run(Invocable&& f) {
+    queue().run(f);
+  }
+
+  /** Shortcut to run synchronously a uniform invocable on
+      this queue
+
+      \param f is an invocable taking a uniform tile handler
+  */
+  template <typename Invocable> void uniform_run(Invocable&& f) {
+    queue().uniform_run(f);
+    queue().wait();
+  }
+
+  /** Connect the ports of 2 tiles or shims together with an
+      hyperspace switched circuit, jumping over the underlying routing
+      infrastructure.
+
+      This is used to speed up communication in emulation and to skip
+      the need of a routing planner.
+
+      \todo To deprecate and implement in another way?
 
       \param[in] T is the type of the data to be transferred
 
@@ -143,44 +196,30 @@ struct device {
 
       \todo Refactor, make the difference between user & physical ports
   */
-  template <typename T, typename SrcPort, typename DstPort>
-  void connect(SrcPort src, DstPort dst) {
-    /// \todo move this into a factory
-    connection c { ::trisycl::static_pipe<T, 4> {} };
-    constexpr bool valid_src = std::is_same_v<SrcPort, port::tile>
-      || std::is_same_v<SrcPort, port::shim>;
-    static_assert(valid_src,
-                  "SrcPort type should be port::tile or port::shim");
-    if constexpr (std::is_same_v<SrcPort, port::tile>) {
-       tile(src.x, src.y).out_connection(src.port) = c.out();
-    }
-    else if constexpr(std::is_same_v<SrcPort, port::shim>) {
-       shim(src.x).bli_out_connection(src.port) = c.out();
-    }
-    constexpr bool valid_dst = std::is_same_v<DstPort, port::tile>
-      || std::is_same_v<DstPort, port::shim>;
-    static_assert(valid_dst,
-                  "DstPort type should be port::tile or port::shim");
-    if constexpr (std::is_same_v<DstPort, port::tile>) {
-      tile(dst.x, dst.y).in_connection(dst.port) = c.in();
-    }
-    else if constexpr(std::is_same_v<DstPort, port::shim>) {
-      shim(dst.x).bli_in_connection(dst.port) = c.in();
-    }
+  template <typename SrcPort, typename DstPort>
+  void connect(SrcPort&& src, DstPort&& dst) {
+    implementation->connect(std::forward<SrcPort>(src),
+                            std::forward<DstPort>(dst));
   }
 
+  /** Apply a invocable on all the AXI stream of the neighborhood of
+      each tile */
+  template <typename F> void for_each_tile_neighborhood(F&& f) {
+    implementation->for_each_tile_neighborhood(std::forward<F>(f));
+  }
+
+  /** Display the device layout
+
+      \param[in] file_name is the name of the file to write the LaTeX
+      drawing into or use std::cerr by default
+  */
+  auto display(const std::string& file_name = {}) {
+    return implementation->display(file_name);
+  }
 };
 
 /// @} End the aie Doxygen group
 
-}
-
-/*
-    # Some Emacs stuff:
-    ### Local Variables:
-    ### ispell-local-dictionary: "american"
-    ### eval: (flyspell-prog-mode)
-    ### End:
-*/
+} // namespace trisycl::vendor::xilinx::acap::aie
 
 #endif // TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_DEVICE_HPP

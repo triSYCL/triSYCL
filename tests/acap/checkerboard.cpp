@@ -3,7 +3,7 @@
    RUN: %{execute}%s
 */
 
-#include <SYCL/sycl.hpp>
+#include <sycl/sycl.hpp>
 
 #include <iostream>
 #include <type_traits>
@@ -13,7 +13,7 @@ graphics::application a;
 
 /// To have a checkerboard-like pattern
 bool constexpr is_white(int x, int y) {
-  // Bottom left is black
+  // South-West (0,0) is black
   return (x + y) & 1;
 };
 

@@ -3,8 +3,8 @@
 
 /** \file
 
-    The basic AI Engine heterogeneous tile (i.e. dependent of x & y
-    coordinates)
+    The basic AI Engine heterogeneous tile that dependent of x & y
+    coordinates but also from the collective program run on it.
 
     Ronan dot Keryell at Xilinx dot com
 
@@ -18,7 +18,7 @@
 #include "triSYCL/detail/program_manager.hpp"
 #include "tile_base.hpp"
 #include "xaie_wrapper.hpp"
-#include "hw_memory.hpp"
+#include "hardware.hpp"
 #include "program.hpp"
 #include "lock.hpp"
 
@@ -67,10 +67,10 @@ namespace trisycl::vendor::xilinx::acap::aie {
 template <typename AIE_Program, int X, int Y>
 struct tile : tile_base<AIE_Program> {
   /** The horizontal tile coordinates in the CGRA grid (starting at 0
-      and increasing to the right) */
+      and increasing towards the East) */
   static auto constexpr x = X;
   /** The vertical tile coordinates in the CGRA grid (starting at
-      increasing to the top) */
+      increasing towards the North) */
   static auto constexpr y = Y;
 
   /// The geography of the CGRA
@@ -111,27 +111,75 @@ struct tile : tile_base<AIE_Program> {
   */
 
 
-  /// Test if the tile is in the left column
-  static bool constexpr is_left_column() {
-    return geo::is_left_column(x);
+  /// Test if the tile is in the Western column
+  static bool constexpr is_west_column() {
+    return geo::is_west_column(x);
   }
 
 
-  /// Test if the tile is in the right column
-  static bool constexpr is_right_column() {
-    return geo::is_right_column(x);
+  /// Test if the tile is in the Eastern column
+  static bool constexpr is_east_column() {
+    return geo::is_east_column(x);
   }
 
 
-  /// Test if the tile is in the bottom row
-  static bool constexpr is_bottom_row() {
-    return geo::is_bottom_row(y);
+  /// Test if the tile is in the Southern row
+  static bool constexpr is_south_row() {
+    return geo::is_south_row(y);
   }
 
 
-  /// Test if the tile is in the top row
-  static bool constexpr is_top_row() {
-    return geo::is_top_row(y);
+  /// Test if the tile is in the Northern row
+  static bool constexpr is_north_row() {
+    return geo::is_north_row(y);
+  }
+
+
+  /// Test if the tile has a Western neighbor
+  static bool constexpr is_west_valid() {
+    return !geo::is_west_column(x);
+  }
+
+
+  /// Test if the tile has a Eastern neighbor
+  static bool constexpr is_east_valid() {
+    return !geo::is_east_column(x);
+  }
+
+
+  /// Test if the tile has a Southern neighbor
+  static bool constexpr is_south_valid() {
+    return !geo::is_south_row(y);
+  }
+
+
+  /// Test if the tile has a South West neighbor
+  static bool constexpr is_south_west_valid() {
+    return is_south_valid() && is_west_valid();
+  }
+
+
+  /// Test if the tile has a South East neighbor
+  static bool constexpr is_south_east_valid() {
+    return is_south_valid() && is_east_valid();
+  }
+
+
+  /// Test if the tile has a Northern neighbor
+  static bool constexpr is_north_valid() {
+    return !geo::is_north_row(y);
+  }
+
+
+  /// Test if the tile has a North East neighbor
+  static bool constexpr is_north_east_valid() {
+    return is_north_valid() && is_east_valid();
+  }
+
+
+  /// Test if the tile has a North West neighbor
+  static bool constexpr is_north_west_valid() {
+    return is_north_valid() && is_west_valid();
   }
 
 
@@ -146,26 +194,26 @@ struct tile : tile_base<AIE_Program> {
   }
 
 
-  /// Test if a memory module exists on the left of this tile
-  static bool constexpr is_memory_module_left() {
+  /// Test if a memory module exists on the West of this tile
+  static bool constexpr is_memory_module_west() {
     return is_memory_module(-1, 0);
   }
 
 
-  /// Test if a memory module exists on the right of this tile
-  static bool constexpr is_memory_module_right() {
+  /// Test if a memory module exists on the East of this tile
+  static bool constexpr is_memory_module_east() {
     return is_memory_module(1, 0);
   }
 
 
-  /// Test if a memory module exists below this tile
-  static bool constexpr is_memory_module_down() {
+  /// Test if a memory module exists on the South this tile
+  static bool constexpr is_memory_module_south() {
     return is_memory_module(0, -1);
   }
 
 
-  /// Test if a memory module exists above this tile
-  static bool constexpr is_memory_module_up() {
+  /// Test if a memory module exists on the North this tile
+  static bool constexpr is_memory_module_north() {
     return is_memory_module(0, 1);
   }
 
@@ -188,39 +236,39 @@ struct tile : tile_base<AIE_Program> {
 #ifndef __SYCL_DEVICE_ONLY__
   /// On the host
 
-  /// Get the memory module on the left if it does exist
-   auto &mem_left() {
-     static_assert(is_memory_module_left(), "There is no memory module"
-                   " on the left of this tile in the left column and"
+  /// Get the memory module on the West if it does exist
+   auto &mem_west() {
+     static_assert(is_memory_module_west(), "There is no memory module"
+                   " on the West of this tile in the Western column and"
                    " on an even row");
      return tb::program->template
        memory_module<memory_module_linear_id(-1, 0)>();
   }
 
 
-  /// Get the memory module on the right if it does exist
-  auto &mem_right() {
-    static_assert(is_memory_module_right(), "There is no memory module"
-                  " on the right of this tile in the right column and"
-                   " on an odd row");
+  /// Get the memory module on the East if it does exist
+  auto &mem_east() {
+    static_assert(is_memory_module_east(), "There is no memory module"
+                  " on the East of this tile in the Eastern column and"
+                  " on an odd row");
     return tb::program->template
       memory_module<memory_module_linear_id(1, 0)>();
   }
 
 
-  /// Get the memory module below if it does exist
-  auto &mem_down() {
-    static_assert(is_memory_module_down(), "There is no memory module"
-                  " below the lower tile row");
+  /// Get the memory module on the South if it does exist
+  auto &mem_south() {
+    static_assert(is_memory_module_south(), "There is no memory module"
+                  " below the Southern tile row");
     return tb::program->template
       memory_module<memory_module_linear_id(0, -1)>();
   }
 
 
-  /// Get the memory module above if it does exist
-  auto &mem_up() {
-    static_assert(is_memory_module_up(), "There is no memory module"
-                  " above the upper tile row");
+  /// Get the memory module on the North if it does exist
+  auto &mem_north() {
+    static_assert(is_memory_module_north(), "There is no memory module"
+                  " above the Northern tile row");
     return tb::program->template
       memory_module<memory_module_linear_id(0, 1)>();
   }
@@ -229,11 +277,13 @@ struct tile : tile_base<AIE_Program> {
   /// The memory module native to the tile
   auto &mem() {
     if constexpr (y & 1)
-      return mem_left();
+      return mem_west();
     else
-      return mem_right();
+      return mem_east();
   }
 
+#ifdef __SYCL_XILINX_AIE__
+/// TODO: This API doesn't yet exist for CPU emulation
   device_lock get_lock(int8_t id, dir d = dir::self) {
     TRISYCL_DUMP2(std::dec << "get_lock: (X = " << X << ", Y = " << Y
                            << ") dir:" << tile_t::dir_to_str[d],
@@ -242,7 +292,7 @@ struct tile : tile_base<AIE_Program> {
             xaie::XAie_TileLoc(tb::aie_hw_tile.Col + tile_t::get_offset(d).y,
                                tb::aie_hw_tile.Row + tile_t::get_offset(d).x)};
   }
-
+#endif
 #else
   /// On device
 
@@ -253,8 +303,8 @@ struct tile : tile_base<AIE_Program> {
       typename AIE_Program::template tileable_memory<X + dx, Y + dy>;
 
   /// Get the memory module on the left if it does exist
-  auto &mem_left() {
-    static_assert(is_memory_module_left(),
+  auto &mem_west() {
+    static_assert(is_memory_module_west(),
                   "There is no memory module"
                   " on the left of this tile in the left column and"
                   " on an even row");
@@ -264,8 +314,8 @@ struct tile : tile_base<AIE_Program> {
   }
 
   /// Get the memory module on the right if it does exist
-  auto &mem_right() {
-    static_assert(is_memory_module_right(),
+  auto &mem_east() {
+    static_assert(is_memory_module_east(),
                   "There is no memory module"
                   " on the right of this tile in the right column and"
                   " on an odd row");
@@ -275,8 +325,8 @@ struct tile : tile_base<AIE_Program> {
   }
 
   /// Get the memory module below if it does exist
-  auto &mem_down() {
-    static_assert(is_memory_module_down(), "There is no memory module"
+  auto &mem_south() {
+    static_assert(is_memory_module_south(), "There is no memory module"
                                            " below the lower tile row");
     return *(
         tile_mem_t<tile_t::get_pos(dir::down).x, tile_t::get_pos(dir::down).y>
@@ -284,8 +334,8 @@ struct tile : tile_base<AIE_Program> {
   }
 
   /// Get the memory module above if it does exist
-  auto &mem_up() {
-    static_assert(is_memory_module_up(), "There is no memory module"
+  auto &mem_north() {
+    static_assert(is_memory_module_north(), "There is no memory module"
                                          " above the upper tile row");
     return *(tile_mem_t<tile_t::get_pos(dir::up).x, tile_t::get_pos(dir::up).y>
                  *)(hw_mem::north_tile_addr + hw_mem::tile_mem_beg_off);
@@ -300,9 +350,9 @@ struct tile : tile_base<AIE_Program> {
 
   auto &mem_side() {
     if constexpr (Y & 1)
-      return mem_left();
+      return mem_west();
     else
-      return mem_right();
+      return mem_east();
   }
 
   device_lock get_lock(int8_t id, dir d = dir::self) { return {id + d * 16}; }
@@ -388,7 +438,7 @@ struct tile : tile_base<AIE_Program> {
 
   /// Load the elf via path to a block of memory which contains an elf image
   void load_elf_image(std::string_view image) {
-    assert(detail::program_manager::isELFMagic(image.data()) &&
+    assert(::trisycl::detail::program_manager::isELFMagic(image.data()) &&
            "invalid ELF magic");
     TRISYCL_XAIE(xaie::XAie_LoadElfMem(tb::aie_inst, tb::aie_hw_tile,
                                        (u8 *)(image.data())));
@@ -484,37 +534,37 @@ struct tile : tile_base<AIE_Program> {
   */
   void horizontal_barrier(int lock = 14) {
     if constexpr (y & 1) {
-      // Propagate a token from left to right and back
-      if constexpr (!is_left_column()) {
-        // Wait for the left neighbour to be ready
+      // Propagate a token from West to East and back
+      if constexpr (!is_west_column()) {
+        // Wait for the Western neighbour to be ready
         mem().lock(lock).acquire_with_value(true);
       }
-      if constexpr (is_memory_module_right()) {
-        mem_right().lock(lock).acquire_with_value(false);
-        // Unleash the right neighbour
-        mem_right().lock(lock).release_with_value(true);
-        // Wait for the right neighbour to acknowledge
-        mem_right().lock(lock).acquire_with_value(false);
+      if constexpr (is_memory_module_east()) {
+        mem_east().lock(lock).acquire_with_value(false);
+        // Unleash the Eastern neighbour
+        mem_east().lock(lock).release_with_value(true);
+        // Wait for the Eastern neighbour to acknowledge
+        mem_east().lock(lock).acquire_with_value(false);
        }
-      if constexpr (!is_left_column()) {
-        // Acknowledge to the left neighbour
+      if constexpr (!is_west_column()) {
+        // Acknowledge to the Western neighbour
         mem().lock(lock).release_with_value(false);
       }
     } else {
-      // Propagate a token from right to left and back
-      if constexpr (!is_right_column()) {
-        // Wait for the right neighbour to be ready
+      // Propagate a token from East to West and back
+      if constexpr (!is_east_column()) {
+        // Wait for the Eastern neighbour to be ready
         mem().lock(lock).acquire_with_value(true);
       }
-      if constexpr (is_memory_module_left()) {
-        mem_left().lock(lock).acquire_with_value(false);
-        // Unleash the left neighbour
-        mem_left().lock(lock).release_with_value(true);
-        // Wait for the left neighbour to acknowledge
-        mem_left().lock(lock).acquire_with_value(false);
+      if constexpr (is_memory_module_west()) {
+        mem_west().lock(lock).acquire_with_value(false);
+        // Unleash the Western neighbour
+        mem_west().lock(lock).release_with_value(true);
+        // Wait for the Western neighbour to acknowledge
+        mem_west().lock(lock).acquire_with_value(false);
        }
-      if constexpr (!is_right_column()) {
-        // Acknowledge to the right neighbour
+      if constexpr (!is_east_column()) {
+        // Acknowledge to the Eastern neighbour
         mem().lock(lock).release_with_value(false);
       }
     }
@@ -529,20 +579,20 @@ struct tile : tile_base<AIE_Program> {
       default
   */
   void vertical_barrier(int lock = 15) {
-    // Propagate a token from bottom to top and back
-    if constexpr (!is_bottom_row()) {
-      // Wait for the neighbour below to be ready
+    // Propagate a token from South to North and back
+    if constexpr (!is_south_row()) {
+      // Wait for the Southern neighbour to be ready
       mem().lock(lock).acquire_with_value(true);
     }
-    if constexpr (is_memory_module_up()) {
-      mem_up().lock(lock).acquire_with_value(false);
-      // Unleash the neighbour above
-      mem_up().lock(lock).release_with_value(true);
-      // Wait for the neighbour above to acknowledge
-      mem_up().lock(lock).acquire_with_value(false);
+    if constexpr (is_memory_module_north()) {
+      mem_north().lock(lock).acquire_with_value(false);
+      // Unleash the Northern neighbour
+      mem_north().lock(lock).release_with_value(true);
+      // Wait for the Northern neighbour to acknowledge
+      mem_north().lock(lock).acquire_with_value(false);
     }
-    if constexpr (!is_bottom_row()) {
-      // Acknowledge to the neighbour below
+    if constexpr (!is_south_row()) {
+      // Acknowledge to the Southern neighbour
       mem().lock(lock).release_with_value(false);
     }
   }
@@ -557,6 +607,23 @@ struct tile : tile_base<AIE_Program> {
     horizontal_barrier();
     vertical_barrier();
   }
+
+
+  /** Get access on a receiver DMA
+
+      \param[in] port specifies which DMA to access, starting at 0 */
+  auto rx_dma(int port) {
+    return dma_dsl { *this, this->ti.rx_dma(port) };
+  }
+
+
+  /** Get access on a transmit DMA
+
+      \param[in] port specifies which DMA to access, starting at 0 */
+  auto tx_dma(int port) {
+    return dma_dsl { *this, this->ti.tx_dma(port) };
+  }
+
 
 };
 

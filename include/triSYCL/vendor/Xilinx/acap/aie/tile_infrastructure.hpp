@@ -7,8 +7,11 @@
     infrastructure to all the tiles, i.e. independent of x & y
     coordinates, but also from the tile program itself.
 
-    For example the AXI stream switch configuration and packet can
-    survive to some program changes.
+    This tile can be seen as the SYCL subdevice of the raw CGRA SYCL
+    device to run elemental functions.
+
+    This is owned by the device, so for example the AXI stream switch
+    configuration and packet can survive to some program changes.
 
     Ronan dot Keryell at Xilinx dot com
 
@@ -16,11 +19,10 @@
     License. See LICENSE.TXT for details.
 */
 
-#include <future>
+#include <utility>
 
-#include <boost/format.hpp>
-
-#include "axi_stream_switch.hpp"
+#include "tile_infrastructure/detail/tile_infrastructure.hpp"
+#include "triSYCL/device/facade/device.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
@@ -32,120 +34,129 @@ namespace trisycl::vendor::xilinx::acap::aie {
     This allows some type erasure while accessing the common
     tile infrastructure.
 
-    \param AIE is the type representing the full CGRA with the
-    programs and memory contents
+    \param Geography is the \c geography type representing the full
+    layout of the architecture
 */
-template <typename AIEDevice>
-class tile_infrastructure  {
-  using axi_ss_geo = typename AIEDevice::geo::core_axi_stream_switch;
-  using mpl = typename axi_ss_geo::master_port_layout;
-  using spl = typename axi_ss_geo::slave_port_layout;
-  using axi_ss_t = axi_stream_switch<axi_ss_geo>;
+template <typename Geography>
+class tile_infrastructure
+    : public facade::device<tile_infrastructure<Geography>,
+                            detail::tile_infrastructure<Geography>> {
+  /// The type encapsulating the implementation
+  using dti = detail::tile_infrastructure<Geography>;
 
-  /// The AXI stream switch of the core tile
-  axi_ss_t axi_ss;
+ public:
+  /// The façade used to implement part of the use facing type
+  using facade_t = facade::device<tile_infrastructure<Geography>, dti>;
 
-  /// Keep track of execution in this tile
-  std::future<void> work;
+  using geo = Geography;
+  using axi_ss_geo = typename dti::axi_ss_geo;
+  using mpl = typename dti::mpl;
+  using spl = typename dti::spl;
+  using axi_ss_t = typename dti::axi_ss_t;
 
-private:
+  /// Make the implementation member directly accessible in this class
+  using facade_t::implementation;
 
-  /** Map the user input port number to the AXI stream switch port
+  /** Start the tile infrastructure associated to the AIE device
 
-      \param[in] port is the user port to use
+      \param[in] x is the horizontal coordinate for this tile
+
+      \param[in] y is the vertical coordinate for this tile
+
+      \param[in] fiber_executor is the executor used to run
+      infrastructure details
   */
-  static auto translate_input_port(int port) {
-    return axi_ss_t::translate_port(port, mpl::me_0, mpl::me_last,
-                                    "The core input port is out of range");
-  }
+  tile_infrastructure(int x, int y,
+                      ::trisycl::detail::fiber_pool& fiber_executor)
+      : facade_t { std::make_shared<dti>(x, y, fiber_executor) } {}
 
+  tile_infrastructure() = default;
 
-  /** Map the user output port number to the AXI stream switch port
+  /// Get the horizontal coordinate
+  int x() { return implementation->x(); }
 
-      \param[in] port is the BLI id/port to use
-  */
-  static auto translate_output_port(int port) {
-    return axi_ss_t::translate_port(port, spl::me_0, spl::me_last,
-                                    "The core output port is out of range");
-  }
-
-public:
+  /// Get the vertical coordinate
+  int y() { return implementation->y(); }
 
   /** Get the user input connection from the AXI stream switch
 
       \param[in] port is the port to use
   */
-  auto& in_connection(int port) {
-    return axi_ss.in_connection(translate_input_port(port));
-  }
-
+  auto& in_connection(int port) { return implementation->in_connection(port); }
 
   /** Get the user output connection to the AXI stream switch
 
       \param[in] port is port to use
   */
   auto& out_connection(int port) {
-    return axi_ss.out_connection(translate_output_port(port));
+    return implementation->out_connection(port);
   }
-
 
   /** Get the user input port from the AXI stream switch
 
-      \param[in] T is the data type to be used in the transfers
-
-      \param[in] Target specifies if the connection is blocking or
-      not. It is blocking by default
-
       \param[in] port is the port to use
   */
-  template <typename T, access::target Target = access::target::blocking_pipe>
-  auto in(int port) {
-    return axi_ss.in_connection(translate_input_port(port))
-      .template in<T, Target>();
-  }
-
+  auto& in(int port) { return implementation->in(port); }
 
   /** Get the user output port to the AXI stream switch
 
-      \param[in] T is the data type to be used in the transfers
-
-      \param[in] Target specifies if the connection is blocking or
-      not. It is blocking by default
-
       \param[in] port is the port to use
   */
-  template <typename T, access::target Target = access::target::blocking_pipe>
-  auto out(int port) {
-    return axi_ss.out_connection(translate_output_port(port))
-      .template out<T, Target>();
+  auto& out(int port) { return implementation->out(port); }
+
+  /** Get access to a receiver DMA
+
+      \param[in] id specifies which DMA to access */
+  auto& rx_dma(int id) { return implementation->rx_dma(id); }
+
+  /** Get access to a transmit DMA
+
+      \param[in] id specifies which DMA to access */
+  auto& tx_dma(int id) { return implementation->tx_dma(id); }
+
+  /** Get the input router port of the AXI stream switch
+
+      \param p is the slave_port_layout for the stream
+  */
+  auto& input(spl p) { return implementation->input(p); }
+
+  /** Get the output router port of the AXI stream switch
+
+      \param p is the master_port_layout for the stream
+  */
+  auto& output(mpl p) { return implementation->output(p); }
+
+  /// Launch a callable on this tile
+  template <typename Work> auto& single_task(Work&& f) {
+    implementation->single_task(std::forward<Work>(f));
+    // To allow chaining commands
+    return *this;
   }
-
-
-  /// Submit a callable on this tile
-  template <typename Work>
-  void submit(Work &&f) {
-    work = std::async(std::launch::async,
-                      std::forward<Work>(f));
-  }
-
 
   /// Wait for the execution of the callable on this tile
-  void wait() {
-    work.get();
+  auto& wait() {
+    implementation->wait();
+    // To allow chaining commands
+    return *this;
   }
 
+  /// Configure a connection of the core tile AXI stream switch
+  auto& connect(typename geo::core_axi_stream_switch::slave_port_layout sp,
+                typename geo::core_axi_stream_switch::master_port_layout mp) {
+    implementation->connect(sp, mp);
+    // To allow chaining commands
+    return *this;
+  }
+
+  /// Compute the size of the graphics representation of the tile
+  static vec<int, 2> display_size() { return dti::display_size(); }
+
+  /// Display the tile to a LaTeX context
+  void display(latex::context& c) const { implementation->display(c); }
 };
 
 /// @} End the aie Doxygen group
 
-}
-
-/*
-    # Some Emacs stuff:
-    ### Local Variables:
-    ### ispell-local-dictionary: "american"
-    ### eval: (flyspell-prog-mode)
-    ### End:
-*/
+} // namespace trisycl::vendor::xilinx::acap::aie
 
 #endif // TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_TILE_INFRASTRUCTURE_HPP

@@ -13,6 +13,12 @@
     License. See LICENSE.TXT for details.
 */
 
+namespace trisycl {
+/// forward declaration to use in the detail class
+template<typename, int>
+class vec;
+}
+
 namespace trisycl::detail {
   template <typename T>
   class alignment {

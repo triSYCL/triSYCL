@@ -53,28 +53,28 @@ template <typename AIE, int X, int Y> struct prog : acap::aie::tile<AIE, X, Y> {
     t::get_lock(0).acquire();
     output[0] = {t::mem().x, t::mem().y, (int32_t)&t::mem(), t::mem().id};
     t::get_lock(0).release();
-    if constexpr (t::is_memory_module_up()) {
+    if constexpr (t::is_memory_module_north()) {
       t::get_lock(0, t::dir::up).acquire();
-      output[1] = {t::mem_up().x, t::mem_up().y, (int32_t)&t::mem_up(),
-                   t::mem_up().id};
+      output[1] = {t::mem_north().x, t::mem_north().y, (int32_t)&t::mem_north(),
+                   t::mem_north().id};
       t::get_lock(0, t::dir::up).release();
     }
-    if constexpr (t::is_memory_module_down()) {
+    if constexpr (t::is_memory_module_south()) {
       t::get_lock(0, t::dir::down).acquire();
-      output[2] = {t::mem_down().x, t::mem_down().y, (int32_t)&t::mem_down(),
-                   t::mem_down().id};
+      output[2] = {t::mem_south().x, t::mem_south().y, (int32_t)&t::mem_south(),
+                   t::mem_south().id};
       t::get_lock(0, t::dir::down).release();
     }
-    if constexpr (t::is_memory_module_right()) {
+    if constexpr (t::is_memory_module_east()) {
       t::get_lock(0, t::dir::right).acquire();
-      output[3] = {t::mem_right().x, t::mem_right().y, (int32_t)&t::mem_right(),
-                   t::mem_right().id};
+      output[3] = {t::mem_east().x, t::mem_east().y, (int32_t)&t::mem_east(),
+                   t::mem_east().id};
       t::get_lock(0, t::dir::right).release();
     }
-    if constexpr (t::is_memory_module_left()) {
+    if constexpr (t::is_memory_module_west()) {
       t::get_lock(0, t::dir::left).acquire();
-      output[4] = {t::mem_left().x, t::mem_left().y, (int32_t)&t::mem_left(),
-                   t::mem_left().id};
+      output[4] = {t::mem_west().x, t::mem_west().y, (int32_t)&t::mem_west(),
+                   t::mem_west().id};
       t::get_lock(0, t::dir::left).release();
     }
   }

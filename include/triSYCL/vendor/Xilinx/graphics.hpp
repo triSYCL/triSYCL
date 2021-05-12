@@ -33,6 +33,8 @@
 
 #include <experimental/mdspan>
 
+#include <boost/thread/barrier.hpp>
+
 #include <gtkmm.h>
 
 /** \defgroup graphics Graphics support for CGRA-like interaction
@@ -43,8 +45,6 @@
 */
 
 namespace trisycl::vendor::xilinx::graphics {
-
-namespace fundamentals_v3 = std::experimental::fundamentals_v3;
 
 // RGB 8 bit images, so 3 bytes per pixel
 using rgb = std::array<std::uint8_t, 3>;
@@ -100,7 +100,7 @@ struct frame_grid : Gtk::ApplicationWindow {
         frames.back().set_shadow_type(Gtk::SHADOW_ETCHED_OUT);
         // A minimal border to save space on main window
         frames.back().set_border_width(1);
-        // Display the frame with the lower y down in a mathematical sense
+        // Display the frame with the lower y South in a mathematical sense
         grid.attach(frames.back(), x, ny - y - 1, 1, 1);
       }
 
@@ -163,7 +163,7 @@ struct palette {
       \param[in] clip is optional and specifies a value to be enhanced
   */
   palette(kind k = gray, int phase = 0, int frequency_log2 = 0, int clip = -1)
-    : k { k }, phase { phase } , clip { clip } {
+    : k { k }, phase { phase } , clip { clip }, frequency_log2{frequency_log2} {
       update();
     }
 
@@ -397,6 +397,14 @@ struct image_grid : frame_grid {
   /// The RGB palette used to render the image values
   palette p;
 
+  /// A global done state across all the tile to allow a global shutdown
+  bool done_snapshot;
+
+  /// Set to true once "done" state has been sampled
+  std::atomic_flag done_has_been_sampled;
+
+  /// Barrier to compute the global done state across the tiles
+  boost::barrier done_barrier { static_cast<unsigned int>(nx*ny) };
 
   /** Create a grid of tiled images
 
@@ -427,7 +435,7 @@ struct image_grid : frame_grid {
                                     , image_y*zoom //< height
                                       );
         images.emplace_back(pb);
-        // Display the frame with the lower y down
+        // Display the frame with the lower y to the South
         f.add(images.back());
       }
 
@@ -437,8 +445,13 @@ struct image_grid : frame_grid {
           // Only 1 customer at a time
           std::lock_guard lock { dispatch_protection };
           // Skip the work when done to avoid dead lock
-          if (!done)
+          if (done)
+            // Wake-up everybody waiting for sending some work to
+            // realize that they have to give up on their hope
+            cv.notify_all();
+          else
             work_to_dispatch();
+          // Discard the previous work
           work_to_dispatch = nullptr;
         }
         // We can serve the next customer
@@ -463,7 +476,7 @@ struct image_grid : frame_grid {
     cv.wait(lock, [&] { return !work_to_dispatch || done; } );
     // Do not submit anything if we are in the shutdown process already
     if (!done) {
-      work_to_dispatch = f;
+      work_to_dispatch = std::move(f);
       // Ask the graphics thread for some work
       dispatcher.emit();
     }
@@ -499,9 +512,9 @@ struct image_grid : frame_grid {
        std::make_shared taking an array size comes only in C++20 while
        it is available for std::make_unique in C++17... */
     std::shared_ptr<std::uint8_t[]> d { new std::uint8_t[3*image_x*image_y] };
-    fundamentals_v3::mdspan<rgb,
-                            fundamentals_v3::dynamic_extent,
-                            fundamentals_v3::dynamic_extent> output {
+    std::experimental::mdspan<rgb,
+                              std::experimental::dynamic_extent,
+                              std::experimental::dynamic_extent> output {
       reinterpret_cast<rgb *>(d.get()),
       image_y,
       image_x
@@ -520,7 +533,7 @@ struct image_grid : frame_grid {
                                                 max_value);
       }
     // Send the graphics updating code
-    submit([=] {
+    submit([=, this] {
         // Create a first buffer, allowing later zooming
         auto pb = Gdk::Pixbuf::create_from_data(d.get()
                                               , Gdk::Colorspace::COLORSPACE_RGB
@@ -559,9 +572,9 @@ struct image_grid : frame_grid {
                               RangeValue min_value,
                               RangeValue max_value) {
     // Wrap the pointed area into an MDspan
-    const fundamentals_v3::mdspan<DataType,
-                                  fundamentals_v3::dynamic_extent,
-                                  fundamentals_v3::dynamic_extent> md {
+    const std::experimental::mdspan<DataType,
+                                    std::experimental::dynamic_extent,
+                                    std::experimental::dynamic_extent> md {
       data,
       image_y,
       image_x
@@ -573,6 +586,20 @@ struct image_grid : frame_grid {
   /// Return the palette used to render the value
   palette &get_palette() {
     return p;
+  }
+
+
+  /// Test if the window has been closed after synchronizing with a
+  /// barrier accross all the tiles
+  bool is_done_barrier() {
+    // Only 1 thread sample the graphics status
+    if (done_has_been_sampled.test_and_set())
+      done_snapshot = done;
+    // Then wait for everybody to synchronize
+    done_barrier.count_down_and_wait();
+    // Reinitialize the flag for the next iteration
+    done_has_been_sampled.clear();
+    return done_snapshot;
   }
 
 };
@@ -644,6 +671,12 @@ struct application {
   /// Test if the window has been closed
   bool is_done() {
     return w->done;
+  }
+
+
+  /// Test if the window has been closed after synchronizing with a barrier
+  bool is_done_barrier() {
+    return w->is_done_barrier();
   }
 
 

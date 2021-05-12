@@ -21,7 +21,7 @@
     storage which could be somehow compatible with another existing
     cl::sycl implementation by using a layered approach
 */
-#include "triSYCL/vendor/trisycl/scope.hpp"
+#include "triSYCL/vendor/triSYCL/scope.hpp"
 
 #include <iostream>
 
@@ -54,7 +54,7 @@ int test_main(int argc, char *argv[]) {
     int array[size];
     bool stop;
     // Send data from a kernel to host
-    cl::sycl::static_pipe<int, 4> out;
+    cl::sycl::sycl_2_2::static_pipe<int, 4> out;
   };
 
   vendor::trisycl::scope::platform

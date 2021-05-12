@@ -27,7 +27,7 @@
 
 #include <experimental/mdspan>
 
-#include <SYCL/sycl.hpp>
+#include <sycl/sycl.hpp>
 
 // Some headers used when debugging
 #include <chrono>
@@ -38,7 +38,6 @@ using namespace std::chrono_literals;
 
 
 using namespace sycl::vendor::xilinx;
-namespace fundamentals_v3 = std::experimental::fundamentals_v3;
 
 // The size of the machine to use
 //using layout = acap::aie::layout::size<5,4>;
@@ -142,7 +141,7 @@ auto is_harbor = [] (auto x, auto y) constexpr -> bool {
 /// A sequential reference implementation of wave propagation
 template <auto size_x, auto size_y, auto display_tile_size>
 struct reference_wave_propagation {
-  using space = fundamentals_v3::mdspan<double, size_y, size_x>;
+  using space = std::experimental::mdspan<double, size_y, size_x>;
   // It would be nice to have a constexpr static member to express this,
   // but right now size() is a member function
   //double u_m[space::size()];
@@ -176,9 +175,9 @@ struct reference_wave_propagation {
     for (int j = 0; j < size_y; ++j)
       for (int i = 0; i < size_x - 1; ++i) {
         // dw/dx
-        auto up = w(j,i + 1) - w(j,i);
+        auto north = w(j,i + 1) - w(j,i);
         // Integrate horizontal speed
-        u(j,i) += up*alpha;
+        u(j,i) += north*alpha;
       }
     for (int j = 0; j < size_y - 1; ++j)
       for (int i = 0; i < size_x; ++i) {
@@ -210,9 +209,9 @@ struct reference_wave_propagation {
           /* Split the data in sub-windows with a subspan
 
              Display actually one redundant line/column on each
-             bottom/left to mimic the halo in the ACAP case
+             South/West to mimic the halo in the ACAP case
           */
-          auto sp = fundamentals_v3::subspan
+          auto sp = std::experimental::subspan
             (w,
              std::make_pair(j*display_tile_size,
                             1 + (j + 1)*display_tile_size),
@@ -227,17 +226,18 @@ struct reference_wave_propagation {
   void compare_with_sequential_reference_e(const char *message, int x, int y,
                                            Array &arr,
                                            const MDspan_ref &ref) {
-    const fundamentals_v3::mdspan<double, image_size, image_size> md
+    const std::experimental::mdspan<double, image_size, image_size> md
     { &arr[0][0] };
 
     // Take into account 1 line/column of overlapping halo
     int x_offset = md.extent(1) - 1;
     int y_offset = md.extent(0) - 1;
-    auto mdref = fundamentals_v3::subspan(ref,
-                                          std::make_pair(y*y_offset,
-                                                         1 + (y + 1)*y_offset),
-                                          std::make_pair(x*x_offset,
-                                                         1 + (x + 1)*x_offset));
+    auto mdref =
+      std::experimental::subspan(ref,
+                                 std::make_pair(y*y_offset,
+                                                1 + (y + 1)*y_offset),
+                                 std::make_pair(x*x_offset,
+                                                1 + (x + 1)*x_offset));
     compare_2D_mdspan(message, md, mdref);
   }
 
@@ -330,9 +330,9 @@ struct tile : acap::aie::tile<AIE, X, Y> {
     for (int j = 0; j < image_size; ++j)
       for (int i = 0; i < image_size - 1; ++i) {
         // dw/dx
-        auto up = m.w[j][i + 1] - m.w[j][i];
+        auto north = m.w[j][i + 1] - m.w[j][i];
         // Integrate horizontal speed
-        m.u[j][i] += up*alpha;
+        m.u[j][i] += north*alpha;
       }
 
     for (int j = 0; j < image_size - 1; ++j)
@@ -345,24 +345,24 @@ struct tile : acap::aie::tile<AIE, X, Y> {
 
     t::barrier();
 
-    // Transfer first column of u to next memory module on the left
+    // Transfer first column of u to next memory module to the West
     if constexpr (Y & 1) {
-      if constexpr (t::is_memory_module_right()) {
-        auto& right = t::mem_right();
+      if constexpr (t::is_memory_module_east()) {
+        auto& east = t::mem_east();
         for (int j = 0; j < image_size; ++j)
-          m.u[j][image_size - 1] = right.u[j][0];
+          m.u[j][image_size - 1] = east.u[j][0];
       }
     }
     if constexpr (!(Y & 1)) {
-      if constexpr (t::is_memory_module_left()) {
-        auto& left = t::mem_left();
+      if constexpr (t::is_memory_module_west()) {
+        auto& west = t::mem_west();
         for (int j = 0; j < image_size; ++j)
-          left.u[j][image_size - 1] = m.u[j][0];
+          west.u[j][image_size - 1] = m.u[j][0];
       }
     }
 
-    if constexpr (t::is_memory_module_down()) {
-      auto& below = t::mem_down();
+    if constexpr (t::is_memory_module_south()) {
+      auto& below = t::mem_south();
       for (int i = 0; i < image_size; ++i)
         below.v[image_size - 1][i] = m.v[0][i];
     }
@@ -382,8 +382,8 @@ struct tile : acap::aie::tile<AIE, X, Y> {
 
     t::barrier();
 
-    if constexpr (t::is_memory_module_up()) {
-      auto& above = t::mem_up();
+    if constexpr (t::is_memory_module_north()) {
+      auto& above = t::mem_north();
       for (int i = 0; i < image_size; ++i)
         above.w[0][i] = m.w[image_size - 1][i];
     }
@@ -391,19 +391,19 @@ struct tile : acap::aie::tile<AIE, X, Y> {
     //b4.wait();
     t::barrier();
 
-    // Transfer last line of w to next memory module on the right
+    // Transfer last line of w to next memory module on the East
     if constexpr (Y & 1) {
-      if constexpr (t::is_memory_module_right()) {
-        auto& right = t::mem_right();
+      if constexpr (t::is_memory_module_east()) {
+        auto& east = t::mem_east();
         for (int j = 0; j < image_size; ++j)
-          right.w[j][0] = m.w[j][image_size - 1];
+          east.w[j][0] = m.w[j][image_size - 1];
       }
     }
     if constexpr (!(Y & 1)) {
-      if constexpr (t::is_memory_module_left()) {
-        auto& left = t::mem_left();
+      if constexpr (t::is_memory_module_west()) {
+        auto& west = t::mem_west();
         for (int j = 0; j < image_size; ++j)
-          m.w[j][0] = left.w[j][image_size - 1];
+          m.w[j][0] = west.w[j][image_size - 1];
       }
     }
 
@@ -419,9 +419,9 @@ struct tile : acap::aie::tile<AIE, X, Y> {
   void run() {
     initialize_space();
     auto& m = t::mem();
-    fundamentals_v3::mdspan<double, image_size, image_size> md { &m.w[0][0] };
+    std::experimental::mdspan<double, image_size, image_size> md { &m.w[0][0] };
     /// Loop on simulated time
-    for (int time = 0; !a.is_done(); ++time) {
+    for (int time = 0; !a.is_done_barrier(); ++time) {
       seq.compare_with_sequential_reference(time, t::x, t::y, m);
       compute();
       // Display every display_time_step

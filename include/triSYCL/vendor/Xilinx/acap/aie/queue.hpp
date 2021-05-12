@@ -12,6 +12,7 @@
 */
 
 #include <future>
+#include <utility>
 
 #include "program.hpp"
 
@@ -22,16 +23,20 @@ namespace trisycl::vendor::xilinx::acap::aie {
 
 /** The AI Engine minimal queue
 
+    \todo Make a real queue implementation instead of this mock-up
+
     \param AIEDevice is the AIE device targeted by the queue
 */
 template <typename AIEDevice>
 struct queue {
-  using geo = typename AIEDevice::geo;
+  using device = AIEDevice;
+  using geo = typename device::geo;
   using layout = typename geo::layout;
 
-  AIEDevice &aie_d;
+  /// \todo Why using a reference since now a device is a shared_ptr?
+  device& aie_d;
 
-  queue(AIEDevice &d) : aie_d { d } {}
+  queue(device &d) : aie_d { d } {}
 
 
   /** Provide a wait() function that actually can throw an exception
@@ -60,9 +65,36 @@ struct queue {
                       int X,
                       int Y> typename Memory = acap::aie::memory>
   void run() const {
-    program<AIEDevice, Tile, Memory> { aie_d }.run();
+    program<device, Tile, Memory> { aie_d }.run();
   }
 
+
+  /** Run synchronously an heterogeneous invocable on this queue
+
+      \param f is an invocable taking an heterogeneous tile handler
+  */
+  template <typename Invocable>
+  void run(Invocable&& f) const {
+    program<device> { aie_d }.run(std::forward<Invocable>(f));
+  }
+
+
+  /// Wait for all the device tiles on this queue to finish
+  void wait() {
+    aie_d.for_each_tile([](auto& t) { t.wait(); });
+  }
+
+  /** Run synchronously a uniform invocable on this queue
+
+      \param f is an invocable taking a uniform tile handler
+  */
+  template <typename Invocable>
+  void uniform_run(Invocable&& f) const {
+    aie_d.for_each_tile(std::forward<Invocable>(f));
+  }
+
+
+///\todo SUBMIT
 
   /** Submit a program execution on this queue
 

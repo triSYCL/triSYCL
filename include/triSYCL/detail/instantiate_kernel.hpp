@@ -22,14 +22,14 @@ namespace trisycl::detail {
 /** Avoid the interprocedural optimization to remove these arguments
     in the kernel instantiation by relying on some dummy static variables.
 
-    Using \c __attribute__((used)) does not work on arguments but only
+    Using \c [[gnu::used]] does not work on arguments but only
     on static variable, so use this function.
 */
-auto prevent_arguments_from_optimization = [] (auto & ...args) {
+auto inline prevent_arguments_from_optimization = [] (auto & ...args) {
   /* Just keep track of the address of all the given objects,
      otherwise the objects are copied, may throw, are registered for
      destruction with \c atexit(), etc. */
-  static auto __attribute__((used)) keep = std::make_tuple(& args...);
+  [[gnu::used]] static auto keep = std::make_tuple(& args...);
 };
 
 
@@ -47,7 +47,7 @@ auto prevent_arguments_from_optimization = [] (auto & ...args) {
 */
 template <typename KernelName,
           typename Functor>
-__attribute__((noinline)) void
+[[gnu::noinline]] void
 instantiate_kernel(Functor f) noexcept {
   /* The outlining compiler is expected to do some massage here or
      around and to insert some calls to \c serialize_arg and so on */
@@ -87,7 +87,7 @@ set_kernel_task_marker(detail::task &) noexcept {
 */
 template <typename KernelName,
           typename Kernel>
-__attribute__((noinline))
+[[gnu::noinline]]
 void launch_device_kernel(detail::task &t,
                           Kernel k) noexcept {
   /** Setup the task to be used to launch the kernel.

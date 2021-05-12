@@ -20,7 +20,7 @@
 
 #include <thread>
 
-#include "lock.hpp"
+#include "memory_infrastructure.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
@@ -34,29 +34,31 @@ namespace trisycl::vendor::xilinx::acap::aie {
     module infrastructure.
 */
 struct memory_base {
-  /// making lock part the memory tile is a weird deisign choice and this
-  /// makes it harder to do calculate offsets of elements in the memory tile.
-  /// this is with its removed
+#if !defined(__SYCL_XILINX_AIE__)
+  /// TODO: The locking interface for CPU emulation need to be adapted to match
+  /// the hardware one.
 
-  // /// The lock unit of the memory tile
-  // lock_unit memory_locking_unit;
+  /// Keep a reference to the memory_infrastructure hardware features
+  memory_infrastructure mi;
 
-  // /// Get an access to the right lock
-  // auto &lock(int i) {
-  //   return memory_locking_unit.lock(i);
-  // }
+  /// Get an access to the a specific lock
+  auto& lock(int i) { return mi->lock(i); }
+
+  /// Store a way to access to hardware infrastructure of the tile
+  void set_memory_infrastructure(memory_infrastructure m) { mi = m; }
+#else
+  void set_memory_infrastructure(memory_infrastructure) { }
+  auto &lock(int i) {
+    /// TODO: fix it. This doesn't seem implementable for host code when using
+    /// actual hardware because it needs acces to the device handle.
+    static device_lock l{};
+    return l;
+  }
+#endif
 };
 
 /// @} End the aie Doxygen group
 
-}
-
-/*
-    # Some Emacs stuff:
-    ### Local Variables:
-    ### ispell-local-dictionary: "american"
-    ### eval: (flyspell-prog-mode)
-    ### End:
-*/
+} // namespace trisycl::vendor::xilinx::acap::aie
 
 #endif // TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_MEMORY_BASE_HPP

@@ -81,7 +81,7 @@ struct program {
   using device = AIEDevice;
 
   /// The device running this program
-  AIEDevice &aie_d;
+  AIEDevice aie_d;
 
   /// Type describing all the memory modules of the CGRA
   template <int X, int Y>
@@ -196,37 +196,43 @@ struct program {
   }
 
 #ifdef __SYCL_XILINX_AIE__
-  xaie::XAie_SetupConfig(aie_config, aiev1::dev_gen,
-                         aiev1::base_addr, aiev1::col_shift,
-                         aiev1::row_shift, aiev1::num_hw_col,
+  xaie::XAie_SetupConfig(aie_config, aiev1::dev_gen, aiev1::base_addr,
+                         aiev1::col_shift, aiev1::row_shift, aiev1::num_hw_col,
                          aiev1::num_hw_row, aiev1::num_shim_row,
-                         aiev1::mem_tile_row_start,
-                         aiev1::mem_tile_row_num,
-                         aiev1::aie_tile_row_start,
-                         aiev1::aie_tile_row_num);
+                         aiev1::mem_tile_row_start, aiev1::mem_tile_row_num,
+                         aiev1::aie_tile_row_start, aiev1::aie_tile_row_num);
   xaie::XAie_InstDeclare(aie_inst, &aie_config);
 #endif
 
   /// Create the AIE program with the tiles and memory modules
-  program(AIEDevice &aie_d) : aie_d { aie_d } {
-  // Initialization of the AI Engine tile constructs from Lib X AI Engine
+  program(AIEDevice &aie_d) : aie_d{aie_d} {
+    // Initialization of the AI Engine tile constructs from Lib X AI Engine
 #ifdef __SYCL_XILINX_AIE__
-  TRISYCL_XAIE(xaie::XAie_CfgInitialize(&aie_inst, &aie_config));
-  TRISYCL_XAIE(xaie::XAie_PmRequestTiles(&aie_inst, NULL, 0));
+    TRISYCL_XAIE(xaie::XAie_CfgInitialize(&aie_inst, &aie_config));
+    TRISYCL_XAIE(xaie::XAie_PmRequestTiles(&aie_inst, NULL, 0));
 #endif
 
-  boost::hana::for_each(tiles, [&](auto& t) {
-    // Inform each tile about its program
-    t.set_program(*this);
-    // Inform each tile about their tile infrastructure
-    t.set_tile_infrastructure(aie_d.tile(t.x, t.y));
+    boost::hana::for_each(tiles, [&](auto &t) {
+      // Inform each tile about its program
+      t.set_program(*this);
 #ifdef __SYCL_XILINX_AIE__
-    // Inform each tile about their hw tile instance. Skip the first shim row.
-    t.set_hw_tile(xaie::XAie_TileLoc(t.x, t.y + 1), &aie_inst);
+      // Inform each tile about their hw tile instance. Skip the first shim row.
+      t.set_hw_tile(xaie::XAie_TileLoc(t.x, t.y + 1), &aie_inst);
+#else
+      // TODO; this should be enabled for real hardware
+      // Inform each tile about their tile infrastructure
+      t.set_tile_infrastructure(aie_d.tile(t.x, t.y));
 #endif
-    // Keep track of each base tile
-    tile_bases[t.y][t.x] = &t;
-  });
+      // Keep track of each base tile
+      tile_bases[t.y][t.x] = &t;
+    });
+    // Connect each memory to its infrastructure
+    boost::hana::for_each(memory_modules, [&](auto &m) {
+      // Inform each tile about their tile infrastructure
+      m.set_memory_infrastructure(aie_d.mem(m.x, m.y));
+      // Keep track of each base tile
+      memory_modules_bases[m.y][m.x] = &m;
+    });
   }
 
 #ifdef __SYCL_XILINX_AIE__
@@ -249,63 +255,108 @@ struct program {
 // To specify explicitly the name just change the template signature to
 // template <typename KernelName, typename KernelType> and do not compile with
 // the -fsycl-unnamed-lambda option.
-// NOTE: the name of this function - "kernel_outliner" - is used by the
-// Front End to determine kernel invocation kind.
 #ifdef __SYCL_DEVICE_ONLY__
   template <typename KernelName, typename KernelType>
   __attribute__((sycl_kernel))
   __attribute__((annotate("xilinx_acap_tile", KernelType::x,
                           KernelType::y))) void
-  kernel_outliner(KernelType &k) {
+  kernel_invoker_run(KernelType &k) {
     k.run();
+  }
+  template <typename KernelName, typename KernelType>
+  __attribute__((sycl_kernel))
+  __attribute__((annotate("xilinx_acap_tile", KernelType::x,
+                          KernelType::y))) void
+  kernel_invoker_call(KernelType &k) {
+    k();
+  }
+#else
+  template <typename KernelName, typename KernelType>
+  void kernel_invoker_run(KernelType &k) {
+    k.run();
+  }
+  template <typename KernelName, typename KernelType>
+  void kernel_invoker_call(KernelType &k) {
+    k();
   }
 #endif
 
-// Outliner for Method 2
-//#ifdef __SYCL_DEVICE_ONLY__
-//  template <typename KernelType>
-//  __attribute__((sycl_kernel))
-//  void kernel_outliner(KernelType k) {
-//    k();
-//  }
-//#endif
+  template <
+      typename KernelName, typename KernelType,
+      std::enable_if_t<std::is_invocable_r<void, KernelType>::value, int> = 0>
+  void kernel_invoker(KernelType &k) {
+    kernel_invoker_call<KernelName, KernelType>(k);
+  }
+  template <
+      typename KernelName, typename KernelType,
+      std::enable_if_t<!std::is_invocable_r<void, KernelType>::value, int> = 0>
+  void kernel_invoker(KernelType &k) {
+    kernel_invoker_run<KernelName, KernelType>(k);
+  }
 
-  /** Launch the programs of all the tiles of the CGRA in their own
-      CPU thread and wait for their completion.
+  // Outliner for Method 2
+  //#ifdef __SYCL_DEVICE_ONLY__
+  //  template <typename KernelType>
+  //  __attribute__((sycl_kernel))
+  //  void kernel_invoker(KernelType k) {
+  //    k();
+  //  }
+  //#endif
 
-      This is the main member function to use to launch the execution.
-  */
-  void run() {
+  /// Wait for the end of the execution of each tile
+  void wait() {
+    /// There the device doesn't need to wait for itself to execute.
+#if !defined(__SYCL_DEVICE_ONLY__)
+    boost::hana::for_each(tiles, [&](auto &t) {
+      TRISYCL_DUMP2("Joining AIE tile (" << t.x << ',' << t.y << ')', "exec");
+      t.core_wait();
+      TRISYCL_DUMP2("Joined AIE tile (" << t.x << ',' << t.y << ')', "exec");
+    });
+#endif
+  }
+
+  void lock() {
     boost::hana::for_each(tiles, [&](auto &t) {
       if constexpr (has_function_lock<decltype(t)>::value)
         t.lock();
     });
+  }
 
-    // Start each tile program in its own CPU thread
+  /** Launch the programs of all the tiles of the CGRA in their own
+      executor (CPU thread, fiber...) and wait for their completion.
+
+      This is the main member function to use to launch the execution.
+  */
+  void run() {
+    lock();
+    // Start each tile program
     boost::hana::for_each(tiles, [&] (auto& t) {
 #ifdef __SYCL_DEVICE_ONLY__ // The outlining of the device binary
-        // Method 1: use it directly as a kernel wrapper
-        // This still results in some "garbage" IR from the axi streams default
-        // destructor, but you can run -O3 and it'll clean it up quite a bit
-        // without nuking everything so it's progress. The result seems semi-
-        // reasonable and passes through xchesscc at a reasonable speed
-        kernel_outliner<typename std::decay<decltype(t)>::type>(t);
+                            // Method 1: use it directly as a kernel
+                            // wrapper This still results in some
+                            // "garbage" IR from the axi streams default
+                            // destructor, but you can run -O3 and it'll
+                            // clean it up quite a bit without nuking
+                            // everything so it's progress. The result
+                            // seems semi- reasonable and passes through
+                            // xchesscc at a reasonable speed
+      kernel_invoker<typename std::decay<decltype(t)>::type>(t);
 
-        // Method 2: This needs us to turn off diagnostic about std layout
-        // but allows us to use some normal SYCL like lambda generation rather
-        // treating it as a kernel function object.
-        // This does result in rather different IR than the above method,
-        // Method 1 results in a function wrapper that's closer to what is
-        // generated by the original test cases run through cardano. Where it
-        // takes some arguments to the variables used inside of it.
-        // This expects the Tile as an argument, and accesses the data contained
-        // inside. So there is different connotations/semantics to the programs
-        // generated by each method.
-        // auto kernel = [=, TileMove = std::move(t)]() mutable {TileMove.run();};
-        // kernel_outliner(kernel);
+      // Method 2: This needs us to turn off diagnostic about std layout
+      // but allows us to use some normal SYCL like lambda generation rather
+      // treating it as a kernel function object.
+      // This does result in rather different IR than the above method,
+      // Method 1 results in a function wrapper that's closer to what is
+      // generated by the original test cases run through cardano. Where it
+      // takes some arguments to the variables used inside of it.
+      // This expects the Tile as an argument, and accesses the data contained
+      // inside. So there is different connotations/semantics to the programs
+      // generated by each method.
+      // auto kernel = [=, TileMove = std::move(t)]() mutable {TileMove.run();};
+      // kernel_invoker(kernel);
 #else // Host code paths
 #ifdef __SYCL_XILINX_AIE__ // Host code path taken for the Real AI Engine HW
-        t.submit([&] {
+          t.single_task([&] {
             // The name is captured by it's non-reference type and has to be in
             // the cl::sycl::detail namespace as the integration header is
             // defined to be in this namespace (and all our implementation
@@ -315,7 +366,7 @@ struct program {
                 typename std::decay<decltype(t)>::type>::getName();
 
             auto kernelImage =
-                detail::program_manager::instance()->get_image(kernelName);
+                ::trisycl::detail::program_manager::instance()->get_image(kernelName);
 
 #ifdef TRISYCL_DEBUG_IMAGE
             // Image Dump using name retrieval for Debug, separate debug define
@@ -370,41 +421,42 @@ struct program {
             TRISYCL_DUMP2("Stopping AIE tile (" << t.x << ',' << t.y << ')', "exec");
           });
 #else // Code path taken for Software Emulation on CPU
-       t.submit([&] {
-            TRISYCL_DUMP2("Starting AIE tile (" << t.x << ',' << t.y
-                           << ") linear id = " << t.linear_id(), "exec");
-
-            if (!t.prerun())
-              return;
-
-            /* The kernel is the run member function. Just use a
-               capture by reference because there is direct execution
-               here. */
-            t.run();
-
-            t.postrun();
-
-            TRISYCL_DUMP2("Stopping AIE tile (" << t.x << ',' << t.y << ')', "exec");
+          t.single_task([&] {
+            TRISYCL_DUMP_T("Starting AIE tile ("
+                           << t.x << ',' << t.y
+                           << ") linear id = " << t.linear_id());
+            /* Just use a capture by reference in the following
+               because there is direct execution here */
+            kernel_invoker(t);
+            TRISYCL_DUMP_T("Stopping AIE tile (" << t.x << ',' << t.y << ')');
           });
-#endif // __SYCL_XILINX_AIE__
-#endif // __SYCL_DEVICE_ONLY__
-    });
-
-// TODO: look into if this ndef is required, mostly just trying to avoid scary
-// thread code inside kernels.
-#ifndef __SYCL_DEVICE_ONLY__
-//     Wait for the end of the execution of each tile
-    boost::hana::for_each(tiles, [&] (auto& t) {
-        TRISYCL_DUMP2("Joining AIE tile (" << t.x << ',' << t.y << ')', "exec");
-        t.wait();
-        TRISYCL_DUMP2("Joined AIE tile (" << t.x << ',' << t.y << ')', "exec");
-      });
 #endif
+#endif
+        });
+  wait();
+  }
+  /** Run synchronously an heterogeneous invocable collectively on the device
 
-    TRISYCL_DUMP2("Total size of the own memory of all the tile programs: "
-                   << std::dec << sizeof(tiles) << " bytes.", "exec");
-    TRISYCL_DUMP2("Total size of the memory modules: "
-                   << std::dec << sizeof(memory_modules) << " bytes.", "exec");
+      \param f is an invocable taking an heterogeneous tile handler
+
+      \todo Factorize out the 2 run functions
+  */
+  template <typename Invocable>
+  void run(Invocable&& f) {
+    // Start each tile program in its own executor
+    boost::hana::for_each(tiles, [&] (auto& t) {
+        t.single_task([&] {
+            TRISYCL_DUMP_T("Starting AIE tile (" << t.x << ',' << t.y
+                           << ") linear id = " << t.linear_id());
+            /// Each tile gets its own copy of work
+            auto kernel = [&, work = f] { work(t); };
+            using kernel_type = decltype(kernel);
+            // Use the kernel type as its SYCL name too
+            kernel_invoker<kernel_type, kernel_type>(kernel);
+            TRISYCL_DUMP_T("Stopping AIE tile (" << t.x << ',' << t.y << ')');
+          });
+      });
+    wait();
   }
 
   /// Access the cascade connections

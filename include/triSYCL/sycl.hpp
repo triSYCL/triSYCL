@@ -13,24 +13,26 @@
     and to be used in full or partially with other SYCL
     implementations without naming conflict.
 
-    You can use CL/sycl.hpp or SYCL/sycl.hpp headers instead to use this
+    You can use CL/sycl.hpp or sycl/sycl.hpp headers instead to use this
     implementation with the usual \c ::cl::sycl or \c ::sycl namespaces.
 
     For more information about SYCL:
     http://www.khronos.org/sycl/
 
     For more information on this project and to access to the source of
-    this file, look at https://github.com/triSYCL/triSYCL
+    this file, look at https://gitenterprise.xilinx.com/rkeryell/acappp
 
     The Doxygen version of the implementation itself is in
-    http://trisycl.github.io/triSYCL/Doxygen/triSYCL/html
+    https://pages.gitenterprise.xilinx.com/rkeryell/acappp/Doxygen/acappp/html
+    and
+    https://pages.gitenterprise.xilinx.com/rkeryell/acappp/Doxygen/acappp/acappp-implementation-refman.pdf
 
 
     Ronan at keryell dot FR
 
     Copyright 2014--2015 Advanced Micro Devices, Inc.
 
-    Copyright 2015--2019 Xilinx, Inc.
+    Copyright 2015--2020 Xilinx, Inc.
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
@@ -68,12 +70,13 @@
 #include "triSYCL/opencl_types.hpp"
 #include "triSYCL/parallelism.hpp"
 #include "triSYCL/pipe.hpp"
-#include "triSYCL/pipe_reservation.hpp"
 #include "triSYCL/platform.hpp"
 #include "triSYCL/program.hpp"
 #include "triSYCL/queue.hpp"
 #include "triSYCL/range.hpp"
-#include "triSYCL/static_pipe.hpp"
+#include "triSYCL/sycl_2_2/pipe.hpp"
+#include "triSYCL/sycl_2_2/pipe_reservation.hpp"
+#include "triSYCL/sycl_2_2/static_pipe.hpp"
 #include "triSYCL/vec.hpp"
 
 // Some includes at the end to break some dependencies
