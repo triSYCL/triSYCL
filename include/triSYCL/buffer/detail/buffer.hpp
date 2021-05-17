@@ -14,6 +14,7 @@
 #include <type_traits>
 
 #include <boost/multi_array.hpp>
+#include <experimental/mdspan>
 // \todo Use C++17 optional when it is mainstream
 #include <boost/optional.hpp>
 
@@ -50,6 +51,12 @@ public:
      least the current implementation can copy the data too */
   using non_const_value_type = std::remove_const_t<value_type>;
 
+  /// Use dynamic size for each extent
+  using extents = std::experimental::extents<std::experimental::dynamic_extent>;
+
+  /// The memory lay out of a buffer: a dynamic multidimensional array
+  using mdspan = std::experimental::basic_mdspan<value_type, extents>;
+
 private:
 
   // \todo Replace U and D somehow by T and Dimensions
@@ -79,7 +86,7 @@ private:
       or to some other memory location in the case of host memory or
       storage<> abstraction use
   */
-  boost::multi_array_ref<value_type, Dimensions> access;
+  mdspan access;
 
   /* How to copy back data on buffer destruction, can be modified with
      set_final_data( ... )
@@ -196,8 +203,9 @@ public:
        \c copy_back_cl_buffer any more.
        \todo Optimize for the case the buffer is not based on host memory
     */
-    auto size = access.num_elements() * sizeof(value_type);
-    call_update_buffer_state(host_context, access::mode::read, size, access.data());
+    // \todo to update when https://github.com/kokkos/mdspan/issues/45 is solved
+    call_update_buffer_state(host_context, access::mode::read,
+                             get_size(), access.data());
 
 #endif
     if (modified && final_write_back)
@@ -246,9 +254,9 @@ public:
            \todo Use std::uninitialized_move instead, when we switch
            to full C++17
         */
-        std::copy(current_access.begin(),
-                  current_access.end(),
-                  access.begin());
+        std::copy(current_access.data(),
+                  current_access.data() + get_count(),
+                  access.data());
       }
     }
   }
@@ -259,25 +267,22 @@ public:
       constructor
   */
   auto get_range() const {
-    /* Interpret the shape which is a pointer to the first element as an
-       array of Dimensions elements so that the range<Dimensions>
-       constructor is happy with this collection
-
-       \todo Add also a constructor in range<> to accept a const
-       std::size_t *?
-    */
-    return range<Dimensions> {
-      *(const std::size_t (*)[Dimensions])(access.shape())
-        };
+    range<Dimensions> r;
+    for (std::size_t i = 0; i < Dimensions; ++i)
+      r[i] = access.extent(i);
+    return r;
   }
 
 
   /** Returns the total number of elements in the buffer
 
       Equal to get_range()[0] * ... * get_range()[Dimensions-1].
+
+      \todo Move these kinds of functions into a mixin between buffers
+      and accessors?
   */
-  auto get_count() const {
-    return access.num_elements();
+  std::size_t get_count() const {
+    return access.mapping().required_span_size();
   }
 
 
@@ -287,7 +292,7 @@ public:
       http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/p0122r0.pdf
       it is named bytes() for example
   */
-  auto get_size() const {
+  std::size_t get_size() const {
     return get_count()*sizeof(value_type);
   }
 
@@ -337,14 +342,14 @@ private:
     auto count = r.size();
     // Allocate uninitialized memory
     allocation = alloc.allocate(count);
-    return boost::multi_array_ref<value_type, Dimensions> { allocation, r };
+    return mdspan { allocation, 1 };
   }
 
 
   /// Deallocate buffer memory if required
   void deallocate_buffer() {
     if (allocation)
-      alloc.deallocate(allocation, access.num_elements());
+      alloc.deallocate(allocation, get_count());
   }
 
 

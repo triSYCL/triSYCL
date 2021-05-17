@@ -10,7 +10,10 @@
 */
 
 #include <cstddef>
+#include <experimental/mdspan>
 #include <memory>
+#include <type_traits>
+#include <utility>
 
 #ifdef TRISYCL_OPENCL
 #include <boost/compute.hpp>
@@ -73,12 +76,14 @@ class accessor :
   */
   std::shared_ptr<detail::buffer<T, Dimensions>> buf;
 
-  /// The implementation is a multi_array_ref wrapper
-  using array_view_type = boost::multi_array_ref<T, Dimensions>;
+  /// Use dynamic size for each extent
+  using extents = std::experimental::extents<std::experimental::dynamic_extent>;
 
+  /// The implementation is a multi_array_ref wrapper
+  using array_view_type = std::experimental::basic_mdspan<T, extents>;
   // The same type but writable
-  using writable_array_view_type =
-    typename std::remove_const<array_view_type>::type;
+  using writable_array_view_type = typename std::experimental::basic_mdspan
+    <typename array_view_type::value_type, extents>;
 
   /** The way the buffer is really accessed
 
@@ -99,21 +104,23 @@ public:
 
   /** \todo in the specification: store the types for user request as STL
       or C++AMP */
-  using value_type = T;
-  using element = T;
+  using element_type = T;
+  using value_type = std::remove_cv_t<element_type>;
+  using pointer = typename array_view_type::pointer;
   using reference = typename array_view_type::reference;
-  using const_reference = typename array_view_type::const_reference;
+  using const_reference = typename std::remove_const_t<reference>;
 
+  using iterator = pointer;
+#ifdef TODO
   /** Inherit the iterator types from the implementation
 
       \todo Add iterators to accessors in the specification
   */
-  using iterator = typename array_view_type::iterator;
   using const_iterator = typename array_view_type::const_iterator;
   using reverse_iterator = typename array_view_type::reverse_iterator;
   using const_reverse_iterator =
     typename array_view_type::const_reverse_iterator;
-
+#endif
 
   /** Construct a host accessor from an existing buffer
 
@@ -204,16 +211,10 @@ public:
       https://cvs.khronos.org/bugzilla/show_bug.cgi?id=14404
   */
   auto get_range() const {
-    /* Interpret the shape which is a pointer to the first element as an
-       array of Dimensions elements so that the range<Dimensions>
-       constructor is happy with this collection
-
-       \todo Add also a constructor in range<> to accept a const
-       std::size_t *?
-    */
-    return range<Dimensions> {
-      *(const std::size_t (*)[Dimensions])(array.shape())
-        };
+    range<Dimensions> r;
+    for (std::size_t i = 0; i < Dimensions; ++i)
+      r[i] = array.extent(i);
+    return r;
   }
 
 
@@ -224,9 +225,12 @@ public:
       \todo Move on
       https://cvs.khronos.org/bugzilla/show_bug.cgi?id=15564 and
       https://cvs.khronos.org/bugzilla/show_bug.cgi?id=14404
+
+      \todo Move these kinds of functions into a mixin between buffers
+      and accessors?
   */
-  auto get_count() const {
-    return array.num_elements();
+  std::size_t get_count() const {
+    return array.mapping().required_span_size();
   }
 
 
@@ -236,7 +240,7 @@ public:
       https://cvs.khronos.org/bugzilla/show_bug.cgi?id=15564 and
       https://cvs.khronos.org/bugzilla/show_bug.cgi?id=14404
   */
-  auto get_size() const {
+  std::size_t get_size() const {
     return get_count()*sizeof(value_type);
   }
 
@@ -398,19 +402,12 @@ public:
       \todo Do we need this in detail::accessor too or only in accessor?
   */
 
+  iterator begin() { return array.data(); }
 
-  // iterator begin() { return array.begin(); }
-  iterator begin() const {
-    return const_cast<writable_array_view_type &>(array).begin();
-  }
+  iterator end() { return array.data() + get_count(); }
 
 
-  // iterator end() { return array.end(); }
-  iterator end() const {
-    return const_cast<writable_array_view_type &>(array).end();
-  }
-
-
+#ifdef TODO
   // const_iterator begin() const { return array.begin(); }
 
 
@@ -445,7 +442,7 @@ public:
 
 
   const_reverse_iterator crend() const { return array.rend(); }
-
+#endif
 private:
 
 #ifdef TRISYCL_OPENCL

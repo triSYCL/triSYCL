@@ -324,7 +324,6 @@ class accessor :
     return implementation->get_pointer();
   }
 
-
   /** Forward all the iterator functions to the implementation
 
       \todo Add these functions to the specification
@@ -358,7 +357,7 @@ class accessor :
     return implementation->end();
   }
 
-
+#ifdef TODO
   // const_iterator begin() const { return implementation->begin(); }
 
 
@@ -399,7 +398,7 @@ class accessor :
   typename accessor_detail::const_reverse_iterator crend() const {
     return implementation->rend();
   }
-
+#endif
 };
 
 /// @} End the execution Doxygen group
