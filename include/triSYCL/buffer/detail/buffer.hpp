@@ -9,9 +9,11 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <array>
 #include <cstddef>
 #include <memory>
 #include <type_traits>
+#include <utility>
 
 #include <boost/multi_array.hpp>
 #include <experimental/mdspan>
@@ -47,17 +49,29 @@ public:
   // Extension to SYCL: provide pieces of STL container interface
   using element = T;
   using value_type = T;
+
+private:
+
   /* Even if the buffer is read-only use a non-const type so at
      least the current implementation can copy the data too */
   using non_const_value_type = std::remove_const_t<value_type>;
 
-  /// Use dynamic size for each extent
-  using extents = std::experimental::extents<std::experimental::dynamic_extent>;
+  /// Create an mdspan std::experimental::extents object with a
+  /// dynamic size for each extent
+  template<std::size_t... I>
+  static constexpr auto make_dynamic_extents(std::index_sequence<I...>) {
+    return std::experimental::extents
+      // This repeats n times the std::experimental::dynamic_extent
+      <((void)I, std::experimental::dynamic_extent)...> {};
+  };
 
-  /// The memory lay out of a buffer: a dynamic multidimensional array
-  using mdspan = std::experimental::basic_mdspan<value_type, extents>;
+  /// Create an mdspan std::experimental::extents type with a
+  /// dynamic size for each extent
+  using dynamic_extents =
+    decltype(make_dynamic_extents(std::make_index_sequence<Dimensions> {}));
 
-private:
+  /// The memory lay-out of a buffer is a dynamic multidimensional array
+  using mdspan = std::experimental::basic_mdspan<value_type, dynamic_extents>;
 
   // \todo Replace U and D somehow by T and Dimensions
   // To allow allocation access
@@ -72,14 +86,6 @@ private:
       \todo Implement user-provided allocator
   */
   std::allocator<non_const_value_type> alloc;
-
-  /** If some allocation is requested on the host for the buffer
-      memory, this is where the memory is attached to.
-
-      Note that this is uninitialized memory, as stated in SYCL
-      specification.
-  */
-  non_const_value_type *allocation = nullptr;
 
   /** This is the multi-dimensional interface to the data that may point
       to either allocation in the case of storage managed by SYCL itself
@@ -111,13 +117,14 @@ private:
 public:
 
   /// Create a new read-write buffer of size \param r
-  buffer(const range<Dimensions> &r) : access { allocate_buffer(r) } {}
+  buffer(const range<Dimensions>& r)
+    : access { allocate_buffer(r), extents_cast(r) } {}
 
 
   /** Create a new read-write buffer from \param host_data of size
       \param r without further allocation */
   buffer(T *host_data, const range<Dimensions> &r) :
-    access { host_data, r },
+    access { host_data, extents_cast(r) },
     data_host { true }
   {}
 
@@ -141,7 +148,7 @@ public:
        wrapper is not. If a write accessor is requested, there should
        be a copy on write. So this pointer should not be written and
        this const_cast should be acceptable. */
-    access { const_cast<T *>(host_data), r },
+    access { const_cast<T*>(host_data), extents_cast(r) },
     data_host { true },
     /* Set copy_if_modified to true, so that if an accessor with write
        access is created, data are copied before to be modified. */
@@ -158,7 +165,7 @@ public:
       used.
   */
   buffer(shared_ptr_class<T> &host_data, const range<Dimensions> &r) :
-    access { host_data.get(), r },
+    access { host_data.get(), extents_cast(r) },
     input_shared_pointer { host_data },
     data_host { true }
   {}
@@ -167,11 +174,13 @@ public:
   /// Create a new allocated 1D buffer from the given elements
   template <typename Iterator>
   buffer(Iterator start_iterator, Iterator end_iterator) :
-    access { allocate_buffer(std::distance(start_iterator, end_iterator)) }
+    access { allocate_buffer(std::distance(start_iterator, end_iterator)),
+             extents_cast(range<1> { static_cast<std::size_t>
+                   (std::distance(start_iterator, end_iterator)) } ) }
     {
       /* Then assign allocation since this is the only multi_array
          method with this iterator interface */
-      access.assign(start_iterator, end_iterator);
+      assign(start_iterator, end_iterator);
     }
 
 
@@ -341,15 +350,34 @@ private:
   auto allocate_buffer(const range<Dimensions> &r) {
     auto count = r.size();
     // Allocate uninitialized memory
-    allocation = alloc.allocate(count);
-    return mdspan { allocation, 1 };
+    return alloc.allocate(count);
   }
 
 
   /// Deallocate buffer memory if required
   void deallocate_buffer() {
-    if (allocation)
-      alloc.deallocate(allocation, get_count());
+    if (access.data())
+      alloc.deallocate(access.data(), get_count());
+  }
+
+
+  /** Cast a SYCL range into a mdspan index array, which is an array
+      of std::size_t into an array of std::ptrdiff_t
+  */
+  const std::array<typename mdspan::index_type, Dimensions>&
+  extents_cast(const range<Dimensions>& r) {
+    return reinterpret_cast<const std::array<typename mdspan::index_type,
+                                             Dimensions>&>(r);
+  }
+
+  /** Assign the 1-D storage behind the accessor
+
+      Use 2 different iterator types since in C++20 ranges it is now
+      the case.
+  */
+  template <typename StartIter, typename EndIter>
+  void assign(StartIter start_iterator, EndIter end_iterator) {
+    std::copy(start_iterator, end_iterator, access.data());
   }
 
 

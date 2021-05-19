@@ -76,14 +76,25 @@ class accessor :
   */
   std::shared_ptr<detail::buffer<T, Dimensions>> buf;
 
-  /// Use dynamic size for each extent
-  using extents = std::experimental::extents<std::experimental::dynamic_extent>;
+  /// Create an mdspan std::experimental::extents object with a
+  /// dynamic size for each extent
+  template<std::size_t... I>
+  static constexpr auto make_dynamic_extents(std::index_sequence<I...>) {
+    return std::experimental::extents
+      // This repeats n times the std::experimental::dynamic_extent
+      <((void)I, std::experimental::dynamic_extent)...> {};
+  };
 
-  /// The implementation is a multi_array_ref wrapper
-  using array_view_type = std::experimental::basic_mdspan<T, extents>;
+  /// Create an mdspan std::experimental::extents type with a
+  /// dynamic size for each extent
+  using dynamic_extents =
+    decltype(make_dynamic_extents(std::make_index_sequence<Dimensions> {}));
+
+  /// The memory lay-out of a buffer is a dynamic multidimensional array
+  using array_view_type = std::experimental::basic_mdspan<T, dynamic_extents>;
   // The same type but writable
   using writable_array_view_type = typename std::experimental::basic_mdspan
-    <typename array_view_type::value_type, extents>;
+    <typename array_view_type::value_type, dynamic_extents>;
 
   /** The way the buffer is really accessed
 
@@ -245,13 +256,25 @@ public:
   }
 
 
+  /** Cast a SYCL range into a mdspan index array, which is an array
+      of std::size_t into an array of std::ptrdiff_t
+  */
+  const std::array<typename array_view_type::index_type, Dimensions>&
+  extents_cast(const range<Dimensions> &r) {
+    return reinterpret_cast<const std::array
+                            <typename array_view_type::index_type,
+                             Dimensions>&>(r);
+  }
+
+
   /** Use the accessor with integers à la [][][]
 
       Use array_view_type::reference instead of auto& because it does not
       work in some dimensions.
    */
   reference operator[](std::size_t index) {
-    return array[index];
+    /// \todo use subspan
+    return array(index);
   }
 
 
@@ -266,26 +289,26 @@ public:
 
 
   /// To use the accessor with [id<>]
-  auto &operator[](id<dimensionality> index) {
-    return array(index);
+   auto &operator[](const id<dimensionality>& index) {
+    return array(extents_cast(index));
   }
 
 
   /// To use the accessor with [id<>]
-  auto &operator[](id<dimensionality> index) const {
-    return array(index);
+  auto &operator[](const id<dimensionality>& index) const {
+    return array(extents_cast(index));
   }
 
 
   /// To use an accessor with [item<>]
-  auto &operator[](item<dimensionality> index) {
-    return (*this)[index.get()];
+  auto &operator[](const item<dimensionality>& index) {
+    return array(extents_cast(index.get()));
   }
 
 
   /// To use an accessor with [item<>]
-  auto &operator[](item<dimensionality> index) const {
-    return (*this)[index.get()];
+  auto &operator[](const item<dimensionality>& index) const {
+    return array(extents_cast(index.get()));
   }
 
 
@@ -293,16 +316,16 @@ public:
 
       \todo Add in the specification because used by HPC-GPU slide 22
   */
-  auto &operator[](nd_item<dimensionality> index) {
-    return (*this)[index.get_global()];
+  auto &operator[](const nd_item<dimensionality>& index) {
+    return array(extents_cast(index.get_global()));
   }
 
   /** To use an accessor with an [nd_item<>]
 
       \todo Add in the specification because used by HPC-GPU slide 22
   */
-  auto &operator[](nd_item<dimensionality> index) const {
-    return (*this)[index.get_global()];
+  auto &operator[](const nd_item<dimensionality>& index) const {
+    return array(extents_cast(index.get_global()));
   }
 
 
