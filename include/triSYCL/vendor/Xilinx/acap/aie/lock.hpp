@@ -61,6 +61,7 @@ struct device_lock {
 /// on host for acap
   int id;
 
+  /// TODO this should be an xaie::handle
   xaie::XAie_DevInst *dev_inst;
   xaie::XAie_LocType loc;
 

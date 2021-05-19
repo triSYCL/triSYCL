@@ -234,6 +234,11 @@ template <typename Layout> struct device {
       // Create & start the tile infrastructure
       tile(x, y) = { x, y, fiber_executor };
     });
+
+#if !defined(__SYCL_XILINX_AIE__)
+    // TODO: this should be enabled on hardware when it is working but for now
+    // it isn't
+
     for_each_tile_x_index([&](auto x) {
       // Start the shim infrastructure
       shim(x).start(x, fiber_executor);
@@ -264,6 +269,7 @@ template <typename Layout> struct device {
              ranges::views::zip(sass::m_west_range, sass::s_east_range))
           shim(x).output(o) = shim(x - 1).input(i);
     });
+#endif
   }
 
   /** Display the device layout

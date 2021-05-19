@@ -59,10 +59,6 @@ public:
 
   /// Noop on device, it has to exist for compilation purposes as Host side code
   /// is still compiled for the device unfortunately.
-  void set_hw_tile(xaie::XAie_LocType, xaie::XAie_DevInst*) {}
-
-  /// Noop on device, it has to exist for compilation purposes as Host side code
-  /// is still compiled for the device unfortunately.
   void set_program(AIE_Program &p) {}
 
   /// Routines to run before core starts running.
@@ -79,6 +75,10 @@ public:
 
   /// Routines to run after core completes running.
   void postrun() {}
+
+  template <typename Work> void single_task(Work &&f) {
+    detail::tile_infrastructure<typename device::geo>{}.single_task(std::forward<Work>(f));
+  }
 
   void set_tile_infrastructure(const tile_infrastructure<device> &t) {}
 };
@@ -106,13 +106,6 @@ protected:
   /// \todo can probably be removed
   AIE_Program *program;
 
-/// TODO: Think about where this should go, this is an instance of a HW Tile
-/// that a device instantiates, does it belong here or in tile_infrastructure?
-#ifdef __SYCL_XILINX_AIE__
-  xaie::XAie_LocType aie_hw_tile;
-  xaie::XAie_DevInst* aie_inst;
-#endif
-
   /// Keep a reference to the tile_infrastructure hardware features
   tile_infrastructure<geo> ti;
 
@@ -120,9 +113,11 @@ public:
 
 #ifdef __SYCL_XILINX_AIE__
   /// Store a way to access to hw tile instance
-  void set_hw_tile(xaie::XAie_LocType tile, xaie::XAie_DevInst* inst) {
-    aie_hw_tile = tile;
-    aie_inst = inst;
+  void set_dev_handle(xaie::handle h) {
+    ti.set_dev_handle(h);
+  }
+  xaie::handle get_dev_handle() const {
+    return ti.get_dev_handle();
   }
 #endif
 

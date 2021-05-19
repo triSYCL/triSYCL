@@ -73,6 +73,11 @@ template <typename Geography> class tile_infrastructure {
   std::array<std::optional<sending_dma<axi_ss_t>>, axi_ss_geo::s_dma_size>
       tx_dmas;
 
+#if defined(__SYCL_XILINX_AIE__)
+#if !defined(__SYCL_DEVICE_ONLY__)
+  xaie::handle dev_handle;
+#endif
+#else
 #if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
   /// Keep track of the fiber executor
   ::trisycl::detail::fiber_pool* fe;
@@ -83,6 +88,51 @@ template <typename Geography> class tile_infrastructure {
   /// Keep track of the std::thread execution in this tile
   std::future<void> future_work;
 #endif
+#endif
+
+#ifdef __SYCL_DEVICE_ONLY__
+  /// On device trigger outlining.
+
+  template <typename KernelName, typename KernelType>
+  __attribute__((sycl_kernel))
+  __attribute__((annotate("xilinx_acap_tile", KernelType::x,
+                          KernelType::y))) void
+  kernel_invoker_run(KernelType &k) {
+    k.run();
+  }
+  template <typename KernelName, typename KernelType>
+  __attribute__((sycl_kernel))
+  __attribute__((annotate("xilinx_acap_tile", KernelType::x,
+                          KernelType::y))) void
+  kernel_invoker_call(KernelType &k) {
+    k();
+  }
+#else
+  /// This isn't called on the host unless we are in CPU emulation so we invoke
+  /// the kernel function.
+
+  template <typename KernelName, typename KernelType>
+  void kernel_invoker_run(KernelType &k) {
+    k.run();
+  }
+  template <typename KernelName, typename KernelType>
+  void kernel_invoker_call(KernelType &k) {
+    k();
+  }
+#endif
+
+  template <
+      typename KernelName, typename KernelType,
+      std::enable_if_t<std::is_invocable_r<void, KernelType>::value, int> = 0>
+  void kernel_invoker(KernelType &k) {
+    kernel_invoker_call<KernelName, KernelType>(k);
+  }
+  template <
+      typename KernelName, typename KernelType,
+      std::enable_if_t<!std::is_invocable_r<void, KernelType>::value, int> = 0>
+  void kernel_invoker(KernelType &k) {
+    kernel_invoker_run<KernelName, KernelType>(k);
+  }
 
   /** Map the user input port number to the AXI stream switch port
 
@@ -103,6 +153,11 @@ template <typename Geography> class tile_infrastructure {
   }
 
  public:
+
+#ifdef __SYCL_DEVICE_ONLY__
+tile_infrastructure() = default;
+#endif
+
   /** Start the tile infrastructure associated to the AIE device
 
       \param[in] x is the horizontal coordinate for this tile
@@ -120,6 +175,10 @@ template <typename Geography> class tile_infrastructure {
       , fe { &fiber_executor }
 #endif
   {
+#if !defined(__SYCL_XILINX_AIE__)
+    // TODO: this should be enabled on hardware when it is working but for now
+    // it isn't
+
     // Connect the core receivers to its AXI stream switch
     for (auto p : views::enum_type(mpl::me_0, mpl::me_last))
       output(p) =
@@ -135,7 +194,19 @@ template <typename Geography> class tile_infrastructure {
     for (const auto& [d, p] :
          ranges::views::zip(tx_dmas, axi_ss_geo::s_dma_range))
       d.emplace(fiber_executor, input(p));
+#endif
   }
+
+#if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
+  // for host side on device execution
+  /// Store a way to access to hw tile instance
+  void set_dev_handle(xaie::handle h) {
+    dev_handle = h;
+  }
+  xaie::handle get_dev_handle() const {
+    return dev_handle;
+  }
+#endif
 
   /// Get the horizontal coordinate
   int x() { return x_coordinate; }
@@ -218,7 +289,74 @@ template <typename Geography> class tile_infrastructure {
   }
 
   /// Launch an invocable on this tile
-  template <typename Work> void single_task(Work&& f) {
+  template <typename Work> void single_task(Work &&f) {
+#ifdef __SYCL_XILINX_AIE__
+#ifdef __SYCL_DEVICE_ONLY__
+    // The outlining of the device binary Method 1: use it directly as a kernel
+    // wrapper This still results in some "garbage" IR from the axi streams
+    // default destructor, but you can run -O3 and it'll clean it up quite a bit
+    // without nuking everything so it's progress. The result seems semi-
+    // reasonable and passes through xchesscc at a reasonable speed
+    kernel_invoker<typename std::decay<decltype(f)>::type>(f);
+
+#else
+    /// Host side
+
+    // The name is captured by it's non-reference type and has to be in
+    // the cl::sycl::detail namespace as the integration header is
+    // defined to be in this namespace (and all our implementation
+    // resides in trisycl by default, so ::detail resolves to
+    // trisycl::detail)
+    auto kernelName = ::trisycl::detail::KernelInfo<
+        typename std::decay<decltype(f)>::type>::getName();
+
+    auto kernelImage =
+        ::trisycl::detail::program_manager::instance()->get_image(kernelName);
+
+#ifdef TRISYCL_DEBUG_IMAGE
+    // Image Dump using name retrieval for Debug, separate debug define
+    // as dumping 400 images when at maximum array capacity is not
+    // necessarily something you always want to do when debugging.
+    //
+    // This differentiates from the program_manager image dump in that
+    // it helps check whether the names are correctly correlating to the
+    // correct elf images and if there is some breakage in the storing
+    // of the images.
+    detail::program_manager::instance()->image_dump(
+        kernelName, "run_aie_" + kernelName + ".elf");
+#endif
+    {
+      // auto Transaction = f.get_transaction();
+      f.get_dev_handle().core_reset();
+
+      TRISYCL_DUMP2("Loading Kernel " << kernelName << " ELF to tile (" << f.x
+                                      << ',' << f.y
+                                      << ") linear id = " << f.linear_id(),
+                    "exec");
+
+      f.get_dev_handle().load_elf_image(kernelImage);
+
+      TRISYCL_DUMP2("Loaded Kernel " << kernelName << " ELF to tile (" << f.x
+                                     << ',' << f.y
+                                     << ") linear id = " << f.linear_id()
+                                     << "beginning tile execution",
+                    "exec");
+      /// Setup DMA for parameter passing
+      f.get_dev_handle().mem_dma(hw_mem::args_beg_off, hw_mem::args_size);
+      if (!f.prerun())
+        return;
+
+      TRISYCL_DUMP2("Starting AIE tile ("
+                        << f.x << ',' << f.y
+                        << ") linear id = " << f.linear_id() << ","
+                        << "Associated Tile Kernel Name: " << kernelName
+                        << "- beginning prerun execution",
+                    "exec");
+
+      f.get_dev_handle().core_run();
+    }
+#endif
+#else
     if (future_work.valid())
       throw std::logic_error("Something is already running on this tile!");
     // Launch the tile program immediately on a new executor engine
@@ -239,11 +377,27 @@ template <typename Geography> class tile_infrastructure {
 #else
     future_work = std::async(std::launch::async, kernel);
 #endif
+#endif
   }
 
   /// Wait for the execution of the callable on this tile
-  void wait() { if (future_work.valid())
+  void wait() {
+#ifdef __SYCL_XILINX_AIE__
+#ifdef __SYCL_DEVICE_ONLY__
+/// Device side
+
+/// Noop
+
+#else
+/// Host side
+
+/// TODO
+
+#endif
+#else
+    if (future_work.valid())
       future_work.get();
+#endif
   }
 
   /// Configure a connection of the core tile AXI stream switch

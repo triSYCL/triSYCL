@@ -79,7 +79,6 @@ struct tile : tile_base<AIE_Program> {
   /// Shortcut to the tile base class
   using tb = tile_base<AIE_Program>;
 
-
   /** Return the coordinate of the tile in the given dimension
 
       \param Dim is 0 for the horizontal (x) dimension and 1 for the
@@ -288,9 +287,9 @@ struct tile : tile_base<AIE_Program> {
     TRISYCL_DUMP2(std::dec << "get_lock: (X = " << X << ", Y = " << Y
                            << ") dir:" << tile_t::dir_to_str[d],
                   "sync");
-    return {id, tb::aie_inst,
-            xaie::XAie_TileLoc(tb::aie_hw_tile.Col + tile_t::get_offset(d).y,
-                               tb::aie_hw_tile.Row + tile_t::get_offset(d).x)};
+    return {id, get_dev_handle().inst,
+            xaie::XAie_TileLoc(get_dev_handle().tile.Col + tile_t::get_offset(d).y,
+                               get_dev_handle().tile.Row + tile_t::get_offset(d).x)};
   }
 #endif
 #else
@@ -363,110 +362,17 @@ struct tile : tile_base<AIE_Program> {
 // cleanly
 // Part of the real current host -> device communication API using Lib X AI
 // Engine
-#ifdef __SYCL_XILINX_AIE__
+#if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
+  // for host side on device execution
   /// Store a way to access to hw tile instance
-  void set_hw_tile(xaie::XAie_LocType tile, xaie::XAie_DevInst* inst) {
+  void set_dev_handle(xaie::handle h) {
     TRISYCL_DUMP2(std::dec << "Mapping: (X = " << X << ", Y = " << Y
-                            << ") to  (Row = " << (int)tile.Row
-                            << ", Col = " << (int)tile.Col << ")", "exec");
-    tb::set_hw_tile(tile, inst);
+                            << ") to  (Row = " << (int)h.tile.Row
+                            << ", Col = " << (int)h.tile.Col << ")", "exec");
+    tb::set_dev_handle(h);
   }
-
-  xaie::XAie_Transaction
-  get_transaction(uint32_t flags = XAIE_TRANSACTION_ENABLE_AUTO_FLUSH) {
-    return {tb::aie_inst, flags};
-  }
-
-  /// The memory read accessors
-  std::uint32_t mem_read(std::uint32_t offset) {
-    std::uint32_t Data;
-    TRISYCL_XAIE(
-        xaie::XAie_DataMemRdWord(tb::aie_inst, tb::aie_hw_tile, offset, &Data));
-    TRISYCL_DUMP2("Reading: (" << X << ", " << Y << ") + 0x" << std::hex
-                              << offset << " = " << std::dec << Data,"memory");
-    return Data;
-  }
-
-  /// The memory write accessors
-  void mem_write(std::uint32_t offset, std::uint32_t data) {
-    TRISYCL_XAIE(
-        xaie::XAie_DataMemWrWord(tb::aie_inst, tb::aie_hw_tile, offset, data));
-    TRISYCL_DUMP2("Writing: (" << X << ", " << Y << ") + 0x" << std::hex
-                               << offset << " = " << std::dec << data,"memory");
-  }
-
-  /// memcpy from device to host
-  void memcpy_d2h(void *data, std::uint32_t offset, std::uint32_t size) {
-    TRISYCL_XAIE(xaie::XAie_DataMemBlockRead(tb::aie_inst, tb::aie_hw_tile,
-                                             offset, data, size));
-    TRISYCL_DUMP2("memcpy_d2h: (" << X << ", " << Y << ") + 0x" << std::hex
-                                  << offset << "-0x" << offset + size
-                                  << " -> 0x" << (uintptr_t)data << "-0x"
-                                  << ((uintptr_t)data) + size,
-                  "memory");
-  }
-
-  /// memcpy from host to device
-  void memcpy_h2d(std::uint32_t offset, void *data, std::uint32_t size) {
-    TRISYCL_XAIE(xaie::XAie_DataMemBlockWrite(tb::aie_inst, tb::aie_hw_tile,
-                                              offset, data, size));
-    TRISYCL_DUMP2("memcpy_h2d: (" << X << ", " << Y << ") + 0x" << std::hex
-                                  << offset << "-0x" << offset + size
-                                  << " <- 0x" << (uintptr_t)data << "-0x"
-                                  << ((uintptr_t)data) + size,
-                  "memory");
-  }
-
-  /// Configure device for dma.
-  void mem_dma(uint32_t offset, uint32_t size) {
-    xaie::XAie_DmaDesc DmaDesc;
-    TRISYCL_XAIE(
-        xaie::XAie_DmaDescInit(tb::aie_inst, &DmaDesc, tb::aie_hw_tile));
-    TRISYCL_XAIE(xaie::XAie_DmaSetAddrLen(&DmaDesc, offset, size));
-    TRISYCL_DUMP2("Setup Dma: (" << X << ", " << Y << ") 0x" << std::hex
-                                 << offset << "-0x" << (offset + size),
-                  "memory");
-  }
-
-  /// FIXME: is this right location for these functions?
-  /// Load the elf via path to a elf binary file, handy for debugging if you
-  /// wish to dump a stored binary or load something AoT compiled seperately
-  void load_elf_file(const char *path) {
-    // global load of elf
-    TRISYCL_XAIE(xaie::XAie_LoadElf(tb::aie_inst, tb::aie_hw_tile, path, 0));
-  }
-
-  /// Load the elf via path to a block of memory which contains an elf image
-  void load_elf_image(std::string_view image) {
-    assert(::trisycl::detail::program_manager::isELFMagic(image.data()) &&
-           "invalid ELF magic");
-    TRISYCL_XAIE(xaie::XAie_LoadElfMem(tb::aie_inst, tb::aie_hw_tile,
-                                       (u8 *)(image.data())));
-  }
-
-  /// Reset the core
-  void core_reset() {
-    TRISYCL_XAIE(xaie::XAie_CoreUnreset(tb::aie_inst, tb::aie_hw_tile));
-  }
-
-  /// Start the core
-  void core_run() {
-    TRISYCL_XAIE(xaie::XAie_CoreEnable(tb::aie_inst, tb::aie_hw_tile));
-  }
-
-  /// Stop the core
-  void core_stop() {
-    TRISYCL_XAIE(xaie::XAie_CoreDisable(tb::aie_inst, tb::aie_hw_tile));
-  }
-
-  /// Wait for the core to complete
-  void core_wait() {
-    TRISYCL_DUMP2(std::dec << "(" << X << ", " << Y << ") Waiting for kernel...", "exec");
-    xaie::AieRC RC = xaie::XAIE_OK;
-    do {
-      RC = xaie::XAie_CoreWaitForDone(tb::aie_inst, tb::aie_hw_tile, 0);
-    } while (RC != xaie::XAIE_OK);
-    TRISYCL_DUMP2(std::dec << "(" << X << ", " << Y << ") done", "exec");
+  xaie::handle get_dev_handle() {
+    return tb::get_dev_handle();
   }
 #endif
 
