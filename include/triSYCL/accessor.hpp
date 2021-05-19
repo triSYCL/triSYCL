@@ -250,25 +250,25 @@ class accessor :
 
 
   /// To use the accessor with [id<>]
-  auto &operator[](id<dimensionality> index) {
+  auto &operator[](const id<dimensionality>& index) {
     return (*implementation)[index];
   }
 
 
   /// To use the accessor with [id<>]
-  auto &operator[](id<dimensionality> index) const {
+  auto &operator[](const id<dimensionality>& index) const {
     return (*implementation)[index];
   }
 
 
   /// To use an accessor with [item<>]
-  auto &operator[](item<dimensionality> index) {
+  auto &operator[](const item<dimensionality>& index) {
     return (*this)[index.get_id()];
   }
 
 
   /// To use an accessor with [item<>]
-  auto &operator[](item<dimensionality> index) const {
+  auto &operator[](const item<dimensionality>& index) const {
     return (*this)[index.get_id()];
   }
 
@@ -277,7 +277,7 @@ class accessor :
 
       \todo Add in the specification because used by HPC-GPU slide 22
   */
-  auto &operator[](nd_item<dimensionality> index) {
+  auto &operator[](const nd_item<dimensionality>& index) {
     return (*this)[index.get_global_id()];
   }
 
@@ -285,7 +285,7 @@ class accessor :
 
       \todo Add in the specification because used by HPC-GPU slide 22
   */
-  auto &operator[](nd_item<dimensionality> index) const {
+  auto &operator[](const nd_item<dimensionality>& index) const {
     return (*this)[index.get_global_id()];
   }
 
