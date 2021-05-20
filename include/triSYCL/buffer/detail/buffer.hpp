@@ -87,6 +87,14 @@ private:
   */
   std::allocator<non_const_value_type> alloc;
 
+  /** If some allocation is requested on the host for the buffer
+      memory, this is where the memory is attached to.
+
+      Note that this is uninitialized memory, as stated in SYCL
+      specification.
+  */
+  non_const_value_type *allocation = nullptr;
+
   /** This is the multi-dimensional interface to the data that may point
       to either allocation in the case of storage managed by SYCL itself
       or to some other memory location in the case of host memory or
@@ -118,6 +126,7 @@ public:
 
   /// Create a new read-write buffer of size \param r
   buffer(const range<Dimensions>& r)
+    /// \todo Lazily allocate memory since it might not be used on host
     : access { allocate_buffer(r), extents_cast(r) } {}
 
 
@@ -350,14 +359,15 @@ private:
   auto allocate_buffer(const range<Dimensions> &r) {
     auto count = r.size();
     // Allocate uninitialized memory
-    return alloc.allocate(count);
+    allocation = alloc.allocate(count);
+    return allocation;
   }
 
 
   /// Deallocate buffer memory if required
   void deallocate_buffer() {
-    if (access.data())
-      alloc.deallocate(access.data(), get_count());
+    if (allocation)
+      alloc.deallocate(allocation, get_count());
   }
 
 
