@@ -84,6 +84,43 @@ template <typename T, int Dimensions> class accessor {
   void update(pointer data, const range<rank()>& r) {
     access = mdspan { data, extents_cast(r) };
   }
+
+ public:
+  /** Return a range object representing the size of the buffer in
+       terms of number of elements in each dimension as passed to the
+       constructor
+
+       \todo Cache it since it is const?
+   */
+  auto get_range() const {
+    range<Dimensions> r;
+    for (std::size_t i = 0; i < Dimensions; ++i)
+      r[i] = access.extent(i);
+    return r;
+  }
+
+  /** Returns the total number of elements in the buffer
+
+      Equal to get_range()[0] * ... * get_range()[Dimensions-1].
+
+      \todo Move these kinds of functions into a mixin between buffers
+      and accessors?
+
+      \todo Cache it since it is const?
+  */
+  std::size_t get_count() const {
+    return access.mapping().required_span_size();
+  }
+
+  /** Returns the size of the buffer storage in bytes
+
+      \todo rename to something else. In
+      http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/p0122r0.pdf
+      it is named bytes() for example
+
+      \todo Cache it since it is const?
+  */
+  std::size_t get_size() const { return get_count() * sizeof(value_type); }
 };
 
 /// @} to end the Doxygen group

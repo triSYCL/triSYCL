@@ -176,8 +176,8 @@ class buffer
        \c copy_back_cl_buffer any more.
        \todo Optimize for the case the buffer is not based on host memory
     */
-    call_update_buffer_state(host_context, access::mode::read, get_size(),
-                             mixin::access.data());
+    call_update_buffer_state(host_context, access::mode::read,
+                             mixin::get_size(), mixin::access.data());
 
 #endif
     if (modified && final_write_back)
@@ -212,57 +212,19 @@ class buffer
         auto current_access = mixin::access;
         /* The range is actually computed from \c access itself, so
            save it */
-        auto current_range = get_range();
+        auto current_range = mixin::get_range();
         allocate_buffer(current_range);
         /* Update the mixin accessor to point to the new allocated
            memory instead */
         mixin::update(allocation, current_range);
         // Then copy the read-only data to the new allocated place
-        std::uninitialized_copy_n(current_access.data(), get_count(),
+        std::uninitialized_copy_n(current_access.data(), mixin::get_count(),
                                   mixin::access.data());
         /* Now the data of the buffer is no longer backed-up by host
            user provided memory */
         data_host = false;
       }
     }
-  }
-
-  /** Return a range object representing the size of the buffer in
-       terms of number of elements in each dimension as passed to the
-       constructor
-
-       \todo Cache it since it is const?
-   */
-  auto get_range() const {
-    range<Dimensions> r;
-    for (std::size_t i = 0; i < Dimensions; ++i)
-      r[i] = mixin::access.extent(i);
-    return r;
-  }
-
-  /** Returns the total number of elements in the buffer
-
-      Equal to get_range()[0] * ... * get_range()[Dimensions-1].
-
-      \todo Move these kinds of functions into a mixin between buffers
-      and accessors?
-
-      \todo Cache it since it is const?
-  */
-  std::size_t get_count() const {
-    return mixin::access.mapping().required_span_size();
-  }
-
-  /** Returns the size of the buffer storage in bytes
-
-      \todo rename to something else. In
-      http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/p0122r0.pdf
-      it is named bytes() for example
-
-      \todo Cache it since it is const?
-  */
-  std::size_t get_size() const {
-    return get_count() * sizeof(typename mixin::value_type);
   }
 
   /** Set the weak pointer as destination for write-back on buffer
@@ -272,7 +234,7 @@ class buffer
     // Capture this by reference is enough since the buffer will still exist
     final_write_back = [this, final_data = std::move(final_data)] {
       if (auto sptr = final_data.lock()) {
-        std::copy_n(mixin::access.data(), get_count(), sptr.get());
+        std::copy_n(mixin::access.data(), mixin::get_count(), sptr.get());
       }
     };
   }
@@ -294,7 +256,7 @@ class buffer
                        "const iterator is not allowed");*/
     // Capture this by reference is enough since the buffer will still exist
     final_write_back = [this, final_data = std::move(final_data)] {
-      std::copy_n(mixin::access.data(), get_count(), final_data);
+      std::copy_n(mixin::access.data(), mixin::get_count(), final_data);
     };
   }
 
@@ -310,7 +272,7 @@ class buffer
   /// Deallocate buffer memory if required
   void deallocate_buffer() {
     if (allocation)
-      alloc.deallocate(allocation, get_count());
+      alloc.deallocate(allocation, mixin::get_count());
   }
 
   /** Assign the 1-D storage behind the accessor
