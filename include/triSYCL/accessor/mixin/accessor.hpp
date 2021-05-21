@@ -23,7 +23,7 @@ namespace trisycl::mixin {
 /// SYCL accessor mixin providing multi-dimensional access features
 template <typename T, int Dimensions> class accessor {
 
- protected:
+ public:
   /** Extension to SYCL: provide pieces of STL container interface
       from mdspan */
   using element_type = T;
@@ -37,6 +37,7 @@ template <typename T, int Dimensions> class accessor {
   */
   static auto constexpr rank() { return Dimensions; }
 
+ protected:
   /// Create an mdspan std::experimental::extents object with a
   /// dynamic size for each extent
   template <std::size_t... I>
@@ -70,6 +71,7 @@ template <typename T, int Dimensions> class accessor {
         const std::array<typename mdspan::index_type, rank()>&>(r);
   }
 
+ public:
   /// Pointer type to the elements
   using pointer = typename mdspan::pointer;
 
@@ -80,12 +82,15 @@ template <typename T, int Dimensions> class accessor {
   accessor(pointer data, const range<rank()>& r)
       : access { data, extents_cast(r) } {}
 
+  /// Create an accessor from another mdspan
+  accessor(const mdspan& m)
+      : access { m } {}
+
   /// Update the accessor to target somewhere else
   void update(pointer data, const range<rank()>& r) {
     access = mdspan { data, extents_cast(r) };
   }
 
- public:
   /** Return a range object representing the size of the buffer in
        terms of number of elements in each dimension as passed to the
        constructor
@@ -121,6 +126,9 @@ template <typename T, int Dimensions> class accessor {
       \todo Cache it since it is const?
   */
   std::size_t get_size() const { return get_count() * sizeof(value_type); }
+
+  /// Get the underlying storage
+  auto data() { return access.data(); }
 };
 
 /// @} to end the Doxygen group

@@ -1,0 +1,173 @@
+#ifndef TRISYCL_SYCL_ACCESSOR_FACADE_ACCESSOR_HPP
+#define TRISYCL_SYCL_ACCESSOR_FACADE_ACCESSOR_HPP
+
+/** \file A SYCL accessor façade to expose to the end user the
+    expected accessor interface on top of low-level SYCL accessor
+    concepts
+
+    This file is distributed under the University of Illinois Open Source
+    License. See LICENSE.TXT for details.
+*/
+
+#include <experimental/mdspan>
+#include <type_traits>
+#include <utility>
+
+#include "triSYCL/accessor/mixin/accessor.hpp"
+
+namespace trisycl::facade {
+
+/** \addtogroup execution Platforms, contexts, accessors and queues
+    @{
+*/
+
+/// SYCL accessor facade providing multi-dimensional access features
+template <typename AccessorMixIn> class accessor : public AccessorMixIn {
+
+  using mixin = AccessorMixIn;
+
+ public:
+  using iterator = typename mixin::pointer;
+
+  /** Use the accessor with integers à la [][][]
+
+      Use array_view_type::reference instead of auto& because it does not
+      work in some dimensions.
+   */
+  typename mixin::reference operator[](std::size_t index) {
+    /// \todo use subspan
+    return mixin::access(index);
+  }
+
+  /** Use the accessor with integers à la [][][]
+
+      Use array_view_type::reference instead of auto& because it does not
+      work in some dimensions.
+   */
+  typename mixin::reference operator[](std::size_t index) const {
+    return mixin::access[index];
+  }
+
+  /// To use the accessor with [id<>]
+  auto& operator[](const id<mixin::rank()>& index) {
+    return mixin::access(mixin::extents_cast(index));
+  }
+
+  /// To use the accessor with [id<>]
+  auto& operator[](const id<mixin::rank()>& index) const {
+    return mixin::access(mixin::extents_cast(index));
+  }
+
+  /// To use an accessor with [item<>]
+  auto& operator[](const item<mixin::rank()>& index) {
+    return mixin::access(mixin::extents_cast(index.get()));
+  }
+
+  /// To use an accessor with [item<>]
+  auto& operator[](const item<mixin::rank()>& index) const {
+    return mixin::access(mixin::extents_cast(index.get()));
+  }
+
+  /** To use an accessor with an [nd_item<>]
+
+      \todo Add in the specification because used by HPC-GPU slide 22
+  */
+  auto& operator[](const nd_item<mixin::rank()>& index) {
+    return mixin::access(mixin::extents_cast(index.get_global()));
+  }
+
+  /** To use an accessor with an [nd_item<>]
+
+      \todo Add in the specification because used by HPC-GPU slide 22
+  */
+  auto& operator[](const nd_item<mixin::rank()>& index) const {
+    return mixin::access(mixin::extents_cast(index.get_global()));
+  }
+
+  /** Get the first element of the accessor
+
+      Useful with an accessor on a scalar for example.
+
+      \todo Add in the specification
+  */
+  typename mixin::reference operator*() { return *mixin::data(); }
+
+  /** Get the first element of the accessor
+
+      Useful with an accessor on a scalar for example.
+
+      \todo Add in the specification?
+
+      \todo Add the concept of 0-dim buffer and accessor for scalar
+      and use an implicit conversion to value_type reference to access
+      the value with the accessor?
+  */
+  typename mixin::reference operator*() const { return *mixin::data(); }
+
+  /** Return the pointer to the data
+
+      \todo Implement the various pointer address spaces
+  */
+  auto get_pointer() const { return mixin::data(); }
+
+  /** Forward all the iterator functions to the implementation
+
+      \todo Add these functions to the specification
+
+      \todo The fact that the lambda capture make a const copy of the
+      accessor is not yet elegantly managed... The issue is that
+      begin()/end() dispatch is made according to the accessor
+      constness and not from the array member constness...
+
+      \todo try to solve it by using some enable_if on array
+      constness?
+
+      \todo The issue is that the end may not be known if it is
+      implemented by a raw OpenCL cl_mem... So only provide on the
+      device the iterators related to the start? Actually the accessor
+      needs to know a part of the shape to have the multidimentional
+      addressing. So this only require a size_t more...
+
+      \todo Factor out these in a template helper
+
+      \todo Do we need this in detail::accessor too or only in accessor?
+  */
+
+  iterator begin() { return mixin::data(); }
+
+  iterator end() { return mixin::data() + mixin::get_count(); }
+
+#ifdef TODO
+  // const_iterator begin() const { return array.begin(); }
+
+  // const_iterator end() const { return array.end(); }
+
+  const_iterator cbegin() const { return array.begin(); }
+
+  const_iterator cend() const { return array.end(); }
+
+  // reverse_iterator rbegin() { return array.rbegin(); }
+  reverse_iterator rbegin() const {
+    return const_cast<writable_array_view_type&>(array).rbegin();
+  }
+
+  // reverse_iterator rend() { return array.rend(); }
+  reverse_iterator rend() const {
+    return const_cast<writable_array_view_type&>(array).rend();
+  }
+
+  // const_reverse_iterator rbegin() const { return array.rbegin(); }
+
+  // const_reverse_iterator rend() const { return array.rend(); }
+
+  const_reverse_iterator crbegin() const { return array.rbegin(); }
+
+  const_reverse_iterator crend() const { return array.rend(); }
+#endif
+};
+
+/// @} to end the Doxygen group
+
+} // namespace trisycl::facade
+
+#endif // TRISYCL_SYCL_ACCESSOR_FACADE_ACCESSOR_HPP

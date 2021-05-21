@@ -177,7 +177,7 @@ class buffer
        \todo Optimize for the case the buffer is not based on host memory
     */
     call_update_buffer_state(host_context, access::mode::read,
-                             mixin::get_size(), mixin::access.data());
+                             mixin::get_size(), mixin::data());
 
 #endif
     if (modified && final_write_back)
@@ -219,7 +219,7 @@ class buffer
         mixin::update(allocation, current_range);
         // Then copy the read-only data to the new allocated place
         std::uninitialized_copy_n(current_access.data(), mixin::get_count(),
-                                  mixin::access.data());
+                                  mixin::data());
         /* Now the data of the buffer is no longer backed-up by host
            user provided memory */
         data_host = false;
@@ -234,7 +234,7 @@ class buffer
     // Capture this by reference is enough since the buffer will still exist
     final_write_back = [this, final_data = std::move(final_data)] {
       if (auto sptr = final_data.lock()) {
-        std::copy_n(mixin::access.data(), mixin::get_count(), sptr.get());
+        std::copy_n(mixin::data(), mixin::get_count(), sptr.get());
       }
     };
   }
@@ -256,7 +256,7 @@ class buffer
                        "const iterator is not allowed");*/
     // Capture this by reference is enough since the buffer will still exist
     final_write_back = [this, final_data = std::move(final_data)] {
-      std::copy_n(mixin::access.data(), mixin::get_count(), final_data);
+      std::copy_n(mixin::data(), mixin::get_count(), final_data);
     };
   }
 
@@ -282,7 +282,7 @@ class buffer
   */
   template <typename StartIter, typename EndIter>
   void assign(StartIter start_iterator, EndIter end_iterator) {
-    std::copy(start_iterator, end_iterator, mixin::access.data());
+    std::copy(start_iterator, end_iterator, mixin::data());
   }
 
   /** Function pair to work around the fact that T might be a \c const type.
