@@ -46,7 +46,7 @@ namespace trisycl {
 
     \todo Update the specification to have a non-const allocator for
     const buffer? Or do we rely on rebind_alloc<T>. But does this work
-    with astate-full allocator?
+    with a state-full allocator?
 
     \todo Add constructors from arrays so that in C++17 the range and
     type can be infered from the constructor

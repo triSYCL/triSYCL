@@ -58,6 +58,23 @@ namespace trisycl::detail {
     @{
 */
 
+/// Some metaprogramming debug helpers
+namespace metaprog {
+  /** Metaprogramming debug of types by emitting a compiler message
+      about the template types when used by providing this
+      declaration without a definition */
+  template <typename... Types>
+  class display_type;
+
+
+  /** Metaprogramming debug of values by emitting a compiler message
+      about the template values when used by providing this
+      declaration without a definition */
+  template <auto... Values>
+  class display_value;
+
+}
+
 /** Class used to trace the construction, copy-construction,
     move-construction and destruction of classes that inherit from it
 
@@ -121,6 +138,7 @@ struct debug {
                  << static_cast<void*>(this));
   }
 #endif
+
 };
 
 

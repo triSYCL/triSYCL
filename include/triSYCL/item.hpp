@@ -33,6 +33,9 @@ public:
   /// specification?
   static constexpr auto dimensionality = Dimensions;
 
+  // The value type is the same as for id
+  using value_type = typename id<Dimensions>::value_type;
+
 private:
 
   range<Dimensions> global_range;
