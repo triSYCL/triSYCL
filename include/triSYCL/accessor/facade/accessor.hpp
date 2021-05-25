@@ -108,7 +108,7 @@ template <typename AccessorMixIn> class accessor : public AccessorMixIn {
 
       \todo Implement the various pointer address spaces
   */
-  auto get_pointer() const { return mixin::data(); }
+  auto get_pointer() { return mixin::data(); }
 
   /** Forward all the iterator functions to the implementation
 
