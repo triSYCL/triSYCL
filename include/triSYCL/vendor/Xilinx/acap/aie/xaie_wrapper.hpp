@@ -220,8 +220,28 @@ struct handle {
     xaie::AieRC RC = xaie::XAIE_OK;
     do {
       RC = xaie::XAie_CoreWaitForDone(inst, tile, 0);
+      // emit_log();
     } while (RC != xaie::XAIE_OK);
     TRISYCL_DUMP2(std::dec << "(" << get_pos_str() << ") done", "exec");
+  }
+  void prepare_log() {
+    mem_write(acap::hw_mem::log_buffer_beg_off, 0);
+    mem_write(acap::hw_mem::log_buffer_beg_off + 4, 0);
+  }
+  void emit_log() {
+    /// This is not synchronized with the device and need to be run after devuce
+    /// execution.
+    std::string log;
+    uint32_t log_size = mem_read(acap::hw_mem::log_buffer_beg_off);
+    // xaie::XAie_DataMemRdWord(inst, tile, acap::hw_mem::log_buffer_beg_off,
+    // &log_size);
+    log.resize(log_size);
+    memcpy_d2h(log.data(),
+               acap::hw_mem::log_buffer_beg_off +
+                   sizeof(acap::hw_mem::log_record),
+               log_size);
+    std::cout << log;
+    std::flush(std::cout);
   }
 };
 

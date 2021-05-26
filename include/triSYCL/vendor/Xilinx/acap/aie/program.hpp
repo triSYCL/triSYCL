@@ -266,6 +266,7 @@ struct program {
     boost::hana::for_each(tiles, [&](auto &t) {
       TRISYCL_DUMP2("Joining AIE tile (" << t.x << ',' << t.y << ')', "exec");
       t.get_dev_handle().core_wait();
+      t.get_dev_handle().emit_log();
       TRISYCL_DUMP2("Joined AIE tile (" << t.x << ',' << t.y << ')', "exec");
       t.postrun();
     });

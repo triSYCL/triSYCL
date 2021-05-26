@@ -230,6 +230,19 @@ struct tile : tile_base<AIE_Program> {
   using tile_t = hw_tile<X, Y>;
   using dir = typename tile_t::dir;
 
+
+#ifdef __SYCL_DEVICE_ONLY__
+  __attribute__((noinline)) void log(const char* ptr) {
+    hw_mem::log_record* lr = hw_mem::log_record::get(X, Y);
+    while (*ptr)
+      lr->get_data()[lr->size++] = *(ptr++);
+  }
+#else
+  void log(const char* ptr) {
+    std::cout << ptr;
+  }
+#endif
+
 /// This could be refactored to minimized duplication by separating between host
 /// and device at address computation instead of all the function.
 #ifndef __SYCL_DEVICE_ONLY__
@@ -344,7 +357,7 @@ struct tile : tile_base<AIE_Program> {
   auto &mem() {
     return *(
         tile_mem_t<tile_t::get_pos(dir::self).x, tile_t::get_pos(dir::self).y>
-            *)(hw_mem::self_tile_addr<X, Y> + hw_mem::tile_mem_beg_off);
+            *)(hw_mem::self_tile_addr(X, Y) + hw_mem::tile_mem_beg_off);
   }
 
   auto &mem_side() {

@@ -30,6 +30,7 @@
 
 #include "../../axi_stream_switch.hpp"
 #include "../../dma.hpp"
+#include "../../hardware.hpp"
 #include "triSYCL/detail/fiber_pool.hpp"
 #include "triSYCL/detail/ranges.hpp"
 #include "triSYCL/vendor/Xilinx/config.hpp"
@@ -64,6 +65,7 @@ template <typename Geography> class tile_infrastructure {
   /// Keep the vertical coordinate
   int y_coordinate;
 
+#if !defined(__SYCL_DEVICE_ONLY__)
   /// The AXI stream switch of the core tile
   axi_ss_t axi_ss;
 
@@ -72,6 +74,7 @@ template <typename Geography> class tile_infrastructure {
       Use std::optional to postpone initialization */
   std::array<std::optional<sending_dma<axi_ss_t>>, axi_ss_geo::s_dma_size>
       tx_dmas;
+#endif
 
 #if defined(__SYCL_XILINX_AIE__)
 #if !defined(__SYCL_DEVICE_ONLY__)
@@ -91,49 +94,55 @@ template <typename Geography> class tile_infrastructure {
 #endif
 
 #ifdef __SYCL_DEVICE_ONLY__
-  /// On device trigger outlining.
-
   template <typename KernelName, typename KernelType>
-  __attribute__((sycl_kernel))
-  __attribute__((annotate("xilinx_acap_tile", KernelType::x,
-                          KernelType::y))) void
-  kernel_invoker_run(KernelType &k) {
-    k.run();
-  }
-  template <typename KernelName, typename KernelType>
-  __attribute__((sycl_kernel))
-  __attribute__((annotate("xilinx_acap_tile", KernelType::x,
-                          KernelType::y))) void
-  kernel_invoker_call(KernelType &k) {
+  __attribute__((sycl_kernel)) void kernel_outliner(KernelType &k) {
     k();
   }
 #else
-  /// This isn't called on the host unless we are in CPU emulation so we invoke
-  /// the kernel function.
-
   template <typename KernelName, typename KernelType>
-  void kernel_invoker_run(KernelType &k) {
-    k.run();
-  }
-  template <typename KernelName, typename KernelType>
-  void kernel_invoker_call(KernelType &k) {
+  void kernel_outliner(KernelType &k) {
     k();
   }
 #endif
 
-  template <
-      typename KernelName, typename KernelType,
-      std::enable_if_t<std::is_invocable_r<void, KernelType>::value, int> = 0>
-  void kernel_invoker(KernelType &k) {
-    kernel_invoker_call<KernelName, KernelType>(k);
+  template <typename KernelType>
+  auto kernel_builder(KernelType &k) requires requires(KernelType k) {
+    k();
   }
-  template <
-      typename KernelName, typename KernelType,
-      std::enable_if_t<!std::is_invocable_r<void, KernelType>::value, int> = 0>
-  void kernel_invoker(KernelType &k) {
-    kernel_invoker_run<KernelName, KernelType>(k);
+  {
+    return [=]() mutable { k(); };
+  };
+  template <typename KernelType>
+  auto kernel_builder(KernelType &k) requires requires(KernelType k) {
+    k(*this);
+  }
+  {
+    return [=]() mutable {
+      /// TODO tile_infrastructure should be properly initialized.
+      std::remove_cvref_t<decltype(*this)> th;
+      k(th);
+    };
+  }
+  template <typename KernelType>
+  auto kernel_builder(KernelType &k) requires requires(KernelType k) {
+    k.run();
+  }
+  {
+    return [=]() mutable { k.run(); };
+  }
+  template <typename KernelType>
+  auto kernel_builder(KernelType &k) requires requires(KernelType k) {
+    k.run(*this);
+  }
+  {
+    return [=]() mutable {
+      /// TODO tile_infrastructure should be properly initialized.
+      std::remove_cvref_t<decltype(*this)> th;
+      k.run(th);
+    };
   }
 
+#if !defined(__SYCL_DEVICE_ONLY__)
   /** Map the user input port number to the AXI stream switch port
 
       \param[in] port is the user port to use
@@ -151,6 +160,7 @@ template <typename Geography> class tile_infrastructure {
     return axi_ss_t::translate_port(port, mpl::me_0, mpl::me_last,
                                     "The core output port is out of range");
   }
+#endif
 
  public:
 
@@ -208,12 +218,25 @@ tile_infrastructure() = default;
   }
 #endif
 
+#ifdef __SYCL_DEVICE_ONLY__
+  __attribute__((noinline)) void log(const char* ptr) {
+    hw_mem::log_record* lr = hw_mem::log_record::get(x(), y());
+    while (*ptr)
+      lr->get_data()[lr->size++] = *(ptr++);
+  }
+#else
+  void log(const char* ptr) {
+    std::cout << ptr;
+  }
+#endif
+
   /// Get the horizontal coordinate
   int x() { return x_coordinate; }
 
   /// Get the vertical coordinate
   int y() { return y_coordinate; }
 
+#if !defined(__SYCL_DEVICE_ONLY__)
   /** Get the user input connection from the AXI stream switch
 
       \param[in] port is the port to use
@@ -287,17 +310,21 @@ tile_infrastructure() = default;
     // No index validation required because of type safety
     return axi_ss.output(p);
   }
+#endif
 
   /// Launch an invocable on this tile
   template <typename Work> void single_task(Work &&f) {
 #ifdef __SYCL_XILINX_AIE__
 #ifdef __SYCL_DEVICE_ONLY__
+
+    auto Kernel = kernel_builder(f);
+
     // The outlining of the device binary Method 1: use it directly as a kernel
     // wrapper This still results in some "garbage" IR from the axi streams
     // default destructor, but you can run -O3 and it'll clean it up quite a bit
     // without nuking everything so it's progress. The result seems semi-
     // reasonable and passes through xchesscc at a reasonable speed
-    kernel_invoker<typename std::decay<decltype(f)>::type>(f);
+    kernel_outliner<typename std::decay<decltype(f)>::type>(Kernel);
 
 #else
     /// Host side
@@ -307,8 +334,13 @@ tile_infrastructure() = default;
     // defined to be in this namespace (and all our implementation
     // resides in trisycl by default, so ::detail resolves to
     // trisycl::detail)
-    auto kernelName = ::trisycl::detail::KernelInfo<
+    std::string kernelName = ::trisycl::detail::KernelInfo<
         typename std::decay<decltype(f)>::type>::getName();
+
+    if (is_west(x(), y()))
+      kernelName += "_west";
+    else
+      kernelName += "_east";
 
     auto kernelImage =
         ::trisycl::detail::program_manager::instance()->get_image(kernelName);
@@ -327,33 +359,33 @@ tile_infrastructure() = default;
 #endif
     {
       // auto Transaction = f.get_transaction();
-      f.get_dev_handle().core_reset();
+      get_dev_handle().core_reset();
 
-      TRISYCL_DUMP2("Loading Kernel " << kernelName << " ELF to tile (" << f.x
-                                      << ',' << f.y
-                                      << ") linear id = " << f.linear_id(),
+      TRISYCL_DUMP2("Loading Kernel " << kernelName << " ELF to tile (" << x()
+                                      << ',' << y()
+                                      << ")",
                     "exec");
 
-      f.get_dev_handle().load_elf_image(kernelImage);
+      get_dev_handle().load_elf_image(kernelImage);
 
-      TRISYCL_DUMP2("Loaded Kernel " << kernelName << " ELF to tile (" << f.x
-                                     << ',' << f.y
-                                     << ") linear id = " << f.linear_id()
-                                     << "beginning tile execution",
+      TRISYCL_DUMP2("Loaded Kernel " << kernelName << " ELF to tile (" << x()
+                                     << ',' << y()
+                                     << ") beginning tile execution",
                     "exec");
       /// Setup DMA for parameter passing
-      f.get_dev_handle().mem_dma(hw_mem::args_beg_off, hw_mem::args_size);
-      if (!f.prerun())
-        return;
+      get_dev_handle().mem_dma(hw_mem::args_beg_off, hw_mem::log_buffer_end_off - hw_mem::args_beg_off);
+      get_dev_handle().prepare_log();
+      if constexpr (requires{f.prerun();})
+        if (!f.prerun())
+          return;
 
       TRISYCL_DUMP2("Starting AIE tile ("
-                        << f.x << ',' << f.y
-                        << ") linear id = " << f.linear_id() << ","
+                        << x() << ',' << y() << ") "
                         << "Associated Tile Kernel Name: " << kernelName
                         << "- beginning prerun execution",
                     "exec");
 
-      f.get_dev_handle().core_run();
+      get_dev_handle().core_run();
     }
 #endif
 #else
@@ -400,6 +432,7 @@ tile_infrastructure() = default;
 #endif
   }
 
+#if !defined(__SYCL_DEVICE_ONLY__)
   /// Configure a connection of the core tile AXI stream switch
   void connect(typename geo::core_axi_stream_switch::slave_port_layout sp,
                typename geo::core_axi_stream_switch::master_port_layout mp) {
@@ -471,6 +504,7 @@ tile_infrastructure() = default;
            x_coordinate % y_coordinate)
               .str());
   }
+#endif
 };
 
 /// @} End the aie Doxygen group

@@ -99,12 +99,12 @@ constexpr unsigned north_tile_addr = 0x30000;        // (1 << 17) | (2 << 15)
 constexpr unsigned east_or_self_tile_addr = 0x38000; // (1 << 17) | (3 << 15)
 
 /// Base address a tile viewed from itself.
-template <int X, int Y>
-constexpr unsigned self_tile_addr = ((Y & 1) ? west_or_self_tile_addr
-                                             : east_or_self_tile_addr);
-template <int X, int Y>
-constexpr unsigned side_tile_addr = ((Y & 1) ? east_or_self_tile_addr
-                                             : west_or_self_tile_addr);
+static constexpr unsigned self_tile_addr(unsigned X, unsigned Y) {
+  return ((Y & 1) ? west_or_self_tile_addr : east_or_self_tile_addr);
+}
+static constexpr unsigned side_tile_addr(unsigned X, unsigned Y) {
+  return ((Y & 1) ? east_or_self_tile_addr : west_or_self_tile_addr);
+}
 
 constexpr unsigned tile_size = 0x8000;
 constexpr unsigned offset_mask = tile_size - 1;
@@ -128,6 +128,22 @@ constexpr unsigned args_end_off = args_beg_off + args_size;
 constexpr unsigned tile_mem_beg_off = args_end_off;
 constexpr unsigned tile_mem_size = 0x2000;
 constexpr unsigned tile_mem_end_off = tile_mem_beg_off + tile_mem_size;
+
+constexpr unsigned log_buffer_beg_off = tile_mem_end_off;
+constexpr unsigned log_buffer_size = 0x1000;
+constexpr unsigned log_buffer_end_off = log_buffer_beg_off + log_buffer_size;
+
+struct log_record {
+  static log_record *get(unsigned X, unsigned Y) {
+    return (log_record *)(self_tile_addr(X, Y) + log_buffer_beg_off);
+  }
+  uint32_t size;
+  // uint32_t host_idx;
+  char* get_data() {
+    return (char*)(this + 1);
+  }
+};
+
 }; // namespace hw_mem
 
 } // namespace trisycl::vendor::xilinx::acap
