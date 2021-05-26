@@ -9,6 +9,7 @@
 */
 
 #include <experimental/mdspan>
+#include <tuple>
 #include <type_traits>
 #include <utility>
 
@@ -129,6 +130,51 @@ template <typename T, int Dimensions> class accessor {
 
   /// Get the underlying storage
   auto data() { return access.data(); }
+
+  /** Proxy object to transform an expression like
+      accessor[i1][i2][i3] into the implementation mdpsan(i1,i2,i3)
+      one index at a time.
+
+      It gathers intermediate [index] to finally call the mdspan
+      indexing operator once they are all available
+
+      \parameter[in] N is the number of indices which can be stored in
+      this proxy
+  */
+  template <std::size_t N> struct track_index {
+    /// Keep a reference to the mdspan to eventually resolve the
+    /// indexing
+    mdspan& mds;
+
+    /// The list of indices in the order of [i1][i2][i3]...
+    std::array<std::size_t, N> indices;
+
+    /// Construct the initial tracking object from the accessor
+    track_index(accessor& a)
+        : mds { a.access } {}
+
+    /// Create a tracking object from an mdspan and a list of indices
+    template <typename... Index>
+    track_index(mdspan& m, Index&&... inds)
+        : mds { m }
+          // Typically there will be N - 1 indices in the array of size N
+        , indices { std::forward<Index>(inds)... } {}
+
+    /// The individual indexing operator
+    decltype(auto) operator[](std::size_t index) {
+      // Keep track of the new index in the last element
+      indices[N - 1] = index;
+      if constexpr (N == accessor::rank())
+        // If we have accumulated all the indices, call the mdspan
+        // indexing function
+        return std::invoke(mds, indices);
+      else
+        // Otherwise return a tracker from the current indices and
+        // with 1 more room for the next index
+        return std::make_from_tuple<track_index<N + 1>>(
+            std::tuple_cat(std::forward_as_tuple(mds), indices));
+    }
+  };
 };
 
 /// @} to end the Doxygen group

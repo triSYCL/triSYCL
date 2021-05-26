@@ -31,21 +31,24 @@ template <typename AccessorMixIn> class accessor : public AccessorMixIn {
 
   /** Use the accessor with integers à la [][][]
 
-      Use array_view_type::reference instead of auto& because it does not
-      work in some dimensions.
-   */
-  typename mixin::reference operator[](std::size_t index) {
-    /// \todo use subspan
-    return mixin::access(index);
+      \return decltype(auto) to return either a reference to the final
+      element when the indexing has been fully resolved or a proxy
+      object to handle the remaining [] */
+  decltype(auto) operator[](std::size_t index) {
+    /* Use a proxy object to track all the [index] and aggregate them
+       to resolve the indexing */
+    return typename mixin::template track_index<1> { mixin::access }[index];
   }
 
   /** Use the accessor with integers à la [][][]
 
-      Use array_view_type::reference instead of auto& because it does not
-      work in some dimensions.
-   */
-  typename mixin::reference operator[](std::size_t index) const {
-    return mixin::access[index];
+      \return decltype(auto) to return either a reference to the final
+      element when the indexing has been fully resolved or a proxy
+      object to handle the remaining [] */
+  decltype(auto) operator[](std::size_t index) const {
+    /* Use a proxy object to track all the [index] and aggregate them
+       to resolve the indexing */
+    return typename mixin::template track_index<1> { mixin::access }[index];
   }
 
   /// To use the accessor with [id<>]
