@@ -32,6 +32,9 @@ template <typename T, int Dimensions> class accessor {
       the current implementation can copy the data too */
   using value_type = std::remove_cv_t<element_type>;
 
+  // Useful to handle buffers initialized from const values
+  using non_const_pointer = value_type*;
+
   /** Get the number of dimensions of the buffer
 
       Name inspired from ISO C++ P0009 mdspan papers

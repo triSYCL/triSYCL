@@ -64,7 +64,7 @@ class buffer
       Note that this is uninitialized memory, as stated in SYCL
       specification.
   */
-  typename mixin::pointer allocation = nullptr;
+  typename mixin::non_const_pointer allocation = nullptr;
 
   /** How to copy back data on buffer destruction, can be modified with
       set_final_data( ... )
