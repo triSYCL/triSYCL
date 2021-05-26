@@ -30,15 +30,14 @@ namespace trisycl {
 */
 template <int Dimensions = 1>
 struct nd_range : boost::equality_comparable<nd_range<Dimensions>> {
-  /// \todo add this Boost::multi_array or STL concept to the
-  /// specification?
-  static constexpr auto dimensionality = Dimensions;
+  /// The number of dimensions of the nd_range
+  static auto constexpr rank() { return Dimensions; }
 
 private:
 
-  range<dimensionality> global_range;
-  range<dimensionality> local_range;
-  id<dimensionality> offset;
+  range<rank()> global_range;
+  range<rank()> local_range;
+  id<rank()> offset;
 
 public:
 
@@ -85,7 +84,7 @@ public:
   /// Comparison operators for nd_range.
   bool operator==(const nd_range &nd_rangeB) const {
     return (global_range == nd_rangeB.global_range &&
-	    offset == nd_rangeB.offset);
+            offset == nd_rangeB.offset);
   }
 };
 

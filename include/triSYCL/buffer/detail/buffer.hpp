@@ -32,10 +32,6 @@ namespace trisycl::detail {
 
 /** A SYCL buffer is a multidimensional variable length array (à la C99
     VLA or even Fortran before) that is used to store data to work on.
-
-    In the case we initialize it from a pointer, for now we just wrap the
-    data with boost::multi_array_ref to provide the VLA semantics without
-    any storage.
 */
 template <typename T, int Dimensions = 1>
 class buffer
@@ -144,8 +140,6 @@ class buffer
       : mixin { allocate_buffer(std::distance(start_iterator, end_iterator)),
                 range<1> { static_cast<std::size_t>(
                     std::distance(start_iterator, end_iterator)) } } {
-    /* Then assign allocation since this is the only multi_array
-       method with this iterator interface */
     assign(start_iterator, end_iterator);
   }
 

@@ -42,6 +42,8 @@ public:
                                 range<Dimensions>,
                                 Dimensions>::small_array_123;
 
+  /// The number of dimensions of the range
+  static auto constexpr rank() { return Dimensions; }
 
   /** Return the number of elements in the range
    */

@@ -18,7 +18,6 @@
 #ifdef TRISYCL_OPENCL
 #include <boost/compute.hpp>
 #endif
-#include <boost/multi_array.hpp>
 
 #include "triSYCL/access.hpp"
 #include "triSYCL/accessor/detail/accessor_base.hpp"
@@ -46,13 +45,13 @@ template <typename T, int Dimensions> class buffer;
 /** The buffer accessor abstracts the way buffer data are accessed
     inside a kernel in a multidimensional variable length array way.
 
-    This implementation relies on boost::multi_array to provide this
-    nice syntax and behaviour.
+    This implementation relies on std::experimental::mdspan to provide
+    this nice syntax and behaviour.
 
     Right now the aim of this class is just to access to the buffer in
-    a read-write mode, even if capturing the multi_array_ref from a
-    lambda make it const (since in examples we have lambda with [=]
-    without mutable lambda).
+    a read-write mode, even if capturing the accessor from a lambda
+    make it const (since in examples we have lambda with [=] without
+    mutable lambda).
 
     \todo Use the access::mode
 */
