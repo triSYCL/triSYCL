@@ -18,7 +18,8 @@
     License. See LICENSE.TXT for details.
  */
 
-#include <thread>
+#include <functional>
+#include <optional>
 
 #include "memory_infrastructure.hpp"
 
@@ -35,13 +36,16 @@ namespace trisycl::vendor::xilinx::acap::aie {
 */
 struct memory_base {
   /// Keep a reference to the memory_infrastructure hardware features
-  memory_infrastructure mi;
+  std::optional<std::reference_wrapper<memory_infrastructure>> mi;
 
   /// Get an access to the a specific lock
-  auto& lock(int i) { return mi->lock(i); }
+  auto& lock(int i) {
+    // value() will throw if there is some missed initialization
+    return mi.value().get().lock(i);
+  }
 
   /// Store a way to access to hardware infrastructure of the tile
-  void set_memory_infrastructure(memory_infrastructure m) { mi = m; }
+  void set_memory_infrastructure(memory_infrastructure& m) { mi = m; }
 };
 
 /// @} End the aie Doxygen group

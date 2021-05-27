@@ -227,7 +227,7 @@ template <typename Layout> struct device {
     // Initialize all the tiles with their network connections first
     for_each_tile_index([&](auto x, auto y) {
       // Create & start the tile infrastructure
-      tile(x, y) = { x, y, fiber_executor };
+      tile(x, y) = { x, y, *this, fiber_executor };
     });
     for_each_tile_x_index([&](auto x) {
       // Start the shim infrastructure
