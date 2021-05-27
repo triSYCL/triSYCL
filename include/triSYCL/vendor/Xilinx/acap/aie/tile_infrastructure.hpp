@@ -77,7 +77,10 @@ class tile_infrastructure
       : facade_t { std::make_shared<dti>(x, y, dev, fiber_executor) } {}
   tile_infrastructure() = default;
 
-  /// Get the horizontal coordinate
+ // \todo Implement a real tile handle instead of using x(), y(),
+  // etc. from here
+
+   /// Get the horizontal coordinate
   int x() { return implementation->x(); }
 
   /// Get the vertical coordinate
@@ -161,7 +164,23 @@ class tile_infrastructure
 
   /// Launch a callable on this tile
   template <typename Work> auto& single_task(Work&& f) {
-    implementation->single_task(std::forward<Work>(f));
+    /** Recycle the tile_infrastructure shared_ptr as a fake tile
+        handle which is copyable.
+
+        \todo In a device implementation we should have a real
+        tile_handler type making sense on the device instead of just
+        *this */
+    auto kernel = [&] {
+      if constexpr (requires { f(); })
+        /* If the invocable is not interested by the handler, do not
+           provide it. Add the outer lambda to avoid a warning about
+           capturing this when non using it */
+        return [work = std::forward<Work>(f)] { return work(); };
+      else
+        return [this, work = std::forward<Work>(f)] { return work(*this); };
+    }();
+
+    implementation->single_task(kernel);
     // To allow chaining commands
     return *this;
   }
