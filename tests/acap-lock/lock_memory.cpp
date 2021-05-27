@@ -10,6 +10,7 @@
 #include <type_traits>
 
 #include <sycl/sycl.hpp>
+#include "triSYCL/vendor/Xilinx/graphics.hpp"
 
 using namespace std::chrono_literals;
 using namespace sycl::vendor::xilinx;
