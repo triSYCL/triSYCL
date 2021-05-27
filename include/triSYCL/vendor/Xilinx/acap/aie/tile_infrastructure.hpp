@@ -83,6 +83,12 @@ class tile_infrastructure
   /// Get the vertical coordinate
   int y() { return implementation->y(); }
 
+  /// Get the horizontal number of tiles
+  static constexpr int x_size() { return geo::x_size; }
+
+  /// Get the vertical number of tiles
+  static constexpr int y_size() { return geo::y_size; }
+
   /// Access to the common infrastructure part of a tile memory
   auto& mem() {
     return implementation->mem();
