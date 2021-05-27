@@ -30,7 +30,10 @@ template <int X_size, int Y_size>
 struct size : full {
   static_assert(X_size >= 1 && Y_size >= 1, "Sorry, "
                 "we do not yet support antimatter or black matter cores :-)");
+  /// Maximum horizontal coordinate
   static auto constexpr x_max = X_size - 1;
+
+  /// Maximum vertical coordinate
   static auto constexpr y_max = Y_size - 1;
 };
 

@@ -3,7 +3,7 @@
 
 /** \file
 
-    SYCL-friendly queue for AIE
+    SYCL-friendly queue for AIE cooperative program including all the tiles
 
     Ronan dot Keryell at Xilinx dot com
 
