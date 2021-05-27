@@ -3,10 +3,10 @@
    RUN: %{execute}%s
 */
 
+#include "triSYCL/vendor/Xilinx/graphics.hpp"
 #include <complex>
 #include <cstdint>
 #include <sycl/sycl.hpp>
-#include "triSYCL/vendor/Xilinx/graphics.hpp"
 
 using namespace sycl::vendor::xilinx;
 auto constexpr image_size = 229;
@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
   acap::aie::device<acap::aie::layout::size<2, 3>> aie;
   graphics::application a;
 
-  // Open a graphic view of a ME array
+  // Open a graphic view of a AIE array
   a.start(argc, argv, aie.x_size, aie.y_size, image_size, image_size, 1)
       .image_grid()
       .get_palette()
