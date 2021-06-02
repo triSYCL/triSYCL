@@ -36,7 +36,7 @@ class accessor : public ::trisycl::accessor<typename Buffer::value_type,
                                    access::target::host_buffer>;
  public:
 
-  using base::accessor;
+  using typename base::accessor;
   accessor(Buffer& b, auto& cgh)
     : base { b } {}
 };

@@ -27,8 +27,7 @@ namespace trisycl::vendor::xilinx::acap::aie {
 
     \param AIEDevice is the AIE device targeted by the queue
 */
-template <typename AIEDevice>
-struct queue {
+template <typename AIEDevice> struct queue {
   using device = AIEDevice;
   using geo = typename device::geo;
   using layout = typename geo::layout;
@@ -36,8 +35,8 @@ struct queue {
   /// \todo Why using a reference since now a device is a shared_ptr?
   device& aie_d;
 
-  queue(device &d) : aie_d { d } {}
-
+  queue(device& d)
+      : aie_d { d } {}
 
   /** Provide a wait() function that actually can throw an exception
       instead of ignoring it by the std::future::wait() */
@@ -49,7 +48,6 @@ struct queue {
     }
   };
 
-
   /** Run synchronously a program execution on this queue
 
       \param Tile is the description of the program tiles to
@@ -58,29 +56,24 @@ struct queue {
       \param Memory is the description of the machine memory modules. By
       default the machine has empty memory modules.
   */
-  template <template <typename Device,
-                      int X,
-                      int Y> typename Tile = acap::aie::tile,
-            template <typename Device,
-                      int X,
-                      int Y> typename Memory = acap::aie::memory>
+  template <template <typename Device, int X, int Y>
+            typename Tile = acap::aie::tile,
+            template <typename Device, int X, int Y>
+            typename Memory = acap::aie::memory>
   void run() const {
     program<device, Tile, Memory> { aie_d }.run();
   }
-
 
   /** Run synchronously an heterogeneous invocable on this queue
 
       \param f is an invocable taking an heterogeneous tile handler
   */
-  template <typename Invocable>
-  void run(Invocable&& f) const {
+  template <typename Invocable> void run(Invocable&& f) const {
     program<device> { aie_d }.run(std::forward<Invocable>(f));
   }
 
-
   /// Wait for all the device tiles on this queue to finish
-  void wait() {
+  void wait() const {
     aie_d.for_each_tile([](auto& t) { t.wait(); });
   }
 
@@ -88,13 +81,13 @@ struct queue {
 
       \param f is an invocable taking a uniform tile handler
   */
-  template <typename Invocable>
-  void uniform_run(Invocable&& f) const {
-    aie_d.for_each_tile(std::forward<Invocable>(f));
+  template <typename Invocable> void uniform_run(Invocable f) const {
+    aie_d.for_each_tile(
+        [work = std::move(f)](auto& t) { t.single_task(std::move(work)); });
+    wait();
   }
 
-
-///\todo SUBMIT
+  ///\todo SUBMIT
 
   /** Submit a program execution on this queue
 
@@ -104,27 +97,22 @@ struct queue {
       \param Memory is the description of the machine memory modules. By
       default the machine has empty memory modules.
   */
-  template <template <typename Device,
-                      int X,
-                      int Y> typename Tile = acap::aie::tile,
-            template <typename Device,
-                      int X,
-                      int Y> typename Memory = acap::aie::memory>
+  template <template <typename Device, int X, int Y>
+            typename Tile = acap::aie::tile,
+            template <typename Device, int X, int Y>
+            typename Memory = acap::aie::memory>
   auto submit() const {
-    return queue_waiter {
-      std::async(std::launch::async,
-                 /** \fixme implement a real queue with lifetime
-                     support because here it assume the device will
-                     last... */
-                 [*this] { this->run<Tile, Memory>(); }) };
+    return queue_waiter { std::async(std::launch::async,
+                                     /** \fixme implement a real queue with
+                                        lifetime support because here it assume
+                                        the device will last... */
+                                     [*this] { this->run<Tile, Memory>(); }) };
   }
-
-
 };
 
 /// @} End the aie Doxygen group
 
-}
+} // namespace trisycl::vendor::xilinx::acap::aie
 
 /*
     # Some Emacs stuff:
