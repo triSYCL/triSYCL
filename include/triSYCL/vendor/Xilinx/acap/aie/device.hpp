@@ -52,6 +52,29 @@ class device : public facade::device<device<Layout>, detail::device<Layout>> {
   xaie::XAie_DevInst *get_dev_inst() { return implementation->get_dev_inst(); }
 #endif
 
+  // Some shortcuts to useful constants
+
+  /// Minimum horizontal coordinate
+  static auto constexpr x_min = geo::x_min;
+
+  /// Maximum horizontal coordinate
+  static auto constexpr x_max = geo::x_max;
+
+  /// Number of tile horizontally in the CGRA
+  static auto constexpr x_size = geo::x_size;
+
+  /// Minimum vertical coordinate
+  static auto constexpr y_min = geo::y_min;
+
+  /// Maximum vertical coordinate
+  static auto constexpr y_max = geo::y_max;
+
+  /// Number of tile vertically in the CGRA
+  static auto constexpr y_size = geo::y_size;
+
+  /// Total number of tiles in the CGRA
+  static auto constexpr size = geo::size;
+
   /// The default constructor makes a new device
   device()
       : facade_t { std::make_shared<dd>() } {}

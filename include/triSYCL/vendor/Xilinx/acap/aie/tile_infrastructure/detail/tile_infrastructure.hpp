@@ -66,8 +66,20 @@ template <typename Geography> class tile_infrastructure {
   int y_coordinate;
 
 #if !defined(__SYCL_DEVICE_ONLY__)
+  /** Keep track of the aie::detail::device for hardware resource
+      control in device mode or for debugging purpose for better
+      messages.
+
+      Use void* for now to avoid cyclic header dependencies for now
+      instead of the aie::detail::device */
+  void* dev [[maybe_unused]];
+
   /// The AXI stream switch of the core tile
   axi_ss_t axi_ss;
+
+  /** Keep track of all the infrastructure tile memories
+      of this device */
+  aie::memory_infrastructure mi;
 
   /** Sending DMAs
 
@@ -197,19 +209,26 @@ static void kernel_prerun() {
 tile_infrastructure() = default;
 #endif
 
-  /** Start the tile infrastructure associated to the AIE device
+  /** Start the tile infrastructure associated to the AIE device tile
 
       \param[in] x is the horizontal coordinate for this tile
 
       \param[in] y is the vertical coordinate for this tile
 
+      \param[in] dev is the aie::detail::device used to control
+      hardware when using real hardware and provide some debug
+      information from inside the tile_infrastructure. Use auto
+      concept here to avoid explicit type causing circular dependency
+
       \param[in] fiber_executor is the executor used to run
       infrastructure details
   */
-  tile_infrastructure(int x, int y,
+  tile_infrastructure(int x, int y, auto& dev,
                       ::trisycl::detail::fiber_pool& fiber_executor)
       : x_coordinate { x }
       , y_coordinate { y }
+      , dev { &dev }
+      , mi { dev }
 #if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
       , fe { &fiber_executor }
 #endif
@@ -266,6 +285,12 @@ tile_infrastructure() = default;
   int y() { return y_coordinate; }
 
 #if !defined(__SYCL_DEVICE_ONLY__)
+
+  /// Access to the common infrastructure part of a tile memory
+  auto& mem() {
+    return mi;
+  }
+
   /** Get the user input connection from the AXI stream switch
 
       \param[in] port is the port to use
@@ -421,22 +446,10 @@ tile_infrastructure() = default;
     if (future_work.valid())
       throw std::logic_error("Something is already running on this tile!");
     // Launch the tile program immediately on a new executor engine
-    /** \todo In a device implementation we should have a real
-        tile_handler type making sense on the device instead of just
-        *this */
-    auto kernel = [&] {
-      if constexpr (requires { f(); })
-        /* If the invocable is not interested by the handler, do not
-           provide it. Add the outer lambda to avoid a warning about
-           capturing this when non using it */
-        return [work = std::forward<Work>(f)] { return work(); };
-      else
-        return [this, work = std::forward<Work>(f)] { return work(*this); };
-    }();
 #if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
-    future_work = fe->submit(kernel);
+    future_work = fe->submit(std::forward<Work>(f));
 #else
-    future_work = std::async(std::launch::async, kernel);
+    future_work = std::async(std::launch::async, std::forward<Work>(f));
 #endif
 #endif
   }

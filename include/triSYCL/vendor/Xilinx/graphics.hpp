@@ -734,8 +734,10 @@ struct application {
 
       \param[in] zoom is the zooming factor applied to image pixels,
       both horizontally and vertically
+
+      \return a reference on *this to allow operation chaining
   */
-  void start(int &argc, char **&argv,
+  auto& start(int &argc, char **&argv,
              int nx, int ny, int image_x, int image_y, int zoom) {
     // To be sure not passing over the asynchronous graphics start
     std::promise<void> graphics_initialization;
@@ -772,6 +774,7 @@ struct application {
                                    image_x * image_y);
         });
 #endif
+    return *this;
   }
 
   ///  Wait for the graphics window to end

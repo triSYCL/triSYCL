@@ -225,7 +225,7 @@ class receiving_dma
       Use std::span for 1D contiguous transfers only for now
   */
   void receive(std::span<axi_packet::value_type> sp) {
-    this->push_command([=] {
+    this->push_command([=, this] {
       /* Write each element received from input router port into the
          memory described by DMA operation */
       for (auto& e : sp) {
@@ -286,7 +286,7 @@ class sending_dma : public dma<AXIStreamSwitch, sending_dma<AXIStreamSwitch>> {
 
   /// Enqueue a DMA transfer to send a span
   void send(std::span<axi_packet::value_type> sp) {
-    this->push_command([=] {
+    this->push_command([=, this] {
       // Send each element of this span to the output port
       for (const auto& e : sp) {
         output_port->write(e);

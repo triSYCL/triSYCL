@@ -21,6 +21,7 @@
 
 #include <utility>
 
+#include "memory_infrastructure.hpp"
 #include "tile_infrastructure/detail/tile_infrastructure.hpp"
 #include "triSYCL/device/facade/device.hpp"
 
@@ -45,7 +46,7 @@ class tile_infrastructure
   using dti = detail::tile_infrastructure<Geography>;
 
  public:
-  /// The façade used to implement part of the use facing type
+  /// The façade used to implement part of the user-facing type
   using facade_t = facade::device<tile_infrastructure<Geography>, dti>;
 
   using geo = Geography;
@@ -63,13 +64,17 @@ class tile_infrastructure
 
       \param[in] y is the vertical coordinate for this tile
 
+      \param[in] dev is the aie::detail::device used to control
+      hardware when using real hardware and provide some debug
+      information from inside the tile_infrastructure. Use auto
+      concept here to avoid explicit type causing circular dependency
+
       \param[in] fiber_executor is the executor used to run
       infrastructure details
   */
-  tile_infrastructure(int x, int y,
+  tile_infrastructure(int x, int y, auto& dev,
                       ::trisycl::detail::fiber_pool& fiber_executor)
-      : facade_t { std::make_shared<dti>(x, y, fiber_executor) } {}
-
+      : facade_t { std::make_shared<dti>(x, y, dev, fiber_executor) } {}
   tile_infrastructure() = default;
 
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
@@ -81,11 +86,42 @@ class tile_infrastructure
   }
 #endif
 
+ // \todo Implement a real tile handle instead of using x(), y(),
+  // etc. from here
+
   /// Get the horizontal coordinate
   int x() { return implementation->x(); }
 
   /// Get the vertical coordinate
   int y() { return implementation->y(); }
+
+  /// Get the horizontal number of tiles
+  static constexpr int x_size() { return geo::x_size; }
+
+  /// Get the vertical number of tiles
+  static constexpr int y_size() { return geo::y_size; }
+
+  /// Access to the common infrastructure part of a tile memory
+  auto& mem() {
+    return implementation->mem();
+  }
+
+  struct cgh_t {
+    tile_infrastructure ti;
+    cgh_t(tile_infrastructure t) : ti { t } {}
+
+  template <typename Invocable>
+    void single_task(Invocable&& t) {
+      ti.single_task([=] { t(); });
+    }
+  };
+
+  /// Submit a command group to the tile
+  template <typename Invocable>
+  void submit(Invocable&& f) const {
+    cgh_t cgh { *this };
+    std::forward<Invocable>(f)(cgh);
+  }
 
   /** Get the user input connection from the AXI stream switch
 
@@ -137,7 +173,23 @@ class tile_infrastructure
 
   /// Launch a callable on this tile
   template <typename Work> auto& single_task(Work&& f) {
-    implementation->single_task(std::forward<Work>(f));
+    /** Recycle the tile_infrastructure shared_ptr as a fake tile
+        handle which is copyable.
+
+        \todo In a device implementation we should have a real
+        tile_handler type making sense on the device instead of just
+        *this */
+    auto kernel = [&] {
+      if constexpr (requires { f(); })
+        /* If the invocable is not interested by the handler, do not
+           provide it. Add the outer lambda to avoid a warning about
+           capturing this when non using it */
+        return [work = std::forward<Work>(f)] { return work(); };
+      else
+        return [this, work = std::forward<Work>(f)] { return work(*this); };
+    }();
+
+    implementation->single_task(kernel);
     // To allow chaining commands
     return *this;
   }

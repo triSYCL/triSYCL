@@ -28,6 +28,7 @@
 #include <experimental/mdspan>
 
 #include <sycl/sycl.hpp>
+#include "triSYCL/vendor/Xilinx/graphics.hpp"
 
 // Some headers used when debugging
 #include <chrono>

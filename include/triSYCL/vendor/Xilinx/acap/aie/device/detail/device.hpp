@@ -132,11 +132,7 @@ template <typename Layout> struct device {
       f(y);
   };
 
-  /** Keep track of all the (non detail) infrastructure tile memories
-      of this device */
-  aie::memory_infrastructure mi[geo::y_size][geo::x_size];
-
-  /** Access to the common infrastructure part of a tile memory
+  /** Shortcut to access to the common infrastructure part of a tile memory
 
       \param[in] x is the horizontal tile coordinate
 
@@ -145,8 +141,7 @@ template <typename Layout> struct device {
       \throws trisycl::runtime_error if the coordinate is invalid
   */
   auto& mem(int x, int y) {
-    geo::validate_x_y(x, y);
-    return mi[y][x];
+    return tile(x, y).mem();
   }
 
   /** The shim tiles on the lower row of the tile array
@@ -253,7 +248,7 @@ template <typename Layout> struct device {
     // Initialize all the tiles with their network connections first
     for_each_tile_index([&](auto x, auto y) {
       // Create & start the tile infrastructure
-      tile(x, y) = { x, y, fiber_executor };
+      tile(x, y) = { x, y, *this, fiber_executor };
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
       tile(x, y).set_dev_handle(
           xaie::handle{xaie::acap_pos_to_xaie_pos({x, y}), &aie_inst});

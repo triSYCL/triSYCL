@@ -101,9 +101,6 @@
 /// For Xilinx ACAP
 #include "triSYCL/vendor/Xilinx/acap.hpp"
 
-// Xilinx-specific extension for some graphics support
-#include "triSYCL/vendor/Xilinx/graphics.hpp"
-
 // An extension about constexpr host introspection API
 //#include "triSYCL/extension/ce/platform.hpp"
 

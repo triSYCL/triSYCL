@@ -6,8 +6,8 @@
     The basic AI Engine homogeneous memory infrastructure,
     i.e. independent of x & y coordinates.
 
-    This is owned by a device, so for example the lock configuration
-    can survive to some program changes.
+    This is owned by a device tile, so for example the lock
+    configuration can survive to some program changes.
 
     Ronan dot Keryell at Xilinx dot com
 
@@ -15,10 +15,7 @@
     License. See LICENSE.TXT for details.
 */
 
-#include <utility>
-
-#include "memory_infrastructure/detail/memory_infrastructure.hpp"
-#include "triSYCL/device/facade/device.hpp"
+#include "lock.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
@@ -30,35 +27,36 @@ namespace trisycl::vendor::xilinx::acap::aie {
     This allows some type erasure while accessing the common
     memory infrastructure.
 
-    \todo Recycle the device_facade for now
-
     \param Geography is the \c geography type representing the full
     layout of the architecture
 */
-class memory_infrastructure
-    : public facade::device<memory_infrastructure,
-                            detail::memory_infrastructure> {
-  /// The type encapsulating the implementation
-  using dti = detail::memory_infrastructure;
+class memory_infrastructure {
+  /// The lock unit of the memory tile
+  lock_unit memory_locking_unit;
+
+  /** Keep track of the aie::detail::device for hardware resource
+      control in device mode or for debugging purpose for better
+      messages.
+
+      Use void* for now to avoid cyclic header dependencies for now
+      instead of the aie::detail::device */
+  void* dev [[maybe_unused]];
 
  public:
-  /// The façade used to implement part of the use facing type
-  using facade_t = facade::device<memory_infrastructure, dti>;
+  /** Start the memory infrastructure associated to the AIE device tile
 
-  /// Make the implementation member directly accessible in this class
-  using facade_t::implementation;
+      \param[in] dev is the aie::detail::device used to control
+      hardware when using real hardware and provide some debug
+      information from inside the tile_infrastructure.
 
-  /** Start the memory infrastructure associated to the AIE device
-
-      \param[in] x is the horizontal coordinate for this tile
-
-      \param[in] y is the vertical coordinate for this tile
+      Use auto concept here to avoid explicit type causing circular
+      dependency
   */
-  memory_infrastructure()
-      : facade_t { std::make_shared<dti>() } {}
+  memory_infrastructure(auto& dev)
+      : dev { &dev } {}
 
-  // Forward everything to the implementation detail
-  auto& operator->() { return implementation; }
+  /// Get access to a specific lock in this memory module
+  auto& lock(int i) { return memory_locking_unit.lock(i); }
 };
 
 /// @} End the aie Doxygen group

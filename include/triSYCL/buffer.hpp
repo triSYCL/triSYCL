@@ -73,6 +73,12 @@ public:
   using const_reference = const value_type&;
   using allocator_type = Allocator;
 
+  /** Get the number of dimensions of the buffer
+
+      Name inspired from ISO C++ P0009 mdspan papers
+  */
+  static auto constexpr rank() { return Dimensions; }
+
 private:
 
   // The type encapsulating the implementation

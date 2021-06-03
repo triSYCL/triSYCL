@@ -504,13 +504,41 @@ public:
 
 };
 
+/** SYCL 2020 host_accessor
+
+    \param[in] DataType is the value type of the elements
+
+    \param[in] Dimensions is the rank of the accessor
+
+    \param[in] AccessMode precises whether the access is done in read
+    or write mode. By default this is read+write
+*/
+template <typename DataType,
+          int Dimensions,
+          access::mode AccessMode = access::mode::read_write>
+class host_accessor : public accessor<DataType,
+                                      Dimensions,
+                                      AccessMode,
+                                      access::target::host_buffer> {
+  using base = accessor<DataType,
+                        Dimensions,
+                        AccessMode,
+                        access::target::host_buffer>;
+ public:
+  using typename base::accessor;
+
+  /// Create an accessor to a buffer to access from the host
+  template <typename Allocator>
+  host_accessor(buffer<DataType, Dimensions, Allocator>& target_buffer)
+    : base { target_buffer } {}
+};
 
 /** Top-level function to break circular dependencies on the the types
     to get the pipe implementation */
 template <typename Accessor>
 static inline auto &get_pipe_detail(Accessor &a) {
   return a.get_pipe_detail();
-  }
+}
 
 /// @} End the data Doxygen group
 

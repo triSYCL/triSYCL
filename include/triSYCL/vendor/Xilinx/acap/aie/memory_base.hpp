@@ -18,7 +18,8 @@
     License. See LICENSE.TXT for details.
  */
 
-#include <thread>
+#include <functional>
+#include <optional>
 
 #include "memory_infrastructure.hpp"
 
@@ -39,15 +40,18 @@ struct memory_base {
   /// the hardware one.
 
   /// Keep a reference to the memory_infrastructure hardware features
-  memory_infrastructure mi;
+  std::optional<std::reference_wrapper<memory_infrastructure>> mi;
 
   /// Get an access to the a specific lock
-  auto& lock(int i) { return mi->lock(i); }
+  auto& lock(int i) {
+    // value() will throw if there is some missed initialization
+    return mi.value().get().lock(i);
+  }
 
   /// Store a way to access to hardware infrastructure of the tile
-  void set_memory_infrastructure(memory_infrastructure m) { mi = m; }
+  void set_memory_infrastructure(memory_infrastructure& m) { mi = m; }
 #else
-  void set_memory_infrastructure(memory_infrastructure) { }
+  void set_memory_infrastructure(memory_infrastructure&) { }
   auto &lock(int i) {
     /// TODO: fix it. This doesn't seem implementable for host code when using
     /// actual hardware because it needs acces to the device handle.
