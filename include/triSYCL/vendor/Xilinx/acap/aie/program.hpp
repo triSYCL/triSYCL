@@ -195,24 +195,9 @@ struct program {
         f(*tile_bases[y][x]);
   }
 
-#if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
-  // for host side on device execution
-  xaie::XAie_SetupConfig(aie_config, aiev1::dev_gen, aiev1::base_addr,
-                         aiev1::col_shift, aiev1::row_shift, aiev1::num_hw_col,
-                         aiev1::num_hw_row, aiev1::num_shim_row,
-                         aiev1::mem_tile_row_start, aiev1::mem_tile_row_num,
-                         aiev1::aie_tile_row_start, aiev1::aie_tile_row_num);
-  xaie::XAie_InstDeclare(aie_inst, &aie_config);
-#endif
-
   /// Create the AIE program with the tiles and memory modules
   program(AIEDevice &aie_d) : aie_d{aie_d} {
     // Initialization of the AI Engine tile constructs from Lib X AI Engine
-#if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
-    // for host side on device execution
-    TRISYCL_XAIE(xaie::XAie_CfgInitialize(&aie_inst, &aie_config));
-    TRISYCL_XAIE(xaie::XAie_PmRequestTiles(&aie_inst, NULL, 0));
-#endif
 
     boost::hana::for_each(tiles, [&](auto &t) {
       // Inform each tile about its program
@@ -222,13 +207,6 @@ struct program {
 
     // Inform each tile about their tile infrastructure
     t.set_tile_infrastructure(aie_d.tile(t.x, t.y));
-#endif
-#if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
-      // for host side on device execution
-
-    // Inform each tile about their hw tile instance. Skip the first shim row.
-    t.set_dev_handle(
-        xaie::handle{xaie::acap_pos_to_xaie_pos({t.x, t.y}), &aie_inst});
 #endif
     // Keep track of each base tile
     tile_bases[t.y][t.x] = &t;
@@ -241,14 +219,6 @@ struct program {
       memory_modules_bases[m.y][m.x] = &m;
     });
   }
-
-#if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
-  // for host side on device execution
-  ~program() {
-    TRISYCL_XAIE(xaie::XAie_Finish(&aie_inst));
-  }
-#endif
-
 
   // Outliner for Method 2
   //#ifdef __SYCL_DEVICE_ONLY__

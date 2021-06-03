@@ -11,7 +11,10 @@
 
 using namespace sycl::vendor::xilinx;
 
-static auto constexpr image_size = 229;
+/// The current maximum size of a memory module is 8192 bytes
+/// sqrt(8192) ~ 90.5... so 90 is the largest integral value we can put here. at
+/// least until the 8192 bytes goes away.
+static auto constexpr image_size = 90;
 graphics::application a;
 
 // All the memory modules are the same
@@ -54,8 +57,9 @@ struct mandelbrot : acap::aie::tile<AIE, X, Y> {
 };
 
 int main(int argc, char *argv[]) {
-  acap::aie::device<acap::aie::layout::size<2,3>> aie;
+  acap::aie::device<acap::aie::layout::size<6,6>> aie;
   // Open a graphic view of a ME array
+  a.set_device(aie);
   a.start(argc, argv, decltype(aie)::geo::x_size,
           decltype(aie)::geo::y_size,
           image_size, image_size, 1);

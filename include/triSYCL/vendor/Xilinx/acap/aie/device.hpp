@@ -48,6 +48,10 @@ class device : public facade::device<device<Layout>, detail::device<Layout>> {
   using ssp = typename dd::ssp;
   using smp = typename dd::smp;
 
+#if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
+  xaie::XAie_DevInst *get_dev_inst() { return implementation->get_dev_inst(); }
+#endif
+
   /// The default constructor makes a new device
   device()
       : facade_t { std::make_shared<dd>() } {}

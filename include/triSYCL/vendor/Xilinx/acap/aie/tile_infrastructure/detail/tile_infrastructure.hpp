@@ -105,42 +105,71 @@ template <typename Geography> class tile_infrastructure {
   }
 #endif
 
+#ifdef __SYCL_DEVICE_ONLY__
+static void kernel_prerun() {
+  // log("This is needed to bypass bugs\n");
+}
+#else
+static void kernel_prerun() {
+}
+#endif
+
+#ifdef __SYCL_DEVICE_ONLY__
   template <typename KernelType>
-  auto kernel_builder(KernelType &k) requires requires(KernelType k) {
+  auto kernel_builder(KernelType &) requires requires(KernelType k) {
     k();
   }
   {
-    return [=]() mutable { k(); };
+    return []() mutable {
+      KernelType *k = (KernelType *)(hw_mem::self_tile_addr(hw_mem::is_west_dev()) + hw_mem::args_beg_off);
+      kernel_prerun();
+      k->operator()();
+    };
   };
   template <typename KernelType>
-  auto kernel_builder(KernelType &k) requires requires(KernelType k) {
+  auto kernel_builder(KernelType &) requires requires(KernelType k) {
     k(*this);
   }
   {
-    return [=]() mutable {
+    return []() mutable {
+      KernelType *k =
+          (KernelType *)(hw_mem::self_tile_addr(hw_mem::is_west_dev()) +
+                         hw_mem::args_beg_off);
+      kernel_prerun();
       /// TODO tile_infrastructure should be properly initialized.
       std::remove_cvref_t<decltype(*this)> th;
-      k(th);
+      k->operator()(th);
     };
   }
   template <typename KernelType>
-  auto kernel_builder(KernelType &k) requires requires(KernelType k) {
+  auto kernel_builder(KernelType &) requires requires(KernelType k) {
     k.run();
   }
   {
-    return [=]() mutable { k.run(); };
+    return []() mutable {
+      KernelType *k =
+          (KernelType *)(hw_mem::self_tile_addr(hw_mem::is_west_dev()) +
+                         hw_mem::args_beg_off);
+      kernel_prerun();
+      k->run();
+    };
   }
   template <typename KernelType>
-  auto kernel_builder(KernelType &k) requires requires(KernelType k) {
+  auto kernel_builder(KernelType &) requires requires(KernelType k) {
     k.run(*this);
   }
   {
-    return [=]() mutable {
+    return []() mutable {
+      KernelType *k =
+          (KernelType *)(hw_mem::self_tile_addr(hw_mem::is_west_dev()) +
+                         hw_mem::args_beg_off);
+      kernel_prerun();
       /// TODO tile_infrastructure should be properly initialized.
       std::remove_cvref_t<decltype(*this)> th;
-      k.run(th);
+      k->run(th);
     };
   }
+#endif
 
 #if !defined(__SYCL_DEVICE_ONLY__)
   /** Map the user input port number to the AXI stream switch port
@@ -219,13 +248,13 @@ tile_infrastructure() = default;
 #endif
 
 #ifdef __SYCL_DEVICE_ONLY__
-  __attribute__((noinline)) void log(const char* ptr) {
-    hw_mem::log_record* lr = hw_mem::log_record::get(x(), y());
+  static __attribute__((noinline)) void log(const char* ptr) {
+    volatile hw_mem::log_record* lr = hw_mem::log_record::get();
     while (*ptr)
       lr->get_data()[lr->size++] = *(ptr++);
   }
 #else
-  void log(const char* ptr) {
+  static void log(const char* ptr) {
     std::cout << ptr;
   }
 #endif

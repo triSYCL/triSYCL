@@ -219,8 +219,8 @@ struct handle {
         std::dec << "(" << get_pos_str() << ") Waiting for kernel...", "exec");
     xaie::AieRC RC = xaie::XAIE_OK;
     do {
-      RC = xaie::XAie_CoreWaitForDone(inst, tile, 0);
-      // emit_log();
+      RC = xaie::XAie_CoreWaitForDone(inst, tile, 1);
+      emit_log();
     } while (RC != xaie::XAIE_OK);
     TRISYCL_DUMP2(std::dec << "(" << get_pos_str() << ") done", "exec");
   }
@@ -229,17 +229,24 @@ struct handle {
     mem_write(acap::hw_mem::log_buffer_beg_off + 4, 0);
   }
   void emit_log() {
-    /// This is not synchronized with the device and need to be run after devuce
-    /// execution.
+    /// This is not synchronized with the device
     std::string log;
-    uint32_t log_size = mem_read(acap::hw_mem::log_buffer_beg_off);
-    // xaie::XAie_DataMemRdWord(inst, tile, acap::hw_mem::log_buffer_beg_off,
-    // &log_size);
-    log.resize(log_size);
+    uint32_t log_size;
+    uint32_t host_idx;
+    /// We dont use mem_read here because this part will be executed a lot and 
+    xaie::XAie_DataMemRdWord(inst, tile, acap::hw_mem::log_buffer_beg_off,
+                             &log_size);
+    xaie::XAie_DataMemRdWord(inst, tile, acap::hw_mem::log_buffer_beg_off + 4,
+                             &host_idx);
+    if (log_size <= host_idx)
+      return;
+    uint32_t size = log_size - host_idx;
+    log.resize(size);
     memcpy_d2h(log.data(),
                acap::hw_mem::log_buffer_beg_off +
-                   sizeof(acap::hw_mem::log_record),
-               log_size);
+                   sizeof(acap::hw_mem::log_record) + host_idx,
+               size);
+    mem_write(acap::hw_mem::log_buffer_beg_off + 4, log_size);
     std::cout << log;
     std::flush(std::cout);
   }

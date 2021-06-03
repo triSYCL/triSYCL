@@ -20,6 +20,15 @@
     License. See LICENSE.TXT for details.
 */
 
+
+#ifdef __SYCL_XILINX_AIE__
+#include "acap/aie/hardware.hpp"
+#ifndef __SYCL_DEVICE_ONLY__
+#include "acap/aie/xaie_wrapper.hpp"
+#endif
+#endif
+
+#ifndef __SYCL_DEVICE_ONLY__
 #include <algorithm>
 #include <atomic>
 #include <condition_variable>
@@ -36,7 +45,7 @@
 #include <boost/thread/barrier.hpp>
 
 #include <gtkmm.h>
-
+#endif
 /** \defgroup graphics Graphics support for CGRA-like interaction
 
     This can create a graphics application and typically update some
@@ -49,6 +58,92 @@ namespace trisycl::vendor::xilinx::graphics {
 // RGB 8 bit images, so 3 bytes per pixel
 using rgb = std::array<std::uint8_t, 3>;
 
+#ifdef __SYCL_XILINX_AIE__
+
+/// This struct needs to have the same layout on the host and the device.
+struct graphics_record {
+#ifdef __SYCL_DEVICE_ONLY__
+  /// This is only possible on device.
+  static graphics_record *get() {
+    return (graphics_record *)(acap::hw_mem::self_tile_addr(
+                                   acap::hw_mem::is_west_dev()) +
+                               acap::hw_mem::graphic_beg_off);
+  }
+#endif
+  uint32_t is_done;
+  /// pointer do not have the same layout on device and host so data is treated
+  /// as a pointer on the device and as a uint32_t on the host.
+#ifdef __SYCL_DEVICE_ONLY__
+  void *data;
+#else
+  uint32_t data;
+#endif
+  uint32_t min_value;
+  uint32_t max_value;
+  uint32_t counter;
+};
+#endif
+
+#ifdef __SYCL_DEVICE_ONLY__
+
+/// This only exists such for compilation purposes and should never be used on
+/// device. But the compiler still requires host code to compile on device
+struct palette {
+  enum kind { gray, rainbow };
+
+  void set(kind new_k, int new_phase, int new_frequency_log2, int new_clip) {
+  }
+};
+
+struct image_grid {
+  palette get_palette() {
+    return {};
+  }
+};
+
+struct application {
+    template<typename T>
+  void set_device(T&& d) {
+  }
+
+  void start(int &argc, char **&argv,
+             int nx, int ny, int image_x, int image_y, int zoom) {
+  }
+
+
+  ///  Wait for the graphics window to end
+  void wait() {
+    /// TODO
+  }
+
+
+  /// Test if the window has been closed
+  bool is_done() {
+    graphics_record *gr = graphics_record::get();
+    return gr->is_done;
+  }
+
+  /// Test if the window has been closed after synchronizing with a barrier
+  bool is_done_barrier() {
+    /// TODO
+  }
+
+  template <typename DataType, typename RangeValue>
+  void update_tile_data_image(int x, int y, DataType data, RangeValue min_value,
+                              RangeValue max_value) {
+    volatile graphics_record *gr = graphics_record::get();
+    gr->data = data;
+    gr->min_value = min_value;
+    gr->max_value = max_value;
+    gr->counter++;
+  };
+
+  graphics::image_grid image_grid() {
+    return {};
+  }
+};
+
+#else
 /** An application window displaying a grid of tiles
 
     Each tile is framed with the tile identifiers
@@ -610,7 +705,18 @@ struct image_grid : frame_grid {
 struct application {
   std::thread t;
   std::unique_ptr<graphics::image_grid> w;
+#ifdef __SYCL_XILINX_AIE__
+  xaie::XAie_DevInst *dev_inst;
+  std::thread device_communication_thread;
+#endif
   bool initialized = false;
+
+  template<typename T>
+  void set_device(T&& d) {
+#ifdef __SYCL_XILINX_AIE__
+    dev_inst = d.get_dev_inst();
+#endif
+  }
 
   /** Start the graphics application
 
@@ -657,14 +763,23 @@ struct application {
         // Advertise that the graphics is shutting down
         w->done = true;
       } };
-    // Wait for the graphics to start
-    graphics_initialization.get_future().get();
+        // Wait for the graphics to start
+        graphics_initialization.get_future()
+            .get();
+#ifdef __SYCL_XILINX_AIE__
+        device_communication_thread = std::thread([=, this] {
+          background_image_updater(this, &w->done, nx, ny, dev_inst,
+                                   image_x * image_y);
+        });
+#endif
   }
-
 
   ///  Wait for the graphics window to end
   void wait() {
     t.join();
+#ifdef __SYCL_XILINX_AIE__
+    device_communication_thread.join();
+#endif
   }
 
 
@@ -704,6 +819,68 @@ struct application {
     w->update_tile_data_image(x, y, data, min_value, max_value);
   };
 
+#if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
+
+  static void background_image_updater(application *a,
+                                       std::atomic<bool> *is_done,
+                                       int tile_x_size, int tile_y_size,
+                                       xaie::XAie_DevInst *dev_inst,
+                                       size_t graphic_buff_size) {
+    struct tile_data {
+      uint32_t counter = 0;
+    };
+    TRISYCL_DUMP("Staring background graphics device communication thread");
+    std::vector<std::uint8_t> graphic_buffer;
+    graphic_buffer.resize(graphic_buff_size);
+    
+    std::vector<tile_data> tiles_data;
+    tiles_data.resize(tile_x_size * tile_y_size);
+
+    auto for_each_tile = [&](auto &&l) {
+      for (int x = 0; x < tile_x_size; x++)
+        for (int y = 0; y < tile_y_size; y++)
+          l(x, y, xaie::handle{xaie::acap_pos_to_xaie_pos({x, y}), dev_inst},
+            tiles_data[x * tile_y_size + y]);
+    };
+
+    /// Initialized the graphics_record of each tile.
+    for_each_tile([&](int x, int y, xaie::handle h, tile_data &td) {
+      graphics_record gr;
+      std::memset(&gr, 0, sizeof(gr));
+      h.memcpy_h2d(acap::hw_mem::graphic_beg_off, &gr, sizeof(gr));
+    });
+
+    TRISYCL_DUMP("Core graphics initialized");
+    while (!*is_done)
+      for_each_tile([&](int x, int y, xaie::handle h, tile_data &td) {
+        graphics_record gr;
+        h.memcpy_d2h(&gr, acap::hw_mem::graphic_beg_off,
+                     sizeof(graphics_record));
+        /// The kernel has not started yet.
+        if (gr.counter == 0)
+          return;
+        /// This makes the assumption that the pointer is not in a neighbouring
+        /// tile. This could be generalized.
+        uint32_t dev_off = gr.data & acap::hw_mem::offset_mask;
+        h.memcpy_d2h(graphic_buffer.data(), dev_off,
+                     graphic_buffer.size());
+
+        /// This call is not synchronized but this should only be executed while
+        /// the main thread is waiting for the kernel to finish.
+        a->update_tile_data_image(x, y, graphic_buffer.data(), gr.min_value,
+                                  gr.max_value);
+      });
+
+    TRISYCL_DUMP("Core graphics done");
+    for_each_tile([&](int x, int y, xaie::handle h, tile_data &td) {
+      h.mem_write(acap::hw_mem::graphic_beg_off +
+                      offsetof(graphics_record, is_done),
+                  1);
+    });
+    TRISYCL_DUMP("Ending background graphics device communication thread");
+  }
+
+#endif
 
   /// Return the image_grid in this application
   graphics::image_grid &image_grid() {
@@ -719,6 +896,8 @@ struct application {
   }
 
 };
+
+#endif
 
 }
 

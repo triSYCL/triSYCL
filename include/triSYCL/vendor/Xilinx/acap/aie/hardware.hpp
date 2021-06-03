@@ -99,13 +99,14 @@ constexpr unsigned north_tile_addr = 0x30000;        // (1 << 17) | (2 << 15)
 constexpr unsigned east_or_self_tile_addr = 0x38000; // (1 << 17) | (3 << 15)
 
 /// Base address a tile viewed from itself.
-static constexpr unsigned self_tile_addr(unsigned X, unsigned Y) {
-  return ((Y & 1) ? west_or_self_tile_addr : east_or_self_tile_addr);
+static constexpr unsigned self_tile_addr(bool is_west) {
+  return ((is_west) ? west_or_self_tile_addr : east_or_self_tile_addr);
 }
-static constexpr unsigned side_tile_addr(unsigned X, unsigned Y) {
-  return ((Y & 1) ? east_or_self_tile_addr : west_or_self_tile_addr);
+static constexpr unsigned side_tile_addr(bool is_west) {
+  return (is_west ? east_or_self_tile_addr : west_or_self_tile_addr);
 }
 
+/// Size of each tiles in every direction
 constexpr unsigned tile_size = 0x8000;
 constexpr unsigned offset_mask = tile_size - 1;
 constexpr unsigned base_addr_mask = ~offset_mask;
@@ -133,13 +134,34 @@ constexpr unsigned log_buffer_beg_off = tile_mem_end_off;
 constexpr unsigned log_buffer_size = 0x1000;
 constexpr unsigned log_buffer_end_off = log_buffer_beg_off + log_buffer_size;
 
+constexpr unsigned graphic_beg_off = log_buffer_end_off;
+constexpr unsigned graphic_size = 0x1000;
+constexpr unsigned graphic_end_off = graphic_beg_off + graphic_size;
+
+#ifdef __SYCL_DEVICE_ONLY__
+/// The address of the stack will be either in the west or east tile based on
+/// the parity of the tile so we can use the address of the stack to figure out
+/// the parity. This is what this function does.
+bool is_west_dev() {
+  int i;
+  /// the 15 low bits are offset within a tile
+  /// then bits 16-15 are the index of the tile.
+  /// west = 0b01 and east = 0b11
+  /// so iff 16s bits of the address of a variable on the stack is set to 1 the
+  /// tile is on the east.
+  return !((reinterpret_cast<uint32_t>(&i) & (1 << 16)));
+}
+#endif
+
 struct log_record {
-  static log_record *get(unsigned X, unsigned Y) {
-    return (log_record *)(self_tile_addr(X, Y) + log_buffer_beg_off);
+#ifdef __SYCL_DEVICE_ONLY__
+  static volatile log_record *get() {
+    return (log_record *)(self_tile_addr(is_west_dev()) + log_buffer_beg_off);
   }
+#endif
   uint32_t size;
-  // uint32_t host_idx;
-  char* get_data() {
+  uint32_t host_idx;
+  volatile char* get_data() volatile {
     return (char*)(this + 1);
   }
 };

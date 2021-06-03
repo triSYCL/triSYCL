@@ -232,13 +232,13 @@ struct tile : tile_base<AIE_Program> {
 
 
 #ifdef __SYCL_DEVICE_ONLY__
-  __attribute__((noinline)) void log(const char* ptr) {
-    hw_mem::log_record* lr = hw_mem::log_record::get(X, Y);
+  static __attribute__((noinline)) void log(const char* ptr) {
+    volatile hw_mem::log_record* lr = hw_mem::log_record::get();
     while (*ptr)
       lr->get_data()[lr->size++] = *(ptr++);
   }
 #else
-  void log(const char* ptr) {
+  static void log(const char* ptr) {
     std::cout << ptr;
   }
 #endif
@@ -357,7 +357,7 @@ struct tile : tile_base<AIE_Program> {
   auto &mem() {
     return *(
         tile_mem_t<tile_t::get_pos(dir::self).x, tile_t::get_pos(dir::self).y>
-            *)(hw_mem::self_tile_addr(X, Y) + hw_mem::tile_mem_beg_off);
+            *)(hw_mem::self_tile_addr(is_west(X, Y)) + hw_mem::tile_mem_beg_off);
   }
 
   auto &mem_side() {

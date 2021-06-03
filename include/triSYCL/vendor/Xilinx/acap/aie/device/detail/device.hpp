@@ -25,6 +25,7 @@
 #include "../../shim_tile.hpp"
 #include "../../tile.hpp"
 #include "../../tile_infrastructure.hpp"
+#include "../../xaie_wrapper.hpp"
 
 #include "triSYCL/detail/fiber_pool.hpp"
 
@@ -227,12 +228,36 @@ template <typename Layout> struct device {
     });
   }
 
+#if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
+  // for host side on device execution
+  xaie::XAie_SetupConfig(aie_config, aiev1::dev_gen, aiev1::base_addr,
+                         aiev1::col_shift, aiev1::row_shift, aiev1::num_hw_col,
+                         aiev1::num_hw_row, aiev1::num_shim_row,
+                         aiev1::mem_tile_row_start, aiev1::mem_tile_row_num,
+                         aiev1::aie_tile_row_start, aiev1::aie_tile_row_num);
+  xaie::XAie_InstDeclare(aie_inst, &aie_config);
+
+  xaie::XAie_DevInst* get_dev_inst() {
+    return &aie_inst;
+  }
+#endif
+
   /// Build some device level infrastructure
   device() {
+        // Initialization of the AI Engine tile constructs from Lib X AI Engine
+#if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
+    // for host side on device execution
+    TRISYCL_XAIE(xaie::XAie_CfgInitialize(&aie_inst, &aie_config));
+    TRISYCL_XAIE(xaie::XAie_PmRequestTiles(&aie_inst, NULL, 0));
+#endif
     // Initialize all the tiles with their network connections first
     for_each_tile_index([&](auto x, auto y) {
       // Create & start the tile infrastructure
       tile(x, y) = { x, y, fiber_executor };
+#if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
+      tile(x, y).set_dev_handle(
+          xaie::handle{xaie::acap_pos_to_xaie_pos({x, y}), &aie_inst});
+#endif
     });
 
 #if !defined(__SYCL_XILINX_AIE__)
@@ -271,6 +296,14 @@ template <typename Layout> struct device {
     });
 #endif
   }
+
+
+#if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
+  // for host side on device execution
+  ~device() {
+    TRISYCL_XAIE(xaie::XAie_Finish(&aie_inst));
+  }
+#endif
 
   /** Display the device layout
 
