@@ -122,7 +122,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
   # Change to /std:c++latest once Boost::funtional is fixed
   # (1.63.0 with toolset v141 not working)
-  set_target_cxx_std(_trisycl_cxxfeatures 14)
+  set_target_cxx_std(_trisycl_cxxfeatures 17)
   # Replace default Warning Level 3 with 4 (/Wall is pretty-much useless on MSVC
   # system headers are plagued with warnings)
   string(REGEX REPLACE "/W[0-9]" "/W4" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})

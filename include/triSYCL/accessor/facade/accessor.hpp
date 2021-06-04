@@ -14,6 +14,9 @@
 #include <utility>
 
 #include "triSYCL/accessor/mixin/accessor.hpp"
+#include "triSYCL/id.hpp"
+#include "triSYCL/item.hpp"
+#include "triSYCL/nd_item.hpp"
 
 namespace trisycl::facade {
 

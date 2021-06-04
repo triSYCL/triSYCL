@@ -1,7 +1,7 @@
 #ifndef TRISYCL_SYCL_BUFFER_DETAIL_ACCESSOR_HPP
 #define TRISYCL_SYCL_BUFFER_DETAIL_ACCESSOR_HPP
 
-/** \file The OpenCL SYCL buffer accessor<> detail behind the scene
+/** \file The SYCL buffer accessor<> detail behind the scene
 
     Ronan at Keryell point FR
 
@@ -24,10 +24,6 @@
 #include "triSYCL/accessor/facade/accessor.hpp"
 #include "triSYCL/command_group/detail/task.hpp"
 #include "triSYCL/detail/debug.hpp"
-#include "triSYCL/id.hpp"
-#include "triSYCL/item.hpp"
-#include "triSYCL/nd_item.hpp"
-#include "triSYCL/range.hpp"
 
 namespace trisycl {
 
@@ -46,7 +42,7 @@ template <typename T, int Dimensions> class buffer;
     inside a kernel in a multidimensional variable length array way.
 
     This implementation relies on std::experimental::mdspan to provide
-    this nice syntax and behaviour.
+    this nice syntax and behavior.
 
     Right now the aim of this class is just to access to the buffer in
     a read-write mode, even if capturing the accessor from a lambda
@@ -84,6 +80,9 @@ class accessor
   using const_reverse_iterator =
       typename array_view_type::const_reverse_iterator;
 #endif
+
+  /// Used by the local accessor hack on top of host accessor
+  accessor() = default;
 
   /** Construct a host accessor from an existing buffer
 
@@ -225,6 +224,12 @@ class accessor
     */
   }
 #endif
+
+protected:
+  /// Set later the current buffer associated to this accessor
+  void set_buffer(std::shared_ptr<detail::buffer<T, Dimensions>> b) {
+    buf = b;
+  }
 };
 
 /// @} End the data Doxygen group

@@ -75,12 +75,20 @@ template <typename T, int Dimensions> class accessor {
         const std::array<typename mdspan::index_type, rank()>&>(r);
   }
 
+  /// Set later the mdspan associated to this accessor
+  void set_access(const mdspan& a) {
+    access = a;
+  }
+
  public:
   /// Pointer type to the elements
   using pointer = typename mdspan::pointer;
 
   /// Reference type to the elements
   using reference = typename mdspan::reference;
+
+  /// Used by the local accessor hack on top of host accessor
+  accessor() = default;
 
   /// Create an accessor of dimensions r on top of data storage
   accessor(pointer data, const range<rank()>& r)
