@@ -10,6 +10,7 @@
 */
 
 #include <experimental/mdspan>
+#include <iterator>
 #include <type_traits>
 #include <utility>
 
@@ -31,6 +32,9 @@ template <typename AccessorMixIn> class accessor : public AccessorMixIn {
 
  public:
   using iterator = typename mixin::pointer;
+  using const_iterator = typename mixin::const_pointer;
+  using reverse_iterator = typename std::reverse_iterator<iterator>;
+  using const_reverse_iterator = typename std::reverse_iterator<const_iterator>;
 
   /** Use the accessor with integers à la [][][]
 
@@ -143,33 +147,24 @@ template <typename AccessorMixIn> class accessor : public AccessorMixIn {
 
   iterator end() { return mixin::data() + mixin::get_count(); }
 
-#ifdef TODO
-  // const_iterator begin() const { return array.begin(); }
+  const_iterator cbegin() { return mixin::data(); }
 
-  // const_iterator end() const { return array.end(); }
+  const_iterator cend() { return mixin::data() + mixin::get_count(); }
 
-  const_iterator cbegin() const { return array.begin(); }
+  reverse_iterator rbegin() { return std::reverse_iterator(end()); }
 
-  const_iterator cend() const { return array.end(); }
-
-  // reverse_iterator rbegin() { return array.rbegin(); }
-  reverse_iterator rbegin() const {
-    return const_cast<writable_array_view_type&>(array).rbegin();
+  reverse_iterator rend() {
+    return std::reverse_iterator(begin());
+    ;
   }
 
-  // reverse_iterator rend() { return array.rend(); }
-  reverse_iterator rend() const {
-    return const_cast<writable_array_view_type&>(array).rend();
+  const_reverse_iterator crbegin() const {
+    return std::reverse_iterator(cend());
   }
 
-  // const_reverse_iterator rbegin() const { return array.rbegin(); }
-
-  // const_reverse_iterator rend() const { return array.rend(); }
-
-  const_reverse_iterator crbegin() const { return array.rbegin(); }
-
-  const_reverse_iterator crend() const { return array.rend(); }
-#endif
+  const_reverse_iterator crend() const {
+    return std::reverse_iterator(cbegin());
+  }
 };
 
 /// @} to end the Doxygen group

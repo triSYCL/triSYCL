@@ -76,13 +76,14 @@ template <typename T, int Dimensions> class accessor {
   }
 
   /// Set later the mdspan associated to this accessor
-  void set_access(const mdspan& a) {
-    access = a;
-  }
+  void set_access(const mdspan& a) { access = a; }
 
  public:
-  /// Pointer type to the elements
+  /// Pointer type to element
   using pointer = typename mdspan::pointer;
+
+  /// Pointer type to const element
+  using const_pointer = const element_type*;
 
   /// Reference type to the elements
   using reference = typename mdspan::reference;
@@ -168,7 +169,7 @@ template <typename T, int Dimensions> class accessor {
     template <typename... Index>
     track_index(mdspan& m, Index&&... inds)
         : mds { m }
-          // Typically there will be N - 1 indices in the array of size N
+        // Typically there will be N - 1 indices in the array of size N
         , indices { std::forward<Index>(inds)... } {}
 
     /// The individual indexing operator

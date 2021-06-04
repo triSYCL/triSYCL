@@ -356,13 +356,6 @@ class accessor :
     return implementation->end();
   }
 
-#ifdef TODO
-  // const_iterator begin() const { return implementation->begin(); }
-
-
-  // const_iterator end() const { return implementation->end(); }
-
-
   typename accessor_detail::const_iterator cbegin() const {
     return implementation->cbegin();
   }
@@ -383,12 +376,6 @@ class accessor :
   }
 
 
-  // const_reverse_iterator rbegin() const { return array.rbegin(); }
-
-
-  // const_reverse_iterator rend() const { return array.rend(); }
-
-
   typename accessor_detail::const_reverse_iterator crbegin() const {
     return implementation->rbegin();
   }
@@ -397,7 +384,6 @@ class accessor :
   typename accessor_detail::const_reverse_iterator crend() const {
     return implementation->rend();
   }
-#endif
 };
 
 /// @} End the execution Doxygen group
