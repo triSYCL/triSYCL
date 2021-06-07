@@ -9,7 +9,6 @@
     License. See LICENSE.TXT for details.
 */
 
-#include <experimental/mdspan>
 #include <iterator>
 #include <type_traits>
 #include <utility>

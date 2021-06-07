@@ -10,7 +10,6 @@
 */
 
 #include <cstddef>
-#include <experimental/mdspan>
 #include <memory>
 #include <type_traits>
 #include <utility>

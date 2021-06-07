@@ -69,10 +69,10 @@ template <typename T, int Dimensions> class accessor {
   /** Cast a SYCL range into a mdspan index array, which is an array
       of std::size_t into an array of std::ptrdiff_t
   */
-  const std::array<typename mdspan::index_type, rank()>&
+  const std::array<typename mdspan::size_type, rank()>&
   extents_cast(const range<Dimensions>& r) {
     return reinterpret_cast<
-        const std::array<typename mdspan::index_type, rank()>&>(r);
+        const std::array<typename mdspan::size_type, rank()>&>(r);
   }
 
   /// Set later the mdspan associated to this accessor
