@@ -22,6 +22,7 @@
 #include <optional>
 
 #include "memory_infrastructure.hpp"
+#include "lock.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
@@ -51,6 +52,11 @@ struct memory_base {
   /// Store a way to access to hardware infrastructure of the tile
   void set_memory_infrastructure(memory_infrastructure& m) { mi = m; }
 #else
+#if defined(__SYCL_DEVICE_ONLY__)
+  auto lock(int i) {
+    return device_lock{i};
+  }
+#else
   void set_memory_infrastructure(memory_infrastructure&) { }
   auto &lock(int i) {
     /// TODO: fix it. This doesn't seem implementable for host code when using
@@ -58,6 +64,7 @@ struct memory_base {
     static device_lock l{};
     return l;
   }
+#endif
 #endif
 };
 

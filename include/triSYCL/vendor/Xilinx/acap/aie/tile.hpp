@@ -231,17 +231,9 @@ struct tile : tile_base<AIE_Program> {
   using dir = typename tile_t::dir;
 
 
-#ifdef __SYCL_DEVICE_ONLY__
-  static __attribute__((noinline)) void log(const char* ptr) {
-    volatile hw_mem::log_record* lr = hw_mem::log_record::get();
-    while (*ptr)
-      lr->get_data()[lr->size++] = *(ptr++);
-  }
-#else
   static void log(const char* ptr) {
-    std::cout << ptr;
+    detail::tile_infrastructure<geo>::log(ptr);
   }
-#endif
 
 /// This could be refactored to minimized duplication by separating between host
 /// and device at address computation instead of all the function.

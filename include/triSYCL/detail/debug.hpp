@@ -37,7 +37,11 @@ using namespace std::string_literals;
 
 namespace {
 
+thread_local int no_log_scope_count = 0;
+
 bool should_be_logged(std::string kind) {
+  if (no_log_scope_count)
+    return false;
   const char* env = getenv("TRISYCL_LOG");
   if (!env)
     return true;
@@ -94,6 +98,21 @@ void log_string(const std::string& str) {
 #endif
 
 namespace trisycl::detail {
+
+#if defined(TRISYCL_DEBUG) || defined(TRISYCL_TRACE_KERNEL)
+/// Disbale logs for a section of code.
+struct no_log_scope {
+  no_log_scope() {
+    no_log_scope_count++;
+  }
+  ~no_log_scope() {
+    no_log_scope_count--;
+  }
+};
+#else
+/// When logging is disabled this is a noop
+struct no_log_scope {};
+#endif
 
 /** \addtogroup debug_trace Debugging and tracing support
     @{

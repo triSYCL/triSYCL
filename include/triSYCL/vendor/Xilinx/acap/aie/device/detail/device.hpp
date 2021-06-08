@@ -247,8 +247,10 @@ template <typename Layout> struct device {
 #endif
     // Initialize all the tiles with their network connections first
     for_each_tile_index([&](auto x, auto y) {
+#if !defined(__SYCL_DEVICE_ONLY__)
       // Create & start the tile infrastructure
       tile(x, y) = { x, y, *this, fiber_executor };
+#endif
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
       tile(x, y).set_dev_handle(
           xaie::handle{xaie::acap_pos_to_xaie_pos({x, y}), &aie_inst});

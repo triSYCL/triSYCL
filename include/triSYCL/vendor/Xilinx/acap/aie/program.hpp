@@ -207,7 +207,6 @@ struct program {
 
     // Inform each tile about their tile infrastructure
     t.set_tile_infrastructure(aie_d.tile(t.x, t.y));
-#endif
     // Keep track of each base tile
     tile_bases[t.y][t.x] = &t;
     });
@@ -217,6 +216,7 @@ struct program {
       m.set_memory_infrastructure(aie_d.mem(m.x, m.y));
       // Keep track of each base tile
       memory_modules_bases[m.y][m.x] = &m;
+#endif
     });
   }
 

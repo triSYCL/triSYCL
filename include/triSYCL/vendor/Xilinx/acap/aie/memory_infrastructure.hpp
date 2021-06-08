@@ -15,6 +15,8 @@
     License. See LICENSE.TXT for details.
 */
 
+#ifndef __SYCL_DEVICE_ONLY__
+
 #include "lock.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie {
@@ -31,8 +33,11 @@ namespace trisycl::vendor::xilinx::acap::aie {
     layout of the architecture
 */
 class memory_infrastructure {
+
+#ifndef __SYCL_XILINX_AIE__
   /// The lock unit of the memory tile
   lock_unit memory_locking_unit;
+#endif
 
   /** Keep track of the aie::detail::device for hardware resource
       control in device mode or for debugging purpose for better
@@ -55,12 +60,16 @@ class memory_infrastructure {
   memory_infrastructure(auto& dev)
       : dev { &dev } {}
 
+#ifndef __SYCL_XILINX_AIE__
   /// Get access to a specific lock in this memory module
   auto& lock(int i) { return memory_locking_unit.lock(i); }
+#endif
 };
 
 /// @} End the aie Doxygen group
 
 } // namespace trisycl::vendor::xilinx::acap::aie
+
+#endif
 
 #endif // TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_MEMORY_INFRASTRUCTURE_HPP

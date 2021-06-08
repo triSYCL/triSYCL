@@ -20,6 +20,7 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <array>
 
 #ifdef __SYCL_XILINX_AIE__
 #include "acap/aie/hardware.hpp"
@@ -106,10 +107,10 @@ struct application {
   void set_device(T&& d) {
   }
 
-  void start(int &argc, char **&argv,
-             int nx, int ny, int image_x, int image_y, int zoom) {
+    auto& start(int &argc, char **&argv, int nx, int ny, int image_x,
+                      int image_y, int zoom) {
+      return *this;
   }
-
 
   ///  Wait for the graphics window to end
   void wait() {
@@ -118,19 +119,19 @@ struct application {
 
 
   /// Test if the window has been closed
-  bool is_done() {
-    graphics_record *gr = graphics_record::get();
+  bool is_done() const  {
+    volatile graphics_record *gr = graphics_record::get();
     return gr->is_done;
   }
 
   /// Test if the window has been closed after synchronizing with a barrier
-  bool is_done_barrier() {
+  bool is_done_barrier() const {
     /// TODO
   }
 
   template <typename DataType, typename RangeValue>
   void update_tile_data_image(int x, int y, DataType data, RangeValue min_value,
-                              RangeValue max_value) {
+                              RangeValue max_value) const {
     volatile graphics_record *gr = graphics_record::get();
     gr->data = data;
     gr->min_value = min_value;
@@ -787,7 +788,7 @@ struct application {
 
 
   /// Test if the window has been closed
-  bool is_done() {
+  bool is_done() const {
     return w->done;
   }
 
@@ -818,7 +819,7 @@ struct application {
   void update_tile_data_image(int x, int y,
                               DataType data,
                               RangeValue min_value,
-                              RangeValue max_value) {
+                              RangeValue max_value) const {
     w->update_tile_data_image(x, y, data, min_value, max_value);
   };
 
@@ -856,17 +857,17 @@ struct application {
     TRISYCL_DUMP("Core graphics initialized");
     while (!*is_done)
       for_each_tile([&](int x, int y, xaie::handle h, tile_data &td) {
+        detail::no_log_scope nls;
         graphics_record gr;
         h.memcpy_d2h(&gr, acap::hw_mem::graphic_beg_off,
                      sizeof(graphics_record));
         /// The kernel has not started yet.
         if (gr.counter == 0)
           return;
-        /// This makes the assumption that the pointer is not in a neighbouring
-        /// tile. This could be generalized.
-        uint32_t dev_off = gr.data & acap::hw_mem::offset_mask;
-        h.memcpy_d2h(graphic_buffer.data(), dev_off,
-                     graphic_buffer.size());
+        acap::hw_mem::dev_ptr data_ptr = acap::hw_mem::get_dev_ptr({x, y}, gr.data);
+        h.moved(data_ptr.p)
+            .memcpy_d2h(graphic_buffer.data(), data_ptr.offset,
+                        graphic_buffer.size());
 
         /// This call is not synchronized but this should only be executed while
         /// the main thread is waiting for the kernel to finish.

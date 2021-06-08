@@ -15,6 +15,10 @@
 #include <cstddef>
 #include <cstdint>
 
+#if defined(__SYCL_DEVICE_ONLY__)
+#include "acap-intrinsic.h"
+#endif
+
 namespace trisycl::vendor::xilinx::acap {
 
 struct off {
@@ -31,6 +35,17 @@ struct pos {
   friend constexpr off operator-(pos p, pos p1) {
     return {p.x - p1.x, p.y - p1.y};
   }
+};
+
+enum dir : uint32_t {
+  south,
+  west,
+  north,
+  east,
+  down = south,
+  left = west,
+  up = north,
+  right = east,
 };
 
 constexpr bool is_west(int X, int Y) { return Y & 1; }
@@ -138,6 +153,45 @@ constexpr unsigned graphic_beg_off = log_buffer_end_off;
 constexpr unsigned graphic_size = 0x1000;
 constexpr unsigned graphic_end_off = graphic_beg_off + graphic_size;
 
+#if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
+
+struct dev_ptr {
+  pos p;
+  uint32_t offset;
+};
+
+constexpr off get_offset(bool is_west, dir d) {
+  switch (d) {
+  case south:
+    return {0, -1};
+  case north:
+    return {0, 1};
+  case west:
+    if (is_west)
+      return {0, 0};
+    else
+      return {-1, 0};
+  case east:
+    if (is_west)
+      return {1, 0};
+    else
+      return {0, 0};
+  }
+}
+
+/// this will translate a device representation of a pointer ptr in a tile at
+/// position pos. into a tile position and an offset suitable to be used with de
+/// xaie::handle.
+dev_ptr get_dev_ptr(pos p, uint32_t ptr) {
+  dev_ptr out;
+  out.offset = ptr & offset_mask;
+  dir d = (dir)((ptr >> 15) & 0x3);
+  out.p = p + get_offset(is_west(p.x, p.y), d);
+  return out;
+}
+
+#endif
+
 #ifdef __SYCL_DEVICE_ONLY__
 /// The address of the stack will be either in the west or east tile based on
 /// the parity of the tile so we can use the address of the stack to figure out
@@ -151,6 +205,10 @@ bool is_west_dev() {
   /// tile is on the east.
   return !((reinterpret_cast<uint32_t>(&i) & (1 << 16)));
 }
+
+int get_self_tile_dir() {
+  return is_west_dev() ? 1 : 3;
+}
 #endif
 
 struct log_record {
@@ -158,15 +216,30 @@ struct log_record {
   static volatile log_record *get() {
     return (log_record *)(self_tile_addr(is_west_dev()) + log_buffer_beg_off);
   }
-#endif
-  uint32_t size;
-  uint32_t host_idx;
   volatile char* get_data() volatile {
     return (char*)(this + 1);
   }
+#endif
+  uint32_t size;
 };
 
 }; // namespace hw_mem
+
+#if defined(__SYCL_DEVICE_ONLY__)
+
+namespace hw {
+
+int get_tile_x_cord() {
+  return (acap_intr::get_coreid() >> 16) & 0x3f;
+}
+
+int get_tile_y_cord() {
+  return (acap_intr::get_coreid() & 0xf) - 1;
+}
+  
+}
+
+#endif
 
 } // namespace trisycl::vendor::xilinx::acap
 

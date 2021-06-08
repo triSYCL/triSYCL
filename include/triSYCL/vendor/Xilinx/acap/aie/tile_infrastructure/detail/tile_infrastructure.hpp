@@ -35,6 +35,7 @@
 #include "triSYCL/detail/ranges.hpp"
 #include "triSYCL/vendor/Xilinx/config.hpp"
 #include "triSYCL/vendor/Xilinx/latex.hpp"
+#include "triSYCL/vendor/Xilinx/acap/aie/lock.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie::detail {
 
@@ -59,13 +60,13 @@ template <typename Geography> class tile_infrastructure {
   using axi_ss_t = axi_stream_switch<axi_ss_geo>;
 
  private:
+#if !defined(__SYCL_DEVICE_ONLY__)
   /// Keep the horizontal coordinate
   int x_coordinate;
 
   /// Keep the vertical coordinate
   int y_coordinate;
 
-#if !defined(__SYCL_DEVICE_ONLY__)
   /** Keep track of the aie::detail::device for hardware resource
       control in device mode or for debugging purpose for better
       messages.
@@ -126,16 +127,17 @@ static void kernel_prerun() {
 }
 #endif
 
-#ifdef __SYCL_DEVICE_ONLY__
   template <typename KernelType>
   auto kernel_builder(KernelType &) requires requires(KernelType k) {
     k();
   }
   {
     return []() mutable {
+#ifdef __SYCL_DEVICE_ONLY__
       KernelType *k = (KernelType *)(hw_mem::self_tile_addr(hw_mem::is_west_dev()) + hw_mem::args_beg_off);
       kernel_prerun();
       k->operator()();
+#endif
     };
   };
   template <typename KernelType>
@@ -144,6 +146,7 @@ static void kernel_prerun() {
   }
   {
     return []() mutable {
+#ifdef __SYCL_DEVICE_ONLY__
       KernelType *k =
           (KernelType *)(hw_mem::self_tile_addr(hw_mem::is_west_dev()) +
                          hw_mem::args_beg_off);
@@ -151,6 +154,7 @@ static void kernel_prerun() {
       /// TODO tile_infrastructure should be properly initialized.
       std::remove_cvref_t<decltype(*this)> th;
       k->operator()(th);
+#endif
     };
   }
   template <typename KernelType>
@@ -159,11 +163,13 @@ static void kernel_prerun() {
   }
   {
     return []() mutable {
+#ifdef __SYCL_DEVICE_ONLY__
       KernelType *k =
           (KernelType *)(hw_mem::self_tile_addr(hw_mem::is_west_dev()) +
                          hw_mem::args_beg_off);
       kernel_prerun();
       k->run();
+#endif
     };
   }
   template <typename KernelType>
@@ -172,6 +178,7 @@ static void kernel_prerun() {
   }
   {
     return []() mutable {
+#ifdef __SYCL_DEVICE_ONLY__
       KernelType *k =
           (KernelType *)(hw_mem::self_tile_addr(hw_mem::is_west_dev()) +
                          hw_mem::args_beg_off);
@@ -179,9 +186,9 @@ static void kernel_prerun() {
       /// TODO tile_infrastructure should be properly initialized.
       std::remove_cvref_t<decltype(*this)> th;
       k->run(th);
+#endif
     };
   }
-#endif
 
 #if !defined(__SYCL_DEVICE_ONLY__)
   /** Map the user input port number to the AXI stream switch port
@@ -223,6 +230,7 @@ tile_infrastructure() = default;
       \param[in] fiber_executor is the executor used to run
       infrastructure details
   */
+#if !defined(__SYCL_DEVICE_ONLY__)
   tile_infrastructure(int x, int y, auto& dev,
                       ::trisycl::detail::fiber_pool& fiber_executor)
       : x_coordinate { x }
@@ -254,6 +262,7 @@ tile_infrastructure() = default;
       d.emplace(fiber_executor, input(p));
 #endif
   }
+#endif
 
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
   // for host side on device execution
@@ -269,20 +278,40 @@ tile_infrastructure() = default;
 #ifdef __SYCL_DEVICE_ONLY__
   static __attribute__((noinline)) void log(const char* ptr) {
     volatile hw_mem::log_record* lr = hw_mem::log_record::get();
+    device_lock l{hw_mem::get_self_tile_dir() * 16 + 15};
+    l.acquire();
     while (*ptr)
       lr->get_data()[lr->size++] = *(ptr++);
+    l.release();
   }
 #else
+#if defined(__SYCL_XILINX_AIE__)
+
+#endif
   static void log(const char* ptr) {
     std::cout << ptr;
   }
 #endif
 
+#if defined(__SYCL_DEVICE_ONLY__)
+  /// Get the horizontal coordinate
+  int x() { return hw::get_tile_x_cord(); }
+
+  /// Get the vertical coordinate
+  int y() { return hw::get_tile_y_cord(); }
+#else
   /// Get the horizontal coordinate
   int x() { return x_coordinate; }
 
   /// Get the vertical coordinate
   int y() { return y_coordinate; }
+#endif
+
+  /// Get the horizontal number of tiles
+  static constexpr int x_size() { return geo::x_size; }
+
+  /// Get the vertical number of tiles
+  static constexpr int y_size() { return geo::y_size; }
 
 #if !defined(__SYCL_DEVICE_ONLY__)
 
@@ -369,16 +398,16 @@ tile_infrastructure() = default;
   /// Launch an invocable on this tile
   template <typename Work> void single_task(Work &&f) {
 #ifdef __SYCL_XILINX_AIE__
-#ifdef __SYCL_DEVICE_ONLY__
-
     auto Kernel = kernel_builder(f);
+
+#ifdef __SYCL_DEVICE_ONLY__
 
     // The outlining of the device binary Method 1: use it directly as a kernel
     // wrapper This still results in some "garbage" IR from the axi streams
     // default destructor, but you can run -O3 and it'll clean it up quite a bit
     // without nuking everything so it's progress. The result seems semi-
     // reasonable and passes through xchesscc at a reasonable speed
-    kernel_outliner<typename std::decay<decltype(f)>::type>(Kernel);
+    kernel_outliner<typename std::decay<decltype(Kernel)>::type>(Kernel);
 
 #else
     /// Host side
@@ -389,7 +418,7 @@ tile_infrastructure() = default;
     // resides in trisycl by default, so ::detail resolves to
     // trisycl::detail)
     std::string kernelName = ::trisycl::detail::KernelInfo<
-        typename std::decay<decltype(f)>::type>::getName();
+        typename std::decay<decltype(Kernel)>::type>::getName();
 
     if (is_west(x(), y()))
       kernelName += "_west";
@@ -427,7 +456,7 @@ tile_infrastructure() = default;
                                      << ") beginning tile execution",
                     "exec");
       /// Setup DMA for parameter passing
-      get_dev_handle().mem_dma(hw_mem::args_beg_off, hw_mem::log_buffer_end_off - hw_mem::args_beg_off);
+      get_dev_handle().mem_dma(hw_mem::args_beg_off, hw_mem::graphic_end_off - hw_mem::args_beg_off);
       get_dev_handle().prepare_log();
       if constexpr (requires{f.prerun();})
         if (!f.prerun())
@@ -463,10 +492,7 @@ tile_infrastructure() = default;
 /// Noop
 
 #else
-/// Host side
-
-/// TODO
-
+    get_dev_handle().core_wait();
 #endif
 #else
     if (future_work.valid())

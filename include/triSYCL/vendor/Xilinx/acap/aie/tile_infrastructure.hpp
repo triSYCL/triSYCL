@@ -173,6 +173,7 @@ class tile_infrastructure
 
   /// Launch a callable on this tile
   template <typename Work> auto& single_task(Work&& f) {
+    #ifndef __SYCL_XILINX_AIE__
     /** Recycle the tile_infrastructure shared_ptr as a fake tile
         handle which is copyable.
 
@@ -190,6 +191,9 @@ class tile_infrastructure
     }();
 
     implementation->single_task(kernel);
+    #else
+    implementation->single_task(std::forward<Work>(f));
+    #endif
     // To allow chaining commands
     return *this;
   }

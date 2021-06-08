@@ -25,6 +25,7 @@
 #include <boost/type_index.hpp>
 
 #include "hardware.hpp"
+#include "lock.hpp"
 
 namespace trisycl::vendor::xilinx::xaie {
 extern "C" {
@@ -129,6 +130,13 @@ struct handle {
     return {inst, flags};
   }
 
+  xaie::handle adjusted(acap::off o) {
+    return {acap_pos_to_xaie_pos(xaie_pos_to_acap_pos(tile) + o), inst};
+  }
+  xaie::handle moved(acap::pos p) {
+    return {acap_pos_to_xaie_pos(p), inst};
+  }
+  
   /// The memory read accessors
   std::uint32_t mem_read(std::uint32_t offset) {
     std::uint32_t Data;
@@ -226,29 +234,66 @@ struct handle {
   }
   void prepare_log() {
     mem_write(acap::hw_mem::log_buffer_beg_off, 0);
-    mem_write(acap::hw_mem::log_buffer_beg_off + 4, 0);
   }
   void emit_log() {
     /// This is not synchronized with the device
+    /// This is executed in tight loops so logs are disabled to prevent too
+    /// much log.
+    detail::no_log_scope nls;
     std::string log;
-    uint32_t log_size;
-    uint32_t host_idx;
-    /// We dont use mem_read here because this part will be executed a lot and 
-    xaie::XAie_DataMemRdWord(inst, tile, acap::hw_mem::log_buffer_beg_off,
-                             &log_size);
-    xaie::XAie_DataMemRdWord(inst, tile, acap::hw_mem::log_buffer_beg_off + 4,
-                             &host_idx);
-    if (log_size <= host_idx)
+
+    acquire(15);
+    uint32_t log_size = mem_read(acap::hw_mem::log_buffer_beg_off);
+    if (!log_size) {
+      release(15);
       return;
-    uint32_t size = log_size - host_idx;
-    log.resize(size);
+    }
+    log.resize(log_size);
     memcpy_d2h(log.data(),
                acap::hw_mem::log_buffer_beg_off +
-                   sizeof(acap::hw_mem::log_record) + host_idx,
-               size);
-    mem_write(acap::hw_mem::log_buffer_beg_off + 4, log_size);
+                   sizeof(acap::hw_mem::log_record),
+               log_size);
+    mem_write(acap::hw_mem::log_buffer_beg_off, 0);
+    release(15);
     std::cout << log;
     std::flush(std::cout);
+  }
+
+  void acquire(int id) {
+    TRISYCL_DUMP2("acquiring lock (" << get_pos_str() << ") id: " << (int)id,
+                  "sync");
+    TRISYCL_XAIE(XAie_LockAcquire(
+        inst, tile, xaie::XAie_LockInit(id, XAIE_LOCK_WITH_NO_VALUE),
+        0xffffffff));
+    TRISYCL_DUMP2("", "done");
+  }
+
+  /// Unlock the mutex
+  void release(int id) {
+    TRISYCL_DUMP2("releasing lock (" << get_pos_str() << ") id: " << (int)id,
+                  "sync");
+    TRISYCL_XAIE(XAie_LockRelease(
+        inst, tile, xaie::XAie_LockInit(id, XAIE_LOCK_WITH_NO_VALUE),
+        0xffffffff));
+    TRISYCL_DUMP2("", "done");
+  }
+
+  /// Wait until the internal value has the val
+  void acquire_with_value(int id, bool val) {
+    TRISYCL_DUMP2("acquiring lock (" << get_pos_str() << ") id: " << (int)id
+                                     << "val: " << val,
+                  "sync");
+    XAie_LockAcquire(inst, tile, xaie::XAie_LockInit(id, val), 0xffffffff);
+    TRISYCL_DUMP2("", "done");
+  }
+
+  /// Release and update with a new internal value
+  void release_with_value(int id, bool val) {
+    TRISYCL_DUMP2("releasing lock (" << get_pos_str() << ") id: " << (int)id
+                                     << "val: " << val,
+                  "sync");
+    XAie_LockRelease(inst, tile, xaie::XAie_LockInit(id, val), 0xffffffff);
+    TRISYCL_DUMP2("", "done");
   }
 };
 

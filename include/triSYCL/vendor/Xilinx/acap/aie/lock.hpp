@@ -62,46 +62,25 @@ struct device_lock {
   int id;
 
   /// TODO this should be an xaie::handle
-  xaie::XAie_DevInst *dev_inst;
-  xaie::XAie_LocType loc;
+  xaie::handle h;
 
   void acquire() {
-    TRISYCL_DUMP2("acquiring lock (" << (int)loc.Col << ", " << (int)loc.Row - 1
-                                     << ") id: " << (int)id,
-                  "sync");
-    TRISYCL_XAIE(XAie_LockAcquire(
-        dev_inst, loc, xaie::XAie_LockInit(id, XAIE_LOCK_WITH_NO_VALUE),
-        0xffffffff));
-    TRISYCL_DUMP2("", "done");
+    h.acquire(id);
   }
 
   /// Unlock the mutex
   void release() {
-    TRISYCL_DUMP2("releasing lock (" << (int)loc.Col << ", " << (int)loc.Row - 1
-                                     << ") id: " << (int)id,
-                  "sync");
-    TRISYCL_XAIE(XAie_LockRelease(
-        dev_inst, loc, xaie::XAie_LockInit(id, XAIE_LOCK_WITH_NO_VALUE),
-        0xffffffff));
-    TRISYCL_DUMP2("", "done");
+    h.release(id);
   }
 
   /// Wait until the internal value has the val
   void acquire_with_value(bool val) {
-    TRISYCL_DUMP2("acquiring lock (" << (int)loc.Col << ", " << (int)loc.Row - 1
-                                     << ") id: " << (int)id << "val: " << val,
-                  "sync");
-    XAie_LockAcquire(dev_inst, loc, xaie::XAie_LockInit(id, val), 0xffffffff);
-    TRISYCL_DUMP2("", "done");
+    h.acquire_with_value(id, val);
   }
 
   /// Release and update with a new internal value
   void release_with_value(bool val) {
-    TRISYCL_DUMP2("releasing lock (" << (int)loc.Col << ", " << (int)loc.Row - 1
-                                     << ") id: " << (int)id << "val: " << val,
-                  "sync");
-    XAie_LockRelease(dev_inst, loc, xaie::XAie_LockInit(id, val), 0xffffffff);
-    TRISYCL_DUMP2("", "done");
+    h.release_with_value(id, val);
   }
 
 #endif
