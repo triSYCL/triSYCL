@@ -10,10 +10,10 @@
 #########################
 #
 # Tools for finding and building with triSYCL.
-#
-# Requite CMake version 3.5 or higher
 
-cmake_minimum_required (VERSION 3.5)
+# Requite CMake version 3.11 or higher
+cmake_minimum_required (VERSION 3.11)
+
 # The name of the project (forward declare language)
 project(triSYCL CXX)
 
@@ -250,6 +250,17 @@ message(STATUS "triSYCL kernel trace:             ${TRISYCL_TRACE_KERNEL}")
 find_package(Threads REQUIRED)
 
 find_package(range-v3 REQUIRED)
+
+# Install the experimental mdspan implementation described in ISO C++
+# P0009 proposal
+# https://github.com/ORNL/cpp-proposals-pub/tree/master/P0009
+include(ExternalProject)
+ExternalProject_Add(experimental_mdspan
+  GIT_PROGRESS TRUE
+  GIT_REPOSITORY    https://github.com/kokkos/mdspan
+  GIT_SHALLOW       TRUE
+  GIT_TAG           origin/stable
+)
 
 #######################
 #  add_sycl_to_target
