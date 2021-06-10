@@ -114,6 +114,7 @@ template <typename Geography> class tile_infrastructure {
 
 #ifdef __SYCL_DEVICE_ONLY__
 static void kernel_prerun() {
+  acap::heap::init_allocator();
 }
 static void kernel_postrun() {
   finish_kernel();

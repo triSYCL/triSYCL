@@ -161,11 +161,18 @@ template <typename... Tys> struct rpc_impl {
       return ret_val;
     }
   };
-  static_assert(sizeof(device_side) <= hw::rpc_record_size, "");
 };
 
-
 using rpc = rpc_impl<done_rpc, image_update_rpc, send_log_rpc>;
+
+// The advantage of this over static_assert is that V1 and V2 will be printed when it fails.
+template<auto V1, auto V2>
+struct assert_equal {
+  static_assert(V1 == V2, "");
+};
+
+/// This variable is just to check the rpc size
+constexpr assert_equal<sizeof(rpc::device_side), hw::rpc_record_size> v;
 
 } // namespace trisycl::vendor::xilinx::acap::aie
 

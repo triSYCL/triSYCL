@@ -124,13 +124,13 @@ constexpr uint32_t base_addr_mask = ~offset_mask;
 /// tile addresses. when viewed from the host tile base address is 0 so
 /// offsets can be used alone when accessing from the host.
 constexpr uint32_t stack_begin_offset = 0x0;
-constexpr uint32_t stack_size = 0x1000;
+constexpr uint32_t stack_size = 0x800;
 constexpr uint32_t stack_end_offset = stack_begin_offset + stack_size;
 
 /// contains the "arguments", this is where the kernel object will be
 /// placed.
 constexpr uint32_t args_begin_offset = stack_end_offset;
-constexpr uint32_t args_size = 0x1400;
+constexpr uint32_t args_size = 0x1000;
 constexpr uint32_t args_end_offset = args_begin_offset + args_size;
 
 /// contains the memory modules that are shared across tiles.
@@ -140,15 +140,20 @@ constexpr uint32_t tile_mem_begin_offset = args_end_offset;
 constexpr uint32_t tile_mem_size = 0x4000;
 constexpr uint32_t tile_mem_end_offset = tile_mem_begin_offset + tile_mem_size;
 
-/// contains the graphics_record.
+/// contains the RPC system.
 constexpr uint32_t rpc_record_begin_offset = tile_mem_end_offset;
-constexpr uint32_t rpc_record_size = 0x1000;
+constexpr uint32_t rpc_record_size = 56;
 constexpr uint32_t rpc_record_end_offset = rpc_record_begin_offset + rpc_record_size;
 
-/// Offset of the last dedicated section
-constexpr uint32_t last_end_offset = rpc_record_end_offset;
+// This is the heap that is used by dynamic allocations and the allocator's bookeeping.
+constexpr uint32_t heap_begin_offset = rpc_record_end_offset;
+constexpr uint32_t heap_size = 0x1000;
+constexpr uint32_t heap_end_offset = heap_begin_offset + heap_size;
 
-/// The minimum size we want to keep for globabl variables
+/// Offset of the last dedicated section
+constexpr uint32_t last_end_offset = heap_end_offset;
+
+/// The minimum size we want to keep for global variables
 constexpr uint32_t min_global_variable_size = 0x800;
 
 static_assert(last_end_offset + min_global_variable_size <= tile_size, "sections are using more memory than is available");

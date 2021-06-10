@@ -56,7 +56,7 @@ namespace trisycl::vendor::xilinx::acap {
       tmp = tmp / base;
     }
     for (int d = digit_count; d > 0; d--)
-      write(base_char[std::abs((i / pow(base, d - 1)) % base)]);
+      write(base_char[std::abs((i / hw::pow(base, d - 1)) % base)]);
   }
 
   /// This __attribute__((noinline)) is just to make the IR more readable. it is
@@ -81,12 +81,13 @@ namespace trisycl::vendor::xilinx::acap {
 }
 
 #if defined(__SYCL_DEVICE_ONLY__)
-void finish_kernel() {
+/// The annotation here is to prevent the global variable remover from removing
+/// this function.
+__attribute__((annotate("used"))) __attribute__((noreturn)) void finish_kernel() {
   trisycl::vendor::xilinx::acap::aie::done_rpc::data_type dt{};
   trisycl::vendor::xilinx::acap::aie::rpc::device_side::get()->perform(dt);
-  while (1) {
-    acap_intr::memory_fence();
-  }
+  trisycl::vendor::xilinx::acap::log("exiting");
+  acap_intr::core_done();
 }
 
 void __assert_fail(const char *expr, const char *file,
