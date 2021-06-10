@@ -37,7 +37,11 @@ struct pos {
   }
 };
 
-enum dir : uint32_t {
+/// The ordering matters.
+/// It matches with bases addresses other tiles with are at address (1 << 17)
+/// | (dir << 15). It also match with locks where the id from a tile's view
+/// dir << 4 | id.
+enum dir {
   south,
   west,
   north,
@@ -63,10 +67,6 @@ template <int X, int Y> struct hw_tile : hw_tile_impl<is_west(X, Y)> {
 
 template <bool is_west> struct hw_tile_impl {
 
-  /// The ordering matters.
-  /// It matches with bases addresses other tiles with are at address (1 << 17)
-  /// | (dir << 15). It also match with locks where the id from a tile's view
-  /// dir << 4 | id.
   enum dir : int8_t {
     south,
     west,
@@ -160,6 +160,7 @@ struct dev_ptr {
   uint32_t offset;
 };
 
+/// This will convert a direction into an offset.
 constexpr off get_offset(bool is_west, dir d) {
   switch (d) {
   case south:
@@ -184,7 +185,9 @@ constexpr off get_offset(bool is_west, dir d) {
 /// xaie::handle.
 dev_ptr get_dev_ptr(pos p, uint32_t ptr) {
   dev_ptr out;
+  /// extract the offset part of the pointer.
   out.offset = ptr & offset_mask;
+  /// extract the direction.
   dir d = (dir)((ptr >> 15) & 0x3);
   out.p = p + get_offset(is_west(p.x, p.y), d);
   return out;
@@ -217,10 +220,11 @@ struct log_record {
     return (log_record *)(self_tile_addr(is_west_dev()) + log_buffer_beg_off);
   }
   volatile char* get_data() volatile {
-    return (char*)(this + 1);
+    return data;
   }
 #endif
   uint32_t size;
+  char data[];
 };
 
 }; // namespace hw_mem

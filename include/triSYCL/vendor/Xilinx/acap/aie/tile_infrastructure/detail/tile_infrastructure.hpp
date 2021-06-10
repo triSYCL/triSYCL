@@ -276,6 +276,8 @@ tile_infrastructure() = default;
 #endif
 
 #ifdef __SYCL_DEVICE_ONLY__
+  /// This __attribute__((noinline)) is just to make the IR more readable it is
+  /// not required for any other reason.
   static __attribute__((noinline)) void log(const char* ptr) {
     volatile hw_mem::log_record* lr = hw_mem::log_record::get();
     device_lock l{hw_mem::get_self_tile_dir() * 16 + 15};
@@ -285,9 +287,6 @@ tile_infrastructure() = default;
     l.release();
   }
 #else
-#if defined(__SYCL_XILINX_AIE__)
-
-#endif
   static void log(const char* ptr) {
     std::cout << ptr;
   }

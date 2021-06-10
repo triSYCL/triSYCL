@@ -12,8 +12,16 @@ using namespace sycl::vendor::xilinx;
 
 /// The current maximum size of a memory module is 8192 bytes
 /// sqrt(8192) ~ 90.5... so 90 is the largest integral value we can put here. at
+<<<<<<< HEAD
 /// least until the 8192 bytes goes away.
 auto constexpr image_size = 90;
+||||||| parent of 2a57ef85... Address review comment.
+/// least until the 8192 bytes goes away.
+static auto constexpr image_size = 90;
+=======
+/// least until the 8192 bytes limitation is addressed.
+static auto constexpr image_size = 90;
+>>>>>>> 2a57ef85... Address review comment.
 graphics::application a;
 
 // All the memory modules are the same
@@ -47,14 +55,16 @@ struct mandelbrot : acap::aie::tile<AIE, X, Y> {
             ;
           m.plane[j][i] = k;
         }
-      a.update_tile_data_image(t::x, t::y, &m.plane[0][0], 0, 255);
+      a.update_tile_data_image(t::x_coord(), t::y_coord(), &m.plane[0][0], 0,
+                               255);
     }
   }
 };
 
-int main(int argc, char* argv[]) {
-  acap::aie::device<acap::aie::layout::size<2, 3>> aie;
-  // Open a graphic view of a AIE array
+int main(int argc, char *argv[]) {
+  acap::aie::device<acap::aie::layout::size<6,6>> aie;
+  // Open a graphic view of a ME array
+  a.set_device(aie);
   a.start(argc, argv, aie.x_size, aie.y_size, image_size, image_size, 1)
       .image_grid()
       .get_palette()

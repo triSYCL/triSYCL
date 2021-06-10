@@ -236,7 +236,6 @@ struct handle {
     mem_write(acap::hw_mem::log_buffer_beg_off, 0);
   }
   void emit_log() {
-    /// This is not synchronized with the device
     /// This is executed in tight loops so logs are disabled to prevent too
     /// much log.
     detail::no_log_scope nls;
@@ -255,8 +254,7 @@ struct handle {
                log_size);
     mem_write(acap::hw_mem::log_buffer_beg_off, 0);
     release(15);
-    std::cout << log;
-    std::flush(std::cout);
+    std::cout << log << std::flush;
   }
 
   void acquire(int id) {

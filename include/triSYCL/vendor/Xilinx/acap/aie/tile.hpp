@@ -94,6 +94,19 @@ struct tile : tile_base<AIE_Program> {
       return y;
   }
 
+#if defined(__SYCL_DEVICE_ONLY__)
+  /// Get the horizontal coordinate
+  int x_coord() { return hw::get_tile_x_cord(); }
+
+  /// Get the vertical coordinate
+  int y_coord() { return hw::get_tile_y_cord(); }
+#else
+  /// Get the horizontal coordinate
+  int x_coord() { return x; }
+
+  /// Get the vertical coordinate
+  int y_coord() { return y; }
+#endif
 
   /// Return the linearized coordinate of the tile
   static auto constexpr linear_id() {
