@@ -362,7 +362,7 @@ struct tile : tile_base<AIE_Program> {
   auto &mem() {
     return *(
         tile_mem_t<tile_t::get_pos(dir::self).x, tile_t::get_pos(dir::self).y>
-            *)(hw_mem::self_tile_addr(is_west(X, Y)) + hw_mem::tile_mem_beg_off);
+            *)(hw_mem::self_tile_addr(get_parity(X, Y)) + hw_mem::tile_mem_beg_off);
   }
 
   auto &mem_side() {

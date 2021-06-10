@@ -134,7 +134,7 @@ static void kernel_prerun() {
   {
     return []() mutable {
 #ifdef __SYCL_DEVICE_ONLY__
-      KernelType *k = (KernelType *)(hw_mem::self_tile_addr(hw_mem::is_west_dev()) + hw_mem::args_beg_off);
+      KernelType *k = (KernelType *)(hw_mem::self_tile_addr(hw_mem::get_parity_dev()) + hw_mem::args_beg_off);
       kernel_prerun();
       k->operator()();
 #endif
@@ -148,7 +148,7 @@ static void kernel_prerun() {
     return []() mutable {
 #ifdef __SYCL_DEVICE_ONLY__
       KernelType *k =
-          (KernelType *)(hw_mem::self_tile_addr(hw_mem::is_west_dev()) +
+          (KernelType *)(hw_mem::self_tile_addr(hw_mem::get_parity_dev()) +
                          hw_mem::args_beg_off);
       kernel_prerun();
       /// TODO tile_infrastructure should be properly initialized.
@@ -165,7 +165,7 @@ static void kernel_prerun() {
     return []() mutable {
 #ifdef __SYCL_DEVICE_ONLY__
       KernelType *k =
-          (KernelType *)(hw_mem::self_tile_addr(hw_mem::is_west_dev()) +
+          (KernelType *)(hw_mem::self_tile_addr(hw_mem::get_parity_dev()) +
                          hw_mem::args_beg_off);
       kernel_prerun();
       k->run();
@@ -180,7 +180,7 @@ static void kernel_prerun() {
     return []() mutable {
 #ifdef __SYCL_DEVICE_ONLY__
       KernelType *k =
-          (KernelType *)(hw_mem::self_tile_addr(hw_mem::is_west_dev()) +
+          (KernelType *)(hw_mem::self_tile_addr(hw_mem::get_parity_dev()) +
                          hw_mem::args_beg_off);
       kernel_prerun();
       /// TODO tile_infrastructure should be properly initialized.
@@ -419,7 +419,7 @@ tile_infrastructure() = default;
     std::string kernelName = ::trisycl::detail::KernelInfo<
         typename std::decay<decltype(Kernel)>::type>::getName();
 
-    if (is_west(x(), y()))
+    if (get_parity(x(), y()) == parity::west)
       kernelName += "_west";
     else
       kernelName += "_east";

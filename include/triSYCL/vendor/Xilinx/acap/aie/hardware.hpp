@@ -38,10 +38,10 @@ struct pos {
 };
 
 /// The ordering matters.
-/// It matches with bases addresses other tiles with are at address (1 << 17)
+/// It matches with bases addresses order are at address (1 << 17)
 /// | (dir << 15). It also match with locks where the id from a tile's view
 /// dir << 4 | id.
-enum dir {
+enum class dir : int8_t {
   south,
   west,
   north,
@@ -52,12 +52,17 @@ enum dir {
   right = east,
 };
 
-constexpr bool is_west(int X, int Y) { return Y & 1; }
+enum class parity : int8_t {
+  west,
+  east,
+};
 
-template <bool is_west> struct hw_tile_impl;
+constexpr parity get_parity(int X, int Y) { return (Y & 1) ? parity::west : parity::east; }
 
-template <int X, int Y> struct hw_tile : hw_tile_impl<is_west(X, Y)> {
-  using base = hw_tile_impl<is_west(X, Y)>;
+template <parity par> struct hw_tile_impl;
+
+template <int X, int Y> struct hw_tile : hw_tile_impl<get_parity(X, Y)> {
+  using base = hw_tile_impl<get_parity(X, Y)>;
   using dir = typename base::dir;
   using base::get_offset;
   static constexpr pos get_pos(dir d) {
@@ -65,7 +70,7 @@ template <int X, int Y> struct hw_tile : hw_tile_impl<is_west(X, Y)> {
   }
 };
 
-template <bool is_west> struct hw_tile_impl {
+template <parity par> struct hw_tile_impl {
 
   enum dir : int8_t {
     south,
@@ -76,13 +81,13 @@ template <bool is_west> struct hw_tile_impl {
     left = west,
     up = north,
     right = east,
-    self = is_west ? west : east,
-    side = is_west ? east : west,
+    self = (par == parity::west) ? west : east,
+    side = (par == parity::west) ? east : west,
   };
 
   static constexpr const char *dir_to_str[] = {
-      "south/down", is_west ? "west/left/self" : "west/left/side", "north/up",
-      is_west ? "east/right/side" : "east/right/self"};
+      "south/down", (par == parity::west) ? "west/left/self" : "west/left/side", "north/up",
+      (par == parity::west) ? "east/right/side" : "east/right/self"};
 
   static constexpr off get_offset(dir d) {
     switch (d) {
@@ -91,12 +96,12 @@ template <bool is_west> struct hw_tile_impl {
     case north:
       return {1, 0};
     case west:
-      if constexpr (is_west)
+      if constexpr ((par == parity::west))
         return {0, 0};
       else
         return {0, 1};
     case east:
-      if constexpr (is_west)
+      if constexpr ((par == parity::west))
         return {0, -1};
       else
         return {0, 0};
@@ -114,11 +119,11 @@ constexpr unsigned north_tile_addr = 0x30000;        // (1 << 17) | (2 << 15)
 constexpr unsigned east_or_self_tile_addr = 0x38000; // (1 << 17) | (3 << 15)
 
 /// Base address a tile viewed from itself.
-static constexpr unsigned self_tile_addr(bool is_west) {
-  return ((is_west) ? west_or_self_tile_addr : east_or_self_tile_addr);
+static constexpr unsigned self_tile_addr(parity par) {
+  return ((par == parity::west) ? west_or_self_tile_addr : east_or_self_tile_addr);
 }
-static constexpr unsigned side_tile_addr(bool is_west) {
-  return (is_west ? east_or_self_tile_addr : west_or_self_tile_addr);
+static constexpr unsigned side_tile_addr(parity par) {
+  return (par == parity::west ? east_or_self_tile_addr : west_or_self_tile_addr);
 }
 
 /// Size of each tiles in every direction
@@ -161,19 +166,19 @@ struct dev_ptr {
 };
 
 /// This will convert a direction into an offset.
-constexpr off get_offset(bool is_west, dir d) {
+constexpr off get_offset(parity par, dir d) {
   switch (d) {
-  case south:
+  case dir::south:
     return {0, -1};
-  case north:
+  case dir::north:
     return {0, 1};
-  case west:
-    if (is_west)
+  case dir::west:
+    if (par == parity::west)
       return {0, 0};
     else
       return {-1, 0};
-  case east:
-    if (is_west)
+  case dir::east:
+    if (par == parity::west)
       return {1, 0};
     else
       return {0, 0};
@@ -189,7 +194,7 @@ dev_ptr get_dev_ptr(pos p, uint32_t ptr) {
   out.offset = ptr & offset_mask;
   /// extract the direction.
   dir d = (dir)((ptr >> 15) & 0x3);
-  out.p = p + get_offset(is_west(p.x, p.y), d);
+  out.p = p + get_offset(get_parity(p.x, p.y), d);
   return out;
 }
 
@@ -199,25 +204,26 @@ dev_ptr get_dev_ptr(pos p, uint32_t ptr) {
 /// The address of the stack will be either in the west or east tile based on
 /// the parity of the tile so we can use the address of the stack to figure out
 /// the parity. This is what this function does.
-bool is_west_dev() {
+parity get_parity_dev() {
   int i;
   /// the 15 low bits are offset within a tile
   /// then bits 16-15 are the index of the tile.
   /// west = 0b01 and east = 0b11
   /// so iff 16s bits of the address of a variable on the stack is set to 1 the
   /// tile is on the east.
-  return !((reinterpret_cast<uint32_t>(&i) & (1 << 16)));
+  return !((reinterpret_cast<uint32_t>(&i) & (1 << 16))) ? parity::west
+                                                         : parity::east;
 }
 
 int get_self_tile_dir() {
-  return is_west_dev() ? 1 : 3;
+  return (get_parity_dev() == parity::west) ? 1 : 3;
 }
 #endif
 
 struct log_record {
 #ifdef __SYCL_DEVICE_ONLY__
   static volatile log_record *get() {
-    return (log_record *)(self_tile_addr(is_west_dev()) + log_buffer_beg_off);
+    return (log_record *)(self_tile_addr(get_parity_dev()) + log_buffer_beg_off);
   }
   volatile char* get_data() volatile {
     return data;

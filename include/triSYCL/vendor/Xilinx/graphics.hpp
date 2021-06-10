@@ -67,7 +67,7 @@ struct graphics_record {
   /// This is only possible on device.
   static graphics_record *get() {
     return (graphics_record *)(acap::hw_mem::self_tile_addr(
-                                   acap::hw_mem::is_west_dev()) +
+                                   acap::hw_mem::get_parity_dev()) +
                                acap::hw_mem::graphic_beg_off);
   }
 #endif
