@@ -158,6 +158,9 @@ constexpr unsigned graphic_beg_off = log_buffer_end_off;
 constexpr unsigned graphic_size = 0x1000;
 constexpr unsigned graphic_end_off = graphic_beg_off + graphic_size;
 
+dir get_ptr_dir(uint32_t ptr) { return (dir)((ptr >> 15) & 0x3); }
+template <typename T> dir get_ptr_dir(T *p) { return get_ptr_dir((uint32_t)p); }
+
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
 
 struct dev_ptr {
@@ -193,7 +196,7 @@ dev_ptr get_dev_ptr(pos p, uint32_t ptr) {
   /// extract the offset part of the pointer.
   out.offset = ptr & offset_mask;
   /// extract the direction.
-  dir d = (dir)((ptr >> 15) & 0x3);
+  dir d = get_ptr_dir(ptr);
   out.p = p + get_offset(get_parity(p.x, p.y), d);
   return out;
 }
@@ -215,9 +218,12 @@ parity get_parity_dev() {
                                                          : parity::east;
 }
 
-int get_self_tile_dir() {
-  return (get_parity_dev() == parity::west) ? 1 : 3;
+dir get_self_tile_dir() {
+  return (get_parity_dev() == parity::west) ? dir::west : dir::east;
 }
+
+
+
 #endif
 
 struct log_record {

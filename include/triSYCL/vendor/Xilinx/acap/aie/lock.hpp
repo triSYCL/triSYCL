@@ -34,6 +34,8 @@
 #include <boost/fiber/all.hpp>
 #endif
 
+#include "hardware.hpp"
+
 namespace trisycl::vendor::xilinx::acap::aie {
 
 /// \ingroup aie
@@ -43,6 +45,7 @@ namespace trisycl::vendor::xilinx::acap::aie {
 struct device_lock {
 #if defined(__SYCL_DEVICE_ONLY__)
 /// on acap device
+  device_lock(dir d, int i) : id{((int)d * 16) + i} {}
   int id;
 
   /// Lock the mutex

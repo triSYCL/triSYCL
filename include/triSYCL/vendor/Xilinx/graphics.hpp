@@ -40,6 +40,7 @@
 #include <mutex>
 #include <sstream>
 #include <thread>
+#include <iostream>
 
 #include <experimental/mdspan>
 
@@ -62,6 +63,7 @@ using rgb = std::array<std::uint8_t, 3>;
 #ifdef __SYCL_XILINX_AIE__
 
 /// This struct needs to have the same layout on the host and the device.
+template<typename PixelTy>
 struct graphics_record {
 #ifdef __SYCL_DEVICE_ONLY__
   /// This is only possible on device.
@@ -79,11 +81,27 @@ struct graphics_record {
 #else
   uint32_t data;
 #endif
-  uint32_t min_value;
-  uint32_t max_value;
   uint32_t counter;
+  PixelTy min_value;
+  PixelTy max_value;
 };
 #endif
+
+  // template <typename From, typename To> void bit_copy(To *t, From *f) {
+  //   volatile char *to = (volatile char *)t;
+  //   volatile char *from = (volatile char *)f;
+  //   for (int i = 0; i < sizeof(To); i++)
+  //     to[i] = 0;
+  //   for (int i = 0; i < std::min(sizeof(From), sizeof(To)); i++)
+  //     to[i] = from[i];
+  // }
+
+  // template <typename To, typename From>
+  // To bit_cast(const From& from) {
+  //   To to;
+  //   bit_copy(&to, &from);
+  //   return to;
+  // }
 
 #ifdef __SYCL_DEVICE_ONLY__
 
@@ -102,8 +120,9 @@ struct image_grid {
   }
 };
 
+template<typename PixelTy>
 struct application {
-    template<typename T>
+  template<typename T>
   void set_device(T&& d) {
   }
 
@@ -120,7 +139,7 @@ struct application {
 
   /// Test if the window has been closed
   bool is_done() const  {
-    volatile graphics_record *gr = graphics_record::get();
+    volatile graphics_record<PixelTy> *gr = graphics_record<PixelTy>::get();
     return gr->is_done;
   }
 
@@ -129,11 +148,10 @@ struct application {
     /// TODO
   }
 
-  template <typename DataType, typename RangeValue>
-  void update_tile_data_image(int x, int y, DataType data, RangeValue min_value,
-                              RangeValue max_value) const {
-    volatile graphics_record *gr = graphics_record::get();
-    gr->data = data;
+  void update_tile_data_image(int x, int y, PixelTy *data, PixelTy min_value,
+                              PixelTy max_value) const {
+    volatile graphics_record<PixelTy> *gr = graphics_record<PixelTy>::get();
+    gr->data = &data[0];
     gr->min_value = min_value;
     gr->max_value = max_value;
     gr->counter++;
@@ -367,36 +385,42 @@ struct palette {
 
   void decrease_clip() {
     --clip;
+    std::cout << "clip = " << clip << std::endl;
     update();
   }
 
 
   void increase_clip() {
     ++clip;
+    std::cout << "clip = " << clip << std::endl;
     update();
   }
 
 
   void decrease_frequency() {
     --frequency_log2;
+    std::cout << "frequency_log2 = " << frequency_log2 << std::endl;
     update();
   }
 
 
   void increase_frequency() {
     ++frequency_log2;
+    std::cout << "frequency_log2 = " << frequency_log2 << std::endl;
     update();
   }
 
 
   void decrease_phase() {
     --phase;
+    std::cout << "phase = " << phase << std::endl;
     update();
   }
 
 
   void increase_phase() {
     ++phase;
+    std::cout << "phase = " << phase << std::endl;
     update();
   }
 
@@ -412,11 +436,13 @@ struct palette {
       case GDK_KEY_0:
       case GDK_KEY_KP_0:
         k = gray;
+        std::cout << "kind = gray" << std::endl;
         update();
         break;
       case GDK_KEY_1:
       case GDK_KEY_KP_1:
         k = rainbow;
+        std::cout << "kind = rainbow" << std::endl;
         update();
         break;
       case GDK_KEY_minus:
@@ -703,6 +729,7 @@ struct image_grid : frame_grid {
 
 /** A graphics application running in a separate thread to display
     images in a grid of tiles */
+template<typename PixelTy = uint8_t>
 struct application {
   std::thread t;
   std::unique_ptr<graphics::image_grid> w;
@@ -815,11 +842,13 @@ struct application {
     \param[in] max_value is the value represented with maximum of
     graphics palette color
   */
-  template <typename DataType, typename RangeValue>
-  void update_tile_data_image(int x, int y,
-                              DataType data,
-                              RangeValue min_value,
-                              RangeValue max_value) const {
+  template <typename DataType>
+  void update_tile_data_image(int x, int y, DataType data, PixelTy min_value,
+                              PixelTy max_value) const {
+    static_assert(
+        std::is_same_v<typename std::decay<decltype(data[0])>::type,
+                       PixelTy>,
+        "invalid pixel type");
     w->update_tile_data_image(x, y, data, min_value, max_value);
   };
 
@@ -835,7 +864,7 @@ struct application {
     };
     TRISYCL_DUMP("Staring background graphics device communication thread");
     std::vector<std::uint8_t> graphic_buffer;
-    graphic_buffer.resize(graphic_buff_size);
+    graphic_buffer.resize(graphic_buff_size * sizeof(PixelTy));
     
     std::vector<tile_data> tiles_data;
     tiles_data.resize(tile_x_size * tile_y_size);
@@ -849,7 +878,7 @@ struct application {
 
     /// Initialized the graphics_record of each tile.
     for_each_tile([&](int x, int y, xaie::handle h, tile_data &td) {
-      graphics_record gr;
+      graphics_record<PixelTy> gr;
       std::memset(&gr, 0, sizeof(gr));
       h.memcpy_h2d(acap::hw_mem::graphic_beg_off, &gr, sizeof(gr));
     });
@@ -858,27 +887,28 @@ struct application {
     while (!*is_done)
       for_each_tile([&](int x, int y, xaie::handle h, tile_data &td) {
         detail::no_log_scope nls;
-        graphics_record gr;
+        graphics_record<PixelTy> gr;
         h.memcpy_d2h(&gr, acap::hw_mem::graphic_beg_off,
-                     sizeof(graphics_record));
+                     sizeof(graphics_record<PixelTy>));
         /// The kernel has not started yet.
         if (gr.counter == 0)
           return;
-        acap::hw_mem::dev_ptr data_ptr = acap::hw_mem::get_dev_ptr({x, y}, gr.data);
+        acap::hw_mem::dev_ptr data_ptr =
+            acap::hw_mem::get_dev_ptr({x, y}, gr.data);
         h.moved(data_ptr.p)
             .memcpy_d2h(graphic_buffer.data(), data_ptr.offset,
                         graphic_buffer.size());
 
         /// This call is not synchronized but this should only be executed while
         /// the main thread is waiting for the kernel to finish.
-        a->update_tile_data_image(x, y, graphic_buffer.data(), gr.min_value,
-                                  gr.max_value);
+        a->update_tile_data_image(x, y, (PixelTy *)graphic_buffer.data(),
+                                  gr.min_value, gr.max_value);
       });
 
     TRISYCL_DUMP("Core graphics done");
     for_each_tile([&](int x, int y, xaie::handle h, tile_data &td) {
       h.mem_write(acap::hw_mem::graphic_beg_off +
-                      offsetof(graphics_record, is_done),
+                      offsetof(graphics_record<PixelTy>, is_done),
                   1);
     });
     TRISYCL_DUMP("Ending background graphics device communication thread");

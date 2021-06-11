@@ -17,6 +17,15 @@
 
 #include <boost/type_index.hpp>
 
+#if defined(__SYCL_DEVICE_ONLY__)
+#if defined(TRISYCL_DEBUG)
+#undef TRISYCL_DEBUG
+#endif
+#if defined(TRISYCL_TRACE_KERNEL)
+#undef TRISYCL_TRACE_KERNEL
+#endif
+#endif
+
 // Only when the common debug or trace infrastructure is required
 #if defined(TRISYCL_DEBUG) || defined(TRISYCL_TRACE_KERNEL)
 #include <sstream>

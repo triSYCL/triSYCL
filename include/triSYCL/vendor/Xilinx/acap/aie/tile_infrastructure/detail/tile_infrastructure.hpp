@@ -280,7 +280,7 @@ tile_infrastructure() = default;
   /// not required for any other reason.
   static __attribute__((noinline)) void log(const char* ptr) {
     volatile hw_mem::log_record* lr = hw_mem::log_record::get();
-    device_lock l{hw_mem::get_self_tile_dir() * 16 + 15};
+    device_lock l{hw_mem::get_self_tile_dir(), 15};
     l.acquire();
     while (*ptr)
       lr->get_data()[lr->size++] = *(ptr++);

@@ -54,11 +54,12 @@ struct memory_base {
 #else
 #if defined(__SYCL_DEVICE_ONLY__)
   auto lock(int i) {
-    return device_lock{i};
+    return device_lock{hw_mem::get_ptr_dir(this), i};
   }
 #else
   void set_memory_infrastructure(memory_infrastructure&) { }
   auto &lock(int i) {
+    assert(false && "TODO");
     /// TODO: fix it. This doesn't seem implementable for host code when using
     /// actual hardware because it needs acces to the device handle.
     static device_lock l{};
