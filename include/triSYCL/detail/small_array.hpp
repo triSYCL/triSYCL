@@ -144,16 +144,11 @@ struct small_array : std::array<BasicType, Dims>,
   // boost::less_than_comparable<FinalType>,
   // Add a display() method
   detail::display_vector<FinalType> {
-
-  /// \todo add this Boost::multi_array or STL concept to the
-  /// specification?
-  static const auto dimensionality = Dims;
-
   /* Note that constexpr size() from the underlying std::array provides
      the same functionality */
-  static const size_t dimension = Dims;
-  using element_type = BasicType;
+  static constexpr size_t dimension = Dims;
 
+  using element_type = BasicType;
 
   /** A constructor from another array
 

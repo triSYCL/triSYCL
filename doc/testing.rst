@@ -9,9 +9,7 @@ Installation
 ------------
 
 Only modern Clang_ or GCC_ (but usually the latest versions are the
-best), `Boost.MultiArray`_ (which adds to `C++`_ the nice Fortran
-array semantics and syntax), Boost.Operators and a few other Boost
-libraries are needed.
+best), Boost.Operators and a few other Boost libraries are needed.
 
 To install them on latest Linux Debian/unstable (this should work on
 latest Ubuntu too, just adapt the compiler versions):
@@ -54,8 +52,6 @@ Look at `tests/README.rst </tests/README.rst>`_ description.
 .. _Bolt: https://github.com/HSA-Libraries/Bolt
 
 .. _Boost.Compute: https://github.com/boostorg/compute
-
-.. _Boost.MultiArray: http://www.boost.org/doc/libs/1_55_0/libs/multi_array/doc/index.html
 
 .. _C++: http://www.open-std.org/jtc1/sc22/wg21/
 

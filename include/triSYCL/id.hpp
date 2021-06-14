@@ -33,9 +33,8 @@ class id : public detail::small_array_123<
              Dimensions > {
 
 public:
-  /// \todo add this Boost::multi_array or STL concept to the
-  /// specification?
-  static constexpr auto dimensionality = Dimensions;
+  /// The number of dimensions of the id
+  static auto constexpr rank() { return Dimensions; }
 
   // Inherit from all the constructors
   using detail::small_array_123<std::size_t,

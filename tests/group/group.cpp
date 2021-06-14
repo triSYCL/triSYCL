@@ -56,7 +56,7 @@ using namespace cl::sycl;
 
 #define DISPLAY_ELEMENTS(method)                                \
   do {                                                          \
-    for (size_t i = 0; i != decltype(ndi)::dimensionality; ++i) \
+    for (size_t i = 0; i != ndi.rank(); ++i)                    \
       std::cout << ndi.method(i) << ' ';                        \
     std::cout << std::endl;                                     \
   } while (0)

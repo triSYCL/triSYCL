@@ -17,7 +17,6 @@
 #include <boost/compute.hpp>
 #endif
 
-#include "triSYCL/command_group/detail/task.hpp"
 #include "triSYCL/detail/debug.hpp"
 
 namespace trisycl {

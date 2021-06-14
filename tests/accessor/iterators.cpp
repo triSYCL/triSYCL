@@ -46,6 +46,7 @@ int test_main(int argc, char *argv[]) {
 
       cgh.single_task<class sum>([=] {
           // For fun, use aggregate iterators
+          // \todo Use just C++20 ranges and zip at some point
           auto b = boost::make_zip_iterator(boost::make_tuple(aa.cbegin(),
                                                               ab.cbegin(),
                                                               ac.begin()));
@@ -61,6 +62,34 @@ int test_main(int argc, char *argv[]) {
   //std::cout << std::endl << "Result:" << std::endl;
   for (auto e : c.get_access<cl::sycl::access::mode::read>())
     BOOST_CHECK(e == N + 42 - 1);
+    // std::cout << e << " ";
+  //std::cout << std::endl;
+
+  // Launch a kernel to do the summation in the reverse order
+  q.submit([&] (cl::sycl::handler &cgh) {
+      // Get access to the data
+      auto aa = a.get_access<cl::sycl::access::mode::read>(cgh);
+      auto ab = b.get_access<cl::sycl::access::mode::read>(cgh);
+      auto ac = c.get_access<cl::sycl::access::mode::write>(cgh);
+
+      cgh.single_task<class sum>([=] {
+          // For fun, use aggregate iterators
+          // \todo Use just C++20 ranges and zip at some point
+          auto b = boost::make_zip_iterator(boost::make_tuple(aa.crbegin(),
+                                                              ab.crbegin(),
+                                                              ac.rbegin()));
+          auto e = boost::make_zip_iterator(boost::make_tuple(aa.crend(),
+                                                              ab.crend(),
+                                                              ac.rend()));
+
+          for (auto i = b; i != e; ++i)
+            i->get<2>() = i->get<0>() + i->get<1>() + 1;
+        });
+    });
+
+  //std::cout << std::endl << "Result:" << std::endl;
+  for (auto e : c.get_access<cl::sycl::access::mode::read>())
+    BOOST_CHECK(e == N + 42);
     // std::cout << e << " ";
   //std::cout << std::endl;
 

@@ -39,9 +39,8 @@ void parallel_for_workitem_in_group(const group<Dimensions> &g,
  */
 template <int Dimensions>
 struct group : boost::equality_comparable<group<Dimensions>> {
-  /// \todo add this Boost::multi_array or STL concept to the
-  /// specification?
-  static constexpr auto dimensionality = Dimensions;
+  /// The number of dimensions of the group
+  static auto constexpr rank() { return Dimensions; }
 
 private:
 
@@ -176,7 +175,7 @@ public:
 
   /** Loop on the work-items inside a work-group
    */
-  void parallel_for_work_item(std::function<void(h_item<dimensionality>)> f)
+  void parallel_for_work_item(std::function<void(h_item<rank()>)> f)
     const {
     detail::parallel_for_workitem_in_group(*this, f);
   }
@@ -185,7 +184,7 @@ public:
    */
   bool operator==(const group &groupB) const {
     return (group_id == groupB.group_id &&
-	    ndr == groupB.ndr);
+            ndr == groupB.ndr);
   }
 };
 
