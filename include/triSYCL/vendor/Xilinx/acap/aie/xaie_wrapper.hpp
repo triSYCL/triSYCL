@@ -25,7 +25,6 @@
 #include <boost/type_index.hpp>
 
 #include "hardware.hpp"
-#include "lock.hpp"
 
 namespace trisycl::vendor::xilinx::xaie {
 extern "C" {
@@ -124,6 +123,11 @@ struct handle {
     ss << pos.x << ", " << pos.y;
     return ss.str();
   }
+  __attribute__((used)) uint32_t raw_read(uint32_t off) {
+    uint32_t data;
+    XAie_Read32(inst, _XAie_GetTileAddr(inst, tile.Row, tile.Col) + off, &data);
+    return data;
+  }
 
   xaie::XAie_Transaction
   get_transaction(uint32_t flags = XAIE_TRANSACTION_ENABLE_AUTO_FLUSH) {
@@ -208,6 +212,7 @@ struct handle {
 
   /// Reset the core
   void core_reset() {
+    TRISYCL_XAIE(xaie::XAie_CoreReset(inst, tile));
     TRISYCL_XAIE(xaie::XAie_CoreUnreset(inst, tile));
   }
 
@@ -219,6 +224,13 @@ struct handle {
   /// Stop the core
   void core_stop() {
     TRISYCL_XAIE(xaie::XAie_CoreDisable(inst, tile));
+  }
+
+  bool core_soft_wait() {
+    xaie::AieRC RC = xaie::XAIE_OK;
+    RC = xaie::XAie_CoreWaitForDone(inst, tile, 1);
+    emit_log();
+    return RC == xaie::XAIE_OK;
   }
 
   /// Wait for the core to complete
@@ -240,11 +252,12 @@ struct handle {
     /// much log.
     detail::no_log_scope nls;
     std::string log;
+    int lock = 7;
 
-    acquire(15);
+    acquire(lock);
     uint32_t log_size = mem_read(acap::hw_mem::log_buffer_beg_off);
     if (!log_size) {
-      release(15);
+      release(lock);
       return;
     }
     log.resize(log_size);
@@ -253,8 +266,13 @@ struct handle {
                    sizeof(acap::hw_mem::log_record),
                log_size);
     mem_write(acap::hw_mem::log_buffer_beg_off, 0);
-    release(15);
+    release(lock);
+    dump_lock_state();
     std::cout << log << std::flush;
+  }
+  __attribute__((used)) void dump_lock_state() {
+    std::cout << get_pos_str() << ": lock state:" << std::hex << "0x"
+              << raw_read(0x1EF00) << "\n";
   }
 
   void acquire(int id) {

@@ -180,14 +180,22 @@ class tile_infrastructure
         \todo In a device implementation we should have a real
         tile_handler type making sense on the device instead of just
         *this */
-    auto kernel = [&] {
+    auto kernel = [&]() mutable {
       if constexpr (requires { f(); })
         /* If the invocable is not interested by the handler, do not
            provide it. Add the outer lambda to avoid a warning about
            capturing this when non using it */
-        return [work = std::forward<Work>(f)] { return work(); };
-      else
-        return [this, work = std::forward<Work>(f)] { return work(*this); };
+        return [work = std::forward<Work>(f)]() mutable { return work(); };
+      else if constexpr (requires { f(*this); })
+        return [this, work = std::forward<Work>(f)]() mutable {
+          return work(*this);
+        };
+      else if constexpr (requires { f.run(); })
+        return [work = std::forward<Work>(f)]() mutable { return work.run(); };
+      else if constexpr (requires { f.run(*this); })
+        return [this, work = std::forward<Work>(f)]() mutable {
+          return work.run(*this);
+        };
     }();
 
     implementation->single_task(kernel);

@@ -233,13 +233,24 @@ struct program {
   void wait() {
     /// There the device doesn't need to wait for itself to execute.
 #if !defined(__SYCL_DEVICE_ONLY__)
+#if defined(__SYCL_XILINX_AIE__)
+    TRISYCL_DUMP2("Joining AIE tiles...", "exec");
+    bool is_done = false;
+    while (!is_done) {
+      is_done = true;
+      boost::hana::for_each(tiles, [&](auto &t) {
+        is_done &= t.get_dev_handle().core_soft_wait();
+      });
+    }
+    TRISYCL_DUMP2("Joined AIE tiles", "exec");
+    boost::hana::for_each(tiles, [&](auto &t) { t.postrun(); });
+#else
     boost::hana::for_each(tiles, [&](auto &t) {
       TRISYCL_DUMP2("Joining AIE tile (" << t.x << ',' << t.y << ')', "exec");
-      t.get_dev_handle().core_wait();
-      t.get_dev_handle().emit_log();
+      t.wait();
       TRISYCL_DUMP2("Joined AIE tile (" << t.x << ',' << t.y << ')', "exec");
-      t.postrun();
     });
+#endif
 #endif
   }
 

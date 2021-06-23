@@ -244,8 +244,8 @@ struct tile : tile_base<AIE_Program> {
   using dir = typename tile_t::dir;
 
 
-  static void log(const char* ptr) {
-    detail::tile_infrastructure<geo>::log(ptr);
+  static void log(auto i) {
+    detail::tile_infrastructure<geo>::log(i);
   }
 
 /// This could be refactored to minimized duplication by separating between host
@@ -521,6 +521,8 @@ struct tile : tile_base<AIE_Program> {
         mem().lock(lock).release_with_value(false);
       }
     }
+    /// Reset the lock for the next barrier.
+    mem().lock(lock).release_with_value(false);
   }
 
 
@@ -533,32 +535,36 @@ struct tile : tile_base<AIE_Program> {
   */
   void vertical_barrier(int lock = 15) {
     // Propagate a token from South to North and back
+    // All tile except the bottom one wait.
     if constexpr (!is_south_row()) {
       // Wait for the Southern neighbour to be ready
       mem().lock(lock).acquire_with_value(true);
     }
+    // All tile except the top one wait.
     if constexpr (is_memory_module_north()) {
       mem_north().lock(lock).acquire_with_value(false);
       // Unleash the Northern neighbour
       mem_north().lock(lock).release_with_value(true);
       // Wait for the Northern neighbour to acknowledge
       mem_north().lock(lock).acquire_with_value(false);
-    }
+    } 
+    // All tile except the bottom one wait.
     if constexpr (!is_south_row()) {
       // Acknowledge to the Southern neighbour
       mem().lock(lock).release_with_value(false);
     }
+    /// Reset the lock for the next barrier.
+    mem().lock(lock).release_with_value(false);
   }
-
 
   /** Full barrier using the 2 locks by default
 
       Implement a barrier across the full program by using \c
       horizontal_barrier() and \c vertical_barrier().
   */
-  void barrier() {
-    horizontal_barrier();
-    vertical_barrier();
+  void barrier(int h_id = 14, int v_id = 15) {
+    horizontal_barrier(h_id);
+    vertical_barrier(v_id);
   }
 
 

@@ -14,6 +14,8 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <type_traits>
+#include <cstring>
 
 #if defined(__SYCL_DEVICE_ONLY__)
 #include "acap-intrinsic.h"
@@ -143,15 +145,15 @@ constexpr unsigned stack_size = 0x1000;
 constexpr unsigned stack_end_off = stack_beg_off + stack_size;
 
 constexpr unsigned args_beg_off = stack_end_off;
-constexpr unsigned args_size = 0x2000;
+constexpr unsigned args_size = 0x800;
 constexpr unsigned args_end_off = args_beg_off + args_size;
 
 constexpr unsigned tile_mem_beg_off = args_end_off;
-constexpr unsigned tile_mem_size = 0x2000;
+constexpr unsigned tile_mem_size = 0x4000;
 constexpr unsigned tile_mem_end_off = tile_mem_beg_off + tile_mem_size;
 
 constexpr unsigned log_buffer_beg_off = tile_mem_end_off;
-constexpr unsigned log_buffer_size = 0x1000;
+constexpr unsigned log_buffer_size = 0x800;
 constexpr unsigned log_buffer_end_off = log_buffer_beg_off + log_buffer_size;
 
 constexpr unsigned graphic_beg_off = log_buffer_end_off;
@@ -252,7 +254,13 @@ int get_tile_x_cord() {
 int get_tile_y_cord() {
   return (acap_intr::get_coreid() & 0xf) - 1;
 }
-  
+
+int strlen(const char *ptr) {
+  int i = 0;
+  while (ptr[i])
+    i++;
+  return i;
+}
 }
 
 #endif

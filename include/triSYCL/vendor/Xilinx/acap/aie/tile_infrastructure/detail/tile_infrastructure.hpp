@@ -241,7 +241,7 @@ tile_infrastructure() = default;
       , fe { &fiber_executor }
 #endif
   {
-#if !defined(__SYCL_XILINX_AIE__)
+#if !defined(__SYCL_XILINX_AIE__) && 0
     // TODO: this should be enabled on hardware when it is working but for now
     // it isn't
 
@@ -278,17 +278,59 @@ tile_infrastructure() = default;
 #ifdef __SYCL_DEVICE_ONLY__
   /// This __attribute__((noinline)) is just to make the IR more readable it is
   /// not required for any other reason.
-  static __attribute__((noinline)) void log(const char* ptr) {
+  static __attribute__((noinline)) void log_internal(const char* ptr) {
     volatile hw_mem::log_record* lr = hw_mem::log_record::get();
-    device_lock l{hw_mem::get_self_tile_dir(), 15};
+    device_lock l{hw_mem::get_self_tile_dir(), 7};
     l.acquire();
     while (*ptr)
       lr->get_data()[lr->size++] = *(ptr++);
     l.release();
   }
+  static void log(const char* ptr) {
+    char arr[] = "00, 0 : ";
+    arr[0] = '0' + (hw::get_tile_x_cord() / 10);
+    arr[1] = '0' + (hw::get_tile_x_cord() % 10);
+    arr[4] = '0' + (hw::get_tile_y_cord() % 10);
+
+    volatile hw_mem::log_record* lr = hw_mem::log_record::get();
+    /// If logging would overflow the log buffer wait for the buffer to be
+    /// pickup by the host and emptied.
+    bool has_waited = false;
+    while (lr->size + strlen(ptr) + sizeof(arr) > hw_mem::log_buffer_size) {
+      acap_intr::memory_fence();
+      has_waited = true;
+    }
+
+    log_internal(arr);
+    if (has_waited)
+    log_internal("wait ");
+    log_internal(ptr);
+  }
+  static void write_number(auto write, int i, const char* base = "0123456789") {
+    if (i < 0) {
+      write('-');
+      /// This would fail for MIN_INT.
+      write_number(write, -i, base);
+      return;
+    }
+    if (i >= strlen(base))
+      write_number(write, i / strlen(base), base);
+    write(base[i % 10]);
+  }
+  static void log(int i) {
+    char arr[13];
+    char *ptr = &arr[0];
+    write_number([&](char c) mutable { *(ptr++) = c; }, i);
+    ptr[0] = '\n';
+    ptr[1] = '\0';
+    log(arr);
+  }
 #else
   static void log(const char* ptr) {
     std::cout << ptr;
+  }
+  static void log(int i) {
+    std::cout << i;
   }
 #endif
 
@@ -455,7 +497,8 @@ tile_infrastructure() = default;
                                      << ") beginning tile execution",
                     "exec");
       /// Setup DMA for parameter passing
-      get_dev_handle().mem_dma(hw_mem::args_beg_off, hw_mem::graphic_end_off - hw_mem::args_beg_off);
+      // need to test without
+      // get_dev_handle().mem_dma(hw_mem::args_beg_off, hw_mem::graphic_end_off - hw_mem::args_beg_off);
       get_dev_handle().prepare_log();
       if constexpr (requires{f.prerun();})
         if (!f.prerun())

@@ -65,8 +65,9 @@ public:
     auto m = std::max(size.x(), size.y());
     scaling_factor = m > max_size ? max_size/m : 1;
     // Generate the LaTeX header
-#ifndef __SYCL_XILINX_AIE__
-    out = (boost::format { R"(%% To be compiled with lualatex instead of pdflatex
+    // boost::format seems broken and can't compile this.
+#if 0
+    out = (boost::format (R"(%% To be compiled with lualatex instead of pdflatex
 %% to avoid a bug on _ and to handle huge memory automatically.
 \documentclass{article}
 %% Use maximum of the page surface
@@ -101,7 +102,7 @@ public:
   gray,
   style = {line width = %4%mm, ->}]
 
-)" } % scale(size.x()) % scale(size.y()) % scale(1) % scale(0.01)).str();
+)" ) % scale(size.x()) % scale(size.y()) % scale(1) % scale(0.01)).str();
 #endif
   }
 

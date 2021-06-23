@@ -57,13 +57,19 @@
 
 namespace trisycl::vendor::xilinx::graphics {
 
+enum graphics_flag : uint32_t {
+  none = 0x0,
+  is_done = 0x1,
+  is_pause = 0x2,
+};
+
 // RGB 8 bit images, so 3 bytes per pixel
 using rgb = std::array<std::uint8_t, 3>;
 
 #ifdef __SYCL_XILINX_AIE__
 
 /// This struct needs to have the same layout on the host and the device.
-template<typename PixelTy>
+template <typename PixelTy>
 struct graphics_record {
 #ifdef __SYCL_DEVICE_ONLY__
   /// This is only possible on device.
@@ -73,7 +79,7 @@ struct graphics_record {
                                acap::hw_mem::graphic_beg_off);
   }
 #endif
-  uint32_t is_done;
+  uint32_t flags;
   /// pointer do not have the same layout on device and host so data is treated
   /// as a pointer on the device and as a uint32_t on the host.
 #ifdef __SYCL_DEVICE_ONLY__
@@ -81,27 +87,11 @@ struct graphics_record {
 #else
   uint32_t data;
 #endif
-  uint32_t counter;
   PixelTy min_value;
   PixelTy max_value;
+  uint32_t counter;
 };
 #endif
-
-  // template <typename From, typename To> void bit_copy(To *t, From *f) {
-  //   volatile char *to = (volatile char *)t;
-  //   volatile char *from = (volatile char *)f;
-  //   for (int i = 0; i < sizeof(To); i++)
-  //     to[i] = 0;
-  //   for (int i = 0; i < std::min(sizeof(From), sizeof(To)); i++)
-  //     to[i] = from[i];
-  // }
-
-  // template <typename To, typename From>
-  // To bit_cast(const From& from) {
-  //   To to;
-  //   bit_copy(&to, &from);
-  //   return to;
-  // }
 
 #ifdef __SYCL_DEVICE_ONLY__
 
@@ -122,13 +112,14 @@ struct image_grid {
 
 template<typename PixelTy>
 struct application {
+  template <typename T> void set_device(T &&d) {}
+  void enable_data_validation() {}
   template<typename T>
-  void set_device(T&& d) {
-  }
+  void start_data_validation(T&& L) {}
 
-    auto& start(int &argc, char **&argv, int nx, int ny, int image_x,
-                      int image_y, int zoom) {
-      return *this;
+  auto &start(int &argc, char **&argv, int nx, int ny, int image_x, int image_y,
+              int zoom) {
+    return *this;
   }
 
   ///  Wait for the graphics window to end
@@ -140,7 +131,13 @@ struct application {
   /// Test if the window has been closed
   bool is_done() const  {
     volatile graphics_record<PixelTy> *gr = graphics_record<PixelTy>::get();
-    return gr->is_done;
+    return gr->flags & graphics_flag::is_done;
+  }
+
+  void pause() const {
+    volatile graphics_record<PixelTy> *gr = graphics_record<PixelTy>::get();
+    gr->flags |= graphics_flag::is_pause;
+    while (gr->flags & graphics_flag::is_pause);
   }
 
   /// Test if the window has been closed after synchronizing with a barrier
@@ -148,13 +145,18 @@ struct application {
     /// TODO
   }
 
+  void validate_tile_data_image(int x, int y, auto data, PixelTy min_value,
+                              PixelTy max_value) {}
+
   void update_tile_data_image(int x, int y, PixelTy *data, PixelTy min_value,
                               PixelTy max_value) const {
     volatile graphics_record<PixelTy> *gr = graphics_record<PixelTy>::get();
     gr->data = &data[0];
     gr->min_value = min_value;
     gr->max_value = max_value;
+    acap_intr::memory_fence();
     gr->counter++;
+    acap_intr::memory_fence();
   };
 
   graphics::image_grid image_grid() {
@@ -192,7 +194,7 @@ struct frame_grid : Gtk::ApplicationWindow {
   std::function<void(void)> close_action;
 
   /// Set to true by the closing handler
-  std::atomic<bool> done = false;
+  std::atomic<uint32_t> flags = graphics_flag::none;
 
 
   /** Create a grid of tiles
@@ -567,7 +569,7 @@ struct image_grid : frame_grid {
           // Only 1 customer at a time
           std::lock_guard lock { dispatch_protection };
           // Skip the work when done to avoid dead lock
-          if (done)
+          if (flags & graphics_flag::is_done)
             // Wake-up everybody waiting for sending some work to
             // realize that they have to give up on their hope
             cv.notify_all();
@@ -595,9 +597,9 @@ struct image_grid : frame_grid {
   void submit(std::function<void(void)> f) {
     std::unique_lock lock { dispatch_protection };
     // Wait for no work being dispatched or the end
-    cv.wait(lock, [&] { return !work_to_dispatch || done; } );
+    cv.wait(lock, [&] { return !work_to_dispatch || (flags & graphics_flag::is_done); } );
     // Do not submit anything if we are in the shutdown process already
-    if (!done) {
+    if (!(flags & graphics_flag::is_done)) {
       work_to_dispatch = std::move(f);
       // Ask the graphics thread for some work
       dispatcher.emit();
@@ -648,6 +650,7 @@ struct image_grid : frame_grid {
       for (int i = 0;
            i < std::min(static_cast<int>(data.extent(1)), image_x);
            ++i) {
+        assert(!std::isnan(data(j, i)));
         /* Mirror the image vertically to display the pixels in a
            mathematical sense */
         output(image_y - 1 - j,i) = p.palettize(data(j,i),
@@ -716,7 +719,7 @@ struct image_grid : frame_grid {
   bool is_done_barrier() {
     // Only 1 thread sample the graphics status
     if (done_has_been_sampled.test_and_set())
-      done_snapshot = done;
+      done_snapshot = flags & graphics_flag::is_done;
     // Then wait for everybody to synchronize
     done_barrier.count_down_and_wait();
     // Reinitialize the flag for the next iteration
@@ -731,18 +734,59 @@ struct image_grid : frame_grid {
     images in a grid of tiles */
 template<typename PixelTy = uint8_t>
 struct application {
+  struct host_dev_data {
+    struct tile_data {
+      std::vector<std::byte> data;
+      PixelTy min_value;
+      PixelTy max_value;
+    };
+    tile_data host;
+    tile_data dev;
+  };
+
+  struct data_validation {
+    uint32_t x_size;
+    std::vector<host_dev_data> tile_data;
+    host_dev_data &tile(int x, int y) {
+      return tile_data[x * x_size + y];
+    }
+    boost::barrier barrier{2};
+    uint32_t host_tile_counter;
+    uint32_t dev_tile_counter;
+    uint32_t frame_counter;
+  };
   std::thread t;
   std::unique_ptr<graphics::image_grid> w;
+  data_validation dv;
 #ifdef __SYCL_XILINX_AIE__
   xaie::XAie_DevInst *dev_inst;
   std::thread device_communication_thread;
+  std::thread data_validation_thread;
 #endif
   bool initialized = false;
+  bool has_data_validation = false;
 
   template<typename T>
   void set_device(T&& d) {
 #ifdef __SYCL_XILINX_AIE__
     dev_inst = d.get_dev_inst();
+#endif
+  }
+  void enable_data_validation() {
+    has_data_validation = true;
+  }
+  template <typename T> void start_data_validation(T &&L) {
+    dv.x_size = w->nx;
+    dv.dev_tile_counter = 0;
+    dv.host_tile_counter = 0;
+    dv.frame_counter = 0;
+    dv.tile_data.resize(w->nx * w->ny);
+    for (auto &e : dv.tile_data) {
+      e.dev.data.resize(w->image_x * w->image_y * sizeof(PixelTy));
+      e.host.data.resize(w->image_x * w->image_y * sizeof(PixelTy));
+    }
+#ifdef __SYCL_XILINX_AIE__
+    data_validation_thread = std::thread{[&] { L(); }};
 #endif
   }
 
@@ -783,7 +827,7 @@ struct application {
            is bound to this thread too */
         w.reset(new graphics::image_grid { nx, ny, image_x, image_y, zoom });
         w->set_close_action([&] {
-            w->done = true;
+            w->flags |= graphics_flag::is_done;
           });
         // OK, the graphics system is in a usable state, unleash the main thread
         graphics_initialization.set_value();
@@ -791,15 +835,15 @@ struct application {
         a->run(*w);
 
         // Advertise that the graphics is shutting down
-        w->done = true;
+        w->flags |= graphics_flag::is_done;
       } };
         // Wait for the graphics to start
         graphics_initialization.get_future()
             .get();
 #ifdef __SYCL_XILINX_AIE__
         device_communication_thread = std::thread([=, this] {
-          background_image_updater(this, &w->done, nx, ny, dev_inst,
-                                   image_x * image_y);
+          background_image_updater(this, &w->flags, nx, ny, dev_inst, image_x,
+                                   image_y, has_data_validation);
         });
 #endif
     return *this;
@@ -810,13 +854,16 @@ struct application {
     t.join();
 #ifdef __SYCL_XILINX_AIE__
     device_communication_thread.join();
+    assert(data_validation_thread.joinable() == has_data_validation);
+    if (data_validation_thread.joinable())
+      data_validation_thread.join();
 #endif
   }
 
 
   /// Test if the window has been closed
   bool is_done() const {
-    return w->done;
+    return w->flags & graphics_flag::is_done;
   }
 
 
@@ -845,30 +892,116 @@ struct application {
   template <typename DataType>
   void update_tile_data_image(int x, int y, DataType data, PixelTy min_value,
                               PixelTy max_value) const {
-    static_assert(
-        std::is_same_v<typename std::decay<decltype(data[0])>::type,
-                       PixelTy>,
-        "invalid pixel type");
     w->update_tile_data_image(x, y, data, min_value, max_value);
   };
+  template <typename DataType>
+  void validate_tile_data_image(int x, int y, DataType data, PixelTy min_value,
+                                PixelTy max_value) {
+    PixelTy *ptr = (PixelTy *)dv.tile(x, y).host.data.data();
+    for (int j = 0; j < data.extent(0); ++j)
+      for (int i = 0; i < data.extent(1); ++i)
+        *(ptr++) = data(j, i);
+    dv.tile(x, y).host.min_value = min_value;
+    dv.tile(x, y).host.max_value = min_value;
+
+    auto cmp = [](PixelTy a, PixelTy b) {
+      constexpr auto epsilon = 0.01;
+      if constexpr (std::is_floating_point_v<PixelTy>)
+        return std::abs(a - b) < epsilon;
+      else
+        return a == b;
+    };
+
+#ifdef FAIL_IF
+#error "macro collision on FAIL_IF"
+#endif
+
+#define FAIL_IF(COND, EXTRA)                                                   \
+  do {                                                                         \
+    if (!COND) {                                                               \
+      TRISYCL_DUMP("invalid data: " << EXTRA << ": " << #COND);                \
+                                                                 \
+    }                                                                          \
+  } while (0)
+
+    dv.dev_tile_counter++;
+    if (dv.dev_tile_counter == w->nx * w->ny) {
+      dv.dev_tile_counter = 0;
+      dv.barrier.wait();
+      for (int tid = 0; tid < dv.tile_data.size(); tid++) {
+        auto &e = dv.tile_data[tid];
+        FAIL_IF(cmp(e.host.max_value, e.dev.max_value),
+                "tile(" << tid / dv.x_size << ", " << tid % dv.x_size
+                        << ") frame= " << dv.frame_counter
+                        << ", host= " << e.host.max_value
+                        << ", device= " << e.dev.max_value);
+        FAIL_IF(cmp(e.host.min_value, e.dev.min_value),
+                "tile(" << tid / dv.x_size << ", " << tid % dv.x_size
+                        << ") frame= " << dv.frame_counter
+                        << ", host= " << e.host.min_value
+                        << ", device=  " << e.dev.min_value);
+        FAIL_IF(cmp(e.host.data.size(), e.dev.data.size()),
+                "tile(" << tid / dv.x_size << ", " << tid % dv.x_size
+                        << ") frame= " << dv.frame_counter
+                        << ", host= " << e.host.data.size()
+                        << ", device=  " << e.dev.data.size());
+        PixelTy *host_ptr = (PixelTy *)e.host.data.data();
+        PixelTy *dev_ptr = (PixelTy *)e.dev.data.data();
+        size_t size = e.host.data.size() / sizeof(PixelTy);
+        assert(e.host.data.size() % sizeof(PixelTy) == 0);
+        for (int i = 0; i < size; i++)
+          FAIL_IF(cmp(host_ptr[i], dev_ptr[i]),
+                  "tile(" << tid / dv.x_size << ", " << tid % dv.x_size
+                          << ") pixel(" << i / w->image_x << ", "
+                          << i % w->image_x << ") frame= " << dv.frame_counter
+                          << ", host= " << host_ptr[i]
+                          << ", device= " << dev_ptr[i]);
+      }
+      dv.frame_counter++;
+      dv.barrier.wait();
+    }
+#undef FAIL_IF
+  };
+
+  void pause() { 
+    //std::this_thread::sleep_for(std::chrono::milliseconds(10));
+  }
 
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
 
   static void background_image_updater(application *a,
-                                       std::atomic<bool> *is_done,
+                                       std::atomic<uint32_t> *flags,
                                        int tile_x_size, int tile_y_size,
                                        xaie::XAie_DevInst *dev_inst,
-                                       size_t graphic_buff_size) {
+                                       size_t image_x_size, size_t image_y_size,
+                                       bool has_data_validation) {
     struct tile_data {
       uint32_t counter = 0;
     };
     TRISYCL_DUMP("Staring background graphics device communication thread");
     std::vector<std::uint8_t> graphic_buffer;
-    graphic_buffer.resize(graphic_buff_size * sizeof(PixelTy));
+    graphic_buffer.resize(image_x_size * image_y_size * sizeof(PixelTy));
     
     std::vector<tile_data> tiles_data;
     tiles_data.resize(tile_x_size * tile_y_size);
 
+    auto maybe_validate_data = [&](int x, int y, PixelTy min_value, PixelTy max_value) {
+      if (!has_data_validation)
+        return;
+
+      assert(graphic_buffer.size() == a->dv.tile(x, y).dev.data.size());
+      std::memcpy(a->dv.tile(x, y).dev.data.data(), graphic_buffer.data(),
+                  a->dv.tile(x, y).dev.data.size());
+      a->dv.tile(x, y).dev.min_value = min_value;
+      a->dv.tile(x, y).dev.max_value = min_value;
+
+      a->dv.dev_tile_counter++;
+      if (a->dv.dev_tile_counter == tile_x_size * tile_y_size) {
+        a->dv.dev_tile_counter = 0;
+        a->dv.barrier.wait();
+        a->dv.barrier.wait();
+      }
+    };
     auto for_each_tile = [&](auto &&l) {
       for (int x = 0; x < tile_x_size; x++)
         for (int y = 0; y < tile_y_size; y++)
@@ -884,7 +1017,7 @@ struct application {
     });
 
     TRISYCL_DUMP("Core graphics initialized");
-    while (!*is_done)
+    while (!(*flags & graphics_flag::is_done))
       for_each_tile([&](int x, int y, xaie::handle h, tile_data &td) {
         detail::no_log_scope nls;
         graphics_record<PixelTy> gr;
@@ -892,6 +1025,10 @@ struct application {
                      sizeof(graphics_record<PixelTy>));
         /// The kernel has not started yet.
         if (gr.counter == 0)
+          return;
+        /// Sometimes not all data written by the device is made visible at once so we check more than just count.
+        /// This is not the best way to fix this issue but its needed for now.
+        if (gr.data == 0 || gr.max_value == gr.min_value)
           return;
         acap::hw_mem::dev_ptr data_ptr =
             acap::hw_mem::get_dev_ptr({x, y}, gr.data);
@@ -902,14 +1039,19 @@ struct application {
         /// This call is not synchronized but this should only be executed while
         /// the main thread is waiting for the kernel to finish.
         a->update_tile_data_image(x, y, (PixelTy *)graphic_buffer.data(),
-                                  gr.min_value, gr.max_value);
+                                    gr.min_value, gr.max_value);
+
+        maybe_validate_data(x, y, gr.min_value, gr.max_value);
+        h.mem_write(acap::hw_mem::graphic_beg_off +
+                        offsetof(graphics_record<PixelTy>, flags),
+                    gr.flags & ~graphics_flag::is_pause);
       });
 
     TRISYCL_DUMP("Core graphics done");
     for_each_tile([&](int x, int y, xaie::handle h, tile_data &td) {
-      h.mem_write(acap::hw_mem::graphic_beg_off +
-                      offsetof(graphics_record<PixelTy>, is_done),
-                  1);
+      uint32_t off =
+          acap::hw_mem::graphic_beg_off + offsetof(graphics_record<PixelTy>, flags);
+      h.mem_write(off, h.mem_read(off) | graphics_flag::is_done);
     });
     TRISYCL_DUMP("Ending background graphics device communication thread");
   }
