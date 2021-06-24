@@ -239,7 +239,7 @@ template <typename Layout> struct device {
 
   /// Build some device level infrastructure
   device() {
-        // Initialization of the AI Engine tile constructs from Lib X AI Engine
+        // Initialization of the AI Engine tile constructs from LibXAiengine
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
     // for host side on device execution
     TRISYCL_XAIE(xaie::XAie_CfgInitialize(&aie_inst, &aie_config));

@@ -23,7 +23,7 @@
 #include "lock.hpp"
 
 
-/// TODO: Perhaps worth pushing all Lib X AI Engine functionallity we use down
+/// TODO: Perhaps worth pushing all LibXAiengine functionallity we use down
 /// into a C++ API so it can all be excluded with one #ifdef and kept nice and
 /// cleanly
 
@@ -375,7 +375,7 @@ struct tile : tile_base<AIE_Program> {
   device_lock get_lock(int8_t id, dir d = dir::self) { return {id + d * 16}; }
 
 #endif
-// TODO: Perhaps worth pushing all Lib X AI Engine functionallity we use down
+// TODO: Perhaps worth pushing all LibXAiengine functionallity we use down
 // into a C++ API so it can all be excluded with one #IFDEF and kept nice and
 // cleanly
 // Part of the real current host -> device communication API using Lib X AI

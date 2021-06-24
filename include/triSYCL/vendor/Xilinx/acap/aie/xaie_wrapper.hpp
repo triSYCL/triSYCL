@@ -116,6 +116,7 @@ struct handle {
   xaie::XAie_LocType tile;
   xaie::XAie_DevInst *inst;
 
+#ifdef TRISYCL_DEBUG
   std::string get_pos_str() {
     std::string str;
     std::stringstream ss(str);
@@ -123,6 +124,10 @@ struct handle {
     ss << pos.x << ", " << pos.y;
     return ss.str();
   }
+#endif
+  /// Reads raw addresses within the tile this should be used for accessing
+  /// register values mapped in memory as defined in
+  /// http://cervino-doc/HEAD/tile_links/xregdb_me_tile_doc.html
   __attribute__((used)) uint32_t raw_read(uint32_t off) {
     uint32_t data;
     XAie_Read32(inst, _XAie_GetTileAddr(inst, tile.Row, tile.Col) + off, &data);
@@ -250,7 +255,7 @@ struct handle {
   void emit_log() {
     /// This is executed in tight loops so logs are disabled to prevent too
     /// much log.
-    detail::no_log_scope nls;
+    detail::no_log_in_this_scope nls;
     std::string log;
     int lock = 7;
 

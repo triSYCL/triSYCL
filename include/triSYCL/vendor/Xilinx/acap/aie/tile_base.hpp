@@ -16,7 +16,7 @@
 #include "tile_infrastructure.hpp"
 #include "xaie_wrapper.hpp"
 
-/// TODO: Perhaps worth pushing all Lib X AI Engine functionallity we use down
+/// TODO: Perhaps worth pushing all LibXAiengine functionallity we use down
 /// into a C++ API so it can all be excluded with one #ifdef and kept nice and
 /// cleanly
 

@@ -60,8 +60,8 @@ struct memory_base {
   void set_memory_infrastructure(memory_infrastructure&) { }
   auto &lock(int i) {
     assert(false && "TODO");
-    /// TODO: fix it. This doesn't seem implementable for host code when using
-    /// actual hardware because it needs acces to the device handle.
+    /// TODO: fix it. This will need serious refactoring to get access to a
+    /// device xaie::handle.
     static device_lock l{};
     return l;
   }

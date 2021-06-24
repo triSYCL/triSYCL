@@ -837,14 +837,13 @@ struct application {
         // Advertise that the graphics is shutting down
         w->flags |= graphics_flag::is_done;
       } };
-        // Wait for the graphics to start
-        graphics_initialization.get_future()
-            .get();
+    // Wait for the graphics to start
+    graphics_initialization.get_future().get();
 #ifdef __SYCL_XILINX_AIE__
-        device_communication_thread = std::thread([=, this] {
-          background_image_updater(this, &w->flags, nx, ny, dev_inst, image_x,
-                                   image_y, has_data_validation);
-        });
+    device_communication_thread = std::thread([=, this] {
+      background_image_updater(this, &w->flags, nx, ny, dev_inst, image_x,
+                               image_y, has_data_validation);
+    });
 #endif
     return *this;
   }
@@ -897,7 +896,7 @@ struct application {
   template <typename DataType>
   void validate_tile_data_image(int x, int y, DataType data, PixelTy min_value,
                                 PixelTy max_value) {
-    PixelTy *ptr = (PixelTy *)dv.tile(x, y).host.data.data();
+    auto ptr = (PixelTy *)dv.tile(x, y).host.data.data();
     for (int j = 0; j < data.extent(0); ++j)
       for (int i = 0; i < data.extent(1); ++i)
         *(ptr++) = data(j, i);
@@ -905,7 +904,7 @@ struct application {
     dv.tile(x, y).host.max_value = min_value;
 
     auto cmp = [](PixelTy a, PixelTy b) {
-      constexpr auto epsilon = 0.01;
+      constexpr auto epsilon = 0.0001;
       if constexpr (std::is_floating_point_v<PixelTy>)
         return std::abs(a - b) < epsilon;
       else
@@ -920,7 +919,6 @@ struct application {
   do {                                                                         \
     if (!COND) {                                                               \
       TRISYCL_DUMP("invalid data: " << EXTRA << ": " << #COND);                \
-                                                                 \
     }                                                                          \
   } while (0)
 
@@ -1019,7 +1017,7 @@ struct application {
     TRISYCL_DUMP("Core graphics initialized");
     while (!(*flags & graphics_flag::is_done))
       for_each_tile([&](int x, int y, xaie::handle h, tile_data &td) {
-        detail::no_log_scope nls;
+        detail::no_log_in_this_scope nls;
         graphics_record<PixelTy> gr;
         h.memcpy_d2h(&gr, acap::hw_mem::graphic_beg_off,
                      sizeof(graphics_record<PixelTy>));

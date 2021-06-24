@@ -17,6 +17,8 @@
 
 #include <boost/type_index.hpp>
 
+/// The device doesn't have support for the logging infrastructure, no boost, no
+/// sstream, no iostream. So on device logs are simply not emitted.
 #if defined(__SYCL_DEVICE_ONLY__)
 #if defined(TRISYCL_DEBUG)
 #undef TRISYCL_DEBUG
@@ -31,6 +33,7 @@
 #include <sstream>
 #include <string>
 #include <thread>
+#include <filesystem>
 
 #include <boost/log/core.hpp>
 #include <boost/log/trivial.hpp>
@@ -48,24 +51,25 @@ namespace {
 
 thread_local int no_log_scope_count = 0;
 
+/// Determine if a log with a certain kind should be printed.
 bool should_be_logged(std::string kind) {
+  /// If the user has a no_log_in_this_scope, dont log.
   if (no_log_scope_count)
     return false;
   const char* env = getenv("TRISYCL_LOG");
+  /// If the environemnt variable TRISYCL_LOG is unset
+  /// log everything
   if (!env)
     return true;
+  /// otherwise only log what is mentioned in TRISYCL_LOG.
   std::string str(env);
   size_t pos = str.find(kind);
   return pos != std::string::npos;
 }
 
-std::string get_base_name(const char* file_name) {
-  std::string str = file_name;
-  size_t start = str.find_last_of('/');
-  start = start == std::string::npos ? 0 : start + 1;
-  size_t end = str.find_last_of('.');
-  end = end == std::string::npos ? str.size() : end;
-  return str.substr(start, end - start);
+/// get the basename of the source file
+std::string get_base_name(const char *file_name) {
+  return std::filesystem::path(file_name).stem();
 }
 
 void log_string(const std::string& str) {
@@ -109,18 +113,14 @@ void log_string(const std::string& str) {
 namespace trisycl::detail {
 
 #if defined(TRISYCL_DEBUG) || defined(TRISYCL_TRACE_KERNEL)
-/// Disbale logs for a section of code.
-struct no_log_scope {
-  no_log_scope() {
-    no_log_scope_count++;
-  }
-  ~no_log_scope() {
-    no_log_scope_count--;
-  }
+/// Disable logs for a section of code.
+struct no_log_in_this_scope {
+  no_log_in_this_scope() { no_log_scope_count++; }
+  ~no_log_in_this_scope() { no_log_scope_count--; }
 };
 #else
 /// When logging is disabled this is a noop
-struct no_log_scope {};
+struct no_log_in_this_scope {};
 #endif
 
 /** \addtogroup debug_trace Debugging and tracing support

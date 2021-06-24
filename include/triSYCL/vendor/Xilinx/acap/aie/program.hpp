@@ -25,7 +25,7 @@
 #include "triSYCL/detail/program_manager.hpp"
 #include "triSYCL/detail/kernel_desc.hpp"
 
-/// TODO: Perhaps worth pushing all Lib X AI Engine functionallity we use down
+/// TODO: Perhaps worth pushing all LibXAiengine functionallity we use down
 /// into a C++ API so it can all be excluded with one #ifdef and kept nice and
 /// cleanly
 
@@ -197,7 +197,7 @@ struct program {
 
   /// Create the AIE program with the tiles and memory modules
   program(AIEDevice &aie_d) : aie_d{aie_d} {
-    // Initialization of the AI Engine tile constructs from Lib X AI Engine
+    // Initialization of the AI Engine tile constructs from LibXAiengine
 
     boost::hana::for_each(tiles, [&](auto &t) {
       // Inform each tile about its program
