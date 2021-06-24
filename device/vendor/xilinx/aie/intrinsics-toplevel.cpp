@@ -2,7 +2,7 @@
 
     Wrap some AIE intrinsics into some C++ functions so that they can
     be used by some code not compiled with the Synopsys CHESS compiler.
-    This also avoid some conflicts with intrinsics names.
+    This also avoids some conflicts with intrinsics names.
 
     This is to be compiled with the Synopsys CHESS compiler to
     generate a .o library file.
@@ -25,7 +25,7 @@ namespace aie {
 namespace stream {
 // cervino-doc.xilinx.com/HEAD/intrinsics/group__intr__streams.html
 // http://cervino-doc.xilinx.com/HEAD/intrinsics/group__intr__gpvectorop__mode__status.html
-// /proj/xbuilds/HEAD_daily_latest/installs/lin64/Vitis/HEAD/cardano/data/cervino/lib/me_streams.h
+/proj/xbuilds/HEAD_daily_latest/installs/lin64/Vitis/HEAD/aietools/data/versal_prod/lib/me_streams.h
 
 /// \todo For now just handle integer transfers for the streams
 
