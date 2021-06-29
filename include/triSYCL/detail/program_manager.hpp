@@ -188,23 +188,27 @@ public:
       /// sycl-chess.
       /// The current format of each kernels is:
       /// name_of_kernel\n
-      /// size_of_kernel(in characters not binary form)\n
+      /// size_of_kernel (written in plain base 10 ASCII digits, not in binary form)\n
       /// the binary
       /// next kernel or end of file.
       /// It is assumed in the following code that the format is correct, there
       /// is no attempt to detect or correct invalid formats.
       const char* ptr = reinterpret_cast<const char*>(img->ImageStart);
-      /// Loop until we have seen the hole image.
+      /// Loop until we have seen the whole image.
       while (reinterpret_cast<uintptr_t>(ptr) <
              reinterpret_cast<uintptr_t>(img->ImageEnd)) {
         unsigned next_size = 0;
+        // Find the position of the next '\n'
         while (ptr[next_size] != '\n')
           next_size++;
+        // Parse the kernel name
         std::string name(ptr, next_size);
         ptr += next_size + 1;
         next_size = 0;
+        // Find the position of the next '\n'
         while (ptr[next_size] != '\n')
           next_size++;
+        // Parse the file size
         unsigned bin_size = std::stoi(std::string(ptr, next_size));
         ptr += next_size + 1;
         next_size = 0;
