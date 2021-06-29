@@ -33,11 +33,11 @@ template <typename AIE, int X, int Y> struct prog : acap::aie::tile<AIE, X, Y> {
   bool prerun() {
     written_data.push_back({X, Y, 0, id_counter++});
     /// writes to tile_memory::x
-    t::mem_write(acap::hw_mem::tile_mem_beg_off, written_data.back().x);
+    t::mem_write(acap::hw::tile_mem_beg_off, written_data.back().x);
     /// writes to tile_memory::y
-    t::mem_write(acap::hw_mem::tile_mem_beg_off + 4, written_data.back().y);
+    t::mem_write(acap::hw::tile_mem_beg_off + 4, written_data.back().y);
     /// writes to tile_memory::id
-    t::mem_write(acap::hw_mem::tile_mem_beg_off + 8, written_data.back().id);
+    t::mem_write(acap::hw::tile_mem_beg_off + 8, written_data.back().id);
     t::get_lock(0).release();
     return 1;
   }
@@ -86,7 +86,7 @@ template <typename AIE, int X, int Y> struct prog : acap::aie::tile<AIE, X, Y> {
   }
 
   void postrun() {
-    t::memcpy_d2h(&output, acap::hw_mem::args_beg_off, sizeof(output));
+    t::memcpy_d2h(&output, acap::hw::args_beg_off, sizeof(output));
     static const char *strs[] = {"self", "up/north", "down/south", "right/east",
                                  "left/west"};
 

@@ -53,17 +53,14 @@ struct memory_base {
   void set_memory_infrastructure(memory_infrastructure& m) { mi = m; }
 #else
 #if defined(__SYCL_DEVICE_ONLY__)
-  auto lock(int i) {
-    return device_lock{hw_mem::get_ptr_dir(this), i};
-  }
+  auto lock(int i) { return hw_lock{hw::get_ptr_direction(this), i}; }
 #else
   void set_memory_infrastructure(memory_infrastructure&) { }
-  auto &lock(int i) {
+  hw_lock lock(int i) {
     assert(false && "TODO");
+    __builtin_unreachable();
     /// TODO: fix it. This will need serious refactoring to get access to a
     /// device xaie::handle.
-    static device_lock l{};
-    return l;
   }
 #endif
 #endif

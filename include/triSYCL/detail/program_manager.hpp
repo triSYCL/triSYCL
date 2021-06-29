@@ -143,7 +143,7 @@ namespace trisycl::detail {
 class program_manager : public detail::singleton<program_manager> {
 private:
   /// A work-around to a work-around, the AI Engine runtime does some
-  /// manipulation of the elf binary in memory to work through a chess compiler
+  /// manipulation of the ELF binary in memory to work through a chess compiler
   /// bug, so we need a copy of it as the original buffer containing each image
   /// is read-only/const (not because of the const pointer defined in the
   /// structure, but because the section inside the host binary that the device
@@ -180,7 +180,7 @@ public:
 #ifdef TRISYCL_DEBUG_IMAGE
       /// Dump image on registration, used to make sure the initial binary image
       /// is correct before we do anything with it in our runtime
-      image_dump(img, "aie" + std::string(Img->BuildOptions) + ".elf");
+      image_dump(img, "aie" + std::string(Img->BuildOptions) + ".ELF");
 #endif
 
       /// Images are not directly ELF binaries, they can contain multiple ELF

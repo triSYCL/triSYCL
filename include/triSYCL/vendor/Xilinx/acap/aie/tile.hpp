@@ -96,10 +96,10 @@ struct tile : tile_base<AIE_Program> {
 
 #if defined(__SYCL_DEVICE_ONLY__)
   /// Get the horizontal coordinate
-  int x_coord() { return hw::get_tile_x_cord(); }
+  int x_coord() { return hw::get_tile_x_coordinate(); }
 
   /// Get the vertical coordinate
-  int y_coord() { return hw::get_tile_y_cord(); }
+  int y_coord() { return hw::get_tile_y_coordinate(); }
 #else
   /// Get the horizontal coordinate
   int x_coord() { return x; }
@@ -240,7 +240,7 @@ struct tile : tile_base<AIE_Program> {
     return geo:: memory_module_linear_id(x, y, dx, dy);
   }
 
-  using tile_t = hw_tile<X, Y>;
+  using tile_t = hw::hw_tile<X, Y>;
   using dir = typename tile_t::dir;
 
 
@@ -301,13 +301,14 @@ struct tile : tile_base<AIE_Program> {
 
 #ifdef __SYCL_XILINX_AIE__
 /// TODO: This API doesn't yet exist for CPU emulation
-  device_lock get_lock(int8_t id, dir d = dir::self) {
+  hw_lock get_lock(int8_t id, dir d = dir::self) {
     TRISYCL_DUMP2(std::dec << "get_lock: (X = " << X << ", Y = " << Y
-                           << ") dir:" << tile_t::dir_to_str[d],
+                           << ") dir:" << d,
                   "sync");
     return {id, get_dev_handle().inst,
-            xaie::XAie_TileLoc(get_dev_handle().tile.Col + tile_t::get_offset(d).y,
-                               get_dev_handle().tile.Row + tile_t::get_offset(d).x)};
+            xaie::XAie_TileLoc(
+                get_dev_handle().tile.Col + tile_t::get_offset(d).y,
+                get_dev_handle().tile.Row + tile_t::get_offset(d).x)};
   }
 #endif
 #else
@@ -325,9 +326,9 @@ struct tile : tile_base<AIE_Program> {
                   "There is no memory module"
                   " on the left of this tile in the left column and"
                   " on an even row");
-    return *(tile_mem_t<tile_t::get_pos(dir::left).x,
-                        tile_t::get_pos(dir::left).y>
-                 *)(hw_mem::west_or_self_tile_addr + hw_mem::tile_mem_beg_off);
+    return *(
+        tile_mem_t<tile_t::get_pos(dir::left).x, tile_t::get_pos(dir::left).y>
+            *)(hw::west_or_self_tile_addr + hw::tile_mem_beg_off);
   }
 
   /// Get the memory module on the right if it does exist
@@ -338,7 +339,7 @@ struct tile : tile_base<AIE_Program> {
                   " on an odd row");
     return *(
         tile_mem_t<tile_t::get_pos(dir::right).x, tile_t::get_pos(dir::right).y>
-            *)(hw_mem::east_or_self_tile_addr + hw_mem::tile_mem_beg_off);
+            *)(hw::east_or_self_tile_addr + hw::tile_mem_beg_off);
   }
 
   /// Get the memory module below if it does exist
@@ -347,7 +348,7 @@ struct tile : tile_base<AIE_Program> {
                                            " below the lower tile row");
     return *(
         tile_mem_t<tile_t::get_pos(dir::down).x, tile_t::get_pos(dir::down).y>
-            *)(hw_mem::south_tile_addr + hw_mem::tile_mem_beg_off);
+            *)(hw::south_tile_addr + hw::tile_mem_beg_off);
   }
 
   /// Get the memory module above if it does exist
@@ -355,14 +356,15 @@ struct tile : tile_base<AIE_Program> {
     static_assert(is_memory_module_north(), "There is no memory module"
                                          " above the upper tile row");
     return *(tile_mem_t<tile_t::get_pos(dir::up).x, tile_t::get_pos(dir::up).y>
-                 *)(hw_mem::north_tile_addr + hw_mem::tile_mem_beg_off);
+                 *)(hw::north_tile_addr + hw::tile_mem_beg_off);
   }
 
   /// The memory module native to the tile
   auto &mem() {
     return *(
         tile_mem_t<tile_t::get_pos(dir::self).x, tile_t::get_pos(dir::self).y>
-            *)(hw_mem::self_tile_addr(get_parity(X, Y)) + hw_mem::tile_mem_beg_off);
+            *)(hw::self_tile_addr(hw::get_parity({X, Y})) +
+               hw::tile_mem_beg_off);
   }
 
   auto &mem_side() {
@@ -372,7 +374,7 @@ struct tile : tile_base<AIE_Program> {
       return mem_east();
   }
 
-  device_lock get_lock(int8_t id, dir d = dir::self) { return {id + d * 16}; }
+  hw_lock get_lock(int8_t id, dir d = dir::self) { return {id + d * 16}; }
 
 #endif
 // TODO: Perhaps worth pushing all LibXAiengine functionallity we use down
@@ -381,7 +383,7 @@ struct tile : tile_base<AIE_Program> {
 // Part of the real current host -> device communication API using Lib X AI
 // Engine
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
-  // for host side on device execution
+  // For host side when executing on acap hardware
   /// Store a way to access to hw tile instance
   void set_dev_handle(xaie::handle h) {
     TRISYCL_DUMP2(std::dec << "Mapping: (X = " << X << ", Y = " << Y

@@ -134,7 +134,8 @@ static void kernel_prerun() {
   {
     return []() mutable {
 #ifdef __SYCL_DEVICE_ONLY__
-      KernelType *k = (KernelType *)(hw_mem::self_tile_addr(hw_mem::get_parity_dev()) + hw_mem::args_beg_off);
+      KernelType *k = (KernelType *)(hw::self_tile_addr(hw::get_parity_dev()) +
+                                     hw::args_beg_off);
       kernel_prerun();
       k->operator()();
 #endif
@@ -147,9 +148,8 @@ static void kernel_prerun() {
   {
     return []() mutable {
 #ifdef __SYCL_DEVICE_ONLY__
-      KernelType *k =
-          (KernelType *)(hw_mem::self_tile_addr(hw_mem::get_parity_dev()) +
-                         hw_mem::args_beg_off);
+      KernelType *k = (KernelType *)(hw::self_tile_addr(hw::get_parity_dev()) +
+                                     hw::args_beg_off);
       kernel_prerun();
       /// TODO tile_infrastructure should be properly initialized.
       std::remove_cvref_t<decltype(*this)> th;
@@ -164,9 +164,8 @@ static void kernel_prerun() {
   {
     return []() mutable {
 #ifdef __SYCL_DEVICE_ONLY__
-      KernelType *k =
-          (KernelType *)(hw_mem::self_tile_addr(hw_mem::get_parity_dev()) +
-                         hw_mem::args_beg_off);
+      KernelType *k = (KernelType *)(hw::self_tile_addr(hw::get_parity_dev()) +
+                                     hw::args_beg_off);
       kernel_prerun();
       k->run();
 #endif
@@ -179,9 +178,8 @@ static void kernel_prerun() {
   {
     return []() mutable {
 #ifdef __SYCL_DEVICE_ONLY__
-      KernelType *k =
-          (KernelType *)(hw_mem::self_tile_addr(hw_mem::get_parity_dev()) +
-                         hw_mem::args_beg_off);
+      KernelType *k = (KernelType *)(hw::self_tile_addr(hw::get_parity_dev()) +
+                                     hw::args_beg_off);
       kernel_prerun();
       /// TODO tile_infrastructure should be properly initialized.
       std::remove_cvref_t<decltype(*this)> th;
@@ -265,7 +263,7 @@ tile_infrastructure() = default;
 #endif
 
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
-  // for host side on device execution
+  // For host side when executing on acap hardware
   /// Store a way to access to hw tile instance
   void set_dev_handle(xaie::handle h) {
     dev_handle = h;
@@ -278,25 +276,25 @@ tile_infrastructure() = default;
 #ifdef __SYCL_DEVICE_ONLY__
   /// This __attribute__((noinline)) is just to make the IR more readable it is
   /// not required for any other reason.
-  static __attribute__((noinline)) void log_internal(const char* ptr) {
-    volatile hw_mem::log_record* lr = hw_mem::log_record::get();
-    device_lock l{hw_mem::get_self_tile_dir(), 7};
+  static void log_internal(const char *ptr) {
+    volatile hw::log_record *lr = hw::log_record::get();
+    hw_lock l{hw::get_own_memory_module_dir(), 7};
     l.acquire();
     while (*ptr)
       lr->get_data()[lr->size++] = *(ptr++);
     l.release();
   }
-  static void log(const char* ptr) {
+  __attribute__((noinline)) static void log(const char *ptr) {
     char arr[] = "00, 0 : ";
-    arr[0] = '0' + (hw::get_tile_x_cord() / 10);
-    arr[1] = '0' + (hw::get_tile_x_cord() % 10);
-    arr[4] = '0' + (hw::get_tile_y_cord() % 10);
+    arr[0] = '0' + (hw::get_tile_x_coordinate() / 10);
+    arr[1] = '0' + (hw::get_tile_x_coordinate() % 10);
+    arr[4] = '0' + (hw::get_tile_y_coordinate() % 10);
 
-    volatile hw_mem::log_record* lr = hw_mem::log_record::get();
+    volatile hw::log_record *lr = hw::log_record::get();
     /// If logging would overflow the log buffer wait for the buffer to be
     /// pickup by the host and emptied.
     bool has_waited = false;
-    while (lr->size + strlen(ptr) + sizeof(arr) > hw_mem::log_buffer_size) {
+    while (lr->size + strlen(ptr) + sizeof(arr) > hw::log_buffer_size) {
       acap_intr::memory_fence();
       has_waited = true;
     }
@@ -317,7 +315,7 @@ tile_infrastructure() = default;
       write_number(write, i / strlen(base), base);
     write(base[i % 10]);
   }
-  static void log(int i) {
+  __attribute__((noinline)) static void log(int i) {
     char arr[13];
     char *ptr = &arr[0];
     write_number([&](char c) mutable { *(ptr++) = c; }, i);
@@ -336,10 +334,10 @@ tile_infrastructure() = default;
 
 #if defined(__SYCL_DEVICE_ONLY__)
   /// Get the horizontal coordinate
-  int x() { return hw::get_tile_x_cord(); }
+  int x() { return hw::get_tile_x_coordinate(); }
 
   /// Get the vertical coordinate
-  int y() { return hw::get_tile_y_cord(); }
+  int y() { return hw::get_tile_y_coordinate(); }
 #else
   /// Get the horizontal coordinate
   int x() { return x_coordinate; }
@@ -461,7 +459,7 @@ tile_infrastructure() = default;
     std::string kernelName = ::trisycl::detail::KernelInfo<
         typename std::decay<decltype(Kernel)>::type>::getName();
 
-    if (get_parity(x(), y()) == parity::west)
+    if (hw::get_parity({x(), y()}) == hw::parity::west)
       kernelName += "_west";
     else
       kernelName += "_east";
@@ -476,10 +474,10 @@ tile_infrastructure() = default;
     //
     // This differentiates from the program_manager image dump in that
     // it helps check whether the names are correctly correlating to the
-    // correct elf images and if there is some breakage in the storing
+    // correct ELF images and if there is some breakage in the storing
     // of the images.
     detail::program_manager::instance()->image_dump(
-        kernelName, "run_aie_" + kernelName + ".elf");
+        kernelName, "run_aie_" + kernelName + ".ELF");
 #endif
     {
       // auto Transaction = f.get_transaction();
@@ -498,7 +496,8 @@ tile_infrastructure() = default;
                     "exec");
       /// Setup DMA for parameter passing
       // need to test without
-      // get_dev_handle().mem_dma(hw_mem::args_beg_off, hw_mem::graphic_end_off - hw_mem::args_beg_off);
+      // get_dev_handle().mem_dma(hw::args_beg_off, hw::graphic_end_off -
+      // hw::args_beg_off);
       get_dev_handle().prepare_log();
       if constexpr (requires{f.prerun();})
         if (!f.prerun())

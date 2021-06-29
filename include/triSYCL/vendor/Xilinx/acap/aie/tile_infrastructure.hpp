@@ -78,7 +78,7 @@ class tile_infrastructure
   tile_infrastructure() = default;
 
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
-  // for host side on device execution
+  // For host side when executing on acap hardware
   /// Store a way to access to hw tile instance
   void set_dev_handle(xaie::handle h) { implementation->set_dev_handle(h); }
   xaie::handle get_dev_handle() const {

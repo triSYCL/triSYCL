@@ -3,7 +3,7 @@
 
 /** \file
 
-    contains hardware specific informations and linker scripts details of
+    Contains hardware-specific information and linker script details of
     how the memory is used an partitioned
 
     Ronan dot Keryell at Xilinx dot com
@@ -23,52 +23,61 @@
 
 namespace trisycl::vendor::xilinx::acap {
 
-struct off {
+namespace hw {
+
+/// Represent of offset between 2 tile.
+struct offset {
   int x;
   int y;
 };
 
-struct pos {
+/// Represent the position of a tile
+struct position {
   int x;
   int y;
-  friend constexpr pos operator+(pos p, off o) {
+  friend constexpr position operator+(position p, offset o) {
     return {p.x + o.x, p.y + o.y};
   }
-  friend constexpr off operator-(pos p, pos p1) {
+  friend constexpr offset operator-(position p, position p1) {
     return {p.x - p1.x, p.y - p1.y};
   }
 };
 
-/// The ordering matters.
-/// It matches with bases addresses order are at address (1 << 17)
-/// | (dir << 15). It also match with locks where the id from a tile's view
-/// dir << 4 | id.
+/// The ordering  and specific values of elements matters in the following enum.
+/// It matches with bases addresses order. neighbouring tiles of a core are at
+/// address: (1 << 17) | (dir << 15) from the perspective of tha core. It also
+/// match with locks where the id for a core's view is: dir << 4 | id.
 enum class dir : int8_t {
   south,
   west,
   north,
   east,
+  // Add some aliases
   down = south,
   left = west,
   up = north,
   right = east,
 };
 
+/// represent parity of a tile
 enum class parity : int8_t {
   west,
   east,
 };
 
-constexpr parity get_parity(int X, int Y) { return (Y & 1) ? parity::west : parity::east; }
+/// get the parity of tile at position p
+constexpr parity get_parity(position p) {
+  return (p.y & 1) ? parity::west : parity::east;
+}
 
 template <parity par> struct hw_tile_impl;
 
-template <int X, int Y> struct hw_tile : hw_tile_impl<get_parity(X, Y)> {
-  using base = hw_tile_impl<get_parity(X, Y)>;
+template<int X, int Y> struct hw_tile : hw_tile_impl<get_parity({X, Y})> {
+  using base = hw_tile_impl<get_parity({X, Y})>;
   using dir = typename base::dir;
   using base::get_offset;
-  static constexpr pos get_pos(dir d) {
-    return pos{X, Y} + base::get_offset(d);
+  static constexpr position get_pos(dir d) {
+    return position{X, Y} + base::get_offset(d);
   }
 };
 
@@ -91,7 +100,7 @@ template <parity par> struct hw_tile_impl {
       "south/down", (par == parity::west) ? "west/left/self" : "west/left/side", "north/up",
       (par == parity::west) ? "east/right/side" : "east/right/self"};
 
-  static constexpr off get_offset(dir d) {
+  static constexpr offset get_offset(dir d) {
     switch (d) {
     case south:
       return {-1, 0};
@@ -111,27 +120,34 @@ template <parity par> struct hw_tile_impl {
   }
 };
 
-namespace hw_mem {
-/// hardware specific details. should not change.
+/// hardware specific details.
 
-/// Base address of one tile and its neighbors.
-constexpr unsigned south_tile_addr = 0x20000;        // (1 << 17) | (0 << 15)
-constexpr unsigned west_or_self_tile_addr = 0x28000; // (1 << 17) | (1 << 15)
-constexpr unsigned north_tile_addr = 0x30000;        // (1 << 17) | (2 << 15)
-constexpr unsigned east_or_self_tile_addr = 0x38000; // (1 << 17) | (3 << 15)
+/// Base address of memory modules around the tile.
+constexpr uint32_t south_tile_addr = 0x20000;        // (1 << 17) | (0 << 15)
+constexpr uint32_t west_or_self_tile_addr = 0x28000; // (1 << 17) | (1 << 15)
+constexpr uint32_t north_tile_addr = 0x30000;        // (1 << 17) | (2 << 15)
+constexpr uint32_t east_or_self_tile_addr = 0x38000; // (1 << 17) | (3 << 15)
 
-/// Base address a tile viewed from itself.
-static constexpr unsigned self_tile_addr(parity par) {
-  return ((par == parity::west) ? west_or_self_tile_addr : east_or_self_tile_addr);
+constexpr uint32_t get_base_addr(dir d) {
+  return (1 << 17) | ((uint32_t)d << 15);
 }
-static constexpr unsigned side_tile_addr(parity par) {
+
+/// Base address of the tile viewed from itself
+constexpr uint32_t self_tile_addr(parity par) {
+  return ((par == parity::west) ? west_or_self_tile_addr
+                                : east_or_self_tile_addr);
+}
+
+/// Base address of neighbouring east or west tile
+constexpr uint32_t side_tile_addr(parity par) {
   return (par == parity::west ? east_or_self_tile_addr : west_or_self_tile_addr);
 }
 
-/// Size of each tiles in every direction
-constexpr unsigned tile_size = 0x8000;
-constexpr unsigned offset_mask = tile_size - 1;
-constexpr unsigned base_addr_mask = ~offset_mask;
+/// Size of the memory module of every tile.
+/// Not the whole memory just its own memory
+constexpr uint32_t tile_size = 0x8000;
+constexpr uint32_t offset_mask = tile_size - 1;
+constexpr uint32_t base_addr_mask = ~offset_mask;
 
 /// linker script details. any change here need to be reflected in the linker
 /// script and vice versa.
@@ -140,38 +156,52 @@ constexpr unsigned base_addr_mask = ~offset_mask;
 /// Variable below are offsets so the need to be used in combination with base
 /// tile addresses. when viewed from the host tile base address is 0 so
 /// offsets can be used alone when accessing from the host.
-constexpr unsigned stack_beg_off = 0x0;
-constexpr unsigned stack_size = 0x1000;
-constexpr unsigned stack_end_off = stack_beg_off + stack_size;
+constexpr uint32_t stack_beg_off = 0x0;
+constexpr uint32_t stack_size = 0x1000;
+constexpr uint32_t stack_end_off = stack_beg_off + stack_size;
 
-constexpr unsigned args_beg_off = stack_end_off;
-constexpr unsigned args_size = 0x800;
-constexpr unsigned args_end_off = args_beg_off + args_size;
+/// contains the "arguments", this is where the kernel object will be
+/// placed.
+constexpr uint32_t args_beg_off = stack_end_off;
+constexpr uint32_t args_size = 0x800;
+constexpr uint32_t args_end_off = args_beg_off + args_size;
 
-constexpr unsigned tile_mem_beg_off = args_end_off;
-constexpr unsigned tile_mem_size = 0x4000;
-constexpr unsigned tile_mem_end_off = tile_mem_beg_off + tile_mem_size;
+/// contains the memory modules that are shared across tiles.
+/// Technically all section are shared but sections other then this one should
+/// not be access by your neighbors.
+constexpr uint32_t tile_mem_beg_off = args_end_off;
+constexpr uint32_t tile_mem_size = 0x4000;
+constexpr uint32_t tile_mem_end_off = tile_mem_beg_off + tile_mem_size;
 
-constexpr unsigned log_buffer_beg_off = tile_mem_end_off;
-constexpr unsigned log_buffer_size = 0x800;
-constexpr unsigned log_buffer_end_off = log_buffer_beg_off + log_buffer_size;
+/// contains the log_record and the log buffer that follows it.
+constexpr uint32_t log_buffer_beg_off = tile_mem_end_off;
+constexpr uint32_t log_buffer_size = 0x800;
+constexpr uint32_t log_buffer_end_off = log_buffer_beg_off + log_buffer_size;
 
-constexpr unsigned graphic_beg_off = log_buffer_end_off;
-constexpr unsigned graphic_size = 0x1000;
-constexpr unsigned graphic_end_off = graphic_beg_off + graphic_size;
+/// contains the graphics_record.
+constexpr uint32_t graphic_beg_off = log_buffer_end_off;
+constexpr uint32_t graphic_size = 0x1000;
+constexpr uint32_t graphic_end_off = graphic_beg_off + graphic_size;
 
-dir get_ptr_dir(uint32_t ptr) { return (dir)((ptr >> 15) & 0x3); }
-template <typename T> dir get_ptr_dir(T *p) { return get_ptr_dir((uint32_t)p); }
+/// determine the direction of the memory module pointed into by a pointer on
+/// device.
+dir get_ptr_direction(uint32_t ptr) { return (dir)((ptr >> 15) & 0x3); }
+template<typename T> dir get_ptr_direction(T *p) {
+  return get_ptr_direction((uint32_t)p);
+}
 
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
 
+/// an address in memory on any tile of the device.
 struct dev_ptr {
-  pos p;
+  /// The position of the tile this pointer is into
+  position p;
+  /// Offset within the memory module of the tile.
   uint32_t offset;
 };
 
-/// This will convert a direction into an offset.
-constexpr off get_offset(parity par, dir d) {
+/// Convert a direction into an offset
+constexpr offset get_offset(parity par, dir d) {
   switch (d) {
   case dir::south:
     return {0, -1};
@@ -193,77 +223,87 @@ constexpr off get_offset(parity par, dir d) {
 /// this will translate a device representation of a pointer ptr in a tile at
 /// position pos. into a tile position and an offset suitable to be used with de
 /// xaie::handle.
-dev_ptr get_dev_ptr(pos p, uint32_t ptr) {
+/** Translate the device representation of a pointer into something
+    usable by/with xaie::handle and libXAiengine
+
+    \param[in] p is the position of the tile
+    \param[in] ptr is a local pointer inside the tile
+    \return a dev_ptr and aggregation of the position of the memory module/tile
+   and the offset with that memory module
+ */
+dev_ptr get_dev_ptr(position p, uint32_t ptr) {
   dev_ptr out;
-  /// extract the offset part of the pointer.
+  /// Extract the offset part of the pointer
   out.offset = ptr & offset_mask;
-  /// extract the direction.
-  dir d = get_ptr_dir(ptr);
-  out.p = p + get_offset(get_parity(p.x, p.y), d);
+  /// Extract the part direction.
+  dir d = get_ptr_direction(ptr);
+  out.p = p + get_offset(get_parity(p), d);
   return out;
 }
 
 #endif
 
 #ifdef __SYCL_DEVICE_ONLY__
-/// The address of the stack will be either in the west or east tile based on
-/// the parity of the tile so we can use the address of the stack to figure out
-/// the parity. This is what this function does.
+/// The address of the stack will be either in the west or east memory module
+/// based on the parity of the memory module so we can use the address of the
+/// stack to figure out the parity. This is what this function does.
 parity get_parity_dev() {
   int i;
-  /// the 15 low bits are offset within a tile
-  /// then bits 16-15 are the index of the tile.
-  /// west = 0b01 and east = 0b11
-  /// so iff 16s bits of the address of a variable on the stack is set to 1 the
-  /// tile is on the east.
-  return !((reinterpret_cast<uint32_t>(&i) & (1 << 16))) ? parity::west
-                                                         : parity::east;
+  /// The 15 low bits are the offset within a tile memory module.
+  /// Bits 16-15 are the index of the tile memory module,
+  /// West = 0b01 and East = 0b11
+  /// so if and only if the bit 16 of the address of a variable on the stack is
+  /// set to 1, the memory module is on the East of the tile.
+  return ((reinterpret_cast<uint32_t>(&i) & (1 << 16))) ? parity::east
+                                                        : parity::west;
 }
 
-dir get_self_tile_dir() {
+/// Get the direction of the memory module of the tile executing this.
+dir get_own_memory_module_dir() {
   return (get_parity_dev() == parity::west) ? dir::west : dir::east;
 }
-
-
 
 #endif
 
 struct log_record {
 #ifdef __SYCL_DEVICE_ONLY__
+  /// For device only
+
+  /// get the address the log_record
+  /// It is marked volatile because the data can be read by the host
   static volatile log_record *get() {
-    return (log_record *)(self_tile_addr(get_parity_dev()) + log_buffer_beg_off);
+    return (log_record *)(self_tile_addr(get_parity_dev()) +
+                          log_buffer_beg_off);
   }
-  volatile char* get_data() volatile {
-    return data;
-  }
+  /// get the address of the buffer to write logs into, it is volatile because
+  /// the host can read it.
+  volatile char *get_data() volatile { return data; }
 #endif
   uint32_t size;
   char data[];
 };
 
-}; // namespace hw_mem
-
 #if defined(__SYCL_DEVICE_ONLY__)
 
-namespace hw {
+/// get the X coordinate in the acap model
+int get_tile_x_coordinate() { return (acap_intr::get_coreid() >> 16) & 0x7f; }
 
-int get_tile_x_cord() {
-  return (acap_intr::get_coreid() >> 16) & 0x3f;
+/// get the Y coordinate in the acap model
+int get_tile_y_coordinate() {
+  /// the -1 is to skip shim row
+  return (acap_intr::get_coreid() & 0x1f) - 1;
 }
 
-int get_tile_y_cord() {
-  return (acap_intr::get_coreid() & 0xf) - 1;
-}
-
-int strlen(const char *ptr) {
-  int i = 0;
+uint32_t strlen(const char *ptr) {
+  uint32_t i = 0;
   while (ptr[i])
     i++;
   return i;
 }
-}
 
 #endif
+
+} // namespace hw
 
 } // namespace trisycl::vendor::xilinx::acap
 

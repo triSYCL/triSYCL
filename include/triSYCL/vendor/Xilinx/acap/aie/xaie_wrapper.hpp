@@ -2,7 +2,7 @@
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_AIE_UTILS_HPP
 
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
-// for host side on device execution
+// For host side when executing on acap hardware
 
 /** \file
 
@@ -104,23 +104,33 @@ constexpr auto aie_tile_row_num = 8;
 
 namespace trisycl::vendor::xilinx::xaie {
 
-constexpr xaie::XAie_LocType acap_pos_to_xaie_pos(acap::pos p) {
+/// Convert the coordinate system of our runtime into the one used by
+/// libXAiengine and hardware.
+constexpr xaie::XAie_LocType acap_pos_to_xaie_pos(acap::hw::position p) {
   return xaie::XAie_TileLoc(p.x, p.y + 1);
 }
 
-constexpr acap::pos xaie_pos_to_acap_pos(xaie::XAie_LocType loc) {
-  return { loc.Col, loc.Row - 1 };
+/// Convert the coordinate system of libXAiengine and hardware into the one of
+/// our runtime.
+constexpr acap::hw::position xaie_pos_to_acap_pos(xaie::XAie_LocType loc) {
+  return {loc.Col, loc.Row - 1};
 }
 
 struct handle {
-  xaie::XAie_LocType tile;
-  xaie::XAie_DevInst *inst;
+  xaie::XAie_LocType tile = {0, 0};
+  xaie::XAie_DevInst *inst = nullptr;
+
+  handle() = default;
+  handle(xaie::XAie_LocType loc, xaie::XAie_DevInst *dev)
+      : tile{loc}, inst{dev} {}
+  handle(xaie::XAie_LocType loc, xaie::XAie_DevInst &dev)
+      : tile{loc}, inst{&dev} {}
 
 #ifdef TRISYCL_DEBUG
   std::string get_pos_str() {
     std::string str;
     std::stringstream ss(str);
-    acap::pos pos = xaie_pos_to_acap_pos(tile);
+    acap::hw::position pos = xaie_pos_to_acap_pos(tile);
     ss << pos.x << ", " << pos.y;
     return ss.str();
   }
@@ -128,6 +138,8 @@ struct handle {
   /// Reads raw addresses within the tile this should be used for accessing
   /// register values mapped in memory as defined in
   /// http://cervino-doc/HEAD/tile_links/xregdb_me_tile_doc.html
+  /// The __attribute__((used)) is here such that this can be used from the
+  /// debugger.
   __attribute__((used)) uint32_t raw_read(uint32_t off) {
     uint32_t data;
     XAie_Read32(inst, _XAie_GetTileAddr(inst, tile.Row, tile.Col) + off, &data);
@@ -139,13 +151,13 @@ struct handle {
     return {inst, flags};
   }
 
-  xaie::handle adjusted(acap::off o) {
+  xaie::handle adjusted(acap::hw::offset o) {
     return {acap_pos_to_xaie_pos(xaie_pos_to_acap_pos(tile) + o), inst};
   }
-  xaie::handle moved(acap::pos p) {
+  xaie::handle moved(acap::hw::position p) {
     return {acap_pos_to_xaie_pos(p), inst};
   }
-  
+
   /// The memory read accessors
   std::uint32_t mem_read(std::uint32_t offset) {
     std::uint32_t Data;
@@ -200,14 +212,16 @@ struct handle {
   }
 
   /// FIXME: is this right location for these functions?
-  /// Load the elf via path to a elf binary file, handy for debugging if you
+  /// Load the ELF via path to an ELF binary file, handy for debugging if you
   /// wish to dump a stored binary or load something AoT compiled seperately
   void load_elf_file(const char *path) {
-    // global load of elf
+    // Global load of ELF
     TRISYCL_XAIE(xaie::XAie_LoadElf(inst, tile, path, 0));
   }
 
-  /// Load the elf via path to a block of memory which contains an elf image
+  /// Load the ELF from a block of memory which contains an ELF image
+  ///
+  /// \param[in] image is the path of the image file
   void load_elf_image(std::string_view image) {
     assert(::trisycl::detail::program_manager::isELFMagic(image.data()) &&
            "invalid ELF magic");
@@ -231,14 +245,16 @@ struct handle {
     TRISYCL_XAIE(xaie::XAie_CoreDisable(inst, tile));
   }
 
-  bool core_soft_wait() {
+  /// Look if a core has completed execution and return true if it has, it does
+  /// not block.
+  bool try_core_wait() {
     xaie::AieRC RC = xaie::XAIE_OK;
     RC = xaie::XAie_CoreWaitForDone(inst, tile, 1);
     emit_log();
     return RC == xaie::XAIE_OK;
   }
 
-  /// Wait for the core to complete
+  /// Will block the calling thread until the core has completed execution.
   void core_wait() {
     TRISYCL_DUMP2(
         std::dec << "(" << get_pos_str() << ") Waiting for kernel...", "exec");
@@ -249,9 +265,7 @@ struct handle {
     } while (RC != xaie::XAIE_OK);
     TRISYCL_DUMP2(std::dec << "(" << get_pos_str() << ") done", "exec");
   }
-  void prepare_log() {
-    mem_write(acap::hw_mem::log_buffer_beg_off, 0);
-  }
+  void prepare_log() { mem_write(acap::hw::log_buffer_beg_off, 0); }
   void emit_log() {
     /// This is executed in tight loops so logs are disabled to prevent too
     /// much log.
@@ -260,17 +274,16 @@ struct handle {
     int lock = 7;
 
     acquire(lock);
-    uint32_t log_size = mem_read(acap::hw_mem::log_buffer_beg_off);
+    uint32_t log_size = mem_read(acap::hw::log_buffer_beg_off);
     if (!log_size) {
       release(lock);
       return;
     }
     log.resize(log_size);
     memcpy_d2h(log.data(),
-               acap::hw_mem::log_buffer_beg_off +
-                   sizeof(acap::hw_mem::log_record),
+               acap::hw::log_buffer_beg_off + sizeof(acap::hw::log_record),
                log_size);
-    mem_write(acap::hw_mem::log_buffer_beg_off, 0);
+    mem_write(acap::hw::log_buffer_beg_off, 0);
     release(lock);
     dump_lock_state();
     std::cout << log << std::flush;
@@ -280,8 +293,9 @@ struct handle {
               << raw_read(0x1EF00) << "\n";
   }
 
+  /// Acquire the lock
   void acquire(int id) {
-    TRISYCL_DUMP2("acquiring lock (" << get_pos_str() << ") id: " << (int)id,
+    TRISYCL_DUMP2("acquiring lock (" << get_pos_str() << ") id: " << id,
                   "sync");
     TRISYCL_XAIE(XAie_LockAcquire(
         inst, tile, xaie::XAie_LockInit(id, XAIE_LOCK_WITH_NO_VALUE),
@@ -289,9 +303,9 @@ struct handle {
     TRISYCL_DUMP2("", "done");
   }
 
-  /// Unlock the mutex
+  /// Unlock the lock
   void release(int id) {
-    TRISYCL_DUMP2("releasing lock (" << get_pos_str() << ") id: " << (int)id,
+    TRISYCL_DUMP2("releasing lock (" << get_pos_str() << ") id: " << id,
                   "sync");
     TRISYCL_XAIE(XAie_LockRelease(
         inst, tile, xaie::XAie_LockInit(id, XAIE_LOCK_WITH_NO_VALUE),
@@ -301,7 +315,7 @@ struct handle {
 
   /// Wait until the internal value has the val
   void acquire_with_value(int id, bool val) {
-    TRISYCL_DUMP2("acquiring lock (" << get_pos_str() << ") id: " << (int)id
+    TRISYCL_DUMP2("acquiring lock (" << get_pos_str() << ") id: " << id
                                      << "val: " << val,
                   "sync");
     XAie_LockAcquire(inst, tile, xaie::XAie_LockInit(id, val), 0xffffffff);
@@ -310,7 +324,7 @@ struct handle {
 
   /// Release and update with a new internal value
   void release_with_value(int id, bool val) {
-    TRISYCL_DUMP2("releasing lock (" << get_pos_str() << ") id: " << (int)id
+    TRISYCL_DUMP2("releasing lock (" << get_pos_str() << ") id: " << id
                                      << "val: " << val,
                   "sync");
     XAie_LockRelease(inst, tile, xaie::XAie_LockInit(id, val), 0xffffffff);

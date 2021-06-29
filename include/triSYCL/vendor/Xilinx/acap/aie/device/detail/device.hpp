@@ -224,14 +224,20 @@ template <typename Layout> struct device {
   }
 
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
-  // for host side on device execution
+  /// The host needs to set up the device when executing on real device
+  /// The following are macro that declare variables in our case member
+  /// variables. the xaie:: before them is because there type is in the
+  /// namespace xaie::.
+  /// this declares aie_config of type xaie::XAie_Config.
   xaie::XAie_SetupConfig(aie_config, aiev1::dev_gen, aiev1::base_addr,
                          aiev1::col_shift, aiev1::row_shift, aiev1::num_hw_col,
                          aiev1::num_hw_row, aiev1::num_shim_row,
                          aiev1::mem_tile_row_start, aiev1::mem_tile_row_num,
                          aiev1::aie_tile_row_start, aiev1::aie_tile_row_num);
+  /// this declares aie_inst of type xaie::XAie_InstDeclare
   xaie::XAie_InstDeclare(aie_inst, &aie_config);
 
+  /// Returns the pointer to libXAiengine's device.
   xaie::XAie_DevInst* get_dev_inst() {
     return &aie_inst;
   }
@@ -241,21 +247,27 @@ template <typename Layout> struct device {
   device() {
         // Initialization of the AI Engine tile constructs from LibXAiengine
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
-    // for host side on device execution
-    TRISYCL_XAIE(xaie::XAie_CfgInitialize(&aie_inst, &aie_config));
-    TRISYCL_XAIE(xaie::XAie_PmRequestTiles(&aie_inst, NULL, 0));
+        // For host side when executing on acap hardware
+        /// Initialize the device.
+        TRISYCL_XAIE(xaie::XAie_CfgInitialize(&aie_inst, &aie_config));
+        /// Request access to all tiles.
+        TRISYCL_XAIE(xaie::XAie_PmRequestTiles(&aie_inst, NULL, 0));
 #endif
     // Initialize all the tiles with their network connections first
-    for_each_tile_index([&](auto x, auto y) {
+        for_each_tile_index([&](auto x, auto y) {
+        // Create & start the tile infrastructure
 #if !defined(__SYCL_DEVICE_ONLY__)
-      // Create & start the tile infrastructure
-      tile(x, y) = { x, y, *this, fiber_executor };
+          // For CPU emulation
+          tile(x, y) = {x, y, *this, fiber_executor};
 #endif
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
-      tile(x, y).set_dev_handle(
-          xaie::handle{xaie::acap_pos_to_xaie_pos({x, y}), &aie_inst});
+          // For host side when executing on acap hardware
+          // Setup the xaie::handle of each tiles. allowing them to communicate
+          // with hardware.
+          tile(x, y).set_dev_handle(
+              xaie::handle{xaie::acap_pos_to_xaie_pos({x, y}), aie_inst});
 #endif
-    });
+        });
 
 #if !defined(__SYCL_XILINX_AIE__)
     // TODO: this should be enabled on hardware when it is working but for now
@@ -296,8 +308,9 @@ template <typename Layout> struct device {
 
 
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
-  // for host side on device execution
+  // For host side when executing on acap hardware
   ~device() {
+    /// close the device instant.
     TRISYCL_XAIE(xaie::XAie_Finish(&aie_inst));
   }
 #endif

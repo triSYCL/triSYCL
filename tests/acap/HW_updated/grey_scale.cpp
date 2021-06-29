@@ -25,9 +25,9 @@ template <typename AIE, int X, int Y> struct prog : acap::aie::tile<AIE, X, Y> {
   auto get_tile_size() { return size_x * size_y / 400 * 3; }
   auto get_tile_offset() { return get_tile_index() * get_tile_size(); }
   bool prerun() {
-    /// acap::hw_mem::args_beg_off is the start of a region of memory
+    /// acap::hw::args_beg_off is the start of a region of memory
     /// that is suitable for parmeter passing
-    /// acap::hw_mem::self_tile_addr<X, Y> is the start of the tile from the
+    /// acap::hw::self_tile_addr<X, Y> is the start of the tile from the
     /// from the device perspective.
     /// the start of the tile from the host's perspective is 0
 
@@ -37,16 +37,16 @@ template <typename AIE, int X, int Y> struct prog : acap::aie::tile<AIE, X, Y> {
     /// of 64bits on the host
 
     /// setup int8_t *dev_data to point just after the this object on device.
-    t::mem_write(acap::hw_mem::args_beg_off,
-                 acap::hw_mem::self_tile_addr<X, Y> +
-                     acap::hw_mem::args_beg_off + sizeof(*this));
+    t::mem_write(acap::hw::args_beg_off, acap::hw::self_tile_addr<X, Y> +
+                                             acap::hw::args_beg_off +
+                                             sizeof(*this));
 
     /// setup unsigned size;
-    t::mem_write(acap::hw_mem::args_beg_off + 4, get_tile_size());
+    t::mem_write(acap::hw::args_beg_off + 4, get_tile_size());
 
     /// copies input_data to where dev_data is pointing on device.
-    t::memcpy_h2d(acap::hw_mem::args_beg_off + sizeof(*this),
-                 input_data + get_tile_offset(), get_tile_size());
+    t::memcpy_h2d(acap::hw::args_beg_off + sizeof(*this),
+                  input_data + get_tile_offset(), get_tile_size());
     return 1;
   }
 
@@ -66,7 +66,7 @@ template <typename AIE, int X, int Y> struct prog : acap::aie::tile<AIE, X, Y> {
 
     /// copies the data pointed by dev_data on device to output_data on the host.
     t::memcpy_d2h(output_data + get_tile_offset(),
-                  acap::hw_mem::args_beg_off + sizeof(*this), get_tile_size());
+                  acap::hw::args_beg_off + sizeof(*this), get_tile_size());
   }
 };
 

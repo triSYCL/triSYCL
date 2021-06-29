@@ -24,6 +24,7 @@
 
 /// Use libxaiengine on host with real hardware
 #include "xaie_wrapper.hpp"
+#include <thread>
 #endif
 #else
 
@@ -34,6 +35,7 @@
 #include <boost/fiber/all.hpp>
 #endif
 
+#include "triSYCL/detail/enum.hpp"
 #include "hardware.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie {
@@ -41,37 +43,167 @@ namespace trisycl::vendor::xilinx::acap::aie {
 /// \ingroup aie
 /// @{
 
+struct soft_barrier {
 #if defined(__SYCL_XILINX_AIE__)
-struct device_lock {
+  enum {
+    device = 0,
+    host = 1,
+  };
+
+#if !defined(__SYCL_DEVICE_ONLY__)
+  void wait(xaie::handle h, uint32_t dev_off) {
+    uint32_t counter =
+        h.mem_read(dev_off + offsetof(device_side, counters[host]));
+    while (h.mem_read(dev_off + offsetof(device_side, counters[device])) ==
+           counter)
+      std::this_thread::yield();
+    counter++;
+    h.mem_write(dev_off + offsetof(device_side, counters[host]), counter);
+  }
+  bool try_wait(xaie::handle h, uint32_t dev_off) {
+    uint32_t counter =
+        h.mem_read(dev_off + offsetof(device_side, counters[host]));
+    if (h.mem_read(dev_off + offsetof(device_side, counters[device])) ==
+        counter)
+      return false;
+    counter++;
+    h.mem_write(dev_off + offsetof(device_side, counters[host]), counter);
+    return true;
+  }
+#endif
+  struct device_side {
+    uint32_t counters[2];
+    void wait() {
+      acap_intr::memory_fence();
+      counters[device]++;
+      while (counters[host] != counters[device]) {
+      }
+      acap_intr::memory_fence();
+    }
+  };
+#endif
+};
+
+/// This is a software implementation of a mutex for synchronization between
+/// device and host. it is based on Dekker's algorithm
+struct soft_mutex {
+#if defined(__SYCL_XILINX_AIE__)
+  enum {
+    device = 0,
+    host = 1,
+  };
+
+#if !defined(__SYCL_DEVICE_ONLY__)
+  /// This is a handle from the host to a lock on the device
+  struct host_side {
+    /// The handle of the device.
+    xaie::handle h;
+    /// The address of the soft_mutex::device_side on device.
+    uint32_t dev_off;
+
+    void lock() {
+      h.mem_write(dev_off + offsetof(device_side, want_to_enter[host]), 1);
+      while (
+          h.mem_read(dev_off + offsetof(device_side, want_to_enter[device]))) {
+        if (h.mem_read(dev_off + offsetof(device_side, turn)) != device) {
+          h.mem_write(dev_off + offsetof(device_side, want_to_enter[host]), 0);
+          while (h.mem_read(dev_off + offsetof(device_side, turn)) != device)
+            /// I am not sure if it is a good idea to preempt our thread while
+            /// waiting
+            std::this_thread::yield();
+          h.mem_write(dev_off + offsetof(device_side, want_to_enter[host]), 1);
+        }
+      }
+    }
+    void unlock() {
+      h.mem_write(dev_off + offsetof(device_side, turn), 1);
+      h.mem_write(dev_off + offsetof(device_side, want_to_enter[host]), 0);
+    }
+  };
+#endif
+
+  /// This has the ownership semantics of a mutex on the device,  cannot be
+  /// moved or copied. but on the host it is just an empty shell.
+  class device_side {
+
+#if !defined(__SYCL_DEVICE_ONLY__)
+    /// allows host_side to used offset of on membres.
+    friend struct soft_mutex::host_side;
+#endif
+    /// each member here only holds 2 states. but they cannot be less than 4
+    /// byte because the host can only access with a 4 byte granularity. and we
+    /// want the host be be able to do a simple unique memory access to modify
+    /// any of these.
+    volatile uint32_t want_to_enter[2];
+    volatile uint32_t turn;
+
+  public:
+#if defined(__SYCL_DEVICE_ONLY__)
+    /// The device_side cannot be moved on device because the host_side depends
+    /// on its address. The device_side should be initialized from the host
+    /// before the kernel starts.
+    device_side() = delete;
+    device_side(const device_side &) = delete;
+
+    void lock() volatile {
+      /// every memory access here is volatile.
+      want_to_enter[device] = 1;
+      while (want_to_enter[host]) {
+        if (turn != device) {
+          want_to_enter[device] = 0;
+          while (turn != device)
+            ;
+          want_to_enter[device] = true;
+        }
+      }
+      /// Prevent hardware reordering
+      acap_intr::memory_fence();
+      acap_intr::separator_scheduler();
+    }
+    void unlock() volatile {
+      /// Prevent hardware reordering
+      acap_intr::separator_scheduler();
+      acap_intr::memory_fence();
+      /// every memory access here is volatile.
+      turn = host;
+      want_to_enter[device] = 0;
+    }
+#endif
+  };
+#endif
+};
+
+#if defined(__SYCL_XILINX_AIE__)
+struct hw_lock {
 #if defined(__SYCL_DEVICE_ONLY__)
 /// On ACAP device
-  device_lock(dir d, int i) : id{((int)d * 16) + i} {}
-  int id;
+hw_lock(hw::dir d, int i) : id{(detail::underlying_value(d) * 16) + i} {}
+int id;
 
-  /// Lock the mutex
-  void acquire() { acap_intr::acquire(id); }
+/// Lock the mutex
+void acquire() { acap_intr::acquire(id); }
 
-  /// Unlock the mutex
-  void release() { acap_intr::release(id); }
+/// Release the lock
+void release() { acap_intr::release(id); }
 
-  /// Wait until the internal value has the val
-  void acquire_with_value(bool val) { acap_intr::acquire(id, val); }
+/// Wait until the internal value has the val
+void acquire_with_value(bool val) { acap_intr::acquire(id, val); }
 
-  /// Update and release with a new internal value
-  void release_with_value(bool val) { acap_intr::release(id, val); }
+/// Update and release with a new internal value
+void release_with_value(bool val) { acap_intr::release(id, val); }
 
 #else
 /// On host for real ACAP
   int id;
 
-  /// TODO this should be an xaie::handle
   xaie::handle h;
 
+  /// Lock the lock
   void acquire() {
     h.acquire(id);
   }
 
-  /// Unlock the mutex
+  /// Unlock the lock
   void release() {
     h.release(id);
   }
@@ -128,8 +260,7 @@ struct lock_unit {
       m->lock();
     }
 
-
-    /// Unlock the mutex
+    /// Release the lock
     void release() {
       m->unlock();
     }
@@ -161,7 +292,6 @@ struct lock_unit {
     assert(0 <= i && i < lock_number);
     return locks[i];
   }
-
 };
 
 #endif

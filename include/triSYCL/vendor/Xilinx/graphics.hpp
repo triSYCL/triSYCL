@@ -29,6 +29,8 @@
 #endif
 #endif
 
+#include <mutex>
+
 #ifndef __SYCL_DEVICE_ONLY__
 #include <algorithm>
 #include <atomic>
@@ -37,7 +39,6 @@
 #include <functional>
 #include <future>
 #include <memory>
-#include <mutex>
 #include <sstream>
 #include <thread>
 #include <iostream>
@@ -74,9 +75,9 @@ struct graphics_record {
 #ifdef __SYCL_DEVICE_ONLY__
   /// This is only possible on device.
   static graphics_record *get() {
-    return (graphics_record *)(acap::hw_mem::self_tile_addr(
-                                   acap::hw_mem::get_parity_dev()) +
-                               acap::hw_mem::graphic_beg_off);
+    return (graphics_record *)(acap::hw::self_tile_addr(
+                                   acap::hw::get_parity_dev()) +
+                               acap::hw::graphic_beg_off);
   }
 #endif
   uint32_t flags;
@@ -90,6 +91,13 @@ struct graphics_record {
   PixelTy min_value;
   PixelTy max_value;
   uint32_t counter;
+  /// the device_side shouldn't be memcpyed to the device
+  acap::aie::soft_barrier::device_side barrier;
+
+  /// The lock shouldn't be overridden will writing back this struct on the
+  /// device.
+  static constexpr std::size_t no_lock_size =
+      offsetof(graphics_record, barrier);
 };
 #endif
 
@@ -840,10 +848,16 @@ struct application {
     // Wait for the graphics to start
     graphics_initialization.get_future().get();
 #ifdef __SYCL_XILINX_AIE__
-    device_communication_thread = std::thread([=, this] {
+    /// After the background_image_updater has initialized the device for
+    /// graphics transfers it will wait on this barrier.
+    /// This is to prevent the device starting while the device is not yet
+    /// initialized.
+    boost::barrier after_init{2};
+    device_communication_thread = std::thread([=, this, &after_init] {
       background_image_updater(this, &w->flags, nx, ny, dev_inst, image_x,
-                               image_y, has_data_validation);
+                               image_y, has_data_validation, &after_init);
     });
+    after_init.wait();
 #endif
     return *this;
   }
@@ -972,7 +986,8 @@ struct application {
                                        int tile_x_size, int tile_y_size,
                                        xaie::XAie_DevInst *dev_inst,
                                        size_t image_x_size, size_t image_y_size,
-                                       bool has_data_validation) {
+                                       bool has_data_validation,
+                                       boost::barrier *after_init) {
     struct tile_data {
       uint32_t counter = 0;
     };
@@ -1011,25 +1026,31 @@ struct application {
     for_each_tile([&](int x, int y, xaie::handle h, tile_data &td) {
       graphics_record<PixelTy> gr;
       std::memset(&gr, 0, sizeof(gr));
-      h.memcpy_h2d(acap::hw_mem::graphic_beg_off, &gr, sizeof(gr));
+      /// the device_side of the lock should be zero initialized so this is ok.
+      h.memcpy_h2d(acap::hw::graphic_beg_off, &gr, sizeof(gr));
     });
+
+    after_init->wait();
 
     TRISYCL_DUMP("Core graphics initialized");
     while (!(*flags & graphics_flag::is_done))
       for_each_tile([&](int x, int y, xaie::handle h, tile_data &td) {
-        detail::no_log_in_this_scope nls;
+        // detail::no_log_in_this_scope nls;
         graphics_record<PixelTy> gr;
-        h.memcpy_d2h(&gr, acap::hw_mem::graphic_beg_off,
-                     sizeof(graphics_record<PixelTy>));
+        // acap::aie::soft_barrier::host_side barrier{
+        //     h, acap::hw::graphic_beg_off +
+        //            offsetof(graphics_record<PixelTy>, barrier)};
+        h.memcpy_d2h(&gr, acap::hw::graphic_beg_off,
+                     graphics_record<PixelTy>::no_lock_size);
         /// The kernel has not started yet.
         if (gr.counter == 0)
           return;
-        /// Sometimes not all data written by the device is made visible at once so we check more than just count.
-        /// This is not the best way to fix this issue but its needed for now.
-        if (gr.data == 0 || gr.max_value == gr.min_value)
-          return;
-        acap::hw_mem::dev_ptr data_ptr =
-            acap::hw_mem::get_dev_ptr({x, y}, gr.data);
+        /// Sometimes not all data written by the device is made visible at once
+        /// so we check more than just count. This is not the best way to fix
+        /// this issue but its needed for now.
+        // if (gr.data == 0 || gr.max_value == gr.min_value)
+        //   return;
+        acap::hw::dev_ptr data_ptr = acap::hw::get_dev_ptr({x, y}, gr.data);
         h.moved(data_ptr.p)
             .memcpy_d2h(graphic_buffer.data(), data_ptr.offset,
                         graphic_buffer.size());
@@ -1037,10 +1058,10 @@ struct application {
         /// This call is not synchronized but this should only be executed while
         /// the main thread is waiting for the kernel to finish.
         a->update_tile_data_image(x, y, (PixelTy *)graphic_buffer.data(),
-                                    gr.min_value, gr.max_value);
+                                  gr.min_value, gr.max_value);
 
         maybe_validate_data(x, y, gr.min_value, gr.max_value);
-        h.mem_write(acap::hw_mem::graphic_beg_off +
+        h.mem_write(acap::hw::graphic_beg_off +
                         offsetof(graphics_record<PixelTy>, flags),
                     gr.flags & ~graphics_flag::is_pause);
       });
@@ -1048,7 +1069,7 @@ struct application {
     TRISYCL_DUMP("Core graphics done");
     for_each_tile([&](int x, int y, xaie::handle h, tile_data &td) {
       uint32_t off =
-          acap::hw_mem::graphic_beg_off + offsetof(graphics_record<PixelTy>, flags);
+          acap::hw::graphic_beg_off + offsetof(graphics_record<PixelTy>, flags);
       h.mem_write(off, h.mem_read(off) | graphics_flag::is_done);
     });
     TRISYCL_DUMP("Ending background graphics device communication thread");

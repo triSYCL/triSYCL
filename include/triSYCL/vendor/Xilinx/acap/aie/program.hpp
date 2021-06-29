@@ -40,22 +40,6 @@
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
-/// This could be extracted into a macro to make it generic.
-template <typename T> class has_function_lock {
-  template <typename...> static constexpr bool true_t = true;
-  static std::false_type detect(...) { return {}; }
-  template <typename Ty,
-            typename std::enable_if<
-                true_t<decltype(std::declval<Ty>().lock())>, int>::type = 0>
-  static std::true_type detect(Ty) {
-    return {};
-  }
-
-public:
-  static constexpr bool value = decltype(detect(std::declval<T>()))::value;
-};
-
-
 /** Define an AI Engine CGRA program with its code and memory per core
 
     \param AIEDevice is the device description of the machine to
@@ -203,7 +187,7 @@ struct program {
       // Inform each tile about its program
     t.set_program(*this);
 #ifndef __SYCL_DEVICE_ONLY__
-    // always execpt for device side of hardware execution
+    // Always except for device side of hardware execution
 
     // Inform each tile about their tile infrastructure
     t.set_tile_infrastructure(aie_d.tile(t.x, t.y));
@@ -239,7 +223,7 @@ struct program {
     while (!is_done) {
       is_done = true;
       boost::hana::for_each(tiles, [&](auto &t) {
-        is_done &= t.get_dev_handle().core_soft_wait();
+        is_done &= t.get_dev_handle().try_core_wait();
       });
     }
     TRISYCL_DUMP2("Joined AIE tiles", "exec");
@@ -256,7 +240,7 @@ struct program {
 
   void lock() {
     boost::hana::for_each(tiles, [&](auto &t) {
-      if constexpr (has_function_lock<decltype(t)>::value)
+      if constexpr (requires { t.lock(); })
         t.lock();
     });
   }
