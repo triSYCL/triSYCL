@@ -18,16 +18,16 @@
 #if defined(__SYCL_XILINX_AIE__)
 #if defined(__SYCL_DEVICE_ONLY__)
 
-/// on device use hardware intrinsics
+/// Use hardware intrinsics on real device
 #include "acap-intrinsic.h"
 #else
 
-/// on host use libxaiengine
+/// Use libxaiengine on host with real hardware
 #include "xaie_wrapper.hpp"
 #endif
 #else
 
-/// in CPU emulation use fiber synchronization primitives
+/// In CPU emulation, use fiber synchronization primitives
 #include <memory>
 #include <mutex>
 
@@ -44,7 +44,7 @@ namespace trisycl::vendor::xilinx::acap::aie {
 #if defined(__SYCL_XILINX_AIE__)
 struct device_lock {
 #if defined(__SYCL_DEVICE_ONLY__)
-/// on acap device
+/// On ACAP device
   device_lock(dir d, int i) : id{((int)d * 16) + i} {}
   int id;
 
@@ -57,11 +57,11 @@ struct device_lock {
   /// Wait until the internal value has the val
   void acquire_with_value(bool val) { acap_intr::acquire(id, val); }
 
-  /// Release and update with a new internal value
+  /// Update and release with a new internal value
   void release_with_value(bool val) { acap_intr::release(id, val); }
 
 #else
-/// on host for acap
+/// On host for real ACAP
   int id;
 
   /// TODO this should be an xaie::handle
