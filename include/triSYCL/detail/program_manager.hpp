@@ -180,7 +180,7 @@ public:
 #ifdef TRISYCL_DEBUG_IMAGE
       /// Dump image on registration, used to make sure the initial binary image
       /// is correct before we do anything with it in our runtime
-      image_dump(img, "aie" + std::string(Img->BuildOptions) + ".ELF");
+      image_dump(img, "aie" + std::string(Img->BuildOptions) + ".elf");
 #endif
 
       /// Images are not directly ELF binaries, they can contain multiple ELF

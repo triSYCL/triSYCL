@@ -24,6 +24,7 @@
 
 #ifdef __SYCL_XILINX_AIE__
 #include "acap/aie/hardware.hpp"
+#include "acap/aie/lock.hpp"
 #ifndef __SYCL_DEVICE_ONLY__
 #include "acap/aie/xaie_wrapper.hpp"
 #endif
@@ -61,7 +62,6 @@ namespace trisycl::vendor::xilinx::graphics {
 enum graphics_flag : uint32_t {
   none = 0x0,
   is_done = 0x1,
-  is_pause = 0x2,
 };
 
 // RGB 8 bit images, so 3 bytes per pixel
@@ -91,6 +91,9 @@ struct graphics_record {
   PixelTy min_value;
   PixelTy max_value;
   uint32_t counter;
+
+  uint32_t padding;
+
   /// the device_side shouldn't be memcpyed to the device
   acap::aie::soft_barrier::device_side barrier;
 
@@ -142,19 +145,13 @@ struct application {
     return gr->flags & graphics_flag::is_done;
   }
 
-  void pause() const {
-    volatile graphics_record<PixelTy> *gr = graphics_record<PixelTy>::get();
-    gr->flags |= graphics_flag::is_pause;
-    while (gr->flags & graphics_flag::is_pause);
-  }
-
   /// Test if the window has been closed after synchronizing with a barrier
   bool is_done_barrier() const {
     /// TODO
   }
 
-  void validate_tile_data_image(int x, int y, auto data, PixelTy min_value,
-                              PixelTy max_value) {}
+  template<typename ...Ts>
+  void validate_tile_data_image(Ts...) {}
 
   void update_tile_data_image(int x, int y, PixelTy *data, PixelTy min_value,
                               PixelTy max_value) const {
@@ -162,9 +159,10 @@ struct application {
     gr->data = &data[0];
     gr->min_value = min_value;
     gr->max_value = max_value;
-    acap_intr::memory_fence();
-    gr->counter++;
-    acap_intr::memory_fence();
+    gr->counter = gr->counter + 1;
+    gr->barrier.wait();
+    /// The host will read the data
+    gr->barrier.wait();
   };
 
   graphics::image_grid image_grid() {
@@ -753,10 +751,10 @@ struct application {
   };
 
   struct data_validation {
-    uint32_t x_size;
+    uint32_t y_size;
     std::vector<host_dev_data> tile_data;
     host_dev_data &tile(int x, int y) {
-      return tile_data[x * x_size + y];
+      return tile_data[x * y_size + y];
     }
     boost::barrier barrier{2};
     uint32_t host_tile_counter;
@@ -784,7 +782,7 @@ struct application {
     has_data_validation = true;
   }
   template <typename T> void start_data_validation(T &&L) {
-    dv.x_size = w->nx;
+    dv.y_size = w->ny;
     dv.dev_tile_counter = 0;
     dv.host_tile_counter = 0;
     dv.frame_counter = 0;
@@ -932,28 +930,29 @@ struct application {
 #define FAIL_IF(COND, EXTRA)                                                   \
   do {                                                                         \
     if (!COND) {                                                               \
-      TRISYCL_DUMP("invalid data: " << EXTRA << ": " << #COND);                \
+      TRISYCL_DUMP("invalid data: " EXTRA << ": " << #COND);                   \
+      __builtin_debugtrap();                                                   \
     }                                                                          \
   } while (0)
 
-    dv.dev_tile_counter++;
-    if (dv.dev_tile_counter == w->nx * w->ny) {
-      dv.dev_tile_counter = 0;
+    dv.host_tile_counter++;
+    if (dv.host_tile_counter == w->nx * w->ny) {
+      dv.host_tile_counter = 0;
       dv.barrier.wait();
       for (int tid = 0; tid < dv.tile_data.size(); tid++) {
         auto &e = dv.tile_data[tid];
         FAIL_IF(cmp(e.host.max_value, e.dev.max_value),
-                "tile(" << tid / dv.x_size << ", " << tid % dv.x_size
+                "tile(" << (tid / dv.y_size) << ", " << (tid % dv.y_size)
                         << ") frame= " << dv.frame_counter
                         << ", host= " << e.host.max_value
                         << ", device= " << e.dev.max_value);
         FAIL_IF(cmp(e.host.min_value, e.dev.min_value),
-                "tile(" << tid / dv.x_size << ", " << tid % dv.x_size
+                "tile(" << (tid / dv.y_size) << ", " << (tid % dv.y_size)
                         << ") frame= " << dv.frame_counter
                         << ", host= " << e.host.min_value
                         << ", device=  " << e.dev.min_value);
         FAIL_IF(cmp(e.host.data.size(), e.dev.data.size()),
-                "tile(" << tid / dv.x_size << ", " << tid % dv.x_size
+                "tile(" << (tid / dv.y_size) << ", " << (tid % dv.y_size)
                         << ") frame= " << dv.frame_counter
                         << ", host= " << e.host.data.size()
                         << ", device=  " << e.dev.data.size());
@@ -963,7 +962,7 @@ struct application {
         assert(e.host.data.size() % sizeof(PixelTy) == 0);
         for (int i = 0; i < size; i++)
           FAIL_IF(cmp(host_ptr[i], dev_ptr[i]),
-                  "tile(" << tid / dv.x_size << ", " << tid % dv.x_size
+                  "tile(" << (tid / dv.y_size) << ", " << (tid % dv.y_size)
                           << ") pixel(" << i / w->image_x << ", "
                           << i % w->image_x << ") frame= " << dv.frame_counter
                           << ", host= " << host_ptr[i]
@@ -974,10 +973,6 @@ struct application {
     }
 #undef FAIL_IF
   };
-
-  void pause() { 
-    //std::this_thread::sleep_for(std::chrono::milliseconds(10));
-  }
 
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
 
@@ -1035,35 +1030,35 @@ struct application {
     TRISYCL_DUMP("Core graphics initialized");
     while (!(*flags & graphics_flag::is_done))
       for_each_tile([&](int x, int y, xaie::handle h, tile_data &td) {
-        // detail::no_log_in_this_scope nls;
+        detail::no_log_in_this_scope nls;
         graphics_record<PixelTy> gr;
-        // acap::aie::soft_barrier::host_side barrier{
-        //     h, acap::hw::graphic_beg_off +
-        //            offsetof(graphics_record<PixelTy>, barrier)};
+        acap::aie::soft_barrier::host_side barrier{
+            h, acap::hw::graphic_beg_off +
+                   offsetof(graphics_record<PixelTy>, barrier)};
+        // barrier.wait();
+        /// If this is not waiting go check the next tile
+        if (!barrier.try_wait())
+          return;
         h.memcpy_d2h(&gr, acap::hw::graphic_beg_off,
                      graphics_record<PixelTy>::no_lock_size);
-        /// The kernel has not started yet.
-        if (gr.counter == 0)
-          return;
-        /// Sometimes not all data written by the device is made visible at once
-        /// so we check more than just count. This is not the best way to fix
-        /// this issue but its needed for now.
-        // if (gr.data == 0 || gr.max_value == gr.min_value)
-        //   return;
+        assert(gr.counter > td.counter);
+        assert(gr.data > 0);
+        assert(gr.max_value != gr.min_value);
         acap::hw::dev_ptr data_ptr = acap::hw::get_dev_ptr({x, y}, gr.data);
         h.moved(data_ptr.p)
             .memcpy_d2h(graphic_buffer.data(), data_ptr.offset,
                         graphic_buffer.size());
 
+        /// notify the tile that processing of the frame is done.
+        barrier.wait();
+
         /// This call is not synchronized but this should only be executed while
         /// the main thread is waiting for the kernel to finish.
         a->update_tile_data_image(x, y, (PixelTy *)graphic_buffer.data(),
                                   gr.min_value, gr.max_value);
-
+        
         maybe_validate_data(x, y, gr.min_value, gr.max_value);
-        h.mem_write(acap::hw::graphic_beg_off +
-                        offsetof(graphics_record<PixelTy>, flags),
-                    gr.flags & ~graphics_flag::is_pause);
+        td.counter++;
       });
 
     TRISYCL_DUMP("Core graphics done");

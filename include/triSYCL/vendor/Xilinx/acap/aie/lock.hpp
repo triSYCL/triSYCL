@@ -43,6 +43,8 @@ namespace trisycl::vendor::xilinx::acap::aie {
 /// \ingroup aie
 /// @{
 
+/// This is a software implementation of a barrier for synchronization between 1
+/// tile and the host.
 struct soft_barrier {
 #if defined(__SYCL_XILINX_AIE__)
   enum {
@@ -51,31 +53,55 @@ struct soft_barrier {
   };
 
 #if !defined(__SYCL_DEVICE_ONLY__)
-  void wait(xaie::handle h, uint32_t dev_off) {
-    uint32_t counter =
-        h.mem_read(dev_off + offsetof(device_side, counters[host]));
-    while (h.mem_read(dev_off + offsetof(device_side, counters[device])) ==
-           counter)
-      std::this_thread::yield();
-    counter++;
-    h.mem_write(dev_off + offsetof(device_side, counters[host]), counter);
-  }
-  bool try_wait(xaie::handle h, uint32_t dev_off) {
-    uint32_t counter =
-        h.mem_read(dev_off + offsetof(device_side, counters[host]));
-    if (h.mem_read(dev_off + offsetof(device_side, counters[device])) ==
-        counter)
-      return false;
-    counter++;
-    h.mem_write(dev_off + offsetof(device_side, counters[host]), counter);
-    return true;
-  }
-#endif
-  struct device_side {
-    uint32_t counters[2];
+  struct host_side {
+    xaie::handle h;
+    uint32_t dev_off;
+    /// Wait for the device to reach the barrier.
     void wait() {
+      detail::no_log_in_this_scope nls;
+      uint32_t counter =
+          h.mem_read(dev_off + offsetof(device_side, counters[host]));
+      while (h.mem_read(dev_off + offsetof(device_side, counters[device])) ==
+             counter)
+        std::this_thread::yield();
+      counter++;
+      h.mem_write(dev_off + offsetof(device_side, counters[host]), counter);
+    }
+    /// returns true if the device was wating. and perform the barrier.
+    /// returns false if the device was not waiting and doesn't perform the
+    /// barrier.
+    bool try_wait() {
+      detail::no_log_in_this_scope nls;
+      uint32_t counter =
+          h.mem_read(dev_off + offsetof(device_side, counters[host]));
+      if (h.mem_read(dev_off + offsetof(device_side, counters[device])) ==
+          counter)
+        return false;
+      counter++;
+      h.mem_write(dev_off + offsetof(device_side, counters[host]), counter);
+      return true;
+    }
+  };
+#endif
+  class device_side {
+#if !defined(__SYCL_DEVICE_ONLY__)
+    /// allows host_side to used offset of on membres.
+    friend struct soft_barrier::host_side;
+#endif
+    volatile uint32_t counters[2];
+
+  public:
+#if defined(__SYCL_DEVICE_ONLY__)
+    /// The device_side cannot be moved on device because the host_side depends
+    /// on its address. The device_side should be initialized from the host
+    /// before the kernel starts.
+    device_side() = delete;
+    device_side(const device_side &) = delete;
+#endif
+    /// Wait for the host.
+    void wait() volatile {
       acap_intr::memory_fence();
-      counters[device]++;
+      counters[device] = counters[device] + 1;
       while (counters[host] != counters[device]) {
       }
       acap_intr::memory_fence();
@@ -86,6 +112,13 @@ struct soft_barrier {
 
 /// This is a software implementation of a mutex for synchronization between
 /// device and host. it is based on Dekker's algorithm
+
+
+
+/// THIS CLASS IS STILL UNTESTED
+
+
+
 struct soft_mutex {
 #if defined(__SYCL_XILINX_AIE__)
   enum {

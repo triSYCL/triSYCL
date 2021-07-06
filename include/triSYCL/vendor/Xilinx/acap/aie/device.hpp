@@ -49,7 +49,7 @@ class device : public facade::device<device<Layout>, detail::device<Layout>> {
   using smp = typename dd::smp;
 
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
-  /// returns the pointer to the underlying LibXAiengine device.
+  /// Returns the pointer to the underlying LibXAiengine device
   xaie::XAie_DevInst *get_dev_inst() { return implementation->get_dev_inst(); }
 #endif
 

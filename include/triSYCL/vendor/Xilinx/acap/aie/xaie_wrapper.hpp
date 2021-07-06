@@ -285,7 +285,6 @@ struct handle {
                log_size);
     mem_write(acap::hw::log_buffer_beg_off, 0);
     release(lock);
-    dump_lock_state();
     std::cout << log << std::flush;
   }
   __attribute__((used)) void dump_lock_state() {

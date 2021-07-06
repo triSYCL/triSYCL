@@ -477,7 +477,7 @@ tile_infrastructure() = default;
     // correct ELF images and if there is some breakage in the storing
     // of the images.
     detail::program_manager::instance()->image_dump(
-        kernelName, "run_aie_" + kernelName + ".ELF");
+        kernelName, "run_aie_" + kernelName + ".elf");
 #endif
     {
       // auto Transaction = f.get_transaction();

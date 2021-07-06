@@ -53,10 +53,6 @@ enum class dir : int8_t {
   north,
   east,
   // Add some aliases
-  down = south,
-  left = west,
-  up = north,
-  right = east,
 };
 
 /// represent parity of a tile
@@ -163,7 +159,7 @@ constexpr uint32_t stack_end_off = stack_beg_off + stack_size;
 /// contains the "arguments", this is where the kernel object will be
 /// placed.
 constexpr uint32_t args_beg_off = stack_end_off;
-constexpr uint32_t args_size = 0x800;
+constexpr uint32_t args_size = 0x1400;
 constexpr uint32_t args_end_off = args_beg_off + args_size;
 
 /// contains the memory modules that are shared across tiles.
@@ -180,8 +176,16 @@ constexpr uint32_t log_buffer_end_off = log_buffer_beg_off + log_buffer_size;
 
 /// contains the graphics_record.
 constexpr uint32_t graphic_beg_off = log_buffer_end_off;
-constexpr uint32_t graphic_size = 0x1000;
+constexpr uint32_t graphic_size = 0x400;
 constexpr uint32_t graphic_end_off = graphic_beg_off + graphic_size;
+
+/// Offset of the last dedicated section
+constexpr uint32_t last_end_off = graphic_end_off;
+
+/// The minimum size we want to keep for globabl variables
+constexpr uint32_t min_global_variable_size = 0x800;
+
+static_assert(last_end_off + min_global_variable_size <= tile_size, "sections are using more memory than is available");
 
 /// determine the direction of the memory module pointed into by a pointer on
 /// device.
@@ -279,6 +283,7 @@ struct log_record {
   /// the host can read it.
   volatile char *get_data() volatile { return data; }
 #endif
+  uint32_t host_emit_count;
   uint32_t size;
   char data[];
 };
