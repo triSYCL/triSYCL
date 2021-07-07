@@ -135,7 +135,7 @@ static void kernel_prerun() {
     return []() mutable {
 #ifdef __SYCL_DEVICE_ONLY__
       KernelType *k = (KernelType *)(hw::self_tile_addr(hw::get_parity_dev()) +
-                                     hw::args_beg_off);
+                                     hw::args_begin_offset);
       kernel_prerun();
       k->operator()();
 #endif
@@ -149,7 +149,7 @@ static void kernel_prerun() {
     return []() mutable {
 #ifdef __SYCL_DEVICE_ONLY__
       KernelType *k = (KernelType *)(hw::self_tile_addr(hw::get_parity_dev()) +
-                                     hw::args_beg_off);
+                                     hw::args_begin_offset);
       kernel_prerun();
       /// TODO tile_infrastructure should be properly initialized.
       std::remove_cvref_t<decltype(*this)> th;
@@ -165,7 +165,7 @@ static void kernel_prerun() {
     return []() mutable {
 #ifdef __SYCL_DEVICE_ONLY__
       KernelType *k = (KernelType *)(hw::self_tile_addr(hw::get_parity_dev()) +
-                                     hw::args_beg_off);
+                                     hw::args_begin_offset);
       kernel_prerun();
       k->run();
 #endif
@@ -179,7 +179,7 @@ static void kernel_prerun() {
     return []() mutable {
 #ifdef __SYCL_DEVICE_ONLY__
       KernelType *k = (KernelType *)(hw::self_tile_addr(hw::get_parity_dev()) +
-                                     hw::args_beg_off);
+                                     hw::args_begin_offset);
       kernel_prerun();
       /// TODO tile_infrastructure should be properly initialized.
       std::remove_cvref_t<decltype(*this)> th;
@@ -496,12 +496,11 @@ tile_infrastructure() = default;
                     "exec");
       /// Setup DMA for parameter passing
       // need to test without
-      // get_dev_handle().mem_dma(hw::args_beg_off, hw::graphic_end_off -
-      // hw::args_beg_off);
+      // get_dev_handle().mem_dma(hw::args_begin_offset, hw::graphic_end_offset -
+      // hw::args_begin_offset);
       get_dev_handle().prepare_log();
-      if constexpr (requires{f.prerun();})
-        if (!f.prerun())
-          return;
+      if constexpr (requires { f.prerun(); })
+        f.prerun();
 
       TRISYCL_DUMP2("Starting AIE tile ("
                         << x() << ',' << y() << ") "

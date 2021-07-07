@@ -305,10 +305,7 @@ struct tile : tile_base<AIE_Program> {
     TRISYCL_DUMP2(std::dec << "get_lock: (X = " << X << ", Y = " << Y
                            << ") dir:" << d,
                   "sync");
-    return {id, get_dev_handle().inst,
-            xaie::XAie_TileLoc(
-                get_dev_handle().tile.Col + tile_t::get_offset(d).y,
-                get_dev_handle().tile.Row + tile_t::get_offset(d).x)};
+    return {id, get_dev_handle()};
   }
 #endif
 #else
@@ -328,7 +325,7 @@ struct tile : tile_base<AIE_Program> {
                   " on an even row");
     return *(
         tile_mem_t<tile_t::get_pos(dir::left).x, tile_t::get_pos(dir::left).y>
-            *)(hw::west_or_self_tile_addr + hw::tile_mem_beg_off);
+            *)(hw::west_or_self_tile_addr + hw::tile_mem_begin_offset);
   }
 
   /// Get the memory module on the right if it does exist
@@ -339,7 +336,7 @@ struct tile : tile_base<AIE_Program> {
                   " on an odd row");
     return *(
         tile_mem_t<tile_t::get_pos(dir::right).x, tile_t::get_pos(dir::right).y>
-            *)(hw::east_or_self_tile_addr + hw::tile_mem_beg_off);
+            *)(hw::east_or_self_tile_addr + hw::tile_mem_begin_offset);
   }
 
   /// Get the memory module below if it does exist
@@ -348,7 +345,7 @@ struct tile : tile_base<AIE_Program> {
                                            " below the lower tile row");
     return *(
         tile_mem_t<tile_t::get_pos(dir::down).x, tile_t::get_pos(dir::down).y>
-            *)(hw::south_tile_addr + hw::tile_mem_beg_off);
+            *)(hw::south_tile_addr + hw::tile_mem_begin_offset);
   }
 
   /// Get the memory module above if it does exist
@@ -356,7 +353,7 @@ struct tile : tile_base<AIE_Program> {
     static_assert(is_memory_module_north(), "There is no memory module"
                                          " above the upper tile row");
     return *(tile_mem_t<tile_t::get_pos(dir::up).x, tile_t::get_pos(dir::up).y>
-                 *)(hw::north_tile_addr + hw::tile_mem_beg_off);
+                 *)(hw::north_tile_addr + hw::tile_mem_begin_offset);
   }
 
   /// The memory module native to the tile
@@ -364,7 +361,7 @@ struct tile : tile_base<AIE_Program> {
     return *(
         tile_mem_t<tile_t::get_pos(dir::self).x, tile_t::get_pos(dir::self).y>
             *)(hw::self_tile_addr(hw::get_parity({X, Y})) +
-               hw::tile_mem_beg_off);
+               hw::tile_mem_begin_offset);
   }
 
   auto &mem_side() {
@@ -374,7 +371,7 @@ struct tile : tile_base<AIE_Program> {
       return mem_east();
   }
 
-  hw_lock get_lock(int8_t id, dir d = dir::self) { return {id + d * 16}; }
+  hw_lock get_lock(int8_t id, dir d = dir::self) {}
 
 #endif
 // TODO: Perhaps worth pushing all LibXAiengine functionallity we use down

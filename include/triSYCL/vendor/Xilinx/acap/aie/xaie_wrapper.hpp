@@ -23,6 +23,8 @@
 
 #include <boost/log/trivial.hpp>
 #include <boost/type_index.hpp>
+#include <sys/mman.h>
+#include <fcntl.h>
 
 #include "hardware.hpp"
 
@@ -89,7 +91,7 @@ namespace aiev1 {
 constexpr auto dev_gen = XAIE_DEV_GEN_AIE;
 constexpr auto num_hw_row = 9;
 constexpr auto num_hw_col = 50;
-constexpr auto addr_array_off = 0x800;
+constexpr auto addr_array_offset = 0x800;
 constexpr auto base_addr = 0x20000000000;
 constexpr auto col_shift = 23;
 constexpr auto row_shift = 18;
@@ -144,6 +146,49 @@ struct handle {
     uint32_t data;
     XAie_Read32(inst, _XAie_GetTileAddr(inst, tile.Row, tile.Col) + off, &data);
     return data;
+  }
+  __attribute__((used)) void raw_write(uint32_t off, uint32_t data) {
+    XAie_Write32(inst, _XAie_GetTileAddr(inst, tile.Row, tile.Col) + off, data);
+  }
+  /// This will return the base address of the memory mapped tile memory
+  __attribute__((used)) uint32_t *get_base_vaddr() {
+    typedef struct XAie_MemMap {
+      int Fd;
+      void *VAddr;
+      uint64_t MapSize;
+    } XAie_MemMap;
+
+    typedef struct XAie_LinuxIO {
+      int DeviceFd;        /* File descriptor of the device */
+      int PartitionFd;     /* File descriptor of the partition */
+      XAie_MemMap RegMap;  /* Read only mapping of registers */
+      XAie_MemMap ProgMem; /* Mapping of program memory of aie */
+      XAie_MemMap DataMem; /* Mapping of data memory of aie */
+      uint64_t ProgMemAddr;
+      uint64_t ProgMemSize;
+      uint64_t DataMemAddr;
+      uint64_t DataMemSize;
+      uint32_t NumMems;
+      uint32_t NumCols;
+      uint32_t NumRows;
+      uint8_t RowShift;
+      uint8_t ColShift;
+      uint64_t BaseAddr;
+    } XAie_LinuxIO;
+    uint8_t TileType = _XAie_GetTileTypefromLoc(inst, tile);
+    uint32_t vaddr_offset = inst->DevProp.DevMod[TileType].MemMod->MemAddr +
+                            _XAie_GetTileAddr(inst, tile.Row, tile.Col);
+    return (uint32_t *)(((char *)((XAie_LinuxIO *)inst->IOInst)->RegMap.VAddr) +
+                        vaddr_offset);
+  }
+  /// This is intended to be used from gdb
+  __attribute__((used)) std::vector<std::byte>
+  get_device_data(std::uint32_t offset, std::uint32_t size) {
+    detail::no_log_in_this_scope nls;
+    std::vector<std::byte> res;
+    res.resize(size);
+    memcpy_d2h(res.data(), offset, size);
+    return res;
   }
 
   xaie::XAie_Transaction
@@ -265,7 +310,7 @@ struct handle {
     } while (RC != xaie::XAIE_OK);
     TRISYCL_DUMP2(std::dec << "(" << get_pos_str() << ") done", "exec");
   }
-  void prepare_log() { mem_write(acap::hw::log_buffer_beg_off, 0); }
+  void prepare_log() { mem_write(acap::hw::log_buffer_begin_offset, 0); }
   void emit_log() {
     /// This is executed in tight loops so logs are disabled to prevent too
     /// much log.
@@ -274,16 +319,16 @@ struct handle {
     int lock = 7;
 
     acquire(lock);
-    uint32_t log_size = mem_read(acap::hw::log_buffer_beg_off);
+    uint32_t log_size = mem_read(acap::hw::log_buffer_begin_offset);
     if (!log_size) {
       release(lock);
       return;
     }
     log.resize(log_size);
     memcpy_d2h(log.data(),
-               acap::hw::log_buffer_beg_off + sizeof(acap::hw::log_record),
+               acap::hw::log_buffer_begin_offset + sizeof(acap::hw::log_record),
                log_size);
-    mem_write(acap::hw::log_buffer_beg_off, 0);
+    mem_write(acap::hw::log_buffer_begin_offset, 0);
     release(lock);
     std::cout << log << std::flush;
   }

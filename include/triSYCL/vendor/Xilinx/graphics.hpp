@@ -77,7 +77,7 @@ struct graphics_record {
   static graphics_record *get() {
     return (graphics_record *)(acap::hw::self_tile_addr(
                                    acap::hw::get_parity_dev()) +
-                               acap::hw::graphic_beg_off);
+                               acap::hw::graphic_begin_offset);
   }
 #endif
   uint32_t flags;
@@ -150,19 +150,28 @@ struct application {
     /// TODO
   }
 
+  /// This is needed to compile. but should never be called on the device
   template<typename ...Ts>
   void validate_tile_data_image(Ts...) {}
 
   void update_tile_data_image(int x, int y, PixelTy *data, PixelTy min_value,
                               PixelTy max_value) const {
     volatile graphics_record<PixelTy> *gr = graphics_record<PixelTy>::get();
+    /// This is marked volatile because all data inside gr will be read by the
+    /// host and written by the device and is not visible to the device
+    /// compiler.
     gr->data = &data[0];
     gr->min_value = min_value;
     gr->max_value = max_value;
+    /// Count frames sent by the device.
     gr->counter = gr->counter + 1;
-    gr->barrier.wait();
-    /// The host will read the data
-    gr->barrier.wait();
+    /// Notify the host that a frame is ready and wait for the host to start processing it
+    gr->barrier.arrive();
+
+    /// The host will process the frame so nothing should be touched here.
+
+    /// Wait for the host to finish processing the frame.
+    gr->barrier.arrive();
   };
 
   graphics::image_grid image_grid() {
@@ -931,7 +940,6 @@ struct application {
   do {                                                                         \
     if (!COND) {                                                               \
       TRISYCL_DUMP("invalid data: " EXTRA << ": " << #COND);                   \
-      __builtin_debugtrap();                                                   \
     }                                                                          \
   } while (0)
 
@@ -1022,7 +1030,7 @@ struct application {
       graphics_record<PixelTy> gr;
       std::memset(&gr, 0, sizeof(gr));
       /// the device_side of the lock should be zero initialized so this is ok.
-      h.memcpy_h2d(acap::hw::graphic_beg_off, &gr, sizeof(gr));
+      h.memcpy_h2d(acap::hw::graphic_begin_offset, &gr, sizeof(gr));
     });
 
     after_init->wait();
@@ -1033,24 +1041,27 @@ struct application {
         detail::no_log_in_this_scope nls;
         graphics_record<PixelTy> gr;
         acap::aie::soft_barrier::host_side barrier{
-            h, acap::hw::graphic_beg_off +
+            h, acap::hw::graphic_begin_offset +
                    offsetof(graphics_record<PixelTy>, barrier)};
-        // barrier.wait();
+        // barrier.arrive();
         /// If this is not waiting go check the next tile
-        if (!barrier.try_wait())
+        if (!barrier.try_arrive())
           return;
-        h.memcpy_d2h(&gr, acap::hw::graphic_beg_off,
+        TRISYCL_DUMP("updating frame " << x << ", " << y);
+        h.memcpy_d2h(&gr, acap::hw::graphic_begin_offset,
                      graphics_record<PixelTy>::no_lock_size);
-        assert(gr.counter > td.counter);
-        assert(gr.data > 0);
-        assert(gr.max_value != gr.min_value);
+
+        assert(gr.counter == td.counter + 1 && "host received incoherent data");
+        assert(gr.data > 0 && "host received incoherent data");
+        assert(gr.max_value != gr.min_value && "host received incoherent data");
+
         acap::hw::dev_ptr data_ptr = acap::hw::get_dev_ptr({x, y}, gr.data);
         h.moved(data_ptr.p)
             .memcpy_d2h(graphic_buffer.data(), data_ptr.offset,
                         graphic_buffer.size());
 
         /// notify the tile that processing of the frame is done.
-        barrier.wait();
+        barrier.arrive();
 
         /// This call is not synchronized but this should only be executed while
         /// the main thread is waiting for the kernel to finish.
@@ -1058,13 +1069,15 @@ struct application {
                                   gr.min_value, gr.max_value);
         
         maybe_validate_data(x, y, gr.min_value, gr.max_value);
+
+        /// Counter for frame processed by the host.
         td.counter++;
       });
 
     TRISYCL_DUMP("Core graphics done");
     for_each_tile([&](int x, int y, xaie::handle h, tile_data &td) {
       uint32_t off =
-          acap::hw::graphic_beg_off + offsetof(graphics_record<PixelTy>, flags);
+          acap::hw::graphic_begin_offset + offsetof(graphics_record<PixelTy>, flags);
       h.mem_write(off, h.mem_read(off) | graphics_flag::is_done);
     });
     TRISYCL_DUMP("Ending background graphics device communication thread");

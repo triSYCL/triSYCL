@@ -55,55 +55,70 @@ struct soft_barrier {
 #if !defined(__SYCL_DEVICE_ONLY__)
   struct host_side {
     xaie::handle h;
-    uint32_t dev_off;
+    uint32_t dev_offset;
     /// Wait for the device to reach the barrier.
-    void wait() {
+    void arrive() {
       detail::no_log_in_this_scope nls;
       uint32_t counter =
-          h.mem_read(dev_off + offsetof(device_side, counters[host]));
-      while (h.mem_read(dev_off + offsetof(device_side, counters[device])) ==
+          h.mem_read(dev_offset + offsetof(device_side, counters[host]));
+      /// Wait for the device to arrive.
+      while (h.mem_read(dev_offset + offsetof(device_side, counters[device])) ==
              counter)
         std::this_thread::yield();
+      // Notify the device that the host has arrived too
       counter++;
-      h.mem_write(dev_off + offsetof(device_side, counters[host]), counter);
+      h.mem_write(dev_offset + offsetof(device_side, counters[host]), counter);
     }
-    /// returns true if the device was wating. and perform the barrier.
-    /// returns false if the device was not waiting and doesn't perform the
+    /// Return true if the device was waiting and perform the barrier.
+    /// Return false if the device was not waiting and doesn't perform the
     /// barrier.
-    bool try_wait() {
+    bool try_arrive() {
       detail::no_log_in_this_scope nls;
       uint32_t counter =
-          h.mem_read(dev_off + offsetof(device_side, counters[host]));
-      if (h.mem_read(dev_off + offsetof(device_side, counters[device])) ==
+          h.mem_read(dev_offset + offsetof(device_side, counters[host]));
+      if (h.mem_read(dev_offset + offsetof(device_side, counters[device])) ==
           counter)
+        // If the device has not arrived, the host does not arrive either
         return false;
+      // Notify the device that the host has arrived too
       counter++;
-      h.mem_write(dev_off + offsetof(device_side, counters[host]), counter);
+      h.mem_write(dev_offset + offsetof(device_side, counters[host]), counter);
       return true;
     }
   };
 #endif
   class device_side {
 #if !defined(__SYCL_DEVICE_ONLY__)
-    /// allows host_side to used offset of on membres.
+    /// Allow host_side to use offsetof on members
     friend struct soft_barrier::host_side;
 #endif
+    /// This is volatile because it is used by the host and device concurrently
+    /// so the value may supurusly change and cannot be predicted by the
+    /// compiler. counters[device] will be written to by the device and read by
+    /// the host. and counters[host] will be written to by the host and read by
+    /// the device.
     volatile uint32_t counters[2];
 
   public:
 #if defined(__SYCL_DEVICE_ONLY__)
     /// The device_side cannot be moved on device because the host_side depends
-    /// on its address. The device_side should be initialized from the host
+    /// on its address. The device_side should be initialized at 0 from the host
     /// before the kernel starts.
     device_side() = delete;
     device_side(const device_side &) = delete;
 #endif
     /// Wait for the host.
-    void wait() volatile {
+    void arrive() volatile {
+      /// Prevent memory operation from being moved below the barrier
       acap_intr::memory_fence();
+      /// Notify the host that the device has arrived
       counters[device] = counters[device] + 1;
+      /// Wait for the host to arrive.
       while (counters[host] != counters[device]) {
+        /// counters[host] and counters[device] are volatile so this loop is not
+        /// dead.
       }
+      /// Prevent memory operation from being moved above the barrier
       acap_intr::memory_fence();
     }
   };
@@ -132,25 +147,25 @@ struct soft_mutex {
     /// The handle of the device.
     xaie::handle h;
     /// The address of the soft_mutex::device_side on device.
-    uint32_t dev_off;
+    uint32_t dev_offset;
 
     void lock() {
-      h.mem_write(dev_off + offsetof(device_side, want_to_enter[host]), 1);
+      h.mem_write(dev_offset + offsetof(device_side, want_to_enter[host]), 1);
       while (
-          h.mem_read(dev_off + offsetof(device_side, want_to_enter[device]))) {
-        if (h.mem_read(dev_off + offsetof(device_side, turn)) != device) {
-          h.mem_write(dev_off + offsetof(device_side, want_to_enter[host]), 0);
-          while (h.mem_read(dev_off + offsetof(device_side, turn)) != device)
+          h.mem_read(dev_offset + offsetof(device_side, want_to_enter[device]))) {
+        if (h.mem_read(dev_offset + offsetof(device_side, turn)) != device) {
+          h.mem_write(dev_offset + offsetof(device_side, want_to_enter[host]), 0);
+          while (h.mem_read(dev_offset + offsetof(device_side, turn)) != device)
             /// I am not sure if it is a good idea to preempt our thread while
             /// waiting
             std::this_thread::yield();
-          h.mem_write(dev_off + offsetof(device_side, want_to_enter[host]), 1);
+          h.mem_write(dev_offset + offsetof(device_side, want_to_enter[host]), 1);
         }
       }
     }
     void unlock() {
-      h.mem_write(dev_off + offsetof(device_side, turn), 1);
-      h.mem_write(dev_off + offsetof(device_side, want_to_enter[host]), 0);
+      h.mem_write(dev_offset + offsetof(device_side, turn), 1);
+      h.mem_write(dev_offset + offsetof(device_side, want_to_enter[host]), 0);
     }
   };
 #endif

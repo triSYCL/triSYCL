@@ -28,11 +28,11 @@ template <typename AIE, int X, int Y> struct prog : acap::aie::tile<AIE, X, Y> {
   using t = acap::aie::tile<AIE, X, Y>;
   bool prerun() {
     /// writes to tile_memory::x
-    t::mem_write(acap::hw::tile_mem_beg_off, X);
+    t::mem_write(acap::hw::tile_mem_begin_offset, X);
     /// writes to tile_memory::y
-    t::mem_write(acap::hw::tile_mem_beg_off + 4, Y);
+    t::mem_write(acap::hw::tile_mem_begin_offset + 4, Y);
     /// writes to tile_memory::id
-    t::mem_write(acap::hw::tile_mem_beg_off + 8, id_counter++);
+    t::mem_write(acap::hw::tile_mem_begin_offset + 8, id_counter++);
     return 1;
   }
 
@@ -77,7 +77,7 @@ template <typename AIE, int X, int Y> struct prog : acap::aie::tile<AIE, X, Y> {
     /// memcpy the device representation of *this into the host one. this is
     /// possible because *this doesn't contain any pointer type so the layout on
     /// host and device is identical.
-    t::memcpy_d2h(&output, acap::hw::args_beg_off, sizeof(output));
+    t::memcpy_d2h(&output, acap::hw::args_begin_offset, sizeof(output));
 
     static const char *strs[] = {"self", "up/north", "down/south", "right/east",
                                  "left/west"};

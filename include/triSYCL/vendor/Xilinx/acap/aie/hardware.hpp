@@ -52,7 +52,6 @@ enum class dir : int8_t {
   west,
   north,
   east,
-  // Add some aliases
 };
 
 /// represent parity of a tile
@@ -152,40 +151,40 @@ constexpr uint32_t base_addr_mask = ~offset_mask;
 /// Variable below are offsets so the need to be used in combination with base
 /// tile addresses. when viewed from the host tile base address is 0 so
 /// offsets can be used alone when accessing from the host.
-constexpr uint32_t stack_beg_off = 0x0;
+constexpr uint32_t stack_begin_offset = 0x0;
 constexpr uint32_t stack_size = 0x1000;
-constexpr uint32_t stack_end_off = stack_beg_off + stack_size;
+constexpr uint32_t stack_end_offset = stack_begin_offset + stack_size;
 
 /// contains the "arguments", this is where the kernel object will be
 /// placed.
-constexpr uint32_t args_beg_off = stack_end_off;
+constexpr uint32_t args_begin_offset = stack_end_offset;
 constexpr uint32_t args_size = 0x1400;
-constexpr uint32_t args_end_off = args_beg_off + args_size;
+constexpr uint32_t args_end_offset = args_begin_offset + args_size;
 
 /// contains the memory modules that are shared across tiles.
 /// Technically all section are shared but sections other then this one should
 /// not be access by your neighbors.
-constexpr uint32_t tile_mem_beg_off = args_end_off;
+constexpr uint32_t tile_mem_begin_offset = args_end_offset;
 constexpr uint32_t tile_mem_size = 0x4000;
-constexpr uint32_t tile_mem_end_off = tile_mem_beg_off + tile_mem_size;
+constexpr uint32_t tile_mem_end_offset = tile_mem_begin_offset + tile_mem_size;
 
 /// contains the log_record and the log buffer that follows it.
-constexpr uint32_t log_buffer_beg_off = tile_mem_end_off;
+constexpr uint32_t log_buffer_begin_offset = tile_mem_end_offset;
 constexpr uint32_t log_buffer_size = 0x800;
-constexpr uint32_t log_buffer_end_off = log_buffer_beg_off + log_buffer_size;
+constexpr uint32_t log_buffer_end_offset = log_buffer_begin_offset + log_buffer_size;
 
 /// contains the graphics_record.
-constexpr uint32_t graphic_beg_off = log_buffer_end_off;
+constexpr uint32_t graphic_begin_offset = log_buffer_end_offset;
 constexpr uint32_t graphic_size = 0x400;
-constexpr uint32_t graphic_end_off = graphic_beg_off + graphic_size;
+constexpr uint32_t graphic_end_offset = graphic_begin_offset + graphic_size;
 
 /// Offset of the last dedicated section
-constexpr uint32_t last_end_off = graphic_end_off;
+constexpr uint32_t last_end_offset = graphic_end_offset;
 
 /// The minimum size we want to keep for globabl variables
 constexpr uint32_t min_global_variable_size = 0x800;
 
-static_assert(last_end_off + min_global_variable_size <= tile_size, "sections are using more memory than is available");
+static_assert(last_end_offset + min_global_variable_size <= tile_size, "sections are using more memory than is available");
 
 /// determine the direction of the memory module pointed into by a pointer on
 /// device.
@@ -277,7 +276,7 @@ struct log_record {
   /// It is marked volatile because the data can be read by the host
   static volatile log_record *get() {
     return (log_record *)(self_tile_addr(get_parity_dev()) +
-                          log_buffer_beg_off);
+                          log_buffer_begin_offset);
   }
   /// get the address of the buffer to write logs into, it is volatile because
   /// the host can read it.
