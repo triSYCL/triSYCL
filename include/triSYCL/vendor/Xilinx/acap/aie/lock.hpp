@@ -57,7 +57,7 @@ struct soft_barrier {
     xaie::handle h;
     uint32_t dev_offset;
     /// Wait for the device to reach the barrier.
-    void arrive() {
+    void wait() {
       detail::no_log_in_this_scope nls;
       uint32_t counter =
           h.mem_read(dev_offset + offsetof(device_side, counters[host]));
@@ -93,22 +93,22 @@ struct soft_barrier {
     friend struct soft_barrier::host_side;
 #endif
     /// This is volatile because it is used by the host and device concurrently
-    /// so the value may supurusly change and cannot be predicted by the
+    /// so the value may spuriously change and cannot be predicted by the
     /// compiler. counters[device] will be written to by the device and read by
-    /// the host. and counters[host] will be written to by the host and read by
+    /// the host and counters[host] will be written to by the host and read by
     /// the device.
     volatile uint32_t counters[2];
 
   public:
 #if defined(__SYCL_DEVICE_ONLY__)
     /// The device_side cannot be moved on device because the host_side depends
-    /// on its address. The device_side should be initialized at 0 from the host
+    /// on its address. The device_side should be initialized to 0 from the host
     /// before the kernel starts.
     device_side() = delete;
     device_side(const device_side &) = delete;
 #endif
     /// Wait for the host.
-    void arrive() volatile {
+    void wait() volatile {
       /// Prevent memory operation from being moved below the barrier
       acap_intr::memory_fence();
       /// Notify the host that the device has arrived

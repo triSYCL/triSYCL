@@ -166,12 +166,12 @@ struct application {
     /// Count frames sent by the device.
     gr->counter = gr->counter + 1;
     /// Notify the host that a frame is ready and wait for the host to start processing it
-    gr->barrier.arrive();
+    gr->barrier.wait();
 
     /// The host will process the frame so nothing should be touched here.
 
     /// Wait for the host to finish processing the frame.
-    gr->barrier.arrive();
+    gr->barrier.wait();
   };
 
   graphics::image_grid image_grid() {
@@ -1043,7 +1043,7 @@ struct application {
         acap::aie::soft_barrier::host_side barrier{
             h, acap::hw::graphic_begin_offset +
                    offsetof(graphics_record<PixelTy>, barrier)};
-        // barrier.arrive();
+        // barrier.wait();
         /// If this is not waiting go check the next tile
         if (!barrier.try_arrive())
           return;
@@ -1061,7 +1061,7 @@ struct application {
                         graphic_buffer.size());
 
         /// notify the tile that processing of the frame is done.
-        barrier.arrive();
+        barrier.wait();
 
         /// This call is not synchronized but this should only be executed while
         /// the main thread is waiting for the kernel to finish.
