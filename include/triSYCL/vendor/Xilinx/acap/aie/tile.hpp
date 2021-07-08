@@ -371,7 +371,11 @@ struct tile : tile_base<AIE_Program> {
       return mem_east();
   }
 
-  hw_lock get_lock(int8_t id, dir d = dir::self) { return {id, d}; }
+  hw_lock get_lock(int8_t id, dir d = dir::self) {
+    /// This still exists because lock on the host are not yet implemented as
+    /// part of memory_base
+    return {(acap::hw::dir)d, id};
+  }
 
 #endif
 // TODO: Perhaps worth pushing all LibXAiengine functionallity we use down
