@@ -120,10 +120,14 @@ template <typename Geography> class tile_infrastructure {
 
 #ifdef __SYCL_DEVICE_ONLY__
 static void kernel_prerun() {
-  // log("This is needed to bypass bugs\n");
+}
+static void kernel_postrun() {
+  acap_intr::core_done();
 }
 #else
 static void kernel_prerun() {
+}
+static void kernel_postrun() {
 }
 #endif
 
@@ -138,6 +142,7 @@ static void kernel_prerun() {
                                      hw::args_begin_offset);
       kernel_prerun();
       k->operator()();
+      kernel_postrun();
 #endif
     };
   };
@@ -154,6 +159,7 @@ static void kernel_prerun() {
       /// TODO tile_infrastructure should be properly initialized.
       std::remove_cvref_t<decltype(*this)> th;
       k->operator()(th);
+      kernel_postrun();
 #endif
     };
   }
@@ -168,6 +174,7 @@ static void kernel_prerun() {
                                      hw::args_begin_offset);
       kernel_prerun();
       k->run();
+      kernel_postrun();
 #endif
     };
   }
@@ -184,6 +191,7 @@ static void kernel_prerun() {
       /// TODO tile_infrastructure should be properly initialized.
       std::remove_cvref_t<decltype(*this)> th;
       k->run(th);
+      kernel_postrun();
 #endif
     };
   }

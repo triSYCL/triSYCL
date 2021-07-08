@@ -17,7 +17,7 @@ using namespace std::chrono_literals;
 
 using namespace sycl::vendor::xilinx;
 
-using layout = acap::aie::layout::size<2, 3>;
+using layout = acap::aie::layout::size<5, 5>;
 using geography = acap::aie::geography<layout>;
 
 using data_type = double;

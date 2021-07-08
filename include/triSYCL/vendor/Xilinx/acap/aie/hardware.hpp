@@ -290,12 +290,14 @@ struct log_record {
 #if defined(__SYCL_DEVICE_ONLY__)
 
 /// get the X coordinate in the acap model
-int get_tile_x_coordinate() { return (acap_intr::get_coreid() >> 16) & 0x7f; }
+int get_tile_x_coordinate() {
+  return (acap_intr::get_coreid() >> 16) & 0b1111111;
+}
 
 /// get the Y coordinate in the acap model
 int get_tile_y_coordinate() {
   /// the -1 is to skip shim row
-  return (acap_intr::get_coreid() & 0x1f) - 1;
+  return (acap_intr::get_coreid() & 0b11111) - 1;
 }
 
 uint32_t strlen(const char *ptr) {

@@ -264,6 +264,7 @@ template <typename Layout> struct device {
           // For host side when executing on acap hardware
           // Setup the xaie::handle of each tiles. allowing them to communicate
           // with hardware.
+          // This is executed when we create the device object.
           tile(x, y).set_dev_handle(
               xaie::handle{xaie::acap_pos_to_xaie_pos({x, y}), aie_inst});
 #endif

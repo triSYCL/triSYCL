@@ -372,7 +372,7 @@ struct tile : tile_base<AIE_Program> {
   }
 
   hw_lock get_lock(int8_t id, dir d = dir::self) {
-    /// This still exists because lock on the host are not yet implemented as
+    /// This still exists because locks on the host are not yet implemented as
     /// part of memory_base
     return {(acap::hw::dir)d, id};
   }

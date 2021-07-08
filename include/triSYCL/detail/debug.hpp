@@ -248,6 +248,9 @@ struct display_vector {
 
 }
 
+/// Mark a function such that it can be called from a debugger.
+#define TRISYCL_DEBUG_FUNC __attribute__((used))
+
 /*
     # Some Emacs stuff:
     ### Local Variables:

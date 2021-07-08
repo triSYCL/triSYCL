@@ -116,7 +116,7 @@ constexpr acap::hw::position xaie_pos_to_acap_pos(xaie::XAie_LocType loc) {
   return {loc.Col, loc.Row - 1};
 }
 
-/// Ths is a handle to a tile of the acap device.
+/// Ths is a handle to a tile of the ACAP device.
 struct handle {
   xaie::XAie_LocType tile = {0, 0};
   xaie::XAie_DevInst *inst = nullptr;
@@ -139,25 +139,27 @@ struct handle {
   /// Reads raw addresses within the tile this should be used for accessing
   /// register values mapped in memory as defined in
   /// http://cervino-doc/HEAD/tile_links/xregdb_me_tile_doc.html
-  /// The __attribute__((used)) is here such that this can be used from the
-  /// debugger.
-  __attribute__((used)) uint32_t raw_read(uint32_t off) {
+  TRISYCL_DEBUG_FUNC uint32_t raw_read(uint32_t off) {
     uint32_t data;
     XAie_Read32(inst, _XAie_GetTileAddr(inst, tile.Row, tile.Col) + off, &data);
     return data;
   }
-  __attribute__((used)) void raw_write(uint32_t off, uint32_t data) {
+  TRISYCL_DEBUG_FUNC void raw_write(uint32_t off, uint32_t data) {
     XAie_Write32(inst, _XAie_GetTileAddr(inst, tile.Row, tile.Col) + off, data);
   }
 
   /// This will return the base address of the memory mapped tile memory
-  __attribute__((used)) uint32_t *get_base_vaddr() {
+  /// The returned pointer is not safe to access
+  TRISYCL_DEBUG_FUNC uint32_t *get_base_vaddr() {
+    /// This is part of the LibXAIEngine linux backend.
+    /// It is not exposed probably because it is not portable to non-linux
+    /// backends. Since our runtime only works for the linux backend. it is safe
+    /// to use in our case.
     struct XAie_MemMap {
       int Fd;
       void *VAddr;
       uint64_t MapSize;
     };
-
     struct XAie_LinuxIO {
       int DeviceFd;        /* File descriptor of the device */
       int PartitionFd;     /* File descriptor of the partition */
@@ -175,6 +177,7 @@ struct handle {
       uint8_t ColShift;
       uint64_t BaseAddr;
     };
+
     uint8_t TileType = _XAie_GetTileTypefromLoc(inst, tile);
     uint32_t vaddr_offset = inst->DevProp.DevMod[TileType].MemMod->MemAddr +
                             _XAie_GetTileAddr(inst, tile.Row, tile.Col);
@@ -185,7 +188,7 @@ struct handle {
   /// This is intended to be used from gdb
   /// The offset is between the begining of the tile memory and the requested
   /// data.
-  __attribute__((used)) std::vector<std::byte>
+  TRISYCL_DEBUG_FUNC std::vector<std::byte>
   get_device_data(std::uint32_t offset, std::uint32_t size) {
     detail::no_log_in_this_scope nls;
     std::vector<std::byte> res;
@@ -204,6 +207,9 @@ struct handle {
   }
   xaie::handle moved(acap::hw::position p) {
     return {acap_pos_to_xaie_pos(p), inst};
+  }
+  TRISYCL_DEBUG_FUNC xaie::handle moved(int x, int y) {
+    return moved({x, y});
   }
 
   /// The memory read accessors
@@ -248,7 +254,7 @@ struct handle {
                   "memory");
   }
 
-  /// Configure device for dma.
+  /// Configure device for DMA.
   void mem_dma(uint32_t offset, uint32_t size) {
     xaie::XAie_DmaDesc DmaDesc;
     TRISYCL_XAIE(
@@ -336,7 +342,7 @@ struct handle {
     release(lock);
     std::cout << log << std::flush;
   }
-  __attribute__((used)) void dump_lock_state() {
+  TRISYCL_DEBUG_FUNC void dump_lock_state() {
     std::cout << get_coord_str() << ": lock state:" << std::hex << "0x"
               << raw_read(0x1EF00) << "\n";
   }

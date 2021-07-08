@@ -59,11 +59,6 @@
 
 namespace trisycl::vendor::xilinx::graphics {
 
-enum graphics_flag : uint32_t {
-  none = 0x0,
-  is_done = 0x1,
-};
-
 // RGB 8 bit images, so 3 bytes per pixel
 using rgb = std::array<std::uint8_t, 3>;
 
@@ -80,7 +75,7 @@ struct graphics_record {
                                acap::hw::graphic_begin_offset);
   }
 #endif
-  uint32_t flags;
+  uint32_t is_done;
   /// pointer do not have the same layout on device and host so data is treated
   /// as a pointer on the device and as a uint32_t on the host.
 #ifdef __SYCL_DEVICE_ONLY__
@@ -142,7 +137,7 @@ struct application {
   /// Test if the window has been closed
   bool is_done() const  {
     volatile graphics_record<PixelTy> *gr = graphics_record<PixelTy>::get();
-    return gr->flags & graphics_flag::is_done;
+    return gr->is_done;
   }
 
   /// Test if the window has been closed after synchronizing with a barrier
@@ -209,7 +204,7 @@ struct frame_grid : Gtk::ApplicationWindow {
   std::function<void(void)> close_action;
 
   /// Set to true by the closing handler
-  std::atomic<uint32_t> flags = graphics_flag::none;
+  std::atomic<bool> is_done = false;
 
 
   /** Create a grid of tiles
@@ -584,7 +579,7 @@ struct image_grid : frame_grid {
           // Only 1 customer at a time
           std::lock_guard lock { dispatch_protection };
           // Skip the work when done to avoid dead lock
-          if (flags & graphics_flag::is_done)
+          if (is_done)
             // Wake-up everybody waiting for sending some work to
             // realize that they have to give up on their hope
             cv.notify_all();
@@ -610,17 +605,16 @@ struct image_grid : frame_grid {
 
   /// Submit some work to the graphics thread
   void submit(std::function<void(void)> f) {
-    std::unique_lock lock { dispatch_protection };
+    std::unique_lock lock{dispatch_protection};
     // Wait for no work being dispatched or the end
-    cv.wait(lock, [&] { return !work_to_dispatch || (flags & graphics_flag::is_done); } );
+    cv.wait(lock, [&] { return !work_to_dispatch || is_done; });
     // Do not submit anything if we are in the shutdown process already
-    if (!(flags & graphics_flag::is_done)) {
+    if (!is_done) {
       work_to_dispatch = std::move(f);
       // Ask the graphics thread for some work
       dispatcher.emit();
     }
   };
-
 
   /** Update the image of a tile
 
@@ -734,7 +728,7 @@ struct image_grid : frame_grid {
   bool is_done_barrier() {
     // Only 1 thread sample the graphics status
     if (done_has_been_sampled.test_and_set())
-      done_snapshot = flags & graphics_flag::is_done;
+      done_snapshot = is_done;
     // Then wait for everybody to synchronize
     done_barrier.count_down_and_wait();
     // Reinitialize the flag for the next iteration
@@ -833,25 +827,23 @@ struct application {
        Gtk::Application::create might modify argc and argv, capture by
        reference. Since we have to wait for this thread, there should
        not be a read from freed memory issue. */
-    t = std::thread { [&]() mutable {
-        // An application allowing several instance running at the same time
-        auto a =
+    t = std::thread{[&]() mutable {
+      // An application allowing several instance running at the same time
+      auto a =
           Gtk::Application::create(argc, argv, "com.xilinx.trisycl.graphics",
                                    Gio::APPLICATION_NON_UNIQUE);
-        /* Create the graphics object in this thread so the dispatcher
-           is bound to this thread too */
-        w.reset(new graphics::image_grid { nx, ny, image_x, image_y, zoom });
-        w->set_close_action([&] {
-            w->flags |= graphics_flag::is_done;
-          });
-        // OK, the graphics system is in a usable state, unleash the main thread
-        graphics_initialization.set_value();
-        // Launch the graphics event loop handling with the graphics life
-        a->run(*w);
+      /* Create the graphics object in this thread so the dispatcher
+         is bound to this thread too */
+      w.reset(new graphics::image_grid{nx, ny, image_x, image_y, zoom});
+      w->set_close_action([&] { w->is_done = true; });
+      // OK, the graphics system is in a usable state, unleash the main thread
+      graphics_initialization.set_value();
+      // Launch the graphics event loop handling with the graphics life
+      a->run(*w);
 
-        // Advertise that the graphics is shutting down
-        w->flags |= graphics_flag::is_done;
-      } };
+      // Advertise that the graphics is shutting down
+      w->is_done = true;
+    }};
     // Wait for the graphics to start
     graphics_initialization.get_future().get();
 #ifdef __SYCL_XILINX_AIE__
@@ -861,7 +853,7 @@ struct application {
     /// initialized.
     boost::barrier after_init{2};
     device_communication_thread = std::thread([=, this, &after_init] {
-      background_image_updater(this, &w->flags, nx, ny, dev_inst, image_x,
+      background_image_updater(this, &w->is_done, nx, ny, dev_inst, image_x,
                                image_y, has_data_validation, &after_init);
     });
     after_init.wait();
@@ -883,7 +875,7 @@ struct application {
 
   /// Test if the window has been closed
   bool is_done() const {
-    return w->flags & graphics_flag::is_done;
+    return w->is_done;
   }
 
 
@@ -985,7 +977,7 @@ struct application {
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
 
   static void background_image_updater(application *a,
-                                       std::atomic<uint32_t> *flags,
+                                       std::atomic<bool> *is_done,
                                        int tile_x_size, int tile_y_size,
                                        xaie::XAie_DevInst *dev_inst,
                                        size_t image_x_size, size_t image_y_size,
@@ -1036,7 +1028,7 @@ struct application {
     after_init->wait();
 
     TRISYCL_DUMP("Core graphics initialized");
-    while (!(*flags & graphics_flag::is_done))
+    while (!(*is_done))
       for_each_tile([&](int x, int y, xaie::handle h, tile_data &td) {
         detail::no_log_in_this_scope nls;
         graphics_record<PixelTy> gr;
@@ -1077,8 +1069,8 @@ struct application {
     TRISYCL_DUMP("Core graphics done");
     for_each_tile([&](int x, int y, xaie::handle h, tile_data &td) {
       uint32_t off =
-          acap::hw::graphic_begin_offset + offsetof(graphics_record<PixelTy>, flags);
-      h.mem_write(off, h.mem_read(off) | graphics_flag::is_done);
+          acap::hw::graphic_begin_offset + offsetof(graphics_record<PixelTy>, is_done);
+      h.mem_write(off, 1);
     });
     TRISYCL_DUMP("Ending background graphics device communication thread");
   }
