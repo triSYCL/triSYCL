@@ -299,15 +299,6 @@ struct tile : tile_base<AIE_Program> {
       return mem_east();
   }
 
-#ifdef __SYCL_XILINX_AIE__
-/// TODO: This API doesn't yet exist for CPU emulation
-  hw_lock get_lock(int8_t id, dir d = dir::self) {
-    TRISYCL_DUMP2(std::dec << "get_lock: (X = " << X << ", Y = " << Y
-                           << ") dir:" << d,
-                  "sync");
-    return {id, get_dev_handle()};
-  }
-#endif
 #else
   /// On device
 
@@ -369,12 +360,6 @@ struct tile : tile_base<AIE_Program> {
       return mem_west();
     else
       return mem_east();
-  }
-
-  hw_lock get_lock(int8_t id, dir d = dir::self) {
-    /// This still exists because locks on the host are not yet implemented as
-    /// part of memory_base
-    return {(acap::hw::dir)d, id};
   }
 
 #endif

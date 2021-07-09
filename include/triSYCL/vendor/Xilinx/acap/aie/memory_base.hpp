@@ -36,7 +36,7 @@ namespace trisycl::vendor::xilinx::acap::aie {
     module infrastructure.
 */
 struct memory_base {
-#if !defined(__SYCL_XILINX_AIE__)
+#if !defined(__SYCL_DEVICE_ONLY__)
   /// TODO: The locking interface for CPU emulation need to be adapted to match
   /// the hardware one.
 
@@ -44,7 +44,7 @@ struct memory_base {
   std::optional<std::reference_wrapper<memory_infrastructure>> mi;
 
   /// Get an access to the a specific lock
-  auto& lock(int i) {
+  decltype(auto) lock(int i) {
     // value() will throw if there is some missed initialization
     return mi.value().get().lock(i);
   }
@@ -52,17 +52,7 @@ struct memory_base {
   /// Store a way to access to hardware infrastructure of the tile
   void set_memory_infrastructure(memory_infrastructure& m) { mi = m; }
 #else
-#if defined(__SYCL_DEVICE_ONLY__)
   auto lock(int i) { return hw_lock{hw::get_ptr_direction(this), i}; }
-#else
-  void set_memory_infrastructure(memory_infrastructure&) { }
-  hw_lock lock(int i) {
-    assert(false && "TODO");
-    __builtin_unreachable();
-    /// TODO: fix it. This will need serious refactoring to get access to a
-    /// device xaie::handle.
-  }
-#endif
 #endif
 };
 

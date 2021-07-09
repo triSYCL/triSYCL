@@ -37,6 +37,8 @@ class memory_infrastructure {
 #ifndef __SYCL_XILINX_AIE__
   /// The lock unit of the memory tile
   lock_unit memory_locking_unit;
+#else
+  xaie::handle dev_handle;
 #endif
 
   /** Keep track of the aie::detail::device for hardware resource
@@ -63,6 +65,16 @@ class memory_infrastructure {
 #ifndef __SYCL_XILINX_AIE__
   /// Get access to a specific lock in this memory module
   auto& lock(int i) { return memory_locking_unit.lock(i); }
+#else
+  void set_dev_handle(xaie::handle h) {
+    dev_handle = h;
+  }
+  xaie::handle get_dev_handle() const {
+    return dev_handle;
+  }
+  hw_lock lock(int i) {
+    return {i, dev_handle};
+  }
 #endif
 };
 

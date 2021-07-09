@@ -274,6 +274,7 @@ tile_infrastructure() = default;
   // For host side when executing on acap hardware
   /// Store a way to access to hw tile instance
   void set_dev_handle(xaie::handle h) {
+    mi.set_dev_handle(h);
     dev_handle = h;
   }
   xaie::handle get_dev_handle() const {
