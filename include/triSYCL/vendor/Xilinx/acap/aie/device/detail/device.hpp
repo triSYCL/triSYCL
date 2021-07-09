@@ -258,7 +258,7 @@ template <typename Layout> struct device {
         // Create & start the tile infrastructure
 #if !defined(__SYCL_DEVICE_ONLY__)
           // For CPU emulation
-          tile(x, y) = {x, y, *this, fiber_executor};
+          tile(x, y) = {x, y, fiber_executor};
 #endif
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
           // For host side when executing on acap hardware

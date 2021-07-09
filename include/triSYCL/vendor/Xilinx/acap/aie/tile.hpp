@@ -240,13 +240,11 @@ struct tile : tile_base<AIE_Program> {
     return geo:: memory_module_linear_id(x, y, dx, dy);
   }
 
-  using tile_t = hw::hw_tile<X, Y>;
-  using dir = typename tile_t::dir;
-
-
   static void log(auto i) {
     detail::tile_infrastructure<geo>::log(i);
   }
+
+  static constexpr acap::hw::position self_position{X, Y};
 
 /// This could be refactored to minimized duplication by separating between host
 /// and device at address computation instead of all the function.
@@ -304,9 +302,15 @@ struct tile : tile_base<AIE_Program> {
 
   /// The type of the memory module of a tile at offset (dx, dy) from the
   /// current tile.
-  template <int dx, int dy>
+  template <hw::position p>
   using tile_mem_t =
-      typename AIE_Program::template tileable_memory<X + dx, Y + dy>;
+      typename AIE_Program::template tileable_memory<X + p.x, Y + p.y>;
+
+  template <hw::dir d> auto &dir_mem() {
+    constexpr uint32_t tile_addr = get_base_addr(d);
+    return *(tile_mem_t<self_position.moved(d)> *)(tile_addr +
+                                                   hw::tile_mem_begin_offset);
+  }
 
   /// Get the memory module on the left if it does exist
   auto &mem_west() {
@@ -314,9 +318,7 @@ struct tile : tile_base<AIE_Program> {
                   "There is no memory module"
                   " on the left of this tile in the left column and"
                   " on an even row");
-    return *(
-        tile_mem_t<tile_t::get_pos(dir::left).x, tile_t::get_pos(dir::left).y>
-            *)(hw::west_or_self_tile_addr + hw::tile_mem_begin_offset);
+    return dir_mem<hw::dir::west>();
   }
 
   /// Get the memory module on the right if it does exist
@@ -325,38 +327,33 @@ struct tile : tile_base<AIE_Program> {
                   "There is no memory module"
                   " on the right of this tile in the right column and"
                   " on an odd row");
-    return *(
-        tile_mem_t<tile_t::get_pos(dir::right).x, tile_t::get_pos(dir::right).y>
-            *)(hw::east_or_self_tile_addr + hw::tile_mem_begin_offset);
+    return dir_mem<hw::dir::east>();
   }
 
   /// Get the memory module below if it does exist
   auto &mem_south() {
     static_assert(is_memory_module_south(), "There is no memory module"
-                                           " below the lower tile row");
-    return *(
-        tile_mem_t<tile_t::get_pos(dir::down).x, tile_t::get_pos(dir::down).y>
-            *)(hw::south_tile_addr + hw::tile_mem_begin_offset);
+                                            " below the lower tile row");
+    return dir_mem<hw::dir::south>();
   }
 
   /// Get the memory module above if it does exist
   auto &mem_north() {
     static_assert(is_memory_module_north(), "There is no memory module"
-                                         " above the upper tile row");
-    return *(tile_mem_t<tile_t::get_pos(dir::up).x, tile_t::get_pos(dir::up).y>
-                 *)(hw::north_tile_addr + hw::tile_mem_begin_offset);
+                                            " above the upper tile row");
+    return dir_mem<hw::dir::north>();
   }
 
   /// The memory module native to the tile
   auto &mem() {
-    return *(
-        tile_mem_t<tile_t::get_pos(dir::self).x, tile_t::get_pos(dir::self).y>
-            *)(hw::self_tile_addr(hw::get_parity({X, Y})) +
-               hw::tile_mem_begin_offset);
+    if constexpr (self_position.get_parity() == hw::parity::west)
+      return mem_west();
+    else
+      return mem_east();
   }
 
   auto &mem_side() {
-    if constexpr (Y & 1)
+    if constexpr (self_position.get_parity() == hw::parity::east)
       return mem_west();
     else
       return mem_east();

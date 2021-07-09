@@ -67,14 +67,6 @@ template <typename Geography> class tile_infrastructure {
   /// Keep the vertical coordinate
   int y_coordinate;
 
-  /** Keep track of the aie::detail::device for hardware resource
-      control in device mode or for debugging purpose for better
-      messages.
-
-      Use void* for now to avoid cyclic header dependencies for now
-      instead of the aie::detail::device */
-  void* dev [[maybe_unused]];
-
   /// The AXI stream switch of the core tile
   axi_ss_t axi_ss;
 
@@ -237,12 +229,10 @@ tile_infrastructure() = default;
       infrastructure details
   */
 #if !defined(__SYCL_DEVICE_ONLY__)
-  tile_infrastructure(int x, int y, auto& dev,
+  tile_infrastructure(int x, int y,
                       ::trisycl::detail::fiber_pool& fiber_executor)
       : x_coordinate { x }
       , y_coordinate { y }
-      , dev { &dev }
-      , mi { dev }
 #if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
       , fe { &fiber_executor }
 #endif

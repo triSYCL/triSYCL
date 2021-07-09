@@ -72,9 +72,9 @@ class tile_infrastructure
       \param[in] fiber_executor is the executor used to run
       infrastructure details
   */
-  tile_infrastructure(int x, int y, auto& dev,
-                      ::trisycl::detail::fiber_pool& fiber_executor)
-      : facade_t { std::make_shared<dti>(x, y, dev, fiber_executor) } {}
+  tile_infrastructure(int x, int y,
+                      ::trisycl::detail::fiber_pool &fiber_executor)
+      : facade_t{std::make_shared<dti>(x, y, fiber_executor)} {}
   tile_infrastructure() = default;
 
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)

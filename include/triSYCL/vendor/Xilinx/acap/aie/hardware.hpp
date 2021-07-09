@@ -25,24 +25,6 @@ namespace trisycl::vendor::xilinx::acap {
 
 namespace hw {
 
-/// Represent of offset between 2 tile.
-struct offset {
-  int x;
-  int y;
-};
-
-/// Represent the position of a tile
-struct position {
-  int x;
-  int y;
-  friend constexpr position operator+(position p, offset o) {
-    return {p.x + o.x, p.y + o.y};
-  }
-  friend constexpr offset operator-(position p, position p1) {
-    return {p.x - p1.x, p.y - p1.y};
-  }
-};
-
 /// The ordering  and specific values of elements matters in the following enum.
 /// It matches with bases addresses order. neighbouring tiles of a core are at
 /// address: (1 << 17) | (dir << 15) from the perspective of tha core. It also
@@ -60,60 +42,49 @@ enum class parity : int8_t {
   east,
 };
 
-/// get the parity of tile at position p
-constexpr parity get_parity(position p) {
-  return (p.y & 1) ? parity::west : parity::east;
+/// Represent of offset between 2 tile.
+struct offset {
+  int x;
+  int y;
+};
+
+
+/// Convert a direction into an offset
+constexpr offset get_offset(parity par, dir d) {
+  switch (d) {
+  case dir::south:
+    return {0, -1};
+  case dir::north:
+    return {0, 1};
+  case dir::west:
+    if (par == parity::west)
+      return {0, 0};
+    else
+      return {-1, 0};
+  case dir::east:
+    if (par == parity::west)
+      return {1, 0};
+    else
+      return {0, 0};
+  }
 }
 
-template <parity par> struct hw_tile_impl;
-
-template<int X, int Y> struct hw_tile : hw_tile_impl<get_parity({X, Y})> {
-  using base = hw_tile_impl<get_parity({X, Y})>;
-  using dir = typename base::dir;
-  using base::get_offset;
-  static constexpr position get_pos(dir d) {
-    return position{X, Y} + base::get_offset(d);
+/// Represent the position of a tile
+struct position {
+  int x;
+  int y;
+  friend constexpr position operator+(position p, offset o) {
+    return {p.x + o.x, p.y + o.y};
   }
+  friend constexpr offset operator-(position p, position p1) {
+    return {p.x - p1.x, p.y - p1.y};
+  }
+  /// get the parity of tile at position p
+  constexpr parity get_parity() const { return (y & 1) ? parity::west : parity::east; }
+  constexpr position moved(dir d) const { return *this + get_offset(get_parity(), d); }
 };
 
-template <parity par> struct hw_tile_impl {
-
-  enum dir : int8_t {
-    south,
-    west,
-    north,
-    east,
-    down = south,
-    left = west,
-    up = north,
-    right = east,
-    self = (par == parity::west) ? west : east,
-    side = (par == parity::west) ? east : west,
-  };
-
-  static constexpr const char *dir_to_str[] = {
-      "south/down", (par == parity::west) ? "west/left/self" : "west/left/side", "north/up",
-      (par == parity::west) ? "east/right/side" : "east/right/self"};
-
-  static constexpr offset get_offset(dir d) {
-    switch (d) {
-    case south:
-      return {-1, 0};
-    case north:
-      return {1, 0};
-    case west:
-      if constexpr ((par == parity::west))
-        return {0, 0};
-      else
-        return {0, 1};
-    case east:
-      if constexpr ((par == parity::west))
-        return {0, -1};
-      else
-        return {0, 0};
-    }
-  }
-};
+constexpr parity get_parity(position p) { return p.get_parity(); }
 
 /// hardware specific details.
 
@@ -202,26 +173,6 @@ struct dev_ptr {
   /// Offset within the memory module of the tile.
   uint32_t offset;
 };
-
-/// Convert a direction into an offset
-constexpr offset get_offset(parity par, dir d) {
-  switch (d) {
-  case dir::south:
-    return {0, -1};
-  case dir::north:
-    return {0, 1};
-  case dir::west:
-    if (par == parity::west)
-      return {0, 0};
-    else
-      return {-1, 0};
-  case dir::east:
-    if (par == parity::west)
-      return {1, 0};
-    else
-      return {0, 0};
-  }
-}
 
 /// this will translate a device representation of a pointer ptr in a tile at
 /// position pos. into a tile position and an offset suitable to be used with de
