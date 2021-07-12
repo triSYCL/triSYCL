@@ -29,7 +29,7 @@ template <typename AIE, int X, int Y> struct prog : acap::aie::tile<AIE, X, Y> {
   using t = acap::aie::tile<AIE, X, Y>;
   /// The lock function of every tiles is run before the prerun of any other
   /// tile.
-  void lock() { t::get_lock(0).acquire(); }
+  void lock() { t::mem().lock(0).acquire(); }
   bool prerun() {
     written_data.push_back({X, Y, 0, id_counter++});
     /// writes to tile_memory::x
@@ -38,7 +38,7 @@ template <typename AIE, int X, int Y> struct prog : acap::aie::tile<AIE, X, Y> {
     t::get_dev_handle().mem_write(acap::hw::tile_mem_begin_offset + 4, written_data.back().y);
     /// writes to tile_memory::id
     t::get_dev_handle().mem_write(acap::hw::tile_mem_begin_offset + 8, written_data.back().id);
-    t::get_lock(0).release();
+    t::mem().lock(0).release();
     return 1;
   }
 
@@ -114,9 +114,10 @@ template <typename AIE, int X, int Y> struct prog : acap::aie::tile<AIE, X, Y> {
       ss << std::endl;
       /// The data was read by the tile before it was initialized by the host.
       /// This shouldn't be possible because of locks so its a bug
-      assert(output[i].id != 0 && " synchronization bug")
+      assert(output[i].id != 0 && " synchronization bug");
       /// The data that was written doesn't match that data being read back.
-      assert(validate(output[i]) && " invalid data bug");
+      if (output[i].id != -1)
+        assert(validate(output[i]) && " invalid data bug");
     }
     ss << std::endl;
     std::cout << ss.str();

@@ -112,10 +112,6 @@ protected:
 public:
 
 #ifdef __SYCL_XILINX_AIE__
-  /// Store a way to access to hw tile instance
-  void set_dev_handle(xaie::handle h) {
-    ti.set_dev_handle(h);
-  }
   xaie::handle get_dev_handle() const {
     return ti.get_dev_handle();
   }

@@ -257,16 +257,18 @@ template <typename Layout> struct device {
         for_each_tile_index([&](auto x, auto y) {
         // Create & start the tile infrastructure
 #if !defined(__SYCL_DEVICE_ONLY__)
-          // For CPU emulation
-          tile(x, y) = {x, y, fiber_executor};
-#endif
-#if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
+#if defined(__SYCL_XILINX_AIE__)
           // For host side when executing on acap hardware
           // Setup the xaie::handle of each tiles. allowing them to communicate
           // with hardware.
           // This is executed when we create the device object.
-          tile(x, y).set_dev_handle(
-              xaie::handle{xaie::acap_pos_to_xaie_pos({x, y}), aie_inst});
+          tile(x, y) = {
+              x, y, xaie::handle{xaie::acap_pos_to_xaie_pos({x, y}), aie_inst},
+              fiber_executor};
+#else
+          // For CPU emulation
+          tile(x, y) = {x, y, fiber_executor};
+#endif
 #endif
         });
 

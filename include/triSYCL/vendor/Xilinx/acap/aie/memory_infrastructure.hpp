@@ -45,9 +45,7 @@ class memory_infrastructure {
   /// Get access to a specific lock in this memory module
   auto& lock(int i) { return memory_locking_unit.lock(i); }
 #else
-  void set_dev_handle(xaie::handle h) {
-    dev_handle = h;
-  }
+  memory_infrastructure(xaie::handle h) : dev_handle{h} {}
   xaie::handle get_dev_handle() const {
     return dev_handle;
   }

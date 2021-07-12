@@ -72,15 +72,20 @@ class tile_infrastructure
       \param[in] fiber_executor is the executor used to run
       infrastructure details
   */
+#if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
+  tile_infrastructure(int x, int y, xaie::handle h,
+                      ::trisycl::detail::fiber_pool &fiber_executor)
+      : facade_t{std::make_shared<dti>(x, y, h, fiber_executor)} {}
+#else
   tile_infrastructure(int x, int y,
                       ::trisycl::detail::fiber_pool &fiber_executor)
       : facade_t{std::make_shared<dti>(x, y, fiber_executor)} {}
+#endif
   tile_infrastructure() = default;
 
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
   // For host side when executing on acap hardware
   /// Store a way to access to hw tile instance
-  void set_dev_handle(xaie::handle h) { implementation->set_dev_handle(h); }
   xaie::handle get_dev_handle() const {
     return implementation->get_dev_handle();
   }

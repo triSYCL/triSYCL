@@ -229,44 +229,45 @@ tile_infrastructure() = default;
       infrastructure details
   */
 #if !defined(__SYCL_DEVICE_ONLY__)
-  tile_infrastructure(int x, int y,
-                      ::trisycl::detail::fiber_pool& fiber_executor)
-      : x_coordinate { x }
-      , y_coordinate { y }
+tile_infrastructure(int x, int y,
+#if defined(__SYCL_XILINX_AIE__)
+                    xaie::handle h,
+#endif
+                    ::trisycl::detail::fiber_pool &fiber_executor)
+    : x_coordinate{x}, y_coordinate {y}
+#if defined(__SYCL_XILINX_AIE__)
+    ,mi{h}
+    ,dev_handle {h}
+#endif
 #if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
-      , fe { &fiber_executor }
+    ,fe { &fiber_executor }
 #endif
-  {
+{
 #if !defined(__SYCL_XILINX_AIE__) && 0
-    // TODO: this should be enabled on hardware when it is working but for now
-    // it isn't
+  // TODO: this should be enabled on hardware when it is working but for now
+  // it isn't
 
-    // Connect the core receivers to its AXI stream switch
-    for (auto p : views::enum_type(mpl::me_0, mpl::me_last))
-      output(p) =
-          std::make_shared<port_receiver<axi_ss_t>>(axi_ss, "core_receiver");
-    axi_ss.start(x, y, fiber_executor);
-    /* Create the core tile receiver DMAs and make them directly the
-       switch output ports */
-    for (auto p : axi_ss_geo::m_dma_range)
-      output(p) =
-          std::make_shared<receiving_dma<axi_ss_t>>(axi_ss, fiber_executor);
-    /* Create the core tile sender DMAs and connect them internally to
-       their switch input ports */
-    for (const auto& [d, p] :
-         ranges::views::zip(tx_dmas, axi_ss_geo::s_dma_range))
-      d.emplace(fiber_executor, input(p));
+  // Connect the core receivers to its AXI stream switch
+  for (auto p : views::enum_type(mpl::me_0, mpl::me_last))
+    output(p) =
+        std::make_shared<port_receiver<axi_ss_t>>(axi_ss, "core_receiver");
+  axi_ss.start(x, y, fiber_executor);
+  /* Create the core tile receiver DMAs and make them directly the
+     switch output ports */
+  for (auto p : axi_ss_geo::m_dma_range)
+    output(p) =
+        std::make_shared<receiving_dma<axi_ss_t>>(axi_ss, fiber_executor);
+  /* Create the core tile sender DMAs and connect them internally to
+     their switch input ports */
+  for (const auto &[d, p] :
+       ranges::views::zip(tx_dmas, axi_ss_geo::s_dma_range))
+    d.emplace(fiber_executor, input(p));
 #endif
-  }
+}
 #endif
 
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
   // For host side when executing on acap hardware
-  /// Store a way to access to hw tile instance
-  void set_dev_handle(xaie::handle h) {
-    mi.set_dev_handle(h);
-    dev_handle = h;
-  }
   xaie::handle get_dev_handle() const {
     return dev_handle;
   }

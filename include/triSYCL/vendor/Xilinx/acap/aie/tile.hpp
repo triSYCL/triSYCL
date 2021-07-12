@@ -367,13 +367,6 @@ struct tile : tile_base<AIE_Program> {
 // Engine
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
   // For host side when executing on acap hardware
-  /// Store a way to access to hw tile instance
-  void set_dev_handle(xaie::handle h) {
-    TRISYCL_DUMP2(std::dec << "Mapping: (X = " << X << ", Y = " << Y
-                            << ") to  (Row = " << (int)h.tile.Row
-                            << ", Col = " << (int)h.tile.Col << ")", "exec");
-    tb::set_dev_handle(h);
-  }
   xaie::handle get_dev_handle() {
     return tb::get_dev_handle();
   }

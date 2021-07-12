@@ -197,7 +197,7 @@ struct program {
     // Connect each memory to its infrastructure
     boost::hana::for_each(memory_modules, [&](auto &m) {
       // Inform each tile about their tile infrastructure
-      m.set_memory_infrastructure(aie_d.mem(m.x, m.y));
+      m.set_memory_infrastructure(aie_d.mem(m.memory::x, m.memory::y));
       // Keep track of each base tile
       memory_modules_bases[m.y][m.x] = &m;
 #endif
