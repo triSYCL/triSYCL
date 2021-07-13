@@ -932,6 +932,7 @@ struct application {
   do {                                                                         \
     if (!COND) {                                                               \
       TRISYCL_DUMP("invalid data: " EXTRA << ": " << #COND);                   \
+      __builtin_debugtrap();                                                   \
     }                                                                          \
   } while (0)
 
@@ -1035,10 +1036,10 @@ struct application {
         acap::aie::soft_barrier::host_side barrier{
             h, acap::hw::graphic_begin_offset +
                    offsetof(graphics_record<PixelTy>, barrier)};
-        // barrier.wait();
+        barrier.wait();
         /// If this is not waiting go check the next tile
-        if (!barrier.try_arrive())
-          return;
+        // if (!barrier.try_arrive())
+        //   return;
         TRISYCL_DUMP("updating frame " << x << ", " << y);
         h.memcpy_d2h(&gr, acap::hw::graphic_begin_offset,
                      graphics_record<PixelTy>::no_lock_size);

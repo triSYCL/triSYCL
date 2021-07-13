@@ -236,8 +236,8 @@ tile_infrastructure(int x, int y,
                     ::trisycl::detail::fiber_pool &fiber_executor)
     : x_coordinate{x}, y_coordinate {y}
 #if defined(__SYCL_XILINX_AIE__)
-    ,mi{h}
-    ,dev_handle {h}
+    , mi{h}
+    , dev_handle {h}
 #endif
 #if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
     ,fe { &fiber_executor }
