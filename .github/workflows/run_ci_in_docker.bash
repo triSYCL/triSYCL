@@ -44,10 +44,10 @@ apt-get install $APT_ENABLE $C_COMPILER
 [[ ! $CXX_COMPILER =~ '^clang' ]] \
   && apt-get install $APT_ENABLE $CXX_COMPILER
 
-# Install some OpenMP library.
-# TODO: depends on the compiler version...
-[[ $OPENMP == ON ]] \
-  && apt-get install $APT_ENABLE libomp-dev
+# Install some OpenMP library in the case of Clang with the same version
+[[ $OPENMP == ON && $CXX_COMPILER =~ '^clang' ]] \
+  && compiler_version=`echo $CXX_COMPILER | sed 's/[^0-9]//g'` \
+  && apt-get install $APT_ENABLE libomp-${compiler_version}-dev
 
 # Install OpenCL with POCL:
 [[ $OPENCL == ON ]] \
@@ -65,8 +65,8 @@ echo
 cmake . -DTRISYCL_OPENCL=$OPENCL -DTRISYCL_OPENMP=$OPENMP \
   -DCMAKE_C_COMPILER=${C_COMPILER} -DCMAKE_CXX_COMPILER=${CXX_COMPILER}
 
-# Compile all the tests
-make -j`nproc`
+# Compile all the tests using all the available cores
+cmake --build . --verbose --parallel `nproc`
 
 # Run the tests
 ctest
