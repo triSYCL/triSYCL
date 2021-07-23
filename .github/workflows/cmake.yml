@@ -128,7 +128,10 @@ jobs:
         env:
           C_COMPILER: clang-12
           CXX_COMPILER: clang++-12
-          OPENMP: ON
+          # It looks like POCL uses an older version of Clang/LLVM
+          # which conflict with libomp-12-dev libomp5-12 and thus it
+          # is not possible to use OpenMP at the same time
+          OPENMP: OFF
           OPENCL: ON
         with:
           entrypoint: /github/workspace/.github/workflows/run_ci_in_docker.bash

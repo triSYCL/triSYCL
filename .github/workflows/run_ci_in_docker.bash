@@ -44,11 +44,6 @@ apt-get install $APT_ENABLE $C_COMPILER
 [[ ! $CXX_COMPILER =~ '^clang' ]] \
   && apt-get install $APT_ENABLE $CXX_COMPILER
 
-# Install some OpenMP library in the case of Clang with the same version
-[[ $OPENMP == ON && $CXX_COMPILER =~ '^clang' ]] \
-  && compiler_version=`echo $CXX_COMPILER | sed 's/[^0-9]//g'` \
-  && apt-get install $APT_ENABLE libomp-${compiler_version}-dev
-
 # Install OpenCL with POCL:
 [[ $OPENCL == ON ]] \
   && apt-get install $APT_ENABLE opencl-headers \
