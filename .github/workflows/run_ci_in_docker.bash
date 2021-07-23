@@ -33,7 +33,7 @@ apt-get update
 apt-get dist-upgrade $APT_ENABLE
 
 # Install packages required by the CI
-apt-get install $APT_ENABLE apt-utils cmake libboost-all-dev \
+apt-get install $APT_ENABLE git apt-utils cmake libboost-all-dev \
   librange-v3-dev
 
 # Install the required C compiler:
@@ -56,6 +56,12 @@ cd $GITHUB_WORKSPACE
 echo Content of $GITHUB_WORKSPACE
 ls -al
 echo
+
+# Since mdspan is installed by default into /usr/local, make the
+# directory writable by the user to avoid running the whole CMake
+# process as root... Well, here this is running as root anyway for
+# now.
+chown --recursive `id --user` /usr/local
 
 # Configure triSYCL
 cmake . -DTRISYCL_OPENCL=$OPENCL -DTRISYCL_OPENMP=$OPENMP \
