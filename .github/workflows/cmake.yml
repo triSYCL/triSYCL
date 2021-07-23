@@ -43,100 +43,55 @@ jobs:
         # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
         run: ctest -C ${{env.BUILD_TYPE}}
 
-  docker-gcc7-openmp:
-    name: OpenMP & OpenCL POCL with G++ 7
+  docker:
+    name: Run the validation inside Docker with specific OS and options
 
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+       include:
+         - c_compiler: gcc-7
+           cxx_compiler: g++-7
+           OpenMP: ON
+           OpenCL: ON
+
+         - c_compiler: gcc-11
+           cxx_compiler: g++-11
+           OpenMP: ON
+           OpenCL: OFF
+
+         - c_compiler: gcc-11
+           cxx_compiler: g++-11
+           OpenMP: ON
+           OpenCL: ON
+
+         - c_compiler: clang-12
+           cxx_compiler: clang++-12
+           OpenMP: ON
+           OpenCL: OFF
+
+         - c_compiler: clang-12
+           cxx_compiler: clang++-12
+           # It looks like POCL uses an older version of Clang/LLVM
+           # which conflict with libomp-12-dev libomp5-12 and thus it
+           # is not possible to use OpenMP at the same time
+           OpenMP: OFF
+           OpenCL: ON
 
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
 
-      - uses: docker://ubuntu:hirsute
+      - name: ${{ matrix.c_compiler }}, ${{ matrix.cxx_compiler }},
+          OpenMP=${{ matrix.OpenMP }}, OpenCL=${{ matrix.OpenCL }}
+          in Docker Ubuntu 21.04
+        uses: docker://ubuntu:hirsute
         env:
-          C_COMPILER: gcc-7
-          CXX_COMPILER: g++-7
-          OPENMP: ON
-          OPENCL: ON
-        with:
-          # The workspace is mounted at a different location inside Docker
-          entrypoint: /github/workspace/.github/workflows/run_ci_in_docker.bash
-
-  docker-gcc11-openmp:
-    name: OpenMP with G++ 11
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v2
-
-      - uses: docker://ubuntu:hirsute
-        env:
-          C_COMPILER: gcc-11
-          CXX_COMPILER: g++-11
-          OPENMP: ON
-          OPENCL: OFF
-        with:
-          # The workspace is mounted at a different location inside Docker
-          entrypoint: /github/workspace/.github/workflows/run_ci_in_docker.bash
-
-  docker-clang12-openmp:
-    name: OpenMP with Clang++ 12
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v2
-
-      - uses: docker://ubuntu:hirsute
-        env:
-          C_COMPILER: clang-12
-          CXX_COMPILER: clang++-12
-          OPENMP: ON
-          OPENCL: OFF
-        with:
-          # The workspace is mounted at a different location inside Docker
-          entrypoint: /github/workspace/.github/workflows/run_ci_in_docker.bash
-
-  docker-gcc11-openmp-opencl-pocl:
-    name: OpenMP & OpenCL POCL with G++ 11
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v2
-
-      - uses: docker://ubuntu:hirsute
-        env:
-          C_COMPILER: gcc-11
-          CXX_COMPILER: g++-11
-          OPENMP: ON
-          OPENCL: ON
-        with:
-          # The workspace is mounted at a different location inside Docker
-          entrypoint: /github/workspace/.github/workflows/run_ci_in_docker.bash
-
-  docker-clang12-openmp-opencl-pocl:
-    name: OpenMP & OpenCL POCL with Clang++ 12
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v2
-
-      - uses: docker://ubuntu:hirsute
-        env:
-          C_COMPILER: clang-12
-          CXX_COMPILER: clang++-12
-          # It looks like POCL uses an older version of Clang/LLVM
-          # which conflict with libomp-12-dev libomp5-12 and thus it
-          # is not possible to use OpenMP at the same time
-          OPENMP: OFF
-          OPENCL: ON
+          C_COMPILER: ${{ matrix.c_compiler }}
+          CXX_COMPILER: ${{ matrix.cxx_compiler }}
+          OPENMP: ${{ matrix.OpenMP }}
+          OPENCL: ${{ matrix.OpenCL }}
         with:
           # The workspace is mounted at a different location inside Docker
           entrypoint: /github/workspace/.github/workflows/run_ci_in_docker.bash
