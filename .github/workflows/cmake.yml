@@ -59,6 +59,7 @@ jobs:
           OPENMP: ON
           OPENCL: ON
         with:
+          # The workspace is mounted at a different location inside Docker
           entrypoint: /github/workspace/.github/workflows/run_ci_in_docker.bash
 
   docker-gcc11-openmp:
@@ -77,6 +78,7 @@ jobs:
           OPENMP: ON
           OPENCL: OFF
         with:
+          # The workspace is mounted at a different location inside Docker
           entrypoint: /github/workspace/.github/workflows/run_ci_in_docker.bash
 
   docker-clang12-openmp:
@@ -95,6 +97,7 @@ jobs:
           OPENMP: ON
           OPENCL: OFF
         with:
+          # The workspace is mounted at a different location inside Docker
           entrypoint: /github/workspace/.github/workflows/run_ci_in_docker.bash
 
   docker-gcc11-openmp-opencl-pocl:
@@ -113,6 +116,7 @@ jobs:
           OPENMP: ON
           OPENCL: ON
         with:
+          # The workspace is mounted at a different location inside Docker
           entrypoint: /github/workspace/.github/workflows/run_ci_in_docker.bash
 
   docker-clang12-openmp-opencl-pocl:
@@ -134,4 +138,5 @@ jobs:
           OPENMP: OFF
           OPENCL: ON
         with:
+          # The workspace is mounted at a different location inside Docker
           entrypoint: /github/workspace/.github/workflows/run_ci_in_docker.bash

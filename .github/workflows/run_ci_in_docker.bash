@@ -49,10 +49,11 @@ apt-get install $APT_ENABLE $C_COMPILER
   && apt-get install $APT_ENABLE opencl-headers \
     ocl-icd-opencl-dev libpocl-dev
 
-# This is where the repository is mounted inside the Docker image
-cd /github/workspace
+# This is where the directory with the repository work-tree
+# is mounted inside the Docker image
+cd $GITHUB_WORKSPACE
 
-echo Content of /github/workspace:
+echo Content of $GITHUB_WORKSPACE
 ls -al
 echo
 
