@@ -50,6 +50,9 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      # Run all the test even if there are some which fail
+      fail-fast: false
+
       matrix:
        include:
          - c_compiler: gcc-7
