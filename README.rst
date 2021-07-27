@@ -9,8 +9,11 @@ triSYCL
 
 .. highlight:: C++
 
-.. image:: https://travis-ci.org/triSYCL/triSYCL.svg?branch=master
-    :target: https://travis-ci.org/triSYCL/triSYCL
+..
+  Add a badge with the build status of the CI
+  Cf https://docs.github.com/en/actions/managing-workflow-runs/adding-a-workflow-status-badge
+.. image:: https://github.com/triSYCL/triSYCL/actions/workflows/cmake.yml/badge.svg
+    :target: https://github.com/triSYCL/triSYCL/actions
 
 Introduction
 ------------
