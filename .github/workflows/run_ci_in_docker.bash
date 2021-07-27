@@ -16,6 +16,10 @@ echo Mounted file systems:
 df --human-readable
 echo
 
+echo Current directory
+pwd
+echo
+
 echo Content of the home directory:
 ls -al ~
 echo
@@ -63,12 +67,14 @@ echo
 # now.
 chown --recursive `id --user` /usr/local
 
-# Configure triSYCL
-cmake . -DTRISYCL_OPENCL=$OPENCL -DTRISYCL_OPENMP=$OPENMP \
-  -DCMAKE_C_COMPILER=${C_COMPILER} -DCMAKE_CXX_COMPILER=${CXX_COMPILER}
+# Configure triSYCL while creating the build directory
+cmake -B $GITHUB_WORKSPACE/build -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
+  -DTRISYCL_OPENCL=$OPENCL -DTRISYCL_OPENMP=$OPENMP \
+  -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER
 
 # Compile all the tests using all the available cores
-cmake --build . --verbose --parallel `nproc`
+cmake --build $GITHUB_WORKSPACE/build --config $BUILD_TYPE \
+  --verbose --parallel `nproc`
 
 # Run the tests
-ctest
+ctest --build $GITHUB_WORKSPACE/build --config $BUILD_TYPE
