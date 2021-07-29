@@ -258,6 +258,13 @@ uint32_t strlen(const char *ptr) {
   return i;
 }
 
+int pow(int i, int p) {
+  int res = 1;
+  for (; p > 0; p--)
+    res *= i;
+  return res;
+}
+
 #endif
 
 } // namespace hw
