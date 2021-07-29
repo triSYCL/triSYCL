@@ -204,15 +204,6 @@ struct program {
     });
   }
 
-  // Outliner for Method 2
-  //#ifdef __SYCL_DEVICE_ONLY__
-  //  template <typename KernelType>
-  //  __attribute__((sycl_kernel))
-  //  void kernel_invoker(KernelType k) {
-  //    k();
-  //  }
-  //#endif
-
   /// Wait for the end of the execution of each tile
   void wait() {
     /// There the device doesn't need to wait for itself to execute.

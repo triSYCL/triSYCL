@@ -315,10 +315,28 @@ tile_infrastructure(int x, int y,
       write_number(write, i / strlen(base), base);
     write(base[i % 10]);
   }
+  static void write_number2(auto write, int i, const char* base = "0123456789") {
+    if (i < 0) {
+      /// This would fail for MIN_INT.
+      i = -i;
+      write('-');
+    }
+    int didgit_count = 1;
+    int tmp = i;
+    while (tmp > strlen(base)) {
+      didgit_count++;
+      tmp = tmp / strlen(base);
+    }
+    for (int d = didgit_count; d > 0; d--)
+      if (d == 1)
+        write(base[i % strlen(base)]);
+      else
+        write(base[(i / (strlen(base) * (d - 1))) % strlen(base)]);
+  }
   __attribute__((noinline)) static void log(int i) {
     char arr[13];
     char *ptr = &arr[0];
-    write_number([&](char c) mutable { *(ptr++) = c; }, i);
+    write_number2([&](char c) mutable { *(ptr++) = c; }, i);
     ptr[0] = '\n';
     ptr[1] = '\0';
     log(arr);

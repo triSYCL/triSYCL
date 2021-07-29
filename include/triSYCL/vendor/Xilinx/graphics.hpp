@@ -43,6 +43,7 @@
 #include <sstream>
 #include <thread>
 #include <iostream>
+#include <chrono>
 
 #include <experimental/mdspan>
 
@@ -659,7 +660,7 @@ struct image_grid : frame_grid {
       for (int i = 0;
            i < std::min(static_cast<int>(data.extent(1)), image_x);
            ++i) {
-        assert(!std::isnan(data(j, i)));
+
         /* Mirror the image vertically to display the pixels in a
            mathematical sense */
         output(image_y - 1 - j,i) = p.palettize(data(j,i),
@@ -916,8 +917,12 @@ struct application {
     dv.tile(x, y).host.min_value = min_value;
     dv.tile(x, y).host.max_value = min_value;
 
-    auto cmp = [](PixelTy a, PixelTy b) {
-      constexpr auto epsilon = 0.0001;
+    PixelTy avg_delta = 0;
+    int avg_count = 0;
+    auto cmp = [&](PixelTy a, PixelTy b) {
+      constexpr auto epsilon = 0.01;
+      avg_delta = (avg_delta * avg_count + std::abs(a - b)) / (avg_count + 1);
+      avg_count++;
       if constexpr (std::is_floating_point_v<PixelTy>)
         return std::abs(a - b) < epsilon;
       else
@@ -935,6 +940,8 @@ struct application {
       __builtin_debugtrap();                                                   \
     }                                                                          \
   } while (0)
+// __builtin_debugtrap();
+// #define FAIL_IF(COND, EXTRA) (void)(COND)
 
     dv.host_tile_counter++;
     if (dv.host_tile_counter == w->nx * w->ny) {
@@ -971,6 +978,8 @@ struct application {
       }
       dv.frame_counter++;
       dv.barrier.wait();
+      std::cout << "\r avg_delta = " << avg_delta << "       ";
+      std::flush(std::cout);
     }
 #undef FAIL_IF
   };
@@ -1026,6 +1035,11 @@ struct application {
       h.memcpy_h2d(acap::hw::graphic_begin_offset, &gr, sizeof(gr));
     });
 
+    /// This is a time_point of the last frame of tile 0, 0;
+    /// Since all tile are going at the same speed we are only measuring 1 of
+    /// them.
+    std::chrono::time_point<std::chrono::system_clock> last_frame;
+
     after_init->wait();
 
     TRISYCL_DUMP("Core graphics initialized");
@@ -1036,10 +1050,10 @@ struct application {
         acap::aie::soft_barrier::host_side barrier{
             h, acap::hw::graphic_begin_offset +
                    offsetof(graphics_record<PixelTy>, barrier)};
-        barrier.wait();
+        // barrier.wait();
         /// If this is not waiting go check the next tile
-        // if (!barrier.try_arrive())
-        //   return;
+        if (!barrier.try_arrive())
+          return;
         TRISYCL_DUMP("updating frame " << x << ", " << y);
         h.memcpy_d2h(&gr, acap::hw::graphic_begin_offset,
                      graphics_record<PixelTy>::no_lock_size);
@@ -1063,6 +1077,18 @@ struct application {
         
         maybe_validate_data(x, y, gr.min_value, gr.max_value);
 
+        if (x == 0 && y == 0) {
+          auto current = std::chrono::system_clock::now();
+          if (td.counter != 0) {
+            std::cout << "\r frame time = "
+                      << std::chrono::duration_cast<std::chrono::milliseconds>(
+                             current - last_frame)
+                             .count()
+                      << "ms      ";
+            std::flush(std::cout);
+          }
+          last_frame = current;
+        }
         /// Counter for frame processed by the host.
         td.counter++;
       });
