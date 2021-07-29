@@ -61,12 +61,6 @@ echo Content of $GITHUB_WORKSPACE
 ls -al
 echo
 
-# Since mdspan is installed by default into /usr/local, make the
-# directory writable by the user to avoid running the whole CMake
-# process as root... Well, here this is running as root anyway for
-# now.
-chown --recursive `id --user` /usr/local
-
 # Configure triSYCL while creating the build directory
 cmake -B $GITHUB_WORKSPACE/build -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
   -DTRISYCL_OPENCL=$OPENCL -DTRISYCL_OPENMP=$OPENMP \
