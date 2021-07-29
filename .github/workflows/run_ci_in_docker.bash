@@ -77,4 +77,7 @@ cmake --build $GITHUB_WORKSPACE/build --config $BUILD_TYPE \
   --verbose --parallel `nproc`
 
 # Run the tests
-ctest --build $GITHUB_WORKSPACE/build --config $BUILD_TYPE
+(
+  cd $GITHUB_WORKSPACE/build ;
+  ctest --build-config $BUILD_TYPE
+)
