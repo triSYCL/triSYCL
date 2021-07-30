@@ -304,30 +304,24 @@ tile_infrastructure(int x, int y,
     log_internal("wait ");
     log_internal(ptr);
   }
-  static void write_number(auto write, int i, const char* base = "0123456789") {
-    if (i < 0) {
-      write('-');
-      /// This would fail for MIN_INT.
-      write_number(write, -i, base);
-      return;
-    }
-    if (i >= strlen(base))
-      write_number(write, i / strlen(base), base);
-    write(base[i % 10]);
-  }
-  static void write_number2(auto write, int i, const char* base = "0123456789") {
+  static void write_number2(auto write, int i, const char* base_char = "0123456789") {
     if (i < 0)
       write('-');
+    /// For 0 print 0 instead of nothing.
+    if (i == 0) {
+      write(base_char[0]);
+      return;
+    }
 
-    int base_size = strlen(base);
+    int base = strlen(base_char);
     int digit_count = 1;
     int tmp = i;
-    while (std::abs(tmp) > base_size) {
+    while (tmp >= base || tmp <= -base) {
       digit_count++;
-      tmp = tmp / base_size;
+      tmp = tmp / base;
     }
     for (int d = digit_count; d > 0; d--)
-      write(base[(std::abs(i) / pow(base_size, d - 1)) % base_size]);
+      write(base_char[std::abs((i / pow(base, d - 1)) % base)]);
   }
   __attribute__((noinline)) static void log(int i) {
     char arr[13];
