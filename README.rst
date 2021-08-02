@@ -225,8 +225,6 @@ News
 
 .. _Boost.Compute: https://github.com/boostorg/compute
 
-.. _Boost.MultiArray: http://www.boost.org/doc/libs/1_55_0/libs/multi_array/doc/index.html
-
 .. _C++: http://www.open-std.org/jtc1/sc22/wg21/
 
 .. _committee: https://isocpp.org/std/the-committee

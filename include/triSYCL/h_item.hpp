@@ -40,9 +40,8 @@ namespace trisycl {
 */
 template <int Dimensions = 1>
 struct h_item : boost::equality_comparable<h_item<Dimensions>> {
-  /// \todo add this Boost::multi_array or STL concept to the
-  /// specification?
-  static constexpr auto dimensionality = Dimensions;
+  /// The number of dimensions of the h_item
+  static auto constexpr rank() { return Dimensions; }
 
 private:
 

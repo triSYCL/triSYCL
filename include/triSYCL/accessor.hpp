@@ -228,47 +228,46 @@ class accessor :
 
   /** Use the accessor with integers à la [][][]
 
-      Use array_view_type::reference instead of auto& because it does not
-      work in some dimensions.
-   */
-  typename accessor_detail::reference operator[](std::size_t index) {
-//#ifdef TRISYCL_DEVICE
-//#else
-    return (*implementation)[index];
-//#endif
+      \return decltype(auto) to return either a reference to the final
+      element when the indexing has been fully resolved or a proxy
+      object to handle the remaining []
+  */
+  decltype(auto) operator[](std::size_t index) {
+     return (*implementation)[index];
   }
 
 
   /** Use the accessor with integers à la [][][]
 
-      Use array_view_type::reference instead of auto& because it does not
-      work in some dimensions.
+      \return decltype(auto) to return either a reference to the final
+      element when the indexing has been fully resolved or a proxy
+      object to handle the remaining []
    */
-  typename accessor_detail::reference operator[](std::size_t index) const {
+  decltype(auto) operator[](std::size_t index) const {
     return (*implementation)[index];
   }
 
 
   /// To use the accessor with [id<>]
-  auto &operator[](id<dimensionality> index) {
+  auto& operator[](const id<dimensionality>& index) {
     return (*implementation)[index];
   }
 
 
   /// To use the accessor with [id<>]
-  auto &operator[](id<dimensionality> index) const {
+  auto& operator[](const id<dimensionality>& index) const {
     return (*implementation)[index];
   }
 
 
   /// To use an accessor with [item<>]
-  auto &operator[](item<dimensionality> index) {
+  auto& operator[](const item<dimensionality>& index) {
     return (*this)[index.get_id()];
   }
 
 
   /// To use an accessor with [item<>]
-  auto &operator[](item<dimensionality> index) const {
+  auto& operator[](const item<dimensionality>& index) const {
     return (*this)[index.get_id()];
   }
 
@@ -277,7 +276,7 @@ class accessor :
 
       \todo Add in the specification because used by HPC-GPU slide 22
   */
-  auto &operator[](nd_item<dimensionality> index) {
+  auto& operator[](const nd_item<dimensionality>& index) {
     return (*this)[index.get_global_id()];
   }
 
@@ -285,7 +284,7 @@ class accessor :
 
       \todo Add in the specification because used by HPC-GPU slide 22
   */
-  auto &operator[](nd_item<dimensionality> index) const {
+  auto& operator[](const nd_item<dimensionality>& index) const {
     return (*this)[index.get_global_id()];
   }
 
@@ -324,7 +323,6 @@ class accessor :
     return implementation->get_pointer();
   }
 
-
   /** Forward all the iterator functions to the implementation
 
       \todo Add these functions to the specification
@@ -358,13 +356,6 @@ class accessor :
     return implementation->end();
   }
 
-
-  // const_iterator begin() const { return implementation->begin(); }
-
-
-  // const_iterator end() const { return implementation->end(); }
-
-
   typename accessor_detail::const_iterator cbegin() const {
     return implementation->cbegin();
   }
@@ -385,12 +376,6 @@ class accessor :
   }
 
 
-  // const_reverse_iterator rbegin() const { return array.rbegin(); }
-
-
-  // const_reverse_iterator rend() const { return array.rend(); }
-
-
   typename accessor_detail::const_reverse_iterator crbegin() const {
     return implementation->rbegin();
   }
@@ -399,7 +384,6 @@ class accessor :
   typename accessor_detail::const_reverse_iterator crend() const {
     return implementation->rend();
   }
-
 };
 
 /// @} End the execution Doxygen group

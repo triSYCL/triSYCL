@@ -16,6 +16,10 @@ echo Mounted file systems:
 df --human-readable
 echo
 
+echo Current directory
+pwd
+echo
+
 echo Content of the home directory:
 ls -al ~
 echo
@@ -33,7 +37,7 @@ apt-get update
 apt-get dist-upgrade $APT_ENABLE
 
 # Install packages required by the CI
-apt-get install $APT_ENABLE apt-utils cmake libboost-all-dev \
+apt-get install $APT_ENABLE git apt-utils cmake libboost-all-dev \
   librange-v3-dev
 
 # Install the required C compiler:
@@ -57,12 +61,17 @@ echo Content of $GITHUB_WORKSPACE
 ls -al
 echo
 
-# Configure triSYCL
-cmake . -DTRISYCL_OPENCL=$OPENCL -DTRISYCL_OPENMP=$OPENMP \
-  -DCMAKE_C_COMPILER=${C_COMPILER} -DCMAKE_CXX_COMPILER=${CXX_COMPILER}
+# Configure triSYCL while creating the build directory
+cmake -B $GITHUB_WORKSPACE/build -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
+  -DTRISYCL_OPENCL=$OPENCL -DTRISYCL_OPENMP=$OPENMP \
+  -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER
 
 # Compile all the tests using all the available cores
-cmake --build . --verbose --parallel `nproc`
+cmake --build $GITHUB_WORKSPACE/build --config $BUILD_TYPE \
+  --verbose --parallel `nproc`
 
 # Run the tests
-ctest
+(
+  cd $GITHUB_WORKSPACE/build ;
+  ctest --build-config $BUILD_TYPE
+)

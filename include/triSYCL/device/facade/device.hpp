@@ -1,7 +1,7 @@
-#ifndef TRISYCL_SYCL_DEVICE_DETAIL_DEVICE_FACADE_DEVICE_HPP
-#define TRISYCL_SYCL_DEVICE_DETAIL_DEVICE_FACADE_DEVICE_HPP
+#ifndef TRISYCL_SYCL_DEVICE_FACADE_DEVICE_HPP
+#define TRISYCL_SYCL_DEVICE_FACADE_DEVICE_HPP
 
-/** \file A SYCL device facade to implement more easily a SYCL
+/** \file A SYCL device façade to implement more easily a SYCL
     device concept
 
     This file is distributed under the University of Illinois Open Source
@@ -41,4 +41,4 @@ public:
 
 }
 
-#endif // TRISYCL_SYCL_DEVICE_DETAIL_DEVICE_FACADE_DEVICE_HPP
+#endif // TRISYCL_SYCL_DEVICE_FACADE_DEVICE_HPP
