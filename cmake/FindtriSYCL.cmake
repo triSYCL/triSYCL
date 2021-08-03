@@ -249,8 +249,6 @@ message(STATUS "triSYCL kernel trace:             ${TRISYCL_TRACE_KERNEL}")
 
 find_package(Threads REQUIRED)
 
-find_package(range-v3 REQUIRED)
-
 # Install the experimental mdspan implementation described in ISO C++
 # P0009 proposal
 # https://github.com/ORNL/cpp-proposals-pub/tree/master/P0009
@@ -264,6 +262,17 @@ FetchContent_Declare(experimental_mdspan
   GIT_PROGRESS TRUE
 )
 FetchContent_MakeAvailable(experimental_mdspan)
+
+# Get directly a recent version of range-v3 at the source because
+# there are some issues with some old versions provided as
+# distribution packages
+FetchContent_Declare(range_v3
+  GIT_REPOSITORY    https://github.com/ericniebler/range-v3
+  GIT_SHALLOW       TRUE
+  GIT_TAG           0487cca29e352e8f16bbd91fda38e76e39a0ed28
+  GIT_PROGRESS TRUE
+)
+FetchContent_MakeAvailable(range_v3)
 
 #######################
 #  add_sycl_to_target
