@@ -249,16 +249,17 @@ message(STATUS "triSYCL kernel trace:             ${TRISYCL_TRACE_KERNEL}")
 
 find_package(Threads REQUIRED)
 
-# Install the experimental mdspan implementation described in ISO C++
-# P0009 proposal
-# https://github.com/ORNL/cpp-proposals-pub/tree/master/P0009
+# To get some content directly at the source
 include(FetchContent)
 # Display what is happening behind the scene for less confusion
 set(FETCHCONTENT_QUIET FALSE)
+
+# Install the experimental mdspan implementation described in ISO C++
+# P0009 proposal https://github.com/ORNL/cpp-proposals-pub/tree/master/P0009
 FetchContent_Declare(experimental_mdspan
   GIT_REPOSITORY    https://github.com/kokkos/mdspan
   GIT_SHALLOW       TRUE
-  GIT_TAG           origin/stable
+  GIT_TAG           5694f21c39f3b948d06a0c63b9c219bf802e28a8
   GIT_PROGRESS TRUE
 )
 FetchContent_MakeAvailable(experimental_mdspan)
