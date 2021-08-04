@@ -103,7 +103,7 @@ if("${PROJECT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
   set(CPACK_PACKAGE_VERSION_MINOR ${TRISYCL_VERSION_MINOR} )
   set(CPACK_PACKAGE_VERSION_PATCH ${TRISYCL_VERSION_PATCH} )
 
-  set(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-dev,librange-v3-dev")
+  set(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-dev")
   set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "opencl-c-headers (>=1.2), build-essential, cmake")
 
   include(CPack)
