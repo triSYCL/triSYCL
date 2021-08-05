@@ -1,4 +1,6 @@
 # Typical variables to tweak for the local environment.
+# This is a huge set of hacks used by the developers.
+# Normal users should use the newer CMake approach instead. See doc/cmake.rst
 
 # See doc/macros.rst for a description of triSYCL-specific macros.
 
@@ -8,12 +10,16 @@ CXX = clang++-13
 # To use libc++ instead of libstdc++, from libc++-dev & libc++abi-dev packages
 #CXXFLAGS += -stdlib=libc++
 
+# Update to where https://github.com/Neargye/magic_enum is
 CXXFLAGS += -I/home/rkeryell/Xilinx/Projects/C++/magic_enum/include
+
+# To try some development version of Boost.Fiber
 #CXXFLAGS += -I/home/rkeryell/Xilinx/Projects/C++/Boost/fiber/include
 
 # Work around Clang++-11 dev that breaks concepts for range-v3
 # CXXFLAGS += -U__cpp_concepts
 # Even better: use the latest version because it solves other things too
+# from https://github.com/ericniebler/range-v3
 CXXFLAGS += -I/home/rkeryell/Xilinx/Projects/C++/range-v3/include
 
 # But everything works fine with GCC 9 at least
@@ -147,8 +153,8 @@ triSYCL_DIR = $(abspath $(dir $(lastword $(MAKEFILE_LIST)))/..)
 # Use all the .cpp C++ files from the subdirectories that have a 1-1
 # mapping with the binaries to generate, that means the binary is made
 # from only one compilation unit (1 source file)
-#FILES_CPP = $(wildcard */*.cpp)
-FILES_CPP = $(wildcard acap/*.cpp)
+FILES_CPP = $(wildcard */*.cpp)
+#FILES_CPP = $(wildcard acap/*.cpp)
 TARGETS = $(basename $(FILES_CPP))
 
 # There are also .cc C++ files that are used to test binaries made from
@@ -217,7 +223,7 @@ endif
 
 # To test C++2a <mdspan>, specify with this variable where the
 # implementation is, typically the local directory containing
-# https://github.com/hcedwar/ornl-cpp-proposals-pub/tree/master/P0009/prototype/include
+# https://github.com/kokkos/mdspan/tree/stable/include
 ifdef TRISYCL_MDSPAN_INCPATH
   CXXFLAGS += -I$(TRISYCL_MDSPAN_INCPATH)
 endif
@@ -303,9 +309,9 @@ check:  $(TARGETS_CC)
 	# Launch testing with lit tool from LLVM in current directory
 	echo Using $(CXX) compiler:
 	# lit can be found for example on Debian/Ubuntu in package
-	# llvm-10-tools in /usr/lib/llvm-10/build/utils/lit/lit.py
+	# llvm-13-tools in /usr/lib/llvm-13/build/utils/lit/lit.py
 	# so try before running the check:
-	# export TRISYCL_LIT=/usr/lib/llvm-10/build/utils/lit/lit.py
+	# export TRISYCL_LIT=/usr/lib/llvm-13/build/utils/lit/lit.py
 	# The config file for triSYCL needs at least Python 3.3
 	test "unset$$TRISYCL_LIT == unset" \
 	  && echo 'Initialize TRISYCL_LIT variable to the path of "lit" command' ; \
