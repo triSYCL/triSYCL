@@ -10,10 +10,10 @@
 #########################
 #
 # Tools for finding and building with triSYCL.
-#
-# Requite CMake version 3.5 or higher
 
-cmake_minimum_required (VERSION 3.5)
+# Require CMake version 3.16 or higher
+cmake_minimum_required (VERSION 3.16)
+
 # The name of the project (forward declare language)
 project(triSYCL CXX)
 
@@ -122,7 +122,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
   # Change to /std:c++latest once Boost::funtional is fixed
   # (1.63.0 with toolset v141 not working)
-  set_target_cxx_std(_trisycl_cxxfeatures 14)
+  set_target_cxx_std(_trisycl_cxxfeatures 17)
   # Replace default Warning Level 3 with 4 (/Wall is pretty-much useless on MSVC
   # system headers are plagued with warnings)
   string(REGEX REPLACE "/W[0-9]" "/W4" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
@@ -251,7 +251,31 @@ message(STATUS "triSYCL kernel trace:             ${TRISYCL_TRACE_KERNEL}")
 
 find_package(Threads REQUIRED)
 
-find_package(range-v3 REQUIRED)
+# To get some content directly at the source
+include(FetchContent)
+# Display what is happening behind the scene for less confusion
+set(FETCHCONTENT_QUIET FALSE)
+
+# Install the experimental mdspan implementation described in ISO C++
+# P0009 proposal https://github.com/ORNL/cpp-proposals-pub/tree/master/P0009
+FetchContent_Declare(experimental_mdspan
+  GIT_REPOSITORY    https://github.com/kokkos/mdspan
+  GIT_SHALLOW       TRUE
+  GIT_TAG           5694f21c39f3b948d06a0c63b9c219bf802e28a8
+  GIT_PROGRESS TRUE
+)
+FetchContent_MakeAvailable(experimental_mdspan)
+
+# Get directly a recent version of range-v3 at the source because
+# there are some issues with some old versions provided as
+# distribution packages
+FetchContent_Declare(range_v3
+  GIT_REPOSITORY    https://github.com/ericniebler/range-v3
+  GIT_SHALLOW       TRUE
+  GIT_TAG           0487cca29e352e8f16bbd91fda38e76e39a0ed28
+  GIT_PROGRESS TRUE
+)
+FetchContent_MakeAvailable(range_v3)
 
 # Graphics library used by triSYCL graphics library
 find_package(PkgConfig REQUIRED)
@@ -284,6 +308,7 @@ function(add_sycl_to_target targetName)
     Boost::context
     Boost::fiber
     Boost::thread
+    std::mdspan
     #Required by BOOST_COMPUTE_USE_OFFLINE_CACHE:
     $<$<BOOL:${TRISYCL_OPENCL}>:Boost::filesystem>
     ${GTKMM_LIBRARIES}

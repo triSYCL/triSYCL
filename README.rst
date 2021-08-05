@@ -9,8 +9,11 @@ ACAP++: ACAP C++ extensions for triSYCL
 
 .. highlight:: C++
 
-.. image:: https://travis-ci.org/triSYCL/triSYCL.svg?branch=master
-    :target: https://travis-ci.org/triSYCL/triSYCL
+..
+  Add a badge with the build status of the CI
+  Cf https://docs.github.com/en/actions/managing-workflow-runs/adding-a-workflow-status-badge
+.. image:: https://github.com/triSYCL/triSYCL/actions/workflows/cmake.yml/badge.svg
+    :target: https://github.com/triSYCL/triSYCL/actions
 
 Xilinx ACAP extensions
 ----------------------
@@ -229,8 +232,6 @@ News
 .. _Bolt: https://github.com/HSA-Libraries/Bolt
 
 .. _Boost.Compute: https://github.com/boostorg/compute
-
-.. _Boost.MultiArray: http://www.boost.org/doc/libs/1_55_0/libs/multi_array/doc/index.html
 
 .. _C++: http://www.open-std.org/jtc1/sc22/wg21/
 

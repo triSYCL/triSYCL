@@ -1,5 +1,5 @@
 # The minimum version of CMake necessary to build this project
-cmake_minimum_required (VERSION 3.5)
+cmake_minimum_required (VERSION 3.16)
 
 set(TRISYCL_VERSION_MAJOR 0)
 set(TRISYCL_VERSION_MINOR 1)
@@ -93,7 +93,7 @@ if("${PROJECT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
   set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${TRISYCL_VERSION}-${CMAKE_HOST_SYSTEM_NAME}" )
   set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}-Source" )
 
-  set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "SYCL reference implementation" )
+  set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "triSYCL experimental implementation" )
   set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
   set(CPACK_PACKAGE_VENDOR "Neutral" )
   set(CPACK_PACKAGE_CONTACT "${PROJECT_NAME} Maintainers")
@@ -103,7 +103,7 @@ if("${PROJECT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
   set(CPACK_PACKAGE_VERSION_MINOR ${TRISYCL_VERSION_MINOR} )
   set(CPACK_PACKAGE_VERSION_PATCH ${TRISYCL_VERSION_PATCH} )
 
-  set(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-dev,librange-v3-dev")
+  set(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-dev")
   set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "opencl-c-headers (>=1.2), build-essential, cmake")
 
   include(CPack)
