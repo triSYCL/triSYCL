@@ -37,8 +37,10 @@ using namespace std::chrono_literals;
 
 #include <boost/thread.hpp>
 
-
 using namespace sycl::vendor::xilinx;
+
+/// The type used to do all the computations
+using data_t = float;
 
 // The size of the machine to use
 //using layout = acap::aie::layout::size<5,4>;
@@ -55,13 +57,17 @@ boost::barrier b4 { geography::size };
 static auto constexpr K = 1/300.0;
 static auto constexpr g = 9.81;
 static auto constexpr alpha = K*g;
+/// Some dissipation factor to avoid divergence
 static auto constexpr damping = 0.999;
 
-static auto constexpr image_size = 100;
+/// Edge size of the tile square images
+static auto constexpr image_size = 100
+;
 /// Add a drop almost between tile (1,1) and (2,2)
 static auto constexpr x_drop = image_size*2 - 3;
 static auto constexpr y_drop = image_size*2;
 static auto constexpr drop_value = 100;
+
 /** Time-step interval between each display.
     Use 1 to display all the frames, 2 for half the frame and so on. */
 static auto constexpr display_time_step = 2;
@@ -142,22 +148,22 @@ auto is_harbor = [] (auto x, auto y) constexpr -> bool {
 /// A sequential reference implementation of wave propagation
 template <auto size_x, auto size_y, auto display_tile_size>
 struct reference_wave_propagation {
-  using space = std::experimental::mdspan<double,
+  using space = std::experimental::mdspan<data_t,
                                           std::experimental::extents<size_y,
                                                                      size_x>>;
   // It would be nice to have a constexpr static member to express this,
   // but right now size() is a member function
-  //double u_m[space::size()];
+  //data_t u_m[space::size()];
   static auto constexpr linear_size = size_x*size_y;
-  double u_m[linear_size];
+  data_t u_m[linear_size];
   space u { u_m }; // Horizontal speed
-  double v_m[linear_size];
+  data_t v_m[linear_size];
   space v { v_m }; // Vertical speed
-  double w_m[linear_size];
+  data_t w_m[linear_size];
   space w { w_m }; // Local delta depth
-  double side_m[linear_size];
+  data_t side_m[linear_size];
   space side { side_m }; // Hard wall limit
-  double depth_m[linear_size];
+  data_t depth_m[linear_size];
   space depth { depth_m }; // Average depth
 
   /// Initialize the state variables
@@ -229,7 +235,7 @@ struct reference_wave_propagation {
   void compare_with_sequential_reference_e(const char *message, int x, int y,
                                            Array &arr,
                                            const MDspan_ref &ref) {
-    const std::experimental::mdspan<double,
+    const std::experimental::mdspan<data_t,
                                     std::experimental::extents<image_size,
                                                                image_size>>
       md { &arr[0][0] };
@@ -295,16 +301,16 @@ reference_wave_propagation
 /// All the memory modules are the same
 template <typename AIE, int X, int Y>
 struct memory : acap::aie::memory<AIE, X, Y> {
-  double u[image_size][image_size]; //< Horizontal speed
-  double v[image_size][image_size]; //< Vertical speed
-  double w[image_size][image_size]; //< Local delta depth
-  double side[image_size][image_size]; //< Hard wall limit
-  double depth[image_size][image_size]; //< Average depth
+  data_t u[image_size][image_size]; //< Horizontal speed
+  data_t v[image_size][image_size]; //< Vertical speed
+  data_t w[image_size][image_size]; //< Local delta depth
+  data_t side[image_size][image_size]; //< Hard wall limit
+  data_t depth[image_size][image_size]; //< Average depth
 };
 
 
 TRISYCL_DEBUG_ONLY(
-static auto minmax_element(const double value[image_size][image_size]) {
+static auto minmax_element(const data_t value[image_size][image_size]) {
   return std::minmax_element(&value[0][0],
                              &value[image_size][image_size]);
 }
@@ -424,7 +430,7 @@ struct tile : acap::aie::tile<AIE, X, Y> {
   void run() {
     initialize_space();
     auto& m = t::mem();
-    std::experimental::mdspan<double,
+    std::experimental::mdspan<data_t,
                               std::experimental::extents<image_size,
                                                          image_size>>
       md { &m.w[0][0] };
