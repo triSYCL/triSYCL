@@ -5,7 +5,10 @@ ACAP++ environment
   Not supported by GitHub :-(
   include:: doc/common-includes.rst
 
-Some ACAP++ examples are found in `tests/acap </tests/acap>`_
+Some ACAP++ examples are found in `tests/acap </tests/acap>`_,
+`tests/acap-buffer </tests/acap-buffer>`_, `tests/acap-lock
+</tests/acap-lock>`_, `tests/acap-mem </tests/acap-mem>`_, `tests/air
+</tests/air>`_.
 
 The Doxygen-ized version of the API documentation can be found in the
 precompiled
@@ -19,7 +22,7 @@ Installation
 
 Since it is based on modern C++, the best way to have everything
 installed is to run Linux with the latest distribution, such as
-Debian/unstable or Ubuntu 18.10.
+Debian/unstable or Ubuntu 21.04, but it might work on older system too.
 
 Such machines do exist at Xilinx, such as ``xsjsycl40.xilinx.com`` or
 ``xsjsycl41.xilinx.com`` we use to develop ACAP++ and you can ``ssh
@@ -41,24 +44,8 @@ work on latest Ubuntu too, just adapt the compiler versions):
 
 .. code:: bash
 
-  sudo apt-get install git make cmake clang-9 libomp-9-dev llvm-9-dev g++-8 \
-    libboost-all-dev libgtkmm-3.0-dev libpocl-dev
-
-There is also a dependency on the ``mdspan`` library from the ISO C++
-TS which is not yet in the standard but you can get with::
-
-  git clone https://github.com/kokkos/mdspan
-
-and set the ``TRISYCL_MDSPAN_INCPATH`` environment variable to the
-absolute path of the ``.../include`` directory.
-
-But you can also install it globally with::
-
-  sudo cp -a .../include/experimental /usr/local/include
-
-or link it symbolically instead with::
-
-  sudo ln -s .../experimental /usr/local/include/experimental
+  sudo apt-get install git make cmake clang-13 libomp-13-dev \
+    llvm-13-dev g++-11 libboost-all-dev libgtkmm-3.0-dev libpocl-dev
 
 
 Runtime environment
@@ -97,11 +84,11 @@ Compiling with Make
 To compile a given test program, go into the `tests </tests>`_
 directory and execute::
 
-  make acap/hello_world
+  make acap/hello_world_uniform_lambda
 
 and run the program with::
 
-  acap/hello_world
+  acap/hello_world_uniform_lambda
 
 
 Compiling with CMake
@@ -110,7 +97,7 @@ Compiling with CMake
 Create a ``build`` directory somewhere and jump into it. From there,
 run::
 
-  CXX=clang++-9 cmake /where-the-acap++top-directory-is/
+  CXX=clang++-13 cmake /where-the-acap++top-directory-is/
 
 Compile only the ACAP examples with::
 
@@ -220,11 +207,3 @@ now.
 .. _Vulkan: https://www.khronos.org/vulkan/
 
 .. _Xilinx: http://www.xilinx.com
-
-..
-    # Some Emacs stuff:
-    ### Local Variables:
-    ### mode: rst
-    ### minor-mode: flyspell
-    ### ispell-local-dictionary: "american"
-    ### End:
