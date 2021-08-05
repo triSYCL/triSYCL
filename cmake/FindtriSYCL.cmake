@@ -277,6 +277,15 @@ FetchContent_Declare(range_v3
 )
 FetchContent_MakeAvailable(range_v3)
 
+# Get directly a recent version of magic_enum
+FetchContent_Declare(magic_enum
+  GIT_REPOSITORY    https://github.com/Neargye/magic_enum
+  GIT_SHALLOW       TRUE
+  GIT_TAG           v0.7.3
+  GIT_PROGRESS TRUE
+)
+FetchContent_MakeAvailable(magic_enum)
+
 # Graphics library used by triSYCL graphics library
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTKMM gtkmm-3.0)
@@ -313,6 +322,7 @@ function(add_sycl_to_target targetName)
     $<$<BOOL:${TRISYCL_OPENCL}>:Boost::filesystem>
     ${GTKMM_LIBRARIES}
     range-v3::range-v3
+    magic_enum::magic_enum
   )
 
   # Compile definitions
