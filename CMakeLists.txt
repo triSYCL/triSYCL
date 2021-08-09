@@ -10,6 +10,11 @@ set(TRISYCL_VERSION
 project(triSYCL VERSION ${TRISYCL_VERSION} LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17 CACHE STRING "C++ standard to use")
 
+# Pick the Release build type if not defined (to have range-v3 happy)
+if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "")
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "" FORCE)
+endif()
+
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 include(FindtriSYCL)
