@@ -12,6 +12,7 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <algorithm>
 #include <cstddef>
 #include <cstdint>
 #include <type_traits>
@@ -139,18 +140,13 @@ constexpr uint32_t tile_mem_begin_offset = args_end_offset;
 constexpr uint32_t tile_mem_size = 0x4000;
 constexpr uint32_t tile_mem_end_offset = tile_mem_begin_offset + tile_mem_size;
 
-/// contains the log_record and the log buffer that follows it.
-constexpr uint32_t log_buffer_begin_offset = tile_mem_end_offset;
-constexpr uint32_t log_buffer_size = 0x800;
-constexpr uint32_t log_buffer_end_offset = log_buffer_begin_offset + log_buffer_size;
-
 /// contains the graphics_record.
-constexpr uint32_t graphic_begin_offset = log_buffer_end_offset;
-constexpr uint32_t graphic_size = 0x400;
-constexpr uint32_t graphic_end_offset = graphic_begin_offset + graphic_size;
+constexpr uint32_t rpc_record_begin_offset = tile_mem_end_offset;
+constexpr uint32_t rpc_record_size = 0x1000;
+constexpr uint32_t rpc_record_end_offset = rpc_record_begin_offset + rpc_record_size;
 
 /// Offset of the last dedicated section
-constexpr uint32_t last_end_offset = graphic_end_offset;
+constexpr uint32_t last_end_offset = rpc_record_end_offset;
 
 /// The minimum size we want to keep for globabl variables
 constexpr uint32_t min_global_variable_size = 0x800;
@@ -219,25 +215,6 @@ dir get_own_memory_module_dir() {
 
 #endif
 
-struct log_record {
-#ifdef __SYCL_DEVICE_ONLY__
-  /// For device only
-
-  /// get the address the log_record
-  /// It is marked volatile because the data can be read by the host
-  static volatile log_record *get() {
-    return (log_record *)(self_tile_addr(get_parity_dev()) +
-                          log_buffer_begin_offset);
-  }
-  /// get the address of the buffer to write logs into, it is volatile because
-  /// the host can read it.
-  volatile char *get_data() volatile { return data; }
-#endif
-  uint32_t host_emit_count;
-  uint32_t size;
-  char data[];
-};
-
 #if defined(__SYCL_DEVICE_ONLY__)
 
 /// get the X coordinate in the acap model
@@ -265,6 +242,26 @@ int pow(int i, int p) {
   return res;
 }
 
+#endif
+
+template <typename To, typename From>
+inline To bit_cast(const From &from) noexcept {
+  To to;
+  std::memset(&to, 0, sizeof(To));
+  std::memcpy(&to, &from, std::min(sizeof(To), sizeof(From)));
+  return to;
+}
+
+/// stable_pointer is a repesetation of a device pointer that has the same
+/// layout between the host and the device. Ths issue with this approche is that
+/// applying a + or - to a stable_pointer doesn't result in the same value on
+/// the host and the device.
+#if defined(__SYCL_DEVICE_ONLY__)
+template<typename T>
+using stable_pointer = T*;
+#else
+template<typename T>
+using stable_pointer = uint32_t;
 #endif
 
 } // namespace hw

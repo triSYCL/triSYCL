@@ -74,7 +74,7 @@ template <typename AIEDevice> struct queue {
 
   /// Wait for all the device tiles on this queue to finish
   void wait() const {
-    aie_d.for_each_tile([](auto& t) { t.wait(); });
+    program<device> { aie_d }.wait();
   }
 
   /** Run synchronously a uniform invocable on this queue

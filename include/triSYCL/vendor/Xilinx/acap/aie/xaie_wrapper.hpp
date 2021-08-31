@@ -305,7 +305,6 @@ struct handle {
     detail::no_log_in_this_scope nls;
     xaie::u8 is_done;
     TRISYCL_XAIE(xaie::XAie_CoreReadDoneBit(inst, tile, &is_done));
-    emit_log();
     return is_done;
   }
 
@@ -316,31 +315,8 @@ struct handle {
     xaie::AieRC RC = xaie::XAIE_OK;
     do {
       RC = xaie::XAie_CoreWaitForDone(inst, tile, 1);
-      emit_log();
     } while (RC != xaie::XAIE_OK);
     TRISYCL_DUMP2(std::dec << "(" << get_coord_str() << ") done", "exec");
-  }
-  void prepare_log() { mem_write(acap::hw::log_buffer_begin_offset, 0); }
-  void emit_log() {
-    /// This is executed in tight loops so logs are disabled to prevent too
-    /// much log.
-    detail::no_log_in_this_scope nls;
-    std::string log;
-    int lock = 7;
-
-    acquire(lock);
-    uint32_t log_size = mem_read(acap::hw::log_buffer_begin_offset);
-    if (!log_size) {
-      release(lock);
-      return;
-    }
-    log.resize(log_size);
-    memcpy_d2h(log.data(),
-               acap::hw::log_buffer_begin_offset + sizeof(acap::hw::log_record),
-               log_size);
-    mem_write(acap::hw::log_buffer_begin_offset, 0);
-    release(lock);
-    std::cout << log << std::flush;
   }
   TRISYCL_DEBUG_FUNC void dump_lock_state() {
     std::cout << get_coord_str() << ": lock state:" << std::hex << "0x"

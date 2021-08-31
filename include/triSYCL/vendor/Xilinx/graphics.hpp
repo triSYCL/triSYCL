@@ -25,6 +25,7 @@
 #ifdef __SYCL_XILINX_AIE__
 #include "acap/aie/hardware.hpp"
 #include "acap/aie/lock.hpp"
+#include "acap/aie/rpc.hpp"
 #ifndef __SYCL_DEVICE_ONLY__
 #include "acap/aie/xaie_wrapper.hpp"
 #endif
@@ -63,43 +64,6 @@ namespace trisycl::vendor::xilinx::graphics {
 // RGB 8 bit images, so 3 bytes per pixel
 using rgb = std::array<std::uint8_t, 3>;
 
-#ifdef __SYCL_XILINX_AIE__
-
-/// This struct needs to have the same layout on the host and the device.
-template <typename PixelTy>
-struct graphics_record {
-#ifdef __SYCL_DEVICE_ONLY__
-  /// This is only possible on device.
-  static graphics_record *get() {
-    return (graphics_record *)(acap::hw::self_tile_addr(
-                                   acap::hw::get_parity_dev()) +
-                               acap::hw::graphic_begin_offset);
-  }
-#endif
-  uint32_t is_done;
-  /// pointer do not have the same layout on device and host so data is treated
-  /// as a pointer on the device and as a uint32_t on the host.
-#ifdef __SYCL_DEVICE_ONLY__
-  void *data;
-#else
-  uint32_t data;
-#endif
-  PixelTy min_value;
-  PixelTy max_value;
-  uint32_t counter;
-
-  uint32_t padding;
-
-  /// the device_side shouldn't be memcpyed to the device
-  acap::aie::soft_barrier::device_side barrier;
-
-  /// The lock shouldn't be overridden will writing back this struct on the
-  /// device.
-  static constexpr std::size_t no_lock_size =
-      offsetof(graphics_record, barrier);
-};
-#endif
-
 #ifdef __SYCL_DEVICE_ONLY__
 
 /// This only exists such for compilation purposes and should never be used on
@@ -119,6 +83,8 @@ struct image_grid {
 
 template<typename PixelTy>
 struct application {
+  bool done = false;
+  int counter = 0;
   template <typename T> void set_device(T &&d) {}
   void enable_data_validation() {}
   template<typename T>
@@ -137,8 +103,7 @@ struct application {
 
   /// Test if the window has been closed
   bool is_done() const  {
-    volatile graphics_record<PixelTy> *gr = graphics_record<PixelTy>::get();
-    return gr->is_done;
+    return done;
   }
 
   /// Test if the window has been closed after synchronizing with a barrier
@@ -151,23 +116,17 @@ struct application {
   void validate_tile_data_image(Ts...) {}
 
   void update_tile_data_image(int x, int y, PixelTy *data, PixelTy min_value,
-                              PixelTy max_value) const {
-    volatile graphics_record<PixelTy> *gr = graphics_record<PixelTy>::get();
+                              PixelTy max_value) {
+    acap::aie::image_update_data iud;
     /// This is marked volatile because all data inside gr will be read by the
     /// host and written by the device and is not visible to the device
     /// compiler.
-    gr->data = &data[0];
-    gr->min_value = min_value;
-    gr->max_value = max_value;
+    iud.data = &data[0];
+    iud.min_value = acap::hw::bit_cast<uint64_t>(min_value);
+    iud.max_value = acap::hw::bit_cast<uint64_t>(max_value);
     /// Count frames sent by the device.
-    gr->counter = gr->counter + 1;
-    /// Notify the host that a frame is ready and wait for the host to start processing it
-    gr->barrier.wait();
-
-    /// The host will process the frame so nothing should be touched here.
-
-    /// Wait for the host to finish processing the frame.
-    gr->barrier.wait();
+    iud.counter = counter++;
+    done = acap::aie::rpc::device_side::get()->perform(iud);
   };
 
   graphics::image_grid image_grid() {
@@ -848,16 +807,8 @@ struct application {
     // Wait for the graphics to start
     graphics_initialization.get_future().get();
 #ifdef __SYCL_XILINX_AIE__
-    /// After the background_image_updater has initialized the device for
-    /// graphics transfers it will wait on this barrier.
-    /// This is to prevent the device starting while the device is not yet
-    /// initialized.
-    boost::barrier after_init{2};
-    device_communication_thread = std::thread([=, this, &after_init] {
-      background_image_updater(this, &w->is_done, nx, ny, dev_inst, image_x,
-                               image_y, has_data_validation, &after_init);
-    });
-    after_init.wait();
+    initialize_image_updater_rpc(this, &w->is_done, nx, ny, dev_inst, image_x,
+                                 image_y, has_data_validation);
 #endif
     return *this;
   }
@@ -986,24 +937,21 @@ struct application {
 
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
 
-  static void background_image_updater(application *a,
-                                       std::atomic<bool> *is_done,
-                                       int tile_x_size, int tile_y_size,
-                                       xaie::XAie_DevInst *dev_inst,
-                                       size_t image_x_size, size_t image_y_size,
-                                       bool has_data_validation,
-                                       boost::barrier *after_init) {
+  static void initialize_image_updater_rpc(
+      application *a, std::atomic<bool> *is_done, int tile_x_size,
+      int tile_y_size, xaie::XAie_DevInst *dev_inst, size_t image_x_size,
+      size_t image_y_size, bool has_data_validation) {
     struct tile_data {
       uint32_t counter = 0;
     };
-    TRISYCL_DUMP("Staring background graphics device communication thread");
     std::vector<std::uint8_t> graphic_buffer;
     graphic_buffer.resize(image_x_size * image_y_size * sizeof(PixelTy));
-    
+
     std::vector<tile_data> tiles_data;
     tiles_data.resize(tile_x_size * tile_y_size);
 
-    auto maybe_validate_data = [&](int x, int y, PixelTy min_value, PixelTy max_value) {
+    auto maybe_validate_data = [&](int x, int y, PixelTy min_value,
+                                   PixelTy max_value) {
       if (!has_data_validation)
         return;
 
@@ -1020,86 +968,55 @@ struct application {
         a->dv.barrier.wait();
       }
     };
-    auto for_each_tile = [&](auto &&l) {
-      for (int x = 0; x < tile_x_size; x++)
-        for (int y = 0; y < tile_y_size; y++)
-          l(x, y, xaie::handle{xaie::acap_pos_to_xaie_pos({x, y}), dev_inst},
-            tiles_data[x * tile_y_size + y]);
-    };
-
-    /// Initialized the graphics_record of each tile.
-    for_each_tile([&](int x, int y, xaie::handle h, tile_data &td) {
-      graphics_record<PixelTy> gr;
-      std::memset(&gr, 0, sizeof(gr));
-      /// the device_side of the lock should be zero initialized so this is ok.
-      h.memcpy_h2d(acap::hw::graphic_begin_offset, &gr, sizeof(gr));
-    });
 
     /// This is a time_point of the last frame of tile 0, 0;
     /// Since all tile are going at the same speed we are only measuring 1 of
     /// them.
     std::chrono::time_point<std::chrono::system_clock> last_frame;
 
-    after_init->wait();
-
     TRISYCL_DUMP("Core graphics initialized");
-    while (!(*is_done))
-      for_each_tile([&](int x, int y, xaie::handle h, tile_data &td) {
-        detail::no_log_in_this_scope nls;
-        graphics_record<PixelTy> gr;
-        acap::aie::soft_barrier::host_side barrier{
-            h, acap::hw::graphic_begin_offset +
-                   offsetof(graphics_record<PixelTy>, barrier)};
-        // barrier.wait();
-        /// If this is not waiting go check the next tile
-        if (!barrier.try_arrive())
-          return;
-        TRISYCL_DUMP("updating frame " << x << ", " << y);
-        h.memcpy_d2h(&gr, acap::hw::graphic_begin_offset,
-                     graphics_record<PixelTy>::no_lock_size);
+    acap::aie::image_update_rpc::get().impl =
+        [=](int x, int y, xaie::handle h,
+            acap::aie::image_update_data dev_data) mutable -> uint32_t {
+      tile_data &td = tiles_data[x * tile_y_size + y];
+      TRISYCL_DUMP("updating frame " << x << ", " << y);
 
-        assert(gr.counter == td.counter + 1 && "host received incoherent data");
-        assert(gr.data > 0 && "host received incoherent data");
-        assert(gr.max_value != gr.min_value && "host received incoherent data");
+      assert(dev_data.counter == td.counter &&
+             "host received incoherent data");
+      assert(dev_data.data > 0 && "host received incoherent data");
+      assert(dev_data.max_value != dev_data.min_value &&
+             "host received incoherent data");
 
-        acap::hw::dev_ptr data_ptr = acap::hw::get_dev_ptr({x, y}, gr.data);
-        h.moved(data_ptr.p)
-            .memcpy_d2h(graphic_buffer.data(), data_ptr.offset,
-                        graphic_buffer.size());
+      acap::hw::dev_ptr data_ptr = acap::hw::get_dev_ptr({x, y}, dev_data.data);
+      h.moved(data_ptr.p)
+          .memcpy_d2h(graphic_buffer.data(), data_ptr.offset,
+                      graphic_buffer.size());
 
-        /// notify the tile that processing of the frame is done.
-        barrier.wait();
+      /// This call is not synchronized but this should only be executed while
+      /// the main thread is waiting for the kernel to finish.
+      a->update_tile_data_image(x, y, (PixelTy *)graphic_buffer.data(),
+                                acap::hw::bit_cast<PixelTy>(dev_data.min_value),
+                                acap::hw::bit_cast<PixelTy>(dev_data.max_value));
 
-        /// This call is not synchronized but this should only be executed while
-        /// the main thread is waiting for the kernel to finish.
-        a->update_tile_data_image(x, y, (PixelTy *)graphic_buffer.data(),
-                                  gr.min_value, gr.max_value);
-        
-        maybe_validate_data(x, y, gr.min_value, gr.max_value);
+      maybe_validate_data(x, y, acap::hw::bit_cast<PixelTy>(dev_data.min_value),
+                          acap::hw::bit_cast<PixelTy>(dev_data.max_value));
 
-        if (x == 0 && y == 0) {
-          auto current = std::chrono::system_clock::now();
-          if (td.counter != 0) {
-            std::cout << "\r frame time = "
-                      << std::chrono::duration_cast<std::chrono::milliseconds>(
-                             current - last_frame)
-                             .count()
-                      << "ms      ";
-            std::flush(std::cout);
-          }
-          last_frame = current;
+      if (x == 0 && y == 0) {
+        auto current = std::chrono::system_clock::now();
+        if (td.counter != 0) {
+          std::cout << "\r frame time = "
+                    << std::chrono::duration_cast<std::chrono::milliseconds>(
+                           current - last_frame)
+                           .count()
+                    << "ms      ";
+          std::flush(std::cout);
         }
-        /// Counter for frame processed by the host.
-        td.counter++;
-      });
-
-    TRISYCL_DUMP("Core graphics done");
-    for_each_tile([&](int x, int y, xaie::handle h, tile_data &td) {
-      uint32_t off =
-          acap::hw::graphic_begin_offset + offsetof(graphics_record<PixelTy>, is_done);
-      h.mem_write(off, 1);
-    });
-    TRISYCL_DUMP("Ending background graphics device communication thread");
+        last_frame = current;
+      }
+      /// Counter for frame processed by the host.
+      td.counter++;
+      return *is_done;
+    };
   }
 
 #endif
