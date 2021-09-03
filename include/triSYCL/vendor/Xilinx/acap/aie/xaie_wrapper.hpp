@@ -299,29 +299,35 @@ struct handle {
     TRISYCL_XAIE(xaie::XAie_CoreDisable(inst, tile));
   }
 
-  /// Look if a core has completed execution and return true if it has, it does
-  /// not block.
-  bool try_core_wait() {
-    detail::no_log_in_this_scope nls;
-    xaie::u8 is_done;
-    TRISYCL_XAIE(xaie::XAie_CoreReadDoneBit(inst, tile, &is_done));
-    return is_done;
-  }
+  /// Because of a hardware bug in the done instruction. the behaviour of the
+  /// done intrinsic has changed in the compiler. but the libxaiengine has not
+  /// yet been updated to the new behaviour so these two function do not work
+  /// for now. the runtime uses the rpc system to inform of a kernel being done.
+  ///
+  // /// Look if a core has completed execution and return true if it has, it
+  // does
+  // /// not block.
+  // bool try_core_wait() {
+  //   detail::no_log_in_this_scope nls;
+  //   xaie::u8 is_done;
+  //   TRISYCL_XAIE(xaie::XAie_CoreReadDoneBit(inst, tile, &is_done));
+  //   return is_done;
+  // }
 
-  /// Will block the calling thread until the core has completed execution.
-  void core_wait() {
-    TRISYCL_DUMP2(
-        std::dec << "(" << get_coord_str() << ") Waiting for kernel...", "exec");
-    xaie::AieRC RC = xaie::XAIE_OK;
-    do {
-      RC = xaie::XAie_CoreWaitForDone(inst, tile, 1);
-    } while (RC != xaie::XAIE_OK);
-    TRISYCL_DUMP2(std::dec << "(" << get_coord_str() << ") done", "exec");
-  }
-  TRISYCL_DEBUG_FUNC void dump_lock_state() {
-    std::cout << get_coord_str() << ": lock state:" << std::hex << "0x"
-              << raw_read(0x1EF00) << "\n";
-  }
+  // /// Will block the calling thread until the core has completed execution.
+  // void core_wait() {
+  //   TRISYCL_DUMP2(
+  //       std::dec << "(" << get_coord_str() << ") Waiting for kernel...", "exec");
+  //   xaie::AieRC RC = xaie::XAIE_OK;
+  //   do {
+  //     RC = xaie::XAie_CoreWaitForDone(inst, tile, 1);
+  //   } while (RC != xaie::XAIE_OK);
+  //   TRISYCL_DUMP2(std::dec << "(" << get_coord_str() << ") done", "exec");
+  // }
+  // TRISYCL_DEBUG_FUNC void dump_lock_state() {
+  //   std::cout << get_coord_str() << ": lock state:" << std::hex << "0x"
+  //             << raw_read(0x1EF00) << "\n";
+  // }
 
   /// Acquire the lock
   void acquire(int id) {

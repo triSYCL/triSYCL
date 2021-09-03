@@ -67,6 +67,15 @@ struct send_log_data {
 
 using send_log_rpc = functor_rpc<send_log_data>;
 
+struct done_rpc {
+  struct data_type {};
+#ifndef __SYCL_DEVICE_ONLY__
+  static uint32_t act_on_data(int x, int y, xaie::handle h, data_type d) {
+    return 0;
+  }
+#endif
+};
+
 #ifndef __SYCL_DEVICE_ONLY__
 void initialize_log() {
   send_log_rpc::get().impl = [](int x, int y, xaie::handle h,
@@ -106,22 +115,26 @@ template <typename... Tys> struct rpc_impl {
     }
     void wait_all() {
       ::trisycl::detail::no_log_in_this_scope nls;
-      bool all_done = true;
+      int done_counter = 0;
       do {
-        all_done = true;
         for (int x = 0; x < x_size; x++)
           for (int y = 0; y < y_size; y++) {
-            all_done &= h.moved(x, y).try_core_wait();
             if (!get_barrier(x, y).try_arrive())
               continue;
             Var data;
             h.moved(x, y).memcpy_d2h(&data, addr + offsetof(device_side, data),
                                      sizeof(Var));
-            auto ret = visit(x, y, h.moved(x, y), data);
-            h.moved(x, y).mem_write(addr + offsetof(device_side, ret_val), ret);
+            /// This deals with the special case of 
+            if (data.index() == 0) {
+              done_counter++;
+            } else {
+              auto ret = visit(x, y, h.moved(x, y), data);
+              h.moved(x, y).mem_write(addr + offsetof(device_side, ret_val),
+                                      ret);
+            }
             get_barrier(x, y).wait();
           }
-      } while (!all_done);
+      } while (done_counter < x_size * y_size);
     }
   };
 #endif
@@ -149,7 +162,7 @@ template <typename... Tys> struct rpc_impl {
 };
 
 
-using rpc = rpc_impl<image_update_rpc, send_log_rpc>;
+using rpc = rpc_impl<done_rpc, image_update_rpc, send_log_rpc>;
 
 } // namespace trisycl::vendor::xilinx::acap::aie
 

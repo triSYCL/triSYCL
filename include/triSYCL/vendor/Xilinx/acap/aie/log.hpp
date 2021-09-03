@@ -77,6 +77,14 @@ namespace trisycl::vendor::xilinx::acap {
 }
 
 #if defined(__SYCL_DEVICE_ONLY__)
+void finish_kernel() {
+  trisycl::vendor::xilinx::acap::aie::done_rpc::data_type dt{};
+  trisycl::vendor::xilinx::acap::aie::rpc::device_side::get()->perform(dt);
+  while (1) {
+    acap_intr::memory_fence();
+  }
+}
+
 void __assert_fail(const char *expr, const char *file,
                               unsigned int line, const char *func) {
   using trisycl::vendor::xilinx::acap::log;
@@ -90,7 +98,7 @@ void __assert_fail(const char *expr, const char *file,
   log(expr, /*with_coord*/false);
   log("' failed\n", /*with_coord*/false);
   log("kernel killed\n", /*with_coord*/false);
-  acap_intr::core_done();
+  finish_kernel();
 }
 
 #endif

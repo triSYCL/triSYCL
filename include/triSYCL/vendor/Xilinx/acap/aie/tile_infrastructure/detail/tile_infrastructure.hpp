@@ -32,6 +32,7 @@
 #include "../../dma.hpp"
 #include "../../hardware.hpp"
 #include "../../rpc.hpp"
+#include "../../log.hpp"
 #include "triSYCL/detail/fiber_pool.hpp"
 #include "triSYCL/detail/ranges.hpp"
 #include "triSYCL/vendor/Xilinx/config.hpp"
@@ -115,7 +116,7 @@ template <typename Geography> class tile_infrastructure {
 static void kernel_prerun() {
 }
 static void kernel_postrun() {
-  acap_intr::core_done();
+  finish_kernel();
 }
 #else
 static void kernel_prerun() {
