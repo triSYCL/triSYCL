@@ -17,26 +17,28 @@
 namespace trisycl::vendor::xilinx::acap {
 
 #ifdef __SYCL_DEVICE_ONLY__
-  /// This __attribute__((noinline)) is just to make the IR more readable it is
-  /// not required for any other reason.
-  static void log_internal(const char *ptr) {
+  /// This will send a null terminated string throught the RPC system to the host 
+  void log_internal(const char *ptr) {
     aie::send_log_data sld;
-    sld.data = (void*)ptr;
+    sld.data = ptr;
     sld.size = hw::strlen(ptr);
     acap::aie::rpc::device_side::get()->perform(sld);
   }
 
+  /// This will log the tile coordinates that the null-terminate string.
   __attribute__((noinline)) void log(const char *ptr, bool with_coord = true) {
-    char arr[] = "00, 0 : ";
-    arr[0] = '0' + (hw::get_tile_x_coordinate() / 10);
-    arr[1] = '0' + (hw::get_tile_x_coordinate() % 10);
-    arr[4] = '0' + (hw::get_tile_y_coordinate() % 10);
+    if (with_coord) {
+      char arr[] = "00, 0 : ";
+      arr[0] = '0' + (hw::get_tile_x_coordinate() / 10);
+      arr[1] = '0' + (hw::get_tile_x_coordinate() % 10);
+      arr[4] = '0' + (hw::get_tile_y_coordinate() % 10);
 
-    if (with_coord)
       log_internal(arr);
+    }
     log_internal(ptr);
   }
 
+  /// This function serializes a number into a buffer.
   static void write_number(auto write, int i, const char* base_char = "0123456789") {
     if (i < 0)
       write('-');
@@ -57,7 +59,9 @@ namespace trisycl::vendor::xilinx::acap {
       write(base_char[std::abs((i / pow(base, d - 1)) % base)]);
   }
 
-  __attribute__((noinline)) static void log(int i, bool with_coord = true) {
+  /// This __attribute__((noinline)) is just to make the IR more readable. it is
+  /// not required for any other reason.
+  __attribute__((noinline)) void log(int i, bool with_coord = true) {
     char arr[13];
     char *ptr = &arr[0];
     write_number([&](char c) mutable { *(ptr++) = c; }, i);
@@ -66,10 +70,10 @@ namespace trisycl::vendor::xilinx::acap {
     log(arr, with_coord);
   }
 #else
-  static void log(const char* ptr) {
+  void log(const char* ptr) {
     std::cout << ptr;
   }
-  static void log(int i) {
+  void log(int i) {
     std::cout << i;
   }
 #endif

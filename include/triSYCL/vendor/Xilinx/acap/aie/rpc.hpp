@@ -27,15 +27,18 @@
 #include <string>
 #include <iostream>
 
+#include "triSYCL/detail/overloaded.hpp"
+
 namespace trisycl::vendor::xilinx::acap::aie {
 
-/// This is a convenience wrapper that allows creating functor base rpc easily.
+/// This is a convenience wrapper that allows creating functor based RPC easily.
 template<typename DataTy>
 struct functor_rpc {
   using data_type = DataTy;
 #ifndef __SYCL_DEVICE_ONLY__
   std::function<uint32_t(int, int, xaie::handle, data_type)> impl{};
 
+  /// This is only ever one instance per data type.
   static functor_rpc& get() {
     static functor_rpc val;
     return val;
@@ -49,7 +52,9 @@ struct functor_rpc {
 #endif
 };
 
-/// This struct needs to have the same layout on the host and the device.
+/// This is the data that will be transmitted from the device to the host to
+/// update the image. This struct needs to have the same layout on the host and
+/// the device.
 struct image_update_data {
   hw::stable_pointer<void> data;
   uint64_t min_value;
@@ -59,9 +64,10 @@ struct image_update_data {
 
 using image_update_rpc = functor_rpc<image_update_data>;
 
+/// This is the data that will be transmitted when to the host when the device is logging
 /// This struct needs to have the same layout on the host and the device.
 struct send_log_data {
-  hw::stable_pointer<void> data;
+  hw::stable_pointer<const char> data;
   uint64_t size;
 };
 
@@ -90,9 +96,6 @@ void initialize_log() {
 }
 #endif
 
-template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
-template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
-
 template <typename... Tys> struct rpc_impl {
   using Var = std::variant<typename Tys::data_type...>;
 #ifndef __SYCL_DEVICE_ONLY__
@@ -108,7 +111,7 @@ template <typename... Tys> struct rpc_impl {
       (Call(Tys{}), ...);
     }
     uint32_t visit(int x, int y, xaie::handle h, Var v) {
-      auto visitor = overloaded{[&](typename Tys::data_type data) {
+      auto visitor = detail::overloaded{[&](typename Tys::data_type data) {
         return Tys::act_on_data(x, y, h, data);
       }...};
       return std::visit(visitor, v);

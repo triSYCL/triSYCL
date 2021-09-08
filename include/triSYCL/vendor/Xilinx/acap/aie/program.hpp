@@ -186,8 +186,7 @@ struct program {
   }
 
   /// Create the AIE program with the tiles and memory modules
-  program(AIEDevice &aie_d)
-      : aie_d{aie_d}
+  program(AIEDevice &aie_d) : aie_d { aie_d }
 #ifndef __SYCL_DEVICE_ONLY__
   , rpc_system {
     geo::x_size, geo::y_size, xaie::handle({0, 0}, aie_d.get_dev_inst()),

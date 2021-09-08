@@ -244,6 +244,10 @@ int pow(int i, int p) {
 
 #endif
 
+/// This is function is very similar to the C++20 std::bit_cast but it accepts
+/// bitcasting between types of diffrent sizes. when sizeof(To) > sizeof(From)
+/// bit after sizeof(From) will be 0. when sizeof(From) > sizeof(To), the result
+/// will only contain part of the original object.
 template <typename To, typename From>
 inline To bit_cast(const From &from) noexcept {
   To to;
@@ -252,13 +256,14 @@ inline To bit_cast(const From &from) noexcept {
   return to;
 }
 
-/// stable_pointer is a repesetation of a device pointer that has the same
-/// layout between the host and the device. Ths issue with this approche is that
+/// stable_pointer is a representation of a device pointer that has the same
+/// layout between the host and the device. Ths issue with this approach is that
 /// applying a + or - to a stable_pointer doesn't result in the same value on
 /// the host and the device.
 #if defined(__SYCL_DEVICE_ONLY__)
 template<typename T>
 using stable_pointer = T*;
+static_assert(sizeof(stable_pointer<void>) == sizeof(std::uint32_t));
 #else
 template<typename T>
 using stable_pointer = uint32_t;
