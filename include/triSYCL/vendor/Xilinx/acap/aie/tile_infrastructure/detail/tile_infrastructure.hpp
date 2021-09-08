@@ -304,7 +304,9 @@ tile_infrastructure(int x, int y,
     log_internal("wait ");
     log_internal(ptr);
   }
-  static void write_number2(auto write, int i, const char* base_char = "0123456789") {
+
+  /// Serialize a number into a string
+  static void write_number(auto write, int i, const char* base_char = "0123456789") {
     if (i < 0)
       write('-');
     /// For 0 print 0 instead of nothing.
@@ -324,9 +326,9 @@ tile_infrastructure(int x, int y,
       write(base_char[std::abs((i / pow(base, d - 1)) % base)]);
   }
   __attribute__((noinline)) static void log(int i) {
-    char arr[13];
+    char arr[16];
     char *ptr = &arr[0];
-    write_number2([&](char c) mutable { *(ptr++) = c; }, i);
+    write_number([&](char c) mutable { *(ptr++) = c; }, i);
     ptr[0] = '\n';
     ptr[1] = '\0';
     log(arr);
