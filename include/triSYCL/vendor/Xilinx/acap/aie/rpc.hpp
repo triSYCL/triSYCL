@@ -38,7 +38,8 @@ struct functor_rpc {
 #ifndef __SYCL_DEVICE_ONLY__
   std::function<uint32_t(int, int, xaie::handle, data_type)> impl{};
 
-  /// This is only ever one instance per data type.
+  /// This is only ever one instance per data type, this function will get that
+  /// instance.
   static functor_rpc& get() {
     static functor_rpc val;
     return val;
@@ -62,39 +63,46 @@ struct image_update_data {
   uint32_t counter;
 };
 
+/// The act_on_data has dependencies on graphics.hpp but we do not want to
+/// include graphics.hpp here so we use functor_rpc to have a type-erased RPC
+/// class. and the functor is setup in graphics.hpp.
 using image_update_rpc = functor_rpc<image_update_data>;
 
-/// This is the data that will be transmitted when to the host when the device is logging
-/// This struct needs to have the same layout on the host and the device.
-struct send_log_data {
-  hw::stable_pointer<const char> data;
-  uint64_t size;
-};
-
-using send_log_rpc = functor_rpc<send_log_data>;
-
-struct done_rpc {
-  struct data_type {};
+struct send_log_rpc {
+  /// This is the data that will be transmitted when to the host when the device
+  /// is logging This struct needs to have the same layout on the host and the
+  /// device.
+  struct data_type {
+    hw::stable_pointer<const char> data;
+    uint64_t size;
+  };
 #ifndef __SYCL_DEVICE_ONLY__
-  static uint32_t act_on_data(int x, int y, xaie::handle h, data_type d) {
+  static uint32_t act_on_data(int x, int y, xaie::handle h,
+                              data_type dev_data) {
+    /// Decompose the device pointer into direction of the tile and address in the tile.
+    hw::dev_ptr data_ptr = hw::get_dev_ptr({x, y}, dev_data.data);
+    std::string str;
+    str.resize(dev_data.size);
+    /// Copy the indicated device data into a string.
+    h.moved(data_ptr.p).memcpy_d2h(str.data(), data_ptr.offset, str.size());
+    std::cout << str << std::flush;
     return 0;
   }
 #endif
 };
 
+/// done_rpc is handled in a special wait because indicate if a kernel is done executing.
+struct done_rpc {
+  /// it needs no data, since it is just a signal.
+  struct data_type {};
 #ifndef __SYCL_DEVICE_ONLY__
-void initialize_log() {
-  send_log_rpc::get().impl = [](int x, int y, xaie::handle h,
-                                 send_log_data dev_data) -> uint32_t {
-    hw::dev_ptr data_ptr = hw::get_dev_ptr({x, y}, dev_data.data);
-    std::string str;
-    str.resize(dev_data.size);
-    h.moved(data_ptr.p).memcpy_d2h(str.data(), data_ptr.offset, str.size());
-    std::cout << str << std::flush;
+  static uint32_t act_on_data(int x, int y, xaie::handle h, data_type d) {
+    /// The effect of the signal are handled directly by wait_all
+    assert(false && "This should be handeled by wait_all");
     return 0;
-  };
-}
+  }
 #endif
+};
 
 template <typename... Tys> struct rpc_impl {
   using Var = std::variant<typename Tys::data_type...>;
@@ -106,10 +114,6 @@ template <typename... Tys> struct rpc_impl {
     soft_barrier::host_side get_barrier(int x, int y) {
       return {h.moved(x, y), (uint32_t)(addr + offsetof(device_side, barrier))};
     }
-    template<typename T>
-    static void for_all_type(T&& Call) {
-      (Call(Tys{}), ...);
-    }
     uint32_t visit(int x, int y, xaie::handle h, Var v) {
       auto visitor = detail::overloaded{[&](typename Tys::data_type data) {
         return Tys::act_on_data(x, y, h, data);
@@ -118,25 +122,37 @@ template <typename... Tys> struct rpc_impl {
     }
     void wait_all() {
       ::trisycl::detail::no_log_in_this_scope nls;
+      /// This count the number of kernel that indicated they finished
+      /// executing. any kernel can signal it finished executing just once
+      /// because it stop executing or get stuck in an infinite loop after that.
+      /// so it is not needed to keep track of which kernel stoped executing
+      /// just how many.
       int done_counter = 0;
       do {
         for (int x = 0; x < x_size; x++)
           for (int y = 0; y < y_size; y++) {
+            /// If try_arrive returns true the device has written data and is
+            /// wating on the host to act on it
             if (!get_barrier(x, y).try_arrive())
               continue;
             Var data;
+            /// Read the data the device has written.
             h.moved(x, y).memcpy_d2h(&data, addr + offsetof(device_side, data),
                                      sizeof(Var));
-            /// This deals with the special case of 
+            /// This deals with the special case of a kernel indicating it is
+            /// done. This kernel stoped executing.
             if (data.index() == 0) {
               done_counter++;
             } else {
+              /// Otherwise call the appropriate function.
               auto ret = visit(x, y, h.moved(x, y), data);
+              /// And write back the response.
               h.moved(x, y).mem_write(addr + offsetof(device_side, ret_val),
                                       ret);
             }
             get_barrier(x, y).wait();
           }
+        /// Wait until all kernel have finished.
       } while (done_counter < x_size * y_size);
     }
   };
@@ -154,7 +170,9 @@ template <typename... Tys> struct rpc_impl {
     Var data;
     uint32_t ret_val;
     template <typename Ty> uint32_t perform(Ty &&d) {
+      /// Write the data.
       data = std::forward<Ty>(d);
+      /// Notify the host of the data being available.
       barrier.wait();
       /// Wait for the host to process the data.
       barrier.wait();

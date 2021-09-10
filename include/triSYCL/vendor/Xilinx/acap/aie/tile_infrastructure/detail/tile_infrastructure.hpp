@@ -438,12 +438,6 @@ tile_infrastructure(int x, int y,
                                      << ',' << y()
                                      << ") beginning tile execution",
                     "exec");
-      /// Setup DMA for parameter passing
-      // need to test without
-      // get_dev_handle().mem_dma(hw::args_begin_offset, hw::graphic_end_offset -
-      // hw::args_begin_offset);
-
-      initialize_log();
 
       if constexpr (requires { f.prerun(); })
         f.prerun();
