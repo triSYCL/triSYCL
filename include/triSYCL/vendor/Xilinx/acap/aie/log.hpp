@@ -19,7 +19,7 @@ namespace trisycl::vendor::xilinx::acap {
 #ifdef __SYCL_DEVICE_ONLY__
   /// This will send a null terminated string throught the RPC system to the host 
   void log_internal(const char *ptr) {
-    aie::send_log_data sld;
+    aie::send_log_rpc::data_type sld;
     sld.data = ptr;
     sld.size = hw::strlen(ptr);
     acap::aie::rpc::device_side::get()->perform(sld);
@@ -61,16 +61,24 @@ namespace trisycl::vendor::xilinx::acap {
 
   /// This __attribute__((noinline)) is just to make the IR more readable. it is
   /// not required for any other reason.
-  __attribute__((noinline)) void log(int i, bool with_coord = true) {
-    char arr[13];
+  __attribute__((noinline)) void log(int i, bool with_coord = true, const char* base = "0123456789") {
+    char arr[/*bits in base 2*/31 + /*sign*/1 + /*\0*/1];
     char *ptr = &arr[0];
-    write_number([&](char c) mutable { *(ptr++) = c; }, i);
-    ptr[0] = '\n';
-    ptr[1] = '\0';
+    write_number([&](char c) mutable { *(ptr++) = c; }, i, base);
+    ptr[0] = '\0';
     log(arr, with_coord);
+  }
+  /// This __attribute__((noinline)) is just to make the IR more readable. it is
+  /// not required for any other reason.
+  __attribute__((noinline)) void log(void* p, bool with_coord = true) {
+    log("0x", with_coord);
+    log((int)p, false, "0123456789abcdef");
   }
 #else
   void log(const char* ptr) {
+    std::cout << ptr;
+  }
+  void log(void* ptr) {
     std::cout << ptr;
   }
   void log(int i) {

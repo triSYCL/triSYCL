@@ -117,6 +117,7 @@ static void kernel_prerun() {
   acap::heap::init_allocator();
 }
 static void kernel_postrun() {
+  acap::heap::assert_no_leak();
   finish_kernel();
 }
 #else

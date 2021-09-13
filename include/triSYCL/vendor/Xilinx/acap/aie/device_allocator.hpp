@@ -65,7 +65,8 @@ struct block_header {
     block_header* new_next = (block_header*)get_end();
     __builtin_memset(new_next, 0, sizeof(block_header));
     this->next = new_next;
-    new_next->size = size - new_size - sizeof(block_header);
+    assert(old_size >= new_size + sizeof(block_header));
+    new_next->size = old_size - new_size - sizeof(block_header);
     new_next->next = old_next;
   }
 #endif
@@ -94,7 +95,7 @@ void init_allocator() {
   ag->total_list = allocator_global::create_block(
       (void *)(hw::self_tile_addr(hw::get_parity_dev()) +
                hw::heap_begin_offset + sizeof(allocator_global)),
-      hw::heap_size);
+      hw::heap_size - sizeof(allocator_global));
 }
 
 /// This malloc will return nullptr on failure.
@@ -103,29 +104,95 @@ void *try_malloc(uint32_t size) {
   size = (size + (alloc_align - 1)) & ~(alloc_align - 1);
   allocator_global *ag = allocator_global::get();
   block_header *bh = ag->total_list;
+  /// Go throught the whole block list.
   while (bh) {
+    /// Find a suitable block.
     if (bh->size >= size && !bh->in_use) {
+      /// Split the block if possible
       if (bh->is_splitable(size))
         bh->split(size);
+      /// Mark the block used and return the address
       bh->in_use = 1;
       return bh->get_alloc();
     }
     bh = bh->get_next();
   }
+  /// There was no suitable block. so we cannot perform this allocation.
+  /// Allocation faillure can be caused by high fragmentation and do not mean
+  /// that no other allocation can be performed with this allocator.
   return nullptr;
 }
 
 /// This malloc will assert on allocation failure.
 void* malloc(uint32_t size) {
   void* ret = try_malloc(size);
+#ifdef TISYCL_DEVICE_ALLOCATOR_DEBUG
+  log("malloc(");
+  log(size, /*with_coord*/false);
+  log(") = ", /*with_coord*/false);
+  log(ret, /*with_coord*/false);
+  log("\n", /*with_coord*/false);
+#endif
   assert(ret != 0 && "unhandled dynamic allocation failure");
   return ret;
 }
 
 void free(void* p) {
+#ifdef TISYCL_DEVICE_ALLOCATOR_DEBUG
+  log("free(");
+  log(p, /*with_coord*/false);
+  log(")\n", /*with_coord*/false);
+#endif
   block_header *bh = block_header::get_header(p);
+  assert(bh->in_use && "double free or free on invalid address");
   bh->in_use = 0;
   /// TODO merge with nearby unused blocks.
+}
+
+/// This function will log the state of the heap.
+void dump_allocator_state() {
+  allocator_global *ag = allocator_global::get();
+  log("dumping blocks in heap ");
+  log(hw::heap_begin_offset, /*with_coord*/false);
+  log("-", /*with_coord*/false);
+  log(hw::heap_end_offset, /*with_coord*/false);
+  log("\n", /*with_coord*/false);
+  int idx = 0;
+  block_header *bh = ag->total_list;
+  while (bh) {
+    log("block ");
+    log(idx++, /*with_coord*/false);
+    log(" bh_addr=", /*with_coord*/false);
+    log(bh, /*with_coord*/false);
+    log(" alloc=", /*with_coord*/false);
+    log(bh->get_alloc(), /*with_coord*/false);
+    log(" in_use=", /*with_coord*/false);
+    log(bh->in_use, /*with_coord*/false);
+    log(" size=", /*with_coord*/false);
+    log(bh->size, /*with_coord*/false);
+    log(" next=", /*with_coord*/false);
+    log(bh->get_next(), /*with_coord*/false);
+    log("\n", /*with_coord*/false);
+    bh = bh->get_next();
+  }
+}
+
+void assert_no_leak() {
+  allocator_global *ag = allocator_global::get();
+  block_header *bh = ag->total_list;
+  bool has_leak = false;
+  while (bh) {
+    if (bh->in_use) {
+      log("block ");
+      log(" addr=", /*with_coord*/ false);
+      log(bh->get_alloc(), /*with_coord*/ false);
+      log(" size=", /*with_coord*/ false);
+      log(bh->size, /*with_coord*/ false);
+      log(" still in use\n", /*with_coord*/ false);
+    }
+    bh = bh->get_next();
+  }
+  assert(!has_leak && "leak detected");
 }
 
 #endif
