@@ -84,8 +84,10 @@ int main() {
 
           // Can only point to a global<> object
           global<unsigned long int *> g_p;
+          (void) g_p; // unused
           // Can only point to a local<> object
           local<char *> l_p;
+          (void) l_p; // unused
           multi_ptr<char *, access::address_space::constant_space> c_mp = c_p;
           c_mp--;
           multi_ptr<double*, access::address_space::private_space> p_mp = pd;

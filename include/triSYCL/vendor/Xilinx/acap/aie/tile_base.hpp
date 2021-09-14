@@ -4,7 +4,8 @@
 /** \file
 
     The basic AI Engine homogeneous tile, with common content to all
-    the tiles (i.e. independent of x & y coordinates)
+    the tiles (i.e. independent of x & y coordinates) but depending on
+    a collective program.
 
     Ronan dot Keryell at Xilinx dot com
 
@@ -13,15 +14,11 @@
 */
 
 #include "tile_infrastructure.hpp"
+#include "xaie_wrapper.hpp"
 
-/// TODO: Perhaps worth pushing all Lib X AI Engine functionallity we use down
+/// TODO: Perhaps worth pushing all LibXAiengine functionallity we use down
 /// into a C++ API so it can all be excluded with one #ifdef and kept nice and
 /// cleanly
-#ifdef __SYCL_XILINX_AIE__
-extern "C" {
-  #include <xaiengine.h>
-}
-#endif
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
@@ -62,10 +59,6 @@ public:
 
   /// Noop on device, it has to exist for compilation purposes as Host side code
   /// is still compiled for the device unfortunately.
-  void set_hw_tile(XAieGbl_Tile *tile) {}
-
-  /// Noop on device, it has to exist for compilation purposes as Host side code
-  /// is still compiled for the device unfortunately.
   void set_program(AIE_Program &p) {}
 
   /// Routines to run before core starts running.
@@ -83,7 +76,11 @@ public:
   /// Routines to run after core completes running.
   void postrun() {}
 
-  void set_tile_infrastructure(tile_infrastructure<device> &t) {}
+  template <typename Work> void single_task(Work &&f) {
+    detail::tile_infrastructure<typename device::geo>{}.single_task(std::forward<Work>(f));
+  }
+
+  void set_tile_infrastructure(const tile_infrastructure<device> &t) {}
 };
 
 #endif // ifdef SYCL_DEVICE_ONLY
@@ -101,28 +98,22 @@ public:
 template <typename AIE_Program>
 class tile_base {
 
-  using device = typename AIE_Program::device;
+  using geo = typename AIE_Program::device::geo;
 
 protected:
 
   /// Keep a reference to the AIE_Program with the full tile and memory view
+  /// \todo can probably be removed
   AIE_Program *program;
 
-/// TODO: Think about where this should go, this is an instance of a HW Tile
-/// that a device instantiates, does it belong here or in tile_infrastructure?
-#ifdef __SYCL_XILINX_AIE__
-  XAieGbl_Tile *aie_hw_tile;
-#endif
-
   /// Keep a reference to the tile_infrastructure hardware features
-  tile_infrastructure<device> *ti;
+  tile_infrastructure<geo> ti;
 
 public:
 
 #ifdef __SYCL_XILINX_AIE__
-  /// Store a way to access to hw tile instance
-  void set_hw_tile(XAieGbl_Tile *tile) {
-    aie_hw_tile = tile;
+  xaie::handle get_dev_handle() const {
+    return ti.get_dev_handle();
   }
 #endif
 
@@ -147,19 +138,20 @@ public:
 
   /// Submit a callable on this tile
   template <typename Work>
-  void submit(Work &&f) {
-    ti->submit(std::forward<Work>(f));
+  void single_task(Work &&f) {
+    ti.single_task(std::forward<Work>(f));
   }
 
 
   /// Wait for the execution of the callable on this tile
   void wait() {
-    ti->wait();
+    ti.wait();
   }
 
 
   /// Access the cascade connections
   auto &cascade() {
+    // \todo the cascade should be part of the tile infrastructure instead
     return program->cascade();
   }
 
@@ -168,8 +160,8 @@ public:
 
       \param[in] port is the port to use
   */
-  auto& in_connection(int port) {
-    return ti->in_connection(port);
+  auto &in_connection(int port) {
+    return ti.in_connection(port);
   }
 
 
@@ -177,38 +169,20 @@ public:
 
       \param[in] port is port to use
   */
-  auto& out_connection(int port) {
-    return ti->out_connection(port);
+  auto &out_connection(int port) {
+    return ti.out_connection(port);
   }
 
 
-  /** Get the user input port from the AXI stream switch
-
-      \param[in] T is the data type to be used in the transfers
-
-      \param[in] Target specifies if the connection is blocking or
-      not. It is blocking by default
-
-      \param[in] port is the port to use
-  */
-  template <typename T, access::target Target = access::target::blocking_pipe>
-  auto in(int port) {
-    return ti->template in<T, Target>(port);
+  /// Get the user input port from the AXI stream switch
+  auto &in(int port) {
+    return ti.in(port);
   }
 
 
-  /** Get the user output port to the AXI stream switch
-
-      \param[in] T is the data type to be used in the transfers
-
-      \param[in] Target specifies if the connection is blocking or
-      not. It is blocking by default
-
-      \param[in] port is the port to use
-  */
-  template <typename T, access::target Target = access::target::blocking_pipe>
-  auto out(int port) {
-    return ti->template out<T, Target>(port);
+  /// Get the user output port to the AXI stream switch
+  auto &out(int port) {
+    return ti.out(port);
   }
 
 
@@ -218,8 +192,8 @@ public:
   }
 
   /// Store a way to access to hardware infrastructure of the tile
-  void set_tile_infrastructure(tile_infrastructure<device> &t) {
-    ti = &t;
+  void set_tile_infrastructure(const tile_infrastructure<geo> t) {
+    ti = t;
   }
 };
 

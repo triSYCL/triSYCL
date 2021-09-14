@@ -38,12 +38,17 @@ To compile the tests with OpenCL, use for example on Unix::
   cmake .. -DTRISYCL_OPENCL=ON
   # Use as many compilation threads as we have CPU cores
   # but it might be dangerous if there is not enough memory per core
-  make -j`nproc`
+  cmake --build . --verbose --parallel `nproc`
 
 Adding the option ``-DCMAKE_EXPORT_COMPILE_COMMANDS=1`` to the CMake
 parameter is useful to generate the compilation database used by some
 tools such as the Clang-based indexing and refactoring tools
 (``run-clang-tidy``...).
+
+You can choose a specific compiler during the first `cmake` use, such
+as with::
+
+  CXX=clang++-11 cmake ..
 
 
 Notes
@@ -69,6 +74,17 @@ LIT, can test exit codes and match stdout vs. a regex.
 To run the tests once compiled, use for example::
 
   ctest
+
+
+Building a package with CPack
+-----------------------------
+
+Look at the `CPack <https://cmake.org/cmake/help/latest/module/CPack.html>`_ documentation online.
+
+For example on a Debian/Ubuntu system, a `.deb` package can be
+generated with::
+
+  cmake --build . --target package
 
 
 Warning-free

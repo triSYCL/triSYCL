@@ -4,17 +4,33 @@
 
 # Set default compiler instead of default CXX=g++ value
 # Assume some recent compiler
-CXX = clang++-9
+CXX = clang++-13
 # To use libc++ instead of libstdc++, from libc++-dev & libc++abi-dev packages
 #CXXFLAGS += -stdlib=libc++
 
-# But everything works fine with GCC 7 at least
+CXXFLAGS += -I/home/rkeryell/Xilinx/Projects/C++/magic_enum/include
+#CXXFLAGS += -I/home/rkeryell/Xilinx/Projects/C++/Boost/fiber/include
+
+# Work around Clang++-11 dev that breaks concepts for range-v3
+# CXXFLAGS += -U__cpp_concepts
+# Even better: use the latest version because it solves other things too
+CXXFLAGS += -I/home/rkeryell/Xilinx/Projects/C++/range-v3/include
+
+# But everything works fine with GCC 9 at least
 #CXX = g++
 
 # The device compiler to use.
 # Assume that the device compiler is in $(LLVM_BUILD_DIR) and this
 # environment variable is set.
 CL_CXX = $(LLVM_BUILD_DIR)/bin/clang++
+
+
+# Configure some Xilinx AIE parameters
+# Use a real std::thread to run the tile core program instead of a Boost.Fiber
+#CXXFLAGS += -DTRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER=0
+# Use a specific number of std::thread to run the Boost.Fiber executor
+#CXXFLAGS += -DTRISYCL_XILINX_AIE_FIBER_EXECUTOR_THREADS=12
+
 
 # Set OpenCL_INCPATH variable to where CL/cl.h like headers are if
 # required
@@ -52,9 +68,6 @@ LDLIBS += -lpthread
 #LDLIBS += $(shell pkg-config --libs-only-l pocl)
 #CXXFLAGS += $(shell pkg-config --cflags pocl)
 
-# To use Boost.Thread
-LDLIBS += -lboost_thread -lboost_system
-
 # For Clang UBSan https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html
 #CXXFLAGS += -fsanitize=undefined
 # For Clang AddressSanitizer https://clang.llvm.org/docs/AddressSanitizer.html
@@ -63,11 +76,11 @@ LDLIBS += -lboost_thread -lboost_system
 # For Clang ThreadSanitizer https://clang.llvm.org/docs/ThreadSanitizer.html
 #CXXFLAGS += -fsanitize=thread
 # For Clang MemorySanitizer https://clang.llvm.org/docs/MemorySanitizer.html
-#CXXFLAGS += -fsanitize=memory
+#CXXFLAGS += -fsanitize=memory -fsanitize-recover=all
 # To enable debug and tracing:
-# CXXFLAGS += -g
-# With optimization and without assertions
-#CXXFLAGS += -O3 -DNDEBUG -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
+#CXXFLAGS += -g -O0
+# Without optimization and without assertions
+#CXXFLAGS += -g -DNDEBUG -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -DNDEBUG
 #CXXFLAGS += -g -DTRISYCL_TRACE_KERNEL -DBOOST_LOG_DYN_LINK
 #CXXFLAGS += -g -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK
@@ -78,6 +91,9 @@ CXXFLAGS += -O3 -DNDEBUG
 #CXXFLAGS += -O3
 # To have DEBUG mode working
 LDLIBS += -lboost_log -lpthread
+# To have Boost.Fibers
+LDLIBS += -lboost_fiber -lboost_context -lboost_thread -lboost_system
+
 # To use Clang sanitizer modes
 #CXXFLAGS += -fsanitize=address -fno-omit-frame-pointer
 #CXXFLAGS += -fsanitize=thread -fno-omit-frame-pointer
@@ -131,7 +147,8 @@ triSYCL_DIR = $(abspath $(dir $(lastword $(MAKEFILE_LIST)))/..)
 # Use all the .cpp C++ files from the subdirectories that have a 1-1
 # mapping with the binaries to generate, that means the binary is made
 # from only one compilation unit (1 source file)
-FILES_CPP = $(wildcard */*.cpp)
+#FILES_CPP = $(wildcard */*.cpp)
+FILES_CPP = $(wildcard acap/*.cpp)
 TARGETS = $(basename $(FILES_CPP))
 
 # There are also .cc C++ files that are used to test binaries made from
@@ -181,10 +198,10 @@ CLEANING_TARGETS += $(KERNELS_BC) $(KERNELS_BIN) $(KERNELS_INTERNALIZED_CXX) \
 	$(KERNELS_CALLER_BC) $(KERNELS_CALLER) $(KERNELS_XPIRBC) $(KERNELS_XO) \
 	$(KERNELS_BIN_INFO)
 
-# The implementation uses C++14.
+# The implementation uses C++17.
 # Use -Wno-ignored-attributes to avoid a lot of warning with
 # Boost.Compute and g++ version >= 6
-CXXFLAGS += -Wall -Wno-ignored-attributes -std=c++2a -I$(triSYCL_DIR)/include \
+CXXFLAGS += -Wall -Wno-ignored-attributes -std=c++20 -I$(triSYCL_DIR)/include \
 	-I$(triSYCL_DIR)/tests/common
 
 # Vivado HLS path
@@ -286,9 +303,9 @@ check:  $(TARGETS_CC)
 	# Launch testing with lit tool from LLVM in current directory
 	echo Using $(CXX) compiler:
 	# lit can be found for example on Debian/Ubuntu in package
-	# llvm-6.0-tools in /usr/lib/llvm-6.0/build/utils/lit/lit.py
+	# llvm-10-tools in /usr/lib/llvm-10/build/utils/lit/lit.py
 	# so try before running the check:
-	# export TRISYCL_LIT=/usr/lib/llvm-6.0/build/utils/lit/lit.py
+	# export TRISYCL_LIT=/usr/lib/llvm-10/build/utils/lit/lit.py
 	# The config file for triSYCL needs at least Python 3.3
 	test "unset$$TRISYCL_LIT == unset" \
 	  && echo 'Initialize TRISYCL_LIT variable to the path of "lit" command' ; \
@@ -303,8 +320,8 @@ check-list:
 
 check-compilers:
 	# Launch the check with various compilers
-	-FORCE_CXX=g++-7 $(MAKE) clean check
-	-FORCE_CXX=clang++-6.0 $(MAKE) clean check
+	-FORCE_CXX=g++-10 $(MAKE) clean check
+	-FORCE_CXX=clang++-11 $(MAKE) clean check
 	-FORCE_CXX=g++ $(MAKE) clean check
 
 # A special target to be called as from the test as "make execute

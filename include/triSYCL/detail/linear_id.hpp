@@ -30,11 +30,11 @@ size_t constexpr inline linear_id(Range range, Id id, Id offset = {}) {
   /* A good compiler should unroll this and do partial evaluation to
      remove the first multiplication by 0 of this Horner evaluation and
      remove the 0 offset evaluation */
-    for (int i = dims - 1; i >= 0; --i)
-      linear_id = linear_id*range[i] + id[i] - offset[i];
+  for (int i = dims - 1; i >= 0; --i)
+    linear_id = linear_id*range[i] + id[i] - offset[i];
 
-    return linear_id;
-  }
+  return linear_id;
+}
 
 
 /// @} End the helpers Doxygen group

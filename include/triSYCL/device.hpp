@@ -10,6 +10,7 @@
 */
 
 #include <algorithm>
+#include <functional>
 #include <memory>
 #include <any>
 
@@ -19,7 +20,7 @@
 
 #include "triSYCL/detail/default_classes.hpp"
 
-#include "triSYCL/detail/shared_ptr_implementation.hpp"
+#include "triSYCL/device/facade/device.hpp"
 #include "triSYCL/device/detail/host_device.hpp"
 #ifdef TRISYCL_OPENCL
 #include "triSYCL/device/detail/opencl_device.hpp"
@@ -43,11 +44,10 @@ class platform;
 class device
   /* Use the underlying device implementation that can be shared in the
      SYCL model */
-  : public detail::shared_ptr_implementation<device, detail::device> {
+  : public facade::device<device, detail::device> {
 
   // The type encapsulating the implementation
-  using implementation_t =
-    detail::shared_ptr_implementation<device, detail::device>;
+  using implementation_t = facade::device<device, detail::device>;
 
 public:
 

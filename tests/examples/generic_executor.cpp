@@ -20,12 +20,12 @@ using namespace boost::hana::literals;
 /* A generic function taking any number of arguments of any type and
    folding them with a given generic operator */
 auto generic_executor = [] (auto op, auto... inputs) {
-  // Construct a tupple of heterogeneous buffers wrapping the inputs
+  // Use a tupple of heterogeneous buffers to wrap the inputs
   auto a = boost::hana::make_tuple(buffer<typename decltype(inputs)::value_type>
     { std::begin(inputs),
       std::end(inputs) }...);
 
-  /* The basic computation
+  /* The element-wise computation
 
      Note that we could use HANA to add some hierarchy in the
      computation (Wallace's tree...) or to sort by type to minimize
@@ -34,32 +34,33 @@ auto generic_executor = [] (auto op, auto... inputs) {
     return boost::hana::fold_left(args, op);
   };
 
-  // Make a pseudo-computation on the input to infer the result type
-  auto pseudo_result = compute(boost::hana::make_tuple(*std::begin(inputs)...));
-  using return_value_type = decltype(pseudo_result);
-
-  /* Use the range of the first argument as the range of the result
-     and computation */
+  // Use the range of the first argument as the range
+  // of the result and computation */
   auto size = a[0_c].get_count();
+
+  // Infer the type of the output from 1 computation on inputs
+  using return_value_type =
+    decltype(compute(boost::hana::make_tuple(*std::begin(inputs)...)));
 
   // Allocate the buffer for the result
   buffer<return_value_type> output { size };
 
+  // Submit a command-group to the device
   queue {}.submit([&] (handler& cgh) {
       // Define the data used as a tuple of read accessors
       auto ka = boost::hana::transform(a, [&] (auto b) {
           return b.template get_access<access::mode::read>(cgh);
         });
-      // Define the data produced with a write accessor to the output buffer
+      // Data are produced to a write accessor to the output buffer
       auto ko = output.template get_access<access::mode::discard_write>(cgh);
 
       // Define the data-parallel kernel
       cgh.parallel_for<class gen_add>(size, [=] (id<1> i) {
-          // Extract the operands for an elemental computation in a tuple
+          // Pack operands an elemental computation in a tuple
           auto operands = boost::hana::transform(ka, [&] (auto acc) {
               return acc[i];
             });
-          // Do the computation on the operands into the elemental result
+          // Assign computation on the operands to the elemental result
           ko[i] = compute(operands);
         });
   });

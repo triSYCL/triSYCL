@@ -1,6 +1,7 @@
 #ifndef TRISYCL_SYCL_DETAIL_PROGRAM_MANAGER_HPP
 #define TRISYCL_SYCL_DETAIL_PROGRAM_MANAGER_HPP
 
+#include <cassert>
 #include <iostream>
 #include <string>
 #include <utility>
@@ -72,8 +73,11 @@ struct __sycl_device_image {
   /// architecture
   const char *DeviceTargetSpec;
   /// a null-terminated string; target- and compiler-specific options
-  /// which are suggested to use to "build" program at runtime
-  const char *BuildOptions;
+  /// which are suggested to use to "compile" program at runtime
+  const char *CompileOptions;
+  /// a null-terminated string; target- and compiler-specific options
+  /// which are suggested to use to "link" program at runtime
+  const char *LinkOptions;
   /// Pointer to the manifest data start
   const unsigned char *ManifestStart;
   /// Pointer to the manifest data end
@@ -85,6 +89,10 @@ struct __sycl_device_image {
   /// the entry table
   __sycl_offload_entry *EntriesBegin;
   __sycl_offload_entry *EntriesEnd;
+
+  /// Unused for now.
+  void* PropertySetsBegin;
+  void* PropertySetsEnd;
 };
 
 /// This must match the __tgt_bin_desc of the clang-offload-wrapper
@@ -134,12 +142,8 @@ namespace trisycl::detail {
 
 class program_manager : public detail::singleton<program_manager> {
 private:
-  /// \todo: Can probably get rid of this if we can rip all the data we need from
-  /// it when we run through
-  std::vector<__sycl_device_image*> images;
-
   /// A work-around to a work-around, the AI Engine runtime does some
-  /// manipulation of the elf binary in memory to work through a chess compiler
+  /// manipulation of the ELF binary in memory to work through a chess compiler
   /// bug, so we need a copy of it as the original buffer containing each image
   /// is read-only/const (not because of the const pointer defined in the
   /// structure, but because the section inside the host binary that the device
@@ -147,22 +151,19 @@ private:
   ///
   /// We also need to make a pairing between the binary and its name so we can
   /// retrieve it via integration header.
-  std::vector<std::pair</*Name*/std::string, /*Binary*/std::string>> image_list;
+  std::vector<std::pair</*Name*/std::string, /*Binary*/std::string_view>> image_list;
 
 public:
+  static bool isELFMagic(const char *BinStart) {
+    return BinStart[0] == 0x7f && BinStart[1] == 'E' && BinStart[2] == 'L' &&
+           BinStart[3] == 'F';
+  }
   /// This in theory loads all of the images for a module, a module may not
   /// necessarily a translation unit it may also contain kernels from
   /// other TUs. But this requires a little more investigation as we have no
   /// test that spans multiple TUs yet! See Intel SYCL LLVM Pull:
   /// https://github.com/intel/llvm/pull/631
   void addImages(__sycl_bin_desc* desc) {
-    /// \todo Probably needs a lock to not have data races when running on
-    /// multiple cores, Intel defines a global singleton lock based on C++
-    /// mutexs in it's Util.hpp class in the SYCL runtime and uses it as follows:
-    /// std::lock_guard<std::mutex> Guard(Sync::getGlobalLock());
-    if (images.empty())
-      images.clear();
-
     TRISYCL_DUMP_T("Number of Device Images being registered from module: "
                    << desc->NumDeviceImages << "\n");
 
@@ -182,15 +183,50 @@ public:
       image_dump(img, "aie" + std::string(Img->BuildOptions) + ".elf");
 #endif
 
-      /// We piggyback off of the BuildOptions parameter of the device_image
-      /// description as it's unused in our case and it allows us to avoid
-      /// altering the ClangOffloadWrappers types which causes them to risk
-      /// incompatibility with Intel's SYCL implementation and OpenMP/HIP
-      ///
-      /// Push to ro storage images and our writeable copies in image_list
-      images.push_back(img);
-      image_list.push_back(std::make_pair(std::string(img->BuildOptions),
-                           std::string(img->ImageStart, img->ImageEnd)));
+      /// Images are not directly ELF binaries, they can contain multiple ELF
+      /// binaries, and also contain their name. The images are built inside
+      /// sycl-chess.
+      /// The current format of each kernels is:
+      /// name_of_kernel\n
+      /// size_of_kernel (written in plain base 10 ASCII digits, not in binary form)\n
+      /// the binary
+      /// next kernel or end of file.
+      /// It is assumed in the following code that the format is correct, there
+      /// is no attempt to detect or correct invalid formats.
+      const char* ptr = reinterpret_cast<const char*>(img->ImageStart);
+      /// Loop until we have seen the whole image.
+      while (reinterpret_cast<uintptr_t>(ptr) <
+             reinterpret_cast<uintptr_t>(img->ImageEnd)) {
+        unsigned next_size = 0;
+        // Find the position of the next '\n'
+        while (ptr[next_size] != '\n')
+          next_size++;
+        // Parse the kernel name
+        std::string name(ptr, next_size);
+        ptr += next_size + 1;
+        next_size = 0;
+        // Find the position of the next '\n'
+        while (ptr[next_size] != '\n')
+          next_size++;
+        // Parse the file size
+        unsigned bin_size = std::stoi(std::string(ptr, next_size));
+        ptr += next_size + 1;
+        next_size = 0;
+        std::string_view bin(ptr, bin_size);
+        ptr += bin_size;
+        TRISYCL_DUMP_T("Loading Name: " << name << " Size: " << bin_size
+                                        << " Magic: \"" << bin.substr(0, 4)
+                                        << "\" IsElf: "
+                                        << isELFMagic(bin.data()));
+        /// We piggyback off of the BuildOptions parameter of the device_image
+        /// description as it's unused in our case and it allows us to avoid
+        /// altering the ClangOffloadWrappers types which causes them to risk
+        /// incompatibility with Intel's SYCL implementation and OpenMP/HIP
+        image_list.emplace_back(std::move(name), bin);
+      }
+      assert(reinterpret_cast<uintptr_t>(ptr) ==
+                 reinterpret_cast<uintptr_t>(img->ImageEnd) &&
+             "invalid Image format");
     }
   }
 
@@ -227,7 +263,7 @@ public:
   ///
   /// Return by index, only relevant really if you're testing for now and know
   /// the exact location in the vector that the image resides.
-  std::string get_image(const unsigned int index) {
+  std::string_view get_image(const unsigned int index) {
     return std::get<1>(image_list.at(index));
   }
 
@@ -236,21 +272,13 @@ public:
   ///
   /// Return by kernel name, used to map integration header names to offloaded
   /// binary names
-  std::string get_image(const std::string& kernelName) {
+  std::string_view get_image(const std::string& kernelName) {
     for (auto image : image_list)
       if (std::get<0>(image) == kernelName) {
         return std::get<1>(image);
       }
     return {};
   }
-
-  /// The original read-only image section of the image stored in the fat-binary
-  /// Only really useful for debugging or copying, directly casting off const
-  /// and trying to manipulate this will result in a segfault
-  const unsigned char* get_ro_image(const unsigned int index) {
-    return images.at(index)->ImageStart;
-  }
-
 };
 
 }

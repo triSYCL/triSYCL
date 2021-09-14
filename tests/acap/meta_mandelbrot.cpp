@@ -15,7 +15,8 @@
 #include <cstdint>
 #include <iostream>
 
-#include <SYCL/sycl.hpp>
+#include <sycl/sycl.hpp>
+#include "triSYCL/vendor/Xilinx/graphics.hpp"
 
 using namespace sycl::vendor::xilinx;
 

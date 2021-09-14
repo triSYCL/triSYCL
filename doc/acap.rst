@@ -21,9 +21,10 @@ Since it is based on modern C++, the best way to have everything
 installed is to run Linux with the latest distribution, such as
 Debian/unstable or Ubuntu 18.10.
 
-Such machines do exist at Xilinx, such as ``xsjsycl40.xilinx.com`` we
-use to develop ACAP++ and you can ``ssh -X`` into it to give a
-(graphical) try and skip directly to the next section.
+Such machines do exist at Xilinx, such as ``xsjsycl40.xilinx.com`` or
+``xsjsycl41.xilinx.com`` we use to develop ACAP++ and you can ``ssh
+-X`` into it to give a (graphical) try and skip directly to the next
+section.
 
 Some generic information about setting up such a machine or
 environment can be found in
@@ -46,20 +47,18 @@ work on latest Ubuntu too, just adapt the compiler versions):
 There is also a dependency on the ``mdspan`` library from the ISO C++
 TS which is not yet in the standard but you can get with::
 
-  git clone https://github.com/ORNL/cpp-proposals-pub.git
+  git clone https://github.com/kokkos/mdspan
 
 and set the ``TRISYCL_MDSPAN_INCPATH`` environment variable to the
-absolute path of the
-``.../cpp-proposals-pub/P0009/reference-implementation/include``
-directory.
+absolute path of the ``.../include`` directory.
 
 But you can also install it globally with::
 
-  sudo cp -a .../cpp-proposals-pub/P0009/reference-implementation/include/experimental /usr/local/include
+  sudo cp -a .../include/experimental /usr/local/include
 
 or link it symbolically instead with::
 
-  sudo ln -s .../cpp-proposals-pub/P0009/reference-implementation//include/experimental 
+  sudo ln -s .../experimental /usr/local/include/experimental
 
 
 Runtime environment
@@ -70,10 +69,10 @@ Get ACAP++ itself with::
   git clone https://gitenterprise.xilinx.com/rkeryell/acappp.git
 
 
-ACAP++ uses a lot of stack storage and often the default environment
-limits the amount to a small value such as 8 MiB, which causes the
-program just to crash boldly when using more stack allocation with a
-blunt message like::
+Some examples of ACAP++ uses a lot of stack storage and often the
+default environment limits the amount to a small value such as 8 MiB,
+which causes the program just to crash boldly when using more stack
+allocation with a blunt message like::
 
   acap/wave_propagation
   Segmentation fault (core dumped)

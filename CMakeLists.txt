@@ -1,26 +1,32 @@
-cmake_minimum_required (VERSION 3.5) # The minimum version of CMake necessary to build this project
+# The minimum version of CMake necessary to build this project
+cmake_minimum_required (VERSION 3.5)
 
 set(TRISYCL_VERSION_MAJOR 0)
 set(TRISYCL_VERSION_MINOR 1)
 set(TRISYCL_VERSION_PATCH 0)
-set(TRISYCL_VERSION "${TRISYCL_VERSION_MAJOR}.${TRISYCL_VERSION_MINOR}.${TRISYCL_VERSION_PATCH}")
-project(triSYCL VERSION ${TRISYCL_VERSION} LANGUAGES CXX)
+set(TRISYCL_VERSION
+  "${TRISYCL_VERSION_MAJOR}.${TRISYCL_VERSION_MINOR}.${TRISYCL_VERSION_PATCH}")
 
+project(triSYCL VERSION ${TRISYCL_VERSION} LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17 CACHE STRING "C++ standard to use")
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
-include(FindTriSYCL)
+include(FindtriSYCL)
 
 # Enable CTest
 include(CTest)
 enable_testing()
 
-include_directories(${PROJECT_SOURCE_DIR}/include) # All targets inherit SYCL include dir
-include_directories(${PROJECT_SOURCE_DIR}/tests/common) # All targets inherit SYCL include dir
-
+ # All targets inherit SYCL include dir
+include_directories(${PROJECT_SOURCE_DIR}/include)
+ # All targets inherit SYCL test include dir since it is about testing here
+include_directories(${PROJECT_SOURCE_DIR}/tests/common)
 
 # Recurse into tests dir to pick up unit tests
-add_subdirectory(tests)
+if (BUILD_TESTING)
+  add_subdirectory(tests)
+endif()
 
 add_library(${PROJECT_NAME} INTERFACE)
 
@@ -70,33 +76,36 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INC
 
 
 # CPACK
+if("${PROJECT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
 
-if(EXISTS "/etc/debian_version")
-	set(DEBIAN TRUE CACHE BOOL "Enable debian specific options: 64-bit lib name and .deb generation")
+  if(EXISTS "/etc/debian_version")
+	  set(DEBIAN TRUE CACHE BOOL "Enable debian specific options: 64-bit lib name and .deb generation")
+  endif()
+
+  if(DEBIAN)
+	  set(CPACK_GENERATOR "TGZ;DEB" )
+  else()
+	  set(CPACK_GENERATOR "TGZ" )
+  endif()
+
+  set(CPACK_PACKAGING_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
+
+  set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${TRISYCL_VERSION}-${CMAKE_HOST_SYSTEM_NAME}" )
+  set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}-Source" )
+
+  set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "SYCL reference implementation" )
+  set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
+  set(CPACK_PACKAGE_VENDOR "Neutral" )
+  set(CPACK_PACKAGE_CONTACT "${PROJECT_NAME} Maintainers")
+  set(CPACK_RESOURCE_FILE_README "${PROJECT_SOURCE_DIR}/README.rst")
+
+  set(CPACK_PACKAGE_VERSION_MAJOR ${TRISYCL_VERSION_MAJOR} )
+  set(CPACK_PACKAGE_VERSION_MINOR ${TRISYCL_VERSION_MINOR} )
+  set(CPACK_PACKAGE_VERSION_PATCH ${TRISYCL_VERSION_PATCH} )
+
+  set(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-dev,librange-v3-dev")
+  set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "opencl-c-headers (>=1.2), build-essential, cmake")
+
+  include(CPack)
+
 endif()
-
-if(DEBIAN)
-	set(CPACK_GENERATOR "TGZ;DEB" )
-else()
-	set(CPACK_GENERATOR "TGZ" )
-endif()
-
-set(CPACK_PACKAGING_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
-
-set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${TRISYCL_VERSION}-${CMAKE_HOST_SYSTEM_NAME}" )
-set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}-Source" )
-
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "SYCL reference implementation" )
-set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
-set(CPACK_PACKAGE_VENDOR "Neutral" )
-set(CPACK_PACKAGE_CONTACT "${PROJECT_NAME} Maintainers")
-set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.rst")
-
-set(CPACK_PACKAGE_VERSION_MAJOR ${TRISYCL_VERSION_MAJOR} )
-set(CPACK_PACKAGE_VERSION_MINOR ${TRISYCL_VERSION_MINOR} )
-set(CPACK_PACKAGE_VERSION_PATCH ${TRISYCL_VERSION_PATCH} )
-
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-dev")
-set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "opencl-c-headers (>=1.2), build-essential, cmake")
-
-include(CPack)

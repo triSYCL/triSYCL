@@ -82,11 +82,9 @@ struct task : public std::enable_shared_from_this<task>,
   /// Add a new task to the task graph and schedule for execution
   void schedule(std::function<void(void)> f) {
     /* To keep a copy of the task shared_ptr after the end of the
-       command group, capture it by copy in the following lambda. This
-       should be easier in C++17 with move semantics on capture
+       command group, capture it by copy in the following lambda.
     */
-    auto task = shared_from_this();
-    auto execution = [=] {
+    auto execution = [f = std::move(f), task = shared_from_this()] {
       // Wait for the required tasks to be ready
       task->wait_for_producers();
       task->prelude();
@@ -99,7 +97,7 @@ struct task : public std::enable_shared_from_this<task>,
       // Notify the waiting tasks that we are done
       task->notify_consumers();
       // Notify the queue we are done
-      owner_queue->kernel_end();
+      task->owner_queue->kernel_end();
       TRISYCL_DUMP_T("Task thread exit");
     };
     /* Notify the queue that there is a kernel submitted to the
@@ -266,7 +264,7 @@ struct task : public std::enable_shared_from_this<task>,
 
 
   /// Set a kernel argument by address
-  void set_arg(int arg_index, std::size_t arg_size, const void *scalar_value) {
+  void set_arg(std::size_t arg_index, std::size_t arg_size, const void *scalar_value) {
 #ifdef TRISYCL_OPENCL
     // Forward to the OpenCL kernel
     get_kernel().get_boost_compute().set_arg(arg_index,
@@ -280,7 +278,7 @@ struct task : public std::enable_shared_from_this<task>,
 
   /// Set a kernel argument by value
   template <typename T>
-  void set_arg(int arg_index, const T &scalar_value) {
+  void set_arg(std::size_t arg_index, const T &scalar_value) {
 #ifdef TRISYCL_OPENCL
     // Forward to the OpenCL kernel
     get_kernel().get_boost_compute().set_arg(arg_index, scalar_value);

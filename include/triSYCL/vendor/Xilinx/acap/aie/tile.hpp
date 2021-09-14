@@ -3,8 +3,8 @@
 
 /** \file
 
-    The basic AI Engine heterogeneous tile (i.e. dependent of x & y
-    coordinates)
+    The basic AI Engine heterogeneous tile that dependent of x & y
+    coordinates but also from the collective program run on it.
 
     Ronan dot Keryell at Xilinx dot com
 
@@ -15,68 +15,23 @@
 #include <type_traits>
 
 #include "triSYCL/access.hpp"
+#include "triSYCL/detail/program_manager.hpp"
 #include "tile_base.hpp"
+#include "xaie_wrapper.hpp"
+#include "hardware.hpp"
+#include "program.hpp"
+#include "lock.hpp"
 
 
-/// TODO: Perhaps worth pushing all Lib X AI Engine functionallity we use down
+/// TODO: Perhaps worth pushing all LibXAiengine functionallity we use down
 /// into a C++ API so it can all be excluded with one #ifdef and kept nice and
 /// cleanly
-#ifdef __SYCL_XILINX_AIE__
-extern "C" {
-  #include <xaiengine.h>
-}
-#endif
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
 /// \ingroup aie
 /// @{
 
-#ifdef __SYCL_DEVICE_ONLY__
-
-/** An empty device tile for now, what is enabled for a tile inside of a Kernel
-    the aim is to incrementally add on top of this without breaking the kernel
-    compilation for now.
-
-    It's an incremental WIP approach but essentially this will end up as some
-    kind of Tile Lite as we work out what works on device and what doesn't.
-
-    For example does having the X AI Engine components on the device make sense?
-    I imagine not as they seem to be host only...
-
-    The Intel SYCL runtime has a similar concept with some of it's APIs like
-    accessors, so perhaps it makes sense for Tiles.
-
-    \param AIE is the type representing the full CGRA with the
-    programs and memory contents
-
-    \param X is the horizontal coordinate of the memory module
-
-    \param Y is the vertical coordinate of the memory module
-
-*/
-template <typename AIE_Program, int X, int Y>
-struct tile : tile_base<AIE_Program> {
-  /** The horizontal tile coordinates in the CGRA grid (starting at 0
-      and increasing to the right) */
-  static auto constexpr x = X;
-  /** The vertical tile coordinates in the CGRA grid (starting at
-      increasing to the top) */
-  static auto constexpr y = Y;
-
-  /// Noop on device, it has to exist for compilation purposes as Host side code
-  /// is still compiled for the device unfortunately.
-  std::uint32_t mem_read(std::uint32_t offset) { return 0; }
-
-  /// Noop on device, it has to exist for compilation purposes as Host side code
-  /// is still compiled for the device unfortunately.
-  void mem_write(std::uint32_t offset, std::uint32_t data) {}
-
-};
-
-#endif // ifdef SYCL_DEVICE_ONLY
-
-#ifndef __SYCL_DEVICE_ONLY__
 
 /** The AI Engine tile infrastructure defining the program of a tile
 
@@ -112,10 +67,10 @@ struct tile : tile_base<AIE_Program> {
 template <typename AIE_Program, int X, int Y>
 struct tile : tile_base<AIE_Program> {
   /** The horizontal tile coordinates in the CGRA grid (starting at 0
-      and increasing to the right) */
+      and increasing towards the East) */
   static auto constexpr x = X;
   /** The vertical tile coordinates in the CGRA grid (starting at
-      increasing to the top) */
+      increasing towards the North) */
   static auto constexpr y = Y;
 
   /// The geography of the CGRA
@@ -123,7 +78,6 @@ struct tile : tile_base<AIE_Program> {
 
   /// Shortcut to the tile base class
   using tb = tile_base<AIE_Program>;
-
 
   /** Return the coordinate of the tile in the given dimension
 
@@ -140,6 +94,19 @@ struct tile : tile_base<AIE_Program> {
       return y;
   }
 
+#if defined(__SYCL_DEVICE_ONLY__)
+  /// Get the horizontal coordinate
+  int x_coord() { return hw::get_tile_x_coordinate(); }
+
+  /// Get the vertical coordinate
+  int y_coord() { return hw::get_tile_y_coordinate(); }
+#else
+  /// Get the horizontal coordinate
+  int x_coord() { return x; }
+
+  /// Get the vertical coordinate
+  int y_coord() { return y; }
+#endif
 
   /// Return the linearized coordinate of the tile
   static auto constexpr linear_id() {
@@ -156,27 +123,75 @@ struct tile : tile_base<AIE_Program> {
   */
 
 
-  /// Test if the tile is in the left column
-  static bool constexpr is_left_column() {
-    return geo::is_left_column(x);
+  /// Test if the tile is in the Western column
+  static bool constexpr is_west_column() {
+    return geo::is_west_column(x);
   }
 
 
-  /// Test if the tile is in the right column
-  static bool constexpr is_right_column() {
-    return geo::is_right_column(x);
+  /// Test if the tile is in the Eastern column
+  static bool constexpr is_east_column() {
+    return geo::is_east_column(x);
   }
 
 
-  /// Test if the tile is in the bottom row
-  static bool constexpr is_bottom_row() {
-    return geo::is_bottom_row(y);
+  /// Test if the tile is in the Southern row
+  static bool constexpr is_south_row() {
+    return geo::is_south_row(y);
   }
 
 
-  /// Test if the tile is in the top row
-  static bool constexpr is_top_row() {
-    return geo::is_top_row(y);
+  /// Test if the tile is in the Northern row
+  static bool constexpr is_north_row() {
+    return geo::is_north_row(y);
+  }
+
+
+  /// Test if the tile has a Western neighbor
+  static bool constexpr is_west_valid() {
+    return !geo::is_west_column(x);
+  }
+
+
+  /// Test if the tile has a Eastern neighbor
+  static bool constexpr is_east_valid() {
+    return !geo::is_east_column(x);
+  }
+
+
+  /// Test if the tile has a Southern neighbor
+  static bool constexpr is_south_valid() {
+    return !geo::is_south_row(y);
+  }
+
+
+  /// Test if the tile has a South West neighbor
+  static bool constexpr is_south_west_valid() {
+    return is_south_valid() && is_west_valid();
+  }
+
+
+  /// Test if the tile has a South East neighbor
+  static bool constexpr is_south_east_valid() {
+    return is_south_valid() && is_east_valid();
+  }
+
+
+  /// Test if the tile has a Northern neighbor
+  static bool constexpr is_north_valid() {
+    return !geo::is_north_row(y);
+  }
+
+
+  /// Test if the tile has a North East neighbor
+  static bool constexpr is_north_east_valid() {
+    return is_north_valid() && is_east_valid();
+  }
+
+
+  /// Test if the tile has a North West neighbor
+  static bool constexpr is_north_west_valid() {
+    return is_north_valid() && is_west_valid();
   }
 
 
@@ -191,26 +206,26 @@ struct tile : tile_base<AIE_Program> {
   }
 
 
-  /// Test if a memory module exists on the left of this tile
-  static bool constexpr is_memory_module_left() {
+  /// Test if a memory module exists on the West of this tile
+  static bool constexpr is_memory_module_west() {
     return is_memory_module(-1, 0);
   }
 
 
-  /// Test if a memory module exists on the right of this tile
-  static bool constexpr is_memory_module_right() {
+  /// Test if a memory module exists on the East of this tile
+  static bool constexpr is_memory_module_east() {
     return is_memory_module(1, 0);
   }
 
 
-  /// Test if a memory module exists below this tile
-  static bool constexpr is_memory_module_down() {
+  /// Test if a memory module exists on the South this tile
+  static bool constexpr is_memory_module_south() {
     return is_memory_module(0, -1);
   }
 
 
-  /// Test if a memory module exists above this tile
-  static bool constexpr is_memory_module_up() {
+  /// Test if a memory module exists on the North this tile
+  static bool constexpr is_memory_module_north() {
     return is_memory_module(0, 1);
   }
 
@@ -225,40 +240,50 @@ struct tile : tile_base<AIE_Program> {
     return geo:: memory_module_linear_id(x, y, dx, dy);
   }
 
+  static void log(auto i) {
+    detail::tile_infrastructure<geo>::log(i);
+  }
 
-  /// Get the memory module on the left if it does exist
-   auto &mem_left() {
-     static_assert(is_memory_module_left(), "There is no memory module"
-                   " on the left of this tile in the left column and"
+  static constexpr acap::hw::position self_position{X, Y};
+
+/// This could be refactored to minimized duplication by separating between host
+/// and device at address computation instead of all the function.
+#ifndef __SYCL_DEVICE_ONLY__
+  /// On the host
+
+  /// Get the memory module on the West if it does exist
+   auto &mem_west() {
+     static_assert(is_memory_module_west(), "There is no memory module"
+                   " on the West of this tile in the Western column and"
                    " on an even row");
      return tb::program->template
        memory_module<memory_module_linear_id(-1, 0)>();
   }
 
 
-  /// Get the memory module on the right if it does exist
-  auto &mem_right() {
-    static_assert(is_memory_module_right(), "There is no memory module"
-                  " on the right of this tile in the right column and"
-                   " on an odd row");
+  /// Get the memory module on the East if it does exist
+  auto &mem_east() {
+    static_assert(is_memory_module_east(), "There is no memory module"
+                  " on the East of this tile in the Eastern column and"
+                  " on an odd row");
     return tb::program->template
       memory_module<memory_module_linear_id(1, 0)>();
   }
 
 
-  /// Get the memory module below if it does exist
-  auto &mem_down() {
-    static_assert(is_memory_module_down(), "There is no memory module"
-                  " below the lower tile row");
+  /// Get the memory module on the South if it does exist
+  auto &mem_south() {
+    static_assert(is_memory_module_south(), "There is no memory module"
+                  " below the Southern tile row");
     return tb::program->template
       memory_module<memory_module_linear_id(0, -1)>();
   }
 
 
-  /// Get the memory module above if it does exist
-  auto &mem_up() {
-    static_assert(is_memory_module_up(), "There is no memory module"
-                  " above the upper tile row");
+  /// Get the memory module on the North if it does exist
+  auto &mem_north() {
+    static_assert(is_memory_module_north(), "There is no memory module"
+                  " above the Northern tile row");
     return tb::program->template
       memory_module<memory_module_linear_id(0, 1)>();
   }
@@ -267,61 +292,114 @@ struct tile : tile_base<AIE_Program> {
   /// The memory module native to the tile
   auto &mem() {
     if constexpr (y & 1)
-      return mem_left();
+      return mem_west();
     else
-      return mem_right();
+      return mem_east();
   }
 
-// TODO: Perhaps worth pushing all Lib X AI Engine functionallity we use down
+#else
+  /// On device
+
+  /// The type of the memory module of a tile at offset (dx, dy) from the
+  /// current tile.
+  template <hw::position p>
+  using tile_mem_t =
+      typename AIE_Program::template tileable_memory<X + p.x, Y + p.y>;
+
+  template <hw::dir d> auto &dir_mem() {
+    constexpr uint32_t tile_addr = get_base_addr(d);
+    return *(tile_mem_t<self_position.moved(d)> *)(tile_addr +
+                                                   hw::tile_mem_begin_offset);
+  }
+
+  /// Get the memory module on the left if it does exist
+  auto &mem_west() {
+    static_assert(is_memory_module_west(),
+                  "There is no memory module"
+                  " on the left of this tile in the left column and"
+                  " on an even row");
+    return dir_mem<hw::dir::west>();
+  }
+
+  /// Get the memory module on the right if it does exist
+  auto &mem_east() {
+    static_assert(is_memory_module_east(),
+                  "There is no memory module"
+                  " on the right of this tile in the right column and"
+                  " on an odd row");
+    return dir_mem<hw::dir::east>();
+  }
+
+  /// Get the memory module below if it does exist
+  auto &mem_south() {
+    static_assert(is_memory_module_south(), "There is no memory module"
+                                            " below the lower tile row");
+    return dir_mem<hw::dir::south>();
+  }
+
+  /// Get the memory module above if it does exist
+  auto &mem_north() {
+    static_assert(is_memory_module_north(), "There is no memory module"
+                                            " above the upper tile row");
+    return dir_mem<hw::dir::north>();
+  }
+
+  /// The memory module native to the tile
+  auto &mem() {
+    if constexpr (self_position.get_parity() == hw::parity::west)
+      return mem_west();
+    else
+      return mem_east();
+  }
+
+  auto &mem_side() {
+    if constexpr (self_position.get_parity() == hw::parity::east)
+      return mem_west();
+    else
+      return mem_east();
+  }
+
+#endif
+// TODO: Perhaps worth pushing all LibXAiengine functionallity we use down
 // into a C++ API so it can all be excluded with one #IFDEF and kept nice and
 // cleanly
 // Part of the real current host -> device communication API using Lib X AI
 // Engine
-#ifdef __SYCL_XILINX_AIE__
-  /// The memory read accessors
-  std::uint32_t mem_read(std::uint32_t offset) {
-    return XAieTile_DmReadWord(tb::aie_hw_tile, offset);
-  }
-
-  /// The memory write accessors
-  void mem_write(std::uint32_t offset, std::uint32_t data) {
-    XAieTile_DmWriteWord(tb::aie_hw_tile, offset, data);
-  }
-
-  /// FIXME: is this right location for these functions?
-  /// Load the elf via path to a elf binary file, handy for debugging if you
-  /// wish to dump a stored binary or load something AoT compiled seperately
-  void load_elf_file(const char *path) {
-    // global load of elf
-    XAieGbl_LoadElf(tb::aie_hw_tile,  reinterpret_cast<const u8*>(path), 0);
-  }
-
-  /// Load the elf via path to a block of memory which contains an elf image
-  void load_elf_image(std::string image) {
-    XAieGbl_LoadElfMem(tb::aie_hw_tile, reinterpret_cast<u8*>(image.data()), 0);
-  }
-
-  /// Reset the core
-  void core_reset() {
-    XAieTile_CoreControl(tb::aie_hw_tile, XAIE_DISABLE, XAIE_ENABLE);
-  }
-
-  /// Start the core
-  void core_run() {
-    XAieTile_CoreControl(tb::aie_hw_tile, XAIE_ENABLE, XAIE_DISABLE);
-  }
-
-  /// Stop the core
-  void core_stop() {
-    XAieTile_CoreControl(tb::aie_hw_tile, XAIE_DISABLE, XAIE_DISABLE);
-  }
-
-  /// Wait for the core to complete
-  void core_wait() {
-    while(!XAieTile_CoreWaitStatus(tb::aie_hw_tile, 0,
-                                   XAIETILE_CORE_STATUS_DONE));
+#if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
+  // For host side when executing on acap hardware
+  xaie::handle get_dev_handle() {
+    return tb::get_dev_handle();
   }
 #endif
+
+  /** Get the memory module relative to the tile
+
+      \param[in] Dx is the horizontal offset relative to the current core tile
+
+      \param[in] Dy is the vertical offset relative to the current core tile
+
+      \return the memory tile object
+
+      Note that since a core tile has a 4-neighbor connectivity, at
+      least one of the offset needs to be 0 and the other to be either
+      1 or -1.
+  */
+  template <int Dx, int Dy>
+  auto &mem() {
+    static_assert(geo::is_valid_memory_module_offset(Dx, Dy),
+                  "Note that since a core tile has a 4-neighbor connectivity,"
+                  " one of the offset needs to be 0 and the other to be either"
+                  " 1 or -1");
+    if constexpr (Dx == -1)
+      return mem_west();
+    else if constexpr (Dx == 1)
+      return mem_east();
+    else if constexpr (Dy == -1)
+      return mem_south();
+    else
+      return mem_north();
+  }
+
 
   /// The type of the memory module native to the tile
   using mem_t = typename AIE_Program::template tileable_memory<x, y>;
@@ -387,40 +465,42 @@ struct tile : tile_base<AIE_Program> {
   */
   void horizontal_barrier(int lock = 14) {
     if constexpr (y & 1) {
-      // Propagate a token from left to right and back
-      if constexpr (!is_left_column()) {
-        // Wait for the left neighbour to be ready
+      // Propagate a token from West to East and back
+      if constexpr (!is_west_column()) {
+        // Wait for the Western neighbour to be ready
         mem().lock(lock).acquire_with_value(true);
       }
-      if constexpr (is_memory_module_right()) {
-        mem_right().lock(lock).acquire_with_value(false);
-        // Unleash the right neighbour
-        mem_right().lock(lock).release_with_value(true);
-        // Wait for the right neighbour to acknowledge
-        mem_right().lock(lock).acquire_with_value(false);
+      if constexpr (is_memory_module_east()) {
+        mem_east().lock(lock).acquire_with_value(false);
+        // Unleash the Eastern neighbour
+        mem_east().lock(lock).release_with_value(true);
+        // Wait for the Eastern neighbour to acknowledge
+        mem_east().lock(lock).acquire_with_value(false);
        }
-      if constexpr (!is_left_column()) {
-        // Acknowledge to the left neighbour
+      if constexpr (!is_west_column()) {
+        // Acknowledge to the Western neighbour
         mem().lock(lock).release_with_value(false);
       }
     } else {
-      // Propagate a token from right to left and back
-      if constexpr (!is_right_column()) {
-        // Wait for the right neighbour to be ready
+      // Propagate a token from East to West and back
+      if constexpr (!is_east_column()) {
+        // Wait for the Eastern neighbour to be ready
         mem().lock(lock).acquire_with_value(true);
       }
-      if constexpr (is_memory_module_left()) {
-        mem_left().lock(lock).acquire_with_value(false);
-        // Unleash the left neighbour
-        mem_left().lock(lock).release_with_value(true);
-        // Wait for the left neighbour to acknowledge
-        mem_left().lock(lock).acquire_with_value(false);
+      if constexpr (is_memory_module_west()) {
+        mem_west().lock(lock).acquire_with_value(false);
+        // Unleash the Western neighbour
+        mem_west().lock(lock).release_with_value(true);
+        // Wait for the Western neighbour to acknowledge
+        mem_west().lock(lock).acquire_with_value(false);
        }
-      if constexpr (!is_right_column()) {
-        // Acknowledge to the right neighbour
+      if constexpr (!is_east_column()) {
+        // Acknowledge to the Eastern neighbour
         mem().lock(lock).release_with_value(false);
       }
     }
+    /// Reset the lock for the next barrier.
+    mem().lock(lock).release_with_value(false);
   }
 
 
@@ -432,38 +512,57 @@ struct tile : tile_base<AIE_Program> {
       default
   */
   void vertical_barrier(int lock = 15) {
-    // Propagate a token from bottom to top and back
-    if constexpr (!is_bottom_row()) {
-      // Wait for the neighbour below to be ready
+    // Propagate a token from South to North and back
+    // All tile except the bottom one wait.
+    if constexpr (!is_south_row()) {
+      // Wait for the Southern neighbour to be ready
       mem().lock(lock).acquire_with_value(true);
     }
-    if constexpr (is_memory_module_up()) {
-      mem_up().lock(lock).acquire_with_value(false);
-      // Unleash the neighbour above
-      mem_up().lock(lock).release_with_value(true);
-      // Wait for the neighbour above to acknowledge
-      mem_up().lock(lock).acquire_with_value(false);
-    }
-    if constexpr (!is_bottom_row()) {
-      // Acknowledge to the neighbour below
+    // All tile except the top one wait.
+    if constexpr (is_memory_module_north()) {
+      mem_north().lock(lock).acquire_with_value(false);
+      // Unleash the Northern neighbour
+      mem_north().lock(lock).release_with_value(true);
+      // Wait for the Northern neighbour to acknowledge
+      mem_north().lock(lock).acquire_with_value(false);
+    } 
+    // All tile except the bottom one wait.
+    if constexpr (!is_south_row()) {
+      // Acknowledge to the Southern neighbour
       mem().lock(lock).release_with_value(false);
     }
+    /// Reset the lock for the next barrier.
+    mem().lock(lock).release_with_value(false);
   }
-
 
   /** Full barrier using the 2 locks by default
 
       Implement a barrier across the full program by using \c
       horizontal_barrier() and \c vertical_barrier().
   */
-  void barrier() {
-    horizontal_barrier();
-    vertical_barrier();
+  void barrier(int h_id = 14, int v_id = 15) {
+    horizontal_barrier(h_id);
+    vertical_barrier(v_id);
   }
 
-};
 
-#endif // ifndef SYCL_DEVICE_ONLY
+  /** Get access on a receiver DMA
+
+      \param[in] port specifies which DMA to access, starting at 0 */
+  auto rx_dma(int port) {
+    return dma_dsl { *this, this->ti.rx_dma(port) };
+  }
+
+
+  /** Get access on a transmit DMA
+
+      \param[in] port specifies which DMA to access, starting at 0 */
+  auto tx_dma(int port) {
+    return dma_dsl { *this, this->ti.tx_dma(port) };
+  }
+
+
+};
 
 /// @} End the aie Doxygen group
 

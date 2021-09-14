@@ -18,8 +18,10 @@
     License. See LICENSE.TXT for details.
  */
 
-#include <thread>
+#include <functional>
+#include <optional>
 
+#include "memory_infrastructure.hpp"
 #include "lock.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie {
@@ -34,25 +36,28 @@ namespace trisycl::vendor::xilinx::acap::aie {
     module infrastructure.
 */
 struct memory_base {
-  /// The lock unit of the memory tile
-  lock_unit memory_locking_unit;
+#if !defined(__SYCL_DEVICE_ONLY__)
+  /// TODO: The locking interface for CPU emulation need to be adapted to match
+  /// the hardware one.
 
-  /// Get an access to the right lock
-  auto &lock(int i) {
-    return memory_locking_unit.lock(i);
+  /// Keep a reference to the memory_infrastructure hardware features
+  std::optional<std::reference_wrapper<memory_infrastructure>> mi;
+
+  /// Get an access to the a specific lock
+  decltype(auto) lock(int i) {
+    // value() will throw if there is some missed initialization
+    return mi.value().get().lock(i);
   }
+
+  /// Store a way to access to hardware infrastructure of the tile
+  void set_memory_infrastructure(memory_infrastructure& m) { mi = m; }
+#else
+  auto lock(int i) { return hw_lock{hw::get_ptr_direction(this), i}; }
+#endif
 };
 
 /// @} End the aie Doxygen group
 
-}
-
-/*
-    # Some Emacs stuff:
-    ### Local Variables:
-    ### ispell-local-dictionary: "american"
-    ### eval: (flyspell-prog-mode)
-    ### End:
-*/
+} // namespace trisycl::vendor::xilinx::acap::aie
 
 #endif // TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_MEMORY_BASE_HPP
