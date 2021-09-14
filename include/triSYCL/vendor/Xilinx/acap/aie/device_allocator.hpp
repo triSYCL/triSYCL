@@ -31,11 +31,13 @@ constexpr unsigned alloc_align = 4;
 /// metadata associated with each dynamic allocation.
 /// 
 struct block_header {
-  /// TODO We could use the size to find the next block.
-  /// TODO make this doubly linked.
-  hw::stable_pointer<block_header> next;
-  uint32_t size : 31;
+  /// This pointes to the previous block.
+  hw::stable_pointer<block_header> prev;
+
+  /// Size is used to find the next block.
+  uint32_t size : 30;
   uint32_t in_use : 1;
+  uint32_t is_last : 1;
 #if defined(__SYCL_DEVICE_ONLY__)
   static block_header* get_header(void* ptr) {
     /// The block header is always just before the allocation in memory.
@@ -46,31 +48,72 @@ struct block_header {
   void* get_alloc() {
     return (void*)(this + 1);
   }
-  block_header* get_next() {
-    return next;
-  }
   void* get_end() {
     return (void*)((char*)(this + 1) + size);
+  }
+  block_header* get_next() {
+    if (is_last)
+      return nullptr;
+    /// Blocks are one after the other in memory: header | alloc | header | alloc ...
+    /// so the end of one block is the beginign of the next.
+    return (block_header*)get_end();
+  }
+  block_header* get_prev() {
+    return prev;
   }
   /// Check if the block is large enough to fit a block header plus some data.
   /// If not there is nothing to be gained by splitting the block.
   bool is_splitable(uint32_t new_size) {
     return size >= new_size + sizeof(block_header) + min_alloc_size;
   }
+  void correct_next() {
+    if (auto* next = get_next())
+      next->prev = this;
+  }
   /// resize the current block to new_size and create a block with the rest of the size.
   void split(uint32_t new_size) {
-    block_header* old_next = get_next();
-    uint32_t old_size = size;
+    assert(!in_use && "cannot change blocks that are in use");
+    assert(size >= new_size + sizeof(block_header));
+    assert((new_size % alloc_align) == 0 && "not properly aligned");
+
+    /// Create new block
+    block_header* new_next = (block_header*)((char*)get_alloc() + new_size);
+    new_next->size = size - new_size - sizeof(block_header);
+    new_next->in_use = 0;
+    new_next->is_last = is_last;
+    new_next->prev = this;
+    new_next->correct_next();
+    assert(((uint32_t)new_next % alloc_align) == 0 && "not properly aligned");
+    assert((new_next->size % alloc_align) == 0 && "not properly aligned");
+
+    /// Update old block
     this->size = new_size;
-    block_header* new_next = (block_header*)get_end();
-    __builtin_memset(new_next, 0, sizeof(block_header));
-    this->next = new_next;
-    assert(old_size >= new_size + sizeof(block_header));
-    new_next->size = old_size - new_size - sizeof(block_header);
-    new_next->next = old_next;
+    this->is_last = 0;
+    this->in_use = 0;
+  }
+  /// Every reference to the next block_header maybe invalid after this call.
+  void try_merge_next() {
+    block_header* next = get_next();
+    /// Cannot be merged with next block
+    if (!next || next->in_use)
+      return;
+    this->size = this->size + sizeof(block_header) + next->size;
+    this->is_last = next->is_last;
+    this->correct_next();
+  }
+  /// The block_header may not be in usable state after this call because it
+  /// could be skipped.
+  void try_merge_prev() {
+    auto* prev = get_prev();
+    if (prev && !prev->in_use)
+      prev->try_merge_next();
   }
 #endif
 };
+
+/// This is to make sure we are made aware when the block_header size changes.
+/// It is safe to change it.
+static_assert(sizeof(block_header) == 8, "");
 
 struct allocator_global {
   hw::stable_pointer<block_header> total_list;
@@ -81,8 +124,10 @@ struct allocator_global {
   }
   static block_header *create_block(void *p, uint32_t s) {
     block_header *block = (block_header *)p;
-    __builtin_memset(block, 0, sizeof(block_header));
+    block->prev = nullptr;
     block->size = s - sizeof(block_header);
+    block->in_use = 0;
+    block->is_last = 1;
     return block;
   }
 #endif
@@ -146,7 +191,12 @@ void free(void* p) {
   block_header *bh = block_header::get_header(p);
   assert(bh->in_use && "double free or free on invalid address");
   bh->in_use = 0;
-  /// TODO merge with nearby unused blocks.
+  /// try to merge with nearby blocks to reduce fragmentation.
+  bh->try_merge_next();
+  /// We try to merge into the previous block after mergin into the next block
+  /// because mergin into the previous block makes the current block unusable if
+  /// successful.
+  bh->try_merge_prev();
 }
 
 /// This function will log the state of the heap.
@@ -162,7 +212,7 @@ void dump_allocator_state() {
   while (bh) {
     log("block ");
     log(idx++, /*with_coord*/false);
-    log(" bh_addr=", /*with_coord*/false);
+    log(" self=", /*with_coord*/false);
     log(bh, /*with_coord*/false);
     log(" alloc=", /*with_coord*/false);
     log(bh->get_alloc(), /*with_coord*/false);
@@ -172,6 +222,8 @@ void dump_allocator_state() {
     log(bh->size, /*with_coord*/false);
     log(" next=", /*with_coord*/false);
     log(bh->get_next(), /*with_coord*/false);
+    log(" prev=", /*with_coord*/false);
+    log(bh->get_prev(), /*with_coord*/false);
     log("\n", /*with_coord*/false);
     bh = bh->get_next();
   }
@@ -183,6 +235,7 @@ void assert_no_leak() {
   bool has_leak = false;
   while (bh) {
     if (bh->in_use) {
+      has_leak = true;
       log("block ");
       log(" addr=", /*with_coord*/ false);
       log(bh->get_alloc(), /*with_coord*/ false);

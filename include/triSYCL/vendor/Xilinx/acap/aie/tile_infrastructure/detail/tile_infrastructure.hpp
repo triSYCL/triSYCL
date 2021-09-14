@@ -38,6 +38,7 @@
 #include "triSYCL/vendor/Xilinx/config.hpp"
 #include "triSYCL/vendor/Xilinx/latex.hpp"
 #include "triSYCL/vendor/Xilinx/acap/aie/lock.hpp"
+#include "triSYCL/vendor/Xilinx/acap/aie/device_allocator.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie::detail {
 
