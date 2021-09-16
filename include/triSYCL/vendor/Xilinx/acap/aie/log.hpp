@@ -86,6 +86,13 @@ namespace trisycl::vendor::xilinx::acap {
   }
 #endif
 
+template<typename Ty, typename ...Tys>
+void multi_log(Ty F, Tys... O) {
+  /// TODO make it use a single buffer.
+  log(F);
+  (log(O, false), ...);
+}
+
 }
 
 #if defined(__SYCL_DEVICE_ONLY__)

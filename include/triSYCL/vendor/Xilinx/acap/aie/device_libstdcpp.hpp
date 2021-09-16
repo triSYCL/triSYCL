@@ -72,70 +72,22 @@ void __throw_bad_function_call() { assert(false && "cannot throw on device"); }
 /// defined all possible variates of the operator new. since we never throw but
 /// assert on allocation failure there is no difference between the throwing and
 /// nonthrowing version.
+/// According to cppreference by default every implementation will use either of
+/// these 2 new overload. So overloading only those 2 should be enough to
+/// replace all of them.
 void *operator new(std::size_t count) {
-  return trisycl::vendor::xilinx::acap::heap::malloc(count);
-}
-void *operator new[](std::size_t count) {
   return trisycl::vendor::xilinx::acap::heap::malloc(count);
 }
 void *operator new(std::size_t count, std::align_val_t al) {
   return trisycl::vendor::xilinx::acap::heap::malloc(count);
 }
-void *operator new[](std::size_t count, std::align_val_t al) {
-  return trisycl::vendor::xilinx::acap::heap::malloc(count);
-}
-void *operator new(std::size_t count, const std::nothrow_t &tag) {
-  return trisycl::vendor::xilinx::acap::heap::malloc(count);
-}
-void *operator new[](std::size_t count, const std::nothrow_t &tag) {
-  return trisycl::vendor::xilinx::acap::heap::malloc(count);
-}
-void *operator new(std::size_t count, std::align_val_t al,
-                   const std::nothrow_t &) {
-  return trisycl::vendor::xilinx::acap::heap::malloc(count);
-}
-void *operator new[](std::size_t count, std::align_val_t al,
-                     const std::nothrow_t &) {
-  return trisycl::vendor::xilinx::acap::heap::malloc(count);
-}
 
+/// Same here according to cppreference all operator delete based on one of
+/// those two.
 void operator delete(void *ptr) noexcept {
   trisycl::vendor::xilinx::acap::heap::free(ptr);
 }
-void operator delete[](void *ptr) noexcept {
-  trisycl::vendor::xilinx::acap::heap::free(ptr);
-}
 void operator delete(void *ptr, std::align_val_t al) noexcept {
-  trisycl::vendor::xilinx::acap::heap::free(ptr);
-}
-void operator delete[](void *ptr, std::align_val_t al) noexcept {
-  trisycl::vendor::xilinx::acap::heap::free(ptr);
-}
-void operator delete(void *ptr, std::size_t sz) noexcept {
-  trisycl::vendor::xilinx::acap::heap::free(ptr);
-}
-void operator delete[](void *ptr, std::size_t sz) noexcept {
-  trisycl::vendor::xilinx::acap::heap::free(ptr);
-}
-void operator delete(void *ptr, std::size_t sz, std::align_val_t al) noexcept {
-  trisycl::vendor::xilinx::acap::heap::free(ptr);
-}
-void operator delete[](void *ptr, std::size_t sz,
-                       std::align_val_t al) noexcept {
-  trisycl::vendor::xilinx::acap::heap::free(ptr);
-}
-void operator delete(void *ptr, const std::nothrow_t &tag) noexcept {
-  trisycl::vendor::xilinx::acap::heap::free(ptr);
-}
-void operator delete[](void *ptr, const std::nothrow_t &tag) noexcept {
-  trisycl::vendor::xilinx::acap::heap::free(ptr);
-}
-void operator delete(void *ptr, std::align_val_t al,
-                     const std::nothrow_t &tag) noexcept {
-  trisycl::vendor::xilinx::acap::heap::free(ptr);
-}
-void operator delete[](void *ptr, std::align_val_t al,
-                       const std::nothrow_t &tag) noexcept {
   trisycl::vendor::xilinx::acap::heap::free(ptr);
 }
 

@@ -38,9 +38,9 @@ struct functor_rpc {
 #ifndef __SYCL_DEVICE_ONLY__
   std::function<uint32_t(int, int, xaie::handle, data_type)> impl{};
 
-  /// This is only ever one instance per data type, this function will get that
-  /// instance.
-  static functor_rpc& get() {
+  /// This is only one instance of this per template parameter, this function
+  /// will get that instance.
+  static functor_rpc &get() {
     static functor_rpc val;
     return val;
   }

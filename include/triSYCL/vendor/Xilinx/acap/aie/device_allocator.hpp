@@ -162,7 +162,7 @@ void *try_malloc(uint32_t size) {
     }
     bh = bh->get_next();
   }
-  /// There was no suitable block. so we cannot perform this allocation.
+  /// There was no suitable block, so we cannot perform this allocation.
   /// Allocation faillure can be caused by high fragmentation and do not mean
   /// that no other allocation can be performed with this allocator.
   return nullptr;
@@ -171,22 +171,16 @@ void *try_malloc(uint32_t size) {
 /// This malloc will assert on allocation failure.
 void* malloc(uint32_t size) {
   void* ret = try_malloc(size);
-#ifdef TISYCL_DEVICE_ALLOCATOR_DEBUG
-  log("malloc(");
-  log(size, /*with_coord*/false);
-  log(") = ", /*with_coord*/false);
-  log(ret, /*with_coord*/false);
-  log("\n", /*with_coord*/false);
+#ifdef TRISYCL_DEVICE_ALLOCATOR_DEBUG
+  multi_log("malloc(", size, ") = ", ret, "\n");
 #endif
   assert(ret != 0 && "unhandled dynamic allocation failure");
   return ret;
 }
 
-void free(void* p) {
-#ifdef TISYCL_DEVICE_ALLOCATOR_DEBUG
-  log("free(");
-  log(p, /*with_coord*/false);
-  log(")\n", /*with_coord*/false);
+void free(void *p) {
+#ifdef TRISYCL_DEVICE_ALLOCATOR_DEBUG
+  multi_log("free(", p, ")\n");
 #endif
   block_header *bh = block_header::get_header(p);
   assert(bh->in_use && "double free or free on invalid address");
@@ -202,29 +196,14 @@ void free(void* p) {
 /// This function will log the state of the heap.
 void dump_allocator_state() {
   allocator_global *ag = allocator_global::get();
-  log("dumping blocks in heap ");
-  log(hw::heap_begin_offset, /*with_coord*/false);
-  log("-", /*with_coord*/false);
-  log(hw::heap_end_offset, /*with_coord*/false);
-  log("\n", /*with_coord*/false);
+  multi_log("dumping blocks in heap ", hw::heap_begin_offset, "-",
+            hw::heap_end_offset, "\n");
   int idx = 0;
   block_header *bh = ag->total_list;
   while (bh) {
-    log("block ");
-    log(idx++, /*with_coord*/false);
-    log(" self=", /*with_coord*/false);
-    log(bh, /*with_coord*/false);
-    log(" alloc=", /*with_coord*/false);
-    log(bh->get_alloc(), /*with_coord*/false);
-    log(" in_use=", /*with_coord*/false);
-    log(bh->in_use, /*with_coord*/false);
-    log(" size=", /*with_coord*/false);
-    log(bh->size, /*with_coord*/false);
-    log(" next=", /*with_coord*/false);
-    log(bh->get_next(), /*with_coord*/false);
-    log(" prev=", /*with_coord*/false);
-    log(bh->get_prev(), /*with_coord*/false);
-    log("\n", /*with_coord*/false);
+    multi_log("block ", idx++, " self=", bh, " alloc=", bh->get_alloc(),
+              " in_use=", bh->in_use, " size=", bh->size,
+              " next=", bh->get_next(), " prev=", bh->get_prev(), "\n");
     bh = bh->get_next();
   }
 }
@@ -236,12 +215,8 @@ void assert_no_leak() {
   while (bh) {
     if (bh->in_use) {
       has_leak = true;
-      log("block ");
-      log(" addr=", /*with_coord*/ false);
-      log(bh->get_alloc(), /*with_coord*/ false);
-      log(" size=", /*with_coord*/ false);
-      log(bh->size, /*with_coord*/ false);
-      log(" still in use\n", /*with_coord*/ false);
+      multi_log("block ", " addr=", bh->get_alloc(), " size=", bh->size,
+                " still in use\n");
     }
     bh = bh->get_next();
   }
