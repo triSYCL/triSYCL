@@ -33,6 +33,7 @@
 #include "../../hardware.hpp"
 #include "../../log.hpp"
 #include "../../rpc.hpp"
+#include "../../cascade_stream.hpp"
 #include "triSYCL/detail/fiber_pool.hpp"
 #include "triSYCL/detail/ranges.hpp"
 #include "triSYCL/vendor/Xilinx/config.hpp"
@@ -82,6 +83,8 @@ template <typename Geography> class tile_infrastructure {
       Use std::optional to postpone initialization */
   std::array<std::optional<sending_dma<axi_ss_t>>, axi_ss_geo::s_dma_size>
       tx_dmas;
+
+  cascade_stream cstream;
 #endif
 
 #if defined(__SYCL_XILINX_AIE__)
@@ -273,11 +276,18 @@ tile_infrastructure(int x, int y,
 }
 #endif
 
-#if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
+#if defined(__SYCL_XILINX_AIE__) 
+#if !defined(__SYCL_DEVICE_ONLY__)
   // For host side when executing on acap hardware
   xaie::handle get_dev_handle() const {
     return dev_handle;
   }
+#else
+  xaie::handle get_dev_handle() const {
+    assert(false && "unimplemented");
+    return {};
+  }
+#endif
 #endif
 
 #if defined(__SYCL_DEVICE_ONLY__)
@@ -362,6 +372,8 @@ tile_infrastructure(int x, int y,
 
       \param[in] id specifies which DMA to access */
   auto& tx_dma(int id) { return *tx_dmas.at(id); }
+
+  auto& cascade() { return cstream; }
 
   /** Get the input router port of the AXI stream switch
 

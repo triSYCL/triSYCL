@@ -21,7 +21,7 @@
 #include "memory_base.hpp"
 #include "rpc.hpp"
 #include "tile.hpp"
-#include "tile_base.hpp"
+#include "rpc.hpp"
 #include "xaie_wrapper.hpp"
 #include "triSYCL/detail/program_manager.hpp"
 #include "triSYCL/detail/kernel_desc.hpp"
@@ -100,11 +100,6 @@ struct program {
   decltype(geo::template generate_tiles<tileable_tile>()) tiles =
     geo::template generate_tiles<tileable_tile>();
 
-  /** Keep track of all the tiles as a type-erased tile_base type to
-      have a simpler access to the basic position-independent tile
-      features */
-  tile_base<program> *tile_bases[geo::y_size][geo::x_size];
-
   /** Access to the common infrastructure part of a memory module
 
       \param[in] x is the horizontal memory module coordinate
@@ -178,11 +173,10 @@ struct program {
 
       \param[in] F is the function to apply on each tile base
   */
-  template <typename F>
-  void for_each_tile_base(F && f) {
+  template <typename F> void for_each_tile_infra(F &&f) {
     for (auto y = 0; y != geo::y_size; ++y)
       for (auto x = 0; x != geo::x_size; ++x)
-        f(*tile_bases[y][x]);
+        f(aie_d.tile(x, y));
   }
 
   /// Create the AIE program with the tiles and memory modules
@@ -205,7 +199,6 @@ struct program {
       // Inform each tile about their tile infrastructure
       t.set_tile_infrastructure(aie_d.tile(t.x, t.y));
       // Keep track of each base tile
-      tile_bases[t.y][t.x] = &t;
     });
     // Connect each memory to its infrastructure
     boost::hana::for_each(memory_modules, [&](auto &m) {
@@ -279,11 +272,6 @@ struct program {
           });
       });
     wait();
-  }
-
-  /// Access the cascade connections
-  auto &cascade() {
-    return aie_d.cascade();
   }
 
 };

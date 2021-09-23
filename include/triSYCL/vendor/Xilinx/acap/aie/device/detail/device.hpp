@@ -62,10 +62,6 @@ template <typename Layout> struct device {
   /// Naming shortcut for the master ports of the shim AXI stream switch
   using smp = typename sass::master_port_layout;
 
-  /// The cascade stream infrastructure of the CGRA
-  /// \todo remove and distribute it instead
-  cascade_stream<geo> cs;
-
   /** A fiber pool executor to run the infrastructure powered by
       TRISYCL_XILINX_AIE_FIBER_EXECUTOR_THREADS std::thread */
   ::trisycl::detail::fiber_pool fiber_executor {
@@ -160,10 +156,6 @@ template <typename Layout> struct device {
     geo::validate_x(x);
     return shims[x];
   }
-
-  /// Access the cascade connections
-  /// \todo To remove?
-  auto& cascade() { return cs; }
 
   /** Connect the ports of 2 tiles or shims together with an
       hyperspace switched circuit, jumping over the underlying routing

@@ -144,10 +144,6 @@ class device : public facade::device<device<Layout>, detail::device<Layout>> {
   */
   auto& shim(int x) { return implementation->shim(x); }
 
-  /// Access the cascade connections
-  /// \todo To remove?
-  auto& cascade() { return implementation->cascade(); }
-
   /// Create a queue on this device
   auto queue() { return vendor::xilinx::acap::aie::queue { *this }; }
 

@@ -12,7 +12,7 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_AIE_UTILS_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_AIE_UTILS_HPP
 
-#if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
+#if defined(__SYCL_XILINX_AIE__)
 // For host side when executing on acap hardware
 
 #include "triSYCL/detail/debug.hpp"

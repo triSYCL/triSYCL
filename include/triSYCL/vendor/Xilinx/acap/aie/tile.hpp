@@ -16,13 +16,16 @@
 
 #include "triSYCL/access.hpp"
 #include "triSYCL/detail/program_manager.hpp"
-#include "tile_base.hpp"
 #include "xaie_wrapper.hpp"
 #include "hardware.hpp"
 #include "program.hpp"
 #include "lock.hpp"
 #include "log.hpp"
+#include "tile_infrastructure.hpp"
 
+#ifdef __SYCL_XILINX_AIE__
+#include "exec_kernel.hpp"
+#endif
 
 /// TODO: Perhaps worth pushing all LibXAiengine functionallity we use down
 /// into a C++ API so it can all be excluded with one #ifdef and kept nice and
@@ -66,7 +69,7 @@ namespace trisycl::vendor::xilinx::acap::aie {
     TU, some discussion here: https://github.com/intel/llvm/issues/488
 */
 template <typename AIE_Program, int X, int Y>
-struct tile : tile_base<AIE_Program> {
+struct tile {
   /** The horizontal tile coordinates in the CGRA grid (starting at 0
       and increasing towards the East) */
   static auto constexpr x = X;
@@ -77,8 +80,14 @@ struct tile : tile_base<AIE_Program> {
   /// The geography of the CGRA
   using geo = typename AIE_Program::geo;
 
-  /// Shortcut to the tile base class
-  using tb = tile_base<AIE_Program>;
+#ifndef __SYCL_DEVICE_ONLY__
+  /// Keep a reference to the AIE_Program with the full tile and memory view
+  /// \todo can probably be removed
+  AIE_Program *program;
+
+  /// Keep a reference to the tile_infrastructure hardware features
+  tile_infrastructure<geo> ti;
+#endif
 
   /** Return the coordinate of the tile in the given dimension
 
@@ -93,6 +102,19 @@ struct tile : tile_base<AIE_Program> {
       return x;
     else
       return y;
+  }
+
+  /// Store a way to access to hardware infrastructure of the tile
+  void set_tile_infrastructure(const tile_infrastructure<geo> t) {
+#ifndef __SYCL_DEVICE_ONLY__
+    ti = t;
+#endif
+  }
+  /// Store a way to access to the program
+  void set_program(AIE_Program &p) {
+#ifndef __SYCL_DEVICE_ONLY__
+    program = &p;
+#endif
   }
 
 #if defined(__SYCL_DEVICE_ONLY__)
@@ -257,7 +279,7 @@ struct tile : tile_base<AIE_Program> {
      static_assert(is_memory_module_west(), "There is no memory module"
                    " on the West of this tile in the Western column and"
                    " on an even row");
-     return tb::program->template
+     return program->template
        memory_module<memory_module_linear_id(-1, 0)>();
   }
 
@@ -267,7 +289,7 @@ struct tile : tile_base<AIE_Program> {
     static_assert(is_memory_module_east(), "There is no memory module"
                   " on the East of this tile in the Eastern column and"
                   " on an odd row");
-    return tb::program->template
+    return program->template
       memory_module<memory_module_linear_id(1, 0)>();
   }
 
@@ -276,7 +298,7 @@ struct tile : tile_base<AIE_Program> {
   auto &mem_south() {
     static_assert(is_memory_module_south(), "There is no memory module"
                   " below the Southern tile row");
-    return tb::program->template
+    return program->template
       memory_module<memory_module_linear_id(0, -1)>();
   }
 
@@ -285,7 +307,7 @@ struct tile : tile_base<AIE_Program> {
   auto &mem_north() {
     static_assert(is_memory_module_north(), "There is no memory module"
                   " above the Northern tile row");
-    return tb::program->template
+    return program->template
       memory_module<memory_module_linear_id(0, 1)>();
   }
 
@@ -369,7 +391,7 @@ struct tile : tile_base<AIE_Program> {
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
   // For host side when executing on acap hardware
   xaie::handle get_dev_handle() {
-    return tb::get_dev_handle();
+    return ti.get_dev_handle();
   }
 #endif
 
@@ -425,6 +447,7 @@ struct tile : tile_base<AIE_Program> {
   }
 
 
+#ifndef __SYCL_DEVICE_ONLY__
   /** Get a read accessor to the cascade stream input
 
       \param T is the data type used to read from the cascade
@@ -437,7 +460,7 @@ struct tile : tile_base<AIE_Program> {
   auto get_cascade_stream_in() {
     static_assert(!is_cascade_start(), "You cannot access to the cascade stream"
                   " input on the tile that starts the stream");
-    return tb::cascade().template get_cascade_stream_in<T>(x, y);
+    return ti.template get_cascade_stream_in<T>();
   }
 
 
@@ -453,9 +476,9 @@ struct tile : tile_base<AIE_Program> {
   auto get_cascade_stream_out() {
     static_assert(!is_cascade_end(), "You cannot access to the cascade stream"
                   " output on the tile that starts the stream");
-    return tb::cascade().template get_cascade_stream_out<T>(x, y);
+    return ti.template get_cascade_stream_out<T>();
   }
-
+#endif
 
   /** An horizontal barrier using a lock
 
@@ -504,7 +527,64 @@ struct tile : tile_base<AIE_Program> {
     mem().lock(lock).release_with_value(false);
   }
 
+  /// Routines to run before core starts running.
+  int prerun() {
+    return 1;
+  }
 
+  /// Routines to run after core completes running.
+  void postrun() {
+  }
+
+  /// Submit a callable on this tile
+  template <typename Work> void single_task(Work &&f) {
+#if !defined(__SYCL_XILINX_AIE__)
+    ti.single_task(std::forward<Work>(f));
+#else
+#if !defined(__SYCL_DEVICE_ONLY__)
+    xaie::handle h = ti.get_dev_handle();
+#else
+    xaie::handle h = {};
+#endif
+    // detail::tile_infrastructure<typename device::geo>{}.single_task(std::forward<Work>(f));
+    detail::exec_kernel<detail::tile_infrastructure<geo>>{}.exec(h, std::forward<Work>(f));
+#endif
+  }
+
+#ifndef __SYCL_DEVICE_ONLY__
+#ifndef __SYCL_XILINX_AIE__
+  /// Wait for the execution of the callable on this tile
+  void wait() {
+    ti.wait();
+  }
+#endif
+
+  /** Get the user input connection from the AXI stream switch
+
+      \param[in] port is the port to use
+  */
+  auto &in_connection(int port) {
+    return ti.in_connection(port);
+  }
+
+  /** Get the user output connection to the AXI stream switch
+
+      \param[in] port is port to use
+  */
+  auto &out_connection(int port) {
+    return ti.out_connection(port);
+  }
+
+  /// Get the user input port from the AXI stream switch
+  auto &in(int port) {
+    return ti.in(port);
+  }
+
+  /// Get the user output port to the AXI stream switch
+  auto &out(int port) {
+    return ti.out(port);
+  }
+#endif
   /** A vertical barrier using a lock
 
       Implement a barrier across the tiles a line.

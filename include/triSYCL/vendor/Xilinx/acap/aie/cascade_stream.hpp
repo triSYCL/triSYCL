@@ -12,7 +12,7 @@
 */
 
 #include "triSYCL/access.hpp"
-#include "geography.hpp"
+#include "triSYCL/sycl_2_2/static_pipe.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
@@ -38,47 +38,15 @@ namespace trisycl::vendor::xilinx::acap::aie {
 
     Direct stream interface: One cascade stream in, one cascade stream
     out (384-bits)
-
-    \todo Remove this global infrastructure and distribute it on the
-    tile_infrastructure itself
 */
-template <typename Geography>
+
 struct cascade_stream {
-  using geo = Geography;
-  /** The pipes for the cascade streams, with 1 spare pipe on each
-      side of the PE string
+  ::trisycl::sycl_2_2::static_pipe<int, 4> stream;
 
-      \todo Use a data type with 384 bits
-  */
-  ::trisycl::sycl_2_2::static_pipe<int, 4>
-  cascade_stream_pipes[geo::x_size*geo::y_size + 1];
-
-  /* Cascade stream layout
-
-      On even rows, a tile use cascade_stream_pipes[y][x] as input and
-      cascade_stream_pipes[y][x + 1] as output
-
-      On odd rows the flow goes into the other direction, so a tile
-      use cascade_stream_pipes[y][x + 1] as input and
-      cascade_stream_pipes[y][x] as output
-  */
-
-  /** Get a blocking read accessor to the cascade stream input
-
-      \param T is the data type used to read from the cascade
-      stream pipe
-
-     \param[in] x is the horizontal tile coordinate
-
-      \param[in] y is the vertical tile coordinate
-  */
-  template <typename T>
-  auto get_cascade_stream_in(int x, int y) const {
-    return cascade_stream_pipes[geo::cascade_linear_id(x, y)]
-      .template get_access<access::mode::read,
-                           access::target::blocking_pipe>();
+  template <typename T> auto get_cascade_stream_in() const {
+    return stream.template get_access<access::mode::read,
+                                      access::target::blocking_pipe>();
   }
-
 
   /** Get a blocking write accessor to the cascade stream output
 
@@ -89,14 +57,11 @@ struct cascade_stream {
 
       \param[in] y is the vertical tile coordinate
   */
-  template <typename T>
-  auto get_cascade_stream_out(int x, int y) const {
+  template <typename T> auto get_cascade_stream_out() const {
     // The output is connected to the down-stream neighbour of the cascade
-    return cascade_stream_pipes[geo::cascade_linear_id(x, y) + 1]
-      .template get_access<access::mode::write,
-                           access::target::blocking_pipe>();
+    return stream.template get_access<access::mode::write,
+                                      access::target::blocking_pipe>();
   }
-
 };
 
 /// @} End the aie Doxygen group

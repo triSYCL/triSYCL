@@ -112,6 +112,8 @@ class tile_infrastructure
     return implementation->mem();
   }
 
+  auto& cascade() { return implementation->cascade(); }
+
   struct cgh_t {
     tile_infrastructure ti;
     cgh_t(tile_infrastructure t) : ti { t } {}
