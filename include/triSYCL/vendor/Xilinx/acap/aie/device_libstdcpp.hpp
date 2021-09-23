@@ -79,6 +79,7 @@ void *operator new(std::size_t count) {
   return trisycl::vendor::xilinx::acap::heap::malloc(count);
 }
 void *operator new(std::size_t count, std::align_val_t al) {
+  assert(al <= (std::align_val_t)4 && "the allocator doesn't support higher alignments.");
   return trisycl::vendor::xilinx::acap::heap::malloc(count);
 }
 

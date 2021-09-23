@@ -329,6 +329,12 @@ struct handle {
   //             << raw_read(0x1EF00) << "\n";
   // }
 
+  void stream_connect(xaie::StrmSwPortType FromType, int FromPortNum,
+                      xaie::StrmSwPortType ToType, int ToPortNum) {
+    TRISYCL_XAIE(XAie_StrmConnCctEnable(inst, tile, FromType, FromPortNum,
+                                        ToType, ToPortNum));
+  }
+
   /// Acquire the lock
   void acquire(int id) {
     TRISYCL_DUMP2("acquiring lock (" << get_coord_str() << ") id: " << id,
