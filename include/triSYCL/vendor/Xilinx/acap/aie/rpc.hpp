@@ -35,7 +35,7 @@ namespace trisycl::vendor::xilinx::acap::aie {
 template<typename DataTy>
 struct functor_rpc {
   using data_type = DataTy;
-#ifndef __SYCL_DEVICE_ONLY__
+#if !defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_XILINX_AIE__)
   std::function<uint32_t(int, int, xaie::handle, data_type)> impl{};
 
   /// This is only one instance of this per template parameter, this function
@@ -76,7 +76,7 @@ struct send_log_rpc {
     hw::stable_pointer<const char> data;
     uint64_t size;
   };
-#ifndef __SYCL_DEVICE_ONLY__
+#if !defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_XILINX_AIE__)
   static uint32_t act_on_data(int x, int y, xaie::handle h,
                               data_type dev_data) {
     /// Decompose the device pointer into direction of the tile and address in the tile.
@@ -95,7 +95,7 @@ struct send_log_rpc {
 struct done_rpc {
   /// it needs no data, since it is just a signal.
   struct data_type {};
-#ifndef __SYCL_DEVICE_ONLY__
+#if !defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_XILINX_AIE__)
   static uint32_t act_on_data(int x, int y, xaie::handle h, data_type d) {
     /// The effect of the signal are handled directly by wait_all
     assert(false && "This should be handeled by wait_all");
@@ -106,7 +106,7 @@ struct done_rpc {
 
 template <typename... Tys> struct rpc_impl {
   using Var = std::variant<typename Tys::data_type...>;
-#ifndef __SYCL_DEVICE_ONLY__
+#if !defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_XILINX_AIE__)
   struct host_side {
     int x_size, y_size;
     xaie::handle h;
@@ -159,6 +159,7 @@ template <typename... Tys> struct rpc_impl {
 #endif
 
   struct device_side {
+#if defined(__SYCL_XILINX_AIE__)
 #ifdef __SYCL_DEVICE_ONLY__
     static device_side *get() {
       return (device_side *)(acap::hw::self_tile_addr(
@@ -179,6 +180,7 @@ template <typename... Tys> struct rpc_impl {
       return ret_val;
     }
   };
+#endif
 };
 
 using rpc = rpc_impl<done_rpc, image_update_rpc, send_log_rpc>;

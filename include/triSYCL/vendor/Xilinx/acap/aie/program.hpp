@@ -69,7 +69,7 @@ struct program {
   AIEDevice aie_d;
 
 
-#if !defined(__SYCL_DEVICE_ONLY__)
+#if !defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_XILINX_AIE__)
   rpc::host_side rpc_system;
 #endif
 
@@ -187,7 +187,7 @@ struct program {
 
   /// Create the AIE program with the tiles and memory modules
   program(AIEDevice &aie_d) : aie_d { aie_d }
-#ifndef __SYCL_DEVICE_ONLY__
+#if !defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_XILINX_AIE__)
   , rpc_system {
     geo::x_size, geo::y_size, xaie::handle({0, 0}, aie_d.get_dev_inst()),
         hw::rpc_record_begin_offset
