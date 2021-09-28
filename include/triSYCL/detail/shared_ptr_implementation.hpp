@@ -58,9 +58,12 @@ struct shared_ptr_implementation : public boost::totally_ordered<Parent> {
       This is generalized by boost::equality_comparable from
       boost::totally_ordered to implement the equality comparable
       concept
+
+      Use recipe for hidden friends from P1601R0: "Recommendations for
+      Specifying “Hidden Friends""
   */
-  bool operator ==(const Parent &other) const {
-    return implementation == other.implementation;
+  friend bool operator ==(const Parent& lhs, const Parent& rhs) {
+    return lhs.implementation == rhs.implementation;
   }
 
 
@@ -70,10 +73,13 @@ struct shared_ptr_implementation : public boost::totally_ordered<Parent> {
       boost::totally_ordered to implement the equality comparable
       concept
 
+      Use recipe for hidden friends from P1601R0: "Recommendations for
+      Specifying “Hidden Friends""
+
       \todo Add this to the spec
   */
-  bool operator <(const Parent &other) const {
-    return implementation < other.implementation;
+  friend bool operator <(const Parent& lhs, const Parent& rhs) {
+    return lhs.implementation < rhs.implementation;
   }
 
 
