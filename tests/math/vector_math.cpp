@@ -12,7 +12,8 @@
 #include <numeric>
 
 #include <sycl/sycl.hpp>
-#include <boost/test/minimal.hpp>
+
+#include <catch2/catch_test_macros.hpp>
 
 template <typename T, int Dim>
 void do_vec_unary_math(sycl::vec<T, Dim> v) {
@@ -29,13 +30,13 @@ void do_vec_unary_math(sycl::vec<T, Dim> v) {
 
   len = std::sqrt(len);
 
-  BOOST_CHECK(length == len);
+  REQUIRE(length == len);
 
   for (int i = 0; i < Dim; ++i) {
-    BOOST_CHECK(abs[i] == std::abs(v[i]));
-    BOOST_CHECK(clamp[i] == std::clamp(v[i], 2.0f, 4.0f));
-    BOOST_CHECK(floor[i] == std::floor(v[i]));
-    BOOST_CHECK(normalize[i] == v[i] / len);
+    REQUIRE(abs[i] == std::abs(v[i]));
+    REQUIRE(clamp[i] == std::clamp(v[i], 2.0f, 4.0f));
+    REQUIRE(floor[i] == std::floor(v[i]));
+    REQUIRE(normalize[i] == v[i] / len);
   }
 }
 
@@ -49,10 +50,10 @@ void do_vec_binary_math(sycl::vec<T, Dim> v, sycl::vec<T, Dim> v2) {
   auto max = sycl::max(v, v2);
 
   for (int i = 0; i < Dim; ++i) {
-    BOOST_CHECK(fmin[i] == std::fmin(v2[i], v[i]));
-    BOOST_CHECK(fmax[i] == std::fmax(v[i], v2[i]));
-    BOOST_CHECK(min[i] == std::min(v2[i], v[i]));
-    BOOST_CHECK(max[i] == std::max(v[i], v2[i]));
+    REQUIRE(fmin[i] == std::fmin(v2[i], v[i]));
+    REQUIRE(fmax[i] == std::fmax(v[i], v2[i]));
+    REQUIRE(min[i] == std::min(v2[i], v[i]));
+    REQUIRE(max[i] == std::max(v[i], v2[i]));
   }
 }
 
@@ -79,11 +80,11 @@ inline void do_check_sign() {
                                           uint32_t{1} << 31};
 
   for (std::size_t i = 0; i < 8; ++i) {
-    BOOST_CHECK(reinterpret_cast<uint32_t &>(res[i]) == expected_output[i]);
+    REQUIRE(reinterpret_cast<uint32_t &>(res[i]) == expected_output[i]);
   }
 }
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("vector operations", "[math]") {
   sycl::float2 f2 {2.3f, 4.1f};
   sycl::float3 f3_a {1,2,3};
   sycl::float3 f3_b {1,5,7};
@@ -113,24 +114,22 @@ int test_main(int argc, char *argv[]) {
   auto cross3_ab = sycl::cross(f3_a, f3_b);
   auto cross4_ab = sycl::cross(f4_a, f4_b);
 
-  BOOST_CHECK(cross3_ab.x() == -1);
-  BOOST_CHECK(cross3_ab.y() == -4);
-  BOOST_CHECK(cross3_ab.z() == 3);
+  REQUIRE(cross3_ab.x() == -1);
+  REQUIRE(cross3_ab.y() == -4);
+  REQUIRE(cross3_ab.z() == 3);
 
-  BOOST_CHECK(cross4_ab.x() == -1);
-  BOOST_CHECK(cross4_ab.y() == -4);
-  BOOST_CHECK(cross4_ab.z() == 3);
-  BOOST_CHECK(cross4_ab.w() == 0);
+  REQUIRE(cross4_ab.x() == -1);
+  REQUIRE(cross4_ab.y() == -4);
+  REQUIRE(cross4_ab.z() == 3);
+  REQUIRE(cross4_ab.w() == 0);
 
   auto dot3_ab = sycl::dot(f3_a, f3_b);
   auto dot4_ab = sycl::dot(f4_a, f4_b);;
   auto dot16_ab = sycl::dot(f16_a, f16_b);;
 
-  BOOST_CHECK(dot3_ab == 32);
-  BOOST_CHECK(dot4_ab == 40);
-  BOOST_CHECK(dot16_ab == 2400);
+  REQUIRE(dot3_ab == 32);
+  REQUIRE(dot4_ab == 40);
+  REQUIRE(dot16_ab == 2400);
 
   do_check_sign();
-
-  return 0;
 }

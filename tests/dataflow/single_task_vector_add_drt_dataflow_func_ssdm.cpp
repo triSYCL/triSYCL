@@ -1,14 +1,17 @@
 /* RUN: %{execute}%s
    REQUIRES: this-test-does-not-run-with-lit-yet
 
-   A simple typical FPGA-like kernel with dataflow optimization while copying contents from array, and add a fixed alpha value for each.
-   This example is With dataflow and pipeline optimization.
+   A simple typical FPGA-like kernel with dataflow optimization while
+   copying contents from array, and add a fixed alpha value for each.
+
+   This example is with dataflow and pipeline optimization.
 */
 #include <CL/sycl.hpp>
+
 #include <iostream>
 #include <numeric>
 
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 using namespace cl::sycl;
 
@@ -52,7 +55,8 @@ void writeOutput(T *buffer_out, const U &d_a) {
   }
 }
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("add with dataflow and pipeline optimization through SSDM intrinsics",
+          "[FPGA]") {
   buffer<Type> a { BLOCK_SIZE };
   buffer<Type> b { BLOCK_SIZE };
   buffer<Type> res { BLOCK_SIZE };
@@ -125,7 +129,6 @@ _ssdm_op_SpecDataflowPipeline(-1, "");
   for (unsigned int i = 0 ; i < BLOCK_SIZE; ++i) {
     std::cout << "a_a["<< i << "]: " << a_a[i] << " ";
     std::cout << "res_r["<< i << "]: " << res_r[i] << std::endl;
-    BOOST_CHECK(a_a[i] == res_r[i]);
+    REQUIRE(a_a[i] == res_r[i]);
   }
-  return 0;
 }

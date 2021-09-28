@@ -9,7 +9,7 @@
 #include <string>
 #include <type_traits>
 
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 #include <CL/sycl.hpp>
 
@@ -23,18 +23,18 @@ using Type = int;
 #define TRISYCL_CHECK(ARRAY, PARTITION_TYPE, EXPECTED_VALUE)            \
   {                                                                     \
     std::array<Type, ARRAY_LENGTH> expected_value EXPECTED_VALUE;       \
-    BOOST_CHECK(decltype(ARRAY)::partition_type == PARTITION_TYPE);     \
+    REQUIRE(decltype(ARRAY)::partition_type == PARTITION_TYPE);         \
     /* Evaluate size */                                                 \
-    BOOST_CHECK(ARRAY.size() == expected_value.size());                 \
+    REQUIRE(ARRAY.size() == expected_value.size());                     \
     /* Test subscript operator */                                       \
     for (std::size_t i = 0; i != ARRAY.size(); ++i)                     \
-      BOOST_CHECK(ARRAY[i] == expected_value[i]);                       \
+      REQUIRE(ARRAY[i] == expected_value[i]);                           \
     /* Test iterator */                                                 \
-    BOOST_CHECK(std::equal(ARRAY.begin(), ARRAY.end(),                  \
-                           expected_value.begin(), expected_value.end())); \
+    REQUIRE(std::equal(ARRAY.begin(), ARRAY.end(),                      \
+                       expected_value.begin(), expected_value.end()));  \
   }
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("partition_array works on normal host code", "[partition_array]") {
   // Construct a partition_array from a list of number
   xilinx::partition_array<Type, ARRAY_LENGTH> A = {1, 2, 3, 4};
   TRISYCL_CHECK(A, xilinx::partition::type::none, ({1, 2, 3, 4}))
@@ -76,6 +76,4 @@ int test_main(int argc, char *argv[]) {
                           xilinx::partition::complete<>> H;
   H = toC;
   TRISYCL_CHECK(H, xilinx::partition::type::complete, ({5, 6, 7, 8}));
-
-  return 0;
 }

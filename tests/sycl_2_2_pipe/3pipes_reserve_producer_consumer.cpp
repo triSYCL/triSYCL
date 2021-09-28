@@ -2,10 +2,12 @@
 
    4 kernels producing, transforming and consuming data through 3 pipes with reserve
 */
-#include <CL/sycl.hpp>
 #include <iostream>
 #include <iterator>
 #include <numeric>
+
+#include <CL/sycl.hpp>
+
 #include <catch2/catch_test_macros.hpp>
 
 // Size of the buffers
