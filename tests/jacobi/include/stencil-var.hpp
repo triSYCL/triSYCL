@@ -224,7 +224,7 @@ public:
         cl::sycl::accessor<T, 2, cl::sycl::access::mode::read> _aB {*aB, cgh};
         cl::sycl::accessor<T, 1, cl::sycl::access::mode::read> _bB {*bB, cgh};
         cgh.parallel_for<class KernelCompute>(range,
-                                              [=, *this](cl::sycl::id<2> id){
+                                              [=](cl::sycl::id<2> id){
             operation_var2D<T, B, f, st, aB, bB, a_f, b_f>::eval(id, _B, _aB, _bB);
           });
       });
