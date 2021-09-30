@@ -975,14 +975,14 @@ struct application {
     std::chrono::time_point<std::chrono::system_clock> last_frame;
 
     TRISYCL_DUMP("Core graphics initialized");
-    acap::aie::image_update_rpc::get().impl =
-        [=](int x, int y, xaie::handle h,
-            acap::aie::image_update_data dev_data) mutable -> uint32_t {
+    acap::aie::image_update_rpc::set_handler([=](int x, int y, xaie::handle h,
+                                                 acap::aie::image_update_data
+                                                     dev_data) mutable
+                                             -> uint32_t {
       tile_data &td = tiles_data[x * tile_y_size + y];
       TRISYCL_DUMP("updating frame " << x << ", " << y);
 
-      assert(dev_data.counter == td.counter &&
-             "host received incoherent data");
+      assert(dev_data.counter == td.counter && "host received incoherent data");
       assert(dev_data.data > 0 && "host received incoherent data");
       assert(dev_data.max_value != dev_data.min_value &&
              "host received incoherent data");
@@ -994,9 +994,10 @@ struct application {
 
       /// This call is not synchronized but this should only be executed while
       /// the main thread is waiting for the kernel to finish.
-      a->update_tile_data_image(x, y, (PixelTy *)graphic_buffer.data(),
-                                acap::hw::bit_cast<PixelTy>(dev_data.min_value),
-                                acap::hw::bit_cast<PixelTy>(dev_data.max_value));
+      a->update_tile_data_image(
+          x, y, (PixelTy *)graphic_buffer.data(),
+          acap::hw::bit_cast<PixelTy>(dev_data.min_value),
+          acap::hw::bit_cast<PixelTy>(dev_data.max_value));
 
       maybe_validate_data(x, y, acap::hw::bit_cast<PixelTy>(dev_data.min_value),
                           acap::hw::bit_cast<PixelTy>(dev_data.max_value));
@@ -1013,10 +1014,10 @@ struct application {
         }
         last_frame = current;
       }
-      /// Counter for frame processed by the host.
+      /// Count the framed processed by the host
       td.counter++;
       return *is_done;
-    };
+    });
   }
 
 #endif

@@ -299,14 +299,13 @@ struct handle {
     TRISYCL_XAIE(xaie::XAie_CoreDisable(inst, tile));
   }
 
-  /// Because of a hardware bug in the done instruction. the behaviour of the
-  /// done intrinsic has changed in the compiler. but the libxaiengine has not
-  /// yet been updated to the new behaviour so these two function do not work
-  /// for now. the runtime uses the rpc system to inform of a kernel being done.
-  ///
-  // /// Look if a core has completed execution and return true if it has, it
-  // does
-  // /// not block.
+  /// Because of a hardware bug in the done instruction, the behaviour of the
+  /// done intrinsic has changed in the compiler but the libxaiengine has not
+  /// yet been updated to the new behaviour, so these two functions do not work
+  /// for now. The runtime uses the RPC system to inform of a kernel being done.
+  
+  // /// Look if a core has completed execution and return true if it has.
+  // /// It does not block.
   // bool try_core_wait() {
   //   detail::no_log_in_this_scope nls;
   //   xaie::u8 is_done;
@@ -329,6 +328,11 @@ struct handle {
   //             << raw_read(0x1EF00) << "\n";
   // }
 
+  /// connect one port of a stream switch to another.
+  /// \param FromType type of the source port
+  /// \param FromPortNum port id of the source port
+  /// \param ToType type of the target port
+  /// \param ToPortNum  port id of the target port
   void stream_connect(xaie::StrmSwPortType FromType, int FromPortNum,
                       xaie::StrmSwPortType ToType, int ToPortNum) {
     TRISYCL_XAIE(XAie_StrmConnCctEnable(inst, tile, FromType, FromPortNum,

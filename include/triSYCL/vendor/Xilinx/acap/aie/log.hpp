@@ -25,7 +25,7 @@ namespace trisycl::vendor::xilinx::acap {
     acap::aie::rpc::device_side::get()->perform(sld);
   }
 
-  /// This will log the tile coordinates that the null-terminate string.
+  /// This will log the tile coordinates followed by the null-terminate string provided as argument.
   __attribute__((noinline)) void log(const char *ptr, bool with_coord = true) {
     if (with_coord) {
       char arr[] = "00, 0 : ";
@@ -39,7 +39,12 @@ namespace trisycl::vendor::xilinx::acap {
   }
 
   /// This function serializes a number into a buffer.
-  static void write_number(auto write, int i, const char* base_char = "0123456789") {
+  /// \param write is a callable that add a character to the buffer,
+  /// \param i is the number
+  /// \param base_char is the sequence of character to use as a base. a
+  /// mapping between a didgit and the character representation of such didgit.
+  static void write_number(auto write, int i,
+                           const char *base_char = "0123456789") {
     if (i < 0)
       write('-');
     /// For 0 print 0 instead of nothing.
@@ -59,6 +64,7 @@ namespace trisycl::vendor::xilinx::acap {
       write(base_char[std::abs((i / hw::pow(base, d - 1)) % base)]);
   }
 
+  /// This will log i on the console of the host.
   /// This __attribute__((noinline)) is just to make the IR more readable. it is
   /// not required for any other reason.
   __attribute__((noinline)) void log(int i, bool with_coord = true, const char* base = "0123456789") {
@@ -70,6 +76,7 @@ namespace trisycl::vendor::xilinx::acap {
   }
   /// This __attribute__((noinline)) is just to make the IR more readable. it is
   /// not required for any other reason.
+  /// This will log a pointer in hexa-decimal preceded by 0x on the console of the host
   __attribute__((noinline)) void log(void* p, bool with_coord = true) {
     log("0x", with_coord);
     log((int)p, false, "0123456789abcdef");
@@ -87,10 +94,12 @@ namespace trisycl::vendor::xilinx::acap {
 #endif
 
 template<typename Ty, typename ...Tys>
-void multi_log(Ty F, Tys... O) {
+void multi_log(Ty First, Tys... Others) {
   /// TODO make it use a single buffer.
-  log(F);
-  (log(O, false), ...);
+  /// The first will have coordinates
+  log(First);
+  /// The other wont have coordinates
+  (log(Others, /*with_coord*/false), ...);
 }
 
 }
@@ -100,24 +109,19 @@ void multi_log(Ty F, Tys... O) {
 /// this function.
 __attribute__((annotate("used"))) __attribute__((noreturn)) void finish_kernel() {
   trisycl::vendor::xilinx::acap::aie::done_rpc::data_type dt{};
+  /// Inform the host via RPC that the kernel is done executing.
   trisycl::vendor::xilinx::acap::aie::rpc::device_side::get()->perform(dt);
-  trisycl::vendor::xilinx::acap::log("exiting");
+  trisycl::vendor::xilinx::acap::log("exiting\n");
   acap_intr::core_done();
 }
 
-void __assert_fail(const char *expr, const char *file,
-                              unsigned int line, const char *func) {
-  using trisycl::vendor::xilinx::acap::log;
-  log("acap : ", /*with_coord*/true);
-  log(file, /*with_coord*/false);
-  log(":", /*with_coord*/false);
-  log(line, /*with_coord*/false);
-  log(": ", /*with_coord*/false);
-  log(func, /*with_coord*/false);
-  log(": Assertion `", /*with_coord*/false);
-  log(expr, /*with_coord*/false);
-  log("' failed\n", /*with_coord*/false);
-  log("kernel killed\n", /*with_coord*/false);
+
+/// The assert macro will call this function if an assertion fails on device.
+void __assert_fail(const char *expr, const char *file, unsigned int line,
+                   const char *func) {
+  trisycl::vendor::xilinx::acap::multi_log("acap : ", file, ":", line, ": ",
+                                           func, ": Assertion `", expr,
+                                           "' failed\n", "kernel killed\n");
   finish_kernel();
 }
 

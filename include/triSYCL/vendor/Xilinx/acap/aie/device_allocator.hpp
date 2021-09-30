@@ -36,21 +36,30 @@ struct block_header {
 
   /// Size is used to find the next block.
   uint32_t size : 30;
+  /// Wether the allocation is currently in use.
   uint32_t in_use : 1;
+  /// Wether this allocation is the last allocation of the list
   uint32_t is_last : 1;
 #if defined(__SYCL_DEVICE_ONLY__)
+
+  /// get the block header from an allocation. the inverse of get_alloc.
   static block_header* get_header(void* ptr) {
     /// The block header is always just before the allocation in memory.
     return ((block_header*)ptr) - 1;
   }
+
   /// return a pointer to the section of memory this block header tracks.
-  /// This region is just after the block_header.
+  /// This region is just after the block_header. the inverse of get_header.
   void* get_alloc() {
     return (void*)(this + 1);
   }
+
+  /// return the end of the allocation.
   void* get_end() {
     return (void*)((char*)(this + 1) + size);
   }
+
+  /// get the next block the list.
   block_header* get_next() {
     if (is_last)
       return nullptr;
@@ -58,18 +67,25 @@ struct block_header {
     /// so the end of one block is the beginign of the next.
     return (block_header*)get_end();
   }
+
+  /// get the previous block in the list.
   block_header* get_prev() {
     return prev;
   }
+
   /// Check if the block is large enough to fit a block header plus some data.
   /// If not there is nothing to be gained by splitting the block.
   bool is_splitable(uint32_t new_size) {
     return size >= new_size + sizeof(block_header) + min_alloc_size;
   }
+
+  /// correct the prev field of the next block if it exist.
+  /// This is need when inserting or removing blocks form the list.
   void correct_next() {
     if (auto* next = get_next())
       next->prev = this;
   }
+
   /// resize the current block to new_size and create a block with the rest of the size.
   void split(uint32_t new_size) {
     assert(!in_use && "cannot change blocks that are in use");
@@ -91,6 +107,8 @@ struct block_header {
     this->is_last = 0;
     this->in_use = 0;
   }
+
+  /// This will try to merge this block with the folowing block.
   /// Every reference to the next block_header maybe invalid after this call.
   void try_merge_next() {
     block_header* next = get_next();
@@ -101,6 +119,8 @@ struct block_header {
     this->is_last = next->is_last;
     this->correct_next();
   }
+
+  /// This will try to merge this block with the previous block
   /// The block_header may not be in usable state after this call because it
   /// could be skipped.
   void try_merge_prev() {
@@ -169,15 +189,16 @@ void *try_malloc(uint32_t size) {
 }
 
 /// This malloc will assert on allocation failure.
-void* malloc(uint32_t size) {
-  void* ret = try_malloc(size);
+void *malloc(uint32_t size) {
+  void *ret = try_malloc(size);
 #ifdef TRISYCL_DEVICE_ALLOCATOR_DEBUG
   multi_log("malloc(", size, ") = ", ret, "\n");
 #endif
-  assert(ret != 0 && "unhandled dynamic allocation failure");
+  assert(ret && "unhandled dynamic allocation failure");
   return ret;
 }
 
+/// Release an allocation and try to merge it with nearby allocations
 void free(void *p) {
 #ifdef TRISYCL_DEVICE_ALLOCATOR_DEBUG
   multi_log("free(", p, ")\n");

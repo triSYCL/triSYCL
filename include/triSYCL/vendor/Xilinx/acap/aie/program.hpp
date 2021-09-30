@@ -21,10 +21,10 @@
 #include "memory_base.hpp"
 #include "tile.hpp"
 #include "tile_base.hpp"
+#include "rpc.hpp"
 #include "xaie_wrapper.hpp"
 #include "triSYCL/detail/program_manager.hpp"
 #include "triSYCL/detail/kernel_desc.hpp"
-#include "rpc.hpp"
 
 /// TODO: Perhaps worth pushing all LibXAiengine functionallity we use down
 /// into a C++ API so it can all be excluded with one #ifdef and kept nice and

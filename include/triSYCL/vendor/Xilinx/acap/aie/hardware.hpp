@@ -271,7 +271,7 @@ using stable_pointer = T*;
 static_assert(sizeof(stable_pointer<void>) == sizeof(std::uint32_t));
 #else
 template<typename T>
-using stable_pointer = uint32_t;
+using stable_pointer = std::uint32_t;
 #endif
 
 } // namespace hw

@@ -69,9 +69,9 @@ void __throw_future_error(int) { assert(false && "cannot throw on device"); }
 void __throw_bad_function_call() { assert(false && "cannot throw on device"); }
 } // namespace std
 
-/// defined all possible variates of the operator new. since we never throw but
-/// assert on allocation failure there is no difference between the throwing and
-/// nonthrowing version.
+/// Defined all possible variants of the operator new. Since we never throw but
+/// assert on allocation failure, there is no difference between the throwing and
+/// non-throwing version.
 /// According to cppreference by default every implementation will use either of
 /// these 2 new overload. So overloading only those 2 should be enough to
 /// replace all of them.

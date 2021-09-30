@@ -31,8 +31,8 @@
 #include "../../axi_stream_switch.hpp"
 #include "../../dma.hpp"
 #include "../../hardware.hpp"
-#include "../../rpc.hpp"
 #include "../../log.hpp"
+#include "../../rpc.hpp"
 #include "triSYCL/detail/fiber_pool.hpp"
 #include "triSYCL/detail/ranges.hpp"
 #include "triSYCL/vendor/Xilinx/config.hpp"
@@ -114,9 +114,11 @@ template <typename Geography> class tile_infrastructure {
 #endif
 
 #ifdef __SYCL_DEVICE_ONLY__
+/// This will be invoked on device before any user code.
 static void kernel_prerun() {
   acap::heap::init_allocator();
 }
+/// This will be invoked on device when exiting normally after any user code.
 static void kernel_postrun() {
   acap::heap::assert_no_leak();
   finish_kernel();

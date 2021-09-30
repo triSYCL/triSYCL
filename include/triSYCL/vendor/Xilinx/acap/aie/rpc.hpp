@@ -33,16 +33,22 @@ namespace trisycl::vendor::xilinx::acap::aie {
 
 /// This is a convenience wrapper that allows creating functor based RPC easily.
 template<typename DataTy>
-struct functor_rpc {
+class functor_rpc {
   using data_type = DataTy;
 #if !defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_XILINX_AIE__)
   std::function<uint32_t(int, int, xaie::handle, data_type)> impl{};
 
+public:
   /// This is only one instance of this per template parameter, this function
   /// will get that instance.
   static functor_rpc &get() {
     static functor_rpc val;
     return val;
+  }
+
+  template<typename Func>
+  static set_handler(Func&& func) {
+    get().impl = std::forward<Func>(func);
   }
 
   /// Process data that is received.
@@ -57,9 +63,13 @@ struct functor_rpc {
 /// update the image. This struct needs to have the same layout on the host and
 /// the device.
 struct image_update_data {
+  /// a pointer the new image data.
   hw::stable_pointer<void> data;
+  /// the minimun value of a pixel.
   uint64_t min_value;
+  /// the maximum value of a pixel.
   uint64_t max_value;
+  /// a count of the number of image_update_data that was sent.
   uint32_t counter;
 };
 
@@ -73,7 +83,9 @@ struct send_log_rpc {
   /// is logging This struct needs to have the same layout on the host and the
   /// device.
   struct data_type {
+    /// a pointer to a buffer the first character to print
     hw::stable_pointer<const char> data;
+    /// the number of characters to print
     uint64_t size;
   };
 #if !defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_XILINX_AIE__)
@@ -111,15 +123,21 @@ template <typename... Tys> struct rpc_impl {
     int x_size, y_size;
     xaie::handle h;
     uint32_t addr;
+
+    /// this will retrun a handle to the synchronization barrier between the device and the host.
     soft_barrier::host_side get_barrier(int x, int y) {
       return {h.moved(x, y), (uint32_t)(addr + offsetof(device_side, barrier))};
     }
+
+    /// This will invoke the correct function to process the data in v
     uint32_t visit(int x, int y, xaie::handle h, Var v) {
       auto visitor = detail::overloaded{[&](typename Tys::data_type data) {
         return Tys::act_on_data(x, y, h, data);
       }...};
       return std::visit(visitor, v);
     }
+
+    /// This will wait on every kernel while handling there RPC requests
     void wait_all() {
       ::trisycl::detail::no_log_in_this_scope nls;
       /// This count the number of kernel that indicated they finished
@@ -170,9 +188,11 @@ template <typename... Tys> struct rpc_impl {
     soft_barrier::device_side barrier;
     Var data;
     uint32_t ret_val;
+
+    /// This sent data to the host to be processed.
     template <typename Ty> uint32_t perform(Ty &&d) {
       /// Write the data.
-      data = std::forward<Ty>(d);
+      data = d;
       /// Notify the host of the data being available.
       barrier.wait();
       /// Wait for the host to process the data.
