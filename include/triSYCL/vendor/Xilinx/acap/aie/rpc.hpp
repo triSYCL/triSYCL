@@ -33,12 +33,12 @@ namespace trisycl::vendor::xilinx::acap::aie {
 
 /// This is a convenience wrapper that allows creating functor based RPC easily.
 template<typename DataTy>
-class functor_rpc {
+struct functor_rpc {
   using data_type = DataTy;
+
 #if !defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_XILINX_AIE__)
   std::function<uint32_t(int, int, xaie::handle, data_type)> impl{};
 
-public:
   /// This is only one instance of this per template parameter, this function
   /// will get that instance.
   static functor_rpc &get() {
@@ -47,7 +47,7 @@ public:
   }
 
   template<typename Func>
-  static set_handler(Func&& func) {
+  static void set_handler(Func&& func) {
     get().impl = std::forward<Func>(func);
   }
 
@@ -199,12 +199,13 @@ template <typename... Tys> struct rpc_impl {
       barrier.wait();
       return ret_val;
     }
-  };
 #endif
+  };
 };
 
 using rpc = rpc_impl<done_rpc, image_update_rpc, send_log_rpc>;
 
+#if defined(__SYCL_XILINX_AIE__)
 // The advantage of this over static_assert is that V1 and V2 will be printed when it fails.
 template<auto V1, auto V2>
 struct assert_equal {
@@ -213,6 +214,7 @@ struct assert_equal {
 
 /// This variable is just to check the rpc size
 constexpr assert_equal<sizeof(rpc::device_side), hw::rpc_record_size> v;
+#endif
 
 } // namespace trisycl::vendor::xilinx::acap::aie
 
