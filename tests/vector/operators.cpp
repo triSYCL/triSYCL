@@ -3,9 +3,11 @@
    Test some vec<> behaviour with all the operators
 */
 #include <CL/sycl.hpp>
+
 #include <iostream>
 #include <valarray>
-#include <boost/test/minimal.hpp>
+
+#include <catch2/catch_test_macros.hpp>
 
 using namespace cl::sycl;
 
@@ -38,12 +40,12 @@ auto equal = [] (auto const &v, auto const &verif) {
     va va1 { vil1 };                                    \
     va va2 { vil2 };                                    \
     va va3 = va1 OPERATOR va2;                          \
-    BOOST_CHECK(equal(v1, va1));                        \
-    BOOST_CHECK(equal(v2, va2));                        \
-    BOOST_CHECK(equal(v3, va3));                        \
+    REQUIRE(equal(v1, va1));                            \
+    REQUIRE(equal(v2, va2));                            \
+    REQUIRE(equal(v3, va3));                            \
     v3 OPERATOR##= v1;                                  \
     va3 OPERATOR##= va1;                                \
-    BOOST_CHECK(equal(v3, va3));                        \
+    REQUIRE(equal(v3, va3));                            \
   }
 
 
@@ -57,11 +59,11 @@ auto equal = [] (auto const &v, auto const &verif) {
     using va = std::valarray<TYPE>;                     \
     v v1 VAL1;                                          \
     va va1 { vil1 };                                    \
-    BOOST_CHECK(equal(v1, va1));                        \
+    REQUIRE(equal(v1, va1));                            \
     v v2 = OPERATOR v1;                                 \
     va va2 = OPERATOR va1;                              \
-    BOOST_CHECK(equal(v1, va1));                        \
-    BOOST_CHECK(equal(v2, va2));                        \
+    REQUIRE(equal(v1, va1));                            \
+    REQUIRE(equal(v2, va2));                            \
   }
 
 /** Use the std::valarray<> implementation to compare unary
@@ -76,8 +78,8 @@ auto equal = [] (auto const &v, auto const &verif) {
     using v = vec<TYPE, SIZE>;                                    \
     v v1 VAL;                                                     \
     v v2 = BEFORE_OP v1 AFTER_OP;                                 \
-    BOOST_CHECK(equal(v1, v VAL_AFTER));                          \
-    BOOST_CHECK(equal(v2, v RESULT));                             \
+    REQUIRE(equal(v1, v VAL_AFTER));                              \
+    REQUIRE(equal(v2, v RESULT));                                 \
   }
 
 
@@ -114,10 +116,10 @@ int test_main(int argc, char *argv[]) {
         std::valarray<float> va4 = 1.F + va3;
         va4 += va1;
         va4 += 3.F;
-        BOOST_CHECK(equal(v1, va1));
-        BOOST_CHECK(equal(v2, va2));
-        BOOST_CHECK(equal(v3, va3));
-        BOOST_CHECK(equal(v4, va4));
+        REQUIRE(equal(v1, va1));
+        REQUIRE(equal(v2, va2));
+        REQUIRE(equal(v3, va3));
+        REQUIRE(equal(v4, va4));
         TRISYCL_CHECK(+, float, 4, ({ 1, 2, 3, 4}), ({ 4, 5, 6, 7}));
         TRISYCL_CHECK(-, float, 4, ({ 1, 2, 3, 4}), ({ 4, 5, 6, 7}));
         TRISYCL_CHECK(*, float, 4, ({ 1, 2, 3, 4}), ({ 4, 5, 6, 7}));
@@ -152,6 +154,4 @@ int test_main(int argc, char *argv[]) {
                                        });
       }); // End of our commands for this queue
   } // End scope, so we wait for the queue to complete
-
-  return 0;
 }

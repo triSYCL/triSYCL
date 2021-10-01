@@ -26,7 +26,8 @@ constexpr size_t DIM = 64;
 using Type = int;
 
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("matrix multiplication with partition_array for PoCL",
+          "[partition_array]") {
   buffer<Type> in1 { BLOCK_SIZE };
   buffer<Type> in2 { BLOCK_SIZE };
   buffer<Type> out { BLOCK_SIZE };
@@ -135,7 +136,6 @@ int test_main(int argc, char *argv[]) {
   for (unsigned int i = 0 ; i < BLOCK_SIZE; ++i) {
     //std::cout << "a_out["<< i << "]: " << a_out[i] << " ";
     //std::cout << "res_r["<< i << "]: " << res_r[i] << std::endl;
-    BOOST_CHECK(a_out[i] == res_r[i]);
+    REQUIRE(a_out[i] == res_r[i]);
   }
-  return 0;
 }

@@ -1,18 +1,21 @@
 /* RUN: %{execute}%s
 
-   Exercise buffer size-like methods
+   Exercise buffer size-like member functions
 */
 
 #include <CL/sycl.hpp>
-#include <boost/test/minimal.hpp>
+
 #include <iostream>
+
+#include <catch2/catch_test_macros.hpp>
 
 using namespace cl::sycl;
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("size-like member functions", "[buffer]") {
   std::vector<int> v(10);
-  size_t bufferSize = std::distance(v.begin(), v.end()); 
-  std::shared_ptr<int> ptr { new int[bufferSize], std::default_delete<int[]>() };
+  size_t bufferSize = std::distance(v.begin(), v.end());
+  std::shared_ptr<int> ptr { new int[bufferSize],
+                             std::default_delete<int[]>() };
   std::copy(v.begin(), v.end(), ptr.get());
   buffer<int, 1> buf(ptr, range<1>(bufferSize));
 
@@ -29,5 +32,4 @@ int test_main(int argc, char *argv[]) {
     std::cout << "buf.get_range() = " << buf.get_range().get(0) << std::endl;
     assert(false);
   }
-  return 0;
 }

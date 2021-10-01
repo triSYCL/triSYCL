@@ -1,27 +1,27 @@
 /* RUN: %{execute}%s
 
-   Test some vec<> as method behaviour
+   Test some vec<> alignment
 */
 #include <CL/sycl.hpp>
+
 #include <iostream>
-#include <boost/test/minimal.hpp>
+
+#include <catch2/catch_test_macros.hpp>
 
 using namespace cl::sycl;
 
-int test_main(int argc, char *argv[]) {
-	auto val = std::alignment_of<cl::sycl::vec<char, 2>>::value;
-	BOOST_CHECK(val == 2);
-	val = std::alignment_of<cl::sycl::vec<char, 3>>::value;
-	BOOST_CHECK(val == 4);
-	val = std::alignment_of<cl::sycl::vec<char, 4>>::value;
-	BOOST_CHECK(val == 4);
+TEST_CASE("alignment", "[vector]") {
+  auto val = std::alignment_of<cl::sycl::vec<char, 2>>::value;
+  REQUIRE(val == 2);
+  val = std::alignment_of<cl::sycl::vec<char, 3>>::value;
+  REQUIRE(val == 4);
+  val = std::alignment_of<cl::sycl::vec<char, 4>>::value;
+  REQUIRE(val == 4);
 
-	val = std::alignment_of<cl::sycl::vec<int, 2>>::value;
-	BOOST_CHECK(val == 8);
-	val = std::alignment_of<cl::sycl::vec<int, 3>>::value;
-	BOOST_CHECK(val == 16);
-	val = std::alignment_of<cl::sycl::vec<int, 4>>::value;
-	BOOST_CHECK(val == 16);
-
-	return 0;
+  val = std::alignment_of<cl::sycl::vec<int, 2>>::value;
+  REQUIRE(val == 8);
+  val = std::alignment_of<cl::sycl::vec<int, 3>>::value;
+  REQUIRE(val == 16);
+  val = std::alignment_of<cl::sycl::vec<int, 4>>::value;
+  REQUIRE(val == 16);
 }

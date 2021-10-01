@@ -3,12 +3,14 @@
    Exercise buffer::set_final_data()
 */
 #include <CL/sycl.hpp>
+
 #include <iostream>
-#include <boost/test/minimal.hpp>
+
+#include <catch2/catch_test_macros.hpp>
 
 using namespace cl::sycl;
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("set_final_data with iterator", "[buffer]") {
   constexpr int N = 16;
   {
     std::vector<int> v(N);
@@ -25,8 +27,8 @@ int test_main(int argc, char *argv[]) {
     // Tthe buffer is not modified, thus w = { 0, ..., 0 };
     for (int i = 0; i < N; ++i) {
       // std::cerr << w[i] << ':' << i << std::endl;
-      BOOST_CHECK(v[i] == i);
-      BOOST_CHECK(w[i] == 0);
+      REQUIRE(v[i] == i);
+      REQUIRE(w[i] == 0);
     }
   }
   {
@@ -43,8 +45,8 @@ int test_main(int argc, char *argv[]) {
     // The buffer is 'modified', thus w = v;
     for (int i = 0; i < N; ++i) {
       // std::cerr << w[i] << ':' << i << std::endl;
-      BOOST_CHECK(v[i] == i);
-      BOOST_CHECK(w[i] == i);
+      REQUIRE(v[i] == i);
+      REQUIRE(w[i] == i);
     }
   }
   {
@@ -66,8 +68,8 @@ int test_main(int argc, char *argv[]) {
 
     for (int i = 0; i < N; ++i) {
       // std::cerr << w[i] << ':' << i << std::endl;
-      BOOST_CHECK(v[i] == 0);
-      BOOST_CHECK(w[i] == i);
+      REQUIRE(v[i] == 0);
+      REQUIRE(w[i] == i);
     }
   }
   {
@@ -83,8 +85,8 @@ int test_main(int argc, char *argv[]) {
 
     for (int i = 0; i < N; ++i) {
       // std::cerr << w[i] << ':' << i << std::endl;
-      BOOST_CHECK(v[i] == i);
-      BOOST_CHECK(w[i] == 0);
+      REQUIRE(v[i] == i);
+      REQUIRE(w[i] == 0);
     }
   }
   {
@@ -101,7 +103,7 @@ int test_main(int argc, char *argv[]) {
     //A write accessor is created thus a write-back is triggered on v.
     for (int i = 0; i < N; ++i) {
       // std::cout << i << " -> " << v[i] << std::endl;
-      BOOST_CHECK(v[i] == i);
+      REQUIRE(v[i] == i);
     }
   }
   {
@@ -119,9 +121,7 @@ int test_main(int argc, char *argv[]) {
      */
     for (int i = 0; i < N; ++i) {
       // std::cout << i << " -> " << v[i] << std::endl;
-      BOOST_CHECK(v[i] == 0);
+      REQUIRE(v[i] == 0);
     }
   }
-
-  return 0;
 }
