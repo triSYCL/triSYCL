@@ -1,19 +1,34 @@
+#ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_EXEC_KERNEL_HPP
+#define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_EXEC_KERNEL_HPP
+
+
+/** \file
+
+    This
+
+    This file is distributed under the University of Illinois Open Source
+    License. See LICENSE.TXT for details.
+*/
+
+#ifndef __SYCL_XILINX_AIE__
+#error "This header should only be included when targeting the emulator"
+#endif
 
 #ifdef __SYCL_DEVICE_ONLY__
 #include "device_allocator.hpp"
 #include "log.hpp"
 #endif
 
-#include <string>
 #include "xaie_wrapper.hpp"
+#include <string>
 
 #include "triSYCL/detail/program_manager.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie::detail {
 
-template<typename TileHandle>
-struct exec_kernel {
+template <typename TileHandle> struct exec_kernel {
 #ifdef __SYCL_DEVICE_ONLY__
+  /// Trigger the outlining on device with __attribute__((sycl_kernel))
   template <typename KernelName, typename KernelType>
   __attribute__((sycl_kernel)) void kernel_outliner(KernelType &k) {
     k();
@@ -26,19 +41,20 @@ struct exec_kernel {
 #endif
 
 #ifdef __SYCL_DEVICE_ONLY__
-static void kernel_prerun() {
-  acap::heap::init_allocator();
-}
-static void kernel_postrun() {
-  acap::heap::assert_no_leak();
-  finish_kernel();
-}
+  /// This will be invoked on device before any user code.
+  static void kernel_prerun() { acap::heap::init_allocator(); }
+  /// This will be invoked on device when exiting normally after any user code.
+  static void kernel_postrun() {
+    acap::heap::assert_no_leak();
+    finish_kernel();
+  }
 #else
-static void kernel_prerun() {
-}
-static void kernel_postrun() {
-}
+  static void kernel_prerun() {}
+  static void kernel_postrun() {}
 #endif
+
+  /// kernel_builder will insert prerun and postrun, and get an instance of the
+  /// kernel object and the tile handle.
 
   template <typename KernelType>
   auto kernel_builder(KernelType &) requires requires(KernelType k) {
@@ -105,13 +121,11 @@ static void kernel_postrun() {
     };
   }
 
-  template<typename K>
-  void exec(xaie::handle dev_handle, K k) {
-     acap::hw::position pos = xaie_pos_to_acap_pos(dev_handle.tile);
+  template <typename K> void exec(xaie::handle dev_handle, K k) {
+    acap::hw::position pos = xaie_pos_to_acap_pos(dev_handle.tile);
     auto Kernel = kernel_builder(k);
 
 #ifdef __SYCL_DEVICE_ONLY__
-
     // The outlining of the device binary Method 1: use it directly as a kernel
     // wrapper This still results in some "garbage" IR from the axi streams
     // default destructor, but you can run -O3 and it'll clean it up quite a bit
@@ -130,8 +144,7 @@ static void kernel_postrun() {
     std::string kernelName = ::trisycl::detail::KernelInfo<
         typename std::decay<decltype(Kernel)>::type>::getName();
 
-    if (hw::get_parity(pos) ==
-        hw::parity::west)
+    if (hw::get_parity(pos) == hw::parity::west)
       kernelName += "_west";
     else
       kernelName += "_east";
@@ -152,7 +165,7 @@ static void kernel_postrun() {
         kernelName, "run_aie_" + kernelName + ".elf");
 #endif
     {
-      // auto Transaction = f.get_transaction();
+      // auto Transaction = dev_handle.get_transaction();
       dev_handle.core_reset();
 
       TRISYCL_DUMP2("Loading Kernel " << kernelName << " ELF to tile (" << pos.x
@@ -180,4 +193,6 @@ static void kernel_postrun() {
 #endif
   }
 };
-}
+} // namespace trisycl::vendor::xilinx::acap::aie::detail
+
+#endif

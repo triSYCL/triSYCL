@@ -17,8 +17,6 @@
     License. See LICENSE.TXT for details.
  */
 
-#include "memory_base.hpp"
-
 namespace trisycl::vendor::xilinx::acap::aie {
 
 /// \ingroup aie
@@ -42,13 +40,7 @@ template <typename AIE //< The type representing the full CGRA
           ,
           int Y //< The vertical coordinate of the memory module
           >
-struct memory : memory_base {
-  /** The horizontal tile coordinates in the CGRA grid (starting at 0
-      and increasing towards East) */
-  static auto constexpr x = X;
-  /** The vertical tile coordinates in the CGRA grid (starting at
-      increasing towards North) */
-  static auto constexpr y = Y;
+struct memory {
 };
 
 /// @} End the aie Doxygen group

@@ -1,6 +1,10 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_TILE_INFRASTRUCTURE_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_TILE_INFRASTRUCTURE_HPP
 
+#ifdef __SYCL_XILINX_AIE__
+#error "This header should only be included when targeting the emulator"
+#endif
+
 /** \file
 
     The basic AI Engine homogeneous tile, with the common
@@ -21,7 +25,6 @@
 
 #include <utility>
 
-#include "memory_infrastructure.hpp"
 #include "rpc.hpp"
 #include "tile_infrastructure/detail/tile_infrastructure.hpp"
 #include "triSYCL/device/facade/device.hpp"
@@ -40,24 +43,17 @@ namespace trisycl::vendor::xilinx::acap::aie {
     layout of the architecture
 */
 template <typename Geography>
-class tile_infrastructure
-    : public facade::device<tile_infrastructure<Geography>,
-                            detail::tile_infrastructure<Geography>> {
+class tile_infrastructure {
   /// The type encapsulating the implementation
+  std::shared_ptr<detail::tile_infrastructure<Geography>> implementation;
   using dti = detail::tile_infrastructure<Geography>;
 
  public:
-  /// The façade used to implement part of the user-facing type
-  using facade_t = facade::device<tile_infrastructure<Geography>, dti>;
-
   using geo = Geography;
   using axi_ss_geo = typename dti::axi_ss_geo;
   using mpl = typename dti::mpl;
   using spl = typename dti::spl;
   using axi_ss_t = typename dti::axi_ss_t;
-
-  /// Make the implementation member directly accessible in this class
-  using facade_t::implementation;
 
   /** Start the tile infrastructure associated to the AIE device
 
@@ -73,24 +69,14 @@ class tile_infrastructure
       \param[in] fiber_executor is the executor used to run
       infrastructure details
   */
-#if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
-  tile_infrastructure(int x, int y, xaie::handle h,
-                      ::trisycl::detail::fiber_pool &fiber_executor)
-      : facade_t{std::make_shared<dti>(x, y, h, fiber_executor)} {}
-#else
   tile_infrastructure(int x, int y,
                       ::trisycl::detail::fiber_pool &fiber_executor)
-      : facade_t{std::make_shared<dti>(x, y, fiber_executor)} {}
-#endif
+      : implementation{std::make_shared<dti>(x, y, fiber_executor)} {}
   tile_infrastructure() = default;
 
-#if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
-  // For host side when executing on acap hardware
-  /// Store a way to access to hw tile instance
-  xaie::handle get_dev_handle() const {
-    return implementation->get_dev_handle();
+  void set_tile_infrastructure(const tile_infrastructure& other) {
+    implementation = other.implementation;
   }
-#endif
 
  // \todo Implement a real tile handle instead of using x(), y(),
   // etc. from here
@@ -129,6 +115,14 @@ class tile_infrastructure
   void submit(Invocable&& f) const {
     cgh_t cgh { *this };
     std::forward<Invocable>(f)(cgh);
+  }
+
+   /** Get a handle to a lock
+
+       \param[in] i is the id of the lock
+   */
+  auto get_self_lock(int i) {
+     return implementation->lock(i);
   }
 
   /** Get the user input connection from the AXI stream switch

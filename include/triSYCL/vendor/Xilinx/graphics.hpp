@@ -26,14 +26,11 @@
 #include "acap/aie/hardware.hpp"
 #include "acap/aie/lock.hpp"
 #include "acap/aie/rpc.hpp"
-#ifndef __SYCL_DEVICE_ONLY__
 #include "acap/aie/xaie_wrapper.hpp"
-#endif
 #endif
 
 #include <mutex>
 
-#ifndef __SYCL_DEVICE_ONLY__
 #include <algorithm>
 #include <atomic>
 #include <condition_variable>
@@ -51,7 +48,6 @@
 #include <boost/thread/barrier.hpp>
 
 #include <gtkmm.h>
-#endif
 /** \defgroup graphics Graphics support for CGRA-like interaction
 
     This can create a graphics application and typically update some

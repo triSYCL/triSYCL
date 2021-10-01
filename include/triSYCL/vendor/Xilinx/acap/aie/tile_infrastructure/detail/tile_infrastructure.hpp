@@ -1,6 +1,10 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_TILE_INFRASTRUCTURE_DETAIL_TILE_INFRASTRUCTURE_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_TILE_INFRASTRUCTURE_DETAIL_TILE_INFRASTRUCTURE_HPP
 
+#ifdef __SYCL_XILINX_AIE__
+#error "This header should only be included when targeting the emulator"
+#endif
+
 /** \file
 
     The basic AI Engine homogeneous tile, with the common
@@ -31,6 +35,7 @@
 #include "../../axi_stream_switch.hpp"
 #include "../../dma.hpp"
 #include "../../hardware.hpp"
+#include "../../lock.hpp"
 #include "../../log.hpp"
 #include "../../rpc.hpp"
 #include "../../cascade_stream.hpp"
@@ -64,7 +69,6 @@ template <typename Geography> class tile_infrastructure {
   using axi_ss_t = axi_stream_switch<axi_ss_geo>;
 
  private:
-#if !defined(__SYCL_DEVICE_ONLY__)
   /// Keep the horizontal coordinate
   int x_coordinate;
 
@@ -74,9 +78,7 @@ template <typename Geography> class tile_infrastructure {
   /// The AXI stream switch of the core tile
   axi_ss_t axi_ss;
 
-  /** Keep track of all the infrastructure tile memories
-      of this device */
-  aie::memory_infrastructure mi;
+  lock_unit memory_locking_unit;
 
   /** Sending DMAs
 
@@ -85,13 +87,7 @@ template <typename Geography> class tile_infrastructure {
       tx_dmas;
 
   cascade_stream cstream;
-#endif
 
-#if defined(__SYCL_XILINX_AIE__)
-#if !defined(__SYCL_DEVICE_ONLY__)
-  xaie::handle dev_handle;
-#endif
-#else
 #if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
   /// Keep track of the fiber executor
   ::trisycl::detail::fiber_pool* fe;
@@ -102,103 +98,7 @@ template <typename Geography> class tile_infrastructure {
   /// Keep track of the std::thread execution in this tile
   std::future<void> future_work;
 #endif
-#endif
 
-#ifdef __SYCL_DEVICE_ONLY__
-  template <typename KernelName, typename KernelType>
-  __attribute__((sycl_kernel)) void kernel_outliner(KernelType &k) {
-    k();
-  }
-#else
-  template <typename KernelName, typename KernelType>
-  void kernel_outliner(KernelType &k) {
-    k();
-  }
-#endif
-
-#ifdef __SYCL_DEVICE_ONLY__
-/// This will be invoked on device before any user code.
-static void kernel_prerun() {
-  acap::heap::init_allocator();
-}
-/// This will be invoked on device when exiting normally after any user code.
-static void kernel_postrun() {
-  acap::heap::assert_no_leak();
-  finish_kernel();
-}
-#else
-static void kernel_prerun() {
-}
-static void kernel_postrun() {
-}
-#endif
-
-  template <typename KernelType>
-  auto kernel_builder(KernelType &) requires requires(KernelType k) {
-    k();
-  }
-  {
-    return []() mutable {
-#ifdef __SYCL_DEVICE_ONLY__
-      KernelType *k = (KernelType *)(hw::self_tile_addr(hw::get_parity_dev()) +
-                                     hw::args_begin_offset);
-      kernel_prerun();
-      k->operator()();
-      kernel_postrun();
-#endif
-    };
-  };
-  template <typename KernelType>
-  auto kernel_builder(KernelType &) requires requires(KernelType k) {
-    k(*this);
-  }
-  {
-    return []() mutable {
-#ifdef __SYCL_DEVICE_ONLY__
-      KernelType *k = (KernelType *)(hw::self_tile_addr(hw::get_parity_dev()) +
-                                     hw::args_begin_offset);
-      kernel_prerun();
-      /// TODO tile_infrastructure should be properly initialized.
-      std::remove_cvref_t<decltype(*this)> th;
-      k->operator()(th);
-      kernel_postrun();
-#endif
-    };
-  }
-  template <typename KernelType>
-  auto kernel_builder(KernelType &) requires requires(KernelType k) {
-    k.run();
-  }
-  {
-    return []() mutable {
-#ifdef __SYCL_DEVICE_ONLY__
-      KernelType *k = (KernelType *)(hw::self_tile_addr(hw::get_parity_dev()) +
-                                     hw::args_begin_offset);
-      kernel_prerun();
-      k->run();
-      kernel_postrun();
-#endif
-    };
-  }
-  template <typename KernelType>
-  auto kernel_builder(KernelType &) requires requires(KernelType k) {
-    k.run(*this);
-  }
-  {
-    return []() mutable {
-#ifdef __SYCL_DEVICE_ONLY__
-      KernelType *k = (KernelType *)(hw::self_tile_addr(hw::get_parity_dev()) +
-                                     hw::args_begin_offset);
-      kernel_prerun();
-      /// TODO tile_infrastructure should be properly initialized.
-      std::remove_cvref_t<decltype(*this)> th;
-      k->run(th);
-      kernel_postrun();
-#endif
-    };
-  }
-
-#if !defined(__SYCL_DEVICE_ONLY__)
   /** Map the user input port number to the AXI stream switch port
 
       \param[in] port is the user port to use
@@ -216,13 +116,8 @@ static void kernel_postrun() {
     return axi_ss_t::translate_port(port, mpl::me_0, mpl::me_last,
                                     "The core output port is out of range");
   }
-#endif
 
  public:
-
-#ifdef __SYCL_DEVICE_ONLY__
-tile_infrastructure() = default;
-#endif
 
   /** Start the tile infrastructure associated to the AIE device tile
 
@@ -238,265 +133,149 @@ tile_infrastructure() = default;
       \param[in] fiber_executor is the executor used to run
       infrastructure details
   */
-#if !defined(__SYCL_DEVICE_ONLY__)
-tile_infrastructure(int x, int y,
-#if defined(__SYCL_XILINX_AIE__)
-                    xaie::handle h,
-#endif
-                    ::trisycl::detail::fiber_pool &fiber_executor)
-    : x_coordinate{x}, y_coordinate {y}
-#if defined(__SYCL_XILINX_AIE__)
-    , mi{h}
-    , dev_handle {h}
-#endif
+   tile_infrastructure(int x, int y,
+                       ::trisycl::detail::fiber_pool &fiber_executor)
+       : x_coordinate{x}, y_coordinate {
+     y
+   }
 #if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
-    ,fe { &fiber_executor }
+   , fe { &fiber_executor }
 #endif
-{
-#if !defined(__SYCL_XILINX_AIE__) && 0
-  // TODO: this should be enabled on hardware when it is working but for now
-  // it isn't
+   {
+     // TODO: this should be enabled on hardware when it is working but for now
+     // it isn't
 
-  // Connect the core receivers to its AXI stream switch
-  for (auto p : views::enum_type(mpl::me_0, mpl::me_last))
-    output(p) =
-        std::make_shared<port_receiver<axi_ss_t>>(axi_ss, "core_receiver");
-  axi_ss.start(x, y, fiber_executor);
-  /* Create the core tile receiver DMAs and make them directly the
-     switch output ports */
-  for (auto p : axi_ss_geo::m_dma_range)
-    output(p) =
-        std::make_shared<receiving_dma<axi_ss_t>>(axi_ss, fiber_executor);
-  /* Create the core tile sender DMAs and connect them internally to
-     their switch input ports */
-  for (const auto &[d, p] :
-       ranges::views::zip(tx_dmas, axi_ss_geo::s_dma_range))
-    d.emplace(fiber_executor, input(p));
-#endif
-}
-#endif
+     // Connect the core receivers to its AXI stream switch
+     for (auto p : views::enum_type(mpl::me_0, mpl::me_last))
+       output(p) =
+           std::make_shared<port_receiver<axi_ss_t>>(axi_ss, "core_receiver");
+     axi_ss.start(x, y, fiber_executor);
+     /* Create the core tile receiver DMAs and make them directly the
+        switch output ports */
+     for (auto p : axi_ss_geo::m_dma_range)
+       output(p) =
+           std::make_shared<receiving_dma<axi_ss_t>>(axi_ss, fiber_executor);
+     /* Create the core tile sender DMAs and connect them internally to
+        their switch input ports */
+     for (const auto &[d, p] :
+          ranges::views::zip(tx_dmas, axi_ss_geo::s_dma_range))
+       d.emplace(fiber_executor, input(p));
+   }
 
-#if defined(__SYCL_XILINX_AIE__) 
-#if !defined(__SYCL_DEVICE_ONLY__)
-  // For host side when executing on acap hardware
-  xaie::handle get_dev_handle() const {
-    return dev_handle;
-  }
-#else
-  xaie::handle get_dev_handle() const {
-    assert(false && "unimplemented");
-    return {};
-  }
-#endif
-#endif
+   /// Get the horizontal coordinate
+   int x() { return x_coordinate; }
 
-#if defined(__SYCL_DEVICE_ONLY__)
-  /// Get the horizontal coordinate
-  int x() { return hw::get_tile_x_coordinate(); }
+   /// Get the vertical coordinate
+   int y() { return y_coordinate; }
 
-  /// Get the vertical coordinate
-  int y() { return hw::get_tile_y_coordinate(); }
-#else
-  /// Get the horizontal coordinate
-  int x() { return x_coordinate; }
+   /// Get the horizontal number of tiles
+   static constexpr int x_size() { return geo::x_size; }
 
-  /// Get the vertical coordinate
-  int y() { return y_coordinate; }
-#endif
+   /// Get the vertical number of tiles
+   static constexpr int y_size() { return geo::y_size; }
 
-  /// Get the horizontal number of tiles
-  static constexpr int x_size() { return geo::x_size; }
+   /** Get a handle to a lock
 
-  /// Get the vertical number of tiles
-  static constexpr int y_size() { return geo::y_size; }
-
-#if !defined(__SYCL_DEVICE_ONLY__)
-
-  /// Access to the common infrastructure part of a tile memory
-  auto& mem() {
-    return mi;
+       \param[in] i is the id of the lock
+   */
+  auto get_self_lock(int i) {
+     return memory_locking_unit.lock(i);
   }
 
-  /** Get the user input connection from the AXI stream switch
+   /** Get the user input connection from the AXI stream switch
 
-      \param[in] port is the port to use
-  */
-  auto& in_connection(int port) {
-    /* The input port for the core is actually the corresponding
-       output on the switch */
-    return axi_ss.out_connection(translate_output_port(port));
-  }
+       \param[in] port is the port to use
+   */
+   auto &in_connection(int port) {
+     /* The input port for the core is actually the corresponding
+        output on the switch */
+     return axi_ss.out_connection(translate_output_port(port));
+   }
 
-  /** Get the user output connection to the AXI stream switch
+   /** Get the user output connection to the AXI stream switch
 
-      \param[in] port is port to use
-  */
-  auto& out_connection(int port) {
-    /* The output port for the core is actually the corresponding
-       input on the switch */
-    return axi_ss.in_connection(translate_input_port(port));
-  }
+       \param[in] port is port to use
+   */
+   auto &out_connection(int port) {
+     /* The output port for the core is actually the corresponding
+        input on the switch */
+     return axi_ss.in_connection(translate_input_port(port));
+   }
 
-  /** Get the user input port from the AXI stream switch
+   /** Get the user input port from the AXI stream switch
 
-      \param[in] port is the port to use
-  */
-  auto& in(int port) {
-    TRISYCL_DUMP_T("in(" << port << ") on tile(" << x_coordinate << ','
-                         << y_coordinate << ')');
-    return *in_connection(port);
-  }
-
-  /** Get the user output port to the AXI stream switch
-
-      \param[in] port is the port to use
-  */
-  auto& out(int port) {
-    TRISYCL_DUMP_T("out(" << port << ") on tile(" << x_coordinate << ','
+       \param[in] port is the port to use
+   */
+   auto &in(int port) {
+     TRISYCL_DUMP_T("in(" << port << ") on tile(" << x_coordinate << ','
                           << y_coordinate << ')');
-    return *out_connection(port);
-  }
+     return *in_connection(port);
+   }
 
-  /** Get access to a receiver DMA
+   /** Get the user output port to the AXI stream switch
 
-      \param[in] id specifies which DMA to access */
-  auto& rx_dma(int id) {
-    /** The output of the switch is actually a receiving DMA, so we
-        can view it as a DMA */
-    return static_cast<receiving_dma<axi_ss_t>&>(*output(
-        axi_ss_t::translate_port(id, mpl::dma_0, mpl::dma_last,
-                                 "The receiver DMA port is out of range")));
-  }
+       \param[in] port is the port to use
+   */
+   auto &out(int port) {
+     TRISYCL_DUMP_T("out(" << port << ") on tile(" << x_coordinate << ','
+                           << y_coordinate << ')');
+     return *out_connection(port);
+   }
 
-  /** Get access to a transmit DMA
+   /** Get access to a receiver DMA
 
-      \param[in] id specifies which DMA to access */
-  auto& tx_dma(int id) { return *tx_dmas.at(id); }
+       \param[in] id specifies which DMA to access */
+   auto &rx_dma(int id) {
+     /** The output of the switch is actually a receiving DMA, so we
+         can view it as a DMA */
+     return static_cast<receiving_dma<axi_ss_t> &>(*output(
+         axi_ss_t::translate_port(id, mpl::dma_0, mpl::dma_last,
+                                  "The receiver DMA port is out of range")));
+   }
 
-  auto& cascade() { return cstream; }
+   /** Get access to a transmit DMA
 
-  /** Get the input router port of the AXI stream switch
+       \param[in] id specifies which DMA to access */
+   auto &tx_dma(int id) { return *tx_dmas.at(id); }
 
-      \param p is the slave_port_layout for the stream
-  */
-  auto& input(spl p) {
-    // No index validation required because of type safety
-    return axi_ss.input(p);
-  }
+   auto &cascade() { return cstream; }
 
-  /** Get the output router port of the AXI stream switch
+   /** Get the input router port of the AXI stream switch
 
-      \param p is the master_port_layout for the stream
-  */
-  auto& output(mpl p) {
-    // No index validation required because of type safety
-    return axi_ss.output(p);
-  }
-#endif
+       \param p is the slave_port_layout for the stream
+   */
+   auto &input(spl p) {
+     // No index validation required because of type safety
+     return axi_ss.input(p);
+   }
 
-  /// Launch an invocable on this tile
-  template <typename Work> void single_task(Work &&f) {
-#ifdef __SYCL_XILINX_AIE__
-    auto Kernel = kernel_builder(f);
+   /** Get the output router port of the AXI stream switch
 
-#ifdef __SYCL_DEVICE_ONLY__
+       \param p is the master_port_layout for the stream
+   */
+   auto &output(mpl p) {
+     // No index validation required because of type safety
+     return axi_ss.output(p);
+   }
 
-    // The outlining of the device binary Method 1: use it directly as a kernel
-    // wrapper This still results in some "garbage" IR from the axi streams
-    // default destructor, but you can run -O3 and it'll clean it up quite a bit
-    // without nuking everything so it's progress. The result seems semi-
-    // reasonable and passes through xchesscc at a reasonable speed
-    kernel_outliner<typename std::decay<decltype(Kernel)>::type>(Kernel);
-
-#else
-    /// Host side
-
-    // The name is captured by it's non-reference type and has to be in
-    // the cl::sycl::detail namespace as the integration header is
-    // defined to be in this namespace (and all our implementation
-    // resides in trisycl by default, so ::detail resolves to
-    // trisycl::detail)
-    std::string kernelName = ::trisycl::detail::KernelInfo<
-        typename std::decay<decltype(Kernel)>::type>::getName();
-
-    if (hw::get_parity({x(), y()}) == hw::parity::west)
-      kernelName += "_west";
-    else
-      kernelName += "_east";
-
-    auto kernelImage =
-        ::trisycl::detail::program_manager::instance()->get_image(kernelName);
-
-#ifdef TRISYCL_DEBUG_IMAGE
-    // Image Dump using name retrieval for Debug, separate debug define
-    // as dumping 400 images when at maximum array capacity is not
-    // necessarily something you always want to do when debugging.
-    //
-    // This differentiates from the program_manager image dump in that
-    // it helps check whether the names are correctly correlating to the
-    // correct ELF images and if there is some breakage in the storing
-    // of the images.
-    detail::program_manager::instance()->image_dump(
-        kernelName, "run_aie_" + kernelName + ".elf");
-#endif
-    {
-      // auto Transaction = f.get_transaction();
-      get_dev_handle().core_reset();
-
-      TRISYCL_DUMP2("Loading Kernel " << kernelName << " ELF to tile (" << x()
-                                      << ',' << y()
-                                      << ")",
-                    "exec");
-
-      get_dev_handle().load_elf_image(kernelImage);
-
-      TRISYCL_DUMP2("Loaded Kernel " << kernelName << " ELF to tile (" << x()
-                                     << ',' << y()
-                                     << ") beginning tile execution",
-                    "exec");
-
-      if constexpr (requires { f.prerun(); })
-        f.prerun();
-
-      TRISYCL_DUMP2("Starting AIE tile ("
-                        << x() << ',' << y() << ") "
-                        << "Associated Tile Kernel Name: " << kernelName
-                        << "- beginning prerun execution",
-                    "exec");
-
-      get_dev_handle().core_run();
-    }
-#endif
-#else
-    if (future_work.valid())
-      throw std::logic_error("Something is already running on this tile!");
-    // Launch the tile program immediately on a new executor engine
+   /// Launch an invocable on this tile
+   template <typename Work> void single_task(Work &&f) {
+     if (future_work.valid())
+       throw std::logic_error("Something is already running on this tile!");
+       // Launch the tile program immediately on a new executor engine
 #if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
     future_work = fe->submit(std::forward<Work>(f));
 #else
     future_work = std::async(std::launch::async, std::forward<Work>(f));
 #endif
-#endif
   }
 
   /// Wait for the execution of the callable on this tile
   void wait() {
-#ifdef __SYCL_XILINX_AIE__
-#ifdef __SYCL_DEVICE_ONLY__
-/// Device side
-
-/// Noop
-
-#else
-    get_dev_handle().core_wait();
-#endif
-#else
     if (future_work.valid())
       future_work.get();
-#endif
   }
 
-#if !defined(__SYCL_DEVICE_ONLY__)
   /// Configure a connection of the core tile AXI stream switch
   void connect(typename geo::core_axi_stream_switch::slave_port_layout sp,
                typename geo::core_axi_stream_switch::master_port_layout mp) {
@@ -568,7 +347,6 @@ tile_infrastructure(int x, int y,
            x_coordinate % y_coordinate)
               .str());
   }
-#endif
 };
 
 /// @} End the aie Doxygen group

@@ -20,11 +20,9 @@
 
 #include "../../cascade_stream.hpp"
 #include "../../geography.hpp"
-#include "../../memory_infrastructure.hpp"
 #include "../../queue.hpp"
 #include "../../shim_tile.hpp"
 #include "../../tile.hpp"
-#include "../../tile_infrastructure.hpp"
 #include "../../xaie_wrapper.hpp"
 
 #include "triSYCL/detail/fiber_pool.hpp"
@@ -71,6 +69,7 @@ template <typename Layout> struct device {
        detail::fiber_pool::sched::work_stealing, false };
   */
 
+#ifndef __SYCL_XILINX_AIE__
   /// Keep track of all the (non detail) infrastructure tiles of this device
   aie::tile_infrastructure<geo> ti[geo::y_size][geo::x_size];
 
@@ -82,10 +81,12 @@ template <typename Layout> struct device {
 
       \throws trisycl::runtime_error if the coordinate is invalid
   */
+
   auto& tile(int x, int y) {
     geo::validate_x_y(x, y);
     return ti[y][x];
   }
+#endif
 
   /** Apply a function for each tile index of the device
 
@@ -128,6 +129,7 @@ template <typename Layout> struct device {
       f(y);
   };
 
+#ifndef __SYCL_XILINX_AIE__
   /** Shortcut to access to the common infrastructure part of a tile memory
 
       \param[in] x is the horizontal tile coordinate
@@ -139,6 +141,7 @@ template <typename Layout> struct device {
   auto& mem(int x, int y) {
     return tile(x, y).mem();
   }
+#endif
 
   /** The shim tiles on the lower row of the tile array
 
@@ -237,32 +240,21 @@ template <typename Layout> struct device {
 
   /// Build some device level infrastructure
   device() {
-        // Initialization of the AI Engine tile constructs from LibXAiengine
+    // Initialization of the AI Engine tile constructs from LibXAiengine
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
-        // For host side when executing on acap hardware
-        /// Initialize the device.
-        TRISYCL_XAIE(xaie::XAie_CfgInitialize(&aie_inst, &aie_config));
-        /// Request access to all tiles.
-        TRISYCL_XAIE(xaie::XAie_PmRequestTiles(&aie_inst, NULL, 0));
-#endif
+    // For host side when executing on acap hardware
+    /// Initialize the device.
+    TRISYCL_XAIE(xaie::XAie_CfgInitialize(&aie_inst, &aie_config));
+    /// Request access to all tiles.
+    TRISYCL_XAIE(xaie::XAie_PmRequestTiles(&aie_inst, NULL, 0));
+#elif !defined(__SYCL_XILINX_AIE__)
     // Initialize all the tiles with their network connections first
-        for_each_tile_index([&](auto x, auto y) {
-        // Create & start the tile infrastructure
-#if !defined(__SYCL_DEVICE_ONLY__)
-#if defined(__SYCL_XILINX_AIE__)
-          // For host side when executing on acap hardware
-          // Setup the xaie::handle of each tiles. allowing them to communicate
-          // with hardware.
-          // This is executed when we create the device object.
-          tile(x, y) = {
-              x, y, xaie::handle{xaie::acap_pos_to_xaie_pos({x, y}), aie_inst},
-              fiber_executor};
-#else
-          // For CPU emulation
-          tile(x, y) = {x, y, fiber_executor};
+    for_each_tile_index([&](auto x, auto y) {
+      // Create & start the tile infrastructure
+      // For CPU emulation
+      tile(x, y) = {x, y, fiber_executor};
+    });
 #endif
-#endif
-        });
 
 #if !defined(__SYCL_XILINX_AIE__)
     // TODO: this should be enabled on hardware when it is working but for now
@@ -301,7 +293,6 @@ template <typename Layout> struct device {
 #endif
   }
 
-
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
   // For host side when executing on acap hardware
   ~device() {
@@ -310,6 +301,7 @@ template <typename Layout> struct device {
   }
 #endif
 
+#ifndef __SYCL_XILINX_AIE__
   /** Display the device layout
 
       \param[in] file_name is the name of the file to write the LaTeX
@@ -340,6 +332,7 @@ template <typename Layout> struct device {
 
     c.display();
   }
+#endif
 };
 
 /// @} End the aie Doxygen group

@@ -29,7 +29,7 @@ template <typename AIE, int X, int Y> struct prog : acap::aie::tile<AIE, X, Y> {
   using t = acap::aie::tile<AIE, X, Y>;
   /// The lock function of every tiles is run before the prerun of any other
   /// tile.
-  void lock() { t::mem().lock(0).acquire(); }
+  void lock() { t::get_self_lock(0).acquire(); }
   bool prerun() {
     written_data.push_back({X, Y, 0, id_counter++});
     /// writes to tile_memory::x
@@ -38,7 +38,7 @@ template <typename AIE, int X, int Y> struct prog : acap::aie::tile<AIE, X, Y> {
     t::get_dev_handle().mem_write(acap::hw::tile_mem_begin_offset + 4, written_data.back().y);
     /// writes to tile_memory::id
     t::get_dev_handle().mem_write(acap::hw::tile_mem_begin_offset + 8, written_data.back().id);
-    t::mem().lock(0).release();
+    t::get_self_lock(0).release();
     return 1;
   }
 
@@ -58,32 +58,32 @@ template <typename AIE, int X, int Y> struct prog : acap::aie::tile<AIE, X, Y> {
     /// This means pointers will be 0xffffffff and ints will be -1.
     __builtin_memset(this, 0xff, sizeof(*this));
 
-    t::mem().lock(0).acquire();
+    t::get_self_lock(0).acquire();
     output[idx_self] = {t::mem().x, t::mem().y, (int32_t)&t::mem(), t::mem().id};
-    t::mem().lock(0).release();
+    t::get_self_lock(0).release();
     if constexpr (t::is_memory_module_north()) {
-      t::mem_north().lock(0).acquire();
+      t::get_lock(t::dir::north, 0).acquire();
       output[idx_north] = {t::mem_north().x, t::mem_north().y, (int32_t)&t::mem_north(),
                    t::mem_north().id};
-      t::mem_north().lock(0).release();
+      t::get_lock(t::dir::north, 0).release();
     }
     if constexpr (t::is_memory_module_south()) {
-      t::mem_south().lock(0).acquire();
+      t::get_lock(t::dir::south, 0).acquire();
       output[idx_south] = {t::mem_south().x, t::mem_south().y, (int32_t)&t::mem_south(),
                    t::mem_south().id};
-      t::mem_south().lock(0).release();
+      t::get_lock(t::dir::south, 0).release();
     }
     if constexpr (t::is_memory_module_east()) {
-      t::mem_east().lock(0).acquire();
+      t::get_lock(t::dir::east, 0).acquire();
       output[idx_east] = {t::mem_east().x, t::mem_east().y, (int32_t)&t::mem_east(),
                    t::mem_east().id};
-      t::mem_east().lock(0).release();
+      t::get_lock(t::dir::east, 0).release();
     }
     if constexpr (t::is_memory_module_west()) {
-      t::mem_west().lock(0).acquire();
+      t::get_lock(t::dir::west, 0).acquire();
       output[idx_west] = {t::mem_west().x, t::mem_west().y, (int32_t)&t::mem_west(),
                    t::mem_west().id};
-      t::mem_west().lock(0).release();
+      t::get_lock(t::dir::west, 0).release();
     }
   }
 

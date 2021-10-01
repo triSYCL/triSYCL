@@ -182,13 +182,16 @@ template <typename... Tys> struct rpc_impl {
 
   struct device_side {
 #if defined(__SYCL_XILINX_AIE__)
-#ifdef __SYCL_DEVICE_ONLY__
     static device_side *get() {
+#ifdef __SYCL_DEVICE_ONLY__
       return (device_side *)(acap::hw::self_tile_addr(
                                      acap::hw::get_parity_dev()) +
                                  acap::hw::rpc_record_begin_offset);
-    }
+#else
+    assert("This should never be called on the host");
+    return nullptr;
 #endif
+    }
     soft_barrier::device_side barrier;
     Var data;
     uint32_t ret_val;

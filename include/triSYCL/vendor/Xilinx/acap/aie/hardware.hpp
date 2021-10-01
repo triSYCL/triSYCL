@@ -70,6 +70,20 @@ constexpr offset get_offset(parity par, dir d) {
   }
 }
 
+/// Convert a into an offset ignoring parity.
+constexpr offset get_simple_offset(dir d) {
+  switch (d) {
+  case dir::south:
+    return {0, -1};
+  case dir::north:
+    return {0, 1};
+  case dir::west:
+    return {-1, 0};
+  case dir::east:
+    return {1, 0};
+  }
+}
+
 /// Represent the position of a tile
 struct position {
   int x;
