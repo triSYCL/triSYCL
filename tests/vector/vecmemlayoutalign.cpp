@@ -5,8 +5,10 @@
 */
 
 #include <CL/sycl.hpp>
+
 #include <iostream>
-#include <boost/test/minimal.hpp>
+
+#include <catch2/catch_test_macros.hpp>
 
 using namespace cl::sycl;
 
@@ -32,26 +34,26 @@ void TestVecType() {
   cl::sycl::vec<T, 4> v4;
   cl::sycl::vec<T, 8> v8;
 
-  BOOST_CHECK(sizeof(v1) == 1 * sizeof(T));
-  BOOST_CHECK(sizeof(v2) == 2 * sizeof(T));
-  BOOST_CHECK(sizeof(v3) == 4 * sizeof(T));
-  BOOST_CHECK(sizeof(v4) == 4 * sizeof(T));
-  BOOST_CHECK(sizeof(v8) == 8 * sizeof(T));
+  REQUIRE(sizeof(v1) == 1 * sizeof(T));
+  REQUIRE(sizeof(v2) == 2 * sizeof(T));
+  REQUIRE(sizeof(v3) == 4 * sizeof(T));
+  REQUIRE(sizeof(v4) == 4 * sizeof(T));
+  REQUIRE(sizeof(v8) == 8 * sizeof(T));
 
-  BOOST_CHECK(sizeof(v1) == v1.get_size());
-  BOOST_CHECK(sizeof(v2) == v2.get_size());
-  BOOST_CHECK(sizeof(v3) == v3.get_size());
-  BOOST_CHECK(sizeof(v4) == v4.get_size());
-  BOOST_CHECK(sizeof(v8) == v8.get_size());
+  REQUIRE(sizeof(v1) == v1.get_size());
+  REQUIRE(sizeof(v2) == v2.get_size());
+  REQUIRE(sizeof(v3) == v3.get_size());
+  REQUIRE(sizeof(v4) == v4.get_size());
+  REQUIRE(sizeof(v8) == v8.get_size());
 
-  BOOST_CHECK(sizeof(Mt.data[0][0]) == sizeof(T));
-  BOOST_CHECK(sizeof(Mt.data[0]) == v4.get_size());
-  BOOST_CHECK(sizeof(Mt) == v4.get_size() * 4);
+  REQUIRE(sizeof(Mt.data[0][0]) == sizeof(T));
+  REQUIRE(sizeof(Mt.data[0]) == v4.get_size());
+  REQUIRE(sizeof(Mt) == v4.get_size() * 4);
 
   // is sequential and contiguous in memory
   for (int i = 0; i < 4; ++i)
-    BOOST_CHECK((static_cast<void*>(&v4[i]) ==
-                 static_cast<void*>(&v4[0] + i)));
+    REQUIRE(static_cast<void*>(&v4[i]) ==
+            static_cast<void*>(&v4[0] + i));
 
   // A magic trick! reinterpret_cast to a T* as the data should be contiguous
   // and sequential and thus usable as an array
@@ -64,34 +66,32 @@ void TestVecType() {
   // data is correct
   for (int i = 0, k = 0; i < 4; ++i)
     for (int j = 0; j < 4; ++j) {
-      BOOST_CHECK(Mt.data[i][j] == v4[j % 4]);
+      REQUIRE(Mt.data[i][j] == v4[j % 4]);
 
-      BOOST_CHECK((static_cast<void*>(&Mt.data[i][j]) ==
-        static_cast<void*>(&Mt.data[0][0] + k)));
+      REQUIRE(static_cast<void*>(&Mt.data[i][j]) ==
+              static_cast<void*>(&Mt.data[0][0] + k));
 
-      BOOST_CHECK(Mt.data[i][j] == *(&Mt.data[0][0] + k));
+      REQUIRE(Mt.data[i][j] == *(&Mt.data[0][0] + k));
 
-      BOOST_CHECK(data[k] == *(&Mt.data[0][0] + k));
+      REQUIRE(data[k] == *(&Mt.data[0][0] + k));
 
-      BOOST_CHECK(data[k] == Mt.data[i][j]);
+      REQUIRE(data[k] == Mt.data[i][j]);
 
       ++k;
     }
 
   // Check alignment is still working, technically not required as there exists
   // an align as test in vecalign, but doesn't hurt to be thorough
-  BOOST_CHECK(std::alignment_of<decltype(v1)>::value == sizeof(T) * 1);
-  BOOST_CHECK(std::alignment_of<decltype(v2)>::value == sizeof(T) * 2);
-  BOOST_CHECK(std::alignment_of<decltype(v3)>::value == sizeof(T) * 4);
-  BOOST_CHECK(std::alignment_of<decltype(v4)>::value == sizeof(T) * 4);
-  BOOST_CHECK(std::alignment_of<decltype(v8)>::value == sizeof(T) * 8);
+  REQUIRE(std::alignment_of<decltype(v1)>::value == sizeof(T) * 1);
+  REQUIRE(std::alignment_of<decltype(v2)>::value == sizeof(T) * 2);
+  REQUIRE(std::alignment_of<decltype(v3)>::value == sizeof(T) * 4);
+  REQUIRE(std::alignment_of<decltype(v4)>::value == sizeof(T) * 4);
+  REQUIRE(std::alignment_of<decltype(v8)>::value == sizeof(T) * 8);
 }
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("memory layoout", "[vector]") {
   TestVecType<char>();
   TestVecType<int>();
   TestVecType<float>();
   TestVecType<double>();
-
-  return 0;
 }

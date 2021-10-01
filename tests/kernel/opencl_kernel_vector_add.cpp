@@ -1,20 +1,22 @@
-/* RUN: %{execute}%s | %{filecheck} %s
-   CHECK: Result:
-   CHECK-NEXT: 6 8 11
+/* RUN: %{execute}%s
+
+   Run an OpenCL kernel adding 2 vectors
 */
 #include <iostream>
 #include <iterator>
-#include <boost/compute.hpp>
-#include <boost/test/minimal.hpp>
 
 #include <CL/sycl.hpp>
+
+#include <boost/compute.hpp>
+
+#include <catch2/catch_test_macros.hpp>
 
 using namespace cl::sycl;
 
 constexpr size_t N = 3;
 using Vector = float[N];
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("OpenCL kernel adding 2 vectors", "[opencl_kernel]") {
   Vector a = { 1, 2, 3 };
   Vector b = { 5, 6, 8 };
   Vector c;
@@ -56,10 +58,7 @@ int test_main(int argc, char *argv[]) {
       }); //< End of our commands for this queue
   } //< Buffer C goes out of scope and copies back values to c
 
-  std::cout << std::endl << "Result:" << std::endl;
-  for (auto e : c)
-    std::cout << e << " ";
-  std::cout << std::endl;
-
-  return 0;
+  REQUIRE(c[0] == 6);
+  REQUIRE(c[1] == 8);
+  REQUIRE(c[2] == 11);
 }

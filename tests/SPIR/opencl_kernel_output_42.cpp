@@ -4,13 +4,14 @@
 /* RUN: %{execute}%s
  */
 #include <boost/compute.hpp>
-#include <boost/test/minimal.hpp>
+
+#include <catch2/catch_test_macros.hpp>
 
 #include <CL/sycl.hpp>
 
 using namespace cl::sycl;
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("OpenCL kernel returning 42", "[SPIR]") {
   /* Construct the queue from the default OpenCL one.
 
      You can use the following environment variables to select
@@ -46,7 +47,5 @@ int test_main(int argc, char *argv[]) {
     });
 
   auto a_output = output.get_access<access::mode::read>();
-  BOOST_CHECK(a_output[0] == 42);
-
-  return 0;
+  REQUIRE(a_output[0] == 42);
 }

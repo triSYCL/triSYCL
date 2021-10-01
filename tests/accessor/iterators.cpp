@@ -2,20 +2,24 @@
 
    Experiment with iterators on buffer accessors
 */
-#include <CL/sycl.hpp>
 #include <iostream>
 #include <iterator>
 #include <numeric>
 
+#include <CL/sycl.hpp>
+
 #include <boost/iterator/zip_iterator.hpp>
-#include <boost/test/minimal.hpp>
 // Actually zip_iterator.hpp requires this implementation of tuples...
 #include <boost/tuple/tuple.hpp>
+
+#include <catch2/catch_test_macros.hpp>
 
 constexpr size_t N = 300;
 using Type = int;
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE(
+    "Experiment with iterators on buffer accessors",
+    "[accessor]") {
   // Initialize the input buffers to some easy-to-compute values
   cl::sycl::buffer<Type> a { N };
   {
@@ -61,7 +65,7 @@ int test_main(int argc, char *argv[]) {
 
   //std::cout << std::endl << "Result:" << std::endl;
   for (auto e : c.get_access<cl::sycl::access::mode::read>())
-    BOOST_CHECK(e == N + 42 - 1);
+    REQUIRE(e == N + 42 - 1);
     // std::cout << e << " ";
   //std::cout << std::endl;
 
@@ -89,9 +93,7 @@ int test_main(int argc, char *argv[]) {
 
   //std::cout << std::endl << "Result:" << std::endl;
   for (auto e : c.get_access<cl::sycl::access::mode::read>())
-    BOOST_CHECK(e == N + 42);
+    REQUIRE(e == N + 42);
     // std::cout << e << " ";
   //std::cout << std::endl;
-
-  return 0;
 }

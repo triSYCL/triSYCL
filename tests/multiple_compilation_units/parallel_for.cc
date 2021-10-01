@@ -9,7 +9,7 @@
 
 #include <CL/sycl.hpp>
 
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 constexpr size_t N = 3;
 using Vector = float[N];
@@ -18,7 +18,7 @@ extern void other(Vector &, Vector &, Vector &);
 
 using namespace cl::sycl;
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("parallel for vector addition", "[multiple_compilation_units]") {
   queue my_queue;
   constexpr int size = 10;
   constexpr int groupsize = 2;
@@ -48,11 +48,9 @@ int test_main(int argc, char *argv[]) {
   // Check the computation above
   for (auto g = 0; g != size/groupsize; ++g)
     for (auto l = 0; l != groupsize; ++l)
-       BOOST_CHECK(o[g*groupsize + l] == g*1000 + l);
+       REQUIRE(o[g*groupsize + l] == g*1000 + l);
 
   // Check the computation above
   for (int i = 0; i != N; i++)
-    BOOST_CHECK(c[i] == a[i] + b[i]);
-
-  return 0;
+    REQUIRE(c[i] == a[i] + b[i]);
 }

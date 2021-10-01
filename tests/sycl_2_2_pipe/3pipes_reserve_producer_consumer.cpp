@@ -1,12 +1,14 @@
 /* RUN: %{execute}%s
 
-   4 kernels producing, transforming and consuming data through 3 pipes
+   4 kernels producing, transforming and consuming data through 3 pipes with reserve
 */
-#include <CL/sycl.hpp>
 #include <iostream>
 #include <iterator>
 #include <numeric>
-#include <boost/test/minimal.hpp>
+
+#include <CL/sycl.hpp>
+
+#include <catch2/catch_test_macros.hpp>
 
 // Size of the buffers
 constexpr size_t N = 200;
@@ -16,7 +18,9 @@ static_assert(N == WI*(N/WI), "N needs to be a multiple of WI");
 
 using Type = int;
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE(
+    "4 kernels producing, transforming and consuming data through 3 pipess with reserve",
+    "[SYCL-2.2 pipes]") {
   // Initialize the input buffers to some easy-to-compute values
   cl::sycl::buffer<Type> a { N };
   {
@@ -137,7 +141,5 @@ int test_main(int argc, char *argv[]) {
 
   // Verify on the host the buffer content
   for (auto e : c.get_access<cl::sycl::access::mode::read>())
-    BOOST_CHECK(e == N + 42 - 1);
-
-  return 0;
+    REQUIRE(e == N + 42 - 1);
 }

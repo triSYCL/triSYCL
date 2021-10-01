@@ -7,11 +7,12 @@
    purpose
 */
 #include <CL/sycl.hpp>
+
 #include <iostream>
 #include <iterator>
 #include <numeric>
 
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 // Size of the buffers
 constexpr size_t N = 200;
@@ -21,7 +22,7 @@ static_assert(N == WI*(N/WI), "N needs to be a multiple of WI");
 
 using Type = int;
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("Consumer-producer with 1 pipe and reserve", "[SYCL 2.2 pipe]") {
   // Initialize the input buffers to some easy-to-compute values
   cl::sycl::buffer<Type> a { N };
   {
@@ -119,7 +120,6 @@ int test_main(int argc, char *argv[]) {
   // Verify on the host the buffer content
   for (auto const &e : c.get_access<cl::sycl::access::mode::read>()) {
     // The difference between elements reconstructs the index value
-    BOOST_CHECK(e == &e - &*c.get_access<cl::sycl::access::mode::read>().begin());
+    REQUIRE(e == &e - &*c.get_access<cl::sycl::access::mode::read>().begin());
   }
-  return 0;
 }

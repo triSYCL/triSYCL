@@ -5,8 +5,9 @@
 */
 #include <iostream>
 #include <iterator>
+
 #include <boost/compute.hpp>
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 #include <CL/sycl.hpp>
 
@@ -15,7 +16,7 @@ using namespace cl::sycl;
 constexpr size_t N = 3;
 using Vector = float[N];
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("OpenCL kernel vector addition", "[kernel]") {
   Vector a = { 1, 2, 3 };
   Vector b = { 5, 6, 8 };
   Vector c;
@@ -66,7 +67,5 @@ int test_main(int argc, char *argv[]) {
 
   // Verify the computation done by the kernel
   for (std::size_t i = 0; i < N; ++i)
-    BOOST_CHECK(c[i] == a[i] + b[i] + 42);
-
-  return 0;
+    REQUIRE(c[i] == a[i] + b[i] + 42);
 }

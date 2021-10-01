@@ -3,7 +3,8 @@
    Test the various pipe observers
 */
 #include <CL/sycl.hpp>
-#include <boost/test/minimal.hpp>
+
+#include <catch2/catch_test_macros.hpp>
 
 constexpr size_t N = 3;
 
@@ -22,7 +23,7 @@ auto send_element = [] (auto a_queue,
               ;
         });
       });
-   /* Make sure we wait for the pipe writing execution before inquring
+   /* Make sure we wait for the pipe writing execution before inquiring
       about the pipe sate later */
    a_queue.wait();
 };
@@ -62,32 +63,30 @@ MAKE_GET_OBSERVER(size, std::size_t);
 MAKE_GET_OBSERVER(capacity, std::size_t);
 
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("Pipe function members", "[SYCL 2.2 pipe]") {
   // A pipe of N char elements
   cl::sycl::sycl_2_2::pipe<char> p { N };
 
   // Create a queue to launch the kernels
   cl::sycl::queue q;
 
-  BOOST_CHECK(get_empty(q, p) == true);
-  BOOST_CHECK(get_full(q, p) == false);
-  BOOST_CHECK(get_size(q, p) == 0);
-  BOOST_CHECK(get_capacity(q, p) == N);
+  REQUIRE(get_empty(q, p) == true);
+  REQUIRE(get_full(q, p) == false);
+  REQUIRE(get_size(q, p) == 0);
+  REQUIRE(get_capacity(q, p) == N);
   send_element(q, p, 43);
-  BOOST_CHECK(get_empty(q, p) == false);
-  BOOST_CHECK(get_full(q, p) == false);
-  BOOST_CHECK(get_size(q, p) == 1);
-  BOOST_CHECK(get_capacity(q, p) == N);
+  REQUIRE(get_empty(q, p) == false);
+  REQUIRE(get_full(q, p) == false);
+  REQUIRE(get_size(q, p) == 1);
+  REQUIRE(get_capacity(q, p) == N);
   send_element(q, p, 18);
-  BOOST_CHECK(get_empty(q, p) == false);
-  BOOST_CHECK(get_full(q, p) == false);
-  BOOST_CHECK(get_size(q, p) == 2);
-  BOOST_CHECK(get_capacity(q, p) == N);
+  REQUIRE(get_empty(q, p) == false);
+  REQUIRE(get_full(q, p) == false);
+  REQUIRE(get_size(q, p) == 2);
+  REQUIRE(get_capacity(q, p) == N);
   send_element(q, p, 100);
-  BOOST_CHECK(get_empty(q, p) == false);
-  BOOST_CHECK(get_full(q, p) == true);
-  BOOST_CHECK(get_size(q, p) == 3);
-  BOOST_CHECK(get_capacity(q, p) == N);
-
-  return 0;
+  REQUIRE(get_empty(q, p) == false);
+  REQUIRE(get_full(q, p) == true);
+  REQUIRE(get_size(q, p) == 3);
+  REQUIRE(get_capacity(q, p) == N);
 }

@@ -7,7 +7,7 @@
 /// Test explicitly a feature of triSYCL, so include the triSYCL header
 #include "triSYCL/sycl.hpp"
 
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 /// Test explicitly a feature of triSYCL in ::trisycl namespace
 using namespace trisycl;
@@ -40,30 +40,28 @@ bool equal(const detail::small_array<T, U, N, true> &v,
 }
 
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("small_array", "[detail]") {
   sa1 a;
   sa1 a1 { 3 };
-  BOOST_CHECK(a1[0] == 3);
+  REQUIRE(a1[0] == 3);
   a = a1;
   std::cerr << a[0] << std::endl;
-  BOOST_CHECK(a[0] == 3);
+  REQUIRE(a[0] == 3);
   auto a2 = a*a1;
-  BOOST_CHECK(a2[0] == 9);
+  REQUIRE(a2[0] == 9);
   sa2 b1 { 1, 2 };
-  BOOST_CHECK(equal(b1, { 1, 2 }));
+  REQUIRE(equal(b1, { 1, 2 }));
   sa2 b2 = { 1, 2 };
-  BOOST_CHECK(b1 == b2);
+  REQUIRE(b1 == b2);
   sa2 b3 = b2 + b1;
-  BOOST_CHECK(equal(b3, { 2, 4 }));
+  REQUIRE(equal(b3, { 2, 4 }));
   sa2 b4 { b1 - b3 };
-  BOOST_CHECK(equal(b4, { -1, -2 }));
+  REQUIRE(equal(b4, { -1, -2 }));
   auto b5 = b4/b1;
-  BOOST_CHECK(equal(b5, { -1, -1 }));
+  REQUIRE(equal(b5, { -1, -1 }));
   sa3 c = { 1, 2, 3 };
-  BOOST_CHECK(equal(c, { 1, 2, 3 }));
+  REQUIRE(equal(c, { 1, 2, 3 }));
   std::array<float, 3> da = { 2, 3, 4};
   sa3 d = da;
-  BOOST_CHECK(equal(d , { 2, 3, 4 }));
-
-  return 0;
+  REQUIRE(equal(d , { 2, 3, 4 }));
 }
