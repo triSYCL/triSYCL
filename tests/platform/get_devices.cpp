@@ -5,11 +5,11 @@
 
 #include <CL/sycl.hpp>
 
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 using namespace cl::sycl;
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("get_device", "[platform]") {
 
 #ifdef TRISYCL_OPENCL
   // We check that \c get_device in triSYCL returns the same devices
@@ -21,8 +21,8 @@ int test_main(int argc, char *argv[]) {
 
     for(const auto &d : p.devices()) {
       device s_d { d };
-      BOOST_CHECK(std::find(devices.begin(), devices.end(),
-                            s_d) != devices.end());
+      REQUIRE(std::find(devices.begin(), devices.end(),
+                        s_d) != devices.end());
     }
   }
 #endif
@@ -32,8 +32,6 @@ int test_main(int argc, char *argv[]) {
   vector_class<device> devices = p.get_devices();
 
   // There should be only the host device
-  BOOST_CHECK(devices.size() == 1);
-  BOOST_CHECK(devices[0].is_host());
-
-  return 0;
+  REQUIRE(devices.size() == 1);
+  REQUIRE(devices[0].is_host());
 }

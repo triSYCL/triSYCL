@@ -6,20 +6,22 @@
    and https://cvs.khronos.org/bugzilla/show_bug.cgi?id=14404
 */
 
-#include <CL/sycl.hpp>
-#include <boost/test/minimal.hpp>
 #include <iostream>
+
+#include <CL/sycl.hpp>
+
+#include <catch2/catch_test_macros.hpp>
 
 using namespace cl::sycl;
 
 #define CHECK_RANGE_ACCESSOR(r, a)                                \
-  BOOST_CHECK(r  == a.get_range());                               \
-  BOOST_CHECK(r.size() == a.get_count());                         \
-  BOOST_CHECK(a.get_size()                                        \
+  REQUIRE(r  == a.get_range());                                   \
+  REQUIRE(r.size() == a.get_count());                             \
+  REQUIRE(a.get_size()                                            \
               == a.get_count()*sizeof(decltype(a)::value_type));
 
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("Exercise accessor size-like methods", "[accessor]") {
   range<1> r1 { 8 };
   buffer<double> b1 { r1 };
   CHECK_RANGE_ACCESSOR(r1, (b1.get_access<access::mode::read_write>()));
@@ -31,6 +33,4 @@ int test_main(int argc, char *argv[]) {
   range<3> r3 { 2, 7, 11 };
   buffer<short, 3> b3 { r3 };
   CHECK_RANGE_ACCESSOR(r3, (b3.get_access<access::mode::read_write>()));
-
-  return 0;
 }

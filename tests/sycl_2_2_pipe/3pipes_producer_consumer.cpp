@@ -7,12 +7,14 @@
 #include <iterator>
 #include <numeric>
 
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 constexpr size_t N = 300;
 using Type = int;
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE(
+    "4 kernels producing, transforming and consuming data through 3 pipes",
+    "[SYCL-2.2 pipes]") {
   // Initialize the input buffers to some easy-to-compute values
   cl::sycl::buffer<Type> a { N };
   {
@@ -112,7 +114,5 @@ int test_main(int argc, char *argv[]) {
 
   // Verify on the host the buffer content
   for (auto e : c.get_access<cl::sycl::access::mode::read>())
-    BOOST_CHECK(e == N + 42 - 1);
-
-  return 0;
+    REQUIRE(e == N + 42 - 1);
 }

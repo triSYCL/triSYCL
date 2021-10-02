@@ -10,7 +10,7 @@
 /// Test explicitly a feature of triSYCL, so include the triSYCL header
 #include "triSYCL/detail/fiber_pool.hpp"
 
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 // Use precise time measurement
 using clk = std::chrono::high_resolution_clock;
@@ -75,7 +75,7 @@ void benchmark(int thread_number,
          && "we should have the right number of global interations");
 }
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("fiber_pool", "[detail]") {
   for (auto thread_number : { 1, 2, 4, 8 })
     for (auto fiber_number : { 1, 3, 10, 1000 })
       for (auto iterations : { 0, 1, 1000 })
@@ -96,6 +96,4 @@ int test_main(int argc, char *argv[]) {
                       scheduler,
                       true);
         }
-
-  return 0;
 }

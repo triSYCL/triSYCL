@@ -3,14 +3,14 @@
    Exercise buffer::set_final_data()
 */
 #include <CL/sycl.hpp>
-//#include <iostream>
+
 #include <numeric>
-#include <boost/test/minimal.hpp>
+
+#include <catch2/catch_test_macros.hpp>
 
 using namespace cl::sycl;
 
-int test_main(int argc, char *argv[]) {
-
+TEST_CASE("construction from shared pointer", "[buffer]") {
   constexpr size_t N = 16;
 
   /** There is a draft for shared_ptr of arrays for C++17, but it is
@@ -37,8 +37,6 @@ int test_main(int argc, char *argv[]) {
 
   for (int i = 0; i != N; ++i) {
     // std::cerr << data.get()[i] << ':' << i << std::endl;
-    BOOST_CHECK(data.get()[i] == i + 314 + 2015);
+    REQUIRE(data.get()[i] == i + 314 + 2015);
   }
-
-  return 0;
 }

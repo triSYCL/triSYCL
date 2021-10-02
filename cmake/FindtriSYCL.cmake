@@ -251,6 +251,10 @@ message(STATUS "triSYCL kernel trace:             ${TRISYCL_TRACE_KERNEL}")
 
 find_package(Threads REQUIRED)
 
+# Graphics library used by triSYCL graphics library
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GTKMM gtkmm-3.0)
+
 # To get some content directly at the source
 include(FetchContent)
 # Display what is happening behind the scene for less confusion
@@ -260,8 +264,11 @@ set(FETCHCONTENT_QUIET FALSE)
 # P0009 proposal https://github.com/ORNL/cpp-proposals-pub/tree/master/P0009
 FetchContent_Declare(experimental_mdspan
   GIT_REPOSITORY    https://github.com/kokkos/mdspan
+  # There is a bug in CMake before 3.21 not having GIT_SHALLOW
+  # working, so use latest commit of the branch even if it is not
+  # super stable...
   GIT_SHALLOW       TRUE
-  GIT_TAG           5694f21c39f3b948d06a0c63b9c219bf802e28a8
+  GIT_TAG           stable
   GIT_PROGRESS TRUE
 )
 FetchContent_MakeAvailable(experimental_mdspan)
@@ -272,7 +279,7 @@ FetchContent_MakeAvailable(experimental_mdspan)
 FetchContent_Declare(range_v3
   GIT_REPOSITORY    https://github.com/ericniebler/range-v3
   GIT_SHALLOW       TRUE
-  GIT_TAG           0487cca29e352e8f16bbd91fda38e76e39a0ed28
+  GIT_TAG           master
   GIT_PROGRESS TRUE
 )
 FetchContent_MakeAvailable(range_v3)
@@ -286,9 +293,12 @@ FetchContent_Declare(magic_enum
 )
 FetchContent_MakeAvailable(magic_enum)
 
-# Graphics library used by triSYCL graphics library
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(GTKMM gtkmm-3.0)
+# Get the Catch2 testing environment
+FetchContent_Declare(Catch2
+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  GIT_TAG        v3.0.0-preview3
+)
+FetchContent_MakeAvailable(Catch2)
 
 #######################
 #  add_sycl_to_target

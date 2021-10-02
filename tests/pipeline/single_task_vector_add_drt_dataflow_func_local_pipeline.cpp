@@ -5,11 +5,11 @@
    This example is With dataflow and pipeline optimization.
 */
 #include <CL/sycl.hpp>
+
 #include <iostream>
 #include <numeric>
 
-#include <boost/test/minimal.hpp>
-
+#include <catch2/catch_test_macros.hpp>
 
 using namespace cl::sycl;
 
@@ -59,7 +59,7 @@ void writeOutput(T (&buffer_out)[BLOCK_SIZE], const U &d_a) {
   }
 }
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("dataflow read/compute/write functions", "[pipeline]") {
   buffer<Type> a { BLOCK_SIZE };
   buffer<Type> b { BLOCK_SIZE };
   buffer<Type> res { BLOCK_SIZE };
@@ -133,7 +133,6 @@ int test_main(int argc, char *argv[]) {
   for (unsigned int i = 0 ; i < BLOCK_SIZE; ++i) {
     std::cout << "a_a["<< i << "]: " << a_a[i] << " ";
     std::cout << "res_r["<< i << "]: " << res_r[i] << std::endl;
-    BOOST_CHECK(a_a[i] == res_r[i]);
+    REQUIRE(a_a[i] == res_r[i]);
   }
-  return 0;
 }

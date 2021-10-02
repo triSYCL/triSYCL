@@ -1,13 +1,13 @@
 /* RUN: %{execute}%s
 
-   Experiment with iterators on buffer accessors
+   Experiment with convolution and local accessors with hierarchical parallelism
 */
 #include <CL/sycl.hpp>
 #include <iostream>
 #include <iterator>
 #include <numeric>
 
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 using namespace cl::sycl;
 
@@ -15,7 +15,8 @@ constexpr size_t N = 300;
 using Type = int;
 
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("convolution and local accessors with hierarchical parallelism",
+          "[accessor]") {
   // The convolution kernel
   const std::vector<Type> conv_kernel_init = { 1, 2, 4 };
   buffer<Type> conv_kernel { conv_kernel_init.begin(),
@@ -83,7 +84,5 @@ int test_main(int argc, char *argv[]) {
   auto a_result = result.get_access<access::mode::read>();
   // Verify the result
   for (unsigned int i = 0 ; i < gold_result.size(); ++i)
-    BOOST_CHECK(gold_result[i] == a_result[i]);
-
-  return 0;
+    REQUIRE(gold_result[i] == a_result[i]);
 }
