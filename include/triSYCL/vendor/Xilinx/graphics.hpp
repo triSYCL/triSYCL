@@ -1014,7 +1014,7 @@ struct application {
         }
         last_frame = current;
       }
-      /// Count the framed processed by the host
+      /// Count the frames processed by the host
       td.counter++;
       return *is_done;
     });

@@ -36,30 +36,30 @@ struct block_header {
 
   /// Size is used to find the next block.
   uint32_t size : 30;
-  /// Wether the allocation is currently in use.
+  /// Whether the allocation is currently in use.
   uint32_t in_use : 1;
-  /// Wether this allocation is the last allocation of the list
+  /// Whether this allocation is the last allocation of the list
   uint32_t is_last : 1;
 #if defined(__SYCL_DEVICE_ONLY__)
 
-  /// get the block header from an allocation. the inverse of get_alloc.
+  /// Get the \c block_header from an allocation. The inverse of \c get_alloc.
   static block_header* get_header(void* ptr) {
     /// The block header is always just before the allocation in memory.
     return ((block_header*)ptr) - 1;
   }
 
-  /// return a pointer to the section of memory this block header tracks.
-  /// This region is just after the block_header. the inverse of get_header.
+  /// Return a pointer to the section of memory this block header tracks.
+  /// This region is just after the \c block_header. The inverse of \c get_header.
   void* get_alloc() {
     return (void*)(this + 1);
   }
 
-  /// return the end of the allocation.
+  /// Return the end of the allocation.
   void* get_end() {
     return (void*)((char*)(this + 1) + size);
   }
 
-  /// get the next block the list.
+  /// Get the next block in the list
   block_header* get_next() {
     if (is_last)
       return nullptr;
@@ -68,7 +68,7 @@ struct block_header {
     return (block_header*)get_end();
   }
 
-  /// get the previous block in the list.
+  /// Get the previous block in the list
   block_header* get_prev() {
     return prev;
   }
@@ -79,8 +79,8 @@ struct block_header {
     return size >= new_size + sizeof(block_header) + min_alloc_size;
   }
 
-  /// correct the prev field of the next block if it exist.
-  /// This is need when inserting or removing blocks form the list.
+  /// Correct the previous field of the next block if it does exist.
+  /// This is needed when inserting or removing blocks from the list.
   void correct_next() {
     if (auto* next = get_next())
       next->prev = this;
@@ -108,7 +108,7 @@ struct block_header {
     this->in_use = 0;
   }
 
-  /// This will try to merge this block with the folowing block.
+  /// This will try to merge this block with the following block.
   /// Every reference to the next block_header maybe invalid after this call.
   void try_merge_next() {
     block_header* next = get_next();
@@ -155,6 +155,7 @@ struct allocator_global {
 
 #if defined(__SYCL_DEVICE_ONLY__)
 
+/// Initialize the allocator
 void init_allocator() {
   allocator_global *ag = allocator_global::get();
   ag->total_list = allocator_global::create_block(

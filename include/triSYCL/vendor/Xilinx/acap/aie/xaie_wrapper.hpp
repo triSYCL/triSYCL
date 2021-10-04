@@ -328,11 +328,11 @@ struct handle {
   //             << raw_read(0x1EF00) << "\n";
   // }
 
-  /// connect one port of a stream switch to another.
-  /// \param FromType type of the source port
-  /// \param FromPortNum port id of the source port
-  /// \param ToType type of the target port
-  /// \param ToPortNum  port id of the target port
+  /// Connect one port of a stream switch to another.
+  /// \param FromType is the type of the source port
+  /// \param FromPortNum is the port id of the source port
+  /// \param ToType is the type of the target port
+  /// \param ToPortNum is the port id of the target port
   void stream_connect(xaie::StrmSwPortType FromType, int FromPortNum,
                       xaie::StrmSwPortType ToType, int ToPortNum) {
     TRISYCL_XAIE(XAie_StrmConnCctEnable(inst, tile, FromType, FromPortNum,

@@ -63,13 +63,18 @@ struct functor_rpc {
 /// update the image. This struct needs to have the same layout on the host and
 /// the device.
 struct image_update_data {
-  /// a pointer the new image data.
+  /// A pointer to the new image data
   hw::stable_pointer<void> data;
-  /// the minimun value of a pixel.
+
+  /// In min_value and max_value, uint64_t is just to have 8-byte of storage,
+  /// the graphics system will bitcast min_value to the proper type before use.
+
+  /// 8-byte storage for the minimun value of a pixel.
   uint64_t min_value;
-  /// the maximum value of a pixel.
+  /// 8-byte storage for The maximum value of a pixel.
   uint64_t max_value;
-  /// a count of the number of image_update_data that was sent.
+
+  /// Number of image updates that as been sent
   uint32_t counter;
 };
 
@@ -83,9 +88,9 @@ struct send_log_rpc {
   /// is logging This struct needs to have the same layout on the host and the
   /// device.
   struct data_type {
-    /// a pointer to a buffer the first character to print
+    /// Pointer to the first character of a buffer to print
     hw::stable_pointer<const char> data;
-    /// the number of characters to print
+    /// Number of characters to print
     uint64_t size;
   };
 #if !defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_XILINX_AIE__)

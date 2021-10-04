@@ -39,10 +39,10 @@ namespace trisycl::vendor::xilinx::acap {
   }
 
   /// This function serializes a number into a buffer.
-  /// \param write is a callable that add a character to the buffer,
-  /// \param i is the number
-  /// \param base_char is the sequence of character to use as a base. a
-  /// mapping between a didgit and the character representation of such didgit.
+  /// \param[in] write is a callable handling each generated character, for example to add a character to a buffer,
+  /// \param[in] i is the number to be represented as characters
+  /// \param[in] base_char is the sequence of characters to use as a base. A
+  /// mapping between a digit and the character representation of such digit.
   static void write_number(auto write, int i,
                            const char *base_char = "0123456789") {
     if (i < 0)
@@ -76,7 +76,7 @@ namespace trisycl::vendor::xilinx::acap {
   }
   /// This __attribute__((noinline)) is just to make the IR more readable. it is
   /// not required for any other reason.
-  /// This will log a pointer in hexa-decimal preceded by 0x on the console of the host
+  /// This will log a pointer in hexadecimal preceded by 0x on the console of the host
   __attribute__((noinline)) void log(void* p, bool with_coord = true) {
     log("0x", with_coord);
     log((int)p, false, "0123456789abcdef");
@@ -98,7 +98,7 @@ void multi_log(Ty First, Tys... Others) {
   /// TODO make it use a single buffer.
   /// The first will have coordinates
   log(First);
-  /// The other wont have coordinates
+  /// The others will not have coordinates
   (log(Others, /*with_coord*/false), ...);
 }
 
@@ -109,7 +109,7 @@ void multi_log(Ty First, Tys... Others) {
 /// this function.
 __attribute__((annotate("used"))) __attribute__((noreturn)) void finish_kernel() {
   trisycl::vendor::xilinx::acap::aie::done_rpc::data_type dt{};
-  /// Inform the host via RPC that the kernel is done executing.
+  /// Inform the host via RPC that the kernel has finished
   trisycl::vendor::xilinx::acap::aie::rpc::device_side::get()->perform(dt);
   trisycl::vendor::xilinx::acap::log("exiting\n");
   acap_intr::core_done();
