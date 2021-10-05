@@ -250,8 +250,8 @@ int pow(int i, int p) {
 #endif
 
 /// This is function is very similar to the C++20 std::bit_cast but it accepts
-/// bitcasting between types of diffrent sizes. when sizeof(To) > sizeof(From)
-/// bit after sizeof(From) will be 0. when sizeof(From) > sizeof(To), the result
+/// bitcasting between types of diffrent sizes. When sizeof(To) > sizeof(From)
+/// bit after sizeof(From) will be 0. When sizeof(From) > sizeof(To), the result
 /// will only contain part of the original object.
 template <typename To, typename From>
 inline To bit_cast(const From &from) noexcept {

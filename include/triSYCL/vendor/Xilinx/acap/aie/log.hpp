@@ -17,7 +17,7 @@
 namespace trisycl::vendor::xilinx::acap {
 
 #ifdef __SYCL_DEVICE_ONLY__
-  /// This will send a null terminated string throught the RPC system to the host 
+  /// Send a null-terminated string through the RPC system to the host.
   void log_internal(const char *ptr) {
     aie::send_log_rpc::data_type sld;
     sld.data = ptr;
@@ -25,7 +25,7 @@ namespace trisycl::vendor::xilinx::acap {
     acap::aie::rpc::device_side::get()->perform(sld);
   }
 
-  /// This will log the tile coordinates followed by the null-terminate string provided as argument.
+  /// Log the tile coordinates followed by the null-terminated string provided as argument
   __attribute__((noinline)) void log(const char *ptr, bool with_coord = true) {
     if (with_coord) {
       char arr[] = "00, 0 : ";
@@ -65,7 +65,7 @@ namespace trisycl::vendor::xilinx::acap {
   }
 
   /// This will log i on the console of the host.
-  /// This __attribute__((noinline)) is just to make the IR more readable. it is
+  /// This __attribute__((noinline)) is just to make the IR more readable. It is
   /// not required for any other reason.
   __attribute__((noinline)) void log(int i, bool with_coord = true, const char* base = "0123456789") {
     char arr[/*bits in base 2*/31 + /*sign*/1 + /*\0*/1];
@@ -79,7 +79,7 @@ namespace trisycl::vendor::xilinx::acap {
   /// This will log a pointer in hexadecimal preceded by 0x on the console of the host
   __attribute__((noinline)) void log(void* p, bool with_coord = true) {
     log("0x", with_coord);
-    log((int)p, false, "0123456789abcdef");
+    log(reinterpret_cast<std::intptr_t>(p), false, "0123456789abcdef");
   }
 #else
   void log(const char* ptr) {
@@ -93,21 +93,20 @@ namespace trisycl::vendor::xilinx::acap {
   }
 #endif
 
-template<typename Ty, typename ...Tys>
-void multi_log(Ty First, Tys... Others) {
+template<typename Type, typename ...Types>
+void multi_log(Type First, Types... Others) {
   /// TODO make it use a single buffer.
   /// The first will have coordinates
   log(First);
-  /// The others will not have coordinates
+  /// The others, if any,  will not have coordinates
   (log(Others, /*with_coord*/false), ...);
 }
 
 }
 
 #if defined(__SYCL_DEVICE_ONLY__)
-/// The annotation here is to prevent the global variable remover from removing
-/// this function.
-__attribute__((annotate("used"))) __attribute__((noreturn)) void finish_kernel() {
+/// Notify the host that the kernel has finished.
+__attribute__((noreturn)) void finish_kernel() {
   trisycl::vendor::xilinx::acap::aie::done_rpc::data_type dt{};
   /// Inform the host via RPC that the kernel has finished
   trisycl::vendor::xilinx::acap::aie::rpc::device_side::get()->perform(dt);

@@ -31,7 +31,7 @@ constexpr unsigned alloc_align = 4;
 /// metadata associated with each dynamic allocation.
 /// 
 struct block_header {
-  /// This pointes to the previous block.
+  /// Point to the previous block
   hw::stable_pointer<block_header> prev;
 
   /// Size is used to find the next block.
@@ -45,18 +45,18 @@ struct block_header {
   /// Get the \c block_header from an allocation. The inverse of \c get_alloc.
   static block_header* get_header(void* ptr) {
     /// The block header is always just before the allocation in memory.
-    return ((block_header*)ptr) - 1;
+    return static_cast<block_header*>(ptr) - 1;
   }
 
   /// Return a pointer to the section of memory this block header tracks.
   /// This region is just after the \c block_header. The inverse of \c get_header.
   void* get_alloc() {
-    return (void*)(this + 1);
+    return static_cast<void*>(this + 1);
   }
 
   /// Return the end of the allocation.
   void* get_end() {
-    return (void*)((char*)(this + 1) + size);
+    return static_cast<void *>(reinterpret_cast<char *>(this + 1) + size);
   }
 
   /// Get the next block in the list
@@ -65,7 +65,7 @@ struct block_header {
       return nullptr;
     /// Blocks are one after the other in memory: header | alloc | header | alloc ...
     /// so the end of one block is the beginign of the next.
-    return (block_header*)get_end();
+    return reinterpret_cast<block_header*>(get_end());
   }
 
   /// Get the previous block in the list
@@ -93,13 +93,13 @@ struct block_header {
     assert((new_size % alloc_align) == 0 && "not properly aligned");
 
     /// Create new block
-    block_header* new_next = (block_header*)((char*)get_alloc() + new_size);
+    block_header* new_next = reinterpret_cast<block_header*>(static_cast<char*>(get_alloc()) + new_size);
     new_next->size = size - new_size - sizeof(block_header);
     new_next->in_use = 0;
     new_next->is_last = is_last;
     new_next->prev = this;
     new_next->correct_next();
-    assert(((uint32_t)new_next % alloc_align) == 0 && "not properly aligned");
+    assert((reinterpret_cast<int32_t>(new_next) % alloc_align) == 0 && "not properly aligned");
     assert((new_next->size % alloc_align) == 0 && "not properly aligned");
 
     /// Update old block
@@ -120,7 +120,7 @@ struct block_header {
     this->correct_next();
   }
 
-  /// This will try to merge this block with the previous block
+  /// This will try to merge this block with the previous block.
   /// The block_header may not be in usable state after this call because it
   /// could be skipped.
   void try_merge_prev() {
@@ -138,12 +138,12 @@ static_assert(sizeof(block_header) == 8, "");
 struct allocator_global {
   hw::stable_pointer<block_header> total_list;
 #if defined(__SYCL_DEVICE_ONLY__)
-  static allocator_global* get() {
-    return (allocator_global *)(hw::self_tile_addr(hw::get_parity_dev()) +
-                                hw::heap_begin_offset);
+  static allocator_global *get() {
+    return reinterpret_cast<allocator_global *>(
+        hw::self_tile_addr(hw::get_parity_dev()) + hw::heap_begin_offset);
   }
   static block_header *create_block(void *p, uint32_t s) {
-    block_header *block = (block_header *)p;
+    block_header *block = static_cast<block_header *>(p);
     block->prev = nullptr;
     block->size = s - sizeof(block_header);
     block->in_use = 0;
@@ -159,8 +159,9 @@ struct allocator_global {
 void init_allocator() {
   allocator_global *ag = allocator_global::get();
   ag->total_list = allocator_global::create_block(
-      (void *)(hw::self_tile_addr(hw::get_parity_dev()) +
-               hw::heap_begin_offset + sizeof(allocator_global)),
+      reinterpret_cast<void *>(hw::self_tile_addr(hw::get_parity_dev()) +
+                               hw::heap_begin_offset +
+                               sizeof(allocator_global)),
       hw::heap_size - sizeof(allocator_global));
 }
 

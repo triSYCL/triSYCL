@@ -3,7 +3,7 @@
 
 /** \file
 
-    This file implement the RPC system used for device -> host communication.
+    Implement the RPC system used for device → host communication.
 
     Ronan dot Keryell at Xilinx dot com
 
@@ -14,18 +14,12 @@
 #ifdef __SYCL_XILINX_AIE__
 #include "hardware.hpp"
 #include "lock.hpp"
-#ifndef __SYCL_DEVICE_ONLY__
 #include "xaie_wrapper.hpp"
-#endif
 #endif
 
 #include <cstdint>
 #include <functional>
-#include <map>
-#include <typeindex>
 #include <variant>
-#include <string>
-#include <iostream>
 
 #include "triSYCL/detail/overloaded.hpp"
 
@@ -79,13 +73,18 @@ struct image_update_data {
 };
 
 /// The act_on_data has dependencies on graphics.hpp but we do not want to
-/// include graphics.hpp here so we use functor_rpc to have a type-erased RPC
+/// include graphics.hpp here because:
+///  - rpc.hpp is already included in graphics.hpp and we cannot have circular
+///    dependencies. this might be removable with sufficient refactoring.
+///  - rpc.hpp is a lower level system then graphics.hpp so
+///    graphics.hpp should include rpc.hpp not the inverse.
+/// so we use functor_rpc to have a type-erased RPC
 /// class. and the functor is setup in graphics.hpp.
 using image_update_rpc = functor_rpc<image_update_data>;
 
 struct send_log_rpc {
-  /// This is the data that will be transmitted when to the host when the device
-  /// is logging This struct needs to have the same layout on the host and the
+  /// This is the data that will be transmitted to the host when the device
+  /// is logging. This struct needs to have the same layout on the host and the
   /// device.
   struct data_type {
     /// Pointer to the first character of a buffer to print
@@ -108,14 +107,14 @@ struct send_log_rpc {
 #endif
 };
 
-/// done_rpc is handled in a special wait because indicate if a kernel is done executing.
+/// done_rpc is handled differently because indicate if a kernel is done executing.
 struct done_rpc {
   /// it needs no data, since it is just a signal.
   struct data_type {};
 #if !defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_XILINX_AIE__)
   static uint32_t act_on_data(int x, int y, xaie::handle h, data_type d) {
     /// The effect of the signal are handled directly by wait_all
-    assert(false && "This should be handeled by wait_all");
+    assert(false && "This should be handled by wait_all");
     return 0;
   }
 #endif
@@ -162,8 +161,8 @@ template <typename... Tys> struct rpc_impl {
             /// Read the data the device has written.
             h.moved(x, y).memcpy_d2h(&data, addr + offsetof(device_side, data),
                                      sizeof(Var));
-            /// This deals with the special case of a kernel indicating it is
-            /// done. This kernel stoped executing.
+            /// Deal with the special case of a kernel indicating it is done.
+            /// This kernel stopped executing.
             if (data.index() == 0) {
               done_counter++;
             } else {
@@ -175,7 +174,7 @@ template <typename... Tys> struct rpc_impl {
             }
             get_barrier(x, y).wait();
           }
-        /// Wait until all kernel have finished.
+        /// Wait until all kernels have finished.
       } while (done_counter < x_size * y_size);
     }
   };
