@@ -299,52 +299,44 @@ struct handle {
     TRISYCL_XAIE(xaie::XAie_CoreDisable(inst, tile));
   }
 
-  /// Look if a core has completed execution and return true if it has, it does
-  /// not block.
-  bool try_core_wait() {
-    detail::no_log_in_this_scope nls;
-    xaie::u8 is_done;
-    TRISYCL_XAIE(xaie::XAie_CoreReadDoneBit(inst, tile, &is_done));
-    emit_log();
-    return is_done;
-  }
+  /// Because of a hardware bug in the done instruction, the behaviour of the
+  /// done intrinsic has changed in the compiler but the libxaiengine has not
+  /// yet been updated to the new behaviour, so these two functions do not work
+  /// for now. The runtime uses the RPC system to inform of a kernel being done.
+  
+  // /// Look if a core has completed execution and return true if it has.
+  // /// It does not block.
+  // bool try_core_wait() {
+  //   detail::no_log_in_this_scope nls;
+  //   xaie::u8 is_done;
+  //   TRISYCL_XAIE(xaie::XAie_CoreReadDoneBit(inst, tile, &is_done));
+  //   return is_done;
+  // }
 
-  /// Will block the calling thread until the core has completed execution.
-  void core_wait() {
-    TRISYCL_DUMP2(
-        std::dec << "(" << get_coord_str() << ") Waiting for kernel...", "exec");
-    xaie::AieRC RC = xaie::XAIE_OK;
-    do {
-      RC = xaie::XAie_CoreWaitForDone(inst, tile, 1);
-      emit_log();
-    } while (RC != xaie::XAIE_OK);
-    TRISYCL_DUMP2(std::dec << "(" << get_coord_str() << ") done", "exec");
-  }
-  void prepare_log() { mem_write(acap::hw::log_buffer_begin_offset, 0); }
-  void emit_log() {
-    /// This is executed in tight loops so logs are disabled to prevent too
-    /// much log.
-    detail::no_log_in_this_scope nls;
-    std::string log;
-    int lock = 7;
+  // /// Will block the calling thread until the core has completed execution.
+  // void core_wait() {
+  //   TRISYCL_DUMP2(
+  //       std::dec << "(" << get_coord_str() << ") Waiting for kernel...", "exec");
+  //   xaie::AieRC RC = xaie::XAIE_OK;
+  //   do {
+  //     RC = xaie::XAie_CoreWaitForDone(inst, tile, 1);
+  //   } while (RC != xaie::XAIE_OK);
+  //   TRISYCL_DUMP2(std::dec << "(" << get_coord_str() << ") done", "exec");
+  // }
+  // TRISYCL_DEBUG_FUNC void dump_lock_state() {
+  //   std::cout << get_coord_str() << ": lock state:" << std::hex << "0x"
+  //             << raw_read(0x1EF00) << "\n";
+  // }
 
-    acquire(lock);
-    uint32_t log_size = mem_read(acap::hw::log_buffer_begin_offset);
-    if (!log_size) {
-      release(lock);
-      return;
-    }
-    log.resize(log_size);
-    memcpy_d2h(log.data(),
-               acap::hw::log_buffer_begin_offset + sizeof(acap::hw::log_record),
-               log_size);
-    mem_write(acap::hw::log_buffer_begin_offset, 0);
-    release(lock);
-    std::cout << log << std::flush;
-  }
-  TRISYCL_DEBUG_FUNC void dump_lock_state() {
-    std::cout << get_coord_str() << ": lock state:" << std::hex << "0x"
-              << raw_read(0x1EF00) << "\n";
+  /// Connect one port of a stream switch to another.
+  /// \param FromType is the type of the source port
+  /// \param FromPortNum is the port id of the source port
+  /// \param ToType is the type of the target port
+  /// \param ToPortNum is the port id of the target port
+  void stream_connect(xaie::StrmSwPortType FromType, int FromPortNum,
+                      xaie::StrmSwPortType ToType, int ToPortNum) {
+    TRISYCL_XAIE(XAie_StrmConnCctEnable(inst, tile, FromType, FromPortNum,
+                                        ToType, ToPortNum));
   }
 
   /// Acquire the lock

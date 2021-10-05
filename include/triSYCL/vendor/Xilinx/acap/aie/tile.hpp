@@ -21,6 +21,7 @@
 #include "hardware.hpp"
 #include "program.hpp"
 #include "lock.hpp"
+#include "log.hpp"
 
 
 /// TODO: Perhaps worth pushing all LibXAiengine functionallity we use down
@@ -241,7 +242,7 @@ struct tile : tile_base<AIE_Program> {
   }
 
   static void log(auto i) {
-    detail::tile_infrastructure<geo>::log(i);
+    acap::log(i);
   }
 
   static constexpr acap::hw::position self_position{X, Y};
@@ -304,7 +305,7 @@ struct tile : tile_base<AIE_Program> {
   /// current tile.
   template <hw::position p>
   using tile_mem_t =
-      typename AIE_Program::template tileable_memory<X + p.x, Y + p.y>;
+      typename AIE_Program::template tileable_memory<p.x, p.y>;
 
   template <hw::dir d> auto &dir_mem() {
     constexpr uint32_t tile_addr = get_base_addr(d);

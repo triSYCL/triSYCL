@@ -12,6 +12,7 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <algorithm>
 #include <cstddef>
 #include <cstdint>
 #include <type_traits>
@@ -123,13 +124,13 @@ constexpr uint32_t base_addr_mask = ~offset_mask;
 /// tile addresses. when viewed from the host tile base address is 0 so
 /// offsets can be used alone when accessing from the host.
 constexpr uint32_t stack_begin_offset = 0x0;
-constexpr uint32_t stack_size = 0x1000;
+constexpr uint32_t stack_size = 0x800;
 constexpr uint32_t stack_end_offset = stack_begin_offset + stack_size;
 
 /// contains the "arguments", this is where the kernel object will be
 /// placed.
 constexpr uint32_t args_begin_offset = stack_end_offset;
-constexpr uint32_t args_size = 0x1400;
+constexpr uint32_t args_size = 0x1000;
 constexpr uint32_t args_end_offset = args_begin_offset + args_size;
 
 /// contains the memory modules that are shared across tiles.
@@ -139,20 +140,20 @@ constexpr uint32_t tile_mem_begin_offset = args_end_offset;
 constexpr uint32_t tile_mem_size = 0x4000;
 constexpr uint32_t tile_mem_end_offset = tile_mem_begin_offset + tile_mem_size;
 
-/// contains the log_record and the log buffer that follows it.
-constexpr uint32_t log_buffer_begin_offset = tile_mem_end_offset;
-constexpr uint32_t log_buffer_size = 0x800;
-constexpr uint32_t log_buffer_end_offset = log_buffer_begin_offset + log_buffer_size;
+/// contains the RPC system.
+constexpr uint32_t rpc_record_begin_offset = tile_mem_end_offset;
+constexpr uint32_t rpc_record_size = 56;
+constexpr uint32_t rpc_record_end_offset = rpc_record_begin_offset + rpc_record_size;
 
-/// contains the graphics_record.
-constexpr uint32_t graphic_begin_offset = log_buffer_end_offset;
-constexpr uint32_t graphic_size = 0x400;
-constexpr uint32_t graphic_end_offset = graphic_begin_offset + graphic_size;
+// This is the heap that is used by dynamic allocations and the allocator's bookeeping.
+constexpr uint32_t heap_begin_offset = rpc_record_end_offset;
+constexpr uint32_t heap_size = 0x1000;
+constexpr uint32_t heap_end_offset = heap_begin_offset + heap_size;
 
 /// Offset of the last dedicated section
-constexpr uint32_t last_end_offset = graphic_end_offset;
+constexpr uint32_t last_end_offset = heap_end_offset;
 
-/// The minimum size we want to keep for globabl variables
+/// The minimum size we want to keep for global variables
 constexpr uint32_t min_global_variable_size = 0x800;
 
 static_assert(last_end_offset + min_global_variable_size <= tile_size, "sections are using more memory than is available");
@@ -219,25 +220,6 @@ dir get_own_memory_module_dir() {
 
 #endif
 
-struct log_record {
-#ifdef __SYCL_DEVICE_ONLY__
-  /// For device only
-
-  /// get the address the log_record
-  /// It is marked volatile because the data can be read by the host
-  static volatile log_record *get() {
-    return (log_record *)(self_tile_addr(get_parity_dev()) +
-                          log_buffer_begin_offset);
-  }
-  /// get the address of the buffer to write logs into, it is volatile because
-  /// the host can read it.
-  volatile char *get_data() volatile { return data; }
-#endif
-  uint32_t host_emit_count;
-  uint32_t size;
-  char data[];
-};
-
 #if defined(__SYCL_DEVICE_ONLY__)
 
 /// get the X coordinate in the acap model
@@ -265,6 +247,31 @@ int pow(int i, int p) {
   return res;
 }
 
+#endif
+
+/// This is function is very similar to the C++20 std::bit_cast but it accepts
+/// bitcasting between types of diffrent sizes. When sizeof(To) > sizeof(From)
+/// bit after sizeof(From) will be 0. When sizeof(From) > sizeof(To), the result
+/// will only contain part of the original object.
+template <typename To, typename From>
+inline To bit_cast(const From &from) noexcept {
+  To to;
+  std::memset(&to, 0, sizeof(To));
+  std::memcpy(&to, &from, std::min(sizeof(To), sizeof(From)));
+  return to;
+}
+
+/// stable_pointer is a representation of a device pointer that has the same
+/// layout between the host and the device. Ths issue with this approach is that
+/// applying a + or - to a stable_pointer doesn't result in the same value on
+/// the host and the device.
+#if defined(__SYCL_DEVICE_ONLY__)
+template<typename T>
+using stable_pointer = T*;
+static_assert(sizeof(stable_pointer<void>) == sizeof(std::uint32_t));
+#else
+template<typename T>
+using stable_pointer = std::uint32_t;
 #endif
 
 } // namespace hw

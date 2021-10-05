@@ -22,6 +22,7 @@
 #include <utility>
 
 #include "memory_infrastructure.hpp"
+#include "rpc.hpp"
 #include "tile_infrastructure/detail/tile_infrastructure.hpp"
 #include "triSYCL/device/facade/device.hpp"
 

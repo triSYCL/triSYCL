@@ -31,11 +31,14 @@
 #include "../../axi_stream_switch.hpp"
 #include "../../dma.hpp"
 #include "../../hardware.hpp"
+#include "../../log.hpp"
+#include "../../rpc.hpp"
 #include "triSYCL/detail/fiber_pool.hpp"
 #include "triSYCL/detail/ranges.hpp"
 #include "triSYCL/vendor/Xilinx/config.hpp"
 #include "triSYCL/vendor/Xilinx/latex.hpp"
 #include "triSYCL/vendor/Xilinx/acap/aie/lock.hpp"
+#include "triSYCL/vendor/Xilinx/acap/aie/device_allocator.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie::detail {
 
@@ -111,10 +114,14 @@ template <typename Geography> class tile_infrastructure {
 #endif
 
 #ifdef __SYCL_DEVICE_ONLY__
+/// This will be invoked on device before any user code.
 static void kernel_prerun() {
+  acap::heap::init_allocator();
 }
+/// This will be invoked on device when exiting normally after any user code.
 static void kernel_postrun() {
-  acap_intr::core_done();
+  acap::heap::assert_no_leak();
+  finish_kernel();
 }
 #else
 static void kernel_prerun() {
@@ -270,75 +277,6 @@ tile_infrastructure(int x, int y,
   // For host side when executing on acap hardware
   xaie::handle get_dev_handle() const {
     return dev_handle;
-  }
-#endif
-
-#ifdef __SYCL_DEVICE_ONLY__
-  /// This __attribute__((noinline)) is just to make the IR more readable it is
-  /// not required for any other reason.
-  static void log_internal(const char *ptr) {
-    volatile hw::log_record *lr = hw::log_record::get();
-    hw_lock l{hw::get_own_memory_module_dir(), 7};
-    l.acquire();
-    while (*ptr)
-      lr->get_data()[lr->size++] = *(ptr++);
-    l.release();
-  }
-  __attribute__((noinline)) static void log(const char *ptr) {
-    char arr[] = "00, 0 : ";
-    arr[0] = '0' + (hw::get_tile_x_coordinate() / 10);
-    arr[1] = '0' + (hw::get_tile_x_coordinate() % 10);
-    arr[4] = '0' + (hw::get_tile_y_coordinate() % 10);
-
-    volatile hw::log_record *lr = hw::log_record::get();
-    /// If logging would overflow the log buffer wait for the buffer to be
-    /// pickup by the host and emptied.
-    bool has_waited = false;
-    while (lr->size + strlen(ptr) + sizeof(arr) > hw::log_buffer_size) {
-      acap_intr::memory_fence();
-      has_waited = true;
-    }
-
-    log_internal(arr);
-    if (has_waited)
-    log_internal("wait ");
-    log_internal(ptr);
-  }
-
-  /// Serialize a number into a string
-  static void write_number(auto write, int i, const char* base_char = "0123456789") {
-    if (i < 0)
-      write('-');
-    /// For 0 print 0 instead of nothing.
-    if (i == 0) {
-      write(base_char[0]);
-      return;
-    }
-
-    int base = strlen(base_char);
-    int digit_count = 1;
-    int tmp = i;
-    while (tmp >= base || tmp <= -base) {
-      digit_count++;
-      tmp = tmp / base;
-    }
-    for (int d = digit_count; d > 0; d--)
-      write(base_char[std::abs((i / pow(base, d - 1)) % base)]);
-  }
-  __attribute__((noinline)) static void log(int i) {
-    char arr[16];
-    char *ptr = &arr[0];
-    write_number([&](char c) mutable { *(ptr++) = c; }, i);
-    ptr[0] = '\n';
-    ptr[1] = '\0';
-    log(arr);
-  }
-#else
-  static void log(const char* ptr) {
-    std::cout << ptr;
-  }
-  static void log(int i) {
-    std::cout << i;
   }
 #endif
 
@@ -504,11 +442,7 @@ tile_infrastructure(int x, int y,
                                      << ',' << y()
                                      << ") beginning tile execution",
                     "exec");
-      /// Setup DMA for parameter passing
-      // need to test without
-      // get_dev_handle().mem_dma(hw::args_begin_offset, hw::graphic_end_offset -
-      // hw::args_begin_offset);
-      get_dev_handle().prepare_log();
+
       if constexpr (requires { f.prerun(); })
         f.prerun();
 

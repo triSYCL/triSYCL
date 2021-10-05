@@ -19,6 +19,7 @@
 #include "geography.hpp"
 #include "memory.hpp"
 #include "memory_base.hpp"
+#include "rpc.hpp"
 #include "tile.hpp"
 #include "tile_base.hpp"
 #include "xaie_wrapper.hpp"
@@ -66,6 +67,11 @@ struct program {
 
   /// The device running this program
   AIEDevice aie_d;
+
+
+#if !defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_XILINX_AIE__)
+  rpc::host_side rpc_system;
+#endif
 
   /// Type describing all the memory modules of the CGRA
   template <int X, int Y>
@@ -180,19 +186,26 @@ struct program {
   }
 
   /// Create the AIE program with the tiles and memory modules
-  program(AIEDevice &aie_d) : aie_d{aie_d} {
+  program(AIEDevice &aie_d) : aie_d { aie_d }
+#if !defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_XILINX_AIE__)
+  , rpc_system {
+    geo::x_size, geo::y_size, xaie::handle({0, 0}, aie_d.get_dev_inst()),
+        hw::rpc_record_begin_offset
+  }
+#endif
+  {
     // Initialization of the AI Engine tile constructs from LibXAiengine
 
     boost::hana::for_each(tiles, [&](auto &t) {
       // Inform each tile about its program
-    t.set_program(*this);
+      t.set_program(*this);
 #ifndef __SYCL_DEVICE_ONLY__
-    // Always except for device side of hardware execution
+      // Always except for device side of hardware execution
 
-    // Inform each tile about their tile infrastructure
-    t.set_tile_infrastructure(aie_d.tile(t.x, t.y));
-    // Keep track of each base tile
-    tile_bases[t.y][t.x] = &t;
+      // Inform each tile about their tile infrastructure
+      t.set_tile_infrastructure(aie_d.tile(t.x, t.y));
+      // Keep track of each base tile
+      tile_bases[t.y][t.x] = &t;
     });
     // Connect each memory to its infrastructure
     boost::hana::for_each(memory_modules, [&](auto &m) {
@@ -210,13 +223,7 @@ struct program {
 #if !defined(__SYCL_DEVICE_ONLY__)
 #if defined(__SYCL_XILINX_AIE__)
     TRISYCL_DUMP2("Joining AIE tiles...", "exec");
-    bool is_done = false;
-    while (!is_done) {
-      is_done = true;
-      boost::hana::for_each(tiles, [&](auto &t) {
-        is_done &= t.get_dev_handle().try_core_wait();
-      });
-    }
+    rpc_system.wait_all();
     TRISYCL_DUMP2("Joined AIE tiles", "exec");
     boost::hana::for_each(tiles, [&](auto &t) { t.postrun(); });
 #else

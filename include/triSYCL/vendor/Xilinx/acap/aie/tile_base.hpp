@@ -64,15 +64,6 @@ public:
   /// Routines to run before core starts running.
   int prerun() { return 1; }
 
-  /** Provide a run member function that does nothing so it is
-      possible to write a minimum AI Engine program that does nothing.
-
-      Note that even if this function is not virtual, in the common
-      case a programmer implements it to specify the program executed
-      by a tile
-  */
-  void run() {}
-
   /// Routines to run after core completes running.
   void postrun() {}
 
@@ -120,16 +111,6 @@ public:
   /// Routines to run before core starts running.
   int prerun() {
     return 1;
-  }
-
-  /** Provide a run member function that does nothing so it is
-      possible to write a minimum AI Engine program that does nothing.
-
-      Note that even if this function is not virtual, in the common
-      case a programmer implements it to specify the program executed
-      by a tile
-  */
-  void run() {
   }
 
   /// Routines to run after core completes running.
