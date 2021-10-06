@@ -8,7 +8,7 @@
 
 #include <CL/sycl.hpp>
 
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 struct explosive_type {
 
@@ -23,13 +23,13 @@ struct explosive_type {
   explosive_type(decltype(value) v) : value { v } {}
 
   // Behave like "value" itself through this implicit reference conversion
-  operator decltype(value)& () { return value; }
+  operator const decltype(value)& () const { return value; }
 
 };
 
 using namespace cl::sycl;
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("uninitialized buffers do not initialize memory", "[buffer]") {
   queue my_queue;
   constexpr int size = 10;
 
@@ -48,7 +48,5 @@ int test_main(int argc, char *argv[]) {
 
   // Check the computation above
   for (int i = 0; i != size; i++)
-    BOOST_CHECK(o[i] == i);
-
-  return 0;
+    REQUIRE(o[i] == i);
 }

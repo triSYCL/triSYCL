@@ -1,0 +1,102 @@
+name: CMake
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    name: CMake with default option on the default GitHub Ubuntu
+    # The CMake configure and build commands are platform agnostic and should work equally
+    # well on Windows or Mac.  You can convert this to a matrix build if you need
+    # cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Install required packages
+        run: |
+          sudo apt update
+          sudo apt install libboost-all-dev librange-v3-dev
+
+      - name: Configure CMake
+        # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+        # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+        run:
+          # Create the build directory in ${{github.workspace}}/build
+          cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+      - name: Build
+        # Build your program with the given configuration
+        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        # Execute tests defined by the CMake configuration.
+        # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+        run: ctest --build-config ${{env.BUILD_TYPE}}
+
+  docker:
+    name: Run the validation inside Docker with specific OS and options
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      # Run all the test even if there are some which fail
+      fail-fast: false
+
+      matrix:
+       include:
+         - c_compiler: gcc-7
+           cxx_compiler: g++-7
+           OpenMP: ON
+           OpenCL: ON
+
+         - c_compiler: gcc-11
+           cxx_compiler: g++-11
+           OpenMP: ON
+           OpenCL: OFF
+
+         - c_compiler: gcc-11
+           cxx_compiler: g++-11
+           OpenMP: ON
+           OpenCL: ON
+
+         - c_compiler: clang-12
+           cxx_compiler: clang++-12
+           OpenMP: ON
+           OpenCL: OFF
+
+         - c_compiler: clang-12
+           cxx_compiler: clang++-12
+           # It looks like POCL uses an older version of Clang/LLVM
+           # which conflict with libomp-12-dev libomp5-12 and thus it
+           # is not possible to use OpenMP at the same time
+           OpenMP: OFF
+           OpenCL: ON
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: ${{ matrix.c_compiler }}, ${{ matrix.cxx_compiler }},
+          OpenMP=${{ matrix.OpenMP }}, OpenCL=${{ matrix.OpenCL }}
+          in Docker Ubuntu 21.04
+        uses: docker://ubuntu:hirsute
+        env:
+          C_COMPILER: ${{ matrix.c_compiler }}
+          CXX_COMPILER: ${{ matrix.cxx_compiler }}
+          OPENMP: ${{ matrix.OpenMP }}
+          OPENCL: ${{ matrix.OpenCL }}
+        with:
+          # The workspace is mounted at a different location inside Docker
+          entrypoint: /github/workspace/.github/workflows/run_ci_in_docker.bash

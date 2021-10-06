@@ -25,7 +25,7 @@
 
 #include <iostream>
 
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 using namespace cl::sycl;
 
@@ -40,7 +40,7 @@ static inline auto all_devices = bh::make_tuple
 
 constexpr int size = 100;
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("queue", "[scope]") {
 
   buffer<int> b { size };
 
@@ -119,13 +119,11 @@ int test_main(int argc, char *argv[]) {
   // Check the various results from the host side
 
   // Use a SYCL extension to access some device scope from the host
-  BOOST_CHECK(host_q.device_scope().global == 4);
+  REQUIRE(host_q.device_scope().global == 4);
   // Use a SYCL extension to access some platform scope from the host
   auto output = fpga_q.platform_scope().
     out.get_access<access::mode::read,
                    access::target::blocking_pipe>();
   for (int i = 0; i < (int) b.get_count(); ++i)
-    BOOST_CHECK(i + 1 == output.read());
-
-  return 0;
+    REQUIRE(i + 1 == output.read());
 }

@@ -202,7 +202,7 @@ class tile_infrastructure
         return [this, work = std::forward<Work>(f)]() mutable {
           return work.run(*this);
         };
-    }();
+    };
 
     implementation->single_task(kernel);
     #else

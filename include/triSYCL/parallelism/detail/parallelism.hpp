@@ -14,7 +14,6 @@
 */
 
 #include <cstddef>
-#include <boost/multi_array.hpp>
 
 #include "triSYCL/group.hpp"
 #include "triSYCL/h_item.hpp"
@@ -54,12 +53,12 @@ template <std::size_t level,
           typename Id>
 struct parallel_for_iterate {
   parallel_for_iterate(Range r, ParallelForFunctor &f, Id &index) {
-    for (boost::multi_array_types::index _sycl_index = 0,
-           _sycl_end = r[Range::dimensionality - level];
+    for (std::size_t _sycl_index = 0,
+           _sycl_end = r[r.rank() - level];
          _sycl_index < _sycl_end;
          _sycl_index++) {
       // Set the current value of the index for this dimension
-      index[Range::dimensionality - level] = _sycl_index;
+      index[r.rank() - level] = _sycl_index;
       // Iterate further on lower dimensions
       parallel_for_iterate<level - 1,
                            Range,
@@ -88,18 +87,17 @@ struct parallel_OpenMP_for_iterate {
       // Allocate an OpenMP thread-local index
       Id index;
       // Make a simple loop end condition for OpenMP
-      boost::multi_array_types::index _sycl_end =
-        r[Range::dimensionality - level];
+      std::size_t _sycl_end = r[r.rank() - level];
       /* Distribute the iterations on the OpenMP threads. Some OpenMP
          "collapse" could be useful for small iteration space, but it
          would need some template specialization to have real contiguous
          loop nests */
 #pragma omp for
-      for (boost::multi_array_types::index _sycl_index = 0;
+      for (std::size_t _sycl_index = 0;
            _sycl_index < _sycl_end;
            _sycl_index++) {
         // Set the current value of the index for this dimension
-        index[Range::dimensionality - level] = _sycl_index;
+        index[r.rank() - level] = _sycl_index;
         // Iterate further on lower dimensions
         parallel_for_iterate<level - 1,
                              Range,

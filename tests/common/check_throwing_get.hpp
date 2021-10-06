@@ -15,6 +15,6 @@ void check_throwing_get(const T &o) {
     exception_seen = true;
   }
   // Check the error was well managed
-  BOOST_CHECK(exception_seen);
+  REQUIRE(exception_seen);
 #endif
 }

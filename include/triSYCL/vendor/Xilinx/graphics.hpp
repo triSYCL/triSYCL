@@ -605,9 +605,7 @@ struct image_grid : frame_grid {
        std::make_shared taking an array size comes only in C++20 while
        it is available for std::make_unique in C++17... */
     std::shared_ptr<std::uint8_t[]> d { new std::uint8_t[3*image_x*image_y] };
-    std::experimental::mdspan<rgb,
-                              std::experimental::dynamic_extent,
-                              std::experimental::dynamic_extent> output {
+    std::experimental::mdspan output {
       reinterpret_cast<rgb *>(d.get()),
       image_y,
       image_x
@@ -666,13 +664,7 @@ struct image_grid : frame_grid {
                               RangeValue min_value,
                               RangeValue max_value) {
     // Wrap the pointed area into an MDspan
-    const std::experimental::mdspan<DataType,
-                                    std::experimental::dynamic_extent,
-                                    std::experimental::dynamic_extent> md {
-      data,
-      image_y,
-      image_x
-    };
+    const std::experimental::mdspan md { data, image_y, image_x };
     update_tile_data_image(x, y, md, min_value, max_value);
   }
 

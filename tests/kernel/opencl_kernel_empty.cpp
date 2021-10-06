@@ -2,7 +2,8 @@
 */
 #include <iostream>
 #include <boost/compute.hpp>
-#include <boost/test/minimal.hpp>
+
+#include <catch2/catch_test_macros.hpp>
 
 #include <CL/sycl.hpp>
 
@@ -10,7 +11,7 @@
 
 using namespace cl::sycl;
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("empty OpenCL kernel", "[kernel]") {
   // Construct an OpenCL program from the source string
   auto program = boost::compute::program::create_with_source(R"(
     __kernel void empty() {
@@ -45,6 +46,4 @@ int test_main(int argc, char *argv[]) {
                                     );
     });
 #endif
-
-  return 0;
 }

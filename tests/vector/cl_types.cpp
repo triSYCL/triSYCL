@@ -5,9 +5,11 @@
 */
 
 #include <CL/sycl.hpp>
+
 #include <iostream>
 #include <valarray>
-#include <boost/test/minimal.hpp>
+
+#include <catch2/catch_test_macros.hpp>
 
 using namespace cl::sycl;
 
@@ -89,10 +91,10 @@ auto equal = [] (auto const &v, auto const &verif) {
     va_in va1 { vil1 };                                                        \
     va_in va2 { vil2 };                                                        \
     va_out va3 = va1 OPERATOR va2;                                             \
-    BOOST_CHECK(equal(v1, v2));                                                \
-    BOOST_CHECK(equal(v1, va1));                                               \
-    BOOST_CHECK(equal(v2, va2));                                               \
-    BOOST_CHECK(equal(v3, va3));                                               \
+    REQUIRE(equal(v1, v2));                                                    \
+    REQUIRE(equal(v1, va1));                                                   \
+    REQUIRE(equal(v2, va2));                                                   \
+    REQUIRE(equal(v3, va3));                                                   \
   }
 
 /* The values for the operation
@@ -165,7 +167,7 @@ auto equal = [] (auto const &v, auto const &verif) {
   GENERATE_TEST_TYPE((float,             float,  1));                       \
   GENERATE_TEST_TYPE((double,            double, 1));
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("CL-types outside OpenCL interoperability", "[vector]") {
   constexpr size_t N = 16;
   { // By sticking all the SYCL work in a {} block, we ensure
     // all SYCL tasks must complete before exiting the block
@@ -187,6 +189,4 @@ int test_main(int argc, char *argv[]) {
         }); // End of our commands for this queue
       });
   } // End scope, so we wait for the queue to complete
-
-   return 0;
 }

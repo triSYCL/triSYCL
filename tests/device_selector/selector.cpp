@@ -2,11 +2,11 @@
 */
 #include <CL/sycl.hpp>
 
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 using namespace cl::sycl;
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("existing selectors", "[device selector]") {
   // For all device_type
   for (auto const &t : { info::device_type::host,
                          info::device_type::cpu,
@@ -16,8 +16,6 @@ int test_main(int argc, char *argv[]) {
     auto devices = device::get_devices(t);
     // Check that each returned device has the expected type
     for (auto const &d : devices)
-      BOOST_CHECK(d.type() == t);
+      REQUIRE(d.type() == t);
   }
-
-  return 0;
 }

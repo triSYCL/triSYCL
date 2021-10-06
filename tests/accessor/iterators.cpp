@@ -2,20 +2,24 @@
 
    Experiment with iterators on buffer accessors
 */
-#include <CL/sycl.hpp>
 #include <iostream>
 #include <iterator>
 #include <numeric>
 
+#include <CL/sycl.hpp>
+
 #include <boost/iterator/zip_iterator.hpp>
-#include <boost/test/minimal.hpp>
 // Actually zip_iterator.hpp requires this implementation of tuples...
 #include <boost/tuple/tuple.hpp>
+
+#include <catch2/catch_test_macros.hpp>
 
 constexpr size_t N = 300;
 using Type = int;
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE(
+    "Experiment with iterators on buffer accessors",
+    "[accessor]") {
   // Initialize the input buffers to some easy-to-compute values
   cl::sycl::buffer<Type> a { N };
   {
@@ -46,6 +50,7 @@ int test_main(int argc, char *argv[]) {
 
       cgh.single_task<class sum>([=] {
           // For fun, use aggregate iterators
+          // \todo Use just C++20 ranges and zip at some point
           auto b = boost::make_zip_iterator(boost::make_tuple(aa.cbegin(),
                                                               ab.cbegin(),
                                                               ac.begin()));
@@ -60,9 +65,35 @@ int test_main(int argc, char *argv[]) {
 
   //std::cout << std::endl << "Result:" << std::endl;
   for (auto e : c.get_access<cl::sycl::access::mode::read>())
-    BOOST_CHECK(e == N + 42 - 1);
+    REQUIRE(e == N + 42 - 1);
     // std::cout << e << " ";
   //std::cout << std::endl;
 
-  return 0;
+  // Launch a kernel to do the summation in the reverse order
+  q.submit([&] (cl::sycl::handler &cgh) {
+      // Get access to the data
+      auto aa = a.get_access<cl::sycl::access::mode::read>(cgh);
+      auto ab = b.get_access<cl::sycl::access::mode::read>(cgh);
+      auto ac = c.get_access<cl::sycl::access::mode::write>(cgh);
+
+      cgh.single_task<class sum>([=] {
+          // For fun, use aggregate iterators
+          // \todo Use just C++20 ranges and zip at some point
+          auto b = boost::make_zip_iterator(boost::make_tuple(aa.crbegin(),
+                                                              ab.crbegin(),
+                                                              ac.rbegin()));
+          auto e = boost::make_zip_iterator(boost::make_tuple(aa.crend(),
+                                                              ab.crend(),
+                                                              ac.rend()));
+
+          for (auto i = b; i != e; ++i)
+            i->get<2>() = i->get<0>() + i->get<1>() + 1;
+        });
+    });
+
+  //std::cout << std::endl << "Result:" << std::endl;
+  for (auto e : c.get_access<cl::sycl::access::mode::read>())
+    REQUIRE(e == N + 42);
+    // std::cout << e << " ";
+  //std::cout << std::endl;
 }

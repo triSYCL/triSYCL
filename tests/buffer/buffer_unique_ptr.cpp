@@ -3,14 +3,15 @@
    Exercise buffer construction from unique pointer
 */
 #include <CL/sycl.hpp>
+
 #include <iostream>
 #include <numeric>
-#include <boost/test/minimal.hpp>
+
+#include <catch2/catch_test_macros.hpp>
 
 using namespace cl::sycl;
 
-int test_main(int argc, char *argv[]) {
-
+TEST_CASE("construction from unique pointer", "[buffer]") {
   constexpr size_t N = 16;
 
   /* Allocate some memory to test ownership give-away
@@ -37,7 +38,7 @@ int test_main(int argc, char *argv[]) {
 
   buffer<int> a { std::move(init), N };
   // After buffer construction, init has been deallocated
-  BOOST_CHECK(!init);
+  REQUIRE(!init);
 
   buffer<int> b { N };
 
@@ -54,8 +55,6 @@ int test_main(int argc, char *argv[]) {
   auto result = b.get_access<access::mode::read>();
   for (int i = 0; i != N; ++i) {
     //std::cerr << result[i] << ':' << i << std::endl;
-    BOOST_CHECK(result[i] == 2*(314 + i));
+    REQUIRE(result[i] == 2*(314 + i));
   }
-
-  return 0;
 }

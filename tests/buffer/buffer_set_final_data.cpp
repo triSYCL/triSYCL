@@ -4,12 +4,12 @@
 */
 #include <CL/sycl.hpp>
 #include <iostream>
-#include <boost/test/minimal.hpp>
+
+#include <catch2/catch_test_macros.hpp>
 
 using namespace cl::sycl;
 
-int test_main(int argc, char *argv[]) {
-
+TEST_CASE("set_final_data shared_ptr", "[buffer]") {
   constexpr size_t N = 16;
 
   /** There is a draft for shared_ptr of arrays for C++17, but it is
@@ -42,8 +42,6 @@ int test_main(int argc, char *argv[]) {
 
   for (int i = 0; i != N; ++i) {
     // std::cerr << result.get()[i] << ':' << i << std::endl;
-    BOOST_CHECK(result.get()[i] == i);
+    REQUIRE(result.get()[i] == i);
   }
-
-  return 0;
 }
