@@ -18,9 +18,7 @@
 #include <type_traits>
 #include <cstring>
 
-#if defined(__SYCL_DEVICE_ONLY__)
 #include "acap-intrinsic.h"
-#endif
 
 namespace trisycl::vendor::xilinx::acap {
 

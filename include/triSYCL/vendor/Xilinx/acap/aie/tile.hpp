@@ -36,6 +36,17 @@ struct tile_hw_impl {
   CRTP& get() { return *(CRTP*)this; }
   const CRTP& get() const { return *(const CRTP*)this; }
 
+  template<typename D, typename P>
+  void initialize(D& device, P) {
+#if !defined(__SYCL_DEVICE_ONLY__)
+    /// We do not need the program so we just ignore it.
+    dev_handle = xaie::handle{xaie::acap_pos_to_xaie_pos(CRTP::self_position),
+                              device.get_dev_inst()};
+#else
+    assert(false && "should never be executed on device");
+#endif
+  }
+
 #if !defined(__SYCL_DEVICE_ONLY__)
   // For host side when executing on acap hardware
   xaie::handle dev_handle;
@@ -57,7 +68,7 @@ struct tile_hw_impl {
   }
 
   template <hw::dir d> auto &dir_mem() {
-#ifdef __SYCL_DEVICE_ONLY__
+#if !defined(__SYCL_DEVICE_ONLY__)
     assert(false && "This should never be executed on the host");
 #endif
     constexpr uint32_t tile_addr = get_base_addr(d);
@@ -65,23 +76,22 @@ struct tile_hw_impl {
                  *)(tile_addr + hw::tile_mem_begin_offset);
   }
 
-#if defined(__SYCL_DEVICE_ONLY__)
-  /// Get the horizontal coordinate
-  int x_coord() { return hw::get_tile_x_coordinate(); }
-
-  /// Get the vertical coordinate
-  int y_coord() { return hw::get_tile_y_coordinate(); }
-#else
-
+#if !defined(__SYCL_DEVICE_ONLY__)
   /// Get the horizontal coordinate
   int x_coord() { return CRTP::x; }
 
   /// Get the vertical coordinate
   int y_coord() { return CRTP::y; }
+#else
+  /// Get the horizontal coordinate
+  int x_coord() { return hw::get_tile_x_coordinate(); }
+
+  /// Get the vertical coordinate
+  int y_coord() { return hw::get_tile_y_coordinate(); }
 #endif
 
   hw_lock get_lock(hw::dir d, int i) {
-#ifndef __SYCL_DEVICE_ONLY__
+#if !defined(__SYCL_DEVICE_ONLY__)
     return {i, dev_handle.moved(CRTP::self_position.moved(d))};
 #else
     return {d, i};
@@ -154,13 +164,14 @@ struct tile_emu_impl : tile_infrastructure<Geo> {
   CRTP &get() { return *(CRTP *)this; }
   const CRTP &get() const { return *(const CRTP *)this; }
 
+  template<typename D, typename P>
+  void initialize(D& device, P& prog) {
+    program = &prog
+    set_tile_infrastructure(device.tile(CRTP::self_position.x , CRTP::self_position.y));
+  }
+
   /// Keep a reference to the AIE_Program with the full tile and memory view
   AIE_Program *program;
-
-  /// Store a way to access to the program
-  void set_program(AIE_Program &p) {
-    program = &p;
-  }
 
   /// Get the horizontal coordinate
   int x_coord() { return CRTP::x; }

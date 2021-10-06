@@ -161,17 +161,18 @@ struct program {
   {
     // Initialization of the AI Engine tile constructs from LibXAiengine
 
-#ifndef __SYCL_XILINX_AIE__
     boost::hana::for_each(tiles, [&](auto &t) {
-      // Inform each tile about its program
-      t.set_program(*this);
-      // Always except for device side of hardware execution
+      t.initialize(aie_d, *this);
+// #ifndef __SYCL_XILINX_AIE__
+//       // Inform each tile about its program
+//       t.set_program(*this);
+//       // Always except for device side of hardware execution
 
-      // Inform each tile about their tile infrastructure
-      t.set_tile_infrastructure(aie_d.tile(t.x, t.y));
-      // Keep track of each base tile
+//       // Inform each tile about their tile infrastructure
+//       t.set_tile_infrastructure(aie_d.tile(t.x, t.y));
+//       // Keep track of each base tile
+// #endif
     });
-#endif
   }
 
   /// Wait for the end of the execution of each tile
