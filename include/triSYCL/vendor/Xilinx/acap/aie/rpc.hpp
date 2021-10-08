@@ -11,8 +11,9 @@
     License. See LICENSE.TXT for details.
  */
 
-#ifdef __SYCL_XILINX_AIE__
 #include "hardware.hpp"
+
+#ifdef __SYCL_XILINX_AIE__
 #include "lock.hpp"
 #include "xaie_wrapper.hpp"
 #endif
@@ -58,7 +59,7 @@ struct functor_rpc {
 /// the device.
 struct image_update_data {
   /// A pointer to the new image data
-  hw::stable_pointer<void> data;
+  hw::dev_ptr<void> data;
 
   /// In min_value and max_value, uint64_t is just to have 8-byte of storage,
   /// the graphics system will bitcast min_value to the proper type before use.
@@ -88,19 +89,18 @@ struct send_log_rpc {
   /// device.
   struct data_type {
     /// Pointer to the first character of a buffer to print
-    hw::stable_pointer<const char> data;
+    hw::dev_ptr<const char> data;
     /// Number of characters to print
     uint64_t size;
   };
 #if !defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_XILINX_AIE__)
   static uint32_t act_on_data(int x, int y, xaie::handle h,
                               data_type dev_data) {
-    /// Decompose the device pointer into direction of the tile and address in the tile.
-    hw::dev_ptr data_ptr = hw::get_dev_ptr({x, y}, dev_data.data);
     std::string str;
     str.resize(dev_data.size);
     /// Copy the indicated device data into a string.
-    h.moved(data_ptr.p).memcpy_d2h(str.data(), data_ptr.offset, str.size());
+    h.moved(hw::position{x, y}.moved(dev_data.data.get_dir()))
+        .memcpy_d2h(str.data(), dev_data.data.get_offset(), str.size());
     std::cout << str << std::flush;
     return 0;
   }

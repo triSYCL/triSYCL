@@ -112,7 +112,6 @@ class device {
   };
 
 
-#if !defined(__SYCL_XILINX_AIE__)
   /** Access to the common infrastructure part of a tile
 
       \param[in] x is the horizontal tile coordinate
@@ -121,8 +120,7 @@ class device {
 
       \throws trisycl::runtime_error if the coordinate is invalid
   */
-  auto& tile(int x, int y) { return implementation->tile(x, y); }
-#endif
+  decltype(auto) tile(int x, int y) { return implementation->tile(x, y); }
 
   /** Access to the common infrastructure part of a tile memory
 

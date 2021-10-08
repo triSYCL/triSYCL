@@ -1,18 +1,18 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_EXEC_KERNEL_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_EXEC_KERNEL_HPP
 
+#ifndef __SYCL_XILINX_AIE__
+#error "This header should only be included when targeting hardware"
+#endif
 
 /** \file
 
-    This
+    This file implements the kernel outlining and execution logic when executing
+    on hardware
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
 */
-
-#ifndef __SYCL_XILINX_AIE__
-#error "This header should only be included when targeting the emulator"
-#endif
 
 #ifdef __SYCL_DEVICE_ONLY__
 #include "device_allocator.hpp"
@@ -55,7 +55,9 @@ template <typename TileHandle> struct exec_kernel {
 
   /// kernel_builder will insert prerun and postrun, and get an instance of the
   /// kernel object and the tile handle.
-
+  /// In the current implementation the opencl-like kernel built by the device
+  /// compiler is not used. the only thing that the compiler does is call one of
+  /// the lambdas built by kernel_builder
   template <typename KernelType>
   auto kernel_builder(KernelType &) requires requires(KernelType k) {
     k();
@@ -123,14 +125,13 @@ template <typename TileHandle> struct exec_kernel {
 
   template <typename K> void exec(xaie::handle dev_handle, K k) {
     acap::hw::position pos = xaie_pos_to_acap_pos(dev_handle.tile);
+
+    /// The host and device must see the same kernel type so we need to build
+    /// the kernel here.
     auto Kernel = kernel_builder(k);
 
 #ifdef __SYCL_DEVICE_ONLY__
-    // The outlining of the device binary Method 1: use it directly as a kernel
-    // wrapper This still results in some "garbage" IR from the axi streams
-    // default destructor, but you can run -O3 and it'll clean it up quite a bit
-    // without nuking everything so it's progress. The result seems semi-
-    // reasonable and passes through xchesscc at a reasonable speed
+    /// On device trigger outlining of device code.
     kernel_outliner<typename std::decay<decltype(Kernel)>::type>(Kernel);
 
 #else
@@ -144,6 +145,8 @@ template <typename TileHandle> struct exec_kernel {
     std::string kernelName = ::trisycl::detail::KernelInfo<
         typename std::decay<decltype(Kernel)>::type>::getName();
 
+    /// The sycl-chess script will build 2 version per kernels one with west
+    /// parity one with east parity.
     if (hw::get_parity(pos) == hw::parity::west)
       kernelName += "_west";
     else

@@ -222,8 +222,7 @@ public:
   bool write(const T &value, bool blocking = false) {
     // Lock the pipe to avoid being disturbed
     std::unique_lock<std::mutex> ul { cb_mutex };
-    TRISYCL_DUMP_T("Write pipe full = " << full()
-                   << " value = " << value);
+    TRISYCL_DUMP_T("Write pipe full = " << full());
 
     if (blocking)
       /* If in blocking mode, wait for the not full condition, that
@@ -285,7 +284,6 @@ public:
       cb.pop_front();
     }
 
-    TRISYCL_DUMP_T("Read pipe value = " << value);
     // Micro-optimization: unlock before the notification
     // https://en.cppreference.com/w/cpp/thread/condition_variable/notify_all
     ul.unlock();

@@ -18,19 +18,42 @@
 #include <boost/format.hpp>
 #include <boost/hana.hpp>
 
-#include "../../cascade_stream.hpp"
 #include "../../geography.hpp"
 #include "../../queue.hpp"
 #include "../../shim_tile.hpp"
-#include "../../tile.hpp"
-#include "../../xaie_wrapper.hpp"
 
+#ifdef __SYCL_XILINX_AIE__
+#include "../../xaie_wrapper.hpp"
+#else
 #include "triSYCL/detail/fiber_pool.hpp"
+#include "../../tile_infrastructure.hpp"
+#endif
 
 /// \ingroup aie
 /// @{
 
 namespace trisycl::vendor::xilinx::acap::aie::detail {
+
+#ifdef __SYCL_XILINX_AIE__
+template<typename Geo>
+struct tile_hw_config {
+  xaie::handle dev_handle;
+  /// Configure a connection of the core tile AXI stream switch
+  auto &connect(typename Geo::core_axi_stream_switch::slave_port_layout sp,
+                typename Geo::core_axi_stream_switch::master_port_layout mp) {
+#if defined(__SYCL_DEVICE_ONLY__)
+    assert(false && "should never be executed on device");
+#endif
+    auto slave_port_type = xaie::acap_port_to_xaie_port_type<true>(sp);
+    auto slave_port_id = xaie::acap_port_to_xaie_port_id(sp, slave_port_type);
+    auto master_port_type = xaie::acap_port_to_xaie_port_type<false>(mp);
+    auto master_port_id = xaie::acap_port_to_xaie_port_id(mp, master_port_type);
+    dev_handle.stream_connect(slave_port_type, slave_port_id, master_port_type,
+                              master_port_id);
+    return *this;
+  }
+};
+#endif
 
 /** Create a SYCL-like device view of an AI Engine CGRA with some layout
 
@@ -81,10 +104,15 @@ template <typename Layout> struct device {
 
       \throws trisycl::runtime_error if the coordinate is invalid
   */
-
   auto& tile(int x, int y) {
     geo::validate_x_y(x, y);
     return ti[y][x];
+  }
+#else
+  auto tile(int x, int y) {
+    return tile_hw_config<geo> {
+      xaie::handle { xaie::acap_pos_to_xaie_pos({x, y}), get_dev_inst() }
+    };
   }
 #endif
 
@@ -218,7 +246,7 @@ template <typename Layout> struct device {
     });
   }
 
-#if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
+#if defined(__SYCL_XILINX_AIE__)
   /// The host needs to set up the device when executing on real device
   /// The following are macro that declare variables in our case member
   /// variables. the xaie:: before them is because there type is in the
@@ -292,6 +320,7 @@ template <typename Layout> struct device {
     });
 #endif
   }
+
 
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
   // For host side when executing on acap hardware

@@ -44,7 +44,7 @@ namespace trisycl::vendor::xilinx::acap::aie {
 */
 template <typename Geography>
 class tile_infrastructure {
-  /// The type encapsulating the implementation
+  /// Pointer to the implementation
   std::shared_ptr<detail::tile_infrastructure<Geography>> implementation;
   using dti = detail::tile_infrastructure<Geography>;
 
@@ -121,8 +121,8 @@ class tile_infrastructure {
 
        \param[in] i is the id of the lock
    */
-  auto get_self_lock(int i) {
-     return implementation->lock(i);
+  auto get_lock(int i) {
+     return implementation->get_lock(i);
   }
 
   /** Get the user input connection from the AXI stream switch
@@ -182,7 +182,7 @@ class tile_infrastructure {
         \todo In a device implementation we should have a real
         tile_handler type making sense on the device instead of just
         *this */
-    auto kernel = [&]() mutable {
+    auto kernel = [&]() {
       if constexpr (requires { f(); })
         /* If the invocable is not interested by the handler, do not
            provide it. Add the outer lambda to avoid a warning about
@@ -198,7 +198,7 @@ class tile_infrastructure {
         return [this, work = std::forward<Work>(f)]() mutable {
           return work.run(*this);
         };
-    };
+    }();
 
     implementation->single_task(kernel);
     #else

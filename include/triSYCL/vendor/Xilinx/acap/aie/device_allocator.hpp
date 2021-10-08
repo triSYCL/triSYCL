@@ -32,7 +32,7 @@ constexpr unsigned alloc_align = 4;
 /// 
 struct block_header {
   /// Point to the previous block
-  hw::stable_pointer<block_header> prev;
+  hw::dev_ptr<block_header> prev;
 
   /// Size is used to find the next block.
   uint32_t size : 30;
@@ -70,7 +70,7 @@ struct block_header {
 
   /// Get the previous block in the list
   block_header* get_prev() {
-    return prev;
+    return prev.get();
   }
 
   /// Check if the block is large enough to fit a block header plus some data.
@@ -136,7 +136,7 @@ struct block_header {
 static_assert(sizeof(block_header) == 8, "");
 
 struct allocator_global {
-  hw::stable_pointer<block_header> total_list;
+  hw::dev_ptr<block_header> total_list;
 #if defined(__SYCL_DEVICE_ONLY__)
   static allocator_global *get() {
     return reinterpret_cast<allocator_global *>(
@@ -170,7 +170,7 @@ void *try_malloc(uint32_t size) {
   /// extend size to the next multiple of alloc_align;
   size = (size + (alloc_align - 1)) & ~(alloc_align - 1);
   allocator_global *ag = allocator_global::get();
-  block_header *bh = ag->total_list;
+  block_header *bh = ag->total_list.get();
   /// Go throught the whole block list.
   while (bh) {
     /// Find a suitable block.
@@ -222,7 +222,7 @@ void dump_allocator_state() {
   multi_log("dumping blocks in heap ", hw::heap_begin_offset, "-",
             hw::heap_end_offset, "\n");
   int idx = 0;
-  block_header *bh = ag->total_list;
+  block_header *bh = ag->total_list.get();
   while (bh) {
     multi_log("block ", idx++, " self=", bh, " alloc=", bh->get_alloc(),
               " in_use=", bh->in_use, " size=", bh->size,
@@ -233,7 +233,7 @@ void dump_allocator_state() {
 
 void assert_no_leak() {
   allocator_global *ag = allocator_global::get();
-  block_header *bh = ag->total_list;
+  block_header *bh = ag->total_list.get();
   bool has_leak = false;
   while (bh) {
     if (bh->in_use) {

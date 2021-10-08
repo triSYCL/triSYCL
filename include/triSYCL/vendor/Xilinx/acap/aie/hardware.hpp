@@ -17,8 +17,11 @@
 #include <cstdint>
 #include <type_traits>
 #include <cstring>
+#include <cassert>
 
+#ifdef __SYCL_XILINX_AIE__
 #include "acap-intrinsic.h"
+#endif
 
 namespace trisycl::vendor::xilinx::acap {
 
@@ -69,6 +72,8 @@ constexpr offset get_offset(parity par, dir d) {
 }
 
 /// Convert a into an offset ignoring parity.
+/// The Geography calculation already take in account parity so when giving
+/// offset to those API we need to use this instead of get_offset
 constexpr offset get_simple_offset(dir d) {
   switch (d) {
   case dir::south:
@@ -177,39 +182,6 @@ template<typename T> dir get_ptr_direction(T *p) {
   return get_ptr_direction((uint32_t)p);
 }
 
-#if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
-
-/// an address in memory on any tile of the device.
-struct dev_ptr {
-  /// The position of the tile this pointer is into
-  position p;
-  /// Offset within the memory module of the tile.
-  uint32_t offset;
-};
-
-/// this will translate a device representation of a pointer ptr in a tile at
-/// position pos. into a tile position and an offset suitable to be used with de
-/// xaie::handle.
-/** Translate the device representation of a pointer into something
-    usable by/with xaie::handle and libXAiengine
-
-    \param[in] p is the position of the tile
-    \param[in] ptr is a local pointer inside the tile
-    \return a dev_ptr and aggregation of the position of the memory module/tile
-   and the offset with that memory module
- */
-dev_ptr get_dev_ptr(position p, uint32_t ptr) {
-  dev_ptr out;
-  /// Extract the offset part of the pointer
-  out.offset = ptr & offset_mask;
-  /// Extract the part direction.
-  dir d = get_ptr_direction(ptr);
-  out.p = p + get_offset(get_parity(p), d);
-  return out;
-}
-
-#endif
-
 #ifdef __SYCL_DEVICE_ONLY__
 /// The address of the stack will be either in the west or east memory module
 /// based on the parity of the memory module so we can use the address of the
@@ -274,17 +246,68 @@ inline To bit_cast(const From &from) noexcept {
 }
 
 /// stable_pointer is a representation of a device pointer that has the same
-/// layout between the host and the device. Ths issue with this approach is that
-/// applying a + or - to a stable_pointer doesn't result in the same value on
-/// the host and the device.
+/// layout between the host and the device. This also contains function to
+/// manipulate pointer representations and pointer arithmetic
+template<typename T>
+struct dev_ptr {
 #if defined(__SYCL_DEVICE_ONLY__)
-template<typename T>
-using stable_pointer = T*;
-static_assert(sizeof(stable_pointer<void>) == sizeof(std::uint32_t));
+/// On device a pointer is just a pointer
+T* ptr;
+static T* add(T* ptr, std::ptrdiff_t off) { return ptr + off; }
+T* get() { return ptr; }
 #else
-template<typename T>
-using stable_pointer = std::uint32_t;
+/// On the host a device pointer is 
+std::uint32_t ptr;
+static std::uint32_t add(std::uint32_t ptr, std::ptrdiff_t off) {
+  /// to match pointer arithmetic we need to multiply by sizeof(T)
+  return ptr + off * sizeof(T);
+}
+T *get() {
+  assert(false && "should never be executed on the host");
+  return nullptr;
+}
 #endif
+  void set(uint32_t val) { ptr = (decltype(dev_ptr::ptr))val; }
+  void set(T* val) { ptr = (decltype(dev_ptr::ptr))val; }
+
+  /// There is not implementation of operator* because it is invalid on dev_ptr<void>.
+  T* operator->() { return get(); }
+  operator bool() { return *this != dev_ptr(nullptr); }
+
+  /// Pointer arithmetic
+  dev_ptr operator+(std::ptrdiff_t off) { return {add(ptr, off)}; }
+  dev_ptr operator-(std::ptrdiff_t off) { return {add(ptr, -off)}; }
+  std::ptrdiff_t operator-(dev_ptr other) { return ptr - other.ptr; }
+  dev_ptr& operator++() { ptr = add(ptr, 1); return *this; }
+  dev_ptr operator++(int) { dev_ptr old = *this; *this++; return old; }
+  dev_ptr& operator--() { ptr = add(ptr, -1); return *this; }
+  dev_ptr operator--(int) { dev_ptr old = *this; *this--; return old; }
+
+  /// Pointer comparaison
+  bool operator==(dev_ptr other) const { return ptr == other.ptr; }
+  bool operator!=(dev_ptr other) const { return ptr != other.ptr; }
+  bool operator<(dev_ptr other) const { return ptr < other.ptr; }
+  bool operator<=(dev_ptr other) const { return ptr <= other.ptr; }
+  bool operator>(dev_ptr other) const { return ptr > other.ptr; }
+  bool operator>=(dev_ptr other) const { return ptr >= other.ptr; }
+
+  /// Pointer assignment
+  dev_ptr& operator+=(std::ptrdiff_t off) { *this = *this + off; return *this; }
+  dev_ptr& operator-=(std::ptrdiff_t off) { *this = *this - off; return *this; }
+  dev_ptr& operator=(T* p) { set(p); return *this; }
+  dev_ptr& operator=(std::nullptr_t) { set(nullptr); return *this; }
+
+  /// Manipulating representation
+  dir get_dir() { return get_ptr_direction(ptr); }
+  std::uint32_t get_offset() { return ((std::uint32_t)ptr) & offset_mask; }
+  static constexpr dev_ptr create(hw::dir d, uint32_t offset) {
+    return {(decltype(dev_ptr::ptr))(get_base_addr(d) + offset)};
+  }
+};
+
+/// Validate that the layout is the same on device and host
+static_assert(sizeof(dev_ptr<void>) == sizeof(std::uint32_t) &&
+              sizeof(dev_ptr<void>) == 4);
 
 } // namespace hw
 

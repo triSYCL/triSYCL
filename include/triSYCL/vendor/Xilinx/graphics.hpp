@@ -975,9 +975,8 @@ struct application {
       assert(dev_data.max_value != dev_data.min_value &&
              "host received incoherent data");
 
-      acap::hw::dev_ptr data_ptr = acap::hw::get_dev_ptr({x, y}, dev_data.data);
-      h.moved(data_ptr.p)
-          .memcpy_d2h(graphic_buffer.data(), data_ptr.offset,
+      h.moved(dev_data.data.get_dir())
+          .memcpy_d2h(graphic_buffer.data(), dev_data.data.get_offset(),
                       graphic_buffer.size());
 
       /// This call is not synchronized but this should only be executed while

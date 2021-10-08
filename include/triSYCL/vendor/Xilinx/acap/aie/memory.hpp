@@ -41,6 +41,9 @@ template <typename AIE //< The type representing the full CGRA
           int Y //< The vertical coordinate of the memory module
           >
 struct memory {
+  // TODO: should we still need this class ? it can be usefull for the user to
+  // mark his memory type and the runtime to detect it via std::is_base_of bu
+  // this is currently not done.
 };
 
 /// @} End the aie Doxygen group

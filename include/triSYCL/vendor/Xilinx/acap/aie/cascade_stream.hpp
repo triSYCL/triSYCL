@@ -1,6 +1,10 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_CASCADE_STREAM_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_CASCADE_STREAM_HPP
 
+#ifdef __SYCL_XILINX_AIE__
+#error "This should only exist in emulation mode"
+#endif
+
 /** \file
 
     The cascade stream infrastructure between AI Engine tiles
@@ -10,7 +14,6 @@
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
 */
-
 #include "triSYCL/access.hpp"
 #include "triSYCL/sycl_2_2/static_pipe.hpp"
 
@@ -41,26 +44,21 @@ namespace trisycl::vendor::xilinx::acap::aie {
 */
 
 struct cascade_stream {
-  ::trisycl::sycl_2_2::static_pipe<int, 4> stream;
+  detail::sycl_2_2::pipe<std::array<char, 48>> stream;
 
-  template <typename T> auto get_cascade_stream_in() const {
-    return stream.template get_access<access::mode::read,
-                                      access::target::blocking_pipe>();
+  cascade_stream() : stream{4} {}
+
+  void write48(const char *ptr) {
+    static_assert(sizeof(std::array<char, 48>) == 48, "");
+    std::array<char, 48> data;
+    std::memcpy(data.data(), ptr, 48);
+    stream.write(data, /*blocking*/ true);
   }
-
-  /** Get a blocking write accessor to the cascade stream output
-
-      \param T is the data type used to write to the cascade
-      stream pipe
-
-      \param[in] x is the horizontal tile coordinate
-
-      \param[in] y is the vertical tile coordinate
-  */
-  template <typename T> auto get_cascade_stream_out() const {
-    // The output is connected to the down-stream neighbour of the cascade
-    return stream.template get_access<access::mode::write,
-                                      access::target::blocking_pipe>();
+  void read48(char *ptr) {
+    static_assert(sizeof(std::array<char, 48>) == 48, "");
+    std::array<char, 48> data;
+    stream.read(data, /*blocking*/ true);
+    std::memcpy(ptr, data.data(), 48);
   }
 };
 

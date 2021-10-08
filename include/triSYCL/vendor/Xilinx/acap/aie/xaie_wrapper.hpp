@@ -17,6 +17,7 @@
 
 #include "triSYCL/detail/debug.hpp"
 #include "triSYCL/detail/program_manager.hpp"
+#include "triSYCL/detail/enum.hpp"
 
 #include <iostream>
 #include <sstream>
@@ -116,6 +117,46 @@ constexpr acap::hw::position xaie_pos_to_acap_pos(xaie::XAie_LocType loc) {
   return {loc.Col, loc.Row - 1};
 }
 
+template <bool is_slave, typename T>
+xaie::StrmSwPortType acap_port_to_xaie_port_type(T from) {
+  assert(from >= T::me_0);
+  if (from <= T::me_last)
+    return xaie::CORE;
+  else if (from <= T::dma_last)
+    return xaie::DMA;
+  else if (from <= T::tile_ctrl_last)
+    return xaie::CTRL;
+  else if (from <= T::fifo_last)
+    return xaie::FIFO;
+  else if (from <= T::south_last)
+    return xaie::SOUTH;
+  else if (from <= T::west_last)
+    return xaie::WEST;
+  else if (from <= T::north_last)
+    return xaie::NORTH;
+  else if (from <= T::east_last)
+    return xaie::EAST;
+  else if constexpr (is_slave) {
+    if (from <= T::size)
+      return xaie::TRACE;
+  }
+  assert(false && "invalid port");
+}
+
+template <typename T>
+int acap_port_to_xaie_port_id(T from, xaie::StrmSwPortType PType) {
+  static std::array<int, 9> arr = {1,
+                                   detail::underlying_value(T::me_last),
+                                   detail::underlying_value(T::dma_last),
+                                   detail::underlying_value(T::tile_ctrl_last),
+                                   detail::underlying_value(T::fifo_last),
+                                   detail::underlying_value(T::south_last),
+                                   detail::underlying_value(T::west_last),
+                                   detail::underlying_value(T::north_last),
+                                   detail::underlying_value(T::east_last)};
+  return detail::underlying_value(from) - arr[PType] - 1;
+}
+
 /// Ths is a handle to a tile of the ACAP device.
 struct handle {
   xaie::XAie_LocType tile = {0, 0};
@@ -208,9 +249,11 @@ struct handle {
   xaie::handle moved(acap::hw::position p) {
     return {acap_pos_to_xaie_pos(p), inst};
   }
-  TRISYCL_DEBUG_FUNC xaie::handle moved(int x, int y) {
-    return moved({x, y});
+  xaie::handle moved(acap::hw::dir d) {
+    return {acap_pos_to_xaie_pos(xaie_pos_to_acap_pos(tile).moved(d)), inst};
   }
+
+  TRISYCL_DEBUG_FUNC xaie::handle moved(int x, int y) { return moved({x, y}); }
 
   /// The memory read accessors
   std::uint32_t mem_read(std::uint32_t offset) {

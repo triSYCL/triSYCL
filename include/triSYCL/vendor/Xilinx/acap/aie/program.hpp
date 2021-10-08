@@ -136,6 +136,12 @@ struct program {
     return tile<geo::linear_id(X, Y)>();
   }
 
+  /** Access to a tile_infrastructure by its coordinates
+
+      \param[in] X is the horizontal tile coordinate
+
+      \param[in] Y is the vertical tile coordinate
+  */
   auto& tile_infra(int x, int y) {
     return aie_d.tile(x, y);
   }
@@ -163,15 +169,6 @@ struct program {
 
     boost::hana::for_each(tiles, [&](auto &t) {
       t.initialize(aie_d, *this);
-// #ifndef __SYCL_XILINX_AIE__
-//       // Inform each tile about its program
-//       t.set_program(*this);
-//       // Always except for device side of hardware execution
-
-//       // Inform each tile about their tile infrastructure
-//       t.set_tile_infrastructure(aie_d.tile(t.x, t.y));
-//       // Keep track of each base tile
-// #endif
     });
   }
 
@@ -220,25 +217,13 @@ struct program {
 
       \todo Factorize out the 2 run functions
   */
-  template <typename Invocable>
-  void run(Invocable&& f) {
+  template <typename Invocable> void run(Invocable &&f) {
     lock();
     // Start each tile program in its own executor
-    boost::hana::for_each(tiles, [&] (auto& t) {
-        t.single_task([&] {
-            TRISYCL_DUMP_T("Starting AIE tile (" << t.x << ',' << t.y
-                           << ") linear id = " << t.linear_id());
-            /// Each tile gets its own copy of work
-            auto kernel = [&, work = f] { work(t); };
-            using kernel_type = decltype(kernel);
-            // Use the kernel type as its SYCL name too
-            kernel_invoker<kernel_type, kernel_type>(kernel);
-            TRISYCL_DUMP_T("Stopping AIE tile (" << t.x << ',' << t.y << ')');
-          });
-      });
+    boost::hana::for_each(
+        tiles, [&](auto &t) { t.single_task(std::forward<Invocable>(f)); });
     wait();
   }
-
 };
 
 /// @} End the aie Doxygen group

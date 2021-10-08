@@ -23,7 +23,7 @@
 #include "log.hpp"
 
 #ifdef __SYCL_XILINX_AIE__
-/// When executing on real hardware.
+/// When executing on real hardware on the host or device side.
 
 #include "exec_kernel.hpp"
 #include "hardware.hpp"
@@ -98,22 +98,22 @@ struct tile_hw_impl {
 #endif
   }
 
-  template <typename T>
-  auto get_cascade_stream_in() {
-    assert(false && "not yet implemented");
+  /// write 48 byte starting from ptr to the cascade stream
+  void cascade_stream_write48(const char *ptr) {
+    acap_intr::cstream_write48(ptr);
   }
 
-  /** Get a write accessor to the cascade stream output
+  /// read 48 byte into ptr to the cascade stream
+  void cascade_stream_read48(char *ptr) {
+    acap_intr::cstream_read48(ptr);
+  }
 
-      \param T is the data type used to write to the cascade
-      stream pipe
+  void stream_write16(const char *ptr, int stream_dix) {
+    acap_intr::stream_write16(ptr, stream_dix);
+  }
 
-      \param Target is the access mode to the pipe. It is blocking
-      by default
-  */
-  template <typename T>
-  auto get_cascade_stream_out() {
-    assert(false && "not yet implemented");
+  void stream_read16(char *ptr, int stream_dix) {
+    acap_intr::stream_read16(ptr, stream_dix);
   }
 
   /// When waiting on the host we should go through this function but throught
@@ -166,8 +166,8 @@ struct tile_emu_impl : tile_infrastructure<Geo> {
 
   template<typename D, typename P>
   void initialize(D& device, P& prog) {
-    program = &prog
-    set_tile_infrastructure(device.tile(CRTP::self_position.x , CRTP::self_position.y));
+    program = &prog;
+    base::set_tile_infrastructure(device.tile(CRTP::self_position.x , CRTP::self_position.y));
   }
 
   /// Keep a reference to the AIE_Program with the full tile and memory view
@@ -184,8 +184,29 @@ struct tile_emu_impl : tile_infrastructure<Geo> {
         hw::get_simple_offset(d).x, hw::get_simple_offset(d).y)>();
   }
 
+  /// read 48 byte into ptr to the cascade stream
+  void cascade_stream_read48(char *ptr) { return base::cascade().read48(ptr); }
+
+  /// write 48 byte starting from ptr to the cascade stream
+  void cascade_stream_write48(const char *ptr) {
+    hw::position next_in_cascade = {
+        Geo::cascade_linear_x(Geo::cascade_linear_id(CRTP::x, CRTP::y) + 1),
+        Geo::cascade_linear_y(Geo::cascade_linear_id(CRTP::x, CRTP::y) + 1)};
+    program->tile_infra(next_in_cascade.x, next_in_cascade.y)
+        .cascade()
+        .write48(ptr);
+  }
+
+  void stream_write16(const char *ptr, int stream_dix) {
+    acap_intr::stream_write16(ptr, stream_dix);
+  }
+
+  void stream_read16(char *ptr, int stream_dix) {
+    acap_intr::stream_read16(ptr, stream_dix);
+  }
+
   lock_unit &get_lock(hw::dir d, int i) {
-    get().program->tile_infra(CRTP::self_position.moved(d)).get_self_lock(i);
+    program->tile_infra(CRTP::self_position.moved(d)).get_lock(i);
   }
 };
 
@@ -488,7 +509,7 @@ struct tile : public tile_backend<typename AIE_Program::geo, AIE_Program, tile<A
   using dir = hw::dir;
   using base::get_lock;
 
-  auto get_self_lock(int i) {
+  auto get_lock(int i) {
     if constexpr (self_position.get_parity() == hw::parity::west)
       return get_lock(hw::dir::west, i);
     else
@@ -517,36 +538,81 @@ struct tile : public tile_backend<typename AIE_Program::geo, AIE_Program, tile<A
     return geo::cascade_linear_id(x, y);
   }
 
-
-  /** Get a read accessor to the cascade stream input
-
-      \param T is the data type used to read from the cascade
-      stream pipe
-
-      \param Target is the access mode to the pipe. It is blocking
-      by default
-  */
-  template <typename T>
-  auto get_cascade_stream_in() {
-    static_assert(!is_cascade_start(), "You cannot access to the cascade stream"
-                  " input on the tile that starts the stream");
-    return base::template get_cascade_stream_in<T>();
+private:
+  /// Generic function to deal with fixed size stream operations.
+  template <unsigned OpSize, bool is_read, typename OpFunc>
+  static void stream_operation(typename std::conditional<is_read, char, const char>::type *ptr,
+                        unsigned size, OpFunc func) {
+    std::array<char, OpSize> buffer;
+    buffer.fill(0);
+    unsigned idx = 0;
+    for (; idx + OpSize <= size; idx += OpSize)
+      func(ptr + idx);
+    if (idx < size) {
+      if constexpr (!is_read)
+        std::memcpy(buffer.data(), ptr + idx, size - idx);
+      func(buffer.data());
+      if constexpr (is_read)
+        std::memcpy(ptr + idx, buffer.data(), size - idx);
+    }
   }
 
+public:
+  /** Write an object of type SpecifiedTy to a cascade stream
 
-  /** Get a write accessor to the cascade stream output
-
-      \param T is the data type used to write to the cascade
+      \param SpecifiedTy is the data type used to read from the cascade
       stream pipe
-
-      \param Target is the access mode to the pipe. It is blocking
-      by default
   */
-  template <typename T>
-  auto get_cascade_stream_out() {
-    static_assert(!is_cascade_end(), "You cannot access to the cascade stream"
-                  " output on the tile that starts the stream");
-    return base::template get_cascade_stream_out<T>();
+  template <typename SpecifiedTy> void cascade_write(const SpecifiedTy &value) {
+    static_assert(!is_cascade_end(), "There is nothing to write for.");
+    static_assert(std::is_trivially_copyable<SpecifiedTy>::value,
+                  "SpecifiedTy cannot passed by streams");
+    stream_operation<48, /*is_read*/ false>(
+        reinterpret_cast<const char *>(std::addressof(value)),
+        sizeof(SpecifiedTy),
+        [this](const char *ptr) { base::cascade_stream_write48(ptr); });
+  }
+
+  /** Read an object of type SpecifiedTy from the cascade stream
+
+      \param SpecifiedTy is the data type used to write to the cascade
+      stream pipe
+  */
+  template <typename SpecifiedTy> SpecifiedTy cascade_read() {
+    static_assert(!is_cascade_start(), "There is nothing to read from");
+    static_assert(std::is_trivially_copyable<SpecifiedTy>::value,
+                  "SpecifiedTy cannot passed by streams");
+    SpecifiedTy value;
+    stream_operation<48, /*is_read*/ true>(
+        reinterpret_cast<char *>(std::addressof(value)), sizeof(SpecifiedTy),
+        [this](char *ptr) { base::cascade_stream_read48(ptr); });
+    return value;
+  }
+
+  template <typename SpecifiedTy>
+  void stream_write(const SpecifiedTy &value, int stream_id) {
+    static_assert(std::is_trivially_copyable<SpecifiedTy>::value,
+                  "SpecifiedTy cannot passed by streams");
+    stream_operation<16, /*is_read*/ false>(
+        reinterpret_cast<const char *>(std::addressof(value)),
+        sizeof(SpecifiedTy), [this, stream_id](const char *ptr) {
+          base::stream_write16(ptr, stream_id);
+        });
+  }
+
+  /** Read an object of type SpecifiedTy from the stream
+
+      \param SpecifiedTy is the data type used to write to the cascade
+      stream pipe
+  */
+  template <typename SpecifiedTy> SpecifiedTy stream_read(int stream_id) {
+    static_assert(std::is_trivially_copyable<SpecifiedTy>::value,
+                  "SpecifiedTy cannot passed by streams");
+    SpecifiedTy value;
+    stream_operation<16, /*is_read*/ true>(
+        reinterpret_cast<char *>(std::addressof(value)), sizeof(SpecifiedTy),
+        [this, stream_id](char *ptr) { base::stream_read16(ptr, stream_id); });
+    return value;
   }
 
   /** An horizontal barrier using a lock
@@ -561,7 +627,7 @@ struct tile : public tile_backend<typename AIE_Program::geo, AIE_Program, tile<A
       // Propagate a token from West to East and back
       if constexpr (!is_west_column()) {
         // Wait for the Western neighbour to be ready
-        get_self_lock(lock).acquire_with_value(true);
+        get_lock(lock).acquire_with_value(true);
       }
       if constexpr (is_memory_module_east()) {
         get_lock(hw::dir::east, lock).acquire_with_value(false);
@@ -572,13 +638,13 @@ struct tile : public tile_backend<typename AIE_Program::geo, AIE_Program, tile<A
        }
       if constexpr (!is_west_column()) {
         // Acknowledge to the Western neighbour
-        get_self_lock(lock).release_with_value(false);
+        get_lock(lock).release_with_value(false);
       }
     } else {
       // Propagate a token from East to West and back
       if constexpr (!is_east_column()) {
         // Wait for the Eastern neighbour to be ready
-        get_self_lock(lock).acquire_with_value(true);
+        get_lock(lock).acquire_with_value(true);
       }
       if constexpr (is_memory_module_west()) {
         get_lock(hw::dir::west, lock).acquire_with_value(false);
@@ -589,52 +655,13 @@ struct tile : public tile_backend<typename AIE_Program::geo, AIE_Program, tile<A
        }
       if constexpr (!is_east_column()) {
         // Acknowledge to the Eastern neighbour
-        get_self_lock(lock).release_with_value(false);
+        get_lock(lock).release_with_value(false);
       }
     }
     /// Reset the lock for the next barrier.
-    get_self_lock(lock).release_with_value(false);
+    get_lock(lock).release_with_value(false);
   }
 
-  /// Routines to run before core starts running.
-  int prerun() {
-    return 1;
-  }
-
-  /// Routines to run after core completes running.
-  void postrun() {
-  }
-
-  /// Wait for the execution of the callable on this tile
-  void wait() {
-    base::wait();
-  }
-
-  /** Get the user input connection from the AXI stream switch
-
-      \param[in] port is the port to use
-  */
-  auto &in_connection(int port) {
-    return base::in_connection(port);
-  }
-
-  /** Get the user output connection to the AXI stream switch
-
-      \param[in] port is port to use
-  */
-  auto &out_connection(int port) {
-    return base::out_connection(port);
-  }
-
-  /// Get the user input port from the AXI stream switch
-  auto &in(int port) {
-    return base::in(port);
-  }
-
-  /// Get the user output port to the AXI stream switch
-  auto &out(int port) {
-    return base::out(port);
-  }
 
   /** A vertical barrier using a lock
 
@@ -648,7 +675,7 @@ struct tile : public tile_backend<typename AIE_Program::geo, AIE_Program, tile<A
     // All tile except the bottom one wait.
     if constexpr (!is_south_row()) {
       // Wait for the Southern neighbour to be ready
-      get_self_lock(lock).acquire_with_value(true);
+      get_lock(lock).acquire_with_value(true);
     }
     // All tile except the top one wait.
     if constexpr (is_memory_module_north()) {
@@ -661,10 +688,10 @@ struct tile : public tile_backend<typename AIE_Program::geo, AIE_Program, tile<A
     // All tile except the bottom one wait.
     if constexpr (!is_south_row()) {
       // Acknowledge to the Southern neighbour
-      get_self_lock(lock).release_with_value(false);
+      get_lock(lock).release_with_value(false);
     }
     /// Reset the lock for the next barrier.
-    get_self_lock(lock).release_with_value(false);
+    get_lock(lock).release_with_value(false);
   }
 
   /** Full barrier using the 2 locks by default
@@ -678,7 +705,7 @@ struct tile : public tile_backend<typename AIE_Program::geo, AIE_Program, tile<A
   }
 
 /// not yet implemented
-#if 0 
+#if 0
   /** Get access on a receiver DMA
 
       \param[in] port specifies which DMA to access, starting at 0 */

@@ -178,7 +178,7 @@ template <typename Geography> class tile_infrastructure {
 
        \param[in] i is the id of the lock
    */
-  auto get_self_lock(int i) {
+  auto get_lock(int i) {
      return memory_locking_unit.lock(i);
   }
 
