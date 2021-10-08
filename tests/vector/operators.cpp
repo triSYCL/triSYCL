@@ -28,42 +28,39 @@ auto equal = [] (auto const &v, auto const &verif) {
 /** Use the std::valarray<> implementation to compare computations on
    vec<> and std::valarray<>
 */
-#define TRISYCL_CHECK(OPERATOR, TYPE, SIZE, VAL1, VAL2) \
-  {                                                     \
-    std::initializer_list<TYPE> vil1 VAL1;              \
-    std::initializer_list<TYPE> vil2 VAL2;              \
-    using v = vec<TYPE, SIZE>;                          \
-    using va = std::valarray<TYPE>;                     \
-    v v1 VAL1;                                          \
-    v v2 VAL2;                                          \
-    v v3 = v1 OPERATOR v2;                              \
-    va va1 { vil1 };                                    \
-    va va2 { vil2 };                                    \
-    va va3 = va1 OPERATOR va2;                          \
-    REQUIRE(equal(v1, va1));                            \
-    REQUIRE(equal(v2, va2));                            \
-    REQUIRE(equal(v3, va3));                            \
-    v3 OPERATOR##= v1;                                  \
-    va3 OPERATOR##= va1;                                \
-    REQUIRE(equal(v3, va3));                            \
+#define TRISYCL_CHECK(OPERATOR, TYPE, SIZE, VAL1, VAL2)   \
+  {                                                       \
+    using v = vec<TYPE, SIZE>;                            \
+    using va = std::valarray<TYPE>;                       \
+    v v1 VAL1;                                            \
+    v v2 VAL2;                                            \
+    v v3 = v1 OPERATOR v2;                                \
+    va va1 VAL1;                                          \
+    va va2 VAL2;                                          \
+    va va3 = va1 OPERATOR va2;                            \
+    REQUIRE(equal(v1, va1));                              \
+    REQUIRE(equal(v2, va2));                              \
+    REQUIRE(equal(v3, va3));                              \
+    v3 OPERATOR##= v1;                                    \
+    va3 OPERATOR##= va1;                                  \
+    REQUIRE(equal(v3, va3));                              \
   }
 
 
 /** Use the std::valarray<> implementation to compare unary
     computations on vec<> and std::valarray<>
 */
-#define TRISYCL_UNARY_CHECK(OPERATOR, TYPE, SIZE, VAL1) \
-  {                                                     \
-    std::initializer_list<TYPE> vil1 VAL1;              \
-    using v = vec<TYPE, SIZE>;                          \
-    using va = std::valarray<TYPE>;                     \
-    v v1 VAL1;                                          \
-    va va1 { vil1 };                                    \
-    REQUIRE(equal(v1, va1));                            \
-    v v2 = OPERATOR v1;                                 \
-    va va2 = OPERATOR va1;                              \
-    REQUIRE(equal(v1, va1));                            \
-    REQUIRE(equal(v2, va2));                            \
+#define TRISYCL_UNARY_CHECK(OPERATOR, TYPE, SIZE, VAL1)   \
+  {                                                       \
+    using v = vec<TYPE, SIZE>;                            \
+    using va = std::valarray<TYPE>;                       \
+    v v1 VAL1;                                            \
+    va va1 VAL1;                                          \
+    REQUIRE(equal(v1, va1));                              \
+    v v2 = OPERATOR v1;                                   \
+    va va2 = OPERATOR va1;                                \
+    REQUIRE(equal(v1, va1));                              \
+    REQUIRE(equal(v2, va2));                              \
   }
 
 /** Use the std::valarray<> implementation to compare unary
@@ -73,7 +70,7 @@ auto equal = [] (auto const &v, auto const &verif) {
    a++)
 */
 #define TRISYCL_PREPOSTFIX_CHECK(BEFORE_OP, AFTER_OP, TYPE, SIZE, \
-                           VAL, VAL_AFTER, RESULT)                \
+                                 VAL, VAL_AFTER, RESULT)          \
   {                                                               \
     using v = vec<TYPE, SIZE>;                                    \
     v v1 VAL;                                                     \
@@ -119,6 +116,7 @@ TEST_CASE("operators", "[vector]") {
         REQUIRE(equal(v2, va2));
         REQUIRE(equal(v3, va3));
         REQUIRE(equal(v4, va4));
+        TRISYCL_CHECK(+, float, 1, { 1 }, { 4 });
         TRISYCL_CHECK(+, float, 4, ({ 1, 2, 3, 4}), ({ 4, 5, 6, 7}));
         TRISYCL_CHECK(-, float, 4, ({ 1, 2, 3, 4}), ({ 4, 5, 6, 7}));
         TRISYCL_CHECK(*, float, 4, ({ 1, 2, 3, 4}), ({ 4, 5, 6, 7}));
