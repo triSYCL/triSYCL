@@ -83,8 +83,7 @@ auto equal = [] (auto const &v, auto const &verif) {
   }
 
 
-int test_main(int argc, char *argv[]) {
-
+TEST_CASE("operators", "[vector]") {
   constexpr size_t N = 16;
   { // By sticking all the SYCL work in a {} block, we ensure
     // all SYCL tasks must complete before exiting the block
