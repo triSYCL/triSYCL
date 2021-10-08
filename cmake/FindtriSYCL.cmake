@@ -117,6 +117,11 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
         # warning: instantiation of variable '<templated id>' required here,
         # but no definition is available
         -Wno-undefined-var-template
+        # Remove the warning messages from the (OpenMP) vectorizer in
+        # include/triSYCL/parallelism/detail/parallelism.hpp
+        -Wno-pass-failed
+        ## To get line and column in the warning from the (OpenMP) vectorizer
+        # -gline-tables-only -gcolumn-info
     )
   endif()
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
