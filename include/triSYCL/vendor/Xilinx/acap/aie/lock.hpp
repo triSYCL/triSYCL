@@ -38,8 +38,13 @@ struct lock_unit {
   // There are 16 hardware locks per memory tile
   auto static constexpr lock_number = 16;
 
+  using lock_id_t = decltype(lock_number);
+
   /// The individual locking system
   struct locking_device {
+    /// The type of the value stored in the locking device
+    using value_t = bool;
+
     /* The problem here is that \c mutex and \c condition_variable
        are not moveable while the instantiation of a memory module uses
        move assignment with Boost.Hana...
@@ -55,7 +60,7 @@ struct lock_unit {
       new boost::fibers::condition_variable { } };
 
     /// The value to be waited for, initialized to false on reset
-    bool value = false;
+    value_t value = false;
 
     /// Lock the mutex
     void acquire() {
@@ -70,14 +75,14 @@ struct lock_unit {
 
 
     /// Wait until the internal value has the expectation
-    void acquire_with_value(bool expectation) {
+    void acquire_with_value(value_t expectation) {
       std::unique_lock lk { *m };
       cv->wait(lk, [&] { return expectation == value; });
     }
 
 
     /// Release and update with a new internal value
-    void release_with_value(bool new_value) {
+    void release_with_value(value_t new_value) {
       {
         std::unique_lock lk { *m };
         value = new_value;
