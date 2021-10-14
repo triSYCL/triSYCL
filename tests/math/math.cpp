@@ -3,8 +3,10 @@
    Test the behaviour of math.cpp
 */
 #include <CL/sycl.hpp>
+
 #include <iostream>
-#include <boost/test/minimal.hpp>
+
+#include <catch2/catch_test_macros.hpp>
 
 using namespace cl::sycl;
 
@@ -15,7 +17,7 @@ using namespace cl::sycl;
 #define TRYSYCL_MATH_WRAPX3s(FUN, i) std::cout << FUN(i, i, i) << std::endl;
 #define TRYSYCL_MATH_WRAPX3ss(FUN, i) std::cout << FUN(i, i, i) << std::endl;
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("math", "[math]") {
   constexpr auto N = 100;
   for (auto k = 0; k < N; k++) {
     double i = k;
@@ -122,5 +124,4 @@ int test_main(int argc, char *argv[]) {
     \*/
     //*TRYSYCL_MATH_WRAPX(popcount)//I
   }
-  return 0;
 }
