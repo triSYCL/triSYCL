@@ -81,9 +81,11 @@ template <typename AIEDevice> struct queue {
 
       \param f is an invocable taking a uniform tile handler
   */
-  template <typename Invocable> void uniform_run(Invocable f) const {
+  template <typename Invocable> void uniform_run(Invocable&& f) const {
     aie_d.for_each_tile(
-        [work = std::move(f)](auto& t) { t.single_task(std::move(work)); });
+        [work = std::forward<Invocable>(f)](auto& t) {
+          t.single_task(work);
+        });
     wait();
   }
 

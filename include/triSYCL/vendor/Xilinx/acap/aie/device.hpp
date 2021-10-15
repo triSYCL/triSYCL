@@ -184,7 +184,7 @@ class device : public facade::device<device<Layout>, detail::device<Layout>> {
       \param f is an invocable taking an heterogeneous tile handler
   */
   template <typename Invocable> void run(Invocable&& f) {
-    queue().run(f);
+    queue().run(std::forward<Invocable>(f));
   }
 
   /** Shortcut to run synchronously a uniform invocable on
@@ -193,7 +193,7 @@ class device : public facade::device<device<Layout>, detail::device<Layout>> {
       \param f is an invocable taking a uniform tile handler
   */
   template <typename Invocable> void uniform_run(Invocable&& f) {
-    queue().uniform_run(f);
+    queue().uniform_run(std::forward<Invocable>(f));
     queue().wait();
   }
 
