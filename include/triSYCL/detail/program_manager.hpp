@@ -141,6 +141,13 @@ namespace trisycl::detail {
 */
 
 class program_manager : public detail::singleton<program_manager> {
+public:
+  struct BinData {
+    std::string Name;
+    std::string_view Binary;
+    /// Size of the memory section reserved for the runtime.
+    unsigned MemSize;
+  };
 private:
   /// A work-around to a work-around, the AI Engine runtime does some
   /// manipulation of the ELF binary in memory to work through a chess compiler
@@ -151,7 +158,7 @@ private:
   ///
   /// We also need to make a pairing between the binary and its name so we can
   /// retrieve it via integration header.
-  std::vector<std::pair</*Name*/std::string, /*Binary*/std::string_view>> image_list;
+  std::vector<BinData> image_list;
 
 public:
   static bool isELFMagic(const char *BinStart) {
@@ -209,20 +216,28 @@ public:
         while (ptr[next_size] != '\n')
           next_size++;
         // Parse the file size
+        unsigned reserved_runtime_memory_size= std::stoi(std::string(ptr, next_size));
+        ptr += next_size + 1;
+        next_size = 0;
+        // Find the position of the next '\n'
+        while (ptr[next_size] != '\n')
+          next_size++;
+        // Parse the file size
         unsigned bin_size = std::stoi(std::string(ptr, next_size));
         ptr += next_size + 1;
         next_size = 0;
         std::string_view bin(ptr, bin_size);
         ptr += bin_size;
-        TRISYCL_DUMP_T("Loading Name: " << name << " Size: " << bin_size
-                                        << " Magic: \"" << bin.substr(0, 4)
-                                        << "\" IsElf: "
-                                        << isELFMagic(bin.data()));
+        TRISYCL_DUMP_T("Loading Name: "
+                       << name << " Size: " << bin_size
+                       << " MemSize: " << reserved_runtime_memory_size
+                       << " Magic: \"" << bin.substr(0, 4)
+                       << "\" IsElf: " << isELFMagic(bin.data()));
         /// We piggyback off of the BuildOptions parameter of the device_image
         /// description as it's unused in our case and it allows us to avoid
         /// altering the ClangOffloadWrappers types which causes them to risk
         /// incompatibility with Intel's SYCL implementation and OpenMP/HIP
-        image_list.emplace_back(std::move(name), bin);
+        image_list.emplace_back(BinData{std::move(name), bin, reserved_runtime_memory_size});
       }
       assert(reinterpret_cast<uintptr_t>(ptr) ==
                  reinterpret_cast<uintptr_t>(img->ImageEnd) &&
@@ -263,8 +278,8 @@ public:
   ///
   /// Return by index, only relevant really if you're testing for now and know
   /// the exact location in the vector that the image resides.
-  std::string_view get_image(const unsigned int index) {
-    return std::get<1>(image_list.at(index));
+  BinData get_bin_data(const unsigned int index) {
+    return image_list.at(index);
   }
 
   /// A write-able copy of our binary image, mainly so the AI Engine runtime can
@@ -272,10 +287,10 @@ public:
   ///
   /// Return by kernel name, used to map integration header names to offloaded
   /// binary names
-  std::string_view get_image(const std::string& kernelName) {
+  BinData get_bin_data(const std::string& kernelName) {
     for (auto image : image_list)
-      if (std::get<0>(image) == kernelName) {
-        return std::get<1>(image);
+      if (image.Name == kernelName) {
+        return image;
       }
     return {};
   }

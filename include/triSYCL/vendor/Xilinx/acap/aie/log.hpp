@@ -82,13 +82,13 @@ namespace trisycl::vendor::xilinx::acap {
     log(reinterpret_cast<std::intptr_t>(p), false, "0123456789abcdef");
   }
 #else
-  void log(const char* ptr) {
+  void log(const char* ptr, bool = false) {
     std::cout << ptr;
   }
-  void log(void* ptr) {
+  void log(void* ptr, bool = false) {
     std::cout << ptr;
   }
-  void log(int i) {
+  void log(int i, bool = false) {
     std::cout << i;
   }
 #endif
@@ -111,7 +111,8 @@ __attribute__((noreturn)) void finish_kernel() {
   /// Inform the host via RPC that the kernel has finished
   trisycl::vendor::xilinx::acap::aie::rpc::device_side::get()->perform(dt);
   trisycl::vendor::xilinx::acap::log("exiting\n");
-  acap_intr::core_done();
+  while (1)
+    acap_intr::memory_fence();
 }
 
 

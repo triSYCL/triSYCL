@@ -31,20 +31,30 @@
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
-template<typename Geo, typename CRTP>
-struct tile_hw_impl {
-  CRTP& get() { return *(CRTP*)this; }
-  const CRTP& get() const { return *(const CRTP*)this; }
+struct tile_hw_base_impl {
+  tile_hw_base_impl() = default;
+  tile_hw_base_impl(xaie::handle h)
+#if !defined(__SYCL_DEVICE_ONLY__)
+  : dev_handle(h)
+#endif
+  {}
 
-  template<typename D, typename P>
-  void initialize(D& device, P) {
+  template<typename D>
+  void initialize(D& device, int x, int y) {
 #if !defined(__SYCL_DEVICE_ONLY__)
     /// We do not need the program so we just ignore it.
-    dev_handle = xaie::handle{xaie::acap_pos_to_xaie_pos(CRTP::self_position),
+    dev_handle = xaie::handle{xaie::acap_pos_to_xaie_pos({x, y}),
                               device.get_dev_inst()};
 #else
     assert(false && "should never be executed on device");
 #endif
+  }
+
+  /// Submit a callable on this tile
+  template <typename TileTy = tile_hw_base_impl, typename Work>
+  void single_task(Work &&f, uint32_t self_shared_mem_size = 0) {
+    return detail::exec_kernel<TileTy>{}.exec(
+        get_dev_handle(), std::forward<Work>(f), self_shared_mem_size);
   }
 
 #if !defined(__SYCL_DEVICE_ONLY__)
@@ -61,27 +71,12 @@ struct tile_hw_impl {
   }
 #endif
 
-  /// Submit a callable on this tile
-  template <typename Work> void single_task(Work &&f) {
-    // detail::tile_infrastructure<typename device::geo>{}.single_task(std::forward<Work>(f));
-    detail::exec_kernel<CRTP>{}.exec(get_dev_handle(), std::forward<Work>(f));
-  }
-
-  template <hw::dir d> auto &dir_mem() {
-#if !defined(__SYCL_DEVICE_ONLY__)
-    assert(false && "This should never be executed on the host");
-#endif
-    constexpr uint32_t tile_addr = get_base_addr(d);
-    return *(typename CRTP::template tile_mem_t<CRTP::self_position.moved(d)>
-                 *)(tile_addr + hw::tile_mem_begin_offset);
-  }
-
 #if !defined(__SYCL_DEVICE_ONLY__)
   /// Get the horizontal coordinate
-  int x_coord() { return CRTP::x; }
+  int x_coord() { return xaie::xaie_pos_to_acap_pos(dev_handle.tile).x; }
 
   /// Get the vertical coordinate
-  int y_coord() { return CRTP::y; }
+  int y_coord() { return xaie::xaie_pos_to_acap_pos(dev_handle.tile).y; }
 #else
   /// Get the horizontal coordinate
   int x_coord() { return hw::get_tile_x_coordinate(); }
@@ -92,7 +87,7 @@ struct tile_hw_impl {
 
   hw_lock get_lock(hw::dir d, int i) {
 #if !defined(__SYCL_DEVICE_ONLY__)
-    return {i, dev_handle.moved(CRTP::self_position.moved(d))};
+    return {i, dev_handle.moved(d)};
 #else
     return {d, i};
 #endif
@@ -100,26 +95,62 @@ struct tile_hw_impl {
 
   /// write 48 byte starting from ptr to the cascade stream
   void cascade_stream_write48(const char *ptr) {
+#ifdef TRISYCL_DEVICE_STREAM_DEBUG
+    multi_log("cascade_stream_write48\n");
+#endif
     acap_intr::cstream_write48(ptr);
   }
 
   /// read 48 byte into ptr to the cascade stream
   void cascade_stream_read48(char *ptr) {
+#ifdef TRISYCL_DEVICE_STREAM_DEBUG
+    multi_log("cascade_stream_read48\n");
+#endif
     acap_intr::cstream_read48(ptr);
   }
 
   void stream_write16(const char *ptr, int stream_dix) {
+#ifdef TRISYCL_DEVICE_STREAM_DEBUG
+    multi_log("stream_write16\n");
+#endif
     acap_intr::stream_write16(ptr, stream_dix);
   }
 
   void stream_read16(char *ptr, int stream_dix) {
+#ifdef TRISYCL_DEVICE_STREAM_DEBUG
+    multi_log("stream_read16\n");
+#endif
     acap_intr::stream_read16(ptr, stream_dix);
   }
 
   /// When waiting on the host we should go through this function but throught
   /// the wait_all. and we should not each this function either on the device.
   void wait() { assert(false && "unreachable"); }
+};
 
+template<typename Geo, typename CRTP>
+struct tile_hw_impl : public tile_hw_base_impl {
+  using base = tile_hw_base_impl;
+  CRTP& get() { return *(CRTP*)this; }
+  const CRTP& get() const { return *(const CRTP*)this; }
+
+  template<typename D, typename P>
+  void initialize(D& device, P) {
+    base::initialize(device, CRTP::x, CRTP::y);
+  }
+
+  /// Submit a callable on this tile
+  template <typename Work> void single_task(Work &&f) {
+    return base::single_task<CRTP>(
+        std::forward<Work>(f),
+        sizeof(typename CRTP::template tile_mem_t<CRTP::self_position>));
+  }
+
+  template <hw::dir d> auto &dir_mem() {
+    return *get_object<
+        typename CRTP::template tile_mem_t<CRTP::self_position.moved(d)>>(
+        hw::offset_table::get_tile_mem_begin_offset(), d);
+  }
 
   /** Get the user input connection from the AXI stream switch
 

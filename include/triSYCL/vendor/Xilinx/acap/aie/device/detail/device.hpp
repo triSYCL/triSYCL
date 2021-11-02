@@ -36,8 +36,20 @@ namespace trisycl::vendor::xilinx::acap::aie::detail {
 
 #ifdef __SYCL_XILINX_AIE__
 template<typename Geo>
-struct tile_hw_config {
+class tile_hw_config {
   xaie::handle dev_handle;
+
+  tile_hw_base_impl get_tile() {
+    return {dev_handle};
+  }
+public:
+  tile_hw_config() = default;
+  tile_hw_config(xaie::handle h) : dev_handle(h) {}
+  template<typename T>
+  void submit(T func) {
+      auto t = get_tile();
+      std::forward<T>(func)(t);
+  }
   /// Configure a connection of the core tile AXI stream switch
   auto &connect(typename Geo::core_axi_stream_switch::slave_port_layout sp,
                 typename Geo::core_axi_stream_switch::master_port_layout mp) {
@@ -109,11 +121,9 @@ template <typename Layout> struct device {
     return ti[y][x];
   }
 #else
-  auto tile(int x, int y) {
-    return tile_hw_config<geo> {
-      xaie::handle { xaie::acap_pos_to_xaie_pos({x, y}), get_dev_inst() }
-    };
-  }
+  tile_hw_config<geo> thc[geo::y_size][geo::x_size];
+
+  auto &tile(int x, int y) { return thc[x][y]; }
 #endif
 
   /** Apply a function for each tile index of the device
@@ -275,14 +285,18 @@ template <typename Layout> struct device {
     TRISYCL_XAIE(xaie::XAie_CfgInitialize(&aie_inst, &aie_config));
     /// Request access to all tiles.
     TRISYCL_XAIE(xaie::XAie_PmRequestTiles(&aie_inst, NULL, 0));
-#elif !defined(__SYCL_XILINX_AIE__)
     // Initialize all the tiles with their network connections first
+#endif
     for_each_tile_index([&](auto x, auto y) {
+#if !defined(__SYCL_XILINX_AIE__)
       // Create & start the tile infrastructure
       // For CPU emulation
       tile(x, y) = {x, y, fiber_executor};
-    });
+#else
+      tile(x, y) = tile_hw_config<geo>{
+          xaie::handle{xaie::acap_pos_to_xaie_pos({x, y}), get_dev_inst()}};
 #endif
+    });
 
 #if !defined(__SYCL_XILINX_AIE__)
     // TODO: this should be enabled on hardware when it is working but for now
@@ -320,7 +334,6 @@ template <typename Layout> struct device {
     });
 #endif
   }
-
 
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
   // For host side when executing on acap hardware

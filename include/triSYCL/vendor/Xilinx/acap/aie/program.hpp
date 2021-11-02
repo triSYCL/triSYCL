@@ -161,7 +161,7 @@ struct program {
 #if !defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_XILINX_AIE__)
   , rpc_system {
     geo::x_size, geo::y_size, xaie::handle({0, 0}, aie_d.get_dev_inst()),
-        hw::rpc_record_begin_offset
+        hw::offset_table::get_rpc_record_begin_offset()
   }
 #endif
   {

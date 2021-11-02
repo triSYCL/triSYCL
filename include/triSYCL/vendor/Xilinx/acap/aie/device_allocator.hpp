@@ -88,7 +88,6 @@ struct block_header {
 
   /// resize the current block to new_size and create a block with the rest of the size.
   void split(uint32_t new_size) {
-    assert(!in_use && "cannot change blocks that are in use");
     assert(size >= new_size + sizeof(block_header));
     assert((new_size % alloc_align) == 0 && "not properly aligned");
 
@@ -105,7 +104,6 @@ struct block_header {
     /// Update old block
     this->size = new_size;
     this->is_last = 0;
-    this->in_use = 0;
   }
 
   /// This will try to merge this block with the following block.
@@ -139,8 +137,8 @@ struct allocator_global {
   hw::dev_ptr<block_header> total_list;
 #if defined(__SYCL_DEVICE_ONLY__)
   static allocator_global *get() {
-    return reinterpret_cast<allocator_global *>(
-        hw::self_tile_addr(hw::get_parity_dev()) + hw::heap_begin_offset);
+    return hw::get_object<allocator_global>(
+        acap::hw::offset_table::get_heap_begin_offset());
   }
   static block_header *create_block(void *p, uint32_t s) {
     block_header *block = static_cast<block_header *>(p);
@@ -159,10 +157,12 @@ struct allocator_global {
 void init_allocator() {
   allocator_global *ag = allocator_global::get();
   ag->total_list = allocator_global::create_block(
-      reinterpret_cast<void *>(hw::self_tile_addr(hw::get_parity_dev()) +
-                               hw::heap_begin_offset +
-                               sizeof(allocator_global)),
-      hw::heap_size - sizeof(allocator_global));
+      hw::get_object<void>(hw::offset_table::get_heap_begin_offset()),
+      hw::offset_table::get_heap_size() -
+          sizeof(allocator_global));
+  assert(sizeof(allocator_global) + min_alloc_size <
+             (hw::offset_table::get_heap_size()) &&
+         "the allocator was not provided enough space to work properly");
 }
 
 /// This malloc will return nullptr on failure.
@@ -200,6 +200,42 @@ void *malloc(uint32_t size) {
   return ret;
 }
 
+void* try_realloc(void *ptr, uint32_t new_size) {
+  /// extend size to the next multiple of alloc_align;
+  new_size = (new_size + (alloc_align - 1)) & ~(alloc_align - 1);
+  block_header *bh = block_header::get_header(ptr);
+  /// Since we automaticaly merge blocks. there can only be one consecutive free block.
+  /// so we only need to look at the next block.
+  /// If we can use the next block.
+  if (bh->get_next() && !bh->get_next()->in_use)
+    /// If merging with the next block would allow us to reach the requested size.
+    if (bh->size + bh->get_next()->size + sizeof(block_header) >= new_size)
+      bh->try_merge_next();
+  /// If we can use the current(maybe after merging) block to reach the required size.
+  if (bh->size > new_size) {
+    if (bh->is_splitable(new_size))
+      bh->split(new_size);
+    return ptr;
+  }
+  /// otherwise fallback to allocting a new block.
+  void* new_ptr = try_malloc(new_size);
+  /// If we failed to allocate a new block propagate the error.
+  if (!new_ptr)
+    return nullptr;
+  std::memcpy(new_ptr, ptr, bh->size);
+  free(ptr);
+  return new_ptr;
+}
+
+void* realloc(void *ptr, uint32_t new_size) {
+  void *ret = try_realloc(ptr, new_size);
+#ifdef TRISYCL_DEVICE_ALLOCATOR_DEBUG
+  multi_log("realloc(", ptr ,", ", new_size, ") = ", ret, "\n");
+#endif
+  assert(ret && "unhandled dynamic allocation failure");
+  return ret;
+}
+
 /// Release an allocation and try to merge it with nearby allocations
 void free(void *p) {
 #ifdef TRISYCL_DEVICE_ALLOCATOR_DEBUG
@@ -219,8 +255,10 @@ void free(void *p) {
 /// This function will log the state of the heap.
 void dump_allocator_state() {
   allocator_global *ag = allocator_global::get();
-  multi_log("dumping blocks in heap ", hw::heap_begin_offset, "-",
-            hw::heap_end_offset, "\n");
+  multi_log(
+      "dumping blocks in heap ",
+      hw::get_object<void>(acap::hw::offset_table::get_heap_begin_offset()), "-",
+      hw::get_object<void>(acap::hw::offset_table::get_heap_end_offset()), "\n");
   int idx = 0;
   block_header *bh = ag->total_list.get();
   while (bh) {

@@ -717,7 +717,6 @@ struct application {
   data_validation dv;
 #ifdef __SYCL_XILINX_AIE__
   xaie::XAie_DevInst *dev_inst;
-  std::thread device_communication_thread;
   std::thread data_validation_thread;
 #endif
   bool initialized = false;
@@ -805,7 +804,6 @@ struct application {
   void wait() {
     t.join();
 #ifdef __SYCL_XILINX_AIE__
-    device_communication_thread.join();
     assert(data_validation_thread.joinable() == has_data_validation);
     if (data_validation_thread.joinable())
       data_validation_thread.join();

@@ -154,7 +154,7 @@ int acap_port_to_xaie_port_id(T from, xaie::StrmSwPortType PType) {
                                    detail::underlying_value(T::west_last),
                                    detail::underlying_value(T::north_last),
                                    detail::underlying_value(T::east_last)};
-  return detail::underlying_value(from) - arr[PType] - 1;
+  return detail::underlying_value(from) - arr[PType] + 1;
 }
 
 /// Ths is a handle to a tile of the ACAP device.
@@ -275,8 +275,42 @@ struct handle {
                   "memory");
   }
 
+  template<typename T>
+  T load(acap::hw::dev_ptr<T> ptr) {
+    static_assert(std::is_trivially_copyable<T>::value, "This object cannot be transfred");
+    T ret;
+    moved(ptr.get_dir()).memcpy_d2h(std::addressof(ret), ptr.get_offset(), sizeof(ret));
+    return ret;
+  }
+
+  template<typename T>
+  void store(acap::hw::dev_ptr<T> ptr, const T& val) {
+    static_assert(std::is_trivially_copyable<T>::value, "This object cannot be transfred");
+    moved(ptr.get_dir()).memcpy_h2d(ptr.get_offset(), std::addressof(val), sizeof(val));
+  }
+
+  // template <typename T> struct dev_access {
+  //   friend class handle;
+
+  // private:
+  //   T data;
+  //   hw::dev_ptr<T> ptr;
+  //   handle dev_handle;
+
+  // public:
+  //   dev_access(const dev_access &) = delete;
+  //   dev_access(dev_access &&) = default;
+  //   T *operator->() { return &data; }
+  //   ~dev_access() { dev_handle.store(ptr, data); }
+  // };
+
+  // dev_access<T> get_access(hw::dev_ptr<T> ptr) {
+  //   return dev_access{load(ptr), ptr, *this};
+  // }
+
   /// memcpy from device to host
-  void memcpy_d2h(void *data, std::uint32_t offset, std::uint32_t size) {
+  void
+  memcpy_d2h(void *data, std::uint32_t offset, std::uint32_t size) {
     TRISYCL_XAIE(xaie::XAie_DataMemBlockRead(inst, tile,
                                              offset, data, size));
     TRISYCL_DUMP2("memcpy_d2h: (" << get_coord_str() << ") + 0x" << std::hex

@@ -183,14 +183,8 @@ template <typename... Tys> struct rpc_impl {
   struct device_side {
 #if defined(__SYCL_XILINX_AIE__)
     static device_side *get() {
-#ifdef __SYCL_DEVICE_ONLY__
-      return (device_side *)(acap::hw::self_tile_addr(
-                                     acap::hw::get_parity_dev()) +
-                                 acap::hw::rpc_record_begin_offset);
-#else
-    assert("This should never be called on the host");
-    return nullptr;
-#endif
+      return hw::get_object<device_side>(
+          acap::hw::offset_table::get_rpc_record_begin_offset());
     }
     soft_barrier::device_side barrier;
     Var data;
@@ -220,7 +214,7 @@ struct assert_equal {
 };
 
 /// This variable is just to check the rpc size
-constexpr assert_equal<sizeof(rpc::device_side), hw::rpc_record_size> v;
+constexpr assert_equal<sizeof(rpc::device_side), hw::offset_table::get_rpc_record_size()> v;
 #endif
 
 } // namespace trisycl::vendor::xilinx::acap::aie
