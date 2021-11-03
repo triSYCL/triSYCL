@@ -108,9 +108,9 @@ template <typename TileHandle> struct exec_kernel {
     k();
   }
   {
-    return [k]() mutable {
+    return []() mutable {
 #ifdef __SYCL_DEVICE_ONLY__
-      static storage<KernelType> lambda_storage;
+      static storage<KernelType> lambda_storage asm("kernel_lambda_capture");
       kernel_prerun();
       lambda_storage.get().operator()();
       kernel_postrun();
@@ -122,9 +122,9 @@ template <typename TileHandle> struct exec_kernel {
     k(*this);
   }
   {
-    return [k]() mutable {
+    return []() mutable {
 #ifdef __SYCL_DEVICE_ONLY__
-      static storage<KernelType> lambda_storage;
+      static storage<KernelType> lambda_storage asm("kernel_lambda_capture");
       kernel_prerun();
       /// TODO TileHandle should be properly initialized.
       TileHandle th;
@@ -138,9 +138,9 @@ template <typename TileHandle> struct exec_kernel {
     k.run();
   }
   {
-    return [k]() mutable {
+    return []() mutable {
 #ifdef __SYCL_DEVICE_ONLY__
-      static storage<KernelType> lambda_storage;
+      static storage<KernelType> lambda_storage asm("kernel_lambda_capture");
       kernel_prerun();
       lambda_storage.get().run();
       kernel_postrun();
@@ -152,9 +152,9 @@ template <typename TileHandle> struct exec_kernel {
     k.run(*this);
   }
   {
-    return [k]() mutable {
+    return []() mutable {
 #ifdef __SYCL_DEVICE_ONLY__
-      static storage<KernelType> lambda_storage;
+      static storage<KernelType> lambda_storage asm("kernel_lambda_capture");
       kernel_prerun();
       /// TODO TileHandle should be properly initialized.
       TileHandle th;
@@ -167,13 +167,13 @@ template <typename TileHandle> struct exec_kernel {
   template <typename K> void exec(xaie::handle dev_handle, K k, uint32_t mem_tile_size) {
     acap::hw::position pos = xaie_pos_to_acap_pos(dev_handle.tile);
 
-    // /// The host and device must see the same kernel type so we need to build
-    // /// the kernel here.
-    // auto Kernel = kernel_builder(k);
+    /// The host and device must see the same kernel type so we need to build
+    /// the kernel here.
+    auto Kernel = kernel_builder(k);
 
 #ifdef __SYCL_DEVICE_ONLY__
     /// On device trigger outlining of device code.
-    kernel_outliner<typename std::decay<decltype(k)>::type>(k);
+    kernel_outliner<typename std::decay<decltype(Kernel)>::type>(Kernel);
 
 #else
     /// Host side

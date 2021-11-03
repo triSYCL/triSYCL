@@ -9,6 +9,7 @@
 
 #include "triSYCL/detail/debug.hpp"
 #include "triSYCL/detail/singleton.hpp"
+#include "elf.h"
 
 /** \file The minimum required functions for registering a binary
     using the triSYCL/Intel SYCL frontend, so that the compilation flow stays
@@ -147,7 +148,49 @@ public:
     std::string_view Binary;
     /// Size of the memory section reserved for the runtime.
     unsigned MemSize;
+    struct symbol {
+      uint32_t addr;
+      uint32_t size;
+      std::string_view name;
+    };
+    symbol lookup_symbol(std::string_view sym) {
+      const char *file_start = Binary.data();
+      const Elf32_Ehdr *file_header = (const Elf32_Ehdr *)file_start;
+      const Elf32_Shdr *section_table =
+          (const Elf32_Shdr *)(file_start + file_header->e_shoff);
+      const Elf32_Shdr *section_string_section = section_table + file_header->e_shstrndx;
+      const char *section_string_start = file_start + section_string_section->sh_offset;
+      const Elf32_Shdr *symbol_section = nullptr;
+      const Elf32_Shdr *string_section = nullptr;
+      /// Find the string and symbol tables.
+      for (int i = 0; i < file_header->e_shnum; i++) {
+        auto name = std::string_view(section_string_start + section_table[i].sh_name);
+        if (section_table[i].sh_type == SHT_SYMTAB) {
+          assert(!symbol_section);
+          symbol_section = section_table + i;
+        }
+        if (section_table[i].sh_type == SHT_STRTAB && name == ".strtab") {
+          assert(!string_section);
+          string_section = section_table + i;
+        }
+      }
+      assert(symbol_section && string_section &&
+             "unable to find symbol or string section");
+      const char *string_start = file_start + string_section->sh_offset;
+      const Elf32_Sym *symbol_table =
+          (const Elf32_Sym *)(file_start + symbol_section->sh_offset);
+      /// Find the symbol
+      for (int i = 0; i < file_header->e_shnum; i++) {
+        auto name = std::string_view(string_start + symbol_table[i].st_name);
+        if (name == sym)
+          /// st_value is the address when the binary is not relocatable.
+          /// which should be the case here.
+          return {symbol_table[i].st_value, symbol_table[i].st_size, name};
+      }
+      assert(false && "requested symbol was not found");
+    }
   };
+
 private:
   /// A work-around to a work-around, the AI Engine runtime does some
   /// manipulation of the ELF binary in memory to work through a chess compiler
