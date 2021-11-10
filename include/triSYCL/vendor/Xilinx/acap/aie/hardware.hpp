@@ -152,10 +152,13 @@ parity get_parity_dev() {
 #endif
 }
 
-/// Get the direction of the memory module of the tile executing this.
-dir get_self_dir() {
-  return (get_parity_dev() == parity::west) ? dir::west : dir::east;
+/// Get the direction of the memory module based on the parity
+dir get_self_dir(parity p) {
+  return (p == parity::west) ? dir::west : dir::east;
 }
+
+/// Get the direction of the memory module of the tile executing this.
+dir get_self_dir() { return get_self_dir(get_parity_dev()); }
 
 dir resolved_dir(dir d) {
   if (d == dir::self)
@@ -265,8 +268,16 @@ uint32_t get_int() { return (uint32_t)ptr; }
                   "T2 should be not be specifier by the user");
     return *get();
   }
+  template <typename T2 = T, typename std::enable_if<
+                                 !std::is_same<T2, void>::value, int>::type = 0>
+  T2 &operator[](std::size_t index) {
+    return get()[index];
+  }
   T *operator->() { return get(); }
   operator bool() { return get_int() != 0; }
+  template <typename OtherT> explicit operator dev_ptr<OtherT>() {
+    return {(OtherT*)ptr};
+  }
 
   /// Pointer arithmetic
   dev_ptr operator+(std::ptrdiff_t off) { return {add(ptr, off)}; }
@@ -293,9 +304,17 @@ uint32_t get_int() { return (uint32_t)ptr; }
 
   /// Manipulating representation
   dir get_dir() { return get_ptr_direction(ptr); }
+  void set_offset(uint32_t offset) {
+    assert((offset & ~offset_mask) == 0);
+    set((get_int() & ~offset_mask) | offset);
+  }
   std::uint32_t get_offset() { return ((std::uint32_t)ptr) & offset_mask; }
   static constexpr dev_ptr create(hw::dir d, uint32_t offset) {
+    assert((offset & ~offset_mask) == 0);
     return {(decltype(dev_ptr::ptr))(get_base_addr(d) + offset)};
+  }
+  static constexpr dev_ptr create(hw::parity p, uint32_t offset) {
+    return create(get_self_dir(p));
   }
 };
 

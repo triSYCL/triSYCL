@@ -21,9 +21,12 @@
 #include "../../geography.hpp"
 #include "../../queue.hpp"
 #include "../../shim_tile.hpp"
+#include "../../accessor.hpp"
+#include "../../rpc.hpp"
 
 #ifdef __SYCL_XILINX_AIE__
 #include "../../xaie_wrapper.hpp"
+#include "triSYCL/detail/kernel_desc.hpp"
 #else
 #include "triSYCL/detail/fiber_pool.hpp"
 #include "../../tile_infrastructure.hpp"
@@ -39,16 +42,82 @@ template<typename Geo>
 class tile_hw_config {
   xaie::handle dev_handle;
 
-  tile_hw_base_impl get_tile() {
-    return {dev_handle};
-  }
+  class handler {
+    struct accessor_data {
+      const char* id;
+      void* ptr;
+      size_t size;
+      size_t sizeof_acc;
+      uint32_t dev_addr;
+    };
+    std::vector<accessor_data> accessors;
+    xaie::handle dev_handle;
+    public:
+    handler() = default;
+    handler(xaie::handle h) : dev_handle(h) {}
+    template <typename Acc> void add_accessor(const Acc &acc) {
+      accessors.emplace_back(accessor_data{(const char *)std::addressof(acc),
+                                           &*acc.begin(), acc.get_size(),
+                                           sizeof(acc)});
+    }
+#ifndef __SYCL_DEVICE_ONLY__
+    /// Write the lambda on the device such that the kernel can use it.
+    template <typename KernelDesc, typename KernelLambda>
+    void write_lambda(KernelLambda &L, uint32_t dev_addr, uint32_t heap_start) {
+
+      /// Write the lambda to memory, the accessors will get corrected later.
+      dev_handle.store<KernelLambda, /*no_check*/true>(dev_addr, L);
+      for (int i = 0; i < KernelDesc::getNumParams(); i++) {
+        ::trisycl::detail::kernel_param_desc_t kdesc = KernelDesc::getParamDesc(i);
+        if (kdesc.kind == ::trisycl::detail::kernel_param_kind_t::kind_accessor) {
+          void* acc_addr = ((char*)&L) + kdesc.offset;
+          bool was_found = false;
+          for (auto& acc : accessors) {
+            /// Check is the accessor in acc is the same as the one at address acc_addr.
+            if (std::memcmp(acc_addr, acc.id, acc.sizeof_acc) == 0) {
+              assert(!was_found && "accessors was found twice ??");
+              was_found = true;
+              ::trisycl::vendor::xilinx::acap::aie::device_accessor_base dev_acc;
+              /// Allocate space on device for the accessors's data.
+              uint32_t buff_addr =
+                  acap::heap::malloc(dev_handle, heap_start, acc.size);
+              acc.dev_addr = buff_addr;
+              /// Copy the accessor's data to the device.
+              dev_handle.memcpy_h2d(buff_addr, acc.ptr, acc.size);
+              dev_acc.size = acc.size;
+              /// Store device address of the accessor such that we can do the write_back.
+              dev_acc.ptr = hw::dev_ptr<void>::create(dev_handle.get_self_dir(),
+                                                      buff_addr);
+              /// Overwrite the host accessor with the device accessor.
+              dev_handle.store(dev_addr + kdesc.offset, dev_acc);
+            }
+          }
+        }
+      }
+    }
+    void write_back() {
+      for (auto e : accessors)
+        /// Copy the data of accessors on device back to the host.
+        /// Offset 0 is in the stack so we know that buffers are not at offset 0
+        if (e.dev_addr)
+          dev_handle.memcpy_d2h(e.ptr, e.dev_addr, e.size);
+    }
+#endif
+    template <typename T> void single_task(T &&func) {
+      detail::exec_kernel<tile_hw_base_impl>{}.exec(
+          dev_handle, std::forward<T>(func), 0, this);
+    }
+  } cgh;
+
 public:
   tile_hw_config() = default;
-  tile_hw_config(xaie::handle h) : dev_handle(h) {}
+  tile_hw_config(xaie::handle h) : dev_handle(h), cgh(dev_handle) {}
   template<typename T>
   void submit(T func) {
-      auto t = get_tile();
-      std::forward<T>(func)(t);
+    std::forward<T>(func)(cgh);
+  }
+  void write_back() {
+    cgh.write_back();
   }
   /// Configure a connection of the core tile AXI stream switch
   auto &connect(typename Geo::core_axi_stream_switch::slave_port_layout sp,

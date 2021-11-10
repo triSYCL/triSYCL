@@ -126,11 +126,10 @@ template <typename... Tys> struct rpc_impl {
   struct host_side {
     int x_size, y_size;
     xaie::handle h;
-    uint32_t addr;
 
     /// this will retrun a handle to the synchronization barrier between the device and the host.
     soft_barrier::host_side get_barrier(int x, int y) {
-      return {h.moved(x, y), (uint32_t)(addr + offsetof(device_side, barrier))};
+      return {h.moved(x, y), (uint32_t)(hw::offset_table::get_rpc_record_begin_offset() + offsetof(device_side, barrier))};
     }
 
     /// This will invoke the correct function to process the data in v
@@ -144,6 +143,7 @@ template <typename... Tys> struct rpc_impl {
     /// This will wait on every kernel while handling there RPC requests
     void wait_all() {
       ::trisycl::detail::no_log_in_this_scope nls;
+      int addr = hw::offset_table::get_rpc_record_begin_offset();
       /// This count the number of kernel that indicated they finished
       /// executing. any kernel can signal it finished executing just once
       /// because it stop executing or get stuck in an infinite loop after that.
@@ -207,14 +207,10 @@ template <typename... Tys> struct rpc_impl {
 using rpc = rpc_impl<done_rpc, image_update_rpc, send_log_rpc>;
 
 #if defined(__SYCL_XILINX_AIE__)
-// The advantage of this over static_assert is that V1 and V2 will be printed when it fails.
-template<auto V1, auto V2>
-struct assert_equal {
-  static_assert(V1 == V2, "");
-};
-
-/// This variable is just to check the rpc size
-constexpr assert_equal<sizeof(rpc::device_side), hw::offset_table::get_rpc_record_size()> v;
+detail::assert_equal_layout<
+    rpc::device_side, rpc::device_side,
+    /*expected_size=*/hw::offset_table::get_rpc_record_size()>
+    rpc_check;
 #endif
 
 } // namespace trisycl::vendor::xilinx::acap::aie

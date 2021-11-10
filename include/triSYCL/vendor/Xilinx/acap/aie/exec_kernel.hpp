@@ -14,8 +14,9 @@
     License. See LICENSE.TXT for details.
 */
 
-#ifdef __SYCL_DEVICE_ONLY__
 #include "device_allocator.hpp"
+
+#ifdef __SYCL_DEVICE_ONLY__
 #include "log.hpp"
 
 // /// This declaration will invoke the constructors of every globale variable in
@@ -55,6 +56,7 @@ extern "C" void __cxx_global_var_dtor() {
 
 #include "xaie_wrapper.hpp"
 #include "hardware.hpp"
+#include "log.hpp"
 #include <string>
 
 #include "triSYCL/detail/program_manager.hpp"
@@ -78,7 +80,6 @@ template <typename TileHandle> struct exec_kernel {
 #ifdef __SYCL_DEVICE_ONLY__
   /// This will be invoked on device before any user code.
   static void kernel_prerun() {
-    acap::heap::init_allocator();
     __cxx_global_var_ctor();
   }
   /// This will be invoked on device when exiting normally after any user code.
@@ -92,12 +93,6 @@ template <typename TileHandle> struct exec_kernel {
   static void kernel_postrun() {}
 #endif
 
-  template<typename T>
-  struct storage {
-    alignas(T) char data[sizeof(T)];
-    T& get() { return *reinterpret_cast<T*>(&data[0]); }
-  };
-
   /// kernel_builder will insert prerun and postrun, and get an instance of the
   /// kernel object and the tile handle.
   /// In the current implementation the opencl-like kernel built by the device
@@ -110,7 +105,8 @@ template <typename TileHandle> struct exec_kernel {
   {
     return []() mutable {
 #ifdef __SYCL_DEVICE_ONLY__
-      static storage<KernelType> lambda_storage asm("kernel_lambda_capture");
+      __attribute__((used)) static ::trisycl::detail::storage<KernelType>
+          lambda_storage asm("kernel_lambda_capture");
       kernel_prerun();
       lambda_storage.get().operator()();
       kernel_postrun();
@@ -124,7 +120,8 @@ template <typename TileHandle> struct exec_kernel {
   {
     return []() mutable {
 #ifdef __SYCL_DEVICE_ONLY__
-      static storage<KernelType> lambda_storage asm("kernel_lambda_capture");
+      __attribute__((used)) static ::trisycl::detail::storage<KernelType>
+          lambda_storage asm("kernel_lambda_capture");
       kernel_prerun();
       /// TODO TileHandle should be properly initialized.
       TileHandle th;
@@ -140,7 +137,8 @@ template <typename TileHandle> struct exec_kernel {
   {
     return []() mutable {
 #ifdef __SYCL_DEVICE_ONLY__
-      static storage<KernelType> lambda_storage asm("kernel_lambda_capture");
+      __attribute__((used)) static ::trisycl::detail::storage<KernelType>
+          lambda_storage asm("kernel_lambda_capture");
       kernel_prerun();
       lambda_storage.get().run();
       kernel_postrun();
@@ -154,7 +152,8 @@ template <typename TileHandle> struct exec_kernel {
   {
     return []() mutable {
 #ifdef __SYCL_DEVICE_ONLY__
-      static storage<KernelType> lambda_storage asm("kernel_lambda_capture");
+      __attribute__((used)) static ::trisycl::detail::storage<KernelType>
+          lambda_storage asm("kernel_lambda_capture");
       kernel_prerun();
       /// TODO TileHandle should be properly initialized.
       TileHandle th;
@@ -164,7 +163,13 @@ template <typename TileHandle> struct exec_kernel {
     };
   }
 
-  template <typename K> void exec(xaie::handle dev_handle, K k, uint32_t mem_tile_size) {
+  struct ParmHandlerDefault {
+    template<typename..., typename...Ts>
+    void write_lambda(Ts&&...) {}
+  };
+  template <typename K, typename ParamHandler = ParmHandlerDefault>
+  void exec(xaie::handle dev_handle, K k, uint32_t mem_tile_size = 0,
+            ParamHandler* Phandler = nullptr) {
     acap::hw::position pos = xaie_pos_to_acap_pos(dev_handle.tile);
 
     /// The host and device must see the same kernel type so we need to build
@@ -183,8 +188,9 @@ template <typename TileHandle> struct exec_kernel {
     // defined to be in this namespace (and all our implementation
     // resides in trisycl by default, so ::detail resolves to
     // trisycl::detail)
-    std::string kernelName = ::trisycl::detail::KernelInfo<
-        typename std::decay<decltype(Kernel)>::type>::getName();
+    using KI = ::trisycl::detail::KernelInfo<
+        typename std::decay<decltype(Kernel)>::type>;
+    std::string kernelName = KI::getName();
 
     /// The sycl-chess script will build 2 version per kernels one with west
     /// parity one with east parity.
@@ -223,9 +229,6 @@ template <typename TileHandle> struct exec_kernel {
                                      << ") beginning tile execution",
                     "exec");
 
-      if constexpr (requires { k.prerun(); })
-        k.prerun();
-
       hw::offset_table ot;
       ot.global_variable_start = kernel_bin_data.MemSize;
       ot.global_variable_start = ot.global_variable_start & ~3; /// Align down to 4
@@ -238,6 +241,21 @@ template <typename TileHandle> struct exec_kernel {
                     "memory");
       dev_handle.memcpy_h2d(hw::offset_table::get_offset_table_begin_offset(),
                             &ot, sizeof(ot));
+      acap::heap::init_allocator(dev_handle, ot.heap_start,
+                                 /*heap_end*/ ot.global_variable_start -
+                                     ot.heap_start);
+      if (Phandler)
+        /// if we have a Param handler let it run
+        Phandler->template write_lambda<KI>(
+            k,
+            /// parameter should be placed inside the lambda of the kernel which
+            /// is at the symbol kernel_lambda_capture
+            kernel_bin_data.lookup_symbol("kernel_lambda_capture").addr &
+                hw::offset_mask,
+            ot.heap_start);
+
+      if constexpr (requires { k.prerun(); })
+        k.prerun();
 
       TRISYCL_DUMP2("Starting AIE tile ("
                         << pos.x << ',' << pos.y << ") "

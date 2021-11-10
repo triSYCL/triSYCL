@@ -35,12 +35,50 @@ struct block_header {
   hw::dev_ptr<block_header> prev;
 
   /// Size is used to find the next block.
-  uint32_t size : 30;
+  uint32_t size : 29;
   /// Whether the allocation is currently in use.
   uint32_t in_use : 1;
   /// Whether this allocation is the last allocation of the list
   uint32_t is_last : 1;
-#if defined(__SYCL_DEVICE_ONLY__)
+
+  uint32_t is_host_allocated : 1;
+
+  /// Check if the block is large enough to fit a block header plus some data.
+  /// If not there is nothing to be gained by splitting the block.
+  bool is_splitable(uint32_t new_size) {
+    return size >= new_size + sizeof(block_header) + min_alloc_size;
+  }
+
+#if !defined(__SYCL_DEVICE_ONLY__)
+  /// resize the current block to new_size and create a block with the rest of the size.
+  void split(xaie::handle handle, uint32_t bh_addr, uint32_t new_size) {
+    assert(size >= new_size + sizeof(block_header));
+    assert((new_size % alloc_align) == 0 && "not properly aligned");
+
+    /// Create new block
+    uint32_t new_next_addr = bh_addr + sizeof(block_header) + new_size;
+    block_header new_next;
+    new_next.size = size - new_size - sizeof(block_header);
+    new_next.in_use = 0;
+    new_next.is_last = is_last;
+    new_next.prev.set_offset(bh_addr);
+    new_next.is_host_allocated = 1;
+    assert((new_next_addr % alloc_align) == 0 && "not properly aligned");
+    assert((new_next.size % alloc_align) == 0 && "not properly aligned");
+    handle.store(new_next_addr, new_next);
+
+    if (!new_next.is_last) {
+      uint32_t old_next_addr = bh_addr + sizeof(block_header) + this->size;
+      block_header old_next = handle.load<block_header>(old_next_addr);
+      old_next.prev.set_offset(new_next_addr);
+      handle.store(old_next_addr, old_next);
+    }
+
+    /// Update old block
+    this->size = new_size;
+    this->is_last = 0;
+  }
+#else
 
   /// Get the \c block_header from an allocation. The inverse of \c get_alloc.
   static block_header* get_header(void* ptr) {
@@ -71,12 +109,6 @@ struct block_header {
   /// Get the previous block in the list
   block_header* get_prev() {
     return prev.get();
-  }
-
-  /// Check if the block is large enough to fit a block header plus some data.
-  /// If not there is nothing to be gained by splitting the block.
-  bool is_splitable(uint32_t new_size) {
-    return size >= new_size + sizeof(block_header) + min_alloc_size;
   }
 
   /// Correct the previous field of the next block if it does exist.
@@ -134,43 +166,36 @@ struct block_header {
 static_assert(sizeof(block_header) == 8, "");
 
 struct allocator_global {
-  hw::dev_ptr<block_header> total_list;
 #if defined(__SYCL_DEVICE_ONLY__)
-  static allocator_global *get() {
-    return hw::get_object<allocator_global>(
+  static block_header *get_start() {
+    return hw::get_object<block_header>(
         acap::hw::offset_table::get_heap_begin_offset());
-  }
-  static block_header *create_block(void *p, uint32_t s) {
-    block_header *block = static_cast<block_header *>(p);
-    block->prev = nullptr;
-    block->size = s - sizeof(block_header);
-    block->in_use = 0;
-    block->is_last = 1;
-    return block;
   }
 #endif
 };
 
-#if defined(__SYCL_DEVICE_ONLY__)
-
 /// Initialize the allocator
-void init_allocator() {
-  allocator_global *ag = allocator_global::get();
-  ag->total_list = allocator_global::create_block(
-      hw::get_object<void>(hw::offset_table::get_heap_begin_offset()),
-      hw::offset_table::get_heap_size() -
-          sizeof(allocator_global));
-  assert(sizeof(allocator_global) + min_alloc_size <
-             (hw::offset_table::get_heap_size()) &&
+void init_allocator(xaie::handle handle, uint32_t heap_start,
+                    uint32_t heap_size) {
+  assert(sizeof(allocator_global) + min_alloc_size < heap_size &&
          "the allocator was not provided enough space to work properly");
+  assert(heap_start % alloc_align == 0);
+  block_header block;
+  block.prev = nullptr;
+  block.size = heap_size - sizeof(block_header);
+  block.in_use = 0;
+  block.is_last = 1;
+  block.is_host_allocated = 1;
+  handle.store(heap_start, block);
 }
+
+#if defined(__SYCL_DEVICE_ONLY__)
 
 /// This malloc will return nullptr on failure.
 void *try_malloc(uint32_t size) {
   /// extend size to the next multiple of alloc_align;
   size = (size + (alloc_align - 1)) & ~(alloc_align - 1);
-  allocator_global *ag = allocator_global::get();
-  block_header *bh = ag->total_list.get();
+  block_header *bh = allocator_global::get_start();
   /// Go throught the whole block list.
   while (bh) {
     /// Find a suitable block.
@@ -200,6 +225,73 @@ void *malloc(uint32_t size) {
   return ret;
 }
 
+#else
+/// This malloc will return nullptr on failure.
+uint32_t try_malloc(xaie::handle handle, uint32_t heap_start, uint32_t size) {
+  /// extend size to the next multiple of alloc_align;
+  size = (size + (alloc_align - 1)) & ~(alloc_align - 1);
+  uint32_t bh_addr = heap_start;
+  block_header bh;
+  /// Go throught the whole block list.
+  do {
+    /// load the block
+    bh = handle.load<block_header>(bh_addr);
+    /// Find a suitable block.
+    if (bh.size >= size && !bh.in_use) {
+      /// Split the block if possible
+      if (bh.is_splitable(size))
+        bh.split(handle, bh_addr, size);
+      /// Mark the block used and return the address
+      bh.in_use = 1;
+      bh.is_host_allocated = 1;
+      handle.store(bh_addr, bh);
+      return bh_addr + sizeof(block_header);
+    }
+    /// Calculate the address of the next block.
+    bh_addr = bh_addr + sizeof(block_header) + bh.size;
+  } while (!bh.is_last);
+
+  /// There was no suitable block, so we cannot perform this allocation.
+  /// Allocation faillure can be caused by high fragmentation and do not mean
+  /// that no other allocation can be performed with this allocator.
+  return 0;
+}
+
+/// This malloc will assert on allocation failure.
+uint32_t malloc(xaie::handle handle, uint32_t heap_start, uint32_t size) {
+  uint32_t ret = try_malloc(handle, heap_start, size);
+#ifdef TRISYCL_DEVICE_ALLOCATOR_DEBUG
+  multi_log("malloc(", size, ") = ", ret, "\n");
+#endif
+  assert(ret && "unhandled dynamic allocation failure");
+  return ret;
+}
+
+void dump_allocator_state(xaie::handle handle, uint32_t heap_start) {
+  multi_log(
+      "dumping blocks in heap ",
+      heap_start, "-",
+      "?????", "\n");
+  int idx = 0;
+  uint32_t bh_addr = heap_start;
+  block_header bh;
+  do {
+    bh = handle.load<block_header>(bh_addr);
+    multi_log("block ", idx++, " self=", bh_addr,
+              " alloc=", bh_addr + sizeof(block_header), " in_use=", bh.in_use,
+              " size=", bh.size,
+              " next=", bh_addr + sizeof(block_header) + bh.size,
+              " prev=", bh.prev.get_offset(),
+              " is_host_allocated=", bh.is_host_allocated, "\n");
+    /// Calculate the address of the next block.
+    bh_addr = bh_addr + sizeof(block_header) + bh.size;
+    /// load the next block
+  } while (!bh.is_last);
+}
+
+#endif
+
+#if defined(__SYCL_DEVICE_ONLY__)
 void* try_realloc(void *ptr, uint32_t new_size) {
   /// extend size to the next multiple of alloc_align;
   new_size = (new_size + (alloc_align - 1)) & ~(alloc_align - 1);
@@ -254,27 +346,26 @@ void free(void *p) {
 
 /// This function will log the state of the heap.
 void dump_allocator_state() {
-  allocator_global *ag = allocator_global::get();
   multi_log(
       "dumping blocks in heap ",
       hw::get_object<void>(acap::hw::offset_table::get_heap_begin_offset()), "-",
       hw::get_object<void>(acap::hw::offset_table::get_heap_end_offset()), "\n");
   int idx = 0;
-  block_header *bh = ag->total_list.get();
+  block_header *bh = allocator_global::get_start();
   while (bh) {
     multi_log("block ", idx++, " self=", bh, " alloc=", bh->get_alloc(),
               " in_use=", bh->in_use, " size=", bh->size,
-              " next=", bh->get_next(), " prev=", bh->get_prev(), "\n");
+              " next=", bh->get_next(), " prev=", bh->get_prev(),
+              " is_host_allocated=", bh->is_host_allocated, "\n");
     bh = bh->get_next();
   }
 }
 
 void assert_no_leak() {
-  allocator_global *ag = allocator_global::get();
-  block_header *bh = ag->total_list.get();
+  block_header *bh = allocator_global::get_start();
   bool has_leak = false;
   while (bh) {
-    if (bh->in_use) {
+    if (bh->in_use && !bh->is_host_allocated) {
       has_leak = true;
       multi_log("block ", " addr=", bh->get_alloc(), " size=", bh->size,
                 " still in use\n");

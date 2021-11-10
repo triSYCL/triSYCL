@@ -153,9 +153,15 @@ public:
       uint32_t size;
       std::string_view name;
     };
+    /// Lookup information about a symbol stored in the ELF.
+    /// This function assumes that the ELFs are 32-bits because it is true for
+    /// acap. Maybe future platform will have 64-bit ELFs and this fontion will
+    /// fail.
     symbol lookup_symbol(std::string_view sym) {
       const char *file_start = Binary.data();
       const Elf32_Ehdr *file_header = (const Elf32_Ehdr *)file_start;
+      assert(file_header->e_ident[EI_CLASS] == 1 &&
+             "this function only handles 32bit ELFs");
       const Elf32_Shdr *section_table =
           (const Elf32_Shdr *)(file_start + file_header->e_shoff);
       const Elf32_Shdr *section_string_section = section_table + file_header->e_shstrndx;
@@ -180,7 +186,7 @@ public:
       const Elf32_Sym *symbol_table =
           (const Elf32_Sym *)(file_start + symbol_section->sh_offset);
       /// Find the symbol
-      for (int i = 0; i < file_header->e_shnum; i++) {
+      for (int i = 0; i < (symbol_section->sh_size / sizeof(Elf32_Sym)); i++) {
         auto name = std::string_view(string_start + symbol_table[i].st_name);
         if (name == sym)
           /// st_value is the address when the binary is not relocatable.

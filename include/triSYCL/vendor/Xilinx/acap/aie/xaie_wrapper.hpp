@@ -253,6 +253,12 @@ struct handle {
     return {acap_pos_to_xaie_pos(xaie_pos_to_acap_pos(tile).moved(d)), inst};
   }
 
+  acap::hw::position get_acap_pos() { return xaie_pos_to_acap_pos(tile); }
+
+  acap::hw::dir get_self_dir() {
+    return acap::hw::get_self_dir(get_acap_pos().get_parity());
+  }
+
   TRISYCL_DEBUG_FUNC xaie::handle moved(int x, int y) { return moved({x, y}); }
 
   /// The memory read accessors
@@ -275,38 +281,29 @@ struct handle {
                   "memory");
   }
 
-  template<typename T>
-  T load(acap::hw::dev_ptr<T> ptr) {
-    static_assert(std::is_trivially_copyable<T>::value, "This object cannot be transfred");
+  template <typename T, bool no_check = false> T load(uint32_t offset) {
+    static_assert(no_check || std::is_trivially_copyable<T>::value,
+                  "This object cannot be transferred");
+    assert(offset % alignof(T) == 0 && "object should be properly aligned");
     T ret;
-    moved(ptr.get_dir()).memcpy_d2h(std::addressof(ret), ptr.get_offset(), sizeof(ret));
+    memcpy_d2h(std::addressof(ret), offset, sizeof(ret));
     return ret;
   }
 
-  template<typename T>
-  void store(acap::hw::dev_ptr<T> ptr, const T& val) {
-    static_assert(std::is_trivially_copyable<T>::value, "This object cannot be transfred");
-    moved(ptr.get_dir()).memcpy_h2d(ptr.get_offset(), std::addressof(val), sizeof(val));
+  template <typename T> T load(acap::hw::dev_ptr<T> ptr) {
+    return moved(ptr.get_dir()).load(ptr.get_offset());
   }
 
-  // template <typename T> struct dev_access {
-  //   friend class handle;
+  template <typename T, bool no_check = false> void store(uint32_t offset, const T &val) {
+    static_assert(no_check || std::is_trivially_copyable<T>::value,
+                  "This object cannot be transferred");
+    assert(offset % alignof(T) == 0 && "object should be properly aligned");
+    memcpy_h2d(offset, std::addressof(val), sizeof(val));
+  }
 
-  // private:
-  //   T data;
-  //   hw::dev_ptr<T> ptr;
-  //   handle dev_handle;
-
-  // public:
-  //   dev_access(const dev_access &) = delete;
-  //   dev_access(dev_access &&) = default;
-  //   T *operator->() { return &data; }
-  //   ~dev_access() { dev_handle.store(ptr, data); }
-  // };
-
-  // dev_access<T> get_access(hw::dev_ptr<T> ptr) {
-  //   return dev_access{load(ptr), ptr, *this};
-  // }
+  template <typename T> void store(acap::hw::dev_ptr<T> ptr, const T &val) {
+    moved(ptr.get_dir()).store(ptr.get_offset(), val);
+  }
 
   /// memcpy from device to host
   void
@@ -321,7 +318,7 @@ struct handle {
   }
 
   /// memcpy from host to device
-  void memcpy_h2d(std::uint32_t offset, void *data, std::uint32_t size) {
+  void memcpy_h2d(std::uint32_t offset, const void *data, std::uint32_t size) {
     TRISYCL_XAIE(xaie::XAie_DataMemBlockWrite(inst, tile,
                                               offset, data, size));
     TRISYCL_DUMP2("memcpy_h2d: (" << get_coord_str() << ") + 0x" << std::hex

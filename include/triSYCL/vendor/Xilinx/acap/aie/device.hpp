@@ -175,6 +175,13 @@ class device {
     queue().template run<Tile, Memory>();
   }
 
+  void wait() {
+    program().wait();
+#ifndef __SYCL_DEVICE_ONLY__
+    for_each_tile([&](auto &tile) { tile.write_back(); });
+#endif
+  }
+
   /** Shortcut to run synchronously an heterogeneous invocable on this
       queue
 

@@ -161,7 +161,6 @@ struct program {
 #if !defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_XILINX_AIE__)
   , rpc_system {
     geo::x_size, geo::y_size, xaie::handle({0, 0}, aie_d.get_dev_inst()),
-        hw::offset_table::get_rpc_record_begin_offset()
   }
 #endif
   {
@@ -180,7 +179,10 @@ struct program {
     TRISYCL_DUMP2("Joining AIE tiles...", "exec");
     rpc_system.wait_all();
     TRISYCL_DUMP2("Joined AIE tiles", "exec");
-    boost::hana::for_each(tiles, [&](auto &t) { t.postrun(); });
+    boost::hana::for_each(tiles, [&](auto &t) {     
+      if constexpr (requires { t.postrun(); })
+        t.postrun();
+    });
 #else
     boost::hana::for_each(tiles, [&](auto &t) {
       TRISYCL_DUMP2("Joining AIE tile (" << t.x << ',' << t.y << ')', "exec");
