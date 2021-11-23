@@ -31,26 +31,40 @@ APT_ENABLE="--assume-yes --allow-downgrades \
 export DEBIAN_FRONTEND=noninteractive
 
 # Get the latest list of packages
-apt-get update
+apt update
 
 # Update the system to the latest packages
-apt-get dist-upgrade $APT_ENABLE
+apt dist-upgrade $APT_ENABLE
+
+# A shortcut to replace easily the install command.  Use apt-get
+# instead of apt to avoid warning "apt does not have a stable CLI
+# interface. Use with caution in scripts."
+APT_INSTALL="apt-get install $APT_ENABLE"
 
 # Install packages required by the CI
-apt-get install $APT_ENABLE git apt-utils cmake libboost-all-dev \
+$APT_INSTALL git apt-utils cmake libboost-all-dev \
   librange-v3-dev
 
-# Install the required C compiler:
-apt-get install $APT_ENABLE $C_COMPILER
+# Install the required C compiler:g
+$APT_INSTALL $C_COMPILER
 
 # Install the required C++ compiler.
-# Do not install if it is clang++ since it comes with clang C compiler
-[[ ! $CXX_COMPILER =~ '^clang' ]] \
-  && apt-get install $APT_ENABLE $CXX_COMPILER
+if [[ $CXX_COMPILER =~ ^clang++ ]]; then
+  if [[ $OPENMP == ON ]]; then
+    # Clang requires a specific OpenMP library to run.
+    # The version is what is left when we remove "clang++-"
+    cxx_compiler_version=${CXX_COMPILER#clang++-}
+    apt install  $APT_ENABLE libomp-${cxx_compiler_version}-dev
+  fi
+else
+  # Do not install the C++ compiler if it is clang++ since it comes
+  # along the Clang C compiler
+  $APT_INSTALL $CXX_COMPILER
+fi
 
 # Install OpenCL with POCL:
 [[ $OPENCL == ON ]] \
-  && apt-get install $APT_ENABLE opencl-headers \
+  && $APT_INSTALL opencl-headers \
     ocl-icd-opencl-dev libpocl-dev
 
 # This is where the directory with the repository work-tree
