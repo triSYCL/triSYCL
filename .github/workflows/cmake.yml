@@ -16,7 +16,10 @@ jobs:
     # The CMake configure and build commands are platform agnostic and should work equally
     # well on Windows or Mac.  You can convert this to a matrix build if you need
     # cross-platform coverage.
-    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    # See:
+    # https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    # Here for now it will end up probably with Ubuntu 20.04 LTS and
+    # G++ 9
     runs-on: ubuntu-latest
 
     steps:
@@ -56,11 +59,6 @@ jobs:
 
       matrix:
        include:
-         - c_compiler: gcc-7
-           cxx_compiler: g++-7
-           OpenMP: ON
-           OpenCL: ON
-
          - c_compiler: gcc-11
            cxx_compiler: g++-11
            OpenMP: ON
@@ -71,13 +69,13 @@ jobs:
            OpenMP: ON
            OpenCL: ON
 
-         - c_compiler: clang-12
-           cxx_compiler: clang++-12
+         - c_compiler: clang-13
+           cxx_compiler: clang++-13
            OpenMP: ON
            OpenCL: OFF
 
-         - c_compiler: clang-12
-           cxx_compiler: clang++-12
+         - c_compiler: clang-13
+           cxx_compiler: clang++-13
            # It looks like POCL uses an older version of Clang/LLVM
            # which conflict with libomp-12-dev libomp5-12 and thus it
            # is not possible to use OpenMP at the same time
@@ -90,8 +88,8 @@ jobs:
 
       - name: ${{ matrix.c_compiler }}, ${{ matrix.cxx_compiler }},
           OpenMP=${{ matrix.OpenMP }}, OpenCL=${{ matrix.OpenCL }}
-          in Docker Ubuntu 21.04
-        uses: docker://ubuntu:hirsute
+          in Docker Ubuntu 21.10
+        uses: docker://ubuntu:impish
         env:
           C_COMPILER: ${{ matrix.c_compiler }}
           CXX_COMPILER: ${{ matrix.cxx_compiler }}
