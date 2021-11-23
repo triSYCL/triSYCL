@@ -286,7 +286,8 @@ FetchContent_MakeAvailable(range_v3)
 # Get the Catch2 testing environment
 FetchContent_Declare(Catch2
   GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-  GIT_TAG        v3.0.0-preview3
+  # The v3.0.0-preview3 was too old to compile with Ubuntu 21.10 libc
+  GIT_TAG        devel
 )
 FetchContent_MakeAvailable(Catch2)
 
