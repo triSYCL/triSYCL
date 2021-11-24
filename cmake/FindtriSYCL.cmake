@@ -321,7 +321,11 @@ function(add_sycl_to_target targetName)
     ${Boost_INCLUDE_DIRS}
     $<$<BOOL:${TRISYCL_OPENCL}>:${OpenCL_INCLUDE_DIRS}>
     $<$<BOOL:${TRISYCL_OPENCL}>:${BOOST_COMPUTE_INCPATH}>
-    ${GTKMM_INCLUDE_DIRS})
+    ${GTKMM_INCLUDE_DIRS}
+    # Hard-code a missing path for GTK in CMake from Ubuntu 21.10
+    # Waiting for https://gitlab.kitware.com/cmake/cmake/-/issues/21627 to land
+    /usr/lib/x86_64-linux-gnu/atkmm-1.6/include
+)
 
   # Link dependencies
   target_link_libraries(${targetName} PUBLIC
