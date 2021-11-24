@@ -9,7 +9,7 @@
 .. highlight:: Bash
 
 
-triSYCL is a pure C++17 header runtime library to provide SYCL_ support
+triSYCL is a pure C++20 header runtime library to provide SYCL_ support
 on CPU and accelerators.
 
 To target devices, a device compiler based on Clang_/LLVM_ is required
@@ -53,8 +53,8 @@ Tab characters are not used. Be sure you configure your editor to help
 you and to prevent parasitic spacing, such as trailing white spaces
 and so on.
 
-To avoid ODR conflicts with a pure header library, C++17 ``inline`` is
-used massively.
+To avoid ODR conflicts with a pure header library, C++17 ``inline``
+variables are used massively.
 
 
 Basic organization
@@ -173,6 +173,9 @@ compiler...
 
 triSYCL architecture for accelerator
 ====================================
+
+All this is obsolete and has been superseded by
+https://github.com/triSYCL/sycl
 
 When targeting an accelerator, even if SYCL_ is a pure `C++`_ DSEL_, a
 specific compiler is required to extract the kernel code and compile
