@@ -22,7 +22,7 @@ Installation
 
 Since it is based on modern C++, the best way to have everything
 installed is to run Linux with the latest distribution, such as
-Debian/unstable or Ubuntu 21.04, but it might work on older system too.
+Debian/unstable or Ubuntu 21.10, but it might work on older system too.
 
 Such machines do exist at Xilinx, such as ``xsjsycl40.xilinx.com`` or
 ``xsjsycl41.xilinx.com`` we use to develop ACAP++ and you can ``ssh
@@ -44,8 +44,8 @@ work on latest Ubuntu too, just adapt the compiler versions):
 
 .. code:: bash
 
-  sudo apt-get install git make cmake clang-13 libomp-13-dev \
-    llvm-13-dev g++-11 libboost-all-dev libgtkmm-3.0-dev libpocl-dev
+  sudo apt-get install git make cmake clang-14 libomp-14-dev \
+    llvm-14-dev g++-11 libboost-all-dev libgtkmm-3.0-dev libpocl-dev
 
 
 Runtime environment
@@ -97,9 +97,13 @@ Compiling with CMake
 Create a ``build`` directory somewhere and jump into it. From there,
 run::
 
-  CXX=clang++-13 cmake /where-the-acap++top-directory-is/
+  CXX=clang++-14 cmake /where-the-acap++top-directory-is/ -DCMAKE_EXPORT_COMPILE_COMMANDS=1
 
-Compile only the ACAP examples with::
+Compile everything with::
+
+  cmake --build tests/acap --parallel `nproc`
+
+or just the ACAP main examples with::
 
   cmake --build tests/acap --parallel `nproc`
 
@@ -107,9 +111,9 @@ Then all you can run for example::
 
   tests/acap/acap_mandelbrot
 
-Note that all executables have the test directory ``acap_`` prepended to
-the name to avoid target name conflicts across the directories for
-now.
+Note that all executables have the test directory itself like
+``acap_`` prepended to the name to avoid target name conflicts across
+the directories for now.
 
 
 ..
