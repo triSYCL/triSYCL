@@ -117,6 +117,11 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
         # warning: instantiation of variable '<templated id>' required here,
         # but no definition is available
         -Wno-undefined-var-template
+        # Remove the warning messages from the (OpenMP) vectorizer in
+        # include/triSYCL/parallelism/detail/parallelism.hpp
+        -Wno-pass-failed
+        ## To get line and column in the warning from the (OpenMP) vectorizer
+        # -gline-tables-only -gcolumn-info
     )
   endif()
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
@@ -296,7 +301,8 @@ FetchContent_MakeAvailable(magic_enum)
 # Get the Catch2 testing environment
 FetchContent_Declare(Catch2
   GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-  GIT_TAG        v3.0.0-preview3
+  # The v3.0.0-preview3 was too old to compile with Ubuntu 21.10 libc
+  GIT_TAG        devel
 )
 FetchContent_MakeAvailable(Catch2)
 
