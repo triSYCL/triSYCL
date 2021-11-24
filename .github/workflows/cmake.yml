@@ -36,21 +36,29 @@ jobs:
           sudo apt install libboost-all-dev librange-v3-dev
 
       - name: Configure CMake
-        # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+        # Configure CMake in a 'build'
+        # subdirectory. `CMAKE_BUILD_TYPE` is only required if you are
+        # using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
         run:
           # Create the build directory in ${{github.workspace}}/build
           cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
-      - name: Build
+      # Skip the build and test on default GitHub Action with 1 core
+      # since the compilation takes too much time and is stopped:
+      # c++: fatal error: Killed signal terminated program cc1plus
+      # compilation terminated.
+      # make[2]: *** [tests/vector/CMakeFiles/vector_cl_types.dir/build.make:76: tests/vector/CMakeFiles/vector_cl_types.dir/cl_types.cpp.o] Error 1
+      # make[1]: *** [CMakeFiles/Makefile2:4575: tests/vector/CMakeFiles/vector_cl_types.dir/all] Error 2
+      #- name: Build
         # Build your program with the given configuration
-        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      #  run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-      - name: Test
-        working-directory: ${{github.workspace}}/build
+      #- name: Test
+      #  working-directory: ${{github.workspace}}/build
         # Execute tests defined by the CMake configuration.
         # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-        run: ctest --build-config ${{env.BUILD_TYPE}}
+      #  run: ctest --build-config ${{env.BUILD_TYPE}}
 
   docker:
     name: Run the validation inside Docker with specific OS and options
