@@ -24,28 +24,30 @@ SYCL_committee and also to the ISO `C++`_ committee.
 
 Because of lack of resources **this SYCL implementation is very
 incomplete and should not be used by a normal end-user.** Fortunately
-there are now several strong implementations of SYCL_ available, such
-as ComputeCpp_, `DPC++`_ or hipSYCL_ that can be used on various
-targets.
+there are now many other implementations of SYCL_ available, including
+some strong implementations like ComputeCpp_, `DPC++`_ or hipSYCL_
+that can be used on various targets.
 
-This implementation is mainly based on C++17 with increasing C++20
-features backed with OpenMP_ or TBB_ for parallel execution on the
-CPU, with `Boost.Compute`_ for the non single-source OpenCL_
-interoperability layer and with an experimental (but now obsolete
-2017-2018) LLVM_/Clang_ version for the device compiler providing full
+This implementation is mainly based on C++20 features backed with
+OpenMP_ or TBB_ for parallel execution on the CPU, with
+`Boost.Compute`_ for the non single-source OpenCL_ interoperability
+layer and with an experimental (from 2017-2018 which is now obsolete)
+LLVM_/Clang_ version for the device compiler providing full
 single-source SYCL_ experience, typically targeting a SPIR_
 device. Since in SYCL_ there is a host fall-back, this CPU
 implementation can be seen as an implementation of this fall-back too.
 
-Since around 2018 Intel put a lot of effort in their own `DPC++`_
-project to up-stream SYCL_ into LLVM_/Clang_, there is another project
-about merging the Intel SYCL_ implementation with triSYCL_ at
-https://github.com/triSYCL/sycl to give a greater user experience for
-Xilinx_ FPGA instead of using our experimental clunky device compiler.
-But this is still very experimental because the Xilinx_ tool-chain is
-based on old incompatible versions of LLVM_/Clang_.
+Since around 2018 Intel has put a lot of effort in their own oneAPI
+`DPC++`_ SYCL_ project to up-stream SYCL_ into LLVM_/Clang_, there is
+another project about merging the oneAPI `DPC++`_ SYCL_ implementation
+with triSYCL_ at https://github.com/triSYCL/sycl to give a greater
+user experience for Xilinx_ FPGA instead of using our obsolete
+experimental clunky device compiler. But this is still very
+experimental because the Xilinx_ tool-chain is based on old
+incompatible versions of LLVM_/Clang_ and nothing of these is
+supported by the Xilinx_ product teams.
 
-Most of our efforts are focused on extensions, such as supporting
+Most of our efforts are focused on extensions, such as targeting
 Xilinx_ FPGA and Versal ACAP CGRA
 https://gitenterprise.xilinx.com/rkeryell/acappp, which is not
 open-source yet since it would expose too much architectural details
@@ -71,8 +73,9 @@ SYCL
 ----
 
 SYCL_ is a single-source modern C++-based DSEL_ (Domain Specific
-Embedded Language) aimed at facilitating the programming of heterogeneous
-accelerators by leveraging the OpenCL_ language and concepts.
+Embedded Language) and open standard from Khronos_ aimed at
+facilitating the programming of heterogeneous accelerators by
+leveraging existing concepts inspired by OpenCL_, CUDA_, `C++AMP`_, OpenMP_...
 
 A typical kernel with its launch looks like this pure modern C++ code::
 
@@ -88,14 +91,15 @@ Look for example at
 https://github.com/triSYCL/triSYCL/blob/master/tests/examples/demo_parallel_matrix_add.cpp
 for a complete example.
 
-Note that even if the concepts behind SYCL_ are inspired by OpenCL_
-concepts, the SYCL_ programming model is a very general asynchronous
-task graph model for heterogeneous computing with *no* relation with
-OpenCL_ itself, except when using the OpenCL_ API interoperability
-mode.
-
 SYCL_ is developed inside the Khronos_ SYCL_ committee and thus, for
 more information on SYCL_, look at http://www.khronos.org/sycl
+
+Note that even if the concepts behind SYCL_ are inspired by OpenCL_
+concepts, the SYCL_ programming model is a very general asynchronous
+task graph model for heterogeneous computing targeting various
+frameworks and API and has *no* relation with OpenCL_ itself, except
+when using the OpenCL_ API interoperability mode, like any other
+target.
 
 For the SYCL_ ecosystem, look at http://sycl.tech
 
@@ -124,8 +128,9 @@ Architecture of triSYCL runtime and compiler
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 `Architecture of triSYCL runtime and compiler <doc/architecture.rst>`_
-describes the code base with some high-level diagrams but also how to
-compile and use the device compiler on some Xilinx_ FPGA for example.
+describes the code base with some high-level diagrams but also how it
+was possible to compile and use the obsolete device compiler on some Xilinx_
+FPGA for example. Now look at https://github.com/triSYCL/sycl instead.
 
 
 CMake infrastructure
