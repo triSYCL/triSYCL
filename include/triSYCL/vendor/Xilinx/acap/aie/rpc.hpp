@@ -22,6 +22,7 @@
 #include <functional>
 #include <variant>
 
+#include "triSYCL/detail/layout_utils.hpp"
 #include "triSYCL/detail/overloaded.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie {
@@ -107,7 +108,24 @@ struct send_log_rpc {
 #endif
 };
 
-/// done_rpc is handled differently because indicate if a kernel is done executing.
+struct host_breakpoint {
+  struct data_type {
+    uint32_t offset;
+    uint32_t count;
+  };
+  __attribute__((noinline)) static void host_break(int x, int y, xaie::handle h, data_type d) {
+    /// Put a breakpoint in this function to debug
+  }
+#if !defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_XILINX_AIE__)
+  static uint32_t act_on_data(int x, int y, xaie::handle h, data_type d) {
+    host_break(x, y, h, d);
+    return 0;
+  }
+#endif
+};
+
+/// done_rpc is handled differently because indicate if a kernel is done
+/// executing.
 struct done_rpc {
   /// it needs no data, since it is just a signal.
   struct data_type {};
@@ -153,26 +171,34 @@ template <typename... Tys> struct rpc_impl {
       do {
         for (int x = 0; x < x_size; x++)
           for (int y = 0; y < y_size; y++) {
-            /// If try_arrive returns true the device has written data and is
-            /// wating on the host to act on it
-            if (!get_barrier(x, y).try_arrive())
-              continue;
-            Var data;
-            /// Read the data the device has written.
-            h.moved(x, y).memcpy_d2h(&data, addr + offsetof(device_side, data),
-                                     sizeof(Var));
-            /// Deal with the special case of a kernel indicating it is done.
-            /// This kernel stopped executing.
-            if (data.index() == 0) {
-              done_counter++;
-            } else {
-              /// Otherwise call the appropriate function.
-              auto ret = visit(x, y, h.moved(x, y), data);
-              /// And write back the response.
-              h.moved(x, y).mem_write(addr + offsetof(device_side, ret_val),
-                                      ret);
+            /// We process at least one request per device.
+            bool chain = true;
+            /// while the device asks to chain requests.
+            while (chain) {
+              /// If try_arrive returns true the device has written data and is
+              /// wating on the host to act on it
+              if (!get_barrier(x, y).try_arrive())
+                continue;
+              Var data;
+              /// Read the data the device has written.
+              h.moved(x, y).memcpy_d2h(
+                  &data, addr + offsetof(device_side, data), sizeof(Var));
+              /// Deal with the special case of a kernel indicating it is done.
+              /// This kernel stopped executing.
+              if (data.index() == 0) {
+                done_counter++;
+              } else {
+                /// Otherwise call the appropriate function.
+                auto ret = visit(x, y, h.moved(x, y), data);
+                /// And write back the response.
+                h.moved(x, y).mem_write(addr + offsetof(device_side, ret_val),
+                                        ret);
+                /// read if the device requested to chain the is request.
+                chain = h.moved(x, y).mem_read(
+                    addr + offsetof(device_side, chained_request));
+              }
+              get_barrier(x, y).wait();
             }
-            get_barrier(x, y).wait();
           }
         /// Wait until all kernels have finished.
       } while (done_counter < x_size * y_size);
@@ -190,10 +216,16 @@ template <typename... Tys> struct rpc_impl {
     Var data;
     uint32_t ret_val;
 
+    /// This asks the host to wait for on other request from the same device
+    /// after processing this request. this exist to prevent le host from
+    /// interleaving log requests.
+    uint32_t chained_request;
+
     /// This sent data to the host to be processed.
-    template <typename Ty> uint32_t perform(Ty &&d) {
+    template <typename Ty> uint32_t perform(Ty &&d, bool chained = false) {
       /// Write the data.
       data = d;
+      chained_request = chained;
       /// Notify the host of the data being available.
       barrier.wait();
       /// Wait for the host to process the data.
@@ -204,7 +236,7 @@ template <typename... Tys> struct rpc_impl {
   };
 };
 
-using rpc = rpc_impl<done_rpc, image_update_rpc, send_log_rpc>;
+using rpc = rpc_impl<done_rpc, image_update_rpc, send_log_rpc, host_breakpoint>;
 
 #if defined(__SYCL_XILINX_AIE__)
 detail::assert_equal_layout<

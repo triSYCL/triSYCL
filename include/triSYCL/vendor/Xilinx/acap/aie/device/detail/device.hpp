@@ -64,6 +64,7 @@ class tile_hw_config {
     /// Write the lambda on the device such that the kernel can use it.
     template <typename KernelDesc, typename KernelLambda>
     void write_lambda(KernelLambda &L, uint32_t dev_addr, uint32_t heap_start) {
+      TRISYCL_DUMP2("Lambda address = " << (void*)(std::uintptr_t)dev_addr, "memory");
 
       /// Write the lambda to memory, the accessors will get corrected later.
       dev_handle.store<KernelLambda, /*no_check*/true>(dev_addr, L);
@@ -116,9 +117,10 @@ public:
   void submit(T func) {
     std::forward<T>(func)(cgh);
   }
-  void write_back() {
-    cgh.write_back();
+  template <typename T> void single_task(T &&func) {
+    cgh.single_task(std::forward<T>(func));
   }
+  void write_back() { cgh.write_back(); }
   /// Configure a connection of the core tile AXI stream switch
   auto &connect(typename Geo::core_axi_stream_switch::slave_port_layout sp,
                 typename Geo::core_axi_stream_switch::master_port_layout mp) {

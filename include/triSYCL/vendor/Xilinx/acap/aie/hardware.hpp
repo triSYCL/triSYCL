@@ -217,6 +217,17 @@ int pow(int i, int p) {
   return res;
 }
 
+/// The chess backend has a codegen bug that prevent standard conditional based
+/// abs from working. here is a bit manipulation implementation of abs.
+int abs(int a) {
+  /// The complier is smart enough to figure out that this is a normal abs that
+  /// will get misscompiled. and will turn it into an abs if the is not
+  /// volatile.
+  volatile int const mask = a >> (sizeof(decltype(a)) * 8 - 1);
+
+  return (a + mask) ^ mask;
+}
+
 #endif
 
 /// This is function is very similar to the C++20 std::bit_cast but it accepts

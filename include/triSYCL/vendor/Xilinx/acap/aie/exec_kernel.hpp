@@ -63,19 +63,17 @@ extern "C" void __cxx_global_var_dtor() {
 
 namespace trisycl::vendor::xilinx::acap::aie::detail {
 
-template <typename TileHandle> struct exec_kernel {
+/// Trigger the outlining on device with __attribute__((sycl_kernel))
+template <typename KernelName, typename KernelType>
+__attribute__((sycl_kernel)) void kernel_outliner(KernelType k) {
 #ifdef __SYCL_DEVICE_ONLY__
-  /// Trigger the outlining on device with __attribute__((sycl_kernel))
-  template <typename KernelName, typename KernelType>
-  __attribute__((sycl_kernel)) void kernel_outliner(KernelType &k) {
-    k();
-  }
+  k();
 #else
-  template <typename KernelName, typename KernelType>
-  void kernel_outliner(KernelType &k) {
-    k();
-  }
+  (void)k;
 #endif
+}
+
+template <typename TileHandle> struct exec_kernel {
 
 #ifdef __SYCL_DEVICE_ONLY__
   /// This will be invoked on device before any user code.
@@ -113,9 +111,9 @@ template <typename TileHandle> struct exec_kernel {
 #endif
     };
   };
-  template <typename KernelType, typename Param>
-  auto kernel_builder(KernelType &k) requires requires(KernelType k) {
-    k(*this);
+  template <typename KernelType>
+  auto kernel_builder(KernelType &k) requires requires(KernelType k, TileHandle t) {
+    k(t);
   }
   {
     return []() mutable {
@@ -146,8 +144,8 @@ template <typename TileHandle> struct exec_kernel {
     };
   }
   template <typename KernelType>
-  auto kernel_builder(KernelType &k) requires requires(KernelType k) {
-    k.run(*this);
+  auto kernel_builder(KernelType &k) requires requires(KernelType k, TileHandle t) {
+    k.run(t);
   }
   {
     return []() mutable {
@@ -176,11 +174,9 @@ template <typename TileHandle> struct exec_kernel {
     /// the kernel here.
     auto Kernel = kernel_builder(k);
 
-#ifdef __SYCL_DEVICE_ONLY__
     /// On device trigger outlining of device code.
     kernel_outliner<typename std::decay<decltype(Kernel)>::type>(Kernel);
-
-#else
+#ifndef __SYCL_DEVICE_ONLY__
     /// Host side
 
     // The name is captured by it's non-reference type and has to be in
