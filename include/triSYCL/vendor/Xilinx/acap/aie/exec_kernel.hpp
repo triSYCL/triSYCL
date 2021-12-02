@@ -15,51 +15,25 @@
 */
 
 #include "device_allocator.hpp"
-
-#ifdef __SYCL_DEVICE_ONLY__
-#include "log.hpp"
-
-// /// This declaration will invoke the constructors of every globale variable in
-// /// the file. __cxx_global_var_init is the specific name of a function generated
-// /// by the compiler.
-// struct __cxx_global_var_ctor_elem {
-//   int32_t order; // unused
-//   void (*func)();
-//   void *ptr; // unused
-// };
-
-// /// FIXEME: For now the compilation flow doesn't support building multiple
-// /// files. So we only support global initialization comming from 1 file.
-// extern __cxx_global_var_ctor_elem
-//     __cxx_global_var_ctor_arr[1] asm("llvm.global_ctors");
-extern "C" void __cxx_global_var_ctor() {
-  // __cxx_global_var_ctor_arr[0].func();
-}
-
-// struct __cxa_atexit_obj {
-//   void(*func)(void*);
-//   void* obj;
-// };
-
-// __cxa_atexit_obj* __cxa_atexit_begin;
-// __cxa_atexit_obj* __cxa_atexit_end;
-
-// extern "C" int __cxa_atexit(void(*f)(void*), void* obj, void* handle) {
-//   /// In our case the handle doesn't mean anything.
-//   return 0;
-// }
-/// This will be filled by our compiler with every destructor.
-extern "C" void __cxx_global_var_dtor() {
-}
-
-#endif
-
-#include "xaie_wrapper.hpp"
 #include "hardware.hpp"
 #include "log.hpp"
+#include "xaie_wrapper.hpp"
+
 #include <string>
 
 #include "triSYCL/detail/program_manager.hpp"
+
+
+#ifdef __SYCL_DEVICE_ONLY__
+
+/// This declaration will invoke the constructors of every global variable in
+/// the file.
+extern "C" void __cxx_global_var_ctor() {}
+
+/// This will be filled by our compiler with every destructor.
+extern "C" void __cxx_global_var_dtor() {}
+
+#endif
 
 namespace trisycl::vendor::xilinx::acap::aie::detail {
 
@@ -86,86 +60,72 @@ template <typename TileHandle> struct exec_kernel {
     acap::heap::assert_no_leak();
     finish_kernel();
   }
+  /// Generic kernel invoker on device.
+  template <auto func, typename KernelType, typename... Ts>
+  static void kernel_run(Ts... ts) {
+    /// This static variable provides storage on device for the capture of the
+    /// kernel lambda. asm("kernel_lambda_capture") means that the compiler will
+    /// emit the variable under the symbol kernel_lambda_capture. This
+    /// variable's visibility is changed by the device compiler such that the
+    /// symbol is visible
+    static ::trisycl::detail::storage<KernelType> lambda_storage asm(
+        "kernel_lambda_capture");
+    kernel_prerun();
+    (lambda_storage.get().*func)(ts...);
+    kernel_postrun();
+  }
+
 #else
-  static void kernel_prerun() {}
-  static void kernel_postrun() {}
+  template <auto func, typename KernelType, typename... Ts>
+  static void kernel_run(Ts... ts) {}
 #endif
 
   /// kernel_builder will insert prerun and postrun, and get an instance of the
   /// kernel object and the tile handle.
-  /// In the current implementation the opencl-like kernel built by the device
-  /// compiler is not used. the only thing that the compiler does is call one of
+  /// In the current implementation the OpenCL-like kernel built by the device
+  /// compiler is not used. The only thing that the compiler does is call one of
   /// the lambdas built by kernel_builder
   template <typename KernelType>
-  auto kernel_builder(KernelType &k) requires requires(KernelType k) {
+  auto kernel_builder(KernelType& k) requires requires(KernelType k) {
     k();
   }
   {
-    return []() mutable {
-#ifdef __SYCL_DEVICE_ONLY__
-      __attribute__((used)) static ::trisycl::detail::storage<KernelType>
-          lambda_storage asm("kernel_lambda_capture");
-      kernel_prerun();
-      lambda_storage.get().operator()();
-      kernel_postrun();
-#endif
-    };
+    return []() { kernel_run<&KernelType::operator(), KernelType>(); };
   };
   template <typename KernelType>
-  auto kernel_builder(KernelType &k) requires requires(KernelType k, TileHandle t) {
+  auto kernel_builder(KernelType& k) requires requires(KernelType k,
+                                                       TileHandle t) {
     k(t);
   }
   {
-    return []() mutable {
-#ifdef __SYCL_DEVICE_ONLY__
-      __attribute__((used)) static ::trisycl::detail::storage<KernelType>
-          lambda_storage asm("kernel_lambda_capture");
-      kernel_prerun();
-      /// TODO TileHandle should be properly initialized.
-      TileHandle th;
-      lambda_storage.get().operator()(th);
-      kernel_postrun();
-#endif
+    return []() {
+      kernel_run<&KernelType::operator(), KernelType>(TileHandle {});
     };
   }
   template <typename KernelType>
-  auto kernel_builder(KernelType &k) requires requires(KernelType k) {
+  auto kernel_builder(KernelType& k) requires requires(KernelType k) {
     k.run();
   }
   {
-    return []() mutable {
-#ifdef __SYCL_DEVICE_ONLY__
-      __attribute__((used)) static ::trisycl::detail::storage<KernelType>
-          lambda_storage asm("kernel_lambda_capture");
-      kernel_prerun();
-      lambda_storage.get().run();
-      kernel_postrun();
-#endif
-    };
+    return []() { kernel_run<&KernelType::run, KernelType>(); };
   }
   template <typename KernelType>
-  auto kernel_builder(KernelType &k) requires requires(KernelType k, TileHandle t) {
+  auto kernel_builder(KernelType& k) requires requires(KernelType k,
+                                                       TileHandle t) {
     k.run(t);
   }
   {
-    return []() mutable {
-#ifdef __SYCL_DEVICE_ONLY__
-      __attribute__((used)) static ::trisycl::detail::storage<KernelType>
-          lambda_storage asm("kernel_lambda_capture");
-      kernel_prerun();
-      /// TODO TileHandle should be properly initialized.
-      TileHandle th;
-      lambda_storage.get().run(th);
-      kernel_postrun();
-#endif
-    };
+    return []() { kernel_run<&KernelType::run, KernelType>(TileHandle {}); };
   }
 
-  struct ParmHandlerDefault {
+  /// an empty placeholder we use as a default when there is no automatic
+  /// paramter passing.
+  struct ParamHandlerDefault {
     template<typename..., typename...Ts>
     void write_lambda(Ts&&...) {}
   };
-  template <typename K, typename ParamHandler = ParmHandlerDefault>
+
+  template <typename K, typename ParamHandler = ParamHandlerDefault>
   void exec(xaie::handle dev_handle, K k, uint32_t mem_tile_size = 0,
             ParamHandler* Phandler = nullptr) {
     acap::hw::position pos = xaie_pos_to_acap_pos(dev_handle.tile);
@@ -175,21 +135,20 @@ template <typename TileHandle> struct exec_kernel {
     auto Kernel = kernel_builder(k);
 
     /// On device trigger outlining of device code.
-    kernel_outliner<typename std::decay<decltype(Kernel)>::type>(Kernel);
+    kernel_outliner<std::decay_t<decltype(Kernel)>>(Kernel);
 #ifndef __SYCL_DEVICE_ONLY__
     /// Host side
 
-    // The name is captured by it's non-reference type and has to be in
+    // The name is captured by its non-reference type and has to be in
     // the cl::sycl::detail namespace as the integration header is
     // defined to be in this namespace (and all our implementation
     // resides in trisycl by default, so ::detail resolves to
     // trisycl::detail)
-    using KI = ::trisycl::detail::KernelInfo<
-        typename std::decay<decltype(Kernel)>::type>;
+    using KI = ::trisycl::detail::KernelInfo<std::decay_t<decltype(Kernel)>>;
     std::string kernelName = KI::getName();
 
-    /// The sycl-chess script will build 2 version per kernels one with west
-    /// parity one with east parity.
+    /// The sycl-chess script will build 2 versions per kernel: one with West
+    /// parity and one with East parity
     if (hw::get_parity(pos) == hw::parity::west)
       kernelName += "_west";
     else
@@ -198,18 +157,6 @@ template <typename TileHandle> struct exec_kernel {
     auto kernel_bin_data =
         ::trisycl::detail::program_manager::instance()->get_bin_data(kernelName);
 
-#ifdef TRISYCL_DEBUG_IMAGE
-    // Image Dump using name retrieval for Debug, separate debug define
-    // as dumping 400 images when at maximum array capacity is not
-    // necessarily something you always want to do when debugging.
-    //
-    // This differentiates from the program_manager image dump in that
-    // it helps check whether the names are correctly correlating to the
-    // correct ELF images and if there is some breakage in the storing
-    // of the images.
-    detail::program_manager::instance()->image_dump(
-        kernelName, "run_aie_" + kernelName + ".elf");
-#endif
     {
       // auto Transaction = dev_handle.get_transaction();
       dev_handle.core_reset();
@@ -227,13 +174,15 @@ template <typename TileHandle> struct exec_kernel {
 
       hw::offset_table ot;
       ot.global_variable_start = kernel_bin_data.MemSize;
-      ot.global_variable_start = ot.global_variable_start & ~3; /// Align down to 4
-      ot.heap_start = hw::offset_table::get_tile_mem_begin_offset() + mem_tile_size;
-      ot.heap_start = (ot.heap_start + 3) & ~3; // align up to 4;
+      ot.global_variable_start =
+          ot.global_variable_start & ~3; /// Align down to 4
+      ot.heap_start =
+          hw::offset_table::get_tile_mem_begin_offset() + mem_tile_size;
+      ot.heap_start = acap::heap::align_size(ot.heap_start); // align up to 4;
       TRISYCL_DUMP2("tile(" << pos.x << ',' << pos.y << ") "
                             << "global_variable_start = 0x" << std::hex
-                            << ot.global_variable_start
-                            << " heap_start = 0x" << ot.heap_start,
+                            << ot.global_variable_start << " heap_start = 0x"
+                            << ot.heap_start,
                     "memory");
       dev_handle.memcpy_h2d(hw::offset_table::get_offset_table_begin_offset(),
                             &ot, sizeof(ot));

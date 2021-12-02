@@ -248,26 +248,33 @@ inline To bit_cast(const From &from) noexcept {
 template<typename T>
 struct dev_ptr {
 #if defined(__SYCL_DEVICE_ONLY__)
-/// On device a pointer is just a pointer
-T* ptr;
-static T* add(T* ptr, std::ptrdiff_t off) { return ptr + off; }
-T* get() { return ptr; }
-uint32_t get_int() { return (uint32_t)ptr; }
+  /// On device a pointer is just a pointer
+  T* ptr = nullptr;
+  static T* add(T* ptr, std::ptrdiff_t off) { return ptr + off; }
+  T* get() const { return ptr; }
+  uint32_t get_int() const { return (uint32_t)ptr; }
 #else
   /// On the host a device pointer is
-  std::uint32_t ptr;
+  std::uint32_t ptr = 0;
   static std::uint32_t add(std::uint32_t ptr, std::ptrdiff_t off) {
     /// to match pointer arithmetic we need to multiply by sizeof(T)
     return ptr + off * sizeof(T);
   }
-  T *get() {
+  T *get() const {
     assert(false && "should never be executed on the host");
     return nullptr;
   }
-  uint32_t get_int() { return ptr; }
+  uint32_t get_int() const { return ptr; }
 #endif
   void set(uint32_t val) { ptr = (decltype(dev_ptr::ptr))val; }
   void set(T* val) { ptr = (decltype(dev_ptr::ptr))val; }
+
+  dev_ptr() = default;
+  explicit dev_ptr(std::nullptr_t) : dev_ptr() {}
+  explicit dev_ptr(uint32_t offset)
+      : dev_ptr() {
+    set(offset);
+  }
 
   /// This function will be SFNIAE out for T == void. without causing hard
   /// error on instantiation of the class. T2 should never be specified by the
@@ -288,6 +295,9 @@ uint32_t get_int() { return (uint32_t)ptr; }
   operator bool() { return get_int() != 0; }
   template <typename OtherT> explicit operator dev_ptr<OtherT>() {
     return {(OtherT*)ptr};
+  }
+  template <typename OtherT> explicit operator OtherT*() {
+    return (OtherT*)get();
   }
 
   /// Pointer arithmetic
@@ -322,7 +332,7 @@ uint32_t get_int() { return (uint32_t)ptr; }
   std::uint32_t get_offset() { return ((std::uint32_t)ptr) & offset_mask; }
   static constexpr dev_ptr create(hw::dir d, uint32_t offset) {
     assert((offset & ~offset_mask) == 0);
-    return {(decltype(dev_ptr::ptr))(get_base_addr(d) + offset)};
+    return dev_ptr{(decltype(dev_ptr::ptr))(get_base_addr(d) + offset)};
   }
   static constexpr dev_ptr create(hw::parity p, uint32_t offset) {
     return create(get_self_dir(p));

@@ -26,11 +26,11 @@
 /// When executing on real hardware on the host or device side.
 
 #include "exec_kernel.hpp"
-#include "hardware.hpp"
 #include "lock.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
+template<typename Geo>
 struct tile_hw_base_impl {
   tile_hw_base_impl() = default;
   tile_hw_base_impl(xaie::handle h)
@@ -93,6 +93,14 @@ struct tile_hw_base_impl {
 #endif
   }
 
+  hw_lock get_lock(int i) {
+#if !defined(__SYCL_DEVICE_ONLY__)
+    return {i, dev_handle};
+#else
+    return {hw::get_self_dir(), i};
+#endif
+  }
+
   /// write 48 byte starting from ptr to the cascade stream
   void cascade_stream_write48(const char *ptr) {
 #ifdef TRISYCL_DEVICE_STREAM_DEBUG
@@ -123,14 +131,24 @@ struct tile_hw_base_impl {
     acap_intr::stream_read16(ptr, stream_dix);
   }
 
+  static void log(auto i) {
+    acap::log(i);
+  }
+
   /// When waiting on the host we should go through this function but throught
   /// the wait_all. and we should not each this function either on the device.
   void wait() { assert(false && "unreachable"); }
+
+  /// Get the horizontal number of tiles
+  static constexpr int x_size() { return Geo::x_size; }
+
+  /// Get the vertical number of tiles
+  static constexpr int y_size() { return Geo::y_size; }
 };
 
 template<typename Geo, typename CRTP>
-struct tile_hw_impl : public tile_hw_base_impl {
-  using base = tile_hw_base_impl;
+struct tile_hw_impl : public tile_hw_base_impl<Geo> {
+  using base = tile_hw_base_impl<Geo>;
   CRTP& get() { return *(CRTP*)this; }
   const CRTP& get() const { return *(const CRTP*)this; }
 
@@ -141,7 +159,7 @@ struct tile_hw_impl : public tile_hw_base_impl {
 
   /// Submit a callable on this tile
   template <typename Work> void single_task(Work &&f) {
-    return base::single_task<CRTP>(
+    return base::template single_task<CRTP>(
         std::forward<Work>(f),
         sizeof(typename CRTP::template tile_mem_t<CRTP::self_position>));
   }
@@ -453,10 +471,6 @@ struct tile : public tile_backend<typename AIE_Program::geo, AIE_Program, tile<A
   */
   static auto constexpr memory_module_linear_id(int dx, int dy) {
     return geo:: memory_module_linear_id(x, y, dx, dy);
-  }
-
-  static void log(auto i) {
-    acap::log(i);
   }
 
   static constexpr acap::hw::position self_position{X, Y};

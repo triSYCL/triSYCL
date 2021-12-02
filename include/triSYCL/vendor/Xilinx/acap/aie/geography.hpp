@@ -238,7 +238,7 @@ struct geography : Layout {
   */
   static bool constexpr is_cascade_end(int x, int y) {
     // The x position depends on the parity of the last line
-    // FIXEME: what to do when the requested tiles do not cover all columns of the hardware.
+    // FIXME: what to do when the requested tiles do not cover all columns of the hardware.
     return x == ((y & 1) ? x_min : layout::x_max) && y == layout::y_max;
   }
 

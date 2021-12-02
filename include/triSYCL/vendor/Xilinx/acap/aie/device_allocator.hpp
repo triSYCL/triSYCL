@@ -28,6 +28,10 @@ constexpr unsigned min_alloc_size = 8;
 /// Must be a power of 2;
 constexpr unsigned alloc_align = 4;
 
+uint32_t align_size(uint32_t size) {
+  return (size + (alloc_align - 1)) & ~(alloc_align - 1);
+}
+
 /// metadata associated with each dynamic allocation.
 /// 
 struct block_header {
@@ -94,7 +98,7 @@ struct block_header {
 
   /// Return the end of the allocation.
   void* get_end() {
-    return static_cast<void *>(reinterpret_cast<char *>(this + 1) + size);
+    return static_cast<void*>(reinterpret_cast<char*>(this + 1) + size);
   }
 
   /// Get the next block in the list
@@ -167,7 +171,7 @@ static_assert(sizeof(block_header) == 8, "");
 
 struct allocator_global {
 #if defined(__SYCL_DEVICE_ONLY__)
-  static block_header *get_start() {
+  static block_header* get_start() {
     return hw::get_object<block_header>(
         acap::hw::offset_table::get_heap_begin_offset());
   }
@@ -192,10 +196,10 @@ void init_allocator(xaie::handle handle, uint32_t heap_start,
 #if defined(__SYCL_DEVICE_ONLY__)
 
 /// This malloc will return nullptr on failure.
-void *try_malloc(uint32_t size) {
+void* try_malloc(uint32_t size) {
   /// extend size to the next multiple of alloc_align;
-  size = (size + (alloc_align - 1)) & ~(alloc_align - 1);
-  block_header *bh = allocator_global::get_start();
+  size = align_size(size);
+  block_header* bh = allocator_global::get_start();
   /// Go throught the whole block list.
   while (bh) {
     /// Find a suitable block.
@@ -216,8 +220,8 @@ void *try_malloc(uint32_t size) {
 }
 
 /// This malloc will assert on allocation failure.
-void *malloc(uint32_t size) {
-  void *ret = try_malloc(size);
+void* malloc(uint32_t size) {
+  void* ret = try_malloc(size);
 #ifdef TRISYCL_DEVICE_ALLOCATOR_DEBUG
   multi_log("malloc(", size, ") = ", ret, "\n");
 #endif
@@ -229,7 +233,7 @@ void *malloc(uint32_t size) {
 /// This malloc will return nullptr on failure.
 uint32_t try_malloc(xaie::handle handle, uint32_t heap_start, uint32_t size) {
   /// extend size to the next multiple of alloc_align;
-  size = (size + (alloc_align - 1)) & ~(alloc_align - 1);
+  size = align_size(size);
   uint32_t bh_addr = heap_start;
   block_header bh;
   /// Go throught the whole block list.
@@ -292,24 +296,25 @@ void dump_allocator_state(xaie::handle handle, uint32_t heap_start) {
 #endif
 
 #if defined(__SYCL_DEVICE_ONLY__)
-void* try_realloc(void *ptr, uint32_t new_size) {
+void* try_realloc(void* ptr, uint32_t new_size) {
   /// extend size to the next multiple of alloc_align;
-  new_size = (new_size + (alloc_align - 1)) & ~(alloc_align - 1);
-  block_header *bh = block_header::get_header(ptr);
-  /// Since we automaticaly merge blocks. there can only be one consecutive free block.
-  /// so we only need to look at the next block.
-  /// If we can use the next block.
+  new_size = align_size(new_size);
+  block_header* bh = block_header::get_header(ptr);
+  /// Since we automatically merge blocks on free, there can only be one
+  /// consecutive free block, so we only need to look at the next block. If we
+  /// can use the next block
   if (bh->get_next() && !bh->get_next()->in_use)
     /// If merging with the next block would allow us to reach the requested size.
     if (bh->size + bh->get_next()->size + sizeof(block_header) >= new_size)
       bh->try_merge_next();
-  /// If we can use the current(maybe after merging) block to reach the required size.
+  /// If we can use the current (maybe after merging) block to reach the required size.
   if (bh->size > new_size) {
     if (bh->is_splitable(new_size))
       bh->split(new_size);
     return ptr;
   }
-  /// otherwise fallback to allocting a new block.
+
+  /// Otherwise fallback to allocating a new block
   void* new_ptr = try_malloc(new_size);
   /// If we failed to allocate a new block propagate the error.
   if (!new_ptr)
@@ -319,8 +324,8 @@ void* try_realloc(void *ptr, uint32_t new_size) {
   return new_ptr;
 }
 
-void* realloc(void *ptr, uint32_t new_size) {
-  void *ret = try_realloc(ptr, new_size);
+void* realloc(void* ptr, uint32_t new_size) {
+  void* ret = try_realloc(ptr, new_size);
 #ifdef TRISYCL_DEVICE_ALLOCATOR_DEBUG
   multi_log("realloc(", ptr ,", ", new_size, ") = ", ret, "\n");
 #endif
@@ -329,11 +334,11 @@ void* realloc(void *ptr, uint32_t new_size) {
 }
 
 /// Release an allocation and try to merge it with nearby allocations
-void free(void *p) {
+void free(void* p) {
 #ifdef TRISYCL_DEVICE_ALLOCATOR_DEBUG
   multi_log("free(", p, ")\n");
 #endif
-  block_header *bh = block_header::get_header(p);
+  block_header* bh = block_header::get_header(p);
   assert(bh->in_use && "double free or free on invalid address");
   bh->in_use = 0;
   /// try to merge with nearby blocks to reduce fragmentation.
@@ -351,7 +356,7 @@ void dump_allocator_state() {
       hw::get_object<void>(acap::hw::offset_table::get_heap_begin_offset()), "-",
       hw::get_object<void>(acap::hw::offset_table::get_heap_end_offset()), "\n");
   int idx = 0;
-  block_header *bh = allocator_global::get_start();
+  block_header* bh = allocator_global::get_start();
   while (bh) {
     multi_log("block ", idx++, " self=", bh, " alloc=", bh->get_alloc(),
               " in_use=", bh->in_use, " size=", bh->size,
@@ -362,7 +367,7 @@ void dump_allocator_state() {
 }
 
 void assert_no_leak() {
-  block_header *bh = allocator_global::get_start();
+  block_header* bh = allocator_global::get_start();
   bool has_leak = false;
   while (bh) {
     if (bh->in_use && !bh->is_host_allocated) {

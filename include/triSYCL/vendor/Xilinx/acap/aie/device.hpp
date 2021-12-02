@@ -178,7 +178,7 @@ class device {
   void wait() {
     program().wait();
 #ifndef __SYCL_DEVICE_ONLY__
-    for_each_tile([&](auto &tile) { tile.write_back(); });
+    for_each_tile([&](auto& tile) { tile.write_back(); });
 #endif
   }
 

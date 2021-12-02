@@ -48,13 +48,13 @@ struct cascade_stream {
 
   cascade_stream() : stream{4} {}
 
-  void write48(const char *ptr) {
+  void write48(const char* ptr) {
     static_assert(sizeof(std::array<char, 48>) == 48, "");
     std::array<char, 48> data;
     std::memcpy(data.data(), ptr, 48);
     stream.write(data, /*blocking*/ true);
   }
-  void read48(char *ptr) {
+  void read48(char* ptr) {
     static_assert(sizeof(std::array<char, 48>) == 48, "");
     std::array<char, 48> data;
     stream.read(data, /*blocking*/ true);
@@ -64,7 +64,7 @@ struct cascade_stream {
 
 /// @} End the aie Doxygen group
 
-}
+} // namespace trisycl::vendor::xilinx::acap::aie
 
 /*
     # Some Emacs stuff:

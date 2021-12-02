@@ -133,136 +133,137 @@ template <typename Geography> class tile_infrastructure {
       \param[in] fiber_executor is the executor used to run
       infrastructure details
   */
-   tile_infrastructure(int x, int y,
-                       ::trisycl::detail::fiber_pool &fiber_executor)
-       : x_coordinate{x}, y_coordinate {
-     y
-   }
+  tile_infrastructure(int x, int y,
+                      ::trisycl::detail::fiber_pool& fiber_executor)
+      : x_coordinate { x }
+      , y_coordinate {
+    y
+  }
 #if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
-   , fe { &fiber_executor }
+  , fe { &fiber_executor }
 #endif
-   {
-     // TODO: this should be enabled on hardware when it is working but for now
-     // it isn't
+  {
+    // TODO: this should be enabled on hardware when it is working but for now
+    // it isn't
 
-     // Connect the core receivers to its AXI stream switch
-     for (auto p : views::enum_type(mpl::me_0, mpl::me_last))
-       output(p) =
-           std::make_shared<port_receiver<axi_ss_t>>(axi_ss, "core_receiver");
-     axi_ss.start(x, y, fiber_executor);
-     /* Create the core tile receiver DMAs and make them directly the
-        switch output ports */
-     for (auto p : axi_ss_geo::m_dma_range)
-       output(p) =
-           std::make_shared<receiving_dma<axi_ss_t>>(axi_ss, fiber_executor);
-     /* Create the core tile sender DMAs and connect them internally to
-        their switch input ports */
-     for (const auto &[d, p] :
-          ranges::views::zip(tx_dmas, axi_ss_geo::s_dma_range))
-       d.emplace(fiber_executor, input(p));
-   }
-
-   /// Get the horizontal coordinate
-   int x() { return x_coordinate; }
-
-   /// Get the vertical coordinate
-   int y() { return y_coordinate; }
-
-   /// Get the horizontal number of tiles
-   static constexpr int x_size() { return geo::x_size; }
-
-   /// Get the vertical number of tiles
-   static constexpr int y_size() { return geo::y_size; }
-
-   /** Get a handle to a lock
-
-       \param[in] i is the id of the lock
-   */
-  auto get_lock(int i) {
-     return memory_locking_unit.lock(i);
+    // Connect the core receivers to its AXI stream switch
+    for (auto p : views::enum_type(mpl::me_0, mpl::me_last))
+      output(p) =
+          std::make_shared<port_receiver<axi_ss_t>>(axi_ss, "core_receiver");
+    axi_ss.start(x, y, fiber_executor);
+    /* Create the core tile receiver DMAs and make them directly the
+       switch output ports */
+    for (auto p : axi_ss_geo::m_dma_range)
+      output(p) =
+          std::make_shared<receiving_dma<axi_ss_t>>(axi_ss, fiber_executor);
+    /* Create the core tile sender DMAs and connect them internally to
+       their switch input ports */
+    for (const auto& [d, p] :
+         ranges::views::zip(tx_dmas, axi_ss_geo::s_dma_range))
+      d.emplace(fiber_executor, input(p));
   }
 
-   /** Get the user input connection from the AXI stream switch
+  /// Get the horizontal coordinate
+  int x() { return x_coordinate; }
 
-       \param[in] port is the port to use
-   */
-   auto &in_connection(int port) {
-     /* The input port for the core is actually the corresponding
-        output on the switch */
-     return axi_ss.out_connection(translate_output_port(port));
-   }
+  /// Get the vertical coordinate
+  int y() { return y_coordinate; }
 
-   /** Get the user output connection to the AXI stream switch
+  /// Get the horizontal number of tiles
+  static constexpr int x_size() { return geo::x_size; }
 
-       \param[in] port is port to use
-   */
-   auto &out_connection(int port) {
-     /* The output port for the core is actually the corresponding
-        input on the switch */
-     return axi_ss.in_connection(translate_input_port(port));
-   }
+  /// Get the vertical number of tiles
+  static constexpr int y_size() { return geo::y_size; }
 
-   /** Get the user input port from the AXI stream switch
+  /** Get a handle to a lock
 
-       \param[in] port is the port to use
-   */
-   auto &in(int port) {
-     TRISYCL_DUMP_T("in(" << port << ") on tile(" << x_coordinate << ','
+      \param[in] i is the id of the lock
+  */
+  auto get_lock(int i) {
+    return memory_locking_unit.lock(i);
+  }
+
+  /** Get the user input connection from the AXI stream switch
+
+      \param[in] port is the port to use
+  */
+  auto& in_connection(int port) {
+    /* The input port for the core is actually the corresponding
+       output on the switch */
+    return axi_ss.out_connection(translate_output_port(port));
+  }
+
+  /** Get the user output connection to the AXI stream switch
+
+      \param[in] port is port to use
+  */
+  auto& out_connection(int port) {
+    /* The output port for the core is actually the corresponding
+       input on the switch */
+    return axi_ss.in_connection(translate_input_port(port));
+  }
+
+  /** Get the user input port from the AXI stream switch
+
+      \param[in] port is the port to use
+  */
+  auto& in(int port) {
+    TRISYCL_DUMP_T("in(" << port << ") on tile(" << x_coordinate << ','
+                         << y_coordinate << ')');
+    return *in_connection(port);
+  }
+
+  /** Get the user output port to the AXI stream switch
+
+      \param[in] port is the port to use
+  */
+  auto& out(int port) {
+    TRISYCL_DUMP_T("out(" << port << ") on tile(" << x_coordinate << ','
                           << y_coordinate << ')');
-     return *in_connection(port);
-   }
+    return *out_connection(port);
+  }
 
-   /** Get the user output port to the AXI stream switch
+  /** Get access to a receiver DMA
 
-       \param[in] port is the port to use
-   */
-   auto &out(int port) {
-     TRISYCL_DUMP_T("out(" << port << ") on tile(" << x_coordinate << ','
-                           << y_coordinate << ')');
-     return *out_connection(port);
-   }
+      \param[in] id specifies which DMA to access */
+  auto& rx_dma(int id) {
+    /** The output of the switch is actually a receiving DMA, so we
+        can view it as a DMA */
+    return static_cast<receiving_dma<axi_ss_t>&>(*output(
+        axi_ss_t::translate_port(id, mpl::dma_0, mpl::dma_last,
+                                 "The receiver DMA port is out of range")));
+  }
 
-   /** Get access to a receiver DMA
+  /** Get access to a transmit DMA
 
-       \param[in] id specifies which DMA to access */
-   auto &rx_dma(int id) {
-     /** The output of the switch is actually a receiving DMA, so we
-         can view it as a DMA */
-     return static_cast<receiving_dma<axi_ss_t> &>(*output(
-         axi_ss_t::translate_port(id, mpl::dma_0, mpl::dma_last,
-                                  "The receiver DMA port is out of range")));
-   }
+      \param[in] id specifies which DMA to access */
+  auto& tx_dma(int id) { return *tx_dmas.at(id); }
 
-   /** Get access to a transmit DMA
+  auto& cascade() { return cstream; }
 
-       \param[in] id specifies which DMA to access */
-   auto &tx_dma(int id) { return *tx_dmas.at(id); }
+  /** Get the input router port of the AXI stream switch
 
-   auto &cascade() { return cstream; }
+      \param p is the slave_port_layout for the stream
+  */
+  auto& input(spl p) {
+    // No index validation required because of type safety
+    return axi_ss.input(p);
+  }
 
-   /** Get the input router port of the AXI stream switch
+  /** Get the output router port of the AXI stream switch
 
-       \param p is the slave_port_layout for the stream
-   */
-   auto &input(spl p) {
-     // No index validation required because of type safety
-     return axi_ss.input(p);
-   }
+      \param p is the master_port_layout for the stream
+  */
+  auto& output(mpl p) {
+    // No index validation required because of type safety
+    return axi_ss.output(p);
+  }
 
-   /** Get the output router port of the AXI stream switch
-
-       \param p is the master_port_layout for the stream
-   */
-   auto &output(mpl p) {
-     // No index validation required because of type safety
-     return axi_ss.output(p);
-   }
-
-   /// Launch an invocable on this tile
-   template <typename Work> void single_task(Work &&f) {
-     if (future_work.valid())
-       throw std::logic_error("Something is already running on this tile!");
-       // Launch the tile program immediately on a new executor engine
+  /// Launch an invocable on this tile
+  template <typename Work> void single_task(Work&& f) {
+    if (future_work.valid())
+      throw std::logic_error("Something is already running on this tile!");
+    // Launch the tile program immediately on a new executor engine
 #if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
     future_work = fe->submit(std::forward<Work>(f));
 #else
