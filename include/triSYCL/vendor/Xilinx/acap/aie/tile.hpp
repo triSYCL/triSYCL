@@ -131,8 +131,9 @@ struct tile_hw_base_impl {
     acap_intr::stream_read16(ptr, stream_dix);
   }
 
-  static void log(auto i) {
-    acap::log(i);
+  /// Print values and strings on the console
+  static void log(auto... Val) {
+    acap::multi_log(Val...);
   }
 
   /// When waiting on the host we should go through this function but throught

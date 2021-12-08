@@ -61,8 +61,8 @@ template <typename TileHandle> struct exec_kernel {
     finish_kernel();
   }
   /// Generic kernel invoker on device.
-  template <auto func, typename KernelType, typename... Ts>
-  static void kernel_run(Ts... ts) {
+  template <typename KernelType, typename Func>
+  static void kernel_run(Func func) {
     /// This static variable provides storage on device for the capture of the
     /// kernel lambda. asm("kernel_lambda_capture") means that the compiler will
     /// emit the variable under the symbol kernel_lambda_capture. This
@@ -71,13 +71,13 @@ template <typename TileHandle> struct exec_kernel {
     static ::trisycl::detail::storage<KernelType> lambda_storage asm(
         "kernel_lambda_capture");
     kernel_prerun();
-    (lambda_storage.get().*func)(ts...);
+    func(lambda_storage.get());
     kernel_postrun();
   }
 
 #else
-  template <auto func, typename KernelType, typename... Ts>
-  static void kernel_run(Ts... ts) {}
+  template <typename KernelType, typename Func>
+  static void kernel_run(Func func) {}
 #endif
 
   /// kernel_builder will insert prerun and postrun, and get an instance of the
@@ -90,7 +90,7 @@ template <typename TileHandle> struct exec_kernel {
     k();
   }
   {
-    return []() { kernel_run<&KernelType::operator(), KernelType>(); };
+    return [] { kernel_run<KernelType>([](auto& k) { k(); }); };
   };
   template <typename KernelType>
   auto kernel_builder(KernelType& k) requires requires(KernelType k,
@@ -98,8 +98,11 @@ template <typename TileHandle> struct exec_kernel {
     k(t);
   }
   {
-    return []() {
-      kernel_run<&KernelType::operator(), KernelType>(TileHandle {});
+    return [] {
+      kernel_run<KernelType>([](auto& k) {
+        TileHandle t {};
+        k(t);
+      });
     };
   }
   template <typename KernelType>
@@ -107,7 +110,7 @@ template <typename TileHandle> struct exec_kernel {
     k.run();
   }
   {
-    return []() { kernel_run<&KernelType::run, KernelType>(); };
+    return [] { kernel_run<KernelType>([](auto& k) { k.run(); }); };
   }
   template <typename KernelType>
   auto kernel_builder(KernelType& k) requires requires(KernelType k,
@@ -115,11 +118,16 @@ template <typename TileHandle> struct exec_kernel {
     k.run(t);
   }
   {
-    return []() { kernel_run<&KernelType::run, KernelType>(TileHandle {}); };
+    return [] {
+      kernel_run<KernelType>([](auto& k) {
+        TileHandle t {};
+        k.run(t);
+      });
+    };
   }
 
-  /// an empty placeholder we use as a default when there is no automatic
-  /// paramter passing.
+  /// An empty placeholder we use as a default when there is no automatic
+  /// paramater passing.
   struct ParamHandlerDefault {
     template<typename..., typename...Ts>
     void write_lambda(Ts&&...) {}

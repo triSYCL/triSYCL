@@ -161,21 +161,22 @@ public:
     /// ACAP. Maybe future platform will have 64-bit ELFs and this function will
     /// fail.
     symbol lookup_symbol(std::string_view sym) {
-      const char *file_start = Binary.data();
-      auto *file_header = reinterpret_cast<const Elf32_Ehdr *>(file_start);
+      const char* file_start = Binary.data();
+      auto* file_header = reinterpret_cast<const Elf32_Ehdr*>(file_start);
       assert(file_header->e_ident[EI_CLASS] == 1 &&
              "this function only handles 32bit ELFs");
-      auto *section_table = reinterpret_cast<const Elf32_Shdr *>(
+      auto* section_table = reinterpret_cast<const Elf32_Shdr*>(
           file_start + file_header->e_shoff);
-      const Elf32_Shdr *section_string_section =
+      const Elf32_Shdr* section_string_section =
           section_table + file_header->e_shstrndx;
-      const char *section_string_start =
+      const char* section_string_start =
           file_start + section_string_section->sh_offset;
-      const Elf32_Shdr *symbol_section = nullptr;
-      const Elf32_Shdr *string_section = nullptr;
+      const Elf32_Shdr* symbol_section = nullptr;
+      const Elf32_Shdr* string_section = nullptr;
       /// Find the symbol string table and the symbol table.
       for (int i = 0; i < file_header->e_shnum; i++) {
-        auto name = std::string_view(section_string_start + section_table[i].sh_name);
+        auto name =
+            std::string_view(section_string_start + section_table[i].sh_name);
         if (section_table[i].sh_type == SHT_SYMTAB) {
           assert(!symbol_section);
           symbol_section = section_table + i;
@@ -187,8 +188,8 @@ public:
       }
       assert(symbol_section && string_section &&
              "unable to find symbol or string section");
-      const char *string_start = file_start + string_section->sh_offset;
-      auto *symbol_table = reinterpret_cast<const Elf32_Sym *>(
+      const char* string_start = file_start + string_section->sh_offset;
+      auto* symbol_table = reinterpret_cast<const Elf32_Sym*>(
           file_start + symbol_section->sh_offset);
       /// Find the symbol
       for (int i = 0; i < (symbol_section->sh_size / sizeof(Elf32_Sym)); i++) {
@@ -196,7 +197,7 @@ public:
         if (name == sym)
           /// st_value is the address when the binary is not relocatable,
           /// which should be the case here.
-          return {symbol_table[i].st_value, symbol_table[i].st_size, name};
+          return { symbol_table[i].st_value, symbol_table[i].st_size, name };
       }
       assert(false && "requested symbol was not found");
     }

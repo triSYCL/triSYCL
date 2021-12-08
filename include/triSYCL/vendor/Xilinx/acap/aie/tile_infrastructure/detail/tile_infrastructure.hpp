@@ -118,7 +118,6 @@ template <typename Geography> class tile_infrastructure {
   }
 
  public:
-
   /** Start the tile infrastructure associated to the AIE device tile
 
       \param[in] x is the horizontal coordinate for this tile
@@ -135,13 +134,13 @@ template <typename Geography> class tile_infrastructure {
   */
   tile_infrastructure(int x, int y,
                       ::trisycl::detail::fiber_pool& fiber_executor)
+      // clang-format off
       : x_coordinate { x }
-      , y_coordinate {
-    y
-  }
+      , y_coordinate { y }
 #if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
-  , fe { &fiber_executor }
+      , fe { &fiber_executor }
 #endif
+  // clang-format on
   {
     // TODO: this should be enabled on hardware when it is working but for now
     // it isn't

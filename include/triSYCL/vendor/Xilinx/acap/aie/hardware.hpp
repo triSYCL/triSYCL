@@ -260,7 +260,7 @@ struct dev_ptr {
     /// to match pointer arithmetic we need to multiply by sizeof(T)
     return ptr + off * sizeof(T);
   }
-  T *get() const {
+  T* get() const {
     assert(false && "should never be executed on the host");
     return nullptr;
   }
@@ -281,17 +281,17 @@ struct dev_ptr {
   /// user.
   template <typename T2 = T, typename std::enable_if<
                                  !std::is_same<T2, void>::value, int>::type = 0>
-  T2 &operator*() {
+  T2& operator*() {
     static_assert(std::is_same<T2, T>::value,
                   "T2 should be not be specifier by the user");
     return *get();
   }
   template <typename T2 = T, typename std::enable_if<
                                  !std::is_same<T2, void>::value, int>::type = 0>
-  T2 &operator[](std::size_t index) {
+  T2& operator[](std::size_t index) {
     return get()[index];
   }
-  T *operator->() { return get(); }
+  T* operator->() { return get(); }
   operator bool() { return get_int() != 0; }
   template <typename OtherT> explicit operator dev_ptr<OtherT>() {
     return {(OtherT*)ptr};

@@ -29,7 +29,7 @@ struct device_accessor_base {
   int size;
 };
 
-/// User facing accessor on device.
+/// User-facing accessor on device.
 template <typename DataType, int Dimensions, access::mode AccessMode,
           access::target Target = access::target::global_buffer>
 class device_accessor : device_accessor_base {
@@ -42,10 +42,10 @@ class device_accessor : device_accessor_base {
   }
 
 public:
-  /// Constructor from a buffer. only exists for compilation purposes and should
+  /// Constructor from a buffer. Only exists for compilation purposes and should
   /// never be invoked.
   template <typename Buffer>
-  device_accessor(const Buffer &) requires (!std::is_same_v<Buffer, device_accessor>) {
+  device_accessor(const Buffer&) requires (!std::is_same_v<Buffer, device_accessor>) {
     /// This exists only for the purpose of compilation and should never be
     /// called at runtime.
     assert(false && "should never be executed");
@@ -53,9 +53,9 @@ public:
   /// Copy constructor
   device_accessor(const device_accessor&) = default;
 
-  DataType *begin() const { return get_ptr(); }
-  DataType *end() const { return begin() + get_count(); }
-  DataType &operator[](size_t index) const { return get_ptr()[index]; }
+  DataType* begin() const { return get_ptr(); }
+  DataType* end() const { return begin() + get_count(); }
+  DataType& operator[](size_t index) const { return get_ptr()[index]; }
   /// Return the number of elements in the data
   size_t get_count() const { return base::size / sizeof(DataType); }
   /// Return the size in bytes of the data
