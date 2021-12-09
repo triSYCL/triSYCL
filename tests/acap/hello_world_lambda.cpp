@@ -18,8 +18,8 @@ int main() {
      each tile has a different code according to the use of constexpr
      th tile_handler member usage
   */
-  acap::aie::device<acap::aie::layout::vc1902> {}.run([](auto& th) {
-    std::cout << "Hello, I am the AIE tile (" << th.x << ',' << th.y << ")"
+  acap::aie::device<acap::aie::layout::size<1, 1>> {}.run([](auto& th) {
+    std::cout << "Hello, I am the AIE tile (" << th.x() << ',' << th.y() << ")"
               << std::endl;
   });
 }

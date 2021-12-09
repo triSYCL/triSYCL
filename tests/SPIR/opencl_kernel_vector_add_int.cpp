@@ -13,7 +13,8 @@
 #include <iostream>
 #include <iterator>
 #include <boost/compute.hpp>
-#include <boost/test/minimal.hpp>
+
+#include <catch2/catch_test_macros.hpp>
 
 #include <CL/sycl.hpp>
 
@@ -24,7 +25,7 @@ using Type = int;
 constexpr size_t N = 300;
 constexpr Type offset = 33;
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("OpenCL kernel vector add", "[SPIR]") {
   buffer<Type> input { N };
   buffer<Type> output { N };
 
@@ -77,7 +78,5 @@ int test_main(int argc, char *argv[]) {
   auto a_input = input.get_access<access::mode::read>();
   auto a_output = output.get_access<access::mode::read>();
   for (unsigned int i = 0 ; i < input.get_count(); ++i)
-    BOOST_CHECK(a_output[i] == a_input[i] + offset);
-
-  return 0;
+    REQUIRE(a_output[i] == a_input[i] + offset);
 }

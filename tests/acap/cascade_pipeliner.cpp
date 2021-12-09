@@ -78,7 +78,7 @@ struct cascade_executor {
           input = t::in(0).read();
         else
           // Normal stage: read the input from the cascade neighbor
-          input = t::template get_cascade_stream_in<InputT>().read();
+          input = t::template cascade_read<InputT>();
         std::cout << "< Tile(" << X << ',' << Y << ") is reading "
                   << input << std::endl;
         // The computation for this pipeline stage
@@ -90,7 +90,7 @@ struct cascade_executor {
           t::out(0) << output;
         else
           // Normal stage: send the result to the cascade neighbor
-          t::template get_cascade_stream_out<OutputT>() << output;
+          t::template cascade_write<OutputT>(output);
       }
     }
   };

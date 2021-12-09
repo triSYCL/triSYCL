@@ -27,15 +27,10 @@ namespace trisycl::vendor::xilinx::acap::aie {
     instantiate with the physical size
 */
 template <typename Layout>
-class device : public facade::device<device<Layout>, detail::device<Layout>> {
+class device {
+  std::shared_ptr<detail::device<Layout>> implementation;
   /// The type encapsulating the implementation
   using dd = detail::device<Layout>;
-
-  /// The façade used to implement part of the use facing type
-  using facade_t = facade::device<device<Layout>, dd>;
-
-  /// Make the implementation member directly accessible in this class
-  using facade_t::implementation;
 
  public:
   /// Expose some useful internal implementation.
@@ -78,7 +73,7 @@ class device : public facade::device<device<Layout>, detail::device<Layout>> {
 
   /// The default constructor makes a new device
   device()
-      : facade_t { std::make_shared<dd>() } {}
+      : implementation { std::make_shared<dd>() } {}
 
   /** Apply a function for each tile index of the device
 
@@ -116,6 +111,7 @@ class device : public facade::device<device<Layout>, detail::device<Layout>> {
     implementation->for_each_tile_y_index(std::forward<F>(f));
   };
 
+
   /** Access to the common infrastructure part of a tile
 
       \param[in] x is the horizontal tile coordinate
@@ -124,7 +120,7 @@ class device : public facade::device<device<Layout>, detail::device<Layout>> {
 
       \throws trisycl::runtime_error if the coordinate is invalid
   */
-  auto& tile(int x, int y) { return implementation->tile(x, y); }
+  decltype(auto) tile(int x, int y) { return implementation->tile(x, y); }
 
   /** Access to the common infrastructure part of a tile memory
 
@@ -143,10 +139,6 @@ class device : public facade::device<device<Layout>, detail::device<Layout>> {
       \throws trisycl::runtime_error if the coordinate is invalid
   */
   auto& shim(int x) { return implementation->shim(x); }
-
-  /// Access the cascade connections
-  /// \todo To remove?
-  auto& cascade() { return implementation->cascade(); }
 
   /// Create a queue on this device
   auto queue() { return vendor::xilinx::acap::aie::queue { *this }; }
@@ -181,6 +173,13 @@ class device : public facade::device<device<Layout>, detail::device<Layout>> {
             typename Memory = acap::aie::memory>
   void run() {
     queue().template run<Tile, Memory>();
+  }
+
+  void wait() {
+    program().wait();
+#ifndef __SYCL_DEVICE_ONLY__
+    for_each_tile([&](auto& tile) { tile.write_back(); });
+#endif
   }
 
   /** Shortcut to run synchronously an heterogeneous invocable on this

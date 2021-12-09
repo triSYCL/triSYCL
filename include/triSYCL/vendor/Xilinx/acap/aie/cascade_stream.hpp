@@ -1,6 +1,10 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_CASCADE_STREAM_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_CASCADE_STREAM_HPP
 
+#ifdef __SYCL_XILINX_AIE__
+#error "This should only exist in emulation mode"
+#endif
+
 /** \file
 
     The cascade stream infrastructure between AI Engine tiles
@@ -10,9 +14,8 @@
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
 */
-
 #include "triSYCL/access.hpp"
-#include "geography.hpp"
+#include "triSYCL/sycl_2_2/static_pipe.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
@@ -38,70 +41,30 @@ namespace trisycl::vendor::xilinx::acap::aie {
 
     Direct stream interface: One cascade stream in, one cascade stream
     out (384-bits)
-
-    \todo Remove this global infrastructure and distribute it on the
-    tile_infrastructure itself
 */
-template <typename Geography>
+
 struct cascade_stream {
-  using geo = Geography;
-  /** The pipes for the cascade streams, with 1 spare pipe on each
-      side of the PE string
+  detail::sycl_2_2::pipe<std::array<char, 48>> stream;
 
-      \todo Use a data type with 384 bits
-  */
-  ::trisycl::sycl_2_2::static_pipe<int, 4>
-  cascade_stream_pipes[geo::x_size*geo::y_size + 1];
+  cascade_stream() : stream{4} {}
 
-  /* Cascade stream layout
-
-      On even rows, a tile use cascade_stream_pipes[y][x] as input and
-      cascade_stream_pipes[y][x + 1] as output
-
-      On odd rows the flow goes into the other direction, so a tile
-      use cascade_stream_pipes[y][x + 1] as input and
-      cascade_stream_pipes[y][x] as output
-  */
-
-  /** Get a blocking read accessor to the cascade stream input
-
-      \param T is the data type used to read from the cascade
-      stream pipe
-
-     \param[in] x is the horizontal tile coordinate
-
-      \param[in] y is the vertical tile coordinate
-  */
-  template <typename T>
-  auto get_cascade_stream_in(int x, int y) const {
-    return cascade_stream_pipes[geo::cascade_linear_id(x, y)]
-      .template get_access<access::mode::read,
-                           access::target::blocking_pipe>();
+  void write48(const char* ptr) {
+    static_assert(sizeof(std::array<char, 48>) == 48, "");
+    std::array<char, 48> data;
+    std::memcpy(data.data(), ptr, 48);
+    stream.write(data, /*blocking*/ true);
   }
-
-
-  /** Get a blocking write accessor to the cascade stream output
-
-      \param T is the data type used to write to the cascade
-      stream pipe
-
-      \param[in] x is the horizontal tile coordinate
-
-      \param[in] y is the vertical tile coordinate
-  */
-  template <typename T>
-  auto get_cascade_stream_out(int x, int y) const {
-    // The output is connected to the down-stream neighbour of the cascade
-    return cascade_stream_pipes[geo::cascade_linear_id(x, y) + 1]
-      .template get_access<access::mode::write,
-                           access::target::blocking_pipe>();
+  void read48(char* ptr) {
+    static_assert(sizeof(std::array<char, 48>) == 48, "");
+    std::array<char, 48> data;
+    stream.read(data, /*blocking*/ true);
+    std::memcpy(ptr, data.data(), 48);
   }
-
 };
 
 /// @} End the aie Doxygen group
 
-}
+} // namespace trisycl::vendor::xilinx::acap::aie
 
 /*
     # Some Emacs stuff:

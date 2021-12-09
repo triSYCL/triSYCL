@@ -12,11 +12,12 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_AIE_UTILS_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_AIE_UTILS_HPP
 
-#if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
+#if defined(__SYCL_XILINX_AIE__)
 // For host side when executing on acap hardware
 
 #include "triSYCL/detail/debug.hpp"
 #include "triSYCL/detail/program_manager.hpp"
+#include "triSYCL/detail/enum.hpp"
 
 #include <iostream>
 #include <sstream>
@@ -116,6 +117,46 @@ constexpr acap::hw::position xaie_pos_to_acap_pos(xaie::XAie_LocType loc) {
   return {loc.Col, loc.Row - 1};
 }
 
+template <bool is_slave, typename T>
+xaie::StrmSwPortType acap_port_to_xaie_port_type(T from) {
+  assert(from >= T::me_0);
+  if (from <= T::me_last)
+    return xaie::CORE;
+  else if (from <= T::dma_last)
+    return xaie::DMA;
+  else if (from <= T::tile_ctrl_last)
+    return xaie::CTRL;
+  else if (from <= T::fifo_last)
+    return xaie::FIFO;
+  else if (from <= T::south_last)
+    return xaie::SOUTH;
+  else if (from <= T::west_last)
+    return xaie::WEST;
+  else if (from <= T::north_last)
+    return xaie::NORTH;
+  else if (from <= T::east_last)
+    return xaie::EAST;
+  else if constexpr (is_slave) {
+    if (from <= T::size)
+      return xaie::TRACE;
+  }
+  assert(false && "invalid port");
+}
+
+template <typename T>
+int acap_port_to_xaie_port_id(T from, xaie::StrmSwPortType PType) {
+  static std::array<int, 9> arr = {1,
+                                   detail::underlying_value(T::me_last),
+                                   detail::underlying_value(T::dma_last),
+                                   detail::underlying_value(T::tile_ctrl_last),
+                                   detail::underlying_value(T::fifo_last),
+                                   detail::underlying_value(T::south_last),
+                                   detail::underlying_value(T::west_last),
+                                   detail::underlying_value(T::north_last),
+                                   detail::underlying_value(T::east_last)};
+  return detail::underlying_value(from) - arr[PType] + 1;
+}
+
 /// Ths is a handle to a tile of the ACAP device.
 struct handle {
   xaie::XAie_LocType tile = {0, 0};
@@ -208,9 +249,17 @@ struct handle {
   xaie::handle moved(acap::hw::position p) {
     return {acap_pos_to_xaie_pos(p), inst};
   }
-  TRISYCL_DEBUG_FUNC xaie::handle moved(int x, int y) {
-    return moved({x, y});
+  xaie::handle moved(acap::hw::dir d) {
+    return {acap_pos_to_xaie_pos(xaie_pos_to_acap_pos(tile).moved(d)), inst};
   }
+
+  acap::hw::position get_acap_pos() { return xaie_pos_to_acap_pos(tile); }
+
+  acap::hw::dir get_self_dir() {
+    return acap::hw::get_self_dir(get_acap_pos().get_parity());
+  }
+
+  TRISYCL_DEBUG_FUNC xaie::handle moved(int x, int y) { return moved({x, y}); }
 
   /// The memory read accessors
   std::uint32_t mem_read(std::uint32_t offset) {
@@ -232,8 +281,33 @@ struct handle {
                   "memory");
   }
 
+  template <typename T, bool no_check = false> T load(uint32_t offset) {
+    static_assert(no_check || std::is_trivially_copyable<T>::value,
+                  "This object cannot be transferred");
+    assert(offset % alignof(T) == 0 && "object should be properly aligned");
+    T ret;
+    memcpy_d2h(std::addressof(ret), offset, sizeof(ret));
+    return ret;
+  }
+
+  template <typename T> T load(acap::hw::dev_ptr<T> ptr) {
+    return moved(ptr.get_dir()).load(ptr.get_offset());
+  }
+
+  template <typename T, bool no_check = false> void store(uint32_t offset, const T &val) {
+    static_assert(no_check || std::is_trivially_copyable<T>::value,
+                  "This object cannot be transferred");
+    assert(offset % alignof(T) == 0 && "object should be properly aligned");
+    memcpy_h2d(offset, std::addressof(val), sizeof(val));
+  }
+
+  template <typename T> void store(acap::hw::dev_ptr<T> ptr, const T &val) {
+    moved(ptr.get_dir()).store(ptr.get_offset(), val);
+  }
+
   /// memcpy from device to host
-  void memcpy_d2h(void *data, std::uint32_t offset, std::uint32_t size) {
+  void
+  memcpy_d2h(void *data, std::uint32_t offset, std::uint32_t size) {
     TRISYCL_XAIE(xaie::XAie_DataMemBlockRead(inst, tile,
                                              offset, data, size));
     TRISYCL_DUMP2("memcpy_d2h: (" << get_coord_str() << ") + 0x" << std::hex
@@ -244,7 +318,7 @@ struct handle {
   }
 
   /// memcpy from host to device
-  void memcpy_h2d(std::uint32_t offset, void *data, std::uint32_t size) {
+  void memcpy_h2d(std::uint32_t offset, const void *data, std::uint32_t size) {
     TRISYCL_XAIE(xaie::XAie_DataMemBlockWrite(inst, tile,
                                               offset, data, size));
     TRISYCL_DUMP2("memcpy_h2d: (" << get_coord_str() << ") + 0x" << std::hex

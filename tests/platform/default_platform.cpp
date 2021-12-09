@@ -21,7 +21,7 @@
 #include <CL/sycl.hpp>
 #include <iostream>
 
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 #include "basic_object_checks.hpp"
 #include "check_throwing_get.hpp"
@@ -29,13 +29,13 @@
 
 using namespace cl::sycl;
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("member functions with default platform", "[platform]") {
   check_all<platform>();
   platform p;
   display(p);
 
   // Check that it is the host platform by default
-  BOOST_CHECK(p.is_host());
+  REQUIRE(p.is_host());
 
   platform p2 { p };
 
@@ -51,6 +51,4 @@ int test_main(int argc, char *argv[]) {
 
   // Verify that get() throws since there is no OpenCL behind the curtain
   check_throwing_get(p);
-
-  return 0;
 }

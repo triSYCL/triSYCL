@@ -1,8 +1,9 @@
-cmake_minimum_required (VERSION 3.0) # The minimum version of CMake necessary to build this project
-project (math) # The name of our project
+project(math) # The name of our project
 
-declare_trisycl_test(TARGET math)
-declare_trisycl_test(TARGET vector_math)
+declare_trisycl_test(TARGET math CATCH2_WITH_MAIN)
+declare_trisycl_test(TARGET vector_math CATCH2_WITH_MAIN)
+
 if(${TRISYCL_OPENCL})
-  declare_trisycl_test(TARGET opencl_type USES_OPENCL TEST_REGEX "x: 0, y: 1, z: 2")
+  declare_trisycl_test(TARGET opencl_type USES_OPENCL  CATCH2_WITH_MAIN
+                       TEST_REGEX "x: 0, y: 1, z: 2")
 endif(${TRISYCL_OPENCL})

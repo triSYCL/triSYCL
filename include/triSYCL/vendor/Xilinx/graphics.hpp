@@ -26,14 +26,11 @@
 #include "acap/aie/hardware.hpp"
 #include "acap/aie/lock.hpp"
 #include "acap/aie/rpc.hpp"
-#ifndef __SYCL_DEVICE_ONLY__
 #include "acap/aie/xaie_wrapper.hpp"
-#endif
 #endif
 
 #include <mutex>
 
-#ifndef __SYCL_DEVICE_ONLY__
 #include <algorithm>
 #include <atomic>
 #include <condition_variable>
@@ -51,7 +48,6 @@
 #include <boost/thread/barrier.hpp>
 
 #include <gtkmm.h>
-#endif
 /** \defgroup graphics Graphics support for CGRA-like interaction
 
     This can create a graphics application and typically update some
@@ -605,9 +601,7 @@ struct image_grid : frame_grid {
        std::make_shared taking an array size comes only in C++20 while
        it is available for std::make_unique in C++17... */
     std::shared_ptr<std::uint8_t[]> d { new std::uint8_t[3*image_x*image_y] };
-    std::experimental::mdspan<rgb,
-                              std::experimental::dynamic_extent,
-                              std::experimental::dynamic_extent> output {
+    std::experimental::mdspan output {
       reinterpret_cast<rgb *>(d.get()),
       image_y,
       image_x
@@ -666,13 +660,7 @@ struct image_grid : frame_grid {
                               RangeValue min_value,
                               RangeValue max_value) {
     // Wrap the pointed area into an MDspan
-    const std::experimental::mdspan<DataType,
-                                    std::experimental::dynamic_extent,
-                                    std::experimental::dynamic_extent> md {
-      data,
-      image_y,
-      image_x
-    };
+    const std::experimental::mdspan md { data, image_y, image_x };
     update_tile_data_image(x, y, md, min_value, max_value);
   }
 
@@ -729,7 +717,6 @@ struct application {
   data_validation dv;
 #ifdef __SYCL_XILINX_AIE__
   xaie::XAie_DevInst *dev_inst;
-  std::thread device_communication_thread;
   std::thread data_validation_thread;
 #endif
   bool initialized = false;
@@ -817,7 +804,6 @@ struct application {
   void wait() {
     t.join();
 #ifdef __SYCL_XILINX_AIE__
-    device_communication_thread.join();
     assert(data_validation_thread.joinable() == has_data_validation);
     if (data_validation_thread.joinable())
       data_validation_thread.join();
@@ -987,9 +973,8 @@ struct application {
       assert(dev_data.max_value != dev_data.min_value &&
              "host received incoherent data");
 
-      acap::hw::dev_ptr data_ptr = acap::hw::get_dev_ptr({x, y}, dev_data.data);
-      h.moved(data_ptr.p)
-          .memcpy_d2h(graphic_buffer.data(), data_ptr.offset,
+      h.moved(dev_data.data.get_dir())
+          .memcpy_d2h(graphic_buffer.data(), dev_data.data.get_offset(),
                       graphic_buffer.size());
 
       /// This call is not synchronized but this should only be executed while

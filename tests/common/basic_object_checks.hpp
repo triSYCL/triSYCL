@@ -1,12 +1,14 @@
-#include <unordered_set>
 #include <set>
+#include <unordered_set>
+
+#include <catch2/catch_test_macros.hpp>
 
 /// Check copy behaviour with a default object by default
 template <typename T>
 void check_copy(T t = {}) {
   // Verify the copy operation
   T t2 { t };
-  BOOST_CHECK(t2 == t);
+  REQUIRE(t2 == t);
 }
 
 
@@ -16,7 +18,7 @@ void check_assignment(T t = {}) {
   // Verify the assignment operation
   T t3;
   t3 = t;
-  BOOST_CHECK(t3 == t);
+  REQUIRE(t3 == t);
 }
 
 
@@ -33,7 +35,7 @@ void check_associative_ordered_container(T t = {}) {
   ts.insert(t3);
 
   // Check that all the t are the same actually even in an ordered set
-  BOOST_CHECK(ts.size() == 1);
+  REQUIRE(ts.size() == 1);
 }
 
 /// Check unordered associative containers with a default object by default
@@ -49,7 +51,7 @@ void check_associative_unordered_container(T t = {}) {
   uts.insert(t3);
 
   // Check that all the t are the same actually even in an unordered set
-  BOOST_CHECK(uts.size() == 1);
+  REQUIRE(uts.size() == 1);
 }
 
 

@@ -5,7 +5,7 @@
 
 #include <CL/sycl.hpp>
 
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 using namespace cl::sycl;
 
@@ -47,12 +47,12 @@ void generic_par_for_wg(range<Dimensions> k_range,
   auto gl_lin_out = gl_lin.get_access<access::mode::read>();
 
   for (int i = 0; i < linr_size / linwg_size; ++i) {
-    BOOST_CHECK(group_lin_out[i] == i); // group id
+    REQUIRE(group_lin_out[i] == i); // group id
   }
 
   for (int i = 0; i < linr_size; ++i) {
-    BOOST_CHECK(gl_lin_out[i] == i);                            // w1 global id
-    BOOST_CHECK(loc_lin_out[i] == loc_lin_out[i] % linwg_size); // local id
+    REQUIRE(gl_lin_out[i] == i);                            // w1 global id
+    REQUIRE(loc_lin_out[i] == loc_lin_out[i] % linwg_size); // local id
   }
 
   /* We must wait for for the queue to finish as none of buffer's destruction
@@ -61,7 +61,7 @@ void generic_par_for_wg(range<Dimensions> k_range,
   my_queue.wait();
 }
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("hierarchical", "[parallel_for]") {
   generic_par_for_wg<1, class par_1d>({10}, {2});
   generic_par_for_wg<2, class par_2d_square>({10, 10}, {2, 2});
   generic_par_for_wg<2, class par_2d_square>({12, 12}, {4, 4});
@@ -75,6 +75,4 @@ int test_main(int argc, char *argv[]) {
   generic_par_for_wg<3, class par_3d_square>({100, 100, 100}, {20, 20, 20});
   generic_par_for_wg<3, class par_3d_rect>({150, 200, 150}, {15, 20, 10});
   generic_par_for_wg<3, class par_3d_rect>({150, 200, 100}, {15, 20, 4});
-
-  return 0;
 }

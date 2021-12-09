@@ -9,6 +9,7 @@
 
 #include "triSYCL/detail/debug.hpp"
 #include "triSYCL/detail/singleton.hpp"
+#include "elf.h"
 
 /** \file The minimum required functions for registering a binary
     using the triSYCL/Intel SYCL frontend, so that the compilation flow stays
@@ -141,6 +142,67 @@ namespace trisycl::detail {
 */
 
 class program_manager : public detail::singleton<program_manager> {
+public:
+  struct BinData {
+    std::string Name;
+    std::string_view Binary;
+    /// Size of the memory section reserved for the runtime.
+    unsigned MemSize;
+    BinData() = default;
+    BinData(std::string N, std::string_view B, unsigned M)
+        : Name{std::move(N)}, Binary{B}, MemSize{M} {}
+    struct symbol {
+      uint32_t addr;
+      uint32_t size;
+      std::string_view name;
+    };
+    /// Lookup information about a symbol stored in the ELF.
+    /// This function assumes that the ELFs are 32-bits because it is true for
+    /// ACAP. Maybe future platform will have 64-bit ELFs and this function will
+    /// fail.
+    symbol lookup_symbol(std::string_view sym) {
+      const char* file_start = Binary.data();
+      auto* file_header = reinterpret_cast<const Elf32_Ehdr*>(file_start);
+      assert(file_header->e_ident[EI_CLASS] == 1 &&
+             "this function only handles 32bit ELFs");
+      auto* section_table = reinterpret_cast<const Elf32_Shdr*>(
+          file_start + file_header->e_shoff);
+      const Elf32_Shdr* section_string_section =
+          section_table + file_header->e_shstrndx;
+      const char* section_string_start =
+          file_start + section_string_section->sh_offset;
+      const Elf32_Shdr* symbol_section = nullptr;
+      const Elf32_Shdr* string_section = nullptr;
+      /// Find the symbol string table and the symbol table.
+      for (int i = 0; i < file_header->e_shnum; i++) {
+        auto name =
+            std::string_view(section_string_start + section_table[i].sh_name);
+        if (section_table[i].sh_type == SHT_SYMTAB) {
+          assert(!symbol_section);
+          symbol_section = section_table + i;
+        }
+        if (section_table[i].sh_type == SHT_STRTAB && name == ".strtab") {
+          assert(!string_section);
+          string_section = section_table + i;
+        }
+      }
+      assert(symbol_section && string_section &&
+             "unable to find symbol or string section");
+      const char* string_start = file_start + string_section->sh_offset;
+      auto* symbol_table = reinterpret_cast<const Elf32_Sym*>(
+          file_start + symbol_section->sh_offset);
+      /// Find the symbol
+      for (int i = 0; i < (symbol_section->sh_size / sizeof(Elf32_Sym)); i++) {
+        auto name = std::string_view(string_start + symbol_table[i].st_name);
+        if (name == sym)
+          /// st_value is the address when the binary is not relocatable,
+          /// which should be the case here.
+          return { symbol_table[i].st_value, symbol_table[i].st_size, name };
+      }
+      assert(false && "requested symbol was not found");
+    }
+  };
+
 private:
   /// A work-around to a work-around, the AI Engine runtime does some
   /// manipulation of the ELF binary in memory to work through a chess compiler
@@ -151,7 +213,7 @@ private:
   ///
   /// We also need to make a pairing between the binary and its name so we can
   /// retrieve it via integration header.
-  std::vector<std::pair</*Name*/std::string, /*Binary*/std::string_view>> image_list;
+  std::vector<BinData> image_list;
 
 public:
   static bool isELFMagic(const char *BinStart) {
@@ -209,20 +271,29 @@ public:
         while (ptr[next_size] != '\n')
           next_size++;
         // Parse the file size
-        unsigned bin_size = std::stoi(std::string(ptr, next_size));
+        char* end;
+        unsigned reserved_runtime_memory_size = std::strtoul(ptr, &end, 10);
+        ptr += next_size + 1;
+        next_size = 0;
+        // Find the position of the next '\n'
+        while (ptr[next_size] != '\n')
+          next_size++;
+        // Parse the file size
+        unsigned bin_size = std::strtoul(ptr, &end, 10);
         ptr += next_size + 1;
         next_size = 0;
         std::string_view bin(ptr, bin_size);
         ptr += bin_size;
-        TRISYCL_DUMP_T("Loading Name: " << name << " Size: " << bin_size
-                                        << " Magic: \"" << bin.substr(0, 4)
-                                        << "\" IsElf: "
-                                        << isELFMagic(bin.data()));
+        TRISYCL_DUMP_T("Loading Name: "
+                       << name << " Size: " << bin_size
+                       << " MemSize: " << reserved_runtime_memory_size
+                       << " Magic: \"" << bin.substr(0, 4)
+                       << "\" IsElf: " << isELFMagic(bin.data()));
         /// We piggyback off of the BuildOptions parameter of the device_image
         /// description as it's unused in our case and it allows us to avoid
         /// altering the ClangOffloadWrappers types which causes them to risk
         /// incompatibility with Intel's SYCL implementation and OpenMP/HIP
-        image_list.emplace_back(std::move(name), bin);
+        image_list.emplace_back(std::move(name), bin, reserved_runtime_memory_size);
       }
       assert(reinterpret_cast<uintptr_t>(ptr) ==
                  reinterpret_cast<uintptr_t>(img->ImageEnd) &&
@@ -230,41 +301,13 @@ public:
     }
   }
 
-  // Simple test function to dump an image to file
-  void image_dump(__sycl_device_image * img, const std::string& filename) {
-    std::ofstream F{filename, std::ios::binary};
-
-    if (!F.is_open()) {
-      std::cerr << "File for image dump could not be opened \n";
-      return;
-    }
-
-    size_t ImgSize = static_cast<size_t>((intptr_t)img->ImageEnd
-                                       - (intptr_t)img->ImageStart);
-    F.write(reinterpret_cast<const char *>(img->ImageStart), ImgSize);
-    F.close();
-  }
-
-  // Simple test function to dump an image to file
-  void image_dump(const std::string& img, const std::string& filename) {
-    std::ofstream F{filename, std::ios::binary};
-
-    if (!F.is_open()) {
-      std::cerr << "File for image dump could not be opened \n";
-      return;
-    }
-
-    F.write(img.data(), img.size());
-    F.close();
-  }
-
   /// A write-able copy of our binary image, mainly so the AI Engine runtime can
   /// do some manipulation to workaround some chess problems.
   ///
   /// Return by index, only relevant really if you're testing for now and know
   /// the exact location in the vector that the image resides.
-  std::string_view get_image(const unsigned int index) {
-    return std::get<1>(image_list.at(index));
+  BinData get_bin_data(const unsigned int index) {
+    return image_list.at(index);
   }
 
   /// A write-able copy of our binary image, mainly so the AI Engine runtime can
@@ -272,10 +315,10 @@ public:
   ///
   /// Return by kernel name, used to map integration header names to offloaded
   /// binary names
-  std::string_view get_image(const std::string& kernelName) {
+  BinData get_bin_data(const std::string& kernelName) {
     for (auto image : image_list)
-      if (std::get<0>(image) == kernelName) {
-        return std::get<1>(image);
+      if (image.Name == kernelName) {
+        return image;
       }
     return {};
   }

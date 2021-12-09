@@ -11,8 +11,9 @@
     License. See LICENSE.TXT for details.
  */
 
-#ifdef __SYCL_XILINX_AIE__
 #include "hardware.hpp"
+
+#ifdef __SYCL_XILINX_AIE__
 #include "lock.hpp"
 #include "xaie_wrapper.hpp"
 #endif
@@ -21,6 +22,7 @@
 #include <functional>
 #include <variant>
 
+#include "triSYCL/detail/layout_utils.hpp"
 #include "triSYCL/detail/overloaded.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie {
@@ -58,7 +60,7 @@ struct functor_rpc {
 /// the device.
 struct image_update_data {
   /// A pointer to the new image data
-  hw::stable_pointer<void> data;
+  hw::dev_ptr<void> data;
 
   /// In min_value and max_value, uint64_t is just to have 8-byte of storage,
   /// the graphics system will bitcast min_value to the proper type before use.
@@ -88,26 +90,42 @@ struct send_log_rpc {
   /// device.
   struct data_type {
     /// Pointer to the first character of a buffer to print
-    hw::stable_pointer<const char> data;
+    hw::dev_ptr<const char> data;
     /// Number of characters to print
     uint64_t size;
   };
 #if !defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_XILINX_AIE__)
   static uint32_t act_on_data(int x, int y, xaie::handle h,
                               data_type dev_data) {
-    /// Decompose the device pointer into direction of the tile and address in the tile.
-    hw::dev_ptr data_ptr = hw::get_dev_ptr({x, y}, dev_data.data);
     std::string str;
     str.resize(dev_data.size);
     /// Copy the indicated device data into a string.
-    h.moved(data_ptr.p).memcpy_d2h(str.data(), data_ptr.offset, str.size());
+    h.moved(hw::position{x, y}.moved(dev_data.data.get_dir()))
+        .memcpy_d2h(str.data(), dev_data.data.get_offset(), str.size());
     std::cout << str << std::flush;
     return 0;
   }
 #endif
 };
 
-/// done_rpc is handled differently because indicate if a kernel is done executing.
+struct host_breakpoint {
+  struct data_type {
+    uint32_t offset;
+    uint32_t count;
+  };
+  __attribute__((noinline)) static void host_break(int x, int y, xaie::handle h, data_type d) {
+    /// Put a breakpoint in this function to debug
+  }
+#if !defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_XILINX_AIE__)
+  static uint32_t act_on_data(int x, int y, xaie::handle h, data_type d) {
+    host_break(x, y, h, d);
+    return 0;
+  }
+#endif
+};
+
+/// done_rpc is handled differently because indicate if a kernel is done
+/// executing.
 struct done_rpc {
   /// it needs no data, since it is just a signal.
   struct data_type {};
@@ -126,11 +144,10 @@ template <typename... Tys> struct rpc_impl {
   struct host_side {
     int x_size, y_size;
     xaie::handle h;
-    uint32_t addr;
 
     /// this will retrun a handle to the synchronization barrier between the device and the host.
     soft_barrier::host_side get_barrier(int x, int y) {
-      return {h.moved(x, y), (uint32_t)(addr + offsetof(device_side, barrier))};
+      return {h.moved(x, y), (uint32_t)(hw::offset_table::get_rpc_record_begin_offset() + offsetof(device_side, barrier))};
     }
 
     /// This will invoke the correct function to process the data in v
@@ -144,6 +161,7 @@ template <typename... Tys> struct rpc_impl {
     /// This will wait on every kernel while handling there RPC requests
     void wait_all() {
       ::trisycl::detail::no_log_in_this_scope nls;
+      int addr = hw::offset_table::get_rpc_record_begin_offset();
       /// This count the number of kernel that indicated they finished
       /// executing. any kernel can signal it finished executing just once
       /// because it stop executing or get stuck in an infinite loop after that.
@@ -153,26 +171,34 @@ template <typename... Tys> struct rpc_impl {
       do {
         for (int x = 0; x < x_size; x++)
           for (int y = 0; y < y_size; y++) {
-            /// If try_arrive returns true the device has written data and is
-            /// wating on the host to act on it
-            if (!get_barrier(x, y).try_arrive())
-              continue;
-            Var data;
-            /// Read the data the device has written.
-            h.moved(x, y).memcpy_d2h(&data, addr + offsetof(device_side, data),
-                                     sizeof(Var));
-            /// Deal with the special case of a kernel indicating it is done.
-            /// This kernel stopped executing.
-            if (data.index() == 0) {
-              done_counter++;
-            } else {
-              /// Otherwise call the appropriate function.
-              auto ret = visit(x, y, h.moved(x, y), data);
-              /// And write back the response.
-              h.moved(x, y).mem_write(addr + offsetof(device_side, ret_val),
-                                      ret);
+            /// We process at least one request per device.
+            bool chain = true;
+            /// while the device asks to chain requests.
+            while (chain) {
+              /// If try_arrive returns true the device has written data and is
+              /// wating on the host to act on it
+              if (!get_barrier(x, y).try_arrive())
+                continue;
+              Var data;
+              /// Read the data the device has written.
+              h.moved(x, y).memcpy_d2h(
+                  &data, addr + offsetof(device_side, data), sizeof(Var));
+              /// Deal with the special case of a kernel indicating it is done.
+              /// This kernel stopped executing.
+              if (data.index() == 0) {
+                done_counter++;
+              } else {
+                /// Otherwise call the appropriate function.
+                auto ret = visit(x, y, h.moved(x, y), data);
+                /// And write back the response.
+                h.moved(x, y).mem_write(addr + offsetof(device_side, ret_val),
+                                        ret);
+                /// read if the device requested to chain the is request.
+                chain = h.moved(x, y).mem_read(
+                    addr + offsetof(device_side, chained_request));
+              }
+              get_barrier(x, y).wait();
             }
-            get_barrier(x, y).wait();
           }
         /// Wait until all kernels have finished.
       } while (done_counter < x_size * y_size);
@@ -182,21 +208,24 @@ template <typename... Tys> struct rpc_impl {
 
   struct device_side {
 #if defined(__SYCL_XILINX_AIE__)
-#ifdef __SYCL_DEVICE_ONLY__
     static device_side *get() {
-      return (device_side *)(acap::hw::self_tile_addr(
-                                     acap::hw::get_parity_dev()) +
-                                 acap::hw::rpc_record_begin_offset);
+      return hw::get_object<device_side>(
+          acap::hw::offset_table::get_rpc_record_begin_offset());
     }
-#endif
     soft_barrier::device_side barrier;
     Var data;
     uint32_t ret_val;
 
+    /// This asks the host to wait for on other request from the same device
+    /// after processing this request. this exist to prevent le host from
+    /// interleaving log requests.
+    uint32_t chained_request;
+
     /// This sent data to the host to be processed.
-    template <typename Ty> uint32_t perform(Ty &&d) {
+    template <typename Ty> uint32_t perform(Ty &&d, bool chained = false) {
       /// Write the data.
       data = d;
+      chained_request = chained;
       /// Notify the host of the data being available.
       barrier.wait();
       /// Wait for the host to process the data.
@@ -207,17 +236,13 @@ template <typename... Tys> struct rpc_impl {
   };
 };
 
-using rpc = rpc_impl<done_rpc, image_update_rpc, send_log_rpc>;
+using rpc = rpc_impl<done_rpc, image_update_rpc, send_log_rpc, host_breakpoint>;
 
 #if defined(__SYCL_XILINX_AIE__)
-// The advantage of this over static_assert is that V1 and V2 will be printed when it fails.
-template<auto V1, auto V2>
-struct assert_equal {
-  static_assert(V1 == V2, "");
-};
-
-/// This variable is just to check the rpc size
-constexpr assert_equal<sizeof(rpc::device_side), hw::rpc_record_size> v;
+detail::assert_equal_layout<
+    rpc::device_side, rpc::device_side,
+    /*expected_size=*/hw::offset_table::get_rpc_record_size()>
+    rpc_check;
 #endif
 
 } // namespace trisycl::vendor::xilinx::acap::aie

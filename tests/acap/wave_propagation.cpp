@@ -37,8 +37,10 @@ using namespace std::chrono_literals;
 
 #include <boost/thread.hpp>
 
-
 using namespace sycl::vendor::xilinx;
+
+/// The type used to do all the computations
+using data_t = float;
 
 // The size of the machine to use
 // using layout = acap::aie::layout::size<5,4>;
@@ -56,6 +58,7 @@ using idx_type = int;
 data_type constexpr K = 1.0 / 300.0;
 data_type constexpr g = 9.81;
 data_type constexpr alpha = K * g;
+/// Some dissipation factor to avoid divergence
 data_type constexpr damping = 0.999;
 
 idx_type constexpr image_size = 20;
@@ -148,7 +151,9 @@ constexpr auto is_harbor = [](auto x, auto y) constexpr -> bool {
 /// A sequential reference implementation of wave propagation
 template <auto size_x, auto size_y, auto display_tile_size>
 struct reference_wave_propagation {
-  using space = std::experimental::mdspan<data_type, size_y, size_x>;
+  using space = std::experimental::mdspan<data_type,
+                                          std::experimental::extents<size_y,
+                                                                     size_x>>;
   // It would be nice to have a constexpr static member to express this,
   // but right now size() is a member function
   // data_type u_m[space::size()];
@@ -215,7 +220,7 @@ struct reference_wave_propagation {
            Display actually one redundant line/column on each
            South/West to mimic the halo in the ACAP case
         */
-        auto sp = std::experimental::subspan(
+        auto sp = std::experimental::submdspan(
             w,
             std::make_pair(j * display_tile_size, (j + 1) * display_tile_size),
             std::make_pair(i * display_tile_size, (i + 1) * display_tile_size));

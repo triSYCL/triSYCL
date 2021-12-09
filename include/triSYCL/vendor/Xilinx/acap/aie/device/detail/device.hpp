@@ -18,21 +18,142 @@
 #include <boost/format.hpp>
 #include <boost/hana.hpp>
 
-#include "../../cascade_stream.hpp"
 #include "../../geography.hpp"
-#include "../../memory_infrastructure.hpp"
 #include "../../queue.hpp"
 #include "../../shim_tile.hpp"
-#include "../../tile.hpp"
-#include "../../tile_infrastructure.hpp"
-#include "../../xaie_wrapper.hpp"
+#include "../../accessor.hpp"
+#include "../../rpc.hpp"
 
+#ifdef __SYCL_XILINX_AIE__
+#include "../../xaie_wrapper.hpp"
+#include "triSYCL/detail/kernel_desc.hpp"
+#else
 #include "triSYCL/detail/fiber_pool.hpp"
+#include "../../tile_infrastructure.hpp"
+#endif
 
 /// \ingroup aie
 /// @{
 
 namespace trisycl::vendor::xilinx::acap::aie::detail {
+
+#ifdef __SYCL_XILINX_AIE__
+
+/// Type used to configure and execute work on one specific tile on the host.
+template <typename Geo> class tile_hw_config : public tile_hw_base_impl<Geo> {
+  xaie::handle dev_handle;
+
+  class handler {
+    struct accessor_data {
+      /// Pointer to the start of the host accessor's representation.
+      const char* id;
+      /// Pointer the accessors data.
+      void* ptr;
+      /// Size in bytes of the accessors data
+      size_t size;
+      /// Size in bytes of the accessors representation
+      size_t sizeof_acc;
+      /// Address on device at which the buffer was placed.
+      hw::dev_ptr<void> dev_addr;
+    };
+
+    /// Collection of accessor that may be transfer to the device by the kernel.
+    std::vector<accessor_data> accessors;
+    xaie::handle dev_handle;
+    public:
+    handler() = default;
+    handler(xaie::handle h) : dev_handle(h) {}
+
+    /// Register a new accessor that may need to be transferred.
+    template <typename Acc> void add_accessor(const Acc& acc) {
+      accessors.emplace_back(
+          accessor_data { reinterpret_cast<const char*>(&acc), &*acc.begin(),
+                          acc.get_size(), sizeof(acc) });
+    }
+
+#ifndef __SYCL_DEVICE_ONLY__
+    /// Write the lambda on the device such that the kernel can use it.
+    template <typename KernelDesc, typename KernelLambda>
+    void write_lambda(KernelLambda& L, uint32_t dev_addr, uint32_t heap_start) {
+      TRISYCL_DUMP2("Lambda address = " << (void*)(std::uintptr_t)dev_addr, "memory");
+
+      /// Write the lambda to memory, the accessors will get corrected later.
+      dev_handle.store<KernelLambda, /*no_check*/true>(dev_addr, L);
+      for (int i = 0; i < KernelDesc::getNumParams(); i++) {
+        ::trisycl::detail::kernel_param_desc_t kdesc = KernelDesc::getParamDesc(i);
+        /// Only accessor are supported and need special handling.
+        if (kdesc.kind == ::trisycl::detail::kernel_param_kind_t::kind_accessor) {
+          void* acc_addr = reinterpret_cast<char*>(&L) + kdesc.offset;
+          bool was_found = false;
+          for (auto& acc : accessors) {
+            /// Check if the accessor in acc is the same as the one at address
+            /// acc_addr In this function we do not have type information about
+            /// the accessor so we rely on accessor memory represention to
+            /// identify which accessor is where in the lambda capture.
+            if (std::memcmp(acc_addr, acc.id, acc.sizeof_acc) == 0) {
+              assert(!was_found && "accessor was found twice ??");
+              was_found = true;
+              ::trisycl::vendor::xilinx::acap::aie::device_accessor_base dev_acc;
+              /// Allocate space on device for the accessors's data.
+              uint32_t buff_addr =
+                  acap::heap::malloc(dev_handle, heap_start, acc.size);
+              /// Copy the accessor's data to the device.
+              dev_handle.memcpy_h2d(buff_addr, acc.ptr, acc.size);
+              dev_acc.size = acc.size;
+              /// Calculated the address from the device's perspective
+              dev_acc.ptr = hw::dev_ptr<void>::create(dev_handle.get_self_dir(),
+                                                      buff_addr);
+              /// Overwrite the host accessor with the device accessor.
+              dev_handle.store(dev_addr + kdesc.offset, dev_acc);
+              /// Store device address of the accessor such that we can do the write_back.
+              acc.dev_addr = dev_acc.ptr;
+            }
+          }
+        }
+      }
+    }
+
+    /// Write all accessors that were written to device back to the host
+    void write_back() {
+      for (auto e : accessors)
+        if (e.dev_addr)
+          dev_handle.memcpy_d2h(e.ptr, e.dev_addr.get_offset(), e.size);
+    }
+#endif
+    template <typename T> void single_task(T&& func) {
+      detail::exec_kernel<tile_hw_base_impl<Geo>>{}.exec(
+          dev_handle, std::forward<T>(func), 0, this);
+    }
+  } cgh;
+
+public:
+  tile_hw_config() = default;
+  tile_hw_config(xaie::handle h) : dev_handle(h), cgh(dev_handle) {}
+
+  template <typename T> void submit(T func) { std::forward<T>(func)(cgh); }
+
+  template <typename T> void single_task(T&& func) {
+    cgh.single_task(std::forward<T>(func));
+  }
+
+  void write_back() { cgh.write_back(); }
+  /// Configure a connection of the core tile AXI stream switch
+
+  auto &connect(typename Geo::core_axi_stream_switch::slave_port_layout sp,
+                typename Geo::core_axi_stream_switch::master_port_layout mp) {
+#if defined(__SYCL_DEVICE_ONLY__)
+    assert(false && "should never be executed on device");
+#endif
+    auto slave_port_type = xaie::acap_port_to_xaie_port_type</*is_slave*/true>(sp);
+    auto slave_port_id = xaie::acap_port_to_xaie_port_id(sp, slave_port_type);
+    auto master_port_type = xaie::acap_port_to_xaie_port_type</*is_slave*/false>(mp);
+    auto master_port_id = xaie::acap_port_to_xaie_port_id(mp, master_port_type);
+    dev_handle.stream_connect(slave_port_type, slave_port_id, master_port_type,
+                              master_port_id);
+    return *this;
+  }
+};
+#endif
 
 /** Create a SYCL-like device view of an AI Engine CGRA with some layout
 
@@ -62,10 +183,6 @@ template <typename Layout> struct device {
   /// Naming shortcut for the master ports of the shim AXI stream switch
   using smp = typename sass::master_port_layout;
 
-  /// The cascade stream infrastructure of the CGRA
-  /// \todo remove and distribute it instead
-  cascade_stream<geo> cs;
-
   /** A fiber pool executor to run the infrastructure powered by
       TRISYCL_XILINX_AIE_FIBER_EXECUTOR_THREADS std::thread */
   ::trisycl::detail::fiber_pool fiber_executor {
@@ -75,6 +192,7 @@ template <typename Layout> struct device {
        detail::fiber_pool::sched::work_stealing, false };
   */
 
+#ifndef __SYCL_XILINX_AIE__
   /// Keep track of all the (non detail) infrastructure tiles of this device
   aie::tile_infrastructure<geo> ti[geo::y_size][geo::x_size];
 
@@ -90,6 +208,11 @@ template <typename Layout> struct device {
     geo::validate_x_y(x, y);
     return ti[y][x];
   }
+#else
+  tile_hw_config<geo> thc[geo::y_size][geo::x_size];
+
+  auto& tile(int x, int y) { return thc[x][y]; }
+#endif
 
   /** Apply a function for each tile index of the device
 
@@ -132,6 +255,7 @@ template <typename Layout> struct device {
       f(y);
   };
 
+#ifndef __SYCL_XILINX_AIE__
   /** Shortcut to access to the common infrastructure part of a tile memory
 
       \param[in] x is the horizontal tile coordinate
@@ -143,6 +267,7 @@ template <typename Layout> struct device {
   auto& mem(int x, int y) {
     return tile(x, y).mem();
   }
+#endif
 
   /** The shim tiles on the lower row of the tile array
 
@@ -160,10 +285,6 @@ template <typename Layout> struct device {
     geo::validate_x(x);
     return shims[x];
   }
-
-  /// Access the cascade connections
-  /// \todo To remove?
-  auto& cascade() { return cs; }
 
   /** Connect the ports of 2 tiles or shims together with an
       hyperspace switched circuit, jumping over the underlying routing
@@ -223,7 +344,7 @@ template <typename Layout> struct device {
     });
   }
 
-#if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
+#if defined(__SYCL_XILINX_AIE__)
   /// The host needs to set up the device when executing on real device
   /// The following are macro that declare variables in our case member
   /// variables. the xaie:: before them is because there type is in the
@@ -245,32 +366,24 @@ template <typename Layout> struct device {
 
   /// Build some device level infrastructure
   device() {
-        // Initialization of the AI Engine tile constructs from LibXAiengine
+    // Initialization of the AI Engine tile constructs from LibXAiengine
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
-        // For host side when executing on acap hardware
-        /// Initialize the device.
-        TRISYCL_XAIE(xaie::XAie_CfgInitialize(&aie_inst, &aie_config));
-        /// Request access to all tiles.
-        TRISYCL_XAIE(xaie::XAie_PmRequestTiles(&aie_inst, NULL, 0));
-#endif
+    // For host side when executing on ACAP hardware.
+    /// Initialize the device
+    TRISYCL_XAIE(xaie::XAie_CfgInitialize(&aie_inst, &aie_config));
+    /// Request access to all tiles.
+    TRISYCL_XAIE(xaie::XAie_PmRequestTiles(&aie_inst, NULL, 0));
     // Initialize all the tiles with their network connections first
-        for_each_tile_index([&](auto x, auto y) {
-        // Create & start the tile infrastructure
-#if !defined(__SYCL_DEVICE_ONLY__)
-#if defined(__SYCL_XILINX_AIE__)
-          // For host side when executing on acap hardware
-          // Setup the xaie::handle of each tiles. allowing them to communicate
-          // with hardware.
-          // This is executed when we create the device object.
-          tile(x, y) = {
-              x, y, xaie::handle{xaie::acap_pos_to_xaie_pos({x, y}), aie_inst},
-              fiber_executor};
+#endif
+    for_each_tile_index([&](auto x, auto y) {
+#if !defined(__SYCL_XILINX_AIE__)
+      // Create & start the tile infrastructure.
+      // For CPU emulation
+      tile(x, y) = {x, y, fiber_executor};
 #else
-          // For CPU emulation
-          tile(x, y) = {x, y, fiber_executor};
+      tile(x, y) = xaie::handle{xaie::acap_pos_to_xaie_pos({x, y}), get_dev_inst()};
 #endif
-#endif
-        });
+    });
 
 #if !defined(__SYCL_XILINX_AIE__)
     // TODO: this should be enabled on hardware when it is working but for now
@@ -309,7 +422,6 @@ template <typename Layout> struct device {
 #endif
   }
 
-
 #if defined(__SYCL_XILINX_AIE__) && !defined(__SYCL_DEVICE_ONLY__)
   // For host side when executing on acap hardware
   ~device() {
@@ -318,6 +430,7 @@ template <typename Layout> struct device {
   }
 #endif
 
+#ifndef __SYCL_XILINX_AIE__
   /** Display the device layout
 
       \param[in] file_name is the name of the file to write the LaTeX
@@ -348,6 +461,7 @@ template <typename Layout> struct device {
 
     c.display();
   }
+#endif
 };
 
 /// @} End the aie Doxygen group

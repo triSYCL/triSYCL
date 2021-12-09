@@ -16,16 +16,12 @@
  */
 
 #if defined(__SYCL_XILINX_AIE__)
-#if defined(__SYCL_DEVICE_ONLY__)
-
 /// Use hardware intrinsics on real device
 #include "acap-intrinsic.h"
-#else
 
 /// Use libxaiengine on host with real hardware
 #include "xaie_wrapper.hpp"
-#include <thread>
-#endif
+
 #else
 
 /// In CPU emulation, use fiber synchronization primitives
