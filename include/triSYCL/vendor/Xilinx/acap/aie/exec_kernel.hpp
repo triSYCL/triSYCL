@@ -67,9 +67,10 @@ template <typename TileHandle> struct exec_kernel {
     /// kernel lambda. asm("kernel_lambda_capture") means that the compiler will
     /// emit the variable under the symbol kernel_lambda_capture. This
     /// variable's visibility is changed by the device compiler such that the
-    /// symbol is visible
-    static ::trisycl::detail::storage<KernelType> lambda_storage asm(
-        "kernel_lambda_capture");
+    /// symbol is visible. The used attribute is needed to make sure the
+    /// compiler doesn't remove the symbol.
+    static __attribute__((used)) ::trisycl::detail::storage<KernelType>
+        lambda_storage asm("kernel_lambda_capture");
     kernel_prerun();
     func(lambda_storage.get());
     kernel_postrun();

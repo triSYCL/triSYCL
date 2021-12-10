@@ -10,9 +10,6 @@
 
 using namespace sycl::vendor::xilinx;
 
-/// The current maximum size of a memory module is 8192 bytes
-/// sqrt(8192) ~ 90.5... so 90 is the largest integral value we can put here. at
-/// least until the 8192 bytes goes away.
 auto constexpr image_size = 90;
 graphics::application a;
 

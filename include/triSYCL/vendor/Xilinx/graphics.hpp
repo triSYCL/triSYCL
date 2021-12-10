@@ -29,19 +29,18 @@
 #include "acap/aie/xaie_wrapper.hpp"
 #endif
 
-#include <mutex>
-
 #include <algorithm>
 #include <atomic>
+#include <chrono>
 #include <condition_variable>
 #include <cstddef>
 #include <functional>
 #include <future>
+#include <iostream>
 #include <memory>
+#include <mutex>
 #include <sstream>
 #include <thread>
-#include <iostream>
-#include <chrono>
 
 #include <experimental/mdspan>
 
@@ -847,7 +846,7 @@ struct application {
   template <typename DataType>
   void validate_tile_data_image(int x, int y, DataType data, PixelTy min_value,
                                 PixelTy max_value) {
-    auto ptr = (PixelTy *)dv.tile(x, y).host.data.data();
+    auto ptr = reinterpret_cast<PixelTy*>(dv.tile(x, y).host.data.data());
     for (int j = 0; j < data.extent(0); ++j)
       for (int i = 0; i < data.extent(1); ++i)
         *(ptr++) = data(j, i);
@@ -901,8 +900,8 @@ struct application {
                         << ") frame= " << dv.frame_counter
                         << ", host= " << e.host.data.size()
                         << ", device=  " << e.dev.data.size());
-        PixelTy *host_ptr = (PixelTy *)e.host.data.data();
-        PixelTy *dev_ptr = (PixelTy *)e.dev.data.data();
+        PixelTy *host_ptr = reinterpret_cast<PixelTy*>(e.host.data.data());
+        PixelTy *dev_ptr = reinterpret_cast<PixelTy*>(e.dev.data.data());
         size_t size = e.host.data.size() / sizeof(PixelTy);
         assert(e.host.data.size() % sizeof(PixelTy) == 0);
         for (int i = 0; i < size; i++)
@@ -980,7 +979,7 @@ struct application {
       /// This call is not synchronized but this should only be executed while
       /// the main thread is waiting for the kernel to finish.
       a->update_tile_data_image(
-          x, y, (PixelTy *)graphic_buffer.data(),
+          x, y, reinterpret_cast<PixelTy*>(graphic_buffer.data()),
           acap::hw::bit_cast<PixelTy>(dev_data.min_value),
           acap::hw::bit_cast<PixelTy>(dev_data.max_value));
 

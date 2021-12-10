@@ -66,7 +66,7 @@ public:
     scaling_factor = m > max_size ? max_size/m : 1;
     // Generate the LaTeX header
     // boost::format seems broken and can't compile this.
-#if 0
+// #if 0
     out = (boost::format (R"(%% To be compiled with lualatex instead of pdflatex
 %% to avoid a bug on _ and to handle huge memory automatically.
 \documentclass{article}
@@ -103,7 +103,7 @@ public:
   style = {line width = %4%mm, ->}]
 
 )" ) % scale(size.x()) % scale(size.y()) % scale(1) % scale(0.01)).str();
-#endif
+// #endif
   }
 
 

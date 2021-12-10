@@ -1,7 +1,11 @@
-/* Mandelbrot set for AI Engine as uniform lambda
+// REQUIRES: acap
 
-   RUN: %{execute}%s
-*/
+// This test uses an old API
+// XFAIL
+
+// RUN: %acap_clang %s -o %s.bin
+// RUN: %add_acap_result %s.bin
+// RUN: rm %s.bin
 
 #include "triSYCL/vendor/Xilinx/graphics.hpp"
 #include <complex>
@@ -11,12 +15,10 @@
 using namespace sycl::vendor::xilinx;
 auto constexpr image_size = 64;
 
-/// This is not a local variable because the lambda needs to capture by copy and
-/// graphics::application is not copyable on the host.
-graphics::application a;
+graphics::application<uint8_t> a;
 
 int main(int argc, char* argv[]) {
-  acap::aie::device<acap::aie::layout::size<8, 8>> aie;
+  acap::aie::device<acap::aie::layout::size<50, 8>> aie;
 
   a.set_device(aie);
   // Open a graphic view of a AIE array
@@ -38,15 +40,26 @@ int main(int argc, char* argv[]) {
     while (!a.is_done()) {
       for (int j = 0; j < image_size; ++j)
         for (int k, i = 0; i < image_size; ++i) {
-          std::complex c { x0 + xs * (th.x() * image_size + i),
-                           y0 + ys * (th.y() * image_size + j) };
+          std::complex c { x0 + xs * (th.x_coord() * image_size + i),
+                           y0 + ys * (th.y_coord() * image_size + j) };
           std::complex z { 0.0 };
           for (k = 0; norm(z = z * z + c) < D && k <= 255; k++)
             ;
           plane[j][i] = k;
         }
       // \todo something like th.update_tile_data_image(&plane[0][0], 0, 255); ?
-      a.update_tile_data_image(th.x(), th.y(), &plane[0][0], 0, 255);
+      a.update_tile_data_image(th.x_coord(), th.y_coord(), &plane[0][0], 0, 255);
     }
   });
 }
+
+// notable issues:
+//
+//  - the graphics::application cannot be a local variable because if
+//  graphics::application is a local variable it needs to be captured by the
+//  lambda. kernel lambda need to capture by value ([=]) but this causes a copy.
+//  and on the host graphics::application contain std::thread which aren't
+//  copyable. This was fixed by making graphics::application a global variable.
+//
+//  - xs and ys cannot be constexpr because th is not known at compile time.
+//  that said xs and ys will be constant folded.
