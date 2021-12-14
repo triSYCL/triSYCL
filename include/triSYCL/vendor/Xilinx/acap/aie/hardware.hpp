@@ -149,6 +149,7 @@ parity get_parity_dev() {
                                                         : parity::west;
 #else
   assert(false && "this can only be used on device");
+  return parity::east;
 #endif
 }
 

@@ -113,10 +113,10 @@ struct host_breakpoint {
     uint32_t offset;
     uint32_t count;
   };
+#if !defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_XILINX_AIE__)
   __attribute__((noinline)) static void host_break(int x, int y, xaie::handle h, data_type d) {
     /// Put a breakpoint in this function to debug
   }
-#if !defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_XILINX_AIE__)
   static uint32_t act_on_data(int x, int y, xaie::handle h, data_type d) {
     host_break(x, y, h, d);
     return 0;
