@@ -1,5 +1,5 @@
-Language:        Cpp
-BasedOnStyle:  LLVM
+Language: Cpp
+BasedOnStyle: LLVM
 AccessModifierOffset: -1
 BreakInheritanceList: BeforeComma
 BreakConstructorInitializers: BeforeComma
