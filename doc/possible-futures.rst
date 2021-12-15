@@ -10,6 +10,9 @@ https://gitenterprise.xilinx.com/rkeryell/triSYCL/issues
 
 Some ideas of future developments where *you* can contribute too: :-)
 
+Note that some of these are pretty old and might be already obsolete
+or already implemented in other SYCL implementations.
+
 - go on using the official OpenCL_ SYCL_ conformance test suite (CTS)
   which is now open-source https://github.com/KhronosGroup/SYCL-CTS to
   extend/debug/validate this implementation;

@@ -116,7 +116,7 @@ int main(int argc, char *argv[]) {
   a.image_grid().get_palette().set(graphics::palette::rainbow, 100, 2, 0);
 
   // Launch the AI Engine program
-  m.run();
+  // m.run();
   // Wait for the graphics to stop
   a.wait();
 }

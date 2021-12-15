@@ -77,19 +77,17 @@ auto equal = [] (auto const &v, auto const &verif) {
 */
 #define TRISYCL_CHECK(OPERATOR, TYPE, CL_TYPE, SIZE, VAL1, VAL2, OUT)          \
   {                                                                            \
-    std::initializer_list<TYPE> vil1 (VAL1);                                   \
-    std::initializer_list<TYPE> vil2 (VAL2);                                   \
     using v = BOOST_PP_IF(BOOST_PP_EQUAL(SIZE, 1),                             \
                           BOOST_PP_CAT(cl::sycl::CL_TYPE, SIZE),               \
                           BOOST_PP_CAT(                                        \
                             BOOST_PP_CAT(cl::sycl::cl_, CL_TYPE), SIZE));      \
     using va_in = std::valarray<TYPE>;                                         \
     using va_out = std::valarray<OUT>;                                         \
-    v v1 (VAL1);                                                               \
-    v v2 (VAL2);                                                               \
+    v v1 VAL1;                                                                 \
+    v v2 VAL2;                                                                 \
     v v3 = v2 OPERATOR v1;                                                     \
-    va_in va1 { vil1 };                                                        \
-    va_in va2 { vil2 };                                                        \
+    va_in va1 VAL1;                                                            \
+    va_in va2 VAL2;                                                            \
     va_out va3 = va1 OPERATOR va2;                                             \
     REQUIRE(equal(v1, v2));                                                    \
     REQUIRE(equal(v1, va1));                                                   \

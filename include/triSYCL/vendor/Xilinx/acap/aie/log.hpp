@@ -97,13 +97,13 @@ __attribute__((noinline)) void log_internal(const char *ptr, bool chained) {
     log(reinterpret_cast<std::intptr_t>(p), false, chained, "0123456789abcdef");
   }
 #else
-  void log(const char* ptr, bool = false, bool = false) {
+  inline void log(const char* ptr, bool = false, bool = false) {
     std::cout << ptr;
   }
-  void log(void* ptr, bool = false, bool = false) {
+  inline void log(void* ptr, bool = false, bool = false) {
     std::cout << ptr;
   }
-  void log(int i, bool = false, bool = false) {
+  inline void log(int i, bool = false, bool = false) {
     std::cout << i;
   }
 #endif

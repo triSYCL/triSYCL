@@ -48,7 +48,7 @@ tools such as the Clang-based indexing and refactoring tools
 You can choose a specific compiler during the first `cmake` use, such
 as with::
 
-  CXX=clang++-11 cmake ..
+  CXX=clang++-14 cmake ..
 
 
 Notes
@@ -117,6 +117,9 @@ found in the top-level ``CMakeLists.txt`` file for all compilers.
 
 Tested platforms
 ================
+
+All the following Windows and WSL is probably obsolete and MicroSoft
+has probably improved the situation quite a lot.
 
 Windows 10 + VS 15 + Boost 1.63.0
 ---------------------------------

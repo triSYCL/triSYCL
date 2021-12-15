@@ -82,10 +82,10 @@ class tile_infrastructure {
   // etc. from here
 
   /// Get the horizontal coordinate
-  int x() { return implementation->x(); }
+  int x_coord() { return implementation->x(); }
 
   /// Get the vertical coordinate
-  int y() { return implementation->y(); }
+  int y_coord() { return implementation->y(); }
 
   /// Get the horizontal number of tiles
   static constexpr int x_size() { return geo::x_size; }

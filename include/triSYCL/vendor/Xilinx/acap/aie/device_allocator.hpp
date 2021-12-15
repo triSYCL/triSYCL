@@ -1,6 +1,10 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_DEVICE_ALLOCATOR_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_DEVICE_ALLOCATOR_HPP
 
+#ifndef __SYCL_XILINX_AIE__
+# error "This file should only be used for hardware execution"
+#endif
+
 /** \file
 
     contains hardware specific informations and linker scripts details of

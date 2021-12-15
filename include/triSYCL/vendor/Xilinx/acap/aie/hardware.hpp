@@ -57,7 +57,7 @@ struct offset {
 
 
 /// Convert a direction into an offset
-constexpr offset get_offset(parity par, dir d) {
+constexpr inline offset get_offset(parity par, dir d) {
   switch (d) {
   case dir::south:
     return {0, -1};
@@ -81,7 +81,7 @@ constexpr offset get_offset(parity par, dir d) {
 /// Convert a into an offset ignoring parity.
 /// The Geography calculation already take in account parity so when giving
 /// offset to those API we need to use this instead of get_offset
-constexpr offset get_simple_offset(dir d) {
+constexpr inline offset get_simple_offset(dir d) {
   switch (d) {
   case dir::south:
     return {0, -1};
@@ -129,7 +129,7 @@ constexpr uint32_t base_addr_mask = ~offset_mask;
 
 /// determine the direction of the memory module pointed into by a pointer on
 /// device.
-dir get_ptr_direction(uint32_t ptr) { return (dir)((ptr >> 15) & 0x3); }
+inline dir get_ptr_direction(uint32_t ptr) { return (dir)((ptr >> 15) & 0x3); }
 template<typename T> dir get_ptr_direction(T *p) {
   return get_ptr_direction((uint32_t)p);
 }
@@ -137,7 +137,7 @@ template<typename T> dir get_ptr_direction(T *p) {
 /// The address of the stack will be either in the west or east memory module
 /// based on the parity of the memory module so we can use the address of the
 /// stack to figure out the parity. This is what this function does.
-parity get_parity_dev() {
+inline parity get_parity_dev() {
 #ifdef __SYCL_DEVICE_ONLY__
   int i;
   /// The 15 low bits are the offset within a tile memory module.
@@ -154,31 +154,31 @@ parity get_parity_dev() {
 }
 
 /// Get the direction of the memory module based on the parity
-dir get_self_dir(parity p) {
+inline dir get_self_dir(parity p) {
   return (p == parity::west) ? dir::west : dir::east;
 }
 
 /// Get the direction of the memory module of the tile executing this.
-dir get_self_dir() { return get_self_dir(get_parity_dev()); }
+inline dir get_self_dir() { return get_self_dir(get_parity_dev()); }
 
-dir resolved_dir(dir d) {
+inline dir resolved_dir(dir d) {
   if (d == dir::self)
     return get_self_dir();
   return d;
 }
 
-constexpr uint32_t get_base_addr(dir d) {
+inline constexpr uint32_t get_base_addr(dir d) {
   return (1 << 17) | ((uint32_t)d << 15);
 }
 
 /// Base address of the tile viewed from itself
-constexpr uint32_t self_tile_addr(parity par) {
+inline constexpr uint32_t self_tile_addr(parity par) {
   return ((par == parity::west) ? west_or_self_tile_addr
                                 : east_or_self_tile_addr);
 }
 
 /// Base address of the tile viewed from itself
-uint32_t self_tile_addr() {
+inline uint32_t self_tile_addr() {
   return ((get_parity_dev() == parity::west) ? west_or_self_tile_addr
                                              : east_or_self_tile_addr);
 }

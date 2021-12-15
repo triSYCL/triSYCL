@@ -239,10 +239,12 @@ template <typename... Tys> struct rpc_impl {
 using rpc = rpc_impl<done_rpc, image_update_rpc, send_log_rpc, host_breakpoint>;
 
 #if defined(__SYCL_XILINX_AIE__)
+namespace {
 detail::assert_equal_layout<
     rpc::device_side, rpc::device_side,
     /*expected_size=*/hw::offset_table::get_rpc_record_size()>
     rpc_check;
+}
 #endif
 
 } // namespace trisycl::vendor::xilinx::acap::aie

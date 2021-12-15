@@ -248,11 +248,11 @@ struct tile_emu_impl : tile_infrastructure<Geo> {
   }
 
   void stream_write16(const char *ptr, int stream_dix) {
-    acap_intr::stream_write16(ptr, stream_dix);
+    assert(false && "Not implemented in emulation");
   }
 
   void stream_read16(char *ptr, int stream_dix) {
-    acap_intr::stream_read16(ptr, stream_dix);
+    assert(false && "Not implemented in emulation");
   }
 
   lock_unit &get_lock(hw::dir d, int i) {

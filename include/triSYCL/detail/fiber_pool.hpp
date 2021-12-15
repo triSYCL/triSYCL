@@ -120,11 +120,11 @@ public:
     // Put the packaged_task into a shared_ptr to fit it later in a
     // lambda in a std::function since the type is move-only
     auto pt = std::make_shared<boost::fibers::packaged_task<void(void)>>
-      ([w = std::move(work)] () mutable { return w(); });
+      ([w = std::forward<Callable>(work)] () mutable { return w(); });
     auto f = pt->get_future();
     // Submit a lambda to do the type erasure so the submission queue
     // type is independent of the type of the packaged_task
-    submission.push([p = std::move(pt)] { (*p)(); });
+    submission.push([p = std::move(pt)] () mutable { (*p)(); });
     // Return the future to the client to get the result or the exception
     return f;
   }

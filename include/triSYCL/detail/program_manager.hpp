@@ -200,6 +200,7 @@ public:
           return { symbol_table[i].st_value, symbol_table[i].st_size, name };
       }
       assert(false && "requested symbol was not found");
+      __builtin_unreachable();
     }
   };
 

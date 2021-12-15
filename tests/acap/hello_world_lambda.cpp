@@ -19,7 +19,7 @@ int main() {
      th tile_handler member usage
   */
   acap::aie::device<acap::aie::layout::size<1, 1>> {}.run([](auto& th) {
-    std::cout << "Hello, I am the AIE tile (" << th.x() << ',' << th.y() << ")"
+    std::cout << "Hello, I am the AIE tile (" << th.x_coord() << ',' << th.y_coord() << ")"
               << std::endl;
   });
 }

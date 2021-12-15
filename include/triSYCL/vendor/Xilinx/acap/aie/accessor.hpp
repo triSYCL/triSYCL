@@ -124,7 +124,7 @@ template <typename Buffer>
 accessor(Buffer, auto &)
     -> accessor<typename Buffer::value_type, Buffer::rank(),
                 access::mode::read_write, access::target::global_buffer>;
-
+namespace {
 detail::assert_equal_layout<
     accessor<int, 1, access::mode::read_write, access::target::global_buffer,
              /*is_device=*/true>,
@@ -132,6 +132,7 @@ detail::assert_equal_layout<
              /*is_device=*/false>,
     16, 8>
     accessor_check;
+}
 
 /// @} End the aie Doxygen group
 
