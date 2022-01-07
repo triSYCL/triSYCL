@@ -26,6 +26,17 @@
 
 #define BOOST_COMPUTE_CL_VERSION_1_2
 
+namespace trisycl::detail {
+  constexpr bool allow_any_dimension =
+#ifdef TRISYCL_ALLOW_ANY_DIMENSION
+    /// Allow any dimension in SYCL object, not only between 1 and 3
+    true
+#else
+    false
+#endif
+    ;
+  } // namespace trisycl::detail
+
 /// This source is compiled by a single source compiler
 #define __SYCL_SINGLE_SOURCE__
 
