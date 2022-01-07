@@ -100,9 +100,9 @@ TEST_CASE("matrix multiplication with partition_array for PoCL",
                                   d_in1 = drt::accessor<decltype(a_in1)> { a_in1 },
                                   d_in2 = drt::accessor<decltype(a_in2)> { a_in2 }
       ] {
-            xilinx::partition_array<Type, BLOCK_SIZE> A;
-            xilinx::partition_array<Type, BLOCK_SIZE> B;
-            xilinx::partition_array<Type, BLOCK_SIZE> C;
+            vendor::xilinx::partition_array<Type, BLOCK_SIZE> A;
+            vendor::xilinx::partition_array<Type, BLOCK_SIZE> B;
+            vendor::xilinx::partition_array<Type, BLOCK_SIZE> C;
 
             for (int i = 0 ; i < DIM * DIM; i++) {
                 A[i]  = d_in1[i];
