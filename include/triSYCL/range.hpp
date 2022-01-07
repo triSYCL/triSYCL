@@ -30,7 +30,7 @@ namespace trisycl {
     \todo add to the specification some way to specify an offset?
 */
 template <int Dimensions = 1>
-class range : public detail::small_array_123<
+class range : public detail::small_array_sycl<
                 std::size_t,
                 range<Dimensions>,
                 Dimensions > {
@@ -38,9 +38,9 @@ class range : public detail::small_array_123<
 public:
 
   // Inherit of all the constructors
-  using detail::small_array_123<std::size_t,
+  using detail::small_array_sycl<std::size_t,
                                 range<Dimensions>,
-                                Dimensions>::small_array_123;
+                                Dimensions>::small_array_sycl;
 
   /// The number of dimensions of the range
   static auto constexpr rank() { return Dimensions; }

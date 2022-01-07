@@ -27,7 +27,7 @@ template <int Dimensions, bool with_offset> class item;
     item
 */
 template <int Dimensions = 1>
-class id : public detail::small_array_123<
+class id : public detail::small_array_sycl<
              std::size_t,
              id<Dimensions>,
              Dimensions > {
@@ -37,9 +37,9 @@ public:
   static auto constexpr rank() { return Dimensions; }
 
   // Inherit from all the constructors
-  using detail::small_array_123<std::size_t,
+  using detail::small_array_sycl<std::size_t,
                                 id<Dimensions>,
-                                Dimensions>::small_array_123;
+                                Dimensions>::small_array_sycl;
 
 
   /// Construct an id from the dimensions of a range
@@ -47,19 +47,19 @@ public:
     /** Use the fact we have a constructor of a small_array from a another
         kind of small_array
      */
-    : detail::small_array_123<std::size_t, id<Dimensions>, Dimensions>
+    : detail::small_array_sycl<std::size_t, id<Dimensions>, Dimensions>
       { range_size }
   {}
 
 
   /// Construct an id from an item global_id
   id(const item<Dimensions, true> &rhs)
-    : detail::small_array_123<std::size_t, id<Dimensions>, Dimensions>
+    : detail::small_array_sycl<std::size_t, id<Dimensions>, Dimensions>
       { rhs.get_id() }
   {}
 
   /// Default constructor must 0 all elements
-  id() : detail::small_array_123<std::size_t, id<Dimensions>, Dimensions> { 0 }
+  id() : detail::small_array_sycl<std::size_t, id<Dimensions>, Dimensions> { 0 }
   {}
 };
 

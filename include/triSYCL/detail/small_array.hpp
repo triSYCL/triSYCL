@@ -325,7 +325,7 @@ TRISYCL_OPERATOR_BASIC_TYPE_OP(>>)
 
 /** A small array of 1, 2 or 3 elements with the implicit constructors */
 template <typename BasicType, typename FinalType, std::size_t Dims>
-struct small_array_123 : small_array<BasicType, FinalType, Dims> {
+struct small_array_sycl : small_array<BasicType, FinalType, Dims> {
   static_assert(1 <= Dims && Dims <= 3,
                 "Dimensions are between 1 and 3");
 };
@@ -337,28 +337,28 @@ struct small_array_123 : small_array<BasicType, FinalType, Dims> {
     Dimensions = 1
 */
 template <typename BasicType, typename FinalType>
-struct small_array_123<BasicType, FinalType, 1>
+struct small_array_sycl<BasicType, FinalType, 1>
   : public small_array<BasicType, FinalType, 1> {
   /// A 1-D constructor to have implicit conversion from from 1 integer
   /// and automatic inference of the dimensionality
-  small_array_123(BasicType x) {
+  small_array_sycl(BasicType x) {
     (*this)[0] = x;
   }
 
 
   /// Keep other constructors
-  small_array_123() = default;
+  small_array_sycl() = default;
 
   using small_array<BasicType, FinalType, 1>::small_array;
 };
 
 
 template <typename BasicType, typename FinalType>
-struct small_array_123<BasicType, FinalType, 2>
+struct small_array_sycl<BasicType, FinalType, 2>
   : public small_array<BasicType, FinalType, 2> {
   /// A 2-D constructor to have implicit conversion from from 2 integers
   /// and automatic inference of the dimensionality
-  small_array_123(BasicType x, BasicType y) {
+  small_array_sycl(BasicType x, BasicType y) {
     (*this)[0] = x;
     (*this)[1] = y;
   }
@@ -369,22 +369,22 @@ struct small_array_123<BasicType, FinalType, 2>
 
       \todo Add to the specification of the range, id...
   */
-  explicit small_array_123(BasicType e) : small_array_123 { e, e } { }
+  explicit small_array_sycl(BasicType e) : small_array_sycl { e, e } { }
 
 
   /// Keep other constructors
-  small_array_123() = default;
+  small_array_sycl() = default;
 
   using small_array<BasicType, FinalType, 2>::small_array;
 };
 
 
 template <typename BasicType, typename FinalType>
-struct small_array_123<BasicType, FinalType, 3>
+struct small_array_sycl<BasicType, FinalType, 3>
   : public small_array<BasicType, FinalType, 3> {
   /// A 3-D constructor to have implicit conversion from from 3 integers
   /// and automatic inference of the dimensionality
-  small_array_123(BasicType x, BasicType y, BasicType z) {
+  small_array_sycl(BasicType x, BasicType y, BasicType z) {
     (*this)[0] = x;
     (*this)[1] = y;
     (*this)[2] = z;
@@ -396,11 +396,11 @@ struct small_array_123<BasicType, FinalType, 3>
 
       \todo Add to the specification of the range, id...
   */
-  explicit small_array_123(BasicType e) : small_array_123 { e, e, e } { }
+  explicit small_array_sycl(BasicType e) : small_array_sycl { e, e, e } { }
 
 
   /// Keep other constructors
-  small_array_123() = default;
+  small_array_sycl() = default;
 
   using small_array<BasicType, FinalType, 3>::small_array;
 };
