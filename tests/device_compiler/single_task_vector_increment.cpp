@@ -6,7 +6,7 @@
 #include <iostream>
 #include <numeric>
 
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 using namespace cl::sycl;
 
@@ -14,7 +14,7 @@ constexpr size_t N = 300;
 using Type = int;
 
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("single_task_vector_increment", "[old device compiler]") {
   buffer<Type> input { N };
   buffer<Type> output { N };
 
@@ -44,7 +44,5 @@ int test_main(int argc, char *argv[]) {
   auto a_input = input.get_access<access::mode::read>();
   auto a_output = output.get_access<access::mode::read>();
   for (unsigned int i = 0 ; i < input.get_count(); ++i)
-    BOOST_CHECK(a_output[i] == a_input[i] + 42);
-
-  return 0;
+    REQUIRE(a_output[i] == a_input[i] + 42);
 }

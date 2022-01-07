@@ -7,14 +7,14 @@
 #include <iostream>
 #include <numeric>
 
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 using namespace cl::sycl;
 
 constexpr size_t N = 300;
 using Type = int;
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("single_task_vector_add_drt", "[old device compiler]") {
   buffer<Type> a { N };
   buffer<Type> b { N };
   buffer<Type> c { N };
@@ -68,7 +68,5 @@ int test_main(int argc, char *argv[]) {
   // Verify the result
   auto a_a = a.get_access<access::mode::read>();
   for (unsigned int i = 0 ; i < a.get_count(); ++i)
-    BOOST_CHECK(a_a[i] == 5 + 2*i);
-
-  return 0;
+    REQUIRE(a_a[i] == 5 + 2*i);
 }

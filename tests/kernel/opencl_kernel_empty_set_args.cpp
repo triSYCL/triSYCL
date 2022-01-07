@@ -4,15 +4,14 @@
 */
 #include <iostream>
 #include <boost/compute.hpp>
-#include <boost/test/minimal.hpp>
 
 #include <CL/sycl.hpp>
 
-#include "basic_object_checks.hpp"
+#include <catch2/catch_test_macros.hpp>
 
 using namespace cl::sycl;
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("kernel empty set args", "[OpenCL interoperability]") {
   // Construct an OpenCL program from the source string
   auto program = boost::compute::program::create_with_source(R"(
     __kernel void empty() {
@@ -38,6 +37,4 @@ int test_main(int argc, char *argv[]) {
   /* Since the kernel does not use any buffer, wait for its completion
      to be sure it is executed before the program exit */
   q.wait();
-
-  return 0;
 }

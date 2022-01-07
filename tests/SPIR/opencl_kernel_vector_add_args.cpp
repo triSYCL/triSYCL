@@ -13,7 +13,7 @@
 #include <iostream>
 #include <iterator>
 #include <boost/compute.hpp>
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 #include <CL/sycl.hpp>
 
@@ -22,7 +22,7 @@ using namespace cl::sycl;
 constexpr size_t N = 3;
 using Vector = float[N];
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("opencl_kernel_vector_add_args", "[SPIR]") {
   Vector a = { 1, 2, 3 };
   Vector b = { 5, 6, 8 };
   Vector c;
@@ -78,6 +78,4 @@ int test_main(int argc, char *argv[]) {
   for (auto e : c)
     std::cout << e << " ";
   std::cout << std::endl;
-
-  return 0;
 }

@@ -3,7 +3,7 @@
 #include <numeric>
 #include <vector>
 
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 /*
   The aim of this test is to check that multidimensional kernels are executing
@@ -34,13 +34,13 @@ void gen_nd_range(range<Dimensions> k_range) {
   auto acc_r = a.get_access<access::mode::read>();
 
   for (unsigned int i = 0; i < k_range.size(); ++i) {
-    BOOST_CHECK(acc_r[i] == k_range.size() + i);
+    REQUIRE(acc_r[i] == k_range.size() + i);
   }
 
   my_queue.wait();
 }
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("parallel_for_ND_range", "[old device compiler]") {
   gen_nd_range<1, class par_1d>({10});
   gen_nd_range<2, class par_2d_square>({10, 10});
   gen_nd_range<2, class par_2d_square>({12, 12});
@@ -54,6 +54,4 @@ int test_main(int argc, char *argv[]) {
   gen_nd_range<3, class par_3d_square>({100, 100, 100});
   gen_nd_range<3, class par_3d_rect>({150, 200, 150});
   gen_nd_range<3, class par_3d_rect>({150, 200, 100});
-
-  return 0;
 }

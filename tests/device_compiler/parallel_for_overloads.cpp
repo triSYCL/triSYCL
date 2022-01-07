@@ -3,7 +3,7 @@
 #include <numeric>
 #include <vector>
 
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 /*
   The aim of this test is to check the parallel_for overloads translate down to
@@ -17,7 +17,7 @@ using namespace cl::sycl;
 
 constexpr size_t N = 32;
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("parallel_for_overloads", "[old device compiler]") {
   queue my_queue{default_selector{}};
 
   buffer<unsigned int, 1> a{N};
@@ -74,8 +74,6 @@ int test_main(int argc, char *argv[]) {
   auto acc_r = a.get_access<access::mode::read>();
 
   for (unsigned int i = 0; i < N; ++i) {
-    BOOST_CHECK(acc_r[i] == i*3);
+    REQUIRE(acc_r[i] == i*3);
   }
-
-  return 0;
 }

@@ -7,13 +7,11 @@
 
 #include <CL/sycl.hpp>
 #include <iostream>
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
-
-int test_main(int argc, char *argv[]) {
+TEST_CASE("OpenCL interoperability types", "[math]") {
   cl::sycl::cl_float3 vec { 0, 1, 2 };
   std::cout << "x: "    << vec.x()
             << ", y: "  << vec.y()
             << ", z: "  << vec.z() << std::endl;
-  return 0;
 }
