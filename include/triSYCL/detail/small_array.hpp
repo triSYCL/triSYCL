@@ -16,6 +16,7 @@
 
 #include <boost/operators.hpp>
 
+#include "triSYCL/detail/global_config.hpp"
 #include "triSYCL/detail/debug.hpp"
 
 
@@ -323,13 +324,16 @@ TRISYCL_OPERATOR_BASIC_TYPE_OP(>>)
 
 #undef TRISYCL_OPERATOR_BASIC_TYPE_OP
 
-/** A small array of 1, 2 or 3 elements with the implicit constructors */
+/** A small array to implement SYCL objects like id, range,
+    item... with 1, 2 or 3 elements (or even more if
+    detail::allow_any_dimension is true), with the implicit
+    constructors */
 template <typename BasicType, typename FinalType, std::size_t Dims>
 struct small_array_sycl : small_array<BasicType, FinalType, Dims> {
-  static_assert(1 <= Dims && Dims <= 3,
-                "Dimensions are between 1 and 3");
+  static_assert(1 <= Dims, "SYCL dimensions are greater than or equal to 1");
+  static_assert(detail::allow_any_dimension || Dims <= 3,
+                "SYCL dimensions are less than or equal to 3");
 };
-
 
 /** Use some specializations so that some function overloads can be
     determined according to some implicit constructors and to have an
