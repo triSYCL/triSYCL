@@ -1,6 +1,8 @@
 /* RUN: %{execute}%s
    REQUIRES: this-test-does-not-run-with-lit-yet
 
+   This is an obsolete test now.
+
    A simple typical FPGA-like kernel doing matrix multiplying.
    This example is aim to show how to use array block and cyclic partitioning.
 */
@@ -8,8 +10,7 @@
 #include <iostream>
 #include <numeric>
 
-#include <boost/test/minimal.hpp>
-
+#include <catch2/catch_test_macros.hpp>
 
 using namespace cl::sycl;
 
@@ -101,9 +102,9 @@ TEST_CASE("matrix multiplication with partition_array for PoCL",
                                   d_in1 = drt::accessor<decltype(a_in1)> { a_in1 },
                                   d_in2 = drt::accessor<decltype(a_in2)> { a_in2 }
       ] {
-            xilinx::partition_array<Type, BLOCK_SIZE> A;
-            xilinx::partition_array<Type, BLOCK_SIZE> B;
-            xilinx::partition_array<Type, BLOCK_SIZE> C;
+            vendor::xilinx::partition_array<Type, BLOCK_SIZE> A;
+            vendor::xilinx::partition_array<Type, BLOCK_SIZE> B;
+            vendor::xilinx::partition_array<Type, BLOCK_SIZE> C;
 
             for (int i = 0 ; i < DIM * DIM; i++) {
                 A[i]  = d_in1[i];

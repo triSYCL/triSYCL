@@ -54,7 +54,6 @@ void writeOutput(T *buffer_out, const U &d_a) {
 }
 
 TEST_CASE("dataflow and pipeline optimization", "[FPGA]") {
-int test_main(int argc, char *argv[]) {
   buffer<Type> a { BLOCK_SIZE };
   buffer<Type> b { BLOCK_SIZE };
   buffer<Type> res { BLOCK_SIZE };
