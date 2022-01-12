@@ -24,7 +24,7 @@ project(triSYCL CXX)
 #  Sets the specified target to support the required C++ standard level.
 #
 #  targetName : Name of the target to be set.
-#  cxxStdYear : The year of the required C++ standard (e.g.: 17)
+#  cxxStdYear : The year of the required C++ standard (e.g.: 20)
 #
 function(set_target_cxx_std targetName cxxStdYear)
   if(cxx_std_${cxxStdYear} IN_LIST CMAKE_CXX_COMPILE_FEATURES)
@@ -68,7 +68,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
   else()
     message(STATUS "host compiler - gcc ${CMAKE_CXX_COMPILER_VERSION}")
 
-    set_target_cxx_std(_trisycl_cxxfeatures 17)
+    set_target_cxx_std(_trisycl_cxxfeatures 20)
     target_compile_options(_trisycl_cxxfeatures
       INTERFACE
         # Turn on all warnings:
@@ -95,7 +95,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   else()
     message(STATUS "host compiler - clang ${CMAKE_CXX_COMPILER_VERSION}")
 
-    set_target_cxx_std(_trisycl_cxxfeatures 17)
+    set_target_cxx_std(_trisycl_cxxfeatures 20)
     target_compile_options(_trisycl_cxxfeatures
       INTERFACE
         # Turn on all warnings
@@ -127,7 +127,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
   # Change to /std:c++latest once Boost::funtional is fixed
   # (1.63.0 with toolset v141 not working)
-  set_target_cxx_std(_trisycl_cxxfeatures 17)
+  set_target_cxx_std(_trisycl_cxxfeatures 20)
   # Replace default Warning Level 3 with 4 (/Wall is pretty-much useless on MSVC
   # system headers are plagued with warnings)
   string(REGEX REPLACE "/W[0-9]" "/W4" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
@@ -191,7 +191,7 @@ set(CL_SYCL_LANGUAGE_VERSION 121 CACHE STRING VERSION
   "Host language version to be used by triSYCL (default is: 121)")
 set(TRISYCL_CL_LANGUAGE_VERSION 121 CACHE STRING VERSION
   "Device language version to be used by triSYCL (default is: 121)")
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CXX_STANDARD_REQUIRED ON)
 
 if(NOT TRISYCL_INCLUDE_DIR)
