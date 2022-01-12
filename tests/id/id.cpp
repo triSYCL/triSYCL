@@ -30,10 +30,10 @@ using namespace cl::sycl;
 int main() {
   id<> i;
   id<3> i3;
-  id<> j { 1 };
+  id j { 1 };
   i = j;
   id<2> ii;
-  id<2> jj { 5, 7 };
+  id jj { 5, 7 };
   ii = jj;
   jj[1] = 3;
   i3 = { 1, 2, 3 };
@@ -44,20 +44,20 @@ int main() {
   std::cout << jj[1] << std::endl;
 
   // Test that id<> implement comparable
-  if (jj != make_id({ 5, 7 }))
+  if (jj != id { 5, 7 })
     std::cout << "jj has changed" << std::endl;
 
   // jj is 5, 3 at this point
-  ii = jj < make_id({ 4, 7 });
+  ii = jj < id { 4, 7 };
   ii.display();
 
-  ii = jj > make_id({ 4, 7 });
+  ii = jj > id { 4, 7 };
   ii.display();
 
-  ii = jj <= make_id({ 4, 3 });
+  ii = jj <= id { 4, 3 };
   ii.display();
 
-  ii = jj >= make_id({ 4, 3 });
+  ii = jj >= id { 4, 3 };
   ii.display();
 
   // Try some STL interoperability:
@@ -73,19 +73,19 @@ int main() {
 
   // Test arithmetics on id<>
 
-  jj += make_id({ 1, 2 });
+  jj += { 1, 2 };
   jj.display();
-  (jj - make_id({ 2, 1 })).display();
-  (jj % make_id({ 2, 2 })).display();
-  (jj * make_id({ 2, 3 })).display();
-  (jj /= make_id(1, 2)).display();
+  (jj - id { 2, 1 }).display();
+  (jj % id { 2, 2 }).display();
+  (jj * id { 2, 3 }).display();
+  (jj /= { 1, 2 }).display();
 
   range<3> r = { 1, 2, 3 };
-  id<3> ir { r };
+  id ir { r };
   ir.display();
 
   item<2> it { { 1, 2 }, { 5, 6 }, { 9, 10 } };
-  id<2> iditem { it };
+  id iditem { it };
   iditem.display();
 
   id<3> zeroid;

@@ -70,24 +70,6 @@ public:
 */
 template <typename... BasicType> id(BasicType... Args) -> id<sizeof...(Args)>;
 
-/** Implement a make_id to construct an id<> of the right dimension with
-    implicit conversion from an initializer list for example.
-
-    Cannot use a template on the number of dimensions because the implicit
-    conversion would not be tried. */
-inline auto make_id(id<1> i) { return i; }
-inline auto make_id(id<2> i) { return i; }
-inline auto make_id(id<3> i) { return i; }
-
-
-/** Construct an id<> from a function call with arguments, like
-    make_id(1, 2, 3) */
-template<typename... BasicType>
-auto make_id(BasicType... Args) {
-  // Call constructor directly to allow narrowing
-  return id<sizeof...(Args)>(Args...);
-}
-
 /// @} End the parallelism Doxygen group
 
 }
