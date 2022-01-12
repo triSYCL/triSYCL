@@ -11,13 +11,17 @@
 
 #include <algorithm>
 #include <array>
+#include <concepts>
 #include <cstddef>
 #include <type_traits>
+#include <utility>
 
 #include <boost/operators.hpp>
 
 #include "triSYCL/detail/global_config.hpp"
+#include "triSYCL/detail/array_tuple_helpers.hpp"
 #include "triSYCL/detail/debug.hpp"
+#include "triSYCL/detail/metaprogramming.hpp"
 
 
 namespace trisycl::detail {
@@ -179,11 +183,7 @@ struct small_array : std::array<BasicType, Dims>,
       some conflicts, make it optional here, according to
       EnableArgsConstructor template parameter.
    */
-  template <typename... Types,
-            // Just to make enable_if depend of the template and work
-            bool Depend = true,
-            typename = typename std::enable_if_t<EnableArgsConstructor
-                                                 && Depend>>
+  template <typename... Types>
   small_array(const Types &... args)
     : std::array<BasicType, Dims> {
     // Allow a loss of precision in initialization with the static_cast
@@ -327,6 +327,48 @@ struct small_array_sycl : small_array<BasicType, FinalType, Dims> {
   static_assert(1 <= Dims, "SYCL dimensions are greater than or equal to 1");
   static_assert(detail::allow_any_dimension || Dims <= 3,
                 "SYCL dimensions are less than or equal to 3");
+
+  /// Keep other constructors
+  small_array_sycl() = default;
+
+  /** Construct from an object inheriting from a compatible std::array
+
+      This useful in implementation details for example to construct a
+      sycl::id from a sycl::range.
+  */
+  template <typename Array>
+  requires std::is_base_of_v<std::array<BasicType, Dims>, Array>
+  small_array_sycl(const Array& a) {
+    // Copy the internal value
+    static_cast<std::array<BasicType, Dims>&>(*this) =
+        static_cast<const std::array<BasicType, Dims>&>(a);
+  }
+
+  /** Constructor taking either Dims arguments compatible with BasicType
+      or just 1 argument compatible with BasicType and broadcast its
+      value to all the elements */
+  template <typename... Args>
+  // Check that each parameter is convertible to the BasicType
+  // Full C++20: requires (std::convertible_to<Args, BasicType> && ...)
+  // In the meantime:
+  requires requires { (static_cast<BasicType>(std::declval<Args>()), ...); }
+  small_array_sycl(Args... args) {
+    if constexpr (sizeof...(Args) == Dims) {
+      // If there is the right number of elements we initialize each
+      // element from each parameter, allowing some narrowing
+      static_cast<std::array<BasicType, Dims>&>(
+          *this) = { static_cast<BasicType>(args)... };
+    } else if constexpr (sizeof...(Args) == 1) {
+      // If there is only 1 argument, this is a broadcast
+      detail::assign_from_tuple(
+          static_cast<std::array<BasicType, Dims>&>(*this),
+          detail::expand_to_vector<small_array_sycl, std::tuple<BasicType>,
+                                   true> {}
+              .expand(args...));
+    } else
+      static_assert(true, "There should be either 1 argument to broadcast the "
+                          "value or 1 value per dimension");
+  }
 };
 
 /** Use some specializations so that some function overloads can be
