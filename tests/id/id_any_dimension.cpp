@@ -11,6 +11,10 @@
 #include <iostream>
 
 TEST_CASE("use dimensions higher than 3", "[id]") {
+  // CTAD
+  sycl::id i5 { 0, 1, 2, 3, 4 };
+  i5.display();
+  
   sycl::id<4> i4;
   i4 = { 1, 2, 3, 4 };
   i4.display();

@@ -63,6 +63,12 @@ public:
   {}
 };
 
+/**  User-defined deduction guides to deduce the rank of an id from the number
+     of arguments
+
+     For example id { 4, 5, 7 } will define an id<3> { 4, 5, 7 }
+*/
+template <typename... BasicType> id(BasicType... Args) -> id<sizeof...(Args)>;
 
 /** Implement a make_id to construct an id<> of the right dimension with
     implicit conversion from an initializer list for example.
