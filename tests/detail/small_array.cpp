@@ -4,6 +4,7 @@
    namespace by using #include "triSYCL/sycl.hpp"
 */
 
+
 /// Test explicitly a feature of triSYCL, so include the triSYCL header
 #include "triSYCL/sycl.hpp"
 
@@ -12,22 +13,22 @@
 /// Test explicitly a feature of triSYCL in ::trisycl namespace
 using namespace trisycl;
 
-struct sa1 : public detail::small_array<float, sa1, 1, true> {
-  using detail::small_array<float, sa1, 1, true>::small_array;
+struct sa1 : public detail::small_array<float, sa1, 1> {
+  using detail::small_array<float, sa1, 1>::small_array;
 };
 
-struct sa2 : public detail::small_array<float, sa2, 2, true> {
-  using detail::small_array<float, sa2, 2, true>::small_array;
+struct sa2 : public detail::small_array<float, sa2, 2> {
+  using detail::small_array<float, sa2, 2>::small_array;
 };
 
-struct sa3 : public detail::small_array<float, sa3, 3, true> {
-  using detail::small_array<float, sa3, 3, true>::small_array;
+struct sa3 : public detail::small_array<float, sa3, 3> {
+  using detail::small_array<float, sa3, 3>::small_array;
 };
 
-
+/// \todo just use range equal algorithm
 /// Return true if both contents are the same
 template <typename T, typename U, size_t N>
-bool equal(const detail::small_array<T, U, N, true> &v,
+bool equal(const detail::small_array<T, U, N> &v,
            const std::array<T, N> &verif) {
   /* Do not use directly v == verif because we want to verify the
      (implicit) constructor itself */
