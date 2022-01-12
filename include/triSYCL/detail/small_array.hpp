@@ -117,9 +117,6 @@ namespace trisycl::detail {
     \param FinalType is the final type, such as range<> or id<>, so that
     boost::operator can return the right type
 
-    \param EnableArgsConstructor adds a constructors from Dims variadic
-    elements when true. It is false by default.
-
     std::array<> provides the collection concept, with .size(), == and !=
     too.
 
@@ -128,8 +125,7 @@ namespace trisycl::detail {
 */
 template <typename BasicType,
           typename FinalType,
-          std::size_t Dims,
-          bool EnableArgsConstructor = false>
+          std::size_t Dims>
 struct small_array : std::array<BasicType, Dims>,
   // To have all the usual arithmetic operations on this type and bitwise
   // operations. Note these operation classes are chained via:
@@ -165,12 +161,10 @@ struct small_array : std::array<BasicType, Dims>,
 
   /// A constructor from another small_array of the same size
   template <typename SourceBasicType,
-            typename SourceFinalType,
-            bool SourceEnableArgsConstructor>
+            typename SourceFinalType>
   small_array(const small_array<SourceBasicType,
               SourceFinalType,
-              Dims,
-              SourceEnableArgsConstructor> &src) {
+              Dims> &src) {
     std::copy_n(&src[0], Dims, &(*this)[0]);
   }
 
