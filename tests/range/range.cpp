@@ -42,33 +42,25 @@
 using namespace cl::sycl;
 
 // To test the inference of the range rank
-template<int N> void f(range<N> r) {
+template<int N> void f(const range<N>& r) {
   std::cout << "Range of dims " << N << std::endl;
 }
-
-/* To force the implicit conversion to the right range<>
-
-   Unfortunately this does not work with templates, even with explicit
-   instanciation for these 3 values... */
-void g(range<1> r) { f(r); }
-void g(range<2> r) { f(r); }
-void g(range<3> r) { f(r); }
-
-
 
 int main() {
   range<> t { 1 };
   range<> r(t);
+  // CTAD
+  range u { r };
 
   std::cout << std::endl << "Result:" << std::endl;
-  std::cout << r.get(0) << " ";
+  std::cout << u.get(0) << " ";
   std::cout << std::endl;
 
   range<> a = 3;
   std::cout << "a = " << a[0] << std::endl;
   range<1> b = { 4 };
   std::cout << "b = " << b[0] << std::endl;
-  b /= make_range(2);
+  b /= { 2 };
   std::cout << "b = " << b[0] << std::endl;
   range<2> c = { 5, 6 };
   std::cout << "c = " << c[0] << ',' << c[1] << std::endl;
@@ -78,17 +70,16 @@ int main() {
   div.display();
 
   // Test modulo operation
-  d %= make_range({2, 3, 4});
+  d %= { 2, 3, 4 };
   std::cout << "d = " << d[0] << ',' << d[1] <<  ',' << d[2] << std::endl;
 
-  d += make_range(1, 2, 3);
+  d += { 1, 2, 3 };
   std::cout << "d = " << d[0] << ',' << d[1] <<  ',' << d[2] << std::endl;
 
-  g(43);
-  g(2014);
-  g({ 1, 128 });
-
-  g({ 11, 54, 68 });
+  f(43);
+  f(2014);
+  f({ 1, 128 });
+  f({ 11, 54, 68 });
 
 
   // Try some conversions

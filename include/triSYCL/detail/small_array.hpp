@@ -18,6 +18,8 @@
 
 #include <boost/operators.hpp>
 
+#include <range/v3/all.hpp>
+
 #include "triSYCL/detail/global_config.hpp"
 #include "triSYCL/detail/array_tuple_helpers.hpp"
 #include "triSYCL/detail/debug.hpp"
@@ -331,17 +333,19 @@ struct small_array_sycl : small_array<BasicType, FinalType, Dims> {
   /// Keep other constructors
   small_array_sycl() = default;
 
-  /** Construct from an object inheriting from a compatible std::array
+  /** Construct from a range-like object inheriting from a
+      compatible std::array
 
       This useful in implementation details for example to construct a
       sycl::id from a sycl::range.
   */
-  template <typename Array>
-  requires std::is_base_of_v<std::array<BasicType, Dims>, Array>
-  small_array_sycl(const Array& a) {
-    // Copy the internal value
-    static_cast<std::array<BasicType, Dims>&>(*this) =
-        static_cast<const std::array<BasicType, Dims>&>(a);
+  template <typename Range>
+  requires requires {
+    ranges::copy(std::declval<Range>(), std::declval<BasicType>());
+  }
+  small_array_sycl(Range&& r) {
+    // Copy to internal value
+    ranges::copy(std::forward<Range>(r), this->begin());
   }
 
   /** Constructor taking either Dims arguments compatible with BasicType
