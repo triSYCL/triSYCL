@@ -14,6 +14,7 @@
 #include <utility>
 
 #include "triSYCL/range.hpp"
+#include "triSYCL/detail/small_array.hpp"
 
 namespace trisycl::mixin {
 
@@ -70,13 +71,14 @@ template <typename T, int Dimensions> class accessor {
   */
   mdspan access;
 
-  /** Cast a SYCL range into a mdspan index array, which is an array
-      of std::size_t into an array of std::ptrdiff_t
+  /** Cast a SYCL range/id-like into a mdspan index array, which is an
+      array of std::size_t into an array of std::ptrdiff_t
   */
+  template <typename BasicType, typename FinalType>
   const std::array<typename mdspan::size_type, rank()>&
-  extents_cast(const range<Dimensions>& r) {
+  extents_cast(const detail::small_array<BasicType, FinalType, rank()>& sa) {
     return reinterpret_cast<
-        const std::array<typename mdspan::size_type, rank()>&>(r);
+        const std::array<typename mdspan::size_type, rank()>&>(sa);
   }
 
   /// Set later the mdspan associated to this accessor
