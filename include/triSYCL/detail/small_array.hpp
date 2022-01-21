@@ -341,7 +341,7 @@ struct small_array_sycl : small_array<BasicType, FinalType, Dims> {
   */
   template <typename Range>
   requires requires {
-    ranges::copy(std::declval<Range>(), std::declval<BasicType>());
+    ranges::copy(std::declval<Range>(), std::declval<BasicType*>());
   }
   small_array_sycl(Range&& r) {
     // Copy to internal value
