@@ -259,31 +259,35 @@ public:
       Dimensions
   */
 #if defined(TRISYCL_USE_OPENCL_ND_RANGE)
-  #define TRISYCL_parallel_for_functor_GLOBAL(N)                        \
-  template <typename KernelName = std::nullptr_t,                       \
-            typename ParallelForFunctor>                                \
-  void parallel_for(range<N> global_size,                               \
-                    ParallelForFunctor f) {                             \
-    schedule_parallel_for_kernel<KernelName>([=] {                      \
-        detail::parallel_for(global_size, f);                           \
-     }, global_size);                                                   \
+  template <typename KernelName = std::nullptr_t, int Dims,
+            typename ParallelForFunctor>
+  void parallel_for(const std::size_t (&global_size)[Dims],
+                    ParallelForFunctor f) {
+    schedule_parallel_for_kernel<KernelName>(
+        [=] { detail::parallel_for(global_size, f); }, global_size);
   }
 #else
-  #define TRISYCL_parallel_for_functor_GLOBAL(N)                        \
-  template <typename KernelName = std::nullptr_t,                       \
-            typename ParallelForFunctor>                                \
-  void parallel_for(range<N> global_size,                               \
-                    ParallelForFunctor f) {                             \
-    schedule_kernel<KernelName>([=] {                                   \
-        detail::parallel_for(global_size, f);                           \
-     });                                                                \
+  template <typename KernelName = std::nullptr_t, int Dims,
+            typename ParallelForFunctor>
+  void parallel_for(const std::size_t (&global_size)[Dims],
+                    ParallelForFunctor f) {
+    schedule_kernel<KernelName>([=] { detail::parallel_for(range<Dims> { global_size }, f); });
   }
 #endif
-
-  TRISYCL_parallel_for_functor_GLOBAL(1)
-  TRISYCL_parallel_for_functor_GLOBAL(2)
-  TRISYCL_parallel_for_functor_GLOBAL(3)
-
+#if defined(TRISYCL_USE_OPENCL_ND_RANGE)
+  template <typename KernelName = std::nullptr_t, int Dims,
+            typename ParallelForFunctor>
+  void parallel_for(range<Dims> global_size, ParallelForFunctor f) {
+    schedule_parallel_for_kernel<KernelName>(
+        [=] { detail::parallel_for(global_size, f); }, global_size);
+  }
+#else
+  template <typename KernelName = std::nullptr_t, int Dims,
+            typename ParallelForFunctor>
+  void parallel_for(range<Dims> global_size, ParallelForFunctor f) {
+    schedule_kernel<KernelName>([=] { detail::parallel_for(global_size, f); });
+  }
+#endif
 
   /** Kernel invocation method of a kernel defined as a lambda or functor,
       for the specified range and offset and given an id or item for

@@ -41,16 +41,14 @@ public:
                                 id<Dimensions>,
                                 Dimensions>::small_array_sycl;
 
-
-  /// Construct an id from the dimensions of a range
-  id(const range<Dimensions> &range_size)
-    /** Use the fact we have a constructor of a small_array from a another
-        kind of small_array
-     */
-    : detail::small_array_sycl<std::size_t, id<Dimensions>, Dimensions>
-      { range_size }
-  {}
-
+  /// Construct an id from a range
+  id(const range<Dimensions>& range_size)
+      /** Use the fact we have a constructor of a small_array from a another
+          kind of small_array
+      */
+      : detail::small_array_sycl<std::size_t, id<Dimensions>, Dimensions> {
+        range_size
+      } {}
 
   /// Construct an id from an item global_id
   id(const item<Dimensions, true> &rhs)
