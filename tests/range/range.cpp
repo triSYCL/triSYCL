@@ -9,10 +9,6 @@
    CHECK-NEXT: 1 1 1
    CHECK-NEXT: d = 1,2,1
    CHECK-NEXT: d = 2,4,4
-   CHECK-NEXT: Range of dims 1
-   CHECK-NEXT: Range of dims 1
-   CHECK-NEXT: Range of dims 2
-   CHECK-NEXT: Range of dims 3
    CHECK-NEXT: 1 2 3
    CHECK-NEXT: 2 5 6
    CHECK-NEXT: 1 4 16
@@ -40,11 +36,6 @@
 #include <iostream>
 
 using namespace cl::sycl;
-
-// To test the inference of the range rank
-template<int N> void f(const range<N>& r) {
-  std::cout << "Range of dims " << N << std::endl;
-}
 
 int main() {
   range<> t { 1 };
@@ -75,12 +66,6 @@ int main() {
 
   d += { 1, 2, 3 };
   std::cout << "d = " << d[0] << ',' << d[1] <<  ',' << d[2] << std::endl;
-
-  f(43);
-  f(2014);
-  f({ 1, 128 });
-  f({ 11, 54, 68 });
-
 
   // Try some conversions
   char array[3] = { 1, 2, 3 };
