@@ -42,6 +42,7 @@ class range
                                 Dimensions>::small_array_sycl;
 
   range() = default;
+
   /// The number of dimensions of the range
   static auto constexpr rank() { return Dimensions; }
 

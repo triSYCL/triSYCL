@@ -243,7 +243,7 @@ public:
 
       If it is a lambda function or the if the functor type is globally
       visible there is no need for the developer to provide a kernel name
-      type (typename KernelName) for it, as described in detail in 3.5.3
+      type (typename KernelName) for it.
 
       \param global_size is the full size of the range<>
 
@@ -271,7 +271,8 @@ public:
             typename ParallelForFunctor>
   void parallel_for(const std::size_t (&global_size)[Dims],
                     ParallelForFunctor f) {
-    schedule_kernel<KernelName>([=] { detail::parallel_for(range<Dims> { global_size }, f); });
+    schedule_kernel<KernelName>(
+        [=] { detail::parallel_for(range<Dims> { global_size }, f); });
   }
 #endif
 #if defined(TRISYCL_USE_OPENCL_ND_RANGE)
@@ -286,6 +287,19 @@ public:
             typename ParallelForFunctor>
   void parallel_for(range<Dims> global_size, ParallelForFunctor f) {
     schedule_kernel<KernelName>([=] { detail::parallel_for(global_size, f); });
+  }
+#endif
+#if defined(TRISYCL_USE_OPENCL_ND_RANGE)
+  template <typename KernelName = std::nullptr_t, typename ParallelForFunctor>
+  void parallel_for(std::size_t global_size, ParallelForFunctor f) {
+    schedule_parallel_for_kernel<KernelName>(
+        [=] { detail::parallel_for(range { global_size }, f); }, global_size);
+  }
+#else
+  template <typename KernelName = std::nullptr_t, typename ParallelForFunctor>
+  void parallel_for(std::size_t global_size, ParallelForFunctor f) {
+    schedule_kernel<KernelName>(
+        [=] { detail::parallel_for(range { global_size }, f); });
   }
 #endif
 
