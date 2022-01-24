@@ -9,8 +9,6 @@
 #include <iostream>
 #include "test-helpers.hpp"
 
-using namespace cl::sycl;
-
 // Size of the buffers
 constexpr size_t N = 20;
 constexpr size_t M = 30;
@@ -25,17 +23,17 @@ int main() {
 
   // Create a read-write 2D buffer of size N*M upon host storage
   double array[N][M];
-  cl::sycl::buffer<double, 2> b(&array[0][0], make_range(N, M));
+  cl::sycl::buffer<double, 2> b(&array[0][0], { N, M });
   DISPLAY_BUFFER_READ_ONLY_STATUS(b);
 
   // Create a read-write 2D buffer of size N*M upon host storage
   const double carray[N][M] = { { 0 } };
-  cl::sycl::buffer<double, 2> c(&carray[0][0], make_range(N, M));
+  cl::sycl::buffer<double, 2> c(&carray[0][0], { N, M });
   DISPLAY_BUFFER_READ_ONLY_STATUS(c);
 
   // Create a read-only 2D buffer of size N*M upon host storage
   const double ccarray[N][M] = { { 0 } };
-  cl::sycl::buffer<const double, 2> cc { &ccarray[0][0], make_range(N, M) };
+  cl::sycl::buffer<const double, 2> cc { &ccarray[0][0], { N, M } };
   DISPLAY_BUFFER_READ_ONLY_STATUS(cc);
 
   // Create a read-write 1D buffer initialized with copy of elements given
