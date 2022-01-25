@@ -348,28 +348,14 @@ public:
 
       \param KernelName is a class type that defines the name to be used for
       the underlying kernel
-
-      Unfortunately, to have implicit conversion to work on the range, the
-      function can not be templated, so instantiate it for all the
-      dimensions
   */
-#define TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(N)               \
-  template <typename KernelName = std::nullptr_t,                 \
-            typename ParallelForFunctor>                          \
-  void parallel_for(range<N> global_size,                         \
-                    id<N> offset,                                 \
-                    ParallelForFunctor f) {                       \
-    schedule_kernel<KernelName>([=] {                             \
-        detail::parallel_for_global_offset(global_size,           \
-                                           offset,                \
-                                           f);                    \
-      });                                                         \
+  template <typename KernelName = std::nullptr_t, int Dims,
+            typename ParallelForFunctor>
+  void parallel_for(range<Dims> global_size, id<Dims> offset,
+                    ParallelForFunctor f) {
+    schedule_kernel<KernelName>(
+        [=] { detail::parallel_for_global_offset(global_size, offset, f); });
   }
-
-  TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(1)
-  TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(2)
-  TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(3)
-
 
   /** Kernel invocation method of a kernel defined as a lambda or functor,
       for the specified nd_range and given an nd_item for indexing in the
