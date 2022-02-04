@@ -7,7 +7,7 @@
 #include <iostream>
 #include <numeric>
 
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 
 using namespace cl::sycl;
@@ -52,32 +52,32 @@ void writeOutput(T (&buffer_out)[BLOCK_SIZE], const U &d_a) {
   }
 }
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("single_task_vector_add_drt_func_local", "[old device compiler]") {
   buffer<Type> a { BLOCK_SIZE };
-  buffer<Type> b { BLOCK_SIZE }; 
-  buffer<Type> res { BLOCK_SIZE }; 
+  buffer<Type> b { BLOCK_SIZE };
+  buffer<Type> res { BLOCK_SIZE };
 
   {
     auto a_b = b.get_access<access::mode::discard_write>();
     // Initialize buffer with increasing numbers starting at 0
     std::iota(a_b.begin(), a_b.end(), 0);
     for (int i = 0; i < BLOCK_SIZE; i++)
-    	std::cout << a_b[i] << " ";
+      std::cout << a_b[i] << " ";
     std::cout << std::endl;
-  }	
+  }
 
 
   {
     auto a_r = b.get_access<access::mode::read>();
     auto res_b = res.get_access<access::mode::discard_write>();
     for (int i = 0; i < BLOCK_SIZE; i++)
-    	res_b[i] = a_r[i] * ALPHA;
+      res_b[i] = a_r[i] * ALPHA;
   }
 
   {
     auto res_r = res.get_access<access::mode::read>();
     for (int i = 0; i < BLOCK_SIZE; i++)
-    	std::cout << res_r[i] << " ";
+      std::cout << res_r[i] << " ";
     std::cout << std::endl;
   }
 
@@ -108,12 +108,12 @@ int test_main(int argc, char *argv[]) {
       cgh.single_task<class add>([=,
                                   d_a = drt::accessor<decltype(a_a)> { a_a },
                                   d_b = drt::accessor<decltype(a_b)> { a_b }
-				  ] {
-  				  int buffer_in[BLOCK_SIZE]; 
-  				  int buffer_out[BLOCK_SIZE];
-				  readInput(buffer_in, d_b);
-				  compute(buffer_in, buffer_out);
-				  writeOutput(buffer_out, d_a);
+          ] {
+            int buffer_in[BLOCK_SIZE];
+            int buffer_out[BLOCK_SIZE];
+          readInput(buffer_in, d_b);
+          compute(buffer_in, buffer_out);
+          writeOutput(buffer_out, d_a);
 
                                  });
     });
@@ -122,9 +122,8 @@ int test_main(int argc, char *argv[]) {
   auto a_a = a.get_access<access::mode::read>();
   auto res_r = res.get_access<access::mode::read>();
   for (unsigned int i = 0 ; i < BLOCK_SIZE; ++i) {
-  	std::cout << "a_a["<< i << "]: " << a_a[i] << " ";
-  	std::cout << "res_r["<< i << "]: " << res_r[i] << std::endl;
- 	BOOST_CHECK(a_a[i] == res_r[i]);
+    std::cout << "a_a["<< i << "]: " << a_a[i] << " ";
+    std::cout << "res_r["<< i << "]: " << res_r[i] << std::endl;
+    REQUIRE(a_a[i] == res_r[i]);
   }
-  return 0;
 }

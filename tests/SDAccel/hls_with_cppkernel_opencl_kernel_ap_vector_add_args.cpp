@@ -18,7 +18,7 @@
 #include <iterator>
 #include <array>
 #include <boost/compute.hpp>
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 #include <CL/sycl.hpp>
 
@@ -32,7 +32,7 @@ constexpr size_t N = 3;
 using Type = ap_int<256>;
 using Vector = std::array<Type, N>;
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("hls_with_cppkernel_opencl_kernel_ap_vector_add_args", "[SDAccel]") {
   Vector a = { 1, 2, 3 };
   Vector b = { 5, 6, 8 };
   Vector c;
@@ -91,6 +91,4 @@ int test_main(int argc, char *argv[]) {
   for (auto e : c)
     std::cout << e << " ";
   std::cout << std::endl;
-
-  return 0;
 }

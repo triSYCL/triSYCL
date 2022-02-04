@@ -7,7 +7,7 @@
 #include <iostream>
 #include <numeric>
 
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 #ifdef TRISYCL_DEVICE
 
@@ -39,7 +39,7 @@ constexpr size_t ALPHA = 3;
 
 using Type = int;
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("array partition cyclicblock", "[old device compiler]") {
   buffer<Type> a { BLOCK_SIZE };
   buffer<Type> b { BLOCK_SIZE };
   buffer<Type> res { BLOCK_SIZE };
@@ -137,7 +137,6 @@ int test_main(int argc, char *argv[]) {
   for (unsigned int i = 0 ; i < BLOCK_SIZE; ++i) {
     // std::cout << "a_a["<< i << "]: " << a_a[i] << " ";
     // std::cout << "res_r["<< i << "]: " << res_r[i] << std::endl;
-    BOOST_CHECK(a_a[i] == res_r[i]);
+    REQUIRE(a_a[i] == res_r[i]);
   }
-  return 0;
 }
