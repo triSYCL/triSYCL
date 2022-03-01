@@ -174,29 +174,19 @@ struct small_array : std::array<BasicType, Dims>,
     std::copy_n(&src[0], Dims, &(*this)[0]);
   }
 
-
-  /** Initialize the array from a list of elements
+  /** Initialize the array from a list of exactly Dims elements
 
       Strangely, even when using the array constructors, the
       initialization of the aggregate is not available. So recreate an
       equivalent here.
-
-      Since there are inherited types that defines some constructors with
-      some conflicts, make it optional here, according to
-      EnableArgsConstructor template parameter.
-   */
+  */
   template <typename... Types>
-  small_array(const Types &... args)
-    : std::array<BasicType, Dims> {
-    // Allow a loss of precision in initialization with the static_cast
-    { static_cast<BasicType>(args)... }
-  }
-  {
-    static_assert(sizeof...(args) == Dims,
-                  "The number of initializing elements should match "
-                  "the dimension");
-  }
-
+    requires(sizeof...(Types) == Dims)
+  small_array(const Types&... args)
+      : std::array<BasicType, Dims> {
+        // Allow a loss of precision in initialization with the static_cast
+        { static_cast<BasicType>(args)... }
+      } {}
 
   /// Construct a small_array from a std::array
   template <typename SourceBasicType>
