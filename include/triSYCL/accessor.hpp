@@ -10,6 +10,7 @@
 */
 
 #include <cstddef>
+#include <type_traits>
 
 #include "triSYCL/access.hpp"
 #include "triSYCL/accessor/detail/local_accessor.hpp"
@@ -45,20 +46,16 @@ class handler;
 
     \todo Implement it for images according so section 3.3.4.5
 */
-template <typename DataType,
-          int Dimensions,
-          access::mode AccessMode,
+template <typename DataType, int Dimensions,
+          access::mode AccessMode =
+              (std::is_const_v<DataType> ? access::mode::read
+                                         : access::mode::read_write),
           access::target Target = access::target::global_buffer>
-class accessor :
-    public detail::shared_ptr_implementation<accessor<DataType,
-                                                      Dimensions,
-                                                      AccessMode,
-                                                      Target>,
-                                             detail::accessor<DataType,
-                                                              Dimensions,
-                                                              AccessMode,
-                                                              Target>>,
-    public detail::container_element_aspect<DataType> {
+class accessor
+    : public detail::shared_ptr_implementation<
+          accessor<DataType, Dimensions, AccessMode, Target>,
+          detail::accessor<DataType, Dimensions, AccessMode, Target>>
+    , public detail::container_element_aspect<DataType> {
 
  public:
 
