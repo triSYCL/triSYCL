@@ -76,6 +76,11 @@ class accessor
   friend implementation_t;
 
  public:
+  /// Introspect the \c access_mode
+  auto static constexpr access_mode() { return AccessMode; }
+
+  /// Introspect the \c target
+  auto static constexpr target() { return Target; }
 
   // Make the implementation member directly accessible in this class
   using implementation_t::implementation;
