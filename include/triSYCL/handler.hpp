@@ -243,47 +243,92 @@ public:
 
       If it is a lambda function or the if the functor type is globally
       visible there is no need for the developer to provide a kernel name
-      type (typename KernelName) for it, as described in detail in 3.5.3
+      type (typename KernelName) for it.
 
       \param global_size is the full size of the range<>
 
-      \param N dimensionality of the iteration space
+      \tparam Dims dimensionality of the iteration space
+
+      \tparam KernelName is a class type that defines the name to be used
+      for the underlying kernel
 
       \param f is the kernel functor to execute
 
-      \param KernelName is a class type that defines the name to be used
+      \tparam ParallelForFunctor is the type of the kernel functor
+  */
+  template <typename KernelName = std::nullptr_t, int Dims,
+            typename ParallelForFunctor>
+  void parallel_for(const range<Dims>& global_size, ParallelForFunctor f) {
+    if constexpr (detail::use_native_work_item) {
+      // Use a normal parallel for
+      schedule_parallel_for_kernel<KernelName>(
+          [=] { detail::parallel_for(global_size, f); }, global_size);
+    } else
+      // Launch a single-task kernel containing the loop nests
+      schedule_kernel<KernelName>(
+          [=] { detail::parallel_for(global_size, f); });
+  }
+
+  /** SYCL parallel_for launches a data parallel computation with
+      parallelism specified at launch time with a range defined with a
+      { dim1, dim2, dim3... } syntax
+
+      Kernel invocation method of a kernel defined as a lambda or functor,
+      for the specified range and given an id or item for indexing in the
+      indexing space defined by range.
+
+      If it is a lambda function or the if the functor type is globally
+      visible there is no need for the developer to provide a kernel name
+      type (typename KernelName) for it.
+
+      \param global_size is the full size of the range<> defined as a
+      C array to allow type deduction from a list-initialization
+      with { args... }
+
+      \tparam Dims dimensionality of the iteration space
+
+      \tparam KernelName is a class type that defines the name to be used
       for the underlying kernel
 
-      Unfortunately, to have implicit conversion to work on the range, the
-      function can not be templated, so instantiate it for all the
-      Dimensions
+      \param f is the kernel functor to execute
+
+      \tparam ParallelForFunctor is the type of the kernel functor
   */
-#if defined(TRISYCL_USE_OPENCL_ND_RANGE)
-  #define TRISYCL_parallel_for_functor_GLOBAL(N)                        \
-  template <typename KernelName = std::nullptr_t,                       \
-            typename ParallelForFunctor>                                \
-  void parallel_for(range<N> global_size,                               \
-                    ParallelForFunctor f) {                             \
-    schedule_parallel_for_kernel<KernelName>([=] {                      \
-        detail::parallel_for(global_size, f);                           \
-     }, global_size);                                                   \
+  template <typename KernelName = std::nullptr_t, int Dims,
+            typename ParallelForFunctor>
+  void parallel_for(const std::size_t (&global_size)[Dims],
+                    ParallelForFunctor f) {
+    parallel_for<KernelName>(range<Dims> { global_size }, f);
   }
-#else
-  #define TRISYCL_parallel_for_functor_GLOBAL(N)                        \
-  template <typename KernelName = std::nullptr_t,                       \
-            typename ParallelForFunctor>                                \
-  void parallel_for(range<N> global_size,                               \
-                    ParallelForFunctor f) {                             \
-    schedule_kernel<KernelName>([=] {                                   \
-        detail::parallel_for(global_size, f);                           \
-     });                                                                \
+
+  /** SYCL parallel_for launches a data parallel computation with
+      parallelism specified at launch time with a range defined with a
+      single dimension as an integer
+
+      Kernel invocation method of a kernel defined as a lambda or functor,
+      for the specified range and given an id or item for indexing in the
+      indexing space defined by range.
+
+      If it is a lambda function or the if the functor type is globally
+      visible there is no need for the developer to provide a kernel name
+      type (typename KernelName) for it.
+
+      \param global_size is the full size of the range<1> defined as an
+      integer
+
+      \tparam KernelName is a class type that defines the name to be used
+      for the underlying kernel
+
+      \param f is the kernel functor to execute
+
+      \tparam ParallelForFunctor is the type of the kernel functor
+  */
+  template <typename KernelName = std::nullptr_t,
+            typename ParallelForFunctor>
+  void parallel_for(std::size_t global_size,
+                    ParallelForFunctor f) {
+    parallel_for<KernelName>(range { global_size }, f);
   }
-#endif
-
-  TRISYCL_parallel_for_functor_GLOBAL(1)
-  TRISYCL_parallel_for_functor_GLOBAL(2)
-  TRISYCL_parallel_for_functor_GLOBAL(3)
-
 
   /** Kernel invocation method of a kernel defined as a lambda or functor,
       for the specified range and offset and given an id or item for
@@ -303,28 +348,14 @@ public:
 
       \param KernelName is a class type that defines the name to be used for
       the underlying kernel
-
-      Unfortunately, to have implicit conversion to work on the range, the
-      function can not be templated, so instantiate it for all the
-      dimensions
   */
-#define TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(N)               \
-  template <typename KernelName = std::nullptr_t,                 \
-            typename ParallelForFunctor>                          \
-  void parallel_for(range<N> global_size,                         \
-                    id<N> offset,                                 \
-                    ParallelForFunctor f) {                       \
-    schedule_kernel<KernelName>([=] {                             \
-        detail::parallel_for_global_offset(global_size,           \
-                                           offset,                \
-                                           f);                    \
-      });                                                         \
+  template <typename KernelName = std::nullptr_t, int Dims,
+            typename ParallelForFunctor>
+  void parallel_for(range<Dims> global_size, id<Dims> offset,
+                    ParallelForFunctor f) {
+    schedule_kernel<KernelName>(
+        [=] { detail::parallel_for_global_offset(global_size, offset, f); });
   }
-
-  TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(1)
-  TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(2)
-  TRISYCL_ParallelForFunctor_GLOBAL_OFFSET(3)
-
 
   /** Kernel invocation method of a kernel defined as a lambda or functor,
       for the specified nd_range and given an nd_item for indexing in the

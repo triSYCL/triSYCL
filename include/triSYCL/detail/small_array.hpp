@@ -11,12 +11,19 @@
 
 #include <algorithm>
 #include <array>
+#include <concepts>
 #include <cstddef>
 #include <type_traits>
+#include <utility>
 
 #include <boost/operators.hpp>
 
+#include <range/v3/all.hpp>
+
+#include "triSYCL/detail/global_config.hpp"
+#include "triSYCL/detail/array_tuple_helpers.hpp"
 #include "triSYCL/detail/debug.hpp"
+#include "triSYCL/detail/metaprogramming.hpp"
 
 
 namespace trisycl::detail {
@@ -116,9 +123,6 @@ namespace trisycl::detail {
     \param FinalType is the final type, such as range<> or id<>, so that
     boost::operator can return the right type
 
-    \param EnableArgsConstructor adds a constructors from Dims variadic
-    elements when true. It is false by default.
-
     std::array<> provides the collection concept, with .size(), == and !=
     too.
 
@@ -127,8 +131,7 @@ namespace trisycl::detail {
 */
 template <typename BasicType,
           typename FinalType,
-          std::size_t Dims,
-          bool EnableArgsConstructor = false>
+          std::size_t Dims>
 struct small_array : std::array<BasicType, Dims>,
   // To have all the usual arithmetic operations on this type and bitwise
   // operations. Note these operation classes are chained via:
@@ -164,42 +167,26 @@ struct small_array : std::array<BasicType, Dims>,
 
   /// A constructor from another small_array of the same size
   template <typename SourceBasicType,
-            typename SourceFinalType,
-            bool SourceEnableArgsConstructor>
+            typename SourceFinalType>
   small_array(const small_array<SourceBasicType,
               SourceFinalType,
-              Dims,
-              SourceEnableArgsConstructor> &src) {
+              Dims> &src) {
     std::copy_n(&src[0], Dims, &(*this)[0]);
   }
 
-
-  /** Initialize the array from a list of elements
+  /** Initialize the array from a list of exactly Dims elements
 
       Strangely, even when using the array constructors, the
       initialization of the aggregate is not available. So recreate an
       equivalent here.
-
-      Since there are inherited types that defines some constructors with
-      some conflicts, make it optional here, according to
-      EnableArgsConstructor template parameter.
-   */
-  template <typename... Types,
-            // Just to make enable_if depend of the template and work
-            bool Depend = true,
-            typename = typename std::enable_if_t<EnableArgsConstructor
-                                                 && Depend>>
-  small_array(const Types &... args)
-    : std::array<BasicType, Dims> {
-    // Allow a loss of precision in initialization with the static_cast
-    { static_cast<BasicType>(args)... }
-  }
-  {
-    static_assert(sizeof...(args) == Dims,
-                  "The number of initializing elements should match "
-                  "the dimension");
-  }
-
+  */
+  template <typename... Types>
+    requires(sizeof...(Types) == Dims)
+  small_array(const Types&... args)
+      : std::array<BasicType, Dims> {
+        // Allow a loss of precision in initialization with the static_cast
+        { static_cast<BasicType>(args)... }
+      } {}
 
   /// Construct a small_array from a std::array
   template <typename SourceBasicType>
@@ -323,86 +310,59 @@ TRISYCL_OPERATOR_BASIC_TYPE_OP(>>)
 
 #undef TRISYCL_OPERATOR_BASIC_TYPE_OP
 
-/** A small array of 1, 2 or 3 elements with the implicit constructors */
+/** A small array to implement SYCL objects like id, range,
+    item... with 1, 2 or 3 elements (or even more if
+    detail::allow_any_dimension is true), with the implicit
+    constructors */
 template <typename BasicType, typename FinalType, std::size_t Dims>
-struct small_array_123 : small_array<BasicType, FinalType, Dims> {
-  static_assert(1 <= Dims && Dims <= 3,
-                "Dimensions are between 1 and 3");
-};
-
-
-/** Use some specializations so that some function overloads can be
-    determined according to some implicit constructors and to have an
-    implicit conversion from/to BasicType (such as an int typically) if
-    Dimensions = 1
-*/
-template <typename BasicType, typename FinalType>
-struct small_array_123<BasicType, FinalType, 1>
-  : public small_array<BasicType, FinalType, 1> {
-  /// A 1-D constructor to have implicit conversion from from 1 integer
-  /// and automatic inference of the dimensionality
-  small_array_123(BasicType x) {
-    (*this)[0] = x;
-  }
-
+struct small_array_sycl : small_array<BasicType, FinalType, Dims> {
+  static_assert(1 <= Dims, "SYCL dimensions are greater than or equal to 1");
+  static_assert(detail::allow_any_dimension || Dims <= 3,
+                "SYCL dimensions are less than or equal to 3");
 
   /// Keep other constructors
-  small_array_123() = default;
+  small_array_sycl() = default;
 
-  using small_array<BasicType, FinalType, 1>::small_array;
-};
+  /** Construct from a range-like object inheriting from a
+      compatible std::array
 
-
-template <typename BasicType, typename FinalType>
-struct small_array_123<BasicType, FinalType, 2>
-  : public small_array<BasicType, FinalType, 2> {
-  /// A 2-D constructor to have implicit conversion from from 2 integers
-  /// and automatic inference of the dimensionality
-  small_array_123(BasicType x, BasicType y) {
-    (*this)[0] = x;
-    (*this)[1] = y;
-  }
-
-
-  /** Broadcasting constructor initializing all the elements with the
-      same value
-
-      \todo Add to the specification of the range, id...
+      This useful in implementation details for example to construct a
+      sycl::id from a sycl::range.
   */
-  explicit small_array_123(BasicType e) : small_array_123 { e, e } { }
-
-
-  /// Keep other constructors
-  small_array_123() = default;
-
-  using small_array<BasicType, FinalType, 2>::small_array;
-};
-
-
-template <typename BasicType, typename FinalType>
-struct small_array_123<BasicType, FinalType, 3>
-  : public small_array<BasicType, FinalType, 3> {
-  /// A 3-D constructor to have implicit conversion from from 3 integers
-  /// and automatic inference of the dimensionality
-  small_array_123(BasicType x, BasicType y, BasicType z) {
-    (*this)[0] = x;
-    (*this)[1] = y;
-    (*this)[2] = z;
+  template <typename Range>
+  requires requires {
+    ranges::copy(std::declval<Range>(), std::declval<BasicType*>());
+  }
+  small_array_sycl(Range&& r) {
+    // Copy to internal value
+    ranges::copy(std::forward<Range>(r), this->begin());
   }
 
-
-  /** Broadcasting constructor initializing all the elements with the
-      same value
-
-      \todo Add to the specification of the range, id...
-  */
-  explicit small_array_123(BasicType e) : small_array_123 { e, e, e } { }
-
-
-  /// Keep other constructors
-  small_array_123() = default;
-
-  using small_array<BasicType, FinalType, 3>::small_array;
+  /** Constructor taking either Dims arguments compatible with BasicType
+      or just 1 argument compatible with BasicType and broadcast its
+      value to all the elements */
+  template <typename... Args>
+  // Check that each parameter is convertible to the BasicType
+  // Full C++20: requires (std::convertible_to<Args, BasicType> && ...)
+  // In the meantime:
+  requires requires { (static_cast<BasicType>(std::declval<Args>()), ...); }
+  small_array_sycl(Args... args) {
+    if constexpr (sizeof...(Args) == Dims) {
+      // If there is the right number of elements we initialize each
+      // element from each parameter, allowing some narrowing
+      static_cast<std::array<BasicType, Dims>&>(
+          *this) = { static_cast<BasicType>(args)... };
+    } else if constexpr (sizeof...(Args) == 1) {
+      // If there is only 1 argument, this is a broadcast
+      detail::assign_from_tuple(
+          static_cast<std::array<BasicType, Dims>&>(*this),
+          detail::expand_to_vector<small_array_sycl, std::tuple<BasicType>,
+                                   true> {}
+              .expand(args...));
+    } else
+      static_assert(true, "There should be either 1 argument to broadcast the "
+                          "value or 1 value per dimension");
+  }
 };
 
 /// @} End the helpers Doxygen group

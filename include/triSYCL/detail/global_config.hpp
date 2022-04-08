@@ -26,6 +26,29 @@
 
 #define BOOST_COMPUTE_CL_VERSION_1_2
 
+namespace trisycl::detail {
+  /// Map TRISYCL_ALLOW_ANY_DIMENSION to a constexpr variable
+  constexpr bool allow_any_dimension =
+#ifdef TRISYCL_ALLOW_ANY_DIMENSION
+    /// Allow any dimension in SYCL object, not only between 1 and 3
+    true
+#else
+    false
+#endif
+    ;
+
+  /// Map TRISYCL_USE_OPENCL_ND_RANGE to a constexpr variable
+  constexpr bool use_native_work_item =
+#ifdef TRISYCL_USE_OPENCL_ND_RANGE
+    // Use the OpenCL-like native mechanism to provide work-item dimensions
+    true
+#else
+    // Emulate work-item dimensions with a loop nest
+    false
+#endif
+    ;
+  } // namespace trisycl::detail
+
 /// This source is compiled by a single source compiler
 #define __SYCL_SINGLE_SOURCE__
 
