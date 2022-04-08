@@ -512,6 +512,18 @@ public:
 
 };
 
+/** A deduction guide to infer the buffer type from the read-write
+    forward iterators into a copy-in on construction and copy-back on
+    destruction
+
+    \todo Use some standard concepts
+
+    \todo Add this to SYCL Next
+*/
+template <std::forward_iterator FIB, std::forward_iterator FIE>
+buffer(FIB begin, FIE end)
+    -> buffer<typename std::iterator_traits<FIB>::value_typT, 1>;
+
 /// @} End the data Doxygen group
 
 }
