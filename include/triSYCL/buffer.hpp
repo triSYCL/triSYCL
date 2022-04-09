@@ -12,6 +12,7 @@
 #include <cstddef>
 #include <iterator>
 #include <memory>
+#include <ranges>
 #include <type_traits>
 
 #include "triSYCL/access.hpp"
@@ -179,6 +180,23 @@ public:
                          { host_data, r }) }
   {}
 
+
+  /** Create a new buffer with associated host memory from a range
+
+      \param[inout] host_data points to the storage and values used by
+      the buffer
+
+      \param[in] allocator is to be used by the SYCL runtime, of type
+      trisycl::buffer_allocator<T> by default
+
+      The memory is owned by the runtime during the lifetime of the
+      object.  Data is copied back to the host unless the user
+      overrides the behavior using the set_final_data method.
+  */
+  buffer(auto /* std::continuous_range */& host_data,
+         Allocator allocator = {})
+    : buffer { host_data.begin(), range { std::ranges::distance(host_data) } }
+  {}
 
   /** Create a new buffer with associated memory, using the data in
       host_data
