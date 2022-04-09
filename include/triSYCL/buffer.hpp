@@ -217,8 +217,6 @@ public:
 
       \param[in] r defines the size
 
-      \param[inout] m is the mutex used to protect the data access
-
       \param[in] allocator is to be used by the SYCL runtime, of type
       trisycl::buffer_allocator<T> by default
 
