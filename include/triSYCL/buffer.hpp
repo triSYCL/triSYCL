@@ -538,7 +538,18 @@ public:
 */
 template <std::forward_iterator FIB, std::forward_iterator FIE>
 buffer(FIB begin, FIE end)
-    -> buffer<typename std::iterator_traits<FIB>::value_typT, 1>;
+    -> buffer<typename std::iterator_traits<FIB>::value_type, 1>;
+
+/** A deduction guide to infer the buffer type from the read-write
+    range
+
+    \todo Use some standard concepts
+
+    \todo Add this to SYCL Next
+*/
+  buffer(auto /* std::continuous_range */& host_data)
+    -> buffer<std::ranges::range_value_t<decltype(host_data)>, 1>;
+
 
 /// @} End the data Doxygen group
 
