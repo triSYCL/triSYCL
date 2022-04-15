@@ -193,10 +193,16 @@ public:
       object.  Data is copied back to the host unless the user
       overrides the behavior using the set_final_data method.
   */
-  buffer(auto /* std::continuous_range */& host_data,
+  template <typename Range>
+    requires requires {
+               // \todo Use range concept when it lands
+               std::begin(std::declval<Range>());
+               std::end(std::declval<Range>());
+             }
+  buffer(Range /* auto std::continuous_range */& host_data,
          Allocator allocator = {})
-    : buffer { host_data.begin(), range { std::ranges::distance(host_data) } }
-  {}
+      : buffer { host_data.begin(),
+                 range { std::ranges::distance(host_data) } } {}
 
   /** Create a new buffer with associated memory, using the data in
       host_data
