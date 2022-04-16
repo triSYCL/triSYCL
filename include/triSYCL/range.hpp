@@ -11,6 +11,7 @@
 
 #include <functional>
 #include <numeric>
+#include <type_traits>
 #include "triSYCL/detail/small_array.hpp"
 
 namespace trisycl {
@@ -67,7 +68,21 @@ range(BasicType... Args) -> range<sizeof...(Args)>;
 
 /// @} End the parallelism Doxygen group
 
-}
+namespace detail {
+
+/// A type trait to check if a type it a sycl::range or not
+template <typename T> struct is_range : std::false_type {};
+
+/// Return true if template instantiating match a sycl::range
+template <int Dimensions>
+struct is_range<range<Dimensions>> : std::true_type {};
+
+/// A variable to check if a type is a sycl::range or not
+template <typename T> constexpr auto is_range_v = is_range<T>::value;
+
+} // namespace detail
+
+} // namespace trisycl
 
 /*
     # Some Emacs stuff:

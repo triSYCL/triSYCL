@@ -9,6 +9,7 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <concepts>
 #include <cstddef>
 #include <iterator>
 #include <memory>
@@ -199,6 +200,10 @@ public:
                std::begin(std::declval<Range>());
                std::end(std::declval<Range>());
              }
+             /* But skip the case \c sycl::range<n> which is also a C++ range
+                and we do not want to hijack the constructor from a \c
+                sycl::range */
+             && (!detail::is_range_v<Range>)
   buffer(Range /* auto std::continuous_range */& host_data,
          Allocator allocator = {})
       : buffer { host_data.begin(),
