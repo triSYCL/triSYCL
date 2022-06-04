@@ -25,7 +25,6 @@ namespace trisycl {
 inline device device_selector::select_device(vector_class<platform> platforms) const {
   int best_id = -1;
   int best_score = -1;
-  int i = 0;
   device best_device;
 
   for (auto &platform : platforms) {
@@ -36,7 +35,6 @@ inline device device_selector::select_device(vector_class<platform> platforms) c
         best_device = dev;
         best_score = score;
       }
-      ++i;
     }
   }
   if (best_id == -1)
