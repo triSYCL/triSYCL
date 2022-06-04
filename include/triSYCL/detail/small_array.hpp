@@ -363,6 +363,17 @@ struct small_array_sycl : small_array<BasicType, FinalType, Dims> {
       static_assert(true, "There should be either 1 argument to broadcast the "
                           "value or 1 value per dimension");
   }
+
+  /** Conversion operator to scalar BasicType when only 1 dimension
+
+      This is used for example to implicitly convert a sycl::id<1> to
+      a std::size_t
+  */
+  template <auto T = Dims>
+    requires(Dims == 1)
+  operator BasicType() {
+    return this->get(0);
+  }
 };
 
 /// @} End the helpers Doxygen group
