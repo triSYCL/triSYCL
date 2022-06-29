@@ -31,6 +31,9 @@ public:
   /// The number of dimensions of the item
   static auto constexpr rank() { return Dimensions; }
 
+  // The value type is the same as for id
+  using value_type = typename id<Dimensions>::value_type;
+
 private:
 
   range<Dimensions> global_range;
