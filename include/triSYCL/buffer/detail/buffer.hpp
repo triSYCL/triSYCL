@@ -212,7 +212,7 @@ class buffer
            memory instead */
         mixin::update(allocation, current_range);
         // Then copy the read-only data to the new allocated place
-        std::uninitialized_copy_n(current_access.data(), mixin::get_count(),
+        std::uninitialized_copy_n(current_access.data_handle(), mixin::get_count(),
                                   mixin::data());
         /* Now the data of the buffer is no longer backed-up by host
            user provided memory */

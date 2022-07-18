@@ -69,7 +69,7 @@ template <typename T, int Dimensions> class accessor {
 
  public:
   /// Pointer type to element
-  using pointer = typename mdspan::pointer;
+  using pointer = typename mdspan::accessor_type::data_handle_type;
 
   /// Pointer type to const element
   using const_pointer = const element_type*;
@@ -130,7 +130,7 @@ template <typename T, int Dimensions> class accessor {
   std::size_t get_size() const { return get_count() * sizeof(value_type); }
 
   /// Get the underlying storage
-  auto data() { return access.data(); }
+  auto data() { return access.data_handle(); }
 
   /** Proxy object to transform an expression like
       accessor[i1][i2][i3] into the implementation mdpsan(i1,i2,i3)
