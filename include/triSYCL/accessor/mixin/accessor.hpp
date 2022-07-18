@@ -43,26 +43,9 @@ template <typename T, int Dimensions> class accessor {
   static auto constexpr rank() { return Dimensions; }
 
  protected:
-  /* Create an mdspan std::experimental::extents object with a
-     dynamic size for each extent
-
-     \todo Useless since https://isocpp.org/files/papers/P2299R3.html
-     has been implemented
-  */
-  template <std::size_t... I>
-  static constexpr auto make_dynamic_extents(std::index_sequence<I...>) {
-    return std::experimental::extents
-        // This repeats n times the std::experimental::dynamic_extent
-        <((void)I, std::experimental::dynamic_extent)...> {};
-  };
-
-  /// Create an mdspan std::experimental::extents type with a
-  /// dynamic size for each extent
-  using dynamic_extents =
-      decltype(make_dynamic_extents(std::make_index_sequence<Dimensions> {}));
-
   /// The memory lay-out of a buffer is a dynamic multidimensional array
-  using mdspan = std::experimental::mdspan<element_type, dynamic_extents>;
+  using mdspan = std::experimental::mdspan<
+      element_type, std::experimental::dextents<std::size_t, Dimensions>>;
 
   /** This is the multi-dimensional interface to the data that may point
       to either allocation in the case of storage managed by SYCL itself
