@@ -258,6 +258,8 @@ public:
   */
   template <typename KernelName = std::nullptr_t, int Dims,
             typename ParallelForFunctor>
+  // Do not land here if we are using the sycl::kernel API
+  requires (!std::is_base_of_v<kernel, ParallelForFunctor>)
   void parallel_for(const range<Dims>& global_size, ParallelForFunctor f) {
     if constexpr (detail::use_native_work_item) {
       // Use a normal parallel for
@@ -325,6 +327,8 @@ public:
   */
   template <typename KernelName = std::nullptr_t,
             typename ParallelForFunctor>
+  // Do not land here if we are using the sycl::kernel API
+  requires (!std::is_base_of_v<kernel, ParallelForFunctor>)
   void parallel_for(std::size_t global_size,
                     ParallelForFunctor f) {
     parallel_for<KernelName>(range { global_size }, f);
