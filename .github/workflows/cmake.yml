@@ -69,25 +69,25 @@ jobs:
 
       matrix:
        include:
-         - c_compiler: gcc-11
-           cxx_compiler: g++-11
+         - c_compiler: gcc-12
+           cxx_compiler: g++-12
            OpenMP: ON
            OpenCL: OFF
 
-         - c_compiler: gcc-11
-           cxx_compiler: g++-11
+         - c_compiler: gcc-12
+           cxx_compiler: g++-12
            OpenMP: ON
            OpenCL: ON
 
-         - c_compiler: clang-13
-           cxx_compiler: clang++-13
+         - c_compiler: clang-14
+           cxx_compiler: clang++-14
            OpenMP: ON
            OpenCL: OFF
 
-         - c_compiler: clang-13
-           cxx_compiler: clang++-13
+         - c_compiler: clang-14
+           cxx_compiler: clang++-14
            # It looks like POCL uses an older version of Clang/LLVM
-           # which conflict with libomp-12-dev libomp5-12 and thus it
+           # which conflict with libomp-14-dev libomp5-14 and thus it
            # is not possible to use OpenMP at the same time
            OpenMP: OFF
            OpenCL: ON
