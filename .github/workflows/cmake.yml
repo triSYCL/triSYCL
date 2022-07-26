@@ -86,10 +86,7 @@ jobs:
 
          - c_compiler: clang-14
            cxx_compiler: clang++-14
-           # It looks like POCL uses an older version of Clang/LLVM
-           # which conflict with libomp-14-dev libomp5-14 and thus it
-           # is not possible to use OpenMP at the same time
-           OpenMP: OFF
+           OpenMP: ON
            OpenCL: ON
 
     steps:
