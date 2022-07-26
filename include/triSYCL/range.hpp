@@ -9,6 +9,7 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <concepts>
 #include <functional>
 #include <numeric>
 #include <type_traits>
@@ -69,6 +70,14 @@ range(BasicType... Args) -> range<sizeof...(Args)>;
 /// @} End the parallelism Doxygen group
 
 namespace detail {
+    /** Make an explicit range<1> when an integral is provided or pass
+        the value unchanged */
+    auto rangeify(auto r) {
+      if constexpr (std::integral<decltype(r)>)
+        return range { r };
+      else
+        return r;
+    };
 
 /// A type trait to check if a type it a sycl::range or not
 template <typename T> struct is_range : std::false_type {};

@@ -9,6 +9,7 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <concepts>
 #include <cstddef>
 #include <memory>
 #include <tuple>
@@ -259,7 +260,7 @@ public:
   template <typename KernelName = std::nullptr_t, int Dims,
             typename ParallelForFunctor>
   // Do not land here if we are using the sycl::kernel API
-  requires (!std::is_base_of_v<kernel, ParallelForFunctor>)
+  requires (!std::derived_from<ParallelForFunctor, kernel>)
   void parallel_for(const range<Dims>& global_size, ParallelForFunctor f) {
     if constexpr (detail::use_native_work_item) {
       // Use a normal parallel for
@@ -328,7 +329,7 @@ public:
   template <typename KernelName = std::nullptr_t,
             typename ParallelForFunctor>
   // Do not land here if we are using the sycl::kernel API
-  requires (!std::is_base_of_v<kernel, ParallelForFunctor>)
+  requires (!std::derived_from<ParallelForFunctor, kernel>)
   void parallel_for(std::size_t global_size,
                     ParallelForFunctor f) {
     parallel_for<KernelName>(range { global_size }, f);
@@ -482,9 +483,10 @@ public:
       \todo Add in the spec a version taking a kernel and a functor,
       to have host fall-back
   */
-  template <int Dimensions = 1>
-  void parallel_for(range<Dimensions> num_work_items,
-                    kernel sycl_kernel) {
+  template <int Dimensions = 1, typename SYCLrange>
+    requires(std::derived_from<SYCLrange, range<Dimensions>> ||
+             std::integral<SYCLrange>)
+  void parallel_for(SYCLrange num_work_items, kernel sycl_kernel) {
     /* For now just use the usual host task system to schedule
        manually the OpenCL kernels instead of using OpenCL event-based
        scheduling
@@ -498,16 +500,10 @@ public:
        otherwise "this" is captured by reference and havoc with task
        just accessing the dead "this". Nasty bug to find... */
     task->schedule(detail::trace_kernel<kernel>([=, t = task] {
-          sycl_kernel.implementation->parallel_for(t, t->get_queue(),
-                                                   num_work_items); }));
+      sycl_kernel.implementation->parallel_for(t, t->get_queue(),
+                                               detail::rangeify(num_work_items));
+    }));
   }
-
-  /** Specialize the case when num_work_items i directly a std::size_t
-      instead of a range<1> */
-  void parallel_for(std::size_t num_work_items, kernel sycl_kernel) {
-    parallel_for(range { num_work_items }, sycl_kernel);
-  }
-
 
   /** Kernel invocation method of a kernel defined as pointer to a kernel
       object, for the specified nd_range and given an nd_item for indexing
