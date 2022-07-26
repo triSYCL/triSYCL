@@ -459,18 +459,18 @@ public:
       to have host fall-back
   */
   void single_task(kernel sycl_kernel) {
-    /* For now just use the usual host task system to schedule          \
-       manually the OpenCL kernels instead of using OpenCL event-based  \
-       scheduling                                                       \
-                                                                        \
-       \todo Move the tracing inside the kernel implementation          \
-                                                                        \
-       \todo Simplify this 2 step ugly interface                        \
-    */                                                                  \
-    task->set_kernel(sycl_kernel.implementation);                       \
-    task->schedule(detail::trace_kernel<kernel>([=, t = task] {         \
-          sycl_kernel.implementation->single_task(t, t->get_queue());   \
-        }));                                                            \
+    /* For now just use the usual host task system to schedule
+       manually the OpenCL kernels instead of using OpenCL event-based
+       scheduling
+
+       \todo Move the tracing inside the kernel implementation
+
+       \todo Simplify this 2 step ugly interface
+    */
+    task->set_kernel(sycl_kernel.implementation);
+    task->schedule(detail::trace_kernel<kernel>([=, t = task] {
+          sycl_kernel.implementation->single_task(t, t->get_queue());
+        }));
   }
 
 
