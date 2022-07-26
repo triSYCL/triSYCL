@@ -9,6 +9,7 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <concepts>
 #include <cstddef>
 #include <memory>
 #include <tuple>
@@ -258,6 +259,8 @@ public:
   */
   template <typename KernelName = std::nullptr_t, int Dims,
             typename ParallelForFunctor>
+  // Do not land here if we are using the sycl::kernel API
+  requires (!std::derived_from<ParallelForFunctor, kernel>)
   void parallel_for(const range<Dims>& global_size, ParallelForFunctor f) {
     if constexpr (detail::use_native_work_item) {
       // Use a normal parallel for
@@ -325,6 +328,8 @@ public:
   */
   template <typename KernelName = std::nullptr_t,
             typename ParallelForFunctor>
+  // Do not land here if we are using the sycl::kernel API
+  requires (!std::derived_from<ParallelForFunctor, kernel>)
   void parallel_for(std::size_t global_size,
                     ParallelForFunctor f) {
     parallel_for<KernelName>(range { global_size }, f);
@@ -455,18 +460,18 @@ public:
       to have host fall-back
   */
   void single_task(kernel sycl_kernel) {
-    /* For now just use the usual host task system to schedule          \
-       manually the OpenCL kernels instead of using OpenCL event-based  \
-       scheduling                                                       \
-                                                                        \
-       \todo Move the tracing inside the kernel implementation          \
-                                                                        \
-       \todo Simplify this 2 step ugly interface                        \
-    */                                                                  \
-    task->set_kernel(sycl_kernel.implementation);                       \
-    task->schedule(detail::trace_kernel<kernel>([=, t = task] {         \
-          sycl_kernel.implementation->single_task(t, t->get_queue());   \
-        }));                                                            \
+    /* For now just use the usual host task system to schedule
+       manually the OpenCL kernels instead of using OpenCL event-based
+       scheduling
+
+       \todo Move the tracing inside the kernel implementation
+
+       \todo Simplify this 2 step ugly interface
+    */
+    task->set_kernel(sycl_kernel.implementation);
+    task->schedule(detail::trace_kernel<kernel>([=, t = task] {
+          sycl_kernel.implementation->single_task(t, t->get_queue());
+        }));
   }
 
 
@@ -478,36 +483,27 @@ public:
       \todo Add in the spec a version taking a kernel and a functor,
       to have host fall-back
   */
-#define TRISYCL_ParallelForKernel_RANGE(N)                              \
-  void parallel_for(range<N> num_work_items,                            \
-                    kernel sycl_kernel) {                               \
-    /* For now just use the usual host task system to schedule          \
-       manually the OpenCL kernels instead of using OpenCL event-based  \
-       scheduling                                                       \
-                                                                        \
-       \todo Move the tracing inside the kernel implementation          \
-                                                                        \
-       \todo Simplify this 2 step ugly interface                        \
-    */                                                                  \
-    task->set_kernel(sycl_kernel.implementation);                       \
-    /* Use an intermediate variable to capture task by copy because     \
-       otherwise "this" is captured by reference and havoc with task    \
-       just accessing the dead "this". Nasty bug to find... */          \
-    task->schedule(detail::trace_kernel<kernel>([=, t = task] {         \
-          sycl_kernel.implementation->parallel_for(t, t->get_queue(),   \
-                                                   num_work_items); })); \
+  template <int Dimensions = 1, typename SYCLrange>
+    requires(std::derived_from<SYCLrange, range<Dimensions>> ||
+             std::integral<SYCLrange>)
+  void parallel_for(SYCLrange num_work_items, kernel sycl_kernel) {
+    /* For now just use the usual host task system to schedule
+       manually the OpenCL kernels instead of using OpenCL event-based
+       scheduling
+
+       todo Move the tracing inside the kernel implementation
+
+       todo Simplify this 2 step ugly interface
+    */
+    task->set_kernel(sycl_kernel.implementation);
+    /* Use an intermediate variable to capture task by copy because
+       otherwise "this" is captured by reference and havoc with task
+       just accessing the dead "this". Nasty bug to find... */
+    task->schedule(detail::trace_kernel<kernel>([=, t = task] {
+      sycl_kernel.implementation->parallel_for(t, t->get_queue(),
+                                               detail::rangeify(num_work_items));
+    }));
   }
-
-
-  /* Do not use a template parameter since otherwise the parallel_for
-     functor is selected instead of this one
-
-     \todo Clean this
-  */
-  TRISYCL_ParallelForKernel_RANGE(1)
-  TRISYCL_ParallelForKernel_RANGE(2)
-  TRISYCL_ParallelForKernel_RANGE(3)
-#undef TRISYCL_ParallelForKernel_RANGE
 
   /** Kernel invocation method of a kernel defined as pointer to a kernel
       object, for the specified nd_range and given an nd_item for indexing
