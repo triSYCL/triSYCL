@@ -46,17 +46,20 @@ class alignas(alignment_v<::trisycl::vec<DataType, NumElements>>)
                                                   ::trisycl::vec<DataType,
                                                                  NumElements>,
                                                   NumElements>;
-public:
 
+ public:
   /** Construct a vec from anything from a scalar (to initialize all the
       elements with this value) up to an aggregate of scalar and vector
       types (in this case the total number of elements must match the size
-      of the vector)
-  */
-  template <typename... Types>
-  vec(const Types... args)
-    : basic_type { detail::expand<vec>(flatten_to_tuple<vec>(args...)) } { }
+      of the vector).
 
+      Do not use this constructor with NumElements to avoid ambiguity
+      with the inherited small_array constructor.
+   */
+  template <typename... Types>
+    requires(sizeof...(Types) != NumElements)
+  vec(const Types... args)
+      : basic_type { detail::expand<vec>(flatten_to_tuple<vec>(args...)) } {}
 
   /// Use classical constructors too
   vec() = default;

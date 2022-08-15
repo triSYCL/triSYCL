@@ -11,10 +11,6 @@ d = 7,8,9
  1 1 1
 d = 1,2,1
 d = 2,4,4
-Range of dims 1
-Range of dims 1
-Range of dims 2
-Range of dims 3
  1 2 3
  2 5 6
  1 4 16

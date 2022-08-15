@@ -14,6 +14,7 @@
 #include <utility>
 
 #include "triSYCL/range.hpp"
+#include "triSYCL/detail/small_array.hpp"
 
 namespace trisycl::mixin {
 
@@ -42,26 +43,9 @@ template <typename T, int Dimensions> class accessor {
   static auto constexpr rank() { return Dimensions; }
 
  protected:
-  /* Create an mdspan std::experimental::extents object with a
-     dynamic size for each extent
-
-     \todo Useless since https://isocpp.org/files/papers/P2299R3.html
-     has been implemented
-  */
-  template <std::size_t... I>
-  static constexpr auto make_dynamic_extents(std::index_sequence<I...>) {
-    return std::experimental::extents
-        // This repeats n times the std::experimental::dynamic_extent
-        <((void)I, std::experimental::dynamic_extent)...> {};
-  };
-
-  /// Create an mdspan std::experimental::extents type with a
-  /// dynamic size for each extent
-  using dynamic_extents =
-      decltype(make_dynamic_extents(std::make_index_sequence<Dimensions> {}));
-
   /// The memory lay-out of a buffer is a dynamic multidimensional array
-  using mdspan = std::experimental::mdspan<element_type, dynamic_extents>;
+  using mdspan = std::experimental::mdspan<
+      element_type, std::experimental::dextents<std::size_t, Dimensions>>;
 
   /** This is the multi-dimensional interface to the data that may point
       to either allocation in the case of storage managed by SYCL itself
@@ -70,13 +54,14 @@ template <typename T, int Dimensions> class accessor {
   */
   mdspan access;
 
-  /** Cast a SYCL range into a mdspan index array, which is an array
-      of std::size_t into an array of std::ptrdiff_t
+  /** Cast a SYCL range/id-like into a mdspan index array, which is an
+      array of std::size_t into an array of std::ptrdiff_t
   */
+  template <typename BasicType, typename FinalType>
   const std::array<typename mdspan::size_type, rank()>&
-  extents_cast(const range<Dimensions>& r) {
+  extents_cast(const detail::small_array<BasicType, FinalType, rank()>& sa) {
     return reinterpret_cast<
-        const std::array<typename mdspan::size_type, rank()>&>(r);
+        const std::array<typename mdspan::size_type, rank()>&>(sa);
   }
 
   /// Set later the mdspan associated to this accessor
@@ -84,7 +69,7 @@ template <typename T, int Dimensions> class accessor {
 
  public:
   /// Pointer type to element
-  using pointer = typename mdspan::pointer;
+  using pointer = typename mdspan::accessor_type::data_handle_type;
 
   /// Pointer type to const element
   using const_pointer = const element_type*;
@@ -145,7 +130,7 @@ template <typename T, int Dimensions> class accessor {
   std::size_t get_size() const { return get_count() * sizeof(value_type); }
 
   /// Get the underlying storage
-  auto data() { return access.data(); }
+  auto data() { return access.data_handle(); }
 
   /** Proxy object to transform an expression like
       accessor[i1][i2][i3] into the implementation mdpsan(i1,i2,i3)

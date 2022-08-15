@@ -27,7 +27,7 @@ template <int Dimensions, bool with_offset> class item;
     item
 */
 template <int Dimensions = 1>
-class id : public detail::small_array_123<
+class id : public detail::small_array_sycl<
              std::size_t,
              id<Dimensions>,
              Dimensions > {
@@ -37,50 +37,36 @@ public:
   static auto constexpr rank() { return Dimensions; }
 
   // Inherit from all the constructors
-  using detail::small_array_123<std::size_t,
+  using detail::small_array_sycl<std::size_t,
                                 id<Dimensions>,
-                                Dimensions>::small_array_123;
+                                Dimensions>::small_array_sycl;
 
-
-  /// Construct an id from the dimensions of a range
-  id(const range<Dimensions> &range_size)
-    /** Use the fact we have a constructor of a small_array from a another
-        kind of small_array
-     */
-    : detail::small_array_123<std::size_t, id<Dimensions>, Dimensions>
-      { range_size }
-  {}
-
+  /// Construct an id from a range
+  id(const range<Dimensions>& range_size)
+      /** Use the fact we have a constructor of a small_array from a another
+          kind of small_array
+      */
+      : detail::small_array_sycl<std::size_t, id<Dimensions>, Dimensions> {
+        range_size
+      } {}
 
   /// Construct an id from an item global_id
   id(const item<Dimensions, true> &rhs)
-    : detail::small_array_123<std::size_t, id<Dimensions>, Dimensions>
+    : detail::small_array_sycl<std::size_t, id<Dimensions>, Dimensions>
       { rhs.get_id() }
   {}
 
   /// Default constructor must 0 all elements
-  id() : detail::small_array_123<std::size_t, id<Dimensions>, Dimensions> { 0 }
+  id() : detail::small_array_sycl<std::size_t, id<Dimensions>, Dimensions> { 0 }
   {}
 };
 
+/**  User-defined deduction guides to deduce the rank of an id from the number
+     of arguments
 
-/** Implement a make_id to construct an id<> of the right dimension with
-    implicit conversion from an initializer list for example.
-
-    Cannot use a template on the number of dimensions because the implicit
-    conversion would not be tried. */
-inline auto make_id(id<1> i) { return i; }
-inline auto make_id(id<2> i) { return i; }
-inline auto make_id(id<3> i) { return i; }
-
-
-/** Construct an id<> from a function call with arguments, like
-    make_id(1, 2, 3) */
-template<typename... BasicType>
-auto make_id(BasicType... Args) {
-  // Call constructor directly to allow narrowing
-  return id<sizeof...(Args)>(Args...);
-}
+     For example id { 4, 5, 7 } will define an id<3> { 4, 5, 7 }
+*/
+template <typename... BasicType> id(BasicType... Args) -> id<sizeof...(Args)>;
 
 /// @} End the parallelism Doxygen group
 
