@@ -148,12 +148,11 @@ auto is_harbor = [] (auto x, auto y) constexpr -> bool {
 /// A sequential reference implementation of wave propagation
 template <auto size_x, auto size_y, auto display_tile_size>
 struct reference_wave_propagation {
-  using space = std::experimental::mdspan<data_t,
-                                          std::experimental::extents<size_y,
-                                                                     size_x>>;
+  using space = std::experimental::mdspan<
+      data_t, std::experimental::extents<std::size_t, size_y, size_x>>;
   // It would be nice to have a constexpr static member to express this,
   // but right now size() is a member function
-  //data_t u_m[space::size()];
+  // data_t u_m[space::size()];
   static auto constexpr linear_size = size_x*size_y;
   data_t u_m[linear_size];
   space u { u_m }; // Horizontal speed
@@ -235,10 +234,9 @@ struct reference_wave_propagation {
   void compare_with_sequential_reference_e(const char *message, int x, int y,
                                            Array &arr,
                                            const MDspan_ref &ref) {
-    const std::experimental::mdspan<data_t,
-                                    std::experimental::extents<image_size,
-                                                               image_size>>
-      md { &arr[0][0] };
+    const std::experimental::mdspan md {
+      &arr[0][0], std::experimental::extents { image_size, image_size }
+    };
 
     // Take into account 1 line/column of overlapping halo
     int x_offset = md.extent(1) - 1;
@@ -430,10 +428,9 @@ struct tile : acap::aie::tile<AIE, X, Y> {
   void run() {
     initialize_space();
     auto& m = t::mem();
-    std::experimental::mdspan<data_t,
-                              std::experimental::extents<image_size,
-                                                         image_size>>
-      md { &m.w[0][0] };
+    const std::experimental::mdspan md {
+      &m.w[0][0], std::experimental::extents { image_size, image_size }
+    };
     /// Loop on simulated time
     for (int time = 0; !a.is_done_barrier(); ++time) {
       seq.compare_with_sequential_reference(time, t::x, t::y, m);
