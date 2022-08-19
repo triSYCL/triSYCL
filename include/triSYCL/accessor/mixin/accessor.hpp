@@ -144,14 +144,10 @@ template <typename T, int Dimensions> class accessor {
   static decltype(auto)
   tuple_indexed_mdspan_access(auto&& some_mdspan,
                               const auto& tuple_like_indices) {
-    if constexpr (requires { std::invoke(some_mdspan, tuple_like_indices); })
-      // If we have the pre-C++23 mdspan(i1, i2,...) indexing syntax, use it
-      return std::invoke(some_mdspan, tuple_like_indices);
-    else
-      // Otherwise use the C++23 mdspan[i1, i2,...] indexing syntax
-      return std::invoke(
-          [&](auto... i) -> decltype(auto) { return some_mdspan[i...]; },
-          tuple_like_indices);
+    // Otherwise use the C++23 mdspan[i1, i2,...] indexing syntax
+    return std::invoke(
+        [&](auto... i) -> decltype(auto) { return some_mdspan[i...]; },
+        tuple_like_indices);
   }
 
   /** Access to an element with indices implementing a tuple
