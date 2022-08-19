@@ -58,46 +58,46 @@ template <typename AccessorMixIn> class accessor : public AccessorMixIn {
   }
 
   /// To use the accessor with [id<>]
-  auto& operator[](const id<mixin::rank()>& index) {
-    return mixin::access(mixin::extents_cast(index));
+  decltype(auto) operator[](const id<mixin::rank()>& index) {
+    return mixin::tuple_indexed_access(index);
   }
 
   /// To use the accessor with [id<>]
-  auto& operator[](const id<mixin::rank()>& index) const {
-    return mixin::access(mixin::extents_cast(index));
+  decltype(auto) operator[](const id<mixin::rank()>& index) const {
+    return mixin::tuple_indexed_access(index);
   }
 
   /// To use an accessor with [item<>]
-  auto& operator[](const item<mixin::rank()>& index) {
-    return mixin::access(mixin::extents_cast(index.get()));
+  decltype(auto) operator[](const item<mixin::rank()>& index) {
+    return (*this)[index.get()];
   }
 
   /// To use an accessor with [item<>]
-  auto& operator[](const item<mixin::rank()>& index) const {
-    return mixin::access(mixin::extents_cast(index.get()));
+  decltype(auto) operator[](const item<mixin::rank()>& index) const {
+    return (*this)[index.get()];
   }
 
   /** To use an accessor with an [nd_item<>]
 
-      \todo Add in the specification because used by HPC-GPU slide 22
+      \todo Add to the specification because used by HPC-GPU slide 22
   */
-  auto& operator[](const nd_item<mixin::rank()>& index) {
-    return mixin::access(mixin::extents_cast(index.get_global()));
+  decltype(auto) operator[](const nd_item<mixin::rank()>& index) {
+    return (*this)[index.get_global()];
   }
 
   /** To use an accessor with an [nd_item<>]
 
-      \todo Add in the specification because used by HPC-GPU slide 22
+      \todo Add to the specification because used by HPC-GPU slide 22
   */
-  auto& operator[](const nd_item<mixin::rank()>& index) const {
-    return mixin::access(mixin::extents_cast(index.get_global()));
+  decltype(auto) operator[](const nd_item<mixin::rank()>& index) const {
+    return (*this)[index.get_global()];
   }
 
   /** Get the first element of the accessor
 
       Useful with an accessor on a scalar for example.
 
-      \todo Add in the specification
+      \todo Add to the specification
   */
   typename mixin::reference operator*() { return *mixin::data(); }
 
@@ -105,7 +105,7 @@ template <typename AccessorMixIn> class accessor : public AccessorMixIn {
 
       Useful with an accessor on a scalar for example.
 
-      \todo Add in the specification?
+      \todo Add to the specification?
 
       \todo Add the concept of 0-dim buffer and accessor for scalar
       and use an implicit conversion to value_type reference to access
