@@ -7,6 +7,9 @@
     triSYCL into the \c ::cl::sycl namespace
 */
 
+/// Define what is the real SYCL namespace to use
+#define TRISYCL_SYCL_NAMESPACE cl::sycl
+
 #include "triSYCL/sycl.hpp"
 
 /// The official SYCL 1.2.1 specification exposes the API in the

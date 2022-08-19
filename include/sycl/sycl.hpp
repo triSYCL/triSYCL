@@ -9,6 +9,9 @@
 */
 
 
+/// Define what is the real SYCL namespace to use
+#define TRISYCL_SYCL_NAMESPACE sycl
+
 #include "triSYCL/sycl.hpp"
 
 /// Expose the SYCL API directly in the ::sycl namespace
