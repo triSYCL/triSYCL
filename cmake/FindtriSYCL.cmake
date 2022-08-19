@@ -11,8 +11,8 @@
 #
 # Tools for finding and building with triSYCL.
 
-# Require CMake version 3.16 or higher
-cmake_minimum_required (VERSION 3.16)
+# Require CMake version 3.20 or higher
+cmake_minimum_required (VERSION 3.20)
 
 # The name of the project (forward declare language)
 project(triSYCL CXX)
@@ -320,9 +320,6 @@ function(add_sycl_to_target targetName)
     $<$<BOOL:${TRISYCL_OPENCL}>:${OpenCL_INCLUDE_DIRS}>
     $<$<BOOL:${TRISYCL_OPENCL}>:${BOOST_COMPUTE_INCPATH}>
     ${GTKMM_INCLUDE_DIRS}
-    # Hard-code a missing path for GTK in CMake from Ubuntu 21.10
-    # Waiting for https://gitlab.kitware.com/cmake/cmake/-/issues/21627 to land
-    /usr/lib/x86_64-linux-gnu/atkmm-1.6/include
 )
 
   # Link dependencies
