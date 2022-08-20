@@ -41,7 +41,7 @@ tuple_to_array_iterate(Tuple t, std::index_sequence<Is...>) {
      The static cast is here to avoid the warning when there is a loss
      of precision, for example when initializing an int from a float.
   */
-  return { { static_cast<typename V::element_type>(std::get<Is>(t))...} };
+  return { { static_cast<typename V::element_type>(std::get<Is>(t))... } };
 }
 
 
