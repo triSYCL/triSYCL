@@ -35,26 +35,36 @@ template <typename AccessorMixIn> class accessor : public AccessorMixIn {
   using reverse_iterator = typename std::reverse_iterator<iterator>;
   using const_reverse_iterator = typename std::reverse_iterator<const_iterator>;
 
-  /** Use the accessor with integers à la [][][]
+  /** Use the accessor with integers à la [i1][i2][i3] or C++23 [i1, i2,...]
 
       \return decltype(auto) to return either a reference to the final
       element when the indexing has been fully resolved or a proxy
       object to handle the remaining [] */
-  decltype(auto) operator[](std::size_t index) {
-    /* Use a proxy object to track all the [index] and aggregate them
-       to resolve the indexing */
-    return typename mixin::template track_index<1> { mixin::access }[index];
+  template <std::integral... T> decltype(auto) operator[](T... indices) {
+    if constexpr (sizeof...(T) == 1)
+      /* The [][][] case uses a proxy object to track all the [index]
+         and aggregate them to resolve the indexing */
+      return
+          typename mixin::template track_index<1> { mixin::access }[indices...];
+    else
+      // Or just the C++23 [i1, i2,...] case
+      return mixin::access[indices...];
   }
 
-  /** Use the accessor with integers à la [][][]
+  /** Use the accessor with integers à la [i1][i2][i3] or C++23 [i1, i2,...]
 
       \return decltype(auto) to return either a reference to the final
       element when the indexing has been fully resolved or a proxy
       object to handle the remaining [] */
-  decltype(auto) operator[](std::size_t index) const {
-    /* Use a proxy object to track all the [index] and aggregate them
-       to resolve the indexing */
-    return typename mixin::template track_index<1> { mixin::access }[index];
+  template <std::integral... T> decltype(auto) operator[](T... indices) const {
+    if constexpr (sizeof...(T) == 1)
+      /* The [][][] case uses a proxy object to track all the [index]
+         and aggregate them to resolve the indexing */
+      return
+          typename mixin::template track_index<1> { mixin::access }[indices...];
+    else
+      // Or just the C++23 [i1, i2,...] case
+      return mixin::access[indices...];
   }
 
   /// To use the accessor with [id<>]

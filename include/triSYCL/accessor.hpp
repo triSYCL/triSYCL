@@ -227,34 +227,28 @@ class accessor
     return implementation->get_size();
   }
 
-
-  /** Use the accessor with integers à la [][][]
-
-      \return decltype(auto) to return either a reference to the final
-      element when the indexing has been fully resolved or a proxy
-      object to handle the remaining []
-  */
-  decltype(auto) operator[](std::size_t index) {
-     return (*implementation)[index];
-  }
-
-
-  /** Use the accessor with integers à la [][][]
+  /** Use the accessor with integers à la [i1][i2][i3] or C++23 [i1, i2,...]
 
       \return decltype(auto) to return either a reference to the final
       element when the indexing has been fully resolved or a proxy
-      object to handle the remaining []
-   */
-  decltype(auto) operator[](std::size_t index) const {
-    return (*implementation)[index];
+      object to handle the remaining [] */
+  template <std::integral... T> decltype(auto) operator[](T... indices) {
+    return (*implementation)[indices...];
   }
 
+  /** Use the accessor with integers à la [i1][i2][i3] or C++23 [i1, i2,...]
+
+      \return decltype(auto) to return either a reference to the final
+      element when the indexing has been fully resolved or a proxy
+      object to handle the remaining [] */
+  template <std::integral... T> decltype(auto) operator[](T... indices) const {
+    return (*implementation)[indices...];
+  }
 
   /// To use the accessor with [id<>]
   auto& operator[](const id<dimensionality>& index) {
     return (*implementation)[index];
   }
-
 
   /// To use the accessor with [id<>]
   auto& operator[](const id<dimensionality>& index) const {
