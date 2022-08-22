@@ -74,27 +74,6 @@ template <typename... BasicType> id(BasicType... Args) -> id<sizeof...(Args)>;
 
 }
 
-namespace std {
-// Declare a tuple-like interface for the sycl::id
-
-/// Export the id dimension as its tuple size
-template <int Dimensions> struct tuple_size<trisycl::id<Dimensions>>
-    : public std::integral_constant<std::size_t, Dimensions> {};
-
-/// The element of the tuple is the matching id element
-template <std::size_t I, int Dimensions>
-decltype(auto) get(trisycl::id<Dimensions>&& id) {
-  return id.get(I);
-}
-
-/// Each tuple element type is the same, the one of any id element
-template <std::size_t I, int Dimensions>
-struct tuple_element<I, trisycl::id<Dimensions>> {
-  using type = typename trisycl::id<Dimensions>::element_type;
-};
-
-}
-
 /*
     # Some Emacs stuff:
     ### Local Variables:
