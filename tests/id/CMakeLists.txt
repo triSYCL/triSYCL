@@ -1,5 +1,4 @@
-cmake_minimum_required (VERSION 3.0) # The minimum version of CMake necessary to build this project
-project (id) # The name of our project
+project(id)
 
 declare_trisycl_test(TARGET id TEST_REGEX
 "Result:
@@ -23,8 +22,11 @@ cjj via e = 3
  1 2 3
  5 6
 zeroid = 0, 0, 0")
+
 declare_trisycl_test(TARGET id_any_dimension CATCH2_WITH_MAIN TEST_REGEX
 " 1 2 3 4
  2 4 7 12
  1 2 3 4 5
  7 8 9 10 11 12")
+
+declare_trisycl_test(TARGET tuple_like_protocol CATCH2_WITH_MAIN)

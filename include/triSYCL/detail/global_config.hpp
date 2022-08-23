@@ -37,6 +37,11 @@ namespace trisycl::detail {
 #endif
     ;
 
+/// Define what is the real SYCL namespace to use
+#ifndef TRISYCL_SYCL_NAMESPACE
+#define TRISYCL_SYCL_NAMESPACE trisycl
+#endif
+
   /// Map TRISYCL_USE_OPENCL_ND_RANGE to a constexpr variable
   constexpr bool use_native_work_item =
 #ifdef TRISYCL_USE_OPENCL_ND_RANGE

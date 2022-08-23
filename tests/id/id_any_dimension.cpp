@@ -3,6 +3,7 @@
    Example using extension for SYCL objects with dimensions higher than 3
 */
 
+// Allows also ranks higher than 3
 #define TRISYCL_ALLOW_ANY_DIMENSION
 
 #include <sycl/sycl.hpp>
@@ -14,7 +15,7 @@ TEST_CASE("use dimensions higher than 3", "[id]") {
   // CTAD
   sycl::id i5 { 0, 1, 2, 3, 4 };
   i5.display();
-  
+
   sycl::id<4> i4;
   i4 = { 1, 2, 3, 4 };
   i4.display();
