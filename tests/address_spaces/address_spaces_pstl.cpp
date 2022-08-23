@@ -2,12 +2,11 @@
 */
 
 #include <CL/sycl.hpp>
-#include <vector>
-#include <list>
 #include <algorithm>
 #include <cstdlib>
 #include <iostream>
-
+#include <list>
+#include <tuple>
 
 
 size_t up_rounded_division(size_t x, size_t y){
@@ -242,7 +241,8 @@ int main() {
 {
   std::vector<int> v1 = {2, 2, 3, 1};
   std::vector<int> v2 = {4, 2, 1, 3};
-  int result = 18;
+  int constexpr result = 18;
+  std::ignore = result;
   int value = 0;
 
   value = std::inner_product(v1.begin(), v1.end(), v2.begin(), value);
@@ -253,7 +253,8 @@ int main() {
 {
   std::vector<int> v1 = {2, 2, 3, 1};
   std::vector<int> v2 = {4, 2, 1, 3};
-  int result = 28;
+  int constexpr result = 28;
+  std::ignore = result;
   int value = 10;
 
   cl::sycl::queue q;
@@ -265,7 +266,8 @@ int main() {
 {
   std::vector<int> v1 = {2, 2, 3, 1, 5, 1, 1, 1};
   std::vector<int> v2 = {4, 2, 1, 3, 5, 1, 1, 1};
-  int result = 46;
+  int constexpr result = 46;
+  std::ignore = result;
   int value = 0;
 
   cl::sycl::queue q;
@@ -277,7 +279,8 @@ int main() {
 {
   std::vector<int> v1 = {2, 2, 3, 1, 5, 1, 1};
   std::vector<int> v2 = {4, 2, 1, 3, 5, 1, 1};
-  int result = 45;
+  int constexpr result = 45;
+  std::ignore = result;
   int value = 0;
 
   cl::sycl::queue q;
@@ -289,7 +292,8 @@ int main() {
 {
   std::vector<int> v1 = {2, 2, 3, 1};
   std::vector<int> v2 = {4, 2, 1, 3};
-  int result = 28;
+  int constexpr result = 28;
+  std::ignore = result;
   int value = 10;
 
   cl::sycl::queue q;
@@ -303,7 +307,8 @@ int main() {
 {
   std::vector<float> v1 = {2.0, 2.0, 3.0, 1.0};
   std::vector<float> v2 = {4.0, 2.0, 1.0, 3.0};
-  float result = 28.0;
+  float constexpr result = 28.0;
+  std::ignore = result;
   float value = 10.0;
 
   cl::sycl::queue q;
@@ -317,7 +322,8 @@ int main() {
 {
   std::list<float> v1;  //{2.0, 2.0, 3.0, 1.0};
   std::list<float> v2;  //{4.0, 2.0, 1.0, 3.0};
-  float result = 28.0;
+  float constexpr result = 28.0;
+  std::ignore = result;
   float value = 10.0;
 
   v1.push_back(2.0);

@@ -35,69 +35,79 @@ template <typename AccessorMixIn> class accessor : public AccessorMixIn {
   using reverse_iterator = typename std::reverse_iterator<iterator>;
   using const_reverse_iterator = typename std::reverse_iterator<const_iterator>;
 
-  /** Use the accessor with integers à la [][][]
+  /** Use the accessor with integers à la [i1][i2][i3] or C++23 [i1, i2,...]
 
       \return decltype(auto) to return either a reference to the final
       element when the indexing has been fully resolved or a proxy
       object to handle the remaining [] */
-  decltype(auto) operator[](std::size_t index) {
-    /* Use a proxy object to track all the [index] and aggregate them
-       to resolve the indexing */
-    return typename mixin::template track_index<1> { mixin::access }[index];
+  template <std::integral... T> decltype(auto) operator[](T... indices) {
+    if constexpr (sizeof...(T) == 1)
+      /* The [][][] case uses a proxy object to track all the [index]
+         and aggregate them to resolve the indexing */
+      return
+          typename mixin::template track_index<1> { mixin::access }[indices...];
+    else
+      // Or just the C++23 [i1, i2,...] case
+      return mixin::access[indices...];
   }
 
-  /** Use the accessor with integers à la [][][]
+  /** Use the accessor with integers à la [i1][i2][i3] or C++23 [i1, i2,...]
 
       \return decltype(auto) to return either a reference to the final
       element when the indexing has been fully resolved or a proxy
       object to handle the remaining [] */
-  decltype(auto) operator[](std::size_t index) const {
-    /* Use a proxy object to track all the [index] and aggregate them
-       to resolve the indexing */
-    return typename mixin::template track_index<1> { mixin::access }[index];
+  template <std::integral... T> decltype(auto) operator[](T... indices) const {
+    if constexpr (sizeof...(T) == 1)
+      /* The [][][] case uses a proxy object to track all the [index]
+         and aggregate them to resolve the indexing */
+      return
+          typename mixin::template track_index<1> { mixin::access }[indices...];
+    else
+      // Or just the C++23 [i1, i2,...] case
+      return mixin::access[indices...];
   }
 
   /// To use the accessor with [id<>]
-  auto& operator[](const id<mixin::rank()>& index) {
-    return mixin::access(mixin::extents_cast(index));
+  decltype(auto) operator[](const id<mixin::rank()>& index) {
+    return mixin::tuple_indexed_access(index);
   }
 
   /// To use the accessor with [id<>]
-  auto& operator[](const id<mixin::rank()>& index) const {
-    return mixin::access(mixin::extents_cast(index));
+  decltype(auto) operator[](const id<mixin::rank()>& index) const {
+    return mixin::tuple_indexed_access(index);
   }
 
   /// To use an accessor with [item<>]
-  auto& operator[](const item<mixin::rank()>& index) {
-    return mixin::access(mixin::extents_cast(index.get()));
+  decltype(auto) operator[](const item<mixin::rank()>& index) {
+    return (*this)[index.get()];
   }
 
   /// To use an accessor with [item<>]
-  auto& operator[](const item<mixin::rank()>& index) const {
-    return mixin::access(mixin::extents_cast(index.get()));
+  decltype(auto) operator[](const item<mixin::rank()>& index) const {
+    return (*this)[index.get()];
   }
 
   /** To use an accessor with an [nd_item<>]
 
-      \todo Add in the specification because used by HPC-GPU slide 22
+      \todo Add to the specification because used by HPC-GPU slide 22
   */
-  auto& operator[](const nd_item<mixin::rank()>& index) {
-    return mixin::access(mixin::extents_cast(index.get_global()));
+  decltype(auto) operator[](const nd_item<mixin::rank()>& index) {
+    return (*this)[index.get_global()];
   }
 
   /** To use an accessor with an [nd_item<>]
 
-      \todo Add in the specification because used by HPC-GPU slide 22
+      \todo Add to the specification because used by HPC-GPU slide 22
   */
-  auto& operator[](const nd_item<mixin::rank()>& index) const {
-    return mixin::access(mixin::extents_cast(index.get_global()));
+  decltype(auto) operator[](const nd_item<mixin::rank()>& index) const {
+    return (*this)[index.get_global()];
   }
 
   /** Get the first element of the accessor
 
       Useful with an accessor on a scalar for example.
 
-      \todo Add in the specification
+      \todo Add to the specification
   */
   typename mixin::reference operator*() { return *mixin::data(); }
 
@@ -105,7 +115,7 @@ template <typename AccessorMixIn> class accessor : public AccessorMixIn {
 
       Useful with an accessor on a scalar for example.
 
-      \todo Add in the specification?
+      \todo Add to the specification?
 
       \todo Add the concept of 0-dim buffer and accessor for scalar
       and use an implicit conversion to value_type reference to access

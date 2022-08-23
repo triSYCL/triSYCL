@@ -4,11 +4,11 @@
 /// Define a level of multi-dimensional iterator
 template <int Dimensions, typename Functor, std::size_t level>
 struct trisycl_for_range_iterate {
-  trisycl_for_range_iterate(const cl::sycl::range<Dimensions> &r,
-                            cl::sycl::id<Dimensions> &it,
+  trisycl_for_range_iterate(const TRISYCL_SYCL_NAMESPACE::range<Dimensions> &r,
+                            TRISYCL_SYCL_NAMESPACE::id<Dimensions> &it,
                             const Functor &f) {
     // Iterate in dimension level
-    using value_type = typename cl::sycl::id<Dimensions>::value_type;
+    using value_type = typename TRISYCL_SYCL_NAMESPACE::id<Dimensions>::value_type;
     for (value_type i = 0; r[level - 1] - i != 0; ++i) {
       // Set current dimension
       it[level - 1] = i;
@@ -22,8 +22,8 @@ struct trisycl_for_range_iterate {
 /// Once at level 0, just call the final function with the current coordinate
 template <int Dimensions, typename Functor>
 struct trisycl_for_range_iterate<Dimensions, Functor, 0> {
-  trisycl_for_range_iterate(const cl::sycl::range<Dimensions> &r,
-                            cl::sycl::id<Dimensions> &it,
+  trisycl_for_range_iterate(const TRISYCL_SYCL_NAMESPACE::range<Dimensions> &r,
+                            TRISYCL_SYCL_NAMESPACE::id<Dimensions> &it,
                             const Functor &f) {
     f(it);
   }
@@ -33,16 +33,16 @@ struct trisycl_for_range_iterate<Dimensions, Functor, 0> {
 /// Apply a function on all the id<> of a range<>
 template <int Dimensions, typename Functor>
 void
-trisycl_for_range(const cl::sycl::range<Dimensions> &r,
+trisycl_for_range(const TRISYCL_SYCL_NAMESPACE::range<Dimensions> &r,
                   const Functor &f) {
-  cl::sycl::id<Dimensions> it;
+  TRISYCL_SYCL_NAMESPACE::id<Dimensions> it;
   trisycl_for_range_iterate<Dimensions, Functor, Dimensions>(r, it, f);
 }
 
 /// Output an id<> on a stream
 template <int Dimensions>
 std::ostream& operator<<(std::ostream& stream,
-                         const cl::sycl::id<Dimensions>& i) {
+                         const TRISYCL_SYCL_NAMESPACE::id<Dimensions>& i) {
   for (auto e : i)
     stream<< e << " ";
   return stream;
@@ -52,14 +52,14 @@ std::ostream& operator<<(std::ostream& stream,
 /// Verify the value of a buffer against a function of the id<>
 template <typename dataType,
           int Dimensions,
-          cl::sycl::access::mode mode,
-          cl::sycl::access::target target,
+          TRISYCL_SYCL_NAMESPACE::access::mode mode,
+          TRISYCL_SYCL_NAMESPACE::access::target target,
           typename Functor>
 bool trisycl_verify_buffer_value(
-    cl::sycl::buffer<dataType, Dimensions> b,
-    cl::sycl::accessor<dataType, Dimensions, mode, target> a,
+    TRISYCL_SYCL_NAMESPACE::buffer<dataType, Dimensions> b,
+    TRISYCL_SYCL_NAMESPACE::accessor<dataType, Dimensions, mode, target> a,
     Functor f) {
-  trisycl_for_range(b.get_range(), [&] (cl::sycl::id<Dimensions> i) {
+  trisycl_for_range(b.get_range(), [&] (TRISYCL_SYCL_NAMESPACE::id<Dimensions> i) {
       if (a[i] != f(i)) {
         std::stringstream message;
         message << "Error: got " << a[i] << " instead of expected " << f(i)
@@ -88,7 +88,7 @@ bool trisycl_verify_buffer_value(
   do {                                                                  \
     try {                                                               \
       trisycl_verify_buffer_value(b,                                    \
-                                  b.get_access<cl::sycl::access::mode::read>(), \
+                                  b.get_access<TRISYCL_SYCL_NAMESPACE::access::mode::read>(), \
                                   func);                                \
     }                                                                   \
     catch (std::runtime_error &e) {                                     \

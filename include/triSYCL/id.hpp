@@ -11,6 +11,8 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <tuple>
+#include <type_traits>
 
 #include "triSYCL/detail/small_array.hpp"
 #include "triSYCL/range.hpp"

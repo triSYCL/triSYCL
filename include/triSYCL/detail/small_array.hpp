@@ -32,6 +32,12 @@ namespace trisycl::detail {
     @{
 */
 
+/// Tag to define simply inheritance from small_array
+struct small_array_tag {};
+
+/// Concept describing a class inheriting from small_array
+template <typename T>
+concept is_small_array = std::derived_from<T, trisycl::detail::small_array_tag>;
 
 /** Helper macro to declare a vector operation with the given side-effect
     operator.
@@ -146,7 +152,9 @@ struct small_array : std::array<BasicType, Dims>,
   // boost::equality_comparable<FinalType>,
   // boost::less_than_comparable<FinalType>,
   // Add a display() method
-  detail::display_vector<FinalType> {
+  detail::display_vector<FinalType>,
+  // Just to find easily this is a small_array without templates
+  detail::small_array_tag {
   /* Note that constexpr size() from the underlying std::array provides
      the same functionality */
   static constexpr size_t dimension = Dims;
@@ -379,6 +387,32 @@ struct small_array_sycl : small_array<BasicType, FinalType, Dims> {
 /// @} End the helpers Doxygen group
 
 }
+
+namespace std {
+// Declare a tuple-like interface for the heirs of the small_array
+
+/// Export the dimension as its tuple size
+template <typename T>
+  requires trisycl::detail::is_small_array<T>
+struct tuple_size<T>
+    : public std::integral_constant<std::size_t, T::dimension> {};
+
+/// The element of the tuple is the matching element of the small_array heir
+template <std::size_t I, typename T>
+  requires trisycl::detail::is_small_array<T> decltype(auto)
+get(T&& e) {
+  return e.get(I);
+}
+
+/// Each tuple element type is the same, the one of any small_array
+/// heir element
+template <std::size_t I, typename T>
+  requires trisycl::detail::is_small_array<T>
+struct tuple_element<I, T> {
+  using type = typename T::element_type;
+};
+
+} // namespace std
 
 /*
     # Some Emacs stuff:

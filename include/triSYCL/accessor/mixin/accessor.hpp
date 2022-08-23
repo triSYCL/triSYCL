@@ -132,6 +132,35 @@ template <typename T, int Dimensions> class accessor {
   /// Get the underlying storage
   auto data() { return access.data_handle(); }
 
+  /** Access to an mdspan element with indices implementing a tuple
+      interface
+
+      \param[inout] some_mdspan is the mdspan to access
+
+      \param[in] tuple_like_indices are the indices to use
+
+      \return a reference to the element
+  */
+  static decltype(auto)
+  tuple_indexed_mdspan_access(auto&& some_mdspan,
+                              const auto& tuple_like_indices) {
+    // Otherwise use the C++23 mdspan[i1, i2,...] indexing syntax
+    return std::invoke(
+        [&](auto... i) -> decltype(auto) { return some_mdspan[i...]; },
+        tuple_like_indices);
+  }
+
+  /** Access to an element with indices implementing a tuple
+      interface
+
+      \param[in] tuple_like_indices are the indices to use
+
+      \return a reference to the accessor element
+  */
+  decltype(auto) tuple_indexed_access(const auto& tuple_like_indices) {
+    return tuple_indexed_mdspan_access(access, tuple_like_indices);
+  }
+
   /** Proxy object to transform an expression like
       accessor[i1][i2][i3] into the implementation mdpsan(i1,i2,i3)
       one index at a time.
@@ -168,7 +197,7 @@ template <typename T, int Dimensions> class accessor {
       if constexpr (N == accessor::rank())
         // If we have accumulated all the indices, call the mdspan
         // indexing function
-        return std::invoke(mds, indices);
+        return tuple_indexed_mdspan_access(mds, indices);
       else
         // Otherwise return a tracker from the current indices and
         // with 1 more room for the next index
