@@ -38,11 +38,15 @@ TEST_CASE("construction and basic operations", "[marray]") {
 
       cgh.parallel_for(sycl::range<1> { n }, [=](sycl::id<1> index) {
         sycl::marray<float, 16> v;
+        sycl::mfloat1 v1 = 1.5F;
+        REQUIRE(equal(v1, { 1.5F }));
+        auto v1_1 = v1 + v1;
+        REQUIRE(v1_1[0] == 3.F);
         sycl::mfloat2 v2 = { 6, 3 };
         REQUIRE(equal(v2, { 6, 3 }));
         sycl::mfloat2 v2_c(4, 3);
         REQUIRE(equal(v2_c, { 4, 3 }));
-        sycl::mfloat2 v2_v1 = { 1.5, 1.5 };
+        sycl::mfloat2 v2_v1 = { v1, v1 };
         REQUIRE(equal(v2_v1, { 1.5, 1.5 }));
         sycl::mdouble2 v2_d = v2 / v2_c;
         REQUIRE(equal(v2_d, { 1.5, 1 }));
@@ -52,7 +56,7 @@ TEST_CASE("construction and basic operations", "[marray]") {
         REQUIRE(equal(v2f, { 3, 4.6 }));
         sycl::mfloat4 v4 = { 2.F, 3.6F, 3, -8 };
         REQUIRE(equal(v4, { 2, 3.6, 3, -8 }));
-        sycl::mfloat4 v4_v2_v1 = { 2.F, v2, 1.5 };
+        sycl::mfloat4 v4_v2_v1 = { 2.F, v2, v1 };
         REQUIRE(equal(v4_v2_v1, { 2, 6, 3, 1.5 }));
         v4 = v4_v2_v1 * 3;
         REQUIRE(equal(v4, { 6, 18, 9, 4.5 }));
@@ -84,7 +88,7 @@ TEST_CASE("construction and basic operations", "[marray]") {
         auto c3_identity = c3 & c3;
         REQUIRE(equal(c3_identity, c3));
         // There is a truncation on 1.5
-        sycl::mshort4 s4 = { c3, 1.5 };
+        sycl::mshort4 s4 = { c3, v1 };
         REQUIRE(equal(s4, { 1, '\003', 03, 1 }));
         sycl::mulong8 ul8(s4, 1, 2, uc2);
         REQUIRE(equal(ul8, { 1, '\003', 03, 1, 1, 2, 3, 3 }));

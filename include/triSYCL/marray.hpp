@@ -30,6 +30,7 @@ using marray = vec<DataType, numElements>;
 
 /// Declare the vector types of a type for all the sizes
 #define TRISYCL_DEFINE_MARRAY_TYPE(type, actual_type)                          \
+  TRISYCL_DEFINE_MARRAY_TYPE_SIZE(type, 1, actual_type)                        \
   TRISYCL_DEFINE_MARRAY_TYPE_SIZE(type, 2, actual_type)                        \
   TRISYCL_DEFINE_MARRAY_TYPE_SIZE(type, 3, actual_type)                        \
   TRISYCL_DEFINE_MARRAY_TYPE_SIZE(type, 4, actual_type)                        \
