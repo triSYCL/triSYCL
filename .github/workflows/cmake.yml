@@ -22,7 +22,10 @@ jobs:
     # cross-platform coverage.
     # See:
     # https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: ubuntu-22.10
+    # Pick something which does exist or the runners will wait for
+    # ever
+    # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
+    runs-on: ubuntu-latest
 
     steps:
       - name: Check out repository code
@@ -61,7 +64,7 @@ jobs:
   docker:
     name: Run the validation inside Docker with specific OS and options
 
-    runs-on: ubuntu-22.10
+    runs-on: ubuntu-latest
 
     strategy:
       # Run all the test even if there are some which fail
@@ -96,7 +99,7 @@ jobs:
       - name: ${{ matrix.c_compiler }}, ${{ matrix.cxx_compiler }},
           OpenMP=${{ matrix.OpenMP }}, OpenCL=${{ matrix.OpenCL }}
           in Docker Ubuntu 22.10
-        uses: docker://ubuntu:jammy
+        uses: docker://ubuntu:kinetic
         env:
           C_COMPILER: ${{ matrix.c_compiler }}
           CXX_COMPILER: ${{ matrix.cxx_compiler }}
