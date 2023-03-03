@@ -8,7 +8,6 @@
 #include <fstream>
 
 #include "triSYCL/detail/debug.hpp"
-#include "triSYCL/detail/singleton.hpp"
 #include "elf.h"
 
 /** \file The minimum required functions for registering a binary
@@ -321,7 +320,8 @@ public:
       if (image.Name == kernelName) {
         return image;
       }
-    return {};
+    std::cerr << "tried to find: " << kernelName << std::endl;
+    assert(false && "tried to non-existant kernel");
   }
 };
 

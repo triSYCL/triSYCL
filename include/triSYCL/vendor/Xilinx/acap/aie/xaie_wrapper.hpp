@@ -22,6 +22,7 @@
 #include <iostream>
 #include <sstream>
 
+#define BOOST_LOG_DYN_LINK 1
 #include <boost/log/trivial.hpp>
 #include <boost/type_index.hpp>
 

@@ -27,6 +27,9 @@ void __throw_bad_exception(void) { assert(false && "cannot throw on device"); }
 void __throw_bad_alloc(void) { assert(false && "cannot throw on device"); }
 void __throw_bad_cast(void) { assert(false && "cannot throw on device"); }
 void __throw_bad_typeid(void) { assert(false && "cannot throw on device"); }
+void __throw_bad_array_new_length(void) {
+  assert(false && "cannot throw on device");
+}
 void __throw_logic_error(const char *) {
   assert(false && "cannot throw on device");
 }

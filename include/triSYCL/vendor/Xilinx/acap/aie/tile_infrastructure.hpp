@@ -121,7 +121,7 @@ class tile_infrastructure {
 
        \param[in] i is the id of the lock
    */
-  auto get_lock(int i) {
+  decltype(auto) get_lock(int i) {
      return implementation->get_lock(i);
   }
 

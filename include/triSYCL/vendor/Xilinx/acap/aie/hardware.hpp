@@ -112,6 +112,7 @@ struct position {
 };
 
 constexpr parity get_parity(position p) { return p.get_parity(); }
+constexpr parity get_parity(int x, int y) { return get_parity(position{x, y}); }
 
 /// hardware specific details.
 
@@ -129,7 +130,7 @@ constexpr uint32_t base_addr_mask = ~offset_mask;
 
 /// determine the direction of the memory module pointed into by a pointer on
 /// device.
-inline dir get_ptr_direction(uint32_t ptr) { return (dir)((ptr >> 15) & 0x3); }
+constexpr dir get_ptr_direction(uint32_t ptr) { return (dir)((ptr >> 15) & 0x3); }
 template<typename T> dir get_ptr_direction(T *p) {
   return get_ptr_direction((uint32_t)p);
 }
@@ -154,7 +155,7 @@ inline parity get_parity_dev() {
 }
 
 /// Get the direction of the memory module based on the parity
-inline dir get_self_dir(parity p) {
+constexpr dir get_self_dir(parity p) {
   return (p == parity::west) ? dir::west : dir::east;
 }
 
@@ -167,18 +168,18 @@ inline dir resolved_dir(dir d) {
   return d;
 }
 
-inline constexpr uint32_t get_base_addr(dir d) {
+constexpr uint32_t get_base_addr(dir d) {
   return (1 << 17) | ((uint32_t)d << 15);
 }
 
 /// Base address of the tile viewed from itself
-inline constexpr uint32_t self_tile_addr(parity par) {
+constexpr uint32_t self_tile_addr(parity par) {
   return ((par == parity::west) ? west_or_self_tile_addr
                                 : east_or_self_tile_addr);
 }
 
 /// Base address of the tile viewed from itself
-inline uint32_t self_tile_addr() {
+uint32_t self_tile_addr() {
   return ((get_parity_dev() == parity::west) ? west_or_self_tile_addr
                                              : east_or_self_tile_addr);
 }

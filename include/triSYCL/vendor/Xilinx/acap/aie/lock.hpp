@@ -21,6 +21,7 @@
 
 /// Use libxaiengine on host with real hardware
 #include "xaie_wrapper.hpp"
+#include <thread>
 
 #else
 

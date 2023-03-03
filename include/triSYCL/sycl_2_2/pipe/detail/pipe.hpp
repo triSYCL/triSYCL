@@ -232,13 +232,6 @@ public:
       return false;
 
     cb.push_back(value);
-    TRISYCL_DUMP_T("Write pipe front = " << cb.front()
-                   << " back = " << cb.back()
-                   << " cb.begin() = " << (void *)&*cb.begin()
-                   << " cb.size() = " << cb.size()
-                   << " cb.end() = " << (void *)&*cb.end()
-                   << " reserved_for_reading() = " << reserved_for_reading()
-                   << " reserved_for_writing() = " << reserved_for_writing());
     // Micro-optimization: unlock before the notification
     // https://en.cppreference.com/w/cpp/thread/condition_variable/notify_all
     ul.unlock();
@@ -270,9 +263,6 @@ public:
     else if (empty())
       return false;
 
-    TRISYCL_DUMP_T("Read pipe front = " << cb.front()
-                   << " back = " << cb.back()
-                   << " reserved_for_reading() = " << reserved_for_reading());
     if (read_reserved_frozen)
       /** If there is a pending reservation, read the next element to
           be read and update the number of reserved elements */

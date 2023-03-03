@@ -555,7 +555,7 @@ struct tile : public tile_backend<typename AIE_Program::geo, AIE_Program, tile<A
   using dir = hw::dir;
   using base::get_lock;
 
-  auto get_lock(int i) {
+  decltype(auto) get_lock(int i) {
     if constexpr (self_position.get_parity() == hw::parity::west)
       return get_lock(hw::dir::west, i);
     else
