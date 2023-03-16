@@ -20,11 +20,10 @@
 
 namespace aie {
 
-template <typename CRTP>
-struct device_tile_common : private detail::device_tile_impl {
+template <typename TypeInfoTy, int X, int Y>
+struct device_tile : private detail::device_tile_impl {
  private:
   using impl = detail::device_tile_impl;
-  CRTP* get() { return static_cast<CRTP*>(this); }
 
   template <unsigned OpSize, bool is_read, typename OpFunc>
   static void stream_operation(
@@ -44,12 +43,26 @@ struct device_tile_common : private detail::device_tile_impl {
     }
   }
 
- protected:
-  using impl::init;
-
  public:
+  using impl::init;
+  using self_memory_tile = typename TypeInfoTy::template tile_data<X, Y>;
+  template <hw::dir d> auto get_tile_type() {
+    constexpr auto new_pos = hw::position { X, Y }.moved(d);
+    return typename TypeInfoTy::template tile_data<new_pos.x, new_pos.y> {};
+  }
+
+  static constexpr bool is_hetero() { return true; }
+  static constexpr int x() { return X; }
+  static constexpr int y() { return Y; }
+  static constexpr hw::position get_pos() { return { X, Y }; }
+  static constexpr int size_x() { return TypeInfoTy::sizeX; }
+  static constexpr int size_y() { return TypeInfoTy::sizeX; }
+  static constexpr bool has_neighbor(hw::dir d) {
+    return get_pos().moved(d).is_valid(size_x(), size_y());
+  }
+
   template <typename hw::dir d> auto& get_memory() {
-    using RetTy = decltype(get()->template get_tile_type<d>());
+    using RetTy = decltype(get_tile_type<d>());
     return *(RetTy*)impl::get_mem_addr<d>();
   }
   auto& mem() { return get_memory<hw::dir::self>(); }
@@ -58,7 +71,7 @@ struct device_tile_common : private detail::device_tile_impl {
   auto& mem_east() { return get_memory<hw::dir::east>(); }
   auto& mem_west() { return get_memory<hw::dir::west>(); }
   auto& mem_side() {
-    if (get()->get_pos()->get_parity() == hw::parity::east)
+    if (get_pos().get_parity() == hw::parity::east)
       return get_memory<hw::dir::east>();
     else
       return get_memory<hw::dir::east>();
@@ -105,115 +118,28 @@ struct device_tile_common : private detail::device_tile_impl {
   }
 };
 
-template <typename TileDataTy>
-struct device_tile_uniform
-    : public device_tile_common<device_tile_uniform<TileDataTy>> {
- private:
-  using Base = device_tile_common<device_tile_uniform<TileDataTy>>;
-
-  friend struct device_tile_common<device_tile_uniform<TileDataTy>>;
-  int sizeX;
-  int sizeY;
-
-  template <hw::dir d> auto get_tile_type() { return TileDataTy {}; }
-
- public:
-  using self_memory_tile = TileDataTy;
-  static constexpr bool is_hetero() { return false; }
-  void init(detail::device_impl& g, hw::position p) { Base::init(g, p); }
-  int x() { return Base::impl::x_coord(); }
-  int y() { return Base::impl::y_coord(); }
-  hw::position get_pos() const { return { x(), y() }; }
-  int size_x() { return sizeX; }
-  int size_y() { return sizeX; }
-  bool has_neighbor(hw::dir d) {
-    return get_pos().moved(d).is_valid(size_x(), size_y());
-  }
-};
-
 template <typename TypeInfoTy, int X, int Y>
-struct device_tile_hetro
-    : public device_tile_common<device_tile_hetro<TypeInfoTy, X, Y>> {
+struct host_tile {
  private:
-  friend struct device_tile_common<device_tile_hetro<TypeInfoTy, X, Y>>;
-  using Base = device_tile_common<device_tile_hetro<TypeInfoTy, X, Y>>;
-  template <hw::dir d> auto get_tile_type() {
-    constexpr auto new_pos = hw::position { X, Y }.moved(d);
-    return typename TypeInfoTy::template tile_data<new_pos.x, new_pos.y> {};
-  }
-
- public:
-  using self_memory_tile = typename TypeInfoTy::template tile_data<X, Y>;
-  using Base::init;
-  static constexpr bool is_hetero() { return true; }
-  static constexpr int x() { return X; }
-  static constexpr int y() { return Y; }
-  static constexpr hw::position get_pos() { return { X, Y }; }
-  static constexpr int size_x() { return TypeInfoTy::sizeX; }
-  static constexpr int size_y() { return TypeInfoTy::sizeX; }
-  static constexpr bool has_neighbor(hw::dir d) {
-    return get_pos().moved(d).is_valid(size_x(), size_y());
-  }
-};
-
-template <typename CRTP> struct host_tile_common {
- private:
+  device_tile<TypeInfoTy, X, Y> dt;
   detail::host_tile_impl impl;
-  CRTP* get() { return static_cast<CRTP*>(this); }
-
- protected:
-  void init(detail::device_impl& global) {
-    impl.init(global, get()->get_pos());
-  }
-
- public:
-  template <typename F> void single_task(F&& func) {
-    impl.execute(func, get()->dt);
-  }
-  void register_accessor(const detail::accessor_common& acc) {
-    impl.register_accessor(acc);
-  }
-};
-template <typename TileDataTy>
-struct host_tile_uniform
-    : public host_tile_common<host_tile_uniform<TileDataTy>> {
- private:
-  using Base = host_tile_common<host_tile_uniform<TileDataTy>>;
-  friend struct host_tile_common<host_tile_uniform<TileDataTy>>;
-  hw::position pos;
-  device_tile_uniform<TileDataTy> dt;
-
- public:
-  hw::position get_pos() const { return pos; }
-  void init(detail::device_impl& global, int x, int y) {
-    pos = { x, y };
-    dt.init(global, pos);
-    Base::init(global);
-  }
-};
-template <typename TypeInfoTy, int X, int Y>
-struct host_tile_hetero
-    : public host_tile_common<host_tile_hetero<TypeInfoTy, X, Y>> {
- private:
-  using Base = host_tile_common<host_tile_hetero<TypeInfoTy, X, Y>>;
-  friend struct host_tile_common<host_tile_hetero<TypeInfoTy, X, Y>>;
-  device_tile_hetro<TypeInfoTy, X, Y> dt;
 
  public:
   static constexpr hw::position get_pos() { return { X, Y }; }
   void init(detail::device_impl& global) {
     dt.init(global, get_pos());
-    Base::init(global);
+    impl.init(global, get_pos());
+  }
+
+  template <typename F> void single_task(F&& func) {
+    impl.execute(func, dt);
+  }
+  void register_accessor(const detail::accessor_common& acc) {
+    impl.register_accessor(acc);
   }
 };
 
-template <int size_X, int size_Y> struct device {
-  static constexpr int sizeX = size_X;
-  static constexpr int sizeY = size_Y;
-  std::shared_ptr<detail::device_impl> impl;
-  device()
-      : impl(std::make_shared<detail::device_impl>(size_X, size_Y)) {}
-};
+namespace detail {
 
 template <typename ElemTy, int X, int Y> struct indexed_elem {
   static constexpr hw::position pos { X, Y };
@@ -225,25 +151,34 @@ template <int size_X, int size_Y> struct tile_type_info_common {
   static constexpr int sizeY = size_Y;
 };
 
-template <template <int, int> typename TileDataTy, int size_X, int size_Y>
+template <typename TypeSelectorTy, int size_X, int size_Y>
 struct tile_type_info_hetero : public tile_type_info_common<size_X, size_Y> {
   static constexpr bool is_hetro = true;
+
+  template <int x, int y, typename T> static auto get_type(T l) {
+    return l.template operator()<x, y>();
+  }
+
+  template<typename T>
+  struct type_selector {
+    using type = T::type;
+  };
+
+  template<>
+  struct type_selector<void> {
+    using type = detail::illegal_to_access;
+  };
+
+  template <int X, int Y>
+  using TileDataTy = type_selector<decltype(get_type<X, Y>(std::declval<TypeSelectorTy>()))>::type;
+
   template <int X, int Y>
   using tile_data =
       std::conditional_t < X >= 0 && Y >= 0 &&
       X < size_X&& Y<size_Y, TileDataTy<X, Y>, detail::illegal_to_access>;
 };
 
-template <typename TileDataTy, int size_X, int size_Y>
-struct tile_type_info_uniform : public tile_type_info_common<size_X, size_Y> {
-  static constexpr bool is_hetro = false;
-  template <int X, int Y>
-  using tile_data =
-      std::conditional_t < X >= 0 && Y >= 0 &&
-      X < size_X&& Y<size_Y, TileDataTy, detail::illegal_to_access>;
-};
-
-template <template <int, int> typename TileDataTy,
+template <typename TypeSelectorTy,
           template <typename, int X, int Y> typename HostTileTy, int size_X,
           int size_Y>
 struct layout_storage {
@@ -252,12 +187,13 @@ struct layout_storage {
   static constexpr auto tile_coordinates = boost::hana::cartesian_product(
       boost::hana::make_tuple(boost::hana::range_c<int, 0, sizeX>,
                               boost::hana::range_c<int, 0, sizeY>));
-  using type_info = tile_type_info_hetero<TileDataTy, sizeX, sizeY>;
+  using type_info = tile_type_info_hetero<TypeSelectorTy, sizeX, sizeY>;
 
   static auto generate_storage() {
     return boost::hana::transform(tile_coordinates, [&](auto coord) {
       return indexed_elem<
-          TileDataTy<boost::hana::at_c<0>(coord), boost::hana::at_c<1>(coord)>,
+          typename type_info::template TileDataTy<boost::hana::at_c<0>(coord),
+                                                 boost::hana::at_c<1>(coord)>,
           boost::hana::at_c<0>(coord), boost::hana::at_c<1>(coord)> {};
     });
   }
@@ -297,6 +233,19 @@ struct layout_storage {
   layout_storage(detail::device_impl& device) { init(device); }
 };
 
+template <typename T> struct selected_type {
+  using type = T;
+};
+
+} // namespace detail
+
+template <typename T> auto select() { return detail::selected_type<T> {}; }
+
+template <int size_X, int size_Y> struct device {
+  static constexpr int sizeX = size_X;
+  static constexpr int sizeY = size_Y;
+};
+
 template <typename DevTy> struct queue {
   DevTy dev;
   queue(DevTy d)
@@ -304,32 +253,28 @@ template <typename DevTy> struct queue {
   template <typename TileDataTy = aie::detail::illegal_to_access,
             typename F = void>
   void submit_uniform(F&& func) {
-    std::array<std::array<TileDataTy, DevTy::sizeY>, DevTy::sizeX> tile_storage;
-    std::array<std::array<host_tile_uniform<TileDataTy>, DevTy::sizeY>,
-               DevTy::sizeX>
-        tiles;
-    for (int x = 0; x < DevTy::sizeX; x++) {
-      for (int y = 0; y < DevTy::sizeY; y++) {
-        hw::position pos { x, y };
-        dev.impl->add_storage(pos, &tile_storage[x][y]);
-        auto& elem = tiles[x][y];
-        elem.init(*dev.impl, x, y);
-        func(elem);
-      }
-    }
-    dev.impl->wait_all();
+    submit([]<int X, int Y>() { return select<TileDataTy>(); },
+           std::forward<F>(func));
   }
   template <template <int, int> typename TileDataTy, typename F>
   void submit_hetero(F&& func) {
-    layout_storage<TileDataTy, host_tile_hetero, DevTy::sizeX, DevTy::sizeY>
-        storage(*dev.impl);
+    submit([]<int X, int Y>() { return select<TileDataTy<X, Y>>(); },
+           std::forward<F>(func));
+  }
+  template <typename TypeSelectorTy, typename F>
+  void submit(TypeSelectorTy&& type_selector, F&& func) {
+    detail::device_impl impl(DevTy::sizeX, DevTy::sizeY);
+    detail::layout_storage<TypeSelectorTy, host_tile, DevTy::sizeX, DevTy::sizeY>
+        storage(impl);
     boost::hana::for_each(storage.tiles, [&](auto& ts) { func(ts.elem); });
-    dev.impl->wait_all();
+    impl.wait_all();
   }
 };
 
-template <typename T>
-using buffer = std::vector<T>;
+template <typename DevTy>
+queue(DevTy&) -> queue<DevTy>;
+
+template <typename T> using buffer = std::vector<T>;
 
 enum access_mode {
   read_only = 1 << 0,
@@ -342,10 +287,12 @@ struct alignas(8) __SYCL_TYPE(acap_accessor) accessor
     : detail::accessor_common {
  private:
   using base = detail::accessor_common;
+
  public:
   template <typename HostTileTy>
   accessor(HostTileTy& tile, const buffer<T>& buff, access_mode am = read_write)
-      : base { (unsigned)buff.size(), (unsigned)sizeof(T), (void*)buff.data() } {
+      : base { (unsigned)buff.size(), (unsigned)sizeof(T),
+               (void*)buff.data() } {
     static_assert(std::is_trivially_copyable_v<T>,
                   "cannot safely be copied to the device");
     /// calling register_accessor is not needed in device execution because we
@@ -362,6 +309,6 @@ struct alignas(8) __SYCL_TYPE(acap_accessor) accessor
 namespace detail {
 detail::assert_equal<sizeof(accessor<int>), 16> check_sizeof_accessor;
 detail::assert_equal<alignof(accessor<int>), 8> check_alignof_accessor;
-}
+} // namespace detail
 
 } // namespace aie
