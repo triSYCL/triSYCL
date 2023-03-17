@@ -119,9 +119,6 @@ template <typename TileHandle> struct exec_kernel {
         program_manager::instance()->get_bin_data(kernelName);
 
     {
-      // auto Transaction = dev_handle.get_transaction();
-      dev_handle.core_reset();
-
       TRISYCL_DUMP2("Loading Kernel " << kernelName << " ELF to tile (" << pos.x
                                       << ',' << pos.y << ")",
                     "exec");

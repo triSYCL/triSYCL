@@ -41,6 +41,9 @@ struct lock_impl_fallback {
   void release_with_value(bool val) { TRISYCL_FALLBACK; }
 };
 
+using device_lock_impl_fallback = lock_impl_fallback;
+using host_lock_impl_fallback = lock_impl_fallback;
+
 struct device_tile_impl_fallback {
   template <typename DeviceImplTy> void init(DeviceImplTy&, hw::position pos) {}
   lock_impl_fallback get_lock(hw::dir d, int i) { TRISYCL_FALLBACK; }
@@ -63,6 +66,13 @@ struct host_tile_impl_fallback {
   }
   template <typename AccTy> void register_accessor(const AccTy&) {
     TRISYCL_FALLBACK;
+  }
+  void notify_has_accessed_mem(void* mem, std::size_t size) {
+    TRISYCL_FALLBACK;
+  }
+  lock_impl_fallback get_lock(int i) {
+    TRISYCL_FALLBACK;
+    return {};
   }
 };
 

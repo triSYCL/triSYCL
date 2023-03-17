@@ -1,9 +1,9 @@
 
-#ifndef AIE_DETAIL_EMULATION_HPP
-#define AIE_DETAIL_EMULATION_HPP
+#ifndef AIE_DETAIL_FALLBACK_HPP
+#define AIE_DETAIL_FALLBACK_HPP
 
-#if !defined (__ACAP_EMULATION___) || defined (__SYCL_DEVICE_ONLY__)
-#error "should only be used in emulation mode"
+#if !defined (__AIE_FALLBACK___) || defined (__SYCL_DEVICE_ONLY__)
+#error "should only be used in fallback mode"
 #endif
 
 #include "common.hpp"

@@ -16,26 +16,6 @@ using device_tile_impl = device_tile_impl_fallback;
 
 namespace aiev1 = xaie::aiev1;
 
-template <int size> class fingerprint {
-  std::array<char, size> data;
-
- public:
-  template <typename T, typename std::enable_if_t<sizeof(T) == size, int> = 0>
-  fingerprint(const T& elem) {
-    std::memcpy(data.data(), std::addressof(elem), size);
-  }
-  friend bool operator==(fingerprint self, fingerprint other) {
-    return std::memcmp(self.data.data(), other.data.data(), size) == 0;
-  }
-  friend bool operator==(fingerprint self, fingerprint other) {
-    return !(self == other);
-  }
-};
-
-template <typename T> fingerprint(const T& elem) -> fingerprint<sizeof(T)>;
-
-template <typename T> using fingerprint_of = fingerprint<sizeof(T)>;
-
 struct device_impl : device_impl_fallback {
   struct handle_impl {
     /// The host needs to set up the device when executing on real device

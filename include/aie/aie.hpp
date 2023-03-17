@@ -4,8 +4,12 @@
 #include "detail/common.hpp"
 #include "detail/hardware.hpp"
 #include <array>
+#include <vector>
 
-#ifdef __ACAP_EMULATION___
+#ifdef __AIE_FALLBACK___
+// fallback, test that the fallback API can compile
+#include "detail/fallback.hpp"
+#elif defined(__ACAP_EMULATION___)
 // emulation
 #include "detail/emulation.hpp"
 #else
@@ -19,6 +23,23 @@
 #endif
 
 namespace aie {
+
+template <typename LockTy> struct lock_guard_ex : detail::no_copy_or_move {
+ private:
+  LockTy impl;
+
+ public:
+  template <typename>
+  friend struct unlock_guard_ex;
+  lock_guard_ex(LockTy l)
+      : impl(l) {
+    impl.acquire();
+  }
+  ~lock_guard_ex() { impl.release(); }
+};
+
+template <typename LockTy>
+lock_guard_ex(LockTy) -> lock_guard_ex<LockTy>;
 
 template <typename TypeInfoTy, int X, int Y>
 struct device_tile : private detail::device_tile_impl {
@@ -51,10 +72,16 @@ struct device_tile : private detail::device_tile_impl {
     return typename TypeInfoTy::template tile_data<new_pos.x, new_pos.y> {};
   }
 
-  static constexpr bool is_hetero() { return true; }
   static constexpr int x() { return X; }
   static constexpr int y() { return Y; }
   static constexpr hw::position get_pos() { return { X, Y }; }
+
+  /// Using the constexpr API will prevent kernel merging in many cases,
+  /// So we also provide a non-constexpr way to get the x and y
+  int dyn_x() { return impl::x_coord(); }
+  int dyn_y() { return impl::y_coord(); }
+  hw::position get_dyn_pos() { return { dyn_x(), dyn_y() }; }
+
   static constexpr int size_x() { return TypeInfoTy::sizeX; }
   static constexpr int size_y() { return TypeInfoTy::sizeX; }
   static constexpr bool has_neighbor(hw::dir d) {
@@ -116,6 +143,10 @@ struct device_tile : private detail::device_tile_impl {
         [this](char* ptr) { impl::cascade_read48(ptr); });
     return value;
   }
+
+  detail::device_lock_impl get_lock(hw::dir d, int i) {
+    return impl::get_lock(d, i);
+  }
 };
 
 template <typename TypeInfoTy, int X, int Y>
@@ -123,12 +154,25 @@ struct host_tile {
  private:
   device_tile<TypeInfoTy, X, Y> dt;
   detail::host_tile_impl impl;
+  detail::device_impl* dev_impl;
 
  public:
   static constexpr hw::position get_pos() { return { X, Y }; }
   void init(detail::device_impl& global) {
+    dev_impl = &global;
     dt.init(global, get_pos());
     impl.init(global, get_pos());
+  }
+
+  auto& mem() {
+    using RetTy = typename decltype(dt)::self_memory_tile;
+    void* ptr = dev_impl->get_mem(get_pos());
+    impl.notify_has_accessed_mem(ptr, sizeof(RetTy));
+    return *reinterpret_cast<RetTy*>(ptr);
+  }
+
+  detail::host_lock_impl get_lock(int i) {
+    return impl.get_lock(i);
   }
 
   template <typename F> void single_task(F&& func) {
@@ -146,13 +190,10 @@ template <typename ElemTy, int X, int Y> struct indexed_elem {
   ElemTy elem;
 };
 
-template <int size_X, int size_Y> struct tile_type_info_common {
+template <typename TypeSelectorTy, int size_X, int size_Y>
+struct tile_type_info {
   static constexpr int sizeX = size_X;
   static constexpr int sizeY = size_Y;
-};
-
-template <typename TypeSelectorTy, int size_X, int size_Y>
-struct tile_type_info_hetero : public tile_type_info_common<size_X, size_Y> {
   static constexpr bool is_hetro = true;
 
   template <int x, int y, typename T> static auto get_type(T l) {
@@ -161,7 +202,7 @@ struct tile_type_info_hetero : public tile_type_info_common<size_X, size_Y> {
 
   template<typename T>
   struct type_selector {
-    using type = T::type;
+    using type = typename T::type;
   };
 
   template<>
@@ -170,7 +211,7 @@ struct tile_type_info_hetero : public tile_type_info_common<size_X, size_Y> {
   };
 
   template <int X, int Y>
-  using TileDataTy = type_selector<decltype(get_type<X, Y>(std::declval<TypeSelectorTy>()))>::type;
+  using TileDataTy = typename type_selector<decltype(get_type<X, Y>(std::declval<TypeSelectorTy>()))>::type;
 
   template <int X, int Y>
   using tile_data =
@@ -187,7 +228,7 @@ struct layout_storage {
   static constexpr auto tile_coordinates = boost::hana::cartesian_product(
       boost::hana::make_tuple(boost::hana::range_c<int, 0, sizeX>,
                               boost::hana::range_c<int, 0, sizeY>));
-  using type_info = tile_type_info_hetero<TypeSelectorTy, sizeX, sizeY>;
+  using type_info = tile_type_info<TypeSelectorTy, sizeX, sizeY>;
 
   static auto generate_storage() {
     return boost::hana::transform(tile_coordinates, [&](auto coord) {
