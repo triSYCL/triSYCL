@@ -50,6 +50,8 @@ template <typename LockTy> struct lock_guard_ex : detail::no_move {
 template <typename LockTy> lock_guard_ex(LockTy) -> lock_guard_ex<LockTy>;
 
 /// Type used to manipulate a tile on the device from the device itself.
+/// TypeInfoTy contains all type and constexpr information used by the
+/// device_tile.
 template <typename TypeInfoTy, int X, int Y>
 struct device_tile : private detail::device_tile_impl {
  private:
@@ -129,52 +131,52 @@ struct device_tile : private detail::device_tile_impl {
       return get_memory<hw::dir::east>();
   }
 
-  /// Write object to stream
-  template <typename SpecifiedTy>
-  void stream_write(const SpecifiedTy& value, int stream_id) {
-    static_assert(std::is_trivially_copyable_v<SpecifiedTy>,
-                  "SpecifiedTy cannot passed by streams");
+  /// Write an object of type ElemTy to stream
+  template <typename ElemTy>
+  void stream_write(const ElemTy& value, int stream_id) {
+    static_assert(std::is_trivially_copyable_v<ElemTy>,
+                  "ElemTy cannot passed by streams");
     /// The hardware supports writing to a stream by blocks of 16 bytes.
     stream_operation<16, /*is_read*/ false>(
         reinterpret_cast<const char*>(std::addressof(value)),
-        sizeof(SpecifiedTy), [this, stream_id](const char* ptr) {
+        sizeof(ElemTy), [this, stream_id](const char* ptr) {
           impl::stream_write16(ptr, stream_id);
         });
   }
-  /// Read object from stream
-  template <typename SpecifiedTy> SpecifiedTy stream_read(int stream_id) {
-    static_assert(std::is_trivially_copyable_v<SpecifiedTy>,
-                  "SpecifiedTy cannot passed by streams");
-    SpecifiedTy value;
+  /// Read an object of type ElemTy from stream
+  template <typename ElemTy> ElemTy stream_read(int stream_id) {
+    static_assert(std::is_trivially_copyable_v<ElemTy>,
+                  "ElemTy cannot passed by streams");
+    ElemTy value;
     /// The hardware supports reading to a stream by blocks of 16 bytes.
     stream_operation<16, /*is_read*/ true>(
-        reinterpret_cast<char*>(std::addressof(value)), sizeof(SpecifiedTy),
+        reinterpret_cast<char*>(std::addressof(value)), sizeof(ElemTy),
         [this, stream_id](char* ptr) { impl::stream_read16(ptr, stream_id); });
     return value;
   }
-  /// Write object to the cascade stream
-  template <typename SpecifiedTy> void cascade_write(const SpecifiedTy& value) {
+  /// Write an object of type ElemTy to the cascade stream
+  template <typename ElemTy> void cascade_write(const ElemTy& value) {
     // static_assert(!is_cascade_end(), "There is nothing to write for.");
-    static_assert(std::is_trivially_copyable_v<SpecifiedTy>,
-                  "SpecifiedTy cannot passed by streams");
+    static_assert(std::is_trivially_copyable_v<ElemTy>,
+                  "ElemTy cannot passed by streams");
     /// The hardware supports writing to the cascade stream by blocks of 48
     /// bytes.
     stream_operation<48, /*is_read*/ false>(
         reinterpret_cast<const char*>(std::addressof(value)),
-        sizeof(SpecifiedTy),
+        sizeof(ElemTy),
         [this](const char* ptr) { impl::cascade_write48(ptr); });
   }
 
-  /// Read object from the cascade stream
-  template <typename SpecifiedTy> SpecifiedTy cascade_read() {
+  /// Read an object of type ElemTy from the cascade stream
+  template <typename ElemTy> ElemTy cascade_read() {
     // static_assert(!is_cascade_start(), "There is nothing to read from");
-    static_assert(std::is_trivially_copyable_v<SpecifiedTy>,
-                  "SpecifiedTy cannot passed by streams");
-    SpecifiedTy value;
+    static_assert(std::is_trivially_copyable_v<ElemTy>,
+                  "ElemTy cannot passed by streams");
+    ElemTy value;
     /// The hardware supports reading to the cascade stream by blocks of 48
     /// bytes.
     stream_operation<48, /*is_read*/ true>(
-        reinterpret_cast<char*>(std::addressof(value)), sizeof(SpecifiedTy),
+        reinterpret_cast<char*>(std::addressof(value)), sizeof(ElemTy),
         [this](char* ptr) { impl::cascade_read48(ptr); });
     return value;
   }
@@ -211,6 +213,8 @@ struct device_tile : private detail::device_tile_impl {
 };
 
 /// Type used to manipulate a tile on the device from the host
+/// TypeInfoTy contains all type and constexpr information used by the
+/// host_tile.
 template <typename TypeInfoTy, int X, int Y> struct host_tile {
  private:
   device_tile<TypeInfoTy, X, Y> dt;
@@ -418,7 +422,7 @@ struct alignas(8) __SYCL_TYPE(acap_accessor) accessor
  public:
   template <typename HostTileTy>
   accessor(HostTileTy& tile, const buffer<T>& buff, access_mode am = read_write)
-      : base { (unsigned)buff.size(), (unsigned)sizeof(T),
+      : base { (uint32_t)buff.size(), (uint32_t)sizeof(T),
                (void*)buff.data() } {
     static_assert(std::is_trivially_copyable_v<T>,
                   "cannot safely be copied to the device");

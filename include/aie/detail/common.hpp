@@ -87,9 +87,9 @@ struct host_tile_impl_fallback {
 /// it is aligned on 8 such that it has the same layout as it host counterpart.
 struct alignas(8) device_accessor_impl {
   device_accessor_impl() = default;
-  device_accessor_impl(unsigned, unsigned, void*) {}
-  unsigned size = 0;
-  unsigned elem_size = 0;
+  device_accessor_impl(uint32_t, uint32_t, void*) {}
+  uint32_t size = 0;
+  uint32_t elem_size = 0;
   hw::dev_ptr<char> data = nullptr;
   char* get_ptr() { return data.get(); }
   const char* get_ptr() const { return data.get(); }
@@ -102,12 +102,12 @@ struct alignas(8) device_accessor_impl {
 /// it is aligned on 8 such that it has the same layout as it device counterpart.
 struct alignas(8) host_accessor_impl {
   host_accessor_impl() = default;
-  host_accessor_impl(unsigned s, unsigned es, void* d)
+  host_accessor_impl(uint32_t s, uint32_t es, void* d)
       : size(s)
       , elem_size(es)
       , data((char*)d) {}
-  unsigned size = 0;
-  unsigned elem_size = 0;
+  uint32_t size = 0;
+  uint32_t elem_size = 0;
   char* data = nullptr;
   char* get_ptr() { return data; }
   const char* get_ptr() const { return data; }
