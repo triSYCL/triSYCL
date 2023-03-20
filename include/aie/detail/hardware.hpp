@@ -489,7 +489,7 @@ public:
   }
 
   // This is the heap that is used by dynamic allocations and the allocator's
-  // bookeeping.
+  // book-keeping.
   static uint32_t __attribute__((const))
   get_heap_begin_offset(hw::dir d = hw::dir::self) {
     return get(d)->heap_start;

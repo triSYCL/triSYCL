@@ -5,17 +5,14 @@
 #include "hardware.hpp"
 #include "utils.hpp"
 
+/// Used to indicated that the feature is not or cannot be implemented
 #define TRISYCL_FALLBACK                                                       \
   do {                                                                         \
     assert(false && "fallback");                                               \
     __builtin_unreachable();                                                   \
   } while (0)
-#define TRISYCL_UNIMPLEMENTED                                                  \
-  do {                                                                         \
-    assert(false && "unimplementatble");                                       \
-    __builtin_unreachable();                                                   \
-  } while (0)
 
+/// Annotate classes that need special handling when transferred to device.
 #ifdef __SYCL_DEVICE_ONLY__
 #define __SYCL_TYPE(x) [[__sycl_detail__::sycl_type(x)]]
 #else
@@ -24,8 +21,11 @@
 
 namespace aie::detail {
 
-struct illegal_to_access {};
+/// Used as the type of a memory tile that should not be accessed.
+struct out_of_bounds {};
 
+/// The device_impl stores global information about the device.
+/// It is type-erased so it only know void* to memory tile.
 struct device_impl_fallback {
   device_impl_fallback() = default;
   device_impl_fallback(int x, int y) { TRISYCL_FALLBACK; }
@@ -34,6 +34,7 @@ struct device_impl_fallback {
   void wait_all() { TRISYCL_FALLBACK; }
 };
 
+/// The lock_impl enable interacting with a lock.
 struct lock_impl_fallback {
   void acquire() { TRISYCL_FALLBACK; }
   void release() { TRISYCL_FALLBACK; }
@@ -41,9 +42,13 @@ struct lock_impl_fallback {
   void release_with_value(bool val) { TRISYCL_FALLBACK; }
 };
 
+/// It is useful when executing on hardware to have separate type for locks on
+/// device and host. Se here they are separated even if they have the same API.
 using device_lock_impl_fallback = lock_impl_fallback;
 using host_lock_impl_fallback = lock_impl_fallback;
 
+/// The device_tile_impl enable doing any action that can be done on device by a
+/// tile.
 struct device_tile_impl_fallback {
   template <typename DeviceImplTy> void init(DeviceImplTy&, hw::position pos) {}
   lock_impl_fallback get_lock(hw::dir d, int i) { TRISYCL_FALLBACK; }
@@ -56,6 +61,8 @@ struct device_tile_impl_fallback {
   int y_coord() { TRISYCL_FALLBACK; }
 };
 
+/// The host_tile_impl enable doing any action that can be done from the host to
+/// a tile.
 struct host_tile_impl_fallback {
   template <typename DeviceImplTy> void init(DeviceImplTy&, hw::position pos) {}
   lock_impl_fallback get_lock(hw::dir d, int i) { TRISYCL_FALLBACK; }
@@ -76,6 +83,8 @@ struct host_tile_impl_fallback {
   }
 };
 
+/// device_accessor_impl is the internal storage of an accessors on the device.
+/// it is aligned on 8 such that it has the same layout as it host counterpart.
 struct alignas(8) device_accessor_impl {
   device_accessor_impl() = default;
   device_accessor_impl(unsigned, unsigned, void*) {}
@@ -89,6 +98,8 @@ struct alignas(8) device_accessor_impl {
 #endif
 };
 
+/// device_accessor_impl is the internal storage of an accessors on the host.
+/// it is aligned on 8 such that it has the same layout as it device counterpart.
 struct alignas(8) host_accessor_impl {
   host_accessor_impl() = default;
   host_accessor_impl(unsigned s, unsigned es, void* d)
@@ -102,6 +113,7 @@ struct alignas(8) host_accessor_impl {
   const char* get_ptr() const { return data; }
 };
 
+/// This selects the right accessor implementation based on context
 #ifdef __SYCL_DEVICE_ONLY__
 using accessor_common = device_accessor_impl;
 #else
@@ -116,6 +128,7 @@ bool operator!=(accessor_common self, accessor_common other) {
   return !(self == other);
 }
 
+/// Validate that accessors have the same layout on host and
 static assert_equal<sizeof(accessor_common), 16> check_sizeof_accessor_common;
 static assert_equal<alignof(accessor_common), 8> check_alignof_accessor_common;
 

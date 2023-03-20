@@ -6,31 +6,40 @@
 #include <array>
 #include <vector>
 
+/// top-level file of the runtime. aie.hpp contains of the API a user should
+/// use. aie++ can be compiled with many different implementations this
+/// file(aie.hpp) contains only the common parts of the runtime. the internal
+/// API implemented by each back-end is defined in common.hpp.
+
+/// Types in *_impl_fallback are example of the API that need to be implemented
+/// by a backend. it should be appear in aie.hpp
+/// Types in *_impl are implementation by a backend of an API.
+
+/// here we select which include to use based on how aie++ is compiled
 #ifdef __AIE_FALLBACK___
 // fallback, test that the fallback API can compile
 #include "detail/fallback.hpp"
 #elif defined(__ACAP_EMULATION___)
 // emulation
 #include "detail/emulation.hpp"
-#else
-#ifdef __SYCL_DEVICE_ONLY__
+#elif __SYCL_DEVICE_ONLY__
 // device-side on hardware
 #include "detail/device_only.hpp"
 #else
 // host-side on hardware
 #include "detail/host_only.hpp"
 #endif
-#endif
 
 namespace aie {
 
-template <typename LockTy> struct lock_guard_ex : detail::no_copy_or_move {
+/// similar to std::lock_guard but it is adapted to use aie::*_lock_impl instead
+/// of std::*mutex
+template <typename LockTy> struct lock_guard_ex : detail::no_move {
  private:
   LockTy impl;
 
  public:
-  template <typename>
-  friend struct unlock_guard_ex;
+  template <typename> friend struct unlock_guard_ex;
   lock_guard_ex(LockTy l)
       : impl(l) {
     impl.acquire();
@@ -38,27 +47,40 @@ template <typename LockTy> struct lock_guard_ex : detail::no_copy_or_move {
   ~lock_guard_ex() { impl.release(); }
 };
 
-template <typename LockTy>
-lock_guard_ex(LockTy) -> lock_guard_ex<LockTy>;
+template <typename LockTy> lock_guard_ex(LockTy) -> lock_guard_ex<LockTy>;
 
+/// Type used to manipulate a tile on the device from the device itself.
 template <typename TypeInfoTy, int X, int Y>
 struct device_tile : private detail::device_tile_impl {
  private:
   using impl = detail::device_tile_impl;
 
-  template <unsigned OpSize, bool is_read, typename OpFunc>
+  /// Write or Read any size of data using fixed size stream operations
+  template <unsigned FixedSize, bool is_read, typename OpFunc>
   static void stream_operation(
       typename std::conditional<is_read, char, const char>::type* ptr,
-      unsigned size, OpFunc func) {
-    std::array<char, OpSize> buffer;
-    buffer.fill(0);
+      unsigned size, OpFunc stream_operation) {
     unsigned idx = 0;
-    for (; idx + OpSize <= size; idx += OpSize)
-      func(ptr + idx);
+
+    /// While we can make full size stream transfer do it.
+    for (; idx + FixedSize <= size; idx += FixedSize)
+      stream_operation(ptr + idx);
+
+    /// If we have leftover bytes to send
     if (idx < size) {
+      /// the stream operations are fixed size so we need a buffer of sufficient
+      /// size.
+      std::array<char, FixedSize> buffer {};
+
+      /// When writing to a stream, copy the remaining data into the buffer.
+      /// then send the whole buffer on the stream
       if constexpr (!is_read)
         std::memcpy(buffer.data(), ptr + idx, size - idx);
-      func(buffer.data());
+
+      stream_operation(buffer.data());
+
+      /// When reading from a stream, receive the data into the buffer, then
+      /// copy the relevant part of the buffer in the right place.
       if constexpr (is_read)
         std::memcpy(ptr + idx, buffer.data(), size - idx);
     }
@@ -82,12 +104,15 @@ struct device_tile : private detail::device_tile_impl {
   int dyn_y() { return impl::y_coord(); }
   hw::position get_dyn_pos() { return { dyn_x(), dyn_y() }; }
 
+  /// layout of the aie's in use
   static constexpr int size_x() { return TypeInfoTy::sizeX; }
   static constexpr int size_y() { return TypeInfoTy::sizeX; }
+  /// Check id the neighbor is direction d is valid to access
   static constexpr bool has_neighbor(hw::dir d) {
     return get_pos().moved(d).is_valid(size_x(), size_y());
   }
 
+  /// access the neighbor's memory tile
   template <typename hw::dir d> auto& get_memory() {
     using RetTy = decltype(get_tile_type<d>());
     return *(RetTy*)impl::get_mem_addr<d>();
@@ -104,53 +129,89 @@ struct device_tile : private detail::device_tile_impl {
       return get_memory<hw::dir::east>();
   }
 
+  /// Write object to stream
   template <typename SpecifiedTy>
   void stream_write(const SpecifiedTy& value, int stream_id) {
-    static_assert(std::is_trivially_copyable<SpecifiedTy>::value,
+    static_assert(std::is_trivially_copyable_v<SpecifiedTy>,
                   "SpecifiedTy cannot passed by streams");
+    /// The hardware supports writing to a stream by blocks of 16 bytes.
     stream_operation<16, /*is_read*/ false>(
         reinterpret_cast<const char*>(std::addressof(value)),
         sizeof(SpecifiedTy), [this, stream_id](const char* ptr) {
           impl::stream_write16(ptr, stream_id);
         });
   }
+  /// Read object from stream
   template <typename SpecifiedTy> SpecifiedTy stream_read(int stream_id) {
-    static_assert(std::is_trivially_copyable<SpecifiedTy>::value,
+    static_assert(std::is_trivially_copyable_v<SpecifiedTy>,
                   "SpecifiedTy cannot passed by streams");
     SpecifiedTy value;
+    /// The hardware supports reading to a stream by blocks of 16 bytes.
     stream_operation<16, /*is_read*/ true>(
         reinterpret_cast<char*>(std::addressof(value)), sizeof(SpecifiedTy),
         [this, stream_id](char* ptr) { impl::stream_read16(ptr, stream_id); });
     return value;
   }
+  /// Write object to the cascade stream
   template <typename SpecifiedTy> void cascade_write(const SpecifiedTy& value) {
     // static_assert(!is_cascade_end(), "There is nothing to write for.");
-    static_assert(std::is_trivially_copyable<SpecifiedTy>::value,
+    static_assert(std::is_trivially_copyable_v<SpecifiedTy>,
                   "SpecifiedTy cannot passed by streams");
+    /// The hardware supports writing to the cascade stream by blocks of 48
+    /// bytes.
     stream_operation<48, /*is_read*/ false>(
         reinterpret_cast<const char*>(std::addressof(value)),
         sizeof(SpecifiedTy),
         [this](const char* ptr) { impl::cascade_write48(ptr); });
   }
 
+  /// Read object from the cascade stream
   template <typename SpecifiedTy> SpecifiedTy cascade_read() {
     // static_assert(!is_cascade_start(), "There is nothing to read from");
-    static_assert(std::is_trivially_copyable<SpecifiedTy>::value,
+    static_assert(std::is_trivially_copyable_v<SpecifiedTy>,
                   "SpecifiedTy cannot passed by streams");
     SpecifiedTy value;
+    /// The hardware supports reading to the cascade stream by blocks of 48
+    /// bytes.
     stream_operation<48, /*is_read*/ true>(
         reinterpret_cast<char*>(std::addressof(value)), sizeof(SpecifiedTy),
         [this](char* ptr) { impl::cascade_read48(ptr); });
     return value;
   }
 
+  detail::device_lock_impl get_lock(int i) {
+    return get_lock(hw::dir::self, i);
+  }
   detail::device_lock_impl get_lock(hw::dir d, int i) {
     return impl::get_lock(d, i);
   }
+  void vertical_barrier(int lock = 15) {
+    // Propagate a token from South to North and back
+    // All tile except the bottom one wait.
+    if constexpr (has_neighbor(hw::dir::south)) {
+      // Wait for the Southern neighbour to be ready
+      get_lock(lock).acquire_with_value(true);
+    }
+    // All tile except the top one wait.
+    if constexpr (!has_neighbor(hw::dir::south)) {
+      get_lock(hw::dir::north, lock).acquire_with_value(false);
+      // Unleash the Northern neighbour
+      get_lock(hw::dir::north, lock).release_with_value(true);
+      // Wait for the Northern neighbour to acknowledge
+      get_lock(hw::dir::north, lock).acquire_with_value(false);
+    }
+    // All tile except the bottom one wait.
+    if constexpr (has_neighbor(hw::dir::south)) {
+      // Acknowledge to the Southern neighbour
+      get_lock(lock).release_with_value(false);
+    }
+    /// Reset the lock for the next barrier.
+    get_lock(lock).release_with_value(false);
+  }
 };
 
-template <typename TypeInfoTy, int X, int Y>
-struct host_tile {
+/// Type used to manipulate a tile on the device from the host
+template <typename TypeInfoTy, int X, int Y> struct host_tile {
  private:
   device_tile<TypeInfoTy, X, Y> dt;
   detail::host_tile_impl impl;
@@ -164,6 +225,8 @@ struct host_tile {
     impl.init(global, get_pos());
   }
 
+  /// access the memory tile on the host and notify that it needs to be send to
+  /// the device.
   auto& mem() {
     using RetTy = typename decltype(dt)::self_memory_tile;
     void* ptr = dev_impl->get_mem(get_pos());
@@ -171,13 +234,12 @@ struct host_tile {
     return *reinterpret_cast<RetTy*>(ptr);
   }
 
-  detail::host_lock_impl get_lock(int i) {
-    return impl.get_lock(i);
-  }
+  detail::host_lock_impl get_lock(int i) { return impl.get_lock(i); }
 
-  template <typename F> void single_task(F&& func) {
-    impl.execute(func, dt);
-  }
+  /// execute a kernel on the device
+  template <typename F> void single_task(F&& func) { impl.execute(func, dt); }
+  /// Used as implementation detail. this should be refactor such that it
+  /// becomes private
   void register_accessor(const detail::accessor_common& acc) {
     impl.register_accessor(acc);
   }
@@ -190,35 +252,38 @@ template <typename ElemTy, int X, int Y> struct indexed_elem {
   ElemTy elem;
 };
 
+/// Type containing all the constexpr and type information needed by tile types.
 template <typename TypeSelectorTy, int size_X, int size_Y>
 struct tile_type_info {
   static constexpr int sizeX = size_X;
   static constexpr int sizeY = size_Y;
-  static constexpr bool is_hetro = true;
 
+  /// Implementation detail to figure out the return type of the lambda
   template <int x, int y, typename T> static auto get_type(T l) {
     return l.template operator()<x, y>();
   }
 
-  template<typename T>
-  struct type_selector {
+  template <typename T> struct type_selector {
     using type = typename T::type;
   };
 
-  template<>
-  struct type_selector<void> {
-    using type = detail::illegal_to_access;
+  template <> struct type_selector<void> {
+    using type = detail::out_of_bounds;
   };
 
   template <int X, int Y>
-  using TileDataTy = typename type_selector<decltype(get_type<X, Y>(std::declval<TypeSelectorTy>()))>::type;
+  using TileDataTy = typename type_selector<decltype(get_type<X, Y>(
+      std::declval<TypeSelectorTy>()))>::type;
 
+  /// Type of the memory tile at position X, Y
   template <int X, int Y>
   using tile_data =
       std::conditional_t < X >= 0 && Y >= 0 &&
-      X < size_X&& Y<size_Y, TileDataTy<X, Y>, detail::illegal_to_access>;
+      X < size_X&& Y<size_Y, TileDataTy<X, Y>, detail::out_of_bounds>;
 };
 
+/// Storage for all tiles and memory tiles.
+/// Handle all the boost::hana stuff
 template <typename TypeSelectorTy,
           template <typename, int X, int Y> typename HostTileTy, int size_X,
           int size_Y>
@@ -234,7 +299,7 @@ struct layout_storage {
     return boost::hana::transform(tile_coordinates, [&](auto coord) {
       return indexed_elem<
           typename type_info::template TileDataTy<boost::hana::at_c<0>(coord),
-                                                 boost::hana::at_c<1>(coord)>,
+                                                  boost::hana::at_c<1>(coord)>,
           boost::hana::at_c<0>(coord), boost::hana::at_c<1>(coord)> {};
     });
   }
@@ -252,7 +317,7 @@ struct layout_storage {
 
   template <int X, int Y> auto get_storage_type() {
     if constexpr (X < 0 || Y < 0 || X >= sizeX || Y >= sizeY)
-      return detail::illegal_to_access {};
+      return detail::out_of_bounds {};
     return storage_at<X, Y>();
   }
 
@@ -267,8 +332,11 @@ struct layout_storage {
   decltype(generate_tiles()) tiles = generate_tiles();
 
   void init(detail::device_impl& device) {
+    /// inform the device_impl of all the tile memories
     boost::hana::for_each(
         tile_storage, [&](auto& ts) { device.add_storage(ts.pos, &ts.elem); });
+
+    /// init all the host_tiles
     boost::hana::for_each(tiles, [&](auto& ts) { ts.elem.init(device); });
   }
   layout_storage(detail::device_impl& device) { init(device); }
@@ -291,30 +359,46 @@ template <typename DevTy> struct queue {
   DevTy dev;
   queue(DevTy d)
       : dev { d } {}
-  template <typename TileDataTy = aie::detail::illegal_to_access,
-            typename F = void>
+  /// Submit that uses the same struct for all memory tiles
+  template <typename TileDataTy = aie::detail::out_of_bounds, typename F = void>
   void submit_uniform(F&& func) {
     submit([]<int X, int Y>() { return select<TileDataTy>(); },
            std::forward<F>(func));
   }
+  /// Submit that uses difference instances of the same template for all memory
+  /// tiles
   template <template <int, int> typename TileDataTy, typename F>
   void submit_hetero(F&& func) {
     submit([]<int X, int Y>() { return select<TileDataTy<X, Y>>(); },
            std::forward<F>(func));
   }
+
+  template <typename F> void submit(F&& func) {
+    submit([]<int X, int Y>() { return select<detail::out_of_bounds>(); },
+           std::forward<F>(func));
+  }
+
+  /// fully generic submit using a lambda to describe which type to use for
+  /// which memory tile
   template <typename TypeSelectorTy, typename F>
   void submit(TypeSelectorTy&& type_selector, F&& func) {
+    /// access the device physical or emulated
     detail::device_impl impl(DevTy::sizeX, DevTy::sizeY);
-    detail::layout_storage<TypeSelectorTy, host_tile, DevTy::sizeX, DevTy::sizeY>
+
+    /// create all the storage
+    detail::layout_storage<TypeSelectorTy, host_tile, DevTy::sizeX,
+                           DevTy::sizeY>
         storage(impl);
+
+    /// execute the func for all host tiles
     boost::hana::for_each(storage.tiles, [&](auto& ts) { func(ts.elem); });
     impl.wait_all();
   }
 };
 
-template <typename DevTy>
-queue(DevTy&) -> queue<DevTy>;
+template <typename DevTy> queue(DevTy&) -> queue<DevTy>;
 
+/// for now buffers are simple vector. this is temporary
 template <typename T> using buffer = std::vector<T>;
 
 enum access_mode {
@@ -323,6 +407,8 @@ enum access_mode {
   read_write = read_only | write_only,
 };
 
+/// The layout of the accessor must be the same on device and host. because the
+/// lambda must be the same on both side, so the size and alignment must match
 template <typename T>
 struct alignas(8) __SYCL_TYPE(acap_accessor) accessor
     : detail::accessor_common {
@@ -348,6 +434,7 @@ struct alignas(8) __SYCL_TYPE(acap_accessor) accessor
 };
 
 namespace detail {
+/// validate that the accessor has the correct layout
 detail::assert_equal<sizeof(accessor<int>), 16> check_sizeof_accessor;
 detail::assert_equal<alignof(accessor<int>), 8> check_alignof_accessor;
 } // namespace detail

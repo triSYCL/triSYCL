@@ -64,39 +64,45 @@ auto constexpr underlying_value = [](auto e) {
   return static_cast<value_t>(e);
 };
 
+/// check that BinStart start by an ELF magic
 bool isELFMagic(const char* BinStart) {
   return BinStart[0] == 0x7f && BinStart[1] == 'E' && BinStart[2] == 'L' &&
          BinStart[3] == 'F';
 }
 
+/// Check that val has a single bit that is set.
 template <typename T> constexpr bool is_single_bit(T val) {
-  return (val & (val >> 1)) == 0;
+  return (val != 0) && ((val & (val >> 1)) == 0);
 }
 
+/// align val down to align
 template <typename T> constexpr T align_down(T val, T align) {
   assert(is_single_bit(align));
   return val & ~(align - 1);
 }
 
+/// align val up to align
 template <typename T> constexpr T align_up(T val, T align) {
   assert(is_single_bit(align));
   return align_down(val + align - 1, align);
 }
 
-struct no_copy {
-  no_copy() = default;
-  no_copy(const no_copy&) = delete;
-  no_copy(no_copy&&) = default;
-  no_copy& operator=(const no_copy&) = delete;
-  no_copy& operator=(no_copy&&) = delete;
+/// with no copy constructor, inherit from it to remove the copy constructor
+struct move_only {
+  move_only() = default;
+  move_only(const move_only&) = delete;
+  move_only(move_only&&) = default;
+  move_only& operator=(const move_only&) = delete;
+  move_only& operator=(move_only&&) = delete;
 };
 
-struct no_copy_or_move {
-  no_copy_or_move() = default;
-  no_copy_or_move(const no_copy_or_move&) = delete;
-  no_copy_or_move& operator=(const no_copy_or_move&) = delete;
+/// with no copy or move constructor, inherit from it to remove the copy and
+/// move constructor
+struct no_move {
+  no_move() = default;
+  no_move(const no_move&) = delete;
+  no_move& operator=(const no_move&) = delete;
 };
-
 }
 
 #endif

@@ -18,18 +18,18 @@ namespace aiev1 = xaie::aiev1;
 
 struct device_impl : device_impl_fallback {
   struct handle_impl {
-    /// The host needs to set up the device when executing on real device
-    /// The following are macro that declare variables in our case member
-    /// variables. the xaie:: before them is because there type is in the
-    /// namespace xaie::.
-    /// this declares aie_config of type xaie::XAie_Config.
+    /// The host needs to set up the device when executing on real device.
+    /// The following XAie_SetupConfig and XAie_InstDeclare are actually macros that declare variables, in our case member
+    /// variables. The "xaie::" before them is because their type is in the
+    /// namespace "xaie::".
+    /// This declares \c aie_config of type \c xaie::XAie_Config.
     xaie::XAie_SetupConfig(aie_config, aiev1::dev_gen, aiev1::base_addr,
                            aiev1::col_shift, aiev1::row_shift,
                            aiev1::num_hw_col, aiev1::num_hw_row,
                            aiev1::num_shim_row, aiev1::mem_tile_row_start,
                            aiev1::mem_tile_row_num, aiev1::aie_tile_row_start,
                            aiev1::aie_tile_row_num);
-    /// this declares aie_inst of type xaie::XAie_InstDeclare
+    /// This declares \c aie_inst of type \c xaie::XAie_InstDeclare
     xaie::XAie_InstDeclare(aie_inst, &aie_config);
     handle_impl(int x, int y) {
       TRISYCL_XAIE(xaie::XAie_CfgInitialize(&aie_inst, &aie_config));
@@ -56,10 +56,10 @@ struct device_impl : device_impl_fallback {
     /// Cleanup device if the previous use was not cleanup
     TRISYCL_XAIE(xaie::XAie_Finish(&impl.aie_inst));
 
-    /// Re-access the deice after the cleanup.
+    /// Re-access the device after the cleanup.
     impl = handle_impl(x, y);
     /// Request access to all tiles.
-    TRISYCL_XAIE(xaie::XAie_PmRequestTiles(&impl.aie_inst, NULL, 0));
+    TRISYCL_XAIE(xaie::XAie_PmRequestTiles(&impl.aie_inst, nullptr, 0));
     // Initialize all the tiles with their network connections first
     memory.assign(x * y, nullptr);
     sizeX = x;

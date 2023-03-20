@@ -25,7 +25,7 @@
 
 namespace trisycl::vendor::xilinx::acap {
 
-/// This allocator is designed to minimize the memory overhead, to to be fast.
+/// This allocator is designed to minimize the memory overhead to be fast.
 namespace heap {
 
 constexpr unsigned min_alloc_size = 8;

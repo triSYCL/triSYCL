@@ -355,7 +355,7 @@ template <typename Layout> struct device {
                          aiev1::num_hw_row, aiev1::num_shim_row,
                          aiev1::mem_tile_row_start, aiev1::mem_tile_row_num,
                          aiev1::aie_tile_row_start, aiev1::aie_tile_row_num);
-  /// this declares aie_inst of type xaie::XAie_InstDeclare
+  /// This declares \c aie_inst of type \c xaie::XAie_InstDeclare
   xaie::XAie_InstDeclare(aie_inst, &aie_config);
 
   /// Returns the pointer to libXAiengine's device.

@@ -14,7 +14,7 @@
 
 namespace aie::detail {
 
-/// This allocator is designed to minimize the memory overhead, to to be fast.
+/// This allocator is designed to minimize the memory overhead to be fast.
 namespace heap {
 
 /// metadata associated with each dynamic allocation.
