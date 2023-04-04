@@ -108,7 +108,7 @@ struct device_tile : private detail::device_tile_impl {
 
   /// layout of the aie's in use
   static constexpr int size_x() { return TypeInfoTy::sizeX; }
-  static constexpr int size_y() { return TypeInfoTy::sizeX; }
+  static constexpr int size_y() { return TypeInfoTy::sizeY; }
   /// Check id the neighbor is direction d is valid to access
   static constexpr bool has_neighbor(hw::dir d) {
     return get_pos().moved(d).is_valid(size_x(), size_y());
@@ -187,29 +187,40 @@ struct device_tile : private detail::device_tile_impl {
   detail::device_lock_impl get_lock(hw::dir d, int i) {
     return impl::get_lock(d, i);
   }
-  void vertical_barrier(int lock = 15) {
-    // Propagate a token from South to North and back
-    // All tile except the bottom one wait.
-    if constexpr (has_neighbor(hw::dir::south)) {
-      // Wait for the Southern neighbour to be ready
-      get_lock(lock).acquire_with_value(true);
-    }
-    // All tile except the top one wait.
-    if constexpr (!has_neighbor(hw::dir::south)) {
-      get_lock(hw::dir::north, lock).acquire_with_value(false);
-      // Unleash the Northern neighbour
-      get_lock(hw::dir::north, lock).release_with_value(true);
-      // Wait for the Northern neighbour to acknowledge
-      get_lock(hw::dir::north, lock).acquire_with_value(false);
-    }
-    // All tile except the bottom one wait.
-    if constexpr (has_neighbor(hw::dir::south)) {
-      // Acknowledge to the Southern neighbour
-      get_lock(lock).release_with_value(false);
-    }
-    /// Reset the lock for the next barrier.
-    get_lock(lock).release_with_value(false);
-  }
+  // void vertical_barrier(int lock = 15) {
+  //   // Propagate a token from South to North and back
+  //   // All tile except the bottom one wait.
+  //   aie::detail::log("vertical_barrier: start\n");
+  //   if constexpr (has_neighbor(hw::dir::south)) {
+  //     aie::detail::log("vertical_barrier: if 0 0\n");
+  //     // Wait for the Southern neighbour to be ready
+  //     get_lock(lock).acquire_with_value(true);
+  //     aie::detail::log("vertical_barrier: if 0 1\n");
+  //   }
+  //   // All tile except the top one wait.
+  //   if constexpr (has_neighbor(hw::dir::north)) {
+  //     aie::detail::log("vertical_barrier: if 1 0\n");
+  //     get_lock(hw::dir::north, lock).acquire_with_value(false);
+  //     // Unleash the Northern neighbour
+  //     aie::detail::log("vertical_barrier: if 1 1\n");
+  //     get_lock(hw::dir::north, lock).release_with_value(true);
+  //     // Wait for the Northern neighbour to acknowledge
+  //     aie::detail::log("vertical_barrier: if 1 2\n");
+  //     get_lock(hw::dir::north, lock).acquire_with_value(false);
+  //     aie::detail::log("vertical_barrier: if 1 3\n");
+  //   }
+  //   // All tile except the bottom one wait.
+  //   if constexpr (has_neighbor(hw::dir::south)) {
+  //     aie::detail::log("vertical_barrier: if 2 0\n");
+  //     // Acknowledge to the Southern neighbour
+  //     get_lock(lock).release_with_value(false);
+  //     aie::detail::log("vertical_barrier: if 2 1\n");
+  //   }
+  //   aie::detail::log("vertical_barrier: final 1\n");
+  //   /// Reset the lock for the next barrier.
+  //   // get_lock(lock).release_with_value(false);
+  //   // aie::detail::log("vertical_barrier: final 2\n");
+  // }
 };
 
 /// Type used to manipulate a tile on the device from the host
@@ -350,18 +361,29 @@ template <typename T> struct selected_type {
   using type = T;
 };
 
+template <typename T> struct type_list {
+  using type = T;
+};
+
 } // namespace detail
 
 template <typename T> auto select() { return detail::selected_type<T> {}; }
+
+template <typename... Ts> auto add_rpc() {
+  return boost::hana::make_tuple(boost::hana::type_c<Ts>...);
+}
 
 template <int size_X, int size_Y> struct device {
   static constexpr int sizeX = size_X;
   static constexpr int sizeY = size_Y;
 };
 
-template <typename DevTy> struct queue {
+template <typename DevTy, typename ExtraRpcTy> struct queue {
   DevTy dev;
   queue(DevTy d)
+      : dev { d } {}
+  template<typename T>
+  queue(DevTy d, T)
       : dev { d } {}
   /// Submit that uses the same struct for all memory tiles
   template <typename TileDataTy = aie::detail::out_of_bounds, typename F = void>
@@ -400,7 +422,9 @@ template <typename DevTy> struct queue {
   }
 };
 
-template <typename DevTy> queue(DevTy&) -> queue<DevTy>;
+template <typename DevTy> queue(DevTy&) -> queue<DevTy, boost::hana::tuple<>>;
+template <typename DevTy, typename ExtraRpcTy>
+queue(DevTy&, ExtraRpcTy) -> queue<DevTy, ExtraRpcTy>;
 
 /// for now buffers are simple vector. this is temporary
 template <typename T> using buffer = std::vector<T>;

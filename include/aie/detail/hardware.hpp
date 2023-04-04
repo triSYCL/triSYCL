@@ -449,7 +449,7 @@ public:
   }
   static constexpr uint32_t __attribute__((const))
   get_rpc_record_size(hw::dir d = hw::dir::self) {
-    return 56;
+    return 20;
   }
   static constexpr uint32_t __attribute__((const))
   get_rpc_record_end_offset(hw::dir d = hw::dir::self) {

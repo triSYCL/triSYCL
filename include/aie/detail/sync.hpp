@@ -205,8 +205,18 @@ struct done_rpc {
 template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
+// template <typename T>
+// using rpc_ret_ty = decltype(std::declval<T>().act_on_data(
+//     0, 0, std::declval<xaie::handle>(), std::declval<T::data_type>()));
+
+template <typename... Tys>
+struct rpc_info {
+
+};
+
 template <typename... Tys> struct rpc_impl {
   using Var = std::variant<typename Tys::data_type...>;
+  // using RetVar = std::variant<rpc_ret_ty<Tys>...>;
 #if !defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_XILINX_AIE__)
   struct host_side {
     int x_size, y_size;
@@ -246,10 +256,9 @@ template <typename... Tys> struct rpc_impl {
               /// waitng on the host to act on it
               if (!get_barrier(x, y).try_arrive())
                 continue;
-              Var data;
+              device_side ds = h.moved(x, y).load<device_side>(addr);
+              Var data = h.moved(x, y).load(ds.data);
               /// Read the data the device has written.
-              h.moved(x, y).memcpy_d2h(
-                  &data, addr + offsetof(device_side, data), sizeof(Var));
               /// Deal with the special case of a kernel indicating it is done.
               /// This kernel stopped executing.
               if (data.index() == 0) {
@@ -261,8 +270,7 @@ template <typename... Tys> struct rpc_impl {
                 h.moved(x, y).mem_write(addr + offsetof(device_side, ret_val),
                                         ret);
                 /// read if the device requested to chain the is request.
-                chain = h.moved(x, y).mem_read(
-                    addr + offsetof(device_side, chained_request));
+                chain = ds.chained_request;
               }
               get_barrier(x, y).wait();
             }
@@ -280,7 +288,7 @@ template <typename... Tys> struct rpc_impl {
           hw::offset_table::get_rpc_record_begin_offset());
     }
     soft_barrier::device_side barrier;
-    Var data;
+    hw::dev_ptr<Var> data;
     uint32_t ret_val;
 
     /// This asks the host to wait for on other request from the same device
@@ -291,7 +299,8 @@ template <typename... Tys> struct rpc_impl {
     /// This sent data to the host to be processed.
     template <typename Ty> uint32_t perform(Ty &&d, bool chained = false) {
       /// Write the data.
-      data = d;
+      Var v = d;
+      data = &v;
       chained_request = chained;
       /// Notify the host of the data being available.
       barrier.wait();

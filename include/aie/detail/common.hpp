@@ -31,6 +31,7 @@ struct device_impl_fallback {
   device_impl_fallback(int x, int y) { TRISYCL_FALLBACK; }
   void add_storage(hw::position pos, void* storage) { TRISYCL_FALLBACK; }
   void* get_mem(hw::position pos) { TRISYCL_FALLBACK; }
+  // template<typename RpcTy>
   void wait_all() { TRISYCL_FALLBACK; }
 };
 
@@ -59,6 +60,9 @@ struct device_tile_impl_fallback {
   void cascade_read48(const char* ptr) { TRISYCL_FALLBACK; }
   int x_coord() { TRISYCL_FALLBACK; }
   int y_coord() { TRISYCL_FALLBACK; }
+  /// perform an RPC of type T, among the list Ts
+  template<typename T, typename RpcTy>
+  T::data_type rpc_perform(T) { TRISYCL_FALLBACK; }
 };
 
 /// The host_tile_impl enable doing any action that can be done from the host to

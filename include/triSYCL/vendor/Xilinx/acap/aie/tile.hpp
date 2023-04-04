@@ -725,7 +725,7 @@ public:
     }
     // All tile except the top one wait.
     if constexpr (is_memory_module_north()) {
-      get_lock(hw::dir::north, lock).acquire_with_value(false);
+      // get_lock(hw::dir::north, lock).acquire_with_value(false);
       // Unleash the Northern neighbour
       get_lock(hw::dir::north, lock).release_with_value(true);
       // Wait for the Northern neighbour to acknowledge
@@ -736,8 +736,6 @@ public:
       // Acknowledge to the Southern neighbour
       get_lock(lock).release_with_value(false);
     }
-    /// Reset the lock for the next barrier.
-    get_lock(lock).release_with_value(false);
   }
 
   /** Full barrier using the 2 locks by default

@@ -282,7 +282,7 @@ struct handle {
   }
 
   template <typename T> T load(hw::dev_ptr<T> ptr) {
-    return moved(ptr.get_dir()).load(ptr.get_offset());
+    return moved(ptr.get_dir()).template load<T>(ptr.get_offset());
   }
 
   template <typename T, bool no_check = false>
@@ -295,7 +295,7 @@ struct handle {
   }
 
   template <typename T> void store(hw::dev_ptr<T> ptr, const T &val) {
-    moved(ptr.get_dir()).store(ptr.get_offset(), val);
+    moved(ptr.get_dir()).template store<T>(ptr.get_offset(), val);
   }
 
   /// memcpy from device to host
