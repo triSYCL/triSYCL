@@ -22,7 +22,13 @@ jobs:
     # cross-platform coverage.
     # See:
     # https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: ubuntu-22.10
+
+    # Be sure to pick an OS from
+    # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
+    # otherwise the job will be stuck for ever in "Waiting for a
+    # runner to pick up this job... " for a non existing runner to
+    # come.
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Check out repository code
@@ -61,7 +67,7 @@ jobs:
   docker:
     name: Run the validation inside Docker with specific OS and options
 
-    runs-on: ubuntu-22.10
+    runs-on: ubuntu-22.04
 
     strategy:
       # Run all the test even if there are some which fail
@@ -79,13 +85,13 @@ jobs:
            OpenMP: ON
            OpenCL: ON
 
-         - c_compiler: clang-15
-           cxx_compiler: clang++-15
+         - c_compiler: clang-16
+           cxx_compiler: clang++-16
            OpenMP: ON
            OpenCL: OFF
 
-         - c_compiler: clang-15
-           cxx_compiler: clang++-15
+         - c_compiler: clang-16
+           cxx_compiler: clang++-16
            OpenMP: ON
            OpenCL: ON
 
@@ -95,8 +101,8 @@ jobs:
 
       - name: ${{ matrix.c_compiler }}, ${{ matrix.cxx_compiler }},
           OpenMP=${{ matrix.OpenMP }}, OpenCL=${{ matrix.OpenCL }}
-          in Docker Ubuntu 22.10
-        uses: docker://ubuntu:jammy
+          in Docker Ubuntu 23.04
+        uses: docker://ubuntu:lunar
         env:
           C_COMPILER: ${{ matrix.c_compiler }}
           CXX_COMPILER: ${{ matrix.cxx_compiler }}
