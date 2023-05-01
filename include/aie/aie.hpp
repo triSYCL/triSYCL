@@ -3,6 +3,7 @@
 
 #include "detail/common.hpp"
 #include "detail/hardware.hpp"
+#include "detail/rpc.hpp"
 #include <array>
 #include <vector>
 
@@ -16,10 +17,10 @@
 /// Types in *_impl are implementation by a backend of an API.
 
 /// here we select which include to use based on how aie++ is compiled
-#ifdef __AIE_FALLBACK___
+#ifdef __AIE_FALLBACK__
 // fallback, test that the fallback API can compile
 #include "detail/fallback.hpp"
-#elif defined(__ACAP_EMULATION___)
+#elif defined(__ACAP_EMULATION__)
 // emulation
 #include "detail/emulation.hpp"
 #elif __SYCL_DEVICE_ONLY__
@@ -110,25 +111,25 @@ struct device_tile : private detail::device_tile_impl {
   static constexpr int size_x() { return TypeInfoTy::sizeX; }
   static constexpr int size_y() { return TypeInfoTy::sizeY; }
   /// Check id the neighbor is direction d is valid to access
-  static constexpr bool has_neighbor(hw::dir d) {
+  static constexpr bool has_mem(hw::dir d) {
     return get_pos().moved(d).is_valid(size_x(), size_y());
   }
 
   /// access the neighbor's memory tile
-  template <typename hw::dir d> auto& get_memory() {
+  template <typename hw::dir d> auto& get_mem() {
     using RetTy = decltype(get_tile_type<d>());
     return *(RetTy*)impl::get_mem_addr<d>();
   }
-  auto& mem() { return get_memory<hw::dir::self>(); }
-  auto& mem_north() { return get_memory<hw::dir::north>(); }
-  auto& mem_south() { return get_memory<hw::dir::south>(); }
-  auto& mem_east() { return get_memory<hw::dir::east>(); }
-  auto& mem_west() { return get_memory<hw::dir::west>(); }
+  auto& mem() { return get_mem<hw::dir::self>(); }
+  auto& mem_north() { return get_mem<hw::dir::north>(); }
+  auto& mem_south() { return get_mem<hw::dir::south>(); }
+  auto& mem_east() { return get_mem<hw::dir::east>(); }
+  auto& mem_west() { return get_mem<hw::dir::west>(); }
   auto& mem_side() {
     if (get_pos().get_parity() == hw::parity::east)
-      return get_memory<hw::dir::east>();
+      return get_mem<hw::dir::east>();
     else
-      return get_memory<hw::dir::east>();
+      return get_mem<hw::dir::east>();
   }
 
   /// Write an object of type ElemTy to stream
@@ -221,6 +222,23 @@ struct device_tile : private detail::device_tile_impl {
   //   // get_lock(lock).release_with_value(false);
   //   // aie::detail::log("vertical_barrier: final 2\n");
   // }
+
+  // template <typename T, typename... Ts> auto perform_rpc(Ts&&... ts) {
+  //   using info_t = detail::rpc_info<T>;
+  //   return impl::perform_rpc<T>(
+  //       typename info_t::data_t { std::forward<Ts>(ts)... });
+  // }
+
+  template <typename T, typename... Ts> auto perform_rpc(T data) {
+    volatile T local;
+    detail::volatile_store(&local, data);
+    /// lookup what type of RPC sends this data;
+    using rpc_t = TypeInfoTy::rpc_type::template get_info_t<
+        TypeInfoTy::rpc_type::data_seq::template get_index<std::decay_t<T>>>::
+        rpc_t;
+    return impl::perform_rpc<rpc_t, typename TypeInfoTy::rpc_type>(
+        detail::volatile_load(&local));
+  }
 };
 
 /// Type used to manipulate a tile on the device from the host
@@ -268,7 +286,7 @@ template <typename ElemTy, int X, int Y> struct indexed_elem {
 };
 
 /// Type containing all the constexpr and type information needed by tile types.
-template <typename TypeSelectorTy, int size_X, int size_Y>
+template <typename TypeSelectorTy, int size_X, int size_Y, typename RpcTy>
 struct tile_type_info {
   static constexpr int sizeX = size_X;
   static constexpr int sizeY = size_Y;
@@ -295,20 +313,22 @@ struct tile_type_info {
   using tile_data =
       std::conditional_t < X >= 0 && Y >= 0 &&
       X < size_X&& Y<size_Y, TileDataTy<X, Y>, detail::out_of_bounds>;
+  
+  using rpc_type = RpcTy;
 };
 
 /// Storage for all tiles and memory tiles.
 /// Handle all the boost::hana stuff
 template <typename TypeSelectorTy,
           template <typename, int X, int Y> typename HostTileTy, int size_X,
-          int size_Y>
+          int size_Y, typename RpcTy>
 struct layout_storage {
   static constexpr int sizeX = size_X;
   static constexpr int sizeY = size_Y;
   static constexpr auto tile_coordinates = boost::hana::cartesian_product(
       boost::hana::make_tuple(boost::hana::range_c<int, 0, sizeX>,
                               boost::hana::range_c<int, 0, sizeY>));
-  using type_info = tile_type_info<TypeSelectorTy, sizeX, sizeY>;
+  using type_info = tile_type_info<TypeSelectorTy, sizeX, sizeY, RpcTy>;
 
   static auto generate_storage() {
     return boost::hana::transform(tile_coordinates, [&](auto coord) {
@@ -361,8 +381,7 @@ template <typename T> struct selected_type {
   using type = T;
 };
 
-template <typename T> struct type_list {
-  using type = T;
+template <typename...Ts> struct type_list {
 };
 
 } // namespace detail
@@ -370,7 +389,7 @@ template <typename T> struct type_list {
 template <typename T> auto select() { return detail::selected_type<T> {}; }
 
 template <typename... Ts> auto add_rpc() {
-  return boost::hana::make_tuple(boost::hana::type_c<Ts>...);
+  return detail::type_list<Ts...>{};
 }
 
 template <int size_X, int size_Y> struct device {
@@ -378,12 +397,9 @@ template <int size_X, int size_Y> struct device {
   static constexpr int sizeY = size_Y;
 };
 
-template <typename DevTy, typename ExtraRpcTy> struct queue {
+template <typename DevTy> struct queue {
   DevTy dev;
   queue(DevTy d)
-      : dev { d } {}
-  template<typename T>
-  queue(DevTy d, T)
       : dev { d } {}
   /// Submit that uses the same struct for all memory tiles
   template <typename TileDataTy = aie::detail::out_of_bounds, typename F = void>
@@ -406,25 +422,26 @@ template <typename DevTy, typename ExtraRpcTy> struct queue {
 
   /// fully generic submit using a lambda to describe which type to use for
   /// which memory tile
-  template <typename TypeSelectorTy, typename F>
-  void submit(TypeSelectorTy&& type_selector, F&& func) {
+  template <typename TypeSelectorTy, typename F, typename ... ExtraRpcTys>
+  void submit(TypeSelectorTy&& type_selector, F&& func, detail::type_list<ExtraRpcTys...> = detail::type_list<>{}) {
     /// access the device physical or emulated
+    using rpc_impl =
+        detail::rpcs_info<detail::done_rpc, detail::send_log_rpc,
+                              ExtraRpcTys...>;
     detail::device_impl impl(DevTy::sizeX, DevTy::sizeY);
 
     /// create all the storage
     detail::layout_storage<TypeSelectorTy, host_tile, DevTy::sizeX,
-                           DevTy::sizeY>
+                           DevTy::sizeY, rpc_impl>
         storage(impl);
 
     /// execute the func for all host tiles
     boost::hana::for_each(storage.tiles, [&](auto& ts) { func(ts.elem); });
-    impl.wait_all();
+    impl.wait_all<rpc_impl>();
   }
 };
 
-template <typename DevTy> queue(DevTy&) -> queue<DevTy, boost::hana::tuple<>>;
-template <typename DevTy, typename ExtraRpcTy>
-queue(DevTy&, ExtraRpcTy) -> queue<DevTy, ExtraRpcTy>;
+template <typename DevTy> queue(DevTy&) -> queue<DevTy>;
 
 /// for now buffers are simple vector. this is temporary
 template <typename T> using buffer = std::vector<T>;

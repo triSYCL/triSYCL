@@ -3,6 +3,7 @@
 #define AIE_DETAIL_UTILS_HPP
 
 #include <cstdint>
+#include <cstdlib>
 #include <type_traits>
 
 namespace aie::detail {
@@ -103,6 +104,61 @@ struct no_move {
   no_move(const no_move&) = delete;
   no_move& operator=(const no_move&) = delete;
 };
+
+template <typename SrcT, typename DestT>
+void maybe_volatile_memcpy(DestT* dst, SrcT* src, std::size_t size) {
+  for (int idx = 0; idx < size; idx++)
+    dst[idx] = src[idx];
+}
+
+template <typename T>
+__attribute__((noinline)) T volatile_load(volatile T* ptr) {
+  T ret;
+  maybe_volatile_memcpy((char*)&ret, (volatile char*)ptr, sizeof(T));
+  return ret;
+}
+
+template <typename T>
+__attribute__((noinline)) void volatile_store(volatile T* ptr, T t) {
+  maybe_volatile_memcpy((volatile char*)ptr, (char*)&t, sizeof(T));
+}
+
+
+uint32_t strlen(const char *ptr) {
+  uint32_t i = 0;
+  while (ptr[i])
+    i++;
+  return i;
+}
+
+int pow(int i, int p) {
+  int res = 1;
+  for (; p > 0; p--)
+    res *= i;
+  return res;
+}
+
+static void write_number(auto write, int i,
+                         const char* base_char = "0123456789") {
+  if (i < 0)
+    write('-');
+  /// For 0 print 0 instead of nothing.
+  if (i == 0) {
+    write(base_char[0]);
+    return;
+  }
+
+  int base = strlen(base_char);
+  int digit_count = 1;
+  int tmp = i;
+  while (tmp >= base || tmp <= -base) {
+    digit_count++;
+    tmp = tmp / base;
+  }
+  for (int d = digit_count; d > 0; d--)
+    write(base_char[(std::abs(i / pow(base, d - 1)) % base)]);
+}
+
 }
 
 #endif

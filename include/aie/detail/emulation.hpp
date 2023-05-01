@@ -2,7 +2,7 @@
 #ifndef AIE_DETAIL_EMULATION_HPP
 #define AIE_DETAIL_EMULATION_HPP
 
-#if !defined (__ACAP_EMULATION___) || defined (__SYCL_DEVICE_ONLY__)
+#if !defined (__ACAP_EMULATION__) || defined (__SYCL_DEVICE_ONLY__)
 #error "should only be used in emulation mode"
 #endif
 

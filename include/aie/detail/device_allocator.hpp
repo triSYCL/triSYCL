@@ -256,27 +256,27 @@ uint32_t malloc(xaie::handle handle, uint32_t heap_start, uint32_t size) {
   return ret;
 }
 
-void dump_allocator_state(xaie::handle handle, uint32_t heap_start) {
-  log(
-      "dumping blocks in heap ",
-      heap_start, "-",
-      "?????", "\n");
-  int idx = 0;
-  uint32_t bh_addr = heap_start;
-  block_header bh;
-  do {
-    bh = handle.load<block_header>(bh_addr);
-    log("block ", idx++, " self=", bh_addr,
-              " alloc=", bh_addr + sizeof(block_header), " in_use=", bh.in_use,
-              " size=", bh.size,
-              " next=", bh_addr + sizeof(block_header) + bh.size,
-              " prev=", bh.prev.get_offset(),
-              " is_host_allocated=", bh.is_host_allocated, "\n");
-    /// Calculate the address of the next block.
-    bh_addr = bh_addr + sizeof(block_header) + bh.size;
-    /// load the next block
-  } while (!bh.is_last);
-}
+// void dump_allocator_state(xaie::handle handle, uint32_t heap_start) {
+//   log(
+//       "dumping blocks in heap ",
+//       heap_start, "-",
+//       "?????", "\n");
+//   int idx = 0;
+//   uint32_t bh_addr = heap_start;
+//   block_header bh;
+//   do {
+//     bh = handle.load<block_header>(bh_addr);
+//     log("block ", idx++, " self=", bh_addr,
+//               " alloc=", bh_addr + sizeof(block_header), " in_use=", bh.in_use,
+//               " size=", bh.size,
+//               " next=", bh_addr + sizeof(block_header) + bh.size,
+//               " prev=", bh.prev.get_offset(),
+//               " is_host_allocated=", bh.is_host_allocated, "\n");
+//     /// Calculate the address of the next block.
+//     bh_addr = bh_addr + sizeof(block_header) + bh.size;
+//     /// load the next block
+//   } while (!bh.is_last);
+// }
 
 #endif
 
@@ -334,22 +334,22 @@ void free(void* p) {
   bh->try_merge_prev();
 }
 
-/// This function will log the state of the heap.
-void dump_allocator_state() {
-  log(
-      "dumping blocks in heap ",
-      hw::get_object<void>(hw::offset_table::get_heap_begin_offset()), "-",
-      hw::get_object<void>(hw::offset_table::get_heap_end_offset()), "\n");
-  int idx = 0;
-  block_header* bh = allocator_global::get_start();
-  while (bh) {
-    log("block ", idx++, " self=", bh, " alloc=", bh->get_alloc(),
-              " in_use=", bh->in_use, " size=", bh->size,
-              " next=", bh->get_next(), " prev=", bh->get_prev(),
-              " is_host_allocated=", bh->is_host_allocated, "\n");
-    bh = bh->get_next();
-  }
-}
+// /// This function will log the state of the heap.
+// void dump_allocator_state() {
+//   log(
+//       "dumping blocks in heap ",
+//       hw::get_object<void>(hw::offset_table::get_heap_begin_offset()), "-",
+//       hw::get_object<void>(hw::offset_table::get_heap_end_offset()), "\n");
+//   int idx = 0;
+//   block_header* bh = allocator_global::get_start();
+//   while (bh) {
+//     log("block ", idx++, " self=", bh, " alloc=", bh->get_alloc(),
+//               " in_use=", bh->in_use, " size=", bh->size,
+//               " next=", bh->get_next(), " prev=", bh->get_prev(),
+//               " is_host_allocated=", bh->is_host_allocated, "\n");
+//     bh = bh->get_next();
+//   }
+// }
 
 void assert_no_leak() {
   block_header* bh = allocator_global::get_start();
@@ -357,8 +357,8 @@ void assert_no_leak() {
   while (bh) {
     if (bh->in_use && !bh->is_host_allocated) {
       has_leak = true;
-      log("block ", " addr=", bh->get_alloc(), " size=", bh->size,
-                " still in use\n");
+      // log("block ", " addr=", bh->get_alloc(), " size=", bh->size,
+      //           " still in use\n");
     }
     bh = bh->get_next();
   }

@@ -47,8 +47,83 @@ struct device_tile_impl : device_tile_impl_fallback {
   int x_coord() { return hw::get_tile_x_coordinate(); }
   int y_coord() { return hw::get_tile_y_coordinate(); }
   device_lock_impl get_lock(hw::dir d, int i) { return device_lock_impl(d, i); }
+  template <typename T, typename RpcTy>
+  __attribute__((noinline)) static rpc_info<T>::ret_t
+  perform_rpc(rpc_info<T>::data_t d, bool chained = false) {
+    volatile rpc_device_side* obj = rpc_device_side::get();
+    volatile typename rpc_info<T>::ret_t ret;
+    // volatile typename rpc_info<T>::data_t data = d;
+    volatile typename rpc_info<T>::data_t data;
+    volatile_store(&data, d);
+
+    obj->index = RpcTy::template get_index<T>;
+    obj->data = &data;
+    obj->ret = &ret;
+    obj->chained_request = chained;
+
+    /// Notify the host of the data being available.
+    obj->barrier.wait();
+
+    /// Wait for the host to process the data.
+    obj->barrier.wait();
+
+    return volatile_load(&ret);
+    // return ret;
+  }
 };
 
+template<typename T>
+rpc_info<T>::ret_t basic_rpc(typename rpc_info<T>::data_t data, bool chained = false) {
+  using BasicRpc = rpcs_info<done_rpc, send_log_rpc>;
+  return device_tile_impl::perform_rpc<T, BasicRpc>(data, chained);
+}
+
+ __attribute__((noinline)) void log_internal(const char* str, bool chained) {
+  send_log_rpc::data_type data;
+  volatile_store(&data.data, hw::dev_ptr<const char>(str));
+  volatile_store(&data.size, strlen(str));
+  basic_rpc<send_log_rpc>(data, chained);
+}
+
+ __attribute__((noinline)) void log_internal(int i, bool chained) {
+  char arr[/*bits in base 2*/ 31 + /*sign*/ 1 + /*\0*/ 1];
+  char* ptr = &arr[0];
+  // host_breakpoint(ptr, i);
+  write_number([&](char c) mutable { *(ptr++) = c; }, i);
+  ptr[0] = '\0';
+  log_internal(arr, chained);
+}
+
+template<typename Type, typename ...Types>
+void debug_log(Type First, Types... Others) {
+  /// The first will have coordinates
+  log_internal(First, /*chained*/sizeof...(Types));
+  int count = sizeof...(Types) + 1;
+  /// The others, if any,  will not have coordinates
+  (log_internal(Others, /*chained all but last*/--count), ...);
+}
+
 } // namespace aie::detail
+
+/// Notify the host that the kernel has finished.
+extern __attribute__((noreturn)) __attribute__((noinline)) void
+finish_kernel(int32_t exit_code) {
+  // aie::detail::debug_log("start finish\n");
+  aie::detail::basic_rpc<aie::detail::done_rpc>(
+      aie::detail::done_rpc::data_type {});
+  // aie::detail::debug_log("done\n");
+  while (1)
+    acap_intr::memory_fence();
+}
+
+/// The assert macro will call this function if an assertion fails on device.
+extern __attribute__((noreturn)) __attribute__((noinline)) void
+__assert_fail(const char* expr, const char* file, unsigned int line,
+              const char* func) {
+  aie::detail::debug_log("aie(", aie::hw::get_tile_x_coordinate(), ", ",
+                         aie::hw::get_tile_y_coordinate(), ") at ", file, ":",
+                         line, ": ", func, ": Assertion `", expr, "' failed\n\n");
+  finish_kernel(aie::detail::done_rpc::ec_assert);
+}
 
 #endif

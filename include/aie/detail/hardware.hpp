@@ -215,31 +215,6 @@ int get_tile_y_coordinate() {
   return (acap_intr::get_coreid() & 0b11111) - 1;
 }
 
-uint32_t strlen(const char *ptr) {
-  uint32_t i = 0;
-  while (ptr[i])
-    i++;
-  return i;
-}
-
-int pow(int i, int p) {
-  int res = 1;
-  for (; p > 0; p--)
-    res *= i;
-  return res;
-}
-
-/// The chess backend has a codegen bug that prevent standard conditional based
-/// abs from working. here is a bit manipulation implementation of abs.
-int abs(int a) {
-  /// The complier is smart enough to figure out that this is a normal abs that
-  /// will get misscompiled. and will turn it into an abs if the is not
-  /// volatile.
-  volatile int const mask = a >> (sizeof(decltype(a)) * 8 - 1);
-
-  return (a + mask) ^ mask;
-}
-
 #endif
 
 /// This is function is very similar to the C++20 std::bit_cast but it accepts
@@ -277,8 +252,8 @@ template <typename T> struct dev_ptr {
   }
   uint32_t get_int() const { return ptr; }
 #endif
-  void set(uint32_t val) { ptr = (decltype(dev_ptr::ptr))val; }
-  void set(T *val) { ptr = (decltype(dev_ptr::ptr))val; }
+  void set(uint32_t val) volatile { ptr = (decltype(dev_ptr::ptr))val; }
+  void set(T *val) volatile { ptr = (decltype(dev_ptr::ptr))(uintptr_t)val; }
 
   dev_ptr() = default;
   dev_ptr(std::nullptr_t) : dev_ptr() {}
@@ -353,7 +328,15 @@ template <typename T> struct dev_ptr {
     set(p);
     return *this;
   }
+  volatile dev_ptr &operator=(T *p) volatile {
+    set(p);
+    return *this;
+  }
   dev_ptr &operator=(std::nullptr_t) {
+    set((uint32_t)0);
+    return *this;
+  }
+  volatile dev_ptr &operator=(std::nullptr_t) volatile {
     set((uint32_t)0);
     return *this;
   }

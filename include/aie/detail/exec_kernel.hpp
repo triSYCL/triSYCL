@@ -26,6 +26,8 @@
 
 #include <string>
 
+extern void finish_kernel(int32_t exit_code);
+
 #ifdef __SYCL_DEVICE_ONLY__
 
 /// This declaration will invoke the constructors of every global variable in
@@ -57,8 +59,8 @@ template <typename TileHandle> struct exec_kernel {
   /// This will be invoked on device when exiting normally after any user code.
   static void kernel_postrun() {
     __cxx_global_var_dtor();
-    heap::assert_no_leak();
-    finish_kernel();
+    // heap::assert_no_leak();
+    finish_kernel(0);
   }
   /// Generic kernel invoker on device.
   template <typename KernelType, typename Func>

@@ -4,6 +4,7 @@
 
 #include "hardware.hpp"
 #include "utils.hpp"
+#include "meta.hpp"
 
 /// Used to indicated that the feature is not or cannot be implemented
 #define TRISYCL_FALLBACK                                                       \
@@ -24,6 +25,41 @@ namespace aie::detail {
 /// Used as the type of a memory tile that should not be accessed.
 struct out_of_bounds {};
 
+/// handles all the meta-programming needed for the rpc system
+/// This can be reused across all backends
+
+template<typename T>
+struct rpc_info {
+  using rpc_t = T;
+  using ret_t = func_info_t<T::act_on_data>::ret_type;
+  using data_t = func_info_t<T::act_on_data>::args::template get_type<3>;
+};
+
+template <typename... Ts> struct rpcs_info {
+  using base = type_seq<Ts...>;
+  template <auto i>
+  using get_info_t = rpc_info<typename base::template get_type<i>>;
+  template<typename T>
+  static constexpr uint32_t get_index = base::template get_index<T>;
+  using info_seq = type_seq<get_info_t<get_index<Ts>>...>;
+  using data_seq = type_seq<typename get_info_t<get_index<Ts>>::data_t...>;
+  using ret_seq =  type_seq<typename get_info_t<get_index<Ts>>::ret_t...>;
+
+  template <typename Func> static void for_any(uint32_t idx, Func func) {
+    if constexpr (sizeof...(Ts) > 0) {
+      [&]<typename First, typename... Tys>() {
+        if (idx == 0) {
+          func.template operator()<First>();
+          return;
+        }
+        rpcs_info<Tys...>::for_any(idx - 1, func);
+      }.template operator()<Ts...>();
+    } else {
+      TRISYCL_FALLBACK;
+    }
+  }
+};
+
 /// The device_impl stores global information about the device.
 /// It is type-erased so it only know void* to memory tile.
 struct device_impl_fallback {
@@ -31,7 +67,7 @@ struct device_impl_fallback {
   device_impl_fallback(int x, int y) { TRISYCL_FALLBACK; }
   void add_storage(hw::position pos, void* storage) { TRISYCL_FALLBACK; }
   void* get_mem(hw::position pos) { TRISYCL_FALLBACK; }
-  // template<typename RpcTy>
+  template<typename RpcTy>
   void wait_all() { TRISYCL_FALLBACK; }
 };
 
@@ -60,9 +96,8 @@ struct device_tile_impl_fallback {
   void cascade_read48(const char* ptr) { TRISYCL_FALLBACK; }
   int x_coord() { TRISYCL_FALLBACK; }
   int y_coord() { TRISYCL_FALLBACK; }
-  /// perform an RPC of type T, among the list Ts
   template<typename T, typename RpcTy>
-  T::data_type rpc_perform(T) { TRISYCL_FALLBACK; }
+  rpc_info<T>::ret_t perform_rpc(rpc_info<T>::data_t data) { TRISYCL_FALLBACK; }
 };
 
 /// The host_tile_impl enable doing any action that can be done from the host to

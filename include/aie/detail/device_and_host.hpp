@@ -2,7 +2,7 @@
 #ifndef AIE_DETAIL_DEVICE_AND_HOST_HPP
 #define AIE_DETAIL_DEVICE_AND_HOST_HPP
 
-#if defined(__ACAP_EMULATION___)
+#if defined(__ACAP_EMULATION__)
 #error "should only be used in host or device side for hardware"
 #endif
 
@@ -10,6 +10,7 @@
 #include "program_manager.hpp"
 #include "xaie_wrapper.hpp"
 #include "exec_kernel.hpp"
+#include "sync.hpp"
 
 namespace aie::detail {
 
@@ -30,6 +31,36 @@ struct host_lock_impl {
 };
 using device_lock_impl = device_lock_impl_fallback;
 #endif
+
+struct rpc_device_side {
+
+  static volatile rpc_device_side* get() {
+    return hw::get_object<rpc_device_side>(
+        hw::offset_table::get_rpc_record_begin_offset());
+  }
+  soft_barrier::device_side barrier;
+  uint32_t index;
+  hw::dev_ptr<volatile void> data;
+  hw::dev_ptr<volatile void> ret;
+
+  /// This asks the host to wait for on other request from the same device
+  /// after processing this request. this exist to prevent le host from
+  /// interleaving log_internal requests.
+  uint32_t chained_request;
+
+  /// This sent data to the host to be processed.
+  template <typename Ty> uint32_t perform(Ty&& d, bool chained = false) {
+    /// Write the data.
+    // Var v = d;
+    // data = &v;
+    // chained_request = chained;
+    // /// Notify the host of the data being available.
+    // barrier.wait();
+    // /// Wait for the host to process the data.
+    // barrier.wait();
+    // return ret_val;
+  }
+};
 
 struct host_tile_impl : host_tile_impl_fallback {
   void* mem_ptr = nullptr;

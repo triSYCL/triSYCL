@@ -2,7 +2,7 @@
 #ifndef AIE_DETAIL_HOST_ONLY_HPP
 #define AIE_DETAIL_HOST_ONLY_HPP
 
-#if defined(__ACAP_EMULATION___) || defined(__SYCL_DEVICE_ONLY__)
+#if defined(__ACAP_EMULATION__) || defined(__SYCL_DEVICE_ONLY__)
 #error "should only be used on the host side of hardware execution"
 #endif
 
@@ -19,10 +19,10 @@ namespace aiev1 = xaie::aiev1;
 struct device_impl : device_impl_fallback {
   struct handle_impl {
     /// The host needs to set up the device when executing on real device.
-    /// The following XAie_SetupConfig and XAie_InstDeclare are actually macros that declare variables, in our case member
-    /// variables. The "xaie::" before them is because their type is in the
-    /// namespace "xaie::".
-    /// This declares \c aie_config of type \c xaie::XAie_Config.
+    /// The following XAie_SetupConfig and XAie_InstDeclare are actually macros
+    /// that declare variables, in our case member variables. The "xaie::"
+    /// before them is because their type is in the namespace "xaie::". This
+    /// declares \c aie_config of type \c xaie::XAie_Config.
     xaie::XAie_SetupConfig(aie_config, aiev1::dev_gen, aiev1::base_addr,
                            aiev1::col_shift, aiev1::row_shift,
                            aiev1::num_hw_col, aiev1::num_hw_row,
@@ -41,8 +41,6 @@ struct device_impl : device_impl_fallback {
   int sizeX;
   int sizeY;
 
-  rpc::host_side rpc_system;
-
   void*& get_mem(hw::position pos) {
     assert(pos.x < sizeX && pos.y < sizeY);
     return memory[pos.x * sizeY + pos.y];
@@ -52,7 +50,8 @@ struct device_impl : device_impl_fallback {
     return xaie::handle(xaie::acap_pos_to_xaie_pos(pos), &impl.aie_inst);
   }
 
-  device_impl(int x, int y) : impl(x, y) {
+  device_impl(int x, int y)
+      : impl(x, y) {
     /// Cleanup device if the previous use was not cleanup
     TRISYCL_XAIE(xaie::XAie_Finish(&impl.aie_inst));
 
@@ -64,11 +63,60 @@ struct device_impl : device_impl_fallback {
     memory.assign(x * y, nullptr);
     sizeX = x;
     sizeY = y;
-    rpc_system = rpc::host_side { sizeX, sizeY, get_handle({ 0, 0 }) };
+    // rpc_system = rpc::host_side { sizeX, sizeY, get_handle({ 0, 0 }) };
   }
   void add_storage(hw::position pos, void* storage) { get_mem(pos) = storage; }
+
+  /// this will retrun a handle to the synchronization barrier between the
+  /// device and the host.
+  soft_barrier::host_side get_barrier(int x, int y) {
+    return { get_handle({ x, y }),
+             (uint32_t)(hw::offset_table::get_rpc_record_begin_offset() +
+                        offsetof(rpc_device_side, barrier)) };
+  }
+
   ~device_impl() { TRISYCL_XAIE(xaie::XAie_Finish(&impl.aie_inst)); }
-  void wait_all() { rpc_system.wait_all(); }
+  template <typename RpcTy> void wait_all() {
+    trisycl::detail::no_log_in_this_scope nls;
+    int addr = hw::offset_table::get_rpc_record_begin_offset();
+    /// This count the number of kernel that indicated they finished
+    /// executing. any kernel can signal it finished executing just once
+    /// because it stop executing or get stuck in an infinite loop after that.
+    /// so it is not needed to keep track of which kernel stoped executing
+    /// just how many.
+    int done_counter = 0;
+    xaie::handle h = get_handle({ 0, 0 });
+    do {
+      for (int x = 0; x < sizeX; x++)
+        for (int y = 0; y < sizeY; y++) {
+          /// We process at least one request per device.
+          bool chain = false;
+          /// while the device asks to chain requests.
+          do {
+            /// If try_arrive returns true the device has written data and is
+            /// waitng on the host to act on it
+            if (!get_barrier(x, y).try_arrive())
+              continue;
+            rpc_device_side ds = h.moved(x, y).load<rpc_device_side>(addr);
+
+            /// read if the device requested to chain the is request.
+            chain = ds.chained_request;
+
+            /// done is always at index 0 and is handled inline
+            if (ds.index == 0)
+              done_counter++;
+            RpcTy::for_any(ds.index, [&]<typename T> {
+              using info = rpc_info<T>;
+              auto data = h.moved(x, y).load<typename info::data_t>(ds.data);
+              auto ret = T::act_on_data(x, y, h.moved(x, y), data);
+              h.moved(x, y).store(ds.ret, ret);
+            });
+            get_barrier(x, y).wait();
+          } while (chain);
+        }
+      /// Wait until all kernels have finished.
+    } while (done_counter < sizeX * sizeY);
+  }
 };
 } // namespace aie::detail
 

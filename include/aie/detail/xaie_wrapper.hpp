@@ -1,11 +1,7 @@
 #ifndef AIE_DETAIL_XAIE_WRAPPER_HPP
 #define AIE_DETAIL_XAIE_WRAPPER_HPP
 
-#if defined (__ACAP_EMULATION___)
-#error "should only be used on the host side of hardware execution"
-#endif
-
-#ifdef __SYCL_DEVICE_ONLY__
+#if defined(__SYCL_DEVICE_ONLY__) || defined(__AIE_FALLBACK__) || defined(__ACAP_EMULATION__)
 namespace aie::detail::xaie {
 struct handle {
 };
@@ -55,6 +51,10 @@ namespace aie::detail {
 namespace xaie {
 extern "C" {
 #include <xaiengine.h>
+/// xaiengine.h included inside the xaie namespace but it transitively includes
+/// elf.h. so all of elf.h will be included inside the xaie. this is undesirable
+/// so we let other includes also include elf.h outside of the namespace.
+#undef _ELF_H
 }
 
 /// RAII move-only object for libxaiengine transactions.
@@ -281,8 +281,10 @@ struct handle {
     return ret;
   }
 
-  template <typename T> T load(hw::dev_ptr<T> ptr) {
-    return moved(ptr.get_dir()).template load<T>(ptr.get_offset());
+  template <typename T = void, typename U = void> T load(hw::dev_ptr<U> ptr) {
+    return moved(ptr.get_dir())
+        .template load<std::conditional_t<std::is_same_v<T, void>, U, T>>(
+            ptr.get_offset());
   }
 
   template <typename T, bool no_check = false>
@@ -294,7 +296,8 @@ struct handle {
     memcpy_h2d(offset, std::addressof(val), sizeof(T));
   }
 
-  template <typename T> void store(hw::dev_ptr<T> ptr, const T &val) {
+  template <typename T, typename U>
+  void store(hw::dev_ptr<U> ptr, const T& val) {
     moved(ptr.get_dir()).template store<T>(ptr.get_offset(), val);
   }
 
