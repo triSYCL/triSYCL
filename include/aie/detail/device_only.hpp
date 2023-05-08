@@ -110,7 +110,7 @@ extern __attribute__((noreturn)) __attribute__((noinline)) void
 finish_kernel(int32_t exit_code) {
   // aie::detail::debug_log("start finish\n");
   aie::detail::basic_rpc<aie::detail::done_rpc>(
-      aie::detail::done_rpc::data_type {});
+      aie::detail::done_rpc::data_type {exit_code});
   // aie::detail::debug_log("done\n");
   while (1)
     acap_intr::memory_fence();
@@ -123,7 +123,7 @@ __assert_fail(const char* expr, const char* file, unsigned int line,
   aie::detail::debug_log("aie(", aie::hw::get_tile_x_coordinate(), ", ",
                          aie::hw::get_tile_y_coordinate(), ") at ", file, ":",
                          line, ": ", func, ": Assertion `", expr, "' failed\n\n");
-  finish_kernel(aie::detail::done_rpc::ec_assert);
+  finish_kernel(1);
 }
 
 #endif

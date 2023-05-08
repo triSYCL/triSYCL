@@ -7,9 +7,9 @@
 #include <array>
 #include <vector>
 
-/// top-level file of the runtime. aie.hpp contains of the API a user should
+/// The top-level file of the runtime. aie.hpp contains of the API a user should
 /// use. aie++ can be compiled with many different implementations this
-/// file(aie.hpp) contains only the common parts of the runtime. the internal
+/// file(aie.hpp) contains only the common parts of the runtime. The internal
 /// API implemented by each back-end is defined in common.hpp.
 
 /// Types in *_impl_fallback are example of the API that need to be implemented
@@ -58,7 +58,7 @@ struct device_tile : private detail::device_tile_impl {
  private:
   using impl = detail::device_tile_impl;
 
-  /// Write or Read any size of data using fixed size stream operations
+  /// Write or Read data of any size using fixed-size stream operations
   template <unsigned FixedSize, bool is_read, typename OpFunc>
   static void stream_operation(
       typename std::conditional<is_read, char, const char>::type* ptr,

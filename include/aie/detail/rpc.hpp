@@ -32,16 +32,12 @@ struct send_log_rpc {
 };
 
 struct done_rpc {
-  enum exit_code : int32_t {
-    ec_normal = 0,
-    ec_assert = 1,
-  };
   /// it needs no data, since it is just a signal.
   struct data_type {
-    exit_code ec;
+    int32_t ec;
   };
   static uint32_t act_on_data(int x, int y, xaie::handle h, data_type d) {
-    assert(d.ec != ec_assert && "propagating device assert to the host");
+    assert(d.ec != 1 && "propagating device assert to the host");
     return 0;
   }
 };
