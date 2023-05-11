@@ -49,9 +49,17 @@ $APT_INSTALL git apt-utils cmake libboost-all-dev \
 # Clang/LLVM by adding the repository from https://apt.llvm.org/ to
 # benefit from https://reviews.llvm.org/D149637
 if [[ $C_COMPILER =~ ^clang || $CXX_COMPILER =~ ^clang++ ]]; then
-  # Add tools used to set-up the LLVM repository configuration
-  $APT_INSTALL lsb-release wget software-properties-common gnupg
-  bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
+  # Tools to set-up the LLVM repository authentication
+  $APT_INSTALL wget
+  wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | \
+    tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc
+  # "Parse" the Linux distribution parameters
+  source /etc/os-release
+  echo "deb http://apt.llvm.org/$VERSION_CODENAME llvm-toolchain-$VERSION_CODENAME main" \
+    > /etc/apt/sources.list.d/llvm.list
+  echo "deb-src http://apt.llvm.org/$VERSION_CODENAME llvm-toolchain-$VERSION_CODENAME main" \
+    >> /etc/apt/sources.list.d/llvm.list
+  apt update
 fi
 
 # Install the required C compiler:
