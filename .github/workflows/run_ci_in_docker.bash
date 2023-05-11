@@ -45,14 +45,18 @@ APT_INSTALL="apt-get install $APT_ENABLE"
 $APT_INSTALL git apt-utils cmake libboost-all-dev \
   librange-v3-dev
 
+# If clang or clang++ is required, prepare to install the latest
+# Clang/LLVM by adding the repository from https://apt.llvm.org/ to
+# benefit from https://reviews.llvm.org/D149637
+if [[ $C_COMPILER =~ ^clang || $CXX_COMPILER =~ ^clang++ ]]; then
+  bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
+fi
+
 # Install the required C compiler:
 $APT_INSTALL $C_COMPILER
 
 # Install the required C++ compiler.
 if [[ $CXX_COMPILER =~ ^clang++ ]]; then
-  # Install the latest Clang/LLVM https://apt.llvm.org/
-  # to benefit from https://reviews.llvm.org/D149637
-  bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
   if [[ $OPENMP == ON ]]; then
     # Clang requires a specific OpenMP library to run.
     # The version is what is left when we remove "clang++-"
