@@ -33,6 +33,8 @@
 
 namespace aie {
 
+using device_mem_handle = detail::device_mem_handle_adaptor<detail::device_mem_handle_impl>;
+
 /// similar to std::lock_guard but it is adapted to use aie::*_lock_impl instead
 /// of std::*mutex
 template <typename LockTy> struct lock_guard_ex : detail::no_move {
@@ -49,6 +51,16 @@ template <typename LockTy> struct lock_guard_ex : detail::no_move {
 };
 
 template <typename LockTy> lock_guard_ex(LockTy) -> lock_guard_ex<LockTy>;
+
+/// Mix-in to provide the APIs of all rpcs easily to the user
+template<typename DT, typename ... Ts>
+struct multi_rpc_accessor : Ts::template add_to_dev_handle<multi_rpc_accessor<DT, Ts...>>... {
+  private:
+  DT* device_tile;
+  public:
+  multi_rpc_accessor(DT* d) : device_tile(d) {}
+  DT* dt() { return device_tile; }
+};
 
 /// Type used to manipulate a tile on the device from the device itself.
 /// TypeInfoTy contains all type and constexpr information used by the
@@ -229,15 +241,16 @@ struct device_tile : private detail::device_tile_impl {
   //       typename info_t::data_t { std::forward<Ts>(ts)... });
   // }
 
-  template <typename T, typename... Ts> auto perform_rpc(T data) {
-    volatile T local;
-    detail::volatile_store(&local, data);
+  template <typename T> auto perform_rpc(T data) {
+    T local = data;
     /// lookup what type of RPC sends this data;
     using rpc_t = TypeInfoTy::rpc_type::template get_info_t<
         TypeInfoTy::rpc_type::data_seq::template get_index<std::decay_t<T>>>::
         rpc_t;
-    return impl::perform_rpc<rpc_t, typename TypeInfoTy::rpc_type>(
-        detail::volatile_load(&local));
+    return impl::perform_rpc<rpc_t, typename TypeInfoTy::rpc_type>(local);
+  }
+  TypeInfoTy::rpc_type::template rpcs_accessor<device_tile, multi_rpc_accessor> rpcs() {
+    return { this };
   }
 };
 
@@ -388,9 +401,7 @@ template <typename...Ts> struct type_list {
 
 template <typename T> auto select() { return detail::selected_type<T> {}; }
 
-template <typename... Ts> auto add_rpc() {
-  return detail::type_list<Ts...>{};
-}
+template <typename... Ts> detail::type_list<Ts...> add_rpc() { return {}; }
 
 template <int size_X, int size_Y> struct device {
   static constexpr int sizeX = size_X;
@@ -415,9 +426,11 @@ template <typename DevTy> struct queue {
            std::forward<F>(func));
   }
 
-  template <typename F> void submit(F&& func) {
+  template <typename F, typename... ExtraRpcTys>
+  void submit(F&& func,
+              detail::type_list<ExtraRpcTys...> = detail::type_list<> {}) {
     submit([]<int X, int Y>() { return select<detail::out_of_bounds>(); },
-           std::forward<F>(func));
+           std::forward<F>(func), detail::type_list<ExtraRpcTys...> {});
   }
 
   /// fully generic submit using a lambda to describe which type to use for
@@ -426,7 +439,7 @@ template <typename DevTy> struct queue {
   void submit(TypeSelectorTy&& type_selector, F&& func, detail::type_list<ExtraRpcTys...> = detail::type_list<>{}) {
     /// access the device physical or emulated
     using rpc_impl =
-        detail::rpcs_info<detail::done_rpc, detail::send_log_rpc,
+        detail::rpcs_info<detail::done_rpc<device_mem_handle>, detail::send_log_rpc<device_mem_handle>,
                               ExtraRpcTys...>;
     detail::device_impl impl(DevTy::sizeX, DevTy::sizeY);
 

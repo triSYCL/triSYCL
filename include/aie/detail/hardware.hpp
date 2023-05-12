@@ -234,12 +234,16 @@ inline To bit_cast(const From &from) noexcept {
 /// manipulate pointer representations and pointer arithmetic
 template <typename T> struct dev_ptr {
 #if defined(__SYCL_DEVICE_ONLY__)
+  template<typename T2>
+  using otherT = T2*;
   /// On device a pointer is just a pointer
   T *ptr = nullptr;
   static T *add(T *ptr, std::ptrdiff_t off) { return ptr + off; }
   T *get() const { return ptr; }
   uint32_t get_int() const { return (uint32_t)ptr; }
 #else
+  template<typename T2>
+  using otherT = uint32_t;
   /// On the host a device pointer is
   std::uint32_t ptr = 0;
   static std::uint32_t add(std::uint32_t ptr, std::ptrdiff_t off) {
@@ -277,11 +281,11 @@ template <typename T> struct dev_ptr {
   }
   T *operator->() { return get(); }
   operator bool() { return get_int() != 0; }
-  template <typename OtherT> explicit operator dev_ptr<OtherT>() {
-    return {(OtherT *)ptr};
+  template <typename T2> explicit operator dev_ptr<T2>() {
+    return dev_ptr<T2>((otherT<T2>)ptr);
   }
-  template <typename OtherT> explicit operator OtherT *() {
-    return (OtherT *)get();
+  template <typename T2> explicit operator T2 *() {
+    return (otherT<T2>)get();
   }
 
   /// Pointer arithmetic

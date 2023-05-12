@@ -14,6 +14,21 @@ namespace aie::detail {
 
 using device_tile_impl = device_tile_impl_fallback;
 
+struct device_mem_handle_impl : device_mem_handle_impl_fallback {
+  private:
+  xaie::handle handle;
+  public:
+  device_mem_handle_impl(xaie::handle h) : handle(h) {}
+  void memcpy_h2d(generic_ptr<void> p, void* ptr, uint32_t size) {
+    handle.moved(p.ptr.get_dir()).memcpy_h2d(p.ptr, ptr, size);
+  }
+  void memcpy_d2h(void* ptr, generic_ptr<void> p, uint32_t size) {
+    handle.moved(p.ptr.get_dir()).memcpy_d2h(ptr, p.ptr, size);
+  }
+};
+
+using device_mem_handle = device_mem_handle_adaptor<device_mem_handle_impl>;
+
 namespace aiev1 = xaie::aiev1;
 
 struct device_impl : device_impl_fallback {
@@ -108,8 +123,12 @@ struct device_impl : device_impl_fallback {
             RpcTy::for_any(ds.index, [&]<typename T> {
               using info = rpc_info<T>;
               auto data = h.moved(x, y).load<typename info::data_t>(ds.data);
-              auto ret = T::act_on_data(x, y, h.moved(x, y), data);
-              h.moved(x, y).store(ds.ret, ret);
+              if constexpr (!info::is_void_ret) {
+                auto ret = T::act_on_data(x, y, device_mem_handle(h.moved(x, y)), data);
+                h.moved(x, y).store(ds.ret, ret);
+              } else {
+                T::act_on_data(x, y, h.moved(x, y), data);
+              }
             });
             get_barrier(x, y).wait();
           } while (chain);

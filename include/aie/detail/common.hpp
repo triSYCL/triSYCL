@@ -32,6 +32,8 @@ template<typename T>
 struct rpc_info {
   using rpc_t = T;
   using ret_t = func_info_t<T::act_on_data>::ret_type;
+  static constexpr bool is_void_ret = std::is_same_v<ret_t, void>;
+  using non_void_ret_t = std::conditional_t<is_void_ret, uint32_t, ret_t>;
   using data_t = func_info_t<T::act_on_data>::args::template get_type<3>;
 };
 
@@ -44,6 +46,9 @@ template <typename... Ts> struct rpcs_info {
   using info_seq = type_seq<get_info_t<get_index<Ts>>...>;
   using data_seq = type_seq<typename get_info_t<get_index<Ts>>::data_t...>;
   using ret_seq =  type_seq<typename get_info_t<get_index<Ts>>::ret_t...>;
+
+  template<typename DT, template<typename...> typename accessorT>
+  using rpcs_accessor = accessorT<DT, Ts...>;
 
   template <typename Func> static void for_any(uint32_t idx, Func func) {
     if constexpr (sizeof...(Ts) > 0) {
@@ -119,6 +124,59 @@ struct host_tile_impl_fallback {
   lock_impl_fallback get_lock(int i) {
     TRISYCL_FALLBACK;
     return {};
+  }
+};
+
+/// Abstraction over some pointer pointing on device data.
+/// It is used for the APIs of device_mem_handle.
+/// Its is intended to work on both emulation with a raw 64-bit pointer
+/// and for execution on hardware with a 32-bit hw::dev_ptr<T>
+template <typename T> struct generic_ptr {
+  generic_ptr() = default;
+#if !defined(__AIE_FALLBACK__) && !defined(__AIE_EMULATION__)
+  hw::dev_ptr<T> ptr;
+  generic_ptr(T*) { TRISYCL_FALLBACK; }
+  generic_ptr(hw::dev_ptr<T> p)
+      : ptr(p) {}
+  operator generic_ptr<void>() { return hw::dev_ptr<void>{ ptr }; }
+#else
+  T* ptr = nullptr;
+  generic_ptr(T* p) : ptr(p) {}
+  generic_ptr(hw::dev_ptr<T> p) {
+    TRISYCL_FALLBACK;
+  }
+  operator generic_ptr<void>() const { return { (void*)ptr }; }
+#endif
+};
+
+template<typename T>
+generic_ptr(T*) -> generic_ptr<T>;
+template<typename T>
+generic_ptr(hw::dev_ptr<T>) -> generic_ptr<T>;
+
+struct device_mem_handle_impl_fallback {
+  void memcpy_h2d(generic_ptr<void> p, void* ptr, uint32_t size) {
+    TRISYCL_FALLBACK;
+  }
+  void memcpy_d2h(void* ptr, generic_ptr<void> p, uint32_t size) {
+    TRISYCL_FALLBACK;
+  }
+};
+
+/// Add common load<T> and store<T> built on top of the memcpy_* provided by
+/// device_mem_handle_impl
+template<typename ImplTy>
+struct device_mem_handle_adaptor : ImplTy {
+  using ImplTy::ImplTy;
+  template<typename T>
+  T load(generic_ptr<T> ptr) {
+    T res;
+    ImplTy::memcpy_d2h(std::addressof(res), ptr, sizeof(T));
+    return res;
+  }
+  template<typename T>
+  void store(generic_ptr<T> ptr, T val) {
+    ImplTy::memcpy_h2d(ptr, std::addressof(val), sizeof(T));
   }
 };
 

@@ -8,12 +8,18 @@
 
 namespace aie::detail {
 
+template<auto val>
+struct wrapper {};
+
 template <bool b, typename...> struct compile_fail_impl {
   static_assert(b, "voluntary compile error");
 };
 
 template <typename... Tys>
 struct emit_diag_with : compile_fail_impl<false, Tys...> {};
+
+template <auto... vals>
+struct emit_diag_with_val : compile_fail_impl<false, wrapper<vals>...> {};
 
 /// using this is better than using static_assert because the values of template
 /// parameters will be printed in the template instantiation stack

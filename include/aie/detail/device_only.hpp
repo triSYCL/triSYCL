@@ -12,6 +12,14 @@
 
 namespace aie::detail {
 
+/// The type name must match between the host and device because the kernel name
+/// depends on it. So we use a struct here to create a new type with the correct
+/// name instead of a using that would generate an alias with the same mangling
+/// as the original type.
+struct device_mem_handle_impl : device_mem_handle_impl_fallback {};
+
+using device_mem_handle = device_mem_handle_adaptor<device_mem_handle_impl>;
+
 struct device_lock_impl {
  private:
   int id;
@@ -30,6 +38,7 @@ struct device_lock_impl {
 
 using host_lock_impl = lock_impl_fallback;
 using device_impl = device_impl_fallback;
+using device_mem_handle = device_mem_handle_adaptor<device_mem_handle_impl>;
 
 struct device_tile_impl : device_tile_impl_fallback {
   template <hw::dir d> void* get_mem_addr() {
@@ -51,9 +60,8 @@ struct device_tile_impl : device_tile_impl_fallback {
   __attribute__((noinline)) static rpc_info<T>::ret_t
   perform_rpc(rpc_info<T>::data_t d, bool chained = false) {
     volatile rpc_device_side* obj = rpc_device_side::get();
-    volatile typename rpc_info<T>::ret_t ret;
-    // volatile typename rpc_info<T>::data_t data = d;
-    volatile typename rpc_info<T>::data_t data;
+    typename rpc_info<T>::non_void_ret_t ret;
+    typename rpc_info<T>::data_t data;
     volatile_store(&data, d);
 
     obj->index = RpcTy::template get_index<T>;
@@ -67,22 +75,26 @@ struct device_tile_impl : device_tile_impl_fallback {
     /// Wait for the host to process the data.
     obj->barrier.wait();
 
-    return volatile_load(&ret);
-    // return ret;
+    if constexpr (rpc_info<T>::is_void_ret) {
+      return;
+    } else {
+      return volatile_load(&ret);
+    }
   }
 };
 
+/// This is used to provide access to the default RPCs for __assert_fail and
+/// finish_kernel. Since the done_rpc and send_log_rpc are always added at the
+/// beginning in aie.hpp, there indexes are always 0 and 1 respectively.
 template<typename T>
 rpc_info<T>::ret_t basic_rpc(typename rpc_info<T>::data_t data, bool chained = false) {
-  using BasicRpc = rpcs_info<done_rpc, send_log_rpc>;
+  using BasicRpc = rpcs_info<done_rpc<device_mem_handle>, send_log_rpc<device_mem_handle>>;
   return device_tile_impl::perform_rpc<T, BasicRpc>(data, chained);
 }
 
  __attribute__((noinline)) void log_internal(const char* str, bool chained) {
-  send_log_rpc::data_type data;
-  volatile_store(&data.data, hw::dev_ptr<const char>(str));
-  volatile_store(&data.size, strlen(str));
-  basic_rpc<send_log_rpc>(data, chained);
+  send_log_rpc<device_mem_handle>::data_type data{hw::dev_ptr<const char>(str), strlen(str)};
+  basic_rpc<send_log_rpc<device_mem_handle>>(data, chained);
 }
 
  __attribute__((noinline)) void log_internal(int i, bool chained) {
@@ -109,8 +121,8 @@ void debug_log(Type First, Types... Others) {
 extern __attribute__((noreturn)) __attribute__((noinline)) void
 finish_kernel(int32_t exit_code) {
   // aie::detail::debug_log("start finish\n");
-  aie::detail::basic_rpc<aie::detail::done_rpc>(
-      aie::detail::done_rpc::data_type {exit_code});
+  aie::detail::basic_rpc<aie::detail::done_rpc<aie::detail::device_mem_handle>>(
+      aie::detail::done_rpc<aie::detail::device_mem_handle>::data_type {exit_code});
   // aie::detail::debug_log("done\n");
   while (1)
     acap_intr::memory_fence();
@@ -123,7 +135,7 @@ __assert_fail(const char* expr, const char* file, unsigned int line,
   aie::detail::debug_log("aie(", aie::hw::get_tile_x_coordinate(), ", ",
                          aie::hw::get_tile_y_coordinate(), ") at ", file, ":",
                          line, ": ", func, ": Assertion `", expr, "' failed\n\n");
-  finish_kernel(1);
+  finish_kernel(aie::detail::ec_assert);
 }
 
 #endif

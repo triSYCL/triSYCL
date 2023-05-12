@@ -16,6 +16,7 @@ using host_lock_impl = lock_impl_fallback;
 using device_lock_impl = lock_impl_fallback;
 using device_impl = device_impl_fallback;
 using host_tile_impl = host_tile_impl_fallback;
+using device_mem_handle_impl = device_mem_handle_impl_fallback;
 
 }
 
