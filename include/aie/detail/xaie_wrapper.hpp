@@ -372,7 +372,7 @@ struct handle {
   /// Because of a hardware bug in the done instruction, the behaviour of the
   /// done intrinsic has changed in the compiler but the libxaiengine has not
   /// yet been updated to the new behaviour, so these two functions do not work
-  /// for now. The runtime uses the RPC system to inform of a kernel being done.
+  /// for now. The runtime uses the service system to inform of a kernel being done.
   
   // /// Look if a core has completed execution and return true if it has.
   // /// It does not block.

@@ -56,15 +56,15 @@ struct device_tile_impl : device_tile_impl_fallback {
   int x_coord() { return hw::get_tile_x_coordinate(); }
   int y_coord() { return hw::get_tile_y_coordinate(); }
   device_lock_impl get_lock(hw::dir d, int i) { return device_lock_impl(d, i); }
-  template <typename T, typename RpcTy>
-  __attribute__((noinline)) static rpc_info<T>::ret_t
-  perform_rpc(rpc_info<T>::data_t d, bool chained = false) {
-    volatile rpc_device_side* obj = rpc_device_side::get();
-    typename rpc_info<T>::non_void_ret_t ret;
-    typename rpc_info<T>::data_t data;
+  template <typename T, typename ServiceTy>
+  __attribute__((noinline)) static service_info<T>::ret_t
+  perform_service(service_info<T>::data_t d, bool chained = false) {
+    volatile service_device_side* obj = service_device_side::get();
+    typename service_info<T>::non_void_ret_t ret;
+    typename service_info<T>::data_t data;
     volatile_store(&data, d);
 
-    obj->index = RpcTy::template get_index<T>;
+    obj->index = ServiceTy::template get_index<T>;
     obj->data = &data;
     obj->ret = &ret;
     obj->chained_request = chained;
@@ -75,7 +75,7 @@ struct device_tile_impl : device_tile_impl_fallback {
     /// Wait for the host to process the data.
     obj->barrier.wait();
 
-    if constexpr (rpc_info<T>::is_void_ret) {
+    if constexpr (service_info<T>::is_void_ret) {
       return;
     } else {
       return volatile_load(&ret);
@@ -83,27 +83,26 @@ struct device_tile_impl : device_tile_impl_fallback {
   }
 };
 
-/// This is used to provide access to the default RPCs for __assert_fail and
-/// finish_kernel. Since the done_rpc and send_log_rpc are always added at the
-/// beginning in aie.hpp, there indexes are always 0 and 1 respectively.
+/// This is used to provide access to the default services for __assert_fail and
+/// finish_kernel. Since the done_service and send_log_service are always added at the
+/// beginning in aie.hpp, their indexes are always 0 and 1 respectively.
 template<typename T>
-rpc_info<T>::ret_t basic_rpc(typename rpc_info<T>::data_t data, bool chained = false) {
-  using BasicRpc = rpcs_info<done_rpc<device_mem_handle>, send_log_rpc<device_mem_handle>>;
-  return device_tile_impl::perform_rpc<T, BasicRpc>(data, chained);
+service_info<T>::ret_t basic_service(typename service_info<T>::data_t data, bool chained = false) {
+  using BasicService = service_list_info<done_service<device_mem_handle>, send_log_service<device_mem_handle>>;
+  return device_tile_impl::perform_service<T, BasicService>(data, chained);
 }
 
- __attribute__((noinline)) void log_internal(const char* str, bool chained) {
-  send_log_rpc<device_mem_handle>::data_type data{hw::dev_ptr<const char>(str), strlen(str)};
-  basic_rpc<send_log_rpc<device_mem_handle>>(data, chained);
+ __attribute__((noinline)) void log_internal(std::string_view sv, bool chained) {
+  send_log_service<device_mem_handle>::data_type data{hw::dev_ptr<const char>(sv.data()), sv.size()};
+  basic_service<send_log_service<device_mem_handle>>(data, chained);
 }
 
  __attribute__((noinline)) void log_internal(int i, bool chained) {
   char arr[/*bits in base 2*/ 31 + /*sign*/ 1 + /*\0*/ 1];
-  char* ptr = &arr[0];
-  // host_breakpoint(ptr, i);
-  write_number([&](char c) mutable { *(ptr++) = c; }, i);
-  ptr[0] = '\0';
-  log_internal(arr, chained);
+  char* ptr = arr;
+  write_number([&](char c) { *ptr++ = c; }, i);
+  *ptr = '\0';
+  log_internal(std::string_view(arr, ptr - arr), chained);
 }
 
 template<typename Type, typename ...Types>
@@ -121,8 +120,8 @@ void debug_log(Type First, Types... Others) {
 extern __attribute__((noreturn)) __attribute__((noinline)) void
 finish_kernel(int32_t exit_code) {
   // aie::detail::debug_log("start finish\n");
-  aie::detail::basic_rpc<aie::detail::done_rpc<aie::detail::device_mem_handle>>(
-      aie::detail::done_rpc<aie::detail::device_mem_handle>::data_type {exit_code});
+  aie::detail::basic_service<aie::detail::done_service<aie::detail::device_mem_handle>>(
+      aie::detail::done_service<aie::detail::device_mem_handle>::data_type {exit_code});
   // aie::detail::debug_log("done\n");
   while (1)
     acap_intr::memory_fence();

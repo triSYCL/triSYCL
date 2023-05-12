@@ -32,11 +32,11 @@ struct host_lock_impl {
 using device_lock_impl = device_lock_impl_fallback;
 #endif
 
-struct rpc_device_side {
+struct service_device_side {
 
-  static volatile rpc_device_side* get() {
-    return hw::get_object<rpc_device_side>(
-        hw::offset_table::get_rpc_record_begin_offset());
+  static volatile service_device_side* get() {
+    return hw::get_object<service_device_side>(
+        hw::offset_table::get_service_record_begin_offset());
   }
   soft_barrier::device_side barrier;
   uint32_t index;
@@ -106,18 +106,17 @@ struct host_tile_impl : host_tile_impl_fallback {
       auto* acc_addr = reinterpret_cast<host_accessor_impl*>(
           reinterpret_cast<char*>(&L) + kdesc.offset);
       device_accessor_impl dev_acc;
-      dev_acc.size = acc_addr->size;
-      dev_acc.elem_size = acc_addr->elem_size;
-      unsigned size_in_bytes = dev_acc.size * dev_acc.elem_size;
+      dev_acc.size_ = acc_addr->size();
+      unsigned size_in_bytes = dev_acc.size_ * acc_addr->impl->elem_size;
       unsigned dev_data_addr =
           heap::malloc(dev_handle, heap_start, size_in_bytes);
-      dev_handle.memcpy_h2d(dev_data_addr, acc_addr->data, size_in_bytes);
+      dev_handle.memcpy_h2d(dev_data_addr, acc_addr->impl->data, size_in_bytes);
       dev_acc.data =
           hw::dev_ptr<char>::create(dev_handle.get_self_dir(), dev_data_addr);
       dev_handle.store<device_accessor_impl, /*no_check*/ true>(
           dev_lambda_addr + kdesc.offset, dev_acc);
       write_backs.push_back(
-          [=, dev_handle = dev_handle, host_addr = acc_addr->data]() mutable {
+          [=, dev_handle = dev_handle, host_addr = acc_addr->impl->data]() mutable {
             dev_handle.memcpy_d2h(host_addr, dev_data_addr, size_in_bytes);
           });
     }

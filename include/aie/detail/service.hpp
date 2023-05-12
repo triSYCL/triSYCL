@@ -1,15 +1,16 @@
-#ifndef AIE_DETAIL_RPC_HPP
-#define AIE_DETAIL_RPC_HPP
+#ifndef AIE_DETAIL_SERVICE_HPP
+#define AIE_DETAIL_SERVICE_HPP
 
 #include "hardware.hpp"
 #include "sync.hpp"
 #include "xaie_wrapper.hpp"
 #include <limits>
+#include <iostream>
 
 namespace aie::detail {
 
 template <typename dev_handle>
-struct send_log_rpc {
+struct send_log_service {
   /// This is the data that will be transmitted to the host when the device
   /// is logging. This struct needs to have the same layout on the host and the
   /// device.
@@ -22,9 +23,9 @@ struct send_log_rpc {
   template <typename Parent> struct add_to_dev_handle {
    private:
     __attribute__((noinline)) void log_internal(const char* str, bool chained) {
-      send_log_rpc::data_type data { hw::dev_ptr<const char>(str),
+      send_log_service::data_type data { hw::dev_ptr<const char>(str),
                                      strlen(str) };
-      get()->perform_rpc(data);
+      get()->perform_service(data);
     }
     __attribute__((noinline)) void log_internal(int i, bool chained) {
       char arr[/*bits in base 2*/ 31 + /*sign*/ 1 + /*\0*/ 1];
@@ -37,25 +38,18 @@ struct send_log_rpc {
     auto* get() { return static_cast<Parent*>(this)->dt(); }
 
    public:
-    template <typename First, typename... Ts>
-    void log(First first, Ts... others) {
-      /// The first will have coordinates
-      log_internal(first, /*chained*/ sizeof...(Ts));
+    template <typename... Ts>
+    void log(Ts... ts) {
       int count = sizeof...(Ts) + 1;
-      /// The others, if any,  will not have coordinates
-      (log_internal(others, /*chained all but last*/ --count), ...);
+      (log_internal(ts, /*chained all but last*/ --count), ...);
     }
   };
   static void act_on_data(int x, int y, dev_handle h, data_type dev_data) {
-#if !defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_XILINX_AIE__)
     std::string str;
     str.resize(dev_data.size);
     /// Copy the indicated device data into a string.
-    // h.moved(hw::position { x, y }.moved(dev_data.data.get_dir()))
-    //     .memcpy_d2h(str.data(), dev_data.data.get_offset(), str.size());
     h.memcpy_d2h(str.data(), dev_data.data, str.size());
     std::cout << str << std::flush;
-#endif
     return;
   }
 };
@@ -67,7 +61,7 @@ enum : int32_t {
 };
 
 template <typename dev_handle>
-struct done_rpc {
+struct done_service {
   /// it needs no data, since it is just a signal.
   struct data_type {
     int32_t ec;
@@ -80,12 +74,12 @@ struct done_rpc {
     void abort() {
       exit_kernel(ec_abort);
     }
-    void exit_kernel(int ec = ec_success) {
+    void exit_kernel(int32_t ec = ec_success) {
       data_type data { ec };
-      get()->perform_rpc(data);
+      get()->perform_service(data);
     }
   };
-  static uint32_t act_on_data(int x, int y, dev_handle h, data_type d) {
+  static void act_on_data(int x, int y, dev_handle h, data_type d) {
     if (d.ec == ec_assert) {
       assert(false && "propagating assert form the device to the host");
     } else if (d.ec == ec_abort) {
@@ -93,7 +87,6 @@ struct done_rpc {
     } else if (d.ec != ec_success) {
       std::exit(d.ec);
     }
-    return 0;
   }
 };
 

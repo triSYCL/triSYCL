@@ -4,6 +4,7 @@
 
 #include <cstdint>
 #include <cstdlib>
+#include <cassert>
 #include <type_traits>
 
 namespace aie::detail {

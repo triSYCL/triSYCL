@@ -3,7 +3,7 @@
 
 #include "detail/common.hpp"
 #include "detail/hardware.hpp"
-#include "detail/rpc.hpp"
+#include "detail/service.hpp"
 #include <array>
 #include <vector>
 
@@ -52,13 +52,13 @@ template <typename LockTy> struct lock_guard_ex : detail::no_move {
 
 template <typename LockTy> lock_guard_ex(LockTy) -> lock_guard_ex<LockTy>;
 
-/// Mix-in to provide the APIs of all rpcs easily to the user
+/// Mix-in to provide the APIs of all services easily to the user
 template<typename DT, typename ... Ts>
-struct multi_rpc_accessor : Ts::template add_to_dev_handle<multi_rpc_accessor<DT, Ts...>>... {
+struct multi_service_accessor : Ts::template add_to_dev_handle<multi_service_accessor<DT, Ts...>>... {
   private:
   DT* device_tile;
   public:
-  multi_rpc_accessor(DT* d) : device_tile(d) {}
+  multi_service_accessor(DT* d) : device_tile(d) {}
   DT* dt() { return device_tile; }
 };
 
@@ -235,21 +235,21 @@ struct device_tile : private detail::device_tile_impl {
   //   // aie::detail::log("vertical_barrier: final 2\n");
   // }
 
-  // template <typename T, typename... Ts> auto perform_rpc(Ts&&... ts) {
-  //   using info_t = detail::rpc_info<T>;
-  //   return impl::perform_rpc<T>(
+  // template <typename T, typename... Ts> auto perform_service(Ts&&... ts) {
+  //   using info_t = detail::service_info<T>;
+  //   return impl::perform_service<T>(
   //       typename info_t::data_t { std::forward<Ts>(ts)... });
   // }
 
-  template <typename T> auto perform_rpc(T data) {
+  template <typename T> auto perform_service(T data) {
     T local = data;
-    /// lookup what type of RPC sends this data;
-    using rpc_t = TypeInfoTy::rpc_type::template get_info_t<
-        TypeInfoTy::rpc_type::data_seq::template get_index<std::decay_t<T>>>::
-        rpc_t;
-    return impl::perform_rpc<rpc_t, typename TypeInfoTy::rpc_type>(local);
+    /// lookup what type of service sends this data;
+    using service_t = TypeInfoTy::service_type::template get_info_t<
+        TypeInfoTy::service_type::data_seq::template get_index<std::decay_t<T>>>::
+        service_t;
+    return impl::perform_service<service_t, typename TypeInfoTy::service_type>(local);
   }
-  TypeInfoTy::rpc_type::template rpcs_accessor<device_tile, multi_rpc_accessor> rpcs() {
+  TypeInfoTy::service_type::template service_list_accessor<device_tile, multi_service_accessor> service() {
     return { this };
   }
 };
@@ -299,7 +299,7 @@ template <typename ElemTy, int X, int Y> struct indexed_elem {
 };
 
 /// Type containing all the constexpr and type information needed by tile types.
-template <typename TypeSelectorTy, int size_X, int size_Y, typename RpcTy>
+template <typename TypeSelectorTy, int size_X, int size_Y, typename ServiceTy>
 struct tile_type_info {
   static constexpr int sizeX = size_X;
   static constexpr int sizeY = size_Y;
@@ -327,21 +327,21 @@ struct tile_type_info {
       std::conditional_t < X >= 0 && Y >= 0 &&
       X < size_X&& Y<size_Y, TileDataTy<X, Y>, detail::out_of_bounds>;
   
-  using rpc_type = RpcTy;
+  using service_type = ServiceTy;
 };
 
 /// Storage for all tiles and memory tiles.
 /// Handle all the boost::hana stuff
 template <typename TypeSelectorTy,
           template <typename, int X, int Y> typename HostTileTy, int size_X,
-          int size_Y, typename RpcTy>
+          int size_Y, typename ServiceTy>
 struct layout_storage {
   static constexpr int sizeX = size_X;
   static constexpr int sizeY = size_Y;
   static constexpr auto tile_coordinates = boost::hana::cartesian_product(
       boost::hana::make_tuple(boost::hana::range_c<int, 0, sizeX>,
                               boost::hana::range_c<int, 0, sizeY>));
-  using type_info = tile_type_info<TypeSelectorTy, sizeX, sizeY, RpcTy>;
+  using type_info = tile_type_info<TypeSelectorTy, sizeX, sizeY, ServiceTy>;
 
   static auto generate_storage() {
     return boost::hana::transform(tile_coordinates, [&](auto coord) {
@@ -399,9 +399,9 @@ template <typename...Ts> struct type_list {
 
 } // namespace detail
 
-template <typename T> auto select() { return detail::selected_type<T> {}; }
+template <typename T> detail::selected_type<T> select() { return {}; }
 
-template <typename... Ts> detail::type_list<Ts...> add_rpc() { return {}; }
+template <typename... Ts> detail::type_list<Ts...> add_service() { return {}; }
 
 template <int size_X, int size_Y> struct device {
   static constexpr int sizeX = size_X;
@@ -413,44 +413,50 @@ template <typename DevTy> struct queue {
   queue(DevTy d)
       : dev { d } {}
   /// Submit that uses the same struct for all memory tiles
-  template <typename TileDataTy = aie::detail::out_of_bounds, typename F = void>
-  void submit_uniform(F&& func) {
+  template <typename TileDataTy = aie::detail::out_of_bounds, typename F = void,
+            typename ServiceListT = detail::type_list<>>
+  void submit_uniform(F&& func,
+                      ServiceListT services = detail::type_list<> {}) {
     submit([]<int X, int Y>() { return select<TileDataTy>(); },
-           std::forward<F>(func));
+           std::forward<F>(func), services);
   }
   /// Submit that uses difference instances of the same template for all memory
   /// tiles
-  template <template <int, int> typename TileDataTy, typename F>
-  void submit_hetero(F&& func) {
+  template <template <int, int> typename TileDataTy, typename F,
+            typename ServiceListT = detail::type_list<>>
+  void submit_hetero(F&& func, ServiceListT services = detail::type_list<> {}) {
     submit([]<int X, int Y>() { return select<TileDataTy<X, Y>>(); },
-           std::forward<F>(func));
+           std::forward<F>(func), services);
   }
 
-  template <typename F, typename... ExtraRpcTys>
-  void submit(F&& func,
-              detail::type_list<ExtraRpcTys...> = detail::type_list<> {}) {
+  /// Submit without any access to memory tiles;
+  template <typename F, typename ServiceListT = detail::type_list<>>
+  void submit(F&& func, ServiceListT services = detail::type_list<> {}) {
     submit([]<int X, int Y>() { return select<detail::out_of_bounds>(); },
-           std::forward<F>(func), detail::type_list<ExtraRpcTys...> {});
+           std::forward<F>(func), services);
   }
 
   /// fully generic submit using a lambda to describe which type to use for
   /// which memory tile
-  template <typename TypeSelectorTy, typename F, typename ... ExtraRpcTys>
-  void submit(TypeSelectorTy&& type_selector, F&& func, detail::type_list<ExtraRpcTys...> = detail::type_list<>{}) {
+  template <typename TypeSelectorTy, typename F, typename ... ExtraServiceTys>
+  void submit(TypeSelectorTy&& type_selector, F&& func, detail::type_list<ExtraServiceTys...> = detail::type_list<>{}) {
+    /// The device back-end depends on done_service and send_log_service being the first
+    /// 2 service_list in the list.
+    using service_impl =
+        detail::service_list_info<detail::done_service<device_mem_handle>,
+                                  detail::send_log_service<device_mem_handle>,
+                                  ExtraServiceTys...>;
     /// access the device physical or emulated
-    using rpc_impl =
-        detail::rpcs_info<detail::done_rpc<device_mem_handle>, detail::send_log_rpc<device_mem_handle>,
-                              ExtraRpcTys...>;
     detail::device_impl impl(DevTy::sizeX, DevTy::sizeY);
 
     /// create all the storage
     detail::layout_storage<TypeSelectorTy, host_tile, DevTy::sizeX,
-                           DevTy::sizeY, rpc_impl>
+                           DevTy::sizeY, service_impl>
         storage(impl);
 
     /// execute the func for all host tiles
     boost::hana::for_each(storage.tiles, [&](auto& ts) { func(ts.elem); });
-    impl.wait_all<rpc_impl>();
+    impl.wait_all<service_impl>();
   }
 };
 
@@ -465,6 +471,40 @@ enum access_mode {
   read_write = read_only | write_only,
 };
 
+template <typename T> struct accessor;
+
+template <typename T, typename HostTileTy> struct buffer_range {
+ private:
+  friend struct accessor<T>;
+  HostTileTy& tile;
+  const buffer<T>& buff;
+  uint32_t start_read;
+  uint32_t end_read;
+  uint32_t start_write;
+  uint32_t end_write;
+  public:
+   buffer_range(HostTileTy& t, const buffer<T>& b)
+       : tile(t)
+       , buff(b)
+       , start_read(0)
+       , end_read(buff.size())
+       , start_write(0)
+       , end_write(0) {}
+  buffer_range read_range(int start, int end) {
+    start_read = start;
+    end_read = end;
+    return *this;
+  }
+  buffer_range write_range(int start, int end) {
+    start_write = start;
+    end_write = end;
+    return *this;
+  }
+};
+
+template <typename T, typename HostTileTy>
+buffer_range(HostTileTy& t, const buffer<T>& b) -> buffer_range<T, HostTileTy>;
+
 /// The layout of the accessor must be the same on device and host. because the
 /// lambda must be the same on both side, so the size and alignment must match
 template <typename T>
@@ -475,16 +515,22 @@ struct alignas(8) __SYCL_TYPE(acap_accessor) accessor
 
  public:
   template <typename HostTileTy>
+  accessor(buffer_range<T, HostTileTy> range)
+      : base { (uint32_t)range.buff.size() - range.start_read - range.end_read,
+               (uint32_t)sizeof(T), (char*)range.buff.data() + range.start_read,
+               range.start_write - range.start_read,
+               range.end_write - range.start_read } {}
+  template <typename HostTileTy>
   accessor(HostTileTy& tile, const buffer<T>& buff, access_mode am = read_write)
       : base { (uint32_t)buff.size(), (uint32_t)sizeof(T),
-               (void*)buff.data() } {
+               (char*)buff.data() } {
     static_assert(std::is_trivially_copyable_v<T>,
                   "cannot safely be copied to the device");
     /// calling register_accessor is not needed in device execution because we
     /// have compiler support for introspecting the layout of the lambda.
     tile.register_accessor(*this);
   }
-  unsigned get_size() const { return base::size; }
+  unsigned get_size() const { return base::size(); }
   T& operator[](unsigned idx) { return get_data()[idx]; }
   const T& operator[](unsigned idx) const { return get_data()[idx]; }
   T* get_data() { return (T*)base::get_ptr(); }
@@ -493,7 +539,7 @@ struct alignas(8) __SYCL_TYPE(acap_accessor) accessor
 
 namespace detail {
 /// validate that the accessor has the correct layout
-detail::assert_equal<sizeof(accessor<int>), 16> check_sizeof_accessor;
+detail::assert_equal<sizeof(accessor<int>), 8> check_sizeof_accessor;
 detail::assert_equal<alignof(accessor<int>), 8> check_alignof_accessor;
 } // namespace detail
 

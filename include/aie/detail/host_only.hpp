@@ -78,7 +78,7 @@ struct device_impl : device_impl_fallback {
     memory.assign(x * y, nullptr);
     sizeX = x;
     sizeY = y;
-    // rpc_system = rpc::host_side { sizeX, sizeY, get_handle({ 0, 0 }) };
+    // service_system = service::host_side { sizeX, sizeY, get_handle({ 0, 0 }) };
   }
   void add_storage(hw::position pos, void* storage) { get_mem(pos) = storage; }
 
@@ -86,14 +86,14 @@ struct device_impl : device_impl_fallback {
   /// device and the host.
   soft_barrier::host_side get_barrier(int x, int y) {
     return { get_handle({ x, y }),
-             (uint32_t)(hw::offset_table::get_rpc_record_begin_offset() +
-                        offsetof(rpc_device_side, barrier)) };
+             (uint32_t)(hw::offset_table::get_service_record_begin_offset() +
+                        offsetof(service_device_side, barrier)) };
   }
 
   ~device_impl() { TRISYCL_XAIE(xaie::XAie_Finish(&impl.aie_inst)); }
-  template <typename RpcTy> void wait_all() {
+  template <typename ServiceTy> void wait_all() {
     trisycl::detail::no_log_in_this_scope nls;
-    int addr = hw::offset_table::get_rpc_record_begin_offset();
+    int addr = hw::offset_table::get_service_record_begin_offset();
     /// This count the number of kernel that indicated they finished
     /// executing. any kernel can signal it finished executing just once
     /// because it stop executing or get stuck in an infinite loop after that.
@@ -112,7 +112,7 @@ struct device_impl : device_impl_fallback {
             /// waitng on the host to act on it
             if (!get_barrier(x, y).try_arrive())
               continue;
-            rpc_device_side ds = h.moved(x, y).load<rpc_device_side>(addr);
+            service_device_side ds = h.moved(x, y).load<service_device_side>(addr);
 
             /// read if the device requested to chain the is request.
             chain = ds.chained_request;
@@ -120,8 +120,8 @@ struct device_impl : device_impl_fallback {
             /// done is always at index 0 and is handled inline
             if (ds.index == 0)
               done_counter++;
-            RpcTy::for_any(ds.index, [&]<typename T> {
-              using info = rpc_info<T>;
+            ServiceTy::for_any(ds.index, [&]<typename T> {
+              using info = service_info<T>;
               auto data = h.moved(x, y).load<typename info::data_t>(ds.data);
               if constexpr (!info::is_void_ret) {
                 auto ret = T::act_on_data(x, y, device_mem_handle(h.moved(x, y)), data);

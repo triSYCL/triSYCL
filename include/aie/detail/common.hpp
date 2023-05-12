@@ -5,6 +5,7 @@
 #include "hardware.hpp"
 #include "utils.hpp"
 #include "meta.hpp"
+#include <memory>
 
 /// Used to indicated that the feature is not or cannot be implemented
 #define TRISYCL_FALLBACK                                                       \
@@ -25,22 +26,27 @@ namespace aie::detail {
 /// Used as the type of a memory tile that should not be accessed.
 struct out_of_bounds {};
 
-/// handles all the meta-programming needed for the rpc system
+/// handles all the meta-programming needed for the service system
 /// This can be reused across all backends
 
+/// 
 template<typename T>
-struct rpc_info {
-  using rpc_t = T;
+struct service_info {
+  using service_t = T;
   using ret_t = func_info_t<T::act_on_data>::ret_type;
+  /// True if the return is void
   static constexpr bool is_void_ret = std::is_same_v<ret_t, void>;
+  /// void is a special type because C++ doesn't allow variables of type void(a
+  /// mistake). When a variable of type void is needed this can be used instead
+  /// and protect uses of the variable with if constexpr.
   using non_void_ret_t = std::conditional_t<is_void_ret, uint32_t, ret_t>;
   using data_t = func_info_t<T::act_on_data>::args::template get_type<3>;
 };
 
-template <typename... Ts> struct rpcs_info {
+template <typename... Ts> struct service_list_info {
   using base = type_seq<Ts...>;
   template <auto i>
-  using get_info_t = rpc_info<typename base::template get_type<i>>;
+  using get_info_t = service_info<typename base::template get_type<i>>;
   template<typename T>
   static constexpr uint32_t get_index = base::template get_index<T>;
   using info_seq = type_seq<get_info_t<get_index<Ts>>...>;
@@ -48,8 +54,9 @@ template <typename... Ts> struct rpcs_info {
   using ret_seq =  type_seq<typename get_info_t<get_index<Ts>>::ret_t...>;
 
   template<typename DT, template<typename...> typename accessorT>
-  using rpcs_accessor = accessorT<DT, Ts...>;
+  using service_list_accessor = accessorT<DT, Ts...>;
 
+  /// Dynamically dispatch func with the type in Ts at index idx
   template <typename Func> static void for_any(uint32_t idx, Func func) {
     if constexpr (sizeof...(Ts) > 0) {
       [&]<typename First, typename... Tys>() {
@@ -57,7 +64,7 @@ template <typename... Ts> struct rpcs_info {
           func.template operator()<First>();
           return;
         }
-        rpcs_info<Tys...>::for_any(idx - 1, func);
+        service_list_info<Tys...>::for_any(idx - 1, func);
       }.template operator()<Ts...>();
     } else {
       TRISYCL_FALLBACK;
@@ -72,7 +79,7 @@ struct device_impl_fallback {
   device_impl_fallback(int x, int y) { TRISYCL_FALLBACK; }
   void add_storage(hw::position pos, void* storage) { TRISYCL_FALLBACK; }
   void* get_mem(hw::position pos) { TRISYCL_FALLBACK; }
-  template<typename RpcTy>
+  template<typename ServiceTy>
   void wait_all() { TRISYCL_FALLBACK; }
 };
 
@@ -101,8 +108,8 @@ struct device_tile_impl_fallback {
   void cascade_read48(const char* ptr) { TRISYCL_FALLBACK; }
   int x_coord() { TRISYCL_FALLBACK; }
   int y_coord() { TRISYCL_FALLBACK; }
-  template<typename T, typename RpcTy>
-  rpc_info<T>::ret_t perform_rpc(rpc_info<T>::data_t data) { TRISYCL_FALLBACK; }
+  template<typename T, typename ServiceTy>
+  service_info<T>::ret_t perform_service(service_info<T>::data_t data) { TRISYCL_FALLBACK; }
 };
 
 /// The host_tile_impl enable doing any action that can be done from the host to
@@ -149,6 +156,9 @@ template <typename T> struct generic_ptr {
 #endif
 };
 
+/// clang warns about uses of implicitly generated deduction guides. So here are
+/// some explicitly specified deduction guide that are the same as the
+/// automatically generated ones.
 template<typename T>
 generic_ptr(T*) -> generic_ptr<T>;
 template<typename T>
@@ -184,30 +194,42 @@ struct device_mem_handle_adaptor : ImplTy {
 /// it is aligned on 8 such that it has the same layout as it host counterpart.
 struct alignas(8) device_accessor_impl {
   device_accessor_impl() = default;
-  device_accessor_impl(uint32_t, uint32_t, void*) {}
-  uint32_t size = 0;
-  uint32_t elem_size = 0;
+  device_accessor_impl(uint32_t, uint32_t, char*) {}
+  device_accessor_impl(uint32_t, uint32_t, char*, uint32_t, uint32_t) {}
+  uint32_t size_ = 0;
   hw::dev_ptr<char> data = nullptr;
   char* get_ptr() { return data.get(); }
   const char* get_ptr() const { return data.get(); }
-#ifdef __SYCL_DEVICE_ONLY__
-  uint32_t padding = 0;
-#endif
+  std::size_t size() { return size_; }
+};
+
+struct host_accessor_out_of_line_impl {
+  char* data = nullptr;
+  uint32_t elem_size;
+  uint32_t size;
+  uint32_t write_back_start;
+  uint32_t write_back_end;
 };
 
 /// device_accessor_impl is the internal storage of an accessors on the host.
-/// it is aligned on 8 such that it has the same layout as it device counterpart.
+/// it is aligned on 8 such that it has the same layout as it device
+/// counterpart.
 struct alignas(8) host_accessor_impl {
   host_accessor_impl() = default;
-  host_accessor_impl(uint32_t s, uint32_t es, void* d)
-      : size(s)
-      , elem_size(es)
-      , data((char*)d) {}
-  uint32_t size = 0;
-  uint32_t elem_size = 0;
-  char* data = nullptr;
-  char* get_ptr() { return data; }
-  const char* get_ptr() const { return data; }
+  host_accessor_impl(const host_accessor_impl& other)
+      : host_accessor_impl(*other.impl) {}
+  host_accessor_impl(uint32_t s, uint32_t es, char* d)
+      : host_accessor_impl(s, es, d, 0, s) {}
+  host_accessor_impl(uint32_t s, uint32_t es, char* d, uint32_t write_start,
+                     uint32_t write_end)
+      : host_accessor_impl(host_accessor_out_of_line_impl {
+            (char*)d, es, s, write_start, write_end }) {}
+  host_accessor_impl(host_accessor_out_of_line_impl i)
+      : impl(std::make_unique<host_accessor_out_of_line_impl>(i)) {}
+  std::unique_ptr<host_accessor_out_of_line_impl> impl;
+  std::size_t size() { return impl->size; }
+  char* get_ptr() { return impl->data; }
+  const char* get_ptr() const { return impl->data; }
 };
 
 /// This selects the right accessor implementation based on context
@@ -217,16 +239,16 @@ using accessor_common = device_accessor_impl;
 using accessor_common = host_accessor_impl;
 #endif
 
-bool operator==(accessor_common self, accessor_common other) {
-  return self.size == other.size && self.elem_size == other.elem_size &&
-         self.data == other.data;
-}
-bool operator!=(accessor_common self, accessor_common other) {
-  return !(self == other);
-}
+// bool operator==(accessor_common self, accessor_common other) {
+//   return self.size == other.size && self.elem_size == other.elem_size &&
+//          self.data == other.data;
+// }
+// bool operator!=(accessor_common self, accessor_common other) {
+//   return !(self == other);
+// }
 
 /// Validate that accessors have the same layout on host and
-static assert_equal<sizeof(accessor_common), 16> check_sizeof_accessor_common;
+static assert_equal<sizeof(accessor_common), 8> check_sizeof_accessor_common;
 static assert_equal<alignof(accessor_common), 8> check_alignof_accessor_common;
 
 } // namespace aie::detail

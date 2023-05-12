@@ -1,13 +1,13 @@
 #ifndef AIE_DETAIL_HARDWARE_HPP
 #define AIE_DETAIL_HARDWARE_HPP
 
+#include "utils.hpp"
 #include <algorithm>
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
 #include <type_traits>
-#include "utils.hpp"
 
 #ifdef __SYCL_XILINX_AIE__
 #include "acap-intrinsic.h"
@@ -20,7 +20,7 @@ constexpr unsigned min_alloc_size = 8;
 /// Must be a power of 2;
 constexpr unsigned alloc_align = 4;
 
-}
+} // namespace detail::heap
 
 namespace hw {
 
@@ -56,21 +56,21 @@ struct offset {
 constexpr inline offset get_offset(parity par, dir d) {
   switch (d) {
   case dir::south:
-    return {0, -1};
+    return { 0, -1 };
   case dir::north:
-    return {0, 1};
+    return { 0, 1 };
   case dir::west:
     if (par == parity::west)
-      return {0, 0};
+      return { 0, 0 };
     else
-      return {-1, 0};
+      return { -1, 0 };
   case dir::east:
     if (par == parity::west)
-      return {1, 0};
+      return { 1, 0 };
     else
-      return {0, 0};
+      return { 0, 0 };
   case dir::self:
-    return {0, 0};
+    return { 0, 0 };
   }
 }
 
@@ -80,15 +80,15 @@ constexpr inline offset get_offset(parity par, dir d) {
 constexpr inline offset get_simple_offset(dir d) {
   switch (d) {
   case dir::south:
-    return {0, -1};
+    return { 0, -1 };
   case dir::north:
-    return {0, 1};
+    return { 0, 1 };
   case dir::west:
-    return {-1, 0};
+    return { -1, 0 };
   case dir::east:
-    return {1, 0};
+    return { 1, 0 };
   case dir::self:
-    return {0, 0};
+    return { 0, 0 };
   }
 }
 
@@ -97,10 +97,10 @@ struct position {
   int x;
   int y;
   friend constexpr position operator+(position p, offset o) {
-    return {p.x + o.x, p.y + o.y};
+    return { p.x + o.x, p.y + o.y };
   }
   friend constexpr offset operator-(position p, position p1) {
-    return {p.x - p1.x, p.y - p1.y};
+    return { p.x - p1.x, p.y - p1.y };
   }
   /// get the parity of tile at position p
   constexpr parity get_parity() const {
@@ -141,7 +141,7 @@ constexpr uint32_t base_addr_mask = ~offset_mask;
 constexpr dir get_ptr_direction(uint32_t ptr) {
   return (dir)((ptr >> 15) & 0x3);
 }
-template <typename T> dir get_ptr_direction(T *p) {
+template <typename T> dir get_ptr_direction(T* p) {
   return get_ptr_direction((uint32_t)p);
 }
 
@@ -195,11 +195,11 @@ uint32_t self_tile_addr() {
 }
 
 template <typename T>
-T *get_object(uint32_t offset, hw::dir d = hw::dir::self) {
+T* get_object(uint32_t offset, hw::dir d = hw::dir::self) {
 #ifndef __SYCL_DEVICE_ONLY__
   assert(false && "should only be called on device");
 #endif
-  return reinterpret_cast<T *>(get_base_addr(resolved_dir(d)) + offset);
+  return reinterpret_cast<T*>(get_base_addr(resolved_dir(d)) + offset);
 }
 
 #if defined(__SYCL_DEVICE_ONLY__)
@@ -222,7 +222,7 @@ int get_tile_y_coordinate() {
 /// bit after sizeof(From) will be 0. When sizeof(From) > sizeof(To), the result
 /// will only contain part of the original object.
 template <typename To, typename From>
-inline To bit_cast(const From &from) noexcept {
+inline To bit_cast(const From& from) noexcept {
   To to;
   std::memset(&to, 0, sizeof(To));
   std::memcpy(&to, &from, std::min(sizeof(To), sizeof(From)));
@@ -234,65 +234,68 @@ inline To bit_cast(const From &from) noexcept {
 /// manipulate pointer representations and pointer arithmetic
 template <typename T> struct dev_ptr {
 #if defined(__SYCL_DEVICE_ONLY__)
-  template<typename T2>
-  using otherT = T2*;
+  template <typename T2> using otherT = T2*;
   /// On device a pointer is just a pointer
-  T *ptr = nullptr;
-  static T *add(T *ptr, std::ptrdiff_t off) { return ptr + off; }
-  T *get() const { return ptr; }
+  T* ptr = nullptr;
+  static T* add(T* ptr, std::ptrdiff_t off) { return ptr + off; }
+  T* get() const { return ptr; }
   uint32_t get_int() const { return (uint32_t)ptr; }
 #else
-  template<typename T2>
-  using otherT = uint32_t;
+  template <typename T2> using otherT = uint32_t;
   /// On the host a device pointer is
   std::uint32_t ptr = 0;
   static std::uint32_t add(std::uint32_t ptr, std::ptrdiff_t off) {
     /// to match pointer arithmetic we need to multiply by sizeof(T)
     return ptr + off * sizeof(T);
   }
-  T *get() const {
+  T* get() const {
     assert(false && "should never be executed on the host");
     return nullptr;
   }
   uint32_t get_int() const { return ptr; }
 #endif
   void set(uint32_t val) volatile { ptr = (decltype(dev_ptr::ptr))val; }
-  void set(T *val) volatile { ptr = (decltype(dev_ptr::ptr))(uintptr_t)val; }
+  void set(T* val) volatile { ptr = (decltype(dev_ptr::ptr))(uintptr_t)val; }
 
   dev_ptr() = default;
-  dev_ptr(std::nullptr_t) : dev_ptr() {}
-  explicit dev_ptr(uint32_t offset) : dev_ptr() { set(offset); }
-  explicit dev_ptr(T* ptr) : dev_ptr() { set(ptr); }
+  dev_ptr(std::nullptr_t)
+      : dev_ptr() {}
+  explicit dev_ptr(uint32_t offset)
+      : dev_ptr() {
+    set(offset);
+  }
+  explicit dev_ptr(T* ptr)
+      : dev_ptr() {
+    set(ptr);
+  }
 
   /// This function will be SFNIAE out for T == void. without causing hard
   /// error on instantiation of the class. T2 should never be specified by the
   /// user.
   template <typename T2 = T, typename std::enable_if<
                                  !std::is_same<T2, void>::value, int>::type = 0>
-  T2 &operator*() {
+  T2& operator*() {
     static_assert(std::is_same<T2, T>::value,
                   "T2 should be not be specifier by the user");
     return *get();
   }
   template <typename T2 = T, typename std::enable_if<
                                  !std::is_same<T2, void>::value, int>::type = 0>
-  T2 &operator[](std::size_t index) {
+  T2& operator[](std::size_t index) {
     return get()[index];
   }
-  T *operator->() { return get(); }
+  T* operator->() { return get(); }
   operator bool() { return get_int() != 0; }
   template <typename T2> explicit operator dev_ptr<T2>() {
     return dev_ptr<T2>((otherT<T2>)ptr);
   }
-  template <typename T2> explicit operator T2 *() {
-    return (otherT<T2>)get();
-  }
+  template <typename T2> explicit operator T2*() { return reinterpret_cast<T2*>(const_cast<std::remove_const_t<T>*>(get())); }
 
   /// Pointer arithmetic
-  dev_ptr operator+(std::ptrdiff_t off) { return {add(ptr, off)}; }
-  dev_ptr operator-(std::ptrdiff_t off) { return {add(ptr, -off)}; }
+  dev_ptr operator+(std::ptrdiff_t off) { return { add(ptr, off) }; }
+  dev_ptr operator-(std::ptrdiff_t off) { return { add(ptr, -off) }; }
   std::ptrdiff_t operator-(dev_ptr other) { return ptr - other.ptr; }
-  dev_ptr &operator++() {
+  dev_ptr& operator++() {
     ptr = add(ptr, 1);
     return *this;
   }
@@ -301,7 +304,7 @@ template <typename T> struct dev_ptr {
     *this ++;
     return old;
   }
-  dev_ptr &operator--() {
+  dev_ptr& operator--() {
     ptr = add(ptr, -1);
     return *this;
   }
@@ -320,27 +323,27 @@ template <typename T> struct dev_ptr {
   bool operator>=(dev_ptr other) const { return ptr >= other.ptr; }
 
   /// Pointer assignment
-  dev_ptr &operator+=(std::ptrdiff_t off) {
+  dev_ptr& operator+=(std::ptrdiff_t off) {
     *this = *this + off;
     return *this;
   }
-  dev_ptr &operator-=(std::ptrdiff_t off) {
+  dev_ptr& operator-=(std::ptrdiff_t off) {
     *this = *this - off;
     return *this;
   }
-  dev_ptr &operator=(T *p) {
+  dev_ptr& operator=(T* p) {
     set(p);
     return *this;
   }
-  volatile dev_ptr &operator=(T *p) volatile {
+  volatile dev_ptr& operator=(T* p) volatile {
     set(p);
     return *this;
   }
-  dev_ptr &operator=(std::nullptr_t) {
+  dev_ptr& operator=(std::nullptr_t) {
     set((uint32_t)0);
     return *this;
   }
-  volatile dev_ptr &operator=(std::nullptr_t) volatile {
+  volatile dev_ptr& operator=(std::nullptr_t) volatile {
     set((uint32_t)0);
     return *this;
   }
@@ -354,7 +357,7 @@ template <typename T> struct dev_ptr {
   std::uint32_t get_offset() { return ((std::uint32_t)ptr) & offset_mask; }
   static constexpr dev_ptr create(hw::dir d, uint32_t offset) {
     assert((offset & ~offset_mask) == 0);
-    return dev_ptr{(decltype(dev_ptr::ptr))(get_base_addr(d) + offset)};
+    return dev_ptr { (decltype(dev_ptr::ptr))(get_base_addr(d) + offset) };
   }
   static constexpr dev_ptr create(hw::parity p, uint32_t offset) {
     return create(get_self_dir(p));
@@ -374,7 +377,7 @@ static_assert(sizeof(dev_ptr<void>) == sizeof(std::uint32_t) &&
 /// offsets can be used alone when accessing from the host.
 class offset_table {
 #ifndef __SYCL_DEVICE_ONLY__
-  public:
+ public:
 #endif
   /// start of the global variable section and the end of the heap.
   uint32_t global_variable_start;
@@ -382,16 +385,18 @@ class offset_table {
   uint32_t lambda_start;
   uint32_t heap_start;
 
-  offset_table(uint32_t reserved_mem, uint32_t tile_mem_size, uint32_t lambda_size) {
+  offset_table(uint32_t reserved_mem, uint32_t tile_mem_size,
+               uint32_t lambda_size) {
     lambda_start = detail::align_up(
         hw::offset_table::get_tile_mem_begin_offset() + tile_mem_size,
         detail::heap::alloc_align);
     heap_start =
         detail::align_up(lambda_start + lambda_size, detail::heap::alloc_align);
-    global_variable_start = detail::align_down(reserved_mem, detail::heap::alloc_align);
+    global_variable_start =
+        detail::align_down(reserved_mem, detail::heap::alloc_align);
   }
 
-  static offset_table *get(hw::dir d) {
+  static offset_table* get(hw::dir d) {
 #ifdef __SYCL_DEVICE_ONLY__
     return get_object<offset_table>(get_offset_table_begin_offset(), d);
 #else
@@ -400,7 +405,7 @@ class offset_table {
 #endif
   }
 
-public:
+ public:
   /// contain the stack
   static constexpr uint32_t __attribute__((const))
   get_stack_begin_offset(hw::dir d = hw::dir::self) {
@@ -429,18 +434,18 @@ public:
     return get_offset_table_begin_offset(d) + get_offset_table_size(d);
   }
 
-  /// contains the RPC system.
+  /// contains the service system.
   static constexpr uint32_t __attribute__((const))
-  get_rpc_record_begin_offset(hw::dir d = hw::dir::self) {
+  get_service_record_begin_offset(hw::dir d = hw::dir::self) {
     return get_offset_table_end_offset(d);
   }
   static constexpr uint32_t __attribute__((const))
-  get_rpc_record_size(hw::dir d = hw::dir::self) {
+  get_service_record_size(hw::dir d = hw::dir::self) {
     return 20;
   }
   static constexpr uint32_t __attribute__((const))
-  get_rpc_record_end_offset(hw::dir d = hw::dir::self) {
-    return get_rpc_record_begin_offset(d) + get_rpc_record_size(d);
+  get_service_record_end_offset(hw::dir d = hw::dir::self) {
+    return get_service_record_begin_offset(d) + get_service_record_size(d);
   }
 
   /// Beyond this point many offsets and size are not constexpr because they
@@ -451,7 +456,7 @@ public:
   /// not be access by your neighbors.
   static constexpr uint32_t __attribute__((const))
   get_tile_mem_begin_offset(hw::dir d = hw::dir::self) {
-    return get_rpc_record_end_offset(d);
+    return get_service_record_end_offset(d);
   }
   static uint32_t __attribute__((const))
   get_tile_mem_size(hw::dir d = hw::dir::self) {
@@ -496,7 +501,8 @@ public:
   }
   static uint32_t __attribute__((const))
   get_global_variable_size(hw::dir d = hw::dir::self) {
-    return get_global_variable_end_offset(d) - get_global_variable_end_offset(d);
+    return get_global_variable_end_offset(d) -
+           get_global_variable_end_offset(d);
   }
   static constexpr uint32_t __attribute__((const))
   get_global_variable_end_offset(hw::dir d = hw::dir::self) {
