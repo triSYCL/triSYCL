@@ -289,7 +289,9 @@ template <typename T> struct dev_ptr {
   template <typename T2> explicit operator dev_ptr<T2>() {
     return dev_ptr<T2>((otherT<T2>)ptr);
   }
-  template <typename T2> explicit operator T2*() { return reinterpret_cast<T2*>(const_cast<std::remove_const_t<T>*>(get())); }
+  template <typename T2> explicit operator T2*() {
+    return (otherT<T2>)get();
+  }
 
   /// Pointer arithmetic
   dev_ptr operator+(std::ptrdiff_t off) { return { add(ptr, off) }; }

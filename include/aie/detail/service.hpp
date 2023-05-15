@@ -20,12 +20,12 @@ struct send_log_service {
     /// Number of characters to print
     uint32_t size;
   };
-  template <typename Parent> struct add_to_dev_handle {
+  template <typename Parent> struct add_to_service_api {
    private:
     __attribute__((noinline)) void log_internal(const char* str, bool chained) {
       send_log_service::data_type data { hw::dev_ptr<const char>(str),
                                      strlen(str) };
-      get()->perform_service(data);
+      tile().perform_service(data);
     }
     __attribute__((noinline)) void log_internal(int i, bool chained) {
       char arr[/*bits in base 2*/ 31 + /*sign*/ 1 + /*\0*/ 1];
@@ -35,7 +35,7 @@ struct send_log_service {
       ptr[0] = '\0';
       log_internal(arr, chained);
     }
-    auto* get() { return static_cast<Parent*>(this)->dt(); }
+    auto& tile() { return *static_cast<Parent*>(this)->dt(); }
 
    public:
     template <typename... Ts>
@@ -66,9 +66,9 @@ struct done_service {
   struct data_type {
     int32_t ec;
   };
-  template <typename Parent> struct add_to_dev_handle {
+  template <typename Parent> struct add_to_service_api {
    private:
-    auto* get() { return static_cast<Parent*>(this)->dt(); }
+    auto* tile() { return static_cast<Parent*>(this)->dt(); }
 
    public:
     void abort() {
@@ -76,7 +76,7 @@ struct done_service {
     }
     void exit_kernel(int32_t ec = ec_success) {
       data_type data { ec };
-      get()->perform_service(data);
+      tile().perform_service(data);
     }
   };
   static void act_on_data(int x, int y, dev_handle h, data_type d) {

@@ -52,9 +52,28 @@ template <typename LockTy> struct lock_guard_ex : detail::no_move {
 
 template <typename LockTy> lock_guard_ex(LockTy) -> lock_guard_ex<LockTy>;
 
+namespace detail {
+
+template<typename>
+struct get_inner {};
+
+template<typename InnerT, template<typename> typename OuterT>
+struct get_inner<OuterT<InnerT>> {
+  using type = InnerT;
+};
+
+}
+
+template <typename T> struct add_to_api_base {
+  protected:
+  auto& tile() {
+    return *static_cast<typename detail::get_inner<T>::type*>(static_cast<T*>(this))->dt();
+  }
+};
+
 /// Mix-in to provide the APIs of all services easily to the user
 template<typename DT, typename ... Ts>
-struct multi_service_accessor : Ts::template add_to_dev_handle<multi_service_accessor<DT, Ts...>>... {
+struct multi_service_accessor : Ts::template add_to_service_api<multi_service_accessor<DT, Ts...>>... {
   private:
   DT* device_tile;
   public:
@@ -397,6 +416,24 @@ template <typename T> struct selected_type {
 template <typename...Ts> struct type_list {
 };
 
+template<typename InstT, template<typename ...> typename TempT>
+struct is_instance_of_type : std::false_type {};
+
+template<template<typename ...> typename TempT, typename... Ts>
+struct is_instance_of_type<TempT<Ts...>, TempT> : std::true_type {};
+
+template<typename T>
+concept is_type_list = is_instance_of_type<T, type_list>::value;
+
+template<typename T>
+concept is_selected_type = is_instance_of_type<T, selected_type>::value;
+
+template<typename T>
+concept is_type_selector = requires(T s)
+{
+  { s.template operator()<0, 0>() } -> is_selected_type;
+};
+
 } // namespace detail
 
 template <typename T> detail::selected_type<T> select() { return {}; }
@@ -412,25 +449,27 @@ template <typename DevTy> struct queue {
   DevTy dev;
   queue(DevTy d)
       : dev { d } {}
+
   /// Submit that uses the same struct for all memory tiles
   template <typename TileDataTy = aie::detail::out_of_bounds, typename F = void,
-            typename ServiceListT = detail::type_list<>>
+            detail::is_type_list ServiceListT = detail::type_list<>>
   void submit_uniform(F&& func,
                       ServiceListT services = detail::type_list<> {}) {
     submit([]<int X, int Y>() { return select<TileDataTy>(); },
            std::forward<F>(func), services);
   }
+
   /// Submit that uses difference instances of the same template for all memory
   /// tiles
   template <template <int, int> typename TileDataTy, typename F,
-            typename ServiceListT = detail::type_list<>>
+            detail::is_type_list ServiceListT = detail::type_list<>>
   void submit_hetero(F&& func, ServiceListT services = detail::type_list<> {}) {
     submit([]<int X, int Y>() { return select<TileDataTy<X, Y>>(); },
            std::forward<F>(func), services);
   }
 
   /// Submit without any access to memory tiles;
-  template <typename F, typename ServiceListT = detail::type_list<>>
+  template <typename F, detail::is_type_list ServiceListT = detail::type_list<>>
   void submit(F&& func, ServiceListT services = detail::type_list<> {}) {
     submit([]<int X, int Y>() { return select<detail::out_of_bounds>(); },
            std::forward<F>(func), services);
@@ -438,7 +477,7 @@ template <typename DevTy> struct queue {
 
   /// fully generic submit using a lambda to describe which type to use for
   /// which memory tile
-  template <typename TypeSelectorTy, typename F, typename ... ExtraServiceTys>
+  template <detail::is_type_selector TypeSelectorTy, typename F, typename ... ExtraServiceTys>
   void submit(TypeSelectorTy&& type_selector, F&& func, detail::type_list<ExtraServiceTys...> = detail::type_list<>{}) {
     /// The device back-end depends on done_service and send_log_service being the first
     /// 2 service_list in the list.
