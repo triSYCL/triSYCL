@@ -512,23 +512,16 @@ struct image_grid : frame_grid {
        std::make_shared taking an array size comes only in C++20 while
        it is available for std::make_unique in C++17... */
     std::shared_ptr<std::uint8_t[]> d { new std::uint8_t[3*image_x*image_y] };
-    std::experimental::mdspan output {
-      reinterpret_cast<rgb *>(d.get()),
-      image_y,
-      image_x
-    };
+    std::mdspan output { reinterpret_cast<rgb*>(d.get()), image_y, image_x };
     // For each pixel of the md_span or of the image, which one is smaller
-    for (int j = 0;
-         j < std::min(static_cast<int>(data.extent(0)), image_y);
+    for (int j = 0; j < std::min(static_cast<int>(data.extent(0)), image_y);
          ++j)
-      for (int i = 0;
-           i < std::min(static_cast<int>(data.extent(1)), image_x);
+      for (int i = 0; i < std::min(static_cast<int>(data.extent(1)), image_x);
            ++i) {
         /* Mirror the image vertically to display the pixels in a
            mathematical sense */
-        output(image_y - 1 - j,i) = p.palettize(data(j,i),
-                                                min_value,
-                                                max_value);
+        output[image_y - 1 - j, i] =
+            p.palettize(data[j, i], min_value, max_value);
       }
     // Send the graphics updating code
     submit([=, this] {
@@ -565,12 +558,11 @@ struct image_grid : frame_grid {
   */
   template <typename DataType, typename RangeValue>
   void update_tile_data_image(int x, int y,
-                              // Why const is not possible here?
-                              DataType *data,
+                              const DataType *data,
                               RangeValue min_value,
                               RangeValue max_value) {
     // Wrap the pointed area into an MDspan
-    const std::experimental::mdspan md { data, image_y, image_x };
+    const std::mdspan md { data, image_y, image_x };
     update_tile_data_image(x, y, md, min_value, max_value);
   }
 

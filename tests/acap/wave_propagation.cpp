@@ -86,10 +86,10 @@ auto compare_2D_mdspan = [](auto message, const auto &acap, const auto &ref) {
   assert(acap.extent(1) == ref.extent(1));
   for (int j = 0; j < acap.extent(0); ++j)
     for (int i = 0; i < acap.extent(1); ++i)
-      if (std::abs(acap(j,i) - ref(j,i)) > epsilon) {
+      if (std::abs(acap[j, i] - ref[j, i]) > epsilon) {
         TRISYCL_DUMP_T(std::dec << '\t' << message
-                       << " acap(" << j << ',' << i << ") = " << acap(j,i)
-                       << "  ref(" << j << ',' << i << ") = " << ref(j,i));
+                       << " acap(" << j << ',' << i << ") = " << acap[j, i]
+                       << "  ref(" << j << ',' << i << ") = " << re[j, i]);
       }
 };
 #endif
@@ -148,8 +148,7 @@ auto is_harbor = [] (auto x, auto y) constexpr -> bool {
 /// A sequential reference implementation of wave propagation
 template <auto size_x, auto size_y, auto display_tile_size>
 struct reference_wave_propagation {
-  using space = std::experimental::mdspan<
-      data_t, std::experimental::extents<std::size_t, size_y, size_x>>;
+  using space = std::mdspan<data_t, std::extents<std::size_t, size_y, size_x>>;
   // It would be nice to have a constexpr static member to express this,
   // but right now size() is a member function
   // data_t u_m[space::size()];
@@ -169,11 +168,10 @@ struct reference_wave_propagation {
   reference_wave_propagation() {
     for (int j = 0; j < size_y; ++j)
       for (int i = 0; i < size_x; ++i) {
-        // No u[j][i] syntax too like in Boost.Multi_Array ?
-        u(j,i) = v(j,i) = w(j,i) = 0;
-        side(j,i) = K*(!is_harbor(i, j));
-        depth(j,i) = 2600.0*shoal_factor(i, j);
-        w(j,i) += add_a_drop(i, j);
+        u[j, i] = v[j, i] = w[j, i] = 0;
+        side[j, i] = K*(!is_harbor(i, j));
+        depth[j, i] = 2600.0*shoal_factor(i, j);
+        w[j, i] += add_a_drop(i, j);
       }
   }
 
@@ -183,26 +181,26 @@ struct reference_wave_propagation {
     for (int j = 0; j < size_y; ++j)
       for (int i = 0; i < size_x - 1; ++i) {
         // dw/dx
-        auto north = w(j,i + 1) - w(j,i);
+        auto north = w[j, i + 1] - w[j, i];
         // Integrate horizontal speed
-        u(j,i) += north*alpha;
+        u[j, i] += north*alpha;
       }
     for (int j = 0; j < size_y - 1; ++j)
       for (int i = 0; i < size_x; ++i) {
         // dw/dy
-        auto vp = w(j + 1,i) - w(j,i);
+        auto vp = w[j + 1, i] - w[j, i];
         // Integrate vertical speed
-        v(j,i) += vp*alpha;
+        v[j, i] += vp*alpha;
       }
     for (int j = 1; j < size_y; ++j)
       for (int i = 1; i < size_x; ++i) {
         // div speed
-        auto wp = (u(j,i) - u(j,i - 1)) + (v(j,i) - v(j - 1,i));
-        wp *= side(j,i)*(depth(j,i) + w(j,i));
+        auto wp = (u[j, i] - u[j, i - 1]) + (v[j, i] - v[j - 1, i]);
+        wp *= side[j, i]*(depth[j, i] + w[j, i]);
         // Integrate depth
-        w(j,i) += wp;
+        w[j, i] += wp;
         // Add some dissipation for the damping
-        w(j,i) *= damping;
+        w[j, i] *= damping;
       }
   }
 

@@ -44,8 +44,8 @@ template <typename T, int Dimensions> class accessor {
 
  protected:
   /// The memory lay-out of a buffer is a dynamic multidimensional array
-  using mdspan = std::mdspan<
-      element_type, std::dextents<std::size_t, Dimensions>>;
+  using mdspan =
+      std::mdspan<element_type, std::dextents<std::size_t, Dimensions>>;
 
   /** This is the multi-dimensional interface to the data that may point
       to either allocation in the case of storage managed by SYCL itself

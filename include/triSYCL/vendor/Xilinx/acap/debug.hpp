@@ -42,13 +42,12 @@ template <typename Geography>
 class bsp_checker {
   /// A vector clock to compare differerent tiles together
   std::array<std::atomic<int>, Geography::size> vector_clock_alloc;
-  std::experimental::mdspan<
-      std::atomic<int>, std::experimental::extents<
-                            std::size_t, Geography::x_size, Geography::y_size>>
+  std::mdspan<std::atomic<int>,
+              std::experimental::extents<std::size_t, Geography::x_size,
+                                         Geography::y_size>>
       vector_clock { &vector_clock_alloc[0] };
 
  public:
-
   /** Check that none of the tiles executing this are separated by
       more than one execution step each other.
 
@@ -56,7 +55,7 @@ class bsp_checker {
       the tiles.
   */
   void check(int x, int y) {
-    ++vector_clock(x, y);
+    ++vector_clock[x, y];
     /* While the algorithm execution is not atomic, it is enough to
        find some asynchronous bugs */
     auto [min_element, max_element] =
