@@ -63,6 +63,7 @@
 #include "triSYCL/id.hpp"
 #include "triSYCL/image.hpp"
 #include "triSYCL/item.hpp"
+#include "triSYCL/marray.hpp"
 #include "triSYCL/math.hpp"
 #include "triSYCL/nd_item.hpp"
 #include "triSYCL/nd_range.hpp"

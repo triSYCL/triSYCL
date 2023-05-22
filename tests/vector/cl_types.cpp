@@ -153,7 +153,7 @@ auto equal = [] (auto const &v, auto const &verif) {
 #define GENERATE_TEST_TYPE(type)                                               \
   BOOST_PP_SEQ_FOR_EACH(GENERATE_TEST_SIZE, type, SIZES)
 
-#define ALL_TESTS                                                              \
+#define ALL_TESTS                                                           \
   GENERATE_TEST_TYPE((char,              char,   0));                       \
   GENERATE_TEST_TYPE((unsigned char,     uchar,  0));                       \
   GENERATE_TEST_TYPE((short,             short,  0));                       \
