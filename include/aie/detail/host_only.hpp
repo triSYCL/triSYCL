@@ -2,7 +2,7 @@
 #ifndef AIE_DETAIL_HOST_ONLY_HPP
 #define AIE_DETAIL_HOST_ONLY_HPP
 
-#if defined(__ACAP_EMULATION__) || defined(__SYCL_DEVICE_ONLY__)
+#if defined(__AIE_EMULATION__) || defined(__SYCL_DEVICE_ONLY__)
 #error "should only be used on the host side of hardware execution"
 #endif
 
@@ -23,7 +23,7 @@ struct device_mem_handle_impl : device_mem_handle_impl_fallback {
     handle.moved(p.ptr.get_dir()).memcpy_h2d(p.ptr, ptr, size);
   }
   void memcpy_d2h(void* ptr, generic_ptr<void> p, uint32_t size) {
-    handle.moved(p.ptr.get_dir()).memcpy_d2h(ptr, p.ptr, size);
+    handle.moved(p.ptr.get_dir()).memcpy_d2h(ptr, p.ptr.get_offset(), size);
   }
 };
 
@@ -91,7 +91,7 @@ struct device_impl : device_impl_fallback {
   }
 
   ~device_impl() { TRISYCL_XAIE(xaie::XAie_Finish(&impl.aie_inst)); }
-  template <typename ServiceTy> void wait_all() {
+  template <typename ServiceTy> void wait_all(ServiceTy&& service_data) {
     trisycl::detail::no_log_in_this_scope nls;
     int addr = hw::offset_table::get_service_record_begin_offset();
     /// This count the number of kernel that indicated they finished
@@ -120,14 +120,18 @@ struct device_impl : device_impl_fallback {
             /// done is always at index 0 and is handled inline
             if (ds.index == 0)
               done_counter++;
-            ServiceTy::for_any(ds.index, [&]<typename T> {
+            ServiceTy::service_list_t::for_any(ds.index, [&]<typename T> {
               using info = service_info<T>;
               auto data = h.moved(x, y).load<typename info::data_t>(ds.data);
               if constexpr (!info::is_void_ret) {
-                auto ret = T::act_on_data(x, y, device_mem_handle(h.moved(x, y)), data);
+                auto ret =
+                    std::get<T>(service_data.data)
+                        .act_on_data(x, y, device_mem_handle(h.moved(x, y)),
+                                     data);
                 h.moved(x, y).store(ds.ret, ret);
               } else {
-                T::act_on_data(x, y, h.moved(x, y), data);
+                std::get<T>(service_data.data)
+                    .act_on_data(x, y, h.moved(x, y), data);
               }
             });
             get_barrier(x, y).wait();

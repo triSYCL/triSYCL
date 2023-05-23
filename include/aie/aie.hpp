@@ -1,4 +1,7 @@
 
+#ifndef AIE_HPP
+#define AIE_HPP
+
 #include "boost/hana.hpp"
 
 #include "detail/common.hpp"
@@ -20,7 +23,7 @@
 #ifdef __AIE_FALLBACK__
 // fallback, test that the fallback API can compile
 #include "detail/fallback.hpp"
-#elif defined(__ACAP_EMULATION__)
+#elif defined(__AIE_EMULATION__)
 // emulation
 #include "detail/emulation.hpp"
 #elif __SYCL_DEVICE_ONLY__
@@ -33,7 +36,8 @@
 
 namespace aie {
 
-using device_mem_handle = detail::device_mem_handle_adaptor<detail::device_mem_handle_impl>;
+using device_mem_handle =
+    detail::device_mem_handle_adaptor<detail::device_mem_handle_impl>;
 
 /// similar to std::lock_guard but it is adapted to use aie::*_lock_impl instead
 /// of std::*mutex
@@ -54,30 +58,34 @@ template <typename LockTy> lock_guard_ex(LockTy) -> lock_guard_ex<LockTy>;
 
 namespace detail {
 
-template<typename>
-struct get_inner {};
+template <typename> struct get_inner {};
 
-template<typename InnerT, template<typename> typename OuterT>
+template <typename InnerT, template <typename> typename OuterT>
 struct get_inner<OuterT<InnerT>> {
   using type = InnerT;
 };
 
-}
+} // namespace detail
 
 template <typename T> struct add_to_api_base {
-  protected:
+ protected:
   auto& tile() {
-    return *static_cast<typename detail::get_inner<T>::type*>(static_cast<T*>(this))->dt();
+    return *static_cast<typename detail::get_inner<T>::type*>(
+                static_cast<T*>(this))
+                ->dt();
   }
 };
 
 /// Mix-in to provide the APIs of all services easily to the user
-template<typename DT, typename ... Ts>
-struct multi_service_accessor : Ts::template add_to_service_api<multi_service_accessor<DT, Ts...>>... {
-  private:
+template <typename DT, typename... Ts>
+struct multi_service_accessor
+    : Ts::template add_to_service_api<multi_service_accessor<DT, Ts...>>... {
+ private:
   DT* device_tile;
-  public:
-  multi_service_accessor(DT* d) : device_tile(d) {}
+
+ public:
+  multi_service_accessor(DT* d)
+      : device_tile(d) {}
   DT* dt() { return device_tile; }
 };
 
@@ -170,8 +178,8 @@ struct device_tile : private detail::device_tile_impl {
                   "ElemTy cannot passed by streams");
     /// The hardware supports writing to a stream by blocks of 16 bytes.
     stream_operation<16, /*is_read*/ false>(
-        reinterpret_cast<const char*>(std::addressof(value)),
-        sizeof(ElemTy), [this, stream_id](const char* ptr) {
+        reinterpret_cast<const char*>(std::addressof(value)), sizeof(ElemTy),
+        [this, stream_id](const char* ptr) {
           impl::stream_write16(ptr, stream_id);
         });
   }
@@ -194,8 +202,7 @@ struct device_tile : private detail::device_tile_impl {
     /// The hardware supports writing to the cascade stream by blocks of 48
     /// bytes.
     stream_operation<48, /*is_read*/ false>(
-        reinterpret_cast<const char*>(std::addressof(value)),
-        sizeof(ElemTy),
+        reinterpret_cast<const char*>(std::addressof(value)), sizeof(ElemTy),
         [this](const char* ptr) { impl::cascade_write48(ptr); });
   }
 
@@ -222,53 +229,50 @@ struct device_tile : private detail::device_tile_impl {
   // void vertical_barrier(int lock = 15) {
   //   // Propagate a token from South to North and back
   //   // All tile except the bottom one wait.
-  //   aie::detail::log("vertical_barrier: start\n");
-  //   if constexpr (has_neighbor(hw::dir::south)) {
-  //     aie::detail::log("vertical_barrier: if 0 0\n");
+  //   service().log("vertical_barrier: start\n");
+  //   if constexpr (has_mem(hw::dir::south)) {
+  //     service().log("vertical_barrier: if 0 0\n");
   //     // Wait for the Southern neighbour to be ready
   //     get_lock(lock).acquire_with_value(true);
-  //     aie::detail::log("vertical_barrier: if 0 1\n");
+  //     service().log("vertical_barrier: if 0 1\n");
   //   }
   //   // All tile except the top one wait.
-  //   if constexpr (has_neighbor(hw::dir::north)) {
-  //     aie::detail::log("vertical_barrier: if 1 0\n");
+  //   if constexpr (has_mem(hw::dir::north)) {
+  //     service().log("vertical_barrier: if 1 0\n");
   //     get_lock(hw::dir::north, lock).acquire_with_value(false);
   //     // Unleash the Northern neighbour
-  //     aie::detail::log("vertical_barrier: if 1 1\n");
+  //     service().log("vertical_barrier: if 1 1\n");
   //     get_lock(hw::dir::north, lock).release_with_value(true);
   //     // Wait for the Northern neighbour to acknowledge
-  //     aie::detail::log("vertical_barrier: if 1 2\n");
+  //     service().log("vertical_barrier: if 1 2\n");
   //     get_lock(hw::dir::north, lock).acquire_with_value(false);
-  //     aie::detail::log("vertical_barrier: if 1 3\n");
+  //     service().log("vertical_barrier: if 1 3\n");
   //   }
   //   // All tile except the bottom one wait.
-  //   if constexpr (has_neighbor(hw::dir::south)) {
-  //     aie::detail::log("vertical_barrier: if 2 0\n");
+  //   if constexpr (has_mem(hw::dir::south)) {
+  //     service().log("vertical_barrier: if 2 0\n");
   //     // Acknowledge to the Southern neighbour
   //     get_lock(lock).release_with_value(false);
-  //     aie::detail::log("vertical_barrier: if 2 1\n");
+  //     service().log("vertical_barrier: if 2 1\n");
   //   }
-  //   aie::detail::log("vertical_barrier: final 1\n");
+  //   service().log("vertical_barrier: final 1\n");
   //   /// Reset the lock for the next barrier.
   //   // get_lock(lock).release_with_value(false);
-  //   // aie::detail::log("vertical_barrier: final 2\n");
-  // }
-
-  // template <typename T, typename... Ts> auto perform_service(Ts&&... ts) {
-  //   using info_t = detail::service_info<T>;
-  //   return impl::perform_service<T>(
-  //       typename info_t::data_t { std::forward<Ts>(ts)... });
+  //   // service().log("vertical_barrier: final 2\n");
   // }
 
   template <typename T> auto perform_service(T data) {
     T local = data;
     /// lookup what type of service sends this data;
     using service_t = TypeInfoTy::service_type::template get_info_t<
-        TypeInfoTy::service_type::data_seq::template get_index<std::decay_t<T>>>::
-        service_t;
-    return impl::perform_service<service_t, typename TypeInfoTy::service_type>(local);
+        TypeInfoTy::service_type::data_seq::template get_index<
+            std::decay_t<T>>>::service_t;
+    return impl::perform_service<service_t, typename TypeInfoTy::service_type>(
+        local);
   }
-  TypeInfoTy::service_type::template service_list_accessor<device_tile, multi_service_accessor> service() {
+  TypeInfoTy::service_type::template service_list_accessor<
+      device_tile, multi_service_accessor>
+  service() {
     return { this };
   }
 };
@@ -345,7 +349,7 @@ struct tile_type_info {
   using tile_data =
       std::conditional_t < X >= 0 && Y >= 0 &&
       X < size_X&& Y<size_Y, TileDataTy<X, Y>, detail::out_of_bounds>;
-  
+
   using service_type = ServiceTy;
 };
 
@@ -409,28 +413,39 @@ struct layout_storage {
   layout_storage(detail::device_impl& device) { init(device); }
 };
 
+template <typename... ServicesTy> struct service_storage {
+  using list_t = detail::type_seq<ServicesTy...>;
+  using service_list_t = list_t::template to<detail::service_list_info>;
+  std::tuple<ServicesTy...> data;
+  template <typename... Ts, typename... T2s>
+  service_storage<Ts..., ServicesTy..., T2s...> prepend(T2s... t2) {
+    return { std::apply(
+        [&](auto... elems) {
+          return std::make_tuple(Ts {}..., std::move(t2)...,
+                                 std::move(elems)...);
+        },
+        std::move(data)) };
+  }
+};
+
 template <typename T> struct selected_type {
   using type = T;
 };
 
-template <typename...Ts> struct type_list {
-};
-
-template<typename InstT, template<typename ...> typename TempT>
+template <typename InstT, template <typename...> typename TempT>
 struct is_instance_of_type : std::false_type {};
 
-template<template<typename ...> typename TempT, typename... Ts>
+template <template <typename...> typename TempT, typename... Ts>
 struct is_instance_of_type<TempT<Ts...>, TempT> : std::true_type {};
 
-template<typename T>
-concept is_type_list = is_instance_of_type<T, type_list>::value;
+template <typename T>
+concept is_service_storage = is_instance_of_type<T, service_storage>::value;
 
-template<typename T>
+template <typename T>
 concept is_selected_type = is_instance_of_type<T, selected_type>::value;
 
-template<typename T>
-concept is_type_selector = requires(T s)
-{
+template <typename T>
+concept is_type_selector = requires(T s) {
   { s.template operator()<0, 0>() } -> is_selected_type;
 };
 
@@ -438,7 +453,11 @@ concept is_type_selector = requires(T s)
 
 template <typename T> detail::selected_type<T> select() { return {}; }
 
-template <typename... Ts> detail::type_list<Ts...> add_service() { return {}; }
+template <typename... Ts, typename... T2s>
+detail::service_storage<Ts..., T2s...> add_service(T2s... t2) {
+  detail::service_storage<> tmp;
+  return tmp.prepend<Ts...>(std::move(t2)...);
+}
 
 template <int size_X, int size_Y> struct device {
   static constexpr int sizeX = size_X;
@@ -452,9 +471,9 @@ template <typename DevTy> struct queue {
 
   /// Submit that uses the same struct for all memory tiles
   template <typename TileDataTy = aie::detail::out_of_bounds, typename F = void,
-            detail::is_type_list ServiceListT = detail::type_list<>>
+            detail::is_service_storage ServiceListT = detail::service_storage<>>
   void submit_uniform(F&& func,
-                      ServiceListT services = detail::type_list<> {}) {
+                      ServiceListT services = detail::service_storage<> {}) {
     submit([]<int X, int Y>() { return select<TileDataTy>(); },
            std::forward<F>(func), services);
   }
@@ -462,29 +481,35 @@ template <typename DevTy> struct queue {
   /// Submit that uses difference instances of the same template for all memory
   /// tiles
   template <template <int, int> typename TileDataTy, typename F,
-            detail::is_type_list ServiceListT = detail::type_list<>>
-  void submit_hetero(F&& func, ServiceListT services = detail::type_list<> {}) {
+            detail::is_service_storage ServiceListT = detail::service_storage<>>
+  void submit_hetero(F&& func,
+                     ServiceListT services = detail::service_storage<> {}) {
     submit([]<int X, int Y>() { return select<TileDataTy<X, Y>>(); },
            std::forward<F>(func), services);
   }
 
   /// Submit without any access to memory tiles;
-  template <typename F, detail::is_type_list ServiceListT = detail::type_list<>>
-  void submit(F&& func, ServiceListT services = detail::type_list<> {}) {
+  template <typename F,
+            detail::is_service_storage ServiceListT = detail::service_storage<>>
+  void submit(F&& func, ServiceListT services = detail::service_storage<> {}) {
     submit([]<int X, int Y>() { return select<detail::out_of_bounds>(); },
            std::forward<F>(func), services);
   }
 
   /// fully generic submit using a lambda to describe which type to use for
   /// which memory tile
-  template <detail::is_type_selector TypeSelectorTy, typename F, typename ... ExtraServiceTys>
-  void submit(TypeSelectorTy&& type_selector, F&& func, detail::type_list<ExtraServiceTys...> = detail::type_list<>{}) {
-    /// The device back-end depends on done_service and send_log_service being the first
-    /// 2 service_list in the list.
-    using service_impl =
-        detail::service_list_info<detail::done_service<device_mem_handle>,
-                                  detail::send_log_service<device_mem_handle>,
-                                  ExtraServiceTys...>;
+  template <detail::is_type_selector TypeSelectorTy, typename F,
+            typename ServiceStorageT = detail::service_storage<>>
+  void submit(TypeSelectorTy&& type_selector, F&& func,
+              ServiceStorageT services_tmp = detail::service_storage<> {}) {
+    /// The device back-end depends on done_service and send_log_service being
+    /// the first 2 service_list in the list.
+    auto services =
+        services_tmp
+            .template prepend<detail::done_service<device_mem_handle>,
+                              detail::send_log_service<device_mem_handle>>();
+    using service_impl = decltype(services)::service_list_t;
+
     /// access the device physical or emulated
     detail::device_impl impl(DevTy::sizeX, DevTy::sizeY);
 
@@ -495,7 +520,7 @@ template <typename DevTy> struct queue {
 
     /// execute the func for all host tiles
     boost::hana::for_each(storage.tiles, [&](auto& ts) { func(ts.elem); });
-    impl.wait_all<service_impl>();
+    impl.wait_all(std::move(services));
   }
 };
 
@@ -521,14 +546,15 @@ template <typename T, typename HostTileTy> struct buffer_range {
   uint32_t end_read;
   uint32_t start_write;
   uint32_t end_write;
-  public:
-   buffer_range(HostTileTy& t, const buffer<T>& b)
-       : tile(t)
-       , buff(b)
-       , start_read(0)
-       , end_read(buff.size())
-       , start_write(0)
-       , end_write(0) {}
+
+ public:
+  buffer_range(HostTileTy& t, const buffer<T>& b)
+      : tile(t)
+      , buff(b)
+      , start_read(0)
+      , end_read(buff.size())
+      , start_write(0)
+      , end_write(0) {}
   buffer_range read_range(int start, int end) {
     start_read = start;
     end_read = end;
@@ -583,3 +609,5 @@ detail::assert_equal<alignof(accessor<int>), 8> check_alignof_accessor;
 } // namespace detail
 
 } // namespace aie
+
+#endif

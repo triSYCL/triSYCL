@@ -2,7 +2,7 @@
 #ifndef AIE_DETAIL_DEVICE_ONLY_HPP
 #define AIE_DETAIL_DEVICE_ONLY_HPP
 
-#if defined(__ACAP_EMULATION___) || !defined(__SYCL_DEVICE_ONLY__)
+#if defined(__AIE_EMULATION___) || !defined(__SYCL_DEVICE_ONLY__)
 #error "should only be used on the host side of hardware execution"
 #endif
 

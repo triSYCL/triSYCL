@@ -112,36 +112,42 @@ struct no_move {
   no_move& operator=(const no_move&) = delete;
 };
 
-/// Allow to cast pointer type while keeping them volatile.
-/// See static_asserts below for examples.
-template <typename T, typename PtrT>
-using keep_volatile_ptr =
-    std::conditional_t<std::is_volatile_v<std::remove_pointer_t<PtrT>>,
-                       volatile T*, T*>;
+// /// Allow to cast pointer type while keeping them volatile.
+// /// See static_asserts below for examples.
+// template <typename T, typename PtrT>
+// using keep_volatile_ptr =
+//     std::conditional_t<std::is_volatile_v<std::remove_pointer_t<PtrT>>,
+//                        volatile T*, T*>;
 
-static_assert(std::is_same_v<keep_volatile_ptr<int, volatile char*>, volatile int*>, "");
-static_assert(std::is_same_v<keep_volatile_ptr<int, char*>, int*>, "");
+// static_assert(std::is_same_v<keep_volatile_ptr<int, volatile char*>, volatile int*>, "");
+// static_assert(std::is_same_v<keep_volatile_ptr<int, char*>, int*>, "");
+
+// template <typename SrcT, typename DestT>
+// void maybe_volatile_memcpy(DestT* dst, SrcT* src, std::size_t size) {
+//   int idx = 0;
+//   /// Using as many 4-byte accesses as possible before falling back to 1-byte
+//   /// access make the IR easier to read and the generated code better.
+//   for (;idx + 3 < size; idx += 4)
+//     ((keep_volatile_ptr<uint32_t, DestT*>)dst)[idx] = ((keep_volatile_ptr<uint32_t, SrcT*>)src)[idx];
+//   for (;idx < size; idx += 1)
+//     dst[idx] = src[idx];
+// }
 
 template <typename SrcT, typename DestT>
 void maybe_volatile_memcpy(DestT* dst, SrcT* src, std::size_t size) {
-  int idx = 0;
-  /// Using as many 4-byte accesses as possible before falling back to 1-byte
-  /// access make the IR easier to read and the generated code better.
-  for (;idx + 3 < size; idx += 4)
-    ((keep_volatile_ptr<uint32_t, DestT*>)dst)[idx] = ((keep_volatile_ptr<uint32_t, SrcT*>)src)[idx];
-  for (;idx < size; idx += 1)
+  for (int idx = 0; idx < size; idx++)
     dst[idx] = src[idx];
 }
 
 template <typename T>
-T volatile_load(volatile T* ptr) {
+__attribute__((noinline)) T volatile_load(volatile T* ptr) {
   T ret;
   maybe_volatile_memcpy((char*)&ret, (volatile char*)ptr, sizeof(T));
   return ret;
 }
 
 template <typename T>
-void volatile_store(volatile T* ptr, T t) {
+__attribute__((noinline)) void volatile_store(volatile T* ptr, T t) {
   maybe_volatile_memcpy((volatile char*)ptr, (char*)&t, sizeof(T));
 }
 

@@ -285,7 +285,7 @@ template <typename T> struct dev_ptr {
     return get()[index];
   }
   T* operator->() { return get(); }
-  operator bool() { return get_int() != 0; }
+  operator bool() const { return get_int() != 0; }
   template <typename T2> explicit operator dev_ptr<T2>() {
     return dev_ptr<T2>((otherT<T2>)ptr);
   }

@@ -3,8 +3,8 @@
 #define AIE_DETAIL_COMMON_HPP
 
 #include "hardware.hpp"
-#include "utils.hpp"
 #include "meta.hpp"
+#include "utils.hpp"
 #include <memory>
 
 /// Used to indicated that the feature is not or cannot be implemented
@@ -21,6 +21,37 @@
 #define __SYCL_TYPE(x)
 #endif
 
+namespace aie {
+/// Abstraction over some pointer pointing on device data.
+/// It is used for the APIs of device_mem_handle.
+/// Its is intended to work on both emulation with a raw 64-bit pointer
+/// and for execution on hardware with a 32-bit hw::dev_ptr<T>
+template <typename T> struct generic_ptr {
+  generic_ptr() = default;
+#if !defined(__AIE_FALLBACK__) && !defined(__AIE_EMULATION__)
+  hw::dev_ptr<T> ptr;
+  generic_ptr(T*) { TRISYCL_FALLBACK; }
+  generic_ptr(hw::dev_ptr<T> p)
+      : ptr(p) {}
+  operator generic_ptr<void>() { return hw::dev_ptr<void> { ptr }; }
+#else
+  T* ptr = nullptr;
+  generic_ptr(T* p)
+      : ptr(p) {}
+  generic_ptr(hw::dev_ptr<T> p) { TRISYCL_FALLBACK; }
+  operator generic_ptr<void>() const { return { (void*)ptr }; }
+#endif
+  operator bool() const { return (bool)ptr; }
+};
+
+/// clang warns about uses of implicitly generated deduction guides. So here are
+/// some explicitly specified deduction guide that are the same as the
+/// automatically generated ones.
+template <typename T> generic_ptr(T*) -> generic_ptr<T>;
+template <typename T> generic_ptr(hw::dev_ptr<T>) -> generic_ptr<T>;
+
+} // namespace aie
+
 namespace aie::detail {
 
 /// Used as the type of a memory tile that should not be accessed.
@@ -29,31 +60,30 @@ struct out_of_bounds {};
 /// handles all the meta-programming needed for the service system
 /// This can be reused across all backends
 
-/// 
-template<typename T>
-struct service_info {
+///
+template <typename T> struct service_info {
   using service_t = T;
-  using ret_t = func_info_t<T::act_on_data>::ret_type;
+  using ret_t = memfunc_info_t<&T::act_on_data>::ret_type;
   /// True if the return is void
   static constexpr bool is_void_ret = std::is_same_v<ret_t, void>;
   /// void is a special type because C++ doesn't allow variables of type void(a
   /// mistake). When a variable of type void is needed this can be used instead
   /// and protect uses of the variable with if constexpr.
   using non_void_ret_t = std::conditional_t<is_void_ret, uint32_t, ret_t>;
-  using data_t = func_info_t<T::act_on_data>::args::template get_type<3>;
+  using data_t = memfunc_info_t<&T::act_on_data>::args::template get_type<3>;
 };
 
 template <typename... Ts> struct service_list_info {
   using base = type_seq<Ts...>;
   template <auto i>
   using get_info_t = service_info<typename base::template get_type<i>>;
-  template<typename T>
+  template <typename T>
   static constexpr uint32_t get_index = base::template get_index<T>;
   using info_seq = type_seq<get_info_t<get_index<Ts>>...>;
   using data_seq = type_seq<typename get_info_t<get_index<Ts>>::data_t...>;
-  using ret_seq =  type_seq<typename get_info_t<get_index<Ts>>::ret_t...>;
+  using ret_seq = type_seq<typename get_info_t<get_index<Ts>>::ret_t...>;
 
-  template<typename DT, template<typename...> typename accessorT>
+  template <typename DT, template <typename...> typename accessorT>
   using service_list_accessor = accessorT<DT, Ts...>;
 
   /// Dynamically dispatch func with the type in Ts at index idx
@@ -79,8 +109,7 @@ struct device_impl_fallback {
   device_impl_fallback(int x, int y) { TRISYCL_FALLBACK; }
   void add_storage(hw::position pos, void* storage) { TRISYCL_FALLBACK; }
   void* get_mem(hw::position pos) { TRISYCL_FALLBACK; }
-  template<typename ServiceTy>
-  void wait_all() { TRISYCL_FALLBACK; }
+  template <typename ServiceTy> void wait_all(ServiceTy&&) { TRISYCL_FALLBACK; }
 };
 
 /// The lock_impl enable interacting with a lock.
@@ -108,8 +137,10 @@ struct device_tile_impl_fallback {
   void cascade_read48(const char* ptr) { TRISYCL_FALLBACK; }
   int x_coord() { TRISYCL_FALLBACK; }
   int y_coord() { TRISYCL_FALLBACK; }
-  template<typename T, typename ServiceTy>
-  service_info<T>::ret_t perform_service(service_info<T>::data_t data) { TRISYCL_FALLBACK; }
+  template <typename T, typename ServiceTy>
+  service_info<T>::ret_t perform_service(service_info<T>::data_t data) {
+    TRISYCL_FALLBACK;
+  }
 };
 
 /// The host_tile_impl enable doing any action that can be done from the host to
@@ -134,36 +165,6 @@ struct host_tile_impl_fallback {
   }
 };
 
-/// Abstraction over some pointer pointing on device data.
-/// It is used for the APIs of device_mem_handle.
-/// Its is intended to work on both emulation with a raw 64-bit pointer
-/// and for execution on hardware with a 32-bit hw::dev_ptr<T>
-template <typename T> struct generic_ptr {
-  generic_ptr() = default;
-#if !defined(__AIE_FALLBACK__) && !defined(__AIE_EMULATION__)
-  hw::dev_ptr<T> ptr;
-  generic_ptr(T*) { TRISYCL_FALLBACK; }
-  generic_ptr(hw::dev_ptr<T> p)
-      : ptr(p) {}
-  operator generic_ptr<void>() { return hw::dev_ptr<void>{ ptr }; }
-#else
-  T* ptr = nullptr;
-  generic_ptr(T* p) : ptr(p) {}
-  generic_ptr(hw::dev_ptr<T> p) {
-    TRISYCL_FALLBACK;
-  }
-  operator generic_ptr<void>() const { return { (void*)ptr }; }
-#endif
-};
-
-/// clang warns about uses of implicitly generated deduction guides. So here are
-/// some explicitly specified deduction guide that are the same as the
-/// automatically generated ones.
-template<typename T>
-generic_ptr(T*) -> generic_ptr<T>;
-template<typename T>
-generic_ptr(hw::dev_ptr<T>) -> generic_ptr<T>;
-
 struct device_mem_handle_impl_fallback {
   void memcpy_h2d(generic_ptr<void> p, void* ptr, uint32_t size) {
     TRISYCL_FALLBACK;
@@ -175,17 +176,14 @@ struct device_mem_handle_impl_fallback {
 
 /// Add common load<T> and store<T> built on top of the memcpy_* provided by
 /// device_mem_handle_impl
-template<typename ImplTy>
-struct device_mem_handle_adaptor : ImplTy {
+template <typename ImplTy> struct device_mem_handle_adaptor : ImplTy {
   using ImplTy::ImplTy;
-  template<typename T>
-  T load(generic_ptr<T> ptr) {
+  template <typename T> T load(generic_ptr<T> ptr) {
     T res;
     ImplTy::memcpy_d2h(std::addressof(res), ptr, sizeof(T));
     return res;
   }
-  template<typename T>
-  void store(generic_ptr<T> ptr, T val) {
+  template <typename T> void store(generic_ptr<T> ptr, T val) {
     ImplTy::memcpy_h2d(ptr, std::addressof(val), sizeof(T));
   }
 };

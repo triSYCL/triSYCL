@@ -2,7 +2,7 @@
 #ifndef AIE_DETAIL_DEVICE_AND_HOST_HPP
 #define AIE_DETAIL_DEVICE_AND_HOST_HPP
 
-#if defined(__ACAP_EMULATION__)
+#if defined(__AIE_EMULATION__)
 #error "should only be used in host or device side for hardware"
 #endif
 

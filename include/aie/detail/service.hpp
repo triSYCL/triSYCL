@@ -16,7 +16,7 @@ struct send_log_service {
   /// device.
   struct data_type {
     /// Pointer to the first character of a buffer to print
-    generic_ptr<const char> data;
+    aie::generic_ptr<const char> data;
     /// Number of characters to print
     uint32_t size;
   };
@@ -44,7 +44,7 @@ struct send_log_service {
       (log_internal(ts, /*chained all but last*/ --count), ...);
     }
   };
-  static void act_on_data(int x, int y, dev_handle h, data_type dev_data) {
+  void act_on_data(int x, int y, dev_handle h, data_type dev_data) {
     std::string str;
     str.resize(dev_data.size);
     /// Copy the indicated device data into a string.
@@ -79,7 +79,7 @@ struct done_service {
       tile().perform_service(data);
     }
   };
-  static void act_on_data(int x, int y, dev_handle h, data_type d) {
+  void act_on_data(int x, int y, dev_handle h, data_type d) {
     if (d.ec == ec_assert) {
       assert(false && "propagating assert form the device to the host");
     } else if (d.ec == ec_abort) {

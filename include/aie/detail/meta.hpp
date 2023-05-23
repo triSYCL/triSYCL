@@ -41,6 +41,19 @@ struct func_info<RetTy(Ts...)> {
 template<auto func>
 using func_info_t = func_info<decltype(func)>;
 
+template<typename>
+struct memfunc_info {};
+
+template<typename RetTy, typename ClassT, typename ...Ts>
+struct memfunc_info<RetTy (ClassT::*)(Ts...)> {
+  using ret_type = RetTy;
+  using class_type = ClassT;
+  using args = type_seq<Ts...>;
+};
+
+template<auto func>
+using memfunc_info_t = memfunc_info<decltype(func)>;
+
 }
 
 #endif
