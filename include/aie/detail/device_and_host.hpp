@@ -21,7 +21,7 @@ struct host_lock_impl {
   int id;
 
  public:
-  host_lock_impl(xaie::handle h, hw::dir d, int i) : h(h.moved(d)), id{i} {
+  host_lock_impl(xaie::handle h, hw::dir d, int i) : h(h.on(d)), id{i} {
     assert(i < 16);
   }
   void acquire() { h.acquire(id); }
@@ -48,7 +48,7 @@ struct service_device_side {
   /// interleaving log_internal requests.
   uint32_t chained_request;
 
-  /// This sent data to the host to be processed.
+  /// Send data to the host to be processed.
   template <typename Ty> uint32_t perform(Ty&& d, bool chained = false) {
     /// Write the data.
     // Var v = d;
@@ -126,7 +126,7 @@ struct host_tile_impl : host_tile_impl_fallback {
                             mem_ptr, mem_size);
     }
   }
-  host_lock_impl get_lock(int i) {
+  host_lock_impl lock(int i) {
     return host_lock_impl(dev_handle, hw::dir::self, i);
   }
 #endif

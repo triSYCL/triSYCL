@@ -19,11 +19,11 @@ struct device_mem_handle_impl : device_mem_handle_impl_fallback {
   xaie::handle handle;
   public:
   device_mem_handle_impl(xaie::handle h) : handle(h) {}
-  void memcpy_h2d(generic_ptr<void> p, void* ptr, uint32_t size) {
-    handle.moved(p.ptr.get_dir()).memcpy_h2d(p.ptr, ptr, size);
+  void memcpy_h2d(generic_ptr<void> dst, void* src, uint32_t size) {
+    handle.on(dst.ptr.get_dir()).memcpy_h2d(dst.ptr, src, size);
   }
-  void memcpy_d2h(void* ptr, generic_ptr<void> p, uint32_t size) {
-    handle.moved(p.ptr.get_dir()).memcpy_d2h(ptr, p.ptr.get_offset(), size);
+  void memcpy_d2h(void* dst, generic_ptr<void> src, uint32_t size) {
+    handle.on(src.ptr.get_dir()).memcpy_d2h(dst, src.ptr.get_offset(), size);
   }
 };
 
@@ -112,7 +112,7 @@ struct device_impl : device_impl_fallback {
             /// waitng on the host to act on it
             if (!get_barrier(x, y).try_arrive())
               continue;
-            service_device_side ds = h.moved(x, y).load<service_device_side>(addr);
+            service_device_side ds = h.on(x, y).load<service_device_side>(addr);
 
             /// read if the device requested to chain the is request.
             chain = ds.chained_request;
@@ -122,16 +122,16 @@ struct device_impl : device_impl_fallback {
               done_counter++;
             ServiceTy::service_list_t::for_any(ds.index, [&]<typename T> {
               using info = service_info<T>;
-              auto data = h.moved(x, y).load<typename info::data_t>(ds.data);
+              auto data = h.on(x, y).load<typename info::data_t>(ds.data);
               if constexpr (!info::is_void_ret) {
                 auto ret =
                     std::get<T>(service_data.data)
-                        .act_on_data(x, y, device_mem_handle(h.moved(x, y)),
+                        .act_on_data(x, y, device_mem_handle(h.on(x, y)),
                                      data);
-                h.moved(x, y).store(ds.ret, ret);
+                h.on(x, y).store(ds.ret, ret);
               } else {
                 std::get<T>(service_data.data)
-                    .act_on_data(x, y, h.moved(x, y), data);
+                    .act_on_data(x, y, h.on(x, y), data);
               }
             });
             get_barrier(x, y).wait();

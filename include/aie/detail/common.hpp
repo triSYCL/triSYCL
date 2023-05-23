@@ -57,8 +57,8 @@ namespace aie::detail {
 /// Used as the type of a memory tile that should not be accessed.
 struct out_of_bounds {};
 
-/// handles all the meta-programming needed for the service system
-/// This can be reused across all backends
+/// Handles all the meta-programming needed for the service system.
+/// This can be reused across all backends.
 
 ///
 template <typename T> struct service_info {
@@ -66,8 +66,8 @@ template <typename T> struct service_info {
   using ret_t = memfunc_info_t<&T::act_on_data>::ret_type;
   /// True if the return is void
   static constexpr bool is_void_ret = std::is_same_v<ret_t, void>;
-  /// void is a special type because C++ doesn't allow variables of type void(a
-  /// mistake). When a variable of type void is needed this can be used instead
+  /// void is a special type because C++ doesn't allow variables of type void (a
+  /// mistake). When a variable of type void is needed, this can be used instead
   /// and protect uses of the variable with if constexpr.
   using non_void_ret_t = std::conditional_t<is_void_ret, uint32_t, ret_t>;
   using data_t = memfunc_info_t<&T::act_on_data>::args::template get_type<3>;
@@ -129,7 +129,7 @@ using host_lock_impl_fallback = lock_impl_fallback;
 /// tile.
 struct device_tile_impl_fallback {
   template <typename DeviceImplTy> void init(DeviceImplTy&, hw::position pos) {}
-  lock_impl_fallback get_lock(hw::dir d, int i) { TRISYCL_FALLBACK; }
+  lock_impl_fallback lock(hw::dir d, int i) { TRISYCL_FALLBACK; }
   template <hw::dir d> void* get_mem_addr() { TRISYCL_FALLBACK; }
   void stream_write16(const char* ptr, int stream_dix) { TRISYCL_FALLBACK; }
   void stream_read16(char* ptr, int stream_dix) { TRISYCL_FALLBACK; }
@@ -138,7 +138,7 @@ struct device_tile_impl_fallback {
   int x_coord() { TRISYCL_FALLBACK; }
   int y_coord() { TRISYCL_FALLBACK; }
   template <typename T, typename ServiceTy>
-  service_info<T>::ret_t perform_service(service_info<T>::data_t data) {
+  service_info<T>::ret_t perform_service(service_info<T>::data_t data, bool) {
     TRISYCL_FALLBACK;
   }
 };
@@ -147,7 +147,7 @@ struct device_tile_impl_fallback {
 /// a tile.
 struct host_tile_impl_fallback {
   template <typename DeviceImplTy> void init(DeviceImplTy&, hw::position pos) {}
-  lock_impl_fallback get_lock(hw::dir d, int i) { TRISYCL_FALLBACK; }
+  lock_impl_fallback lock(hw::dir d, int i) { TRISYCL_FALLBACK; }
   void* get_mem_addr(hw::dir d) { TRISYCL_FALLBACK; }
   template <typename LambdaTy, typename DeviceTileTy>
   void execute(LambdaTy l, DeviceTileTy& dt) {
@@ -159,17 +159,17 @@ struct host_tile_impl_fallback {
   void notify_has_accessed_mem(void* mem, std::size_t size) {
     TRISYCL_FALLBACK;
   }
-  lock_impl_fallback get_lock(int i) {
+  lock_impl_fallback lock(int i) {
     TRISYCL_FALLBACK;
     return {};
   }
 };
 
 struct device_mem_handle_impl_fallback {
-  void memcpy_h2d(generic_ptr<void> p, void* ptr, uint32_t size) {
+  void memcpy_h2d(generic_ptr<void> dst, void* src, uint32_t size) {
     TRISYCL_FALLBACK;
   }
-  void memcpy_d2h(void* ptr, generic_ptr<void> p, uint32_t size) {
+  void memcpy_d2h(void* dst, generic_ptr<void> src, uint32_t size) {
     TRISYCL_FALLBACK;
   }
 };
@@ -189,7 +189,7 @@ template <typename ImplTy> struct device_mem_handle_adaptor : ImplTy {
 };
 
 /// device_accessor_impl is the internal storage of an accessors on the device.
-/// it is aligned on 8 such that it has the same layout as it host counterpart.
+/// It is aligned on 8 such that it has the same layout as it host counterpart.
 struct alignas(8) device_accessor_impl {
   device_accessor_impl() = default;
   device_accessor_impl(uint32_t, uint32_t, char*) {}
@@ -210,7 +210,7 @@ struct host_accessor_out_of_line_impl {
 };
 
 /// device_accessor_impl is the internal storage of an accessors on the host.
-/// it is aligned on 8 such that it has the same layout as it device
+/// It is aligned on 8 such that it has the same layout as it device
 /// counterpart.
 struct alignas(8) host_accessor_impl {
   host_accessor_impl() = default;

@@ -112,30 +112,24 @@ struct no_move {
   no_move& operator=(const no_move&) = delete;
 };
 
-// /// Allow to cast pointer type while keeping them volatile.
-// /// See static_asserts below for examples.
-// template <typename T, typename PtrT>
-// using keep_volatile_ptr =
-//     std::conditional_t<std::is_volatile_v<std::remove_pointer_t<PtrT>>,
-//                        volatile T*, T*>;
+/// Allow to cast pointer type while keeping them volatile.
+/// See static_asserts below for examples.
+template <typename T, typename PtrT>
+using keep_volatile_ptr =
+    std::conditional_t<std::is_volatile_v<std::remove_pointer_t<PtrT>>,
+                       volatile T*, T*>;
 
-// static_assert(std::is_same_v<keep_volatile_ptr<int, volatile char*>, volatile int*>, "");
-// static_assert(std::is_same_v<keep_volatile_ptr<int, char*>, int*>, "");
-
-// template <typename SrcT, typename DestT>
-// void maybe_volatile_memcpy(DestT* dst, SrcT* src, std::size_t size) {
-//   int idx = 0;
-//   /// Using as many 4-byte accesses as possible before falling back to 1-byte
-//   /// access make the IR easier to read and the generated code better.
-//   for (;idx + 3 < size; idx += 4)
-//     ((keep_volatile_ptr<uint32_t, DestT*>)dst)[idx] = ((keep_volatile_ptr<uint32_t, SrcT*>)src)[idx];
-//   for (;idx < size; idx += 1)
-//     dst[idx] = src[idx];
-// }
+static_assert(std::is_same_v<keep_volatile_ptr<int, volatile char*>, volatile int*>, "");
+static_assert(std::is_same_v<keep_volatile_ptr<int, char*>, int*>, "");
 
 template <typename SrcT, typename DestT>
 void maybe_volatile_memcpy(DestT* dst, SrcT* src, std::size_t size) {
-  for (int idx = 0; idx < size; idx++)
+  int idx = 0;
+  /// Using as many 4-byte accesses as possible before falling back to 1-byte
+  /// access make the IR easier to read and the generated code better.
+  for (;idx + 3 < size; idx++)
+    ((keep_volatile_ptr<uint32_t, DestT*>)dst)[idx] = ((keep_volatile_ptr<uint32_t, SrcT*>)src)[idx];
+  for (;idx < size; idx += 1)
     dst[idx] = src[idx];
 }
 

@@ -236,11 +236,11 @@ struct handle {
   xaie::handle adjusted(hw::offset o) {
     return {acap_pos_to_xaie_pos(xaie_pos_to_acap_pos(tile) + o), inst};
   }
-  xaie::handle moved(hw::position p) {
+  xaie::handle on(hw::position p) {
     return {acap_pos_to_xaie_pos(p), inst};
   }
-  xaie::handle moved(hw::dir d) {
-    return {acap_pos_to_xaie_pos(xaie_pos_to_acap_pos(tile).moved(d)), inst};
+  xaie::handle on(hw::dir d) {
+    return {acap_pos_to_xaie_pos(xaie_pos_to_acap_pos(tile).on(d)), inst};
   }
 
   hw::position get_acap_pos() { return xaie_pos_to_acap_pos(tile); }
@@ -249,7 +249,7 @@ struct handle {
     return hw::get_self_dir(get_acap_pos().get_parity());
   }
 
-  TRISYCL_DEBUG_FUNC xaie::handle moved(int x, int y) { return moved({x, y}); }
+  TRISYCL_DEBUG_FUNC xaie::handle on(int x, int y) { return on({x, y}); }
 
   /// The memory read accessors
   std::uint32_t mem_read(std::uint32_t offset) {
@@ -282,7 +282,7 @@ struct handle {
   }
 
   template <typename T = void, typename U = void> T load(hw::dev_ptr<U> ptr) {
-    return moved(ptr.get_dir())
+    return on(ptr.get_dir())
         .template load<std::conditional_t<std::is_same_v<T, void>, U, T>>(
             ptr.get_offset());
   }
@@ -298,29 +298,29 @@ struct handle {
 
   template <typename T, typename U>
   void store(hw::dev_ptr<U> ptr, const T& val) {
-    moved(ptr.get_dir()).template store<T>(ptr.get_offset(), val);
+    on(ptr.get_dir()).template store<T>(ptr.get_offset(), val);
   }
 
   /// memcpy from device to host
   void
-  memcpy_d2h(void *data, std::uint32_t offset, std::uint32_t size) {
+  memcpy_d2h(void *dst, std::uint32_t src, std::uint32_t size) {
     TRISYCL_XAIE(xaie::XAie_DataMemBlockRead(inst, tile,
-                                             offset, data, size));
+                                             src, dst, size));
     TRISYCL_DUMP2("memcpy_d2h: (" << get_coord_str() << ") + 0x" << std::hex
-                                  << offset << "-0x" << offset + size
-                                  << " -> 0x" << (uintptr_t)data << "-0x"
-                                  << ((uintptr_t)data) + size,
+                                  << src << "-0x" << src + size
+                                  << " -> 0x" << (uintptr_t)dst << "-0x"
+                                  << ((uintptr_t)dst) + size,
                   "memory");
   }
 
   /// memcpy from host to device
-  void memcpy_h2d(std::uint32_t offset, const void *data, std::uint32_t size) {
+  void memcpy_h2d(std::uint32_t dst, const void *src, std::uint32_t size) {
     TRISYCL_XAIE(xaie::XAie_DataMemBlockWrite(inst, tile,
-                                              offset, data, size));
+                                              dst, src, size));
     TRISYCL_DUMP2("memcpy_h2d: (" << get_coord_str() << ") + 0x" << std::hex
-                                  << offset << "-0x" << offset + size
-                                  << " <- 0x" << (uintptr_t)data << "-0x"
-                                  << ((uintptr_t)data) + size,
+                                  << dst << "-0x" << dst + size
+                                  << " <- 0x" << (uintptr_t)src << "-0x"
+                                  << ((uintptr_t)src) + size,
                   "memory");
   }
 

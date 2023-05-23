@@ -25,7 +25,7 @@ struct send_log_service {
     __attribute__((noinline)) void log_internal(const char* str, bool chained) {
       send_log_service::data_type data { hw::dev_ptr<const char>(str),
                                      strlen(str) };
-      tile().perform_service(data);
+      tile().perform_service(data, chained);
     }
     __attribute__((noinline)) void log_internal(int i, bool chained) {
       char arr[/*bits in base 2*/ 31 + /*sign*/ 1 + /*\0*/ 1];

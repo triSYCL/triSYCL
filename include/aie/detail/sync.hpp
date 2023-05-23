@@ -68,7 +68,7 @@ struct soft_barrier {
 
   public:
 #if defined(__SYCL_DEVICE_ONLY__)
-    /// The device_side cannot be moved on device because the host_side depends
+    /// The device_side cannot be on on device because the host_side depends
     /// on its address. The device_side should be initialized to 0 from the host
     /// before the kernel starts.
     device_side() = delete;
@@ -76,7 +76,7 @@ struct soft_barrier {
 #endif
     /// Wait for the host.
     __attribute__((noinline)) void wait() volatile {
-      /// Prevent memory operation from being moved below the barrier
+      /// Prevent memory operation from being on below the barrier
       acap_intr::memory_fence();
       /// Notify the host that the device has arrived
       counters[device] = counters[device] + 1;
@@ -85,7 +85,7 @@ struct soft_barrier {
         /// counters[host] and counters[device] are volatile so this loop is not
         /// dead.
       }
-      /// Prevent memory operation from being moved above the barrier
+      /// Prevent memory operation from being on above the barrier
       acap_intr::memory_fence();
     }
   };

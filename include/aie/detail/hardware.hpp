@@ -26,8 +26,8 @@ namespace hw {
 
 /// The ordering  and specific values of elements matters in the following enum.
 /// It matches with bases addresses order. neighbouring tiles of a core are at
-/// address: (1 << 17) | (dir << 15) from the perspective of tha core. It also
-/// match with locks where the id for a core's view is: dir << 4 | id.
+/// address: (1 << 17) | (dir << 15) from the perspective of that core. It also
+/// matches with locks where the id for a core's view is: dir << 4 | id.
 enum class dir : int8_t {
   south,
   west,
@@ -36,17 +36,20 @@ enum class dir : int8_t {
   self,
 };
 
+/// dir can be self, self is cannot be used in many cases because it needs to be
+/// resolved to east or west. This function asserts that dir should have been
+/// resolved.
 void constexpr assert_is_resolved_dir(dir d) {
   assert(d >= dir::south && d <= dir::east);
 }
 
-/// represent parity of a tile
+/// Represent parity of a tile
 enum class parity : int8_t {
   west,
   east,
 };
 
-/// Represent of offset between 2 tile.
+/// Represent offset between 2 tile.
 struct offset {
   int x;
   int y;
@@ -74,8 +77,8 @@ constexpr inline offset get_offset(parity par, dir d) {
   }
 }
 
-/// Convert a into an offset ignoring parity.
-/// The Geography calculation already take in account parity so when giving
+/// Convert a direction into an offset ignoring parity.
+/// The Geography calculation already takes into account parity so when giving
 /// offset to those API we need to use this instead of get_offset
 constexpr inline offset get_simple_offset(dir d) {
   switch (d) {
@@ -102,11 +105,11 @@ struct position {
   friend constexpr offset operator-(position p, position p1) {
     return { p.x - p1.x, p.y - p1.y };
   }
-  /// get the parity of tile at position p
+  /// Get the parity of tile at position p
   constexpr parity get_parity() const {
     return (y & 1) ? parity::west : parity::east;
   }
-  constexpr position moved(dir d) const {
+  constexpr position on(dir d) const {
     return *this + get_offset(get_parity(), d);
   }
   constexpr bool is_valid(int sizeX, int sizeY) {
@@ -136,7 +139,7 @@ constexpr uint32_t tile_size = 0x8000;
 constexpr uint32_t offset_mask = tile_size - 1;
 constexpr uint32_t base_addr_mask = ~offset_mask;
 
-/// determine the direction of the memory module pointed into by a pointer on
+/// Determine the direction of the memory module pointed into by a pointer on
 /// device.
 constexpr dir get_ptr_direction(uint32_t ptr) {
   return (dir)((ptr >> 15) & 0x3);
@@ -272,16 +275,14 @@ template <typename T> struct dev_ptr {
   /// This function will be SFNIAE out for T == void. without causing hard
   /// error on instantiation of the class. T2 should never be specified by the
   /// user.
-  template <typename T2 = T, typename std::enable_if<
-                                 !std::is_same<T2, void>::value, int>::type = 0>
-  T2& operator*() {
+  template <typename T2 = T>
+  T2& operator*() requires(!std::is_same_v<T2, void>) {
     static_assert(std::is_same<T2, T>::value,
                   "T2 should be not be specifier by the user");
     return *get();
   }
-  template <typename T2 = T, typename std::enable_if<
-                                 !std::is_same<T2, void>::value, int>::type = 0>
-  T2& operator[](std::size_t index) {
+  template <typename T2 = T>
+  T2& operator[](std::size_t index) requires(!std::is_same_v<T2, void>) {
     return get()[index];
   }
   T* operator->() { return get(); }
@@ -370,20 +371,20 @@ template <typename T> struct dev_ptr {
 static_assert(sizeof(dev_ptr<void>) == sizeof(std::uint32_t) &&
               sizeof(dev_ptr<void>) == 4);
 
-/// linker script details. any change here need to be reflected in the linker
+/// Linker script details. any change here need to be reflected in the linker
 /// script and vice versa.
 /// This will probably be made dynamic in the future to allow more efficient
-/// memory usage
-/// Variable below are offsets so the need to be used in combination with base
-/// tile addresses. when viewed from the host tile base address is 0 so
+/// memory usage.
+/// The variables below are offsets so they need to be used in combination with base
+/// tile addresses. When viewed from the host, tile base address is 0 so
 /// offsets can be used alone when accessing from the host.
 class offset_table {
 #ifndef __SYCL_DEVICE_ONLY__
  public:
 #endif
-  /// start of the global variable section and the end of the heap.
+  /// Start of the global variable section and the end of the heap.
   uint32_t global_variable_start;
-  /// start of the heap and the end of the tile memory section.
+  /// Start of the heap and the end of the tile memory section.
   uint32_t lambda_start;
   uint32_t heap_start;
 
@@ -408,7 +409,7 @@ class offset_table {
   }
 
  public:
-  /// contain the stack
+  /// Contain the stack
   static constexpr uint32_t __attribute__((const))
   get_stack_begin_offset(hw::dir d = hw::dir::self) {
     return 0x0;
@@ -422,7 +423,7 @@ class offset_table {
     return get_stack_begin_offset(d) + get_stack_size(d);
   }
 
-  /// contain the dynamic part of this class.
+  /// Contain the dynamic part of this class.
   static constexpr uint32_t __attribute__((const))
   get_offset_table_begin_offset(hw::dir d = hw::dir::self) {
     return get_stack_end_offset(d);
@@ -436,7 +437,7 @@ class offset_table {
     return get_offset_table_begin_offset(d) + get_offset_table_size(d);
   }
 
-  /// contains the service system.
+  /// Contains the service system.
   static constexpr uint32_t __attribute__((const))
   get_service_record_begin_offset(hw::dir d = hw::dir::self) {
     return get_offset_table_end_offset(d);
@@ -451,7 +452,7 @@ class offset_table {
   }
 
   /// Beyond this point many offsets and size are not constexpr because they
-  /// depend on what kernel was loaded on the tile.
+  /// depend on which kernel was loaded on the tile.
 
   /// contains the memory modules that are shared across tiles.
   /// Technically all section are shared but sections other then this one should

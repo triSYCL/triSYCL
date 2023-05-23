@@ -55,7 +55,7 @@ struct device_tile_impl : device_tile_impl_fallback {
   void cascade_read48(char* ptr) { acap_intr::cstream_read48(ptr); }
   int x_coord() { return hw::get_tile_x_coordinate(); }
   int y_coord() { return hw::get_tile_y_coordinate(); }
-  device_lock_impl get_lock(hw::dir d, int i) { return device_lock_impl(d, i); }
+  device_lock_impl lock(hw::dir d, int i) { return device_lock_impl(d, i); }
   template <typename T, typename ServiceTy>
   __attribute__((noinline)) static service_info<T>::ret_t
   perform_service(service_info<T>::data_t d, bool chained = false) {

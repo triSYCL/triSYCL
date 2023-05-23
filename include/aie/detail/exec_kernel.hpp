@@ -103,7 +103,7 @@ template <typename TileHandle> struct exec_kernel {
     hw::position pos = xaie_pos_to_acap_pos(dev_handle.tile);
 
     // The name is captured by its non-reference type and has to be in
-    // the cl::sycl::detail namespace as the integration header is
+    // the sycl::detail namespace as the integration header is
     // defined to be in this namespace (and all our implementation
     // resides in trisycl by default, so ::detail resolves to
     // trisycl::detail)

@@ -39,7 +39,7 @@ struct block_header {
   }
 
 #if !defined(__SYCL_DEVICE_ONLY__)
-  /// resize the current block to new_size and create a block with the rest of the size.
+  /// Resize the current block to new_size and create a block with the rest of the size.
   void split(xaie::handle handle, uint32_t bh_addr, uint32_t new_size) {
     assert(size >= new_size + sizeof(block_header));
     assert((new_size % alloc_align) == 0 && "not properly aligned");
@@ -107,7 +107,7 @@ struct block_header {
       next->prev = this;
   }
 
-  /// resize the current block to new_size and create a block with the rest of the size.
+  /// Resize the current block to new_size and create a block with the rest of the size.
   void split(uint32_t new_size) {
     assert(size >= new_size + sizeof(block_header));
     assert((new_size % alloc_align) == 0 && "not properly aligned");
@@ -282,7 +282,7 @@ uint32_t malloc(xaie::handle handle, uint32_t heap_start, uint32_t size) {
 
 #if defined(__SYCL_DEVICE_ONLY__)
 void* try_realloc(void* ptr, uint32_t new_size) {
-  /// extend size to the next multiple of alloc_align;
+  /// Extend size to the next multiple of alloc_align;
   new_size = align_up(new_size, alloc_align);
   block_header* bh = block_header::get_header(ptr);
   /// Since we automatically merge blocks on free, there can only be one
@@ -326,7 +326,7 @@ void free(void* p) {
   block_header* bh = block_header::get_header(p);
   assert(bh->in_use && "double free or free on invalid address");
   bh->in_use = 0;
-  /// try to merge with nearby blocks to reduce fragmentation.
+  /// Try to merge with nearby blocks to reduce fragmentation.
   bh->try_merge_next();
   /// We try to merge into the previous block after mergin into the next block
   /// because mergin into the previous block makes the current block unusable if
