@@ -32,7 +32,7 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install required packages
         run: |
@@ -97,7 +97,7 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: ${{ matrix.c_compiler }}, ${{ matrix.cxx_compiler }},
           OpenMP=${{ matrix.OpenMP }}, OpenCL=${{ matrix.OpenCL }}
