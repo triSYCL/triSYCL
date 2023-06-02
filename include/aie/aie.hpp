@@ -137,6 +137,34 @@ struct device_tile : private detail::device_tile_impl {
     }
   }
 
+  /// Core logic of barriers. propagate a token from start_end to 
+  template<hw::dir start_end>
+  void barrier_impl(int lock_id) {
+    static constexpr hw::dir opposite = hw::opposite_dir(start_end);
+    // Propagate a token from South to North and back
+    // All tile except the bottom one wait. 0, 0 stuck on north, lock 0, 1 stuck on self lock
+    if constexpr (has_neighbor(start_end)) {
+      // Wait for the Southern neighbour to be ready
+      lock(lock_id).acquire_with_value(true);
+    }
+    // All tile except the top one wait.
+    if constexpr (has_neighbor(opposite)) {
+      lock(opposite, lock_id).acquire_with_value(false);
+      // Unleash the Northern neighbour
+      lock(opposite, lock_id).release_with_value(true);
+      // Wait for the Northern neighbour to acknowledge
+      lock(opposite, lock_id).acquire_with_value(false);
+    }
+    // All tile except the bottom one wait.
+    if constexpr (has_neighbor(start_end)) {
+      // Acknowledge to the Southern neighbour
+      lock(lock_id).release_with_value(false);
+      // The previous release only changes the value. This release will also
+      // unlock the lock
+      lock(lock_id).release_with_value(false);
+    }
+  }
+
  public:
   using impl::init;
   using self_memory_tile = typename TypeInfoTy::template tile_data<X, Y>;
@@ -161,6 +189,9 @@ struct device_tile : private detail::device_tile_impl {
   /// Check id the neighbor is direction d is valid to access
   static constexpr bool has_mem(hw::dir d) {
     return pos().on(d).is_valid(size_x(), size_y());
+  }
+  static constexpr bool has_neighbor(hw::dir d) {
+    return (pos() + hw::get_simple_offset(d)).is_valid(size_x(), size_y());
   }
 
   /// access the neighbor's memory tile
@@ -230,41 +261,26 @@ struct device_tile : private detail::device_tile_impl {
   }
 
   detail::device_lock_impl lock(int i) { return lock(hw::dir::self, i); }
-  detail::device_lock_impl lock(hw::dir d, int i) { return impl::lock(d, i); }
-  // void vertical_barrier(int lock = 15) {
-  //   // Propagate a token from South to North and back
-  //   // All tile except the bottom one wait.
-  //   service().log("vertical_barrier: start\n");
-  //   if constexpr (has_mem(hw::dir::south)) {
-  //     service().log("vertical_barrier: if 0 0\n");
-  //     // Wait for the Southern neighbour to be ready
-  //     lock(lock).acquire_with_value(true);
-  //     service().log("vertical_barrier: if 0 1\n");
-  //   }
-  //   // All tile except the top one wait.
-  //   if constexpr (has_mem(hw::dir::north)) {
-  //     service().log("vertical_barrier: if 1 0\n");
-  //     lock(hw::dir::north, lock).acquire_with_value(false);
-  //     // Unleash the Northern neighbour
-  //     service().log("vertical_barrier: if 1 1\n");
-  //     lock(hw::dir::north, lock).release_with_value(true);
-  //     // Wait for the Northern neighbour to acknowledge
-  //     service().log("vertical_barrier: if 1 2\n");
-  //     lock(hw::dir::north, lock).acquire_with_value(false);
-  //     service().log("vertical_barrier: if 1 3\n");
-  //   }
-  //   // All tile except the bottom one wait.
-  //   if constexpr (has_mem(hw::dir::south)) {
-  //     service().log("vertical_barrier: if 2 0\n");
-  //     // Acknowledge to the Southern neighbour
-  //     lock(lock).release_with_value(false);
-  //     service().log("vertical_barrier: if 2 1\n");
-  //   }
-  //   service().log("vertical_barrier: final 1\n");
-  //   /// Reset the lock for the next barrier.
-  //   // lock(lock).release_with_value(false);
-  //   // service().log("vertical_barrier: final 2\n");
-  // }
+  detail::device_lock_impl lock(hw::dir d, int i) {
+    return impl::lock(pos(), d, i);
+  }
+
+  void vertical_barrier(int lock_id = 15) {
+    barrier_impl<hw::dir::south>(lock_id);
+    /// barrier_impl<hw::dir::north>(lock_id) would also be correct.
+  }
+
+  void horizontal_barrier(int lock_id = 14) {
+    if constexpr (y() & 1)
+      barrier_impl<hw::dir::west>(lock_id);
+    else
+      barrier_impl<hw::dir::east>(lock_id);
+  }
+
+  void full_barrier(int id0 = 14, int id1 = 15) {
+    vertical_barrier(id0);
+    horizontal_barrier(id1);
+  }
 
   /// Execute the service that take a type T as data in its act_on_data function
   /// If chained is true the host will wait until for an other request from the

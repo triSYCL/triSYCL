@@ -22,12 +22,12 @@ struct send_log_service {
   };
   template <typename Parent> struct add_to_service_api {
    private:
-    __attribute__((noinline)) void log_internal(const char* str, bool chained) {
+    void log_internal(const char* str, bool chained) {
       send_log_service::data_type data { hw::dev_ptr<const char>(str),
                                      strlen(str) };
       tile().perform_service(data, chained);
     }
-    __attribute__((noinline)) void log_internal(int i, bool chained) {
+    void log_internal(int i, bool chained) {
       char arr[/*bits in base 2*/ 31 + /*sign*/ 1 + /*\0*/ 1];
       char* ptr = &arr[0];
       // host_breakpoint(ptr, i);
@@ -38,10 +38,20 @@ struct send_log_service {
     auto& tile() { return *static_cast<Parent*>(this)->dt(); }
 
    public:
-    template <typename... Ts>
-    void log(Ts... ts) {
+    /// Log inputs on the console as is.
+    template <typename... Ts> __attribute__((noinline)) void log(Ts... ts) {
       int count = sizeof...(Ts) + 1;
       (log_internal(ts, /*chained all but last*/ --count), ...);
+    }
+    /// Log inputs on the console with a tile position indicator and end of line.
+    template <typename... Ts> __attribute__((noinline)) void logln(Ts... ts) {
+      log_internal("(", true);
+      log_internal(tile().dyn_x(), true);
+      log_internal(", ", true);
+      log_internal(tile().dyn_y(), true);
+      log_internal("): ", true);
+      (log_internal(ts, true), ...);
+      log_internal("\n", false);
     }
   };
   void act_on_data(int x, int y, dev_handle h, data_type dev_data) {

@@ -36,6 +36,10 @@ enum class dir : int8_t {
   self,
 };
 
+constexpr dir opposite_dir(dir d) {
+  return (dir)(detail::underlying_value(d) ^ 0x2);
+}
+
 /// dir can be self, self is cannot be used in many cases because it needs to be
 /// resolved to east or west. This function asserts that dir should have been
 /// resolved.
@@ -174,6 +178,12 @@ constexpr dir get_self_dir(parity p) {
 
 /// Get the direction of the memory module of the tile executing this.
 inline dir get_self_dir() { return get_self_dir(get_parity_dev()); }
+
+constexpr dir resolved_dir(position pos, dir d) {
+  if (d == dir::self)
+    return get_self_dir(pos.get_parity());
+  return d;
+}
 
 inline dir resolved_dir(dir d) {
   if (d == dir::self)

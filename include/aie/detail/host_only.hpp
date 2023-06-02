@@ -2,7 +2,7 @@
 #ifndef AIE_DETAIL_HOST_ONLY_HPP
 #define AIE_DETAIL_HOST_ONLY_HPP
 
-#if defined(__AIE_EMULATION__) || defined(__SYCL_DEVICE_ONLY__)
+#if defined(__AIE_EMULATION__) || defined(__AIE_FALLBACK__) || defined(__SYCL_DEVICE_ONLY__)
 #error "should only be used on the host side of hardware execution"
 #endif
 
@@ -15,9 +15,9 @@ namespace aie::detail {
 using device_tile_impl = device_tile_impl_fallback;
 
 struct device_mem_handle_impl : device_mem_handle_impl_fallback {
-  private:
+  /// Although it require using some preprocessor. having access to the handle
+  /// enable writing a much wider range of services. so it is left public
   xaie::handle handle;
-  public:
   device_mem_handle_impl(xaie::handle h) : handle(h) {}
   void memcpy_h2d(generic_ptr<void> dst, void* src, uint32_t size) {
     handle.on(dst.ptr.get_dir()).memcpy_h2d(dst.ptr, src, size);

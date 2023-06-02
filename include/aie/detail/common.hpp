@@ -129,7 +129,7 @@ using host_lock_impl_fallback = lock_impl_fallback;
 /// tile.
 struct device_tile_impl_fallback {
   template <typename DeviceImplTy> void init(DeviceImplTy&, hw::position pos) {}
-  lock_impl_fallback lock(hw::dir d, int i) { TRISYCL_FALLBACK; }
+  lock_impl_fallback lock(hw::position pos, hw::dir d, int i) { TRISYCL_FALLBACK; }
   template <hw::dir d> void* get_mem_addr() { TRISYCL_FALLBACK; }
   void stream_write16(const char* ptr, int stream_dix) { TRISYCL_FALLBACK; }
   void stream_read16(char* ptr, int stream_dix) { TRISYCL_FALLBACK; }
