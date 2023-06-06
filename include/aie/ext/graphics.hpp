@@ -12,7 +12,7 @@
 
       broadwayd :5 &
       xdg-open http://127.0.0.1:8085
-      GDK_BACKEND=broadway BROADWAY_DISPLAY=:5 acap/wave_propagation
+      GDK_BACKEND=broadway BROADWAY_DISPLAY=:5 aie/wave_propagation
 
     Ronan at Keryell point FR
 

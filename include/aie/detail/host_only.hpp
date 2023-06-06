@@ -18,7 +18,8 @@ struct device_mem_handle_impl : device_mem_handle_impl_fallback {
   /// Although it require using some preprocessor. having access to the handle
   /// enable writing a much wider range of services. so it is left public
   xaie::handle handle;
-  device_mem_handle_impl(xaie::handle h) : handle(h) {}
+  device_mem_handle_impl(xaie::handle h)
+      : handle(h) {}
   void memcpy_h2d(generic_ptr<void> dst, void* src, uint32_t size) {
     handle.on(dst.ptr.get_dir()).memcpy_h2d(dst.ptr, src, size);
   }
@@ -62,7 +63,7 @@ struct device_impl : device_impl_fallback {
   }
 
   xaie::handle get_handle(hw::position pos) {
-    return xaie::handle(xaie::acap_pos_to_xaie_pos(pos), &impl.aie_inst);
+    return xaie::handle(xaie::aie_pos_to_xaie_pos(pos), &impl.aie_inst);
   }
 
   device_impl(int x, int y)
@@ -90,7 +91,9 @@ struct device_impl : device_impl_fallback {
                         offsetof(service_device_side, barrier)) };
   }
 
-  ~device_impl() { TRISYCL_XAIE(xaie::XAie_Finish(&impl.aie_inst)); }
+  ~device_impl() {
+    xaie::XAie_Finish(&impl.aie_inst);
+  }
   template <typename ServiceTy> void wait_all(ServiceTy&& service_data) {
     trisycl::detail::no_log_in_this_scope nls;
     int addr = hw::offset_table::get_service_record_begin_offset();

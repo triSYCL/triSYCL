@@ -97,18 +97,18 @@ constexpr auto aie_tile_row_num = 8;
 
 /// Convert the coordinate system of our runtime into the one used by
 /// libXAiengine and hardware.
-constexpr xaie::XAie_LocType acap_pos_to_xaie_pos(hw::position p) {
+constexpr xaie::XAie_LocType aie_pos_to_xaie_pos(hw::position p) {
   return xaie::XAie_TileLoc(p.x, p.y + 1);
 }
 
 /// Convert the coordinate system of libXAiengine and hardware into the one of
 /// our runtime.
-constexpr hw::position xaie_pos_to_acap_pos(xaie::XAie_LocType loc) {
+constexpr hw::position xaie_pos_to_aie_pos(xaie::XAie_LocType loc) {
   return {loc.Col, loc.Row - 1};
 }
 
 template <bool is_slave, typename T>
-xaie::StrmSwPortType acap_port_to_xaie_port_type(T from) {
+xaie::StrmSwPortType aie_port_to_xaie_port_type(T from) {
   assert(from >= T::me_0);
   if (from <= T::me_last)
     return xaie::CORE;
@@ -134,7 +134,7 @@ xaie::StrmSwPortType acap_port_to_xaie_port_type(T from) {
 }
 
 template <typename T>
-int acap_port_to_xaie_port_id(T from, xaie::StrmSwPortType PType) {
+int aie_port_to_xaie_port_id(T from, xaie::StrmSwPortType PType) {
   static std::array<int, 9> arr = {1,
                                    detail::underlying_value(T::me_last),
                                    detail::underlying_value(T::dma_last),
@@ -162,7 +162,7 @@ struct handle {
   std::string get_coord_str() {
     std::string str;
     std::stringstream ss(str);
-    hw::position pos = xaie_pos_to_acap_pos(tile);
+    hw::position pos = xaie_pos_to_aie_pos(tile);
     ss << pos.x << ", " << pos.y;
     return ss.str();
   }
@@ -234,19 +234,19 @@ struct handle {
   }
 
   xaie::handle adjusted(hw::offset o) {
-    return {acap_pos_to_xaie_pos(xaie_pos_to_acap_pos(tile) + o), inst};
+    return {aie_pos_to_xaie_pos(xaie_pos_to_aie_pos(tile) + o), inst};
   }
   xaie::handle on(hw::position p) {
-    return {acap_pos_to_xaie_pos(p), inst};
+    return {aie_pos_to_xaie_pos(p), inst};
   }
   xaie::handle on(hw::dir d) {
-    return {acap_pos_to_xaie_pos(xaie_pos_to_acap_pos(tile).on(d)), inst};
+    return {aie_pos_to_xaie_pos(xaie_pos_to_aie_pos(tile).on(d)), inst};
   }
 
-  hw::position get_acap_pos() { return xaie_pos_to_acap_pos(tile); }
+  hw::position get_aie_pos() { return xaie_pos_to_aie_pos(tile); }
 
   hw::dir get_self_dir() {
-    return hw::get_self_dir(get_acap_pos().get_parity());
+    return hw::get_self_dir(get_aie_pos().get_parity());
   }
 
   TRISYCL_DEBUG_FUNC xaie::handle on(int x, int y) { return on({x, y}); }

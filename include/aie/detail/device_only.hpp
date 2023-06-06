@@ -6,7 +6,7 @@
 #error "should only be used on the host side of hardware execution"
 #endif
 
-#include "acap-intrinsic.h"
+#include "aie-intrinsic.h"
 #include "common.hpp"
 #include "device_and_host.hpp"
 
@@ -30,10 +30,10 @@ struct device_lock_impl {
     assert(i < 16);
     assert(id < 64);
   }
-  void acquire() { acap_intr::acquire(id); }
-  void release() { acap_intr::release(id); }
-  void acquire_with_value(bool val) { acap_intr::acquire(id, val); }
-  void release_with_value(bool val) { acap_intr::release(id, val); }
+  void acquire() { aie_intr::acquire(id); }
+  void release() { aie_intr::release(id); }
+  void acquire_with_value(bool val) { aie_intr::acquire(id, val); }
+  void release_with_value(bool val) { aie_intr::release(id, val); }
 };
 
 using host_lock_impl = lock_impl_fallback;
@@ -46,13 +46,13 @@ struct device_tile_impl : device_tile_impl_fallback {
                                 d);
   }
   void stream_write16(const char* ptr, int stream_dix) {
-    acap_intr::stream_write16(ptr, stream_dix);
+    aie_intr::stream_write16(ptr, stream_dix);
   }
   void stream_read16(char* ptr, int stream_dix) {
-    acap_intr::stream_read16(ptr, stream_dix);
+    aie_intr::stream_read16(ptr, stream_dix);
   }
-  void cascade_write48(const char* ptr) { acap_intr::cstream_write48(ptr); }
-  void cascade_read48(char* ptr) { acap_intr::cstream_read48(ptr); }
+  void cascade_write48(const char* ptr) { aie_intr::cstream_write48(ptr); }
+  void cascade_read48(char* ptr) { aie_intr::cstream_read48(ptr); }
   int x_coord() { return hw::get_tile_x_coordinate(); }
   int y_coord() { return hw::get_tile_y_coordinate(); }
   device_lock_impl lock(hw::position pos, hw::dir d, int i) {
@@ -126,7 +126,7 @@ finish_kernel(int32_t exit_code) {
       aie::detail::done_service<aie::detail::device_mem_handle>::data_type {exit_code});
   // aie::detail::debug_log("done\n");
   while (1)
-    acap_intr::memory_fence();
+    aie_intr::memory_fence();
 }
 
 /// The assert macro will call this function if an assertion fails on device.

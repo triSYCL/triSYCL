@@ -579,7 +579,7 @@ template <typename T, typename HostTileTy> struct buffer_range {
       , start_read(0)
       , end_read(buff.size())
       , start_write(0)
-      , end_write(0) {}
+      , end_write(buff.size()) {}
 
   /// Specify that only the part of the buffer from start to end will read by the kernel.
   /// The runtime will only send the read part of the buffer to the device.
@@ -605,7 +605,7 @@ buffer_range(HostTileTy& t, const buffer<T>& b) -> buffer_range<T, HostTileTy>;
 /// The layout of the accessor must be the same on device and host. Because the
 /// lambda must be the same on both side, so the size and alignment must match
 template <typename T>
-struct alignas(8) __SYCL_TYPE(acap_accessor) accessor
+struct alignas(8) __SYCL_TYPE(aie_accessor) accessor
     : detail::accessor_common {
  private:
   using base = detail::accessor_common;
@@ -613,10 +613,10 @@ struct alignas(8) __SYCL_TYPE(acap_accessor) accessor
  public:
   template <typename HostTileTy>
   accessor(buffer_range<T, HostTileTy> range)
-      : base { (uint32_t)range.buff.size() - range.start_read - range.end_read,
+      : base { range.end_read - range.start_read,
                (uint32_t)sizeof(T), (char*)range.buff.data() + range.start_read,
                range.start_write - range.start_read,
-               range.end_write - range.start_read } {}
+               range.end_write - range.start_read } { }
   template <typename HostTileTy>
   accessor(HostTileTy& tile, const buffer<T>& buff, access_mode am = read_write)
       : base { (uint32_t)buff.size(), (uint32_t)sizeof(T),

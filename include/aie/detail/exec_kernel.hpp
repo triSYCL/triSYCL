@@ -100,7 +100,7 @@ template <typename TileHandle> struct exec_kernel {
 #ifndef __SYCL_DEVICE_ONLY__
     /// Host side
 
-    hw::position pos = xaie_pos_to_acap_pos(dev_handle.tile);
+    hw::position pos = xaie_pos_to_aie_pos(dev_handle.tile);
 
     // The name is captured by its non-reference type and has to be in
     // the sycl::detail namespace as the integration header is

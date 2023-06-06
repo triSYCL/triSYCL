@@ -10,7 +10,7 @@
 #include <type_traits>
 
 #ifdef __SYCL_XILINX_AIE__
-#include "acap-intrinsic.h"
+#include "aie-intrinsic.h"
 #endif
 
 namespace aie {
@@ -217,15 +217,15 @@ T* get_object(uint32_t offset, hw::dir d = hw::dir::self) {
 
 #if defined(__SYCL_DEVICE_ONLY__)
 
-/// get the X coordinate in the acap model
+/// get the X coordinate in the aie model
 int get_tile_x_coordinate() {
-  return (acap_intr::get_coreid() >> 16) & 0b1111111;
+  return (aie_intr::get_coreid() >> 16) & 0b1111111;
 }
 
-/// get the Y coordinate in the acap model
+/// get the Y coordinate in the aie model
 int get_tile_y_coordinate() {
   /// the -1 is to skip shim row
-  return (acap_intr::get_coreid() & 0b11111) - 1;
+  return (aie_intr::get_coreid() & 0b11111) - 1;
 }
 
 #endif
