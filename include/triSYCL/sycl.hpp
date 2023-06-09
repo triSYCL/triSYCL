@@ -9,30 +9,32 @@
     SYCL specification.
 
     It declares everything into the \c ::trisycl namespace instead of
-    \c ::cl::sycl for SYCL 1.2.1 to express triSYCL specific extensions
-    and to be used in full or partially with other SYCL
-    implementations without naming conflict.
+    \c ::sycl for SYCL 2020 or \c ::cl::sycl for SYCL 1.2.1 to express
+    triSYCL specific extensions and to be used in full or partially
+    with other SYCL implementations without naming conflict.
 
-    You can use CL/sycl.hpp or sycl/sycl.hpp headers instead to use this
-    implementation with the usual \c ::cl::sycl or \c ::sycl namespaces.
+    You can use sycl/sycl.hpp or CL/sycl.hpp headers instead to use
+    this implementation with the usual \c ::sycl or \c ::cl::sycl
+    namespaces.
 
     For more information about SYCL:
     http://www.khronos.org/sycl/
 
     For more information on this project and to access to the source of
-    this file, look at https://gitenterprise.xilinx.com/rkeryell/acappp
+    this file, look at https://github.com/triSYCL/triSYCL
 
     The Doxygen version of the implementation itself is in
-    https://pages.gitenterprise.xilinx.com/rkeryell/acappp/Doxygen/acappp/html
-    and
-    https://pages.gitenterprise.xilinx.com/rkeryell/acappp/Doxygen/acappp/acappp-implementation-refman.pdf
+    http://trisycl.github.io/triSYCL/Doxygen/triSYCL/html and
+    http://trisycl.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
 
 
     Ronan at keryell dot FR
 
     Copyright 2014--2015 Advanced Micro Devices, Inc.
 
-    Copyright 2015--2020 Xilinx, Inc.
+    Copyright 2015--2022 Xilinx, Inc.
+
+    Copyright 2022--2023 Advanced Micro Devices, Inc.
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.

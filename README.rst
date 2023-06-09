@@ -15,8 +15,8 @@ triSYCL
 .. image:: https://github.com/triSYCL/triSYCL/actions/workflows/cmake.yml/badge.svg
     :target: https://github.com/triSYCL/triSYCL/actions
 
-ACAP++: ACAP C++ extensions for AMD ACAP architecture
------------------------------------------------------
+ACAP++: C++ extensions for AMD Versal ACAP AIE1 architecture
+------------------------------------------------------------
 
 See `<tests/acap>`_ for some code samples.
 
