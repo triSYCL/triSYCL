@@ -1,5 +1,5 @@
-ACAP++: ACAP C++ extensions for triSYCL
-+++++++++++++++++++++++++++++++++++++++
+triSYCL
++++++++
 
 ..
   Not supported by GitHub :-(
@@ -15,8 +15,8 @@ ACAP++: ACAP C++ extensions for triSYCL
 .. image:: https://github.com/triSYCL/triSYCL/actions/workflows/cmake.yml/badge.svg
     :target: https://github.com/triSYCL/triSYCL/actions
 
-Xilinx ACAP extensions
-----------------------
+ACAP++: ACAP C++ extensions for AMD ACAP architecture
+-----------------------------------------------------
 
 See `<tests/acap>`_ for some code samples.
 
@@ -37,11 +37,11 @@ there are now many other implementations of SYCL_ available, including
 some strong implementations like ComputeCpp_, `DPC++`_ or hipSYCL_
 that can be used on various targets.
 
-This implementation is mainly based on C++20 features backed with
+This implementation is mainly based on C++23 features backed with
 OpenMP_ or TBB_ for parallel execution on the CPU, with
 `Boost.Compute`_ for the non single-source OpenCL_ interoperability
-layer and with an experimental (from 2017-2018 which is now obsolete)
-LLVM_/Clang_ version for the device compiler providing full
+layer and with an experimental LLVM_/Clang_ version for the device
+compiler (from 2017-2018 which is now obsolete) providing full
 single-source SYCL_ experience, typically targeting a SPIR_
 device. Since in SYCL_ there is a host fall-back, this CPU
 implementation can be seen as an implementation of this fall-back too.
@@ -57,10 +57,8 @@ incompatible versions of LLVM_/Clang_ and nothing of these is
 supported by the Xilinx_ product teams.
 
 Most of our efforts are focused on extensions, such as targeting
-Xilinx_ FPGA and Versal ACAP CGRA
-https://gitenterprise.xilinx.com/rkeryell/acappp, which is not
-open-source yet since it would expose too much architectural details
-for now.
+Xilinx_ FPGA and Versal ACAP CGRA with internal developments on
+https://gitenterprise.xilinx.com/rkeryell/acappp.
 
 
 triSYCL_ has been used to experiment and provide feedback for SYCL_
@@ -71,11 +69,12 @@ This is provided as is, without any warranty, with the same license as
 LLVM_/Clang_.
 
 Technical lead: Ronan at keryell point FR. Developments started first
-at AMD_ and are now mainly funded by Xilinx_.
+at AMD_, then was mainly funded by Xilinx_ and now again by AMD_ since
+Xilinx_ has been bought by AMD_ in 2022.
 
 It is possible to have a paid internship around triSYCL, if you have
 some skills related to this project. Contact the technical lead about
-this. Xilinx_ is also hiring in this area... :-)
+this. AMD_ is also hiring in this area... :-)
 
 
 SYCL
@@ -171,12 +170,20 @@ See `Possible futures <doc/possible-futures.rst>`_.
 triSYCL code documentation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The documentation of the triSYCL_ implementation itself can be found in
+The documentation of the triSYCL_ implementation itself can be found
+in http://trisycl.github.io/triSYCL/Doxygen/triSYCL/html and
+http://trisycl.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
+
+There are also some internal documentation at
 https://pages.gitenterprise.xilinx.com/rkeryell/acappp/Doxygen/acappp/html
 
 
 News
 ----
+
+- 2023/06/09: merge the 5-year old branch experimenting with ACAP++
+  SYCL CPU model extensions for AMD Versal ACAP AIE1 CGRA like the
+  XCVC1902 used in VCK190 or VCK5000 boards.
 
 - 2018/03/12: the long-going device compiler branch has been merged in
   to provide experimental support for SPIR-df friendly devices, such
