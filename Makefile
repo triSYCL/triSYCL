@@ -20,8 +20,10 @@ doc: doc-implementation
 doc-implementation:
 	mkdir -p $(IMPLEMENTATION_DOXYGEN_DIR)
 	doxygen doc/triSYCL-implementation.doxygen
-	# Compile the PDF version
-	cd $(IMPLEMENTATION_DOXYGEN_DIR)/latex; make
+	# Compile the PDF version,
+	# There are some bugs in Doxygen, so force the LaTeX compilation
+	# even with errors by feeding LaTeX input with CR characters
+	cd $(IMPLEMENTATION_DOXYGEN_DIR)/latex; yes | tr 'y' '\r' | make
 
 doc-clean:
 	rm -rf $(API_DOXYGEN_DIR) $(IMPLEMENTATION_DOXYGEN_DIR)
