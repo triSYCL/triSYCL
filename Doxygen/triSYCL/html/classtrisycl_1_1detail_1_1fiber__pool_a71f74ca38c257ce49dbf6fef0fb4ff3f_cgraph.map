@@ -1,0 +1,4 @@
+<map id="trisycl::detail::fiber_pool::join" name="trisycl::detail::fiber_pool::join">
+<area shape="rect" id="node1" title="Wait for all the threads are done." alt="" coords="5,5,135,47"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1detail_1_1fiber__pool.html#ab58698704d53801892bc429914d20141" title="Close the submission." alt="" coords="183,5,312,47"/>
+</map>

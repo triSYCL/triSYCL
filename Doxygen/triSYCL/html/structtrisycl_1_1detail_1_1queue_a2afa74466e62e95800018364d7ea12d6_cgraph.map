@@ -1,6 +1,0 @@
-<map id="trisycl::detail::queue::kernel_end" name="trisycl::detail::queue::kernel_end">
-<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1queue.html#ae33f2e3422135909ffd193b0c8869b6f" title="Return the underlying Boost.Compute command queue. " alt="" coords="192,5,336,47"/>
-<area shape="rect" id="node3" href="$structtrisycl_1_1detail_1_1queue.html#a3190dd14c87ad04c91858f21f6a5d3b5" title="Return the SYCL queue&#39;s context. " alt="" coords="195,71,333,112"/>
-<area shape="rect" id="node4" href="$structtrisycl_1_1detail_1_1queue.html#ae70124e664dabf7450008a586d1323f2" title="Return the SYCL device the queue is associated with. " alt="" coords="195,136,333,177"/>
-<area shape="rect" id="node5" href="$structtrisycl_1_1detail_1_1queue.html#a61ff300306a6806b22d78e966bf2c733" title="Return whether the queue is executing on a SYCL host device. " alt="" coords="195,201,333,243"/>
-</map>

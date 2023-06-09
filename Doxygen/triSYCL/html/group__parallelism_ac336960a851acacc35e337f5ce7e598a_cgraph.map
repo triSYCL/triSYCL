@@ -1,0 +1,5 @@
+<map id="trisycl::h_item::get_global_range" name="trisycl::h_item::get_global_range">
+<area shape="rect" id="node1" title="Return a range&lt;&gt; representing the dimensions of the nd_range&lt;&gt;" alt="" coords="5,39,136,80"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#a96bd08fdd083438bdf0dee18e8f315a3" title="Get the global iteration space range." alt="" coords="186,5,313,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#ad4aeebd1de318b7cebf04f8ccb1ef6ec" title="Return the nd_range&lt;&gt; of the current execution." alt="" coords="184,71,315,112"/>
+</map>

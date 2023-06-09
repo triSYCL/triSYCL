@@ -1,7 +1,8 @@
 <map id="trisycl::device_type_selector::operator()" name="trisycl::device_type_selector::operator()">
-<area shape="rect" id="node2" href="$group__execution.html#a85994f72e781307e4cdf671e18dfb6fc" title="Return true if the device is the SYCL host device. " alt="" coords="376,5,529,32"/>
-<area shape="rect" id="node3" href="$group__execution.html#ac00f3e3a28d15b2e0c8e3e6f91f7cf11" title="Return the device_type of a device. " alt="" coords="192,64,328,91"/>
-<area shape="rect" id="node4" href="$group__execution.html#a00cddd2c75a2bc2c8390c2eb5686ca56" title="Return true if the device is an OpenCL accelerator device. " alt="" coords="392,57,513,98"/>
-<area shape="rect" id="node5" href="$group__execution.html#ab6bff55c4bd74685958ae4bdf31dcd45" title="Return true if the device is an OpenCL CPU device. " alt="" coords="378,123,527,149"/>
-<area shape="rect" id="node6" href="$group__execution.html#a7289977e7ff9170ec98cc30f6f380f5e" title="Return true if the device is an OpenCL GPU device. " alt="" coords="378,173,527,200"/>
+<area shape="rect" id="node1" title="This pure virtual operator allows the customization of device selection." alt="" coords="5,31,144,73"/>
+<area shape="rect" id="node2" href="$group__execution.html#a85994f72e781307e4cdf671e18dfb6fc" title="Return true if the device is the SYCL host device." alt="" coords="376,5,529,32"/>
+<area shape="rect" id="node3" href="$group__execution.html#ac00f3e3a28d15b2e0c8e3e6f91f7cf11" title="Return the device_type of a device." alt="" coords="192,64,328,91"/>
+<area shape="rect" id="node4" href="$group__execution.html#a00cddd2c75a2bc2c8390c2eb5686ca56" title="Return true if the device is an OpenCL accelerator device." alt="" coords="392,57,513,98"/>
+<area shape="rect" id="node5" href="$group__execution.html#ab6bff55c4bd74685958ae4bdf31dcd45" title="Return true if the device is an OpenCL CPU device." alt="" coords="378,123,527,149"/>
+<area shape="rect" id="node6" href="$group__execution.html#a7289977e7ff9170ec98cc30f6f380f5e" title="Return true if the device is an OpenCL GPU device." alt="" coords="378,173,527,200"/>
 </map>

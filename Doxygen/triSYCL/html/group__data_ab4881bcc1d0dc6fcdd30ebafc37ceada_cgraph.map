@@ -1,0 +1,7 @@
+<map id="trisycl::detail::accessor::accessor" name="trisycl::detail::accessor::accessor">
+<area shape="rect" id="node1" title="Construct a host accessor from an existing buffer." alt="" coords="5,71,163,112"/>
+<area shape="rect" id="node2" href="$group__execution.html#a2148e7f785dcd09aa05272a378c31817" title="Get the underlying storage." alt="" coords="211,5,368,47"/>
+<area shape="rect" id="node3" href="$group__execution.html#a9466bab0b0a9d8ebb6ac731a45f7d7c9" title="Returns the size of the buffer storage in bytes." alt="" coords="211,71,368,112"/>
+<area shape="rect" id="node5" href="$group__data.html#ae93b6f20bc4c61705ae616c02b5ad8ed" title="Test if the accessor has a write access right." alt="" coords="211,136,368,177"/>
+<area shape="rect" id="node4" href="$group__execution.html#aa144c18cd7c500dd696bc3916c8897b4" title="Returns the total number of elements in the buffer." alt="" coords="416,71,573,112"/>
+</map>

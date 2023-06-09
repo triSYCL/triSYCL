@@ -1,0 +1,4 @@
+<map id="trisycl::detail::sycl_2_2::pipe::reserve_read" name="trisycl::detail::sycl_2_2::pipe::reserve_read">
+<area shape="rect" id="node1" title="Reserve some part of the pipe for reading." alt="" coords="207,13,372,54"/>
+<area shape="rect" id="node2" href="$group__old__data.html#a27e205f3053b8c83095cf03795e1dcfe" title="Create a pipe reservation station that reserves the pipe itself." alt="" coords="5,5,159,61"/>
+</map>

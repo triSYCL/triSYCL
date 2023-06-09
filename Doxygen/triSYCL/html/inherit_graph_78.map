@@ -1,3 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node2" href="$structtrisycl_1_1is__wrapper.html" title="trisycl::is_wrapper\&lt; T \&gt;" alt="" coords="136,5,296,32"/>
+<area shape="rect" id="node1" href="$group__execution.html#classtrisycl_1_1detail_1_1device" title="An abstract class representing various models of SYCL devices." alt="" coords="12,74,155,101"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1detail_1_1host__device.html" title="SYCL host device." alt="" coords="216,5,345,47"/>
+<area shape="rect" id="node3" href="$classtrisycl_1_1detail_1_1opencl__device.html" title="SYCL OpenCL device." alt="" coords="209,71,352,112"/>
+<area shape="rect" id="node4" href="$structtrisycl_1_1detail_1_1singleton.html" title=" " alt="" coords="5,5,161,47"/>
 </map>

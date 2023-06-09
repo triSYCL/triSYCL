@@ -1,4 +1,9 @@
 <map id="include/triSYCL/vec/detail/vec.hpp" name="include/triSYCL/vec/detail/vec.hpp">
-<area shape="rect" id="node4" href="$alignment__helper_8hpp.html" title="A simple trait to help generate the appropriate alignment data for a SYCL type when specified appropr..." alt="" coords="141,95,304,136"/>
-<area shape="rect" id="node5" href="$array__tuple__helpers_8hpp.html" title="Some helpers to do array&#45;tuple conversions. " alt="" coords="328,95,464,136"/>
+<area shape="rect" id="node1" title="Implement the detail base SYCL vector class." alt="" coords="232,5,371,47"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,102,67,129"/>
+<area shape="rect" id="node3" title=" " alt="" coords="139,184,189,211"/>
+<area shape="rect" id="node4" title=" " alt="" coords="228,184,281,211"/>
+<area shape="rect" id="node5" href="$rounding__mode_8hpp.html" title="Define rounding modes used in SYCL." alt="" coords="302,102,487,129"/>
+<area shape="rect" id="node6" href="$alignment__helper_8hpp.html" title="A simple trait to help generate the appropriate alignment data for a SYCL type when specified appropr..." alt="" coords="512,95,675,136"/>
+<area shape="rect" id="node7" href="$array__tuple__helpers_8hpp.html" title="Some helpers to do array&#45;tuple conversions." alt="" coords="141,95,277,136"/>
 </map>

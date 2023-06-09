@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::axi_stream_switch::display" name="trisycl::vendor::xilinx::acap::aie::axi_stream_switch::display">
+<area shape="rect" id="node1" title="Display the AXI stream switch." alt="" coords="208,5,363,61"/>
+<area shape="rect" id="node2" href="$group__aie.html#a3723e8a350eaf875e93b0263fa6db1e2" title="Display the tile to a LaTeX context." alt="" coords="5,5,160,61"/>
+</map>

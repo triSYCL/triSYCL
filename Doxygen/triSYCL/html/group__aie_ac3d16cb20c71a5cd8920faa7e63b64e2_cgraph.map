@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::queue::uniform_run" name="trisycl::vendor::xilinx::acap::aie::queue::uniform_run">
+<area shape="rect" id="node1" title="Run synchronously a uniform invocable on this queue." alt="" coords="5,5,208,47"/>
+<area shape="rect" id="node2" href="$group__aie.html#a4a3bf2ca359e27d32515cca1f6258db7" title="Wait for all the device tiles on this queue to finish." alt="" coords="256,5,415,47"/>
+</map>

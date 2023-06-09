@@ -1,0 +1,5 @@
+<map id="trisycl::mixin::accessor::tuple_indexed_mdspan_access" name="trisycl::mixin::accessor::tuple_indexed_mdspan_access">
+<area shape="rect" id="node1" title="Access to an mdspan element with indices implementing a tuple interface." alt="" coords="213,39,425,80"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1mixin_1_1accessor_1_1track__index.html#a94f485e19a4397a93b43306c71300b78" title="The individual indexing operator." alt="" coords="5,5,165,47"/>
+<area shape="rect" id="node3" href="$group__execution.html#a6e1886294408463407c1beccd8ca683d" title="Access to an element with indices implementing a tuple interface." alt="" coords="6,71,165,112"/>
+</map>

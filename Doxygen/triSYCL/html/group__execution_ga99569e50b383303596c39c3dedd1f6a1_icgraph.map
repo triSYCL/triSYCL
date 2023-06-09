@@ -1,4 +1,4 @@
 <map id="trisycl::device_selector::select_device" name="trisycl::device_selector::select_device">
-<area shape="rect" id="node2" href="$group__execution.html#a786701b3dada165fa44061b76ca06c05" title="trisycl::context::context" alt="" coords="209,5,368,32"/>
-<area shape="rect" id="node3" href="$group__execution.html#acfa9f1c2e9f145e51d3e37a9d8b42438" title="This constructor chooses a device based on the provided device_selector, which needs to be in the giv..." alt="" coords="217,56,360,83"/>
+<area shape="rect" id="node1" title=" " alt="" coords="212,5,368,47"/>
+<area shape="rect" id="node2" href="$group__execution.html#a786701b3dada165fa44061b76ca06c05" title=" " alt="" coords="5,13,164,39"/>
 </map>

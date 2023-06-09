@@ -1,0 +1,5 @@
+<map id="trisycl::vendor::xilinx::acap::debug::bsp_checker&lt; Geography &gt;" name="trisycl::vendor::xilinx::acap::debug::bsp_checker&lt; Geography &gt;">
+<area shape="rect" id="node1" title="Verify that an SPMD program has a bulk&#45;synchronous behaviour across all the tiles of the CGRA." alt="" coords="376,49,559,105"/>
+<area shape="rect" id="node2" title=" " alt="" coords="41,5,179,61"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,86,215,157"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="trisycl::vendor::xilinx::acap::aie::geography::is_x_y_valid" name="trisycl::vendor::xilinx::acap::aie::geography::is_x_y_valid">
+<area shape="rect" id="node1" title="Test if horizontal and vertical coordinates are valid." alt="" coords="457,5,608,61"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1detail_1_1device.html#ae3d39188f887237dea867b56efb07175" title="Apply a function on all the AXI stream of the neighborhood of each tile." alt="" coords="221,5,409,61"/>
+<area shape="rect" id="node3" href="$structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1detail_1_1device.html#a646bd7dc5393f1ae693cb1f4a1794b61" title="Build some device level infrastructure." alt="" coords="5,5,173,61"/>
+</map>

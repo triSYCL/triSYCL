@@ -1,0 +1,12 @@
+<map id="Debugging support for ACAP" name="Debugging support for ACAP">
+<area shape="rect" id="node1" href="$group__Xilinx.html" title=" " alt="" coords="570,42,734,67"/>
+<area shape="rect" id="node2" href="$group__acap.html" title="Some classes and functions to support devices including CPU, FPGA &amp; AI Engine CGRA." alt="" coords="5,301,148,341"/>
+<area shape="rect" id="node3" title="Some classes and functions to help debuging ACAP applications, such as verifying BSP forward progress..." alt="" coords="197,309,388,334"/>
+<area shape="rect" id="node4" href="$group__aie.html" title="Extensions to support explicit AI Engine system&#45;wide programming in C++." alt="" coords="591,142,713,167"/>
+<area shape="rect" id="node5" href="$group__defaults.html" title=" " alt="" coords="557,192,747,232"/>
+<area shape="rect" id="node6" href="$group__graphics.html" title="This can create a graphics application and typically update some sub&#45;images on a frame." alt="" coords="575,264,729,304"/>
+<area shape="rect" id="node7" href="$group__latex.html" title="This can generate LaTeX output used to display internal configuration for debug or teaching purpose." alt="" coords="563,328,741,368"/>
+<area shape="rect" id="node8" href="$group__opencl__spir__helpers.html" title=" " alt="" coords="582,393,722,418"/>
+<area shape="rect" id="node9" href="$group__parallelism.html" title=" " alt="" coords="575,443,729,483"/>
+<area shape="rect" id="node10" href="$group__vector.html" title=" " alt="" coords="577,507,727,533"/>
+</map>

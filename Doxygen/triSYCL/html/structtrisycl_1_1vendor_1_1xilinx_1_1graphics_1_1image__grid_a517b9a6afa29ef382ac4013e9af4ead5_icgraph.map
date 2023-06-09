@@ -1,0 +1,5 @@
+<map id="trisycl::vendor::xilinx::graphics::image_grid::submit" name="trisycl::vendor::xilinx::graphics::image_grid::submit">
+<area shape="rect" id="node1" title="Submit some work to the graphics thread." alt="" coords="435,5,585,61"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1vendor_1_1xilinx_1_1graphics_1_1image__grid.html#a24040ec1a94d40ffa0e0706dab12ead9" title="Update the image of a tile." alt="" coords="220,5,387,61"/>
+<area shape="rect" id="node3" href="$structtrisycl_1_1vendor_1_1xilinx_1_1graphics_1_1image__grid.html#a6d5025c9028984b2061b83aa4c72b2f3" title="Update the image of a tile of size image_y by image_x from a pointer." alt="" coords="5,5,172,61"/>
+</map>

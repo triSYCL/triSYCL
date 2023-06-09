@@ -1,0 +1,18 @@
+<map id="include/triSYCL/vendor/Xilinx/acap/aie/memory_infrastructure.hpp" name="include/triSYCL/vendor/Xilinx/acap/aie/memory_infrastructure.hpp">
+<area shape="rect" id="node1" title="The basic AI Engine homogeneous memory infrastructure, i.e." alt="" coords="339,5,502,61"/>
+<area shape="rect" id="node2" href="$triSYCL_2vendor_2Xilinx_2acap_2aie_2device_2detail_2device_8hpp.html" title="SYCL&#45;friendly device view of AIE." alt="" coords="433,585,589,641"/>
+<area shape="rect" id="node10" href="$triSYCL_2vendor_2Xilinx_2acap_2aie_2memory__base_8hpp.html" title="The basic AI Engine homogeneous Memory Module, with the common infrastructure to all the memory modul..." alt="" coords="130,213,293,269"/>
+<area shape="rect" id="node14" href="$triSYCL_2vendor_2Xilinx_2acap_2aie_2tile__infrastructure_8hpp.html" title="The basic AI Engine homogeneous tile, with the common infrastructure to all the tiles,..." alt="" coords="343,109,499,165"/>
+<area shape="rect" id="node3" href="$triSYCL_2vendor_2Xilinx_2acap_2aie_2accessor_8hpp.html" title="SYCL accessor for AIE tile device." alt="" coords="415,689,607,731"/>
+<area shape="rect" id="node9" href="$triSYCL_2vendor_2Xilinx_2acap_2aie_2device_8hpp.html" title="SYCL&#45;friendly device view of AIE." alt="" coords="631,689,810,731"/>
+<area shape="rect" id="node4" href="$triSYCL_2vendor_2Xilinx_2acap_2aie_8hpp.html" title="Experimenting with CGRA &amp; processor arrays such as ACAP/AI Engine." alt="" coords="273,779,429,820"/>
+<area shape="rect" id="node5" href="$triSYCL_2vendor_2Xilinx_2acap_8hpp.html" title="Experimenting with CGRA &amp; processor arrays such as ACAP/AI Engine." alt="" coords="273,868,429,909"/>
+<area shape="rect" id="node6" href="$triSYCL_2sycl_8hpp.html" title=" " alt="" coords="268,957,435,984"/>
+<area shape="rect" id="node7" href="$CL_2sycl_8hpp.html" title="This is the main SYCL 1.2.1 interoperability header to expose triSYCL into the cl::sycl namespace." alt="" coords="200,1032,337,1059"/>
+<area shape="rect" id="node8" href="$sycl_2sycl_8hpp.html" title="This is the SYCL extension header to expose triSYCL directly into the sycl namespace as expected by S..." alt="" coords="362,1032,506,1059"/>
+<area shape="rect" id="node11" href="$triSYCL_2vendor_2Xilinx_2acap_2aie_2memory_8hpp.html" title="The basic AI Engine heterogeneous Memory Module (i.e." alt="" coords="5,317,191,359"/>
+<area shape="rect" id="node12" href="$triSYCL_2vendor_2Xilinx_2acap_2aie_2program_8hpp.html" title="Model of an AI Engine program, that weaves the program of each tile with the memory of each tile for ..." alt="" coords="155,407,342,448"/>
+<area shape="rect" id="node13" href="$triSYCL_2vendor_2Xilinx_2acap_2aie_2queue_8hpp.html" title="SYCL&#45;friendly queue for AIE cooperative program including all the tiles." alt="" coords="185,496,360,537"/>
+<area shape="rect" id="node15" href="$triSYCL_2vendor_2Xilinx_2acap_2aie_2tile__base_8hpp.html" title="The basic AI Engine homogeneous tile, with common content to all the tiles (i.e." alt="" coords="317,213,473,269"/>
+<area shape="rect" id="node16" href="$triSYCL_2vendor_2Xilinx_2acap_2aie_2tile_8hpp.html" title="The basic AI Engine heterogeneous tile that dependent of x &amp; y coordinates but also from the collecti..." alt="" coords="317,317,474,359"/>
+</map>

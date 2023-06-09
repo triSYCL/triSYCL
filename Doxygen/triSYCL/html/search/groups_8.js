@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['vector_20types_20in_20sycl',['Vector types in SYCL',['../group__vector.html',1,'']]]
+  ['platforms_2c_20contexts_2c_20accessors_20and_20queues_0',['Platforms, contexts, accessors and queues',['../group__execution.html',1,'']]]
 ];

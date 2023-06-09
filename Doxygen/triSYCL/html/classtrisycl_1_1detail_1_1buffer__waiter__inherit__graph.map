@@ -1,4 +1,5 @@
 <map id="trisycl::detail::buffer_waiter&lt; T, Dimensions, Allocator &gt;" name="trisycl::detail::buffer_waiter&lt; T, Dimensions, Allocator &gt;">
-<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1shared__ptr__implementation.html" title="trisycl::detail::shared\l_ptr_implementation\&lt; buffer\l_waiter\&lt; T, Dimensions, Allocator\l \&gt;, detail::buffer\&lt; T, Dimensions \&gt; \&gt;" alt="" coords="264,5,499,76"/>
-<area shape="rect" id="node4" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; buffer_waiter\&lt; T, Dimensions,\l Allocator \&gt; \&gt;" alt="" coords="276,101,487,157"/>
+<area shape="rect" id="node1" title="A helper class to wait for the final buffer destruction if the conditions for blocking are met." alt="" coords="248,82,411,138"/>
+<area shape="rect" id="node2" href="$classdetail_1_1shared__ptr__implementation_3_01buffer__waiter_3_01T_00_011_00_01buffer__allocato7b497b9dd7ebde82483da44589505eb8.html" title=" " alt="" coords="5,5,200,105"/>
+<area shape="rect" id="node3" href="$classdetail_1_1debug_3_01buffer__waiter_3_01T_00_011_00_01buffer__allocator_3_01std_1_1remove__ced304ddc047a8cabb638d52c96e3ea66.html" title=" " alt="" coords="25,129,180,200"/>
 </map>

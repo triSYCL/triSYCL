@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::dma::commit_command" name="trisycl::vendor::xilinx::acap::aie::dma::commit_command">
+<area shape="rect" id="node1" title="Notify a command has been processed." alt="" coords="203,5,369,61"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1dma.html#a52982725f3341adbf8698bea1f3ccded" title="Start the DMA engine using an executor." alt="" coords="5,13,155,54"/>
+</map>

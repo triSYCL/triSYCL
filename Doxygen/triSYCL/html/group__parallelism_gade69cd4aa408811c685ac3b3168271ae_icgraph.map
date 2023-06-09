@@ -1,7 +1,9 @@
 <map id="trisycl::detail::parallel_for" name="trisycl::detail::parallel_for">
-<area shape="rect" id="node2" href="$group__parallelism.html#ga94abf805a744cff3fdf77c04aa0a7c63" title="Calls the appropriate ternary parallel_for overload based on the index type of the kernel function ob..." alt="" coords="226,5,393,32"/>
-<area shape="rect" id="node3" href="$group__execution.html#a5c04b7f4071feb465157d74fc6bfa5d8" title="trisycl::handler::parallel_for" alt="" coords="220,56,399,83"/>
-<area shape="rect" id="node5" href="$group__parallelism.html#ga33858ef5d1b5893ad47bf7397905d6e0" title="Implementation of parallel_for with a range&lt;&gt; and an offset. " alt="" coords="237,107,382,149"/>
-<area shape="rect" id="node6" href="$group__parallelism.html#ga003201ce3c2a95af831b1c58fbb3804c" title="trisycl::detail::parallel\l_for_iterate" alt="" coords="461,143,606,185"/>
-<area shape="rect" id="node4" href="$structtrisycl_1_1vendor_1_1trisycl_1_1scope_1_1queue_1_1command__group.html#a8aa7e5062b6eaaa8a43d8b9b3a580af7" title="Parallel kernel invocation method on a range iteration space. " alt="" coords="447,41,620,97"/>
+<area shape="rect" id="node1" title="Implementation of a data parallel computation with parallelism specified at launch time by a range&lt;&gt;." alt="" coords="459,100,625,127"/>
+<area shape="rect" id="node2" href="$group__execution.html#a5b8c2df16125154691faa3c2789bf9a0" title="SYCL parallel_for launches a data parallel computation with parallelism specified at launch time by a..." alt="" coords="232,20,411,47"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#ga94abf805a744cff3fdf77c04aa0a7c63" title="Calls the appropriate ternary parallel_for overload based on the index type of the kernel function ob..." alt="" coords="238,71,405,97"/>
+<area shape="rect" id="node5" href="$group__parallelism.html#ga33858ef5d1b5893ad47bf7397905d6e0" title="Implementation of parallel_for with a range&lt;&gt; and an offset." alt="" coords="249,122,394,163"/>
+<area shape="rect" id="node7" href="$group__parallelism.html#ga003201ce3c2a95af831b1c58fbb3804c" title=" " alt="" coords="249,187,394,229"/>
+<area shape="rect" id="node3" href="$structtrisycl_1_1vendor_1_1trisycl_1_1scope_1_1queue_1_1command__group.html#a8aa7e5062b6eaaa8a43d8b9b3a580af7" title="Parallel kernel invocation method on a range iteration space." alt="" coords="8,5,181,61"/>
+<area shape="rect" id="node6" href="$group__execution.html#aa8b9d84c21dad545c8c7421a19033f78" title="Kernel invocation method of a kernel defined as a lambda or functor, for the specified range and offs..." alt="" coords="5,129,184,156"/>
 </map>

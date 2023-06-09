@@ -1,0 +1,13 @@
+<map id="trisycl::vendor::xilinx::graphics::image_grid::on_key_press_event" name="trisycl::vendor::xilinx::graphics::image_grid::on_key_press_event">
+<area shape="rect" id="node1" title="Deal with the key pressed." alt="" coords="5,195,156,251"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1vendor_1_1xilinx_1_1graphics_1_1palette.html#a98c355a0bcd4b0b8e284a66e587eb48e" title="Handle with any key pressed." alt="" coords="204,195,376,251"/>
+<area shape="rect" id="node3" href="$structtrisycl_1_1vendor_1_1xilinx_1_1graphics_1_1palette.html#ac13f6bd900bd78630fe750961f54ecba" title=" " alt="" coords="431,5,646,47"/>
+<area shape="rect" id="node4" href="$structtrisycl_1_1vendor_1_1xilinx_1_1graphics_1_1palette.html#a543c57428aabaf93e52a21480aae722b" title=" " alt="" coords="701,203,875,244"/>
+<area shape="rect" id="node7" href="$structtrisycl_1_1vendor_1_1xilinx_1_1graphics_1_1palette.html#a569afc09988814841d45f63045fff7e0" title=" " alt="" coords="445,122,632,178"/>
+<area shape="rect" id="node8" href="$structtrisycl_1_1vendor_1_1xilinx_1_1graphics_1_1palette.html#a09aaf6b5b9e3d4a7dd9dcb5d263cc607" title=" " alt="" coords="424,203,653,244"/>
+<area shape="rect" id="node9" href="$structtrisycl_1_1vendor_1_1xilinx_1_1graphics_1_1palette.html#a40f78950802d179737ab676999c27e17" title=" " alt="" coords="433,268,644,309"/>
+<area shape="rect" id="node10" href="$structtrisycl_1_1vendor_1_1xilinx_1_1graphics_1_1palette.html#a7c2b5da71aea6186eb0d47cdfa4a7463" title=" " alt="" coords="447,334,630,390"/>
+<area shape="rect" id="node11" href="$structtrisycl_1_1vendor_1_1xilinx_1_1graphics_1_1palette.html#ac35f8c6acf4e4627e755f772f11cca2a" title=" " alt="" coords="426,415,651,456"/>
+<area shape="rect" id="node5" href="$structtrisycl_1_1vendor_1_1xilinx_1_1graphics_1_1palette.html#a5e753eb5fcbe549ec93804422ec02b05" title=" " alt="" coords="933,155,1091,211"/>
+<area shape="rect" id="node6" href="$structtrisycl_1_1vendor_1_1xilinx_1_1graphics_1_1palette.html#a47ca22c5754ecba75f5d14e5b3a3f0f9" title=" " alt="" coords="923,235,1101,291"/>
+</map>

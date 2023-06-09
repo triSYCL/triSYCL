@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['_7eaccessor_5fbase_0',['~accessor_base',['../group__data.html#af72bda8f733bd016a15f3d7ad3112e28',1,'trisycl::detail::accessor_base']]],
+  ['_7eapplication_1',['~application',['../structtrisycl_1_1vendor_1_1xilinx_1_1graphics_1_1application.html#a5ec95979830e664c4cc0d81535b29ce3',1,'trisycl::vendor::xilinx::graphics::application::~application()'],['../structtrisycl_1_1vendor_1_1xilinx_1_1graphics_1_1application.html#a5ec95979830e664c4cc0d81535b29ce3',1,'trisycl::vendor::xilinx::graphics::application::~application()']]],
+  ['_7ebuffer_2',['~buffer',['../group__data.html#a360bd2887a957b3ef46e7af5dec9c2bc',1,'trisycl::detail::buffer']]],
+  ['_7ebuffer_5fbase_3',['~buffer_base',['../group__data.html#a775086e6f28f56d4a76879b09562bc7c',1,'trisycl::detail::buffer_base']]],
+  ['_7ebuffer_5fwaiter_4',['~buffer_waiter',['../group__data.html#a4c22a326c873157bffbe674b3c0c9cf9',1,'trisycl::detail::buffer_waiter']]],
+  ['_7ecommunicator_5fport_5',['~communicator_port',['../classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1communicator__port.html#a0a05689bc971f360aeb6f0e5bbccf9a0',1,'trisycl::vendor::xilinx::acap::aie::communicator_port::~communicator_port()=default'],['../classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1communicator__port.html#a0a05689bc971f360aeb6f0e5bbccf9a0',1,'trisycl::vendor::xilinx::acap::aie::communicator_port::~communicator_port()=default']]],
+  ['_7econtext_6',['~context',['../group__execution.html#aa40df5bae406c2c36672023d0fd7ac8c',1,'trisycl::detail::context']]],
+  ['_7edevice_7',['~device',['../group__execution.html#a83aaa33e01976fc615a049b8f0ac12fc',1,'trisycl::detail::device']]],
+  ['_7edevice_5fselector_8',['~device_selector',['../group__execution.html#a8f0031499e184a96e1177e5fced12df9',1,'trisycl::device_selector']]],
+  ['_7edma_9',['~dma',['../classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1dma.html#a4f8094afeadcc7f3aec158c9d9c911ed',1,'trisycl::vendor::xilinx::acap::aie::dma::~dma()'],['../classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1dma.html#a4f8094afeadcc7f3aec158c9d9c911ed',1,'trisycl::vendor::xilinx::acap::aie::dma::~dma()']]],
+  ['_7eerror_5fhandler_10',['~error_handler',['../group__error__handling.html#a8e99b2584bd729f0ad711bb1f6b25346',1,'trisycl::error_handler']]],
+  ['_7eevent_11',['~event',['../structtrisycl_1_1detail_1_1event.html#a19f23b4bc90d49eef13834868cb3cf06',1,'trisycl::detail::event']]],
+  ['_7efiber_5fpool_12',['~fiber_pool',['../classtrisycl_1_1detail_1_1fiber__pool.html#ab7f32b96d9604f4de4642a0ba8f9ba81',1,'trisycl::detail::fiber_pool']]],
+  ['_7eopencl_5fcontext_13',['~opencl_context',['../classtrisycl_1_1detail_1_1opencl__context.html#af6586dd38036937e55fb30d2ec09ad22',1,'trisycl::detail::opencl_context']]],
+  ['_7eopencl_5fdevice_14',['~opencl_device',['../classtrisycl_1_1detail_1_1opencl__device.html#a819b27ccb958a1e590a64cba1f55e614',1,'trisycl::detail::opencl_device']]],
+  ['_7eopencl_5fevent_15',['~opencl_event',['../classtrisycl_1_1detail_1_1opencl__event.html#ade7872d933bb725c51d59df987303e3f',1,'trisycl::detail::opencl_event']]],
+  ['_7eopencl_5fplatform_16',['~opencl_platform',['../group__execution.html#a8d571597ad94749c80f68a23fb67dc1e',1,'trisycl::detail::opencl_platform']]],
+  ['_7eopencl_5fqueue_17',['~opencl_queue',['../classtrisycl_1_1detail_1_1opencl__queue.html#af9251c5f440b6700d4d69f482d3104ba',1,'trisycl::detail::opencl_queue']]],
+  ['_7epipe_5faccessor_18',['~pipe_accessor',['../group__old__data.html#a2f9b840ff97f0a991f783fa31fb0811b',1,'trisycl::detail::sycl_2_2::pipe_accessor']]],
+  ['_7epipe_5freservation_19',['~pipe_reservation',['../group__old__data.html#a0e78c04f2c74dc0c200a8283bf30cfb7',1,'trisycl::detail::sycl_2_2::pipe_reservation']]],
+  ['_7eplatform_20',['~platform',['../group__execution.html#a1b306bf05b6fd25ba6cb7e0564bbc1f7',1,'trisycl::detail::platform']]],
+  ['_7epooled_5fwork_5fstealing_21',['~pooled_work_stealing',['../classtrisycl_1_1detail_1_1pooled__work__stealing.html#a057ce91a88947d20f6d923b1c2c8e886',1,'trisycl::detail::pooled_work_stealing']]],
+  ['_7eprogram_22',['~program',['../classtrisycl_1_1detail_1_1program.html#a5e3b04bfa498442594a0ca52f0061eae',1,'trisycl::detail::program']]],
+  ['_7equeue_23',['~queue',['../structtrisycl_1_1detail_1_1queue.html#a9c0cf54096364d05ebb23c059d2173fd',1,'trisycl::detail::queue']]],
+  ['_7erouter_5fminion_24',['~router_minion',['../classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1axi__stream__switch_1_1router__minion.html#a433811e1671cf658a73145116bfd6c6b',1,'trisycl::vendor::xilinx::acap::aie::axi_stream_switch::router_minion::~router_minion() override'],['../classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1axi__stream__switch_1_1router__minion.html#a433811e1671cf658a73145116bfd6c6b',1,'trisycl::vendor::xilinx::acap::aie::axi_stream_switch::router_minion::~router_minion() override']]]
+];

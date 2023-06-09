@@ -1,0 +1,4 @@
+<map id="trisycl::context::get_boost_queue" name="trisycl::context::get_boost_queue">
+<area shape="rect" id="node1" title="Return the internal queue that is associated to the context and used by triSYCL to move data between ..." alt="" coords="233,5,368,47"/>
+<area shape="rect" id="node2" href="$group__data.html#aad6218af1679f6e4f06ae001a36a86bb" title="When a transfer is requested this function is called, it will update the state of the buffer accordin..." alt="" coords="5,5,185,47"/>
+</map>

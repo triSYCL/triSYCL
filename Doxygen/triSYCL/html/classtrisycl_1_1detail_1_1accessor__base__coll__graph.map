@@ -1,2 +1,5 @@
 <map id="trisycl::detail::accessor_base" name="trisycl::detail::accessor_base">
+<area shape="rect" id="node1" title="The buffer accessor base is here mainly to be accessed from the task without dependency on the buffer..." alt="" coords="33,109,225,136"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,136,47"/>
+<area shape="rect" id="node3" title=" " alt="" coords="161,13,218,39"/>
 </map>

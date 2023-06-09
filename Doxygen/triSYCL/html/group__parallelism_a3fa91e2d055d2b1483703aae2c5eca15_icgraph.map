@@ -1,4 +1,0 @@
-<map id="trisycl::nd_item::get_global_range" name="trisycl::nd_item::get_global_range">
-<area shape="rect" id="node2" href="$group__parallelism.html#a51c9052fd19cf4b610b6baaec3edfd16" title="Return the flattened id of the current work&#45;item after subtracting the offset. " alt="" coords="207,5,344,47"/>
-<area shape="rect" id="node3" href="$group__parallelism.html#a444421f3c90aceddbeb841fd33f0569a" title="Allows projection down to an item. " alt="" coords="191,71,360,98"/>
-</map>

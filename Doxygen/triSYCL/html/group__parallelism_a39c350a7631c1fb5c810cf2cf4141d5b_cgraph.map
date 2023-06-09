@@ -1,4 +1,5 @@
 <map id="trisycl::item::operator item&lt; Dimensions, true &gt;" name="trisycl::item::operator item&lt; Dimensions, true &gt;">
-<area shape="rect" id="node2" href="$group__parallelism.html#a95a7f84f5f4c9e88135e9d88764d0a7f" title="Return the constituent local or global id&lt;&gt; representing the work&#45;item&#39;s position in the iteration sp..." alt="" coords="228,5,361,32"/>
-<area shape="rect" id="node3" href="$group__parallelism.html#a7a254a2ef8ffc47b3c3d3c84d1d95a18" title="Returns a range&lt;&gt; representing the dimensions of the range of possible values of the item..." alt="" coords="237,57,353,98"/>
+<area shape="rect" id="node1" title="Returns an item with same dimensions but offset set to 0." alt="" coords="5,27,180,69"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#ad6458907c63eaef564466906a4a55091" title="Return the constituent local or global id&lt;&gt; representing the work&#45;item&#39;s position in the iteration sp..." alt="" coords="228,5,361,32"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#a64daee7c980a07c403c69f1c5390abf1" title="Returns a range&lt;&gt; representing the dimensions of the range of possible values of the item." alt="" coords="237,57,353,98"/>
 </map>

@@ -1,0 +1,6 @@
+<map id="trisycl::detail::sycl_2_2::pipe::write" name="trisycl::detail::sycl_2_2::pipe::write">
+<area shape="rect" id="node1" title="Try to write a value to the pipe." alt="" coords="5,79,133,120"/>
+<area shape="rect" id="node2" href="$group__old__data.html#aef367ad928fe6df02e1975d0af7aead9" title="Test if the pipe is full." alt="" coords="187,5,315,47"/>
+<area shape="rect" id="node3" href="$group__old__data.html#a22472dc9dd5e7b0af07a47a27682cb79" title="Compute the amount of elements blocked by read reservations, not yet committed." alt="" coords="181,71,321,127"/>
+<area shape="rect" id="node4" href="$group__old__data.html#af3a0e9729461db431623d7219fe17b16" title="Compute the amount of elements blocked by write reservations, not yet committed." alt="" coords="181,151,321,207"/>
+</map>

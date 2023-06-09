@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['latest_5fproducer',['latest_producer',['../group__data.html#a7c6ceffab31b10a04e5630cf87d82e15',1,'trisycl::detail::buffer_base']]],
-  ['latest_5fproducer_5fmutex',['latest_producer_mutex',['../group__data.html#aca98b22e92161a8c1f53076193ba37b0',1,'trisycl::detail::buffer_base']]],
-  ['lo',['lo',['../opencl__spir_8h.html#adec77eae3e956fc86edc6c3f172e2ec8',1,'opencl_spir.h']]],
-  ['local_5findex',['local_index',['../group__parallelism.html#a1be1c87e7780de1bd2eef045c8b79ed7',1,'trisycl::h_item::local_index()'],['../group__parallelism.html#a076e3ff78054188905dbbfc4c1550f33',1,'trisycl::nd_item::local_index()']]],
-  ['local_5frange',['local_range',['../group__parallelism.html#ab4bfe8861c2463a11a2ff09450ea8158',1,'trisycl::nd_range']]]
+  ['k_0',['k',['../structtrisycl_1_1vendor_1_1xilinx_1_1graphics_1_1palette.html#a661a0dcaf15f6a3d12e96fd513afdb0b',1,'trisycl::vendor::xilinx::graphics::palette::k()'],['../classtrisycl_1_1detail_1_1opencl__kernel.html#acfe7f9fbe88152c28429281496ba44e1',1,'trisycl::detail::opencl_kernel::k()']]],
+  ['kernel_1',['kernel',['../structtrisycl_1_1detail_1_1task.html#aa6cd5a5440fa45f28a5e13d5a03508be',1,'trisycl::detail::task']]],
+  ['kernel_5fir_2',['kernel_IR',['../group__device__runtime.html#gac0f4cce2b967b0d5f31b2f20b7523148',1,'trisycl::drt']]]
 ];

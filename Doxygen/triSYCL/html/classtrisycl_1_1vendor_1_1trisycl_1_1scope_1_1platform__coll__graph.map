@@ -1,5 +1,8 @@
 <map id="trisycl::vendor::trisycl::scope::platform&lt; PlatformStorage &gt;" name="trisycl::vendor::trisycl::scope::platform&lt; PlatformStorage &gt;">
-<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1shared__ptr__implementation.html" title="trisycl::detail::shared\l_ptr_implementation\&lt; platform\l\&lt; PlatformStorage \&gt;, detail\l::platform\&lt; PlatformStorage \&gt; \&gt;" alt="" coords="357,23,564,93"/>
-<area shape="rect" id="node4" href="$classstd_1_1shared__ptr_3_01detail_1_1platform_3_01PlatformStorage_01_4_01_4.html" title="shared_ptr\&lt; detail\l::platform\&lt; PlatformStorage \&gt; \&gt;" alt="" coords="7,71,214,112"/>
-<area shape="rect" id="node5" href="$classbool.html" title="bool" alt="" coords="437,118,484,145"/>
+<area shape="rect" id="node1" title="A conceptual platform implementing some platform&#45;scoped storage." alt="" coords="752,103,991,145"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1shared__ptr__implementation.html" title=" " alt="" coords="329,38,575,109"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,5,188,61"/>
+<area shape="rect" id="node4" href="$classstd_1_1shared__ptr_3_01detail_1_1platform_3_01empty__platform__scope_01_4_01_4.html" title=" " alt="" coords="7,85,186,141"/>
+<area shape="rect" id="node5" href="$classfriend.html" title=" " alt="" coords="425,133,479,160"/>
+<area shape="rect" id="node6" href="$classbool.html" title=" " alt="" coords="429,184,475,211"/>
 </map>

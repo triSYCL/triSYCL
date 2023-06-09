@@ -1,3 +1,6 @@
-<map id="Platforms, contexts, devices and queues" name="Platforms, contexts, devices and queues">
-<area shape="rect" id="node2" href="$group__parallelism.html" title="Expressing parallelism\l through kernels" alt="" coords="271,5,424,47"/>
+<map id="Platforms, contexts, accessors and queues" name="Platforms, contexts, accessors and queues">
+<area shape="rect" id="node1" href="$group__defaults.html" title=" " alt="" coords="285,5,475,45"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,63,163,103"/>
+<area shape="rect" id="node3" href="$group__opencl__spir__helpers.html" title=" " alt="" coords="310,70,450,95"/>
+<area shape="rect" id="node4" href="$group__parallelism.html" title=" " alt="" coords="303,120,457,160"/>
 </map>

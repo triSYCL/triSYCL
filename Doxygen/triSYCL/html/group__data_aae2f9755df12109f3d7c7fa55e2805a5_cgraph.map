@@ -1,3 +1,4 @@
 <map id="trisycl::detail::buffer::allocate_buffer" name="trisycl::detail::buffer::allocate_buffer">
-<area shape="rect" id="node2" href="$group__parallelism.html#a55c2d38bfa586195fc9e1d789e011a0f" title="Return the number of elements in the range. " alt="" coords="191,13,320,39"/>
+<area shape="rect" id="node1" title="Allocate uninitialized buffer memory." alt="" coords="5,5,143,47"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#a55c2d38bfa586195fc9e1d789e011a0f" title="Return the number of elements in the range." alt="" coords="191,13,320,39"/>
 </map>

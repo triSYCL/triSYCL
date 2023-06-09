@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::communicator_port::operator&gt;&gt;" name="trisycl::vendor::xilinx::acap::aie::communicator_port::operator&gt;&gt;">
+<area shape="rect" id="node1" title="Alias to the waiting read to a communicator output port." alt="" coords="5,5,179,61"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1communicator__port.html#a0cb6f3ee6c4b1d95ebd36c22db394ce6" title="Waiting read to a core input port." alt="" coords="227,5,400,61"/>
+</map>

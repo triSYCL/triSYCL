@@ -1,6 +1,10 @@
 <map id="trisycl::vec&lt; DataType, 4 &gt;" name="trisycl::vec&lt; DataType, 4 &gt;">
-<area shape="rect" id="node2" href="$classtrisycl_1_1detail_1_1vec.html" title="trisycl::detail::vec\l\&lt; DataType, 4 \&gt;" alt="" coords="676,261,801,303"/>
-<area shape="rect" id="node3" href="$group__helpers.html" title="trisycl::detail::small\l_array\&lt; DataType, ::trisycl\l::vec\&lt; DataType, NumElements\l \&gt;, NumElements \&gt;" alt="" coords="416,247,627,317"/>
-<area shape="rect" id="node6" href="$group__debug__trace.html" title="trisycl::detail::display\l_vector\&lt; ::trisycl::vec\l\&lt; DataType, NumElements \&gt; \&gt;" alt="" coords="39,254,246,310"/>
-<area shape="rect" id="node8" href="$classstatic_01const_01size__t.html" title="static const size_t" alt="" coords="78,385,207,411"/>
+<area shape="rect" id="node1" title=" " alt="" coords="861,269,1043,295"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1detail_1_1vec.html" title=" " alt="" coords="687,261,812,303"/>
+<area shape="rect" id="node3" href="$group__helpers.html" title=" " alt="" coords="427,247,637,317"/>
+<area shape="rect" id="node4" title=" " alt="" coords="87,5,233,47"/>
+<area shape="rect" id="node5" title=" " alt="" coords="5,71,315,229"/>
+<area shape="rect" id="node6" href="$group__debug__trace.html" title=" " alt="" coords="57,254,263,310"/>
+<area shape="rect" id="node7" href="$group__helpers.html#structtrisycl_1_1detail_1_1small__array__tag" title="Tag to define simply inheritance from small_array." alt="" coords="93,335,227,376"/>
+<area shape="rect" id="node8" href="$classstatic_01constexpr_01size__t.html" title=" " alt="" coords="83,401,237,427"/>
 </map>

@@ -1,0 +1,9 @@
+<map id="include/triSYCL/vendor/Xilinx/acap/aie/geography.hpp" name="include/triSYCL/vendor/Xilinx/acap/aie/geography.hpp">
+<area shape="rect" id="node1" title="Geographic information about the AI Engine CGRA." alt="" coords="106,5,305,47"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,95,125,121"/>
+<area shape="rect" id="node3" title=" " alt="" coords="150,95,261,121"/>
+<area shape="rect" id="node4" href="$ranges_8hpp.html" title="Some range&#45;related helpers." alt="" coords="285,95,456,121"/>
+<area shape="rect" id="node5" title=" " alt="" coords="232,169,347,196"/>
+<area shape="rect" id="node6" href="$enum_8hpp.html" title="Some enum&#45;related helpers." alt="" coords="371,169,535,196"/>
+<area shape="rect" id="node7" title=" " alt="" coords="412,244,495,271"/>
+</map>

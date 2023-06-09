@@ -1,0 +1,5 @@
+<map id="trisycl::vendor::xilinx::acap::aie::tile::is_west_column" name="trisycl::vendor::xilinx::acap::aie::tile::is_west_column">
+<area shape="rect" id="node1" title="Test if the tile is in the Western column." alt="" coords="425,5,568,61"/>
+<area shape="rect" id="node2" href="$group__aie.html#ad2ec0db244915c4ccfa4a682c5beb521" title="An horizontal barrier using a lock." alt="" coords="205,5,377,61"/>
+<area shape="rect" id="node3" href="$group__aie.html#a41edf9ee6198a429aafb54fb5c7c68e3" title="Full barrier using the 2 locks by default." alt="" coords="5,13,157,54"/>
+</map>

@@ -1,10 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$group__data.html#classtrisycl_1_1detail_1_1accessor__base" title="The buffer accessor base is here mainly to be accessed from the task without dependency on the buffer..." alt="" coords="5,5,197,32"/>
-<area shape="rect" id="node2" href="$group__data.html#classtrisycl_1_1detail_1_1accessor" title="The buffer accessor abstracts the way buffer data are accessed inside a kernel in a multidimensional ..." alt="" coords="258,56,421,112"/>
-<area shape="rect" id="node3" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; accessor\&lt; T, Dimensions,\l Mode, Target \&gt; \&gt;" alt="" coords="7,56,195,112"/>
-<area shape="rect" id="node4" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; buffer\&lt; T, Dimensions \&gt; \&gt;" alt="" coords="245,238,433,279"/>
-<area shape="rect" id="node5" href="$group__data.html#classtrisycl_1_1detail_1_1buffer" title="A SYCL buffer is a multidimensional variable length array (à la C99 VLA or even Fortran before) that ..." alt="" coords="481,183,619,225"/>
-<area shape="rect" id="node6" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; task \&gt;" alt="" coords="32,187,171,229"/>
-<area shape="rect" id="node7" href="$structtrisycl_1_1detail_1_1task.html" title="The abstraction to represent SYCL tasks executing inside command_group. " alt="" coords="275,187,404,213"/>
-<area shape="rect" id="node9" href="$group__data.html#structtrisycl_1_1detail_1_1buffer__base" title="Factorize some template independent buffer aspects in a base class. " alt="" coords="253,136,425,163"/>
+<area shape="rect" id="node1" href="$classstd_1_1shared__ptr_3_01detail_1_1sycl__2__2_1_1pipe_3_01T_01_4_01_4.html" title=" " alt="" coords="5,5,164,47"/>
 </map>

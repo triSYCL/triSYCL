@@ -1,0 +1,5 @@
+<map id="trisycl::vendor::xilinx::acap::aie::layout::ve1152" name="trisycl::vendor::xilinx::acap::aie::layout::ve1152">
+<area shape="rect" id="node1" title=" " alt="" coords="5,199,181,240"/>
+<area shape="rect" id="node2" href="$group__aie.html" title=" " alt="" coords="14,95,173,151"/>
+<area shape="rect" id="node3" href="$group__aie.html#structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1layout_1_1full" title="Describe the layout of a &quot;big&quot; AI Engine array." alt="" coords="18,5,169,47"/>
+</map>

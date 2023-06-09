@@ -1,0 +1,15 @@
+<map id="include/sycl/vendor/Xilinx/acap/aie/axi_stream_switch.hpp" name="include/sycl/vendor/Xilinx/acap/aie/axi_stream_switch.hpp">
+<area shape="rect" id="node1" title="Model of an AXI stream switch." alt="" coords="247,5,386,61"/>
+<area shape="rect" id="node2" href="$sycl_2vendor_2Xilinx_2acap_2aie_2shim__tile_8hpp.html" title="Model of a shim tile between the AI array and the rest of the circuit." alt="" coords="328,228,470,284"/>
+<area shape="rect" id="node8" href="$sycl_2vendor_2Xilinx_2acap_2aie_2tile__infrastructure_2detail_2tile__infrastructure_8hpp.html" title="The basic AI Engine homogeneous tile, with the common infrastructure to all the tiles,..." alt="" coords="185,109,336,180"/>
+<area shape="rect" id="node3" href="$sycl_2vendor_2Xilinx_2acap_2aie_2device_2detail_2device_8hpp.html" title="SYCL&#45;friendly device view of AIE." alt="" coords="274,704,428,760"/>
+<area shape="rect" id="node4" href="$sycl_2vendor_2Xilinx_2acap_2aie_2accessor_8hpp.html" title="SYCL accessor for AIE tile device." alt="" coords="470,808,662,849"/>
+<area shape="rect" id="node7" href="$sycl_2vendor_2Xilinx_2acap_2aie_2device_8hpp.html" title="SYCL&#45;friendly device view of AIE." alt="" coords="267,808,446,849"/>
+<area shape="rect" id="node5" href="$sycl_2vendor_2Xilinx_2acap_2aie_8hpp.html" title="Experimenting with CGRA &amp; processor arrays such as ACAP/AI Engine." alt="" coords="162,897,298,939"/>
+<area shape="rect" id="node6" href="$sycl_2vendor_2Xilinx_2acap_8hpp.html" title="Experimenting with CGRA &amp; processor arrays such as ACAP/AI Engine." alt="" coords="162,987,297,1028"/>
+<area shape="rect" id="node9" href="$sycl_2vendor_2Xilinx_2acap_2aie_2tile__infrastructure_8hpp.html" title="The basic AI Engine homogeneous tile, with the common infrastructure to all the tiles,..." alt="" coords="169,228,304,284"/>
+<area shape="rect" id="node10" href="$sycl_2vendor_2Xilinx_2acap_2aie_2tile__base_8hpp.html" title="The basic AI Engine homogeneous tile, with common content to all the tiles (i.e." alt="" coords="165,332,300,388"/>
+<area shape="rect" id="node11" href="$sycl_2vendor_2Xilinx_2acap_2aie_2program_8hpp.html" title="Model of an AI Engine program, that weaves the program of each tile with the memory of each tile for ..." alt="" coords="12,525,199,567"/>
+<area shape="rect" id="node13" href="$sycl_2vendor_2Xilinx_2acap_2aie_2tile_8hpp.html" title="The basic AI Engine heterogeneous tile that dependent of x &amp; y coordinates but also from the collecti..." alt="" coords="154,436,311,477"/>
+<area shape="rect" id="node12" href="$sycl_2vendor_2Xilinx_2acap_2aie_2queue_8hpp.html" title="SYCL&#45;friendly queue for AIE cooperative program including all the tiles." alt="" coords="24,615,198,656"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="trisycl::vendor::xilinx::acap::aie::axi_stream_switch::out_connection" name="trisycl::vendor::xilinx::acap::aie::axi_stream_switch::out_connection">
+<area shape="rect" id="node1" title="Access the output connection behind an output port." alt="" coords="441,45,604,101"/>
+<area shape="rect" id="node2" href="$group__aie.html#acbb493758b523b432377f3b9a2cf0774" title="Get the BLI input connection from the shim tile." alt="" coords="225,5,368,61"/>
+<area shape="rect" id="node4" href="$group__aie.html#a199fa82b9bd2f0055b13f4d54c6bfe81" title="Get the user input connection from the AXI stream switch." alt="" coords="200,85,393,141"/>
+<area shape="rect" id="node3" href="$group__aie.html#aaed526f1e84f91694acd305b3595b5ad" title="Get the BLI (Boundary Logic Interface) input port from the PL (Programmable Logic in the FPGA) to rea..." alt="" coords="7,5,150,61"/>
+<area shape="rect" id="node5" href="$group__aie.html#aced0fc2b4d88f2ce6c5af3e702ffd636" title="Get the user input port from the AXI stream switch." alt="" coords="5,85,152,141"/>
+</map>

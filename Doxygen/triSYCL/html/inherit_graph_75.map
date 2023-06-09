@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classtrisycl_1_1half.html" title="trisycl::half" alt="" coords="5,5,92,32"/>
+<area shape="rect" id="node1" href="$group__debug__trace.html" title=" " alt="" coords="5,13,256,54"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1dma.html" title=" " alt="" coords="304,5,547,61"/>
+<area shape="rect" id="node3" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1sending__dma.html" title="Sending DMA." alt="" coords="595,5,763,61"/>
 </map>

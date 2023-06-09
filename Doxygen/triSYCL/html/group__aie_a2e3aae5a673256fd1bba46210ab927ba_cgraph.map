@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::program::run" name="trisycl::vendor::xilinx::acap::aie::program::run">
+<area shape="rect" id="node1" title="Launch the programs of all the tiles of the CGRA in their own executor (CPU thread,..." alt="" coords="5,5,169,47"/>
+<area shape="rect" id="node2" href="$group__aie.html#a1f9156876b0fdf85dca08d9bd127623f" title="Wait for the end of the execution of each tile." alt="" coords="217,5,388,47"/>
+</map>

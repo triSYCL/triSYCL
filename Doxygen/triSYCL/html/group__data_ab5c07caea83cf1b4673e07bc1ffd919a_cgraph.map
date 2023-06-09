@@ -1,5 +1,0 @@
-<map id="trisycl::detail::pipe_reservation::~pipe_reservation" name="trisycl::detail::pipe_reservation::~pipe_reservation">
-<area shape="rect" id="node2" href="$group__data.html#a82a713c7d95a0987416bba3ea1d4192a" title="Commit the reservation station. " alt="" coords="257,53,401,94"/>
-<area shape="rect" id="node3" href="$group__data.html#a6963ee90efbc0c85309290b119f48b92" title="Process the write reservations that are ready to be released in the reservation queue. " alt="" coords="449,5,617,61"/>
-<area shape="rect" id="node4" href="$group__data.html#a38024be31be00ecfdb554146d6c84e1d" title="Process the read reservations that are ready to be released in the reservation queue. " alt="" coords="451,85,616,141"/>
-</map>

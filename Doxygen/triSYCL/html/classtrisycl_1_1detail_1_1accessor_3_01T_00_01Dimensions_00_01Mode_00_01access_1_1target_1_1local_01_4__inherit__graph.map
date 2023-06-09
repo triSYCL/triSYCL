@@ -1,3 +1,10 @@
 <map id="trisycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;" name="trisycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;">
-<area shape="rect" id="node2" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; accessor\&lt; T, Dimensions,\l Mode, access::target::local \&gt; \&gt;" alt="" coords="5,5,213,61"/>
+<area shape="rect" id="node1" title="The local accessor specialization abstracts the way local memory is allocated to a kernel to be share..." alt="" coords="760,129,921,185"/>
+<area shape="rect" id="node2" href="$group__data.html" title=" " alt="" coords="511,89,705,145"/>
+<area shape="rect" id="node3" href="$group__data.html#classtrisycl_1_1detail_1_1accessor__base" title="The buffer accessor base is here mainly to be accessed from the task without dependency on the buffer..." alt="" coords="237,5,429,32"/>
+<area shape="rect" id="node4" href="$group__execution.html" title=" " alt="" coords="211,57,456,98"/>
+<area shape="rect" id="node5" href="$group__execution.html#classtrisycl_1_1mixin_1_1accessor" title="SYCL accessor mixin providing multi&#45;dimensional access features." alt="" coords="5,57,163,98"/>
+<area shape="rect" id="node6" title=" " alt="" coords="253,122,414,193"/>
+<area shape="rect" id="node7" href="$group__debug__trace.html" title=" " alt="" coords="240,217,427,273"/>
+<area shape="rect" id="node8" href="$group__debug__trace.html" title=" " alt="" coords="504,169,712,225"/>
 </map>

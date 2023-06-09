@@ -1,0 +1,5 @@
+<map id="trisycl::vendor::xilinx::acap::aie::receiving_dma::receive" name="trisycl::vendor::xilinx::acap::aie::receiving_dma::receive">
+<area shape="rect" id="node1" title="Enqueue a DMA transfer to receive a span." alt="" coords="5,57,148,113"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1dma.html#ac84dd669b80727b127157181a04bcda8" title="Enqueue a DMA command." alt="" coords="196,5,431,76"/>
+<area shape="rect" id="node3" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1receiving__dma.html#a4fed746ed8dc3878b8dca10d203ac78c" title="Waiting read by a tile program on a core input port from the switch." alt="" coords="242,101,385,157"/>
+</map>

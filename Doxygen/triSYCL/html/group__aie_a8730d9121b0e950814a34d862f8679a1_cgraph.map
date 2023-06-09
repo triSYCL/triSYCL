@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::shim_tile::start" name="trisycl::vendor::xilinx::acap::aie::shim_tile::start">
+<area shape="rect" id="node1" title="Start the shim tile infrastructure associated to the AIE device." alt="" coords="5,5,148,61"/>
+<area shape="rect" id="node2" href="$group__aie.html#a8571a6f5d283541165ab0d9c9e91b8fb" title="Start the tile infrastructure associated to the AIE device." alt="" coords="196,5,351,61"/>
+</map>

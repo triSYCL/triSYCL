@@ -1,5 +1,5 @@
-<map id="trisycl::pipe&lt; T &gt;" name="trisycl::pipe&lt; T &gt;">
-<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1shared__ptr__implementation.html" title="trisycl::detail::shared\l_ptr_implementation\&lt; pipe\l\&lt; T \&gt;, detail::pipe\&lt; T \&gt; \&gt;" alt="" coords="293,30,468,86"/>
-<area shape="rect" id="node4" href="$classstd_1_1shared__ptr_3_01detail_1_1pipe_3_01T_01_4_01_4.html" title="shared_ptr\&lt; detail\l::pipe\&lt; T \&gt; \&gt;" alt="" coords="15,71,142,112"/>
-<area shape="rect" id="node5" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; pipe\&lt; T \&gt; \&gt;" alt="" coords="311,111,450,152"/>
+<map id="trisycl::pipe&lt; Name, T, MinCapacity, SizeT &gt;" name="trisycl::pipe&lt; Name, T, MinCapacity, SizeT &gt;">
+<area shape="rect" id="node1" title="SYCL pipe object." alt="" coords="18,109,183,151"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,13,63,39"/>
+<area shape="rect" id="node3" title=" " alt="" coords="87,5,251,47"/>
 </map>

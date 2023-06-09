@@ -1,3 +1,4 @@
 <map id="trisycl::nd_item::nd_item" name="trisycl::nd_item::nd_item">
-<area shape="rect" id="node2" href="$group__parallelism.html#ab9ba7198c4b22742756389f08039f577" title="To be able to copy and assign nd_item, use default constructors too. " alt="" coords="219,5,384,32"/>
+<area shape="rect" id="node1" title="Create a full nd_item." alt="" coords="5,13,171,39"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#a65d9b543efa609d2a54f0bf739009bc1" title="Get the local part of the iteration space range." alt="" coords="219,5,345,47"/>
 </map>

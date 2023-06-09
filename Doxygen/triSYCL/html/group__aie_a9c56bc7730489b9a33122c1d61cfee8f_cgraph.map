@@ -1,0 +1,5 @@
+<map id="trisycl::vendor::xilinx::acap::aie::detail::tile_infrastructure::display_size" name="trisycl::vendor::xilinx::acap::aie::detail::tile_infrastructure::display_size">
+<area shape="rect" id="node1" title="Compute the size of the graphics representation of the tile." alt="" coords="5,57,191,113"/>
+<area shape="rect" id="node2" href="$group__aie.html#a31cae2096e6714d1549a5ac247e0efb6" title="Compute the size of the graphics representation of the processor." alt="" coords="280,5,435,76"/>
+<area shape="rect" id="node3" href="$group__aie.html#aaed586e25480c7b033775871e0acd3b1" title="Compute the size of the graphics representation of the switch." alt="" coords="239,101,476,157"/>
+</map>

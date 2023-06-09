@@ -1,0 +1,11 @@
+<map id="trisycl::vendor::xilinx::graphics::frame_grid" name="trisycl::vendor::xilinx::graphics::frame_grid">
+<area shape="rect" id="node1" title="An application window displaying a grid of tiles." alt="" coords="295,149,443,190"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,168,32"/>
+<area shape="rect" id="node3" title=" " alt="" coords="29,56,145,83"/>
+<area shape="rect" id="node4" title=" " alt="" coords="63,107,110,133"/>
+<area shape="rect" id="node5" title=" " alt="" coords="57,157,117,184"/>
+<area shape="rect" id="node6" title=" " alt="" coords="13,208,161,235"/>
+<area shape="rect" id="node7" title=" " alt="" coords="67,260,106,287"/>
+<area shape="rect" id="node8" title=" " alt="" coords="15,311,159,337"/>
+<area shape="rect" id="node9" title=" " alt="" coords="32,361,141,388"/>
+</map>

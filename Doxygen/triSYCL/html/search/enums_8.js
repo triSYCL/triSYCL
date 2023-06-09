@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['partition_5faffinity_5fdomain',['partition_affinity_domain',['../group__execution.html#ga6796f93a7599deb4900203644e8063a0',1,'trisycl::info']]],
-  ['partition_5fproperty',['partition_property',['../group__execution.html#ga3a5be86982e6389bfc7dd6684c226271',1,'trisycl::info']]],
-  ['platform',['platform',['../group__execution.html#ga31199ad270f6beeae537afd64ae36d3b',1,'trisycl::info']]],
-  ['program_5fstate',['program_state',['../namespacetrisycl.html#ab038614eebb8ca3061943932bc4e59ff',1,'trisycl']]]
+  ['master_5fport_5flayout_0',['master_port_layout',['../structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1geography_1_1core__axi__stream__switch.html#ac503c4ae94e995dc6bdc9d75745dced5',1,'trisycl::vendor::xilinx::acap::aie::geography::core_axi_stream_switch::master_port_layout()'],['../structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1geography_1_1shim__axi__stream__switch.html#ac1df7066dc078bbc5f2fd5c19ea7a514',1,'trisycl::vendor::xilinx::acap::aie::geography::shim_axi_stream_switch::master_port_layout()'],['../structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1geography_1_1core__axi__stream__switch.html#ac503c4ae94e995dc6bdc9d75745dced5',1,'trisycl::vendor::xilinx::acap::aie::geography::core_axi_stream_switch::master_port_layout()'],['../structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1geography_1_1shim__axi__stream__switch.html#ac1df7066dc078bbc5f2fd5c19ea7a514',1,'trisycl::vendor::xilinx::acap::aie::geography::shim_axi_stream_switch::master_port_layout()']]],
+  ['mode_1',['mode',['../namespacetrisycl_1_1access.html#a2ee71c8ee80896e782636c805fab297c',1,'trisycl::access']]]
 ];

@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::tile_base::out_connection" name="trisycl::vendor::xilinx::acap::aie::tile_base::out_connection">
+<area shape="rect" id="node1" title="Get the user output connection to the AXI stream switch." alt="" coords="5,5,148,61"/>
+<area shape="rect" id="node2" href="$group__aie.html#a09f10a3b25cd9f56661a7b328c80abc4" title="Get the user output connection to the AXI stream switch." alt="" coords="196,5,387,61"/>
+</map>

@@ -1,0 +1,22 @@
+<map id="trisycl::vendor::xilinx::graphics::image_grid" name="trisycl::vendor::xilinx::graphics::image_grid">
+<area shape="rect" id="node1" title="An application window displaying a grid of tiled images." alt="" coords="653,582,804,623"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1vendor_1_1xilinx_1_1graphics_1_1frame__grid.html" title="An application window displaying a grid of tiles." alt="" coords="305,201,453,242"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,157,168,184"/>
+<area shape="rect" id="node4" title=" " alt="" coords="29,208,145,235"/>
+<area shape="rect" id="node5" title=" " alt="" coords="63,259,110,285"/>
+<area shape="rect" id="node6" title=" " alt="" coords="57,5,117,32"/>
+<area shape="rect" id="node7" title=" " alt="" coords="13,56,161,83"/>
+<area shape="rect" id="node8" title=" " alt="" coords="67,436,106,463"/>
+<area shape="rect" id="node15" href="$structtrisycl_1_1vendor_1_1xilinx_1_1graphics_1_1palette.html" title="Color palette to project a linear data space to an RGB color space." alt="" coords="308,498,451,539"/>
+<area shape="rect" id="node9" title=" " alt="" coords="15,327,159,353"/>
+<area shape="rect" id="node10" title=" " alt="" coords="32,107,141,133"/>
+<area shape="rect" id="node11" title=" " alt="" coords="306,564,453,591"/>
+<area shape="rect" id="node12" title=" " alt="" coords="337,615,422,641"/>
+<area shape="rect" id="node13" title=" " alt="" coords="350,665,409,692"/>
+<area shape="rect" id="node14" title=" " alt="" coords="316,716,443,743"/>
+<area shape="rect" id="node16" title=" " alt="" coords="24,560,149,587"/>
+<area shape="rect" id="node17" title=" " alt="" coords="63,611,110,637"/>
+<area shape="rect" id="node18" href="$classbool.html" title=" " alt="" coords="356,767,403,793"/>
+<area shape="rect" id="node19" title=" " alt="" coords="335,817,424,844"/>
+<area shape="rect" id="node20" title=" " alt="" coords="350,868,409,895"/>
+</map>

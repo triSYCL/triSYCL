@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::lock_unit::lock" name="trisycl::vendor::xilinx::acap::aie::lock_unit::lock">
+<area shape="rect" id="node1" title="Get the requested lock." alt="" coords="307,5,481,47"/>
+<area shape="rect" id="node2" href="$group__aie.html#af4ca43b23d5ac84f6c29a20fa4c3773b" title="Get access to a specific lock in this memory module." alt="" coords="5,5,259,47"/>
+</map>

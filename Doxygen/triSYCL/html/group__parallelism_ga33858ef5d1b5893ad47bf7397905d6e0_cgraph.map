@@ -1,3 +1,4 @@
 <map id="trisycl::detail::parallel_for_global_offset" name="trisycl::detail::parallel_for_global_offset">
-<area shape="rect" id="node2" href="$group__parallelism.html#gade69cd4aa408811c685ac3b3168271ae" title="Implementation of a data parallel computation with parallelism specified at launch time by a range&lt;&gt;..." alt="" coords="199,13,365,39"/>
+<area shape="rect" id="node1" title="Implementation of parallel_for with a range&lt;&gt; and an offset." alt="" coords="5,5,151,47"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#gade69cd4aa408811c685ac3b3168271ae" title="Implementation of a data parallel computation with parallelism specified at launch time by a range&lt;&gt;." alt="" coords="199,13,365,39"/>
 </map>

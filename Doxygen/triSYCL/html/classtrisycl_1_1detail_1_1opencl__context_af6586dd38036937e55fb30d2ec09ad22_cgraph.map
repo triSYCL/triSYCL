@@ -1,3 +1,4 @@
 <map id="trisycl::detail::opencl_context::~opencl_context" name="trisycl::detail::opencl_context::~opencl_context">
-<area shape="rect" id="node2" href="$classtrisycl_1_1detail_1_1cache.html#a15d9850964e936f262eb26f68d5cccec" title="Remove an entry from the cache. " alt="" coords="229,5,368,47"/>
+<area shape="rect" id="node1" title="Unregister from the cache on destruction." alt="" coords="5,5,181,47"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1detail_1_1cache.html#a15d9850964e936f262eb26f68d5cccec" title="Remove an entry from the cache." alt="" coords="229,5,368,47"/>
 </map>

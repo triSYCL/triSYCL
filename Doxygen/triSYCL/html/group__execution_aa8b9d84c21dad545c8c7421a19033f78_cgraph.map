@@ -1,0 +1,5 @@
+<map id="trisycl::handler::parallel_for" name="trisycl::handler::parallel_for">
+<area shape="rect" id="node1" title="Kernel invocation method of a kernel defined as a lambda or functor, for the specified range and offs..." alt="" coords="5,13,184,39"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#ga33858ef5d1b5893ad47bf7397905d6e0" title="Implementation of parallel_for with a range&lt;&gt; and an offset." alt="" coords="232,5,377,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#gade69cd4aa408811c685ac3b3168271ae" title="Implementation of a data parallel computation with parallelism specified at launch time by a range&lt;&gt;." alt="" coords="425,13,592,39"/>
+</map>

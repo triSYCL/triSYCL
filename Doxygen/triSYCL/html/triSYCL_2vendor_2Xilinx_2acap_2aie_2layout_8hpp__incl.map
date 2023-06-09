@@ -1,0 +1,8 @@
+<map id="include/triSYCL/vendor/Xilinx/acap/aie/layout.hpp" name="include/triSYCL/vendor/Xilinx/acap/aie/layout.hpp">
+<area shape="rect" id="node1" title="Some examples of AI Engine array layouts." alt="" coords="148,5,323,47"/>
+<area shape="rect" id="node2" href="$triSYCL_2vendor_2Xilinx_2acap_2aie_2layout_2full_8hpp.html" title="Layout for a AI Engine array with 5*6 PE." alt="" coords="184,169,287,196"/>
+<area shape="rect" id="node3" href="$triSYCL_2vendor_2Xilinx_2acap_2aie_2layout_2one__pe_8hpp.html" title="Layout for a AI Engine array with 1 PE only." alt="" coords="27,95,155,121"/>
+<area shape="rect" id="node4" href="$triSYCL_2vendor_2Xilinx_2acap_2aie_2layout_2size_8hpp.html" title="Flexible layout for a AI Engine array with any 2D size." alt="" coords="180,95,291,121"/>
+<area shape="rect" id="node5" href="$triSYCL_2vendor_2Xilinx_2acap_2aie_2layout_2small_8hpp.html" title="Layout for a AI Engine array with a few PE only." alt="" coords="315,95,433,121"/>
+<area shape="rect" id="node6" href="$triSYCL_2vendor_2Xilinx_2acap_2aie_2layout_2versal_8hpp.html" title="Layout for some Xilinx Versal products." alt="" coords="457,95,579,121"/>
+</map>

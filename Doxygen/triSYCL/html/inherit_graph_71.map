@@ -1,4 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$group__error__handling.html#structtrisycl_1_1error__handler" title="User supplied error handler to call a user&#45;provided function when an error happens from a SYCL object..." alt="" coords="5,13,145,39"/>
-<area shape="rect" id="node2" href="$structtrisycl_1_1trisycl_1_1default__error__handler.html" title="trisycl::trisycl::default\l_error_handler" alt="" coords="193,5,340,47"/>
+<area shape="rect" id="node1" href="$group__debug__trace.html" title=" " alt="" coords="5,5,192,76"/>
+<area shape="rect" id="node2" href="$group__old__data.html#classtrisycl_1_1detail_1_1sycl__2__2_1_1pipe__accessor" title="The accessor abstracts the way pipe data are accessed inside a kernel." alt="" coords="240,13,411,69"/>
 </map>

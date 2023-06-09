@@ -1,3 +1,5 @@
 <map id="trisycl::vendor::trisycl::scope::device&lt; DeviceStorage, ScopedPlatform &gt;" name="trisycl::vendor::trisycl::scope::device&lt; DeviceStorage, ScopedPlatform &gt;">
-<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1shared__ptr__implementation.html" title="trisycl::detail::shared\l_ptr_implementation\&lt; device\l\&lt; DeviceStorage, ScopedPlatform\l \&gt;, detail::device\&lt; DeviceStorage,\l ScopedPlatform \&gt; \&gt;" alt="" coords="228,5,449,91"/>
+<area shape="rect" id="node1" title="A conceptual device implementing some device&#45;scoped storage and based on a platform with platform&#45;sco..." alt="" coords="580,35,793,91"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1shared__ptr__implementation.html" title=" " alt="" coords="260,5,532,120"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,20,212,105"/>
 </map>

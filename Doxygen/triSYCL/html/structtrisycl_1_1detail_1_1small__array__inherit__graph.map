@@ -1,3 +1,8 @@
-<map id="trisycl::detail::small_array&lt; BasicType, FinalType, Dims, EnableArgsConstructor &gt;" name="trisycl::detail::small_array&lt; BasicType, FinalType, Dims, EnableArgsConstructor &gt;">
-<area shape="rect" id="node4" href="$group__debug__trace.html" title="trisycl::detail::display\l_vector\&lt; FinalType \&gt;" alt="" coords="37,211,183,252"/>
+<map id="trisycl::detail::small_array&lt; BasicType, FinalType, Dims &gt;" name="trisycl::detail::small_array&lt; BasicType, FinalType, Dims &gt;">
+<area shape="rect" id="node1" title="Define a multi&#45;dimensional index, used for example to locate a work item or a buffer element." alt="" coords="260,153,459,209"/>
+<area shape="rect" id="node6" href="$group__helpers.html#structtrisycl_1_1detail_1_1small__array__sycl" title="A small array to implement SYCL objects like id, range, item... with 1, 2 or 3 elements (or even more..." alt="" coords="507,153,673,209"/>
+<area shape="rect" id="node2" title=" " alt="" coords="31,5,186,47"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,71,212,186"/>
+<area shape="rect" id="node4" href="$group__debug__trace.html" title=" " alt="" coords="36,211,181,252"/>
+<area shape="rect" id="node5" href="$group__helpers.html#structtrisycl_1_1detail_1_1small__array__tag" title="Tag to define simply inheritance from small_array." alt="" coords="41,276,176,317"/>
 </map>

@@ -1,0 +1,6 @@
+<map id="trisycl::mixin::accessor::update" name="trisycl::mixin::accessor::update">
+<area shape="rect" id="node1" title="Update the accessor to target somewhere else." alt="" coords="5,39,163,80"/>
+<area shape="rect" id="node2" href="$group__execution.html#a2148e7f785dcd09aa05272a378c31817" title="Get the underlying storage." alt="" coords="211,5,368,47"/>
+<area shape="rect" id="node3" href="$group__execution.html#a255326fb325821d440d826dabda8f043" title="Cast a SYCL range/id&#45;like into a mdspan index array, which is an array of std::size_t into an array o..." alt="" coords="211,71,368,112"/>
+<area shape="rect" id="node4" href="$group__execution.html#a67e0bd652641192aeb41a0b8adf2d8f3" title="Get the number of dimensions of the buffer." alt="" coords="416,71,573,112"/>
+</map>

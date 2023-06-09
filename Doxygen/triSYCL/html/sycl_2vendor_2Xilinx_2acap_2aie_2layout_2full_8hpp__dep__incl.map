@@ -1,0 +1,10 @@
+<map id="include/sycl/vendor/Xilinx/acap/aie/layout/full.hpp" name="include/sycl/vendor/Xilinx/acap/aie/layout/full.hpp">
+<area shape="rect" id="node1" title="Layout for a AI Engine array with 5*6 PE." alt="" coords="206,5,356,61"/>
+<area shape="rect" id="node2" href="$sycl_2vendor_2Xilinx_2acap_2aie_2layout_8hpp.html" title="Some examples of AI Engine array layouts." alt="" coords="194,213,368,255"/>
+<area shape="rect" id="node5" href="$sycl_2vendor_2Xilinx_2acap_2aie_2layout_2one__pe_8hpp.html" title="Layout for a AI Engine array with 1 PE only." alt="" coords="31,109,182,165"/>
+<area shape="rect" id="node6" href="$sycl_2vendor_2Xilinx_2acap_2aie_2layout_2size_8hpp.html" title="Flexible layout for a AI Engine array with any 2D size." alt="" coords="206,109,356,165"/>
+<area shape="rect" id="node7" href="$sycl_2vendor_2Xilinx_2acap_2aie_2layout_2small_8hpp.html" title="Layout for a AI Engine array with a few PE only." alt="" coords="380,109,531,165"/>
+<area shape="rect" id="node8" href="$sycl_2vendor_2Xilinx_2acap_2aie_2layout_2versal_8hpp.html" title="Layout for some Xilinx Versal products." alt="" coords="555,109,706,165"/>
+<area shape="rect" id="node3" href="$sycl_2vendor_2Xilinx_2acap_2aie_8hpp.html" title="Experimenting with CGRA &amp; processor arrays such as ACAP/AI Engine." alt="" coords="213,303,349,344"/>
+<area shape="rect" id="node4" href="$sycl_2vendor_2Xilinx_2acap_8hpp.html" title="Experimenting with CGRA &amp; processor arrays such as ACAP/AI Engine." alt="" coords="214,392,348,433"/>
+</map>

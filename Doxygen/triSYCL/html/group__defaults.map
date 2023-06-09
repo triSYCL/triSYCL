@@ -1,3 +1,12 @@
 <map id="Manage default configuration and types" name="Manage default configuration and types">
-<area shape="rect" id="node2" href="$group__vector.html" title="Vector types in SYCL" alt="" coords="279,13,428,39"/>
+<area shape="rect" id="node1" href="$group__Xilinx.html" title=" " alt="" coords="331,5,495,31"/>
+<area shape="rect" id="node2" href="$group__acap__debug.html" title="Some classes and functions to help debuging ACAP applications, such as verifying BSP forward progress..." alt="" coords="317,55,508,80"/>
+<area shape="rect" id="node3" href="$group__aie.html" title="Extensions to support explicit AI Engine system&#45;wide programming in C++." alt="" coords="351,104,474,129"/>
+<area shape="rect" id="node4" title=" " alt="" coords="5,218,195,258"/>
+<area shape="rect" id="node5" href="$group__execution.html" title=" " alt="" coords="334,154,491,194"/>
+<area shape="rect" id="node6" href="$group__graphics.html" title="This can create a graphics application and typically update some sub&#45;images on a frame." alt="" coords="336,218,489,258"/>
+<area shape="rect" id="node7" href="$group__latex.html" title="This can generate LaTeX output used to display internal configuration for debug or teaching purpose." alt="" coords="323,282,502,322"/>
+<area shape="rect" id="node8" href="$group__opencl__spir__helpers.html" title=" " alt="" coords="343,347,483,372"/>
+<area shape="rect" id="node9" href="$group__parallelism.html" title=" " alt="" coords="336,398,489,438"/>
+<area shape="rect" id="node10" href="$group__vector.html" title=" " alt="" coords="338,463,487,488"/>
 </map>

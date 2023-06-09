@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['opencl_5fspir_5fhelpers',['Opencl_spir_helpers',['../group__opencl__spir__helpers.html',1,'']]]
+  ['helpers_20to_20do_20array_20and_20tuple_20conversion_0',['Helpers to do array and tuple conversion',['../group__array__tuple__helpers.html',1,'']]]
 ];

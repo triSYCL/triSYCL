@@ -1,0 +1,5 @@
+<map id="trisycl::vendor::xilinx::acap::aie::device::queue" name="trisycl::vendor::xilinx::acap::aie::device::queue">
+<area shape="rect" id="node1" title="Create a queue on this device." alt="" coords="259,39,431,80"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1device.html#add2e78d459c89b14490a05dc30c40afd" title="Shortcut to run synchronously a program on this queue." alt="" coords="31,5,185,47"/>
+<area shape="rect" id="node3" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1device.html#abea2b1c1ead7947de3473d9aaa579392" title="Shortcut to run synchronously a uniform invocable on this queue." alt="" coords="5,71,211,112"/>
+</map>

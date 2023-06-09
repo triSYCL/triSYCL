@@ -1,0 +1,6 @@
+<map id="include/sycl/vendor/Xilinx/acap/aie/layout/size.hpp" name="include/sycl/vendor/Xilinx/acap/aie/layout/size.hpp">
+<area shape="rect" id="node1" title="Flexible layout for a AI Engine array with any 2D size." alt="" coords="17,5,168,61"/>
+<area shape="rect" id="node2" href="$sycl_2vendor_2Xilinx_2acap_2aie_2layout_8hpp.html" title="Some examples of AI Engine array layouts." alt="" coords="5,109,180,151"/>
+<area shape="rect" id="node3" href="$sycl_2vendor_2Xilinx_2acap_2aie_8hpp.html" title="Experimenting with CGRA &amp; processor arrays such as ACAP/AI Engine." alt="" coords="25,199,161,240"/>
+<area shape="rect" id="node4" href="$sycl_2vendor_2Xilinx_2acap_8hpp.html" title="Experimenting with CGRA &amp; processor arrays such as ACAP/AI Engine." alt="" coords="25,288,160,329"/>
+</map>

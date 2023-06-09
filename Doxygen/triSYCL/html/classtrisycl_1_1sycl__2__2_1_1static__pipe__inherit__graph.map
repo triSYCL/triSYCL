@@ -1,0 +1,6 @@
+<map id="trisycl::sycl_2_2::static_pipe&lt; T, Capacity &gt;" name="trisycl::sycl_2_2::static_pipe&lt; T, Capacity &gt;">
+<area shape="rect" id="node1" title="A SYCL static&#45;scoped pipe equivalent to an OpenCL program&#45;scoped pipe." alt="" coords="499,60,673,101"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1shared__ptr__implementation.html" title=" " alt="" coords="260,5,443,76"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,20,204,61"/>
+<area shape="rect" id="node4" href="$group__debug__trace.html" title=" " alt="" coords="252,100,451,141"/>
+</map>

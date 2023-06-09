@@ -1,4 +1,0 @@
-<map id="trisycl::detail::accessor::accessor" name="trisycl::detail::accessor::accessor">
-<area shape="rect" id="node2" href="$group__data.html#ga0bfb3fecc61ee391e268331b495caecc" title="Proxy function to avoid some circular type recursion. " alt="" coords="221,5,358,47"/>
-<area shape="rect" id="node3" href="$group__data.html#ae93b6f20bc4c61705ae616c02b5ad8ed" title="Test if the accessor has a write access right. " alt="" coords="211,71,368,112"/>
-</map>

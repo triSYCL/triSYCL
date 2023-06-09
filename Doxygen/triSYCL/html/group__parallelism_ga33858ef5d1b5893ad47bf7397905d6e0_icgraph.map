@@ -1,3 +1,4 @@
 <map id="trisycl::detail::parallel_for_global_offset" name="trisycl::detail::parallel_for_global_offset">
-<area shape="rect" id="node2" href="$group__parallelism.html#ga003201ce3c2a95af831b1c58fbb3804c" title="trisycl::detail::parallel\l_for_iterate" alt="" coords="199,5,344,47"/>
+<area shape="rect" id="node1" title="Implementation of parallel_for with a range&lt;&gt; and an offset." alt="" coords="232,5,377,47"/>
+<area shape="rect" id="node2" href="$group__execution.html#aa8b9d84c21dad545c8c7421a19033f78" title="Kernel invocation method of a kernel defined as a lambda or functor, for the specified range and offs..." alt="" coords="5,13,184,39"/>
 </map>

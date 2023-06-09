@@ -1,0 +1,7 @@
+<map id="trisycl::vendor::xilinx::acap::aie::tile_infrastructure&lt; Geography &gt;" name="trisycl::vendor::xilinx::acap::aie::tile_infrastructure&lt; Geography &gt;">
+<area shape="rect" id="node1" title="The AI Engine tile infrastructure common to all the tiles." alt="" coords="795,45,985,101"/>
+<area shape="rect" id="node2" href="$group__execution.html" title=" " alt="" coords="524,38,745,109"/>
+<area shape="rect" id="node3" href="$structtrisycl_1_1detail_1_1shared__ptr__implementation.html" title=" " alt="" coords="293,31,475,116"/>
+<area shape="rect" id="node4" title=" " alt="" coords="5,5,152,61"/>
+<area shape="rect" id="node5" href="$classstd_1_1shared__ptr_3_01detail_1_1tile__infrastructure_3_01Geography_01_4_01_4.html" title=" " alt="" coords="13,85,144,141"/>
+</map>

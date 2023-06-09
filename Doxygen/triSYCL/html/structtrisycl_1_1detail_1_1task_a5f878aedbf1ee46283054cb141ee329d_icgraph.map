@@ -1,3 +1,4 @@
 <map id="trisycl::detail::task::notify_consumers" name="trisycl::detail::task::notify_consumers">
-<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1task.html#af00c26cae77da2f1ff242d8c5aa89929" title="Add a new task to the task graph and schedule for execution. " alt="" coords="187,5,316,47"/>
+<area shape="rect" id="node1" title="Notify the waiting tasks that we are done." alt="" coords="183,5,316,47"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1task.html#af00c26cae77da2f1ff242d8c5aa89929" title="Add a new task to the task graph and schedule for execution." alt="" coords="5,5,135,47"/>
 </map>

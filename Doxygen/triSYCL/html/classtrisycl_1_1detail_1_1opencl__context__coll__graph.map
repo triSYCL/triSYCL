@@ -1,4 +1,9 @@
 <map id="trisycl::detail::opencl_context" name="trisycl::detail::opencl_context">
-<area shape="rect" id="node2" href="$group__execution.html#classtrisycl_1_1detail_1_1context" title="trisycl::detail::context" alt="" coords="225,5,371,32"/>
-<area shape="rect" id="node4" href="$classtrisycl_1_1detail_1_1cache.html" title="trisycl::detail::cache\l\&lt; cl_context, trisycl\l::detail::opencl_context \&gt;" alt="" coords="213,107,383,163"/>
+<area shape="rect" id="node1" title="SYCL OpenCL context." alt="" coords="471,74,613,115"/>
+<area shape="rect" id="node2" href="$group__execution.html#classtrisycl_1_1detail_1_1context" title=" " alt="" coords="225,5,371,32"/>
+<area shape="rect" id="node3" title=" " alt="" coords="265,56,331,83"/>
+<area shape="rect" id="node4" title=" " alt="" coords="237,107,359,133"/>
+<area shape="rect" id="node5" href="$classtrisycl_1_1detail_1_1cache.html" title=" " alt="" coords="213,157,383,213"/>
+<area shape="rect" id="node6" title=" " alt="" coords="5,124,149,180"/>
+<area shape="rect" id="node7" title=" " alt="" coords="48,204,107,231"/>
 </map>

@@ -1,0 +1,11 @@
+<map id="trisycl::vendor::xilinx::acap::aie::tile::memory_module_linear_id" name="trisycl::vendor::xilinx::acap::aie::tile::memory_module_linear_id">
+<area shape="rect" id="node1" title="Compute the linear id of a memory module attached to this tile." alt="" coords="851,31,1013,87"/>
+<area shape="rect" id="node2" href="$group__aie.html#ab3eb4f645782530cb263aa87613d2236" title="Get the memory module on the South if it does exist." alt="" coords="619,5,803,47"/>
+<area shape="rect" id="node4" href="$group__aie.html#ad777a7bfef46616736ee46278e1b965b" title="Get the memory module on the West if it does exist." alt="" coords="621,71,801,112"/>
+<area shape="rect" id="node3" href="$group__aie.html#add257a4684af7449ba21b606761fb0ee" title="Get the memory module relative to the tile." alt="" coords="425,5,571,47"/>
+<area shape="rect" id="node5" href="$group__aie.html#ad2ec0db244915c4ccfa4a682c5beb521" title="An horizontal barrier using a lock." alt="" coords="205,55,377,111"/>
+<area shape="rect" id="node7" href="$group__aie.html#a4b06421ad70b71a378e36c8a7f7a849c" title="The memory module native to the tile." alt="" coords="425,129,571,171"/>
+<area shape="rect" id="node6" href="$group__aie.html#a41edf9ee6198a429aafb54fb5c7c68e3" title="Full barrier using the 2 locks by default." alt="" coords="5,136,157,177"/>
+<area shape="rect" id="node8" href="$group__aie.html#a49cf8210764e396cf47c8bafb7b01aed" title="Select a lock for the following operations." alt="" coords="205,136,377,177"/>
+<area shape="rect" id="node9" href="$group__aie.html#aaa455173d321b803900ebc2a7a3f4676" title="A vertical barrier using a lock." alt="" coords="212,202,371,258"/>
+</map>

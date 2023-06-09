@@ -1,0 +1,52 @@
+<map id="include/triSYCL/info/device.hpp" name="include/triSYCL/info/device.hpp">
+<area shape="rect" id="node1" title=" " alt="" coords="88,5,227,47"/>
+<area shape="rect" id="node2" href="$triSYCL_2device_8hpp.html" title=" " alt="" coords="1034,95,1214,121"/>
+<area shape="rect" id="node16" href="$device__runtime_8hpp.html" title=" " alt="" coords="311,1360,465,1401"/>
+<area shape="rect" id="node39" href="$triSYCL_2platform_8hpp.html" title=" " alt="" coords="967,273,1156,300"/>
+<area shape="rect" id="node3" href="$sycl_2vendor_2triSYCL_2scope_2device_8hpp.html" title=" " alt="" coords="2101,556,2280,597"/>
+<area shape="rect" id="node4" href="$sycl_2vendor_2triSYCL_2scope_2device_2detail_2device_8hpp.html" title=" " alt="" coords="1894,169,2047,225"/>
+<area shape="rect" id="node5" href="$context_8hpp.html" title=" " alt="" coords="969,563,1154,590"/>
+<area shape="rect" id="node9" href="$triSYCL_2sycl_8hpp.html" title=" " alt="" coords="722,1650,889,1677"/>
+<area shape="rect" id="node18" href="$triSYCL_2queue_8hpp.html" title=" " alt="" coords="1251,1457,1429,1483"/>
+<area shape="rect" id="node29" href="$host__queue_8hpp.html" title=" " alt="" coords="1263,735,1417,776"/>
+<area shape="rect" id="node30" href="$opencl__queue_8hpp.html" title=" " alt="" coords="1441,735,1607,776"/>
+<area shape="rect" id="node31" href="$triSYCL_2queue_2detail_2queue_8hpp.html" title=" " alt="" coords="815,645,967,687"/>
+<area shape="rect" id="node35" href="$context_2detail_2context_8hpp.html" title=" " alt="" coords="627,355,787,397"/>
+<area shape="rect" id="node38" href="$opencl__platform_8hpp.html" title=" " alt="" coords="1099,177,1277,218"/>
+<area shape="rect" id="node48" href="$triSYCL_2vendor_2triSYCL_2scope_2device_8hpp.html" title=" " alt="" coords="1899,556,2077,597"/>
+<area shape="rect" id="node50" href="$triSYCL_2vendor_2triSYCL_2scope_2device_2detail_2device_8hpp.html" title=" " alt="" coords="1997,452,2153,508"/>
+<area shape="rect" id="node6" href="$buffer__base_8hpp.html" title=" " alt="" coords="980,913,1135,955"/>
+<area shape="rect" id="node7" href="$buffer_2detail_2buffer_8hpp.html" title=" " alt="" coords="931,1181,1082,1223"/>
+<area shape="rect" id="node13" href="$task_8hpp.html" title=" " alt="" coords="734,1003,909,1044"/>
+<area shape="rect" id="node8" href="$buffer_8hpp.html" title=" " alt="" coords="873,1553,1047,1580"/>
+<area shape="rect" id="node12" href="$buffer__waiter_8hpp.html" title=" " alt="" coords="927,1271,1087,1312"/>
+<area shape="rect" id="node10" href="$CL_2sycl_8hpp.html" title="This is the main SYCL 1.2.1 interoperability header to expose triSYCL into the cl::sycl namespace." alt="" coords="654,1739,791,1766"/>
+<area shape="rect" id="node11" href="$sycl_2sycl_8hpp.html" title="This is the SYCL extension header to expose triSYCL directly into the sycl namespace as expected by S..." alt="" coords="816,1739,960,1766"/>
+<area shape="rect" id="node14" href="$triSYCL_2buffer_2detail_2accessor_8hpp.html" title=" " alt="" coords="589,1092,739,1133"/>
+<area shape="rect" id="node17" href="$handler_8hpp.html" title=" " alt="" coords="754,1367,937,1394"/>
+<area shape="rect" id="node28" href="$instantiate__kernel_8hpp.html" title=" " alt="" coords="815,1092,969,1133"/>
+<area shape="rect" id="node15" href="$triSYCL_2accessor_8hpp.html" title=" " alt="" coords="476,1278,671,1305"/>
+<area shape="rect" id="node27" href="$local__accessor_8hpp.html" title=" " alt="" coords="578,1181,750,1223"/>
+<area shape="rect" id="node25" href="$sycl__2__2_2pipe_8hpp.html" title=" " alt="" coords="436,1449,577,1491"/>
+<area shape="rect" id="node26" href="$static__pipe_8hpp.html" title=" " alt="" coords="653,1449,795,1491"/>
+<area shape="rect" id="node19" href="$sycl_2vendor_2triSYCL_2scope_2queue_8hpp.html" title=" " alt="" coords="1403,1643,1578,1684"/>
+<area shape="rect" id="node20" href="$sycl_2vendor_2triSYCL_2scope_2queue_2detail_2queue_8hpp.html" title=" " alt="" coords="1263,1539,1414,1595"/>
+<area shape="rect" id="node21" href="$triSYCL_2vendor_2triSYCL_2scope_2queue_8hpp.html" title=" " alt="" coords="1602,1643,1777,1684"/>
+<area shape="rect" id="node24" href="$triSYCL_2vendor_2triSYCL_2scope_2queue_2detail_2queue_8hpp.html" title=" " alt="" coords="1541,1539,1726,1595"/>
+<area shape="rect" id="node22" href="$sycl_2vendor_2triSYCL_2scope_8hpp.html" title=" " alt="" coords="1885,1732,2021,1773"/>
+<area shape="rect" id="node23" href="$triSYCL_2vendor_2triSYCL_2scope_8hpp.html" title=" " alt="" coords="1705,1732,1861,1773"/>
+<area shape="rect" id="node32" href="$kernel_2detail_2kernel_8hpp.html" title=" " alt="" coords="872,735,1024,776"/>
+<area shape="rect" id="node34" href="$opencl__kernel_8hpp.html" title=" " alt="" coords="778,824,945,865"/>
+<area shape="rect" id="node33" href="$kernel_8hpp.html" title=" " alt="" coords="778,921,955,947"/>
+<area shape="rect" id="node36" href="$host__context_8hpp.html" title=" " alt="" coords="646,459,807,501"/>
+<area shape="rect" id="node37" href="$opencl__context_8hpp.html" title=" " alt="" coords="849,459,1023,501"/>
+<area shape="rect" id="node40" href="$sycl_2vendor_2triSYCL_2scope_2platform_8hpp.html" title=" " alt="" coords="1115,459,1301,501"/>
+<area shape="rect" id="node41" href="$sycl_2vendor_2triSYCL_2scope_2platform_2detail_2platform_8hpp.html" title=" " alt="" coords="811,348,973,404"/>
+<area shape="rect" id="node42" href="$triSYCL_2device_2detail_2device_8hpp.html" title=" " alt="" coords="245,355,400,397"/>
+<area shape="rect" id="node43" href="$host__device_8hpp.html" title=" " alt="" coords="287,459,443,501"/>
+<area shape="rect" id="node44" href="$opencl__device_8hpp.html" title=" " alt="" coords="94,459,263,501"/>
+<area shape="rect" id="node45" href="$triSYCL_2platform_2detail_2platform_8hpp.html" title=" " alt="" coords="1489,355,1653,397"/>
+<area shape="rect" id="node47" href="$triSYCL_2vendor_2triSYCL_2scope_2platform_8hpp.html" title=" " alt="" coords="1733,459,1920,501"/>
+<area shape="rect" id="node49" href="$triSYCL_2vendor_2triSYCL_2scope_2platform_2detail_2platform_8hpp.html" title=" " alt="" coords="1149,348,1312,404"/>
+<area shape="rect" id="node46" href="$host__platform_8hpp.html" title=" " alt="" coords="1391,459,1556,501"/>
+</map>

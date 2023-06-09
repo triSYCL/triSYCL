@@ -1,11 +1,8 @@
 <map id="trisycl::range::size" name="trisycl::range::size">
-<area shape="rect" id="node2" href="$group__data.html#ae9f599aa045b06492d322e704d0bb79b" title="Allocate uninitialized buffer memory. " alt="" coords="183,5,345,76"/>
-<area shape="rect" id="node3" href="$group__data.html#aae2f9755df12109f3d7c7fa55e2805a5" title="Allocate uninitialized buffer memory. " alt="" coords="195,100,333,141"/>
-<area shape="rect" id="node6" href="$group__parallelism.html#gae45ef8f8ab2c96ae4f647e10f656c13a" title="Implement the loop on the work&#45;items inside a work&#45;group. " alt="" coords="191,191,337,232"/>
-<area shape="rect" id="node4" href="$group__data.html#ac3824b2602bacdc61cd136c3251f0fb3" title="Create a new read&#45;write buffer of size. " alt="" coords="408,35,545,76"/>
-<area shape="rect" id="node5" href="$group__data.html#a405f7171b1ab0944411293437500ff5f" title="This method is to be called whenever an accessor is created. " alt="" coords="403,100,550,141"/>
-<area shape="rect" id="node7" href="$group__parallelism.html#ga51d38178288f87c00720c90adf099b12" title="Implement a variation of parallel_for to take into account a nd_range&lt;&gt; " alt="" coords="393,166,560,193"/>
-<area shape="rect" id="node8" href="$group__parallelism.html#ga876d173bd185aefef8daf2459267fe9f" title="Implement the loop on the work&#45;items inside a work&#45;group. " alt="" coords="397,217,557,259"/>
-<area shape="rect" id="node10" href="$group__parallelism.html#ga003201ce3c2a95af831b1c58fbb3804c" title="trisycl::detail::parallel\l_for_iterate" alt="" coords="609,276,754,317"/>
-<area shape="rect" id="node9" href="$group__parallelism.html#af8b3fe6b818b38f0bd960e6c807de88c" title="Loop on the work&#45;items inside a work&#45;group. " alt="" coords="608,211,755,252"/>
+<area shape="rect" id="node1" title="Return the number of elements in the range." alt="" coords="608,46,737,73"/>
+<area shape="rect" id="node2" href="$group__data.html#aae2f9755df12109f3d7c7fa55e2805a5" title="Allocate uninitialized buffer memory." alt="" coords="419,5,556,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#gae45ef8f8ab2c96ae4f647e10f656c13a" title="Implement the loop on the work&#45;items inside a work&#45;group." alt="" coords="415,71,560,112"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#ga51d38178288f87c00720c90adf099b12" title="Implement a variation of parallel_for to take into account a nd_range&lt;&gt;" alt="" coords="200,49,367,75"/>
+<area shape="rect" id="node5" href="$group__parallelism.html#ga876d173bd185aefef8daf2459267fe9f" title="Implement the loop on the work&#45;items inside a work&#45;group." alt="" coords="203,100,363,141"/>
+<area shape="rect" id="node6" href="$group__parallelism.html#a465d20ef4a86acc0ecf904153b4bae24" title="Loop on the work&#45;items inside a work&#45;group." alt="" coords="5,100,152,141"/>
 </map>

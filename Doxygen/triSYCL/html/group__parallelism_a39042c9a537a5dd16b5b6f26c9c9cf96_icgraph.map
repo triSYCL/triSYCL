@@ -1,0 +1,15 @@
+<map id="trisycl::group::get_nd_range" name="trisycl::group::get_nd_range">
+<area shape="rect" id="node1" title=" " alt="" coords="779,201,901,243"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#aac6528700b788aeca5a66eb8e81b4c9b" title="Get the local range for this work_group." alt="" coords="608,39,731,80"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#a34acf7f3dfa5f2a9006020029740e0b3" title="Return a range&lt;&gt; representing the dimensions of the current group." alt="" coords="608,136,731,177"/>
+<area shape="rect" id="node7" href="$group__parallelism.html#abb2105fd1c7b7fb99254b9f6d8c2a5e7" title="Get the local range for this work_group." alt="" coords="608,201,731,243"/>
+<area shape="rect" id="node9" href="$group__parallelism.html#gae45ef8f8ab2c96ae4f647e10f656c13a" title="Implement the loop on the work&#45;items inside a work&#45;group." alt="" coords="415,267,560,308"/>
+<area shape="rect" id="node13" href="$group__parallelism.html#a3824f3ea4298030687d832c6e141f0e9" title="Get the offset of the NDRange." alt="" coords="608,319,731,360"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#a486b2a17a7d3df7b85a0d07ed33afdd1" title="Return element dimension from the constituent global range." alt="" coords="426,5,549,47"/>
+<area shape="rect" id="node5" href="$group__parallelism.html#a5ffec3eaf0277602ea53fef06d5ca3f8" title="Return element dimension from the con stituent group range." alt="" coords="426,71,549,112"/>
+<area shape="rect" id="node6" href="$group__parallelism.html#ae503403247be0c196ee45d4f23c8485f" title="Get a linearized version of the group ID." alt="" coords="426,136,549,177"/>
+<area shape="rect" id="node8" href="$group__parallelism.html#af76db314c2ad26d802a6d22454323968" title="Return element dimension from the constituent local range." alt="" coords="426,201,549,243"/>
+<area shape="rect" id="node10" href="$group__parallelism.html#ga51d38178288f87c00720c90adf099b12" title="Implement a variation of parallel_for to take into account a nd_range&lt;&gt;" alt="" coords="200,245,367,271"/>
+<area shape="rect" id="node11" href="$group__parallelism.html#ga876d173bd185aefef8daf2459267fe9f" title="Implement the loop on the work&#45;items inside a work&#45;group." alt="" coords="203,296,363,337"/>
+<area shape="rect" id="node12" href="$group__parallelism.html#a465d20ef4a86acc0ecf904153b4bae24" title="Loop on the work&#45;items inside a work&#45;group." alt="" coords="5,296,152,337"/>
+</map>

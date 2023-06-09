@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::tile_base::wait" name="trisycl::vendor::xilinx::acap::aie::tile_base::wait">
+<area shape="rect" id="node1" title="Wait for the execution of the callable on this tile." alt="" coords="5,5,180,47"/>
+<area shape="rect" id="node2" href="$group__aie.html#adb98839da5b2ebaf39c408c55c44fa71" title="Wait for the execution of the callable on this tile." alt="" coords="228,5,451,47"/>
+</map>

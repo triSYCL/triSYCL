@@ -1,4 +1,7 @@
 <map id="trisycl::device" name="trisycl::device">
-<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1shared__ptr__implementation.html" title="trisycl::detail::shared\l_ptr_implementation\&lt; device,\l detail::device \&gt;" alt="" coords="62,109,255,165"/>
-<area shape="rect" id="node4" href="$classstd_1_1shared__ptr_3_01detail_1_1device_01_4.html" title="shared_ptr\&lt; detail\l::device \&gt;" alt="" coords="177,5,303,47"/>
+<area shape="rect" id="node1" title="SYCL device." alt="" coords="107,305,210,332"/>
+<area shape="rect" id="node2" href="$group__execution.html" title=" " alt="" coords="74,215,243,256"/>
+<area shape="rect" id="node3" href="$structtrisycl_1_1detail_1_1shared__ptr__implementation.html" title=" " alt="" coords="62,109,255,165"/>
+<area shape="rect" id="node4" title=" " alt="" coords="5,5,152,47"/>
+<area shape="rect" id="node5" href="$classstd_1_1shared__ptr_3_01detail_1_1device_01_4.html" title=" " alt="" coords="177,5,303,47"/>
 </map>

@@ -1,10 +1,12 @@
 <map id="trisycl::detail::linear_id" name="trisycl::detail::linear_id">
-<area shape="rect" id="node2" href="$group__parallelism.html#a51c9052fd19cf4b610b6baaec3edfd16" title="Return the flattened id of the current work&#45;item after subtracting the offset. " alt="" coords="205,5,343,47"/>
-<area shape="rect" id="node3" href="$group__parallelism.html#adc9f290770bcc950e3153231d3886765" title="Return the flattened id of the current work&#45;item after subtracting the offset. " alt="" coords="209,71,339,112"/>
-<area shape="rect" id="node4" href="$group__parallelism.html#abd89a34250b22ec61c999f34e49db167" title="Return the flattened id of the current work&#45;group. " alt="" coords="205,136,343,177"/>
-<area shape="rect" id="node5" href="$group__parallelism.html#a414d403e2b7b818a57a0d46db5b662c7" title="Return the flattened id of the current work&#45;group. " alt="" coords="209,201,339,243"/>
-<area shape="rect" id="node6" href="$group__parallelism.html#af05ae43b2a6a876718b93349b0ca4b4f" title="Return the linearized ID in the item&#39;s range. " alt="" coords="216,267,332,308"/>
-<area shape="rect" id="node7" href="$group__parallelism.html#ae503403247be0c196ee45d4f23c8485f" title="Get a linearized version of the group ID. " alt="" coords="213,332,335,373"/>
-<area shape="rect" id="node8" href="$group__parallelism.html#acecb619f7ab048f5c0419bf4c0b15e8b" title="Return the flattened id of the current work&#45;item within the current work&#45;group. " alt="" coords="205,397,343,439"/>
-<area shape="rect" id="node9" href="$group__parallelism.html#a7335839f52606c80185955f7ec5ffea4" title="Return the flattened id of the current work&#45;item within the current work&#45;group. " alt="" coords="209,463,339,504"/>
+<area shape="rect" id="node1" title="Compute a linearized array access used in the OpenCL 2 world." alt="" coords="217,274,369,301"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#adc9f290770bcc950e3153231d3886765" title="Return the flattened id of the current work&#45;item after subtracting the offset." alt="" coords="22,5,153,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#a51c9052fd19cf4b610b6baaec3edfd16" title="Return the flattened id of the current work&#45;item after subtracting the offset." alt="" coords="19,71,156,112"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#a414d403e2b7b818a57a0d46db5b662c7" title="Return the flattened id of the current work&#45;group." alt="" coords="22,136,153,177"/>
+<area shape="rect" id="node5" href="$group__parallelism.html#abd89a34250b22ec61c999f34e49db167" title="Return the flattened id of the current work&#45;group." alt="" coords="19,201,156,243"/>
+<area shape="rect" id="node6" href="$group__parallelism.html#ae503403247be0c196ee45d4f23c8485f" title="Get a linearized version of the group ID." alt="" coords="26,267,149,308"/>
+<area shape="rect" id="node7" href="$group__parallelism.html#af05ae43b2a6a876718b93349b0ca4b4f" title="Return the linearized ID in the item&#39;s range." alt="" coords="29,332,145,373"/>
+<area shape="rect" id="node8" href="$group__parallelism.html#a7335839f52606c80185955f7ec5ffea4" title="Return the flattened id of the current work&#45;item within the current work&#45;group." alt="" coords="22,397,153,439"/>
+<area shape="rect" id="node9" href="$group__parallelism.html#acecb619f7ab048f5c0419bf4c0b15e8b" title="Return the flattened id of the current work&#45;item within the current work&#45;group." alt="" coords="19,463,156,504"/>
+<area shape="rect" id="node10" href="$group__aie.html#a6d3f44e95e72b97a869af6900fd00010" title="Return the linearized coordinate of the tile." alt="" coords="5,528,169,569"/>
 </map>

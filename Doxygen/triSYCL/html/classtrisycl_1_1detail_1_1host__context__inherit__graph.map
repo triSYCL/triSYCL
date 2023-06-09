@@ -1,4 +1,5 @@
 <map id="trisycl::detail::host_context" name="trisycl::detail::host_context">
-<area shape="rect" id="node2" href="$group__execution.html#classtrisycl_1_1detail_1_1context" title="trisycl::detail::context" alt="" coords="5,13,152,39"/>
-<area shape="rect" id="node3" href="$structtrisycl_1_1detail_1_1singleton.html" title="trisycl::detail::singleton\l\&lt; host_context \&gt;" alt="" coords="177,5,333,47"/>
+<area shape="rect" id="node1" title="SYCL host context." alt="" coords="102,95,231,136"/>
+<area shape="rect" id="node2" href="$group__execution.html#classtrisycl_1_1detail_1_1context" title=" " alt="" coords="5,13,152,39"/>
+<area shape="rect" id="node3" href="$structtrisycl_1_1detail_1_1singleton.html" title=" " alt="" coords="177,5,333,47"/>
 </map>

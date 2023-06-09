@@ -1,2 +1,5 @@
 <map id="trisycl::detail::cache&lt; Key, Value &gt;" name="trisycl::detail::cache&lt; Key, Value &gt;">
+<area shape="rect" id="node1" title="A simple thread safe cache mechanism to cache std::shared_ptr of values indexed by keys." alt="" coords="71,124,209,165"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,149,61"/>
+<area shape="rect" id="node3" title=" " alt="" coords="173,20,232,47"/>
 </map>

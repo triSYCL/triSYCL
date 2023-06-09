@@ -1,5 +1,9 @@
 <map id="trisycl::range&lt; Dimensions &gt;" name="trisycl::range&lt; Dimensions &gt;">
-<area shape="rect" id="node2" href="$group__helpers.html" title="trisycl::detail::small\l_array_123\&lt; std::size\l_t, range\&lt; Dimensions \&gt;\l, Dimensions \&gt;" alt="" coords="548,93,715,164"/>
-<area shape="rect" id="node3" href="$group__helpers.html" title="trisycl::detail::small\l_array\&lt; std::size_t, range\l\&lt; Dimensions \&gt;, Dims \&gt;" alt="" coords="329,101,500,157"/>
-<area shape="rect" id="node6" href="$group__debug__trace.html" title="trisycl::detail::display\l_vector\&lt; range\&lt; Dimensions \&gt; \&gt;" alt="" coords="36,211,251,252"/>
+<area shape="rect" id="node1" title="A SYCL range defines a multi&#45;dimensional index range that can be used to define launch parallel compu..." alt="" coords="669,167,860,194"/>
+<area shape="rect" id="node2" href="$group__helpers.html" title=" " alt="" coords="471,153,621,209"/>
+<area shape="rect" id="node3" href="$group__helpers.html" title=" " alt="" coords="252,153,423,209"/>
+<area shape="rect" id="node4" title=" " alt="" coords="35,5,174,47"/>
+<area shape="rect" id="node5" title=" " alt="" coords="5,71,204,186"/>
+<area shape="rect" id="node6" href="$group__debug__trace.html" title=" " alt="" coords="29,211,181,252"/>
+<area shape="rect" id="node7" href="$group__helpers.html#structtrisycl_1_1detail_1_1small__array__tag" title="Tag to define simply inheritance from small_array." alt="" coords="37,276,172,317"/>
 </map>

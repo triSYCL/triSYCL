@@ -1,0 +1,7 @@
+<map id="include/triSYCL/vendor/Xilinx/acap/debug.hpp" name="include/triSYCL/vendor/Xilinx/acap/debug.hpp">
+<area shape="rect" id="node1" title="Some debugging utilities for ACAP." alt="" coords="79,5,235,47"/>
+<area shape="rect" id="node2" href="$triSYCL_2vendor_2Xilinx_2acap_8hpp.html" title="Experimenting with CGRA &amp; processor arrays such as ACAP/AI Engine." alt="" coords="79,95,235,136"/>
+<area shape="rect" id="node3" href="$triSYCL_2sycl_8hpp.html" title=" " alt="" coords="73,184,240,211"/>
+<area shape="rect" id="node4" href="$CL_2sycl_8hpp.html" title="This is the main SYCL 1.2.1 interoperability header to expose triSYCL into the cl::sycl namespace." alt="" coords="5,259,143,285"/>
+<area shape="rect" id="node5" href="$sycl_2sycl_8hpp.html" title="This is the SYCL extension header to expose triSYCL directly into the sycl namespace as expected by S..." alt="" coords="167,259,311,285"/>
+</map>

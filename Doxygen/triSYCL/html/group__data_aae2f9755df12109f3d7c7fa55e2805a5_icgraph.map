@@ -1,4 +1,0 @@
-<map id="trisycl::detail::buffer::allocate_buffer" name="trisycl::detail::buffer::allocate_buffer">
-<area shape="rect" id="node2" href="$group__data.html#ac3824b2602bacdc61cd136c3251f0fb3" title="Create a new read&#45;write buffer of size. " alt="" coords="195,5,333,47"/>
-<area shape="rect" id="node3" href="$group__data.html#a405f7171b1ab0944411293437500ff5f" title="This method is to be called whenever an accessor is created. " alt="" coords="191,71,337,112"/>
-</map>

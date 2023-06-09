@@ -1,5 +1,9 @@
 <map id="trisycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;" name="trisycl::accessor&lt; DataType, Dimensions, AccessMode, Target &gt;">
-<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1shared__ptr__implementation.html" title="trisycl::detail::shared\l_ptr_implementation\&lt; accessor\l\&lt; DataType, Dimensions, AccessMode,\l Target \&gt;, detail::accessor\&lt; DataType,\l Dimensions, AccessMode, Target \&gt; \&gt;" alt="" coords="329,45,585,130"/>
-<area shape="rect" id="node4" href="$classstd_1_1shared__ptr_3_01detail_1_1accessor_3_01DataType_00_01Dimensions_00_01AccessMode_00_01Target_01_4_01_4.html" title="shared_ptr\&lt; detail\l::accessor\&lt; DataType,\l Dimensions, AccessMode,\l Target \&gt; \&gt;" alt="" coords="5,100,188,171"/>
-<area shape="rect" id="node5" href="$group__helpers.html" title="trisycl::detail::container\l_element_aspect\&lt; DataType \&gt;" alt="" coords="356,155,559,196"/>
+<area shape="rect" id="node1" title="The accessor abstracts the way buffer or pipe data are accessed inside a kernel in a multidimensional..." alt="" coords="809,246,972,302"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1shared__ptr__implementation.html" title=" " alt="" coords="365,41,657,200"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,5,224,105"/>
+<area shape="rect" id="node4" href="$classstd_1_1shared__ptr_3_01detail_1_1accessor_3_01DataType_00_01Dimensions_00_07std_1_1is__cons2521ddca8b1df7ab78e9954276624121.html" title=" " alt="" coords="15,130,214,245"/>
+<area shape="rect" id="node5" href="$group__helpers.html" title=" " alt="" coords="411,224,612,265"/>
+<area shape="rect" id="node6" href="$classfriend.html" title=" " alt="" coords="484,290,539,317"/>
+<area shape="rect" id="node7" title=" " alt="" coords="439,341,583,367"/>
 </map>

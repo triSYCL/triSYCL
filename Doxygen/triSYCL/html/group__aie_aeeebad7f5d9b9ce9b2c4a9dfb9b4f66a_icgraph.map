@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::geography::is_west_column" name="trisycl::vendor::xilinx::acap::aie::geography::is_west_column">
+<area shape="rect" id="node1" title="Test if a tile is in the Western column." alt="" coords="221,5,372,61"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1detail_1_1device.html#a646bd7dc5393f1ae693cb1f4a1794b61" title="Build some device level infrastructure." alt="" coords="5,5,173,61"/>
+</map>

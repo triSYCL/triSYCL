@@ -1,0 +1,6 @@
+<map id="trisycl::vendor::xilinx::acap::aie::shim_tile::bli_in" name="trisycl::vendor::xilinx::acap::aie::shim_tile::bli_in">
+<area shape="rect" id="node1" title="Get the BLI (Boundary Logic Interface) input port from the PL (Programmable Logic in the FPGA) to rea..." alt="" coords="5,45,148,101"/>
+<area shape="rect" id="node2" href="$group__aie.html#acbb493758b523b432377f3b9a2cf0774" title="Get the BLI input connection from the shim tile." alt="" coords="196,45,339,101"/>
+<area shape="rect" id="node3" href="$group__aie.html#a5089dc25fa40e173e7c2117be732e73f" title="Access the output connection behind an output port." alt="" coords="387,5,549,61"/>
+<area shape="rect" id="node4" href="$group__aie.html#a6869fe4688426f47655a39a0b104814d" title="Map the input BLI id/port to the shim AXI stream switch port." alt="" coords="392,85,544,141"/>
+</map>

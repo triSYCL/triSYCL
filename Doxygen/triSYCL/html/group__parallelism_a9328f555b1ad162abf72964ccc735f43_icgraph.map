@@ -1,0 +1,9 @@
+<map id="trisycl::h_item::get_global_id" name="trisycl::h_item::get_global_id">
+<area shape="rect" id="node1" title="Return the constituent global id representing the work&#45;item&#39;s position in the global iteration space." alt="" coords="395,104,525,145"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#abf6375616a16eb47c629cc8f7ae27e90" title="Return the constituent element of the global id representing the work&#45;item&#39;s position in the global i..." alt="" coords="200,5,331,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#adc9f290770bcc950e3153231d3886765" title="Return the flattened id of the current work&#45;item after subtracting the offset." alt="" coords="200,71,331,112"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#ae569e30470b5bf3bb7e8fefefd966b0a" title="Return the constituent group group representing the work&#45;group&#39;s position within the overall nd_range..." alt="" coords="200,136,331,177"/>
+<area shape="rect" id="node7" href="$group__parallelism.html#a197ec14272b861572018fc2a63c4d712" title="Allows projection down to an item." alt="" coords="184,202,347,229"/>
+<area shape="rect" id="node5" href="$group__parallelism.html#af1d5e354b8dd3ca2a0d54c6d0ecf7056" title="Return the constituent element of the group id representing the work&#45;group&#39;s position within the over..." alt="" coords="5,103,136,144"/>
+<area shape="rect" id="node6" href="$group__parallelism.html#a414d403e2b7b818a57a0d46db5b662c7" title="Return the flattened id of the current work&#45;group." alt="" coords="5,168,136,209"/>
+</map>

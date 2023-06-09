@@ -1,0 +1,6 @@
+<map id="trisycl::vendor::xilinx::acap::aie::tile::mem_west" name="trisycl::vendor::xilinx::acap::aie::tile::mem_west">
+<area shape="rect" id="node1" title="Get the memory module on the West if it does exist." alt="" coords="5,53,185,94"/>
+<area shape="rect" id="node2" href="$group__aie.html#a96a5af8ceaf968ba09d228a122df1ba5" title="Test if a memory module exists on the West of this tile." alt="" coords="235,5,395,61"/>
+<area shape="rect" id="node4" href="$group__aie.html#a3487f81c8b6ffa4398e46280009d4dab" title="Compute the linear id of a memory module attached to this tile." alt="" coords="233,85,396,141"/>
+<area shape="rect" id="node3" href="$group__aie.html#a9220f587376a96b2405bd51b392488dd" title="Test if a memory module exists and is connected to this tile." alt="" coords="444,5,587,61"/>
+</map>

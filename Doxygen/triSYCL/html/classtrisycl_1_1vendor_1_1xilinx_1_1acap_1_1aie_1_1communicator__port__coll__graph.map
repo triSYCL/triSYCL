@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::communicator_port" name="trisycl::vendor::xilinx::acap::aie::communicator_port">
+<area shape="rect" id="node1" title="Abstract interface for a communication port." alt="" coords="5,95,208,136"/>
+<area shape="rect" id="node2" href="$group__debug__trace.html" title=" " alt="" coords="28,5,185,47"/>
+</map>

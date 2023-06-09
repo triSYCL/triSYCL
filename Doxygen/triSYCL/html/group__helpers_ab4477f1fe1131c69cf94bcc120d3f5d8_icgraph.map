@@ -1,0 +1,8 @@
+<map id="trisycl::detail::small_array::get" name="trisycl::detail::small_array::get">
+<area shape="rect" id="node1" title="Return the element of the array." alt="" coords="608,50,743,91"/>
+<area shape="rect" id="node2" href="$group__helpers.html#aa2e01f6d06295d6689d37d26812008b0" title="Conversion operator to scalar BasicType when only 1 dimension." alt="" coords="415,5,559,61"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#gae45ef8f8ab2c96ae4f647e10f656c13a" title="Implement the loop on the work&#45;items inside a work&#45;group." alt="" coords="415,86,560,127"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#ga51d38178288f87c00720c90adf099b12" title="Implement a variation of parallel_for to take into account a nd_range&lt;&gt;" alt="" coords="200,64,367,91"/>
+<area shape="rect" id="node5" href="$group__parallelism.html#ga876d173bd185aefef8daf2459267fe9f" title="Implement the loop on the work&#45;items inside a work&#45;group." alt="" coords="203,115,363,157"/>
+<area shape="rect" id="node6" href="$group__parallelism.html#a465d20ef4a86acc0ecf904153b4bae24" title="Loop on the work&#45;items inside a work&#45;group." alt="" coords="5,115,152,157"/>
+</map>

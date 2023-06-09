@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::tile_base::single_task" name="trisycl::vendor::xilinx::acap::aie::tile_base::single_task">
+<area shape="rect" id="node1" title="Submit a callable on this tile." alt="" coords="5,5,148,61"/>
+<area shape="rect" id="node2" href="$group__aie.html#aae2b1110b8d32fc32c100c7191a07abd" title="Launch a callable on this tile." alt="" coords="196,5,387,61"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="trisycl::detail::sycl_2_2::pipe_reservation::pipe_reservation" name="trisycl::detail::sycl_2_2::pipe_reservation::pipe_reservation">
+<area shape="rect" id="node1" title="Create a pipe reservation station that reserves the pipe itself." alt="" coords="5,79,159,135"/>
+<area shape="rect" id="node2" href="$group__old__data.html#a8d88feb01fc140e8d67561645f0320be" title="Reserve some part of the pipe for reading." alt="" coords="208,53,373,94"/>
+<area shape="rect" id="node6" href="$group__old__data.html#af41f5eed23fc412612c6b25958d403fd" title="Reserve some part of the pipe for writing." alt="" coords="207,118,375,159"/>
+<area shape="rect" id="node3" href="$group__old__data.html#a3c178648e9d0c844aa6d23de8a216452" title="Get the current number of elements in the pipe that can be read." alt="" coords="428,53,556,94"/>
+<area shape="rect" id="node4" href="$group__old__data.html#a22472dc9dd5e7b0af07a47a27682cb79" title="Compute the amount of elements blocked by read reservations, not yet committed." alt="" coords="609,5,749,61"/>
+<area shape="rect" id="node5" href="$group__old__data.html#af3a0e9729461db431623d7219fe17b16" title="Compute the amount of elements blocked by write reservations, not yet committed." alt="" coords="609,85,749,141"/>
+<area shape="rect" id="node7" href="$group__old__data.html#a76b862e4753c888db1a16a41ffd2b346" title="Return the maximum number of elements that can fit in the pipe." alt="" coords="423,118,561,159"/>
+</map>

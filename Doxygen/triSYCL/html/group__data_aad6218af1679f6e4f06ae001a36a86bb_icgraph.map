@@ -1,4 +1,0 @@
-<map id="trisycl::detail::buffer_base::update_buffer_state" name="trisycl::detail::buffer_base::update_buffer_state">
-<area shape="rect" id="node2" href="$group__data.html#a9e59e9641989421feb7f541081d86272" title="Function pair to work around the fact that T might be a const type. " alt="" coords="233,5,405,47"/>
-<area shape="rect" id="node3" href="$group__data.html#a360bd2887a957b3ef46e7af5dec9c2bc" title="Create a new sub&#45;buffer without allocation to have separate accessors later. " alt="" coords="453,5,591,47"/>
-</map>

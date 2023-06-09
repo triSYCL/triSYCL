@@ -1,4 +1,8 @@
 <map id="trisycl::detail::opencl_platform" name="trisycl::detail::opencl_platform">
-<area shape="rect" id="node2" href="$group__execution.html#classtrisycl_1_1detail_1_1platform" title="An abstract class representing various models of SYCL platforms. " alt="" coords="225,5,375,32"/>
-<area shape="rect" id="node3" href="$classtrisycl_1_1detail_1_1cache.html" title="trisycl::detail::cache\l\&lt; cl_platform_id, trisycl\l::detail::opencl_platform \&gt;" alt="" coords="213,56,387,112"/>
+<area shape="rect" id="node1" title="SYCL OpenCL platform." alt="" coords="475,49,617,90"/>
+<area shape="rect" id="node2" href="$group__execution.html#classtrisycl_1_1detail_1_1platform" title="An abstract class representing various models of SYCL platforms." alt="" coords="225,5,375,32"/>
+<area shape="rect" id="node3" title=" " alt="" coords="265,56,335,83"/>
+<area shape="rect" id="node4" href="$classtrisycl_1_1detail_1_1cache.html" title=" " alt="" coords="213,107,387,163"/>
+<area shape="rect" id="node5" title=" " alt="" coords="5,73,149,129"/>
+<area shape="rect" id="node6" title=" " alt="" coords="48,153,107,180"/>
 </map>

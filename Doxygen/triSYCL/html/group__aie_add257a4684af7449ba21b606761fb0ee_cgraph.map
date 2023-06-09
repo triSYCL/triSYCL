@@ -1,0 +1,13 @@
+<map id="trisycl::vendor::xilinx::acap::aie::tile::mem" name="trisycl::vendor::xilinx::acap::aie::tile::mem">
+<area shape="rect" id="node1" title="Get the memory module relative to the tile." alt="" coords="5,141,151,182"/>
+<area shape="rect" id="node2" href="$group__aie.html#a23c164a77b68f1c0d663e007515fbf87" title="Get the memory module on the East if it does exist." alt="" coords="202,25,379,66"/>
+<area shape="rect" id="node5" href="$group__aie.html#a48b9ae40f63f324bc2151e082c4bb6bc" title="Get the memory module on the North if it does exist." alt="" coords="200,101,381,142"/>
+<area shape="rect" id="node7" href="$group__aie.html#ab3eb4f645782530cb263aa87613d2236" title="Get the memory module on the South if it does exist." alt="" coords="199,173,383,214"/>
+<area shape="rect" id="node10" href="$group__aie.html#ad777a7bfef46616736ee46278e1b965b" title="Get the memory module on the West if it does exist." alt="" coords="201,253,381,294"/>
+<area shape="rect" id="node3" href="$group__aie.html#a437a76ed3f6888b86cca10d1016e5298" title="Test if a memory module exists on the East of this tile." alt="" coords="434,5,591,61"/>
+<area shape="rect" id="node4" href="$group__aie.html#a9220f587376a96b2405bd51b392488dd" title="Test if a memory module exists and is connected to this tile." alt="" coords="643,125,785,181"/>
+<area shape="rect" id="node6" href="$group__aie.html#a7e78482d94662c2a98d52dc50c74df9d" title="Test if a memory module exists on the North this tile." alt="" coords="432,85,593,141"/>
+<area shape="rect" id="node8" href="$group__aie.html#a1667a0ff74a24cc2951202fa9ee2866c" title="Test if a memory module exists on the South this tile." alt="" coords="431,165,595,221"/>
+<area shape="rect" id="node9" href="$group__aie.html#a3487f81c8b6ffa4398e46280009d4dab" title="Compute the linear id of a memory module attached to this tile." alt="" coords="431,245,594,301"/>
+<area shape="rect" id="node11" href="$group__aie.html#a96a5af8ceaf968ba09d228a122df1ba5" title="Test if a memory module exists on the West of this tile." alt="" coords="433,325,593,381"/>
+</map>

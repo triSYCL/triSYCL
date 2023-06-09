@@ -1,7 +1,8 @@
 <map id="trisycl::detail::task::schedule" name="trisycl::detail::task::schedule">
-<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1task.html#a5f878aedbf1ee46283054cb141ee329d" title="Notify the waiting tasks that we are done. " alt="" coords="186,5,319,47"/>
-<area shape="rect" id="node3" href="$structtrisycl_1_1detail_1_1task.html#af48ae14e192b9d3a4140002a4a7d5920" title="Execute the epilogues. " alt="" coords="188,71,317,112"/>
-<area shape="rect" id="node4" href="$structtrisycl_1_1detail_1_1task.html#a75a321166d5aa76e8d887035204a905a" title="Execute the prologues. " alt="" coords="188,136,317,177"/>
-<area shape="rect" id="node5" href="$structtrisycl_1_1detail_1_1task.html#acee5b9083e84b9c86db84fa214e1f806" title="Release the buffers that have been used by this task. " alt="" coords="188,201,317,243"/>
-<area shape="rect" id="node6" href="$structtrisycl_1_1detail_1_1task.html#a99398a4640aa89bb9fc5dc26feb747c5" title="Wait for the required producer tasks to be ready. " alt="" coords="183,267,323,308"/>
+<area shape="rect" id="node1" title="Add a new task to the task graph and schedule for execution." alt="" coords="5,136,135,177"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1task.html#a5f878aedbf1ee46283054cb141ee329d" title="Notify the waiting tasks that we are done." alt="" coords="186,5,319,47"/>
+<area shape="rect" id="node3" href="$structtrisycl_1_1detail_1_1task.html#af48ae14e192b9d3a4140002a4a7d5920" title="Execute the epilogues." alt="" coords="188,71,317,112"/>
+<area shape="rect" id="node4" href="$structtrisycl_1_1detail_1_1task.html#a75a321166d5aa76e8d887035204a905a" title="Execute the prologues." alt="" coords="188,136,317,177"/>
+<area shape="rect" id="node5" href="$structtrisycl_1_1detail_1_1task.html#acee5b9083e84b9c86db84fa214e1f806" title="Release the buffers that have been used by this task." alt="" coords="188,201,317,243"/>
+<area shape="rect" id="node6" href="$structtrisycl_1_1detail_1_1task.html#a99398a4640aa89bb9fc5dc26feb747c5" title="Wait for the required producer tasks to be ready." alt="" coords="183,267,323,308"/>
 </map>

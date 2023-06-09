@@ -1,5 +1,6 @@
 <map id="trisycl::detail::opencl_queue" name="trisycl::detail::opencl_queue">
-<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1queue.html" title="Some implementation details about the SYCL queue. " alt="" coords="5,102,144,129"/>
-<area shape="rect" id="node3" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; detail::queue \&gt;" alt="" coords="5,5,144,47"/>
-<area shape="rect" id="node4" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; opencl_queue \&gt;" alt="" coords="168,95,307,136"/>
+<area shape="rect" id="node1" title="Some implementation details about the SYCL queue." alt="" coords="85,184,227,225"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1queue.html" title="Some implementation details about the SYCL queue." alt="" coords="5,102,144,129"/>
+<area shape="rect" id="node3" href="$group__debug__trace.html" title=" " alt="" coords="5,5,144,47"/>
+<area shape="rect" id="node4" href="$group__debug__trace.html" title=" " alt="" coords="168,95,307,136"/>
 </map>

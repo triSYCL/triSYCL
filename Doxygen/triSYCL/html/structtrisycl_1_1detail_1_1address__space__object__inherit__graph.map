@@ -1,3 +1,5 @@
 <map id="trisycl::detail::address_space_object&lt; T, AS &gt;" name="trisycl::detail::address_space_object&lt; T, AS &gt;">
-<area shape="rect" id="node3" href="$group__address__spaces.html#structtrisycl_1_1detail_1_1address__space__base" title="Implementation of the base infrastructure to wrap something in an OpenCL address space. " alt="" coords="192,5,349,47"/>
+<area shape="rect" id="node1" title="Implementation of an object type with an OpenCL address space." alt="" coords="95,95,256,136"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,13,164,39"/>
+<area shape="rect" id="node3" href="$group__address__spaces.html#structtrisycl_1_1detail_1_1address__space__base" title="Implementation of the base infrastructure to wrap something in an OpenCL address space." alt="" coords="189,5,343,47"/>
 </map>

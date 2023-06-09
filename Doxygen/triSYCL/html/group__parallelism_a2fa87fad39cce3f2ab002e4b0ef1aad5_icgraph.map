@@ -1,0 +1,4 @@
+<map id="trisycl::item::get_offset" name="trisycl::item::get_offset">
+<area shape="rect" id="node1" title="Returns an id&lt;&gt; representing the n&#45;dimensional offset provided to the parallel_for and that is added ..." alt="" coords="169,5,285,47"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#af05ae43b2a6a876718b93349b0ca4b4f" title="Return the linearized ID in the item&#39;s range." alt="" coords="5,5,121,47"/>
+</map>

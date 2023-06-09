@@ -1,3 +1,4 @@
 <map id="trisycl::queue::submit" name="trisycl::queue::submit">
-<area shape="rect" id="node2" href="$group__execution.html#a66ec8d7190dd2028dbfaf3c5caf2e160" title="Submit a command group functor to the queue, in order to be scheduled for execution on the device..." alt="" coords="200,5,347,32"/>
+<area shape="rect" id="node1" title="Submit a command group functor to the queue, in order to be scheduled for execution on the device." alt="" coords="5,5,152,32"/>
+<area shape="rect" id="node2" href="$group__execution.html#a66ec8d7190dd2028dbfaf3c5caf2e160" title="Submit a command group functor to the queue, in order to be scheduled for execution on the device." alt="" coords="200,5,347,32"/>
 </map>

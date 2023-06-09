@@ -1,0 +1,5 @@
+<map id="trisycl::vendor::xilinx::acap::aie::shim_tile::translate_input_port" name="trisycl::vendor::xilinx::acap::aie::shim_tile::translate_input_port">
+<area shape="rect" id="node1" title="Map the input BLI id/port to the shim AXI stream switch port." alt="" coords="387,5,531,61"/>
+<area shape="rect" id="node2" href="$group__aie.html#aa93b1915f39ae58d13cfc5527a4f30aa" title="Get the BLI output connection to the shim tile." alt="" coords="196,5,339,61"/>
+<area shape="rect" id="node3" href="$group__aie.html#ae0f931eecf4ac399aa161708120c24b8" title="Get the BLI (Boundary Logic Interface) output port to the PL (Programmable Logic in the FPGA) to writ..." alt="" coords="5,5,148,61"/>
+</map>

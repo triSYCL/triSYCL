@@ -1,6 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$group__execution.html#classtrisycl_1_1detail_1_1context" title="trisycl::detail::context" alt="" coords="10,74,157,101"/>
-<area shape="rect" id="node2" href="$group__execution.html#classtrisycl_1_1detail_1_1host__context" title="SYCL host context. " alt="" coords="216,5,345,47"/>
-<area shape="rect" id="node3" href="$classtrisycl_1_1detail_1_1opencl__context.html" title="SYCL OpenCL context. " alt="" coords="209,71,352,112"/>
-<area shape="rect" id="node4" href="$structtrisycl_1_1detail_1_1singleton.html" title="trisycl::detail::singleton\l\&lt; host_context \&gt;" alt="" coords="5,5,161,47"/>
+<area shape="rect" id="node1" href="$group__execution.html#classtrisycl_1_1detail_1_1context" title=" " alt="" coords="10,74,157,101"/>
+<area shape="rect" id="node2" href="$group__execution.html#classtrisycl_1_1detail_1_1host__context" title="SYCL host context." alt="" coords="216,5,345,47"/>
+<area shape="rect" id="node3" href="$classtrisycl_1_1detail_1_1opencl__context.html" title="SYCL OpenCL context." alt="" coords="209,71,352,112"/>
+<area shape="rect" id="node4" href="$structtrisycl_1_1detail_1_1singleton.html" title=" " alt="" coords="5,5,161,47"/>
 </map>

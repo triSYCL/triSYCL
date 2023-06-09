@@ -1,0 +1,8 @@
+<map id="include/triSYCL/vendor/Xilinx/acap/aie/layout.hpp" name="include/triSYCL/vendor/Xilinx/acap/aie/layout.hpp">
+<area shape="rect" id="node1" title="Some examples of AI Engine array layouts." alt="" coords="69,5,244,47"/>
+<area shape="rect" id="node2" href="$triSYCL_2vendor_2Xilinx_2acap_2aie_8hpp.html" title="Experimenting with CGRA &amp; processor arrays such as ACAP/AI Engine." alt="" coords="79,95,235,136"/>
+<area shape="rect" id="node3" href="$triSYCL_2vendor_2Xilinx_2acap_8hpp.html" title="Experimenting with CGRA &amp; processor arrays such as ACAP/AI Engine." alt="" coords="79,184,235,225"/>
+<area shape="rect" id="node4" href="$triSYCL_2sycl_8hpp.html" title=" " alt="" coords="73,273,240,300"/>
+<area shape="rect" id="node5" href="$CL_2sycl_8hpp.html" title="This is the main SYCL 1.2.1 interoperability header to expose triSYCL into the cl::sycl namespace." alt="" coords="5,348,143,375"/>
+<area shape="rect" id="node6" href="$sycl_2sycl_8hpp.html" title="This is the SYCL extension header to expose triSYCL directly into the sycl namespace as expected by S..." alt="" coords="167,348,311,375"/>
+</map>

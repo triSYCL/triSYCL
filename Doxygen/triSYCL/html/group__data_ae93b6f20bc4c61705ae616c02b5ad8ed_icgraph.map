@@ -1,3 +1,4 @@
 <map id="trisycl::detail::accessor::is_write_access" name="trisycl::detail::accessor::is_write_access">
-<area shape="rect" id="node2" href="$group__data.html#a94174fd654b3d92ef3b845329bc7caf0" title="Construct a host accessor from an existing buffer. " alt="" coords="211,5,368,47"/>
+<area shape="rect" id="node1" title="Test if the accessor has a write access right." alt="" coords="211,5,368,47"/>
+<area shape="rect" id="node2" href="$group__data.html#ab4881bcc1d0dc6fcdd30ebafc37ceada" title="Construct a host accessor from an existing buffer." alt="" coords="5,5,163,47"/>
 </map>

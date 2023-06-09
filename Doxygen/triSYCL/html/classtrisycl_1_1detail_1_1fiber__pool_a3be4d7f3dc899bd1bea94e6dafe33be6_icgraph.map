@@ -1,0 +1,6 @@
+<map id="trisycl::detail::fiber_pool::submit" name="trisycl::detail::fiber_pool::submit">
+<area shape="rect" id="node1" title="Submit some work on a new fiber." alt="" coords="232,85,361,127"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1dma.html#a52982725f3341adbf8698bea1f3ccded" title="Start the DMA engine using an executor." alt="" coords="20,5,169,47"/>
+<area shape="rect" id="node3" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1axi__stream__switch_1_1router__minion.html#af796685106c2049455ca43ceba06dfeb" title="Create a router minion on this switch using a fiber executor." alt="" coords="14,71,175,141"/>
+<area shape="rect" id="node4" href="$group__aie.html#abcd220fcbe1391946e9c2e3d477a5d69" title="Launch an invocable on this tile." alt="" coords="5,166,184,222"/>
+</map>

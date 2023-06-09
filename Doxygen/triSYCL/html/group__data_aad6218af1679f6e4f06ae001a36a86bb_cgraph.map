@@ -1,10 +1,12 @@
 <map id="trisycl::detail::buffer_base::update_buffer_state" name="trisycl::detail::buffer_base::update_buffer_state">
-<area shape="rect" id="node2" href="$group__data.html#a31930d97b31c40b843a1de541060cc24" title="Create a boost::compute::buffer for this trisycl::buffer in the cache and associate it with a given c..." alt="" coords="233,5,393,47"/>
-<area shape="rect" id="node4" href="$group__execution.html#ad2286b6d8d2a04a280972a90f46d70bc" title="Return the internal queue that is associated to the context and used by triSYCL to move data between ..." alt="" coords="246,71,381,112"/>
-<area shape="rect" id="node5" href="$group__data.html#ae652de9b841f564c285311373fa96563" title="Check if the buffer is already cached for a certain context. " alt="" coords="245,136,382,177"/>
-<area shape="rect" id="node6" href="$group__data.html#a42b361442b007be017d62301d726ef3e" title="Check if the data of this buffer is up&#45;to&#45;date in a certain context. " alt="" coords="441,216,620,257"/>
-<area shape="rect" id="node7" href="$group__execution.html#a5cb11be9fe698ee1e6e44df9ea0e9e04" title="Specifies whether the context is in SYCL Host Execution Mode. " alt="" coords="234,253,393,279"/>
-<area shape="rect" id="node8" href="$group__data.html#a9d380bc456be55b375c6b31852236c02" title="Transfer the most up&#45;to&#45;date version of the data to the host if the host version is not already up&#45;to..." alt="" coords="235,304,391,345"/>
-<area shape="rect" id="node3" href="$group__execution.html#a797d5d9aee3542538842869d7568f53e" title="Return the underlying boost::compute::context of the trisycl::context. " alt="" coords="463,5,598,47"/>
-<area shape="rect" id="node9" href="$group__execution.html#ad3f39185ef269f6d3d0f36e5d93e935e" title="Return the internal OpenCL queue that is associated to the host context. " alt="" coords="441,304,620,345"/>
+<area shape="rect" id="node1" title="When a transfer is requested this function is called, it will update the state of the buffer accordin..." alt="" coords="5,187,185,229"/>
+<area shape="rect" id="node2" href="$group__data.html#a31930d97b31c40b843a1de541060cc24" title="Create a boost::compute::buffer for this trisycl::buffer in the cache and associate it with a given c..." alt="" coords="233,27,393,69"/>
+<area shape="rect" id="node5" href="$group__execution.html#ab7e1fe9395e93fbcbf0cb7883046cd7f" title="Return the internal queue that is associated to the context and used by triSYCL to move data between ..." alt="" coords="246,93,381,134"/>
+<area shape="rect" id="node6" href="$group__data.html#ae652de9b841f564c285311373fa96563" title="Check if the buffer is already cached for a certain context." alt="" coords="245,158,382,199"/>
+<area shape="rect" id="node7" href="$group__data.html#a42b361442b007be017d62301d726ef3e" title="Check if the data of this buffer is up&#45;to&#45;date in a certain context." alt="" coords="441,238,620,279"/>
+<area shape="rect" id="node8" href="$group__execution.html#a5cb11be9fe698ee1e6e44df9ea0e9e04" title="Specifies whether the context is in SYCL Host Execution Mode." alt="" coords="234,275,393,301"/>
+<area shape="rect" id="node9" href="$group__data.html#a9d380bc456be55b375c6b31852236c02" title="Transfer the most up&#45;to&#45;date version of the data to the host if the host version is not already up&#45;to..." alt="" coords="235,326,391,367"/>
+<area shape="rect" id="node3" href="$group__data.html#gacb39bd9d956d552c0a7b811158d6c31d" title="A deduction guide to infer the buffer type from the read&#45;write forward iterators into a copy&#45;in on co..." alt="" coords="481,5,580,32"/>
+<area shape="rect" id="node4" href="$group__execution.html#a2b662a3ac592ec2e32d98867755df76a" title="Return the underlying boost::compute::context of the trisycl::context." alt="" coords="463,57,598,98"/>
+<area shape="rect" id="node10" href="$group__execution.html#a770c8507039a7650fe4d6b98c12246da" title="Return the internal OpenCL queue that is associated to the host context." alt="" coords="441,326,620,367"/>
 </map>

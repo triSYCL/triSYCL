@@ -1,0 +1,13 @@
+<map id="trisycl::vendor::xilinx::acap::aie::tile::vertical_barrier" name="trisycl::vendor::xilinx::acap::aie::tile::vertical_barrier">
+<area shape="rect" id="node1" title="A vertical barrier using a lock." alt="" coords="5,70,164,126"/>
+<area shape="rect" id="node2" href="$group__aie.html#a7e78482d94662c2a98d52dc50c74df9d" title="Test if a memory module exists on the North this tile." alt="" coords="451,62,612,118"/>
+<area shape="rect" id="node4" href="$group__aie.html#ab665fb07319bd448a847afe059c1c4c1" title="Test if the tile is in the Southern row." alt="" coords="231,33,374,89"/>
+<area shape="rect" id="node5" href="$group__aie.html#a4b06421ad70b71a378e36c8a7f7a849c" title="The memory module native to the tile." alt="" coords="230,179,375,220"/>
+<area shape="rect" id="node11" href="$group__aie.html#a48b9ae40f63f324bc2151e082c4bb6bc" title="Get the memory module on the North if it does exist." alt="" coords="212,113,393,155"/>
+<area shape="rect" id="node3" href="$group__aie.html#a9220f587376a96b2405bd51b392488dd" title="Test if a memory module exists and is connected to this tile." alt="" coords="880,127,1023,183"/>
+<area shape="rect" id="node6" href="$group__aie.html#a23c164a77b68f1c0d663e007515fbf87" title="Get the memory module on the East if it does exist." alt="" coords="443,145,620,187"/>
+<area shape="rect" id="node8" href="$group__aie.html#ad777a7bfef46616736ee46278e1b965b" title="Get the memory module on the West if it does exist." alt="" coords="441,215,621,256"/>
+<area shape="rect" id="node7" href="$group__aie.html#a437a76ed3f6888b86cca10d1016e5298" title="Test if a memory module exists on the East of this tile." alt="" coords="672,127,829,183"/>
+<area shape="rect" id="node9" href="$group__aie.html#a96a5af8ceaf968ba09d228a122df1ba5" title="Test if a memory module exists on the West of this tile." alt="" coords="671,207,831,263"/>
+<area shape="rect" id="node10" href="$group__aie.html#a3487f81c8b6ffa4398e46280009d4dab" title="Compute the linear id of a memory module attached to this tile." alt="" coords="669,287,832,343"/>
+</map>

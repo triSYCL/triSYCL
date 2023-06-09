@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::tile&lt; AIE_Program, X, Y &gt;" name="trisycl::vendor::xilinx::acap::aie::tile&lt; AIE_Program, X, Y &gt;">
+<area shape="rect" id="node1" title="The AI Engine tile infrastructure defining the program of a tile." alt="" coords="5,109,148,165"/>
+<area shape="rect" id="node2" href="$group__aie.html#classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1tile__base" title="The AI Engine tile infrastructure common to all the tiles." alt="" coords="5,5,148,61"/>
+</map>

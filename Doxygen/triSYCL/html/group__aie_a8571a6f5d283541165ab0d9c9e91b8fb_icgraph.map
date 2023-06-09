@@ -1,0 +1,5 @@
+<map id="trisycl::vendor::xilinx::acap::aie::axi_stream_switch::start" name="trisycl::vendor::xilinx::acap::aie::axi_stream_switch::start">
+<area shape="rect" id="node1" title="Start the tile infrastructure associated to the AIE device." alt="" coords="267,45,421,101"/>
+<area shape="rect" id="node2" href="$group__aie.html#a8730d9121b0e950814a34d862f8679a1" title="Start the shim tile infrastructure associated to the AIE device." alt="" coords="41,5,183,61"/>
+<area shape="rect" id="node3" href="$group__aie.html#a338f6ad36b98037f250c9598864f9828" title="Start the tile infrastructure associated to the AIE device tile." alt="" coords="5,85,219,141"/>
+</map>

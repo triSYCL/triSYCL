@@ -1,0 +1,4 @@
+<map id="trisycl::h_item::get_local_id" name="trisycl::h_item::get_local_id">
+<area shape="rect" id="node1" title="Return the constituent local id representing the work&#45;item&#39;s position within the current work&#45;group." alt="" coords="184,5,315,47"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#a7335839f52606c80185955f7ec5ffea4" title="Return the flattened id of the current work&#45;item within the current work&#45;group." alt="" coords="5,5,136,47"/>
+</map>

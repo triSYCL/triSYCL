@@ -1,0 +1,10 @@
+<map id="trisycl::vendor::xilinx::acap::aie::accessor&lt; Buffer &gt;" name="trisycl::vendor::xilinx::acap::aie::accessor&lt; Buffer &gt;">
+<area shape="rect" id="node1" title="Create a SYCL&#45;like device view of an AI Engine CGRA with some layout." alt="" coords="1021,195,1165,251"/>
+<area shape="rect" id="node2" href="$group__data.html" title=" " alt="" coords="792,181,972,266"/>
+<area shape="rect" id="node3" href="$structtrisycl_1_1detail_1_1shared__ptr__implementation.html" title=" " alt="" coords="365,37,640,137"/>
+<area shape="rect" id="node4" title=" " alt="" coords="5,5,224,76"/>
+<area shape="rect" id="node5" href="$classstd_1_1shared__ptr_3_01detail_1_1accessor_3_01Buffer_1_1value__type_00_01Dimensions_00_01AccessMode_00_01Target_01_4_01_4.html" title=" " alt="" coords="30,100,199,171"/>
+<area shape="rect" id="node6" href="$group__helpers.html" title=" " alt="" coords="419,162,587,218"/>
+<area shape="rect" id="node7" href="$classfriend.html" title=" " alt="" coords="475,242,530,269"/>
+<area shape="rect" id="node8" title=" " alt="" coords="431,293,575,319"/>
+</map>

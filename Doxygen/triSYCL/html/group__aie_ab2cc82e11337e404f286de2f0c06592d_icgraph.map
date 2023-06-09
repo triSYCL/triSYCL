@@ -1,0 +1,5 @@
+<map id="trisycl::vendor::xilinx::acap::aie::detail::tile_infrastructure::x" name="trisycl::vendor::xilinx::acap::aie::detail::tile_infrastructure::x">
+<area shape="rect" id="node1" title="Get the horizontal coordinate." alt="" coords="267,45,413,101"/>
+<area shape="rect" id="node2" href="$group__aie.html#a3723e8a350eaf875e93b0263fa6db1e2" title="Display the tile to a LaTeX context." alt="" coords="35,5,189,61"/>
+<area shape="rect" id="node3" href="$group__aie.html#a338f6ad36b98037f250c9598864f9828" title="Start the tile infrastructure associated to the AIE device tile." alt="" coords="5,85,219,141"/>
+</map>

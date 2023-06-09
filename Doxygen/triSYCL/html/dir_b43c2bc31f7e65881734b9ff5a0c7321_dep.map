@@ -1,7 +1,7 @@
 <map id="include/triSYCL/event" name="include/triSYCL/event">
-<area shape="rect" id="node2" href="dir_776bc632c9b91b3e2c98ccf22183c76c.html" title="detail" alt="" coords="37,63,109,111"/>
-<area shape="rect" id="node3" href="dir_f344767bae51d34c648f686d6eb83a10.html" title="detail" alt="" coords="37,159,109,207"/>
-<area shape="rect" id="edge1-headlabel" href="dir_000027_000015.html" title="1" alt="" coords="78,133,86,147"/>
+<area shape="rect" id="node1" href="dir_f344767bae51d34c648f686d6eb83a10.html" title="detail" alt="" coords="37,159,109,207"/>
+<area shape="rect" id="node3" href="dir_776bc632c9b91b3e2c98ccf22183c76c.html" title="detail" alt="" coords="37,63,109,111"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000024_000021.html" title="1" alt="" coords="78,133,86,148"/>
 <area shape="rect" id="clust2" href="dir_b43c2bc31f7e65881734b9ff5a0c7321.html" alt="" coords="27,52,216,121"/>
-<area shape="rect" id="clust1" href="dir_aaf3c766ec178046651f3200d7a96209.html" title="triSYCL" alt="" coords="16,16,227,132"/>
+<area shape="rect" id="clust1" href="dir_aaf3c766ec178046651f3200d7a96209.html" title="triSYCL" alt="" coords="16,16,227,217"/>
 </map>

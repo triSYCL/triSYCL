@@ -1,0 +1,5 @@
+<map id="trisycl::detail::sycl_2_2::pipe::size" name="trisycl::detail::sycl_2_2::pipe::size">
+<area shape="rect" id="node1" title="Get the current number of elements in the pipe that can be read." alt="" coords="5,53,133,94"/>
+<area shape="rect" id="node2" href="$group__old__data.html#a22472dc9dd5e7b0af07a47a27682cb79" title="Compute the amount of elements blocked by read reservations, not yet committed." alt="" coords="181,5,321,61"/>
+<area shape="rect" id="node3" href="$group__old__data.html#af3a0e9729461db431623d7219fe17b16" title="Compute the amount of elements blocked by write reservations, not yet committed." alt="" coords="181,85,321,141"/>
+</map>

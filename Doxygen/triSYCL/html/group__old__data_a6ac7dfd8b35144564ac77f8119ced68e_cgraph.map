@@ -1,0 +1,4 @@
+<map id="trisycl::accessor&lt; DataType, 1, AccessMode, access::target::blocking_pipe &gt;::get_pipe_detail" name="trisycl::accessor&lt; DataType, 1, AccessMode, access::target::blocking_pipe &gt;::get_pipe_detail">
+<area shape="rect" id="node1" title="Get the underlying pipe implementation." alt="" coords="5,5,189,76"/>
+<area shape="rect" id="node2" href="$group__old__data.html#gafdea453578d1f2a810778fc6593b8084" title="Top&#45;level function to break circular dependencies on the the types to get the pipe implementation." alt="" coords="237,27,389,54"/>
+</map>

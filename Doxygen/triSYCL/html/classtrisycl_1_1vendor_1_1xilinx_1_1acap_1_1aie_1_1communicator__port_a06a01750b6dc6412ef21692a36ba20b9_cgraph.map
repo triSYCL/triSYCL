@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::communicator_port::operator&lt;&lt;" name="trisycl::vendor::xilinx::acap::aie::communicator_port::operator&lt;&lt;">
+<area shape="rect" id="node1" title="Alias to enqueue a packet on the communicator input." alt="" coords="5,5,179,61"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1communicator__port.html#afa7ef97962f537426826e0e3c2f0b816" title="Enqueue a packet on the communicator input." alt="" coords="227,5,400,61"/>
+</map>

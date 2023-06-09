@@ -1,3 +1,6 @@
 <map id="trisycl::device" name="trisycl::device">
-<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1shared__ptr__implementation.html" title="trisycl::detail::shared\l_ptr_implementation\&lt; device,\l detail::device \&gt;" alt="" coords="5,95,199,151"/>
+<area shape="rect" id="node1" title="SYCL device." alt="" coords="51,288,153,315"/>
+<area shape="rect" id="node2" href="$group__execution.html" title=" " alt="" coords="17,199,187,240"/>
+<area shape="rect" id="node3" href="$structtrisycl_1_1detail_1_1shared__ptr__implementation.html" title=" " alt="" coords="5,95,199,151"/>
+<area shape="rect" id="node4" title=" " alt="" coords="29,5,175,47"/>
 </map>

@@ -1,0 +1,7 @@
+<map id="trisycl::drt::serialize_accessor_arg" name="trisycl::drt::serialize_accessor_arg">
+<area shape="rect" id="node1" title="Set an accessor argument of the kernel." alt="" coords="5,39,141,80"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1task.html#a4f158280a5ecdd349e7c3cbb974c2a41" title="Get the Boost.Compute buffer for an accessor of the task." alt="" coords="189,5,335,47"/>
+<area shape="rect" id="node3" href="$structtrisycl_1_1detail_1_1task.html#aa8f7f84d483ce02727167f4caa4ee5e2" title="Set a kernel argument by address." alt="" coords="197,71,327,112"/>
+<area shape="rect" id="node4" href="$group__execution.html#aeaa790506b0778e0509af7102dd74dd2" title="Return the Boost.Compute OpenCL kernel object for this kernel." alt="" coords="383,37,527,79"/>
+<area shape="rect" id="node5" href="$structtrisycl_1_1detail_1_1task.html#a7c93c93c579ee580e6d3a8118d807877" title="Get the kernel running if any." alt="" coords="390,103,519,144"/>
+</map>

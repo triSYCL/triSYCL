@@ -1,0 +1,9 @@
+<map id="trisycl::h_item::get_item" name="trisycl::h_item::get_item">
+<area shape="rect" id="node1" title="Allows projection down to an item." alt="" coords="5,78,168,105"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#a9328f555b1ad162abf72964ccc735f43" title="Return the constituent global id representing the work&#45;item&#39;s position in the global iteration space." alt="" coords="216,5,347,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#ac336960a851acacc35e337f5ce7e598a" title="Return a range&lt;&gt; representing the dimensions of the nd_range&lt;&gt;" alt="" coords="216,71,347,112"/>
+<area shape="rect" id="node6" href="$group__parallelism.html#a3ee2b5b22209ff950306e10ce6927b76" title="Return an id&lt;&gt; representing the n&#45;dimensional offset provided to the constructor of the nd_range&lt;&gt; an..." alt="" coords="216,136,347,177"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#a96bd08fdd083438bdf0dee18e8f315a3" title="Get the global iteration space range." alt="" coords="397,37,523,79"/>
+<area shape="rect" id="node5" href="$group__parallelism.html#ad4aeebd1de318b7cebf04f8ccb1ef6ec" title="Return the nd_range&lt;&gt; of the current execution." alt="" coords="395,103,525,144"/>
+<area shape="rect" id="node7" href="$group__parallelism.html#ae5f2679abab71dcdbf617b65f7817e4d" title=" " alt="" coords="397,168,523,209"/>
+</map>

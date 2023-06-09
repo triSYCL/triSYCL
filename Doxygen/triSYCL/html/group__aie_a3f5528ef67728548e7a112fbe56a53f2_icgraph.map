@@ -1,0 +1,5 @@
+<map id="trisycl::vendor::xilinx::acap::aie::axi_stream_switch::connect" name="trisycl::vendor::xilinx::acap::aie::axi_stream_switch::connect">
+<area shape="rect" id="node1" title="Configure a connection of the shim AXI stream switch." alt="" coords="212,45,367,101"/>
+<area shape="rect" id="node2" href="$group__aie.html#acafb4c473972dc82501060be81b0eb9f" title="Configure a connection of the core tile AXI stream switch." alt="" coords="5,5,164,61"/>
+<area shape="rect" id="node3" href="$group__aie.html#ae12774b2ca8ebf57536ec263bfc98125" title="Configure a connection of the shim tile AXI stream switch." alt="" coords="13,85,156,141"/>
+</map>

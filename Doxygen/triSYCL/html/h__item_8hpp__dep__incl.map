@@ -1,18 +1,22 @@
 <map id="include/triSYCL/h_item.hpp" name="include/triSYCL/h_item.hpp">
-<area shape="rect" id="node2" href="$opencl__spir__helpers_8hpp.html" title="Adds helper functions to populate Id&#39;s and Range&#39;s with OpenCL SPIR intrinsics data: e..." alt="" coords="43,155,245,196"/>
-<area shape="rect" id="node3" href="$group_8hpp.html" title="include/triSYCL/group.hpp" alt="" coords="195,80,370,107"/>
-<area shape="rect" id="node4" href="$parallelism_2detail_2parallelism_8hpp.html" title="Implement the detail of the parallel constructions to launch kernels. " alt="" coords="320,155,499,196"/>
-<area shape="rect" id="node8" href="$triSYCL_2sycl_8hpp.html" title="include/triSYCL/sycl.hpp" alt="" coords="361,594,527,621"/>
-<area shape="rect" id="node17" href="$parallelism__tbb_8hpp.html" title="Implement the detail of the parallel constructions to launch kernels using Intel Threading Building B..." alt="" coords="523,155,701,196"/>
-<area shape="rect" id="node5" href="$parallelism_8hpp.html" title="Implement parallel constructions to launch kernels. " alt="" coords="362,244,566,271"/>
-<area shape="rect" id="node6" href="$handler_8hpp.html" title="include/triSYCL/handler.hpp" alt="" coords="471,319,655,345"/>
-<area shape="rect" id="node12" href="$queue_8hpp.html" title="include/triSYCL/queue.hpp" alt="" coords="786,401,963,427"/>
-<area shape="rect" id="node7" href="$buffer_8hpp.html" title="include/triSYCL/buffer.hpp" alt="" coords="665,497,839,524"/>
-<area shape="rect" id="node11" href="$pipe_8hpp.html" title="include/triSYCL/pipe.hpp" alt="" coords="422,497,589,524"/>
-<area shape="rect" id="node16" href="$static__pipe_8hpp.html" title="include/triSYCL/static\l_pipe.hpp" alt="" coords="549,393,699,435"/>
-<area shape="rect" id="node9" href="$CL_2sycl_8hpp.html" title="This is the main SYCL 1.2.1 interoperability header to expose triSYCL into the cl::sycl namespace..." alt="" coords="461,683,598,710"/>
-<area shape="rect" id="node10" href="$SYCL_2sycl_8hpp.html" title="This is the SYCL extension header to expose triSYCL directly into the shorter sycl namespace instead ..." alt="" coords="281,683,436,710"/>
-<area shape="rect" id="node13" href="$vendor_2trisycl_2scope_2queue_2detail_2queue_8hpp.html" title="include/triSYCL/vendor\l/trisycl/scope/queue/detail\l/queue.hpp" alt="" coords="966,483,1141,539"/>
-<area shape="rect" id="node14" href="$vendor_2trisycl_2scope_2queue_8hpp.html" title="include/triSYCL/vendor\l/trisycl/scope/queue.hpp" alt="" coords="909,587,1073,628"/>
-<area shape="rect" id="node15" href="$scope_8hpp.html" title="include/triSYCL/vendor\l/trisycl/scope.hpp" alt="" coords="913,676,1069,717"/>
+<area shape="rect" id="node1" title=" " alt="" coords="996,5,1177,32"/>
+<area shape="rect" id="node2" href="$opencl__spir__helpers_8hpp.html" title="Adds helper functions to populate Id&#39;s and Range&#39;s with OpenCL SPIR intrinsics data: e...." alt="" coords="852,155,1055,196"/>
+<area shape="rect" id="node3" href="$group_8hpp.html" title=" " alt="" coords="999,80,1174,107"/>
+<area shape="rect" id="node4" href="$parallelism_2detail_2parallelism_8hpp.html" title="Implement the detail of the parallel constructions to launch kernels." alt="" coords="649,155,828,196"/>
+<area shape="rect" id="node8" href="$triSYCL_2sycl_8hpp.html" title=" " alt="" coords="797,594,963,621"/>
+<area shape="rect" id="node20" href="$parallelism__tbb_8hpp.html" title="Implement the detail of the parallel constructions to launch kernels using Intel Threading Building B..." alt="" coords="1129,155,1308,196"/>
+<area shape="rect" id="node5" href="$parallelism_8hpp.html" title="Implement parallel constructions to launch kernels." alt="" coords="630,244,834,271"/>
+<area shape="rect" id="node6" href="$handler_8hpp.html" title=" " alt="" coords="630,319,813,345"/>
+<area shape="rect" id="node11" href="$triSYCL_2queue_8hpp.html" title=" " alt="" coords="390,401,567,427"/>
+<area shape="rect" id="node7" href="$buffer_8hpp.html" title=" " alt="" coords="565,497,739,524"/>
+<area shape="rect" id="node18" href="$sycl__2__2_2pipe_8hpp.html" title=" " alt="" coords="863,393,1004,435"/>
+<area shape="rect" id="node19" href="$static__pipe_8hpp.html" title=" " alt="" coords="645,393,787,435"/>
+<area shape="rect" id="node9" href="$CL_2sycl_8hpp.html" title="This is the main SYCL 1.2.1 interoperability header to expose triSYCL into the cl::sycl namespace." alt="" coords="729,683,866,710"/>
+<area shape="rect" id="node10" href="$sycl_2sycl_8hpp.html" title="This is the SYCL extension header to expose triSYCL directly into the sycl namespace as expected by S..." alt="" coords="891,683,1035,710"/>
+<area shape="rect" id="node12" href="$sycl_2vendor_2triSYCL_2scope_2queue_8hpp.html" title=" " alt="" coords="323,587,498,628"/>
+<area shape="rect" id="node13" href="$sycl_2vendor_2triSYCL_2scope_2queue_2detail_2queue_8hpp.html" title=" " alt="" coords="78,483,229,539"/>
+<area shape="rect" id="node14" href="$triSYCL_2vendor_2triSYCL_2scope_2queue_8hpp.html" title=" " alt="" coords="71,587,246,628"/>
+<area shape="rect" id="node17" href="$triSYCL_2vendor_2triSYCL_2scope_2queue_2detail_2queue_8hpp.html" title=" " alt="" coords="253,483,438,539"/>
+<area shape="rect" id="node15" href="$sycl_2vendor_2triSYCL_2scope_8hpp.html" title=" " alt="" coords="5,676,141,717"/>
+<area shape="rect" id="node16" href="$triSYCL_2vendor_2triSYCL_2scope_8hpp.html" title=" " alt="" coords="166,676,322,717"/>
 </map>

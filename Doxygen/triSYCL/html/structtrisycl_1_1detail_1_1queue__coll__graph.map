@@ -1,3 +1,7 @@
 <map id="trisycl::detail::queue" name="trisycl::detail::queue">
-<area shape="rect" id="node2" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; detail::queue \&gt;" alt="" coords="5,5,144,47"/>
+<area shape="rect" id="node1" title="Some implementation details about the SYCL queue." alt="" coords="232,109,371,136"/>
+<area shape="rect" id="node2" href="$group__debug__trace.html" title=" " alt="" coords="5,5,144,47"/>
+<area shape="rect" id="node3" title=" " alt="" coords="168,13,288,39"/>
+<area shape="rect" id="node4" title=" " alt="" coords="313,13,439,39"/>
+<area shape="rect" id="node5" title=" " alt="" coords="464,13,523,39"/>
 </map>

@@ -1,7 +1,13 @@
 <map id="trisycl::nd_range::get_group_range" name="trisycl::nd_range::get_group_range">
-<area shape="rect" id="node2" href="$group__parallelism.html#ga51d38178288f87c00720c90adf099b12" title="Implement a variation of parallel_for to take into account a nd_range&lt;&gt; " alt="" coords="180,5,347,32"/>
-<area shape="rect" id="node3" href="$group__parallelism.html#ga003201ce3c2a95af831b1c58fbb3804c" title="trisycl::detail::parallel\l_for_iterate" alt="" coords="400,49,545,90"/>
-<area shape="rect" id="node4" href="$group__parallelism.html#ga1d85d211443af84683e6126ad69eb216" title="Implement the loop on the work&#45;groups. " alt="" coords="191,107,336,149"/>
-<area shape="rect" id="node5" href="$group__execution.html#a35cee6d51dca6e9ce16a5bcd840a6a52" title="Hierarchical kernel invocation method of a kernel defined as a lambda encoding the body of each work&#45;..." alt="" coords="395,114,551,155"/>
-<area shape="rect" id="node6" href="$group__execution.html#a9993bfc880eef7c0e51cf8acee99ed36" title="Hierarchical kernel invocation method of a kernel defined as a lambda encoding the body of each work&#45;..." alt="" coords="599,114,755,155"/>
+<area shape="rect" id="node1" title="Get the range of work&#45;groups needed to run this ND&#45;range." alt="" coords="628,168,755,209"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#a34acf7f3dfa5f2a9006020029740e0b3" title="Return a range&lt;&gt; representing the dimensions of the current group." alt="" coords="435,71,558,112"/>
+<area shape="rect" id="node5" href="$group__parallelism.html#aecbf76f5d348a22661d621f057ad2596" title="Return the number of groups in the nd_range." alt="" coords="431,139,562,180"/>
+<area shape="rect" id="node8" href="$group__parallelism.html#ga51d38178288f87c00720c90adf099b12" title="Implement a variation of parallel_for to take into account a nd_range&lt;&gt;" alt="" coords="413,205,580,231"/>
+<area shape="rect" id="node9" href="$group__parallelism.html#ga1d85d211443af84683e6126ad69eb216" title="Implement the loop on the work&#45;groups." alt="" coords="424,263,569,304"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#a5ffec3eaf0277602ea53fef06d5ca3f8" title="Return element dimension from the con stituent group range." alt="" coords="226,5,349,47"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#ae503403247be0c196ee45d4f23c8485f" title="Get a linearized version of the group ID." alt="" coords="226,71,349,112"/>
+<area shape="rect" id="node6" href="$group__parallelism.html#a414d403e2b7b818a57a0d46db5b662c7" title="Return the flattened id of the current work&#45;group." alt="" coords="222,136,353,177"/>
+<area shape="rect" id="node7" href="$group__parallelism.html#ac6f2a6c3524c0cc592d882b5e4bd560b" title="Return the number of groups for dimension in the nd_range." alt="" coords="222,201,353,243"/>
+<area shape="rect" id="node10" href="$group__execution.html#a35cee6d51dca6e9ce16a5bcd840a6a52" title="Hierarchical kernel invocation method of a kernel defined as a lambda encoding the body of each work&#45;..." alt="" coords="209,267,365,308"/>
+<area shape="rect" id="node11" href="$group__execution.html#a9993bfc880eef7c0e51cf8acee99ed36" title="Hierarchical kernel invocation method of a kernel defined as a lambda encoding the body of each work&#45;..." alt="" coords="5,267,161,308"/>
 </map>

@@ -1,0 +1,20 @@
+<map id="trisycl::vendor::xilinx::acap::aie::detail::tile_infrastructure&lt; Geography &gt;" name="trisycl::vendor::xilinx::acap::aie::detail::tile_infrastructure&lt; Geography &gt;">
+<area shape="rect" id="node1" title="The AI Engine tile infrastructure common to all the tiles." alt="" coords="1304,389,1496,445"/>
+<area shape="rect" id="node2" title=" " alt="" coords="643,5,681,32"/>
+<area shape="rect" id="node4" href="$group__aie.html" title=" " alt="" coords="993,157,1151,213"/>
+<area shape="rect" id="node3" title=" " alt="" coords="635,436,689,463"/>
+<area shape="rect" id="node10" href="$group__aie.html#classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1memory__infrastructure" title="The AI Engine memory infrastructure common to all the tiles." alt="" coords="961,449,1183,490"/>
+<area shape="rect" id="node5" href="$group__debug__trace.html" title=" " alt="" coords="576,64,748,120"/>
+<area shape="rect" id="node6" title=" " alt="" coords="621,144,703,171"/>
+<area shape="rect" id="node7" title=" " alt="" coords="590,195,734,221"/>
+<area shape="rect" id="node8" title=" " alt="" coords="543,246,781,317"/>
+<area shape="rect" id="node9" title=" " alt="" coords="539,341,785,411"/>
+<area shape="rect" id="node11" href="$group__aie.html#structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1lock__unit" title="The lock infrastructure used by AI Engine memory modules and shim tiles." alt="" coords="591,487,733,529"/>
+<area shape="rect" id="node12" title=" " alt="" coords="268,463,412,489"/>
+<area shape="rect" id="node13" href="$structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1lock__unit_1_1locking__device.html" title="The individual locking system." alt="" coords="269,513,411,569"/>
+<area shape="rect" id="node14" title=" " alt="" coords="27,455,162,497"/>
+<area shape="rect" id="node15" title=" " alt="" coords="5,521,184,562"/>
+<area shape="rect" id="node16" href="$classbool.html" title=" " alt="" coords="71,587,118,613"/>
+<area shape="rect" id="node17" title=" " alt="" coords="981,514,1163,614"/>
+<area shape="rect" id="node18" title=" " alt="" coords="1021,639,1123,665"/>
+</map>

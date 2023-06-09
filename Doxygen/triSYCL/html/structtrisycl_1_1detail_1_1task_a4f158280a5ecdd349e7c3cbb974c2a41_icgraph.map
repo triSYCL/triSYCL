@@ -1,3 +1,4 @@
 <map id="trisycl::detail::task::get_compute_buffer" name="trisycl::detail::task::get_compute_buffer">
-<area shape="rect" id="node2" href="$group__device__runtime.html#ga2d37065516ca6f6bc374843772e19a25" title="Set an accessor argument of the kernel. " alt="" coords="199,5,353,47"/>
+<area shape="rect" id="node1" title="Get the Boost.Compute buffer for an accessor of the task." alt="" coords="189,5,335,47"/>
+<area shape="rect" id="node2" href="$group__device__runtime.html#ga687310989154693cc960080d31ed830a" title="Set an accessor argument of the kernel." alt="" coords="5,5,141,47"/>
 </map>

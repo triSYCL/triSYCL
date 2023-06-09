@@ -1,0 +1,12 @@
+<map id="AI Engine CGRA" name="AI Engine CGRA">
+<area shape="rect" id="node1" href="$group__Xilinx.html" title=" " alt="" coords="503,43,667,69"/>
+<area shape="rect" id="node2" href="$group__acap.html" title="Some classes and functions to support devices including CPU, FPGA &amp; AI Engine CGRA." alt="" coords="5,303,148,343"/>
+<area shape="rect" id="node4" title="Extensions to support explicit AI Engine system&#45;wide programming in C++." alt="" coords="197,310,320,335"/>
+<area shape="rect" id="node3" href="$group__acap__debug.html" title="Some classes and functions to help debuging ACAP applications, such as verifying BSP forward progress..." alt="" coords="489,143,680,169"/>
+<area shape="rect" id="node5" href="$group__defaults.html" title=" " alt="" coords="490,193,679,233"/>
+<area shape="rect" id="node6" href="$group__graphics.html" title="This can create a graphics application and typically update some sub&#45;images on a frame." alt="" coords="508,265,661,305"/>
+<area shape="rect" id="node7" href="$group__latex.html" title="This can generate LaTeX output used to display internal configuration for debug or teaching purpose." alt="" coords="495,329,674,369"/>
+<area shape="rect" id="node8" href="$group__opencl__spir__helpers.html" title=" " alt="" coords="515,394,655,419"/>
+<area shape="rect" id="node9" href="$group__parallelism.html" title=" " alt="" coords="508,444,661,484"/>
+<area shape="rect" id="node10" href="$group__vector.html" title=" " alt="" coords="510,509,659,534"/>
+</map>

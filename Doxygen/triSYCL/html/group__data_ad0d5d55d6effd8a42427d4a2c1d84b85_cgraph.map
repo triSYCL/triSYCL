@@ -1,0 +1,4 @@
+<map id="trisycl::accessor::operator[]" name="trisycl::accessor::operator[]">
+<area shape="rect" id="node1" title="To use an accessor with [item&lt;&gt;]." alt="" coords="5,5,132,47"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#ad6458907c63eaef564466906a4a55091" title="Return the constituent local or global id&lt;&gt; representing the work&#45;item&#39;s position in the iteration sp..." alt="" coords="180,13,313,39"/>
+</map>

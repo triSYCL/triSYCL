@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::tile::is_memory_module_south" name="trisycl::vendor::xilinx::acap::aie::tile::is_memory_module_south">
+<area shape="rect" id="node1" title="Test if a memory module exists on the South this tile." alt="" coords="5,5,169,61"/>
+<area shape="rect" id="node2" href="$group__aie.html#a9220f587376a96b2405bd51b392488dd" title="Test if a memory module exists and is connected to this tile." alt="" coords="217,5,360,61"/>
+</map>

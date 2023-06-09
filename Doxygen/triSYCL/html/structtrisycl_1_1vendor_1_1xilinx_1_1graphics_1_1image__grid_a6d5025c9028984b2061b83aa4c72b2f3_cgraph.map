@@ -1,0 +1,6 @@
+<map id="trisycl::vendor::xilinx::graphics::image_grid::update_tile_data_image" name="trisycl::vendor::xilinx::graphics::image_grid::update_tile_data_image">
+<area shape="rect" id="node1" title="Update the image of a tile of size image_y by image_x from a pointer." alt="" coords="5,35,172,91"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1vendor_1_1xilinx_1_1graphics_1_1image__grid.html#a24040ec1a94d40ffa0e0706dab12ead9" title="Update the image of a tile." alt="" coords="220,35,387,91"/>
+<area shape="rect" id="node3" href="$structtrisycl_1_1vendor_1_1xilinx_1_1graphics_1_1palette.html#a572f09f45ac672b1fee7e2f4d7b0a68d" title="Transform a value into an RGB color according to the palette." alt="" coords="435,5,617,47"/>
+<area shape="rect" id="node4" href="$structtrisycl_1_1vendor_1_1xilinx_1_1graphics_1_1image__grid.html#a517b9a6afa29ef382ac4013e9af4ead5" title="Submit some work to the graphics thread." alt="" coords="451,71,601,127"/>
+</map>

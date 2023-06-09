@@ -1,0 +1,10 @@
+<map id="trisycl::vendor::xilinx::acap::aie::detail::device::connect" name="trisycl::vendor::xilinx::acap::aie::detail::device::connect">
+<area shape="rect" id="node1" title="Connect the ports of 2 tiles or shims together with an hyperspace switched circuit,..." alt="" coords="5,43,173,99"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1detail_1_1device.html#a2adc5a599f819ad0aa9e42ac27954b19" title="Access to the shim tile." alt="" coords="463,13,667,54"/>
+<area shape="rect" id="node5" href="$structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1detail_1_1device.html#a9af5f30163d70d57c6fbcf3437398b03" title="Access to the common infrastructure part of a tile." alt="" coords="221,79,415,121"/>
+<area shape="rect" id="node3" href="$group__aie.html#adcf543794db70ab76cad9f8acb277b1d" title="Validate an horizontal coordinate." alt="" coords="715,5,865,61"/>
+<area shape="rect" id="node4" href="$group__aie.html#a974c727768794d9d60e9d62e0baf5dd2" title="Test if an horizontal coordinate is valid." alt="" coords="913,5,1064,61"/>
+<area shape="rect" id="node6" href="$group__aie.html#a5bdd52186e3f9ed69330fc5c1c9304bf" title="Validate the horizontal and vertical coordinates." alt="" coords="489,79,640,135"/>
+<area shape="rect" id="node7" href="$group__aie.html#a19b23fdd87e86ff55a163b60e5ef78f0" title="Validate a vertical coordinate." alt="" coords="715,85,865,141"/>
+<area shape="rect" id="node8" href="$group__aie.html#a2696e6cf50b1ef951288c2fc732f69b5" title="Test if a vertical coordinate is valid." alt="" coords="913,85,1064,141"/>
+</map>

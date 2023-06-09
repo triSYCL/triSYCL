@@ -1,0 +1,11 @@
+<map id="include/sycl/vendor/Xilinx/acap/aie/cascade_stream.hpp" name="include/sycl/vendor/Xilinx/acap/aie/cascade_stream.hpp">
+<area shape="rect" id="node1" title="The cascade stream infrastructure between AI Engine tiles." alt="" coords="66,5,230,61"/>
+<area shape="rect" id="node2" href="$access_8hpp.html" title=" " alt="" coords="5,109,144,136"/>
+<area shape="rect" id="node3" href="$sycl_2vendor_2Xilinx_2acap_2aie_2geography_8hpp.html" title="Geographic information about the AI Engine CGRA." alt="" coords="169,109,274,136"/>
+<area shape="rect" id="node4" title=" " alt="" coords="21,184,141,211"/>
+<area shape="rect" id="node5" title=" " alt="" coords="166,184,277,211"/>
+<area shape="rect" id="node6" href="$ranges_8hpp.html" title="Some range&#45;related helpers." alt="" coords="301,184,472,211"/>
+<area shape="rect" id="node7" title=" " alt="" coords="248,259,363,285"/>
+<area shape="rect" id="node8" href="$enum_8hpp.html" title="Some enum&#45;related helpers." alt="" coords="387,259,551,285"/>
+<area shape="rect" id="node9" title=" " alt="" coords="428,333,511,360"/>
+</map>

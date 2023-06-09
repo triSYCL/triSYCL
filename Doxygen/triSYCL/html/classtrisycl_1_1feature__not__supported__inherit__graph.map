@@ -1,4 +1,5 @@
 <map id="trisycl::feature_not_supported" name="trisycl::feature_not_supported">
-<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1device__error" title="The SYCL device will trigger this exception on error. " alt="" coords="5,80,141,107"/>
-<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information. " alt="" coords="13,5,134,32"/>
+<area shape="rect" id="node1" title="Exception thrown when an optional feature or extension is used in a kernel but its not available on t..." alt="" coords="8,155,139,196"/>
+<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1device__error" title="The SYCL device will trigger this exception on error." alt="" coords="5,80,141,107"/>
+<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information." alt="" coords="13,5,134,32"/>
 </map>

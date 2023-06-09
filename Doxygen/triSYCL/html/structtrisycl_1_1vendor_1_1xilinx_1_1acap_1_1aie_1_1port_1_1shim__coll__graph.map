@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::port::shim" name="trisycl::vendor::xilinx::acap::aie::port::shim">
+<area shape="rect" id="node1" title="Abstraction of a communication port inside a shim tile." alt="" coords="5,109,155,151"/>
+<area shape="rect" id="node2" title=" " alt="" coords="61,5,99,32"/>
+</map>

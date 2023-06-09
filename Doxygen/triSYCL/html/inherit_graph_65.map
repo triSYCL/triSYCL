@@ -1,6 +1,10 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$group__execution.html#classtrisycl_1_1detail_1_1platform" title="An abstract class representing various models of SYCL platforms. " alt="" coords="8,74,159,101"/>
-<area shape="rect" id="node2" href="$group__execution.html#classtrisycl_1_1detail_1_1host__platform" title="SYCL host platform. " alt="" coords="216,5,345,47"/>
-<area shape="rect" id="node3" href="$group__execution.html#classtrisycl_1_1detail_1_1opencl__platform" title="SYCL OpenCL platform. " alt="" coords="209,71,352,112"/>
-<area shape="rect" id="node4" href="$structtrisycl_1_1detail_1_1singleton.html" title="trisycl::detail::singleton\l\&lt; host_platform \&gt;" alt="" coords="5,5,161,47"/>
+<area shape="rect" id="node1" href="$group__debug__trace.html" title=" " alt="" coords="55,137,213,179"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1communicator__port.html" title="Abstract interface for a communication port." alt="" coords="334,137,537,179"/>
+<area shape="rect" id="node3" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1axi__stream__switch_1_1router__minion.html" title="A router input port with routing skills." alt="" coords="608,5,813,76"/>
+<area shape="rect" id="node4" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1fifo__channel.html" title="A FIFO channel connection." alt="" coords="630,100,791,141"/>
+<area shape="rect" id="node5" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1port__receiver.html" title="A router input port directing to an AIE core input or a BLI input." alt="" coords="627,166,794,222"/>
+<area shape="rect" id="node6" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1receiving__dma.html" title="Receiving DMA." alt="" coords="620,246,801,302"/>
+<area shape="rect" id="node7" href="$group__debug__trace.html" title=" " alt="" coords="5,253,263,295"/>
+<area shape="rect" id="node8" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1dma.html" title=" " alt="" coords="311,246,560,302"/>
 </map>

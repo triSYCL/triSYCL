@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['some_20helpers_20for_20the_20implementation',['Some helpers for the implementation',['../group__helpers.html',1,'']]]
+  ['manage_20default_20configuration_20and_20types_0',['Manage default configuration and types',['../group__defaults.html',1,'']]]
 ];

@@ -1,0 +1,5 @@
+<map id="trisycl::context::get_boost_compute" name="trisycl::context::get_boost_compute">
+<area shape="rect" id="node1" title="Return the underlying boost::compute::context of the trisycl::context." alt="" coords="441,5,576,47"/>
+<area shape="rect" id="node2" href="$group__data.html#a31930d97b31c40b843a1de541060cc24" title="Create a boost::compute::buffer for this trisycl::buffer in the cache and associate it with a given c..." alt="" coords="233,5,393,47"/>
+<area shape="rect" id="node3" href="$group__data.html#aad6218af1679f6e4f06ae001a36a86bb" title="When a transfer is requested this function is called, it will update the state of the buffer accordin..." alt="" coords="5,5,185,47"/>
+</map>

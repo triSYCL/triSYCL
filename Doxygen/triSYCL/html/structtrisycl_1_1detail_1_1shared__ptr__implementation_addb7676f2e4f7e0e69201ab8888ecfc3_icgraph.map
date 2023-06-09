@@ -1,8 +1,7 @@
 <map id="trisycl::detail::shared_ptr_implementation::hash" name="trisycl::detail::shared_ptr_implementation::hash">
-<area shape="rect" id="node2" href="$structstd_1_1hash_3_01trisycl_1_1kernel_01_4.html#a10a18938a617f7eecba02371058753bf" title="std::hash\&lt; trisycl\l::kernel \&gt;::operator()" alt="" coords="234,5,374,47"/>
-<area shape="rect" id="node3" href="$structstd_1_1hash_3_01trisycl_1_1event_01_4.html#aaf0083a52a19ec7ebd77ce5ae6f3bbd6" title="std::hash\&lt; trisycl\l::event \&gt;::operator()" alt="" coords="235,71,373,112"/>
-<area shape="rect" id="node4" href="$structstd_1_1hash_3_01trisycl_1_1platform_01_4.html#ae85f4b57ace7eb96b6ee0005239224a6" title="std::hash\&lt; trisycl\l::platform \&gt;::operator()" alt="" coords="228,136,380,177"/>
-<area shape="rect" id="node5" href="$structstd_1_1hash_3_01trisycl_1_1context_01_4.html#a06aef78aeb52d25e00400c11a03cc745" title="std::hash\&lt; trisycl\l::context \&gt;::operator()" alt="" coords="230,201,378,243"/>
-<area shape="rect" id="node6" href="$structstd_1_1hash_3_01trisycl_1_1device_01_4.html#a09a4d01716a34971d1bbaf22b848ed6c" title="std::hash\&lt; trisycl\l::device \&gt;::operator()" alt="" coords="233,267,375,308"/>
-<area shape="rect" id="node7" href="$structstd_1_1hash_3_01trisycl_1_1queue_01_4.html#a08aac751a95fb5528691d6abc88276d9" title="std::hash\&lt; trisycl\l::queue \&gt;::operator()" alt="" coords="234,332,374,373"/>
+<area shape="rect" id="node1" title="Forward the hashing for unordered containers to the implementation." alt="" coords="196,104,371,145"/>
+<area shape="rect" id="node2" href="$structstd_1_1hash_3_01trisycl_1_1device_01_4.html#a09a4d01716a34971d1bbaf22b848ed6c" title=" " alt="" coords="5,5,148,47"/>
+<area shape="rect" id="node3" href="$structstd_1_1hash_3_01trisycl_1_1event_01_4.html#aaf0083a52a19ec7ebd77ce5ae6f3bbd6" title=" " alt="" coords="8,71,145,112"/>
+<area shape="rect" id="node4" href="$structstd_1_1hash_3_01trisycl_1_1kernel_01_4.html#a10a18938a617f7eecba02371058753bf" title=" " alt="" coords="7,136,147,177"/>
+<area shape="rect" id="node5" href="$structstd_1_1hash_3_01trisycl_1_1queue_01_4.html#a08aac751a95fb5528691d6abc88276d9" title=" " alt="" coords="7,201,147,243"/>
 </map>

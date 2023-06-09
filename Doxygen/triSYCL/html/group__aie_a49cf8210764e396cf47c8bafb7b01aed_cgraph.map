@@ -1,0 +1,10 @@
+<map id="trisycl::vendor::xilinx::acap::aie::dma_dsl::lock" name="trisycl::vendor::xilinx::acap::aie::dma_dsl::lock">
+<area shape="rect" id="node1" title="Select a lock for the following operations." alt="" coords="5,61,177,102"/>
+<area shape="rect" id="node2" href="$group__aie.html#a4b06421ad70b71a378e36c8a7f7a849c" title="The memory module native to the tile." alt="" coords="225,61,371,102"/>
+<area shape="rect" id="node3" href="$group__aie.html#a23c164a77b68f1c0d663e007515fbf87" title="Get the memory module on the East if it does exist." alt="" coords="420,21,597,62"/>
+<area shape="rect" id="node6" href="$group__aie.html#ad777a7bfef46616736ee46278e1b965b" title="Get the memory module on the West if it does exist." alt="" coords="419,93,599,134"/>
+<area shape="rect" id="node4" href="$group__aie.html#a437a76ed3f6888b86cca10d1016e5298" title="Test if a memory module exists on the East of this tile." alt="" coords="649,5,807,61"/>
+<area shape="rect" id="node5" href="$group__aie.html#a9220f587376a96b2405bd51b392488dd" title="Test if a memory module exists and is connected to this tile." alt="" coords="857,45,1000,101"/>
+<area shape="rect" id="node7" href="$group__aie.html#a96a5af8ceaf968ba09d228a122df1ba5" title="Test if a memory module exists on the West of this tile." alt="" coords="648,85,808,141"/>
+<area shape="rect" id="node8" href="$group__aie.html#a3487f81c8b6ffa4398e46280009d4dab" title="Compute the linear id of a memory module attached to this tile." alt="" coords="647,165,809,221"/>
+</map>

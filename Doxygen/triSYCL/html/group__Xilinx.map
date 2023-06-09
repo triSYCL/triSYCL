@@ -1,0 +1,11 @@
+<map id="Xilinx vendor extensions" name="Xilinx vendor extensions">
+<area shape="rect" id="node1" title=" " alt="" coords="5,281,169,306"/>
+<area shape="rect" id="node2" href="$group__acap__debug.html" title="Some classes and functions to help debuging ACAP applications, such as verifying BSP forward progress..." alt="" coords="339,43,529,69"/>
+<area shape="rect" id="node3" href="$group__aie.html" title="Extensions to support explicit AI Engine system&#45;wide programming in C++." alt="" coords="373,114,495,139"/>
+<area shape="rect" id="node4" href="$group__defaults.html" title=" " alt="" coords="339,164,529,204"/>
+<area shape="rect" id="node5" href="$group__graphics.html" title="This can create a graphics application and typically update some sub&#45;images on a frame." alt="" coords="357,236,511,276"/>
+<area shape="rect" id="node6" href="$group__latex.html" title="This can generate LaTeX output used to display internal configuration for debug or teaching purpose." alt="" coords="345,300,523,340"/>
+<area shape="rect" id="node7" href="$group__opencl__spir__helpers.html" title=" " alt="" coords="364,365,504,390"/>
+<area shape="rect" id="node8" href="$group__parallelism.html" title=" " alt="" coords="357,415,511,455"/>
+<area shape="rect" id="node9" href="$group__vector.html" title=" " alt="" coords="359,479,509,505"/>
+</map>

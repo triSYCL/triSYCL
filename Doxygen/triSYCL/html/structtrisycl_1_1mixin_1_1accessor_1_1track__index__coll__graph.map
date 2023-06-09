@@ -1,0 +1,5 @@
+<map id="trisycl::mixin::accessor&lt; T, Dimensions &gt;::track_index&lt; N &gt;" name="trisycl::mixin::accessor&lt; T, Dimensions &gt;::track_index&lt; N &gt;">
+<area shape="rect" id="node1" title="Proxy object to transform an expression like accessor[i1][i2][i3] into the implementation mdpsan(i1,..." alt="" coords="33,95,200,151"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,87,32"/>
+<area shape="rect" id="node3" title=" " alt="" coords="111,5,266,32"/>
+</map>

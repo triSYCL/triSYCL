@@ -1,3 +1,4 @@
 <map id="trisycl::detail::opencl_platform::get_devices" name="trisycl::detail::opencl_platform::get_devices">
-<area shape="rect" id="node2" href="$group__execution.html#abd713f2f262f4ca87685f02a4cfbb3e7" title="Return the underlying Boost.Compute platform. " alt="" coords="208,5,407,47"/>
+<area shape="rect" id="node1" title="Get all the available devices for this OpenCL platform." alt="" coords="5,5,160,47"/>
+<area shape="rect" id="node2" href="$group__execution.html#a9a3774c42834d5200614c22a479b78f6" title="Return the underlying Boost.Compute platform." alt="" coords="208,5,407,47"/>
 </map>

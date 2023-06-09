@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::tile::linear_id" name="trisycl::vendor::xilinx::acap::aie::tile::linear_id">
+<area shape="rect" id="node1" title="Return the linearized coordinate of the tile." alt="" coords="5,5,169,47"/>
+<area shape="rect" id="node2" href="$group__helpers.html#ga185ce9faf9e1d586e4f57871ac4c3058" title="Compute a linearized array access used in the OpenCL 2 world." alt="" coords="217,13,369,39"/>
+</map>

@@ -1,6 +1,8 @@
 <map id="trisycl::accessor&lt; DataType, 1, AccessMode, access::target::pipe &gt;" name="trisycl::accessor&lt; DataType, 1, AccessMode, access::target::pipe &gt;">
-<area shape="rect" id="node2" href="$group__data.html" title="trisycl::detail::pipe\l_accessor\&lt; DataType,\l AccessMode, access::target\l::pipe \&gt;" alt="" coords="333,116,527,187"/>
-<area shape="rect" id="node3" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; detail::pipe_accessor\l\&lt; DataType, AccessMode,\l Target \&gt; \&gt;" alt="" coords="9,5,188,76"/>
-<area shape="rect" id="node4" href="$classstd_1_1shared__ptr_3_01trisycl_1_1detail_1_1pipe_3_01DataType_01_4_01_4.html" title="shared_ptr\&lt; trisycl\l::detail::pipe\&lt; DataType \&gt; \&gt;" alt="" coords="5,100,192,141"/>
-<area shape="rect" id="node5" href="$classbool.html" title="bool" alt="" coords="75,167,122,194"/>
+<area shape="rect" id="node1" title="The pipe accessor abstracts the way pipe data are accessed inside a kernel." alt="" coords="603,117,787,173"/>
+<area shape="rect" id="node2" href="$group__old__data.html" title=" " alt="" coords="384,109,553,180"/>
+<area shape="rect" id="node3" href="$group__debug__trace.html" title=" " alt="" coords="5,5,243,76"/>
+<area shape="rect" id="node4" title=" " alt="" coords="52,101,196,127"/>
+<area shape="rect" id="node5" href="$classbool.html" title=" " alt="" coords="101,161,147,187"/>
+<area shape="rect" id="node6" href="$classstd_1_1shared__ptr_3_01trisycl_1_1detail_1_1sycl__2__2_1_1pipe_3_01DataType_01_4_01_4.html" title=" " alt="" coords="55,211,193,267"/>
 </map>

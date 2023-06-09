@@ -1,0 +1,4 @@
+<map id="trisycl::detail::buffer_add_to_task" name="trisycl::detail::buffer_add_to_task">
+<area shape="rect" id="node1" title="Proxy function to avoid some circular type recursion." alt="" coords="211,5,348,47"/>
+<area shape="rect" id="node2" href="$group__data.html#a9a0ea8db6d7a56a5226b59c7127e6d1d" title="Construct a device accessor from an existing buffer." alt="" coords="5,5,163,47"/>
+</map>

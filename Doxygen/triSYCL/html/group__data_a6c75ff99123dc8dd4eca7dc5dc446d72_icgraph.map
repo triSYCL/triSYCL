@@ -1,3 +1,4 @@
 <map id="trisycl::detail::buffer_base::wait" name="trisycl::detail::buffer_base::wait">
-<area shape="rect" id="node2" href="$group__data.html#a775086e6f28f56d4a76879b09562bc7c" title="The destructor waits for not being used anymore. " alt="" coords="191,5,332,47"/>
+<area shape="rect" id="node1" title="Wait for this buffer to be ready, which is no longer in use." alt="" coords="195,5,332,47"/>
+<area shape="rect" id="node2" href="$group__data.html#a775086e6f28f56d4a76879b09562bc7c" title="The destructor waits for not being used anymore." alt="" coords="5,5,147,47"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="trisycl::device_selector::select_device" name="trisycl::device_selector::select_device">
-<area shape="rect" id="node2" href="$group__execution.html#a433fbccbccf221a5bb2089b223387146" title="Get all the available devices for this platform. " alt="" coords="227,5,347,47"/>
-<area shape="rect" id="node3" href="$group__execution.html#a5b9fb759c696e6e45d8ddcb49430ce4a" title="This pure virtual operator allows the customization of device selection. " alt="" coords="209,71,365,112"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,39,161,80"/>
+<area shape="rect" id="node2" href="$group__execution.html#a433fbccbccf221a5bb2089b223387146" title="Get all the available devices for this platform." alt="" coords="227,5,347,47"/>
+<area shape="rect" id="node3" href="$group__execution.html#a5b9fb759c696e6e45d8ddcb49430ce4a" title="This pure virtual operator allows the customization of device selection." alt="" coords="209,71,365,112"/>
 </map>

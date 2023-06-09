@@ -1,4 +1,8 @@
 <map id="trisycl::detail::vec&lt; DataType, NumElements &gt;" name="trisycl::detail::vec&lt; DataType, NumElements &gt;">
-<area shape="rect" id="node2" href="$group__helpers.html" title="trisycl::detail::small\l_array\&lt; DataType, ::trisycl\l::vec\&lt; DataType, NumElements\l \&gt;, NumElements \&gt;" alt="" coords="328,115,539,185"/>
-<area shape="rect" id="node5" href="$group__debug__trace.html" title="trisycl::detail::display\l_vector\&lt; ::trisycl::vec\l\&lt; DataType, NumElements \&gt; \&gt;" alt="" coords="39,254,246,310"/>
+<area shape="rect" id="node1" title="forward declaration to use in the detail class" alt="" coords="621,196,815,237"/>
+<area shape="rect" id="node2" href="$group__helpers.html" title=" " alt="" coords="363,181,573,252"/>
+<area shape="rect" id="node3" title=" " alt="" coords="87,5,233,47"/>
+<area shape="rect" id="node4" title=" " alt="" coords="5,71,315,229"/>
+<area shape="rect" id="node5" href="$group__debug__trace.html" title=" " alt="" coords="57,254,263,310"/>
+<area shape="rect" id="node6" href="$group__helpers.html#structtrisycl_1_1detail_1_1small__array__tag" title="Tag to define simply inheritance from small_array." alt="" coords="93,335,227,376"/>
 </map>

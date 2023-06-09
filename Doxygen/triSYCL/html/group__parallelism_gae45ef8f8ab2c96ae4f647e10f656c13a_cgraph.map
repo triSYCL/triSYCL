@@ -1,7 +1,9 @@
 <map id="trisycl::detail::parallel_for_workitem" name="trisycl::detail::parallel_for_workitem">
-<area shape="rect" id="node2" href="$group__helpers.html#ad4f44e8a98b8ac82456b46d7c3d11552" title="Return the element of the array. " alt="" coords="199,5,391,61"/>
-<area shape="rect" id="node3" href="$group__parallelism.html#a47af93dd969d17838d6437719e33f1ba" title="Return an id representing the index of the group within the nd_range for every dimension. " alt="" coords="225,85,365,112"/>
-<area shape="rect" id="node4" href="$group__parallelism.html#a9408b24089f91b98a25460e6e18a7cc7" title="Get the local range for this work_group. " alt="" coords="233,137,356,178"/>
-<area shape="rect" id="node5" href="$group__parallelism.html#a176fdbaafeb6d0e0aaf18ce156fee74e" title="trisycl::group::get\l_nd_range" alt="" coords="233,202,356,243"/>
-<area shape="rect" id="node6" href="$group__parallelism.html#a55c2d38bfa586195fc9e1d789e011a0f" title="Return the number of elements in the range. " alt="" coords="230,268,359,295"/>
+<area shape="rect" id="node1" title="Implement the loop on the work&#45;items inside a work&#45;group." alt="" coords="5,144,151,185"/>
+<area shape="rect" id="node2" href="$group__helpers.html#ab4477f1fe1131c69cf94bcc120d3f5d8" title="Return the element of the array." alt="" coords="201,5,336,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#a9f570a8dda352a57c625cd8a21e52e4f" title="Return an id representing the index of the group within the nd_range for every dimension." alt="" coords="199,71,339,98"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#abb2105fd1c7b7fb99254b9f6d8c2a5e7" title="Get the local range for this work_group." alt="" coords="207,173,330,215"/>
+<area shape="rect" id="node5" href="$group__parallelism.html#a65d9b543efa609d2a54f0bf739009bc1" title="Get the local part of the iteration space range." alt="" coords="387,128,513,169"/>
+<area shape="rect" id="node6" href="$group__parallelism.html#a39042c9a537a5dd16b5b6f26c9c9cf96" title=" " alt="" coords="389,207,511,248"/>
+<area shape="rect" id="node7" href="$group__parallelism.html#a55c2d38bfa586195fc9e1d789e011a0f" title="Return the number of elements in the range." alt="" coords="204,290,333,317"/>
 </map>

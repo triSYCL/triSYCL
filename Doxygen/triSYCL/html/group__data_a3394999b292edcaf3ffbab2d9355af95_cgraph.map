@@ -1,5 +1,7 @@
 <map id="trisycl::detail::accessor::copy_in_cl_buffer" name="trisycl::detail::accessor::copy_in_cl_buffer">
-<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1task.html#aef85e4bc2c97856581c09a62484b3f91" title="Get the queue behind the task to run a kernel on. " alt="" coords="225,5,354,47"/>
-<area shape="rect" id="node3" href="$group__data.html#a9ab3f3c0a318ed696fdd6afd180f89e6" title="Returns the size of the underlying buffer storage in bytes. " alt="" coords="211,71,368,112"/>
-<area shape="rect" id="node4" href="$group__data.html#a761b9cc3cf37a384dd88ea0fe68f4bbd" title="Returns the total number of elements behind the accessor. " alt="" coords="416,71,573,112"/>
+<area shape="rect" id="node1" title="Lazily associate a CL buffer to the SYCL buffer and copy data in it if required, updates the state of..." alt="" coords="5,71,163,112"/>
+<area shape="rect" id="node2" href="$group__execution.html#a2148e7f785dcd09aa05272a378c31817" title="Get the underlying storage." alt="" coords="211,5,368,47"/>
+<area shape="rect" id="node3" href="$structtrisycl_1_1detail_1_1task.html#aef85e4bc2c97856581c09a62484b3f91" title="Get the queue behind the task to run a kernel on." alt="" coords="225,71,354,112"/>
+<area shape="rect" id="node4" href="$group__execution.html#a9466bab0b0a9d8ebb6ac731a45f7d7c9" title="Returns the size of the buffer storage in bytes." alt="" coords="211,136,368,177"/>
+<area shape="rect" id="node5" href="$group__execution.html#aa144c18cd7c500dd696bc3916c8897b4" title="Returns the total number of elements in the buffer." alt="" coords="416,136,573,177"/>
 </map>

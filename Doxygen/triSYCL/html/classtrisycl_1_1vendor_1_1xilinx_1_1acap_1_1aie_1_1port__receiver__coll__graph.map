@@ -1,0 +1,9 @@
+<map id="trisycl::vendor::xilinx::acap::aie::port_receiver&lt; AXIStreamSwich &gt;" name="trisycl::vendor::xilinx::acap::aie::port_receiver&lt; AXIStreamSwich &gt;">
+<area shape="rect" id="node1" title="A router input port directing to an AIE core input or a BLI input." alt="" coords="571,90,737,146"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1communicator__port.html" title="Abstract interface for a communication port." alt="" coords="212,5,415,47"/>
+<area shape="rect" id="node3" href="$group__debug__trace.html" title=" " alt="" coords="5,5,163,47"/>
+<area shape="rect" id="node4" title=" " alt="" coords="241,71,385,98"/>
+<area shape="rect" id="node5" title=" " alt="" coords="229,122,397,178"/>
+<area shape="rect" id="node6" title=" " alt="" coords="246,202,381,229"/>
+<area shape="rect" id="node7" title=" " alt="" coords="269,253,357,279"/>
+</map>

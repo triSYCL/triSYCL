@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::detail::tile_infrastructure::single_task" name="trisycl::vendor::xilinx::acap::aie::detail::tile_infrastructure::single_task">
+<area shape="rect" id="node1" title="Launch an invocable on this tile." alt="" coords="5,5,184,61"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1detail_1_1fiber__pool.html#a3be4d7f3dc899bd1bea94e6dafe33be6" title="Submit some work on a new fiber." alt="" coords="232,13,361,54"/>
+</map>

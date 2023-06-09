@@ -1,0 +1,9 @@
+<map id="trisycl::vendor::xilinx::acap::aie::cascade_stream&lt; Geography &gt;" name="trisycl::vendor::xilinx::acap::aie::cascade_stream&lt; Geography &gt;">
+<area shape="rect" id="node1" title="Implementation of the cascade stream infrastructure between AI Engine tiles." alt="" coords="1037,110,1224,166"/>
+<area shape="rect" id="node2" href="$group__old__data.html" title=" " alt="" coords="712,117,851,159"/>
+<area shape="rect" id="node3" href="$structtrisycl_1_1detail_1_1shared__ptr__implementation.html" title=" " alt="" coords="361,23,552,93"/>
+<area shape="rect" id="node4" title=" " alt="" coords="5,5,212,47"/>
+<area shape="rect" id="node5" href="$classstd_1_1shared__ptr_3_01detail_1_1sycl__2__2_1_1pipe_3_01int_01_4_01_4.html" title=" " alt="" coords="27,71,191,112"/>
+<area shape="rect" id="node6" href="$group__debug__trace.html" title=" " alt="" coords="353,117,560,159"/>
+<area shape="rect" id="node7" href="$classfriend.html" title=" " alt="" coords="429,183,484,210"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::queue&lt; AIEDevice &gt;::queue_waiter" name="trisycl::vendor::xilinx::acap::aie::queue&lt; AIEDevice &gt;::queue_waiter">
+<area shape="rect" id="node1" title="Provide a wait() function that actually can throw an exception instead of ignoring it by the std::fut..." alt="" coords="5,80,205,136"/>
+<area shape="rect" id="node2" title=" " alt="" coords="41,5,170,32"/>
+</map>

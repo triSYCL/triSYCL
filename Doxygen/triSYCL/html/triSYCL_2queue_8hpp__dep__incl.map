@@ -1,0 +1,13 @@
+<map id="include/triSYCL/queue.hpp" name="include/triSYCL/queue.hpp">
+<area shape="rect" id="node1" title=" " alt="" coords="303,5,480,32"/>
+<area shape="rect" id="node2" href="$sycl_2vendor_2triSYCL_2scope_2queue_8hpp.html" title=" " alt="" coords="5,184,180,225"/>
+<area shape="rect" id="node3" href="$sycl_2vendor_2triSYCL_2scope_2queue_2detail_2queue_8hpp.html" title=" " alt="" coords="373,80,524,136"/>
+<area shape="rect" id="node4" href="$buffer_8hpp.html" title=" " alt="" coords="600,95,775,121"/>
+<area shape="rect" id="node5" href="$triSYCL_2sycl_8hpp.html" title=" " alt="" coords="571,191,737,218"/>
+<area shape="rect" id="node8" href="$triSYCL_2vendor_2triSYCL_2scope_2queue_8hpp.html" title=" " alt="" coords="213,184,388,225"/>
+<area shape="rect" id="node11" href="$triSYCL_2vendor_2triSYCL_2scope_2queue_2detail_2queue_8hpp.html" title=" " alt="" coords="112,80,297,136"/>
+<area shape="rect" id="node6" href="$CL_2sycl_8hpp.html" title="This is the main SYCL 1.2.1 interoperability header to expose triSYCL into the cl::sycl namespace." alt="" coords="552,281,689,307"/>
+<area shape="rect" id="node7" href="$sycl_2sycl_8hpp.html" title="This is the SYCL extension header to expose triSYCL directly into the sycl namespace as expected by S..." alt="" coords="714,281,858,307"/>
+<area shape="rect" id="node9" href="$sycl_2vendor_2triSYCL_2scope_8hpp.html" title=" " alt="" coords="175,273,311,315"/>
+<area shape="rect" id="node10" href="$triSYCL_2vendor_2triSYCL_2scope_8hpp.html" title=" " alt="" coords="336,273,492,315"/>
+</map>

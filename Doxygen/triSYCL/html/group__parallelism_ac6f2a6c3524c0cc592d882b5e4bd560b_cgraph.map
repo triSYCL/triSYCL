@@ -1,4 +1,6 @@
 <map id="trisycl::h_item::get_group_range" name="trisycl::h_item::get_group_range">
-<area shape="rect" id="node2" href="$group__parallelism.html#aec28e3f8287f5bb940874578d01f08a4" title="Return the number of groups in the nd_range. " alt="" coords="184,5,315,47"/>
-<area shape="rect" id="node3" href="$group__parallelism.html#a28c94147f9763325b4bef600b7e85695" title="Return the nd_range&lt;&gt; of the current execution. " alt="" coords="363,5,493,47"/>
+<area shape="rect" id="node1" title="Return the number of groups for dimension in the nd_range." alt="" coords="5,39,136,80"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#aecbf76f5d348a22661d621f057ad2596" title="Return the number of groups in the nd_range." alt="" coords="184,39,315,80"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#a9c662a1f7b82ef2c239ae70b24b1d7d2" title="Get the range of work&#45;groups needed to run this ND&#45;range." alt="" coords="365,5,491,47"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#ad4aeebd1de318b7cebf04f8ccb1ef6ec" title="Return the nd_range&lt;&gt; of the current execution." alt="" coords="363,71,493,112"/>
 </map>

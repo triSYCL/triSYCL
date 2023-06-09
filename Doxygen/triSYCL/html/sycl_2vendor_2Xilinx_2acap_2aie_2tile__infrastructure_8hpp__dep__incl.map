@@ -1,0 +1,12 @@
+<map id="include/sycl/vendor/Xilinx/acap/aie/tile_infrastructure.hpp" name="include/sycl/vendor/Xilinx/acap/aie/tile_infrastructure.hpp">
+<area shape="rect" id="node1" title="The basic AI Engine homogeneous tile, with the common infrastructure to all the tiles,..." alt="" coords="5,5,140,61"/>
+<area shape="rect" id="node2" href="$sycl_2vendor_2Xilinx_2acap_2aie_2device_2detail_2device_8hpp.html" title="SYCL&#45;friendly device view of AIE." alt="" coords="123,481,276,537"/>
+<area shape="rect" id="node7" href="$sycl_2vendor_2Xilinx_2acap_2aie_2tile__base_8hpp.html" title="The basic AI Engine homogeneous tile, with common content to all the tiles (i.e." alt="" coords="97,109,232,165"/>
+<area shape="rect" id="node3" href="$sycl_2vendor_2Xilinx_2acap_2aie_2accessor_8hpp.html" title="SYCL accessor for AIE tile device." alt="" coords="103,585,295,627"/>
+<area shape="rect" id="node6" href="$sycl_2vendor_2Xilinx_2acap_2aie_2device_8hpp.html" title="SYCL&#45;friendly device view of AIE." alt="" coords="319,585,498,627"/>
+<area shape="rect" id="node4" href="$sycl_2vendor_2Xilinx_2acap_2aie_8hpp.html" title="Experimenting with CGRA &amp; processor arrays such as ACAP/AI Engine." alt="" coords="341,675,477,716"/>
+<area shape="rect" id="node5" href="$sycl_2vendor_2Xilinx_2acap_8hpp.html" title="Experimenting with CGRA &amp; processor arrays such as ACAP/AI Engine." alt="" coords="341,764,476,805"/>
+<area shape="rect" id="node8" href="$sycl_2vendor_2Xilinx_2acap_2aie_2program_8hpp.html" title="Model of an AI Engine program, that weaves the program of each tile with the memory of each tile for ..." alt="" coords="202,303,389,344"/>
+<area shape="rect" id="node10" href="$sycl_2vendor_2Xilinx_2acap_2aie_2tile_8hpp.html" title="The basic AI Engine heterogeneous tile that dependent of x &amp; y coordinates but also from the collecti..." alt="" coords="86,213,243,255"/>
+<area shape="rect" id="node9" href="$sycl_2vendor_2Xilinx_2acap_2aie_2queue_8hpp.html" title="SYCL&#45;friendly queue for AIE cooperative program including all the tiles." alt="" coords="208,392,383,433"/>
+</map>

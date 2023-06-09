@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::trisycl::pipe::cout::write" name="trisycl::vendor::trisycl::pipe::cout::write">
+<area shape="rect" id="node1" title="Send some value to std::cout." alt="" coords="5,5,152,47"/>
+<area shape="rect" id="node2" href="$group__data.html#ab23c2ecbca0112f976c864315313010d" title="Provide the usual stream interface to std::cout." alt="" coords="200,5,347,47"/>
+</map>

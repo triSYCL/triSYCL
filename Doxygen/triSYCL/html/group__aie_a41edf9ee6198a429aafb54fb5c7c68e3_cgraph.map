@@ -1,0 +1,17 @@
+<map id="trisycl::vendor::xilinx::acap::aie::tile::barrier" name="trisycl::vendor::xilinx::acap::aie::tile::barrier">
+<area shape="rect" id="node1" title="Full barrier using the 2 locks by default." alt="" coords="5,261,157,302"/>
+<area shape="rect" id="node2" href="$group__aie.html#ad2ec0db244915c4ccfa4a682c5beb521" title="An horizontal barrier using a lock." alt="" coords="205,337,377,393"/>
+<area shape="rect" id="node12" href="$group__aie.html#aaa455173d321b803900ebc2a7a3f4676" title="A vertical barrier using a lock." alt="" coords="212,137,371,193"/>
+<area shape="rect" id="node3" href="$group__aie.html#a979927ba58732f1afd6b7f5db9b6e9a1" title="Test if the tile is in the Eastern column." alt="" coords="445,371,587,427"/>
+<area shape="rect" id="node4" href="$group__aie.html#a437a76ed3f6888b86cca10d1016e5298" title="Test if a memory module exists on the East of this tile." alt="" coords="885,217,1043,273"/>
+<area shape="rect" id="node6" href="$group__aie.html#a96a5af8ceaf968ba09d228a122df1ba5" title="Test if a memory module exists on the West of this tile." alt="" coords="884,407,1044,463"/>
+<area shape="rect" id="node7" href="$group__aie.html#ac5a50eed2bf797b0c814e63c1463c542" title="Test if the tile is in the Western column." alt="" coords="445,501,587,557"/>
+<area shape="rect" id="node8" href="$group__aie.html#a4b06421ad70b71a378e36c8a7f7a849c" title="The memory module native to the tile." alt="" coords="443,254,589,295"/>
+<area shape="rect" id="node9" href="$group__aie.html#a23c164a77b68f1c0d663e007515fbf87" title="Get the memory module on the East if it does exist." alt="" coords="656,254,833,295"/>
+<area shape="rect" id="node10" href="$group__aie.html#ad777a7bfef46616736ee46278e1b965b" title="Get the memory module on the West if it does exist." alt="" coords="655,374,835,415"/>
+<area shape="rect" id="node5" href="$group__aie.html#a9220f587376a96b2405bd51b392488dd" title="Test if a memory module exists and is connected to this tile." alt="" coords="1093,217,1236,273"/>
+<area shape="rect" id="node11" href="$group__aie.html#a3487f81c8b6ffa4398e46280009d4dab" title="Compute the linear id of a memory module attached to this tile." alt="" coords="883,327,1045,383"/>
+<area shape="rect" id="node13" href="$group__aie.html#a7e78482d94662c2a98d52dc50c74df9d" title="Test if a memory module exists on the North this tile." alt="" coords="664,123,825,179"/>
+<area shape="rect" id="node14" href="$group__aie.html#ab665fb07319bd448a847afe059c1c4c1" title="Test if the tile is in the Southern row." alt="" coords="445,5,587,61"/>
+<area shape="rect" id="node15" href="$group__aie.html#a48b9ae40f63f324bc2151e082c4bb6bc" title="Get the memory module on the North if it does exist." alt="" coords="425,86,607,127"/>
+</map>

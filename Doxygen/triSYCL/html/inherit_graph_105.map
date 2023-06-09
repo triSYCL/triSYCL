@@ -1,0 +1,17 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$group__execution.html#classtrisycl_1_1mixin_1_1accessor" title="SYCL accessor mixin providing multi&#45;dimensional access features." alt="" coords="5,15,163,57"/>
+<area shape="rect" id="node2" href="$group__execution.html" title=" " alt="" coords="211,15,456,57"/>
+<area shape="rect" id="node3" href="$group__data.html" title=" " alt="" coords="511,5,705,61"/>
+<area shape="rect" id="node5" href="$group__data.html#classtrisycl_1_1detail_1_1accessor" title="The buffer accessor abstracts the way buffer data are accessed inside a kernel in a multidimensional ..." alt="" coords="527,165,689,221"/>
+<area shape="rect" id="node4" href="$group__data.html#classtrisycl_1_1detail_1_1accessor_3_01T_00_01Dimensions_00_01Mode_00_01access_1_1target_1_1local_01_4" title="The local accessor specialization abstracts the way local memory is allocated to a kernel to be share..." alt="" coords="760,45,921,101"/>
+<area shape="rect" id="node6" href="$group__execution.html" title=" " alt="" coords="529,297,687,338"/>
+<area shape="rect" id="node7" href="$group__data.html#classtrisycl_1_1detail_1_1buffer" title="A SYCL buffer is a multidimensional variable length array (à la C99 VLA or even Fortran before) that ..." alt="" coords="772,297,909,338"/>
+<area shape="rect" id="node8" href="$group__data.html#classtrisycl_1_1detail_1_1accessor__base" title="The buffer accessor base is here mainly to be accessed from the task without dependency on the buffer..." alt="" coords="237,85,429,112"/>
+<area shape="rect" id="node9" href="$group__debug__trace.html" title=" " alt="" coords="504,85,712,141"/>
+<area shape="rect" id="node10" href="$group__debug__trace.html" title=" " alt="" coords="240,143,427,199"/>
+<area shape="rect" id="node11" href="$group__debug__trace.html" title=" " alt="" coords="539,362,677,403"/>
+<area shape="rect" id="node12" href="$group__debug__trace.html" title=" " alt="" coords="264,421,403,462"/>
+<area shape="rect" id="node13" href="$structtrisycl_1_1detail_1_1task.html" title="The abstraction to represent SYCL tasks executing inside command_group." alt="" coords="543,428,673,455"/>
+<area shape="rect" id="node14" title=" " alt="" coords="267,237,399,278"/>
+<area shape="rect" id="node15" href="$group__data.html#structtrisycl_1_1detail_1_1buffer__base" title="Factorize some template independent buffer aspects in a base class." alt="" coords="522,245,694,272"/>
+</map>

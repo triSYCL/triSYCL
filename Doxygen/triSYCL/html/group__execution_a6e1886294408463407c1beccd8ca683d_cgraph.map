@@ -1,0 +1,4 @@
+<map id="trisycl::mixin::accessor::tuple_indexed_access" name="trisycl::mixin::accessor::tuple_indexed_access">
+<area shape="rect" id="node1" title="Access to an element with indices implementing a tuple interface." alt="" coords="5,5,164,47"/>
+<area shape="rect" id="node2" href="$group__execution.html#abd5445bd551db33605ec8fa2709a10e8" title="Access to an mdspan element with indices implementing a tuple interface." alt="" coords="212,5,424,47"/>
+</map>

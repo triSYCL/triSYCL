@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::graphics::frame_grid::get_frame" name="trisycl::vendor::xilinx::graphics::frame_grid::get_frame">
+<area shape="rect" id="node1" title="Get the frame at a given grid position." alt="" coords="204,5,352,61"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1vendor_1_1xilinx_1_1graphics_1_1image__grid.html#ac9795e064e143f916b22776fdf66e098" title="Create a grid of tiled images." alt="" coords="5,5,156,61"/>
+</map>

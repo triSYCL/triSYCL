@@ -1,0 +1,5 @@
+<map id="trisycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;::accessor" name="trisycl::detail::accessor&lt; T, Dimensions, Mode, access::target::local &gt;::accessor">
+<area shape="rect" id="node1" title="Construct a local accessor of the right size." alt="" coords="5,24,167,95"/>
+<area shape="rect" id="node2" href="$group__execution.html#a8dc014b33aba699cc4a9e2810df68c0f" title="Set later the mdspan associated to this accessor." alt="" coords="215,5,372,47"/>
+<area shape="rect" id="node3" href="$group__data.html#a4c51168df9f102bc21423a5c01285450" title="Set later the current buffer associated to this accessor." alt="" coords="215,71,372,112"/>
+</map>

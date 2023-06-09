@@ -1,0 +1,7 @@
+<map id="trisycl::item::get_id" name="trisycl::item::get_id">
+<area shape="rect" id="node1" title="Return the constituent local or global id&lt;&gt; representing the work&#45;item&#39;s position in the iteration sp..." alt="" coords="228,101,361,127"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#af05ae43b2a6a876718b93349b0ca4b4f" title="Return the linearized ID in the item&#39;s range." alt="" coords="35,5,151,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#af3d0ff59b8ee1edb915ce595025bd745" title="Construct an id from an item global_id." alt="" coords="46,71,139,98"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#a39c350a7631c1fb5c810cf2cf4141d5b" title="Returns an item with same dimensions but offset set to 0." alt="" coords="5,123,180,164"/>
+<area shape="rect" id="node5" href="$group__data.html#a1508adebd76462b4b6cef37ac2a1aae4" title="To use an accessor with [item&lt;&gt;]." alt="" coords="29,188,156,229"/>
+</map>

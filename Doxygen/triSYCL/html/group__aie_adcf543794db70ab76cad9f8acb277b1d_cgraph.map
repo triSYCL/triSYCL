@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::geography::validate_x" name="trisycl::vendor::xilinx::acap::aie::geography::validate_x">
+<area shape="rect" id="node1" title="Validate an horizontal coordinate." alt="" coords="5,5,156,61"/>
+<area shape="rect" id="node2" href="$group__aie.html#a974c727768794d9d60e9d62e0baf5dd2" title="Test if an horizontal coordinate is valid." alt="" coords="204,5,355,61"/>
+</map>

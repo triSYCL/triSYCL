@@ -1,0 +1,4 @@
+<map id="trisycl::sycl_2_2::pipe::pipe" name="trisycl::sycl_2_2::pipe::pipe">
+<area shape="rect" id="node1" title="Construct a pipe able to store up to capacity T objects." alt="" coords="5,5,131,47"/>
+<area shape="rect" id="node2" href="$group__old__data.html#a9a82f06dd2f4b6a33de6fdb77ef8c037" title="Return the maximum number of elements that can fit in the pipe." alt="" coords="179,5,304,47"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::graphics::application::wait" name="trisycl::vendor::xilinx::graphics::application::wait">
+<area shape="rect" id="node1" title="Wait for the graphics window to end." alt="" coords="203,13,384,54"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1vendor_1_1xilinx_1_1graphics_1_1application.html#a5ec95979830e664c4cc0d81535b29ce3" title="The destructor waiting for graphics to end." alt="" coords="5,5,155,61"/>
+</map>

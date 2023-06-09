@@ -1,0 +1,10 @@
+<map id="include/triSYCL/vendor/Xilinx/acap/aie/memory_base.hpp" name="include/triSYCL/vendor/Xilinx/acap/aie/memory_base.hpp">
+<area shape="rect" id="node1" title="The basic AI Engine homogeneous Memory Module, with the common infrastructure to all the memory modul..." alt="" coords="61,5,223,61"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,109,84,136"/>
+<area shape="rect" id="node3" title=" " alt="" coords="109,109,175,136"/>
+<area shape="rect" id="node4" href="$triSYCL_2vendor_2Xilinx_2acap_2aie_2memory__infrastructure_8hpp.html" title="The basic AI Engine homogeneous memory infrastructure, i.e." alt="" coords="200,109,377,136"/>
+<area shape="rect" id="node5" href="$triSYCL_2vendor_2Xilinx_2acap_2aie_2lock_8hpp.html" title="The lock mechanism used by some AI Engine tiles." alt="" coords="253,184,324,211"/>
+<area shape="rect" id="node6" title=" " alt="" coords="166,259,235,285"/>
+<area shape="rect" id="node7" title=" " alt="" coords="259,259,318,285"/>
+<area shape="rect" id="node8" title=" " alt="" coords="342,259,467,285"/>
+</map>

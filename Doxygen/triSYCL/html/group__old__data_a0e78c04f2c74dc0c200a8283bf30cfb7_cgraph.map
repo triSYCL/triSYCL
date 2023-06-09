@@ -1,0 +1,6 @@
+<map id="trisycl::detail::sycl_2_2::pipe_reservation::~pipe_reservation" name="trisycl::detail::sycl_2_2::pipe_reservation::~pipe_reservation">
+<area shape="rect" id="node1" title="An implicit commit is made in the destructor." alt="" coords="5,45,159,101"/>
+<area shape="rect" id="node2" href="$group__old__data.html#a19a3f3c4875243ef3806cfcac2409707" title="Commit the reservation station." alt="" coords="207,45,360,101"/>
+<area shape="rect" id="node3" href="$group__old__data.html#afc2c5058a5ac736695880b69b9a2259c" title="Process the read reservations that are ready to be released in the reservation queue." alt="" coords="409,5,564,61"/>
+<area shape="rect" id="node4" href="$group__old__data.html#a91f4c84acef0cd66c52ba91616f9999a" title="Process the write reservations that are ready to be released in the reservation queue." alt="" coords="408,85,565,141"/>
+</map>

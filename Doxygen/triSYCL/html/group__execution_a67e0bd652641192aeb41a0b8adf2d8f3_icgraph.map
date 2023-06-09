@@ -1,0 +1,6 @@
+<map id="trisycl::mixin::accessor::rank" name="trisycl::mixin::accessor::rank">
+<area shape="rect" id="node1" title="Get the number of dimensions of the buffer." alt="" coords="419,39,576,80"/>
+<area shape="rect" id="node2" href="$group__execution.html#a255326fb325821d440d826dabda8f043" title="Cast a SYCL range/id&#45;like into a mdspan index array, which is an array of std::size_t into an array o..." alt="" coords="212,5,369,47"/>
+<area shape="rect" id="node4" href="$structtrisycl_1_1mixin_1_1accessor_1_1track__index.html#a94f485e19a4397a93b43306c71300b78" title="The individual indexing operator." alt="" coords="211,71,371,112"/>
+<area shape="rect" id="node3" href="$group__execution.html#a991db73408f7b4fddb39d6b3a7d6b6ba" title="Update the accessor to target somewhere else." alt="" coords="5,5,163,47"/>
+</map>

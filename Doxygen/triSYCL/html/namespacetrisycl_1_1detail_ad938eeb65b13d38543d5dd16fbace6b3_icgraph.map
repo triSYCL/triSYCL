@@ -1,0 +1,4 @@
+<map id="trisycl::detail::rangeify" name="trisycl::detail::rangeify">
+<area shape="rect" id="node1" title="Make an explicit range&lt;1&gt; when an integral is provided or pass the value unchanged." alt="" coords="232,5,383,32"/>
+<area shape="rect" id="node2" href="$group__execution.html#a7ae93eadc5be8fd20273dd46172bc0ad" title="Kernel invocation method of a kernel defined as a kernel object, for the specified range and given an..." alt="" coords="5,5,184,32"/>
+</map>

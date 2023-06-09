@@ -1,0 +1,7 @@
+<map id="trisycl::vendor::xilinx::acap::aie::fifo_channel" name="trisycl::vendor::xilinx::acap::aie::fifo_channel">
+<area shape="rect" id="node1" title="A FIFO channel connection." alt="" coords="516,41,677,83"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1communicator__port.html" title="Abstract interface for a communication port." alt="" coords="212,5,415,47"/>
+<area shape="rect" id="node3" href="$group__debug__trace.html" title=" " alt="" coords="5,5,163,47"/>
+<area shape="rect" id="node4" title=" " alt="" coords="241,71,385,98"/>
+<area shape="rect" id="node5" title=" " alt="" coords="229,122,397,178"/>
+</map>

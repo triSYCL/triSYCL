@@ -1,5 +1,0 @@
-<map id="trisycl::detail::accessor::accessor" name="trisycl::detail::accessor::accessor">
-<area shape="rect" id="node2" href="$group__data.html#a9ab3f3c0a318ed696fdd6afd180f89e6" title="Returns the size of the underlying buffer storage in bytes. " alt="" coords="211,5,368,47"/>
-<area shape="rect" id="node4" href="$group__data.html#ae93b6f20bc4c61705ae616c02b5ad8ed" title="Test if the accessor has a write access right. " alt="" coords="211,71,368,112"/>
-<area shape="rect" id="node3" href="$group__data.html#a761b9cc3cf37a384dd88ea0fe68f4bbd" title="Returns the total number of elements behind the accessor. " alt="" coords="416,5,573,47"/>
-</map>

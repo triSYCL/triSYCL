@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['manage_20default_20configuration_20and_20types',['Manage default configuration and types',['../group__defaults.html',1,'']]]
+  ['graphics_20support_20for_20cgra_2dlike_20interaction_0',['Graphics support for CGRA-like interaction',['../group__graphics.html',1,'']]]
 ];

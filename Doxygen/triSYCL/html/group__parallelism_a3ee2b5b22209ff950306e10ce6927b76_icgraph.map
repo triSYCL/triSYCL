@@ -1,0 +1,5 @@
+<map id="trisycl::h_item::get_offset" name="trisycl::h_item::get_offset">
+<area shape="rect" id="node1" title="Return an id&lt;&gt; representing the n&#45;dimensional offset provided to the constructor of the nd_range&lt;&gt; an..." alt="" coords="216,35,347,76"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#adc9f290770bcc950e3153231d3886765" title="Return the flattened id of the current work&#45;item after subtracting the offset." alt="" coords="21,5,152,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#a197ec14272b861572018fc2a63c4d712" title="Allows projection down to an item." alt="" coords="5,71,168,98"/>
+</map>

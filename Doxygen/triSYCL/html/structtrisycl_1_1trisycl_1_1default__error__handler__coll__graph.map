@@ -1,3 +1,4 @@
 <map id="trisycl::trisycl::default_error_handler" name="trisycl::trisycl::default_error_handler">
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,152,47"/>
 <area shape="rect" id="node2" href="$group__error__handling.html#structtrisycl_1_1error__handler" title="User supplied error handler to call a user&#45;provided function when an error happens from a SYCL object..." alt="" coords="9,109,149,136"/>
 </map>

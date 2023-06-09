@@ -1,0 +1,4 @@
+<map id="trisycl::handler::parallel_for" name="trisycl::handler::parallel_for">
+<area shape="rect" id="node1" title="Kernel invocation method of a kernel defined as a kernel object, for the specified range and given an..." alt="" coords="5,5,184,32"/>
+<area shape="rect" id="node2" href="$namespacetrisycl_1_1detail.html#ad938eeb65b13d38543d5dd16fbace6b3" title="Make an explicit range&lt;1&gt; when an integral is provided or pass the value unchanged." alt="" coords="232,5,383,32"/>
+</map>

@@ -1,4 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classtrisycl_1_1detail_1_1property.html" title="trisycl::detail::property" alt="" coords="5,13,156,39"/>
-<area shape="rect" id="node2" href="$classtrisycl_1_1property_1_1queue_1_1enable__profiling.html" title="trisycl::property::\lqueue::enable_profiling" alt="" coords="204,5,359,47"/>
+<area shape="rect" id="node1" href="$group__helpers.html" title=" " alt="" coords="5,5,192,61"/>
+<area shape="rect" id="node2" href="$group__device__runtime.html#classtrisycl_1_1drt_1_1accessor" title="SYCL accessor seen from a device perspective." alt="" coords="240,13,381,54"/>
 </map>

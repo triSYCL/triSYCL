@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::geography::memory_module_dx_coordinate" name="trisycl::vendor::xilinx::acap::aie::geography::memory_module_dx_coordinate">
+<area shape="rect" id="node1" title="Compute the memory module x coordinate delta from its tile." alt="" coords="235,5,449,61"/>
+<area shape="rect" id="node2" href="$group__aie.html#ac6549c82d94d110144e19f26698b5f56" title="Compute the linear id of a memory module attached to a tile." alt="" coords="5,5,187,61"/>
+</map>

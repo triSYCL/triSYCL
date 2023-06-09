@@ -1,9 +1,10 @@
 <map id="trisycl::context::context" name="trisycl::context::context">
-<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1singleton.html#a009fd0942ad638840002092537db892f" title="Get a singleton instance of T. " alt="" coords="212,5,391,47"/>
-<area shape="rect" id="node3" href="$classtrisycl_1_1detail_1_1opencl__context.html#a871e1c031698e0e1ea29c14522e84241" title="Get a singleton instance of the opencl_context. " alt="" coords="230,71,373,112"/>
-<area shape="rect" id="node5" href="$group__execution.html#a5cb11be9fe698ee1e6e44df9ea0e9e04" title="Specifies whether the context is in SYCL Host Execution Mode. " alt="" coords="222,137,381,163"/>
-<area shape="rect" id="node6" href="$group__execution.html#ga99569e50b383303596c39c3dedd1f6a1" title="trisycl::device_selector\l::select_device" alt="" coords="223,188,379,229"/>
-<area shape="rect" id="node4" href="$classtrisycl_1_1detail_1_1cache.html#acf94820e866b304f627288919d123e9e" title="Get a value stored in the cache if present or insert by calling a generator function. " alt="" coords="447,71,586,112"/>
-<area shape="rect" id="node7" href="$group__execution.html#a433fbccbccf221a5bb2089b223387146" title="Get all the available devices for this platform. " alt="" coords="457,161,577,203"/>
-<area shape="rect" id="node8" href="$group__execution.html#a5b9fb759c696e6e45d8ddcb49430ce4a" title="This pure virtual operator allows the customization of device selection. " alt="" coords="439,227,595,268"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,107,164,134"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1singleton.html#a99eae014f9fff1793aac892398b992b4" title="Get a singleton instance of T." alt="" coords="212,5,391,47"/>
+<area shape="rect" id="node3" href="$classtrisycl_1_1detail_1_1opencl__context.html#ab36fd1e29ed895780d97a7f4eeba4993" title="Get a singleton instance of the opencl_context." alt="" coords="230,71,373,112"/>
+<area shape="rect" id="node5" href="$group__execution.html#a5cb11be9fe698ee1e6e44df9ea0e9e04" title="Specifies whether the context is in SYCL Host Execution Mode." alt="" coords="222,137,381,163"/>
+<area shape="rect" id="node6" href="$group__execution.html#ga99569e50b383303596c39c3dedd1f6a1" title=" " alt="" coords="223,188,379,229"/>
+<area shape="rect" id="node4" href="$classtrisycl_1_1detail_1_1cache.html#a52ff34a4ed17f6887d05ff9800749184" title="Get a value stored in the cache if present or insert by calling a generator function." alt="" coords="447,71,586,112"/>
+<area shape="rect" id="node7" href="$group__execution.html#a433fbccbccf221a5bb2089b223387146" title="Get all the available devices for this platform." alt="" coords="457,161,577,203"/>
+<area shape="rect" id="node8" href="$group__execution.html#a5b9fb759c696e6e45d8ddcb49430ce4a" title="This pure virtual operator allows the customization of device selection." alt="" coords="439,227,595,268"/>
 </map>

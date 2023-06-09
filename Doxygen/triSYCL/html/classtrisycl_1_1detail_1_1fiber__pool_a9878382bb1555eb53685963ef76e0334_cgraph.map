@@ -1,0 +1,6 @@
+<map id="trisycl::detail::fiber_pool::fiber_pool" name="trisycl::detail::fiber_pool::fiber_pool">
+<area shape="rect" id="node1" title="Create a fiber_pool." alt="" coords="5,79,135,120"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1detail_1_1pooled__shared__work.html#a3944502a82238f5afa0280a5d960d239" title=" " alt="" coords="183,5,385,47"/>
+<area shape="rect" id="node3" href="$classtrisycl_1_1detail_1_1pooled__work__stealing.html#a2e49169b7f0741224866cd80b0a8bd30" title=" " alt="" coords="207,71,361,127"/>
+<area shape="rect" id="node4" href="$classtrisycl_1_1detail_1_1fiber__pool.html#a9cdfdaf40514dfe8734285ba59df1990" title="The thread worker job." alt="" coords="219,152,349,193"/>
+</map>

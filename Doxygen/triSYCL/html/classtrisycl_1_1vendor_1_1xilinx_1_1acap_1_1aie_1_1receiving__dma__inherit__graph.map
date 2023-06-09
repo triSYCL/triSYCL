@@ -1,0 +1,7 @@
+<map id="trisycl::vendor::xilinx::acap::aie::receiving_dma&lt; AXIStreamSwitch &gt;" name="trisycl::vendor::xilinx::acap::aie::receiving_dma&lt; AXIStreamSwitch &gt;">
+<area shape="rect" id="node1" title="Receiving DMA." alt="" coords="608,43,789,99"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1dma.html" title=" " alt="" coords="311,5,560,61"/>
+<area shape="rect" id="node3" href="$group__debug__trace.html" title=" " alt="" coords="5,13,263,54"/>
+<area shape="rect" id="node4" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1communicator__port.html" title="Abstract interface for a communication port." alt="" coords="334,86,537,127"/>
+<area shape="rect" id="node5" href="$group__debug__trace.html" title=" " alt="" coords="55,86,213,127"/>
+</map>

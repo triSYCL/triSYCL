@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['rounding_5fmode',['rounding_mode',['../group__vector.html#gace6557c9368309621d29aaf117bc8841',1,'trisycl']]]
+  ['queue_0',['queue',['../namespacetrisycl_1_1info.html#a6af2bb53ab541e50a116aadb93a4c1f8',1,'trisycl::info']]]
 ];

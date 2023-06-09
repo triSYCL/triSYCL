@@ -1,2 +1,4 @@
 <map id="trisycl::vendor::xilinx::partition::none" name="trisycl::vendor::xilinx::partition::none">
+<area shape="rect" id="node1" title="Represent a none partition." alt="" coords="6,95,149,136"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,149,32"/>
 </map>

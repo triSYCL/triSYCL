@@ -1,9 +1,0 @@
-<map id="trisycl::group::parallel_for_work_item" name="trisycl::group::parallel_for_work_item">
-<area shape="rect" id="node2" href="$group__parallelism.html#ga876d173bd185aefef8daf2459267fe9f" title="Implement the loop on the work&#45;items inside a work&#45;group. " alt="" coords="200,129,360,171"/>
-<area shape="rect" id="node3" href="$group__parallelism.html#gae45ef8f8ab2c96ae4f647e10f656c13a" title="Implement the loop on the work&#45;items inside a work&#45;group. " alt="" coords="408,129,553,171"/>
-<area shape="rect" id="node4" href="$group__parallelism.html#a176fdbaafeb6d0e0aaf18ce156fee74e" title="trisycl::group::get\l_nd_range" alt="" coords="636,5,759,47"/>
-<area shape="rect" id="node5" href="$group__parallelism.html#a55c2d38bfa586195fc9e1d789e011a0f" title="Return the number of elements in the range. " alt="" coords="633,71,762,98"/>
-<area shape="rect" id="node6" href="$group__helpers.html#ad4f44e8a98b8ac82456b46d7c3d11552" title="Return the element of the array. " alt="" coords="601,122,793,178"/>
-<area shape="rect" id="node7" href="$group__parallelism.html#a47af93dd969d17838d6437719e33f1ba" title="Return an id representing the index of the group within the nd_range for every dimension. " alt="" coords="627,202,767,229"/>
-<area shape="rect" id="node8" href="$group__parallelism.html#a9408b24089f91b98a25460e6e18a7cc7" title="Get the local range for this work_group. " alt="" coords="636,253,759,295"/>
-</map>

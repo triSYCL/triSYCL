@@ -1,5 +1,6 @@
 <map id="trisycl::buffer&lt; T, Dimensions, Allocator &gt;" name="trisycl::buffer&lt; T, Dimensions, Allocator &gt;">
-<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1shared__ptr__implementation.html" title="trisycl::detail::shared\l_ptr_implementation\&lt; buffer\l\&lt; T, Dimensions, Allocator\l \&gt;, detail::buffer_waiter\&lt;\l T, Dimensions, Allocator \&gt; \&gt;" alt="" coords="325,31,520,116"/>
-<area shape="rect" id="node4" href="$classstd_1_1shared__ptr_3_01detail_1_1buffer__waiter_3_01T_00_01Dimensions_00_01Allocator_01_4_01_4.html" title="shared_ptr\&lt; detail\l::buffer_waiter\&lt; T,\l Dimensions, Allocator \&gt; \&gt;" alt="" coords="5,85,184,141"/>
-<area shape="rect" id="node5" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; buffer\&lt; T, Dimensions,\l Allocator \&gt; \&gt;" alt="" coords="339,140,507,196"/>
+<area shape="rect" id="node1" title="A SYCL buffer is a multidimensional variable length array (à la C99 VLA or even Fortran before) that ..." alt="" coords="363,151,528,193"/>
+<area shape="rect" id="node2" title=" " alt="" coords="17,5,199,120"/>
+<area shape="rect" id="node3" href="$classdetail_1_1debug_3_01buffer_3_01T_00_011_00_01buffer__allocator_3_01std_1_1remove__const__t_3_01T_01_4_01_4_01_4_01_4.html" title=" " alt="" coords="5,144,211,200"/>
+<area shape="rect" id="node4" href="$classfriend.html" title=" " alt="" coords="81,224,135,251"/>
 </map>

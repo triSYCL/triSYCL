@@ -1,3 +1,4 @@
 <map id="trisycl::item::display" name="trisycl::item::display">
-<area shape="rect" id="node2" href="$group__debug__trace.html#a1e4ad380a0ef353d15692d36c2893002" title="To debug and test. " alt="" coords="192,5,383,61"/>
+<area shape="rect" id="node1" title="Display the value for debugging and validation purpose." alt="" coords="5,13,144,39"/>
+<area shape="rect" id="node2" href="$group__debug__trace.html#a1e4ad380a0ef353d15692d36c2893002" title="To debug and test." alt="" coords="192,5,337,47"/>
 </map>

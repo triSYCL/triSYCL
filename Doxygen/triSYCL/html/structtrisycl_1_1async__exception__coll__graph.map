@@ -1,3 +1,5 @@
 <map id="trisycl::async_exception" name="trisycl::async_exception">
-<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information. " alt="" coords="26,95,147,121"/>
+<area shape="rect" id="node1" title="An error stored in an exception_list for asynchronous errors." alt="" coords="5,171,168,197"/>
+<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information." alt="" coords="26,95,147,121"/>
+<area shape="rect" id="node3" title=" " alt="" coords="59,5,114,32"/>
 </map>

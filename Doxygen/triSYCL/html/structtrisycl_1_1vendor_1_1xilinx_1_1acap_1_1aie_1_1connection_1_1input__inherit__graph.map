@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::connection::input" name="trisycl::vendor::xilinx::acap::aie::connection::input">
+<area shape="rect" id="node1" title="Abstract an input port." alt="" coords="23,95,178,151"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1connection_1_1base.html" title="Base class of connection port." alt="" coords="5,5,196,47"/>
+</map>

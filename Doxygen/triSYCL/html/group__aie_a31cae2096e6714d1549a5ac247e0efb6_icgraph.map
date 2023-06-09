@@ -1,0 +1,6 @@
+<map id="trisycl::vendor::xilinx::acap::aie::detail::tile_infrastructure::display_core_size" name="trisycl::vendor::xilinx::acap::aie::detail::tile_infrastructure::display_core_size">
+<area shape="rect" id="node1" title="Compute the size of the graphics representation of the processor." alt="" coords="477,31,632,102"/>
+<area shape="rect" id="node2" href="$group__aie.html#a3723e8a350eaf875e93b0263fa6db1e2" title="Display the tile to a LaTeX context." alt="" coords="23,5,178,61"/>
+<area shape="rect" id="node3" href="$group__aie.html#a9c56bc7730489b9a33122c1d61cfee8f" title="Compute the size of the graphics representation of the tile." alt="" coords="244,71,429,127"/>
+<area shape="rect" id="node4" href="$group__aie.html#abaeb001c02cdf3d2ba160f2be4f0bbfc" title="Compute the size of the graphics representation of the tile." alt="" coords="5,85,196,141"/>
+</map>

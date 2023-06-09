@@ -1,0 +1,4 @@
+<map id="trisycl::detail::sycl_2_2::pipe_reservation::commit" name="trisycl::detail::sycl_2_2::pipe_reservation::commit">
+<area shape="rect" id="node1" title="Commit the reservation station." alt="" coords="207,5,360,61"/>
+<area shape="rect" id="node2" href="$group__old__data.html#a0e78c04f2c74dc0c200a8283bf30cfb7" title="An implicit commit is made in the destructor." alt="" coords="5,5,159,61"/>
+</map>

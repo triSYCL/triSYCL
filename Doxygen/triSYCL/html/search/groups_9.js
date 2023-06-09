@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['xilinx_20vendor_20extensions',['Xilinx vendor extensions',['../group__Xilinx.html',1,'']]]
+  ['some_20helpers_20for_20the_20implementation_0',['Some helpers for the implementation',['../group__helpers.html',1,'']]]
 ];

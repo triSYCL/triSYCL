@@ -1,6 +1,7 @@
 <map id="trisycl::device::type" name="trisycl::device::type">
-<area shape="rect" id="node2" href="$group__execution.html#a00cddd2c75a2bc2c8390c2eb5686ca56" title="Return true if the device is an OpenCL accelerator device. " alt="" coords="205,5,327,47"/>
-<area shape="rect" id="node3" href="$group__execution.html#ab6bff55c4bd74685958ae4bdf31dcd45" title="Return true if the device is an OpenCL CPU device. " alt="" coords="191,71,341,98"/>
-<area shape="rect" id="node4" href="$group__execution.html#a7289977e7ff9170ec98cc30f6f380f5e" title="Return true if the device is an OpenCL GPU device. " alt="" coords="191,122,341,149"/>
-<area shape="rect" id="node5" href="$group__execution.html#a85994f72e781307e4cdf671e18dfb6fc" title="Return true if the device is the SYCL host device. " alt="" coords="189,173,343,199"/>
+<area shape="rect" id="node1" title="Return the device_type of a device." alt="" coords="5,97,141,123"/>
+<area shape="rect" id="node2" href="$group__execution.html#a00cddd2c75a2bc2c8390c2eb5686ca56" title="Return true if the device is an OpenCL accelerator device." alt="" coords="205,5,327,47"/>
+<area shape="rect" id="node3" href="$group__execution.html#ab6bff55c4bd74685958ae4bdf31dcd45" title="Return true if the device is an OpenCL CPU device." alt="" coords="191,71,341,98"/>
+<area shape="rect" id="node4" href="$group__execution.html#a7289977e7ff9170ec98cc30f6f380f5e" title="Return true if the device is an OpenCL GPU device." alt="" coords="191,122,341,149"/>
+<area shape="rect" id="node5" href="$group__execution.html#a85994f72e781307e4cdf671e18dfb6fc" title="Return true if the device is the SYCL host device." alt="" coords="189,173,343,199"/>
 </map>

@@ -1,4 +1,6 @@
 <map id="trisycl::profiling_error" name="trisycl::profiling_error">
-<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1device__error" title="The SYCL device will trigger this exception on error. " alt="" coords="5,171,141,197"/>
-<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information. " alt="" coords="13,95,134,121"/>
+<area shape="rect" id="node1" title="The SYCL runtime will trigger this error if there is an error when profiling info is enabled." alt="" coords="18,247,129,288"/>
+<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1device__error" title="The SYCL device will trigger this exception on error." alt="" coords="5,171,141,197"/>
+<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information." alt="" coords="13,95,134,121"/>
+<area shape="rect" id="node4" title=" " alt="" coords="46,5,101,32"/>
 </map>

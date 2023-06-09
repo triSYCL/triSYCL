@@ -1,0 +1,34 @@
+<map id="trisycl::detail::small_array_tag" name="trisycl::detail::small_array_tag">
+<area shape="rect" id="node1" title="Tag to define simply inheritance from small_array." alt="" coords="5,591,140,632"/>
+<area shape="rect" id="node2" href="$group__helpers.html" title=" " alt="" coords="188,220,399,291"/>
+<area shape="rect" id="node16" href="$group__helpers.html" title=" " alt="" coords="219,463,368,519"/>
+<area shape="rect" id="node19" href="$group__helpers.html" title=" " alt="" coords="208,543,379,599"/>
+<area shape="rect" id="node22" href="$group__helpers.html" title=" " alt="" coords="210,623,377,679"/>
+<area shape="rect" id="node27" href="$group__helpers.html" title=" " alt="" coords="208,707,379,763"/>
+<area shape="rect" id="node31" href="$group__helpers.html#structtrisycl_1_1detail_1_1small__array" title="Define a multi&#45;dimensional index, used for example to locate a work item or a buffer element." alt="" coords="194,795,393,851"/>
+<area shape="rect" id="node3" href="$classtrisycl_1_1detail_1_1vec.html" title=" " alt="" coords="501,5,626,47"/>
+<area shape="rect" id="node5" href="$classtrisycl_1_1detail_1_1vec.html" title=" " alt="" coords="501,71,626,112"/>
+<area shape="rect" id="node7" href="$classtrisycl_1_1detail_1_1vec.html" title=" " alt="" coords="501,136,626,177"/>
+<area shape="rect" id="node9" href="$classtrisycl_1_1detail_1_1vec.html" title=" " alt="" coords="501,201,626,243"/>
+<area shape="rect" id="node11" href="$classtrisycl_1_1detail_1_1vec.html" title=" " alt="" coords="501,267,626,308"/>
+<area shape="rect" id="node13" href="$classtrisycl_1_1detail_1_1vec.html" title=" " alt="" coords="501,332,626,373"/>
+<area shape="rect" id="node15" href="$classtrisycl_1_1detail_1_1vec.html" title="forward declaration to use in the detail class" alt="" coords="467,397,660,439"/>
+<area shape="rect" id="node4" href="$group__vector.html#classtrisycl_1_1vec_3_01DataType_00_011_01_4" title=" " alt="" coords="733,13,914,39"/>
+<area shape="rect" id="node6" href="$group__vector.html#classtrisycl_1_1vec_3_01DataType_00_0116_01_4" title=" " alt="" coords="744,71,903,112"/>
+<area shape="rect" id="node8" href="$group__vector.html#classtrisycl_1_1vec_3_01DataType_00_012_01_4" title=" " alt="" coords="733,143,914,170"/>
+<area shape="rect" id="node10" href="$group__vector.html#classtrisycl_1_1vec_3_01DataType_00_013_01_4" title=" " alt="" coords="733,209,914,235"/>
+<area shape="rect" id="node12" href="$group__vector.html#classtrisycl_1_1vec_3_01DataType_00_014_01_4" title=" " alt="" coords="733,274,914,301"/>
+<area shape="rect" id="node14" href="$group__vector.html#classtrisycl_1_1vec_3_01DataType_00_018_01_4" title=" " alt="" coords="733,339,914,366"/>
+<area shape="rect" id="node17" href="$group__helpers.html" title=" " alt="" coords="488,463,639,519"/>
+<area shape="rect" id="node18" href="$group__parallelism.html#classtrisycl_1_1id" title="Define a multi&#45;dimensional index, used for example to locate a work item." alt="" coords="739,478,907,505"/>
+<area shape="rect" id="node20" href="$group__helpers.html" title=" " alt="" coords="488,543,639,599"/>
+<area shape="rect" id="node21" href="$group__parallelism.html#classtrisycl_1_1range" title="A SYCL range defines a multi&#45;dimensional index range that can be used to define launch parallel compu..." alt="" coords="728,534,919,561"/>
+<area shape="rect" id="node23" href="$group__helpers.html" title=" " alt="" coords="447,623,680,679"/>
+<area shape="rect" id="node24" href="$group__parallelism.html" title=" " alt="" coords="739,585,907,611"/>
+<area shape="rect" id="node25" href="$group__parallelism.html" title=" " alt="" coords="759,635,887,662"/>
+<area shape="rect" id="node26" href="$group__parallelism.html" title=" " alt="" coords="770,686,877,713"/>
+<area shape="rect" id="node28" href="$group__helpers.html" title=" " alt="" coords="480,711,647,781"/>
+<area shape="rect" id="node29" href="$group__parallelism.html" title=" " alt="" coords="748,737,899,763"/>
+<area shape="rect" id="node30" href="$group__parallelism.html" title=" " alt="" coords="759,787,887,814"/>
+<area shape="rect" id="node32" href="$group__helpers.html#structtrisycl_1_1detail_1_1small__array__sycl" title="A small array to implement SYCL objects like id, range, item... with 1, 2 or 3 elements (or even more..." alt="" coords="480,806,647,862"/>
+</map>

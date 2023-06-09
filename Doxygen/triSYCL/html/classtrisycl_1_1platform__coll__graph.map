@@ -1,4 +1,7 @@
 <map id="trisycl::platform" name="trisycl::platform">
-<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1shared__ptr__implementation.html" title="trisycl::detail::shared\l_ptr_implementation\&lt; platform,\l detail::platform \&gt;" alt="" coords="57,109,260,165"/>
-<area shape="rect" id="node4" href="$classstd_1_1shared__ptr_3_01detail_1_1platform_01_4.html" title="shared_ptr\&lt; detail\l::platform \&gt;" alt="" coords="177,5,303,47"/>
+<area shape="rect" id="node1" title="Abstract the OpenCL platform." alt="" coords="179,228,291,255"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1shared__ptr__implementation.html" title=" " alt="" coords="57,109,260,165"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,5,152,47"/>
+<area shape="rect" id="node4" href="$classstd_1_1shared__ptr_3_01detail_1_1platform_01_4.html" title=" " alt="" coords="177,5,303,47"/>
+<area shape="rect" id="node5" href="$classfriend.html" title=" " alt="" coords="285,124,339,151"/>
 </map>

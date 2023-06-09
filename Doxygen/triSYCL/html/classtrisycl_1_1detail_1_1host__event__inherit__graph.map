@@ -1,5 +1,6 @@
 <map id="trisycl::detail::host_event" name="trisycl::detail::host_event">
-<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1event.html" title="trisycl::detail::event" alt="" coords="7,102,143,129"/>
-<area shape="rect" id="node3" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; detail::event \&gt;" alt="" coords="5,5,144,47"/>
-<area shape="rect" id="node4" href="$structtrisycl_1_1detail_1_1singleton.html" title="trisycl::detail::singleton\l\&lt; host_event \&gt;" alt="" coords="167,95,323,136"/>
+<area shape="rect" id="node1" title=" " alt="" coords="95,184,225,225"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1event.html" title=" " alt="" coords="7,102,143,129"/>
+<area shape="rect" id="node3" href="$group__debug__trace.html" title=" " alt="" coords="5,5,144,47"/>
+<area shape="rect" id="node4" href="$structtrisycl_1_1detail_1_1singleton.html" title=" " alt="" coords="167,95,323,136"/>
 </map>

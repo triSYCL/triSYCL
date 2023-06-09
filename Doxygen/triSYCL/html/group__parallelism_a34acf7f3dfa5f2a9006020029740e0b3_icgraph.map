@@ -1,0 +1,5 @@
+<map id="trisycl::group::get_group_range" name="trisycl::group::get_group_range">
+<area shape="rect" id="node1" title="Return a range&lt;&gt; representing the dimensions of the current group." alt="" coords="176,39,299,80"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#a5ffec3eaf0277602ea53fef06d5ca3f8" title="Return element dimension from the con stituent group range." alt="" coords="5,5,128,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#ae503403247be0c196ee45d4f23c8485f" title="Get a linearized version of the group ID." alt="" coords="5,71,128,112"/>
+</map>

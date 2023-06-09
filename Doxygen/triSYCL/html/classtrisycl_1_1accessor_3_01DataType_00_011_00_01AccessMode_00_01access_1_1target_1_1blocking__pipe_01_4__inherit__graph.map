@@ -1,4 +1,5 @@
 <map id="trisycl::accessor&lt; DataType, 1, AccessMode, access::target::blocking_pipe &gt;" name="trisycl::accessor&lt; DataType, 1, AccessMode, access::target::blocking_pipe &gt;">
-<area shape="rect" id="node2" href="$group__data.html" title="trisycl::detail::pipe\l_accessor\&lt; DataType,\l AccessMode, access::target\l::blocking_pipe \&gt;" alt="" coords="232,5,425,76"/>
-<area shape="rect" id="node3" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; detail::pipe_accessor\l\&lt; DataType, AccessMode,\l Target \&gt; \&gt;" alt="" coords="5,5,184,76"/>
+<area shape="rect" id="node1" title="The pipe accessor abstracts the way pipe data are accessed inside a kernel." alt="" coords="547,13,755,69"/>
+<area shape="rect" id="node2" href="$group__old__data.html" title=" " alt="" coords="291,5,499,76"/>
+<area shape="rect" id="node3" href="$group__debug__trace.html" title=" " alt="" coords="5,5,243,76"/>
 </map>

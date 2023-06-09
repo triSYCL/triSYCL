@@ -1,4 +1,0 @@
-<map id="trisycl::kernel::kernel" name="trisycl::kernel::kernel">
-<area shape="rect" id="node2" href="$classtrisycl_1_1detail_1_1opencl__kernel.html#aa8af1758847d737ebafdcda24e46c29e" title="trisycl::detail::opencl\l_kernel::instance" alt="" coords="196,5,339,47"/>
-<area shape="rect" id="node3" href="$classtrisycl_1_1detail_1_1cache.html#acf94820e866b304f627288919d123e9e" title="Get a value stored in the cache if present or insert by calling a generator function. " alt="" coords="387,5,525,47"/>
-</map>

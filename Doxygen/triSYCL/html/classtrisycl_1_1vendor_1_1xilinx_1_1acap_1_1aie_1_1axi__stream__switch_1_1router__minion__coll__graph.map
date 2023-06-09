@@ -1,0 +1,16 @@
+<map id="trisycl::vendor::xilinx::acap::aie::axi_stream_switch&lt; AXIStreamGeography &gt;::router_minion" name="trisycl::vendor::xilinx::acap::aie::axi_stream_switch&lt; AXIStreamGeography &gt;::router_minion">
+<area shape="rect" id="node1" title="A router input port with routing skills." alt="" coords="735,196,940,267"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1communicator__port.html" title="Abstract interface for a communication port." alt="" coords="401,5,603,47"/>
+<area shape="rect" id="node3" href="$group__debug__trace.html" title=" " alt="" coords="50,5,207,47"/>
+<area shape="rect" id="node4" title=" " alt="" coords="109,83,148,110"/>
+<area shape="rect" id="node9" href="$group__aie.html#classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1axi__stream__switch" title="An AXI stream switch parameterized with some geographic layout." alt="" coords="393,163,611,219"/>
+<area shape="rect" id="node5" title=" " alt="" coords="418,243,586,299"/>
+<area shape="rect" id="node6" title=" " alt="" coords="435,324,569,365"/>
+<area shape="rect" id="node7" title=" " alt="" coords="397,389,607,460"/>
+<area shape="rect" id="node8" title=" " alt="" coords="409,484,595,525"/>
+<area shape="rect" id="node10" href="$group__debug__trace.html" title=" " alt="" coords="19,145,238,201"/>
+<area shape="rect" id="node11" title=" " alt="" coords="87,225,170,251"/>
+<area shape="rect" id="node12" title=" " alt="" coords="57,275,201,302"/>
+<area shape="rect" id="node13" title=" " alt="" coords="9,327,248,397"/>
+<area shape="rect" id="node14" title=" " alt="" coords="5,421,252,492"/>
+</map>

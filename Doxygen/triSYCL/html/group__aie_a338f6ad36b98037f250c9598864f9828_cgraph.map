@@ -1,0 +1,10 @@
+<map id="trisycl::vendor::xilinx::acap::aie::detail::tile_infrastructure::tile_infrastructure" name="trisycl::vendor::xilinx::acap::aie::detail::tile_infrastructure::tile_infrastructure">
+<area shape="rect" id="node1" title="Start the tile infrastructure associated to the AIE device tile." alt="" coords="5,165,219,221"/>
+<area shape="rect" id="node2" href="$group__aie.html#afffda15999ffcdcf2242dec910f01c6e" title="Get the input router port of the AXI stream switch." alt="" coords="271,5,417,61"/>
+<area shape="rect" id="node4" href="$group__aie.html#a1142908b5c207d739d7ef04b26d731e4" title="Get the output router port of the AXI stream switch." alt="" coords="269,85,419,141"/>
+<area shape="rect" id="node6" href="$group__aie.html#a8571a6f5d283541165ab0d9c9e91b8fb" title="Start the tile infrastructure associated to the AIE device." alt="" coords="267,165,421,221"/>
+<area shape="rect" id="node7" href="$group__aie.html#ab2cc82e11337e404f286de2f0c06592d" title="Get the horizontal coordinate." alt="" coords="271,245,417,301"/>
+<area shape="rect" id="node8" href="$group__aie.html#ad1b8f10b05676ff752e70e17b473fa4b" title="Get the vertical coordinate." alt="" coords="271,325,417,381"/>
+<area shape="rect" id="node3" href="$group__aie.html#a7e587f834c57a79549cb1d8da4726f09" title="Get the input router port of the AXI stream switch." alt="" coords="469,5,624,61"/>
+<area shape="rect" id="node5" href="$group__aie.html#a2e220ae42c5b33cb15b08cadbe4cc4cf" title="Get the input router port of the AXI stream switch." alt="" coords="469,85,624,141"/>
+</map>

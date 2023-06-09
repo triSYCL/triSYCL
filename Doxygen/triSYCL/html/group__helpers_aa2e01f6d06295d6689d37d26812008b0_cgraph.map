@@ -1,0 +1,4 @@
+<map id="trisycl::detail::small_array_sycl::operator BasicType" name="trisycl::detail::small_array_sycl::operator BasicType">
+<area shape="rect" id="node1" title="Conversion operator to scalar BasicType when only 1 dimension." alt="" coords="5,5,149,61"/>
+<area shape="rect" id="node2" href="$group__helpers.html#ab4477f1fe1131c69cf94bcc120d3f5d8" title="Return the element of the array." alt="" coords="197,13,332,54"/>
+</map>

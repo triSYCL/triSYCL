@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::dma::~dma" name="trisycl::vendor::xilinx::acap::aie::dma::~dma">
+<area shape="rect" id="node1" title="Destructor handling the correct infrastructure shutdown." alt="" coords="5,5,163,47"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1dma.html#a04fed694785846130e750706cead2e39" title="Wait for the fiber to complete." alt="" coords="211,5,355,47"/>
+</map>

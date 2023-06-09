@@ -1,0 +1,11 @@
+<map id="LaTeX support for graphics output" name="LaTeX support for graphics output">
+<area shape="rect" id="node1" href="$group__Xilinx.html" title=" " alt="" coords="367,42,531,67"/>
+<area shape="rect" id="node2" href="$group__acap__debug.html" title="Some classes and functions to help debuging ACAP applications, such as verifying BSP forward progress..." alt="" coords="353,117,544,142"/>
+<area shape="rect" id="node3" href="$group__aie.html" title="Extensions to support explicit AI Engine system&#45;wide programming in C++." alt="" coords="387,179,510,205"/>
+<area shape="rect" id="node4" href="$group__defaults.html" title=" " alt="" coords="354,229,543,269"/>
+<area shape="rect" id="node5" href="$group__graphics.html" title="This can create a graphics application and typically update some sub&#45;images on a frame." alt="" coords="372,293,525,333"/>
+<area shape="rect" id="node6" title="This can generate LaTeX output used to display internal configuration for debug or teaching purpose." alt="" coords="5,267,184,307"/>
+<area shape="rect" id="node7" href="$group__opencl__spir__helpers.html" title=" " alt="" coords="379,358,519,383"/>
+<area shape="rect" id="node8" href="$group__parallelism.html" title=" " alt="" coords="372,408,525,448"/>
+<area shape="rect" id="node9" href="$group__vector.html" title=" " alt="" coords="374,473,523,498"/>
+</map>

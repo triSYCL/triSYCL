@@ -1,4 +1,4 @@
 <map id="trisycl::detail::parallel_for_workitem_in_group" name="trisycl::detail::parallel_for_workitem_in_group">
-<area shape="rect" id="node2" href="$group__parallelism.html#ga003201ce3c2a95af831b1c58fbb3804c" title="trisycl::detail::parallel\l_for_iterate" alt="" coords="214,5,359,47"/>
-<area shape="rect" id="node3" href="$group__parallelism.html#af8b3fe6b818b38f0bd960e6c807de88c" title="Loop on the work&#45;items inside a work&#45;group. " alt="" coords="213,71,360,112"/>
+<area shape="rect" id="node1" title="Implement the loop on the work&#45;items inside a work&#45;group." alt="" coords="200,5,360,47"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#a465d20ef4a86acc0ecf904153b4bae24" title="Loop on the work&#45;items inside a work&#45;group." alt="" coords="5,5,152,47"/>
 </map>

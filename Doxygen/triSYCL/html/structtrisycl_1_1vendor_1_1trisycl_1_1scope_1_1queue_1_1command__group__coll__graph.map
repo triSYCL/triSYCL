@@ -1,4 +1,7 @@
 <map id="trisycl::vendor::trisycl::scope::queue&lt; Device, QueueStorage &gt;::command_group&lt; CGH &gt;" name="trisycl::vendor::trisycl::scope::queue&lt; Device, QueueStorage &gt;::command_group&lt; CGH &gt;">
-<area shape="rect" id="node2" href="$group__execution.html#classtrisycl_1_1handler" title="Command group handler class. " alt="" coords="135,109,241,136"/>
-<area shape="rect" id="node3" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; handler \&gt;" alt="" coords="5,5,144,47"/>
+<area shape="rect" id="node1" title="The command group redefining some member functions to be able to pass the scope and so on to the kern..." alt="" coords="115,199,301,269"/>
+<area shape="rect" id="node2" href="$group__execution.html#classtrisycl_1_1handler" title="Command group handler class." alt="" coords="100,109,207,136"/>
+<area shape="rect" id="node3" href="$group__debug__trace.html" title=" " alt="" coords="5,5,144,47"/>
+<area shape="rect" id="node4" title=" " alt="" coords="168,5,299,47"/>
+<area shape="rect" id="node5" title=" " alt="" coords="231,109,294,136"/>
 </map>

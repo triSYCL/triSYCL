@@ -1,4 +1,5 @@
 <map id="trisycl::accessor_error" name="trisycl::accessor_error">
-<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1runtime__error" title="trisycl::runtime_error" alt="" coords="10,80,151,107"/>
-<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information. " alt="" coords="20,5,141,32"/>
+<area shape="rect" id="node1" title="Error regarding the trisycl::accessor objects defined." alt="" coords="5,155,156,181"/>
+<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1runtime__error" title=" " alt="" coords="10,80,151,107"/>
+<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information." alt="" coords="20,5,141,32"/>
 </map>

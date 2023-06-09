@@ -1,0 +1,15 @@
+<map id="trisycl::nd_range::get_local_range" name="trisycl::nd_range::get_local_range">
+<area shape="rect" id="node1" title="Get the local part of the iteration space range." alt="" coords="821,129,948,171"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#abb2105fd1c7b7fb99254b9f6d8c2a5e7" title="Get the local range for this work_group." alt="" coords="629,20,752,61"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#gae45ef8f8ab2c96ae4f647e10f656c13a" title="Implement the loop on the work&#45;items inside a work&#45;group." alt="" coords="415,71,560,112"/>
+<area shape="rect" id="node5" href="$group__parallelism.html#ga51d38178288f87c00720c90adf099b12" title="Implement a variation of parallel_for to take into account a nd_range&lt;&gt;" alt="" coords="200,137,367,163"/>
+<area shape="rect" id="node8" href="$group__parallelism.html#a5b81cbe37393666fd76fb5ffe5091e4f" title="Return a range&lt;&gt; representing the dimensions of the current work&#45;group." alt="" coords="625,188,756,229"/>
+<area shape="rect" id="node13" href="$group__parallelism.html#ab2d6e35b08ac363bab372e73ecb68656" title="Create a full nd_item." alt="" coords="608,254,773,281"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#af76db314c2ad26d802a6d22454323968" title="Return element dimension from the constituent local range." alt="" coords="426,5,549,47"/>
+<area shape="rect" id="node6" href="$group__parallelism.html#ga876d173bd185aefef8daf2459267fe9f" title="Implement the loop on the work&#45;items inside a work&#45;group." alt="" coords="203,71,363,112"/>
+<area shape="rect" id="node7" href="$group__parallelism.html#a465d20ef4a86acc0ecf904153b4bae24" title="Loop on the work&#45;items inside a work&#45;group." alt="" coords="5,71,152,112"/>
+<area shape="rect" id="node9" href="$group__parallelism.html#ae569e30470b5bf3bb7e8fefefd966b0a" title="Return the constituent group group representing the work&#45;group&#39;s position within the overall nd_range..." alt="" coords="422,188,553,229"/>
+<area shape="rect" id="node12" href="$group__parallelism.html#a7335839f52606c80185955f7ec5ffea4" title="Return the flattened id of the current work&#45;item within the current work&#45;group." alt="" coords="422,253,553,295"/>
+<area shape="rect" id="node10" href="$group__parallelism.html#af1d5e354b8dd3ca2a0d54c6d0ecf7056" title="Return the constituent element of the group id representing the work&#45;group&#39;s position within the over..." alt="" coords="218,188,349,229"/>
+<area shape="rect" id="node11" href="$group__parallelism.html#a414d403e2b7b818a57a0d46db5b662c7" title="Return the flattened id of the current work&#45;group." alt="" coords="218,253,349,295"/>
+</map>

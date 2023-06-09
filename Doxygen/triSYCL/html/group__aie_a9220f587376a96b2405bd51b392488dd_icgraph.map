@@ -1,0 +1,17 @@
+<map id="trisycl::vendor::xilinx::acap::aie::tile::is_memory_module" name="trisycl::vendor::xilinx::acap::aie::tile::is_memory_module">
+<area shape="rect" id="node1" title="Test if a memory module exists and is connected to this tile." alt="" coords="1063,137,1205,193"/>
+<area shape="rect" id="node2" href="$group__aie.html#a437a76ed3f6888b86cca10d1016e5298" title="Test if a memory module exists on the East of this tile." alt="" coords="854,293,1011,349"/>
+<area shape="rect" id="node9" href="$group__aie.html#a7e78482d94662c2a98d52dc50c74df9d" title="Test if a memory module exists on the North this tile." alt="" coords="852,17,1013,73"/>
+<area shape="rect" id="node12" href="$group__aie.html#a1667a0ff74a24cc2951202fa9ee2866c" title="Test if a memory module exists on the South this tile." alt="" coords="851,97,1015,153"/>
+<area shape="rect" id="node14" href="$group__aie.html#a96a5af8ceaf968ba09d228a122df1ba5" title="Test if a memory module exists on the West of this tile." alt="" coords="853,177,1013,233"/>
+<area shape="rect" id="node3" href="$group__aie.html#ad2ec0db244915c4ccfa4a682c5beb521" title="An horizontal barrier using a lock." alt="" coords="205,224,377,280"/>
+<area shape="rect" id="node5" href="$group__aie.html#a23c164a77b68f1c0d663e007515fbf87" title="Get the memory module on the East if it does exist." alt="" coords="622,300,799,342"/>
+<area shape="rect" id="node4" href="$group__aie.html#a41edf9ee6198a429aafb54fb5c7c68e3" title="Full barrier using the 2 locks by default." alt="" coords="5,158,157,199"/>
+<area shape="rect" id="node6" href="$group__aie.html#a4b06421ad70b71a378e36c8a7f7a849c" title="The memory module native to the tile." alt="" coords="425,140,571,182"/>
+<area shape="rect" id="node7" href="$group__aie.html#a49cf8210764e396cf47c8bafb7b01aed" title="Select a lock for the following operations." alt="" coords="205,140,377,182"/>
+<area shape="rect" id="node8" href="$group__aie.html#aaa455173d321b803900ebc2a7a3f4676" title="A vertical barrier using a lock." alt="" coords="212,34,371,90"/>
+<area shape="rect" id="node10" href="$group__aie.html#a48b9ae40f63f324bc2151e082c4bb6bc" title="Get the memory module on the North if it does exist." alt="" coords="620,24,801,66"/>
+<area shape="rect" id="node11" href="$group__aie.html#add257a4684af7449ba21b606761fb0ee" title="Get the memory module relative to the tile." alt="" coords="425,75,571,116"/>
+<area shape="rect" id="node13" href="$group__aie.html#ab3eb4f645782530cb263aa87613d2236" title="Get the memory module on the South if it does exist." alt="" coords="619,96,803,138"/>
+<area shape="rect" id="node15" href="$group__aie.html#ad777a7bfef46616736ee46278e1b965b" title="Get the memory module on the West if it does exist." alt="" coords="621,183,801,224"/>
+</map>

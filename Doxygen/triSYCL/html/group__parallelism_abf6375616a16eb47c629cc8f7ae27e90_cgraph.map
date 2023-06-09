@@ -1,3 +1,4 @@
 <map id="trisycl::h_item::get_global_id" name="trisycl::h_item::get_global_id">
-<area shape="rect" id="node2" href="$group__parallelism.html#a0e22fd179ea5ff2c38bdeba9ba3bbcec" title="Return the constituent global id representing the work&#45;item&#39;s position in the global iteration space..." alt="" coords="184,5,315,47"/>
+<area shape="rect" id="node1" title="Return the constituent element of the global id representing the work&#45;item&#39;s position in the global i..." alt="" coords="5,5,136,47"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#a9328f555b1ad162abf72964ccc735f43" title="Return the constituent global id representing the work&#45;item&#39;s position in the global iteration space." alt="" coords="184,5,315,47"/>
 </map>

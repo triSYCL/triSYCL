@@ -1,0 +1,5 @@
+<map id="trisycl::detail::fiber_pool::close" name="trisycl::detail::fiber_pool::close">
+<area shape="rect" id="node1" title="Close the submission." alt="" coords="360,5,489,47"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1detail_1_1fiber__pool.html#a71f74ca38c257ce49dbf6fef0fb4ff3f" title="Wait for all the threads are done." alt="" coords="183,5,312,47"/>
+<area shape="rect" id="node3" href="$classtrisycl_1_1detail_1_1fiber__pool.html#ab7f32b96d9604f4de4642a0ba8f9ba81" title="Wait for some remaining work to be done." alt="" coords="5,5,135,47"/>
+</map>

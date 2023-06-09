@@ -1,5 +1,0 @@
-<map id="trisycl::detail::opencl_device::get_info" name="trisycl::detail::opencl_device::get_info">
-<area shape="rect" id="node2" href="$classtrisycl_1_1detail_1_1opencl__device.html#ab3b2d9c2e9c6cf175b082ec1ee264ddd" title="Return the platform of device. " alt="" coords="196,5,343,47"/>
-<area shape="rect" id="node3" href="$classtrisycl_1_1detail_1_1opencl__device.html#a792cb9b62f4fa4f510f9259a22db14ef" title="trisycl::detail::opencl\l_device::instance" alt="" coords="198,71,341,112"/>
-<area shape="rect" id="node4" href="$group__execution.html#a3274da172199b36edc3c9331bebf23e7" title="Construct a device class instance using a boost::compute::device. " alt="" coords="391,78,540,105"/>
-</map>

@@ -1,0 +1,6 @@
+<map id="trisycl::vendor::xilinx::acap::aie::dma::dma" name="trisycl::vendor::xilinx::acap::aie::dma::dma">
+<area shape="rect" id="node1" title="Start the DMA engine using an executor." alt="" coords="5,93,155,134"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1dma.html#a36b7354e244e8f03c1f9775af2373c3e" title="Notify a command has been processed." alt="" coords="203,5,369,61"/>
+<area shape="rect" id="node3" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1dma.html#ae708d6e72f6c9bb30816a263262ddef9" title="Dequeue a DMA command." alt="" coords="213,85,359,141"/>
+<area shape="rect" id="node4" href="$classtrisycl_1_1detail_1_1fiber__pool.html#a3be4d7f3dc899bd1bea94e6dafe33be6" title="Submit some work on a new fiber." alt="" coords="221,166,351,207"/>
+</map>

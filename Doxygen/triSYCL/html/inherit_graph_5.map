@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classstd_1_1shared__ptr_3_01detail_1_1device_01_4.html" title="shared_ptr\&lt; detail\l::device \&gt;" alt="" coords="5,5,132,47"/>
+<area shape="rect" id="node1" href="$classdetail_1_1debug_3_01buffer__waiter_3_01T_00_011_00_01buffer__allocator_3_01std_1_1remove__ced304ddc047a8cabb638d52c96e3ea66.html" title=" " alt="" coords="25,5,183,76"/>
+<area shape="rect" id="node2" href="$group__data.html#classtrisycl_1_1detail_1_1buffer__waiter" title="A helper class to wait for the final buffer destruction if the conditions for blocking are met." alt="" coords="251,65,413,121"/>
+<area shape="rect" id="node3" href="$classdetail_1_1shared__ptr__implementation_3_01buffer__waiter_3_01T_00_011_00_01buffer__allocato7b497b9dd7ebde82483da44589505eb8.html" title=" " alt="" coords="5,101,203,186"/>
 </map>

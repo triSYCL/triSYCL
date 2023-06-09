@@ -1,0 +1,5 @@
+<map id="trisycl::group::get_group_range" name="trisycl::group::get_group_range">
+<area shape="rect" id="node1" title="Return a range&lt;&gt; representing the dimensions of the current group." alt="" coords="5,39,128,80"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#a9c662a1f7b82ef2c239ae70b24b1d7d2" title="Get the range of work&#45;groups needed to run this ND&#45;range." alt="" coords="176,5,303,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#a39042c9a537a5dd16b5b6f26c9c9cf96" title=" " alt="" coords="178,71,301,112"/>
+</map>

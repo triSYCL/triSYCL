@@ -1,0 +1,11 @@
+<map id="include/sycl/vendor/Xilinx/acap/aie/memory.hpp" name="include/sycl/vendor/Xilinx/acap/aie/memory.hpp">
+<area shape="rect" id="node1" title="The basic AI Engine heterogeneous Memory Module (i.e." alt="" coords="49,5,235,47"/>
+<area shape="rect" id="node2" href="$sycl_2vendor_2Xilinx_2acap_2aie_2memory__base_8hpp.html" title="The basic AI Engine homogeneous Memory Module, with the common infrastructure to all the memory modul..." alt="" coords="77,95,207,121"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,169,84,196"/>
+<area shape="rect" id="node4" title=" " alt="" coords="109,169,175,196"/>
+<area shape="rect" id="node5" href="$sycl_2vendor_2Xilinx_2acap_2aie_2memory__infrastructure_8hpp.html" title="The basic AI Engine homogeneous memory infrastructure, i.e." alt="" coords="200,169,377,196"/>
+<area shape="rect" id="node6" href="$sycl_2vendor_2Xilinx_2acap_2aie_2lock_8hpp.html" title="The lock mechanism used by some AI Engine tiles." alt="" coords="253,244,324,271"/>
+<area shape="rect" id="node7" title=" " alt="" coords="166,319,235,345"/>
+<area shape="rect" id="node8" title=" " alt="" coords="259,319,318,345"/>
+<area shape="rect" id="node9" title=" " alt="" coords="342,319,467,345"/>
+</map>

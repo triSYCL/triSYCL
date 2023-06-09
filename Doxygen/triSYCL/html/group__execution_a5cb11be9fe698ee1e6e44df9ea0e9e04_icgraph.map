@@ -1,6 +1,5 @@
 <map id="trisycl::context::is_host" name="trisycl::context::is_host">
-<area shape="rect" id="node2" href="$group__execution.html#a786701b3dada165fa44061b76ca06c05" title="trisycl::context::context" alt="" coords="223,5,381,32"/>
-<area shape="rect" id="node3" href="$group__data.html#aad6218af1679f6e4f06ae001a36a86bb" title="When a transfer is requested this function is called, it will update the state of the buffer accordin..." alt="" coords="212,57,392,98"/>
-<area shape="rect" id="node4" href="$group__data.html#a9e59e9641989421feb7f541081d86272" title="Function pair to work around the fact that T might be a const type. " alt="" coords="440,57,612,98"/>
-<area shape="rect" id="node5" href="$group__data.html#a360bd2887a957b3ef46e7af5dec9c2bc" title="Create a new sub&#45;buffer without allocation to have separate accessors later. " alt="" coords="660,57,797,98"/>
+<area shape="rect" id="node1" title="Specifies whether the context is in SYCL Host Execution Mode." alt="" coords="233,35,392,61"/>
+<area shape="rect" id="node2" href="$group__execution.html#a786701b3dada165fa44061b76ca06c05" title=" " alt="" coords="16,5,175,32"/>
+<area shape="rect" id="node3" href="$group__data.html#aad6218af1679f6e4f06ae001a36a86bb" title="When a transfer is requested this function is called, it will update the state of the buffer accordin..." alt="" coords="5,57,185,98"/>
 </map>

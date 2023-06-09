@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::tile::is_cascade_end" name="trisycl::vendor::xilinx::acap::aie::tile::is_cascade_end">
+<area shape="rect" id="node1" title="Test if this tile owns the end of the cascade_stream." alt="" coords="204,5,347,61"/>
+<area shape="rect" id="node2" href="$group__aie.html#a4322f9fb7e01d7e94f7eba02d7670106" title="Get a write accessor to the cascade stream output." alt="" coords="5,5,156,61"/>
+</map>

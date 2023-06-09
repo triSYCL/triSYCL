@@ -1,4 +1,5 @@
 <map id="trisycl::vendor::trisycl::scope::queue::command_group::parallel_for" name="trisycl::vendor::trisycl::scope::queue::command_group::parallel_for">
-<area shape="rect" id="node2" href="$group__execution.html#a5c04b7f4071feb465157d74fc6bfa5d8" title="trisycl::handler::parallel_for" alt="" coords="227,20,405,47"/>
-<area shape="rect" id="node3" href="$group__parallelism.html#gade69cd4aa408811c685ac3b3168271ae" title="Implementation of a data parallel computation with parallelism specified at launch time by a range&lt;&gt;..." alt="" coords="453,20,620,47"/>
+<area shape="rect" id="node1" title="Parallel kernel invocation method on a range iteration space." alt="" coords="5,5,179,61"/>
+<area shape="rect" id="node2" href="$group__execution.html#a5b8c2df16125154691faa3c2789bf9a0" title="SYCL parallel_for launches a data parallel computation with parallelism specified at launch time by a..." alt="" coords="227,20,405,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#gade69cd4aa408811c685ac3b3168271ae" title="Implementation of a data parallel computation with parallelism specified at launch time by a range&lt;&gt;." alt="" coords="453,20,620,47"/>
 </map>

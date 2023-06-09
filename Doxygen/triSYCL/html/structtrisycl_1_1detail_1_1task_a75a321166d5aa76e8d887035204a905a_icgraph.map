@@ -1,3 +1,4 @@
 <map id="trisycl::detail::task::prelude" name="trisycl::detail::task::prelude">
-<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1task.html#af00c26cae77da2f1ff242d8c5aa89929" title="Add a new task to the task graph and schedule for execution. " alt="" coords="183,5,312,47"/>
+<area shape="rect" id="node1" title="Execute the prologues." alt="" coords="183,5,312,47"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1task.html#af00c26cae77da2f1ff242d8c5aa89929" title="Add a new task to the task graph and schedule for execution." alt="" coords="5,5,135,47"/>
 </map>

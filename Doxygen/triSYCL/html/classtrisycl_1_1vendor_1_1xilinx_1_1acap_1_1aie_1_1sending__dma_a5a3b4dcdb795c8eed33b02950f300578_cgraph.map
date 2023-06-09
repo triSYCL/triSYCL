@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::sending_dma::send" name="trisycl::vendor::xilinx::acap::aie::sending_dma::send">
+<area shape="rect" id="node1" title="Enqueue a DMA transfer to send a span." alt="" coords="5,20,209,61"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1dma.html#ac84dd669b80727b127157181a04bcda8" title="Enqueue a DMA command." alt="" coords="257,5,492,76"/>
+</map>

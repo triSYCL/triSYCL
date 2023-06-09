@@ -1,0 +1,6 @@
+<map id="trisycl::vendor::xilinx::acap::aie::axi_stream_switch::input" name="trisycl::vendor::xilinx::acap::aie::axi_stream_switch::input">
+<area shape="rect" id="node1" title="Get the input router port of the AXI stream switch." alt="" coords="461,45,616,101"/>
+<area shape="rect" id="node2" href="$group__aie.html#a039252c31bce792c752391bb7a5b7b53" title="Get the input router port of the AXI stream switch." alt="" coords="269,5,411,61"/>
+<area shape="rect" id="node3" href="$group__aie.html#afffda15999ffcdcf2242dec910f01c6e" title="Get the input router port of the AXI stream switch." alt="" coords="267,85,413,141"/>
+<area shape="rect" id="node4" href="$group__aie.html#a338f6ad36b98037f250c9598864f9828" title="Start the tile infrastructure associated to the AIE device tile." alt="" coords="5,85,219,141"/>
+</map>

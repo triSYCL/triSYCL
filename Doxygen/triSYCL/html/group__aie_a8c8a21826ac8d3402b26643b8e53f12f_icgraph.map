@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::shim_tile::output" name="trisycl::vendor::xilinx::acap::aie::shim_tile::output">
+<area shape="rect" id="node1" title="Get the output router port of the AXI stream switch." alt="" coords="196,5,339,61"/>
+<area shape="rect" id="node2" href="$group__aie.html#a02d006948196c7f3bf38fe75e04bfac7" title="Construct the shim tile infrastructure." alt="" coords="5,5,148,61"/>
+</map>

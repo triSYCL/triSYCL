@@ -1,4 +1,6 @@
 <map id="trisycl::memory_allocation_error" name="trisycl::memory_allocation_error">
-<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1device__error" title="The SYCL device will trigger this exception on error. " alt="" coords="25,171,161,197"/>
-<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information. " alt="" coords="32,95,153,121"/>
+<area shape="rect" id="node1" title="Error on memory allocation on the SYCL device for a SYCL kernel." alt="" coords="5,247,180,288"/>
+<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1device__error" title="The SYCL device will trigger this exception on error." alt="" coords="25,171,161,197"/>
+<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information." alt="" coords="32,95,153,121"/>
+<area shape="rect" id="node4" title=" " alt="" coords="65,5,120,32"/>
 </map>

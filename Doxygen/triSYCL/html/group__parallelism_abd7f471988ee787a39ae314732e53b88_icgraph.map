@@ -1,6 +1,0 @@
-<map id="trisycl::nd_item::get_local_range" name="trisycl::nd_item::get_local_range">
-<area shape="rect" id="node2" href="$group__parallelism.html#a8741fffea15e3f4a4b9775c9bf236709" title="Return the constituent group representing the work&#45;group&#39;s position within the overall nd_range..." alt="" coords="191,37,328,79"/>
-<area shape="rect" id="node5" href="$group__parallelism.html#acecb619f7ab048f5c0419bf4c0b15e8b" title="Return the flattened id of the current work&#45;item within the current work&#45;group. " alt="" coords="191,103,328,144"/>
-<area shape="rect" id="node3" href="$group__parallelism.html#aeb30eb06737d5ba2879710cbe0d5179b" title="Return the constituent element of the group id representing the work&#45;group;s position within the over..." alt="" coords="376,5,513,47"/>
-<area shape="rect" id="node4" href="$group__parallelism.html#abd89a34250b22ec61c999f34e49db167" title="Return the flattened id of the current work&#45;group. " alt="" coords="376,71,513,112"/>
-</map>

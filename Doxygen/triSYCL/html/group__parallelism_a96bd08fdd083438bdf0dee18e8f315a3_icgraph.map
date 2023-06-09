@@ -1,0 +1,8 @@
+<map id="trisycl::nd_range::get_global_range" name="trisycl::nd_range::get_global_range">
+<area shape="rect" id="node1" title="Get the global iteration space range." alt="" coords="395,39,521,80"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#aac6528700b788aeca5a66eb8e81b4c9b" title="Get the local range for this work_group." alt="" coords="220,5,343,47"/>
+<area shape="rect" id="node4" href="$group__parallelism.html#ac336960a851acacc35e337f5ce7e598a" title="Return a range&lt;&gt; representing the dimensions of the nd_range&lt;&gt;" alt="" coords="216,71,347,112"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#a486b2a17a7d3df7b85a0d07ed33afdd1" title="Return element dimension from the constituent global range." alt="" coords="25,5,148,47"/>
+<area shape="rect" id="node5" href="$group__parallelism.html#adc9f290770bcc950e3153231d3886765" title="Return the flattened id of the current work&#45;item after subtracting the offset." alt="" coords="21,71,152,112"/>
+<area shape="rect" id="node6" href="$group__parallelism.html#a197ec14272b861572018fc2a63c4d712" title="Allows projection down to an item." alt="" coords="5,137,168,163"/>
+</map>

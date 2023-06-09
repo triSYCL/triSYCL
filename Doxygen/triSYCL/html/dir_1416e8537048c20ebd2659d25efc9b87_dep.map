@@ -1,8 +1,11 @@
 <map id="include/triSYCL/vendor" name="include/triSYCL/vendor">
-<area shape="rect" id="node2" href="dir_7dcd66f0f48db51ccc41ae0b0abc7aab.html" title="trisycl" alt="" coords="133,63,205,111"/>
-<area shape="rect" id="node4" href="dir_f344767bae51d34c648f686d6eb83a10.html" title="detail" alt="" coords="133,159,205,207"/>
-<area shape="rect" id="edge1-headlabel" href="dir_000020_000015.html" title="3" alt="" coords="174,133,182,147"/>
-<area shape="rect" id="node3" href="dir_1c07ef0301af3ce6bffc4bad415b11f0.html" title="Xilinx" alt="" coords="37,63,109,111"/>
+<area shape="rect" id="node1" href="dir_30ec626595a7de5ca12be8005eaa864c.html" title="device" alt="" coords="133,159,205,207"/>
+<area shape="rect" id="node2" href="dir_f344767bae51d34c648f686d6eb83a10.html" title="detail" alt="" coords="37,159,109,207"/>
+<area shape="rect" id="node4" href="dir_57ceecdb43db103ea679bf7272ee87c2.html" title="triSYCL" alt="" coords="37,63,109,111"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000083_000021.html" title="3" alt="" coords="78,133,86,148"/>
+<area shape="rect" id="node5" href="dir_1c07ef0301af3ce6bffc4bad415b11f0.html" title="Xilinx" alt="" coords="133,63,205,111"/>
+<area shape="rect" id="edge2-headlabel" href="dir_000088_000041.html" title="3" alt="" coords="174,133,182,148"/>
+<area shape="rect" id="edge3-headlabel" href="dir_000088_000021.html" title="10" alt="" coords="108,145,123,159"/>
 <area shape="rect" id="clust2" href="dir_1416e8537048c20ebd2659d25efc9b87.html" alt="" coords="27,52,312,121"/>
-<area shape="rect" id="clust1" href="dir_aaf3c766ec178046651f3200d7a96209.html" title="triSYCL" alt="" coords="16,16,323,132"/>
+<area shape="rect" id="clust1" href="dir_aaf3c766ec178046651f3200d7a96209.html" title="triSYCL" alt="" coords="16,16,323,217"/>
 </map>

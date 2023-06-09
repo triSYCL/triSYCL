@@ -1,4 +1,5 @@
 <map id="trisycl::detail::buffer_base::sync_with_host" name="trisycl::detail::buffer_base::sync_with_host">
-<area shape="rect" id="node2" href="$group__execution.html#ad3f39185ef269f6d3d0f36e5d93e935e" title="Return the internal OpenCL queue that is associated to the host context. " alt="" coords="209,5,388,47"/>
-<area shape="rect" id="node3" href="$group__data.html#a42b361442b007be017d62301d726ef3e" title="Check if the data of this buffer is up&#45;to&#45;date in a certain context. " alt="" coords="209,71,388,112"/>
+<area shape="rect" id="node1" title="Transfer the most up&#45;to&#45;date version of the data to the host if the host version is not already up&#45;to..." alt="" coords="5,39,161,80"/>
+<area shape="rect" id="node2" href="$group__execution.html#a770c8507039a7650fe4d6b98c12246da" title="Return the internal OpenCL queue that is associated to the host context." alt="" coords="209,5,388,47"/>
+<area shape="rect" id="node3" href="$group__data.html#a42b361442b007be017d62301d726ef3e" title="Check if the data of this buffer is up&#45;to&#45;date in a certain context." alt="" coords="209,71,388,112"/>
 </map>

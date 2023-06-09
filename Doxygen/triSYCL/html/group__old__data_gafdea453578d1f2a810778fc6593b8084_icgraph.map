@@ -1,0 +1,6 @@
+<map id="trisycl::get_pipe_detail" name="trisycl::get_pipe_detail">
+<area shape="rect" id="node1" title="Top&#45;level function to break circular dependencies on the the types to get the pipe implementation." alt="" coords="237,122,389,149"/>
+<area shape="rect" id="node2" href="$group__old__data.html#a53a311643a216f8d603c5de81a492a67" title="Get the underlying pipe implementation." alt="" coords="5,5,189,76"/>
+<area shape="rect" id="node3" href="$group__old__data.html#a6ac7dfd8b35144564ac77f8119ced68e" title="Get the underlying pipe implementation." alt="" coords="5,100,189,171"/>
+<area shape="rect" id="node4" href="$group__old__data.html#a36bedc53f47eb691715ad4c3965ad835" title="Create a pipe_reservation for an accessor and a number of elements." alt="" coords="23,195,172,251"/>
+</map>

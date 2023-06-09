@@ -1,0 +1,5 @@
+<map id="trisycl::vendor::xilinx::acap::aie::detail::device::shim" name="trisycl::vendor::xilinx::acap::aie::detail::device::shim">
+<area shape="rect" id="node1" title="Access to the shim tile." alt="" coords="221,53,425,94"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1detail_1_1device.html#a33ea5a64ab0dc563a42d06aa472d6d0f" title="Connect the ports of 2 tiles or shims together with an hyperspace switched circuit,..." alt="" coords="5,5,173,61"/>
+<area shape="rect" id="node3" href="$structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1detail_1_1device.html#a646bd7dc5393f1ae693cb1f4a1794b61" title="Build some device level infrastructure." alt="" coords="5,85,173,141"/>
+</map>

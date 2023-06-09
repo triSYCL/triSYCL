@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['trisycl_20extension_20for_20storage_20scopes',['triSYCL extension for storage scopes',['../group__vendor__trisycl__scope.html',1,'']]]
+  ['opencl_5fspir_5fhelpers_0',['Opencl_spir_helpers',['../group__opencl__spir__helpers.html',1,'']]]
 ];

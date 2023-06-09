@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::shim_tile::input" name="trisycl::vendor::xilinx::acap::aie::shim_tile::input">
+<area shape="rect" id="node1" title="Get the input router port of the AXI stream switch." alt="" coords="5,5,148,61"/>
+<area shape="rect" id="node2" href="$group__aie.html#a7e587f834c57a79549cb1d8da4726f09" title="Get the input router port of the AXI stream switch." alt="" coords="196,5,351,61"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="Graphics support for CGRA&#45;like interaction" name="Graphics support for CGRA&#45;like interaction">
+<area shape="rect" id="node1" href="$group__Xilinx.html" title=" " alt="" coords="341,43,505,69"/>
+<area shape="rect" id="node2" href="$group__acap__debug.html" title="Some classes and functions to help debuging ACAP applications, such as verifying BSP forward progress..." alt="" coords="328,118,519,143"/>
+<area shape="rect" id="node3" href="$group__aie.html" title="Extensions to support explicit AI Engine system&#45;wide programming in C++." alt="" coords="362,181,485,206"/>
+<area shape="rect" id="node4" href="$group__defaults.html" title=" " alt="" coords="329,231,518,271"/>
+<area shape="rect" id="node5" title="This can create a graphics application and typically update some sub&#45;images on a frame." alt="" coords="5,268,159,308"/>
+<area shape="rect" id="node6" href="$group__latex.html" title="This can generate LaTeX output used to display internal configuration for debug or teaching purpose." alt="" coords="334,295,513,335"/>
+<area shape="rect" id="node7" href="$group__opencl__spir__helpers.html" title=" " alt="" coords="353,359,493,385"/>
+<area shape="rect" id="node8" href="$group__parallelism.html" title=" " alt="" coords="347,409,500,449"/>
+<area shape="rect" id="node9" href="$group__vector.html" title=" " alt="" coords="349,474,498,499"/>
+</map>

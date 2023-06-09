@@ -1,4 +1,6 @@
 <map id="trisycl::nd_range_error" name="trisycl::nd_range_error">
-<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1runtime__error" title="trisycl::runtime_error" alt="" coords="10,171,151,197"/>
-<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information. " alt="" coords="20,95,141,121"/>
+<area shape="rect" id="node1" title="Error regarding the trisycl::nd_range specified for the SYCL kernel." alt="" coords="5,247,156,273"/>
+<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1runtime__error" title=" " alt="" coords="10,171,151,197"/>
+<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information." alt="" coords="20,95,141,121"/>
+<area shape="rect" id="node4" title=" " alt="" coords="53,5,108,32"/>
 </map>

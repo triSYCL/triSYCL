@@ -1,5 +1,5 @@
 <map id="trisycl::detail::parallel_for_workgroup" name="trisycl::detail::parallel_for_workgroup">
-<area shape="rect" id="node2" href="$group__parallelism.html#ga003201ce3c2a95af831b1c58fbb3804c" title="trisycl::detail::parallel\l_for_iterate" alt="" coords="204,5,349,47"/>
-<area shape="rect" id="node3" href="$group__execution.html#a35cee6d51dca6e9ce16a5bcd840a6a52" title="Hierarchical kernel invocation method of a kernel defined as a lambda encoding the body of each work&#45;..." alt="" coords="199,71,355,112"/>
-<area shape="rect" id="node4" href="$group__execution.html#a9993bfc880eef7c0e51cf8acee99ed36" title="Hierarchical kernel invocation method of a kernel defined as a lambda encoding the body of each work&#45;..." alt="" coords="403,71,559,112"/>
+<area shape="rect" id="node1" title="Implement the loop on the work&#45;groups." alt="" coords="413,5,559,47"/>
+<area shape="rect" id="node2" href="$group__execution.html#a35cee6d51dca6e9ce16a5bcd840a6a52" title="Hierarchical kernel invocation method of a kernel defined as a lambda encoding the body of each work&#45;..." alt="" coords="209,5,365,47"/>
+<area shape="rect" id="node3" href="$group__execution.html#a9993bfc880eef7c0e51cf8acee99ed36" title="Hierarchical kernel invocation method of a kernel defined as a lambda encoding the body of each work&#45;..." alt="" coords="5,5,161,47"/>
 </map>

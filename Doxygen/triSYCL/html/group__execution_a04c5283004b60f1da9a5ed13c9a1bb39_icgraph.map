@@ -1,0 +1,4 @@
+<map id="trisycl::device::get_devices" name="trisycl::device::get_devices">
+<area shape="rect" id="node1" title="Return a list of all available devices." alt="" coords="203,5,332,47"/>
+<area shape="rect" id="node2" href="$group__execution.html#a29671d938bdb4ba721a78d7aad4643ba" title="Construct a device class instance using the device selector provided." alt="" coords="5,13,155,39"/>
+</map>

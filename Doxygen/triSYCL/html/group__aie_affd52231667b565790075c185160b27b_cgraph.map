@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::dma_dsl::wait" name="trisycl::vendor::xilinx::acap::aie::dma_dsl::wait">
+<area shape="rect" id="node1" title="Wait for the transfers to complete." alt="" coords="5,5,177,47"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1dma.html#ac077431475f53aea8c5e83b9ca644129" title="Wait for the transfers to complete." alt="" coords="225,5,373,47"/>
+</map>

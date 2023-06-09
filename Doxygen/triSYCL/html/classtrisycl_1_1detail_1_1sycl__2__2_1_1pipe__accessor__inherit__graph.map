@@ -1,0 +1,4 @@
+<map id="trisycl::detail::sycl_2_2::pipe_accessor&lt; T, AccessMode, Target &gt;" name="trisycl::detail::sycl_2_2::pipe_accessor&lt; T, AccessMode, Target &gt;">
+<area shape="rect" id="node1" title="The accessor abstracts the way pipe data are accessed inside a kernel." alt="" coords="240,13,411,69"/>
+<area shape="rect" id="node2" href="$group__debug__trace.html" title=" " alt="" coords="5,5,192,76"/>
+</map>

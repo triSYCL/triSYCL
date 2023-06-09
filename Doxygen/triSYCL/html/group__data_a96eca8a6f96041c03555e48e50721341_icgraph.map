@@ -1,6 +1,0 @@
-<map id="trisycl::detail::pipe_reservation::assume_validity" name="trisycl::detail::pipe_reservation::assume_validity">
-<area shape="rect" id="node2" href="$group__data.html#ac1cd16017501f2093a411d900a9fd582" title="Start of the reservation area. " alt="" coords="212,5,344,47"/>
-<area shape="rect" id="node3" href="$group__data.html#a3b446c3ff11c392410fe70207ab98547" title="Past the end of the reservation area. " alt="" coords="214,71,342,112"/>
-<area shape="rect" id="node4" href="$group__data.html#a1224c96ec2a6f3aa82498ad8a45b129a" title="Access to an element of the reservation. " alt="" coords="200,136,356,177"/>
-<area shape="rect" id="node5" href="$group__data.html#a45a3d469f109236d6273910c90e72015" title="Get the number of elements in the reservation station. " alt="" coords="214,201,342,243"/>
-</map>

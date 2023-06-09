@@ -1,0 +1,5 @@
+<map id="trisycl::buffer" name="trisycl::buffer">
+<area shape="rect" id="node1" title="A deduction guide to infer the buffer type from the read&#45;write forward iterators into a copy&#45;in on co..." alt="" coords="441,13,540,39"/>
+<area shape="rect" id="node2" href="$group__data.html#a31930d97b31c40b843a1de541060cc24" title="Create a boost::compute::buffer for this trisycl::buffer in the cache and associate it with a given c..." alt="" coords="233,5,393,47"/>
+<area shape="rect" id="node3" href="$group__data.html#aad6218af1679f6e4f06ae001a36a86bb" title="When a transfer is requested this function is called, it will update the state of the buffer accordin..." alt="" coords="5,5,185,47"/>
+</map>

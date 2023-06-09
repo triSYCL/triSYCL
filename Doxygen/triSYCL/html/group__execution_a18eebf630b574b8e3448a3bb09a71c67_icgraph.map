@@ -1,3 +1,4 @@
 <map id="trisycl::handler::single_task" name="trisycl::handler::single_task">
-<area shape="rect" id="node2" href="$structtrisycl_1_1vendor_1_1trisycl_1_1scope_1_1queue_1_1command__group.html#ac40005cb0dde8413610e12a8c2af1c3f" title="Sequential kernel invocation. " alt="" coords="235,5,408,61"/>
+<area shape="rect" id="node1" title="Kernel invocation method of a kernel defined as a lambda or functor." alt="" coords="227,20,408,47"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1vendor_1_1trisycl_1_1scope_1_1queue_1_1command__group.html#ac40005cb0dde8413610e12a8c2af1c3f" title="Sequential kernel invocation." alt="" coords="5,5,179,61"/>
 </map>

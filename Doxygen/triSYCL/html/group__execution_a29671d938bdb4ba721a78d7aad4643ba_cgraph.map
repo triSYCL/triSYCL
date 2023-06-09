@@ -1,5 +1,6 @@
 <map id="trisycl::device::device" name="trisycl::device::device">
-<area shape="rect" id="node2" href="$group__execution.html#ga2f467e997d5c5f6b0ac84779f71d2201" title="Return a list of all available devices. " alt="" coords="203,5,332,47"/>
-<area shape="rect" id="node3" href="$namespacetrisycl.html#a0c0e82613670cf793cb354726ac56eef" title="trisycl::max" alt="" coords="222,71,313,98"/>
-<area shape="rect" id="node4" href="$namespacetrisycl.html#a7c5644e23ec227962b3684cf29056f28" title="trisycl::fmax" alt="" coords="380,71,475,98"/>
+<area shape="rect" id="node1" title="Construct a device class instance using the device selector provided." alt="" coords="5,42,155,69"/>
+<area shape="rect" id="node2" href="$group__execution.html#a04c5283004b60f1da9a5ed13c9a1bb39" title="Return a list of all available devices." alt="" coords="203,5,332,47"/>
+<area shape="rect" id="node3" href="$namespacetrisycl.html#ad8e9b3ac01741e1a611766e0e81b97a6" title=" " alt="" coords="222,71,313,98"/>
+<area shape="rect" id="node4" href="$namespacetrisycl.html#a9b1133b7c5faaa9a27b384865f76aa2e" title=" " alt="" coords="380,71,475,98"/>
 </map>

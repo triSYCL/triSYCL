@@ -1,0 +1,9 @@
+<map id="trisycl::vendor::xilinx::acap::aie::detail::device::mem" name="trisycl::vendor::xilinx::acap::aie::detail::device::mem">
+<area shape="rect" id="node1" title="Shortcut to access to the common infrastructure part of a tile memory." alt="" coords="5,53,211,94"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1detail_1_1device.html#a9af5f30163d70d57c6fbcf3437398b03" title="Access to the common infrastructure part of a tile." alt="" coords="259,53,452,94"/>
+<area shape="rect" id="node3" href="$group__aie.html#a5bdd52186e3f9ed69330fc5c1c9304bf" title="Validate the horizontal and vertical coordinates." alt="" coords="500,45,651,101"/>
+<area shape="rect" id="node4" href="$group__aie.html#adcf543794db70ab76cad9f8acb277b1d" title="Validate an horizontal coordinate." alt="" coords="699,5,849,61"/>
+<area shape="rect" id="node6" href="$group__aie.html#a19b23fdd87e86ff55a163b60e5ef78f0" title="Validate a vertical coordinate." alt="" coords="699,85,849,141"/>
+<area shape="rect" id="node5" href="$group__aie.html#a974c727768794d9d60e9d62e0baf5dd2" title="Test if an horizontal coordinate is valid." alt="" coords="897,5,1048,61"/>
+<area shape="rect" id="node7" href="$group__aie.html#a2696e6cf50b1ef951288c2fc732f69b5" title="Test if a vertical coordinate is valid." alt="" coords="897,85,1048,141"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::tile::is_cascade_start" name="trisycl::vendor::xilinx::acap::aie::tile::is_cascade_start">
+<area shape="rect" id="node1" title="Test if this tile owns the start of the cascade_stream." alt="" coords="196,5,339,61"/>
+<area shape="rect" id="node2" href="$group__aie.html#a81e6a7acdfa5d3b4ce758b1011206cf0" title="Get a read accessor to the cascade stream input." alt="" coords="5,5,148,61"/>
+</map>

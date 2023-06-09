@@ -1,4 +1,14 @@
 <map id="trisycl::detail::task" name="trisycl::detail::task">
-<area shape="rect" id="node3" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; task \&gt;" alt="" coords="21,71,159,112"/>
-<area shape="rect" id="node11" href="$classbool.html" title="bool" alt="" coords="67,610,113,637"/>
+<area shape="rect" id="node1" title="The abstraction to represent SYCL tasks executing inside command_group." alt="" coords="325,363,455,390"/>
+<area shape="rect" id="node2" title=" " alt="" coords="24,5,156,47"/>
+<area shape="rect" id="node3" href="$group__debug__trace.html" title=" " alt="" coords="21,71,159,112"/>
+<area shape="rect" id="node4" title=" " alt="" coords="23,137,157,193"/>
+<area shape="rect" id="node5" title=" " alt="" coords="23,217,157,273"/>
+<area shape="rect" id="node6" title=" " alt="" coords="19,297,161,339"/>
+<area shape="rect" id="node7" href="$classbool.html" title=" " alt="" coords="67,363,113,390"/>
+<area shape="rect" id="node8" title=" " alt="" coords="27,414,153,441"/>
+<area shape="rect" id="node9" title=" " alt="" coords="61,465,119,491"/>
+<area shape="rect" id="node10" title=" " alt="" coords="25,516,155,557"/>
+<area shape="rect" id="node11" title=" " alt="" coords="25,581,155,623"/>
+<area shape="rect" id="node12" title=" " alt="" coords="5,647,175,703"/>
 </map>

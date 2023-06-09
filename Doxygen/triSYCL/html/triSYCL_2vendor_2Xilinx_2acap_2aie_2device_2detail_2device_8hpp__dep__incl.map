@@ -1,0 +1,10 @@
+<map id="include/triSYCL/vendor/Xilinx/acap/aie/device/detail/device.hpp" name="include/triSYCL/vendor/Xilinx/acap/aie/device/detail/device.hpp">
+<area shape="rect" id="node1" title="SYCL&#45;friendly device view of AIE." alt="" coords="127,5,283,61"/>
+<area shape="rect" id="node2" href="$triSYCL_2vendor_2Xilinx_2acap_2aie_2accessor_8hpp.html" title="SYCL accessor for AIE tile device." alt="" coords="5,109,197,151"/>
+<area shape="rect" id="node8" href="$triSYCL_2vendor_2Xilinx_2acap_2aie_2device_8hpp.html" title="SYCL&#45;friendly device view of AIE." alt="" coords="221,109,400,151"/>
+<area shape="rect" id="node3" href="$triSYCL_2vendor_2Xilinx_2acap_2aie_8hpp.html" title="Experimenting with CGRA &amp; processor arrays such as ACAP/AI Engine." alt="" coords="127,199,283,240"/>
+<area shape="rect" id="node4" href="$triSYCL_2vendor_2Xilinx_2acap_8hpp.html" title="Experimenting with CGRA &amp; processor arrays such as ACAP/AI Engine." alt="" coords="127,288,283,329"/>
+<area shape="rect" id="node5" href="$triSYCL_2sycl_8hpp.html" title=" " alt="" coords="122,377,289,404"/>
+<area shape="rect" id="node6" href="$CL_2sycl_8hpp.html" title="This is the main SYCL 1.2.1 interoperability header to expose triSYCL into the cl::sycl namespace." alt="" coords="54,452,191,479"/>
+<area shape="rect" id="node7" href="$sycl_2sycl_8hpp.html" title="This is the SYCL extension header to expose triSYCL directly into the sycl namespace as expected by S..." alt="" coords="216,452,360,479"/>
+</map>

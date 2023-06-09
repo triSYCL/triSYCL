@@ -1,3 +1,4 @@
 <map id="trisycl::detail::capture_arg_v" name="trisycl::detail::capture_arg_v">
-<area shape="rect" id="node2" href="$group__parallelism.html#ga94abf805a744cff3fdf77c04aa0a7c63" title="Calls the appropriate ternary parallel_for overload based on the index type of the kernel function ob..." alt="" coords="200,13,367,39"/>
+<area shape="rect" id="node1" title=" " alt="" coords="220,5,367,47"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#ga94abf805a744cff3fdf77c04aa0a7c63" title="Calls the appropriate ternary parallel_for overload based on the index type of the kernel function ob..." alt="" coords="5,13,172,39"/>
 </map>

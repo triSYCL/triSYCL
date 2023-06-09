@@ -1,4 +1,0 @@
-<map id="trisycl::device::get_devices" name="trisycl::device::get_devices">
-<area shape="rect" id="node2" href="$group__execution.html#a29671d938bdb4ba721a78d7aad4643ba" title="Construct a device class instance using the device selector provided. " alt="" coords="183,5,332,32"/>
-<area shape="rect" id="node3" href="$group__execution.html#af539e8f961c3249598ebc08dc0b4e088" title="Return the platform of device. " alt="" coords="193,57,322,98"/>
-</map>

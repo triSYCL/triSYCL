@@ -1,2 +1,3 @@
 <map id="trisycl::item::get_range" name="trisycl::item::get_range">
+<area shape="rect" id="node1" title="Return the same value as get_range().get(dimension)" alt="" coords="5,29,121,71"/>
 </map>

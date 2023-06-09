@@ -1,0 +1,5 @@
+<map id="trisycl::detail::task::set_arg" name="trisycl::detail::task::set_arg">
+<area shape="rect" id="node1" title="Set a kernel argument by address." alt="" coords="215,35,344,76"/>
+<area shape="rect" id="node2" href="$group__device__runtime.html#ga687310989154693cc960080d31ed830a" title="Set an accessor argument of the kernel." alt="" coords="18,5,154,47"/>
+<area shape="rect" id="node3" href="$group__device__runtime.html#ga8cc843388d292fdecf2d9d1aeb56a5bf" title="Set an argument value of the kernel." alt="" coords="5,71,167,98"/>
+</map>

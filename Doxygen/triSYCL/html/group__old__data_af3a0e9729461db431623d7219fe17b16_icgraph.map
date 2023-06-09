@@ -1,0 +1,14 @@
+<map id="trisycl::detail::sycl_2_2::pipe::reserved_for_writing" name="trisycl::detail::sycl_2_2::pipe::reserved_for_writing">
+<area shape="rect" id="node1" title="Compute the amount of elements blocked by write reservations, not yet committed." alt="" coords="651,213,791,269"/>
+<area shape="rect" id="node2" href="$group__old__data.html#a3c178648e9d0c844aa6d23de8a216452" title="Get the current number of elements in the pipe that can be read." alt="" coords="475,187,603,228"/>
+<area shape="rect" id="node12" href="$group__old__data.html#a0832d944372cd912a6969604e36c8a01" title="Try to write a value to the pipe." alt="" coords="475,252,603,293"/>
+<area shape="rect" id="node3" href="$group__old__data.html#a46cc46205603329bac5f8a9a38767df6" title="Test if the pipe is empty." alt="" coords="270,23,398,64"/>
+<area shape="rect" id="node6" href="$group__old__data.html#ade0e752503b0e7e79155a55b12b30017" title="Past the end of the reservation area." alt="" coords="243,88,425,129"/>
+<area shape="rect" id="node7" href="$group__old__data.html#a8d88feb01fc140e8d67561645f0320be" title="Reserve some part of the pipe for reading." alt="" coords="251,153,417,195"/>
+<area shape="rect" id="node9" href="$group__old__data.html#af41f5eed23fc412612c6b25958d403fd" title="Reserve some part of the pipe for writing." alt="" coords="250,219,418,260"/>
+<area shape="rect" id="node10" href="$group__old__data.html#adcee14bcff471bd75e15119680edaa55" title="Get the number of elements in the reservation station." alt="" coords="241,284,427,325"/>
+<area shape="rect" id="node11" href="$group__old__data.html#acfe9b3b8406ba1c507c84c8384c4f5ae" title="The size() method used outside needs to lock the datastructure." alt="" coords="246,349,422,391"/>
+<area shape="rect" id="node4" href="$group__old__data.html#ac51fe4c25d1ba2e9eef029985d09fe99" title="The empty() method used outside needs to lock the datastructure." alt="" coords="5,5,193,47"/>
+<area shape="rect" id="node5" href="$group__old__data.html#a66f2b4bfa5840cae57b4708e557e6bbb" title="Try to read a value from the pipe." alt="" coords="35,71,163,112"/>
+<area shape="rect" id="node8" href="$group__old__data.html#a27e205f3053b8c83095cf03795e1dcfe" title="Create a pipe reservation station that reserves the pipe itself." alt="" coords="23,165,176,221"/>
+</map>

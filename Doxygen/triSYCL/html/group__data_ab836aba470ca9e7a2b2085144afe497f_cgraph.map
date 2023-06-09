@@ -1,5 +1,0 @@
-<map id="trisycl::detail::pipe_reservation::pipe_reservation" name="trisycl::detail::pipe_reservation::pipe_reservation">
-<area shape="rect" id="node2" href="$group__data.html#a0213ad8ed96e6d1b3db38e5bed442b28" title="Keep the default constructors too. " alt="" coords="249,5,445,47"/>
-<area shape="rect" id="node3" href="$group__data.html#a1a43bcf91569d1c2e760012ad8b72ff1" title="Reserve some part of the pipe for reading. " alt="" coords="283,71,411,112"/>
-<area shape="rect" id="node4" href="$group__data.html#a7a7d85151b785062f57ec5d73053bbab" title="Reserve some part of the pipe for writing. " alt="" coords="283,136,411,177"/>
-</map>

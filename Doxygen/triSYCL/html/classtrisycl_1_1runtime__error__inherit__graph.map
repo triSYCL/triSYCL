@@ -1,10 +1,11 @@
 <map id="trisycl::runtime_error" name="trisycl::runtime_error">
-<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1accessor__error" title="Error regarding the trisycl::accessor objects defined. " alt="" coords="372,5,523,32"/>
-<area shape="rect" id="node4" href="$group__error__handling.html#classtrisycl_1_1event__error" title="Error regarding associated trisycl::event objects. " alt="" coords="382,56,513,83"/>
+<area shape="rect" id="node1" title=" " alt="" coords="175,173,316,200"/>
+<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1accessor__error" title="Error regarding the trisycl::accessor objects defined." alt="" coords="372,5,523,32"/>
+<area shape="rect" id="node4" href="$group__error__handling.html#classtrisycl_1_1event__error" title="Error regarding associated trisycl::event objects." alt="" coords="382,56,513,83"/>
 <area shape="rect" id="node5" href="$group__error__handling.html#classtrisycl_1_1invalid__parameter__error" title="Error regarding parameters to the SYCL kernel, it may apply to any captured parameters to the kernel ..." alt="" coords="364,107,531,149"/>
-<area shape="rect" id="node6" href="$group__error__handling.html#classtrisycl_1_1kernel__error" title="Error that occurred before or while enqueuing the SYCL kernel. " alt="" coords="381,173,514,200"/>
-<area shape="rect" id="node7" href="$group__error__handling.html#classtrisycl_1_1nd__range__error" title="Error regarding the trisycl::nd_range specified for the SYCL kernel. " alt="" coords="372,224,523,251"/>
-<area shape="rect" id="node8" href="$group__error__handling.html#classtrisycl_1_1non__cl__error" title="Exception for an OpenCL operation requested in a non OpenCL area. " alt="" coords="379,275,515,301"/>
-<area shape="rect" id="node9" href="$group__error__handling.html#classtrisycl_1_1pipe__error" title="A failing pipe error will trigger this exception on error. " alt="" coords="386,325,509,352"/>
-<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information. " alt="" coords="5,173,127,200"/>
+<area shape="rect" id="node6" href="$group__error__handling.html#classtrisycl_1_1kernel__error" title="Error that occurred before or while enqueuing the SYCL kernel." alt="" coords="381,173,514,200"/>
+<area shape="rect" id="node7" href="$group__error__handling.html#classtrisycl_1_1nd__range__error" title="Error regarding the trisycl::nd_range specified for the SYCL kernel." alt="" coords="372,224,523,251"/>
+<area shape="rect" id="node8" href="$group__error__handling.html#classtrisycl_1_1non__cl__error" title="Exception for an OpenCL operation requested in a non OpenCL area." alt="" coords="379,275,515,301"/>
+<area shape="rect" id="node9" href="$group__error__handling.html#classtrisycl_1_1pipe__error" title="A failing pipe error will trigger this exception on error." alt="" coords="386,325,509,352"/>
+<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information." alt="" coords="5,173,127,200"/>
 </map>

@@ -1,0 +1,10 @@
+<map id="trisycl::vendor::xilinx::acap::aie::memory_infrastructure" name="trisycl::vendor::xilinx::acap::aie::memory_infrastructure">
+<area shape="rect" id="node1" title="The AI Engine memory infrastructure common to all the tiles." alt="" coords="857,68,1079,109"/>
+<area shape="rect" id="node2" href="$group__aie.html#structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1lock__unit" title="The lock infrastructure used by AI Engine memory modules and shim tiles." alt="" coords="539,32,681,73"/>
+<area shape="rect" id="node3" title=" " alt="" coords="268,13,412,39"/>
+<area shape="rect" id="node4" href="$structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1lock__unit_1_1locking__device.html" title="The individual locking system." alt="" coords="269,63,411,119"/>
+<area shape="rect" id="node5" title=" " alt="" coords="27,5,162,47"/>
+<area shape="rect" id="node6" title=" " alt="" coords="5,71,184,112"/>
+<area shape="rect" id="node7" href="$classbool.html" title=" " alt="" coords="71,137,118,163"/>
+<area shape="rect" id="node8" title=" " alt="" coords="583,98,637,125"/>
+</map>

@@ -1,3 +1,8 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structtrisycl_1_1drt_1_1drt_1_1code_1_1program.html" title="A binary program containing some kernels. " alt="" coords="5,5,116,47"/>
+<area shape="rect" id="node1" href="$group__debug__trace.html" title=" " alt="" coords="5,64,144,105"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1queue.html" title="Some implementation details about the SYCL queue." alt="" coords="192,71,331,98"/>
+<area shape="rect" id="node3" href="$classtrisycl_1_1detail_1_1host__queue.html" title="Some implementation details about the SYCL queue." alt="" coords="385,19,515,60"/>
+<area shape="rect" id="node4" href="$classtrisycl_1_1detail_1_1opencl__queue.html" title="Some implementation details about the SYCL queue." alt="" coords="379,97,521,139"/>
+<area shape="rect" id="node5" href="$group__debug__trace.html" title=" " alt="" coords="192,5,331,47"/>
+<area shape="rect" id="node6" href="$group__debug__trace.html" title=" " alt="" coords="192,123,331,164"/>
 </map>

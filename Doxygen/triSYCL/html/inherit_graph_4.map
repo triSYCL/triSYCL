@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classstd_1_1shared__ptr_3_01detail_1_1context_01_4.html" title="shared_ptr\&lt; detail\l::context \&gt;" alt="" coords="5,5,132,47"/>
+<area shape="rect" id="node1" href="$classdetail_1_1debug_3_01buffer_3_01T_00_011_00_01buffer__allocator_3_01std_1_1remove__const__t_3_01T_01_4_01_4_01_4_01_4.html" title=" " alt="" coords="14,5,187,76"/>
+<area shape="rect" id="node2" href="$group__data.html#classtrisycl_1_1buffer" title="A SYCL buffer is a multidimensional variable length array (à la C99 VLA or even Fortran before) that ..." alt="" coords="244,79,409,120"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,101,196,215"/>
 </map>

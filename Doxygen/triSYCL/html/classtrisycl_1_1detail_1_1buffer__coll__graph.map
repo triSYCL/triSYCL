@@ -1,8 +1,24 @@
 <map id="trisycl::detail::buffer&lt; T, Dimensions &gt;" name="trisycl::detail::buffer&lt; T, Dimensions &gt;">
-<area shape="rect" id="node2" href="$group__data.html#structtrisycl_1_1detail_1_1buffer__base" title="Factorize some template independent buffer aspects in a base class. " alt="" coords="689,223,861,250"/>
-<area shape="rect" id="node11" href="$group__debug__trace.html" title="trisycl::detail::debug\l\&lt; buffer\&lt; T, Dimensions \&gt; \&gt;" alt="" coords="681,275,869,316"/>
-<area shape="rect" id="node15" href="$group__execution.html#classtrisycl_1_1context" title="SYCL context. " alt="" coords="721,537,829,563"/>
-<area shape="rect" id="node16" href="$structtrisycl_1_1detail_1_1shared__ptr__implementation.html" title="trisycl::detail::shared\l_ptr_implementation\&lt; context,\l detail::context \&gt;" alt="" coords="293,522,492,578"/>
-<area shape="rect" id="node18" href="$classstd_1_1shared__ptr_3_01detail_1_1context_01_4.html" title="shared_ptr\&lt; detail\l::context \&gt;" alt="" coords="15,561,142,603"/>
-<area shape="rect" id="node19" href="$classbool.html" title="bool" alt="" coords="752,587,799,614"/>
+<area shape="rect" id="node1" title="A SYCL buffer is a multidimensional variable length array (à la C99 VLA or even Fortran before) that ..." alt="" coords="1027,589,1164,631"/>
+<area shape="rect" id="node2" href="$group__data.html#structtrisycl_1_1detail_1_1buffer__base" title="Factorize some template independent buffer aspects in a base class." alt="" coords="681,239,853,266"/>
+<area shape="rect" id="node3" title=" " alt="" coords="305,5,480,47"/>
+<area shape="rect" id="node4" title=" " alt="" coords="333,71,453,98"/>
+<area shape="rect" id="node5" title=" " alt="" coords="327,123,458,164"/>
+<area shape="rect" id="node6" title=" " alt="" coords="363,189,422,215"/>
+<area shape="rect" id="node7" title=" " alt="" coords="329,239,456,266"/>
+<area shape="rect" id="node8" title=" " alt="" coords="317,291,468,332"/>
+<area shape="rect" id="node9" title=" " alt="" coords="317,356,468,397"/>
+<area shape="rect" id="node10" title=" " alt="" coords="307,422,478,478"/>
+<area shape="rect" id="node11" href="$group__execution.html" title=" " alt="" coords="689,400,846,441"/>
+<area shape="rect" id="node12" title=" " alt="" coords="311,502,474,558"/>
+<area shape="rect" id="node13" href="$group__debug__trace.html" title=" " alt="" coords="698,465,837,507"/>
+<area shape="rect" id="node14" title=" " alt="" coords="697,531,837,572"/>
+<area shape="rect" id="node15" title=" " alt="" coords="703,597,831,623"/>
+<area shape="rect" id="node16" title=" " alt="" coords="692,648,843,689"/>
+<area shape="rect" id="node17" title=" " alt="" coords="691,714,844,741"/>
+<area shape="rect" id="node18" href="$classbool.html" title=" " alt="" coords="744,770,791,797"/>
+<area shape="rect" id="node19" href="$group__execution.html#classtrisycl_1_1context" title="SYCL context." alt="" coords="713,821,821,847"/>
+<area shape="rect" id="node20" href="$structtrisycl_1_1detail_1_1shared__ptr__implementation.html" title=" " alt="" coords="293,806,492,862"/>
+<area shape="rect" id="node21" title=" " alt="" coords="5,780,152,821"/>
+<area shape="rect" id="node22" href="$classstd_1_1shared__ptr_3_01detail_1_1context_01_4.html" title=" " alt="" coords="15,845,142,887"/>
 </map>

@@ -1,0 +1,4 @@
+<map id="trisycl::detail::launch_device_kernel" name="trisycl::detail::launch_device_kernel">
+<area shape="rect" id="node1" title="Gather in a single function what is necessary for the device compiler to outline the kernel or to set..." alt="" coords="5,5,148,47"/>
+<area shape="rect" id="node2" href="$namespacetrisycl_1_1detail.html#ae7f3e2db0e50d1419c67d55346253137" title="Set the task to be used to launch the kernel." alt="" coords="196,5,339,47"/>
+</map>

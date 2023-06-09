@@ -1,0 +1,6 @@
+<map id="trisycl::mixin::accessor::data" name="trisycl::mixin::accessor::data">
+<area shape="rect" id="node1" title="Get the underlying storage." alt="" coords="211,71,368,112"/>
+<area shape="rect" id="node2" href="$group__data.html#ab4881bcc1d0dc6fcdd30ebafc37ceada" title="Construct a host accessor from an existing buffer." alt="" coords="5,5,163,47"/>
+<area shape="rect" id="node3" href="$group__data.html#a3394999b292edcaf3ffbab2d9355af95" title="Lazily associate a CL buffer to the SYCL buffer and copy data in it if required, updates the state of..." alt="" coords="5,71,163,112"/>
+<area shape="rect" id="node4" href="$group__execution.html#a991db73408f7b4fddb39d6b3a7d6b6ba" title="Update the accessor to target somewhere else." alt="" coords="5,136,163,177"/>
+</map>

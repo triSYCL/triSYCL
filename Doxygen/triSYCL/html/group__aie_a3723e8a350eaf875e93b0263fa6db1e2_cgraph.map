@@ -1,0 +1,9 @@
+<map id="trisycl::vendor::xilinx::acap::aie::detail::tile_infrastructure::display" name="trisycl::vendor::xilinx::acap::aie::detail::tile_infrastructure::display">
+<area shape="rect" id="node1" title="Display the tile to a LaTeX context." alt="" coords="5,136,160,192"/>
+<area shape="rect" id="node2" href="$group__aie.html#a4b4cdc8316490492f5a479077ba3cb16" title="Display the AXI stream switch." alt="" coords="223,5,378,61"/>
+<area shape="rect" id="node3" href="$group__aie.html#a31cae2096e6714d1549a5ac247e0efb6" title="Compute the size of the graphics representation of the processor." alt="" coords="483,63,637,134"/>
+<area shape="rect" id="node4" href="$group__aie.html#a9c56bc7730489b9a33122c1d61cfee8f" title="Compute the size of the graphics representation of the tile." alt="" coords="208,136,393,192"/>
+<area shape="rect" id="node6" href="$group__aie.html#ab2cc82e11337e404f286de2f0c06592d" title="Get the horizontal coordinate." alt="" coords="227,216,374,272"/>
+<area shape="rect" id="node7" href="$group__aie.html#ad1b8f10b05676ff752e70e17b473fa4b" title="Get the vertical coordinate." alt="" coords="227,296,374,352"/>
+<area shape="rect" id="node5" href="$group__aie.html#aaed586e25480c7b033775871e0acd3b1" title="Compute the size of the graphics representation of the switch." alt="" coords="441,159,679,215"/>
+</map>

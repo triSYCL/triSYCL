@@ -1,0 +1,5 @@
+<map id="trisycl::group::get_local_range" name="trisycl::group::get_local_range">
+<area shape="rect" id="node1" title="Get the local range for this work_group." alt="" coords="5,39,128,80"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#a65d9b543efa609d2a54f0bf739009bc1" title="Get the local part of the iteration space range." alt="" coords="176,5,303,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#a39042c9a537a5dd16b5b6f26c9c9cf96" title=" " alt="" coords="178,71,301,112"/>
+</map>

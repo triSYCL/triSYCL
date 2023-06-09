@@ -1,3 +1,4 @@
 <map id="trisycl::detail::queue::~queue" name="trisycl::detail::queue::~queue">
-<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1queue.html#a199e75a5b7c55233e6559815c45e9175" title="Wait for all kernel completion. " alt="" coords="192,5,373,47"/>
+<area shape="rect" id="node1" title="Wait for all kernel completion before the queue destruction." alt="" coords="5,5,144,47"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1detail_1_1queue.html#a199e75a5b7c55233e6559815c45e9175" title="Wait for all kernel completion." alt="" coords="192,5,373,47"/>
 </map>

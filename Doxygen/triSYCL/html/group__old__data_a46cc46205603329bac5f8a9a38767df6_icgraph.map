@@ -1,0 +1,5 @@
+<map id="trisycl::detail::sycl_2_2::pipe::empty" name="trisycl::detail::sycl_2_2::pipe::empty">
+<area shape="rect" id="node1" title="Test if the pipe is empty." alt="" coords="241,39,369,80"/>
+<area shape="rect" id="node2" href="$group__old__data.html#ac51fe4c25d1ba2e9eef029985d09fe99" title="The empty() method used outside needs to lock the datastructure." alt="" coords="5,5,193,47"/>
+<area shape="rect" id="node3" href="$group__old__data.html#a66f2b4bfa5840cae57b4708e557e6bbb" title="Try to read a value from the pipe." alt="" coords="35,71,163,112"/>
+</map>

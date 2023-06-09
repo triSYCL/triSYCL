@@ -1,0 +1,4 @@
+<map id="trisycl::mixin::accessor::extents_cast" name="trisycl::mixin::accessor::extents_cast">
+<area shape="rect" id="node1" title="Cast a SYCL range/id&#45;like into a mdspan index array, which is an array of std::size_t into an array o..." alt="" coords="5,5,163,47"/>
+<area shape="rect" id="node2" href="$group__execution.html#a67e0bd652641192aeb41a0b8adf2d8f3" title="Get the number of dimensions of the buffer." alt="" coords="211,5,368,47"/>
+</map>

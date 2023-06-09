@@ -1,0 +1,6 @@
+<map id="trisycl::vendor::xilinx::graphics::application" name="trisycl::vendor::xilinx::graphics::application">
+<area shape="rect" id="node1" title="A graphics application running in a separate thread to display images in a grid of tiles." alt="" coords="96,124,245,165"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,20,64,47"/>
+<area shape="rect" id="node3" title=" " alt="" coords="89,5,253,61"/>
+<area shape="rect" id="node4" href="$classbool.html" title=" " alt="" coords="277,20,323,47"/>
+</map>

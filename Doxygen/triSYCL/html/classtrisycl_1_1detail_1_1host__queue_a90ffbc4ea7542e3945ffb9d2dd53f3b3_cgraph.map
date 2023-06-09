@@ -1,3 +1,4 @@
 <map id="trisycl::detail::host_queue::get_context" name="trisycl::detail::host_queue::get_context">
-<area shape="rect" id="node2" href="$classtrisycl_1_1detail_1_1host__queue.html#a9f7117bfd5d763a52f15709b33f80e82" title="Return the SYCL host device the host queue is associated with. " alt="" coords="193,5,328,47"/>
+<area shape="rect" id="node1" title="Return the SYCL host queue&#39;s host context." alt="" coords="5,5,145,47"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1detail_1_1host__queue.html#a9f7117bfd5d763a52f15709b33f80e82" title="Return the SYCL host device the host queue is associated with." alt="" coords="193,5,328,47"/>
 </map>

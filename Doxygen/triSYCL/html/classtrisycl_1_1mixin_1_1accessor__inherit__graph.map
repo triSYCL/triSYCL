@@ -1,0 +1,7 @@
+<map id="trisycl::mixin::accessor&lt; T, Dimensions &gt;" name="trisycl::mixin::accessor&lt; T, Dimensions &gt;">
+<area shape="rect" id="node1" title="SYCL accessor mixin providing multi&#45;dimensional access features." alt="" coords="5,53,163,94"/>
+<area shape="rect" id="node2" href="$group__execution.html" title=" " alt="" coords="211,53,456,94"/>
+<area shape="rect" id="node3" href="$group__data.html" title=" " alt="" coords="504,5,699,61"/>
+<area shape="rect" id="node5" href="$group__data.html#classtrisycl_1_1detail_1_1accessor" title="The buffer accessor abstracts the way buffer data are accessed inside a kernel in a multidimensional ..." alt="" coords="521,85,682,141"/>
+<area shape="rect" id="node4" href="$group__data.html#classtrisycl_1_1detail_1_1accessor_3_01T_00_01Dimensions_00_01Mode_00_01access_1_1target_1_1local_01_4" title="The local accessor specialization abstracts the way local memory is allocated to a kernel to be share..." alt="" coords="747,5,908,61"/>
+</map>

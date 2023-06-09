@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['platforms_2c_20contexts_2c_20devices_20and_20queues',['Platforms, contexts, devices and queues',['../group__execution.html',1,'']]]
+  ['latex_20support_20for_20graphics_20output_0',['LaTeX support for graphics output',['../group__latex.html',1,'']]]
 ];

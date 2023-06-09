@@ -1,0 +1,5 @@
+<map id="trisycl::vendor::xilinx::acap::aie::tile_base::cascade" name="trisycl::vendor::xilinx::acap::aie::tile_base::cascade">
+<area shape="rect" id="node1" title="Access the cascade connections." alt="" coords="204,45,347,101"/>
+<area shape="rect" id="node2" href="$group__aie.html#a81e6a7acdfa5d3b4ce758b1011206cf0" title="Get a read accessor to the cascade stream input." alt="" coords="9,5,152,61"/>
+<area shape="rect" id="node3" href="$group__aie.html#a4322f9fb7e01d7e94f7eba02d7670106" title="Get a write accessor to the cascade stream output." alt="" coords="5,85,156,141"/>
+</map>

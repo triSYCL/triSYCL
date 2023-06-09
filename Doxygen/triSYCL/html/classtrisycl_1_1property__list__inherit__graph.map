@@ -1,3 +1,4 @@
 <map id="trisycl::property_list" name="trisycl::property_list">
-<area shape="rect" id="node2" href="$group__execution.html#classtrisycl_1_1queue" title="SYCL queue, similar to the OpenCL queue concept. " alt="" coords="23,80,123,107"/>
+<area shape="rect" id="node1" title="SYCL property list." alt="" coords="5,5,141,32"/>
+<area shape="rect" id="node2" href="$group__execution.html#classtrisycl_1_1queue" title="SYCL queue, similar to the OpenCL queue concept." alt="" coords="23,80,123,107"/>
 </map>

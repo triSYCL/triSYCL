@@ -1,4 +1,0 @@
-<map id="trisycl::detail::opencl_queue::instance" name="trisycl::detail::opencl_queue::instance">
-<area shape="rect" id="node2" href="$classtrisycl_1_1detail_1_1opencl__queue.html#ac65bf880e771032a8d0c39db0a0978ad" title="Create a new queue associated to this device. " alt="" coords="196,5,339,47"/>
-<area shape="rect" id="node3" href="$group__execution.html#a285df70fb6de541084d90ac1cc14aa11" title="A queue is created for a SYCL device. " alt="" coords="196,71,339,98"/>
-</map>

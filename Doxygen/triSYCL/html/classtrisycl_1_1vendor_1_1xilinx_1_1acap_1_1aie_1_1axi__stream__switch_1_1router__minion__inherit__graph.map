@@ -1,0 +1,5 @@
+<map id="trisycl::vendor::xilinx::acap::aie::axi_stream_switch&lt; AXIStreamGeography &gt;::router_minion" name="trisycl::vendor::xilinx::acap::aie::axi_stream_switch&lt; AXIStreamGeography &gt;::router_minion">
+<area shape="rect" id="node1" title="A router input port with routing skills." alt="" coords="5,184,211,255"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1communicator__port.html" title="Abstract interface for a communication port." alt="" coords="7,95,209,136"/>
+<area shape="rect" id="node3" href="$group__debug__trace.html" title=" " alt="" coords="29,5,187,47"/>
+</map>

@@ -1,4 +1,6 @@
 <map id="trisycl::platform_error" name="trisycl::platform_error">
-<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1device__error" title="The SYCL device will trigger this exception on error. " alt="" coords="10,171,146,197"/>
-<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information. " alt="" coords="17,95,139,121"/>
+<area shape="rect" id="node1" title="The SYCL platform will trigger this exception on error." alt="" coords="5,247,151,273"/>
+<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1device__error" title="The SYCL device will trigger this exception on error." alt="" coords="10,171,146,197"/>
+<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information." alt="" coords="17,95,139,121"/>
+<area shape="rect" id="node4" title=" " alt="" coords="51,5,105,32"/>
 </map>

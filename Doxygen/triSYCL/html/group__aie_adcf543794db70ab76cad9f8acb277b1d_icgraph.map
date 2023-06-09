@@ -1,0 +1,10 @@
+<map id="trisycl::vendor::xilinx::acap::aie::geography::validate_x" name="trisycl::vendor::xilinx::acap::aie::geography::validate_x">
+<area shape="rect" id="node1" title="Validate an horizontal coordinate." alt="" coords="709,87,860,143"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1detail_1_1device.html#a2adc5a599f819ad0aa9e42ac27954b19" title="Access to the shim tile." alt="" coords="259,61,463,102"/>
+<area shape="rect" id="node5" href="$group__aie.html#a5bdd52186e3f9ed69330fc5c1c9304bf" title="Validate the horizontal and vertical coordinates." alt="" coords="511,119,661,175"/>
+<area shape="rect" id="node3" href="$structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1detail_1_1device.html#a33ea5a64ab0dc563a42d06aa472d6d0f" title="Connect the ports of 2 tiles or shims together with an hyperspace switched circuit,..." alt="" coords="24,5,192,61"/>
+<area shape="rect" id="node4" href="$structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1detail_1_1device.html#a646bd7dc5393f1ae693cb1f4a1794b61" title="Build some device level infrastructure." alt="" coords="24,85,192,141"/>
+<area shape="rect" id="node6" href="$structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1detail_1_1device.html#a9af5f30163d70d57c6fbcf3437398b03" title="Access to the common infrastructure part of a tile." alt="" coords="264,126,457,167"/>
+<area shape="rect" id="node7" href="$structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1detail_1_1device.html#a023e2a73dd403f52699ba3db3c4ec6bc" title="Apply a function for each tile infrastructure of the device." alt="" coords="24,165,192,221"/>
+<area shape="rect" id="node8" href="$structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1detail_1_1device.html#a8562f58f2dd34910cc92ce28c47695a8" title="Shortcut to access to the common infrastructure part of a tile memory." alt="" coords="5,246,211,287"/>
+</map>

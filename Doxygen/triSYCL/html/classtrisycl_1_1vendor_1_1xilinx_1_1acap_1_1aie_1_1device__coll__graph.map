@@ -1,0 +1,8 @@
+<map id="trisycl::vendor::xilinx::acap::aie::device&lt; Layout &gt;" name="trisycl::vendor::xilinx::acap::aie::device&lt; Layout &gt;">
+<area shape="rect" id="node1" title="Create a SYCL&#45;like device view of an AI Engine CGRA with some layout." alt="" coords="795,39,987,80"/>
+<area shape="rect" id="node2" href="$group__execution.html" title=" " alt="" coords="532,31,707,87"/>
+<area shape="rect" id="node3" href="$structtrisycl_1_1detail_1_1shared__ptr__implementation.html" title=" " alt="" coords="293,24,483,95"/>
+<area shape="rect" id="node4" title=" " alt="" coords="5,5,152,47"/>
+<area shape="rect" id="node5" href="$classstd_1_1shared__ptr_3_01detail_1_1device_3_01Layout_01_4_01_4.html" title=" " alt="" coords="7,71,150,112"/>
+<area shape="rect" id="node6" title=" " alt="" coords="547,181,691,207"/>
+</map>

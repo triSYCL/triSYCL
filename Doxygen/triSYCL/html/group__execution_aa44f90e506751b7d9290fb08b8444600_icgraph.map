@@ -1,3 +1,4 @@
 <map id="trisycl::device::get_boost_compute" name="trisycl::device::get_boost_compute">
-<area shape="rect" id="node2" href="$classtrisycl_1_1detail_1_1opencl__queue.html#ac65bf880e771032a8d0c39db0a0978ad" title="Create a new queue associated to this device. " alt="" coords="183,5,325,47"/>
+<area shape="rect" id="node1" title="Return the underlying Boost.Compute device if it is an OpenCL device." alt="" coords="196,5,325,47"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1detail_1_1opencl__queue.html#aeb3e7e2eb0897ca5bb20f59ac82a18b2" title="Create a new queue associated to this device." alt="" coords="5,5,148,47"/>
 </map>

@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$group__vector.html#structtrisycl_1_1elem" title="Series of values to specify named swizzle indexes Used when calling the swizzle member function templ..." alt="" coords="5,5,99,32"/>
+<area shape="rect" id="node1" href="$group__debug__trace.html" title=" " alt="" coords="5,53,243,124"/>
+<area shape="rect" id="node2" href="$group__old__data.html" title=" " alt="" coords="291,5,499,76"/>
+<area shape="rect" id="node4" href="$group__old__data.html" title=" " alt="" coords="310,100,479,171"/>
+<area shape="rect" id="node3" href="$group__old__data.html#classtrisycl_1_1accessor_3_01DataType_00_011_00_01AccessMode_00_01access_1_1target_1_1blocking__pipe_01_4" title="The pipe accessor abstracts the way pipe data are accessed inside a kernel." alt="" coords="547,13,755,69"/>
+<area shape="rect" id="node5" href="$group__old__data.html#classtrisycl_1_1accessor_3_01DataType_00_011_00_01AccessMode_00_01access_1_1target_1_1pipe_01_4" title="The pipe accessor abstracts the way pipe data are accessed inside a kernel." alt="" coords="559,107,743,163"/>
 </map>

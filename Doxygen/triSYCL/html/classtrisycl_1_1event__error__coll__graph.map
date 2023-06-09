@@ -1,4 +1,6 @@
 <map id="trisycl::event_error" name="trisycl::event_error">
-<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1runtime__error" title="trisycl::runtime_error" alt="" coords="5,171,147,197"/>
-<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information. " alt="" coords="15,95,137,121"/>
+<area shape="rect" id="node1" title="Error regarding associated trisycl::event objects." alt="" coords="11,247,141,273"/>
+<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1runtime__error" title=" " alt="" coords="5,171,147,197"/>
+<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information." alt="" coords="15,95,137,121"/>
+<area shape="rect" id="node4" title=" " alt="" coords="49,5,103,32"/>
 </map>

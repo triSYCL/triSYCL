@@ -1,4 +1,5 @@
 <map id="trisycl::link_program_error" name="trisycl::link_program_error">
-<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1device__error" title="The SYCL device will trigger this exception on error. " alt="" coords="7,80,143,107"/>
-<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information. " alt="" coords="14,5,135,32"/>
+<area shape="rect" id="node1" title="Error while linking the SYCL kernel to a SYCL device." alt="" coords="5,155,144,196"/>
+<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1device__error" title="The SYCL device will trigger this exception on error." alt="" coords="7,80,143,107"/>
+<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information." alt="" coords="14,5,135,32"/>
 </map>

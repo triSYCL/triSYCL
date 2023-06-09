@@ -1,0 +1,7 @@
+<map id="trisycl::vendor::xilinx::acap::aie::tile::is_memory_module_north" name="trisycl::vendor::xilinx::acap::aie::tile::is_memory_module_north">
+<area shape="rect" id="node1" title="Test if a memory module exists on the North this tile." alt="" coords="641,42,803,98"/>
+<area shape="rect" id="node2" href="$group__aie.html#a48b9ae40f63f324bc2151e082c4bb6bc" title="Get the memory module on the North if it does exist." alt="" coords="412,20,593,61"/>
+<area shape="rect" id="node4" href="$group__aie.html#aaa455173d321b803900ebc2a7a3f4676" title="A vertical barrier using a lock." alt="" coords="205,71,364,127"/>
+<area shape="rect" id="node3" href="$group__aie.html#add257a4684af7449ba21b606761fb0ee" title="Get the memory module relative to the tile." alt="" coords="212,5,357,47"/>
+<area shape="rect" id="node5" href="$group__aie.html#a41edf9ee6198a429aafb54fb5c7c68e3" title="Full barrier using the 2 locks by default." alt="" coords="5,79,157,120"/>
+</map>

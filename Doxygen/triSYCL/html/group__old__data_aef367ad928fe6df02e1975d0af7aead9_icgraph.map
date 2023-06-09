@@ -1,0 +1,5 @@
+<map id="trisycl::detail::sycl_2_2::pipe::full" name="trisycl::detail::sycl_2_2::pipe::full">
+<area shape="rect" id="node1" title="Test if the pipe is full." alt="" coords="223,39,351,80"/>
+<area shape="rect" id="node2" href="$group__old__data.html#ab92bea7e63a2b593c1987e19b9543b80" title=" " alt="" coords="5,5,175,47"/>
+<area shape="rect" id="node3" href="$group__old__data.html#a0832d944372cd912a6969604e36c8a01" title="Try to write a value to the pipe." alt="" coords="26,71,154,112"/>
+</map>

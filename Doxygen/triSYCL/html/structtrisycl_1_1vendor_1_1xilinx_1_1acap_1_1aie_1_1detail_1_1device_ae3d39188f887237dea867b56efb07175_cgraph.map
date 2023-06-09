@@ -1,0 +1,7 @@
+<map id="trisycl::vendor::xilinx::acap::aie::detail::device::for_each_tile_neighborhood" name="trisycl::vendor::xilinx::acap::aie::detail::device::for_each_tile_neighborhood">
+<area shape="rect" id="node1" title="Apply a function on all the AXI stream of the neighborhood of each tile." alt="" coords="5,45,193,101"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1detail_1_1device.html#a8ffc38b8c4f631654ef9273a3a77f56b" title="Apply a function for each tile index of the device." alt="" coords="241,5,409,61"/>
+<area shape="rect" id="node3" href="$group__aie.html#a5e3600a2a7750f10d6f4975edd62801e" title="Test if horizontal and vertical coordinates are valid." alt="" coords="250,85,401,141"/>
+<area shape="rect" id="node4" href="$group__aie.html#a974c727768794d9d60e9d62e0baf5dd2" title="Test if an horizontal coordinate is valid." alt="" coords="457,45,608,101"/>
+<area shape="rect" id="node5" href="$group__aie.html#a2696e6cf50b1ef951288c2fc732f69b5" title="Test if a vertical coordinate is valid." alt="" coords="457,125,608,181"/>
+</map>

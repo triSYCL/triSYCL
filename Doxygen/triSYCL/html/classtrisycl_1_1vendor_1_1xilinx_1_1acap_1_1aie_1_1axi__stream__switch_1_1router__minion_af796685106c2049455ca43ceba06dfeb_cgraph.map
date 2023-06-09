@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::axi_stream_switch::router_minion::router_minion" name="trisycl::vendor::xilinx::acap::aie::axi_stream_switch::router_minion::router_minion">
+<area shape="rect" id="node1" title="Create a router minion on this switch using a fiber executor." alt="" coords="5,5,167,76"/>
+<area shape="rect" id="node2" href="$classtrisycl_1_1detail_1_1fiber__pool.html#a3be4d7f3dc899bd1bea94e6dafe33be6" title="Submit some work on a new fiber." alt="" coords="215,20,344,61"/>
+</map>

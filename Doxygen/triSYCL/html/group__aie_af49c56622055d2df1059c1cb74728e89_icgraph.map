@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::geography::is_valid_memory_module_offset" name="trisycl::vendor::xilinx::acap::aie::geography::is_valid_memory_module_offset">
+<area shape="rect" id="node1" title="Test if a memory module coordinate offset is plausible." alt="" coords="204,5,421,61"/>
+<area shape="rect" id="node2" href="$group__aie.html#a50d2da6f688c796bd105a04f65cef72a" title="Test if a memory module exists and is connected to a tile." alt="" coords="5,5,156,61"/>
+</map>

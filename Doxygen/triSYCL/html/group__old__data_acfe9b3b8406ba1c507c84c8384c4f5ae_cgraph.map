@@ -1,0 +1,6 @@
+<map id="trisycl::detail::sycl_2_2::pipe::size_with_lock" name="trisycl::detail::sycl_2_2::pipe::size_with_lock">
+<area shape="rect" id="node1" title="The size() method used outside needs to lock the datastructure." alt="" coords="5,53,181,94"/>
+<area shape="rect" id="node2" href="$group__old__data.html#a3c178648e9d0c844aa6d23de8a216452" title="Get the current number of elements in the pipe that can be read." alt="" coords="229,53,357,94"/>
+<area shape="rect" id="node3" href="$group__old__data.html#a22472dc9dd5e7b0af07a47a27682cb79" title="Compute the amount of elements blocked by read reservations, not yet committed." alt="" coords="405,5,545,61"/>
+<area shape="rect" id="node4" href="$group__old__data.html#af3a0e9729461db431623d7219fe17b16" title="Compute the amount of elements blocked by write reservations, not yet committed." alt="" coords="405,85,545,141"/>
+</map>

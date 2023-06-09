@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::geography::linear_x" name="trisycl::vendor::xilinx::acap::aie::geography::linear_x">
+<area shape="rect" id="node1" title="Compute the horizontal coordinate of a tile from linear id." alt="" coords="5,5,156,61"/>
+<area shape="rect" id="node2" href="$group__aie.html#aa68223b41f2496a2e323b80355205b30" title="Compute the linearized coordinate of a tile." alt="" coords="204,5,355,61"/>
+</map>

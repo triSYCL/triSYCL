@@ -1,4 +1,5 @@
 <map id="trisycl::non_cl_error" name="trisycl::non_cl_error">
-<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1runtime__error" title="trisycl::runtime_error" alt="" coords="5,80,147,107"/>
-<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information. " alt="" coords="15,5,137,32"/>
+<area shape="rect" id="node1" title="Exception for an OpenCL operation requested in a non OpenCL area." alt="" coords="8,155,144,181"/>
+<area shape="rect" id="node2" href="$group__error__handling.html#classtrisycl_1_1runtime__error" title=" " alt="" coords="5,80,147,107"/>
+<area shape="rect" id="node3" href="$group__error__handling.html#classtrisycl_1_1exception" title="Encapsulate a SYCL error information." alt="" coords="15,5,137,32"/>
 </map>

@@ -1,0 +1,5 @@
+<map id="trisycl::vendor::xilinx::acap::aie::shim_tile::connect" name="trisycl::vendor::xilinx::acap::aie::shim_tile::connect">
+<area shape="rect" id="node1" title="Configure a connection of the shim tile AXI stream switch." alt="" coords="5,5,148,61"/>
+<area shape="rect" id="node2" href="$group__aie.html#a3f5528ef67728548e7a112fbe56a53f2" title="Configure a connection of the shim AXI stream switch." alt="" coords="196,5,351,61"/>
+<area shape="rect" id="node3" href="$namespacestd.html#a9cfa56edb43d1708b0582912f79e86f7" title="The element of the tuple is the matching element of the small_array heir." alt="" coords="399,20,465,47"/>
+</map>

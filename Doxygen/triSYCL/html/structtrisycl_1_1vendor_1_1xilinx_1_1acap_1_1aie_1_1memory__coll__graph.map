@@ -1,0 +1,6 @@
+<map id="trisycl::vendor::xilinx::acap::aie::memory&lt; AIE, X, Y &gt;" name="trisycl::vendor::xilinx::acap::aie::memory&lt; AIE, X, Y &gt;">
+<area shape="rect" id="node1" title="The AI Engine Memory Module infrastructure of a tile." alt="" coords="481,13,656,69"/>
+<area shape="rect" id="node2" href="$group__aie.html#structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1memory__base" title="The AI Engine Memory Module infrastructure of a tile common to all the tiles." alt="" coords="248,20,421,61"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,5,181,76"/>
+<area shape="rect" id="node4" title=" " alt="" coords="263,89,407,115"/>
+</map>

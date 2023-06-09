@@ -1,0 +1,16 @@
+<map id="trisycl::vendor::xilinx::acap::aie::detail::device::device" name="trisycl::vendor::xilinx::acap::aie::detail::device::device">
+<area shape="rect" id="node1" title="Build some device level infrastructure." alt="" coords="5,206,173,262"/>
+<area shape="rect" id="node2" href="$structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1detail_1_1device.html#a8ffc38b8c4f631654ef9273a3a77f56b" title="Apply a function for each tile index of the device." alt="" coords="481,71,649,127"/>
+<area shape="rect" id="node3" href="$structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1detail_1_1device.html#ae3d39188f887237dea867b56efb07175" title="Apply a function on all the AXI stream of the neighborhood of each tile." alt="" coords="224,133,412,189"/>
+<area shape="rect" id="node7" href="$structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1detail_1_1device.html#ab266fb029ee3c39c3eda4fb13da4c484" title="Apply a function for each x tile index of the device." alt="" coords="234,279,402,335"/>
+<area shape="rect" id="node8" href="$group__aie.html#ac1cce80f939caa768d132e7981858168" title="Test if a tile is in the Eastern column." alt="" coords="243,359,393,415"/>
+<area shape="rect" id="node9" href="$group__aie.html#aeeebad7f5d9b9ce9b2c4a9dfb9b4f66a" title="Test if a tile is in the Western column." alt="" coords="243,439,393,495"/>
+<area shape="rect" id="node10" href="$structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1detail_1_1device.html#a2adc5a599f819ad0aa9e42ac27954b19" title="Access to the shim tile." alt="" coords="463,5,667,47"/>
+<area shape="rect" id="node12" href="$structtrisycl_1_1vendor_1_1xilinx_1_1acap_1_1aie_1_1detail_1_1device.html#a9af5f30163d70d57c6fbcf3437398b03" title="Access to the common infrastructure part of a tile." alt="" coords="221,213,415,255"/>
+<area shape="rect" id="node4" href="$group__aie.html#a5e3600a2a7750f10d6f4975edd62801e" title="Test if horizontal and vertical coordinates are valid." alt="" coords="715,133,865,189"/>
+<area shape="rect" id="node5" href="$group__aie.html#a974c727768794d9d60e9d62e0baf5dd2" title="Test if an horizontal coordinate is valid." alt="" coords="913,73,1064,129"/>
+<area shape="rect" id="node6" href="$group__aie.html#a2696e6cf50b1ef951288c2fc732f69b5" title="Test if a vertical coordinate is valid." alt="" coords="913,173,1064,229"/>
+<area shape="rect" id="node11" href="$group__aie.html#adcf543794db70ab76cad9f8acb277b1d" title="Validate an horizontal coordinate." alt="" coords="715,53,865,109"/>
+<area shape="rect" id="node13" href="$group__aie.html#a5bdd52186e3f9ed69330fc5c1c9304bf" title="Validate the horizontal and vertical coordinates." alt="" coords="489,206,640,262"/>
+<area shape="rect" id="node14" href="$group__aie.html#a19b23fdd87e86ff55a163b60e5ef78f0" title="Validate a vertical coordinate." alt="" coords="715,213,865,269"/>
+</map>

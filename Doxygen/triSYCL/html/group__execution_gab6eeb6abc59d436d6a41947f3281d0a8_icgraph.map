@@ -1,0 +1,3 @@
+<map id="trisycl::device_selector::select_device" name="trisycl::device_selector::select_device">
+<area shape="rect" id="node1" title="Returns a selected device using the functor operator defined in sub&#45;classes operator()(const device &amp;..." alt="" coords="5,29,161,71"/>
+</map>

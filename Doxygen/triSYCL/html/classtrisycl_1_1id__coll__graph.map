@@ -1,6 +1,10 @@
 <map id="trisycl::id&lt; Dimensions &gt;" name="trisycl::id&lt; Dimensions &gt;">
-<area shape="rect" id="node2" href="$group__helpers.html" title="trisycl::detail::small\l_array_123\&lt; std::size\l_t, id\&lt; Dimensions \&gt;, Dimensions \&gt;" alt="" coords="612,203,845,259"/>
-<area shape="rect" id="node3" href="$group__helpers.html" title="trisycl::detail::small\l_array\&lt; std::size_t, id\l\&lt; Dimensions \&gt;, Dims \&gt;" alt="" coords="396,203,563,259"/>
-<area shape="rect" id="node6" href="$group__debug__trace.html" title="trisycl::detail::display\l_vector\&lt; id\&lt; Dimensions \&gt; \&gt;" alt="" coords="37,211,229,252"/>
-<area shape="rect" id="node8" href="$classstatic_01const_01size__t.html" title="static const size_t" alt="" coords="68,327,197,354"/>
+<area shape="rect" id="node1" title="Define a multi&#45;dimensional index, used for example to locate a work item." alt="" coords="708,218,876,245"/>
+<area shape="rect" id="node2" href="$group__helpers.html" title=" " alt="" coords="508,203,659,259"/>
+<area shape="rect" id="node3" href="$group__helpers.html" title=" " alt="" coords="309,203,459,259"/>
+<area shape="rect" id="node4" title=" " alt="" coords="32,5,171,47"/>
+<area shape="rect" id="node5" title=" " alt="" coords="5,71,197,186"/>
+<area shape="rect" id="node6" href="$group__debug__trace.html" title=" " alt="" coords="29,211,174,252"/>
+<area shape="rect" id="node7" href="$group__helpers.html#structtrisycl_1_1detail_1_1small__array__tag" title="Tag to define simply inheritance from small_array." alt="" coords="34,276,169,317"/>
+<area shape="rect" id="node8" href="$classstatic_01constexpr_01size__t.html" title=" " alt="" coords="24,342,179,369"/>
 </map>

@@ -1,5 +1,0 @@
-<map id="trisycl::device::device" name="trisycl::device::device">
-<area shape="rect" id="node2" href="$classtrisycl_1_1detail_1_1opencl__device.html#a792cb9b62f4fa4f510f9259a22db14ef" title="trisycl::detail::opencl\l_device::instance" alt="" coords="203,39,345,80"/>
-<area shape="rect" id="node3" href="$classtrisycl_1_1detail_1_1cache.html#acf94820e866b304f627288919d123e9e" title="Get a value stored in the cache if present or insert by calling a generator function. " alt="" coords="395,5,534,47"/>
-<area shape="rect" id="node4" href="$classtrisycl_1_1detail_1_1opencl__device.html#a8cb5a17338ce1c00a5c1189c83e2069c" title="trisycl::detail::opencl\l_device::get_info" alt="" coords="393,71,536,112"/>
-</map>

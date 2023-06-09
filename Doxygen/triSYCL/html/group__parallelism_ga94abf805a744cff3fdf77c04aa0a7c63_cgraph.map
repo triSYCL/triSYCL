@@ -1,4 +1,5 @@
 <map id="trisycl::detail::parallel_for" name="trisycl::detail::parallel_for">
-<area shape="rect" id="node2" href="$group__parallelism.html#gab787598215b6a61f160c46a90be1f526" title="trisycl::detail::capture\l_arg_v" alt="" coords="230,5,377,47"/>
-<area shape="rect" id="node3" href="$group__parallelism.html#gade69cd4aa408811c685ac3b3168271ae" title="Implementation of a data parallel computation with parallelism specified at launch time by a range&lt;&gt;..." alt="" coords="220,71,387,98"/>
+<area shape="rect" id="node1" title="Calls the appropriate ternary parallel_for overload based on the index type of the kernel function ob..." alt="" coords="5,42,172,69"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#gab787598215b6a61f160c46a90be1f526" title=" " alt="" coords="230,5,377,47"/>
+<area shape="rect" id="node3" href="$group__parallelism.html#gade69cd4aa408811c685ac3b3168271ae" title="Implementation of a data parallel computation with parallelism specified at launch time by a range&lt;&gt;." alt="" coords="220,71,387,98"/>
 </map>

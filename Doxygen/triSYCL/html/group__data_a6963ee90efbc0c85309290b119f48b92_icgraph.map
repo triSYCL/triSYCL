@@ -1,4 +1,0 @@
-<map id="trisycl::detail::pipe::move_write_reservation_forward" name="trisycl::detail::pipe::move_write_reservation_forward">
-<area shape="rect" id="node2" href="$group__data.html#a82a713c7d95a0987416bba3ea1d4192a" title="Commit the reservation station. " alt="" coords="221,13,365,54"/>
-<area shape="rect" id="node3" href="$group__data.html#ab5c07caea83cf1b4673e07bc1ffd919a" title="An implicit commit is made in the destructor. " alt="" coords="413,13,617,54"/>
-</map>

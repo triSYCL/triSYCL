@@ -1,0 +1,5 @@
+<map id="trisycl::vendor::xilinx::acap::aie::tile::is_north_valid" name="trisycl::vendor::xilinx::acap::aie::tile::is_north_valid">
+<area shape="rect" id="node1" title="Test if the tile has a Northern neighbor." alt="" coords="196,45,339,101"/>
+<area shape="rect" id="node2" href="$group__aie.html#a547d2934eaa9d17571ec51110e1f9532" title="Test if the tile has a North East neighbor." alt="" coords="5,5,148,61"/>
+<area shape="rect" id="node3" href="$group__aie.html#ae5de28e3bd13a45c53540ce94126c2ba" title="Test if the tile has a North West neighbor." alt="" coords="5,85,148,141"/>
+</map>

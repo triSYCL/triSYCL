@@ -1,0 +1,5 @@
+<map id="trisycl::vendor::xilinx::acap::aie::detail::tile_infrastructure::rx_dma" name="trisycl::vendor::xilinx::acap::aie::detail::tile_infrastructure::rx_dma">
+<area shape="rect" id="node1" title="Get access to a receiver DMA." alt="" coords="5,5,161,61"/>
+<area shape="rect" id="node2" href="$group__aie.html#a1142908b5c207d739d7ef04b26d731e4" title="Get the output router port of the AXI stream switch." alt="" coords="209,5,359,61"/>
+<area shape="rect" id="node3" href="$group__aie.html#a2e220ae42c5b33cb15b08cadbe4cc4cf" title="Get the input router port of the AXI stream switch." alt="" coords="407,5,561,61"/>
+</map>

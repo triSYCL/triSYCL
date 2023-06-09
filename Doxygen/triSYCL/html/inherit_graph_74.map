@@ -1,7 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node2" href="$group__parallelism.html#structtrisycl_1_1group" title="A group index used in a parallel_for_workitem to specify a work_group. " alt="" coords="201,5,392,32"/>
-<area shape="rect" id="node3" href="$group__parallelism.html#structtrisycl_1_1h__item" title="h_item&lt;int dimensions&gt; identifies an instance of a group::parallel_for_work_item function object exec..." alt="" coords="198,56,395,83"/>
-<area shape="rect" id="node4" href="$group__parallelism.html#classtrisycl_1_1item" title="A SYCL item stores information on a work&#45;item with some more context such as the definition range and..." alt="" coords="209,107,384,149"/>
-<area shape="rect" id="node5" href="$group__parallelism.html#structtrisycl_1_1nd__item" title="A SYCL nd_item stores information on a work&#45;item within a work&#45;group, with some more context such as ..." alt="" coords="195,173,399,200"/>
-<area shape="rect" id="node6" href="$group__parallelism.html#structtrisycl_1_1nd__range" title="A ND&#45;range, made by a global and local range, to specify work&#45;group and work&#45;item organization..." alt="" coords="233,225,360,266"/>
+<area shape="rect" id="node1" href="$group__debug__trace.html" title=" " alt="" coords="5,5,163,47"/>
+<area shape="rect" id="node2" href="$group__old__data.html" title=" " alt="" coords="211,5,380,47"/>
 </map>

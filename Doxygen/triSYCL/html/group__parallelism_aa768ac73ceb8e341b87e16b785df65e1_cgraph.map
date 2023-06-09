@@ -1,3 +1,4 @@
 <map id="trisycl::h_item::h_item" name="trisycl::h_item::h_item">
-<area shape="rect" id="node2" href="$group__parallelism.html#a2e60ca1c8c57f21b2b0ca9a5f81654a2" title="To be able to copy and assign nd_item, use default constructors too. " alt="" coords="204,5,355,32"/>
+<area shape="rect" id="node1" title="Create a full nd_item." alt="" coords="5,13,156,39"/>
+<area shape="rect" id="node2" href="$group__parallelism.html#ae5f2679abab71dcdbf617b65f7817e4d" title=" " alt="" coords="204,5,331,47"/>
 </map>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['mode',['mode',['../namespacetrisycl_1_1access.html#a2ee71c8ee80896e782636c805fab297c',1,'trisycl::access']]]
+  ['local_5fmem_5ftype_0',['local_mem_type',['../group__execution.html#ga0aebbeb3f7fda77b60d916f30ba88665',1,'trisycl::info']]]
 ];

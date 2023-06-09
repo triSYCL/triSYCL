@@ -1,0 +1,8 @@
+<map id="trisycl::vendor::xilinx::acap::aie::geography::linear_id" name="trisycl::vendor::xilinx::acap::aie::geography::linear_id">
+<area shape="rect" id="node1" title="Compute the linearized coordinate of a tile." alt="" coords="632,78,783,134"/>
+<area shape="rect" id="node2" href="$group__aie.html#aca43fcafb0325c2ef1248499c0e6e5d2" title="Compute the horizontal coordinate of a tile from a cascade linear id." alt="" coords="5,36,156,92"/>
+<area shape="rect" id="node3" href="$group__aie.html#a74e550e0a7ee4cee636b947fbd7cc8d3" title="Compute the vertical coordinate of a tile from a cascade linear id." alt="" coords="204,36,355,92"/>
+<area shape="rect" id="node4" href="$group__aie.html#ad81e555bfbe715680e781105e0fa33ac" title="Compute the horizontal coordinate of a tile from linear id." alt="" coords="204,134,355,190"/>
+<area shape="rect" id="node5" href="$group__aie.html#aebb7bb4dc97123423d1136d21530030e" title="Compute the vertical coordinate of a tile from a linear id." alt="" coords="418,78,569,134"/>
+<area shape="rect" id="node6" href="$group__aie.html#ac6549c82d94d110144e19f26698b5f56" title="Compute the linear id of a memory module attached to a tile." alt="" coords="403,208,584,264"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::tile::rx_dma" name="trisycl::vendor::xilinx::acap::aie::tile::rx_dma">
+<area shape="rect" id="node1" title="Get access on a receiver DMA." alt="" coords="5,13,164,54"/>
+<area shape="rect" id="node2" href="$group__aie.html#a3fb5948fdac103cc55ae25fc2dcd84c7" title="Get access to a receiver DMA." alt="" coords="212,5,403,61"/>
+</map>

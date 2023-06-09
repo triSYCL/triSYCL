@@ -1,5 +1,6 @@
 <map id="trisycl::detail::address_space_ptr&lt; T, AS &gt;" name="trisycl::detail::address_space_ptr&lt; T, AS &gt;">
-<area shape="rect" id="node2" href="$group__address__spaces.html#structtrisycl_1_1detail_1_1address__space__fundamental" title="Implementation of a fundamental type with an OpenCL address space. " alt="" coords="5,184,205,225"/>
-<area shape="rect" id="node3" href="$group__address__spaces.html#structtrisycl_1_1detail_1_1address__space__variable" title="Implementation of a variable with an OpenCL address space. " alt="" coords="18,95,193,136"/>
-<area shape="rect" id="node4" href="$group__address__spaces.html#structtrisycl_1_1detail_1_1address__space__base" title="Implementation of the base infrastructure to wrap something in an OpenCL address space. " alt="" coords="27,5,184,47"/>
+<area shape="rect" id="node1" title="Implementation for an OpenCL address space pointer." alt="" coords="29,273,179,315"/>
+<area shape="rect" id="node2" href="$group__address__spaces.html#structtrisycl_1_1detail_1_1address__space__fundamental" title="Implementation of a fundamental type with an OpenCL address space." alt="" coords="5,184,203,225"/>
+<area shape="rect" id="node3" href="$group__address__spaces.html#structtrisycl_1_1detail_1_1address__space__variable" title="Implementation of a variable with an OpenCL address space." alt="" coords="19,95,189,136"/>
+<area shape="rect" id="node4" href="$group__address__spaces.html#structtrisycl_1_1detail_1_1address__space__base" title="Implementation of the base infrastructure to wrap something in an OpenCL address space." alt="" coords="27,5,181,47"/>
 </map>

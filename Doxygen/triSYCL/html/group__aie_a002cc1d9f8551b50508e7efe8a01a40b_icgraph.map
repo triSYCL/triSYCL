@@ -1,0 +1,4 @@
+<map id="trisycl::vendor::xilinx::acap::aie::tile_infrastructure::tx_dma" name="trisycl::vendor::xilinx::acap::aie::tile_infrastructure::tx_dma">
+<area shape="rect" id="node1" title="Get access to a transmit DMA." alt="" coords="212,5,403,61"/>
+<area shape="rect" id="node2" href="$group__aie.html#a5801046dcb15ab448b447de27ebd21fc" title="Get access on a transmit DMA." alt="" coords="5,13,164,54"/>
+</map>
