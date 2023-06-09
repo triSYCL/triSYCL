@@ -78,7 +78,7 @@ update_doc Doxygen/triSYCL triSYCL-implementation-refman.pdf
 git add --update
 
 # Add the home page which comes from the $SRC_BRANCH branch
-git checkout $SRC_BRANCH -- doc/WWW/index.html
+git checkout origin/$SRC_BRANCH -- doc/WWW/index.html
 cp doc/WWW/index.html .
 git add index.html
 # Remove this file added by the check-out above from the files to be
@@ -101,13 +101,13 @@ tree_object=`git write-tree`
     # commit to be taken for publishing, so the following list all the
     # commits between $SRC_BRANCH and the previous $SRC_BRANCH used for the old
     # publication
-    git log gh-pages^2..$SRC_BRANCH
+    git log gh-pages^2..origin/$SRC_BRANCH
 ) > commit_list
 
 # Create a commit object that takes into account its natural history but
 # also the $SRC_BRANCH branch as an ancestor so we can figure out easily which
 # source of the WWW site is currently published
-commit_object=`git commit-tree -p HEAD -p $SRC_BRANCH \
+commit_object=`git commit-tree -p HEAD -p origin/$SRC_BRANCH \
   -F commit_list $tree_object`
 
 # Update the gh-pages branch to this commit object. By construction this
