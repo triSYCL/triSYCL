@@ -732,24 +732,22 @@ struct application {
       counters.resize(a.get_image_grid().nx,
                       std::vector<int>(a.get_image_grid().ny, 0));
       graphic_buffer.resize(a.get_image_grid().image_x *
-                            a.get_image_grid().image_y * sizeof(PixelTy));
+                            a.get_image_grid().image_y *
+                            sizeof(PixelTy));
     }
 
     struct data_type {
       /// A pointer to the new image data
-      aie::generic_ptr<void> data;
+      aie::generic_ptr<PixelTy> data;
 
       /// In min_value and max_value, uint64_t is just to have 8-byte of
       /// storage, the graphics system will bitcast min_value to the proper type
       /// before use.
 
       /// 8-byte storage for the minimun value of a pixel.
-      uint64_t min_value;
+      PixelTy min_value;
       /// 8-byte storage for The maximum value of a pixel.
-      uint64_t max_value;
-
-      /// Number of image updates that as been sent
-      uint32_t counter;
+      PixelTy max_value;
     };
     template <typename Parent> struct add_to_service_api {
       auto* tile() { return static_cast<Parent*>(this)->dt(); }
@@ -765,19 +763,23 @@ struct application {
                      data_type dev_data) {
       int& counter = counters[x][y];
 
-      assert(dev_data.counter == counter && "host received incoherent data");
+      // assert(dev_data.counter == counter && "host received incoherent data");
       assert(dev_data.data && "host received incoherent data");
       assert(dev_data.max_value != dev_data.min_value &&
              "host received incoherent data");
 
       h.memcpy_d2h(graphic_buffer.data(), dev_data.data, graphic_buffer.size());
 
+      // auto* ptr = reinterpret_cast<PixelTy*>(graphic_buffer.data());
+      // for (int i = 0; i < graphic_buffer.size() / sizeof(PixelTy); i++)
+      //   std::cout << " " << ptr[i];
+      // std::cout << std::endl;
+
       /// This call is not synchronized but this should only be executed while
       /// the main thread is waiting for the kernel to finish.
       app.update_tile_data_image(
           x, y, reinterpret_cast<PixelTy*>(graphic_buffer.data()),
-          aie::hw::bit_cast<PixelTy>(dev_data.min_value),
-          aie::hw::bit_cast<PixelTy>(dev_data.max_value));
+          dev_data.min_value, dev_data.max_value);
 
       if (x == 0 && y == 0) {
         auto current = std::chrono::system_clock::now();

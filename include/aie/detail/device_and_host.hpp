@@ -62,6 +62,8 @@ struct service_device_side {
   }
 };
 
+static_assert(sizeof(service_device_side) == hw::offset_table::get_service_record_size());
+
 struct host_tile_impl : host_tile_impl_fallback {
   void* mem_ptr = nullptr;
   std::size_t mem_size = 0;

@@ -85,35 +85,31 @@ struct device_tile_impl : device_tile_impl_fallback {
   }
 };
 
-/// This is used to provide access to the default services for __assert_fail and
-/// finish_kernel. Since the done_service and send_log_service are always added at the
-/// beginning in aie.hpp, their indexes are always 0 and 1 respectively.
-template<typename T>
-service_info<T>::ret_t basic_service(typename service_info<T>::data_t data, bool chained = false) {
-  using BasicService = service_list_info<done_service<device_mem_handle>, send_log_service<device_mem_handle>>;
-  return device_tile_impl::perform_service<T, BasicService>(data, chained);
-}
+/// a type with a similar API to the real device_tile.
+/// This type only needs to implement the API that is used by the basic
+/// services.
+struct fake_dt {
+  using BasicService = service_list_info<done_service<device_mem_handle>,
+                                         send_log_service<device_mem_handle>>;
+  template <typename T> auto perform_service(T data, bool chained = false) {
+    T local = data;
+    /// lookup what type of service sends this data;
+    using service_t = BasicService::template get_info_t<
+        BasicService::data_seq::template get_index<std::decay_t<T>>>::service_t;
+    /// Call on to the implementation to execute the service correct service
+    return device_tile_impl::perform_service<service_t, BasicService>(local,
+                                                                       chained);
+  }
+  int dyn_x() { return hw::get_tile_x_coordinate(); }
+  int dyn_y() { return hw::get_tile_y_coordinate(); }
+};
 
- __attribute__((noinline)) void log_internal(std::string_view sv, bool chained) {
-  send_log_service<device_mem_handle>::data_type data{hw::dev_ptr<const char>(sv.data()), sv.size()};
-  basic_service<send_log_service<device_mem_handle>>(data, chained);
-}
-
- __attribute__((noinline)) void log_internal(int i, bool chained) {
-  char arr[/*bits in base 2*/ 31 + /*sign*/ 1 + /*\0*/ 1];
-  char* ptr = arr;
-  write_number([&](char c) { *ptr++ = c; }, i);
-  *ptr = '\0';
-  log_internal(std::string_view(arr, ptr - arr), chained);
-}
-
-template<typename Type, typename ...Types>
-void debug_log(Type First, Types... Others) {
-  /// The first will have coordinates
-  log_internal(First, /*chained*/sizeof...(Types));
-  int count = sizeof...(Types) + 1;
-  /// The others, if any,  will not have coordinates
-  (log_internal(Others, /*chained all but last*/--count), ...);
+/// Function to obtain a mix-in of all basic service APIs
+detail::multi_service_accessor<fake_dt, done_service<device_mem_handle>,
+                               send_log_service<device_mem_handle>>
+basic_service() {
+  fake_dt dt;
+  return { &dt };
 }
 
 } // namespace aie::detail
@@ -121,10 +117,7 @@ void debug_log(Type First, Types... Others) {
 /// Notify the host that the kernel has finished.
 extern __attribute__((noreturn)) __attribute__((noinline)) void
 finish_kernel(int32_t exit_code) {
-  // aie::detail::debug_log("start finish\n");
-  aie::detail::basic_service<aie::detail::done_service<aie::detail::device_mem_handle>>(
-      aie::detail::done_service<aie::detail::device_mem_handle>::data_type {exit_code});
-  // aie::detail::debug_log("done\n");
+  aie::detail::basic_service().exit_kernel(exit_code);
   while (1)
     aie_intr::memory_fence();
 }
@@ -133,9 +126,10 @@ finish_kernel(int32_t exit_code) {
 extern __attribute__((noreturn)) __attribute__((noinline)) void
 __assert_fail(const char* expr, const char* file, unsigned int line,
               const char* func) {
-  aie::detail::debug_log("aie(", aie::hw::get_tile_x_coordinate(), ", ",
-                         aie::hw::get_tile_y_coordinate(), ") at ", file, ":",
-                         line, ": ", func, ": Assertion `", expr, "' failed\n\n");
+  aie::detail::basic_service().logln("aie(", aie::hw::get_tile_x_coordinate(),
+                                     ", ", aie::hw::get_tile_y_coordinate(),
+                                     ") at ", file, ":", line, ": ", func,
+                                     ": Assertion `", expr, "' failed\n\n");
   finish_kernel(aie::detail::ec_assert);
 }
 

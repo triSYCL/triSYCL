@@ -14,6 +14,40 @@ struct send_log_service {
   /// This is the data that will be transmitted to the host when the device
   /// is logging. This struct needs to have the same layout on the host and the
   /// device.
+  // struct str {
+  //   /// Pointer to the first character of a buffer to print
+  //   aie::generic_ptr<const char> data;
+  //   /// Number of characters to print
+  //   uint32_t size;
+  // };
+  // using data_type = std::variant<str, int64_t, double, float, const void*>;
+  // template <typename Parent> struct add_to_service_api {
+  //  private:
+  //   template <typename T>
+  //   __attribute__((noinline)) void log_internal(T str, bool chained)
+  //     requires(std::is_same_v<T, const char*> || std::is_same_v<T, char*>)
+  //   {
+  //     send_log_service::str data { hw::dev_ptr<const char>(str), strlen(str) };
+  //     tile().perform_service(data_type { data }, chained);
+  //   }
+  //   template <typename T>
+  //   __attribute__((noinline)) void log_internal(T data, bool chained)
+  //     requires(std::is_integral_v<T>)
+  //   {
+  //     tile().perform_service(data_type { (int64_t)data }, chained);
+  //   }
+  //   template <typename T>
+  //   __attribute__((noinline)) void log_internal(T data, bool chained)
+  //     requires(std::is_same_v<T, double> || std::is_same_v<T, float>)
+  //   {
+  //     tile().perform_service(data_type { data }, chained);
+  //   }
+  //   template <typename T>
+  //   __attribute__((noinline)) void log_internal(T data, bool chained)
+  //     requires(std::is_same_v<T, const void*> || std::is_same_v<T, void*>)
+  //   {
+  //     tile().perform_service(data_type { (const void*)data }, chained);
+  //   }
   struct data_type {
     /// Pointer to the first character of a buffer to print
     aie::generic_ptr<const char> data;
@@ -24,7 +58,7 @@ struct send_log_service {
    private:
     void log_internal(const char* str, bool chained) {
       send_log_service::data_type data { hw::dev_ptr<const char>(str),
-                                     strlen(str) };
+                                         strlen(str) };
       tile().perform_service(data, chained);
     }
     void log_internal(int i, bool chained) {
@@ -55,6 +89,19 @@ struct send_log_service {
     }
   };
   void act_on_data(int x, int y, dev_handle h, data_type dev_data) {
+    // std::visit(
+    //     [&](auto data) {
+    //       if constexpr (std::is_same_v<decltype(data), str>) {
+    //         std::string str;
+    //         str.resize(data.size);
+    //         /// Copy the indicated device data into a string.
+    //         h.memcpy_d2h(str.data(), data.data, str.size());
+    //         std::cout << str << std::flush;
+    //       } else {
+    //         std::cout << data << std::flush;
+    //       }
+    //     },
+    //     dev_data);
     std::string str;
     str.resize(dev_data.size);
     /// Copy the indicated device data into a string.
@@ -78,7 +125,7 @@ struct done_service {
   };
   template <typename Parent> struct add_to_service_api {
    private:
-    auto* tile() { return static_cast<Parent*>(this)->dt(); }
+    auto& tile() { return *static_cast<Parent*>(this)->dt(); }
 
    public:
     void abort() {

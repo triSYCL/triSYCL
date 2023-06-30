@@ -47,7 +47,7 @@ struct device_impl : device_impl_fallback {
                            aiev1::aie_tile_row_num);
     /// This declares \c aie_inst of type \c xaie::XAie_InstDeclare
     xaie::XAie_InstDeclare(aie_inst, &aie_config);
-    handle_impl(int x, int y) {
+    handle_impl() {
       TRISYCL_XAIE(xaie::XAie_CfgInitialize(&aie_inst, &aie_config));
     }
   };
@@ -67,14 +67,26 @@ struct device_impl : device_impl_fallback {
   }
 
   device_impl(int x, int y)
-      : impl(x, y) {
-    /// Cleanup device if the previous use was not cleanup
-    TRISYCL_XAIE(xaie::XAie_Finish(&impl.aie_inst));
+      : impl() {
+    int tries = 0;
+    /// Sometimes the program ends in some abnormal way. so the device handle is
+    /// not properly cleanup. Here we iterate opening and closing the device
+    /// handle until we can get access to the tiles we need to. I dont know why
+    /// it works but it does.
+    while (xaie::XAie_PmRequestTiles(&impl.aie_inst, nullptr, 0) !=
+           xaie::XAIE_OK) {
+      /// Cleanup device if the previous use was not cleanup
+      TRISYCL_XAIE(xaie::XAie_Finish(&impl.aie_inst));
 
-    /// Re-access the device after the cleanup.
-    impl = handle_impl(x, y);
-    /// Request access to all tiles.
-    TRISYCL_XAIE(xaie::XAie_PmRequestTiles(&impl.aie_inst, nullptr, 0));
+      if (tries == 30) {
+        TRISYCL_DUMP_ALWAYS("ran out of re-tries to open the device");
+        exit(-1);
+      }
+
+      /// Re-access the device after the cleanup.
+      impl = handle_impl();
+      tries++;
+    }
     // Initialize all the tiles with their network connections first
     memory.assign(x * y, nullptr);
     sizeX = x;

@@ -363,7 +363,7 @@ template <typename T> struct dev_ptr {
 
   /// Manipulating representation
   dir get_dir() { return get_ptr_direction(ptr); }
-  void set_offset(uint32_t offset) {
+   void set_offset(uint32_t offset) {
     assert((offset & ~offset_mask) == 0);
     set((get_int() & ~offset_mask) | offset);
   }
@@ -454,7 +454,7 @@ class offset_table {
   }
   static constexpr uint32_t __attribute__((const))
   get_service_record_size(hw::dir d = hw::dir::self) {
-    return 20;
+    return 24;
   }
   static constexpr uint32_t __attribute__((const))
   get_service_record_end_offset(hw::dir d = hw::dir::self) {

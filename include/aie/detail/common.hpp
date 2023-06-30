@@ -28,19 +28,23 @@ namespace aie {
 /// and for execution on hardware with a 32-bit hw::dev_ptr<T>
 template <typename T> struct generic_ptr {
   generic_ptr() = default;
-#if !defined(__AIE_FALLBACK__) && !defined(__AIE_EMULATION__)
+// #if !defined(__AIE_FALLBACK__) && !defined(__AIE_EMULATION__)
   hw::dev_ptr<T> ptr;
-  generic_ptr(T*) { TRISYCL_FALLBACK; }
+// #ifdef __SYCL_DEVICE_ONLY__
+  generic_ptr(T* p) : generic_ptr(hw::dev_ptr<T>(p)) { }
+// #else
+//   generic_ptr(T*) { TRISYCL_FALLBACK; }
+// #endif
   generic_ptr(hw::dev_ptr<T> p)
       : ptr(p) {}
   operator generic_ptr<void>() { return hw::dev_ptr<void> { ptr }; }
-#else
-  T* ptr = nullptr;
-  generic_ptr(T* p)
-      : ptr(p) {}
-  generic_ptr(hw::dev_ptr<T> p) { TRISYCL_FALLBACK; }
-  operator generic_ptr<void>() const { return { (void*)ptr }; }
-#endif
+  // #else
+  //   T* ptr = nullptr;
+  //   generic_ptr(T* p)
+  //       : ptr(p) {}
+  //   generic_ptr(hw::dev_ptr<T> p) { TRISYCL_FALLBACK; }
+  //   operator generic_ptr<void>() const { return { (void*)ptr }; }
+  // #endif
   operator bool() const { return (bool)ptr; }
 };
 
@@ -248,6 +252,19 @@ using accessor_common = host_accessor_impl;
 /// Validate that accessors have the same layout on host and
 static assert_equal<sizeof(accessor_common), 8> check_sizeof_accessor_common;
 static assert_equal<alignof(accessor_common), 8> check_alignof_accessor_common;
+
+/// Mix-in to provide the APIs of all services easily to the user
+template <typename DT, typename... Ts>
+struct multi_service_accessor
+    : Ts::template add_to_service_api<multi_service_accessor<DT, Ts...>>... {
+ private:
+  DT* device_tile;
+
+ public:
+  multi_service_accessor(DT* d)
+      : device_tile(d) {}
+  DT* dt() { return device_tile; }
+};
 
 } // namespace aie::detail
 
