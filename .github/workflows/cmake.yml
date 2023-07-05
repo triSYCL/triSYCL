@@ -51,7 +51,8 @@ jobs:
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
         run:
           # Create the build directory in ${{github.workspace}}/build
-          cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+          # and inject ccache in the build system
+          cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
       # Skip the build and test on default GitHub Action with 1 core
       # since the compilation takes too much time and is stopped:
@@ -59,9 +60,9 @@ jobs:
       # compilation terminated.
       # make[2]: *** [tests/vector/CMakeFiles/vector_cl_types.dir/build.make:76: tests/vector/CMakeFiles/vector_cl_types.dir/cl_types.cpp.o] Error 1
       # make[1]: *** [CMakeFiles/Makefile2:4575: tests/vector/CMakeFiles/vector_cl_types.dir/all] Error 2
-      #- name: Build
+      - name: Build
         # Build your program with the given configuration
-      #  run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
       #- name: Test
       #  working-directory: ${{github.workspace}}/build
