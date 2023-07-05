@@ -15,6 +15,7 @@ env:
   BUILD_TYPE: Release
 
 jobs:
+
   build:
     name: CMake with default option on the default GitHub Ubuntu
     # The CMake configure and build commands are platform agnostic and should work equally
@@ -38,6 +39,10 @@ jobs:
         run: |
           sudo apt update
           sudo apt install libboost-all-dev librange-v3-dev
+
+      # See https://github.com/hendrikmuhs/ccache-action
+      - name: install-ccache
+        uses: hendrikmuhs/ccache-action@v1.2
 
       - name: Configure CMake
         # Configure CMake in a 'build'
