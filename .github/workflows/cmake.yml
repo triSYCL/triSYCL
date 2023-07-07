@@ -30,6 +30,8 @@ jobs:
     # runner to pick up this job... " for a non existing runner to
     # come.
     runs-on: ubuntu-22.04
+    container:
+      image: docker://ubuntu:lunar
 
     steps:
       - name: Check out repository code
@@ -37,8 +39,8 @@ jobs:
 
       - name: Install required packages
         run: |
-          sudo apt update
-          sudo apt install libboost-all-dev librange-v3-dev
+          apt-get update
+          apt-get install -y build-essential cmake g++ git libboost-all-dev librange-v3-dev
 
       # See https://github.com/hendrikmuhs/ccache-action
       - name: install-ccache
@@ -70,10 +72,17 @@ jobs:
         # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       #  run: ctest --build-config ${{env.BUILD_TYPE}}
 
-  docker:
+  build-and-test:
+
     name: Run the validation inside Docker with specific OS and options
 
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
+
+    # Run into a recent Ubuntu to have recent compilers and C++
+    # standard library
+    container:
+      # Ubuntu 23.04
+      image: docker://ubuntu:lunar
 
     strategy:
       # Run all the test even if there are some which fail
@@ -105,15 +114,57 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v3
 
-      - name: ${{ matrix.c_compiler }}, ${{ matrix.cxx_compiler }},
-          OpenMP=${{ matrix.OpenMP }}, OpenCL=${{ matrix.OpenCL }}
-          in Docker Ubuntu 23.04
-        uses: docker://ubuntu:lunar
-        env:
-          C_COMPILER: ${{ matrix.c_compiler }}
-          CXX_COMPILER: ${{ matrix.cxx_compiler }}
-          OPENMP: ${{ matrix.OpenMP }}
-          OPENCL: ${{ matrix.OpenCL }}
+      - name: Install required packages
+        run: |
+          apt-get update
+          apt-get install -y build-essential cmake g++ git libboost-all-dev librange-v3-dev
+
+      - name: Install the C compiler
+        run: apt-get install -y ${{matrix.c_compiler}}
+
+      - name: Install the C++ compiler
+        run: |
+          if [[ ${{matrix.cxx_compiler}} =~ ^clang++ ]]; then
+            if [[ ${{matrix.OpenMP}} == ON ]]; then
+              # Clang requires a specific OpenMP library to run.
+              # The version is what is left when we remove "clang++-"
+              CXX_COMPILER=${{matrix.cxx_compiler}}
+              cxx_compiler_version=${CXX_COMPILER#clang++-}
+              apt-get install -y libomp-${cxx_compiler_version}-dev
+            fi
+          else
+            # Do not install the C++ compiler if it is clang++ since it comes
+            # along the Clang C compiler
+            apt-get install -y ${{matrix.cxx_compiler}}
+          fi
+
+      - name: Install OpenCL with POCL
+        if: ${{ matrix.OpenCL == 'ON' }}
+        run: apt-get install -y  opencl-headers ocl-icd-opencl-dev libpocl-dev
+
+      # Use ccache to speed-up compilation to also fit into GitHub
+      # resource limitations https://github.com/hendrikmuhs/ccache-action
+      - name: install-ccache
+        uses: hendrikmuhs/ccache-action@v1.2
         with:
-          # The workspace is mounted at a different location inside Docker
-          entrypoint: /github/workspace/.github/workflows/run_ci_in_docker.bash
+          max-size: "1G"
+
+      - name: Configure CMake for ${{matrix.c_compiler}}, ${{matrix.cxx_compiler}},
+          OpenMP=${{matrix.OpenMP}}, OpenCL=${{matrix.OpenCL}}
+        # Create the build directory in ${{github.workspace}}/build
+        # and inject ccache in the build system
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+          -DTRISYCL_OPENCL=${{matrix.OpenCL}} -DTRISYCL_OPENMP=${{matrix.OpenMP}}
+          -DCMAKE_C_COMPILER=${{matrix.c_compiler}} -DCMAKE_CXX_COMPILER=${{matrix.cxx_compiler}}
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+      - name: Build for ${{matrix.c_compiler}}, ${{matrix.cxx_compiler}},
+          OpenMP=${{matrix.OpenMP}}, OpenCL=${{matrix.OpenCL}}
+        # Compile all the tests using all the available cores
+        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+          --verbose --parallel `nproc`
+
+      - name: Test for ${{matrix.c_compiler}}, ${{matrix.cxx_compiler}},
+          OpenMP=${{matrix.OpenMP}}, OpenCL=${{matrix.OpenCL}}
+        working-directory: ${{github.workspace}}/build
+        run: ctest --build-config ${{env.BUILD_TYPE}}
