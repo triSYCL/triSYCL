@@ -16,70 +16,15 @@ env:
 
 jobs:
 
-  build:
-    name: CMake with default option on the default GitHub Ubuntu
-    # The CMake configure and build commands are platform agnostic and should work equally
-    # well on Windows or Mac.  You can convert this to a matrix build if you need
-    # cross-platform coverage.
-    # See:
-    # https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-
-    # Be sure to pick an OS from
-    # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
-    # otherwise the job will be stuck for ever in "Waiting for a
-    # runner to pick up this job... " for a non existing runner to
-    # come.
-    runs-on: ubuntu-22.04
-    container:
-      image: docker://ubuntu:lunar
-
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-
-      - name: Install required packages
-        run: |
-          apt-get update
-          apt-get install -y build-essential cmake g++ git libboost-all-dev librange-v3-dev
-
-      # See https://github.com/hendrikmuhs/ccache-action
-      - name: install-ccache
-        uses: hendrikmuhs/ccache-action@v1.2
-
-      - name: Configure CMake
-        # Configure CMake in a 'build'
-        # subdirectory. `CMAKE_BUILD_TYPE` is only required if you are
-        # using a single-configuration generator such as make.
-        # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-        run:
-          # Create the build directory in ${{github.workspace}}/build
-          # and inject ccache in the build system
-          cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
-
-      # Skip the build and test on default GitHub Action with 1 core
-      # since the compilation takes too much time and is stopped:
-      # c++: fatal error: Killed signal terminated program cc1plus
-      # compilation terminated.
-      # make[2]: *** [tests/vector/CMakeFiles/vector_cl_types.dir/build.make:76: tests/vector/CMakeFiles/vector_cl_types.dir/cl_types.cpp.o] Error 1
-      # make[1]: *** [CMakeFiles/Makefile2:4575: tests/vector/CMakeFiles/vector_cl_types.dir/all] Error 2
-      - name: Build
-        # Build your program with the given configuration
-        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
-
-      #- name: Test
-      #  working-directory: ${{github.workspace}}/build
-        # Execute tests defined by the CMake configuration.
-        # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      #  run: ctest --build-config ${{env.BUILD_TYPE}}
-
   build-and-test:
 
     name: Run the validation inside Docker with specific OS and options
 
+    # By latest GitHub means actually latest LTS only
     runs-on: ubuntu-latest
 
-    # Run into a recent Ubuntu to have recent compilers and C++
-    # standard library
+    # Run into an even more recent Ubuntu inside Docker to have recent
+    # compilers and C++ standard library
     container:
       # Ubuntu 23.04
       image: docker://ubuntu:lunar
@@ -156,7 +101,7 @@ jobs:
         if: ${{ matrix.OpenCL == 'ON' }}
         run: apt-get install -y opencl-headers ocl-icd-opencl-dev libpocl-dev
 
-      # Use ccache to speed-up compilation to also fit into GitHub
+      # Use ccache to speed-up compilation to also fit into GitHub Actions
       # resource limitations https://github.com/hendrikmuhs/ccache-action
       - name: install-ccache
         uses: hendrikmuhs/ccache-action@v1.2
