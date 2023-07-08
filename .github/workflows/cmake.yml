@@ -119,28 +119,42 @@ jobs:
           apt-get update
           apt-get install -y build-essential cmake g++ git libboost-all-dev librange-v3-dev
 
+      - name: Declare LLVM package repository if needed
+        if: ${{ startsWith(matrix.c_compiler, 'clang') || startsWith(matrix.cxx_compiler, 'clang') }}
+        shell: bash
+        run: |
+          apt-get install -y wget
+          wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
+          # "Parse" the Linux distribution parameters
+          source /etc/os-release
+          echo "deb http://apt.llvm.org/$VERSION_CODENAME llvm-toolchain-$VERSION_CODENAME main" \
+            > /etc/apt/sources.list.d/llvm.list
+          echo "deb-src http://apt.llvm.org/$VERSION_CODENAME llvm-toolchain-$VERSION_CODENAME main" \
+            >> /etc/apt/sources.list.d/llvm.list
+          apt-get update
+
       - name: Install the C compiler
         run: apt-get install -y ${{matrix.c_compiler}}
 
       - name: Install the C++ compiler
-        run: |
-          if [[ ${{matrix.cxx_compiler}} =~ ^clang++ ]]; then
-            if [[ ${{matrix.OpenMP}} == ON ]]; then
-              # Clang requires a specific OpenMP library to run.
-              # The version is what is left when we remove "clang++-"
-              CXX_COMPILER=${{matrix.cxx_compiler}}
-              cxx_compiler_version=${CXX_COMPILER#clang++-}
-              apt-get install -y libomp-${cxx_compiler_version}-dev
-            fi
-          else
-            # Do not install the C++ compiler if it is clang++ since it comes
-            # along the Clang C compiler
-            apt-get install -y ${{matrix.cxx_compiler}}
-          fi
+        # Do not install the C++ compiler if it is clang++ since it comes
+        # along the Clang C compiler
+        if: ${{ !startsWith(matrix.cxx_compiler, 'clang') }}
+        run: apt-get install -y ${{matrix.cxx_compiler}}
 
-      - name: Install OpenCL with POCL
+      - name: Install OpenMP support if needed
+        # Clang requires a specific OpenMP library to run
+        if: ${{ matrix.OpenMP == 'ON' && startsWith(matrix.cxx_compiler, 'clang') }}
+        shell: bash
+        run: |
+          # Get the clang++ version, which is what is left when we remove "clang++-"
+          CXX_COMPILER=${{matrix.cxx_compiler}}
+          cxx_compiler_version=${CXX_COMPILER#clang++-}
+          apt-get install -y libomp-${cxx_compiler_version}-dev
+
+      - name: Install OpenCL with POCL if needed
         if: ${{ matrix.OpenCL == 'ON' }}
-        run: apt-get install -y  opencl-headers ocl-icd-opencl-dev libpocl-dev
+        run: apt-get install -y opencl-headers ocl-icd-opencl-dev libpocl-dev
 
       # Use ccache to speed-up compilation to also fit into GitHub
       # resource limitations https://github.com/hendrikmuhs/ccache-action
@@ -166,5 +180,4 @@ jobs:
 
       - name: Test for ${{matrix.c_compiler}}, ${{matrix.cxx_compiler}},
           OpenMP=${{matrix.OpenMP}}, OpenCL=${{matrix.OpenCL}}
-        working-directory: ${{github.workspace}}/build
-        run: ctest --build-config ${{env.BUILD_TYPE}}
+        run: ctest --test-dir ${{github.workspace}}/build --build-config ${{env.BUILD_TYPE}}
