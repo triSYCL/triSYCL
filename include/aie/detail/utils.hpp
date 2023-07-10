@@ -135,14 +135,14 @@ void maybe_volatile_memcpy(DestT* dst, SrcT* src, std::size_t size) {
 }
 
 template <typename T>
-__attribute__((noinline)) T volatile_load(volatile T* ptr) {
+T volatile_load(volatile T* ptr) {
   T ret;
   maybe_volatile_memcpy((char*)&ret, (volatile char*)ptr, sizeof(T));
   return ret;
 }
 
 template <typename T>
-__attribute__((noinline)) void volatile_store(volatile T* ptr, T t) {
+void volatile_store(volatile T* ptr, T t) {
   maybe_volatile_memcpy((volatile char*)ptr, (char*)&t, sizeof(T));
 }
 

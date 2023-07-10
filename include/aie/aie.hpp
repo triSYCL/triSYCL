@@ -201,6 +201,22 @@ struct get_inner<OuterT<InnerT>> {
   using type = InnerT;
 };
 
+template <typename TypeInfoTy, int X, int Y> struct tile_base {
+  static constexpr int x() { return X; }
+  static constexpr int y() { return Y; }
+  static constexpr hw::position pos() { return { X, Y }; }
+
+  static constexpr int size_x() { return TypeInfoTy::sizeX; }
+  static constexpr int size_y() { return TypeInfoTy::sizeY; }
+  /// Check id the neighbor is direction d is valid to access
+  static constexpr bool has_mem(hw::dir d) {
+    return pos().on(d).is_valid(size_x(), size_y());
+  }
+  static constexpr bool has_neighbor(hw::dir d) {
+    return (pos() + hw::get_simple_offset(d)).is_valid(size_x(), size_y());
+  }
+};
+
 } // namespace detail
 
 template <typename T> struct add_to_api_base {
@@ -223,9 +239,12 @@ enum stream_operation {
 /// TypeInfoTy contains all type and constexpr information used by the
 /// device_tile.
 template <typename TypeInfoTy, int X, int Y>
-struct device_tile : private detail::device_tile_impl {
+struct device_tile
+    : private detail::device_tile_impl
+    , public detail::tile_base<TypeInfoTy, X, Y> {
  private:
   using impl = detail::device_tile_impl;
+  using base = detail::tile_base<TypeInfoTy, X, Y>;
 
   /// Write or Read data of any size using fixed-size stream operations
   template <unsigned FixedSize, detail::stream_operation op_kind,
@@ -297,9 +316,9 @@ struct device_tile : private detail::device_tile_impl {
   using impl::init;
   using self_memory_tile = typename TypeInfoTy::template tile_data<X, Y>;
 
-  static constexpr int x() { return X; }
-  static constexpr int y() { return Y; }
-  static constexpr hw::position pos() { return { X, Y }; }
+  using base::x;
+  using base::y;
+  using base::pos;
 
   /// Using the constexpr API will prevent kernel merging in many cases,
   /// So we also provide a non-constexpr way to get the x and y
@@ -307,16 +326,10 @@ struct device_tile : private detail::device_tile_impl {
   int dyn_y() { return impl::y_coord(); }
   hw::position dyn_pos() { return { dyn_x(), dyn_y() }; }
 
-  /// layout of the aie's in use
-  static constexpr int size_x() { return TypeInfoTy::sizeX; }
-  static constexpr int size_y() { return TypeInfoTy::sizeY; }
-  /// Check id the neighbor is direction d is valid to access
-  static constexpr bool has_mem(hw::dir d) {
-    return pos().on(d).is_valid(size_x(), size_y());
-  }
-  static constexpr bool has_neighbor(hw::dir d) {
-    return (pos() + hw::get_simple_offset(d)).is_valid(size_x(), size_y());
-  }
+  using base::size_x;
+  using base::size_y;
+  using base::has_mem;
+  using base::has_neighbor;
 
   /// access the neighbor's memory tile
   template <typename hw::dir d> auto& get_mem() {
@@ -383,6 +396,9 @@ struct device_tile : private detail::device_tile_impl {
         [this](char* ptr) { impl::cascade_read48(ptr); });
     return value;
   }
+  template <typename ElemTy> ElemTy cascade_read_into(ElemTy& out) {
+    out = cascade_read<ElemTy>();
+  }
 
   detail::device_lock_impl lock(int i) { return lock(hw::dir::self, i); }
   detail::device_lock_impl lock(hw::dir d, int i) {
@@ -430,7 +446,8 @@ struct device_tile : private detail::device_tile_impl {
 /// Type used to manipulate a tile on the device from the host
 /// TypeInfoTy contains all type and constexpr information used by the
 /// host_tile.
-template <typename TypeInfoTy, int X, int Y> struct host_tile {
+template <typename TypeInfoTy, int X, int Y>
+struct host_tile : public detail::tile_base<TypeInfoTy, X, Y> {
  private:
   device_tile<TypeInfoTy, X, Y> dt;
   detail::host_tile_impl impl;

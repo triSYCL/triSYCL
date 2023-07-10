@@ -59,7 +59,7 @@ struct device_tile_impl : device_tile_impl_fallback {
     return device_lock_impl(hw::resolved_dir(pos, d), i);
   }
   template <typename T, typename ServiceTy>
-  __attribute__((noinline)) static service_info<T>::ret_t
+  static service_info<T>::ret_t
   perform_service(service_info<T>::data_t d, bool chained = false) {
     volatile service_device_side* obj = service_device_side::get();
     typename service_info<T>::non_void_ret_t ret;
