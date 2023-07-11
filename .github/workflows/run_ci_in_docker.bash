@@ -1,5 +1,62 @@
 #! /bin/bash
 
+# This is no longer used as it has been retrofitted into the official GitHub action way
+# It used to be with:
+
+# jobs:
+
+#   docker:
+
+#     name: Run the validation inside Docker with specific OS and options
+
+#     runs-on: ubuntu-22.04
+
+#     strategy:
+#       # Run all the test even if there are some which fail
+#       fail-fast: false
+
+#       matrix:
+#        include:
+#          - c_compiler: gcc-12
+#            cxx_compiler: g++-12
+#            OpenMP: ON
+#            OpenCL: OFF
+
+#          - c_compiler: gcc-12
+#            cxx_compiler: g++-12
+#            OpenMP: ON
+#            OpenCL: ON
+
+#          - c_compiler: clang-17
+#            cxx_compiler: clang++-17
+#            OpenMP: ON
+#            OpenCL: OFF
+
+#          - c_compiler: clang-17
+#            cxx_compiler: clang++-17
+#            OpenMP: ON
+#            OpenCL: ON
+
+#     steps:
+#       - name: Check out repository code
+#         uses: actions/checkout@v3
+
+#       - name: ${{ matrix.c_compiler }}, ${{ matrix.cxx_compiler }},
+#           OpenMP=${{ matrix.OpenMP }}, OpenCL=${{ matrix.OpenCL }}
+#           in Docker Ubuntu 23.04
+#         uses: docker://ubuntu:lunar
+#         env:
+#           C_COMPILER: ${{ matrix.c_compiler }}
+#           CXX_COMPILER: ${{ matrix.cxx_compiler }}
+#           OPENMP: ${{ matrix.OpenMP }}
+#           OPENCL: ${{ matrix.OpenCL }}
+#         with:
+#           # The workspace is mounted at a different location inside Docker
+#           entrypoint: /github/workspace/.github/workflows/run_ci_in_docker.bash
+
+
+
+
 # Run the shell in verbose mode, show what is executed
 # and exit on the first error:
 set -vxe
@@ -98,7 +155,8 @@ echo
 # Configure triSYCL while creating the build directory
 cmake -B $GITHUB_WORKSPACE/build -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
   -DTRISYCL_OPENCL=$OPENCL -DTRISYCL_OPENMP=$OPENMP \
-  -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER
+  -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER \
+  -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
 # Compile all the tests using all the available cores
 cmake --build $GITHUB_WORKSPACE/build --config $BUILD_TYPE \

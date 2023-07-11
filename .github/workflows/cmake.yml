@@ -15,59 +15,19 @@ env:
   BUILD_TYPE: Release
 
 jobs:
-  build:
-    name: CMake with default option on the default GitHub Ubuntu
-    # The CMake configure and build commands are platform agnostic and should work equally
-    # well on Windows or Mac.  You can convert this to a matrix build if you need
-    # cross-platform coverage.
-    # See:
-    # https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
 
-    # Be sure to pick an OS from
-    # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
-    # otherwise the job will be stuck for ever in "Waiting for a
-    # runner to pick up this job... " for a non existing runner to
-    # come.
-    runs-on: ubuntu-22.04
+  build-and-test:
 
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v2
-
-      - name: Install required packages
-        run: |
-          sudo apt update
-          sudo apt install libboost-all-dev librange-v3-dev
-
-      - name: Configure CMake
-        # Configure CMake in a 'build'
-        # subdirectory. `CMAKE_BUILD_TYPE` is only required if you are
-        # using a single-configuration generator such as make.
-        # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-        run:
-          # Create the build directory in ${{github.workspace}}/build
-          cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
-
-      # Skip the build and test on default GitHub Action with 1 core
-      # since the compilation takes too much time and is stopped:
-      # c++: fatal error: Killed signal terminated program cc1plus
-      # compilation terminated.
-      # make[2]: *** [tests/vector/CMakeFiles/vector_cl_types.dir/build.make:76: tests/vector/CMakeFiles/vector_cl_types.dir/cl_types.cpp.o] Error 1
-      # make[1]: *** [CMakeFiles/Makefile2:4575: tests/vector/CMakeFiles/vector_cl_types.dir/all] Error 2
-      #- name: Build
-        # Build your program with the given configuration
-      #  run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
-
-      #- name: Test
-      #  working-directory: ${{github.workspace}}/build
-        # Execute tests defined by the CMake configuration.
-        # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      #  run: ctest --build-config ${{env.BUILD_TYPE}}
-
-  docker:
     name: Run the validation inside Docker with specific OS and options
 
-    runs-on: ubuntu-22.04
+    # By latest GitHub means actually latest LTS only
+    runs-on: ubuntu-latest
+
+    # Run into an even more recent Ubuntu inside Docker to have recent
+    # compilers and C++ standard library
+    container:
+      # Ubuntu 23.04
+      image: docker://ubuntu:lunar
 
     strategy:
       # Run all the test even if there are some which fail
@@ -97,17 +57,72 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: ${{ matrix.c_compiler }}, ${{ matrix.cxx_compiler }},
-          OpenMP=${{ matrix.OpenMP }}, OpenCL=${{ matrix.OpenCL }}
-          in Docker Ubuntu 23.04
-        uses: docker://ubuntu:lunar
-        env:
-          C_COMPILER: ${{ matrix.c_compiler }}
-          CXX_COMPILER: ${{ matrix.cxx_compiler }}
-          OPENMP: ${{ matrix.OpenMP }}
-          OPENCL: ${{ matrix.OpenCL }}
+      - name: Install required packages
+        run: |
+          apt-get update
+          apt-get install -y build-essential cmake g++ git libboost-all-dev librange-v3-dev
+
+      - name: Declare LLVM package repository if needed
+        if: ${{ startsWith(matrix.c_compiler, 'clang') || startsWith(matrix.cxx_compiler, 'clang') }}
+        shell: bash
+        run: |
+          apt-get install -y wget
+          wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
+          # "Parse" the Linux distribution parameters
+          source /etc/os-release
+          echo "deb http://apt.llvm.org/$VERSION_CODENAME llvm-toolchain-$VERSION_CODENAME main" \
+            > /etc/apt/sources.list.d/llvm.list
+          echo "deb-src http://apt.llvm.org/$VERSION_CODENAME llvm-toolchain-$VERSION_CODENAME main" \
+            >> /etc/apt/sources.list.d/llvm.list
+          apt-get update
+
+      - name: Install the C compiler
+        run: apt-get install -y ${{matrix.c_compiler}}
+
+      - name: Install the C++ compiler
+        # Do not install the C++ compiler if it is clang++ since it comes
+        # along the Clang C compiler
+        if: ${{ !startsWith(matrix.cxx_compiler, 'clang') }}
+        run: apt-get install -y ${{matrix.cxx_compiler}}
+
+      - name: Install OpenMP support if needed
+        # Clang requires a specific OpenMP library to run
+        if: ${{ matrix.OpenMP == 'ON' && startsWith(matrix.cxx_compiler, 'clang') }}
+        shell: bash
+        run: |
+          # Get the clang++ version, which is what is left when we remove "clang++-"
+          CXX_COMPILER=${{matrix.cxx_compiler}}
+          cxx_compiler_version=${CXX_COMPILER#clang++-}
+          apt-get install -y libomp-${cxx_compiler_version}-dev
+
+      - name: Install OpenCL with POCL if needed
+        if: ${{ matrix.OpenCL == 'ON' }}
+        run: apt-get install -y opencl-headers ocl-icd-opencl-dev libpocl-dev
+
+      # Use ccache to speed-up compilation to also fit into GitHub Actions
+      # resource limitations https://github.com/hendrikmuhs/ccache-action
+      - name: install-ccache
+        uses: hendrikmuhs/ccache-action@v1.2
         with:
-          # The workspace is mounted at a different location inside Docker
-          entrypoint: /github/workspace/.github/workflows/run_ci_in_docker.bash
+          max-size: "1G"
+
+      - name: Configure CMake for ${{matrix.c_compiler}}, ${{matrix.cxx_compiler}},
+          OpenMP=${{matrix.OpenMP}}, OpenCL=${{matrix.OpenCL}}
+        # Create the build directory in ${{github.workspace}}/build
+        # and inject ccache in the build system
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+          -DTRISYCL_OPENCL=${{matrix.OpenCL}} -DTRISYCL_OPENMP=${{matrix.OpenMP}}
+          -DCMAKE_C_COMPILER=${{matrix.c_compiler}} -DCMAKE_CXX_COMPILER=${{matrix.cxx_compiler}}
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+      - name: Build for ${{matrix.c_compiler}}, ${{matrix.cxx_compiler}},
+          OpenMP=${{matrix.OpenMP}}, OpenCL=${{matrix.OpenCL}}
+        # Compile all the tests using all the available cores
+        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+          --verbose --parallel `nproc`
+
+      - name: Test for ${{matrix.c_compiler}}, ${{matrix.cxx_compiler}},
+          OpenMP=${{matrix.OpenMP}}, OpenCL=${{matrix.OpenCL}}
+        run: ctest --test-dir ${{github.workspace}}/build --build-config ${{env.BUILD_TYPE}}

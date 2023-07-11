@@ -557,6 +557,9 @@ public:
   TRISYCL_DEFINE_VEC_TYPE(float, float)
   TRISYCL_DEFINE_VEC_TYPE(double, double)
 
+#undef TRISYCL_DEFINE_VEC_TYPE
+#undef TRISYCL_DEFINE_VEC_TYPE_SIZE
+
 /// @} End the vector Doxygen group
 
 }
