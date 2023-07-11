@@ -5,8 +5,8 @@ function(declare_trisycl_test)
   # Declare possible option keywords (not taking any argument).
   # Not clear whether the following options are actually used except
   # CATCH2_WITH_MAIN which asks Catch2 to provide the main()
-  set(options CATCH2_WITH_MAIN USES_OPENCL FORCE_SYNCHRONOUS_EXEC
-    XILINX_SPECIFIC)
+  set(options CATCH2_WITH_MAIN FORCE_SYNCHRONOUS_EXEC GUI
+      USES_OPENCL XILINX_SPECIFIC)
   # Declare keywords taking 1 argument
   set(oneValueArgs TARGET TEST_REGEX)
   # Declare keywords taking 1 or more arguments
@@ -86,6 +86,12 @@ function(declare_trisycl_test)
     set_tests_properties(${TEST_NAME}
       PROPERTIES PASS_REGULAR_EXPRESSION ${declare_trisycl_test_TEST_REGEX})
   endif(DEFINED declare_trisycl_test_TEST_REGEX)
+
+  # If the GUI keyword is used, passed it to ctest so we can enable or
+  # skip tests using the graphical user interface or not
+  if(declare_trisycl_test_GUI)
+    set_tests_properties(${TEST_NAME} PROPERTIES LABELS GUI)
+  endif(declare_trisycl_test_GUI)
 
 endfunction(declare_trisycl_test)
 
