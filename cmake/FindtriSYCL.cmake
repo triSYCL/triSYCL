@@ -11,8 +11,8 @@
 #
 # Tools for finding and building with triSYCL.
 
-# Require CMake version 3.16 or higher
-cmake_minimum_required (VERSION 3.16)
+# Require CMake version 3.20 or higher
+cmake_minimum_required (VERSION 3.20)
 
 # The name of the project (forward declare language)
 project(triSYCL CXX)
@@ -24,7 +24,7 @@ project(triSYCL CXX)
 #  Sets the specified target to support the required C++ standard level.
 #
 #  targetName : Name of the target to be set.
-#  cxxStdYear : The year of the required C++ standard (e.g.: 17)
+#  cxxStdYear : The year of the required C++ standard (e.g.: 23)
 #
 function(set_target_cxx_std targetName cxxStdYear)
   if(cxx_std_${cxxStdYear} IN_LIST CMAKE_CXX_COMPILE_FEATURES)
@@ -68,7 +68,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
   else()
     message(STATUS "host compiler - gcc ${CMAKE_CXX_COMPILER_VERSION}")
 
-    set_target_cxx_std(_trisycl_cxxfeatures 17)
+    set_target_cxx_std(_trisycl_cxxfeatures 23)
     target_compile_options(_trisycl_cxxfeatures
       INTERFACE
         # Turn on all warnings:
@@ -95,7 +95,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   else()
     message(STATUS "host compiler - clang ${CMAKE_CXX_COMPILER_VERSION}")
 
-    set_target_cxx_std(_trisycl_cxxfeatures 17)
+    set_target_cxx_std(_trisycl_cxxfeatures 23)
     target_compile_options(_trisycl_cxxfeatures
       INTERFACE
         # Turn on all warnings
@@ -127,7 +127,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
   # Change to /std:c++latest once Boost::funtional is fixed
   # (1.63.0 with toolset v141 not working)
-  set_target_cxx_std(_trisycl_cxxfeatures 17)
+  set_target_cxx_std(_trisycl_cxxfeatures 23)
   # Replace default Warning Level 3 with 4 (/Wall is pretty-much useless on MSVC
   # system headers are plagued with warnings)
   string(REGEX REPLACE "/W[0-9]" "/W4" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
@@ -191,9 +191,7 @@ set(CL_SYCL_LANGUAGE_VERSION 121 CACHE STRING VERSION
   "Host language version to be used by triSYCL (default is: 121)")
 set(TRISYCL_CL_LANGUAGE_VERSION 121 CACHE STRING VERSION
   "Device language version to be used by triSYCL (default is: 121)")
-
-# There is some C++20 code
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CXX_STANDARD_REQUIRED ON)
 
 if(NOT TRISYCL_INCLUDE_DIR)
@@ -322,9 +320,6 @@ function(add_sycl_to_target targetName)
     $<$<BOOL:${TRISYCL_OPENCL}>:${OpenCL_INCLUDE_DIRS}>
     $<$<BOOL:${TRISYCL_OPENCL}>:${BOOST_COMPUTE_INCPATH}>
     ${GTKMM_INCLUDE_DIRS}
-    # Hard-code a missing path for GTK in CMake from Ubuntu 21.10
-    # Waiting for https://gitlab.kitware.com/cmake/cmake/-/issues/21627 to land
-    /usr/lib/x86_64-linux-gnu/atkmm-1.6/include
 )
 
   # Link dependencies

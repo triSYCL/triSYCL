@@ -10,6 +10,7 @@
 */
 
 #include <cstddef>
+#include <type_traits>
 
 #include "triSYCL/access.hpp"
 #include "triSYCL/accessor/detail/local_accessor.hpp"
@@ -45,20 +46,16 @@ class handler;
 
     \todo Implement it for images according so section 3.3.4.5
 */
-template <typename DataType,
-          int Dimensions,
-          access::mode AccessMode,
+template <typename DataType, int Dimensions,
+          access::mode AccessMode =
+              (std::is_const_v<DataType> ? access::mode::read
+                                         : access::mode::read_write),
           access::target Target = access::target::global_buffer>
-class accessor :
-    public detail::shared_ptr_implementation<accessor<DataType,
-                                                      Dimensions,
-                                                      AccessMode,
-                                                      Target>,
-                                             detail::accessor<DataType,
-                                                              Dimensions,
-                                                              AccessMode,
-                                                              Target>>,
-    public detail::container_element_aspect<DataType> {
+class accessor
+    : public detail::shared_ptr_implementation<
+          accessor<DataType, Dimensions, AccessMode, Target>,
+          detail::accessor<DataType, Dimensions, AccessMode, Target>>
+    , public detail::container_element_aspect<DataType> {
 
  public:
 
@@ -79,6 +76,11 @@ class accessor :
   friend implementation_t;
 
  public:
+  /// Introspect the \c access_mode
+  auto static constexpr access_mode() { return AccessMode; }
+
+  /// Introspect the \c target
+  auto static constexpr target() { return Target; }
 
   // Make the implementation member directly accessible in this class
   using implementation_t::implementation;
@@ -225,34 +227,28 @@ class accessor :
     return implementation->get_size();
   }
 
-
-  /** Use the accessor with integers à la [][][]
-
-      \return decltype(auto) to return either a reference to the final
-      element when the indexing has been fully resolved or a proxy
-      object to handle the remaining []
-  */
-  decltype(auto) operator[](std::size_t index) {
-     return (*implementation)[index];
-  }
-
-
-  /** Use the accessor with integers à la [][][]
+  /** Use the accessor with integers à la [i1][i2][i3] or C++23 [i1, i2,...]
 
       \return decltype(auto) to return either a reference to the final
       element when the indexing has been fully resolved or a proxy
-      object to handle the remaining []
-   */
-  decltype(auto) operator[](std::size_t index) const {
-    return (*implementation)[index];
+      object to handle the remaining [] */
+  template <std::integral... T> decltype(auto) operator[](T... indices) {
+    return (*implementation)[indices...];
   }
 
+  /** Use the accessor with integers à la [i1][i2][i3] or C++23 [i1, i2,...]
+
+      \return decltype(auto) to return either a reference to the final
+      element when the indexing has been fully resolved or a proxy
+      object to handle the remaining [] */
+  template <std::integral... T> decltype(auto) operator[](T... indices) const {
+    return (*implementation)[indices...];
+  }
 
   /// To use the accessor with [id<>]
   auto& operator[](const id<dimensionality>& index) {
     return (*implementation)[index];
   }
-
 
   /// To use the accessor with [id<>]
   auto& operator[](const id<dimensionality>& index) const {

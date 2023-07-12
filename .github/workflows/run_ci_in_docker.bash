@@ -45,7 +45,27 @@ APT_INSTALL="apt-get install $APT_ENABLE"
 $APT_INSTALL git apt-utils cmake libboost-all-dev \
   librange-v3-dev
 
-# Install the required C compiler:g
+# Some packages used by the graphics GTK library
+$APT_INSTALL pkgconf libgtkmm-3.0-dev
+
+# If clang or clang++ is required, prepare to install the latest
+# Clang/LLVM by adding the repository from https://apt.llvm.org/ to
+# benefit from https://reviews.llvm.org/D149637
+if [[ $C_COMPILER =~ ^clang || $CXX_COMPILER =~ ^clang++ ]]; then
+  # Tools to set-up the LLVM repository authentication
+  $APT_INSTALL wget
+  wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | \
+    tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc
+  # "Parse" the Linux distribution parameters
+  source /etc/os-release
+  echo "deb http://apt.llvm.org/$VERSION_CODENAME llvm-toolchain-$VERSION_CODENAME main" \
+    > /etc/apt/sources.list.d/llvm.list
+  echo "deb-src http://apt.llvm.org/$VERSION_CODENAME llvm-toolchain-$VERSION_CODENAME main" \
+    >> /etc/apt/sources.list.d/llvm.list
+  apt update
+fi
+
+# Install the required C compiler:
 $APT_INSTALL $C_COMPILER
 
 # Install the required C++ compiler.

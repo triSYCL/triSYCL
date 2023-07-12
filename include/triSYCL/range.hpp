@@ -9,8 +9,10 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <concepts>
 #include <functional>
 #include <numeric>
+#include <type_traits>
 #include "triSYCL/detail/small_array.hpp"
 
 namespace trisycl {
@@ -30,17 +32,18 @@ namespace trisycl {
     \todo add to the specification some way to specify an offset?
 */
 template <int Dimensions = 1>
-class range : public detail::small_array_123<
-                std::size_t,
-                range<Dimensions>,
-                Dimensions > {
+class range
+    : public detail::small_array_sycl<std::size_t, range<Dimensions>,
+                                      Dimensions> {
 
-public:
+ public:
 
   // Inherit of all the constructors
-  using detail::small_array_123<std::size_t,
+  using detail::small_array_sycl<std::size_t,
                                 range<Dimensions>,
-                                Dimensions>::small_array_123;
+                                Dimensions>::small_array_sycl;
+
+  range() = default;
 
   /// The number of dimensions of the range
   static auto constexpr rank() { return Dimensions; }
@@ -56,30 +59,39 @@ public:
   }
 };
 
+/**  User-defined deduction guides to deduce the rank of a range from
+     the number of arguments
 
-/** Implement a make_range to construct a range<> of the right dimension
-    with implicit conversion from an initializer list for example.
-
-    Cannot use a template on the number of dimensions because the implicit
-    conversion would not be tried.
+     For example range { 4, 5, 7 } will define an range<3> { 4, 5, 7 }
 */
-inline auto make_range(range<1> r) { return r; }
-inline auto make_range(range<2> r) { return r; }
-inline auto make_range(range<3> r) { return r; }
-
-
-/** Construct a range<> from a function call with arguments, like
-    make_range(1, 2, 3)
-*/
-template<typename... BasicType>
-auto make_range(BasicType... Args) {
-  // Call constructor directly to allow narrowing
-  return range<sizeof...(Args)>(Args...);
-}
+template <typename... BasicType>
+range(BasicType... Args) -> range<sizeof...(Args)>;
 
 /// @} End the parallelism Doxygen group
 
-}
+namespace detail {
+    /** Make an explicit range<1> when an integral is provided or pass
+        the value unchanged */
+    auto rangeify(auto r) {
+      if constexpr (std::integral<decltype(r)>)
+        return range { r };
+      else
+        return r;
+    };
+
+/// A type trait to check if a type it a sycl::range or not
+template <typename T> struct is_range : std::false_type {};
+
+/// Return true if template instantiating match a sycl::range
+template <int Dimensions>
+struct is_range<range<Dimensions>> : std::true_type {};
+
+/// A variable to check if a type is a sycl::range or not
+template <typename T> constexpr auto is_range_v = is_range<T>::value;
+
+} // namespace detail
+
+} // namespace trisycl
 
 /*
     # Some Emacs stuff:

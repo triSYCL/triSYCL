@@ -30,7 +30,7 @@ namespace trisycl::detail {
     1,..., dimension-1 as a variadic template pack Is that we can
     iterate on, in this function.
 */
-template <typename V, typename Tuple, size_t... Is>
+template <typename V, typename Tuple, std::size_t... Is>
 std::array<typename V::element_type, V::dimension>
 tuple_to_array_iterate(Tuple t, std::index_sequence<Is...>) {
   /* The effect is like a static for-loop with Is counting from 0 to
@@ -41,7 +41,7 @@ tuple_to_array_iterate(Tuple t, std::index_sequence<Is...>) {
      The static cast is here to avoid the warning when there is a loss
      of precision, for example when initializing an int from a float.
   */
-  return { { static_cast<typename V::element_type>(std::get<Is>(t))...} };
+  return { { static_cast<typename V::element_type>(std::get<Is>(t))... } };
 }
 
 
@@ -51,31 +51,28 @@ template <typename V, typename Tuple>
 auto tuple_to_array(Tuple t) {
   /* Construct an index_sequence with 0, 1, ..., (size of the tuple-1)
      so that tuple_to_array_iterate can statically iterate on it */
-  return tuple_to_array_iterate<V>(t,
-                                   std::make_index_sequence<std::tuple_size<Tuple>::value>{});
+  return tuple_to_array_iterate<V>(
+      t, std::make_index_sequence<std::tuple_size_v<Tuple>> {});
 }
-
 
 /** Allows optional expansion of a 1-element tuple to a V::dimension
     tuple to replicate scalar values in vector initialization
 */
 template <typename V, typename Tuple, bool expansion = false>
 struct expand_to_vector {
-  static_assert(V::dimension == std::tuple_size<Tuple>::value,
-                "The number of elements in initialization should match the dimension of the vector");
+  static_assert(V::dimension == std::tuple_size_v<Tuple>,
+                "The number of elements in initialization should match the "
+                "dimension of the vector");
 
   // By default, act as a pass-through and do not do any expansion
   static auto expand(Tuple t) { return t; }
-
 };
 
-
 /** Specialization in the case we ask for expansion */
-template <typename V, typename Tuple>
-struct expand_to_vector<V, Tuple, true> {
-  static_assert(std::tuple_size<Tuple>::value == 1,
-                "Since it is a vector initialization from a scalar there should be only one initializer value");
-
+template <typename V, typename Tuple> struct expand_to_vector<V, Tuple, true> {
+  static_assert(std::tuple_size_v<Tuple> == 1,
+                "Since it is a vector initialization from a scalar there "
+                "should be only one initializer value");
 
   /** Construct a tuple from a value
 
@@ -87,7 +84,7 @@ struct expand_to_vector<V, Tuple, true> {
       1,..., dimension-1 as a variadic template pack Is that we can
       iterate on, in this function.
   */
-  template <typename Value, size_t... Is>
+  template <typename Value, std::size_t... Is>
   static auto fill_tuple(Value e, std::index_sequence<Is...>) {
     /* The effect is like a static for-loop with Is counting from 0 to
        dimension-1 and thus replicating the pattern to have
@@ -108,9 +105,7 @@ struct expand_to_vector<V, Tuple, true> {
     return fill_tuple(std::get<0>(t),
                       std::make_index_sequence<V::dimension>{});
   }
-
 };
-
 
 /** Create the array data of V from a tuple of initializer
 
@@ -124,7 +119,7 @@ auto expand(Tuple t) {
                            /* Only ask the expansion to all vector
                               element if there only a scalar
                               initializer */
-                           std::tuple_size<Tuple>::value == 1>{}.expand(t));
+                           std::tuple_size_v<Tuple> == 1>{}.expand(t));
 }
 
 }

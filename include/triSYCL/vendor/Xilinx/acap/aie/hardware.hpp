@@ -179,7 +179,7 @@ constexpr uint32_t self_tile_addr(parity par) {
 }
 
 /// Base address of the tile viewed from itself
-uint32_t self_tile_addr() {
+inline uint32_t self_tile_addr() {
   return ((get_parity_dev() == parity::west) ? west_or_self_tile_addr
                                              : east_or_self_tile_addr);
 }

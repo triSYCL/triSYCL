@@ -38,17 +38,14 @@ namespace trisycl::vendor::xilinx::acap::debug {
     If there are some discrepancies, display the tile id which is too
     late or too early.
 */
-template <typename Geography>
-class bsp_checker {
+template <typename Geography> class bsp_checker {
   /// A vector clock to compare differerent tiles together
   std::array<std::atomic<int>, Geography::size> vector_clock_alloc;
-  std::experimental::mdspan<std::atomic<int>,
-                            std::experimental::extents<Geography::x_size,
-                                                       Geography::y_size>>
-  vector_clock { &vector_clock_alloc[0] };
+  std::mdspan<std::atomic<int>,
+              std::extents<std::size_t, Geography::x_size, Geography::y_size>>
+      vector_clock { &vector_clock_alloc[0] };
 
-public:
-
+ public:
   /** Check that none of the tiles executing this are separated by
       more than one execution step each other.
 
@@ -56,24 +53,22 @@ public:
       the tiles.
   */
   void check(int x, int y) {
-    ++vector_clock(x, y);
+    ++vector_clock[x, y];
     /* While the algorithm execution is not atomic, it is enough to
        find some asynchronous bugs */
-    auto [min_element, max_element] =
-      std::minmax_element(vector_clock_alloc.cbegin(),
-                          vector_clock_alloc.cend());
+    auto [min_element, max_element] = std::minmax_element(
+        vector_clock_alloc.cbegin(), vector_clock_alloc.cend());
 
     if (*max_element - *min_element > 1) {
       TRISYCL_DUMP_T(std::dec << "compute(" << x << ',' << y
-                     << ") vector clock min = "
-                     << *min_element << ", max = " << *max_element);
+                              << ") vector clock min = " << *min_element
+                              << ", max = " << *max_element);
       std::terminate();
     }
   }
-
 };
 
-}
+} // namespace trisycl::vendor::xilinx::acap::debug
 
 /// @} End the acap_debug Doxygen group
 

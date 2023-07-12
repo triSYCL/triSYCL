@@ -80,6 +80,7 @@ inline void do_check_sign() {
                                           uint32_t{1} << 31};
 
   for (std::size_t i = 0; i < 8; ++i) {
+    std::cerr << i << ' ' << res[i] << ' ' << expected_output[i] << std::endl;
     REQUIRE(reinterpret_cast<uint32_t &>(res[i]) == expected_output[i]);
   }
 }

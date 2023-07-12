@@ -2,10 +2,11 @@
 
 # Publish the Doxygen API of SYCL on GitHub
 
-# Version for ACAP extensions
-SRC_BRANCH=acap
+# For a version specific to ACAP extensions
+# SRC_BRANCH=acap
+SRC_BRANCH=master
 
-# Ronan Keryell at Xilinx point COM
+# Ronan point Keryell at AMD point COM
 
 # Publish on GitHub the API for the $SRC_BRANCH branch of this git repository.
 
@@ -69,13 +70,15 @@ mkdir Doxygen
 
 # Move the generated documentation at the right place
 #update_doc Doxygen/SYCL SYCL-API-refman.pdf
-update_doc Doxygen/acappp acappp-implementation-refman.pdf
+# For a version specific to ACAP extensions
+#update_doc Doxygen/acappp acappp-implementation-refman.pdf
+update_doc Doxygen/triSYCL triSYCL-implementation-refman.pdf
 
 # Take also into account what has been deleted
 git add --update
 
 # Add the home page which comes from the $SRC_BRANCH branch
-git checkout $SRC_BRANCH -- doc/WWW/index.html
+git checkout origin/$SRC_BRANCH -- doc/WWW/index.html
 cp doc/WWW/index.html .
 git add index.html
 # Remove this file added by the check-out above from the files to be
@@ -98,13 +101,13 @@ tree_object=`git write-tree`
     # commit to be taken for publishing, so the following list all the
     # commits between $SRC_BRANCH and the previous $SRC_BRANCH used for the old
     # publication
-    git log gh-pages^2..$SRC_BRANCH
+    git log gh-pages^2..origin/$SRC_BRANCH
 ) > commit_list
 
 # Create a commit object that takes into account its natural history but
 # also the $SRC_BRANCH branch as an ancestor so we can figure out easily which
 # source of the WWW site is currently published
-commit_object=`git commit-tree -p HEAD -p $SRC_BRANCH \
+commit_object=`git commit-tree -p HEAD -p origin/$SRC_BRANCH \
   -F commit_list $tree_object`
 
 # Update the gh-pages branch to this commit object. By construction this

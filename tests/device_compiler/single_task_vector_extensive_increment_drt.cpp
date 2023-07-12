@@ -14,7 +14,7 @@
 #include <iterator>
 #include <numeric>
 
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 using namespace cl::sycl;
 
@@ -22,7 +22,7 @@ constexpr size_t N = 7;
 using Type = int;
 
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("single_task vector extensive increment drt", "[old device compiler]") {
   Type initial_values[N] = { 1, 2, 3, 4, 5, 6, 7 };
   buffer<Type> input { std::cbegin(initial_values),
                        std::cend(initial_values) };
@@ -75,7 +75,5 @@ int test_main(int argc, char *argv[]) {
   auto a_input = input.get_access<access::mode::read>();
   auto a_output = output.get_access<access::mode::read>();
   for (unsigned int i = 0 ; i < input.get_count(); ++i)
-    BOOST_CHECK(a_output[i] == a_input[i] + 42);
-
-  return 0;
+    REQUIRE(a_output[i] == a_input[i] + 42);
 }

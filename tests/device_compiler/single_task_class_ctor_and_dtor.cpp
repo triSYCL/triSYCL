@@ -3,7 +3,7 @@
 #include <numeric>
 #include <vector>
 
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 /*
   A contrived test with the aim of testing that C++ objects can be created and
@@ -34,8 +34,7 @@ public:
   void set_g(std::size_t g_) { g = g_; }
 };
 
-int test_main(int argc, char *argv[]) {
-
+TEST_CASE("single_task vector add drt dataflow func", "[old device compiler]") {
     queue my_queue{default_selector{}};
 
     buffer<unsigned int, 1> a{N};
@@ -69,8 +68,6 @@ int test_main(int argc, char *argv[]) {
     auto acc_r = a.get_access<access::mode::read>();
 
     for (unsigned int i = 0; i < N; ++i) {
-      BOOST_CHECK(acc_r[i] == i + 30);
+      REQUIRE(acc_r[i] == i + 30);
     }
-
-    return 0;
 }

@@ -8,7 +8,7 @@ set(TRISYCL_VERSION
   "${TRISYCL_VERSION_MAJOR}.${TRISYCL_VERSION_MINOR}.${TRISYCL_VERSION_PATCH}")
 
 project(triSYCL VERSION ${TRISYCL_VERSION} LANGUAGES CXX)
-set(CMAKE_CXX_STANDARD 2b CACHE STRING "C++ standard to use")
+set(CMAKE_CXX_STANDARD 23 CACHE STRING "C++ standard to use")
 
 # Pick the Release build type if not defined (to have range-v3 happy)
 if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "")
@@ -84,13 +84,13 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INC
 if("${PROJECT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
 
   if(EXISTS "/etc/debian_version")
-	  set(DEBIAN TRUE CACHE BOOL "Enable debian specific options: 64-bit lib name and .deb generation")
+    set(DEBIAN TRUE CACHE BOOL "Enable debian specific options: 64-bit lib name and .deb generation")
   endif()
 
   if(DEBIAN)
-	  set(CPACK_GENERATOR "TGZ;DEB" )
+    set(CPACK_GENERATOR "TGZ;DEB" )
   else()
-	  set(CPACK_GENERATOR "TGZ" )
+    set(CPACK_GENERATOR "TGZ" )
   endif()
 
   set(CPACK_PACKAGING_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})

@@ -30,7 +30,7 @@
 
 namespace trisycl::detail::spir {
 
-// Fills the small_array_123 of the type passed to it up to the dimensionality
+// Fills the small_array_sycl of the type passed to it up to the dimensionality
 // of the type T (T generally intended to be a sycl id or range, but can be
 // anything with a dimensionality variable defined and a subscript operator)
 template <typename T,  typename F>

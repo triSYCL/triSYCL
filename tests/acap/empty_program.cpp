@@ -1,4 +1,5 @@
 /* Testing the minimal empty AI Engine Tile program and Memory Module
+
    RUN: %{execute}%s
 */
 
@@ -14,7 +15,7 @@ struct prog : acap::aie::tile<AIE, X, Y> {
   }
 };
 
-int main(int argc, char *argv[]) {
+int test_main(int argc, char *argv[]) {
   /* Test the empty tile program & empty memory module with 4
      machine sizes & API shortcut */
   acap::aie::device<acap::aie::layout::one_pe>{}.queue().submit<prog>().wait();

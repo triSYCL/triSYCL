@@ -40,8 +40,8 @@ template <typename T, int Dimensions> class buffer;
 /** The buffer accessor abstracts the way buffer data are accessed
     inside a kernel in a multidimensional variable length array way.
 
-    This implementation relies on std::experimental::mdspan to provide
-    this nice syntax and behavior.
+    This implementation relies on std::mdspan to provide this nice
+    syntax and behavior.
 
     Right now the aim of this class is just to access to the buffer in
     a read-write mode, even if capturing the accessor from a lambda

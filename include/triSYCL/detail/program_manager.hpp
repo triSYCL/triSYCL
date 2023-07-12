@@ -322,6 +322,7 @@ public:
       }
     std::cerr << "tried to find: " << kernelName << std::endl;
     assert(false && "tried to non-existant kernel");
+    return {};
   }
 };
 

@@ -4,7 +4,7 @@
 #include <type_traits>
 #include <vector>
 
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 /*
   The aim of this test is to check that C Struct objects can be used with
@@ -39,7 +39,7 @@ static_assert(std::is_standard_layout_v<Index_Member_Data> &&
               std::is_trivially_copyable_v<Index_Member_Data>,
               "Index_Member_Data is not POD");
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("buffer of objects member functions", "[old device compiler]") {
   queue my_queue{default_selector{}};
 
   buffer<Index_Member_Data, 1> a{N};
@@ -64,9 +64,7 @@ int test_main(int argc, char *argv[]) {
   auto acc_r = a.get_access<access::mode::read>();
 
   for (unsigned int i = 0; i < N; ++i) {
-    BOOST_CHECK(acc_r[i].get_r() == 32);
-    BOOST_CHECK(acc_r[i].get_g() == i);
+    REQUIRE(acc_r[i].get_r() == 32);
+    REQUIRE(acc_r[i].get_g() == i);
   }
-
-  return 0;
 }

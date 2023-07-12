@@ -21,4 +21,12 @@ int main() {
     std::cout << "Hello, I am the AIE tile (" << th.x_coord() << ',' << th.y_coord() << ")"
               << std::endl;
   });
+
+  // Try with a mutable lambda
+  acap::aie::device<acap::aie::layout::vc1902> {}.uniform_run(
+      [v = 0](auto& th) mutable {
+        auto old_v = v;
+        std::cout << "Again, I am the AIE tile (" << th.x_coord() << ',' << th.y_coord()
+                  << ") mutating " << old_v << " into " << ++v << std::endl;
+      });
 }

@@ -9,9 +9,11 @@
     License. See LICENSE.TXT for details.
 */
 
+#include <concepts>
 #include <cstddef>
 #include <iterator>
 #include <memory>
+#include <ranges>
 #include <type_traits>
 
 #include "triSYCL/access.hpp"
@@ -180,6 +182,33 @@ public:
   {}
 
 
+  /** Create a new buffer with associated host memory from a range
+
+      \param[inout] host_data points to the storage and values used by
+      the buffer
+
+      \param[in] allocator is to be used by the SYCL runtime, of type
+      trisycl::buffer_allocator<T> by default
+
+      The memory is owned by the runtime during the lifetime of the
+      object.  Data is copied back to the host unless the user
+      overrides the behavior using the set_final_data method.
+  */
+  template <typename Range>
+    requires requires {
+               // \todo Use range concept when it lands
+               std::begin(std::declval<Range>());
+               std::end(std::declval<Range>());
+             }
+             /* But skip the case \c sycl::range<n> which is also a C++ range
+                and we do not want to hijack the constructor from a \c
+                sycl::range */
+             && (!detail::is_range_v<Range>)
+  buffer(Range /* auto std::continuous_range */& host_data,
+         Allocator allocator = {})
+      : buffer { host_data.begin(),
+                 range { std::ranges::distance(host_data) } } {}
+
   /** Create a new buffer with associated memory, using the data in
       host_data
 
@@ -216,8 +245,6 @@ public:
       the buffer
 
       \param[in] r defines the size
-
-      \param[inout] m is the mutex used to protect the data access
 
       \param[in] allocator is to be used by the SYCL runtime, of type
       trisycl::buffer_allocator<T> by default
@@ -511,6 +538,29 @@ public:
   }
 
 };
+
+/** A deduction guide to infer the buffer type from the read-write
+    forward iterators into a copy-in on construction and copy-back on
+    destruction
+
+    \todo Use some standard concepts
+
+    \todo Add this to SYCL Next
+*/
+template <std::forward_iterator FIB, std::forward_iterator FIE>
+buffer(FIB begin, FIE end)
+    -> buffer<typename std::iterator_traits<FIB>::value_type, 1>;
+
+/** A deduction guide to infer the buffer type from the read-write
+    range
+
+    \todo Use some standard concepts
+
+    \todo Add this to SYCL Next
+*/
+  buffer(auto /* std::continuous_range */& host_data)
+    -> buffer<std::ranges::range_value_t<decltype(host_data)>, 1>;
+
 
 /// @} End the data Doxygen group
 

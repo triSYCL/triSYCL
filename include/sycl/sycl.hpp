@@ -4,10 +4,12 @@
 /** \file
 
     This is the SYCL extension header to expose triSYCL directly into
-    the shorter \c ::sycl namespace instead of the official SYCL 1.2.1
-    \c ::cl::sycl
+    the ::sycl namespace as expected by SYCL 2020
 */
 
+
+/// Define what is the real SYCL namespace to use
+#define TRISYCL_SYCL_NAMESPACE sycl
 
 #include "triSYCL/sycl.hpp"
 

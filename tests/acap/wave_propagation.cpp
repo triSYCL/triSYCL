@@ -52,34 +52,34 @@ using layout = acap::aie::layout::size<4, 4>;
 using geography = acap::aie::geography<layout>;
 boost::barrier cpu_barrier{geography::size};
 
-using data_type = float;
+using data_t = float;
 using idx_type = int;
 
-data_type constexpr K = 1.0 / 300.0;
-data_type constexpr g = 9.81;
-data_type constexpr alpha = K * g;
+data_t constexpr K = 1.0 / 300.0;
+data_t constexpr g = 9.81;
+data_t constexpr alpha = K * g;
 /// Some dissipation factor to avoid divergence
-data_type constexpr damping = 0.999;
+data_t constexpr damping = 0.999;
 
 idx_type constexpr image_size = 20;
 idx_type constexpr no_halo_size = image_size - 1;
 idx_type constexpr last_image_idx = image_size - 1;
 
-data_type constexpr max_value = 30.0;
-data_type constexpr min_value = -30.0;
+data_t constexpr max_value = 30.0;
+data_t constexpr min_value = -30.0;
 
 idx_type constexpr zoom = 5;
 /// Add a drop almost between tile (1,1) and (2,2)
 idx_type constexpr x_drop = image_size * 1 - image_size / 2 - 1;
 idx_type constexpr y_drop = image_size * 1 - image_size / 2 - 1;
-data_type constexpr drop_value = 100.0;
-data_type constexpr drop_radius = 5.0;
+data_t constexpr drop_value = 100.0;
+data_t constexpr drop_radius = 5.0;
 
 /** Time-step interval between each display.
     Use 1 to display all the frames, 2 for half the frame and so on. */
 auto constexpr display_time_step = 10;
 
-graphics::application<data_type> a;
+graphics::application<data_t> a;
 
 auto epsilon = 0.01;
 
@@ -93,10 +93,10 @@ auto compare_2D_mdspan = [](auto message, const auto &acap, const auto &ref) {
   assert(acap.extent(1) == ref.extent(1));
   for (int j = 0; j < acap.extent(0); ++j)
     for (int i = 0; i < acap.extent(1); ++i)
-      if (std::abs(acap(j, i) - ref(j, i)) > epsilon) {
-        TRISYCL_DUMP_T(std::dec << '\t' << message << " acap(" << j << ',' << i
-                                << ") = " << acap(j, i) << "  ref(" << j << ','
-                                << i << ") = " << ref(j, i));
+      if (std::abs(acap[j, i] - ref[j, i]) > epsilon) {
+        TRISYCL_DUMP_T(std::dec << '\t' << message
+                       << " acap(" << j << ',' << i << ") = " << acap[j, i]
+                       << "  ref(" << j << ',' << i << ") = " << re[j, i]);
       }
 };
 #endif
@@ -105,9 +105,9 @@ auto compare_2D_mdspan = [](auto message, const auto &acap, const auto &ref) {
 constexpr auto square = [](auto v) constexpr { return v * v; };
 
 /// Compute the contribution of a drop to the water height
-constexpr auto add_a_drop = [](int x, int y) constexpr -> data_type {
+constexpr auto add_a_drop = [](int x, int y) constexpr -> data_t {
   // The square radius to the drop center
-  data_type r = square(x - x_drop) + square(y - y_drop);
+  data_t r = square(x - x_drop) + square(y - y_drop);
   // A cone of height drop_value centered on the drop center
   return r < square(drop_radius)
              ? drop_value * (square(drop_radius) - r) / square(drop_radius)
@@ -115,15 +115,15 @@ constexpr auto add_a_drop = [](int x, int y) constexpr -> data_type {
 };
 
 /// Add a circular shoal in the water with half the depth
-constexpr auto shoal_factor = [](auto x, auto y) constexpr -> data_type {
+constexpr auto shoal_factor = [](auto x, auto y) constexpr -> data_t {
   /// The shoal center coordinates
   idx_type constexpr x_shoal = image_size * 8 - 3;
   idx_type constexpr y_shoal = image_size * 4;
-  data_type constexpr shoal_radius = 200.0;
-  data_type constexpr shoal_val = 2600.0;
+  data_t constexpr shoal_radius = 200.0;
+  data_t constexpr shoal_val = 2600.0;
 
   // The square radius to the shoal center
-  data_type r = square(x - x_shoal) + square(y - y_shoal);
+  data_t r = square(x - x_shoal) + square(y - y_shoal);
   // A disk centered on the shoal center
   return r < square(shoal_radius) ? shoal_val / 2 : shoal_val;
 };
@@ -151,18 +151,15 @@ constexpr auto is_harbor = [](auto x, auto y) constexpr -> bool {
 /// A sequential reference implementation of wave propagation
 template <auto size_x, auto size_y, auto display_tile_size>
 struct reference_wave_propagation {
-  using space = std::experimental::mdspan<data_type,
-                                          std::experimental::extents<size_y,
-                                                                     size_x>>;
+  using space = std::mdspan<data_t, std::extents<std::size_t, size_y, size_x>>;
   // It would be nice to have a constexpr static member to express this,
   // but right now size() is a member function
-  // data_type u_m[space::size()];
   static auto constexpr linear_size = size_x * size_y;
-  data_type u_m[linear_size];
-  data_type v_m[linear_size];
-  data_type w_m[linear_size];
-  data_type side_m[linear_size];
-  data_type depth_m[linear_size];
+  data_t u_m[linear_size];
+  data_t v_m[linear_size];
+  data_t w_m[linear_size];
+  data_t side_m[linear_size];
+  data_t depth_m[linear_size];
   space u{u_m}; // Horizontal speed
   space v{v_m}; // Vertical speed
   space w{w_m}; // Local delta depth
@@ -173,12 +170,10 @@ struct reference_wave_propagation {
   reference_wave_propagation() {
     for (int j = 0; j < size_y; ++j)
       for (int i = 0; i < size_x; ++i) {
-        // No u[j][i] syntax too like in Boost.Multi_Array ?
-        u(j, i) = 0;
-        v(j, i) = 0;
-        side(j,i) = K*(!is_harbor(i, j));
-        depth(j,i) = shoal_factor(i, j);
-        w(j, i) = add_a_drop(i, j);
+        u[j, i] = v[j, i] = w[j, i] = 0;
+        side[j, i] = K*(!is_harbor(i, j));
+        depth[j, i] = 2600.0*shoal_factor(i, j);
+        w[j, i] += add_a_drop(i, j);
       }
   }
 
@@ -188,26 +183,26 @@ struct reference_wave_propagation {
     for (int j = 0; j < size_y; ++j)
       for (int i = 0; i < size_x - 1; ++i) {
         // dw/dx
-        auto north = w(j, i + 1) - w(j, i);
+        auto north = w[j, i + 1] - w[j, i];
         // Integrate horizontal speed
-        u(j, i) += north * alpha;
+        u[j, i] += north*alpha;
       }
     for (int j = 0; j < size_y - 1; ++j)
       for (int i = 0; i < size_x; ++i) {
         // dw/dy
-        auto vp = w(j + 1, i) - w(j, i);
+        auto vp = w[j + 1, i] - w[j, i];
         // Integrate vertical speed
-        v(j, i) += vp * alpha;
+        v[j, i] += vp*alpha;
       }
     for (int j = 1; j < size_y; ++j)
       for (int i = 1; i < size_x; ++i) {
         // div speed
-        auto wp = (u(j, i) - u(j, i - 1)) + (v(j, i) - v(j - 1, i));
-        wp *= side(j, i) * (depth(j, i) + w(j, i));
+        auto wp = (u[j, i] - u[j, i - 1]) + (v[j, i] - v[j - 1, i]);
+        wp *= side[j, i]*(depth[j, i] + w[j, i]);
         // Integrate depth
-        w(j, i) += wp;
+        w[j, i] += wp;
         // Add some dissipation for the damping
-        w(j, i) *= damping;
+        w[j, i] *= damping;
       }
   }
 
@@ -256,11 +251,11 @@ reference_wave_propagation<
 /// All the memory modules are the same
 template <typename AIE, int X, int Y>
 struct memory : acap::aie::memory<AIE, X, Y> {
-  data_type u[image_size][image_size];     //< Horizontal speed
-  data_type v[image_size][image_size];     //< Vertical speed
-  data_type w[image_size][image_size];     //< Local delta depth
-  data_type side[image_size][image_size];  //< Hard wall limit
-  data_type depth[image_size][image_size]; //< Average depth
+  data_t u[image_size][image_size];     //< Horizontal speed
+  data_t v[image_size][image_size];     //< Vertical speed
+  data_t w[image_size][image_size];     //< Local delta depth
+  data_t side[image_size][image_size];  //< Hard wall limit
+  data_t depth[image_size][image_size]; //< Average depth
 };
 
 /// All the tiles run the same program
@@ -386,7 +381,7 @@ template <typename AIE, int X, int Y> struct tile : acap::aie::tile<AIE, X, Y> {
 #endif
   }
 
-  volatile data_type frame[no_halo_size][no_halo_size];
+  volatile data_t frame[no_halo_size][no_halo_size];
   void display() {
     auto &m = t::mem();
     for (int j = 0; j < no_halo_size; ++j)
@@ -399,7 +394,7 @@ template <typename AIE, int X, int Y> struct tile : acap::aie::tile<AIE, X, Y> {
     std::this_thread::sleep_for(150ms);
     cpu_barrier.wait();
 #endif
-    a.update_tile_data_image(t::x, t::y, (data_type*)&frame[0][0], min_value, max_value);
+    a.update_tile_data_image(t::x, t::y, (data_t*)&frame[0][0], min_value, max_value);
   }
 
   void run() {

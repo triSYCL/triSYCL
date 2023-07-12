@@ -3,7 +3,7 @@
 #include <numeric>
 #include <vector>
 
-#include <boost/test/minimal.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 /*
   The aim of this test is to check that C Struct objects can be used with
@@ -28,7 +28,7 @@ static_assert(std::is_standard_layout_v<Index_Data> &&
               std::is_trivially_copyable_v<Index_Data>,
               "Index_Data is not POD");
 
-int test_main(int argc, char *argv[]) {
+TEST_CASE("buffer of objects members", "[old device compiler]") {
   queue my_queue{default_selector{}};
 
   buffer<Index_Data, 1> a{N};
@@ -53,9 +53,7 @@ int test_main(int argc, char *argv[]) {
   auto acc_r = a.get_access<access::mode::read>();
 
   for (unsigned int i = 0; i < N; ++i) {
-    BOOST_CHECK(acc_r[i].r == 32);
-    BOOST_CHECK(acc_r[i].g == i);
+    REQUIRE(acc_r[i].r == 32);
+    REQUIRE(acc_r[i].g == i);
   }
-
-  return 0;
 }

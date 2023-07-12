@@ -22,9 +22,13 @@ jobs:
     # cross-platform coverage.
     # See:
     # https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    # Here for now it will end up probably with Ubuntu 20.04 LTS and
-    # G++ 9
-    runs-on: ubuntu-latest
+
+    # Be sure to pick an OS from
+    # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
+    # otherwise the job will be stuck for ever in "Waiting for a
+    # runner to pick up this job... " for a non existing runner to
+    # come.
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Check out repository code
@@ -63,7 +67,7 @@ jobs:
   docker:
     name: Run the validation inside Docker with specific OS and options
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     strategy:
       # Run all the test even if there are some which fail
@@ -71,27 +75,24 @@ jobs:
 
       matrix:
        include:
-         - c_compiler: gcc-11
-           cxx_compiler: g++-11
+         - c_compiler: gcc-12
+           cxx_compiler: g++-12
            OpenMP: ON
            OpenCL: OFF
 
-         - c_compiler: gcc-11
-           cxx_compiler: g++-11
+         - c_compiler: gcc-12
+           cxx_compiler: g++-12
            OpenMP: ON
            OpenCL: ON
 
-         - c_compiler: clang-13
-           cxx_compiler: clang++-13
+         - c_compiler: clang-17
+           cxx_compiler: clang++-17
            OpenMP: ON
            OpenCL: OFF
 
-         - c_compiler: clang-13
-           cxx_compiler: clang++-13
-           # It looks like POCL uses an older version of Clang/LLVM
-           # which conflict with libomp-12-dev libomp5-12 and thus it
-           # is not possible to use OpenMP at the same time
-           OpenMP: OFF
+         - c_compiler: clang-17
+           cxx_compiler: clang++-17
+           OpenMP: ON
            OpenCL: ON
 
     steps:
@@ -100,8 +101,8 @@ jobs:
 
       - name: ${{ matrix.c_compiler }}, ${{ matrix.cxx_compiler }},
           OpenMP=${{ matrix.OpenMP }}, OpenCL=${{ matrix.OpenCL }}
-          in Docker Ubuntu 21.10
-        uses: docker://ubuntu:impish
+          in Docker Ubuntu 23.04
+        uses: docker://ubuntu:lunar
         env:
           C_COMPILER: ${{ matrix.c_compiler }}
           CXX_COMPILER: ${{ matrix.cxx_compiler }}

@@ -176,28 +176,21 @@ class tile_infrastructure {
   /// Launch a callable on this tile
   template <typename Work> auto& single_task(Work&& f) {
     #ifndef __SYCL_XILINX_AIE__
-    /** Recycle the tile_infrastructure shared_ptr as a fake tile
-        handle which is copyable.
-
-        \todo In a device implementation we should have a real
-        tile_handler type making sense on the device instead of just
-        *this */
-    auto kernel = [&]() {
+    /* Add an immediate lambda call to avoid a warning about capturing
+       this when non using it */
+    auto kernel = [&, this]() {
+      (void)this;
       if constexpr (requires { f(); })
         /* If the invocable is not interested by the handler, do not
-           provide it. Add the outer lambda to avoid a warning about
-           capturing this when non using it */
-        return [work = std::forward<Work>(f)]() mutable { return work(); };
-      else if constexpr (requires { f(*this); })
-        return [this, work = std::forward<Work>(f)]() mutable {
-          return work(*this);
-        };
+           provide it. Use a copy of the callable to make the
+           separation from host to device memory very clear. */
+        return [&] () mutable { return std::forward<Work>(f)(); };
       else if constexpr (requires { f.run(); })
-        return [work = std::forward<Work>(f)]() mutable { return work.run(); };
+        return [&]() mutable { return std::forward<Work>(f).run(); };
       else if constexpr (requires { f.run(*this); })
-        return [this, work = std::forward<Work>(f)]() mutable {
-          return work.run(*this);
-        };
+        return [&, this] () mutable { return std::forward<Work>(f).run(*this); };
+      else
+        return [&, this] () mutable { return std::forward<Work>(f)(*this); };
     }();
 
     implementation->single_task(kernel);
