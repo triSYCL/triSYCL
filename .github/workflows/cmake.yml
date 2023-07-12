@@ -35,13 +35,13 @@ jobs:
 
       matrix:
        include:
-         - c_compiler: gcc-12
-           cxx_compiler: g++-12
+         - c_compiler: gcc-13
+           cxx_compiler: g++-13
            OpenMP: ON
            OpenCL: OFF
 
-         - c_compiler: gcc-12
-           cxx_compiler: g++-12
+         - c_compiler: gcc-13
+           cxx_compiler: g++-13
            OpenMP: ON
            OpenCL: ON
 
