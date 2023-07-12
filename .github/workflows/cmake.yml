@@ -129,4 +129,7 @@ jobs:
           OpenMP=${{matrix.OpenMP}}, OpenCL=${{matrix.OpenCL}}
         # Run the tests which do not use the GUI since there is no
         # display or user
-        run: ctest --label-exclude GUI --test-dir ${{github.workspace}}/build --build-config ${{env.BUILD_TYPE}}
+        run: |
+          # Request unlimited stack size needed for some tests
+          ulimit -s unlimited
+          ctest --label-exclude GUI --test-dir ${{github.workspace}}/build --build-config ${{env.BUILD_TYPE}}
