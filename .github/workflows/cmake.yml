@@ -63,7 +63,7 @@ jobs:
         run: |
           apt-get update
           apt-get install -y build-essential cmake g++ git \
-            libboost-all-dev libgtkmm-3.0-dev librange-v3-dev \
+            libboost1.81-all-dev libgtkmm-3.0-dev librange-v3-dev \
             pkgconf
 
       - name: Declare LLVM package repository if needed
