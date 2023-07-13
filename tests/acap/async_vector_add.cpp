@@ -89,9 +89,6 @@ int main() try {
     }
   });
 
-  // Dump the configuration
-  d.display("async_vector_add.tex");
-
   /* Some (future) FPGA kernel reading the input vectors and streaming
      them to the AIE */
   sycl::queue {}.submit([&](auto& h) {
@@ -132,6 +129,9 @@ int main() try {
 
   auto bytes_transfered = va.get_size() + vb.get_size() + vc.get_size();
   measure_bandwidth(bytes_transfered, [&] { d.run<vector_add>(); });
+
+  // Dump the network configuration
+  d.display("async_vector_add.tex");
 
   {
     auto a = va.get_access<sycl::access::mode::read>();
