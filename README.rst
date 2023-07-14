@@ -15,6 +15,15 @@ triSYCL
 .. image:: https://github.com/triSYCL/triSYCL/actions/workflows/cmake.yml/badge.svg
     :target: https://github.com/triSYCL/triSYCL/actions
 
+ACAP++: C++ extensions for AMD Versal ACAP AIE1 architecture
+------------------------------------------------------------
+
+See `<tests/acap>`_ for some code samples.
+
+Look at `<doc/acap.rst>`_ to know more about how to install/use the
+ACAP++ environment.
+
+
 Introduction
 ------------
 
@@ -28,11 +37,11 @@ there are now many other implementations of SYCL_ available, including
 some strong implementations like ComputeCpp_, `DPC++`_ or hipSYCL_
 that can be used on various targets.
 
-This implementation is mainly based on C++20 features backed with
+This implementation is mainly based on C++23 features backed with
 OpenMP_ or TBB_ for parallel execution on the CPU, with
 `Boost.Compute`_ for the non single-source OpenCL_ interoperability
-layer and with an experimental (from 2017-2018 which is now obsolete)
-LLVM_/Clang_ version for the device compiler providing full
+layer and with an experimental LLVM_/Clang_ version for the device
+compiler (from 2017-2018 which is now obsolete) providing full
 single-source SYCL_ experience, typically targeting a SPIR_
 device. Since in SYCL_ there is a host fall-back, this CPU
 implementation can be seen as an implementation of this fall-back too.
@@ -48,10 +57,8 @@ incompatible versions of LLVM_/Clang_ and nothing of these is
 supported by the Xilinx_ product teams.
 
 Most of our efforts are focused on extensions, such as targeting
-Xilinx_ FPGA and Versal ACAP CGRA
-https://gitenterprise.xilinx.com/rkeryell/acappp, which is not
-open-source yet since it would expose too much architectural details
-for now.
+Xilinx_ FPGA and Versal ACAP CGRA with internal developments on
+https://gitenterprise.xilinx.com/rkeryell/acappp.
 
 
 triSYCL_ has been used to experiment and provide feedback for SYCL_
@@ -62,11 +69,12 @@ This is provided as is, without any warranty, with the same license as
 LLVM_/Clang_.
 
 Technical lead: Ronan at keryell point FR. Developments started first
-at AMD_ and are now mainly funded by Xilinx_.
+at AMD_, then was mainly funded by Xilinx_ and now again by AMD_ since
+Xilinx_ has been bought by AMD_ in 2022.
 
 It is possible to have a paid internship around triSYCL, if you have
 some skills related to this project. Contact the technical lead about
-this. Xilinx_ is also hiring in this area... :-)
+this. AMD_ is also hiring in this area... :-)
 
 
 SYCL
@@ -92,7 +100,7 @@ https://github.com/triSYCL/triSYCL/blob/master/tests/examples/demo_parallel_matr
 for a complete example.
 
 SYCL_ is developed inside the Khronos_ SYCL_ committee and thus, for
-more information on SYCL_, look at http://www.khronos.org/sycl
+more information on SYCL_, look at https://www.khronos.org/sycl
 
 Note that even if the concepts behind SYCL_ are inspired by OpenCL_
 concepts, the SYCL_ programming model is a very general asynchronous
@@ -101,7 +109,7 @@ frameworks and API and has *no* relation with OpenCL_ itself, except
 when using the OpenCL_ API interoperability mode, like any other
 target.
 
-For the SYCL_ ecosystem, look at http://sycl.tech
+For the SYCL_ ecosystem, look at https://sycl.tech
 
 
 Documentation
@@ -162,13 +170,20 @@ See `Possible futures <doc/possible-futures.rst>`_.
 triSYCL code documentation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The documentation of the triSYCL_ implementation itself can be found in
-http://trisycl.github.io/triSYCL/Doxygen/triSYCL/html and
-http://trisycl.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
+The documentation of the triSYCL_ implementation itself can be found
+in https://trisycl.github.io/triSYCL/Doxygen/triSYCL/html and
+https://trisycl.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
+
+There are also some internal documentation at
+https://pages.gitenterprise.xilinx.com/rkeryell/acappp/Doxygen/acappp/html
 
 
 News
 ----
+
+- 2023/06/09: merge the 5-year old branch experimenting with ACAP++
+  SYCL CPU model extensions for AMD Versal ACAP AIE1 CGRA like the
+  XCVC1902 used in VCK190 or VCK5000 boards.
 
 - 2018/03/12: the long-going device compiler branch has been merged in
   to provide experimental support for SPIR-df friendly devices, such
@@ -190,7 +205,7 @@ News
   triSYCL starts moving to it
 
 - 2017/11/17: the presentations and videos from `SC17
-  <http://sc17.supercomputing.org>`_ on SYCL and triSYCL are now
+  <https://sc17.supercomputing.org>`_ on SYCL and triSYCL are now
   online https://www.khronos.org/news/events/supercomputing-2017
 
 - 2017/09/19: there is a prototype of device compiler based on
@@ -224,41 +239,41 @@ News
 
 .. Some useful link definitions:
 
-.. _AMD: http://www.amd.com
+.. _AMD: https://www.amd.com
 
 .. _Bolt: https://github.com/HSA-Libraries/Bolt
 
 .. _Boost.Compute: https://github.com/boostorg/compute
 
-.. _C++: http://www.open-std.org/jtc1/sc22/wg21/
+.. _C++: https://www.open-std.org/jtc1/sc22/wg21/
 
 .. _committee: https://isocpp.org/std/the-committee
 
-.. _C++AMP: http://msdn.microsoft.com/en-us/library/hh265137.aspx
+.. _C++AMP: https://msdn.microsoft.com/en-us/library/hh265137.aspx
 
-.. _Clang: http://clang.llvm.org/
+.. _Clang: https://clang.llvm.org/
 
 .. _CLHPP: https://github.com/KhronosGroup/OpenCL-CLHPP
 
-.. _Codeplay: http://www.codeplay.com
+.. _Codeplay: https://www.codeplay.com
 
 .. _ComputeCpp: https://www.codeplay.com/products/computesuite/computecpp
 
 .. _CUDA: https://developer.nvidia.com/cuda-zone
 
-.. _DirectX: http://en.wikipedia.org/wiki/DirectX
+.. _DirectX: https://en.wikipedia.org/wiki/DirectX
 
 .. _DPC++: https://github.com/intel/llvm/tree/sycl
 
-.. _DSEL: http://en.wikipedia.org/wiki/Domain-specific_language
+.. _DSEL: https://en.wikipedia.org/wiki/Domain-specific_language
 
-.. _Eigen: http://eigen.tuxfamily.org
+.. _Eigen: https://eigen.tuxfamily.org
 
-.. _Fortran: http://en.wikipedia.org/wiki/Fortran
+.. _Fortran: https://en.wikipedia.org/wiki/Fortran
 
-.. _GCC: http://gcc.gnu.org/
+.. _GCC: https://gcc.gnu.org/
 
-.. _GOOPAX: http://www.goopax.com/
+.. _GOOPAX: https://www.goopax.com/
 
 .. _HCC: https://github.com/RadeonOpenCompute/hcc
 
@@ -266,43 +281,43 @@ News
 
 .. _hipSYCL: https://github.com/illuhad/hipSYCL
 
-.. _HSA: http://www.hsafoundation.com/
+.. _HSA: https://www.hsafoundation.com/
 
 .. _Khronos: https://www.khronos.org/
 
-.. _LLVM: http://llvm.org/
+.. _LLVM: https://llvm.org/
 
 .. _Metal: https://developer.apple.com/library/ios/documentation/Metal/Reference/MetalShadingLanguageGuide
 
-.. _MPI: http://en.wikipedia.org/wiki/Message_Passing_Interface
+.. _MPI: https://en.wikipedia.org/wiki/Message_Passing_Interface
 
-.. _OpenACC: http://www.openacc-standard.org/
+.. _OpenACC: https://www.openacc-standard.org/
 
 .. _OpenAMP: https://www.multicore-association.org/workgroup/oamp.php
 
-.. _OpenCL: http://www.khronos.org/opencl/
+.. _OpenCL: https://www.khronos.org/opencl/
 
 .. _OpenGL: https://www.khronos.org/opengl/
 
-.. _OpenHMPP: http://en.wikipedia.org/wiki/OpenHMPP
+.. _OpenHMPP: https://en.wikipedia.org/wiki/OpenHMPP
 
-.. _OpenMP: http://openmp.org/
+.. _OpenMP: https://openmp.org/
 
-.. _PACXX: http://pacxx.github.io/page/
+.. _PACXX: https://pacxx.github.io/page/
 
-.. _PoCL: http://portablecl.org/
+.. _PoCL: https://portablecl.org/
 
 .. _SYCL Parallel STL: https://github.com/KhronosGroup/SyclParallelSTL
 
-.. _RenderScript: http://en.wikipedia.org/wiki/Renderscript
+.. _RenderScript: https://en.wikipedia.org/wiki/Renderscript
 
-.. _SC16: http://sc16.supercomputing.org
+.. _SC16: https://sc16.supercomputing.org
 
 .. _SG14: https://groups.google.com/a/isocpp.org/forum/?fromgroups=#!forum/sg14
 
-.. _SPIR: http://www.khronos.org/spir
+.. _SPIR: https://www.khronos.org/spir
 
-.. _SPIR-V: http://www.khronos.org/spir
+.. _SPIR-V: https://www.khronos.org/spir
 
 .. _SYCL: https://www.khronos.org/sycl
 
@@ -310,17 +325,17 @@ News
 
 .. _TBB: https://www.threadingbuildingblocks.org/
 
-.. _Thrust: http://thrust.github.io/
+.. _Thrust: https://thrust.github.io/
 
 .. _triSYCL: https://github.com/triSYCL/triSYCL
 
-.. _VexCL: http://ddemidov.github.io/vexcl/
+.. _VexCL: https://ddemidov.github.io/vexcl/
 
-.. _ViennaCL: http://viennacl.sourceforge.net/
+.. _ViennaCL: https://viennacl.sourceforge.net/
 
 .. _Vulkan: https://www.khronos.org/vulkan/
 
-.. _Xilinx: http://www.xilinx.com
+.. _Xilinx: https://www.xilinx.com
 
 ..
     # Some Emacs stuff:

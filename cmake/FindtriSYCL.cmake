@@ -11,8 +11,8 @@
 #
 # Tools for finding and building with triSYCL.
 
-# Require CMake version 3.16 or higher
-cmake_minimum_required (VERSION 3.16)
+# Require CMake version 3.20 or higher
+cmake_minimum_required (VERSION 3.20)
 
 # The name of the project (forward declare language)
 project(triSYCL CXX)
@@ -61,10 +61,10 @@ add_library(triSYCL::cxxfeatures ALIAS _trisycl_cxxfeatures)
 
 # Check that a supported host compiler can be found
 if(CMAKE_COMPILER_IS_GNUCXX)
-  # Require at least gcc 7
-  if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7)
+  # Require at least gcc 9
+  if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9)
     message(FATAL_ERROR
-      "host compiler - Not found! (gcc version must be at least 7)")
+      "host compiler - Not found! (gcc version must be at least 9)")
   else()
     message(STATUS "host compiler - gcc ${CMAKE_CXX_COMPILER_VERSION}")
 
@@ -88,10 +88,10 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     )
   endif()
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-  # Require at least clang 7
-  if (${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 7)
+  # Require at least clang 9
+  if (${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 9)
     message(FATAL_ERROR
-      "host compiler - Not found! (clang version must be at least 7)")
+      "host compiler - Not found! (clang version must be at least 9)")
   else()
     message(STATUS "host compiler - clang ${CMAKE_CXX_COMPILER_VERSION}")
 
@@ -254,6 +254,10 @@ message(STATUS "triSYCL kernel trace:             ${TRISYCL_TRACE_KERNEL}")
 
 find_package(Threads REQUIRED)
 
+# Graphics library used by triSYCL graphics library
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GTKMM gtkmm-3.0)
+
 # To get some content directly at the source
 include(FetchContent)
 # Display what is happening behind the scene for less confusion
@@ -283,6 +287,15 @@ FetchContent_Declare(range_v3
 )
 FetchContent_MakeAvailable(range_v3)
 
+# Get directly a recent version of magic_enum
+FetchContent_Declare(magic_enum
+  GIT_REPOSITORY    https://github.com/Neargye/magic_enum
+  GIT_SHALLOW       TRUE
+  GIT_TAG           v0.7.3
+  GIT_PROGRESS TRUE
+)
+FetchContent_MakeAvailable(magic_enum)
+
 # Get the Catch2 testing environment
 FetchContent_Declare(Catch2
   GIT_REPOSITORY https://github.com/catchorg/Catch2.git
@@ -305,7 +318,9 @@ function(add_sycl_to_target targetName)
     ${TRISYCL_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
     $<$<BOOL:${TRISYCL_OPENCL}>:${OpenCL_INCLUDE_DIRS}>
-    $<$<BOOL:${TRISYCL_OPENCL}>:${BOOST_COMPUTE_INCPATH}>)
+    $<$<BOOL:${TRISYCL_OPENCL}>:${BOOST_COMPUTE_INCPATH}>
+    ${GTKMM_INCLUDE_DIRS}
+)
 
   # Link dependencies
   target_link_libraries(${targetName} PUBLIC
@@ -320,7 +335,9 @@ function(add_sycl_to_target targetName)
     std::mdspan
     #Required by BOOST_COMPUTE_USE_OFFLINE_CACHE:
     $<$<BOOL:${TRISYCL_OPENCL}>:Boost::filesystem>
+    ${GTKMM_LIBRARIES}
     range-v3::range-v3
+    magic_enum::magic_enum
   )
 
   # Compile definitions

@@ -102,6 +102,9 @@ APT_INSTALL="apt-get install $APT_ENABLE"
 $APT_INSTALL git apt-utils cmake libboost-all-dev \
   librange-v3-dev
 
+# Some packages used by the graphics GTK library
+$APT_INSTALL pkgconf libgtkmm-3.0-dev
+
 # If clang or clang++ is required, prepare to install the latest
 # Clang/LLVM by adding the repository from https://apt.llvm.org/ to
 # benefit from https://reviews.llvm.org/D149637

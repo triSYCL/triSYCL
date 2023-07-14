@@ -7,8 +7,23 @@ on:
     # Also launch the CI when creating a tag
     tags:
   pull_request:
-  # Allows you to run this workflow manually from the Actions tab
+  # Allows you to run this workflow manually from the Actions tab by
+  # selection CMake and then "Run workflow" menu on the right branch
+  # and clicking on "launch_tmate_terminal_for_debug".
+  # Unfortunately this works only for the default branch.
+  # So you can either
+
+  # - change as the default one default the branch of the PR on the
+  #   GitHub repository owning the PR and launching in Actions tab;
+  # - or edit directly the step below which runs tmate and push to the
+  #   PR, ignoring the manual workflow launch.
   workflow_dispatch:
+    inputs:
+      launch_tmate_terminal_for_debug:
+        type: boolean
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
+        required: false
+        default: false
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -35,13 +50,13 @@ jobs:
 
       matrix:
        include:
-         - c_compiler: gcc-12
-           cxx_compiler: g++-12
+         - c_compiler: gcc-13
+           cxx_compiler: g++-13
            OpenMP: ON
            OpenCL: OFF
 
-         - c_compiler: gcc-12
-           cxx_compiler: g++-12
+         - c_compiler: gcc-13
+           cxx_compiler: g++-13
            OpenMP: ON
            OpenCL: ON
 
@@ -62,7 +77,9 @@ jobs:
       - name: Install required packages
         run: |
           apt-get update
-          apt-get install -y build-essential cmake g++ git libboost-all-dev librange-v3-dev
+          apt-get install -y build-essential cmake g++ gdb git \
+            libboost1.81-all-dev libgtkmm-3.0-dev librange-v3-dev \
+            pkgconf
 
       - name: Declare LLVM package repository if needed
         if: ${{ startsWith(matrix.c_compiler, 'clang') || startsWith(matrix.cxx_compiler, 'clang') }}
@@ -123,6 +140,24 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
           --verbose --parallel `nproc`
 
+      # Launch an ssh session via a proxy server if there is a need
+      # for debug. This seems to live for 35 min max
+      # https://github.com/mxschmitt/action-tmate
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        # To run this, launch it manually on the default branch and
+        # click on "launch_tmate_terminal_for_debug"
+        if: ${{ github.event_name == 'workflow_dispatch'
+                && inputs.launch_tmate_terminal_for_debug }}
+        with:
+          # Since we run in Docker, no need to use sudo
+          sudo: false
+
       - name: Test for ${{matrix.c_compiler}}, ${{matrix.cxx_compiler}},
           OpenMP=${{matrix.OpenMP}}, OpenCL=${{matrix.OpenCL}}
-        run: ctest --test-dir ${{github.workspace}}/build --build-config ${{env.BUILD_TYPE}}
+        # Run the tests which do not use the GUI since there is no
+        # display or user
+        run: |
+          # Request unlimited stack size needed for some tests
+          ulimit -s unlimited
+          ctest --label-exclude GUI --test-dir ${{github.workspace}}/build --build-config ${{env.BUILD_TYPE}}

@@ -80,6 +80,9 @@ struct debug {
                  << static_cast<void*>(this));
   }
 
+#if 0
+/// Since Clang++-11 this is no longer working, because it should not have
+/// never been working! But is seems to work with G++
 
   /// Trace the copy construction
   debug(debug const& old) {
@@ -113,7 +116,7 @@ struct debug {
                  << " from " << static_cast<void*>(&rhs));
     return *this;
   }
-
+#endif
 
   /// Trace the destruction
   ~debug() {
