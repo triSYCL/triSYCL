@@ -239,13 +239,13 @@ struct handle {
   xaie::handle on(hw::position p) {
     return {aie_pos_to_xaie_pos(p), inst};
   }
-  xaie::handle on(hw::dir d) {
+  xaie::handle on(dir d) {
     return {aie_pos_to_xaie_pos(xaie_pos_to_aie_pos(tile).on(d)), inst};
   }
 
   hw::position get_aie_pos() { return xaie_pos_to_aie_pos(tile); }
 
-  hw::dir get_self_dir() {
+  dir get_self_dir() {
     return hw::get_self_dir(get_aie_pos().get_parity());
   }
 

@@ -22,8 +22,6 @@ constexpr unsigned alloc_align = 4;
 
 } // namespace detail::heap
 
-namespace hw {
-
 /// The ordering  and specific values of elements matters in the following enum.
 /// It matches with bases addresses order. neighbouring tiles of a core are at
 /// address: (1 << 17) | (dir << 15) from the perspective of that core. It also
@@ -35,6 +33,8 @@ enum class dir : int8_t {
   east,
   self,
 };
+
+namespace hw {
 
 constexpr dir opposite_dir(dir d) {
   return (dir)(detail::underlying_value(d) ^ 0x2);
@@ -208,7 +208,7 @@ uint32_t self_tile_addr() {
 }
 
 template <typename T>
-T* get_object(uint32_t offset, hw::dir d = hw::dir::self) {
+T* get_object(uint32_t offset, dir d = dir::self) {
 #ifndef __SYCL_DEVICE_ONLY__
   assert(false && "should only be called on device");
 #endif
@@ -368,7 +368,7 @@ template <typename T> struct dev_ptr {
     set((get_int() & ~offset_mask) | offset);
   }
   std::uint32_t get_offset() { return ((std::uint32_t)ptr) & offset_mask; }
-  static constexpr dev_ptr create(hw::dir d, uint32_t offset) {
+  static constexpr dev_ptr create(dir d, uint32_t offset) {
     assert((offset & ~offset_mask) == 0);
     return dev_ptr { (decltype(dev_ptr::ptr))(get_base_addr(d) + offset) };
   }
@@ -409,7 +409,7 @@ class offset_table {
         detail::align_down(reserved_mem, detail::heap::alloc_align);
   }
 
-  static offset_table* get(hw::dir d) {
+  static offset_table* get(dir d) {
 #ifdef __SYCL_DEVICE_ONLY__
     return get_object<offset_table>(get_offset_table_begin_offset(), d);
 #else
@@ -421,43 +421,43 @@ class offset_table {
  public:
   /// Contain the stack
   static constexpr uint32_t __attribute__((const))
-  get_stack_begin_offset(hw::dir d = hw::dir::self) {
+  get_stack_begin_offset(dir d = dir::self) {
     return 0x0;
   }
   static constexpr uint32_t __attribute__((const))
-  get_stack_size(hw::dir d = hw::dir::self) {
+  get_stack_size(dir d = dir::self) {
     return 0x1000;
   }
   static constexpr uint32_t __attribute__((const))
-  get_stack_end_offset(hw::dir d = hw::dir::self) {
+  get_stack_end_offset(dir d = dir::self) {
     return get_stack_begin_offset(d) + get_stack_size(d);
   }
 
   /// Contain the dynamic part of this class.
   static constexpr uint32_t __attribute__((const))
-  get_offset_table_begin_offset(hw::dir d = hw::dir::self) {
+  get_offset_table_begin_offset(dir d = dir::self) {
     return get_stack_end_offset(d);
   }
   static constexpr uint32_t __attribute__((const))
-  get_offset_table_size(hw::dir d = hw::dir::self) {
+  get_offset_table_size(dir d = dir::self) {
     return sizeof(offset_table);
   }
   static constexpr uint32_t __attribute__((const))
-  get_offset_table_end_offset(hw::dir d = hw::dir::self) {
+  get_offset_table_end_offset(dir d = dir::self) {
     return get_offset_table_begin_offset(d) + get_offset_table_size(d);
   }
 
   /// Contains the service system.
   static constexpr uint32_t __attribute__((const))
-  get_service_record_begin_offset(hw::dir d = hw::dir::self) {
+  get_service_record_begin_offset(dir d = dir::self) {
     return get_offset_table_end_offset(d);
   }
   static constexpr uint32_t __attribute__((const))
-  get_service_record_size(hw::dir d = hw::dir::self) {
+  get_service_record_size(dir d = dir::self) {
     return 24;
   }
   static constexpr uint32_t __attribute__((const))
-  get_service_record_end_offset(hw::dir d = hw::dir::self) {
+  get_service_record_end_offset(dir d = dir::self) {
     return get_service_record_begin_offset(d) + get_service_record_size(d);
   }
 
@@ -468,57 +468,57 @@ class offset_table {
   /// Technically all section are shared but sections other then this one should
   /// not be access by your neighbors.
   static constexpr uint32_t __attribute__((const))
-  get_tile_mem_begin_offset(hw::dir d = hw::dir::self) {
+  get_tile_mem_begin_offset(dir d = dir::self) {
     return get_service_record_end_offset(d);
   }
   static uint32_t __attribute__((const))
-  get_tile_mem_size(hw::dir d = hw::dir::self) {
+  get_tile_mem_size(dir d = dir::self) {
     return get_tile_mem_end_offset(d) - get_tile_mem_begin_offset(d);
   }
   static uint32_t __attribute__((const))
-  get_tile_mem_end_offset(hw::dir d = hw::dir::self) {
+  get_tile_mem_end_offset(dir d = dir::self) {
     return get_lambda_begin_offset(d);
   }
 
   static uint32_t __attribute__((const))
-  get_lambda_begin_offset(hw::dir d = hw::dir::self) {
+  get_lambda_begin_offset(dir d = dir::self) {
     return get(d)->lambda_start;
   }
   static uint32_t __attribute__((const))
-  get_lambda_size(hw::dir d = hw::dir::self) {
+  get_lambda_size(dir d = dir::self) {
     return get_lambda_end_offset(d) - get_lambda_begin_offset(d);
   }
   static uint32_t __attribute__((const))
-  get_lambda_end_offset(hw::dir d = hw::dir::self) {
+  get_lambda_end_offset(dir d = dir::self) {
     return get_heap_begin_offset(d);
   }
 
   // This is the heap that is used by dynamic allocations and the allocator's
   // book-keeping.
   static uint32_t __attribute__((const))
-  get_heap_begin_offset(hw::dir d = hw::dir::self) {
+  get_heap_begin_offset(dir d = dir::self) {
     return get(d)->heap_start;
   }
   static uint32_t __attribute__((const))
-  get_heap_size(hw::dir d = hw::dir::self) {
+  get_heap_size(dir d = dir::self) {
     return get_heap_end_offset(d) - get_heap_begin_offset(d);
   }
   static uint32_t __attribute__((const))
-  get_heap_end_offset(hw::dir d = hw::dir::self) {
+  get_heap_end_offset(dir d = dir::self) {
     return get_global_variable_start(d);
   }
 
   static uint32_t __attribute__((const))
-  get_global_variable_start(hw::dir d = hw::dir::self) {
+  get_global_variable_start(dir d = dir::self) {
     return get(d)->global_variable_start;
   }
   static uint32_t __attribute__((const))
-  get_global_variable_size(hw::dir d = hw::dir::self) {
+  get_global_variable_size(dir d = dir::self) {
     return get_global_variable_end_offset(d) -
            get_global_variable_end_offset(d);
   }
   static constexpr uint32_t __attribute__((const))
-  get_global_variable_end_offset(hw::dir d = hw::dir::self) {
+  get_global_variable_end_offset(dir d = dir::self) {
     return tile_size;
   }
 };

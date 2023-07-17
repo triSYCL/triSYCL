@@ -209,10 +209,10 @@ template <typename TypeInfoTy, int X, int Y> struct tile_base {
   static constexpr int size_x() { return TypeInfoTy::sizeX; }
   static constexpr int size_y() { return TypeInfoTy::sizeY; }
   /// Check id the neighbor is direction d is valid to access
-  static constexpr bool has_mem(hw::dir d) {
+  static constexpr bool has_mem(dir d) {
     return pos().on(d).is_valid(size_x(), size_y());
   }
-  static constexpr bool has_neighbor(hw::dir d) {
+  static constexpr bool has_neighbor(dir d) {
     return (pos() + hw::get_simple_offset(d)).is_valid(size_x(), size_y());
   }
 };
@@ -280,9 +280,9 @@ struct device_tile
   }
 
   /// Core logic of barriers. propagate a token from start_end to 
-  template<hw::dir start_end>
+  template<dir start_end>
   void barrier_impl(int lock_id) {
-    static constexpr hw::dir opposite = hw::opposite_dir(start_end);
+    static constexpr dir opposite = hw::opposite_dir(start_end);
     // Propagate a token from South to North and back
     // All tile except the bottom one wait. 0, 0 stuck on north, lock 0, 1 stuck on self lock
     if constexpr (has_neighbor(start_end)) {
@@ -307,7 +307,7 @@ struct device_tile
     }
   }
 
-  template <hw::dir d> auto get_tile_type() {
+  template <dir d> auto get_tile_type() {
     constexpr auto new_pos = pos().on(d);
     return detail::selected_type<typename TypeInfoTy::template tile_data<new_pos.x, new_pos.y>>{};
   }
@@ -332,20 +332,20 @@ struct device_tile
   using base::has_neighbor;
 
   /// access the neighbor's memory tile
-  template <typename hw::dir d> auto& get_mem() {
+  template <dir d> auto& get_mem() {
     using RetTy = decltype(get_tile_type<d>())::type;
     return *(RetTy*)impl::get_mem_addr<d>();
   }
-  auto& mem() { return get_mem<hw::dir::self>(); }
-  auto& mem_north() { return get_mem<hw::dir::north>(); }
-  auto& mem_south() { return get_mem<hw::dir::south>(); }
-  auto& mem_east() { return get_mem<hw::dir::east>(); }
-  auto& mem_west() { return get_mem<hw::dir::west>(); }
+  auto& mem() { return get_mem<dir::self>(); }
+  auto& mem_north() { return get_mem<dir::north>(); }
+  auto& mem_south() { return get_mem<dir::south>(); }
+  auto& mem_east() { return get_mem<dir::east>(); }
+  auto& mem_west() { return get_mem<dir::west>(); }
   auto& mem_side() {
     if (pos().get_parity() == hw::parity::east)
-      return get_mem<hw::dir::east>();
+      return get_mem<dir::east>();
     else
-      return get_mem<hw::dir::east>();
+      return get_mem<dir::east>();
   }
 
   /// Write an object of type ElemTy to stream
@@ -396,25 +396,25 @@ struct device_tile
         [this](char* ptr) { impl::cascade_read48(ptr); });
     return value;
   }
-  template <typename ElemTy> ElemTy cascade_read_into(ElemTy& out) {
+  template <typename ElemTy> void cascade_read_into(ElemTy& out) {
     out = cascade_read<ElemTy>();
   }
 
-  detail::device_lock_impl lock(int i) { return lock(hw::dir::self, i); }
-  detail::device_lock_impl lock(hw::dir d, int i) {
+  detail::device_lock_impl lock(int i) { return lock(dir::self, i); }
+  detail::device_lock_impl lock(dir d, int i) {
     return impl::lock(pos(), d, i);
   }
 
   void vertical_barrier(int lock_id = 15) {
-    barrier_impl<hw::dir::south>(lock_id);
-    /// barrier_impl<hw::dir::north>(lock_id) would also be correct.
+    barrier_impl<dir::south>(lock_id);
+    /// barrier_impl<dir::north>(lock_id) would also be correct.
   }
 
   void horizontal_barrier(int lock_id = 14) {
     if constexpr (y() & 1)
-      barrier_impl<hw::dir::west>(lock_id);
+      barrier_impl<dir::west>(lock_id);
     else
-      barrier_impl<hw::dir::east>(lock_id);
+      barrier_impl<dir::east>(lock_id);
   }
 
   void full_barrier(int id0 = 14, int id1 = 15) {
@@ -481,7 +481,7 @@ struct host_tile : public detail::tile_base<TypeInfoTy, X, Y> {
   }
 };
 
-template <typename T> detail::selected_type<T> select() { return {}; }
+template <typename T> detail::selected_type<T> tile_storage() { return {}; }
 
 template <typename... Ts, typename... T2s>
 detail::service_storage<Ts..., T2s...> add_service(T2s... t2) {
@@ -504,7 +504,7 @@ template <typename DevTy> struct queue {
             detail::is_service_storage ServiceListT = detail::service_storage<>>
   void submit_uniform(F&& func,
                       ServiceListT services = detail::service_storage<> {}) {
-    submit([]<int X, int Y>() { return select<TileDataTy>(); },
+    submit([]<int X, int Y>() { return tile_storage<TileDataTy>(); },
            std::forward<F>(func), services);
   }
 
@@ -514,7 +514,7 @@ template <typename DevTy> struct queue {
             detail::is_service_storage ServiceListT = detail::service_storage<>>
   void submit_hetero(F&& func,
                      ServiceListT services = detail::service_storage<> {}) {
-    submit([]<int X, int Y>() { return select<TileDataTy<X, Y>>(); },
+    submit([]<int X, int Y>() { return tile_storage<TileDataTy<X, Y>>(); },
            std::forward<F>(func), services);
   }
 
@@ -522,7 +522,7 @@ template <typename DevTy> struct queue {
   template <typename F,
             detail::is_service_storage ServiceListT = detail::service_storage<>>
   void submit(F&& func, ServiceListT services = detail::service_storage<> {}) {
-    submit([]<int X, int Y>() { return select<detail::out_of_bounds>(); },
+    submit([]<int X, int Y>() { return tile_storage<detail::out_of_bounds>(); },
            std::forward<F>(func), services);
   }
 
@@ -633,10 +633,8 @@ struct alignas(8) __SYCL_TYPE(aie_accessor) accessor
     tile.register_accessor(*this);
   }
   unsigned get_size() const { return base::size(); }
-  T& operator[](unsigned idx) { return get_data()[idx]; }
-  const T& operator[](unsigned idx) const { return get_data()[idx]; }
-  T* get_data() { return (T*)base::get_ptr(); }
-  const T* get_data() const { return (const T*)base::get_ptr(); }
+  T& operator[](unsigned idx) const { return get_data()[idx]; }
+  T* get_data() const { return (T*)base::get_ptr(); }
 };
 
 namespace detail {

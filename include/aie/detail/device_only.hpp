@@ -25,7 +25,7 @@ struct device_lock_impl {
   int id;
 
  public:
-  device_lock_impl(hw::dir d, int i)
+  device_lock_impl(dir d, int i)
       : id { (detail::underlying_value(d) * 16) + i } {
     assert(i < 16);
     assert(id < 64);
@@ -41,7 +41,7 @@ using device_impl = device_impl_fallback;
 using device_mem_handle = device_mem_handle_adaptor<device_mem_handle_impl>;
 
 struct device_tile_impl : device_tile_impl_fallback {
-  template <hw::dir d> void* get_mem_addr() {
+  template <dir d> void* get_mem_addr() {
     return hw::get_object<void>(hw::offset_table::get_tile_mem_begin_offset(),
                                 d);
   }
@@ -55,7 +55,7 @@ struct device_tile_impl : device_tile_impl_fallback {
   void cascade_read48(char* ptr) { aie_intr::cstream_read48(ptr); }
   int x_coord() { return hw::get_tile_x_coordinate(); }
   int y_coord() { return hw::get_tile_y_coordinate(); }
-  device_lock_impl lock(hw::position pos, hw::dir d, int i) {
+  device_lock_impl lock(hw::position pos, dir d, int i) {
     return device_lock_impl(hw::resolved_dir(pos, d), i);
   }
   template <typename T, typename ServiceTy>

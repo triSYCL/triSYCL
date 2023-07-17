@@ -21,7 +21,7 @@ struct host_lock_impl {
   int id;
 
  public:
-  host_lock_impl(xaie::handle h, hw::dir d, int i) : h(h.on(d)), id{i} {
+  host_lock_impl(xaie::handle h, dir d, int i) : h(h.on(d)), id{i} {
     assert(i < 16);
   }
   void acquire() { h.acquire(id); }
@@ -129,7 +129,7 @@ struct host_tile_impl : host_tile_impl_fallback {
     }
   }
   host_lock_impl lock(int i) {
-    return host_lock_impl(dev_handle, hw::dir::self, i);
+    return host_lock_impl(dev_handle, dir::self, i);
   }
 #endif
   void register_accessor(const detail::accessor_common& accessor) {}

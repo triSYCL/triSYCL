@@ -798,7 +798,7 @@ struct application {
       return app.is_done();
     }
   };
-  graphics_service get_service() {
+  graphics_service service() {
     return {*this};
   }
 };
