@@ -2,9 +2,11 @@
 #ifndef AIE_DETAIL_UTILS_HPP
 #define AIE_DETAIL_UTILS_HPP
 
+/// Contains utilities
+
+#include <cassert>
 #include <cstdint>
 #include <cstdlib>
-#include <cassert>
 #include <type_traits>
 
 namespace aie::detail {
@@ -67,6 +69,7 @@ template <typename T> struct singleton {
   }
 };
 
+/// get the value of an enum in its underlying type
 auto constexpr underlying_value = [](auto e) {
   using value_t = std::underlying_type_t<decltype(e)>;
   return static_cast<value_t>(e);
@@ -80,7 +83,7 @@ bool isELFMagic(const char* BinStart) {
 
 /// Check that val has a single bit that is set.
 template <typename T> constexpr bool is_single_bit(T val) {
-  return (val != 0) && ((val & (val >> 1)) == 0);
+  return (val != 0) && ((val & (val - 1)) == 0);
 }
 
 /// align val down to align
@@ -122,6 +125,8 @@ using keep_volatile_ptr =
 static_assert(std::is_same_v<keep_volatile_ptr<int, volatile char*>, volatile int*>, "");
 static_assert(std::is_same_v<keep_volatile_ptr<int, char*>, int*>, "");
 
+/// don't use it. it has a very specific behavior regarding volatile that us
+/// useful for volatile_load and volatile_store.
 template <typename SrcT, typename DestT>
 void maybe_volatile_memcpy(DestT* dst, SrcT* src, std::size_t size) {
   int idx = 0;
@@ -161,6 +166,7 @@ int pow(int i, int p) {
   return res;
 }
 
+/// call the write lambda with digits of a number is proper order
 static void write_number(auto write, int i,
                          const char* base_char = "0123456789") {
   if (i < 0)
@@ -181,7 +187,6 @@ static void write_number(auto write, int i,
   for (int d = digit_count; d > 0; d--)
     write(base_char[(std::abs(i / pow(base, d - 1)) % base)]);
 }
-
 }
 
 #endif

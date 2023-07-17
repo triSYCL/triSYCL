@@ -2,15 +2,18 @@
 #ifndef AIE_DETAIL_DEVICE_AND_HOST_HPP
 #define AIE_DETAIL_DEVICE_AND_HOST_HPP
 
+/// This file contains shared parts between the device and host execution on
+/// hardware.
+
 #if defined(__AIE_EMULATION__)
 #error "should only be used in host or device side for hardware"
 #endif
 
 #include "common.hpp"
-#include "program_manager.hpp"
-#include "xaie_wrapper.hpp"
 #include "exec_kernel.hpp"
+#include "program_manager.hpp"
 #include "sync.hpp"
+#include "xaie_wrapper.hpp"
 
 namespace aie::detail {
 
@@ -101,22 +104,41 @@ struct host_tile_impl : host_tile_impl_fallback {
 
     /// Write the lambda to memory, the accessors will get corrected later.
     dev_handle.store<KernelLambda, /*no_check*/ true>(dev_lambda_addr, L);
+
+    /// iterate over the members of the lambda
     for (int i = 0; i < KernelDesc::getNumParams(); i++) {
       kernel_param_desc_t kdesc = KernelDesc::getParamDesc(i);
+
+      /// We only care about accessors
       if (kdesc.kind != kernel_param_kind_t::kind_accessor)
         continue;
+
+      /// get the contents of the host representation of a accessor
       auto* acc_addr = reinterpret_cast<host_accessor_impl*>(
           reinterpret_cast<char*>(&L) + kdesc.offset);
+
+      /// create the device representation of the accessor we going to fill
       device_accessor_impl dev_acc;
       dev_acc.size_ = acc_addr->size();
       unsigned size_in_bytes = dev_acc.size_ * acc_addr->impl->elem_size;
+
+      /// allocate memory on the device for the buffer associated with accessor
       unsigned dev_data_addr =
           heap::malloc(dev_handle, heap_start, size_in_bytes);
+
+      /// transfer the buffer to the device
       dev_handle.memcpy_h2d(dev_data_addr, acc_addr->impl->data, size_in_bytes);
+
+      /// build the pointer representation from the device's perspective
       dev_acc.data =
           hw::dev_ptr<char>::create(dev_handle.get_self_dir(), dev_data_addr);
+
+      /// Overwrite the host representation of an accessor written the device
+      /// with the proper device representation we just built.
       dev_handle.store<device_accessor_impl, /*no_check*/ true>(
           dev_lambda_addr + kdesc.offset, dev_acc);
+
+      /// Setup the write back for the buffer.
       write_backs.push_back(
           [=, dev_handle = dev_handle, host_addr = acc_addr->impl->data]() mutable {
             dev_handle.memcpy_d2h(host_addr, dev_data_addr, size_in_bytes);

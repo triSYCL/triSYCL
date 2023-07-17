@@ -2,6 +2,8 @@
 #ifndef AIE_DETAIL_HOST_ONLY_HPP
 #define AIE_DETAIL_HOST_ONLY_HPP
 
+/// This file contains host only code
+
 #if defined(__AIE_EMULATION__) || defined(__AIE_FALLBACK__) || defined(__SYCL_DEVICE_ONLY__)
 #error "should only be used on the host side of hardware execution"
 #endif
@@ -15,8 +17,8 @@ namespace aie::detail {
 using device_tile_impl = device_tile_impl_fallback;
 
 struct device_mem_handle_impl : device_mem_handle_impl_fallback {
-  /// Although it require using some preprocessor. having access to the handle
-  /// enable writing a much wider range of services. so it is left public
+  /// Although it requires using some preprocessor, having access to the handle
+  /// enables writing a much wider range of services. So it is left public.
   xaie::handle handle;
   device_mem_handle_impl(xaie::handle h)
       : handle(h) {}
@@ -53,6 +55,7 @@ struct device_impl : device_impl_fallback {
   };
 
   handle_impl impl;
+  /// type-erased addresses of every tile's storage on the host.
   std::vector<void*> memory;
   int sizeX;
   int sizeY;
@@ -87,15 +90,16 @@ struct device_impl : device_impl_fallback {
       impl = handle_impl();
       tries++;
     }
-    // Initialize all the tiles with their network connections first
+    // Initialize all the tiles storage to be empty
     memory.assign(x * y, nullptr);
     sizeX = x;
     sizeY = y;
-    // service_system = service::host_side { sizeX, sizeY, get_handle({ 0, 0 }) };
   }
+
+  /// Used by layout_storage to setup all tile storage
   void add_storage(hw::position pos, void* storage) { get_mem(pos) = storage; }
 
-  /// this will retrun a handle to the synchronization barrier between the
+  /// This will return a handle to the synchronization barrier between the
   /// device and the host.
   soft_barrier::host_side get_barrier(int x, int y) {
     return { get_handle({ x, y }),
@@ -109,11 +113,11 @@ struct device_impl : device_impl_fallback {
   template <typename ServiceTy> void wait_all(ServiceTy&& service_data) {
     trisycl::detail::no_log_in_this_scope nls;
     int addr = hw::offset_table::get_service_record_begin_offset();
-    /// This count the number of kernel that indicated they finished
-    /// executing. any kernel can signal it finished executing just once
-    /// because it stop executing or get stuck in an infinite loop after that.
-    /// so it is not needed to keep track of which kernel stoped executing
-    /// just how many.
+    /// This count the number of kernels that indicated they finished
+    /// executing. Any kernel can signal it finished executing just once
+    /// because it stopped executing or got stuck in an infinite loop after that.
+    /// Thus it is not needed to keep track of which kernel stopped executing,
+    /// just how many did.
     int done_counter = 0;
     xaie::handle h = get_handle({ 0, 0 });
     do {
@@ -129,7 +133,7 @@ struct device_impl : device_impl_fallback {
               continue;
             service_device_side ds = h.on(x, y).load<service_device_side>(addr);
 
-            /// read if the device requested to chain the is request.
+            /// read if the device requested to chain more requests.
             chain = ds.chained_request;
 
             /// done is always at index 0 and is handled inline

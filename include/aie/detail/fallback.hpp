@@ -2,6 +2,9 @@
 #ifndef AIE_DETAIL_FALLBACK_HPP
 #define AIE_DETAIL_FALLBACK_HPP
 
+/// This file implement the fallback implementation
+/// any use of any API will simply assert.
+
 #if !defined (__AIE_FALLBACK__) || defined (__SYCL_DEVICE_ONLY__)
 #error "should only be used in fallback mode"
 #endif

@@ -1,6 +1,11 @@
 #ifndef AIE_DETAIL_DEVICE_ALLOCATOR_HPP
 #define AIE_DETAIL_DEVICE_ALLOCATOR_HPP
 
+/// This file contains an implementation of a heap allocator similar to malloc
+/// but this heap allocator is intended to run on device. This file also
+/// implement so utility to setup and allocate blocks of memory on device from
+/// the host
+
 #ifndef __SYCL_XILINX_AIE__
 # error "This file should only be used for hardware execution"
 #endif
@@ -328,8 +333,8 @@ void free(void* p) {
   bh->in_use = 0;
   /// Try to merge with nearby blocks to reduce fragmentation.
   bh->try_merge_next();
-  /// We try to merge into the previous block after mergin into the next block
-  /// because mergin into the previous block makes the current block unusable if
+  /// We try to merge into the previous block after merging into the next block
+  /// because merging into the previous block makes the current block unusable if
   /// successful.
   bh->try_merge_prev();
 }

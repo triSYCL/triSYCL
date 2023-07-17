@@ -721,34 +721,29 @@ struct application {
   }
 
   struct graphics_service {
+    /// The host-side storage of the serivce.
     aie::ext::application<PixelTy>& app;
 
     std::chrono::time_point<std::chrono::system_clock> last_frame;
-    std::vector<std::vector<int>> counters;
     std::vector<std::uint8_t> graphic_buffer;
 
     graphics_service(aie::ext::application<PixelTy>& a)
         : app(a) {
-      counters.resize(a.get_image_grid().nx,
-                      std::vector<int>(a.get_image_grid().ny, 0));
       graphic_buffer.resize(a.get_image_grid().image_x *
                             a.get_image_grid().image_y *
                             sizeof(PixelTy));
     }
 
     struct data_type {
+      /// data being transferred on each requests.
       /// A pointer to the new image data
       aie::generic_ptr<PixelTy> data;
 
-      /// In min_value and max_value, uint64_t is just to have 8-byte of
-      /// storage, the graphics system will bitcast min_value to the proper type
-      /// before use.
-
-      /// 8-byte storage for the minimun value of a pixel.
       PixelTy min_value;
-      /// 8-byte storage for The maximum value of a pixel.
       PixelTy max_value;
     };
+
+    /// device facing API of this service
     template <typename Parent> struct add_to_service_api {
       auto* tile() { return static_cast<Parent*>(this)->dt(); }
       bool update_image(PixelTy* ptr, PixelTy min_value, PixelTy max_value) {
@@ -759,11 +754,10 @@ struct application {
         return tile()->perform_service(data);
       }
     };
+
+    /// function called on each request
     bool act_on_data(int x, int y, aie::device_mem_handle h,
                      data_type dev_data) {
-      int& counter = counters[x][y];
-
-      // assert(dev_data.counter == counter && "host received incoherent data");
       assert(dev_data.data && "host received incoherent data");
       assert(dev_data.max_value != dev_data.min_value &&
              "host received incoherent data");

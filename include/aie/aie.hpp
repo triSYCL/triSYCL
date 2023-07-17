@@ -38,9 +38,21 @@ namespace aie {
 
 namespace detail {
 
-template <typename ElemTy, int X, int Y> struct indexed_elem {
+template <typename ElemTy, int X, int Y> struct placed_elem {
   static constexpr hw::position pos { X, Y };
   ElemTy elem;
+};
+
+template <typename T> struct selected_type {
+  using type = T;
+};
+
+template <typename T>
+concept is_selected_type = is_instance_of_type<T, selected_type>::value;
+
+template <typename T>
+concept is_type_selector = requires(T s) {
+  { s.template operator()<0, 0>() } -> is_selected_type;
 };
 
 /// Type containing all the constexpr and type information needed by tile types.
@@ -49,7 +61,8 @@ struct tile_type_info {
   static constexpr int sizeX = size_X;
   static constexpr int sizeY = size_Y;
 
-  /// Implementation detail to figure out the return type of the lambda
+  /// Implementation detail used to figure out the return type of the lambda
+  /// used in the aie::queue::submit
   template <int x, int y, typename T> static auto get_type(T l) {
     return l.template operator()<x, y>();
   }
@@ -58,10 +71,12 @@ struct tile_type_info {
     using type = typename T::type;
   };
 
+  /// enforce that void should be treated as detail::out_of_bounds
   template <> struct type_selector<void> {
     using type = detail::out_of_bounds;
   };
 
+  /// The storage type used by the tile at X, Y if X, Y is in range
   template <int X, int Y>
   using TileDataTy = typename type_selector<decltype(get_type<X, Y>(
       std::declval<TypeSelectorTy>()))>::type;
@@ -69,8 +84,9 @@ struct tile_type_info {
   /// Type of the memory tile at position X, Y
   template <int X, int Y>
   using tile_data =
-      std::conditional_t < X >= 0 && Y >= 0 &&
-      X < size_X && Y < size_Y, TileDataTy<X, Y>, detail::out_of_bounds>;
+      std::conditional_t <
+       X >= 0 && X < size_X &&
+       Y >= 0 && Y < size_Y, TileDataTy<X, Y>, detail::out_of_bounds>;
 
   using service_type = ServiceTy;
 };
@@ -82,19 +98,23 @@ template <typename TypeSelectorTy,
 struct layout_storage {
   static constexpr int sizeX = size_X;
   static constexpr int sizeY = size_Y;
+
+  /// tuple of all valid tile coordinates.
   static constexpr auto tile_coordinates = boost::hana::cartesian_product(
       boost::hana::make_tuple(boost::hana::range_c<int, 0, sizeX>,
                               boost::hana::range_c<int, 0, sizeY>));
   using type_info = tile_type_info<TypeSelectorTy, sizeX, sizeY, ServiceTy>;
 
+  /// Implementation detail to generate a tuple of all tile storage types
   static auto generate_storage() {
     return boost::hana::transform(tile_coordinates, [&](auto coord) {
-      return indexed_elem<
+      return placed_elem<
           typename type_info::template TileDataTy<boost::hana::at_c<0>(coord),
                                                   boost::hana::at_c<1>(coord)>,
           boost::hana::at_c<0>(coord), boost::hana::at_c<1>(coord)> {};
     });
   }
+  /// a tuple of all tile storage types
   decltype(generate_storage()) tile_storage = generate_storage();
 
   template <int LinearId> auto& storage_at() {
@@ -107,7 +127,8 @@ struct layout_storage {
     return storage_at<linear_id(X, Y)>();
   }
 
-  template <int X, int Y> auto get_storage_type() {
+  /// get the storage of X, Y
+  template <int X, int Y> auto get_storage() {
     if constexpr (X < 0 || Y < 0 || X >= sizeX || Y >= sizeY)
       return detail::out_of_bounds {};
     return storage_at<X, Y>();
@@ -115,7 +136,7 @@ struct layout_storage {
 
   static auto generate_tiles() {
     return boost::hana::transform(tile_coordinates, [&](auto coord) {
-      return indexed_elem<HostTileTy<type_info, boost::hana::at_c<0>(coord),
+      return placed_elem<HostTileTy<type_info, boost::hana::at_c<0>(coord),
                                      boost::hana::at_c<1>(coord)>,
                           boost::hana::at_c<0>(coord),
                           boost::hana::at_c<1>(coord)> {};
@@ -149,26 +170,8 @@ template <typename... ServicesTy> struct service_storage {
   }
 };
 
-template <typename T> struct selected_type {
-  using type = T;
-};
-
-template <typename InstT, template <typename...> typename TempT>
-struct is_instance_of_type : std::false_type {};
-
-template <template <typename...> typename TempT, typename... Ts>
-struct is_instance_of_type<TempT<Ts...>, TempT> : std::true_type {};
-
 template <typename T>
 concept is_service_storage = is_instance_of_type<T, service_storage>::value;
-
-template <typename T>
-concept is_selected_type = is_instance_of_type<T, selected_type>::value;
-
-template <typename T>
-concept is_type_selector = requires(T s) {
-  { s.template operator()<0, 0>() } -> is_selected_type;
-};
 
 } // namespace detail
 
@@ -221,6 +224,7 @@ template <typename TypeInfoTy, int X, int Y> struct tile_base {
 
 template <typename T> struct add_to_api_base {
  protected:
+  /// get the device tile for a service's add_to_api mix-in
   auto& tile() {
     return *static_cast<typename detail::get_inner<T>::type*>(
                 static_cast<T*>(this))
@@ -432,7 +436,7 @@ struct device_tile
     using service_t = TypeInfoTy::service_type::template get_info_t<
         TypeInfoTy::service_type::data_seq::template get_index<
             std::decay_t<T>>>::service_t;
-    /// Call on to the implementation to execute the service correct service
+    /// Call on to the implementation to execute the service correct
     return impl::perform_service<service_t, typename TypeInfoTy::service_type>(
         local, chained);
   }
@@ -461,7 +465,7 @@ struct host_tile : public detail::tile_base<TypeInfoTy, X, Y> {
     impl.init(global, pos());
   }
 
-  /// access the memory tile on the host and notify that it needs to be send to
+  /// access the memory tile on the host and notify that it needs to be sent to
   /// the device.
   auto& mem() {
     using RetTy = typename decltype(dt)::self_memory_tile;
@@ -474,7 +478,7 @@ struct host_tile : public detail::tile_base<TypeInfoTy, X, Y> {
 
   /// execute a kernel on the device
   template <typename F> void single_task(F&& func) { impl.execute(func, dt); }
-  /// Used as implementation detail. this should be refactor such that it
+  /// Used as implementation detail. this should be refactored such that it
   /// becomes private
   void register_accessor(const detail::accessor_common& acc) {
     impl.register_accessor(acc);

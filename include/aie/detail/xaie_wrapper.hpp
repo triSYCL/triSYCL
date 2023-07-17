@@ -1,6 +1,8 @@
 #ifndef AIE_DETAIL_XAIE_WRAPPER_HPP
 #define AIE_DETAIL_XAIE_WRAPPER_HPP
 
+/// This provides a wrapper around the libxaiengine library.
+
 #if defined(__SYCL_DEVICE_ONLY__) || defined(__AIE_FALLBACK__) || defined(__AIE_EMULATION__)
 namespace aie::detail::xaie {
 struct handle {

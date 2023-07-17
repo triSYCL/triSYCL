@@ -2,6 +2,9 @@
 #ifndef AIE_DETAIL_DEVICE_ONLY_HPP
 #define AIE_DETAIL_DEVICE_ONLY_HPP
 
+/// This file contains parts of the hardware execution that are only used on
+/// device
+
 #if defined(__AIE_EMULATION___) || !defined(__SYCL_DEVICE_ONLY__)
 #error "should only be used on the host side of hardware execution"
 #endif
@@ -96,7 +99,7 @@ struct fake_dt {
     /// lookup what type of service sends this data;
     using service_t = BasicService::template get_info_t<
         BasicService::data_seq::template get_index<std::decay_t<T>>>::service_t;
-    /// Call on to the implementation to execute the service correct service
+    /// Call on to the implementation to execute the service correct
     return device_tile_impl::perform_service<service_t, BasicService>(local,
                                                                        chained);
   }
@@ -115,17 +118,17 @@ basic_service() {
 } // namespace aie::detail
 
 /// Notify the host that the kernel has finished.
-extern __attribute__((noreturn)) __attribute__((noinline)) void
-finish_kernel(int32_t exit_code) {
+extern __attribute__((noreturn)) void finish_kernel(int32_t exit_code) {
   aie::detail::basic_service().exit_kernel(exit_code);
   while (1)
     aie_intr::memory_fence();
 }
 
 /// The assert macro will call this function if an assertion fails on device.
-extern __attribute__((noreturn)) __attribute__((noinline)) void
-__assert_fail(const char* expr, const char* file, unsigned int line,
-              const char* func) {
+extern __attribute__((noreturn)) void __assert_fail(const char* expr,
+                                                    const char* file,
+                                                    unsigned int line,
+                                                    const char* func) {
   aie::detail::basic_service().logln("aie(", aie::hw::get_tile_x_coordinate(),
                                      ", ", aie::hw::get_tile_y_coordinate(),
                                      ") at ", file, ":", line, ": ", func,

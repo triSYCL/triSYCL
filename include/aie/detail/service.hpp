@@ -1,6 +1,8 @@
 #ifndef AIE_DETAIL_SERVICE_HPP
 #define AIE_DETAIL_SERVICE_HPP
 
+/// This files contains default services that are always added to every kernel
+
 #include "hardware.hpp"
 #include "sync.hpp"
 #include "xaie_wrapper.hpp"

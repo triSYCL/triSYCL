@@ -1,6 +1,8 @@
 #ifndef AIE_DETAIL_SYNC_HPP
 #define AIE_DETAIL_SYNC_HPP
 
+/// This file contains synchronization primitives for host/device communication
+
 #include <cstdint>
 #include <functional>
 #include <variant>
@@ -66,17 +68,17 @@ struct soft_barrier {
     /// the device.
     volatile uint32_t counters[2];
 
-  public:
+   public:
 #if defined(__SYCL_DEVICE_ONLY__)
-    /// The device_side cannot be on on device because the host_side depends
-    /// on its address. The device_side should be initialized to 0 from the host
-    /// before the kernel starts.
+    /// The device_side cannot be moved on device because the host_side
+    /// depends on its address. The device_side should be initialized to 0 from
+    /// the host before the kernel starts.
     device_side() = delete;
-    device_side(const device_side &) = delete;
+    device_side(const device_side&) = delete;
 #endif
     /// Wait for the host.
     __attribute__((noinline)) void wait() volatile {
-      /// Prevent memory operation from being on below the barrier
+      /// Prevent memory operation from being moved below the barrier
       aie_intr::memory_fence();
       /// Notify the host that the device has arrived
       counters[device] = counters[device] + 1;

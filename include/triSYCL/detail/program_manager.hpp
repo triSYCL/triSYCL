@@ -2,13 +2,13 @@
 #define TRISYCL_SYCL_DETAIL_PROGRAM_MANAGER_HPP
 
 #include <cassert>
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <utility>
-#include <fstream>
 
-#include "triSYCL/detail/debug.hpp"
 #include "elf.h"
+#include "triSYCL/detail/debug.hpp"
 
 /** \file The minimum required functions for registering a binary
     using the triSYCL/Intel SYCL frontend, so that the compilation flow stays

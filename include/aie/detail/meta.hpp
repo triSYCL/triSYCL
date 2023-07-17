@@ -2,6 +2,8 @@
 #ifndef AIE_DETAIL_META_HPP
 #define AIE_DETAIL_META_HPP
 
+/// Basic meta programming utilities
+
 #include "boost/hana.hpp"
 
 namespace aie::detail {
@@ -53,6 +55,12 @@ struct memfunc_info<RetTy (ClassT::*)(Ts...)> {
 
 template<auto func>
 using memfunc_info_t = memfunc_info<decltype(func)>;
+
+template <typename InstT, template <typename...> typename TempT>
+struct is_instance_of_type : std::false_type {};
+
+template <template <typename...> typename TempT, typename... Ts>
+struct is_instance_of_type<TempT<Ts...>, TempT> : std::true_type {};
 
 }
 

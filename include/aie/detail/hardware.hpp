@@ -1,6 +1,11 @@
 #ifndef AIE_DETAIL_HARDWARE_HPP
 #define AIE_DETAIL_HARDWARE_HPP
 
+/// This file contains many abstract type to represent hardware construct and
+/// properties. Also it contains structured utilities to simplify interactions
+/// with AIE1 hardware from the host and device side. Note that intrinsics to
+/// interact with the hardware come from aie-intrinsic.h
+
 #include "utils.hpp"
 #include <algorithm>
 #include <cassert>
@@ -23,7 +28,7 @@ constexpr unsigned alloc_align = 4;
 } // namespace detail::heap
 
 /// The ordering  and specific values of elements matters in the following enum.
-/// It matches with bases addresses order. neighbouring tiles of a core are at
+/// It matches with bases addresses order. Neighbouring tiles of a core are at
 /// address: (1 << 17) | (dir << 15) from the perspective of that core. It also
 /// matches with locks where the id for a core's view is: dir << 4 | id.
 enum class dir : int8_t {
@@ -31,6 +36,9 @@ enum class dir : int8_t {
   west,
   north,
   east,
+
+  /// self only exist for convenience in some APIs, all uses of dir will
+  /// eventually need to be converted to a real direction at some point.
   self,
 };
 
@@ -40,17 +48,18 @@ constexpr dir opposite_dir(dir d) {
   return (dir)(detail::underlying_value(d) ^ 0x2);
 }
 
-/// dir can be self, self is cannot be used in many cases because it needs to be
-/// resolved to east or west. This function asserts that dir should have been
-/// resolved.
+/// dir has 4 real states south, west, north, east and one virtual state self.
+/// that only exist for convenience. There is many internal uses of dif for
+/// which self is not a valid input because the use expects a real physical
+/// direction not a conceptual one. This function assert that d is not self.
 void constexpr assert_is_resolved_dir(dir d) {
   assert(d >= dir::south && d <= dir::east);
 }
 
 /// Represent parity of a tile
 enum class parity : int8_t {
-  west,
-  east,
+  west, /// self = west
+  east, /// self = east
 };
 
 /// Represent offset between 2 tile.
@@ -191,6 +200,7 @@ inline dir resolved_dir(dir d) {
   return d;
 }
 
+/// get the base address of one of the memory tile in a specific direction
 constexpr uint32_t get_base_addr(dir d) {
   return (1 << 17) | ((uint32_t)d << 15);
 }
@@ -230,7 +240,7 @@ int get_tile_y_coordinate() {
 
 #endif
 
-/// This is function is very similar to the C++20 std::bit_cast but it accepts
+/// This function is very similar to the C++20 std::bit_cast but it accepts
 /// bitcasting between types of diffrent sizes. When sizeof(To) > sizeof(From)
 /// bit after sizeof(From) will be 0. When sizeof(From) > sizeof(To), the result
 /// will only contain part of the original object.
@@ -242,7 +252,7 @@ inline To bit_cast(const From& from) noexcept {
   return to;
 }
 
-/// stable_pointer is a representation of a device pointer that has the same
+/// dev_ptr is a representation of a device pointer that has the same
 /// layout between the host and the device. This also contains function to
 /// manipulate pointer representations and pointer arithmetic
 template <typename T> struct dev_ptr {
@@ -282,7 +292,7 @@ template <typename T> struct dev_ptr {
     set(ptr);
   }
 
-  /// This function will be SFNIAE out for T == void. without causing hard
+  /// This function will be SFINAE-d out for T == void, without causing hard
   /// error on instantiation of the class. T2 should never be specified by the
   /// user.
   template <typename T2 = T>
@@ -381,7 +391,7 @@ template <typename T> struct dev_ptr {
 static_assert(sizeof(dev_ptr<void>) == sizeof(std::uint32_t) &&
               sizeof(dev_ptr<void>) == 4);
 
-/// Linker script details. any change here need to be reflected in the linker
+/// Linker script details. Any change here need to be reflected in the linker
 /// script and vice versa.
 /// This will probably be made dynamic in the future to allow more efficient
 /// memory usage.
