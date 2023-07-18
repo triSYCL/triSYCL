@@ -24,6 +24,12 @@ on:
         description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
         required: false
         default: false
+      compilation_time_out:
+        type: string
+        description: Run the build with a timeout in minutes to have
+          partial compilation to bootstrap ccache
+        required: false
+        default: 10
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -136,6 +142,7 @@ jobs:
 
       - name: Build for ${{matrix.c_compiler}}, ${{matrix.cxx_compiler}},
           OpenMP=${{matrix.OpenMP}}, OpenCL=${{matrix.OpenCL}}
+        timeout-minutes: ${{ inputs.compilation_time_out }}
         # Compile all the tests using all the available cores
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
           --verbose --parallel `nproc`
