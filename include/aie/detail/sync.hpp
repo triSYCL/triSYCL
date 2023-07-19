@@ -3,17 +3,21 @@
 
 /// This file contains synchronization primitives for host/device communication
 
+#include "hardware.hpp"
+#include "xaie_wrapper.hpp"
 #include <cstdint>
 #include <functional>
 #include <variant>
-#include "hardware.hpp"
-#include "xaie_wrapper.hpp"
 #ifndef __SYCL_DEVICE_ONLY__
 #include <iostream>
 #endif
 
 namespace aie::detail {
 
+/// This an implementation of a host/device barrier built on top of volatile
+/// exploiting the fact that memory access on device and thought libxaiengine
+/// are atomic at hardware level so only volatile is needed to prevent the
+/// compiler from breaking the code.
 struct soft_barrier {
 #if defined(__SYCL_XILINX_AIE__)
   enum {

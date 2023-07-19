@@ -45,7 +45,7 @@ using device_mem_handle = device_mem_handle_adaptor<device_mem_handle_impl>;
 
 struct device_tile_impl : device_tile_impl_fallback {
   template <dir d> void* get_mem_addr() {
-    return hw::get_object<void>(hw::offset_table::get_tile_mem_begin_offset(),
+    return get_object<void>(offset_table::get_tile_mem_begin_offset(),
                                 d);
   }
   void stream_write16(const char* ptr, int stream_dix) {
@@ -56,10 +56,10 @@ struct device_tile_impl : device_tile_impl_fallback {
   }
   void cascade_write48(const char* ptr) { aie_intr::cstream_write48(ptr); }
   void cascade_read48(char* ptr) { aie_intr::cstream_read48(ptr); }
-  int x_coord() { return hw::get_tile_x_coordinate(); }
-  int y_coord() { return hw::get_tile_y_coordinate(); }
-  device_lock_impl lock(hw::position pos, dir d, int i) {
-    return device_lock_impl(hw::resolved_dir(pos, d), i);
+  int x_coord() { return get_tile_x_coordinate(); }
+  int y_coord() { return get_tile_y_coordinate(); }
+  device_lock_impl lock(position pos, dir d, int i) {
+    return device_lock_impl(resolved_self_dir(pos, d), i);
   }
   template <typename T, typename ServiceTy>
   static service_info<T>::ret_t
@@ -103,8 +103,8 @@ struct fake_dt {
     return device_tile_impl::perform_service<service_t, BasicService>(local,
                                                                        chained);
   }
-  int dyn_x() { return hw::get_tile_x_coordinate(); }
-  int dyn_y() { return hw::get_tile_y_coordinate(); }
+  int dyn_x() { return get_tile_x_coordinate(); }
+  int dyn_y() { return get_tile_y_coordinate(); }
 };
 
 /// Function to obtain a mix-in of all basic service APIs
@@ -129,8 +129,8 @@ extern __attribute__((noreturn)) void __assert_fail(const char* expr,
                                                     const char* file,
                                                     unsigned int line,
                                                     const char* func) {
-  aie::detail::basic_service().logln("aie(", aie::hw::get_tile_x_coordinate(),
-                                     ", ", aie::hw::get_tile_y_coordinate(),
+  aie::detail::basic_service().logln("aie(", aie::get_tile_x_coordinate(),
+                                     ", ", aie::get_tile_y_coordinate(),
                                      ") at ", file, ":", line, ": ", func,
                                      ": Assertion `", expr, "' failed\n\n");
   finish_kernel(aie::detail::ec_assert);

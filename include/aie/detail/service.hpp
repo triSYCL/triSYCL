@@ -13,9 +13,8 @@ namespace aie::detail {
 
 template <typename dev_handle>
 struct send_log_service {
-  /// This is the data that will be transmitted to the host when the device
-  /// is logging. This struct needs to have the same layout on the host and the
-  /// device.
+  /// This is an experimental improvement that adds support for float and double
+  /// and move serialization from the device to the host.
   // struct str {
   //   /// Pointer to the first character of a buffer to print
   //   aie::generic_ptr<const char> data;
@@ -29,7 +28,7 @@ struct send_log_service {
   //   __attribute__((noinline)) void log_internal(T str, bool chained)
   //     requires(std::is_same_v<T, const char*> || std::is_same_v<T, char*>)
   //   {
-  //     send_log_service::str data { hw::dev_ptr<const char>(str), strlen(str) };
+  //     send_log_service::str data { dev_ptr<const char>(str), strlen(str) };
   //     tile().perform_service(data_type { data }, chained);
   //   }
   //   template <typename T>
@@ -50,6 +49,10 @@ struct send_log_service {
   //   {
   //     tile().perform_service(data_type { (const void*)data }, chained);
   //   }
+
+  /// This is the data that will be transmitted to the host when the device
+  /// is logging. This struct needs to have the same layout on the host and the
+  /// device.
   struct data_type {
     /// Pointer to the first character of a buffer to print
     aie::generic_ptr<const char> data;
@@ -59,7 +62,7 @@ struct send_log_service {
   template <typename Parent> struct add_to_service_api {
    private:
     void log_internal(const char* str, bool chained) {
-      send_log_service::data_type data { hw::dev_ptr<const char>(str),
+      send_log_service::data_type data { dev_ptr<const char>(str),
                                          strlen(str) };
       tile().perform_service(data, chained);
     }

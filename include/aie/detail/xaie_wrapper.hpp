@@ -99,13 +99,13 @@ constexpr auto aie_tile_row_num = 8;
 
 /// Convert the coordinate system of our runtime into the one used by
 /// libXAiengine and hardware.
-constexpr xaie::XAie_LocType aie_pos_to_xaie_pos(hw::position p) {
+constexpr xaie::XAie_LocType aie_pos_to_xaie_pos(position p) {
   return xaie::XAie_TileLoc(p.x, p.y + 1);
 }
 
 /// Convert the coordinate system of libXAiengine and hardware into the one of
 /// our runtime.
-constexpr hw::position xaie_pos_to_aie_pos(xaie::XAie_LocType loc) {
+constexpr position xaie_pos_to_aie_pos(xaie::XAie_LocType loc) {
   return {loc.Col, loc.Row - 1};
 }
 
@@ -164,7 +164,7 @@ struct handle {
   std::string get_coord_str() {
     std::string str;
     std::stringstream ss(str);
-    hw::position pos = xaie_pos_to_aie_pos(tile);
+    position pos = xaie_pos_to_aie_pos(tile);
     ss << pos.x << ", " << pos.y;
     return ss.str();
   }
@@ -235,20 +235,20 @@ struct handle {
     return {inst, flags};
   }
 
-  xaie::handle adjusted(hw::offset o) {
+  xaie::handle adjusted(offset o) {
     return {aie_pos_to_xaie_pos(xaie_pos_to_aie_pos(tile) + o), inst};
   }
-  xaie::handle on(hw::position p) {
+  xaie::handle on(position p) {
     return {aie_pos_to_xaie_pos(p), inst};
   }
   xaie::handle on(dir d) {
     return {aie_pos_to_xaie_pos(xaie_pos_to_aie_pos(tile).on(d)), inst};
   }
 
-  hw::position get_aie_pos() { return xaie_pos_to_aie_pos(tile); }
+  position get_aie_pos() { return xaie_pos_to_aie_pos(tile); }
 
   dir get_self_dir() {
-    return hw::get_self_dir(get_aie_pos().get_parity());
+    return ::aie::get_self_dir(get_aie_pos().get_parity());
   }
 
   TRISYCL_DEBUG_FUNC xaie::handle on(int x, int y) { return on({x, y}); }
@@ -283,7 +283,7 @@ struct handle {
     return ret;
   }
 
-  template <typename T = void, typename U = void> T load(hw::dev_ptr<U> ptr) {
+  template <typename T = void, typename U = void> T load(dev_ptr<U> ptr) {
     return on(ptr.get_dir())
         .template load<std::conditional_t<std::is_same_v<T, void>, U, T>>(
             ptr.get_offset());
@@ -299,7 +299,7 @@ struct handle {
   }
 
   template <typename T, typename U>
-  void store(hw::dev_ptr<U> ptr, const T& val) {
+  void store(dev_ptr<U> ptr, const T& val) {
     on(ptr.get_dir()).template store<T>(ptr.get_offset(), val);
   }
 

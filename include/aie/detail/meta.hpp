@@ -8,6 +8,7 @@
 
 namespace aie::detail {
 
+/// Meta type represents and manipulate sequences of types.
 template <typename... Ts> struct type_seq {
   template <typename Iterable, typename T>
   static constexpr auto index_of(Iterable const& iterable, T const& element) {
@@ -28,6 +29,7 @@ template <typename... Ts> struct type_seq {
   template <template <typename...> typename other> using to = other<Ts...>;
 };
 
+/// Meta type to get information about functions-like types.
 template<typename T>
 struct func_info {};
 
@@ -43,6 +45,7 @@ struct func_info<RetTy(Ts...)> {
 template<auto func>
 using func_info_t = func_info<decltype(func)>;
 
+/// Meta type to get information about member-functions-like types.
 template<typename>
 struct memfunc_info {};
 

@@ -25,24 +25,24 @@ namespace aie {
 /// Abstraction over some pointer pointing on device data.
 /// It is used for the APIs of device_mem_handle.
 /// Its is intended to work on both emulation with a raw 64-bit pointer
-/// and for execution on hardware with a 32-bit hw::dev_ptr<T>
+/// and for execution on hardware with a 32-bit dev_ptr<T>
 template <typename T> struct generic_ptr {
   generic_ptr() = default;
 // #if !defined(__AIE_FALLBACK__) && !defined(__AIE_EMULATION__)
-  hw::dev_ptr<T> ptr;
+  dev_ptr<T> ptr;
 // #ifdef __SYCL_DEVICE_ONLY__
-  generic_ptr(T* p) : generic_ptr(hw::dev_ptr<T>(p)) { }
+  generic_ptr(T* p) : generic_ptr(dev_ptr<T>(p)) { }
 // #else
 //   generic_ptr(T*) { TRISYCL_FALLBACK; }
 // #endif
-  generic_ptr(hw::dev_ptr<T> p)
+  generic_ptr(dev_ptr<T> p)
       : ptr(p) {}
-  operator generic_ptr<void>() { return hw::dev_ptr<void> { ptr }; }
+  operator generic_ptr<void>() { return dev_ptr<void> { ptr }; }
   // #else
   //   T* ptr = nullptr;
   //   generic_ptr(T* p)
   //       : ptr(p) {}
-  //   generic_ptr(hw::dev_ptr<T> p) { TRISYCL_FALLBACK; }
+  //   generic_ptr(dev_ptr<T> p) { TRISYCL_FALLBACK; }
   //   operator generic_ptr<void>() const { return { (void*)ptr }; }
   // #endif
   operator bool() const { return (bool)ptr; }
@@ -52,7 +52,7 @@ template <typename T> struct generic_ptr {
 /// some explicitly specified deduction guide that are the same as the
 /// automatically generated ones.
 template <typename T> generic_ptr(T*) -> generic_ptr<T>;
-template <typename T> generic_ptr(hw::dev_ptr<T>) -> generic_ptr<T>;
+template <typename T> generic_ptr(dev_ptr<T>) -> generic_ptr<T>;
 
 } // namespace aie
 
@@ -111,8 +111,8 @@ template <typename... Ts> struct service_list_info {
 struct device_impl_fallback {
   device_impl_fallback() = default;
   device_impl_fallback(int x, int y) { TRISYCL_FALLBACK; }
-  void add_storage(hw::position pos, void* storage) { TRISYCL_FALLBACK; }
-  void* get_mem(hw::position pos) { TRISYCL_FALLBACK; }
+  void add_storage(position pos, void* storage) { TRISYCL_FALLBACK; }
+  void* get_mem(position pos) { TRISYCL_FALLBACK; }
   template <typename ServiceTy> void wait_all(ServiceTy&&) { TRISYCL_FALLBACK; }
 };
 
@@ -132,8 +132,8 @@ using host_lock_impl_fallback = lock_impl_fallback;
 /// The device_tile_impl enable doing any action that can be done on device by a
 /// tile.
 struct device_tile_impl_fallback {
-  template <typename DeviceImplTy> void init(DeviceImplTy&, hw::position pos) {}
-  lock_impl_fallback lock(hw::position pos, dir d, int i) { TRISYCL_FALLBACK; }
+  template <typename DeviceImplTy> void init(DeviceImplTy&, position pos) {}
+  lock_impl_fallback lock(position pos, dir d, int i) { TRISYCL_FALLBACK; }
   template <dir d> void* get_mem_addr() { TRISYCL_FALLBACK; }
   void stream_write16(const char* ptr, int stream_dix) { TRISYCL_FALLBACK; }
   void stream_read16(char* ptr, int stream_dix) { TRISYCL_FALLBACK; }
@@ -150,7 +150,7 @@ struct device_tile_impl_fallback {
 /// The host_tile_impl enable doing any action that can be done from the host to
 /// a tile.
 struct host_tile_impl_fallback {
-  template <typename DeviceImplTy> void init(DeviceImplTy&, hw::position pos) {}
+  template <typename DeviceImplTy> void init(DeviceImplTy&, position pos) {}
   lock_impl_fallback lock(dir d, int i) { TRISYCL_FALLBACK; }
   void* get_mem_addr(dir d) { TRISYCL_FALLBACK; }
   template <typename LambdaTy, typename DeviceTileTy>
@@ -199,7 +199,7 @@ struct alignas(8) device_accessor_impl {
   device_accessor_impl(uint32_t, uint32_t, char*) {}
   device_accessor_impl(uint32_t, uint32_t, char*, uint32_t, uint32_t) {}
   uint32_t size_ = 0;
-  hw::dev_ptr<char> data = nullptr;
+  dev_ptr<char> data = nullptr;
   char* get_ptr() { return data.get(); }
   const char* get_ptr() const { return data.get(); }
   std::size_t size() { return size_; }

@@ -60,12 +60,12 @@ struct device_impl : device_impl_fallback {
   int sizeX;
   int sizeY;
 
-  void*& get_mem(hw::position pos) {
+  void*& get_mem(position pos) {
     assert(pos.x < sizeX && pos.y < sizeY);
     return memory[pos.x * sizeY + pos.y];
   }
 
-  xaie::handle get_handle(hw::position pos) {
+  xaie::handle get_handle(position pos) {
     return xaie::handle(xaie::aie_pos_to_xaie_pos(pos), &impl.aie_inst);
   }
 
@@ -97,13 +97,13 @@ struct device_impl : device_impl_fallback {
   }
 
   /// Used by layout_storage to setup all tile storage
-  void add_storage(hw::position pos, void* storage) { get_mem(pos) = storage; }
+  void add_storage(position pos, void* storage) { get_mem(pos) = storage; }
 
   /// This will return a handle to the synchronization barrier between the
   /// device and the host.
   soft_barrier::host_side get_barrier(int x, int y) {
     return { get_handle({ x, y }),
-             (uint32_t)(hw::offset_table::get_service_record_begin_offset() +
+             (uint32_t)(offset_table::get_service_record_begin_offset() +
                         offsetof(service_device_side, barrier)) };
   }
 
@@ -112,7 +112,7 @@ struct device_impl : device_impl_fallback {
   }
   template <typename ServiceTy> void wait_all(ServiceTy&& service_data) {
     trisycl::detail::no_log_in_this_scope nls;
-    int addr = hw::offset_table::get_service_record_begin_offset();
+    int addr = offset_table::get_service_record_begin_offset();
     /// This count the number of kernels that indicated they finished
     /// executing. Any kernel can signal it finished executing just once
     /// because it stopped executing or got stuck in an infinite loop after that.

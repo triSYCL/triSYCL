@@ -35,37 +35,26 @@ struct host_lock_impl {
 using device_lock_impl = device_lock_impl_fallback;
 #endif
 
+/// The shared data used to implement services. like every *device_side, it is
+/// unique and reside at a stable address on device.
 struct service_device_side {
-
+  /// Get the singleton implementing this service on the device
   static volatile service_device_side* get() {
-    return hw::get_object<service_device_side>(
-        hw::offset_table::get_service_record_begin_offset());
+    return get_object<service_device_side>(
+        offset_table::get_service_record_begin_offset());
   }
   soft_barrier::device_side barrier;
   uint32_t index;
-  hw::dev_ptr<volatile void> data;
-  hw::dev_ptr<volatile void> ret;
+  dev_ptr<volatile void> data;
+  dev_ptr<volatile void> ret;
 
   /// This asks the host to wait for on other request from the same device
   /// after processing this request. this exist to prevent le host from
   /// interleaving log_internal requests.
   uint32_t chained_request;
-
-  /// Send data to the host to be processed.
-  template <typename Ty> uint32_t perform(Ty&& d, bool chained = false) {
-    /// Write the data.
-    // Var v = d;
-    // data = &v;
-    // chained_request = chained;
-    // /// Notify the host of the data being available.
-    // barrier.wait();
-    // /// Wait for the host to process the data.
-    // barrier.wait();
-    // return ret_val;
-  }
 };
 
-static_assert(sizeof(service_device_side) == hw::offset_table::get_service_record_size());
+static_assert(sizeof(service_device_side) == offset_table::get_service_record_size());
 
 struct host_tile_impl : host_tile_impl_fallback {
   void* mem_ptr = nullptr;
@@ -85,7 +74,7 @@ struct host_tile_impl : host_tile_impl_fallback {
   }
 #if !defined(__SYCL_DEVICE_ONLY__)
   template <typename DeviceImplTy>
-  void init(DeviceImplTy& d, hw::position pos) {
+  void init(DeviceImplTy& d, position pos) {
     dev_handle = d.get_handle(pos);
     dev_handle.core_reset();
   }
@@ -113,7 +102,7 @@ struct host_tile_impl : host_tile_impl_fallback {
       if (kdesc.kind != kernel_param_kind_t::kind_accessor)
         continue;
 
-      /// get the contents of the host representation of a accessor
+      /// Get the content of the host-side representation of an accessor used on device
       auto* acc_addr = reinterpret_cast<host_accessor_impl*>(
           reinterpret_cast<char*>(&L) + kdesc.offset);
 
@@ -131,7 +120,7 @@ struct host_tile_impl : host_tile_impl_fallback {
 
       /// build the pointer representation from the device's perspective
       dev_acc.data =
-          hw::dev_ptr<char>::create(dev_handle.get_self_dir(), dev_data_addr);
+          dev_ptr<char>::create(dev_handle.get_self_dir(), dev_data_addr);
 
       /// Overwrite the host representation of an accessor written the device
       /// with the proper device representation we just built.
@@ -146,7 +135,7 @@ struct host_tile_impl : host_tile_impl_fallback {
     }
     if (mem_ptr) {
       /// If the memory tile was accessed send it to the device.
-      dev_handle.memcpy_h2d(hw::offset_table::get_tile_mem_begin_offset(),
+      dev_handle.memcpy_h2d(offset_table::get_tile_mem_begin_offset(),
                             mem_ptr, mem_size);
     }
   }

@@ -18,6 +18,7 @@ template <bool b, typename...> struct compile_fail_impl {
   static_assert(b, "voluntary compile error");
 };
 
+/// Create a compile error that will print a specific type or values as part of that message.
 template <typename... Tys>
 struct emit_diag_with : compile_fail_impl<false, Tys...> {};
 
@@ -62,7 +63,9 @@ template <typename T> struct storage {
   T& get() { return *reinterpret_cast<T*>(&data[0]); }
 };
 
+/// Generic singleton design pattern
 template <typename T> struct singleton {
+  /// Return the unique instance of this type
   static T* instance() {
     static T elem;
     return &elem;
@@ -125,7 +128,7 @@ using keep_volatile_ptr =
 static_assert(std::is_same_v<keep_volatile_ptr<int, volatile char*>, volatile int*>, "");
 static_assert(std::is_same_v<keep_volatile_ptr<int, char*>, int*>, "");
 
-/// don't use it. it has a very specific behavior regarding volatile that us
+/// Do not use. It has a very specific behavior regarding volatile that is
 /// useful for volatile_load and volatile_store.
 template <typename SrcT, typename DestT>
 void maybe_volatile_memcpy(DestT* dst, SrcT* src, std::size_t size) {
@@ -167,13 +170,13 @@ int pow(int i, int p) {
 }
 
 /// call the write lambda with digits of a number is proper order
-static void write_number(auto write, int i,
+static void write_number(auto char_output_writer, int i,
                          const char* base_char = "0123456789") {
   if (i < 0)
-    write('-');
+    char_output_writer('-');
   /// For 0 print 0 instead of nothing.
   if (i == 0) {
-    write(base_char[0]);
+    char_output_writer(base_char[0]);
     return;
   }
 
@@ -185,8 +188,8 @@ static void write_number(auto write, int i,
     tmp = tmp / base;
   }
   for (int d = digit_count; d > 0; d--)
-    write(base_char[(std::abs(i / pow(base, d - 1)) % base)]);
+    char_output_writer(base_char[(std::abs(i / pow(base, d - 1)) % base)]);
 }
-}
+} // namespace aie::detail
 
 #endif

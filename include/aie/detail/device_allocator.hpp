@@ -26,7 +26,7 @@ namespace heap {
 /// 
 struct block_header {
   /// Point to the previous block
-  hw::dev_ptr<block_header> prev;
+  dev_ptr<block_header> prev;
 
   /// Size is used to find the next block.
   uint32_t size : 29;
@@ -162,8 +162,8 @@ static_assert(sizeof(block_header) == 8, "");
 struct allocator_global {
 #if defined(__SYCL_DEVICE_ONLY__)
   static block_header* get_start() {
-    return hw::get_object<block_header>(
-        hw::offset_table::get_heap_begin_offset());
+    return get_object<block_header>(
+        offset_table::get_heap_begin_offset());
   }
 #endif
 };
@@ -343,8 +343,8 @@ void free(void* p) {
 // void dump_allocator_state() {
 //   log(
 //       "dumping blocks in heap ",
-//       hw::get_object<void>(hw::offset_table::get_heap_begin_offset()), "-",
-//       hw::get_object<void>(hw::offset_table::get_heap_end_offset()), "\n");
+//       get_object<void>(offset_table::get_heap_begin_offset()), "-",
+//       get_object<void>(offset_table::get_heap_end_offset()), "\n");
 //   int idx = 0;
 //   block_header* bh = allocator_global::get_start();
 //   while (bh) {

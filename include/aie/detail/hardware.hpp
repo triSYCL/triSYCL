@@ -27,8 +27,9 @@ constexpr unsigned alloc_align = 4;
 
 } // namespace detail::heap
 
-/// The ordering  and specific values of elements matters in the following enum.
-/// It matches with bases addresses order. Neighbouring tiles of a core are at
+/// Enum used to represent a direction of a neighboring tile.
+/// The ordering and specific values of elements matter in the following enum.
+/// It matches with bases addresses order. Neighboring tiles of a core are at
 /// address: (1 << 17) | (dir << 15) from the perspective of that core. It also
 /// matches with locks where the id for a core's view is: dir << 4 | id.
 enum class dir : int8_t {
@@ -42,27 +43,25 @@ enum class dir : int8_t {
   self,
 };
 
-namespace hw {
-
 constexpr dir opposite_dir(dir d) {
   return (dir)(detail::underlying_value(d) ^ 0x2);
 }
 
 /// dir has 4 real states south, west, north, east and one virtual state self.
-/// that only exist for convenience. There is many internal uses of dif for
+/// that only exists for convenience. There are many internal uses of dir for
 /// which self is not a valid input because the use expects a real physical
 /// direction not a conceptual one. This function assert that d is not self.
-void constexpr assert_is_resolved_dir(dir d) {
+void constexpr assert_is_resolved_self_dir(dir d) {
   assert(d >= dir::south && d <= dir::east);
 }
 
-/// Represent parity of a tile
+/// Represent parity of a tile along the Y (vertical) axis
 enum class parity : int8_t {
   west, /// self = west
   east, /// self = east
 };
 
-/// Represent offset between 2 tile.
+/// Represent offset between the coordinates of 2 tiles
 struct offset {
   int x;
   int y;
@@ -188,13 +187,13 @@ constexpr dir get_self_dir(parity p) {
 /// Get the direction of the memory module of the tile executing this.
 inline dir get_self_dir() { return get_self_dir(get_parity_dev()); }
 
-constexpr dir resolved_dir(position pos, dir d) {
+constexpr dir resolved_self_dir(position pos, dir d) {
   if (d == dir::self)
     return get_self_dir(pos.get_parity());
   return d;
 }
 
-inline dir resolved_dir(dir d) {
+inline dir resolved_self_dir(dir d) {
   if (d == dir::self)
     return get_self_dir();
   return d;
@@ -222,7 +221,7 @@ T* get_object(uint32_t offset, dir d = dir::self) {
 #ifndef __SYCL_DEVICE_ONLY__
   assert(false && "should only be called on device");
 #endif
-  return reinterpret_cast<T*>(get_base_addr(resolved_dir(d)) + offset);
+  return reinterpret_cast<T*>(get_base_addr(resolved_self_dir(d)) + offset);
 }
 
 #if defined(__SYCL_DEVICE_ONLY__)
@@ -337,7 +336,7 @@ template <typename T> struct dev_ptr {
     return old;
   }
 
-  /// Pointer comparaison
+  /// Pointer comparison
   bool operator==(dev_ptr other) const { return ptr == other.ptr; }
   bool operator!=(dev_ptr other) const { return ptr != other.ptr; }
   bool operator<(dev_ptr other) const { return ptr < other.ptr; }
@@ -382,7 +381,7 @@ template <typename T> struct dev_ptr {
     assert((offset & ~offset_mask) == 0);
     return dev_ptr { (decltype(dev_ptr::ptr))(get_base_addr(d) + offset) };
   }
-  static constexpr dev_ptr create(hw::parity p, uint32_t offset) {
+  static constexpr dev_ptr create(parity p, uint32_t offset) {
     return create(get_self_dir(p));
   }
 };
@@ -411,7 +410,7 @@ class offset_table {
   offset_table(uint32_t reserved_mem, uint32_t tile_mem_size,
                uint32_t lambda_size) {
     lambda_start = detail::align_up(
-        hw::offset_table::get_tile_mem_begin_offset() + tile_mem_size,
+        offset_table::get_tile_mem_begin_offset() + tile_mem_size,
         detail::heap::alloc_align);
     heap_start =
         detail::align_up(lambda_start + lambda_size, detail::heap::alloc_align);
@@ -429,6 +428,10 @@ class offset_table {
   }
 
  public:
+  /// Note that in the following, the various APIs of this infrastructure can be
+  /// used to access tile neighbor objects, not just its ones, so the relative
+  /// direction is required to use the correct offset_table.
+
   /// Contain the stack
   static constexpr uint32_t __attribute__((const))
   get_stack_begin_offset(dir d = dir::self) {
@@ -490,6 +493,7 @@ class offset_table {
     return get_lambda_begin_offset(d);
   }
 
+  /// Contains the kernel lambda
   static uint32_t __attribute__((const))
   get_lambda_begin_offset(dir d = dir::self) {
     return get(d)->lambda_start;
@@ -535,7 +539,6 @@ class offset_table {
 
 static_assert(sizeof(offset_table) == 12, "sizeof 1 we beak alignment");
 
-} // namespace hw
 } // namespace aie
 
 #endif

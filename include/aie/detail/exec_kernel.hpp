@@ -66,8 +66,8 @@ template <typename TileHandle> struct exec_kernel {
   template <typename KernelType, typename Func>
   static void kernel_run(Func func) {
     kernel_prerun();
-    func(*hw::get_object<KernelType>(
-        hw::offset_table::get_lambda_begin_offset()));
+    func(*get_object<KernelType>(
+        offset_table::get_lambda_begin_offset()));
     kernel_postrun();
   }
 
@@ -100,7 +100,7 @@ template <typename TileHandle> struct exec_kernel {
 #ifndef __SYCL_DEVICE_ONLY__
     /// Host side
 
-    hw::position pos = xaie_pos_to_aie_pos(dev_handle.tile);
+    position pos = xaie_pos_to_aie_pos(dev_handle.tile);
 
     // The name is captured by its non-reference type and has to be in
     // the sycl::detail namespace as the integration header is
@@ -112,7 +112,7 @@ template <typename TileHandle> struct exec_kernel {
 
     /// The sycl-chess script will build 2 versions per kernel: one with West
     /// parity and one with East parity
-    if (hw::get_parity(pos) == hw::parity::west)
+    if (get_parity(pos) == parity::west)
       kernelName += "_west";
     else
       kernelName += "_east";
@@ -132,13 +132,13 @@ template <typename TileHandle> struct exec_kernel {
                                      << ") beginning tile execution",
                     "exec");
 
-      hw::offset_table ot(kernel_bin_data.MemSize, mem_tile_size, sizeof(K));
+      offset_table ot(kernel_bin_data.MemSize, mem_tile_size, sizeof(K));
       TRISYCL_DUMP2("tile(" << pos.x << ',' << pos.y << ") "
                             << "global_variable_start = 0x" << std::hex
                             << ot.global_variable_start << " heap_start = 0x"
                             << ot.heap_start,
                     "memory");
-      dev_handle.store(hw::offset_table::get_offset_table_begin_offset(), ot);
+      dev_handle.store(offset_table::get_offset_table_begin_offset(), ot);
       heap::init_allocator(dev_handle, ot.heap_start,
                            /*heap_size*/ ot.global_variable_start -
                                ot.heap_start);

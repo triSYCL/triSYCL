@@ -39,7 +39,7 @@ namespace aie {
 namespace detail {
 
 template <typename ElemTy, int X, int Y> struct placed_elem {
-  static constexpr hw::position pos { X, Y };
+  static constexpr position pos { X, Y };
   ElemTy elem;
 };
 
@@ -175,11 +175,14 @@ concept is_service_storage = is_instance_of_type<T, service_storage>::value;
 
 } // namespace detail
 
+/// The adaptor turns a handle_impl implementing only the bare minimum into a
+/// user-facing handle with a full pretty API.
 using device_mem_handle =
     detail::device_mem_handle_adaptor<detail::device_mem_handle_impl>;
 
 /// similar to std::lock_guard but it is adapted to use aie::*_lock_impl instead
 /// of std::*mutex
+/// TODO: the lock_guard* needs to be refactored into read_lock_guard and write_lock_guard.
 template <typename LockTy> struct lock_guard_ex : detail::no_move {
  private:
   LockTy impl;
@@ -207,7 +210,7 @@ struct get_inner<OuterT<InnerT>> {
 template <typename TypeInfoTy, int X, int Y> struct tile_base {
   static constexpr int x() { return X; }
   static constexpr int y() { return Y; }
-  static constexpr hw::position pos() { return { X, Y }; }
+  static constexpr position pos() { return { X, Y }; }
 
   static constexpr int size_x() { return TypeInfoTy::sizeX; }
   static constexpr int size_y() { return TypeInfoTy::sizeY; }
@@ -216,7 +219,7 @@ template <typename TypeInfoTy, int X, int Y> struct tile_base {
     return pos().on(d).is_valid(size_x(), size_y());
   }
   static constexpr bool has_neighbor(dir d) {
-    return (pos() + hw::get_simple_offset(d)).is_valid(size_x(), size_y());
+    return (pos() + get_simple_offset(d)).is_valid(size_x(), size_y());
   }
 };
 
@@ -286,7 +289,7 @@ struct device_tile
   /// Core logic of barriers. propagate a token from start_end to 
   template<dir start_end>
   void barrier_impl(int lock_id) {
-    static constexpr dir opposite = hw::opposite_dir(start_end);
+    static constexpr dir opposite = opposite_dir(start_end);
     // Propagate a token from South to North and back
     // All tile except the bottom one wait. 0, 0 stuck on north, lock 0, 1 stuck on self lock
     if constexpr (has_neighbor(start_end)) {
@@ -328,7 +331,7 @@ struct device_tile
   /// So we also provide a non-constexpr way to get the x and y
   int dyn_x() { return impl::x_coord(); }
   int dyn_y() { return impl::y_coord(); }
-  hw::position dyn_pos() { return { dyn_x(), dyn_y() }; }
+  position dyn_pos() { return { dyn_x(), dyn_y() }; }
 
   using base::size_x;
   using base::size_y;
@@ -346,7 +349,7 @@ struct device_tile
   auto& mem_east() { return get_mem<dir::east>(); }
   auto& mem_west() { return get_mem<dir::west>(); }
   auto& mem_side() {
-    if (pos().get_parity() == hw::parity::east)
+    if (pos().get_parity() == parity::east)
       return get_mem<dir::east>();
     else
       return get_mem<dir::east>();
@@ -458,7 +461,7 @@ struct host_tile : public detail::tile_base<TypeInfoTy, X, Y> {
   detail::device_impl* dev_impl;
 
  public:
-  static constexpr hw::position pos() { return { X, Y }; }
+  static constexpr position pos() { return { X, Y }; }
   void init(detail::device_impl& global) {
     dev_impl = &global;
     dt.init(global, pos());
