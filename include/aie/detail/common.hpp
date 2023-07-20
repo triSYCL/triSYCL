@@ -24,7 +24,7 @@
 namespace aie {
 /// Abstraction over some pointer pointing on device data.
 /// It is used for the APIs of device_mem_handle.
-/// Its is intended to work on both emulation with a raw 64-bit pointer
+/// It is intended to work on both emulation with a raw 64-bit pointer
 /// and for execution on hardware with a 32-bit dev_ptr<T>
 template <typename T> struct generic_ptr {
   generic_ptr() = default;

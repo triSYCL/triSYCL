@@ -1,5 +1,8 @@
 #ifndef AIE_DETAIL_KERNEL_DESC_HPP
 #define AIE_DETAIL_KERNEL_DESC_HPP
+/// This file comes almost as is from
+/// https://github.com/intel/llvm/blob/sycl/sycl/include/sycl/detail/kernel_desc.hpp
+/// Any modification to this file will make merging harder so it should be avoided.
 
 // This header file must not include any standard C++ header files.
 

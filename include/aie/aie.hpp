@@ -117,6 +117,8 @@ struct layout_storage {
   /// a tuple of all tile storage types
   decltype(generate_storage()) tile_storage = generate_storage();
 
+  detail::out_of_bounds out_of_bound_storage;
+
   template <int LinearId> auto& storage_at() {
     return boost::hana::at_c<LinearId>(tile_storage);
   }
@@ -128,10 +130,10 @@ struct layout_storage {
   }
 
   /// get the storage of X, Y
-  template <int X, int Y> auto get_storage() {
+  template <int X, int Y> auto& get_storage() {
     if constexpr (X < 0 || Y < 0 || X >= sizeX || Y >= sizeY)
-      return detail::out_of_bounds {};
-    return storage_at<X, Y>();
+      return out_of_bound_storage;
+    return storage_at<X, Y>().elem;
   }
 
   static auto generate_tiles() {
