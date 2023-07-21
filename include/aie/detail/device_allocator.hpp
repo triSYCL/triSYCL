@@ -10,12 +10,12 @@
 # error "This file should only be used for hardware execution"
 #endif
 
-#include <cstddef>
-#include <cstdint>
 #include "hardware.hpp"
+#include "sync.hpp"
 #include "utils.hpp"
 #include "xaie_wrapper.hpp"
-#include "sync.hpp"
+#include <cstddef>
+#include <cstdint>
 
 namespace aie::detail {
 

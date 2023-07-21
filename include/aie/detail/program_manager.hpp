@@ -7,10 +7,10 @@
 #endif
 
 #include <cassert>
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <utility>
-#include <fstream>
 #include <vector>
 
 #include "elf.h"

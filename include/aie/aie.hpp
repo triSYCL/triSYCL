@@ -586,6 +586,20 @@ template <typename T, typename HostTileTy> struct buffer_range {
   uint32_t start_write;
   uint32_t end_write;
 
+  __attribute__((noinline)) uint32_t all_range_start() { return std::min(start_read, start_write); }
+
+  __attribute__((noinline)) uint32_t all_range_end() { return std::max(end_read, end_write); }
+
+  __attribute__((noinline)) uint32_t all_range_size() { return all_range_end() - all_range_start(); }
+
+  __attribute__((noinline)) char* data() { return (char*)buff.data() + all_range_start() * sizeof(T); }
+
+  __attribute__((noinline)) uint32_t get_write_start() { return start_write - all_range_start(); }
+
+  __attribute__((noinline)) uint32_t get_write_end() { return end_write - all_range_start(); }
+
+  __attribute__((noinline)) uint32_t get_write_size() { return get_write_end() - get_write_start(); }
+
  public:
   buffer_range(HostTileTy& t, const buffer<T>& b)
       : tile(t)
@@ -627,10 +641,8 @@ struct alignas(8) __SYCL_TYPE(aie_accessor) accessor
  public:
   template <typename HostTileTy>
   accessor(buffer_range<T, HostTileTy> range)
-      : base { range.end_read - range.start_read,
-               (uint32_t)sizeof(T), (char*)range.buff.data() + range.start_read,
-               range.start_write - range.start_read,
-               range.end_write - range.start_read } { }
+      : base { range.all_range_size(), (uint32_t)sizeof(T), range.data(),
+               range.get_write_start(), range.get_write_size() } {}
   template <typename HostTileTy>
   accessor(HostTileTy& tile, const buffer<T>& buff, access_mode am = read_write)
       : base { (uint32_t)buff.size(), (uint32_t)sizeof(T),
@@ -641,7 +653,7 @@ struct alignas(8) __SYCL_TYPE(aie_accessor) accessor
     /// have compiler support for introspecting the layout of the lambda.
     tile.register_accessor(*this);
   }
-  unsigned get_size() const { return base::size(); }
+  unsigned size() const { return base::size(); }
   T& operator[](unsigned idx) const { return get_data()[idx]; }
   T* get_data() const { return (T*)base::get_ptr(); }
 };

@@ -106,10 +106,11 @@ struct host_tile_impl : host_tile_impl_fallback {
       auto* acc_addr = reinterpret_cast<host_accessor_impl*>(
           reinterpret_cast<char*>(&L) + kdesc.offset);
 
+      auto& host_out_of_line = *acc_addr->impl;
       /// create the device representation of the accessor we going to fill
       device_accessor_impl dev_acc;
       dev_acc.size_ = acc_addr->size();
-      unsigned size_in_bytes = dev_acc.size_ * acc_addr->impl->elem_size;
+      unsigned size_in_bytes = dev_acc.size_ * host_out_of_line.elem_size;
 
       /// allocate memory on the device for the buffer associated with accessor
       unsigned dev_data_addr =
@@ -128,10 +129,15 @@ struct host_tile_impl : host_tile_impl_fallback {
           dev_lambda_addr + kdesc.offset, dev_acc);
 
       /// Setup the write back for the buffer.
-      write_backs.push_back(
-          [=, dev_handle = dev_handle, host_addr = acc_addr->impl->data]() mutable {
-            dev_handle.memcpy_d2h(host_addr, dev_data_addr, size_in_bytes);
-          });
+      write_backs.push_back([=, dev_handle = dev_handle,
+                             host_addr = host_out_of_line.data]() mutable {
+        dev_handle.memcpy_d2h(
+            host_addr +
+                host_out_of_line.write_back_start * host_out_of_line.elem_size,
+            dev_data_addr +
+                host_out_of_line.write_back_start * host_out_of_line.elem_size,
+            host_out_of_line.write_back_size * host_out_of_line.elem_size);
+      });
     }
     if (mem_ptr) {
       /// If the memory tile was accessed send it to the device.

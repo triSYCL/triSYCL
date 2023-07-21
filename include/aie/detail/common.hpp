@@ -200,9 +200,8 @@ struct alignas(8) device_accessor_impl {
   device_accessor_impl(uint32_t, uint32_t, char*, uint32_t, uint32_t) {}
   uint32_t size_ = 0;
   dev_ptr<char> data = nullptr;
-  char* get_ptr() { return data.get(); }
-  const char* get_ptr() const { return data.get(); }
-  std::size_t size() { return size_; }
+  char* get_ptr() const { return data.get(); }
+  std::size_t size() const { return size_; }
 };
 
 struct host_accessor_out_of_line_impl {
@@ -210,7 +209,7 @@ struct host_accessor_out_of_line_impl {
   uint32_t elem_size;
   uint32_t size;
   uint32_t write_back_start;
-  uint32_t write_back_end;
+  uint32_t write_back_size;
 };
 
 /// device_accessor_impl is the internal storage of an accessors on the host.
@@ -223,15 +222,14 @@ struct alignas(8) host_accessor_impl {
   host_accessor_impl(uint32_t s, uint32_t es, char* d)
       : host_accessor_impl(s, es, d, 0, s) {}
   host_accessor_impl(uint32_t s, uint32_t es, char* d, uint32_t write_start,
-                     uint32_t write_end)
+                     uint32_t write_size)
       : host_accessor_impl(host_accessor_out_of_line_impl {
-            (char*)d, es, s, write_start, write_end }) {}
+            (char*)d, es, s, write_start, write_size }) {}
   host_accessor_impl(host_accessor_out_of_line_impl i)
       : impl(std::make_unique<host_accessor_out_of_line_impl>(i)) {}
   std::unique_ptr<host_accessor_out_of_line_impl> impl;
-  std::size_t size() { return impl->size; }
-  char* get_ptr() { return impl->data; }
-  const char* get_ptr() const { return impl->data; }
+  std::size_t size() const { return impl->size; }
+  char* get_ptr() const { return impl->data; }
 };
 
 /// This selects the right accessor implementation based on context
