@@ -50,6 +50,14 @@ jobs:
       # Ubuntu 23.04
       image: docker://ubuntu:lunar
 
+    # Cancel old CI jobs for a PR when the PR is updated
+    concurrency:
+      # Create a job equivalence class with an id crafted to only
+      # cancel in-progress runs of the same workflow
+      group: ${{ github.workflow }}-${{ github.ref }}
+      # Cancel only pull-request related events
+      cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
+
     strategy:
       # Run all the test even if there are some which fail
       fail-fast: false
