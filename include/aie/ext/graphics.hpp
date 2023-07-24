@@ -613,7 +613,7 @@ struct image_grid : frame_grid {
 /** A graphics application running in a separate thread to display
     images in a grid of tiles */
 template<typename PixelTy = uint8_t>
-struct application {
+struct graphic_application {
   std::thread t;
   std::unique_ptr<image_grid> w;
   bool initialized = false;
@@ -637,8 +637,8 @@ struct application {
 
       \return a reference on *this to allow operation chaining
   */
-  auto& start(int &argc, char **&argv,
-             int nx, int ny, int image_x, int image_y, int zoom) {
+  graphic_application(int& argc, char**& argv, int nx, int ny, int image_x,
+                      int image_y, int zoom) {
     // To be sure not passing over the asynchronous graphics start
     std::promise<void> graphics_initialization;
 
@@ -665,7 +665,6 @@ struct application {
     }};
     // Wait for the graphics to start
     graphics_initialization.get_future().get();
-    return *this;
   }
 
   ///  Wait for the graphics window to end

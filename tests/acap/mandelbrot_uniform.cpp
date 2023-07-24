@@ -1,3 +1,4 @@
+// Mandelbrot set for AI Engine as uniform lambda
 // REQUIRES: acap
 
 // This test uses an old API

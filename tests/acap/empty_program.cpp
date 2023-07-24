@@ -23,7 +23,7 @@ int test_main(int argc, char *argv[]) {
   acap::aie::device<acap::aie::layout::full>{}.run<prog>();
 
   acap::aie::device<acap::aie::layout::vc1902> d;
-  acap::aie::program<acap::aie::device<acap::aie::layout::vc1902>, prog> p { d };
+  acap::aie::program p { d };
   p.run();
 
   return 0;

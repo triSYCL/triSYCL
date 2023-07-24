@@ -45,8 +45,8 @@ using data_t = float;
 // The size of the machine to use
 // using layout = acap::aie::layout::size<5,4>;
 // For a 1920x1080 display
-// using layout = acap::aie::layout::size<18,8>;
-using layout = acap::aie::layout::size<4, 4>;
+using layout = acap::aie::layout::size<18,8>;
+// using layout = acap::aie::layout::size<4, 4>;
 // For a 3440x1440 display
 // using layout = acap::aie::layout::size<33,12>;
 using geography = acap::aie::geography<layout>;
@@ -125,7 +125,7 @@ constexpr auto shoal_factor = [](auto x, auto y) constexpr -> data_t {
   // The square radius to the shoal center
   data_t r = square(x - x_shoal) + square(y - y_shoal);
   // A disk centered on the shoal center
-  return r < square(shoal_radius) ? shoal_val / 2 : shoal_val;
+  return r < square(shoal_radius) ? 0.5 : 1;
 };
 
 /// Add a square harbor in the water
@@ -239,12 +239,12 @@ struct reference_wave_propagation {
 
 /** A sequential reference implementation of the wave propagation
 
-    Use (no_halo_size) for the tile size to skip the halo zone of 1
+    Use no_halo_size for the tile size to skip the halo zone of 1
     pixel in X and Y
 */
 reference_wave_propagation<
-    (no_halo_size) * acap::aie::geography<layout>::x_size + 1,
-    (no_halo_size) * acap::aie::geography<layout>::y_size + 1, no_halo_size>
+    no_halo_size * acap::aie::geography<layout>::x_size + 1,
+    no_halo_size * acap::aie::geography<layout>::y_size + 1, no_halo_size>
     seq;
 // reference_wave_propagation<no_halo_size, no_halo_size, no_halo_size> seq;
 
@@ -267,13 +267,13 @@ template <typename AIE, int X, int Y> struct tile : acap::aie::tile<AIE, X, Y> {
     for (int j = 0; j < image_size; ++j)
       for (int i = 0; i < image_size; ++i) {
         m.u[j][i] = m.v[j][i] = 0;
-        m.side[j][i] = K * (!is_harbor(i + (no_halo_size) * X,
-                                       j + (no_halo_size) * Y));
-        m.depth[j][i] = shoal_factor(i + (no_halo_size) * X,
-                                              j + (no_halo_size) * Y);
+        m.side[j][i] = K * (!is_harbor(i + no_halo_size * X,
+                                       j + no_halo_size * Y));
+        m.depth[j][i] = shoal_factor(i + no_halo_size * X,
+                                              j + no_halo_size * Y);
         // Add a drop using the global coordinate taking into account the halo
         m.w[j][i] =
-            add_a_drop(i + (no_halo_size) * X, j + (no_halo_size) * Y);
+            add_a_drop(i + no_halo_size * X, j + no_halo_size * Y);
       }
   }
 
@@ -283,10 +283,10 @@ template <typename AIE, int X, int Y> struct tile : acap::aie::tile<AIE, X, Y> {
     for (int j = 0; j < image_size; ++j)
       for (int i = 0; i < last_image_idx; ++i) {
         // dw/dx
-        auto hs = m.w[j][i + 1] - m.w[j][i];
+        auto north = m.w[j][i + 1] - m.w[j][i];
 
         // Integrate horizontal speed
-        m.u[j][i] += hs * alpha;
+        m.u[j][i] += north * alpha;
       }
 
     for (int j = 0; j < last_image_idx; ++j)
@@ -305,7 +305,7 @@ template <typename AIE, int X, int Y> struct tile : acap::aie::tile<AIE, X, Y> {
     // Transfer first column of u to next memory module to the West
     if constexpr (Y & 1) {
       if constexpr (t::is_memory_module_east()) {
-        auto &east = t::mem_east();
+        auto& east = t::mem_east();
         for (int j = 0; j < image_size; ++j)
           m.u[j][last_image_idx] = east.u[j][0];
       }
@@ -361,7 +361,7 @@ template <typename AIE, int X, int Y> struct tile : acap::aie::tile<AIE, X, Y> {
     // Transfer last line of w to next memory module on the East
     if constexpr (Y & 1) {
       if constexpr (t::is_memory_module_east()) {
-        auto &east = t::mem_east();
+        auto& east = t::mem_east();
         for (int j = 0; j < image_size; ++j)
           east.w[j][0] = m.w[j][last_image_idx];
       }

@@ -19,8 +19,8 @@
 
 #ifdef __SYCL_DEVICE_ONLY__
 
-/// All of these function are declared in the headers but only defined in the so
-/// file so we provide definition. since they are all exception related we
+/// All these functions are declared in the headers but only defined in the .so
+/// file, so we provide their definition. Since they are all exception related we
 /// assert because we do not have exception support on device.
 namespace std {
 void __throw_bad_exception(void) { assert(false && "cannot throw on device"); }

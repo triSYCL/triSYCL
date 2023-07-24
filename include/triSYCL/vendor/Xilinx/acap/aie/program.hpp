@@ -234,7 +234,7 @@ struct program {
 }
 
 /*
-s    # Some Emacs stuff:
+    # Some Emacs stuff:
     ### Local Variables:
     ### ispell-local-dictionary: "american"
     ### eval: (flyspell-prog-mode)

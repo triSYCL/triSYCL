@@ -228,13 +228,13 @@ T* get_object(uint32_t offset, dir d = dir::self) {
 
 /// get the X coordinate in the aie model
 int get_tile_x_coordinate() {
-  return (aie_intr::get_coreid() >> 16) & 0b1111111;
+  return (aie::intrinsics::get_coreid() >> 16) & 0b1111111;
 }
 
 /// get the Y coordinate in the aie model
 int get_tile_y_coordinate() {
   /// the -1 is to skip shim row
-  return (aie_intr::get_coreid() & 0b11111) - 1;
+  return (aie::intrinsics::get_coreid() & 0b11111) - 1;
 }
 
 #endif

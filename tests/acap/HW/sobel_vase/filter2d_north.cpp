@@ -4,7 +4,7 @@
 
 #include <fstream>
 #include <iostream>
-#include <SYCL/sycl.hpp>
+#include <sycl/sycl.hpp>
 
 // OpenCV Includes
 #include <opencv2/opencv.hpp>

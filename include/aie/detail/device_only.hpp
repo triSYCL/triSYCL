@@ -33,10 +33,10 @@ struct device_lock_impl {
     assert(i < 16);
     assert(id < 64);
   }
-  void acquire() { aie_intr::acquire(id); }
-  void release() { aie_intr::release(id); }
-  void acquire_with_value(bool val) { aie_intr::acquire(id, val); }
-  void release_with_value(bool val) { aie_intr::release(id, val); }
+  void acquire() { aie::intrinsics::acquire(id); }
+  void release() { aie::intrinsics::release(id); }
+  void acquire_with_value(bool val) { aie::intrinsics::acquire(id, val); }
+  void release_with_value(bool val) { aie::intrinsics::release(id, val); }
 };
 
 using host_lock_impl = lock_impl_fallback;
@@ -49,13 +49,13 @@ struct device_tile_impl : device_tile_impl_fallback {
                                 d);
   }
   void stream_write16(const char* ptr, int stream_dix) {
-    aie_intr::stream_write16(ptr, stream_dix);
+    aie::intrinsics::stream_write16(ptr, stream_dix);
   }
   void stream_read16(char* ptr, int stream_dix) {
-    aie_intr::stream_read16(ptr, stream_dix);
+    aie::intrinsics::stream_read16(ptr, stream_dix);
   }
-  void cascade_write48(const char* ptr) { aie_intr::cstream_write48(ptr); }
-  void cascade_read48(char* ptr) { aie_intr::cstream_read48(ptr); }
+  void cascade_write48(const char* ptr) { aie::intrinsics::cstream_write48(ptr); }
+  void cascade_read48(char* ptr) { aie::intrinsics::cstream_read48(ptr); }
   int x_coord() { return get_tile_x_coordinate(); }
   int y_coord() { return get_tile_y_coordinate(); }
   device_lock_impl lock(position pos, dir d, int i) {
@@ -121,7 +121,7 @@ basic_service() {
 extern __attribute__((noreturn)) void finish_kernel(int32_t exit_code) {
   aie::detail::basic_service().exit_kernel(exit_code);
   while (1)
-    aie_intr::memory_fence();
+    aie::intrinsics::memory_fence();
 }
 
 /// The assert macro will call this function if an assertion fails on device.

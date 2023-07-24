@@ -83,7 +83,7 @@ struct soft_barrier {
     /// Wait for the host.
     __attribute__((noinline)) void wait() volatile {
       /// Prevent memory operation from being moved below the barrier
-      aie_intr::memory_fence();
+      aie::intrinsics::memory_fence();
       /// Notify the host that the device has arrived
       counters[device] = counters[device] + 1;
       /// Wait for the host to arrive.
@@ -92,7 +92,7 @@ struct soft_barrier {
         /// dead.
       }
       /// Prevent memory operation from being on above the barrier
-      aie_intr::memory_fence();
+      aie::intrinsics::memory_fence();
     }
   };
 #endif

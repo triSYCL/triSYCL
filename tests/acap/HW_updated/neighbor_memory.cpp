@@ -1,6 +1,6 @@
 /// Example of using neighbor memory tiles
 
-#include <SYCL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <cstring>
 #include <iostream>
 #include <vector>

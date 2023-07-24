@@ -1,7 +1,7 @@
 /* Grey scale example on 400 acap cores.
 */
 
-#include <SYCL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <cstring>
 #include <iostream>
 #include <vector>
