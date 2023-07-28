@@ -86,8 +86,9 @@ jobs:
     # Cancel old CI jobs for a PR when the PR is updated
     concurrency:
       # Create a job equivalence class with an id crafted to only
-      # cancel in-progress runs of the same workflow
-      group: ${{ github.workflow }}-${{ github.ref }}
+      # cancel in-progress runs of the same workflow and same
+      # job-index in the matrix
+      group: '${{ github.workflow }}-job-index-${{ strategy.job-index }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }} for ${{ matrix }}'
       # Cancel only pull-request related events
       cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
 
@@ -99,6 +100,8 @@ jobs:
         run: |
           echo "::notice::{github context:}"
           echo "${{ toJSON(github) }}"
+          echo "::notice::{env context:}"
+          echo "${{ toJSON(env) }}"
           echo "::notice::{vars context:}"
           echo "${{ toJSON(vars) }}"
           echo "::notice::{job context:}"
