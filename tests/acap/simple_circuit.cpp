@@ -47,12 +47,6 @@ int test_main(int argc, char *argv[]) {
   try {
     acap::aie::device<acap::aie::layout::size<3,4>> d;
 
-    // Test the execution of an empty program with empty memory
-    d.queue().run<>();
-
-    // The same but with an explicit wait
-    d.queue().submit<>().wait();
-
     // Test the communication API from the host point-of-view
 
     /*

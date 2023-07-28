@@ -17,8 +17,6 @@
     License. See LICENSE.TXT for details.
  */
 
-#include "memory_base.hpp"
-
 namespace trisycl::vendor::xilinx::acap::aie {
 
 /// \ingroup aie
@@ -37,16 +35,15 @@ namespace trisycl::vendor::xilinx::acap::aie {
     \param Y is the vertical coordinate of the memory module
 */
 template <typename AIE //< The type representing the full CGRA
-          , int X //< The horizontal coordinate of the memory module
-          , int Y //< The vertical coordinate of the memory module
+          ,
+          int X //< The horizontal coordinate of the memory module
+          ,
+          int Y //< The vertical coordinate of the memory module
           >
-struct memory : memory_base {
-  /** The horizontal tile coordinates in the CGRA grid (starting at 0
-      and increasing towards East) */
-  static auto constexpr x = X;
-  /** The vertical tile coordinates in the CGRA grid (starting at
-      increasing towards North) */
-  static auto constexpr y = Y;
+struct memory {
+  // TODO: should we still need this class ? It can be useful for the user to
+  // mark the memory type and the runtime to detect it via std::is_base_of but
+  // this is currently not done
 };
 
 /// @} End the aie Doxygen group

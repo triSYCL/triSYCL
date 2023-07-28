@@ -1,6 +1,10 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_TILE_INFRASTRUCTURE_DETAIL_TILE_INFRASTRUCTURE_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_ACAP_AIE_TILE_INFRASTRUCTURE_DETAIL_TILE_INFRASTRUCTURE_HPP
 
+#ifdef __SYCL_XILINX_AIE__
+#error "This header should only be included when targeting the emulator"
+#endif
+
 /** \file
 
     The basic AI Engine homogeneous tile, with the common
@@ -30,10 +34,16 @@
 
 #include "../../axi_stream_switch.hpp"
 #include "../../dma.hpp"
+#include "../../hardware.hpp"
+#include "../../lock.hpp"
+#include "../../log.hpp"
+#include "../../rpc.hpp"
+#include "../../cascade_stream.hpp"
 #include "triSYCL/detail/fiber_pool.hpp"
 #include "triSYCL/detail/ranges.hpp"
 #include "triSYCL/vendor/Xilinx/config.hpp"
 #include "triSYCL/vendor/Xilinx/latex.hpp"
+#include "triSYCL/vendor/Xilinx/acap/aie/lock.hpp"
 
 namespace trisycl::vendor::xilinx::acap::aie::detail {
 
@@ -64,26 +74,18 @@ template <typename Geography> class tile_infrastructure {
   /// Keep the vertical coordinate
   int y_coordinate;
 
-  /** Keep track of the aie::detail::device for hardware resource
-      control in device mode or for debugging purpose for better
-      messages.
-
-      Use void* for now to avoid cyclic header dependencies for now
-      instead of the aie::detail::device */
-  void* dev [[maybe_unused]];
-
   /// The AXI stream switch of the core tile
   axi_ss_t axi_ss;
 
-  /** Keep track of all the infrastructure tile memories
-      of this device */
-  aie::memory_infrastructure mi;
+  lock_unit memory_locking_unit;
 
   /** Sending DMAs
 
       Use std::optional to postpone initialization */
   std::array<std::optional<sending_dma<axi_ss_t>>, axi_ss_geo::s_dma_size>
       tx_dmas;
+
+  cascade_stream cstream;
 
 #if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
   /// Keep track of the fiber executor
@@ -129,16 +131,19 @@ template <typename Geography> class tile_infrastructure {
       \param[in] fiber_executor is the executor used to run
       infrastructure details
   */
-  tile_infrastructure(int x, int y, auto& dev,
+  tile_infrastructure(int x, int y,
                       ::trisycl::detail::fiber_pool& fiber_executor)
+      // clang-format off
       : x_coordinate { x }
       , y_coordinate { y }
-      , dev { &dev }
-      , mi { dev }
 #if TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER
       , fe { &fiber_executor }
 #endif
+  // clang-format on
   {
+    // TODO: this should be enabled on hardware when it is working but for now
+    // it isn't
+
     // Connect the core receivers to its AXI stream switch
     for (auto p : views::enum_type(mpl::me_0, mpl::me_last))
       output(p) =
@@ -162,9 +167,18 @@ template <typename Geography> class tile_infrastructure {
   /// Get the vertical coordinate
   int y() { return y_coordinate; }
 
-  /// Access to the common infrastructure part of a tile memory
-  auto& mem() {
-    return mi;
+  /// Get the horizontal number of tiles
+  static constexpr int x_size() { return geo::x_size; }
+
+  /// Get the vertical number of tiles
+  static constexpr int y_size() { return geo::y_size; }
+
+  /** Get a handle to a lock
+
+      \param[in] i is the id of the lock
+  */
+  decltype(auto) get_lock(int i) {
+    return memory_locking_unit.lock(i);
   }
 
   /** Get the user input connection from the AXI stream switch
@@ -223,6 +237,8 @@ template <typename Geography> class tile_infrastructure {
       \param[in] id specifies which DMA to access */
   auto& tx_dma(int id) { return *tx_dmas.at(id); }
 
+  auto& cascade() { return cstream; }
+
   /** Get the input router port of the AXI stream switch
 
       \param p is the slave_port_layout for the stream
@@ -254,7 +270,8 @@ template <typename Geography> class tile_infrastructure {
   }
 
   /// Wait for the execution of the callable on this tile
-  void wait() { if (future_work.valid())
+  void wait() {
+    if (future_work.valid())
       future_work.get();
   }
 

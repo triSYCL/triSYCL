@@ -69,12 +69,12 @@ template <typename AIEDevice> struct queue {
       \param f is an invocable taking an heterogeneous tile handler
   */
   template <typename Invocable> void run(Invocable&& f) const {
-    program<device> { aie_d }.run(std::forward<Invocable>(f));
+    program { aie_d }.run(std::forward<Invocable>(f));
   }
 
   /// Wait for all the device tiles on this queue to finish
   void wait() const {
-    aie_d.for_each_tile([](auto& t) { t.wait(); });
+    program { aie_d }.wait();
   }
 
   /** Run synchronously a uniform invocable on this queue
@@ -83,8 +83,8 @@ template <typename AIEDevice> struct queue {
   */
   template <typename Invocable> void uniform_run(Invocable&& f) const {
     aie_d.for_each_tile(
-        [work = std::forward<Invocable>(f)](auto& t) {
-          t.single_task(work);
+        [&](auto& t) {
+          t.single_task(std::forward<Invocable>(f));
         });
     wait();
   }

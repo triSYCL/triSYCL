@@ -17,12 +17,25 @@
 
 #include <boost/type_index.hpp>
 
+/// The device doesn't have support for the logging infrastructure, no boost, no
+/// sstream, no iostream. So on device logs are simply not emitted.
+#if defined(__SYCL_DEVICE_ONLY__)
+#if defined(TRISYCL_DEBUG)
+#undef TRISYCL_DEBUG
+#endif
+#if defined(TRISYCL_TRACE_KERNEL)
+#undef TRISYCL_TRACE_KERNEL
+#endif
+#endif
+
 // Only when the common debug or trace infrastructure is required
 #if defined(TRISYCL_DEBUG) || defined(TRISYCL_TRACE_KERNEL)
 #include <sstream>
 #include <string>
 #include <thread>
+#include <filesystem>
 
+#include <boost/log/core.hpp>
 #include <boost/log/trivial.hpp>
 
 // To be able to construct string literals like "blah"s
@@ -33,26 +46,82 @@ using namespace std::string_literals;
     Use an intermediate ostringstream because there are issues with
     BOOST_LOG_TRIVIAL to display C strings
 */
-#define TRISYCL_INTERNAL_DUMP(expression) do {       \
-    std::ostringstream s;                            \
-    s << expression;                                 \
-    BOOST_LOG_TRIVIAL(debug) << s.str();             \
-  } while(0)
+
+namespace {
+
+thread_local int no_log_scope_count = 0;
+
+/// Determine if a log with a certain kind should be printed.
+bool should_be_logged(std::string kind) {
+  /// If the user has a no_log_in_this_scope, dont log.
+  if (no_log_scope_count)
+    return false;
+  const char* env = getenv("TRISYCL_LOG");
+  /// If the environemnt variable TRISYCL_LOG is unset
+  /// log everything
+  if (!env)
+    return true;
+  /// otherwise only log what is mentioned in TRISYCL_LOG.
+  std::string str(env);
+  size_t pos = str.find(kind);
+  return pos != std::string::npos;
+}
+
+/// get the basename of the source file
+std::string get_base_name(const char *file_name) {
+  return std::filesystem::path(file_name).stem();
+}
+
+void log_string(const std::string& str) {
+  BOOST_LOG_TRIVIAL(debug) << str;
+  boost::log::core::get()->flush();
+}
+}
+
+#define TRISYCL_DUMP_ALWAYS(EXPR)                                              \
+  do {                                                                         \
+    std::stringstream ss;                                                      \
+    ss << EXPR;                                                                \
+    log_string(ss.str());                                                      \
+  } while (0)
+#define TRISYCL_DUMP2(EXPR, KIND)                                              \
+  do {                                                                         \
+    if (!::should_be_logged(KIND))                                             \
+      break;                                                                   \
+    TRISYCL_DUMP_ALWAYS(" " << KIND << " " << EXPR);                           \
+  } while (0)
+#else
+#define TRISYCL_DUMP_ALWAYS(EXPR) do { } while(0)
+#define TRISYCL_DUMP2(EXPR, KIND) do { } while(0)
 #endif
 
 #ifdef TRISYCL_DEBUG
-#define TRISYCL_DUMP(expression) TRISYCL_INTERNAL_DUMP(expression)
+#define TRISYCL_DUMP(EXPR)                                                     \
+  do {                                                                         \
+    TRISYCL_DUMP2(EXPR, ::get_base_name(__FILE__));                            \
+  } while (0)
 
 /// Same as TRISYCL_DUMP() but with thread id first
-#define TRISYCL_DUMP_T(expression)                                      \
-  TRISYCL_DUMP("Thread " << std::hex                                    \
-               << std::this_thread::get_id() << ": " << expression)
+/// The default logger already contains the thread id so this is equivalent to
+/// TRISYCL_DUMP
+#define TRISYCL_DUMP_T(EXPR) TRISYCL_DUMP(EXPR)
 #else
-#define TRISYCL_DUMP(expression) do { } while(0)
-#define TRISYCL_DUMP_T(expression) do { } while(0)
+#define TRISYCL_DUMP(EXPR) do { } while(0)
+#define TRISYCL_DUMP_T(EXPR) do { } while(0)
 #endif
 
 namespace trisycl::detail {
+
+#if defined(TRISYCL_DEBUG) || defined(TRISYCL_TRACE_KERNEL)
+/// Disable logs for a section of code.
+struct no_log_in_this_scope {
+  no_log_in_this_scope() { no_log_scope_count++; }
+  ~no_log_in_this_scope() { no_log_scope_count--; }
+};
+#else
+/// When logging is disabled this is a noop
+struct no_log_in_this_scope {};
+#endif
 
 /** \addtogroup debug_trace Debugging and tracing support
     @{
@@ -137,11 +206,11 @@ auto trace_kernel(Functor f) {
     /* Since the class KernelName may just be declared and not really
        defined, just use it through a class pointer to have
        typeid().name() not complaining */
-    TRISYCL_INTERNAL_DUMP(
+    TRISYCL_DUMP(
       "Kernel started "
       << boost::typeindex::type_id<KernelName *>().pretty_name());
     f();
-    TRISYCL_INTERNAL_DUMP(
+    TRISYCL_DUMP(
       "Kernel stopped "
       << boost::typeindex::type_id<KernelName *>().pretty_name());
   };
@@ -178,6 +247,9 @@ struct display_vector {
 /// @} End the debug_trace Doxygen group
 
 }
+
+/// Mark a function such that it can be called from a debugger.
+#define TRISYCL_DEBUG_FUNC __attribute__((used))
 
 /*
     # Some Emacs stuff:

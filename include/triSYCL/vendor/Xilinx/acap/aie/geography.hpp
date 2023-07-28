@@ -126,9 +126,7 @@ struct geography : Layout {
   */
   static void validate_x(int x) {
     if (!is_x_valid(x)) {
-      throw ::trisycl::runtime_error {
-        (boost::format { "The x coordinate %1% is not between %2% and %3%" }
-          % x % x_min % layout::x_max).str() };
+      throw ::trisycl::runtime_error{""};
     }
   }
 
@@ -153,9 +151,7 @@ struct geography : Layout {
   */
   static void validate_y(int y) {
     if (!is_y_valid(y)) {
-      throw ::trisycl::runtime_error {
-        (boost::format { "The y coordinate %1% is not between %2% and %3%" }
-          % y % y_min % layout::y_max).str() };
+      throw ::trisycl::runtime_error{""};
     }
   }
 
@@ -242,6 +238,7 @@ struct geography : Layout {
   */
   static bool constexpr is_cascade_end(int x, int y) {
     // The x position depends on the parity of the last line
+    // FIXME: what to do when the requested tiles do not cover all columns of the hardware.
     return x == ((y & 1) ? x_min : layout::x_max) && y == layout::y_max;
   }
 

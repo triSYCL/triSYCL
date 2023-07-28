@@ -7,7 +7,6 @@
 */
 
 #include "aie/accessor.hpp"
-#include "aie/cascade_stream.hpp"
 #include "aie/device.hpp"
 #include "aie/geography.hpp"
 #include "aie/layout.hpp"

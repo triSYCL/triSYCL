@@ -15,12 +15,265 @@
 #include <type_traits>
 
 #include "triSYCL/access.hpp"
-#include "tile_base.hpp"
+#include "triSYCL/detail/program_manager.hpp"
+#include "xaie_wrapper.hpp"
+#include "hardware.hpp"
+#include "program.hpp"
+#include "lock.hpp"
+#include "log.hpp"
+
+#ifdef __SYCL_XILINX_AIE__
+/// When executing on real hardware on the host or device side.
+
+#include "exec_kernel.hpp"
+#include "lock.hpp"
+
+namespace trisycl::vendor::xilinx::acap::aie {
+
+template<typename Geo>
+struct tile_hw_base_impl {
+  tile_hw_base_impl() = default;
+  tile_hw_base_impl(xaie::handle h)
+#if !defined(__SYCL_DEVICE_ONLY__)
+  : dev_handle(h)
+#endif
+  {}
+
+  template<typename D>
+  void initialize(D& device, int x, int y) {
+#if !defined(__SYCL_DEVICE_ONLY__)
+    /// We do not need the program so we just ignore it.
+    dev_handle = xaie::handle{xaie::acap_pos_to_xaie_pos({x, y}),
+                              device.get_dev_inst()};
+#else
+    assert(false && "should never be executed on device");
+#endif
+  }
+
+  /// Submit a callable on this tile
+  template <typename TileTy = tile_hw_base_impl, typename Work>
+  void single_task(Work &&f, uint32_t self_shared_mem_size = 0) {
+    return detail::exec_kernel<TileTy>{}.exec(
+        get_dev_handle(), std::forward<Work>(f), self_shared_mem_size);
+  }
+
+#if !defined(__SYCL_DEVICE_ONLY__)
+  // For host side when executing on acap hardware
+  xaie::handle dev_handle;
+
+  xaie::handle get_dev_handle() {
+    return dev_handle;
+  }
+#else
+  xaie::handle get_dev_handle() {
+    assert(false && "should never be executed on device");
+    return {};
+  }
+#endif
+
+#if !defined(__SYCL_DEVICE_ONLY__)
+  /// Get the horizontal coordinate
+  int x_coord() { return xaie::xaie_pos_to_acap_pos(dev_handle.tile).x; }
+
+  /// Get the vertical coordinate
+  int y_coord() { return xaie::xaie_pos_to_acap_pos(dev_handle.tile).y; }
+#else
+  /// Get the horizontal coordinate
+  int x_coord() { return hw::get_tile_x_coordinate(); }
+
+  /// Get the vertical coordinate
+  int y_coord() { return hw::get_tile_y_coordinate(); }
+#endif
+
+  hw_lock get_lock(hw::dir d, int i) {
+#if !defined(__SYCL_DEVICE_ONLY__)
+    return {i, dev_handle.moved(d)};
+#else
+    return {d, i};
+#endif
+  }
+
+  hw_lock get_lock(int i) {
+#if !defined(__SYCL_DEVICE_ONLY__)
+    return {i, dev_handle};
+#else
+    return {hw::get_self_dir(), i};
+#endif
+  }
+
+  /// write 48 byte starting from ptr to the cascade stream
+  void cascade_stream_write48(const char *ptr) {
+#ifdef TRISYCL_DEVICE_STREAM_DEBUG
+    multi_log("cascade_stream_write48\n");
+#endif
+    acap_intr::cstream_write48(ptr);
+  }
+
+  /// read 48 byte into ptr to the cascade stream
+  void cascade_stream_read48(char *ptr) {
+#ifdef TRISYCL_DEVICE_STREAM_DEBUG
+    multi_log("cascade_stream_read48\n");
+#endif
+    acap_intr::cstream_read48(ptr);
+  }
+
+  void stream_write16(const char *ptr, int stream_dix) {
+#ifdef TRISYCL_DEVICE_STREAM_DEBUG
+    multi_log("stream_write16\n");
+#endif
+    acap_intr::stream_write16(ptr, stream_dix);
+  }
+
+  void stream_read16(char *ptr, int stream_dix) {
+#ifdef TRISYCL_DEVICE_STREAM_DEBUG
+    multi_log("stream_read16\n");
+#endif
+    acap_intr::stream_read16(ptr, stream_dix);
+  }
+
+  /// Print values and strings on the console
+  static void log(auto... Val) {
+    acap::multi_log(Val...);
+  }
+
+  /// When waiting on the host we should go through this function but throught
+  /// the wait_all. and we should not each this function either on the device.
+  void wait() { assert(false && "unreachable"); }
+
+  /// Get the horizontal number of tiles
+  static constexpr int x_size() { return Geo::x_size; }
+
+  /// Get the vertical number of tiles
+  static constexpr int y_size() { return Geo::y_size; }
+};
+
+template<typename Geo, typename CRTP>
+struct tile_hw_impl : public tile_hw_base_impl<Geo> {
+  using base = tile_hw_base_impl<Geo>;
+  CRTP& get() { return *(CRTP*)this; }
+  const CRTP& get() const { return *(const CRTP*)this; }
+
+  template<typename D, typename P>
+  void initialize(D& device, P) {
+    base::initialize(device, CRTP::x, CRTP::y);
+  }
+
+  /// Submit a callable on this tile
+  template <typename Work> void single_task(Work &&f) {
+    return base::template single_task<CRTP>(
+        std::forward<Work>(f),
+        sizeof(typename CRTP::template tile_mem_t<CRTP::self_position>));
+  }
+
+  template <hw::dir d> auto &dir_mem() {
+    return *get_object<
+        typename CRTP::template tile_mem_t<CRTP::self_position.moved(d)>>(
+        hw::offset_table::get_tile_mem_begin_offset(), d);
+  }
+
+  /** Get the user input connection from the AXI stream switch
+
+      \param[in] port is the port to use
+  */
+  auto &in_connection(int port) {
+    assert(false && "not yet implemented");
+  }
+
+  /** Get the user output connection to the AXI stream switch
+
+      \param[in] port is port to use
+  */
+  auto &out_connection(int port) {
+    assert(false && "not yet implemented");
+  }
+
+  /// Get the user input port from the AXI stream switch
+  auto &in(int port) {
+    assert(false && "not yet implemented");
+  }
+
+  /// Get the user output port to the AXI stream switch
+  auto &out(int port) {
+    assert(false && "not yet implemented");
+  }
+};
+
+template<typename T1, typename T2, typename T3>
+using tile_backend = tile_hw_impl<T1, T3>;
+}
+#else
+/// When executing in the emulator.
+
+#include "tile_infrastructure.hpp"
+
+namespace trisycl::vendor::xilinx::acap::aie {
+
+template <typename Geo, typename AIE_Program, typename CRTP>
+struct tile_emu_impl : tile_infrastructure<Geo> {
+  using base = tile_infrastructure<Geo>;
+  CRTP &get() { return *(CRTP *)this; }
+  const CRTP &get() const { return *(const CRTP *)this; }
+
+  template<typename D, typename P>
+  void initialize(D& device, P& prog) {
+    program = &prog;
+    base::set_tile_infrastructure(device.tile(CRTP::self_position.x , CRTP::self_position.y));
+  }
+
+  /// Keep a reference to the AIE_Program with the full tile and memory view
+  AIE_Program *program;
+
+  /// Get the horizontal coordinate
+  int x_coord() { return CRTP::x; }
+
+  /// Get the vertical coordinate
+  int y_coord() { return CRTP::y; }
+
+  template <hw::dir d> auto &dir_mem() {
+    return program->template memory_module<CRTP::memory_module_linear_id(
+        hw::get_simple_offset(d).x, hw::get_simple_offset(d).y)>();
+  }
+
+  /// read 48 byte into ptr to the cascade stream
+  void cascade_stream_read48(char *ptr) { return base::cascade().read48(ptr); }
+
+  /// write 48 byte starting from ptr to the cascade stream
+  void cascade_stream_write48(const char *ptr) {
+    hw::position next_in_cascade = {
+        Geo::cascade_linear_x(Geo::cascade_linear_id(CRTP::x, CRTP::y) + 1),
+        Geo::cascade_linear_y(Geo::cascade_linear_id(CRTP::x, CRTP::y) + 1)};
+    program->tile_infra(next_in_cascade.x, next_in_cascade.y)
+        .cascade()
+        .write48(ptr);
+  }
+
+  void stream_write16(const char *ptr, int stream_dix) {
+    assert(false && "Not implemented in emulation");
+  }
+
+  void stream_read16(char *ptr, int stream_dix) {
+    assert(false && "Not implemented in emulation");
+  }
+
+  lock_unit &get_lock(hw::dir d, int i) {
+    program->tile_infra(CRTP::self_position.moved(d)).get_lock(i);
+  }
+};
+
+template<typename ... Ts>
+using tile_backend = tile_emu_impl<Ts...>;
+}
+#endif
+
+/// TODO: Perhaps worth pushing all LibXAiengine functionallity we use down
+/// into a C++ API so it can all be excluded with one #ifdef and kept nice and
+/// cleanly
 
 namespace trisycl::vendor::xilinx::acap::aie {
 
 /// \ingroup aie
 /// @{
+
 
 /** The AI Engine tile infrastructure defining the program of a tile
 
@@ -54,7 +307,9 @@ namespace trisycl::vendor::xilinx::acap::aie {
     TU, some discussion here: https://github.com/intel/llvm/issues/488
 */
 template <typename AIE_Program, int X, int Y>
-struct tile : tile_base<AIE_Program> {
+struct tile : public tile_backend<typename AIE_Program::geo, AIE_Program, tile<AIE_Program, X, Y>> {
+  using base = tile_backend<typename AIE_Program::geo, AIE_Program, tile<AIE_Program, X, Y>>;
+
   /** The horizontal tile coordinates in the CGRA grid (starting at 0
       and increasing towards the East) */
   static auto constexpr x = X;
@@ -64,10 +319,13 @@ struct tile : tile_base<AIE_Program> {
 
   /// The geography of the CGRA
   using geo = typename AIE_Program::geo;
+  using impl = base;
+  using prog = AIE_Program;
 
-  /// Shortcut to the tile base class
-  using tb = tile_base<AIE_Program>;
-
+  /// The type of the memory module of a tile at offset (dx, dy) from the
+  /// current tile.
+  template <hw::position p>
+  using tile_mem_t = typename AIE_Program::template tileable_memory<p.x, p.y>;
 
   /** Return the coordinate of the tile in the given dimension
 
@@ -83,7 +341,6 @@ struct tile : tile_base<AIE_Program> {
     else
       return y;
   }
-
 
   /// Return the linearized coordinate of the tile
   static auto constexpr linear_id() {
@@ -217,53 +474,54 @@ struct tile : tile_base<AIE_Program> {
     return geo:: memory_module_linear_id(x, y, dx, dy);
   }
 
+  static constexpr acap::hw::position self_position{X, Y};
 
-  /// Get the memory module on the West if it does exist
-   auto &mem_west() {
-     static_assert(is_memory_module_west(), "There is no memory module"
-                   " on the West of this tile in the Western column and"
-                   " on an even row");
-     return tb::program->template
-       memory_module<memory_module_linear_id(-1, 0)>();
+  /// Get the memory module on the left if it does exist
+  auto &mem_west() {
+    static_assert(is_memory_module_west(),
+                  "There is no memory module"
+                  " on the left of this tile in the left column and"
+                  " on an even row");
+    return base::template dir_mem<hw::dir::west>();
   }
 
-
-  /// Get the memory module on the East if it does exist
+  /// Get the memory module on the right if it does exist
   auto &mem_east() {
-    static_assert(is_memory_module_east(), "There is no memory module"
-                  " on the East of this tile in the Eastern column and"
+    static_assert(is_memory_module_east(),
+                  "There is no memory module"
+                  " on the right of this tile in the right column and"
                   " on an odd row");
-    return tb::program->template
-      memory_module<memory_module_linear_id(1, 0)>();
+    return base::template dir_mem<hw::dir::east>();
   }
 
-
-  /// Get the memory module on the South if it does exist
+  /// Get the memory module below if it does exist
   auto &mem_south() {
     static_assert(is_memory_module_south(), "There is no memory module"
-                  " below the Southern tile row");
-    return tb::program->template
-      memory_module<memory_module_linear_id(0, -1)>();
+                                            " below the lower tile row");
+    return base::template dir_mem<hw::dir::south>();
   }
 
-
-  /// Get the memory module on the North if it does exist
+  /// Get the memory module above if it does exist
   auto &mem_north() {
     static_assert(is_memory_module_north(), "There is no memory module"
-                  " above the Northern tile row");
-    return tb::program->template
-      memory_module<memory_module_linear_id(0, 1)>();
+                                            " above the upper tile row");
+    return base::template dir_mem<hw::dir::north>();
   }
-
 
   /// The memory module native to the tile
   auto &mem() {
-    if constexpr (y & 1)
+    if constexpr (self_position.get_parity() == hw::parity::west)
       return mem_west();
     else
       return mem_east();
   }
 
+  auto &mem_side() {
+    if constexpr (self_position.get_parity() == hw::parity::east)
+      return mem_west();
+    else
+      return mem_east();
+  }
 
   /** Get the memory module relative to the tile
 
@@ -294,6 +552,16 @@ struct tile : tile_base<AIE_Program> {
   }
 
 
+  using dir = hw::dir;
+  using base::get_lock;
+
+  decltype(auto) get_lock(int i) {
+    if constexpr (self_position.get_parity() == hw::parity::west)
+      return get_lock(hw::dir::west, i);
+    else
+      return get_lock(hw::dir::east, i);
+  }
+
   /// The type of the memory module native to the tile
   using mem_t = typename AIE_Program::template tileable_memory<x, y>;
 
@@ -316,38 +584,82 @@ struct tile : tile_base<AIE_Program> {
     return geo::cascade_linear_id(x, y);
   }
 
-
-  /** Get a read accessor to the cascade stream input
-
-      \param T is the data type used to read from the cascade
-      stream pipe
-
-      \param Target is the access mode to the pipe. It is blocking
-      by default
-  */
-  template <typename T>
-  auto get_cascade_stream_in() {
-    static_assert(!is_cascade_start(), "You cannot access to the cascade stream"
-                  " input on the tile that starts the stream");
-    return tb::cascade().template get_cascade_stream_in<T>(x, y);
+private:
+  /// Generic function to deal with fixed size stream operations.
+  template <unsigned OpSize, bool is_read, typename OpFunc>
+  static void stream_operation(typename std::conditional<is_read, char, const char>::type *ptr,
+                        unsigned size, OpFunc func) {
+    std::array<char, OpSize> buffer;
+    buffer.fill(0);
+    unsigned idx = 0;
+    for (; idx + OpSize <= size; idx += OpSize)
+      func(ptr + idx);
+    if (idx < size) {
+      if constexpr (!is_read)
+        std::memcpy(buffer.data(), ptr + idx, size - idx);
+      func(buffer.data());
+      if constexpr (is_read)
+        std::memcpy(ptr + idx, buffer.data(), size - idx);
+    }
   }
 
+public:
+  /** Write an object of type SpecifiedTy to a cascade stream
 
-  /** Get a write accessor to the cascade stream output
-
-      \param T is the data type used to write to the cascade
+      \param SpecifiedTy is the data type used to read from the cascade
       stream pipe
-
-      \param Target is the access mode to the pipe. It is blocking
-      by default
   */
-  template <typename T>
-  auto get_cascade_stream_out() {
-    static_assert(!is_cascade_end(), "You cannot access to the cascade stream"
-                  " output on the tile that starts the stream");
-    return tb::cascade().template get_cascade_stream_out<T>(x, y);
+  template <typename SpecifiedTy> void cascade_write(const SpecifiedTy &value) {
+    static_assert(!is_cascade_end(), "There is nothing to write for.");
+    static_assert(std::is_trivially_copyable<SpecifiedTy>::value,
+                  "SpecifiedTy cannot passed by streams");
+    stream_operation<48, /*is_read*/ false>(
+        reinterpret_cast<const char *>(std::addressof(value)),
+        sizeof(SpecifiedTy),
+        [this](const char *ptr) { base::cascade_stream_write48(ptr); });
   }
 
+  /** Read an object of type SpecifiedTy from the cascade stream
+
+      \param SpecifiedTy is the data type used to write to the cascade
+      stream pipe
+  */
+  template <typename SpecifiedTy> SpecifiedTy cascade_read() {
+    static_assert(!is_cascade_start(), "There is nothing to read from");
+    static_assert(std::is_trivially_copyable<SpecifiedTy>::value,
+                  "SpecifiedTy cannot passed by streams");
+    SpecifiedTy value;
+    stream_operation<48, /*is_read*/ true>(
+        reinterpret_cast<char *>(std::addressof(value)), sizeof(SpecifiedTy),
+        [this](char *ptr) { base::cascade_stream_read48(ptr); });
+    return value;
+  }
+
+  template <typename SpecifiedTy>
+  void stream_write(const SpecifiedTy &value, int stream_id) {
+    static_assert(std::is_trivially_copyable<SpecifiedTy>::value,
+                  "SpecifiedTy cannot passed by streams");
+    stream_operation<16, /*is_read*/ false>(
+        reinterpret_cast<const char *>(std::addressof(value)),
+        sizeof(SpecifiedTy), [this, stream_id](const char *ptr) {
+          base::stream_write16(ptr, stream_id);
+        });
+  }
+
+  /** Read an object of type SpecifiedTy from the stream
+
+      \param SpecifiedTy is the data type used to write to the cascade
+      stream pipe
+  */
+  template <typename SpecifiedTy> SpecifiedTy stream_read(int stream_id) {
+    static_assert(std::is_trivially_copyable<SpecifiedTy>::value,
+                  "SpecifiedTy cannot passed by streams");
+    SpecifiedTy value;
+    stream_operation<16, /*is_read*/ true>(
+        reinterpret_cast<char *>(std::addressof(value)), sizeof(SpecifiedTy),
+        [this, stream_id](char *ptr) { base::stream_read16(ptr, stream_id); });
+    return value;
+  }
 
   /** An horizontal barrier using a lock
 
@@ -361,37 +673,39 @@ struct tile : tile_base<AIE_Program> {
       // Propagate a token from West to East and back
       if constexpr (!is_west_column()) {
         // Wait for the Western neighbour to be ready
-        mem().lock(lock).acquire_with_value(true);
+        get_lock(lock).acquire_with_value(true);
       }
       if constexpr (is_memory_module_east()) {
-        mem_east().lock(lock).acquire_with_value(false);
+        get_lock(hw::dir::east, lock).acquire_with_value(false);
         // Unleash the Eastern neighbour
-        mem_east().lock(lock).release_with_value(true);
+        get_lock(hw::dir::east, lock).release_with_value(true);
         // Wait for the Eastern neighbour to acknowledge
-        mem_east().lock(lock).acquire_with_value(false);
+        get_lock(hw::dir::east, lock).acquire_with_value(false);
        }
       if constexpr (!is_west_column()) {
         // Acknowledge to the Western neighbour
-        mem().lock(lock).release_with_value(false);
+        get_lock(lock).release_with_value(false);
       }
     } else {
       // Propagate a token from East to West and back
       if constexpr (!is_east_column()) {
         // Wait for the Eastern neighbour to be ready
-        mem().lock(lock).acquire_with_value(true);
+        get_lock(lock).acquire_with_value(true);
       }
       if constexpr (is_memory_module_west()) {
-        mem_west().lock(lock).acquire_with_value(false);
+        get_lock(hw::dir::west, lock).acquire_with_value(false);
         // Unleash the Western neighbour
-        mem_west().lock(lock).release_with_value(true);
+        get_lock(hw::dir::west, lock).release_with_value(true);
         // Wait for the Western neighbour to acknowledge
-        mem_west().lock(lock).acquire_with_value(false);
+        get_lock(hw::dir::west, lock).acquire_with_value(false);
        }
       if constexpr (!is_east_column()) {
         // Acknowledge to the Eastern neighbour
-        mem().lock(lock).release_with_value(false);
+        get_lock(lock).release_with_value(false);
       }
     }
+    /// Reset the lock for the next barrier.
+    get_lock(lock).release_with_value(false);
   }
 
 
@@ -404,35 +718,38 @@ struct tile : tile_base<AIE_Program> {
   */
   void vertical_barrier(int lock = 15) {
     // Propagate a token from South to North and back
+    // All tile except the bottom one wait.
     if constexpr (!is_south_row()) {
       // Wait for the Southern neighbour to be ready
-      mem().lock(lock).acquire_with_value(true);
+      get_lock(lock).acquire_with_value(true);
     }
+    // All tile except the top one wait.
     if constexpr (is_memory_module_north()) {
-      mem_north().lock(lock).acquire_with_value(false);
+      get_lock(hw::dir::north, lock).acquire_with_value(false);
       // Unleash the Northern neighbour
-      mem_north().lock(lock).release_with_value(true);
+      get_lock(hw::dir::north, lock).release_with_value(true);
       // Wait for the Northern neighbour to acknowledge
-      mem_north().lock(lock).acquire_with_value(false);
-    }
+      get_lock(hw::dir::north, lock).acquire_with_value(false);
+    } 
+    // All tile except the bottom one wait.
     if constexpr (!is_south_row()) {
       // Acknowledge to the Southern neighbour
-      mem().lock(lock).release_with_value(false);
+      get_lock(lock).release_with_value(false);
     }
   }
-
 
   /** Full barrier using the 2 locks by default
 
       Implement a barrier across the full program by using \c
       horizontal_barrier() and \c vertical_barrier().
   */
-  void barrier() {
-    horizontal_barrier();
-    vertical_barrier();
+  void barrier(int h_id = 14, int v_id = 15) {
+    horizontal_barrier(h_id);
+    vertical_barrier(v_id);
   }
 
-
+/// not yet implemented
+#if 0
   /** Get access on a receiver DMA
 
       \param[in] port specifies which DMA to access, starting at 0 */
@@ -447,7 +764,7 @@ struct tile : tile_base<AIE_Program> {
   auto tx_dma(int port) {
     return dma_dsl { *this, this->ti.tx_dma(port) };
   }
-
+#endif
 
 };
 
