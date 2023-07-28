@@ -31,6 +31,13 @@ on:
         required: false
         default: 10
 
+defaults:
+  run:
+    # This is already the default, except when running inside another Docker
+    # image, which is the case here. So set it up globally to avoid
+    # repeating elsewhere.
+    shell: bash
+
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
@@ -125,7 +132,6 @@ jobs:
 
       - name: Declare LLVM package repository if needed
         if: ${{ startsWith(matrix.c_compiler, 'clang') || startsWith(matrix.cxx_compiler, 'clang') }}
-        shell: bash
         run: |
           apt-get install -y wget
           wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
@@ -149,7 +155,6 @@ jobs:
       - name: Install OpenMP support if needed
         # Clang requires a specific OpenMP library to run
         if: ${{ matrix.OpenMP == 'ON' && startsWith(matrix.cxx_compiler, 'clang') }}
-        shell: bash
         run: |
           # Get the clang++ version, which is what is left when we remove "clang++-"
           CXX_COMPILER=${{matrix.cxx_compiler}}
@@ -161,7 +166,11 @@ jobs:
         run: apt-get install -y opencl-headers ocl-icd-opencl-dev libpocl-dev
 
       # Use ccache to speed-up compilation to also fit into GitHub Actions
-      # resource limitations https://github.com/hendrikmuhs/ccache-action
+      # resource limitations, see:
+      # https://github.com/hendrikmuhs/ccache-action
+      # The cache is saved in a "Post install-ccache" step, even if
+      # the job is canceled or some previous step fails, which is good
+      # to avoid wasting constrained compilation resources
       - name: install-ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
