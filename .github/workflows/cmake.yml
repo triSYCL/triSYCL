@@ -73,13 +73,13 @@ jobs:
            OpenMP: ON
            OpenCL: ON
 
-         - c_compiler: clang-17
-           cxx_compiler: clang++-17
+         - c_compiler: clang-18
+           cxx_compiler: clang++-18
            OpenMP: ON
            OpenCL: OFF
 
-         - c_compiler: clang-17
-           cxx_compiler: clang++-17
+         - c_compiler: clang-18
+           cxx_compiler: clang++-18
            OpenMP: ON
            OpenCL: ON
 
