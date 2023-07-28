@@ -86,8 +86,9 @@ jobs:
     # Cancel old CI jobs for a PR when the PR is updated
     concurrency:
       # Create a job equivalence class with an id crafted to only
-      # cancel in-progress runs of the same workflow
-      group: ${{ github.workflow }}-${{ github.ref }}
+      # cancel in-progress runs of the same workflow and same
+      # job-index in the matrix
+      group: '${{ github.workflow }}-job-index-${{ strategy.job-index }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }} for ${{ matrix }}'
       # Cancel only pull-request related events
       cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
 
@@ -97,26 +98,16 @@ jobs:
         # https://docs.github.com/en/actions/learn-github-actions/variables
         # https://docs.github.com/en/enterprise-cloud@latest/actions/learn-github-actions/contexts
         run: |
-          echo "::notice::{github context:}"
-          echo "${{ toJSON(github) }}"
-          echo "::notice::{vars context:}"
-          echo "${{ toJSON(vars) }}"
-          echo "::notice::{job context:}"
-          echo "${{ toJSON(job) }}"
-          echo "::notice::{steps context:}"
-          echo "${{ toJSON(steps) }}"
-          echo "::notice::{runner context:}"
-          echo "${{ toJSON(runner) }}"
-          echo "::notice::{strategy context:}"
-          echo "${{ toJSON(strategy) }}"
-          echo "::notice::{matrix context:}"
-          echo "${{ toJSON(matrix) }}"
-          echo "::notice::{needs context:}"
-          echo "${{ toJSON(needs) }}"
-          echo "::notice::{inputs context:}"
-          echo "${{ toJSON(inputs) }}"
-          echo github.workflow=${{ github.workflow }}
-          echo github.ref=${{ github.ref }}
+          echo "github context: ${{ toJSON(github) }}" > /dev/null
+          echo "env context: ${{ toJSON(env) }}" > /dev/null
+          echo "vars context: ${{ toJSON(vars) }}" > /dev/null
+          echo "job context: ${{ toJSON(job) }}" > /dev/null
+          echo "steps context: ${{ toJSON(steps) }}" > /dev/null
+          echo "runner context: ${{ toJSON(runner) }}" > /dev/null
+          echo "strategy context: ${{ toJSON(strategy) }}" > /dev/null
+          echo "matrix context: ${{ toJSON(matrix) }}" > /dev/null
+          echo "needs context: ${{ toJSON(needs) }}" > /dev/null
+          echo "inputs context: ${{ toJSON(inputs) }}" > /dev/null
           echo Shell environment variables:
           env
 
