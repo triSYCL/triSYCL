@@ -25,7 +25,7 @@ on:
         required: false
         default: false
       compilation_time_out:
-        type: string
+        type: number
         description: Run the build with a timeout in minutes to have
           partial compilation to bootstrap ccache
         required: false
@@ -199,7 +199,17 @@ jobs:
 
       - name: Build for ${{matrix.c_compiler}}, ${{matrix.cxx_compiler}},
           OpenMP=${{matrix.OpenMP}}, OpenCL=${{matrix.OpenCL}}
-        timeout-minutes: ${{ inputs.compilation_time_out }}
+        # Some atrocities here because if the time-out value comes
+        # from a variable of type 'number' it actually is interpreted
+        # as a string and parsing fails. GitHub bug or expression
+        # typing fuzziness? So, first use toJSON() to test for
+        # non-existence of the variable to return null which is
+        # implicitly up-casted to a string by the comparison and
+        # returns a default timeout value for 1 day. Otherwise, if the
+        # variable is set, interpret the string number as JSON to
+        # force the type to be a number.
+        timeout-minutes: ${{ ((toJSON(inputs.compilation_time_out) == 'null') && 1440)
+                             || fromJSON(inputs.compilation_time_out) }}
         # Compile all the tests using all the available cores
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
           --verbose --parallel `nproc`
