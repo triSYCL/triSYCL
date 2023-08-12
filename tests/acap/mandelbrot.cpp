@@ -9,7 +9,8 @@
 #include <sycl/sycl.hpp>
 
 using namespace sycl::vendor::xilinx;
-auto constexpr image_size = 229;
+
+auto constexpr image_size = 90;
 graphics::application a;
 
 // All the memory modules are the same
@@ -43,14 +44,16 @@ struct mandelbrot : acap::aie::tile<AIE, X, Y> {
             ;
           m.plane[j][i] = k;
         }
-      a.update_tile_data_image(t::x, t::y, &m.plane[0][0], 0, 255);
+      a.update_tile_data_image(t::x_coord(), t::y_coord(), &m.plane[0][0], 0,
+                               255);
     }
   }
 };
 
-int main(int argc, char* argv[]) {
-  acap::aie::device<acap::aie::layout::size<2, 3>> aie;
-  // Open a graphic view of a AIE array
+int main(int argc, char *argv[]) {
+  acap::aie::device<acap::aie::layout::size<6,6>> aie;
+  // Open a graphic view of a ME array
+  a.set_device(aie);
   a.start(argc, argv, aie.x_size, aie.y_size, image_size, image_size, 1)
       .image_grid()
       .get_palette()

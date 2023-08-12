@@ -13,7 +13,7 @@ struct f {
   int a = 0;
   void operator()(auto& th) {
     ++a;
-    std::cout << "Hello, I am the AIE tile (" << th.x() << ',' << th.y() << ")"
+    std::cout << "Hello, I am the AIE tile (" << th.x_coord() << ',' << th.y_coord() << ")"
               << " a = " << a << std::endl;
   }
 };
@@ -21,7 +21,7 @@ struct f {
 struct const_f {
   int a = 0;
   void operator()(auto& th) const {
-    std::cout << "Hello, I am the AIE const tile (" << th.x() << ',' << th.y()
+    std::cout << "Hello, I am the AIE const tile (" << th.x_coord() << ',' << th.y_coord()
               << ")" << std::endl;
   }
 };

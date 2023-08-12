@@ -19,7 +19,7 @@ int main() {
        only once, since each tile has the same code
     */
     t.single_task([&](auto& th) {
-      std::cout << "Hello, I am the AIE tile (" << th.x() << ',' << th.y()
+      std::cout << "Hello, I am the AIE tile (" << th.x_coord() << ',' << th.y_coord()
                 << ")" << std::endl;
     });
   });

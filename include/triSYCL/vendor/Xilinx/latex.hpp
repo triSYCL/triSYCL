@@ -1,6 +1,7 @@
 #ifndef TRISYCL_SYCL_VENDOR_XILINX_LATEX_HPP
 #define TRISYCL_SYCL_VENDOR_XILINX_LATEX_HPP
 
+
 /** \file Some LaTeX output support useful for debugging
 
     Based on TikZ/PGF
@@ -64,7 +65,9 @@ public:
     auto m = std::max(size.x(), size.y());
     scaling_factor = m > max_size ? max_size/m : 1;
     // Generate the LaTeX header
-    out = (boost::format { R"(%% To be compiled with lualatex instead of pdflatex
+    // boost::format seems broken and can't compile this.
+// #if 0
+    out = (boost::format (R"(%% To be compiled with lualatex instead of pdflatex
 %% to avoid a bug on _ and to handle huge memory automatically.
 \documentclass{article}
 %% Use maximum of the page surface
@@ -99,7 +102,8 @@ public:
   gray,
   style = {line width = %4%mm, ->}]
 
-)" } % scale(size.x()) % scale(size.y()) % scale(1) % scale(0.01)).str();
+)" ) % scale(size.x()) % scale(size.y()) % scale(1) % scale(0.01)).str();
+// #endif
   }
 
 
