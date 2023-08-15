@@ -28,23 +28,19 @@ namespace aie {
 /// and for execution on hardware with a 32-bit dev_ptr<T>
 template <typename T> struct generic_ptr {
   generic_ptr() = default;
-// #if !defined(__AIE_FALLBACK__) && !defined(__AIE_EMULATION__)
+#if !defined(__AIE_FALLBACK__) && !defined(__AIE_EMULATION__)
   dev_ptr<T> ptr;
-// #ifdef __SYCL_DEVICE_ONLY__
-  generic_ptr(T* p) : generic_ptr(dev_ptr<T>(p)) { }
-// #else
-//   generic_ptr(T*) { TRISYCL_FALLBACK; }
-// #endif
-  generic_ptr(dev_ptr<T> p)
-      : ptr(p) {}
+#ifdef __SYCL_DEVICE_ONLY__
+  generic_ptr(T* p)
+      : generic_ptr(dev_ptr<T>(p)) {}
   operator generic_ptr<void>() { return dev_ptr<void> { ptr }; }
-  // #else
-  //   T* ptr = nullptr;
-  //   generic_ptr(T* p)
-  //       : ptr(p) {}
-  //   generic_ptr(dev_ptr<T> p) { TRISYCL_FALLBACK; }
-  //   operator generic_ptr<void>() const { return { (void*)ptr }; }
-  // #endif
+#endif
+#else
+  T* ptr = nullptr;
+  generic_ptr(T* p)
+      : ptr(p) {}
+  operator generic_ptr<void>() const { return { (void*)ptr }; }
+#endif
   operator bool() const { return (bool)ptr; }
 };
 
@@ -141,7 +137,7 @@ struct device_tile_impl_fallback {
   void cascade_read48(const char* ptr) { TRISYCL_FALLBACK; }
   int x_coord() { TRISYCL_FALLBACK; }
   int y_coord() { TRISYCL_FALLBACK; }
-  template <typename T, typename ServiceTy>
+  template <typename T, typename ServiceTy, typename ServiceStorageTy>
   service_info<T>::ret_t perform_service(service_info<T>::data_t data, bool) {
     TRISYCL_FALLBACK;
   }

@@ -442,8 +442,9 @@ struct device_tile
         TypeInfoTy::service_type::data_seq::template get_index<
             std::decay_t<T>>>::service_t;
     /// Call on to the implementation to execute the service correct
-    return impl::perform_service<service_t, typename TypeInfoTy::service_type>(
-        local, chained);
+    return impl::perform_service<service_t, typename TypeInfoTy::service_type,
+                                 typename TypeInfoTy::service_type::base::template to<
+                                     detail::service_storage>>(local, chained);
   }
   TypeInfoTy::service_type::template service_list_accessor<
       device_tile, detail::multi_service_accessor>

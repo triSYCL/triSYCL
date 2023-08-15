@@ -61,7 +61,7 @@ struct device_tile_impl : device_tile_impl_fallback {
   device_lock_impl lock(position pos, dir d, int i) {
     return device_lock_impl(resolved_self_dir(pos, d), i);
   }
-  template <typename T, typename ServiceTy>
+  template <typename T, typename ServiceTy, typename ServiceStorageTy>
   static service_info<T>::ret_t
   perform_service(service_info<T>::data_t d, bool chained = false) {
     volatile service_device_side* obj = service_device_side::get();
@@ -100,8 +100,8 @@ struct fake_dt {
     using service_t = BasicService::template get_info_t<
         BasicService::data_seq::template get_index<std::decay_t<T>>>::service_t;
     /// Call on to the implementation to execute the service correct
-    return device_tile_impl::perform_service<service_t, BasicService>(local,
-                                                                       chained);
+    return device_tile_impl::perform_service<service_t, BasicService, void>(
+        local, chained);
   }
   int dyn_x() { return get_tile_x_coordinate(); }
   int dyn_y() { return get_tile_y_coordinate(); }
