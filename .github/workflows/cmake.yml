@@ -152,15 +152,15 @@ jobs:
           echo "$execution_context_var_inputs"
           echo "::endgroup::"
 
-      - name: Check out repository code
-        uses: actions/checkout@v3
-
       - name: Install required packages
         run: |
           apt-get update
           apt-get install -y build-essential cmake g++ gdb git \
             libboost1.81-all-dev libgtkmm-3.0-dev librange-v3-dev \
             pkgconf
+
+      - name: Check out repository code
+        uses: actions/checkout@v3
 
       - name: Declare LLVM package repository if needed
         if: startsWith(matrix.c_compiler, 'clang') || startsWith(matrix.cxx_compiler, 'clang')
