@@ -24,6 +24,19 @@ on:
         description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
         required: false
         default: false
+      compilation_time_out:
+        type: number
+        description: Run the build with a timeout in minutes to have
+          partial compilation to bootstrap ccache
+        required: false
+        default: 10
+
+defaults:
+  run:
+    # This is already the default, except when running inside another Docker
+    # image, which is the case here. So set it up globally to avoid
+    # repeating elsewhere.
+    shell: bash
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -60,19 +73,84 @@ jobs:
            OpenMP: ON
            OpenCL: ON
 
-         - c_compiler: clang-17
-           cxx_compiler: clang++-17
+         - c_compiler: clang-18
+           cxx_compiler: clang++-18
            OpenMP: ON
            OpenCL: OFF
 
-         - c_compiler: clang-17
-           cxx_compiler: clang++-17
+         - c_compiler: clang-18
+           cxx_compiler: clang++-18
            OpenMP: ON
            OpenCL: ON
 
+    # Cancel old CI jobs for a PR when the PR is updated
+    concurrency:
+      # Create a job equivalence class with an id crafted to only
+      # cancel in-progress runs of the same workflow and same
+      # job-index in the matrix
+      group: '${{ github.workflow }}-job-index-${{ strategy.job-index }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }} for ${{ matrix }}'
+      # Cancel only pull-request related events
+      cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
+
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
+      - name: Display environment variables
+        run: env
+
+      - name: User and group ids
+        run: id -a
+
+      - name: Execution context information
+        # Display a lot of information to help further development
+        # https://docs.github.com/en/actions/learn-github-actions/variables
+        # https://docs.github.com/en/enterprise-cloud@latest/actions/learn-github-actions/contexts
+        # The problem is that echo-ing directly "${{ toJSON(github) }}"
+        # in the shell is not escaped and for example '&' breaks
+        # things or can lead to server-side script injection. :-(
+        # So, use environment setting and display the environment
+        # variable in the shell between "" to avoid unsafe
+        # interpretation.
+        env:
+          execution_context_var_github: ${{ toJSON(github) }}
+          execution_context_var_env: ${{ toJSON(env) }}
+          execution_context_var_vars: ${{ toJSON(vars) }}
+          execution_context_var_job: ${{ toJSON(job) }}
+          execution_context_var_steps: ${{ toJSON(steps) }}
+          execution_context_var_runner: ${{ toJSON(runner) }}
+          execution_context_var_strategy: ${{ toJSON(strategy) }}
+          execution_context_var_matrix: ${{ toJSON(matrix) }}
+          execution_context_var_needs: ${{ toJSON(needs) }}
+          execution_context_var_inputs: ${{ toJSON(inputs) }}
+        run: |
+          echo "::group::github context"
+          echo "$execution_context_var_github"
+          echo "::endgroup::"
+          echo "::group::env context"
+          echo "$execution_context_var_env"
+          echo "::endgroup::"
+          echo "::group::vars context"
+          echo "$execution_context_var_vars"
+          echo "::endgroup::"
+          echo "::group::job context"
+          echo "$execution_context_var_job"
+          echo "::endgroup::"
+          echo "::group::steps context"
+          echo "$execution_context_var_steps"
+          echo "::endgroup::"
+          echo "::group::runner context"
+          echo "$execution_context_var_runner"
+          echo "::endgroup::"
+          echo "::group::strategy context"
+          echo "$execution_context_var_strategy"
+          echo "::endgroup::"
+          echo "::group::matrix context"
+          echo "$execution_context_var_matrix"
+          echo "::endgroup::"
+          echo "::group::needs context"
+          echo "$execution_context_var_needs"
+          echo "::endgroup::"
+          echo "::group::inputs context"
+          echo "$execution_context_var_inputs"
+          echo "::endgroup::"
 
       - name: Install required packages
         run: |
@@ -81,9 +159,11 @@ jobs:
             libboost1.81-all-dev libgtkmm-3.0-dev librange-v3-dev \
             pkgconf
 
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
       - name: Declare LLVM package repository if needed
-        if: ${{ startsWith(matrix.c_compiler, 'clang') || startsWith(matrix.cxx_compiler, 'clang') }}
-        shell: bash
+        if: startsWith(matrix.c_compiler, 'clang') || startsWith(matrix.cxx_compiler, 'clang')
         run: |
           apt-get install -y wget
           wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
@@ -100,14 +180,14 @@ jobs:
 
       - name: Install the C++ compiler
         # Do not install the C++ compiler if it is clang++ since it comes
-        # along the Clang C compiler
+        # along the Clang C compiler. Need "${{ }}" because it starts
+        # with "!"
         if: ${{ !startsWith(matrix.cxx_compiler, 'clang') }}
         run: apt-get install -y ${{matrix.cxx_compiler}}
 
       - name: Install OpenMP support if needed
         # Clang requires a specific OpenMP library to run
-        if: ${{ matrix.OpenMP == 'ON' && startsWith(matrix.cxx_compiler, 'clang') }}
-        shell: bash
+        if: matrix.OpenMP == 'ON' && startsWith(matrix.cxx_compiler, 'clang')
         run: |
           # Get the clang++ version, which is what is left when we remove "clang++-"
           CXX_COMPILER=${{matrix.cxx_compiler}}
@@ -115,15 +195,20 @@ jobs:
           apt-get install -y libomp-${cxx_compiler_version}-dev
 
       - name: Install OpenCL with POCL if needed
-        if: ${{ matrix.OpenCL == 'ON' }}
+        if: matrix.OpenCL == 'ON'
         run: apt-get install -y opencl-headers ocl-icd-opencl-dev libpocl-dev
 
       # Use ccache to speed-up compilation to also fit into GitHub Actions
-      # resource limitations https://github.com/hendrikmuhs/ccache-action
+      # resource limitations, see:
+      # https://github.com/hendrikmuhs/ccache-action
+      # The cache is saved in a "Post install-ccache" step, even if
+      # the job is canceled or some previous step fails, which is good
+      # to avoid wasting constrained compilation resources
       - name: install-ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
           max-size: "1G"
+          key: ${{runner.os}}-${{matrix.c_compiler}}-${{matrix.cxx_compiler}}-${{matrix.OpenMP}}-${{matrix.OpenCL}}
 
       - name: Configure CMake for ${{matrix.c_compiler}}, ${{matrix.cxx_compiler}},
           OpenMP=${{matrix.OpenMP}}, OpenCL=${{matrix.OpenCL}}
@@ -136,6 +221,17 @@ jobs:
 
       - name: Build for ${{matrix.c_compiler}}, ${{matrix.cxx_compiler}},
           OpenMP=${{matrix.OpenMP}}, OpenCL=${{matrix.OpenCL}}
+        # Some atrocities here because if the time-out value comes
+        # from a variable of type 'number' it actually is interpreted
+        # as a string and parsing fails. GitHub bug or expression
+        # typing fuzziness? So, first use toJSON() to test for
+        # non-existence of the variable to return null which is
+        # implicitly up-casted to a string by the comparison and
+        # returns a default timeout value for 1 day. Otherwise, if the
+        # variable is set, interpret the string number as JSON to
+        # force the type to be a number.
+        timeout-minutes: ${{ ((toJSON(inputs.compilation_time_out) == 'null') && 1440)
+                             || fromJSON(inputs.compilation_time_out) }}
         # Compile all the tests using all the available cores
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
           --verbose --parallel `nproc`
@@ -147,8 +243,8 @@ jobs:
         uses: mxschmitt/action-tmate@v3
         # To run this, launch it manually on the default branch and
         # click on "launch_tmate_terminal_for_debug"
-        if: ${{ github.event_name == 'workflow_dispatch'
-                && inputs.launch_tmate_terminal_for_debug }}
+        if: github.event_name == 'workflow_dispatch'
+                && inputs.launch_tmate_terminal_for_debug
         with:
           # Since we run in Docker, no need to use sudo
           sudo: false
