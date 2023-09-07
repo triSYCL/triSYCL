@@ -208,6 +208,7 @@ jobs:
         uses: hendrikmuhs/ccache-action@v1.2
         with:
           max-size: "1G"
+          key: ${{runner.os}}-${{matrix.c_compiler}}-${{matrix.cxx_compiler}}-${{matrix.OpenMP}}-${{matrix.OpenCL}}
 
       - name: Configure CMake for ${{matrix.c_compiler}}, ${{matrix.cxx_compiler}},
           OpenMP=${{matrix.OpenMP}}, OpenCL=${{matrix.OpenCL}}
