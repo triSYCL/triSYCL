@@ -103,7 +103,7 @@ jobs:
         # Display a lot of information to help further development
         # https://docs.github.com/en/actions/learn-github-actions/variables
         # https://docs.github.com/en/enterprise-cloud@latest/actions/learn-github-actions/contexts
-        # The problem is that echo-ing directly ${{ toJSON(github) }}
+        # The problem is that echo-ing directly "${{ toJSON(github) }}"
         # in the shell is not escaped and for example '&' breaks
         # things or can lead to server-side script injection. :-(
         # So, use environment setting and display the environment
@@ -163,7 +163,7 @@ jobs:
             pkgconf
 
       - name: Declare LLVM package repository if needed
-        if: ${{ startsWith(matrix.c_compiler, 'clang') || startsWith(matrix.cxx_compiler, 'clang') }}
+        if: startsWith(matrix.c_compiler, 'clang') || startsWith(matrix.cxx_compiler, 'clang')
         run: |
           apt-get install -y wget
           wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
@@ -180,13 +180,14 @@ jobs:
 
       - name: Install the C++ compiler
         # Do not install the C++ compiler if it is clang++ since it comes
-        # along the Clang C compiler
+        # along the Clang C compiler. Need "${{ }}" because it starts
+        # with "!"
         if: ${{ !startsWith(matrix.cxx_compiler, 'clang') }}
         run: apt-get install -y ${{matrix.cxx_compiler}}
 
       - name: Install OpenMP support if needed
         # Clang requires a specific OpenMP library to run
-        if: ${{ matrix.OpenMP == 'ON' && startsWith(matrix.cxx_compiler, 'clang') }}
+        if: matrix.OpenMP == 'ON' && startsWith(matrix.cxx_compiler, 'clang')
         run: |
           # Get the clang++ version, which is what is left when we remove "clang++-"
           CXX_COMPILER=${{matrix.cxx_compiler}}
@@ -194,7 +195,7 @@ jobs:
           apt-get install -y libomp-${cxx_compiler_version}-dev
 
       - name: Install OpenCL with POCL if needed
-        if: ${{ matrix.OpenCL == 'ON' }}
+        if: matrix.OpenCL == 'ON'
         run: apt-get install -y opencl-headers ocl-icd-opencl-dev libpocl-dev
 
       # Use ccache to speed-up compilation to also fit into GitHub Actions
@@ -241,8 +242,8 @@ jobs:
         uses: mxschmitt/action-tmate@v3
         # To run this, launch it manually on the default branch and
         # click on "launch_tmate_terminal_for_debug"
-        if: ${{ github.event_name == 'workflow_dispatch'
-                && inputs.launch_tmate_terminal_for_debug }}
+        if: github.event_name == 'workflow_dispatch'
+                && inputs.launch_tmate_terminal_for_debug
         with:
           # Since we run in Docker, no need to use sudo
           sudo: false
