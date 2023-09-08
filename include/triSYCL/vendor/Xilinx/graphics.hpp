@@ -34,6 +34,7 @@
 #include <chrono>
 #include <condition_variable>
 #include <cstddef>
+#include <cstdlib>
 #include <functional>
 #include <future>
 #include <iostream>
@@ -835,6 +836,7 @@ struct application {
                               PixelTy max_value) const {
     w->update_tile_data_image(x, y, data, min_value, max_value);
   };
+
   template <typename DataType>
   void validate_tile_data_image(int x, int y, DataType data, PixelTy min_value,
                                 PixelTy max_value) {
@@ -865,7 +867,7 @@ struct application {
   do {                                                                         \
     if (!COND) {                                                               \
       TRISYCL_DUMP("invalid data: " EXTRA << ": " << #COND);                   \
-      __builtin_debugtrap();                                                   \
+      std::abort();                                                            \
     }                                                                          \
   } while (0)
 // __builtin_debugtrap();
