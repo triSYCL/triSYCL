@@ -256,7 +256,7 @@ struct tile_emu_impl : tile_infrastructure<Geo> {
   }
 
   lock_unit &get_lock(hw::dir d, int i) {
-    program->tile_infra(CRTP::self_position.moved(d)).get_lock(i);
+    return program->tile_infra(CRTP::self_position.moved(d)).get_lock(i);
   }
 };
 
@@ -730,7 +730,7 @@ public:
       get_lock(hw::dir::north, lock).release_with_value(true);
       // Wait for the Northern neighbour to acknowledge
       get_lock(hw::dir::north, lock).acquire_with_value(false);
-    } 
+    }
     // All tile except the bottom one wait.
     if constexpr (!is_south_row()) {
       // Acknowledge to the Southern neighbour
