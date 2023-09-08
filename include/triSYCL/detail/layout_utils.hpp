@@ -1,9 +1,7 @@
 #ifndef TRISYCL_SYCL_DETAIL_LAYOUT_UTILS_HPP
 #define TRISYCL_SYCL_DETAIL_LAYOUT_UTILS_HPP
 
-/** \file Compute linearized array access
-
-    Ronan at Keryell point FR
+/** \file Some utilities to deal with data layout
 
     This file is distributed under the University of Illinois Open Source
     License. See LICENSE.TXT for details.
@@ -13,7 +11,7 @@
 
 namespace trisycl::detail {
 
-/// using this is better than using static_assert because the values of template
+/// Using this is better than using static_assert because the values of template
 /// parameters will be printed in the template instantiation stack
 template<auto V1, auto V2>
 struct assert_equal {
@@ -38,16 +36,16 @@ class empty {};
 
 template <std::size_t Size> class non_zero_padding { char padding[Size] = {}; };
 
-/// This should be used as a base class or it wont be able to have 0 padding
+/// This should be used as a base class or it will not be able to have 0 padding
 /// added.
 template <std::size_t Size>
 class padding
-    : std::conditional<Size == 0, empty, non_zero_padding<Size>>::type {};
+    : std::conditional_t<Size == 0, empty, non_zero_padding<Size>> {};
 
 /// Provides storage suitable for a type T.
 template <typename T> struct storage {
   alignas(T) char data[sizeof(T)];
-  T &get() { return *reinterpret_cast<T *>(&data[0]); }
+  T& get() { return *reinterpret_cast<T*>(&data[0]); }
 };
 
 }

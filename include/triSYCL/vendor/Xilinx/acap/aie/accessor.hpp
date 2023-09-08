@@ -25,7 +25,7 @@ namespace trisycl::vendor::xilinx::acap::aie {
 struct device_accessor_base {
   /// Address of the data.
   hw::dev_ptr<void> ptr;
-  /// Size if bytes of the data.
+  /// Size of the data in bytes
   int size;
 };
 
@@ -34,7 +34,7 @@ template <typename DataType, int Dimensions, access::mode AccessMode,
           access::target Target = access::target::global_buffer>
 class device_accessor : device_accessor_base {
   using base = device_accessor_base;
-  static_assert(Dimensions == 1, "only 1d is supported for now");
+  static_assert(Dimensions == 1, "only 1D is supported for now");
 
   /// Get a properly typed pointer to the data.
   DataType* get_ptr() const {
@@ -115,16 +115,19 @@ class alignas(8) accessor
 public:
   //   using typename base::accessor;
   template<typename Buffer>
-  accessor(Buffer &b, auto &cgh) : base{b} {
+  accessor(Buffer& b, auto& cgh) : base{b} {
     cgh.add_accessor(*this);
   }
 };
 
 template <typename Buffer>
-accessor(Buffer, auto &)
+accessor(Buffer, auto&)
     -> accessor<typename Buffer::value_type, Buffer::rank(),
                 access::mode::read_write, access::target::global_buffer>;
+
 namespace {
+// Just to check that these accessors have the same layout
+[[maybe_unused]]
 detail::assert_equal_layout<
     accessor<int, 1, access::mode::read_write, access::target::global_buffer,
              /*is_device=*/true>,
