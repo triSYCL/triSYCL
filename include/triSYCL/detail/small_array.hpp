@@ -372,14 +372,14 @@ struct small_array_sycl : small_array<BasicType, FinalType, Dims> {
                           "value or 1 value per dimension");
   }
 
-  /** Conversion operator to scalar BasicType when only 1 dimension
+  /** Conversion operator to scalar integral when only 1 dimension
 
       This is used for example to implicitly convert a sycl::id<1> to
-      a std::size_t
+      a std::size_t or int
   */
-  template <auto T = Dims>
+  template <std::integral To>
     requires(Dims == 1)
-  operator BasicType() {
+  operator To() {
     return this->get(0);
   }
 };
