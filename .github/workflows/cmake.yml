@@ -54,8 +54,8 @@ jobs:
     # Run into an even more recent Ubuntu inside Docker to have recent
     # compilers and C++ standard library
     container:
-      # Ubuntu 23.04
-      image: docker://ubuntu:lunar
+      # Ubuntu 23.10
+      image: docker://ubuntu:mantic
 
     strategy:
       # Run all the test even if there are some which fail
@@ -73,13 +73,13 @@ jobs:
            OpenMP: ON
            OpenCL: ON
 
-         - c_compiler: clang-18
-           cxx_compiler: clang++-18
+         - c_compiler: clang-19
+           cxx_compiler: clang++-19
            OpenMP: ON
            OpenCL: OFF
 
-         - c_compiler: clang-18
-           cxx_compiler: clang++-18
+         - c_compiler: clang-19
+           cxx_compiler: clang++-19
            OpenMP: ON
            OpenCL: ON
 
@@ -194,7 +194,7 @@ jobs:
           cxx_compiler_version=${CXX_COMPILER#clang++-}
           apt-get install -y libomp-${cxx_compiler_version}-dev
 
-      - name: Install OpenCL with POCL if needed
+      - name: Install OpenCL with PoCL if needed
         if: matrix.OpenCL == 'ON'
         run: apt-get install -y opencl-headers ocl-icd-opencl-dev libpocl-dev
 
