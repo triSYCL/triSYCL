@@ -46,7 +46,7 @@ function(declare_trisycl_test)
   endif(DEFINED declare_trisycl_test_SOURCES)
 
   # Needed because of sloppy file naming in multiple_compilation_units test
-  set_source_files_properties(${Files_SRCS} PROPERTIES LANGUAGE CXX )
+  set_source_files_properties(${Files_SRCS} PROPERTIES LANGUAGE CXX)
 
   # Variable to hold ALL files to build and be visible in IDE
   set(Files_BUILD ${Files_HDRS} ${Files_SRCS})
@@ -101,6 +101,7 @@ add_subdirectory(acap)
 add_subdirectory(accessor)
 add_subdirectory(address_spaces)
 add_subdirectory(aie-axi-stream)
+add_subdirectory(air)
 add_subdirectory(array_partition)
 add_subdirectory(buffer)
 add_subdirectory(detail)
