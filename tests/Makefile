@@ -439,7 +439,7 @@ endif
 # Internalize the kernel binary into cl::sycl::drt::code::program with
 # a C++ file
 %.kernel.internalized.cxx: %.kernel.bin
-	$(triSYCL_DIR)/src/triSYCL_tool --source-in $< --output $@
+	$(triSYCL_DIR)/src/triSYCL/triSYCL_tool --source-in $< --output $@
 
 # Process bitcode with SYCL passes to generate kernel callers
 %.kernel_caller.bc: %.pre_kernel_caller.ll
