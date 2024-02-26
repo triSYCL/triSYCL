@@ -1,5 +1,4 @@
-cmake_minimum_required (VERSION 3.0) # The minimum version of CMake necessary to build this project
-project (nd_range) # The name of our project
+project (nd_range)
 
 declare_trisycl_test(TARGET nd_range TEST_REGEX
 " 6 4 8
@@ -23,4 +22,3 @@ declare_trisycl_test(TARGET nd_range TEST_REGEX
 0
 0
 1")
-
