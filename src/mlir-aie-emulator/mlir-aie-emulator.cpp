@@ -1,9 +1,8 @@
-/* Simple executor for MLIR-generated AIR on AIE using ACAP++
+/// Simple executor for MLIR-AIE code based on ACAP++
+///
+/// RUN: %{execute}%s
 
-   RUN: %{execute}%s
-*/
-
-// Put the tile code on fiber too to boost the performances
+/// Put the tile code on fiber too to boost the performances
 #define TRISYCL_XILINX_AIE_TILE_CODE_ON_FIBER 1
 
 #include <sycl/sycl.hpp>
@@ -11,68 +10,72 @@
 #include <cstdint>
 #include <iostream>
 
-using namespace sycl::vendor::xilinx;
-using namespace sycl::vendor::xilinx::acap::aie;
+namespace aie = sycl::vendor::xilinx::acap::aie;
 
-template <auto x, auto y> void (*aie_tile_out_intrinsic)(std::int32_t port, std::int32_t value);
+/// There is a G++ bug where weak templated symbols do not get emitted when
+/// optimizing. Use this function to pass a symbol too so the compiler looses
+/// track of the use and really emits the symbol. Inspired by
+/// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=61882#c2
+__attribute__((weak)) __attribute__((noinline)) void
+aie_tile_confuse_the_compiler(auto value) {}
 
-/** Use some weak symbol function so the linker can replace it by a
-    more interesting one
-*/
-template <auto x, auto y>
-TRISYCL_WEAK_ATTRIB_PREFIX void TRISYCL_WEAK_ATTRIB_SUFFIX
-air_tile(void* self, void (*out0_write)(void* self, unsigned int value)) {
-  /* By linking with some AIR code such as _Z8air_tileILi6ELi4EEvPvPFvS0_jE
-     (g++) or _Z8air_tileITnDaLi6ETnDaLi4EEvPvPFvS0_jE (clang) for air_tile for
-     X=6 and Y=4, this weak symbol will be replaced by the provided function
-     instead.
-  */
-  // To write some value to out 0 port
-  out0_write(self, 42);
+namespace {
+
+/// To avoid passing a tile handle though all the MLIR generated code, just put
+/// the handle in a global variable which is used by some trampoline functions
+template <auto X, auto Y, typename This> This aie_tile_handle;
+
+/// A dispatch function to write to the output port
+template <auto X, auto Y>
+void (*aie_tile_put_ms_trampoline)(std::int32_t port, std::int32_t value);
+
+} // namespace
+
+/// A dispatch function to write to an output port
+template <auto X, auto Y>
+__attribute__((weak)) __attribute__((noinline)) void
+aie_tile_put_ms_intrinsic(std::int32_t port, std::int32_t value) {
+  aie_tile_put_ms_trampoline<X, Y>(port, value);
 }
 
-/** Use some weak symbol function so the linker can replace it by a
-    more interesting one
-*/
-template <auto x, auto y>
-TRISYCL_WEAK_ATTRIB_PREFIX void TRISYCL_WEAK_ATTRIB_SUFFIX
-aie_tile() {
-}
+/// Use some weak symbol function so the linker can replace this empty function
+/// by any MLIR-generated tile program function
+///
+/// This is mangled by G++ for as _Z16aie_tile_programILi1ELi1EEvv
+template <auto X, auto Y>
+__attribute__((weak)) __attribute__((noinline)) void aie_tile_program() {}
 
-/*
-auto type_erase(auto function) {
+namespace {
 
-}
-*/
-/** An executor kernel just calling some AIR code and exporting some
-    useful functions */
-template <typename AIE, int X, int Y>
-struct executor : acap::aie::tile<AIE, X, Y> {
-  using t = acap::aie::tile<AIE, X, Y>;
+/// An executor kernel just calling some AIR code and exporting some useful
+/// functions and variables to be used
+template <typename AIE, int X, int Y> struct executor : aie::tile<AIE, X, Y> {
+  using t = aie::tile<AIE, X, Y>;
   void run() {
-    // Export like this any useful ACAP++ function needed by your code
-    auto out0_write = [](void* self, unsigned int value) {
-      reinterpret_cast<t*>(self)->out(0) << value;
-    };
-//    std::array dispatch_table { type_erase(+) };
-    // Call the potential AIR tile code
-    air_tile<X, Y>(this, out0_write);
-    aie_tile_out_intrinsic<X, Y> = [this](std::int32_t port,
-                                          std::int32_t value) {
-      out(port) << value;
-    };
-    aie_tile<X, Y>();
+    // Save "this" into global variable to avoid capturing it in the lambda or
+    // to have to pass it through all the user code
+    aie_tile_handle<X, Y, decltype(this)> = this;
+    aie_tile_put_ms_trampoline<X, Y> =
+        +[](std::int32_t port, std::int32_t value) {
+          aie_tile_handle<X, Y, decltype(this)>->out(port) << value;
+        };
+    // Run the tile program
+    aie_tile_program<X, Y>();
+    /// Just reference the intrinsic functions to be sure the functions get
+    /// instantiated
+    aie_tile_confuse_the_compiler(aie_tile_put_ms_intrinsic<X, Y>);
   }
 };
 
+} // namespace
 
 int main() try {
   //  acap::aie::device<layout::vc1902> {}.run<executor>();
 
-  acap::aie::device<layout::size<2,5>> {}.run<executor>();
+  aie::device<aie::layout::size<2, 5>> {}.run<executor>();
 } catch (sycl::exception& e) {
   // Display the string message of any SYCL exception
   std::cerr << e.what() << std::endl;
-  // Rethrow to make clear something bad happened
+  // Rethrow to make it clear that something bad happened
   throw;
 }
