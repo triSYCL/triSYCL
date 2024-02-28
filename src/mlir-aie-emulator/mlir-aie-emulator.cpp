@@ -10,40 +10,63 @@
 #include <cstdint>
 #include <iostream>
 
+// The compiler-dependent attribute to avoid the compiler to optimized too much
+#ifdef __clang__
+// Compiled with clang++
+#define EMULATOR_CONFUSING_ATTRIBUTE noinline
+// This macro is also defined by clang++, so test clang++ first
+#elif defined(__GNUC__)
+// Compiled with g++
+#define EMULATOR_CONFUSING_ATTRIBUTE noipa
+#else
+#error Compiler not handled
+#endif
+
 namespace aie = sycl::vendor::xilinx::acap::aie;
 
 /// There is a G++ bug where weak templated symbols do not get emitted when
 /// optimizing. Use this function to pass a symbol too so the compiler looses
 /// track of the use and really emits the symbol. Inspired by
 /// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=61882#c2
-__attribute__((weak)) __attribute__((noinline)) void
+__attribute__((weak)) __attribute__((EMULATOR_CONFUSING_ATTRIBUTE)) void
 aie_tile_confuse_the_compiler(auto value) {}
 
 namespace {
 
 /// To avoid passing a tile handle though all the MLIR generated code, just put
 /// the handle in a global variable which is used by some trampoline functions
-template <auto X, auto Y, typename This> This aie_tile_handle;
+template <auto Col, auto Row, typename This> This aie_tile_handle;
 
 /// A dispatch function to write to the output port
-template <auto X, auto Y>
+template <auto Col, auto Row>
 void (*aie_tile_put_ms_trampoline)(std::int32_t port, std::int32_t value);
 
 } // namespace
 
 /// A dispatch function to write to an output port
-template <auto X, auto Y>
+///
+/// This is mangled by clang++ for Col=1 and Row=3 as
+/// _Z25aie_tile_put_ms_intrinsicITnDaLi1ETnDaLi3EEvii
+///
+/// This is mangled by g++ for Col=1 and Row=3 as
+/// _Z25aie_tile_put_ms_intrinsicILi1ELi3EEvii
+template <auto Col, auto Row>
 __attribute__((weak)) __attribute__((noinline)) void
 aie_tile_put_ms_intrinsic(std::int32_t port, std::int32_t value) {
-  aie_tile_put_ms_trampoline<X, Y>(port, value);
+  aie_tile_put_ms_trampoline<Col, Row>(port, value);
 }
 
 /// Use some weak symbol function so the linker can replace this empty function
 /// by any MLIR-generated tile program function
 ///
-/// This is mangled by G++ for as _Z16aie_tile_programILi1ELi1EEvv
-template <auto X, auto Y>
-__attribute__((weak)) __attribute__((noinline)) void aie_tile_program() {}
+/// This is mangled by clang++ for Col=1 and Row=3 as
+/// _Z16aie_tile_programITnDaLi1ETnDaLi3EEvv
+///
+/// This is mangled by g++ for Col=1 and Row=3 as
+/// _Z16aie_tile_programILi1ELi3EEvv
+template <auto Col, auto Row>
+__attribute__((weak)) __attribute__((EMULATOR_CONFUSING_ATTRIBUTE)) void
+aie_tile_program() {}
 
 namespace {
 
