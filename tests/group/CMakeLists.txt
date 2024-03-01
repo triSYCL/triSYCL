@@ -1,5 +1,4 @@
-cmake_minimum_required (VERSION 3.0) # The minimum version of CMake necessary to build this project
-project (group) # The name of our project
+project (group)
 
 declare_trisycl_test(TARGET group TEST_REGEX
 " 10

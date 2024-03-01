@@ -110,7 +110,8 @@ namespace trisycl::detail {
 
 /// @} End the defaults Doxygen group
 
-// Compiler specific weak linking (until changing to C++17 inline variables/functions)
+// Compiler specific weak linking (mostly until changing to C++17 inline
+// variables/functions)
 #ifndef TRISYCL_WEAK_ATTRIB_PREFIX
 #ifdef _MSC_VER
 #define TRISYCL_WEAK_ATTRIB_PREFIX __declspec(selectany)

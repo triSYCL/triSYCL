@@ -1,5 +1,5 @@
 # The minimum version of CMake necessary to build this project
-cmake_minimum_required (VERSION 3.16)
+cmake_minimum_required (VERSION 3.20)
 
 set(TRISYCL_VERSION_MAJOR 0)
 set(TRISYCL_VERSION_MINOR 1)
@@ -36,6 +36,11 @@ if (BUILD_TESTING)
   add_subdirectory(tests)
 endif()
 
+add_subdirectory(src)
+
+# Add an Interface Library target to specify usage requirements for
+# dependents but does not compile sources and does not produce a library
+# artifact on disk, since it is header-only
 add_library(${PROJECT_NAME} INTERFACE)
 
 # Package definition

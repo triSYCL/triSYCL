@@ -1,3 +1,3 @@
-project(air) # The name of our project
+project(air)
 
 declare_trisycl_test(TARGET simple_executor)

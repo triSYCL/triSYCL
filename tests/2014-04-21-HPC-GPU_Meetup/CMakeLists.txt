@@ -1,5 +1,4 @@
-cmake_minimum_required (VERSION 3.0) # The minimum version of CMake necessary to build this project
-project (2014-04-21-HPC-GPU_Meetup) # The name of our project
+project (2014-04-21-HPC-GPU_Meetup)
 
 declare_trisycl_test(TARGET slide_7 TEST_REGEX "1234")
 declare_trisycl_test(TARGET slide_9-20 TEST_REGEX "1234")

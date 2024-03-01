@@ -20,9 +20,10 @@ template <auto x, auto y>
 TRISYCL_WEAK_ATTRIB_PREFIX void TRISYCL_WEAK_ATTRIB_SUFFIX
 air_tile(void* self, void (*out0_write)(void* self, unsigned int value)) {
   /* By linking with some AIR code such as _Z8air_tileILi6ELi4EEvPvPFvS0_jE
-     for air_tile for X=6 and Y=4, this weak symbol will be replaced
-     by the provided function instead
- */
+     (g++) or _Z8air_tileITnDaLi6ETnDaLi4EEvPvPFvS0_jE (clang) for air_tile for
+     X=6 and Y=4, this weak symbol will be replaced by the provided function
+     instead.
+  */
   // To write some value to out 0 port
   out0_write(self, 42);
 }

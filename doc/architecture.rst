@@ -236,7 +236,7 @@ Compilation and installation of the triSYCL runtime::
 
   git clone --branch device git@github.com:triSYCL/triSYCL.git
   # Compile the triSYCL_tool command
-  cd triSYCL/src
+  cd triSYCL/src/triSYCL
   make
 
 
