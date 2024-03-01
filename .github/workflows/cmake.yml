@@ -160,7 +160,7 @@ jobs:
             pkgconf
 
       - name: Check out repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Declare LLVM package repository if needed
         if: startsWith(matrix.c_compiler, 'clang') || startsWith(matrix.cxx_compiler, 'clang')
