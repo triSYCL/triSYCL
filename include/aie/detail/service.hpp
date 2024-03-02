@@ -62,7 +62,7 @@ struct send_log_service {
   template <typename Parent> struct add_to_service_api {
    private:
     void log_internal(const char* str, bool chained) {
-      send_log_service::data_type data { dev_ptr<const char>(str),
+      send_log_service::data_type data { generic_ptr<const char>(str),
                                          strlen(str) };
       tile().perform_service(data, chained);
     }
