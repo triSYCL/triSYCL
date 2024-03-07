@@ -256,4 +256,4 @@ jobs:
         run: |
           # Request unlimited stack size needed for some tests
           ulimit -s unlimited
-          ctest --label-exclude GUI --test-dir ${{github.workspace}}/build --build-config ${{env.BUILD_TYPE}}
+          ctest --label-exclude GUI --schedule-random -test-dir ${{github.workspace}}/build --build-config ${{env.BUILD_TYPE}}
