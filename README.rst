@@ -139,6 +139,38 @@ as the Ryzen 9 7940HS has an AIE-ML/AIE2 as the XDNA/NPU/IPU.
   `<include/aie>`_ and the compiler for device support is
   https://github.com/triSYCL/sycl
 
+Other open-source projects related to AIE which are interesting to program AIE:
+
+- https://riallto.ai
+
+- https://github.com/Xilinx/mlir-aie
+
+- https://github.com/Xilinx/mlir-air
+
+- https://github.com/nod-ai/iree-amd-aie
+
+Some documentation about AMD AIE CGRA:
+
+- AIE aka AIE1
+
+  - Versal Adaptive SoC AI Engine Architecture Manual
+    https://docs.xilinx.com/r/en-US/am009-versal-ai-engine/Overview
+
+  - Versal Adaptive SoC Technical Reference Manual
+    https://docs.xilinx.com/r/en-US/am011-versal-acap-trm/Introduction
+
+  - AIE/AIE1 C++ API
+    https://www.xilinx.com/htmldocs/xilinx2023_2/aiengine_api/aie_api/doc/index.html
+
+- AIE-ML aka AIE2
+
+  - AIE2/AIE-ML architecture
+    https://docs.xilinx.com/r/en-US/am020-versal-aie-ml/Overview
+
+  - AIE2/AIE-ML C++ API
+    https://www.xilinx.com/htmldocs/xilinx2023_2/aiengine_ml_intrinsics/intrinsics/
+
+
 Documentation
 -------------
 
