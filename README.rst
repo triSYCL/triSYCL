@@ -127,6 +127,8 @@ Installation & testing
 
 SYCL_ is a template library, so no real installation is required.
 
+To see how you can get started building this library, simply go to https://github.com/Himujjal/triSYCL/tree/master/doc/BUILDING.md
+
 There are some examples you can build however.
 
 See `Testing <doc/testing.rst>`_.
