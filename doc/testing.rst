@@ -16,12 +16,12 @@ latest Ubuntu too, just adapt the compiler versions):
 
 .. code:: bash
 
-  sudo apt-get install clang-11 g++-11 libomp-dev libboost-all-dev
+  sudo apt-get install clang-20 g++-14 libomp-dev libboost-all-dev
 
 There is nothing else to do for now to use the include files from triSYCL_
 ``include`` directory when compiling a program. Just add a
-``-I.../include`` option and ``-std=c++17``
-or even better ``-std=c++2a`` when compiling.
+``-I.../include`` option and ``-std=c++23``
+or even better ``-std=c++2c`` when compiling.
 
 triSYCL_ is configurable through preprocessor macros described in
 `macros <macros.rst>`_.

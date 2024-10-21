@@ -54,8 +54,8 @@ jobs:
     # Run into an even more recent Ubuntu inside Docker to have recent
     # compilers and C++ standard library
     container:
-      # Ubuntu 23.10
-      image: docker://ubuntu:mantic
+      # Ubuntu 24.10
+      image: docker://ubuntu:oracular
 
     strategy:
       # Run all the test even if there are some which fail
@@ -63,23 +63,23 @@ jobs:
 
       matrix:
        include:
-         - c_compiler: gcc-13
-           cxx_compiler: g++-13
+         - c_compiler: gcc-14
+           cxx_compiler: g++-14
            OpenMP: ON
            OpenCL: OFF
 
-         - c_compiler: gcc-13
-           cxx_compiler: g++-13
+         - c_compiler: gcc-14
+           cxx_compiler: g++-14
            OpenMP: ON
            OpenCL: ON
 
-         - c_compiler: clang-19
-           cxx_compiler: clang++-19
+         - c_compiler: clang-20
+           cxx_compiler: clang++-20
            OpenMP: ON
            OpenCL: OFF
 
-         - c_compiler: clang-19
-           cxx_compiler: clang++-19
+         - c_compiler: clang-20
+           cxx_compiler: clang++-20
            OpenMP: ON
            OpenCL: ON
 
@@ -156,7 +156,7 @@ jobs:
         run: |
           apt-get update
           apt-get install -y build-essential cmake g++ gdb git \
-            libboost1.81-all-dev libgtkmm-3.0-dev librange-v3-dev \
+            libboost-all-dev libgtkmm-3.0-dev librange-v3-dev \
             pkgconf
 
       - name: Check out repository code
