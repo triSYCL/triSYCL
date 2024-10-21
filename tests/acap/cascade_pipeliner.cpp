@@ -7,8 +7,6 @@
 #include <sycl/sycl.hpp>
 
 #include <iostream>
-#include <tuple>
-#include <type_traits>
 #include <utility>
 
 #include <boost/hana.hpp>
@@ -99,11 +97,11 @@ struct cascade_executor {
 
   auto get_executor() {
     // AIE NoC connection between shim and input of the pipeline
-    d.template connect(port::shim { 0, 0 }, port::tile { 0, 0, 0 });
+    d.connect(port::shim { 0, 0 }, port::tile { 0, 0, 0 });
     // AIE NoC connection between output of the pipeline and the shim
     auto last_x = decltype(d)::geo::cascade_linear_x(last_stage);
     auto last_y = decltype(d)::geo::cascade_linear_y(last_stage);
-    d.template connect(port::tile { last_x, last_y, 0 },
+    d.connect(port::tile { last_x, last_y, 0 },
                               port::shim { 1, 0 });
     return [&] (FirstT input) {
              d.shim(0).bli_out(0) << input;
