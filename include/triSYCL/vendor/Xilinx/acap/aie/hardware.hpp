@@ -307,9 +307,9 @@ struct dev_ptr {
   dev_ptr operator-(std::ptrdiff_t off) { return {add(ptr, -off)}; }
   std::ptrdiff_t operator-(dev_ptr other) { return ptr - other.ptr; }
   dev_ptr& operator++() { ptr = add(ptr, 1); return *this; }
-  dev_ptr operator++(int) { dev_ptr old = *this; *this++; return old; }
+  dev_ptr operator++(int) { dev_ptr old = *this; (*this)++; return old; }
   dev_ptr& operator--() { ptr = add(ptr, -1); return *this; }
-  dev_ptr operator--(int) { dev_ptr old = *this; *this--; return old; }
+  dev_ptr operator--(int) { dev_ptr old = *this; (*this)--; return old; }
 
   /// Pointer comparaison
   bool operator==(dev_ptr other) const { return ptr == other.ptr; }

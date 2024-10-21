@@ -48,7 +48,7 @@ tools such as the Clang-based indexing and refactoring tools
 You can choose a specific compiler during the first `cmake` use, such
 as with::
 
-  CXX=clang++-14 cmake ..
+  CXX=clang++-20 cmake ..
 
 
 Notes
