@@ -29,7 +29,7 @@ programming for AMD_ AIE CGRA inspired by some SYCL concepts, as explained in
 Because of lack of resources **this SYCL implementation is very
 incomplete and should not be used by a normal end-user.** Fortunately
 there are now many other implementations of SYCL_ available, including
-some strong implementations like ComputeCpp_, `DPC++`_ or hipSYCL_
+some strong implementations like `DPC++`_ or hipSYCL_
 that can be used on various targets.
 
 This implementation is mainly based on C++23 features backed with
@@ -45,11 +45,11 @@ Since around 2018 Intel has put a lot of effort in their own oneAPI
 `DPC++`_ SYCL_ project to up-stream SYCL_ into LLVM_/Clang_, there is
 another project about merging the oneAPI `DPC++`_ SYCL_ implementation
 with triSYCL_ at https://github.com/triSYCL/sycl to give a greater
-user experience for Xilinx_ FPGA instead of using our obsolete
+user experience for AMD_ FPGA instead of using our obsolete
 experimental clunky device compiler. But this is still very
-experimental because the Xilinx_ tool-chain is based on old
+experimental because the AMD_ tool-chain is based on old
 incompatible versions of LLVM_/Clang_ and nothing of these is
-supported by the Xilinx_ product teams.
+supported by the AMD_ product teams.
 
 triSYCL_ has been used to experiment and provide feedback for SYCL_
 1.2, 1.2.1, 2.2, 2020 and even the OpenCL_ C++ 1.0 kernel language
@@ -60,7 +60,7 @@ LLVM_/Clang_.
 
 Technical lead: Ronan at keryell point FR. Developments started first
 at AMD_, then was mainly funded by Xilinx_ and now again by AMD_ since
-Xilinx_ has been bought by AMD_ in 2022.
+Xilinx_ has been acquired by AMD_ in 2022.
 
 It is possible to have a paid internship around triSYCL, if you have
 some skills related to this project. Contact the technical lead about
@@ -160,7 +160,7 @@ Some documentation about AMD AIE CGRA:
     https://docs.xilinx.com/r/en-US/am011-versal-acap-trm/Introduction
 
   - AIE/AIE1 C++ API
-    https://www.xilinx.com/htmldocs/xilinx2023_2/aiengine_api/aie_api/doc/index.html
+    https://www.xilinx.com/htmldocs/xilinx2024_1/aiengine_api/aie_api/doc
 
 - AIE-ML aka AIE2
 
@@ -168,7 +168,7 @@ Some documentation about AMD AIE CGRA:
     https://docs.xilinx.com/r/en-US/am020-versal-aie-ml/Overview
 
   - AIE2/AIE-ML C++ API
-    https://www.xilinx.com/htmldocs/xilinx2023_2/aiengine_ml_intrinsics/intrinsics/
+    https://www.xilinx.com/htmldocs/xilinx2024_1/aiengine_ml_intrinsics/intrinsics
 
 
 Documentation
@@ -196,7 +196,7 @@ Architecture of triSYCL runtime and compiler
 
 `Architecture of triSYCL runtime and compiler <doc/architecture.rst>`_
 describes the code base with some high-level diagrams but also how it
-was possible to compile and use the obsolete device compiler on some Xilinx_
+was possible to compile and use the obsolete device compiler on some AMD_
 FPGA for example. Now look at https://github.com/triSYCL/sycl instead.
 
 
@@ -232,9 +232,6 @@ triSYCL code documentation
 The documentation of the triSYCL_ implementation itself can be found
 in https://trisycl.github.io/triSYCL/Doxygen/triSYCL/html and
 https://trisycl.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
-
-There are also some internal documentation at
-https://pages.gitenterprise.xilinx.com/rkeryell/acappp/Doxygen/acappp/html
 
 
 News
