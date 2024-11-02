@@ -15,15 +15,6 @@ triSYCL
 .. image:: https://github.com/triSYCL/triSYCL/actions/workflows/cmake.yml/badge.svg
     :target: https://github.com/triSYCL/triSYCL/actions
 
-ACAP++: C++ extensions for AMD Versal ACAP AIE1 architecture
-------------------------------------------------------------
-
-See `<tests/acap>`_ for some code samples.
-
-Look at `<doc/acap.rst>`_ to know more about how to install/use the
-ACAP++ environment.
-
-
 Introduction
 ------------
 
@@ -31,10 +22,14 @@ triSYCL_ is a research project to experiment with the specification of
 the SYCL_ standard and to give feedback to the Khronos_ Group
 SYCL_committee and also to the ISO `C++`_ committee.
 
+More recently, this project has been used to experiment with high-level C++
+programming for AMD_ AIE CGRA inspired by some SYCL concepts, as explained in
+`ACAP++ & AIE++: C++ extensions for AMD Versal AIE CGRA architecture`_.
+
 Because of lack of resources **this SYCL implementation is very
 incomplete and should not be used by a normal end-user.** Fortunately
 there are now many other implementations of SYCL_ available, including
-some strong implementations like ComputeCpp_, `DPC++`_ or hipSYCL_
+some strong implementations like `DPC++`_ or hipSYCL_
 that can be used on various targets.
 
 This implementation is mainly based on C++23 features backed with
@@ -50,16 +45,11 @@ Since around 2018 Intel has put a lot of effort in their own oneAPI
 `DPC++`_ SYCL_ project to up-stream SYCL_ into LLVM_/Clang_, there is
 another project about merging the oneAPI `DPC++`_ SYCL_ implementation
 with triSYCL_ at https://github.com/triSYCL/sycl to give a greater
-user experience for Xilinx_ FPGA instead of using our obsolete
+user experience for AMD_ FPGA instead of using our obsolete
 experimental clunky device compiler. But this is still very
-experimental because the Xilinx_ tool-chain is based on old
+experimental because the AMD_ tool-chain is based on old
 incompatible versions of LLVM_/Clang_ and nothing of these is
-supported by the Xilinx_ product teams.
-
-Most of our efforts are focused on extensions, such as targeting
-Xilinx_ FPGA and Versal ACAP CGRA with internal developments on
-https://gitenterprise.xilinx.com/rkeryell/acappp.
-
+supported by the AMD_ product teams.
 
 triSYCL_ has been used to experiment and provide feedback for SYCL_
 1.2, 1.2.1, 2.2, 2020 and even the OpenCL_ C++ 1.0 kernel language
@@ -70,7 +60,7 @@ LLVM_/Clang_.
 
 Technical lead: Ronan at keryell point FR. Developments started first
 at AMD_, then was mainly funded by Xilinx_ and now again by AMD_ since
-Xilinx_ has been bought by AMD_ in 2022.
+Xilinx_ has been acquired by AMD_ in 2022.
 
 It is possible to have a paid internship around triSYCL, if you have
 some skills related to this project. Contact the technical lead about
@@ -112,6 +102,75 @@ target.
 For the SYCL_ ecosystem, look at https://sycl.tech
 
 
+ACAP++ & AIE++: C++ extensions for AMD Versal AIE CGRA architecture
+-------------------------------------------------------------------
+
+Most of our current efforts are focused on extensions, such as targeting AMD_
+FPGA and Versal ACAP AIE CGRA, providing a way to program CPU, GPU, FPGA and
+CGRA at the same time in a single-source C++ program.
+
+This project is a work-in-progress and currently we target partially only the
+first generation of devices, AIE/AIE1, while current models of AMD_ RyzenAI such
+as the Ryzen 9 7940HS has an AIE-ML/AIE2 as the XDNA/NPU/IPU.
+
+- The first generation programming model, `ACAP++` was based on C++17/C++20
+  constructs.
+
+  See
+  https://github.com/triSYCL/sycl/blob/sycl/unified/master/sycl/test/acap/test_aie_mandelbrot.cpp
+  and around, `<tests/acap>`_ and other directories starting with `acap` for
+  some code samples running in pure C++ library CPU emulation with this project.
+
+  Look at `<doc/acap.rst>`_ to know more about how to install/use the ACAP++
+  environment.
+
+  The runtime for CPU emulation and AIE device is found in
+  `<include/triSYCL/vendor/Xilinx>`_ which requires also a special compiler
+  provided by https://github.com/triSYCL/sycl to run on VCK190 boards.
+
+- The second generation programming model, `AIE++` is based on C++23/C++26
+  constructs, allowing an even terser syntax.
+
+  See around
+  `<https://github.com/triSYCL/sycl/blob/sycl/unified/master/sycl/test/aie/mandelbrot.cpp>`_
+  for some examples.
+
+  The runtime for CPU emulation and AIE device support is found in
+  `<include/aie>`_ and the compiler for device support is
+  https://github.com/triSYCL/sycl
+
+Other open-source projects related to AIE which are interesting to program AIE:
+
+- https://riallto.ai
+
+- https://github.com/Xilinx/mlir-aie
+
+- https://github.com/Xilinx/mlir-air
+
+- https://github.com/nod-ai/iree-amd-aie
+
+Some documentation about AMD AIE CGRA:
+
+- AIE aka AIE1
+
+  - Versal Adaptive SoC AI Engine Architecture Manual
+    https://docs.xilinx.com/r/en-US/am009-versal-ai-engine/Overview
+
+  - Versal Adaptive SoC Technical Reference Manual
+    https://docs.xilinx.com/r/en-US/am011-versal-acap-trm/Introduction
+
+  - AIE/AIE1 C++ API
+    https://www.xilinx.com/htmldocs/xilinx2024_1/aiengine_api/aie_api/doc
+
+- AIE-ML aka AIE2
+
+  - AIE2/AIE-ML architecture
+    https://docs.xilinx.com/r/en-US/am020-versal-aie-ml/Overview
+
+  - AIE2/AIE-ML C++ API
+    https://www.xilinx.com/htmldocs/xilinx2024_1/aiengine_ml_intrinsics/intrinsics
+
+
 Documentation
 -------------
 
@@ -137,7 +196,7 @@ Architecture of triSYCL runtime and compiler
 
 `Architecture of triSYCL runtime and compiler <doc/architecture.rst>`_
 describes the code base with some high-level diagrams but also how it
-was possible to compile and use the obsolete device compiler on some Xilinx_
+was possible to compile and use the obsolete device compiler on some AMD_
 FPGA for example. Now look at https://github.com/triSYCL/sycl instead.
 
 
@@ -174,15 +233,12 @@ The documentation of the triSYCL_ implementation itself can be found
 in https://trisycl.github.io/triSYCL/Doxygen/triSYCL/html and
 https://trisycl.github.io/triSYCL/Doxygen/triSYCL/triSYCL-implementation-refman.pdf
 
-There are also some internal documentation at
-https://pages.gitenterprise.xilinx.com/rkeryell/acappp/Doxygen/acappp/html
-
 
 News
 ----
 
 - 2023/06/09: merge the 5-year old branch experimenting with ACAP++
-  SYCL CPU model extensions for AMD Versal ACAP AIE1 CGRA like the
+  SYCL CPU model extensions for AMD_ Versal ACAP AIE1 CGRA like the
   XCVC1902 used in VCK190 or VCK5000 boards.
 
 - 2018/03/12: the long-going device compiler branch has been merged in
